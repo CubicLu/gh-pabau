@@ -6,7 +6,7 @@ export const ClassGuestsFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ClassGuestsWhereInput',
-      orderBy: list('ClassGuestsOrderByInput'),
+      orderBy: list('ClassGuestsOrderByWithRelationInput'),
       cursor: 'ClassGuestsWhereUniqueInput',
       distinct: 'ClassGuestsScalarFieldEnum',
       skip: 'Int',

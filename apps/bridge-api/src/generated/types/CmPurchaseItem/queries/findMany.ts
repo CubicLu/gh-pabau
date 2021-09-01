@@ -6,7 +6,7 @@ export const CmPurchaseItemFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmPurchaseItem'))),
     args: {
       where: 'CmPurchaseItemWhereInput',
-      orderBy: list('CmPurchaseItemOrderByInput'),
+      orderBy: list('CmPurchaseItemOrderByWithRelationInput'),
       cursor: 'CmPurchaseItemWhereUniqueInput',
       distinct: 'CmPurchaseItemScalarFieldEnum',
       skip: 'Int',

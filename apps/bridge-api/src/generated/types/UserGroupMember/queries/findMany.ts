@@ -6,7 +6,7 @@ export const UserGroupMemberFindManyQuery = queryField(
     type: nonNull(list(nonNull('UserGroupMember'))),
     args: {
       where: 'UserGroupMemberWhereInput',
-      orderBy: list('UserGroupMemberOrderByInput'),
+      orderBy: list('UserGroupMemberOrderByWithRelationInput'),
       cursor: 'UserGroupMemberWhereUniqueInput',
       distinct: 'UserGroupMemberScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CmAppointmentCustomAggregateQuery = queryField(
     type: 'AggregateCmAppointmentCustom',
     args: {
       where: 'CmAppointmentCustomWhereInput',
-      orderBy: list('CmAppointmentCustomOrderByInput'),
+      orderBy: list('CmAppointmentCustomOrderByWithRelationInput'),
       cursor: 'CmAppointmentCustomWhereUniqueInput',
       distinct: 'CmAppointmentCustomScalarFieldEnum',
       skip: 'Int',

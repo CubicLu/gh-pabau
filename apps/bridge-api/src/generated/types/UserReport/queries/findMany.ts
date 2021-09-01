@@ -4,7 +4,7 @@ export const UserReportFindManyQuery = queryField('findManyUserReport', {
   type: nonNull(list(nonNull('UserReport'))),
   args: {
     where: 'UserReportWhereInput',
-    orderBy: list('UserReportOrderByInput'),
+    orderBy: list('UserReportOrderByWithRelationInput'),
     cursor: 'UserReportWhereUniqueInput',
     distinct: 'UserReportScalarFieldEnum',
     skip: 'Int',

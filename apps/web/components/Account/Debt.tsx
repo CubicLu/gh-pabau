@@ -10,6 +10,7 @@ import { tempType } from './Invoice'
 import dayjs, { Dayjs } from 'dayjs'
 import { useDebtsQuery, useDebtCountQuery } from '@pabau/graphql'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { DisplayDate } from '../../hooks/displayDate'
 
 interface DebtProps {
   searchTerm: string
@@ -191,7 +192,7 @@ const Debt: FC<DebtProps> = ({
       skeletonWidth: '70px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+        return <Typography.Text>{DisplayDate(data)}</Typography.Text>
       },
     },
     {

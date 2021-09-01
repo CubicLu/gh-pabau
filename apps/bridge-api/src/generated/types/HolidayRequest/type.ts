@@ -37,7 +37,7 @@ export const HolidayRequest = objectType({
       type: 'RotaShift',
       args: {
         where: 'RotaShiftWhereInput',
-        orderBy: 'RotaShiftOrderByInput',
+        orderBy: 'RotaShiftOrderByWithRelationInput',
         cursor: 'RotaShiftWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

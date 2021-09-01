@@ -23,7 +23,7 @@ export const MarketingSource = objectType({
       type: 'CmExtraPatient',
       args: {
         where: 'CmExtraPatientWhereInput',
-        orderBy: 'CmExtraPatientOrderByInput',
+        orderBy: 'CmExtraPatientOrderByWithRelationInput',
         cursor: 'CmExtraPatientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -31,6 +31,20 @@ export const MarketingSource = objectType({
       },
       resolve(root: any) {
         return root.CmExtraPatient
+      },
+    })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
       },
     })
     t.nullable.field('_count', {

@@ -6,7 +6,7 @@ export const ClasstypeMasterFindManyQuery = queryField(
     type: nonNull(list(nonNull('ClasstypeMaster'))),
     args: {
       where: 'ClasstypeMasterWhereInput',
-      orderBy: list('ClasstypeMasterOrderByInput'),
+      orderBy: list('ClasstypeMasterOrderByWithRelationInput'),
       cursor: 'ClasstypeMasterWhereUniqueInput',
       distinct: 'ClasstypeMasterScalarFieldEnum',
       skip: 'Int',

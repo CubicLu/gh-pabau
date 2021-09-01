@@ -8,6 +8,7 @@ import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
 import { Dayjs } from 'dayjs'
 import { useInvoicesQuery, useInvoiceCountQuery } from '@pabau/graphql'
+import { DisplayDate } from '../../hooks/displayDate'
 
 export const tempType = {
   Paid: 'success',
@@ -70,7 +71,7 @@ const Invoice: FC<InvoiceProps> = ({
       visible: true,
       skeletonWidth: '50px',
       render: function render(data) {
-        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+        return <Typography.Text>{DisplayDate(data)}</Typography.Text>
       },
     },
     {
@@ -212,7 +213,6 @@ const Invoice: FC<InvoiceProps> = ({
     })
   }
 
-  console.log('InvoiceColumns', InvoiceColumns)
   return (
     <TableLayout
       columns={InvoiceColumns}

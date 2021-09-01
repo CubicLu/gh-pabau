@@ -4,7 +4,7 @@ export const CardTypeFindManyQuery = queryField('findManyCardType', {
   type: nonNull(list(nonNull('CardType'))),
   args: {
     where: 'CardTypeWhereInput',
-    orderBy: list('CardTypeOrderByInput'),
+    orderBy: list('CardTypeOrderByWithRelationInput'),
     cursor: 'CardTypeWhereUniqueInput',
     distinct: 'CardTypeScalarFieldEnum',
     skip: 'Int',

@@ -41,7 +41,7 @@ export const InventoryCount = objectType({
       type: 'InventoryDiscrepancy',
       args: {
         where: 'InventoryDiscrepancyWhereInput',
-        orderBy: 'InventoryDiscrepancyOrderByInput',
+        orderBy: 'InventoryDiscrepancyOrderByWithRelationInput',
         cursor: 'InventoryDiscrepancyWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

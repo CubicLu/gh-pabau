@@ -6,7 +6,7 @@ export const ContactInsuranceFindManyQuery = queryField(
     type: nonNull(list(nonNull('ContactInsurance'))),
     args: {
       where: 'ContactInsuranceWhereInput',
-      orderBy: list('ContactInsuranceOrderByInput'),
+      orderBy: list('ContactInsuranceOrderByWithRelationInput'),
       cursor: 'ContactInsuranceWhereUniqueInput',
       distinct: 'ContactInsuranceScalarFieldEnum',
       skip: 'Int',

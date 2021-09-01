@@ -6,7 +6,7 @@ export const SessionPackageAggregateQuery = queryField(
     type: 'AggregateSessionPackage',
     args: {
       where: 'SessionPackageWhereInput',
-      orderBy: list('SessionPackageOrderByInput'),
+      orderBy: list('SessionPackageOrderByWithRelationInput'),
       cursor: 'SessionPackageWhereUniqueInput',
       distinct: 'SessionPackageScalarFieldEnum',
       skip: 'Int',

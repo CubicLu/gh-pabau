@@ -4,7 +4,7 @@ export const CompanyNoteFindManyQuery = queryField('findManyCompanyNote', {
   type: nonNull(list(nonNull('CompanyNote'))),
   args: {
     where: 'CompanyNoteWhereInput',
-    orderBy: list('CompanyNoteOrderByInput'),
+    orderBy: list('CompanyNoteOrderByWithRelationInput'),
     cursor: 'CompanyNoteWhereUniqueInput',
     distinct: 'CompanyNoteScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const TemplateFolderAggregateQuery = queryField(
     type: 'AggregateTemplateFolder',
     args: {
       where: 'TemplateFolderWhereInput',
-      orderBy: list('TemplateFolderOrderByInput'),
+      orderBy: list('TemplateFolderOrderByWithRelationInput'),
       cursor: 'TemplateFolderWhereUniqueInput',
       distinct: 'TemplateFolderScalarFieldEnum',
       skip: 'Int',

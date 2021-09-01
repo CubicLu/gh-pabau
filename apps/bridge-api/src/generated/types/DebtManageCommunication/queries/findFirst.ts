@@ -6,7 +6,7 @@ export const DebtManageCommunicationFindFirstQuery = queryField(
     type: 'DebtManageCommunication',
     args: {
       where: 'DebtManageCommunicationWhereInput',
-      orderBy: list('DebtManageCommunicationOrderByInput'),
+      orderBy: list('DebtManageCommunicationOrderByWithRelationInput'),
       cursor: 'DebtManageCommunicationWhereUniqueInput',
       distinct: 'DebtManageCommunicationScalarFieldEnum',
       skip: 'Int',

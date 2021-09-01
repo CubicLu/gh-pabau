@@ -4,7 +4,7 @@ export const BugLogFindManyQuery = queryField('findManyBugLog', {
   type: nonNull(list(nonNull('BugLog'))),
   args: {
     where: 'BugLogWhereInput',
-    orderBy: list('BugLogOrderByInput'),
+    orderBy: list('BugLogOrderByWithRelationInput'),
     cursor: 'BugLogWhereUniqueInput',
     distinct: 'BugLogScalarFieldEnum',
     skip: 'Int',

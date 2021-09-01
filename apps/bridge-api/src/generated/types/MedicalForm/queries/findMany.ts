@@ -4,7 +4,7 @@ export const MedicalFormFindManyQuery = queryField('findManyMedicalForm', {
   type: nonNull(list(nonNull('MedicalForm'))),
   args: {
     where: 'MedicalFormWhereInput',
-    orderBy: list('MedicalFormOrderByInput'),
+    orderBy: list('MedicalFormOrderByWithRelationInput'),
     cursor: 'MedicalFormWhereUniqueInput',
     distinct: 'MedicalFormScalarFieldEnum',
     skip: 'Int',

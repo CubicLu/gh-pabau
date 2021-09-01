@@ -5,6 +5,8 @@ import arya from '../../assets/images/users/arya.png'
 import linda from '../../assets/images/users/linda.png'
 import liza from '../../assets/images/users/liza.png'
 import EmployeeImg from './assets/employees/1.png'
+import labTests from '../../assets/images/lab-tests.svg'
+import Prescriptions2 from '../../assets/images/user2.png'
 
 export const searchResults = [
   { id: '1', firstName: 'Will', lastName: 'Lawsons', avatarUrl: userAvatar },
@@ -1101,5 +1103,154 @@ export const serviceData = [
         ],
       },
     ],
+  },
+]
+
+export const testList = [
+  {
+    id: 1,
+    name: 'DL7 Lab Profile',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Received',
+    isPreviewAvailable: true,
+  },
+
+  {
+    id: 2,
+    name: 'DL7 Lab Profile',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Awaiting results',
+    isPreviewAvailable: false,
+  },
+  {
+    id: 3,
+    name: 'H5 Blood Test',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Received',
+    isPreviewAvailable: true,
+  },
+]
+
+export const prescriptions = [
+  {
+    id: 1,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: labTests,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+  {
+    id: 2,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: Prescriptions2,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+  {
+    id: 3,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: labTests,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+]
+
+export const loyaltyData = [
+  {
+    id: 1,
+    date: '2020-07-23T17:30:00.007Z',
+    time: '17:34',
+    action: 'Purchaising each service - at ringup only',
+    points: '+30.00',
+  },
+  {
+    id: 2,
+    date: '2020-07-22T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 3,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 4,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Purchaising each service - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 5,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 6,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 7,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Purchaising each service - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 8,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Purchaising each service - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 9,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 10,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
   },
 ]

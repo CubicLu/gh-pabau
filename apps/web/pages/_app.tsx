@@ -12,8 +12,6 @@ import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
 import Router from 'next/router'
@@ -22,13 +20,13 @@ import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { languages } from '@pabau/i18n'
 import { Integrations } from '@sentry/tracing'
 import * as Sentry from '@sentry/react'
+import { ErrorNotification } from '../components/Notification/ErrorNotification'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 
 require('../../../libs/ui/src/styles/antd.less')
-import { Notification, NotificationType } from '@pabau/ui'
 import { UserProvider } from '../context/UserContext'
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
@@ -47,7 +45,6 @@ const cache = new InMemoryCache({
       fields: {
         chats: {
           merge(existing = [], incoming: any[]) {
-            console.log('APOLLO CACHE: room.chat.merge()', existing, incoming)
             return [...existing, ...incoming]
           },
         },
@@ -61,12 +58,6 @@ const GRAPHQL_WS_ENDPOINT =
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
-
-//TODO: enable tree shaking
-const iconList = Object.keys(Icons)
-  .filter((key) => key !== 'fas' && key !== 'prefix')
-  .map((icon) => Icons[icon])
-library.add(...iconList)
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
@@ -100,7 +91,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
             Router.replace('/403')
             break
           default:
-            Notification(NotificationType.error, error.message)
+            ErrorNotification(error.message)
             console.log(
               `[GraphQL error]: Message: ${error.message}, Location: ${error.locations}, Path: ${error.path}`
             )
@@ -109,7 +100,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     }
   }
   if (networkError) {
-    console.log(`[Network error]: ${networkError.message}`)
+    console.log(
+      `[Network error]: ${networkError.message} ${networkError.stack}`
+    )
   }
 })
 const getWebSocketLink = () => {

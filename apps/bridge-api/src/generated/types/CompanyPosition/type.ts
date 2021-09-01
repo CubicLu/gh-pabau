@@ -14,7 +14,7 @@ export const CompanyPosition = objectType({
       type: 'CmStaffGeneral',
       args: {
         where: 'CmStaffGeneralWhereInput',
-        orderBy: 'CmStaffGeneralOrderByInput',
+        orderBy: 'CmStaffGeneralOrderByWithRelationInput',
         cursor: 'CmStaffGeneralWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

@@ -6,7 +6,7 @@ export const CmBookingNoteAggregateQuery = queryField(
     type: 'AggregateCmBookingNote',
     args: {
       where: 'CmBookingNoteWhereInput',
-      orderBy: list('CmBookingNoteOrderByInput'),
+      orderBy: list('CmBookingNoteOrderByWithRelationInput'),
       cursor: 'CmBookingNoteWhereUniqueInput',
       distinct: 'CmBookingNoteScalarFieldEnum',
       skip: 'Int',

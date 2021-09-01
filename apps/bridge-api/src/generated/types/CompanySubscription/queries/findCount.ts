@@ -6,7 +6,7 @@ export const CompanySubscriptionFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanySubscriptionWhereInput',
-      orderBy: list('CompanySubscriptionOrderByInput'),
+      orderBy: list('CompanySubscriptionOrderByWithRelationInput'),
       cursor: 'CompanySubscriptionWhereUniqueInput',
       distinct: 'CompanySubscriptionScalarFieldEnum',
       skip: 'Int',

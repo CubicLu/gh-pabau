@@ -6,7 +6,7 @@ export const AttachmentHelperLiteAggregateQuery = queryField(
     type: 'AggregateAttachmentHelperLite',
     args: {
       where: 'AttachmentHelperLiteWhereInput',
-      orderBy: list('AttachmentHelperLiteOrderByInput'),
+      orderBy: list('AttachmentHelperLiteOrderByWithRelationInput'),
       cursor: 'AttachmentHelperLiteWhereUniqueInput',
       distinct: 'AttachmentHelperLiteScalarFieldEnum',
       skip: 'Int',

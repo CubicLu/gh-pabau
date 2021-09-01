@@ -1,7 +1,7 @@
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
-import styles from './login.module.less'
-import { Logo } from '@pabau/ui'
+import { Logo } from '../components/Logo/Logo'
 import { LoginMain } from '../components/Auth/Login'
+import styles from './login.module.less'
 
 const Login = () => {
   return (

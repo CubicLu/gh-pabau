@@ -6,7 +6,7 @@ export const CompanySubscriptionAggregateQuery = queryField(
     type: 'AggregateCompanySubscription',
     args: {
       where: 'CompanySubscriptionWhereInput',
-      orderBy: list('CompanySubscriptionOrderByInput'),
+      orderBy: list('CompanySubscriptionOrderByWithRelationInput'),
       cursor: 'CompanySubscriptionWhereUniqueInput',
       distinct: 'CompanySubscriptionScalarFieldEnum',
       skip: 'Int',

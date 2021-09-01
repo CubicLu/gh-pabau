@@ -6,7 +6,7 @@ export const CompanyBranchAttachmentFindFirstQuery = queryField(
     type: 'CompanyBranchAttachment',
     args: {
       where: 'CompanyBranchAttachmentWhereInput',
-      orderBy: list('CompanyBranchAttachmentOrderByInput'),
+      orderBy: list('CompanyBranchAttachmentOrderByWithRelationInput'),
       cursor: 'CompanyBranchAttachmentWhereUniqueInput',
       distinct: 'CompanyBranchAttachmentScalarFieldEnum',
       skip: 'Int',

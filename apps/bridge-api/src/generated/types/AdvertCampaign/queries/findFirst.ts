@@ -6,7 +6,7 @@ export const AdvertCampaignFindFirstQuery = queryField(
     type: 'AdvertCampaign',
     args: {
       where: 'AdvertCampaignWhereInput',
-      orderBy: list('AdvertCampaignOrderByInput'),
+      orderBy: list('AdvertCampaignOrderByWithRelationInput'),
       cursor: 'AdvertCampaignWhereUniqueInput',
       distinct: 'AdvertCampaignScalarFieldEnum',
       skip: 'Int',

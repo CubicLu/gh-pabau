@@ -55,6 +55,7 @@
     font-size: 14px;
     font-family: 'Circular-Std-Book';
     font-weight: 400;
+    overflow: visible;
     a {
       color: var(--light-grey-color);
     }
@@ -104,9 +105,23 @@
     padding-left: 32px;
   }
 }
-
+.badge-icon {
+  :global .ant-badge-count {
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+}
 @media (min-width: 200px) and (max-width: 767px) {
   .mobile-view-none {
     display: none;
   }
+}
+
+.activity-icon {
+  width: 18px;
 }

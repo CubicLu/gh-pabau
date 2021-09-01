@@ -6,7 +6,7 @@ export const CmContactAlertFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmContactAlert'))),
     args: {
       where: 'CmContactAlertWhereInput',
-      orderBy: list('CmContactAlertOrderByInput'),
+      orderBy: list('CmContactAlertOrderByWithRelationInput'),
       cursor: 'CmContactAlertWhereUniqueInput',
       distinct: 'CmContactAlertScalarFieldEnum',
       skip: 'Int',

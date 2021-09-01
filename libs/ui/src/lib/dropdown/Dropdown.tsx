@@ -67,12 +67,17 @@ export const Dropdown: FC<DropDownInterface> = ({
         onClick={() => onClickAvatarMenu('ClinicMenu')}
       >
         <div className={styles.dropdownHeader}>
-          <span className={styles.headerText}>{userData?.companyName}</span>
+          <span className={styles.headerText}>
+            {userData?.companyName || '<no name>'}
+          </span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
-        <div className={styles.userName}>{userData?.fullName}</div>
+        <div className={styles.userName}>
+          {userData?.fullName || '<no name>'}
+          {userData?.pab1 && <>{` `}(Pabau 1 linked)</>}
+        </div>
         {/* TODO */}
         {/* <div className={styles.userBalance}>
           <p>{t('avatar.balance')}</p>
@@ -142,10 +147,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       </Menu.Item> */}
       <Menu.Item
         key="logout"
-        onClick={() => {
-          console.log('1')
-          onLogOut?.()
-        }}
+        onClick={onLogOut}
         className={styles.dropdownMenu}
       >
         <div className={styles.dropdownHeader}>
@@ -185,7 +187,6 @@ export const Dropdown: FC<DropDownInterface> = ({
               </div>
               {userData?.companyName === company.name ? (
                 <CheckCircleFilled
-                  key={company.id}
                   className={classNames(styles.checkIcon, styles.activeMenu)}
                 />
               ) : (

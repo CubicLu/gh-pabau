@@ -6,7 +6,7 @@ export const SessionPackageFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'SessionPackageWhereInput',
-      orderBy: list('SessionPackageOrderByInput'),
+      orderBy: list('SessionPackageOrderByWithRelationInput'),
       cursor: 'SessionPackageWhereUniqueInput',
       distinct: 'SessionPackageScalarFieldEnum',
       skip: 'Int',

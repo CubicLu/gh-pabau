@@ -6,7 +6,7 @@ export const ClockinTimesheetFindFirstQuery = queryField(
     type: 'ClockinTimesheet',
     args: {
       where: 'ClockinTimesheetWhereInput',
-      orderBy: list('ClockinTimesheetOrderByInput'),
+      orderBy: list('ClockinTimesheetOrderByWithRelationInput'),
       cursor: 'ClockinTimesheetWhereUniqueInput',
       distinct: 'ClockinTimesheetScalarFieldEnum',
       skip: 'Int',

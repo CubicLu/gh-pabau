@@ -6,7 +6,7 @@ export const CmContactJsonAggregateQuery = queryField(
     type: 'AggregateCmContactJson',
     args: {
       where: 'CmContactJsonWhereInput',
-      orderBy: list('CmContactJsonOrderByInput'),
+      orderBy: list('CmContactJsonOrderByWithRelationInput'),
       cursor: 'CmContactJsonWhereUniqueInput',
       distinct: 'CmContactJsonScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const CmCaseAggregateQuery = queryField('aggregateCmCase', {
   type: 'AggregateCmCase',
   args: {
     where: 'CmCaseWhereInput',
-    orderBy: list('CmCaseOrderByInput'),
+    orderBy: list('CmCaseOrderByWithRelationInput'),
     cursor: 'CmCaseWhereUniqueInput',
     distinct: 'CmCaseScalarFieldEnum',
     skip: 'Int',

@@ -4,7 +4,7 @@ export const CmExtraSalonAggregateQuery = queryField('aggregateCmExtraSalon', {
   type: 'AggregateCmExtraSalon',
   args: {
     where: 'CmExtraSalonWhereInput',
-    orderBy: list('CmExtraSalonOrderByInput'),
+    orderBy: list('CmExtraSalonOrderByWithRelationInput'),
     cursor: 'CmExtraSalonWhereUniqueInput',
     distinct: 'CmExtraSalonScalarFieldEnum',
     skip: 'Int',

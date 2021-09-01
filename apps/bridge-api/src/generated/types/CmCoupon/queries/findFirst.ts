@@ -4,7 +4,7 @@ export const CmCouponFindFirstQuery = queryField('findFirstCmCoupon', {
   type: 'CmCoupon',
   args: {
     where: 'CmCouponWhereInput',
-    orderBy: list('CmCouponOrderByInput'),
+    orderBy: list('CmCouponOrderByWithRelationInput'),
     cursor: 'CmCouponWhereUniqueInput',
     distinct: 'CmCouponScalarFieldEnum',
     skip: 'Int',

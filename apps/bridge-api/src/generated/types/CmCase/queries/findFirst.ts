@@ -4,7 +4,7 @@ export const CmCaseFindFirstQuery = queryField('findFirstCmCase', {
   type: 'CmCase',
   args: {
     where: 'CmCaseWhereInput',
-    orderBy: list('CmCaseOrderByInput'),
+    orderBy: list('CmCaseOrderByWithRelationInput'),
     cursor: 'CmCaseWhereUniqueInput',
     distinct: 'CmCaseScalarFieldEnum',
     skip: 'Int',

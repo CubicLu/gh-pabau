@@ -62,6 +62,15 @@ fragment CmLead on CmLead {
   Company {
     ...CompanyFields
   }
+  User {
+    ...UserFields
+  }
+  MarketingSource {
+    ...MarketingSourceFields
+  }
+  LeadStatusData {
+    ...LeadStatusFields
+  }
 }
 
 mutation updateOneCmLead($where: CmLeadWhereUniqueInput!, $data: CmLeadUpdateInput!) {

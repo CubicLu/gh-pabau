@@ -4,7 +4,7 @@ export const RotaShiftFindFirstQuery = queryField('findFirstRotaShift', {
   type: 'RotaShift',
   args: {
     where: 'RotaShiftWhereInput',
-    orderBy: list('RotaShiftOrderByInput'),
+    orderBy: list('RotaShiftOrderByWithRelationInput'),
     cursor: 'RotaShiftWhereUniqueInput',
     distinct: 'RotaShiftScalarFieldEnum',
     skip: 'Int',

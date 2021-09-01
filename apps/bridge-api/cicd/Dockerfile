@@ -10,7 +10,7 @@ RUN yarn install
 COPY . .
 
 # Install Prisma here because it's a devDependency, it doesn't get installed.
-RUN yarn add -D prisma@2.29
+RUN yarn add -D prisma@2.29.1
 RUN node_modules/.bin/prisma generate
 
 EXPOSE 4000

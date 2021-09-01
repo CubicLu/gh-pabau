@@ -6,7 +6,7 @@ export const CommunicationRecipientFindFirstQuery = queryField(
     type: 'CommunicationRecipient',
     args: {
       where: 'CommunicationRecipientWhereInput',
-      orderBy: list('CommunicationRecipientOrderByInput'),
+      orderBy: list('CommunicationRecipientOrderByWithRelationInput'),
       cursor: 'CommunicationRecipientWhereUniqueInput',
       distinct: 'CommunicationRecipientScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const PackageUsedFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'PackageUsedWhereInput',
-      orderBy: list('PackageUsedOrderByInput'),
+      orderBy: list('PackageUsedOrderByWithRelationInput'),
       cursor: 'PackageUsedWhereUniqueInput',
       distinct: 'PackageUsedScalarFieldEnum',
       skip: 'Int',
