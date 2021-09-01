@@ -1,13 +1,22 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, ReactNode, useRef, useState } from 'react'
 import { Button, DotButton } from '@pabau/ui'
 import {
   DeleteOutlined,
-  ExclamationCircleOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   NotificationOutlined,
 } from '@ant-design/icons'
 import styles from './VoucherCard.module.less'
 import classNames from 'classnames'
+import { Drawer } from 'antd'
+
+interface MenuOption {
+  key: number
+  label: string
+  icon: ReactNode
+  onClick?: () => void
+}
+
 export interface VoucherCardProps {
   cardWidth?: number
   backgroundColor1?: string
@@ -16,7 +25,6 @@ export interface VoucherCardProps {
   gradientType: string
   bookNowButton?: boolean
   buttonLabel: string
-  dotMenuShow?: boolean
   borderColor: string
   voucherType?: string
   voucherNum?: number
@@ -29,7 +37,10 @@ export interface VoucherCardProps {
   currencyType?: string
   termsConditions?: string
   voucherBackgrounUrl?: string
-  onMenuClick?: () => void
+  showMenu?: boolean
+  menuOptions?: MenuOption[]
+  onMenuClick?: (key) => void
+  showDrawerMenu?: boolean
 }
 
 export const VoucherCard: FC<VoucherCardProps> = ({
@@ -40,7 +51,9 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   gradientType,
   bookNowButton,
   buttonLabel,
-  dotMenuShow,
+  showMenu,
+  menuOptions,
+  onMenuClick,
   borderColor,
   voucherType = '',
   voucherNum,
@@ -53,11 +66,13 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   currencyType = '$',
   termsConditions = 'N/A',
   voucherBackgrounUrl,
-  onMenuClick,
+  showDrawerMenu = false,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const voucherTypes = ['flowers', 'valentine', 'birthday']
-  const DotMenuOptions = [
+  const [menuPopover, setMenuPopover] = useState(false)
+
+  const defaultMenuOptions: MenuOption[] = [
     {
       key: 1,
       icon: <EditOutlined />,
@@ -72,11 +87,6 @@ export const VoucherCard: FC<VoucherCardProps> = ({
       key: 3,
       icon: <DeleteOutlined />,
       label: 'Delete',
-      onClick: () => {
-        if (onMenuClick) {
-          onMenuClick()
-        }
-      },
     },
     {
       key: 4,
@@ -84,6 +94,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
       label: 'Show terms and conditions',
     },
   ]
+
   const cardFaceBgColor = {
     background: `${gradientType}(${
       gradientType === 'radial-gradient' ? 'circle at center' : '47.23deg'
@@ -148,7 +159,45 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                     )}
                   </div>
                   <div onClick={flipCard}>
-                    {dotMenuShow && <DotButton menuList={DotMenuOptions} />}
+                    {showMenu && (
+                      <>
+                        <DotButton
+                          onMenuClick={(key) => {
+                            setMenuPopover(() => false)
+                            onMenuClick?.(key)
+                          }}
+                          popoverVisible={showDrawerMenu ? false : menuPopover}
+                          setPopoverVisible={(popover) =>
+                            setMenuPopover(() => popover)
+                          }
+                          menuList={menuOptions || defaultMenuOptions}
+                        />
+                        <Drawer
+                          closable
+                          placement="bottom"
+                          visible={showDrawerMenu ? menuPopover : false}
+                          className={styles.voucherDrawer}
+                          title={<div />}
+                          height="auto"
+                          onClose={() => setMenuPopover(() => false)}
+                        >
+                          {(menuOptions || defaultMenuOptions)?.map(
+                            ({ key, icon, label, onClick }) => (
+                              <div
+                                key={label}
+                                onClick={() => {
+                                  setMenuPopover(() => false)
+                                  onClick?.() || onMenuClick?.(key)
+                                }}
+                              >
+                                {icon}
+                                <span>{label}</span>
+                              </div>
+                            )
+                          )}
+                        </Drawer>
+                      </>
+                    )}
                   </div>
                 </div>
 

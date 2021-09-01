@@ -9,13 +9,14 @@ interface WizardProps {
   active: number
   allSteps: number
   showNextBtn?: boolean
+  showPrevBtn?: boolean
   nextBtnLabel?: string | number | React.ReactNode
   disableNextStep?: boolean
+  disablePrevStep?: boolean
   nextButtonDecorator?: React.ReactNode
   nextButtonContent?: React.ReactNode | string
-  previousButtonContent?: React.ReactNode | string
+  prevButtonContent?: React.ReactNode | string
   background?: string
-  allowDisablePrevious?: boolean
   finishDisablesNextStep?: boolean
   hideStep?: boolean
 }
@@ -27,14 +28,15 @@ export const Wizard: React.FC<WizardProps> = ({
   active,
   allSteps,
   disableNextStep = false,
+  disablePrevStep = true,
   nextButtonDecorator,
   background,
   nextButtonContent,
-  previousButtonContent,
-  allowDisablePrevious = true,
+  prevButtonContent,
   finishDisablesNextStep = true,
   hideStep = false,
   showNextBtn = true,
+  showPrevBtn = true,
 }) => {
   return (
     <div
@@ -45,14 +47,16 @@ export const Wizard: React.FC<WizardProps> = ({
       }}
     >
       <div>
-        <Button
-          onClick={() => onPrev?.()}
-          disabled={
-            active <= 0 || (active === allSteps - 1 && allowDisablePrevious)
-          }
-        >
-          {previousButtonContent || 'Previous Step'}
-        </Button>
+        {showPrevBtn && (
+          <Button
+            onClick={() => onPrev?.()}
+            disabled={
+              active <= 0 || (active === allSteps - 1 && disablePrevStep)
+            }
+          >
+            {prevButtonContent || 'Previous Step'}
+          </Button>
+        )}
       </div>
       {!hideStep && (
         <span

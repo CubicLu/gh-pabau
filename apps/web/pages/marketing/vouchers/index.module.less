@@ -72,21 +72,47 @@
         }
       }
       div.rightDiv {
+        width: 50%;
         display: flex;
         align-items: center;
-        flex-wrap: wrap;
+        justify-content: flex-end;
 
-        div {
+        > div {
+          width: 100%;
           display: flex;
           align-items: center;
+          justify-content: flex-end;
+
+          > div:last-child {
+            padding: 0px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            button {
+              margin-top: 0px;
+              margin-bottom: 0px;
+            }
+          }
         }
 
         @media screen and (max-width: 767px) {
           width: 100%;
           justify-content: flex-end;
 
-          div {
+          > div {
             width: 100%;
+
+            > div:first-child {
+              display: none;
+            }
+
+            > div:last-child {
+              > span {
+                width: 100%;
+              }
+            }
           }
         }
       }
@@ -216,4 +242,17 @@
       }
     }
   }
+}
+.modalTerms {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #3d3d46;
+  margin-bottom: 0px !important;
+}
+.closeBtn {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
 }

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useRef } from 'react'
+import React, { FC, useState, useRef } from 'react'
 import Layout from '../../../../components/Layout/Layout'
 import { useUser } from '../../../../context/UserContext'
 import SelectServices from '../../../../components/Marketing/CreateGiftVoucher/SelectServices'
@@ -9,13 +9,18 @@ import { Form, Input, Select } from 'formik-antd'
 import * as Yup from 'yup'
 import classNames from 'classnames'
 import useWindowSize from '../../../..//hooks/useWindowSize'
-
+import {
+  defaultThemes,
+  defaultBgColors,
+  treeData,
+} from '../../../../mocks/vouchers'
 import {
   HomeOutlined,
   EditOutlined,
   RightOutlined,
   CheckCircleFilled,
   CloudUploadOutlined,
+  LeftOutlined,
 } from '@ant-design/icons'
 import {
   Breadcrumb,
@@ -33,120 +38,6 @@ import CommonHeader from '../../../../components/CommonHeader'
 // const { TextArea } = Input
 const { Option } = Select
 const { TextArea } = Input
-
-const arrangeTitle = (
-  title: string | number | JSX.Element = '',
-  subTitle: string | number | JSX.Element = ''
-) => {
-  return (
-    <span className="title">
-      <span className="main">{title}</span>
-      {subTitle && (
-        <span className="sub" style={{ marginTop: '2.5px' }}>
-          {subTitle}
-        </span>
-      )}
-    </span>
-  )
-}
-
-const defaultThemes = [
-  {
-    name: 'Love',
-    url:
-      'https://resize.indiatvnews.com/en/resize/newbucket/1200_-/2020/02/valentines-day-1581614371.jpg',
-  },
-  {
-    name: 'Birthday 1',
-    url:
-      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-birthday-instagram-captions-1584723902.jpg',
-  },
-  {
-    name: 'Birthday 2',
-    url:
-      'https://thumbs.dreamstime.com/b/happy-birthday-cupcake-celebration-message-160558421.jpg',
-  },
-]
-
-const defaultBgColors = [
-  {
-    background: 'linear-gradient(105.26deg, #6E4BF6 2.87%, #B94AF4 100%)',
-    selected: false,
-  },
-  {
-    background: 'linear-gradient(67.52deg, #FDB720 0%, #E86D22 92.36%)',
-    selected: false,
-  },
-  {
-    background: 'linear-gradient(67.52deg, #5AA8FF 0%, #077DFF 92.36%)',
-    selected: false,
-  },
-  {
-    background: 'linear-gradient(67.52deg, #00A36E 0%, #00A69B 92.36%)',
-    selected: false,
-  },
-]
-
-const treeData = [
-  {
-    title: arrangeTitle('Seasonal Offers (8)'),
-    key: 2,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 2.1,
-      },
-      {
-        title: arrangeTitle('2 ml contour', '1h'),
-        key: 2.2,
-      },
-      {
-        title: arrangeTitle('1 ml filler', '1h 25min'),
-        key: 2.3,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Special Offers (12)'),
-    key: 3,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 3.1,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Face Services (23)'),
-    key: 4,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 4.1,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Body Services (23)'),
-    key: 5,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 5.1,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Hair Services (23)'),
-    key: 6,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 6.1,
-      },
-    ],
-  },
-]
 
 export interface CreateVoucherProps {
   title?: string
@@ -185,8 +76,8 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     t('giftvouchers.create.label.voucherrelation.para').toString()
   )
   const [voucherBackgrounUrl, setVoucherBackgroundUrl] = useState(null)
-  const [themes, updateThemes] = useState([])
-  const [bgColors, updateBGColors] = useState([])
+  const [themes, updateThemes] = useState(defaultThemes)
+  const [bgColors] = useState(defaultBgColors)
   const [selectedBgColor, setSelectedBGColor] = useState(null)
 
   const [showNextBtn, setShowNextBtn] = useState(true)
@@ -455,7 +346,10 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           >
             <SelectServices
               dataSource={treeData}
-              onChange={(data) => setValue('services', data)}
+              onChange={(data) => {
+                console.log('D:', data)
+                setValue('services', data)
+              }}
               data={values?.services}
             />
           </Form.Item>
@@ -624,11 +518,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     </Form>
   )
 
-  useEffect(() => {
-    updateThemes(defaultThemes)
-    updateBGColors(defaultBgColors)
-  }, [])
-
   const addNewBgImage = async (e) => {
     if (e) {
       const existingThemes = [...themes]
@@ -668,6 +557,18 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                   showNextBtn={showNextBtn}
                   active={activeStep}
                   data={steps}
+                  nextButtonContent={
+                    <span className={styles.dFlex}>
+                      {t('giftvouchers.create.label.nextstep')}{' '}
+                      <RightOutlined style={{ marginLeft: '5px' }} />
+                    </span>
+                  }
+                  prevButtonContent={
+                    <span className={styles.dFlex}>
+                      <LeftOutlined style={{ marginRight: '5px' }} />{' '}
+                      {t('giftvouchers.create.label.prevstep')}
+                    </span>
+                  }
                   onActiveStepChange={(step) =>
                     onStepChange(step, values, handleSubmit)
                   }
@@ -683,7 +584,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                       </Button>
                     )
                   }
-                  allowDisablePrevious={false}
                 >
                   <Row
                     className={classNames(

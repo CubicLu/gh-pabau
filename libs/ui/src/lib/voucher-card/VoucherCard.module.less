@@ -373,3 +373,61 @@
     }
   }
 }
+
+.voucherDrawer {
+  :global {
+    .ant-drawer-content {
+      border-top-right-radius: 24px;
+      border-top-left-radius: 24px;
+
+      .ant-drawer-wrapper-body {
+        .ant-drawer-header {
+          border-bottom: none;
+          button {
+            display: none;
+          }
+          .ant-drawer-title {
+            display: flex;
+            justify-content: center;
+            > div {
+              height: 4px;
+              width: 40px;
+              background-color: #e3e3e5;
+            }
+          }
+        }
+
+        .ant-drawer-body {
+          padding: 0px 0px 10px 0px;
+
+          > div {
+            cursor: pointer;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            > span:first-child {
+              color: #9292a3;
+              font-size: 17.5px;
+            }
+            > span:last-child {
+              font-style: normal;
+              font-weight: normal;
+              font-size: 16px;
+              line-height: 20px;
+              color: #9292a3;
+              padding-left: 10px;
+            }
+            &:hover {
+              background-color: #eef7fb;
+              > span {
+                color: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

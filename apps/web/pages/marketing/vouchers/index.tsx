@@ -2,145 +2,27 @@ import React, { FC, useState, useEffect } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { ApartmentOutlined } from '@ant-design/icons'
 import {
-  SearchOutlined,
-  FilterOutlined,
-  ApartmentOutlined,
-} from '@ant-design/icons'
-import { Input } from 'antd'
-import { TabbedTable, Button, VoucherCard, Pagination, Table } from '@pabau/ui'
+  TabbedTable,
+  Button,
+  VoucherCard,
+  Pagination,
+  Table,
+  BasicModal as TermsModal,
+} from '@pabau/ui'
 import CommonHeader from '../../../components/CommonHeader'
+import AddButton from '../../../components/AddButton'
 import useWindowSize from '../../../hooks/useWindowSize'
 import VoucherIcon from '../../../components/Marketing/GiftVouchersList/assets/VocherIcon.svg'
-import { Card, Row, Col } from 'antd'
+import { data, giftCardSettings } from '../../../mocks/vouchers'
+import { Card, Row, Col, Typography } from 'antd'
 import Link from 'next/link'
 import styles from './index.module.less'
 
-const giftCardSettings = {
-  cardWidth: 500,
-  backgroundColor1: '#9013FE',
-  backgroundColor2: '#BD10E0',
-  gradientType: 'linear-gradient',
-  borderColor: '#000',
-  bookNowButton: true,
-  buttonLabel: 'Book Now',
-  dotMenuShow: true,
+const { Paragraph } = Typography
 
-  voucherType: '',
-  voucherNum: 100001,
-  voucherPrice: 100,
-  voucherPriceLabel: 'Voucher Value',
-  voucherSoldPrice: 100,
-  voucherSoldPriceLabel: 'Sold 5',
-  voucherRelation: 'Family',
-  voucherRelationLabel: 'Redeem on all services',
-  currencyType: '£',
-  termsConditions: `
-    lorem ipsum, quia dolor sit, amet, consectetur, adipisci
-    velit, sed quia non numquam eius modi tempora incidunt, ut
-    labore et dolore magnam aliquam quaerat voluptatem.
-  `,
-}
-
-const data = [
-  {
-    id: 1,
-    key: '1',
-    number: '7214771214',
-    description: 'FTT Voucher',
-    name: 'FTT Voucher',
-    purchase_date: '14/01/2021',
-    expiry_date: '14/01/2022',
-    amount: 100,
-    remaining_balance: '£100',
-    is_active: 1,
-    index: 0,
-  },
-  {
-    id: 2,
-    key: '2',
-    number: '7214771214',
-    description: 'FTT Voucher',
-    name: 'FTT Voucher',
-    purchase_date: '14/01/2021',
-    expiry_date: '14/01/2022',
-    amount: 100,
-    remaining_balance: '£100',
-    is_active: 0,
-    index: 1,
-  },
-  {
-    id: 3,
-    key: '3',
-    number: '7214771214',
-    description: 'FTT Voucher',
-    name: 'FTT Voucher',
-    purchase_date: '14/01/2021',
-    expiry_date: '14/01/2022',
-    amount: 100,
-    remaining_balance: '£100',
-    is_active: 0,
-    index: 2,
-  },
-  {
-    id: 4,
-    key: '4',
-    number: '7214771214',
-    description: 'FTT Voucher',
-    name: 'FTT Voucher',
-    purchase_date: '14/01/2021',
-    expiry_date: '14/01/2022',
-    amount: 100,
-    remaining_balance: '£100',
-    is_active: 1,
-    index: 3,
-  },
-  {
-    id: 5,
-    key: '5',
-    number: '7214771214',
-    description: 'FTT Voucher',
-    name: 'FTT Voucher',
-    purchase_date: '14/01/2021',
-    expiry_date: '14/01/2022',
-    amount: 100,
-    remaining_balance: '£100',
-    is_active: 1,
-    index: 4,
-  },
-  {
-    id: 6,
-    key: '6',
-    number: '7214771214',
-    description: 'FTT Voucher',
-    name: 'FTT Voucher',
-    purchase_date: '14/01/2021',
-    expiry_date: '14/01/2022',
-    amount: 100,
-    remaining_balance: '£100',
-    is_active: 0,
-    index: 5,
-  },
-  {
-    id: 7,
-    key: '7',
-    number: '7214771214',
-    description: 'FTT Voucher',
-    name: 'FTT Voucher',
-    purchase_date: '14/01/2021',
-    expiry_date: '14/01/2022',
-    amount: 100,
-    remaining_balance: '£100',
-    is_active: 0,
-    index: 6,
-  },
-]
-
-export interface GiftVouchersProps {
-  title?: string
-}
-
-const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
+const GiftVouchers: FC = () => {
   const { t } = useTranslationI18()
   const size = useWindowSize()
   const user = useUser()
@@ -190,7 +72,7 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
       visible: true,
     },
     {
-      title: <span style={{ visibility: 'hidden' }}>view</span>,
+      title: '',
       dataIndex: 'view',
       visible: true,
       className: 'lastColumn',
@@ -213,6 +95,8 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
   const [paginationState, setPaginationState] = useState(true)
   const [dataSource, setDataSource] = useState(null)
   const [activeTab, setActiveTab] = useState(tabItems[0])
+  const [showTermsModal, setShowTermsModal] = useState(false)
+  const [selectedVoucher, setSelectedVoucher] = useState(null)
 
   const CardHeader = () => (
     <div className={styles.header}>
@@ -231,18 +115,15 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
         )}
         {activeTab === tabItems[1] && (
           <div>
-            <Input
-              className={styles.searchDrugsListing}
-              autoFocus
-              placeholder={t('giftvouchers.search.placeholder')}
-              suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
-              onChange={(e) => {
-                setSearchTerm(e.target.value)
+            <AddButton
+              addFilter
+              tableSearch
+              onFilterSource={() => false}
+              schema={{
+                searchPlaceholder: t('giftvouchers.search.placeholder'),
               }}
+              onSearch={(data) => setSearchTerm(data)}
             />
-            <Button type="default" size="large">
-              <FilterOutlined /> {t('giftvouchers.filter')}
-            </Button>
           </div>
         )}
       </div>
@@ -251,30 +132,30 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
 
   useEffect(() => {
     setGifts([
-      { ...giftCardSettings },
-      { ...giftCardSettings },
+      { ...giftCardSettings(t) },
+      { ...giftCardSettings(t) },
       {
-        ...giftCardSettings,
+        ...giftCardSettings(t),
         gradientType: 'linear-gradient',
         voucherType: 'birthday',
       },
       {
-        ...giftCardSettings,
+        ...giftCardSettings(t),
         gradientType: 'linear-gradient',
         voucherType: 'valentine',
       },
       {
-        ...giftCardSettings,
+        ...giftCardSettings(t),
         gradientType: 'radial-gradient',
       },
       {
-        ...giftCardSettings,
+        ...giftCardSettings(t),
         gradientType: 'linear-gradient',
         voucherType: 'flowers',
       },
     ])
     setDataSource(data)
-  }, [])
+  }, [t])
 
   const onTabChange = (tab) => {
     switch (tabItems[tab]) {
@@ -285,6 +166,17 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
       case tabItems[1]:
         setActiveTab(tabItems[1])
         setPaginationState(true)
+        break
+      default:
+        return
+    }
+  }
+
+  const onMenuClick = (key, data) => {
+    switch (key) {
+      case 4:
+        setSelectedVoucher(data)
+        setShowTermsModal(() => true)
         break
       default:
         return
@@ -313,7 +205,11 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
                         key={`col-key-${key * 123}`}
                       >
                         <div className={styles.voucherCard}>
-                          <VoucherCard {...gift} />
+                          <VoucherCard
+                            onMenuClick={(key) => onMenuClick(key, gift)}
+                            showDrawerMenu={size.width < 768}
+                            {...gift}
+                          />
                         </div>
                       </Col>
                     ))
@@ -362,6 +258,32 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
             />
           </div>
         )}
+        <TermsModal
+          width={800}
+          visible={showTermsModal}
+          onCancel={() => {
+            setShowTermsModal(() => false)
+            setSelectedVoucher(null)
+          }}
+          title={t('giftvouchers.create.label.terms')}
+          closable={size?.width > 767 ? true : false}
+        >
+          <Paragraph className={styles.modalTerms}>
+            {selectedVoucher?.termsConditions}
+          </Paragraph>
+          {size?.width < 768 && (
+            <div className={styles.closeBtn}>
+              <Button
+                onClick={() => {
+                  setShowTermsModal(() => false)
+                  setSelectedVoucher(null)
+                }}
+              >
+                {t('common-label-cancel')}
+              </Button>
+            </div>
+          )}
+        </TermsModal>
       </div>
     </Layout>
   )

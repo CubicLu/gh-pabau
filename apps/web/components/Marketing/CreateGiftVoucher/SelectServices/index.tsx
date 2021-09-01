@@ -22,6 +22,7 @@ const arrangeTitle = (
 }
 export interface SingleCheckBoxDropDown {
   title: string | number | JSX.Element
+  label?: string | number | JSX.Element
   key: string | number
   children?: SingleCheckBoxDropDown[]
 }
@@ -29,7 +30,7 @@ export interface SingleCheckBoxDropDown {
 interface SelectServiceProps {
   dataSource: SingleCheckBoxDropDown[]
   onChange?: (data) => void
-  data?: number[]
+  data?: number[] | string[]
 }
 
 export const SelectService: FC<SelectServiceProps> = ({
@@ -38,28 +39,32 @@ export const SelectService: FC<SelectServiceProps> = ({
   data,
 }) => {
   const [servicesModal, toggleServicesModal] = useState(false)
-  const [selectedServices, setSelectedServices] = useState([])
+  const [selectedServices, setSelectedServices] = useState(data)
   const [totalService, setTotalService] = useState(0)
   const [treeData, setTreeData] = useState<SingleCheckBoxDropDown[]>([])
+  const [cTreeData, setCTreeData] = useState<SingleCheckBoxDropDown[]>([])
   const { t } = useTranslationI18()
 
-  const onSave = () => {
-    toggleServicesModal((servicesModal) => !servicesModal)
-    const keys = [...selectedServices]
-    if (selectedServices.includes('all')) {
-      const index = keys.indexOf('all')
-      keys.splice(index, 1)
-    }
-    onChange?.(keys)
-  }
-
   useEffect(() => {
-    const firsObj: SingleCheckBoxDropDown = {
-      title: arrangeTitle(t('giftvouchers.create.label.selectall').toString()),
-      key: 'all',
-      children: dataSource,
+    const updatedTreeData = (data) => {
+      return data?.map((el) => {
+        if (
+          el?.label &&
+          (typeof el?.title === 'string' || typeof el?.title === 'number')
+        )
+          el.title = arrangeTitle(el.title, el?.label)
+        if (el?.children) updatedTreeData(el?.children)
+        return el
+      })
     }
-    setTreeData([firsObj])
+    const data = updatedTreeData(dataSource)
+    const finalTreeData: SingleCheckBoxDropDown = {
+      title: t('selectservices.label.selectall').toString(),
+      key: 'all',
+      children: data,
+    }
+    setTreeData([finalTreeData])
+    setCTreeData([finalTreeData])
 
     let keys: string[] = []
     function countKeys(data) {
@@ -74,11 +79,44 @@ export const SelectService: FC<SelectServiceProps> = ({
     if (keys.length > 0) {
       setTotalService(keys.length)
     }
-    setSelectedServices(data)
-  }, [data, dataSource, t])
+  }, [dataSource, t])
+
+  const onSave = () => {
+    toggleServicesModal((servicesModal) => !servicesModal)
+    const keys = [...selectedServices]
+    onChange?.(keys)
+  }
 
   const onCheck = (checkedKeysValue: string[]) => {
+    console.log('C:', checkedKeysValue)
+    if ((checkedKeysValue as string[]).includes('all')) {
+      const index = checkedKeysValue.indexOf('all')
+      checkedKeysValue.splice(index, 1)
+    }
     setSelectedServices(checkedKeysValue)
+  }
+
+  const onSearch = (value) => {
+    if (value) {
+      const search = (data) => {
+        return data.filter((el) => {
+          if (
+            el?.title
+              ?.toString()
+              ?.toLowerCase()
+              ?.includes(value?.toLowerCase()) ||
+            el?.label?.toString()?.toLowerCase()?.includes(value?.toLowerCase())
+          ) {
+            return el
+          }
+          return null
+        })
+      }
+      const results = search(dataSource)
+      setTreeData(results)
+    } else {
+      setTreeData(cTreeData)
+    }
   }
 
   return (
@@ -89,10 +127,10 @@ export const SelectService: FC<SelectServiceProps> = ({
         size="large"
         value={
           selectedServices.length === totalService
-            ? t('giftvouchers.create.label.allservice').toString()
+            ? t('selectservices.label.allservice').toString()
             : selectedServices.length > 0
             ? `${selectedServices.length} ${t(
-                'giftvouchers.create.label.countedservices'
+                'selectservices.label.countedservices'
               )}`
             : null
         }
@@ -109,7 +147,7 @@ export const SelectService: FC<SelectServiceProps> = ({
       />
       <BasicModal
         visible={servicesModal}
-        title={t('giftvouchers.create.label.selectservices')}
+        title={t('selectservices.label.selectservices')}
         className="servicesModal"
         width={800}
         onCancel={() => toggleServicesModal((modal) => !modal)}
@@ -118,8 +156,9 @@ export const SelectService: FC<SelectServiceProps> = ({
           <Input
             type="text"
             size="large"
-            placeholder={t('giftvouchers.create.label.searchservices')}
+            placeholder={t('selectservices.label.searchservices')}
             suffix={<SearchOutlined />}
+            onChange={(e) => onSearch(e?.target?.value)}
           />
         </div>
         <div className={styles.serviceInputSearch}>
@@ -127,7 +166,7 @@ export const SelectService: FC<SelectServiceProps> = ({
             checkable
             defaultExpandAll={true}
             onCheck={onCheck}
-            checkedKeys={selectedServices}
+            checkedKeys={selectedServices as string[]}
             treeData={treeData}
             showIcon={true}
             blockNode={true}
@@ -137,13 +176,13 @@ export const SelectService: FC<SelectServiceProps> = ({
         </div>
         <div className={styles.saveBtn}>
           <Button type="primary" size="large" onClick={onSave}>
-            {t('giftvouchers.create.label.save')}{' '}
+            {t('common-label-save')}{' '}
             {selectedServices?.length > 0
-              ? selectedServices.includes('all')
+              ? (selectedServices as string[]).includes('all')
                 ? selectedServices.length - 1
                 : selectedServices.length
               : ''}{' '}
-            {t('giftvouchers.create.label.countedservices')}
+            {t('selectservices.label.countedservices')}
           </Button>
         </div>
       </BasicModal>
