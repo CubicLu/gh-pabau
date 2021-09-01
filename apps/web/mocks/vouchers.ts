@@ -1,4 +1,6 @@
 import { TFunction } from 'i18next'
+import Love from '../assets/images/love.png'
+import Birthday from '../assets/images/birthday.png'
 
 export const giftCardSettings = (t: TFunction) => {
   return {
@@ -31,18 +33,11 @@ export const giftCardSettings = (t: TFunction) => {
 export const defaultThemes = [
   {
     name: 'Love',
-    url:
-      'https://resize.indiatvnews.com/en/resize/newbucket/1200_-/2020/02/valentines-day-1581614371.jpg',
+    url: Love,
   },
   {
-    name: 'Birthday 1',
-    url:
-      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-birthday-instagram-captions-1584723902.jpg',
-  },
-  {
-    name: 'Birthday 2',
-    url:
-      'https://thumbs.dreamstime.com/b/happy-birthday-cupcake-celebration-message-160558421.jpg',
+    name: 'Birthday',
+    url: Birthday,
   },
 ]
 
@@ -50,18 +45,22 @@ export const defaultBgColors = [
   {
     background: 'linear-gradient(105.26deg, #6E4BF6 2.87%, #B94AF4 100%)',
     selected: false,
+    name: 'Purple',
   },
   {
     background: 'linear-gradient(67.52deg, #FDB720 0%, #E86D22 92.36%)',
     selected: false,
+    name: 'Orange',
   },
   {
     background: 'linear-gradient(67.52deg, #5AA8FF 0%, #077DFF 92.36%)',
     selected: false,
+    name: 'Blue',
   },
   {
     background: 'linear-gradient(67.52deg, #00A36E 0%, #00A69B 92.36%)',
     selected: false,
+    name: 'Green',
   },
 ]
 

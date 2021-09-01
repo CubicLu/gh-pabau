@@ -21,6 +21,7 @@ import {
   CheckCircleFilled,
   CloudUploadOutlined,
   LeftOutlined,
+  PoweroffOutlined,
 } from '@ant-design/icons'
 import {
   Breadcrumb,
@@ -67,7 +68,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
       step: 2,
     },
   ]
-  const [activeStep, setActiveStep] = useState(0)
+  const [activeStep, setActiveStep] = useState(1)
   const [bookBtn, setBookBtn] = useState(false)
   const [voucherRelation] = useState(
     t('giftvouchers.create.label.voucherrelation').toString()
@@ -75,11 +76,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   const [voucherRelationLabel] = useState(
     t('giftvouchers.create.label.voucherrelation.para').toString()
   )
-  const [voucherBackgrounUrl, setVoucherBackgroundUrl] = useState(null)
   const [themes, updateThemes] = useState(defaultThemes)
-  const [bgColors] = useState(defaultBgColors)
-  const [selectedBgColor, setSelectedBGColor] = useState(null)
-
   const [showNextBtn, setShowNextBtn] = useState(true)
   const [showExtraBtn, setShowExtraBtn] = useState(false)
 
@@ -90,6 +87,8 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     validity: '',
     services: '',
     note: '',
+    bgColor: defaultBgColors?.[0]?.background,
+    bgUrl: '',
   })
 
   const step0Schema = Yup.object({
@@ -202,11 +201,9 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
       <div className={styles.previewCard}>
         <div className={styles.vCard}>
           <VoucherCard
-            backgroundColor1="#9013FE"
-            backgroundColor2="#BD10E0"
             borderColor="#000"
-            voucherBackgrounUrl={voucherBackgrounUrl}
-            background={selectedBgColor?.background}
+            voucherBackgrounUrl={values?.bgUrl}
+            background={values?.bgColor}
             buttonLabel={t('giftvouchers.create.label.booknow')}
             bookNowButton={bookBtn}
             gradientType="linear-gradient"
@@ -427,6 +424,23 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             </div>
             <div>
               <Row>
+                <Col
+                  lg={6}
+                  md={6}
+                  sm={6}
+                  xs={6}
+                  className={classNames(styles.bgImgTheme, aligns[0 % 4])}
+                >
+                  <div
+                    onClick={() => {
+                      setValue('bgColor', defaultBgColors?.[0]?.background)
+                      setValue('bgUrl', null)
+                    }}
+                  >
+                    <PoweroffOutlined />
+                  </div>
+                  <span>{'None'}</span>
+                </Col>
                 {themes?.length &&
                   themes.map((el, key) => (
                     <Col
@@ -439,19 +453,17 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                     >
                       <div
                         onClick={() => {
-                          setSelectedBGColor(null)
-                          setVoucherBackgroundUrl(el.url)
+                          setValue('bgColor', null)
+                          setValue('bgUrl', el.url)
                         }}
                         style={{
                           backgroundImage: `url(${el?.url})`,
                         }}
                         className={
-                          el.url === voucherBackgrounUrl && styles.selectedColor
+                          el.url === values?.bgUrl && styles.selectedColor
                         }
                       >
-                        {el.url === voucherBackgrounUrl && (
-                          <CheckCircleFilled />
-                        )}
+                        {el.url === values?.bgUrl && <CheckCircleFilled />}
                       </div>
                       <span>{el?.name}</span>
                     </Col>
@@ -480,8 +492,8 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             </div>
             <div>
               <Row>
-                {bgColors?.length &&
-                  bgColors.map((el, key) => (
+                {defaultBgColors?.length &&
+                  defaultBgColors.map((el, key) => (
                     <Col
                       key={`col-${key}`}
                       lg={6}
@@ -495,19 +507,20 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                     >
                       <div
                         onClick={() => {
-                          setSelectedBGColor(el)
-                          setVoucherBackgroundUrl(null)
+                          setValue('bgColor', el?.background)
+                          setValue('bgUrl', null)
                         }}
                         style={{ background: el.background }}
                         className={
-                          el.background === selectedBgColor?.background &&
+                          el.background === values?.bgColor &&
                           styles.selectedColor
                         }
                       >
-                        {el.background === selectedBgColor?.background && (
+                        {el.background === values?.bgColor && (
                           <CheckCircleFilled />
                         )}
                       </div>
+                      <span>{el?.name}</span>
                     </Col>
                   ))}
               </Row>
@@ -518,7 +531,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     </Form>
   )
 
-  const addNewBgImage = async (e) => {
+  const addNewBgImage = async (e, setValue) => {
     if (e) {
       const existingThemes = [...themes]
       const file = e.target.files[0]
@@ -529,8 +542,8 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           url: url,
         })
         await updateThemes(existingThemes)
-        setSelectedBGColor(null)
-        setVoucherBackgroundUrl(url)
+        setValue('bgColor', null)
+        setValue('bgUrl', url)
       }
     }
   }
@@ -666,7 +679,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                   type="file"
                   accept=".jpg, .png"
                   ref={bgSelectRef}
-                  onChange={addNewBgImage}
+                  onChange={(e) => addNewBgImage(e, setFieldValue)}
                 />
               </div>
             </Card>
