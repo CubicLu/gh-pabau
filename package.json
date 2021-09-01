@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.549",
+  "version": "2.0.550",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -293,8 +293,8 @@
     "eslint-plugin-tsdoc": "0.2.14",
     "eslint-plugin-unicorn": "31.0.0",
     "eslint-plugin-you-dont-need-lodash-underscore": "6.12.0",
-    "hasura-cli": "2.0.7",
     "graphql-request": "3.5.0",
+    "hasura-cli": "2.0.7",
     "husky": "7.0.1",
     "jest": "27.0.6",
     "jest-fail-on-console-reporter": "0.1.0",
