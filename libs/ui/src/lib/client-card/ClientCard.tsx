@@ -57,6 +57,7 @@ import { ReactComponent as Note } from '../../assets/images/client-card-ops/note
 import { ReactComponent as Alert } from '../../assets/images/client-card-ops/alert.svg'
 import { ReactComponent as SvgPathway } from '../../assets/images/popout/pathway.svg'
 import { ReactComponent as SvgTreatment } from '../../assets/images/popout/treatment.svg'
+import { ReactComponent as SvgConsent } from '../../assets/images/popout/consent.svg'
 import { ReactComponent as SvgRequest } from '../../assets/images/popout/request.svg'
 import { ReactComponent as SvgPrescription } from '../../assets/images/popout/prescription.svg'
 import { ReactComponent as SvgAppointment } from '../../assets/images/popout/appointment.svg'
@@ -292,6 +293,16 @@ const ClientCardModal: FC<ClientCardProps> = ({
       handler: () => handleCreatePopout('treatment'),
     },
     {
+      name: t('dashboard.create.menu.item.consent.title'),
+      icon: (
+        <div className={styles.pencilIconContainer}>
+          <SvgConsent className={styles.pencilIcon} />
+        </div>
+      ),
+      description: t('dashboard.create.menu.item.consent.description'),
+      handler: () => handleCreatePopout('consent'),
+    },
+    {
       name: t('dashboard.create.menu.item.request.title'),
       icon: <SvgRequest className={styles.menuItemIcon} />,
       description: t('dashboard.create.menu.item.request.description'),
@@ -443,6 +454,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
         break
       }
       case 'treatment': {
+        item = {
+          type,
+          title: t('dashboard.create.modal.create.form.title'),
+          receiverData: uuidv4(),
+          client: defaultClient,
+        }
+        break
+      }
+      case 'consent': {
         item = {
           type,
           title: t('dashboard.create.modal.create.form.title'),

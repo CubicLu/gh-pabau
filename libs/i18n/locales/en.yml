@@ -3559,6 +3559,8 @@ en:
   dashboard.create.menu.item.pathway.description: 'Share a photo or write something'
   dashboard.create.menu.item.treatment.title: 'Treatment note'
   dashboard.create.menu.item.treatment.description: 'Create a treatment note'
+  dashboard.create.menu.item.consent.title: 'Consent Form'
+  dashboard.create.menu.item.consent.description: 'Create a consent form'
   dashboard.create.menu.item.request.title: 'Request Labs'
   dashboard.create.menu.item.request.description: 'Create a lab request'
   dashboard.create.menu.item.prescription.title: 'Prescription'
