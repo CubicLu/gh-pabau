@@ -20,6 +20,11 @@ query getSecurityTab {
   me {
     last_login
     passcode
+    company_details: CompanyDetails {
+      timezone {
+        offset_seconds
+      }
+    }
   }
 }
 

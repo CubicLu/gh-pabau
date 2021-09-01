@@ -150,6 +150,16 @@ export const ActivityQuery = extendType({
         delete activitySelect?.select?.CmContact?.select?.clientTotalActivities
         delete activitySelect?.select?.duration
 
+        input.where = Object.entries(input.where).reduce(
+          (acc, [key, value]) => {
+            if (value) {
+              acc[key] = value
+            }
+            return acc
+          },
+          {}
+        )
+
         try {
           const prepareSearchQuery =
             input.where?.search &&
@@ -171,7 +181,7 @@ export const ActivityQuery = extendType({
               },
               ActivityType: { name: { in: input.where?.activityType } },
               status: { in: input.where?.status },
-              User: {
+              AssignedUser: {
                 id: { equals: input.where?.userId },
               },
               AND: {
@@ -294,7 +304,7 @@ export const ActivityQuery = extendType({
                 },
                 ActivityType: { name: { in: input.where?.activityType } },
                 status: { in: input.where?.status },
-                User: {
+                AssignedUser: {
                   id: { equals: input.where?.userId },
                 },
                 AND: {

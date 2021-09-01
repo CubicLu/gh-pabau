@@ -23,7 +23,6 @@ export default {
     voucherRelation: 'Family',
     voucherRelationLabel: 'Redeem on all services',
     currencyType: '£',
-
     termsConditions: `
       lorem ipsum, quia dolor sit, amet, consectetur, adipisci
       velit, sed quia non numquam eius modi tempora incidunt, ut

@@ -6,6 +6,7 @@ import {
   ExclamationCircleOutlined,
   NotificationOutlined,
 } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 import styles from './VoucherCard.module.less'
 import classNames from 'classnames'
 import { Drawer } from 'antd'
@@ -36,7 +37,7 @@ export interface VoucherCardProps {
   voucherRelationLabel: string
   currencyType?: string
   termsConditions?: string
-  voucherBackgrounUrl?: string
+  voucherBackgroundUrl?: string
   showMenu?: boolean
   menuOptions?: MenuOption[]
   onMenuClick?: (key) => void
@@ -65,14 +66,20 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   voucherRelationLabel,
   currencyType = '$',
   termsConditions = 'N/A',
-  voucherBackgrounUrl,
+  voucherBackgroundUrl,
   showDrawerMenu = false,
 }) => {
+  const { t } = useTranslation('common')
   const cardRef = useRef<HTMLDivElement>(null)
   const voucherTypes = ['flowers', 'valentine', 'birthday']
   const [menuPopover, setMenuPopover] = useState(false)
 
   const defaultMenuOptions: MenuOption[] = [
+    {
+      key: 1,
+      icon: <EditOutlined />,
+      label: 'Edit',
+    },
     {
       key: 1,
       icon: <EditOutlined />,
@@ -130,8 +137,8 @@ export const VoucherCard: FC<VoucherCardProps> = ({
             className={`flip-card-front ${voucherType}`}
             style={
               !voucherType && !voucherTypes.includes(voucherType)
-                ? voucherBackgrounUrl
-                  ? { backgroundImage: `url(${voucherBackgrounUrl})` }
+                ? voucherBackgroundUrl
+                  ? { backgroundImage: `url(${voucherBackgroundUrl})` }
                   : background
                   ? { background: background }
                   : { ...cardFaceBgColor }
@@ -141,7 +148,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
             <div
               className={classNames(
                 styles.dots,
-                (voucherBackgrounUrl || voucherType) && styles.bgOpacity
+                (voucherBackgroundUrl || voucherType) && styles.bgOpacity
               )}
             >
               <div className="dotsInner">
@@ -225,7 +232,6 @@ export const VoucherCard: FC<VoucherCardProps> = ({
               </div>
             </div>
           </div>
-
           <div className="flip-card-back" style={{ borderColor }}>
             <div className={styles.dots}>
               <div className="dotsInner">
@@ -241,7 +247,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
             </div>
             <div className={styles.backFaceContent}>
               <div className={styles.pRelative}>
-                <h1>Terms & Conditions</h1>
+                <h1>{t('ui.vouchercard.back.title')}</h1>
                 <p>{termsConditions}</p>
               </div>
             </div>

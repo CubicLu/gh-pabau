@@ -5,6 +5,8 @@ import arya from '../../assets/images/users/arya.png'
 import linda from '../../assets/images/users/linda.png'
 import liza from '../../assets/images/users/liza.png'
 import EmployeeImg from './assets/employees/1.png'
+import { VoucherListProps } from '../client-gift-voucher-layout/ClientGiftVoucherLayout'
+import { VoucherCardProps } from '../voucher-card/VoucherCard'
 import labTests from '../../assets/images/lab-tests.svg'
 import Prescriptions2 from '../../assets/images/user2.png'
 
@@ -1105,6 +1107,68 @@ export const serviceData = [
     ],
   },
 ]
+
+export const vouchers = (): Record<string, VoucherListProps[]> => {
+  const voucher: VoucherCardProps = {
+    cardWidth: 500,
+    backgroundColor1: '#9013FE',
+    backgroundColor2: '#BD10E0',
+    borderColor: '#000',
+    gradientType: 'linear-gradient',
+    bookNowButton: false,
+    voucherPrice: 100,
+    voucherPriceLabel: 'Voucher Value',
+    voucherSoldPrice: 100,
+    voucherSoldPriceLabel: 'Sold 5',
+    voucherRelation: 'Family',
+    voucherRelationLabel: 'Redeem on all services',
+    currencyType: '£',
+    dotMenuShow: true,
+    buttonLabel: '',
+    voucherType: '',
+    termsConditions:
+      'lorem ipsum, quia dolor sit, amet, consectetur, adipiscivelit, sed quia non numquam eius modi tempora incidunt, utlabore et dolore magnam aliquam quaerat voluptatem.',
+    onMenuClick: () => {
+      return
+    },
+  }
+
+  const activeVouchers: VoucherListProps[] = [
+    {
+      id: 1,
+      validTill: '2021-08-30T11:50:05.916Z',
+      voucher: {
+        ...voucher,
+        backgroundColor1: '#5AA8FF',
+        backgroundColor2: '#077DFF',
+      },
+    },
+    {
+      id: 2,
+      validTill: '2021-08-01T11:50:05.916Z',
+      voucher: {
+        ...voucher,
+        backgroundColor1: '#FDB720',
+        backgroundColor2: '#E86D22',
+      },
+    },
+  ]
+
+  const expiredVouchers: VoucherListProps[] = [
+    {
+      id: 3,
+      validTill: '2019-07-31T10:04:25.000Z',
+      voucher: {
+        ...voucher,
+      },
+    },
+  ]
+
+  return {
+    activeVouchers,
+    expiredVouchers,
+  }
+}
 
 export const testList = [
   {
