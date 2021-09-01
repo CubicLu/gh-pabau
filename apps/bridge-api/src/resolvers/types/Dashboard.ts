@@ -9,8 +9,8 @@ export interface DateRangeInput {
   is_active: number
 }
 
-export const BookingStatusInputType = inputObjectType({
-  name: 'BookingStatusInputType',
+export const DashboardInputType = inputObjectType({
+  name: 'DashboardInputType',
   definition(t) {
     t.nonNull.decimal('start_date')
     t.nonNull.decimal('end_date')
@@ -18,14 +18,14 @@ export const BookingStatusInputType = inputObjectType({
   },
 })
 
-export const getBookingStatus = extendType({
+export const getDashboardData = extendType({
   type: 'Query',
   definition(t) {
-    t.field('getBookingStatus', {
+    t.field('getDashboardData', {
       type: 'Json',
       description: 'get booking status count for particular status',
       args: {
-        data: arg({ type: BookingStatusInputType }),
+        data: arg({ type: DashboardInputType }),
       },
       async resolve(_root, { data }, ctx: Context) {
         const bookingStatus = await retrieveBookingStatuses(ctx, data)

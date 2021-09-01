@@ -1239,32 +1239,23 @@ export const retrieveSalesCount = async (
     },
   })
 
-  let SalesList = []
+  const SalesList = []
 
   if (salesCount) {
-    if (salesCount.length > 0) {
-      salesCount?.map((item) => {
-        if (item.product_category_type !== '') {
-          SalesList.push({
-            label: item.product_category_type,
-            count: item._count.id,
-            per:
-              (
-                ((item._count.id ?? 0) * 100) /
-                (totalSalesCount?._count?.id ?? 0)
-              ).toFixed(2) + '%',
-          })
-        }
-        return item
-      })
-    } else {
-      SalesList = [
-        { label: 'Services', count: 0, per: '0.00%' },
-        { label: 'Products', count: 0, per: '0.00%' },
-        { label: 'Packages', count: 0, per: '0.00%' },
-        { label: 'Gift Vouchers', count: 0, per: '0.00%' },
-      ]
-    }
+    salesCount?.map((item) => {
+      if (item.product_category_type !== '') {
+        SalesList.push({
+          label: item.product_category_type,
+          count: item._count.id,
+          per:
+            (
+              ((item._count.id ?? 0) * 100) /
+              (totalSalesCount?._count?.id ?? 0)
+            ).toFixed(2) + '%',
+        })
+      }
+      return item
+    })
   }
   return {
     totalSalesCounts: totalSalesCount?._count?.id ?? 0,

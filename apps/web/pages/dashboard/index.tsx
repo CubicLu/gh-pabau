@@ -1,11 +1,14 @@
-/* eslint-disable graphql/template-strings */
 import React, { useState, useEffect, useMemo } from 'react'
 import { Avatar, Button, MobileHeader, RangePicker } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
 import styles from './dashboard.module.less'
 import { useUser } from '../../context/UserContext'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { useMedia } from 'react-use'
+import {
+  GetCompanyLocationListDocument,
+  GetDashboardDataDocument,
+} from '@pabau/graphql'
 import {
   DownOutlined,
   UpOutlined,
@@ -19,6 +22,12 @@ import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
 import { locationList } from '../../mocks/Dashboard'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { ICount } from '../../components/Dashboard/TopBoard/TopBoard'
+import {
+  defaultAppointmentList,
+  defaultOnlineAppointmentList,
+  defaultSalesList,
+} from '../../mocks/Dashboard'
 
 interface ISetUser {
   key: string
@@ -29,35 +38,6 @@ interface ISetUser {
 
 const { Title } = Typography
 const { Option } = Select
-
-const GET_LOCATION_LIST = gql`
-  query getLocationList($company_id: Int!, $is_active: Int!) {
-    findManyCompanyBranch(
-      where: {
-        company_id: { equals: $company_id }
-        is_active: { equals: $is_active }
-      }
-    ) {
-      name
-    }
-  }
-`
-
-const GET_APPOINTMENT_COUNTS = gql`
-  query get_status(
-    $start_date: Decimal!
-    $end_date: Decimal!
-    $is_active: Int!
-  ) {
-    getBookingStatus(
-      data: {
-        start_date: $start_date
-        end_date: $end_date
-        is_active: $is_active
-      }
-    )
-  }
-`
 
 export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -83,6 +63,13 @@ export function Index() {
     dayjs().startOf('month'),
     dayjs(),
   ])
+  const [appointment, setAppointment] = useState<ICount[]>(
+    defaultAppointmentList
+  )
+  const [onlineAppointment, setOnlineAppointment] = useState<ICount[]>(
+    defaultOnlineAppointmentList
+  )
+  const [sales, setSales] = useState<ICount[]>(defaultSalesList)
   const [totalBooking, setTotalBooking] = useState({
     count: 0,
     per: '0%',
@@ -95,7 +82,7 @@ export function Index() {
     count: 0,
     per: '0%',
   })
-  const { data: locations } = useQuery(GET_LOCATION_LIST, {
+  const { data: locations } = useQuery(GetCompanyLocationListDocument, {
     variables: {
       company_id: user?.me?.company,
       is_active: 1,
@@ -116,31 +103,60 @@ export function Index() {
   }, [filterDate])
 
   const { data: appointment_status } = useQuery(
-    GET_APPOINTMENT_COUNTS,
+    GetDashboardDataDocument,
     getAppointmentQueryVariables
   )
   useEffect(() => {
     if (appointment_status) {
+      if (
+        (appointment_status?.getDashboardData?.bookingStatus?.appointmentList)
+          .length > 0
+      ) {
+        setAppointment(
+          appointment_status?.getDashboardData?.bookingStatus?.appointmentList
+        )
+      } else {
+        setAppointment(defaultAppointmentList)
+      }
+      if (
+        (appointment_status?.getDashboardData?.bookingStatus
+          ?.onlineAppointmentList).length > 0
+      ) {
+        setOnlineAppointment(
+          appointment_status?.getDashboardData?.bookingStatus
+            ?.onlineAppointmentList
+        )
+      } else {
+        setOnlineAppointment(defaultOnlineAppointmentList)
+      }
+      if (
+        (appointment_status?.getDashboardData?.salesStatus?.salesList).length >
+        0
+      ) {
+        setSales(appointment_status?.getDashboardData?.salesStatus?.salesList)
+      } else {
+        setSales(defaultSalesList)
+      }
       setTotalBooking({
         count:
-          appointment_status?.getBookingStatus?.bookingStatus?.totalBooking,
+          appointment_status?.getDashboardData?.bookingStatus?.totalBooking,
         per:
-          appointment_status?.getBookingStatus?.bookingStatus?.totalBookingPer,
+          appointment_status?.getDashboardData?.bookingStatus?.totalBookingPer,
       })
       setTotalOnlineBooking({
         count:
-          appointment_status?.getBookingStatus?.bookingStatus
+          appointment_status?.getDashboardData?.bookingStatus
             ?.totalOnlineBooking,
         per:
-          appointment_status?.getBookingStatus?.bookingStatus
+          appointment_status?.getDashboardData?.bookingStatus
             ?.totalOnlineBookingPer,
       })
       setTotalSalesCount({
         count:
-          appointment_status?.getBookingStatus?.salesStatus
+          appointment_status?.getDashboardData?.salesStatus
             ?.totalAvailableCategoryTypeCount,
         per:
-          appointment_status?.getBookingStatus?.salesStatus
+          appointment_status?.getDashboardData?.salesStatus
             ?.totalAvailableCategoryTypePer,
       })
     }
@@ -416,17 +432,9 @@ export function Index() {
           </div>
           <div className={styles.bottomWrapper}>
             <TopBoard
-              appointment={
-                appointment_status?.getBookingStatus?.bookingStatus
-                  ?.appointmentList
-              }
-              onlineAppointment={
-                appointment_status?.getBookingStatus?.bookingStatus
-                  ?.onlineAppointmentList
-              }
-              sales={
-                appointment_status?.getBookingStatus?.salesStatus?.salesList
-              }
+              appointment={appointment}
+              onlineAppointment={onlineAppointment}
+              sales={sales}
               totalBooking={totalBooking}
               totalOnlineBooking={totalOnlineBooking}
               totalSalesCount={totalSalesCount}

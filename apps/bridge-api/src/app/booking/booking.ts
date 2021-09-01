@@ -48,59 +48,40 @@ export const retrieveBookingStatuses = async (
     },
   })
 
-  let onlineAppointment = []
-  let appointment = []
+  const onlineAppointment = []
+  const appointment = []
 
   if (bookingStatusCount) {
-    if (bookingStatusCount.length > 0) {
-      bookingStatusCount?.map((item) => {
-        if (item.status !== '') {
-          appointment.push({
-            label: item.status,
-            count: item._count.id,
-            per:
-              (
-                ((item._count.id ?? 0) * 100) /
-                (totalBookingStatusCount?._count?.id ?? 0)
-              ).toFixed(2) + '%',
-          })
-        }
-        return item
-      })
-    } else {
-      appointment = [
-        { label: 'Completed', count: 0, per: '0.00%' },
-        { label: 'Waiting', count: 0, per: '0.00%' },
-        { label: 'Canceled', count: 0, per: '0.00%' },
-        { label: 'No show', count: 0, per: '0.00%' },
-      ]
-    }
+    bookingStatusCount?.map((item) => {
+      if (item.status !== '') {
+        appointment.push({
+          label: item.status,
+          count: item._count.id,
+          per:
+            (
+              ((item._count.id ?? 0) * 100) /
+              (totalBookingStatusCount?._count?.id ?? 0)
+            ).toFixed(2) + '%',
+        })
+      }
+      return item
+    })
   }
   if (onlineBookingStatusCount) {
-    if (onlineBookingStatusCount.length > 0) {
-      onlineBookingStatusCount?.map((item) => {
-        if (item.status !== '') {
-          onlineAppointment.push({
-            label: item.status,
-            count: item._count.id,
-            per:
-              (
-                ((item._count.id ?? 0) * 100) /
-                (totalOnlineBookingStatusCount?._count?.id ?? 0)
-              ).toFixed(2) + '%',
-          })
-        }
-        return item
-      })
-    } else {
-      onlineAppointment = [
-        { label: 'Completed', count: 0, per: '0.00%' },
-        { label: 'Waiting', count: 0, per: '0.00%' },
-        { label: 'Canceled', count: 0, per: '0.00%' },
-        { label: 'No show', count: 0, per: '0.00%' },
-        { label: 'Deposits', count: 0, per: '0.00%' },
-      ]
-    }
+    onlineBookingStatusCount?.map((item) => {
+      if (item.status !== '') {
+        onlineAppointment.push({
+          label: item.status,
+          count: item._count.id,
+          per:
+            (
+              ((item._count.id ?? 0) * 100) /
+              (totalOnlineBookingStatusCount?._count?.id ?? 0)
+            ).toFixed(2) + '%',
+        })
+      }
+      return item
+    })
   }
 
   return {

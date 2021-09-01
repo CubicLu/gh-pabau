@@ -8,7 +8,7 @@ import {
   FileTextOutlined,
 } from '@ant-design/icons'
 
-interface ICount {
+export interface ICount {
   label?: string
   count: number
   per: string

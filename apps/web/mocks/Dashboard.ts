@@ -24,6 +24,28 @@ export const columns = [
   },
 ]
 
+export const defaultAppointmentList = [
+  { label: 'Completed', count: 0, per: '0.00%' },
+  { label: 'Waiting', count: 0, per: '0.00%' },
+  { label: 'Canceled', count: 0, per: '0.00%' },
+  { label: 'No show', count: 0, per: '0.00%' },
+]
+
+export const defaultOnlineAppointmentList = [
+  { label: 'Completed', count: 0, per: '0.00%' },
+  { label: 'Waiting', count: 0, per: '0.00%' },
+  { label: 'Canceled', count: 0, per: '0.00%' },
+  { label: 'No show', count: 0, per: '0.00%' },
+  { label: 'Deposits', count: 0, per: '0.00%' },
+]
+
+export const defaultSalesList = [
+  { label: 'Services', count: 0, per: '0.00%' },
+  { label: 'Products', count: 0, per: '0.00%' },
+  { label: 'Packages', count: 0, per: '0.00%' },
+  { label: 'Gift Vouchers', count: 0, per: '0.00%' },
+]
+
 export const data = [
   {
     key: '1',

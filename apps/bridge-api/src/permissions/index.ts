@@ -121,7 +121,7 @@ export const permissions = shield(
       findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
-      getBookingStatus: allow,
+      getDashboardData: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
