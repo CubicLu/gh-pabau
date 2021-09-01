@@ -13,6 +13,7 @@ import {
   ClientFormsLayout,
   ClientPackagesLayout,
   ClientPhotosLayout,
+  ClientPrescriptionsLayout,
   ClientActivitiesLayout,
   ClientVaccineHistoryLayout,
   Button,
@@ -23,7 +24,15 @@ import {
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
-import { Modal, Popover, Input, Badge, Drawer, Tooltip } from 'antd'
+import {
+  Modal,
+  Popover,
+  Input,
+  Badge,
+  Drawer,
+  Tooltip,
+  ConfigProvider,
+} from 'antd'
 import {
   RightOutlined,
   LeftOutlined,
@@ -70,6 +79,8 @@ import {
   thirdPartySearchResults,
   appointments,
   clientPackages,
+  prescriptions,
+  testList,
 } from './mock'
 
 const { TextArea } = Input
@@ -187,10 +198,14 @@ const ClientCardModal: FC<ClientCardProps> = ({
         },
         {
           key: 8,
-          content: 'Lab Tests',
+          content: 'Prescriptions',
         },
         {
           key: 9,
+          content: 'Lab Tests',
+        },
+        {
+          key: 10,
           content: 'Vaccine History',
         },
       ],
@@ -751,7 +766,14 @@ const ClientCardModal: FC<ClientCardProps> = ({
       width={'100%'}
       wrapClassName={styles.clientCard}
     >
-      <>
+      <ConfigProvider
+        getPopupContainer={(node) => {
+          if (node) {
+            return node as HTMLElement
+          }
+          return document.body as HTMLElement
+        }}
+      >
         {moment().format('MM/DD') ===
           moment(clientData.dob).format('MM/DD') && (
           <Confetti
@@ -914,7 +936,32 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientDocumentsLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientLabTestsLayout isEmpty={true} />
+                  <ClientPrescriptionsLayout
+                    isEmpty={false}
+                    prescriptions={prescriptions}
+                    onPreviewClick={(e) => {
+                      console.log('Preview selected:', e)
+                      return Promise.resolve(true)
+                    }}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareClick={(e) => Promise.resolve(true)}
+                    onEditClick={(e) => Promise.resolve(true)}
+                    onRepeatClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
+                </div>
+                <div>
+                  <ClientLabTestsLayout
+                    isEmpty={false}
+                    testList={testList}
+                    onViewReportClick={(e) => {
+                      console.log('View report selected:', e)
+                      return Promise.resolve(true)
+                    }}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
                 </div>
                 <div>
                   <ClientVaccineHistoryLayout isEmpty={true} />
@@ -987,7 +1034,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
             </div>
           </Drawer>
         )}
-      </>
+      </ConfigProvider>
     </Modal>
   )
 }

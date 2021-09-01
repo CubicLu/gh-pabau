@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Layout, Menu as AntMenu, Tooltip } from 'antd'
+import { Badge, Layout, Menu as AntMenu, Tooltip } from 'antd'
 import {
   SettingOutlined,
   MenuFoldOutlined,
@@ -17,9 +17,14 @@ const { Sider } = Layout
 interface P {
   onSideBarCollapsed?: (collapsed: boolean) => void
   active?: string
+  badgeCountList?: BadgeCountList
 }
 
-export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
+interface BadgeCountList {
+  [key: string]: number
+}
+
+export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
   const { t } = useTranslation('common')
   const [collapsed, setCollapsed] = useState(true)
   const [openKeys, setOpenKeys] = useState<string[]>([])
@@ -60,6 +65,10 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
     setSelectedKeys([e.key])
   }
 
+  const sidebarBadge = {
+    activities: badgeCountList?.activities,
+  }
+
   return (
     <Sider
       trigger={null}
@@ -96,11 +105,25 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
         onClick={onClickMenu}
       >
         {sidebarMenu.map((menuData, index) => {
+          const icon = menuData?.displayBadge ? (
+            <Badge
+              className={styles.badgeIcon}
+              count={
+                sidebarBadge[menuData.menuName.toLowerCase().replace(' ', '')]
+              }
+              style={{ backgroundColor: '#54B2D3' }}
+              showZero={false}
+            >
+              {menuData.icon}
+            </Badge>
+          ) : (
+            menuData.icon
+          )
           return !menuData.children ? (
             renderMenu(
               menuData.menuName + index,
               menuData.menuName,
-              menuData.icon,
+              icon,
               menuData?.path
             )
           ) : (

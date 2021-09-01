@@ -21,6 +21,6 @@ INSERT INTO public.notification_types_enum (type, description) VALUES ('news_and
 INSERT INTO public.notification_types_enum (type, description) VALUES ('review', 'A review has been published for someone We encourage you to manage and respond to the review');
 INSERT INTO public.notification_types_enum (type, description) VALUES ('feed_post', 'Receive a notification when someone makes a post to the buzzfeed.');
 INSERT INTO public.notification_types_enum (type, description) VALUES ('like_post', 'Receive a notification when someone likes their wall post.');
-INSERT INTO public.notification_types_enum (type, description) VALUES ('report_scheduled', 'Receive a notification when someone likes their wall post.');
+INSERT INTO public.notification_types_enum (type, description) VALUES ('report_scheduled', 'Receive a notification when a scheduled report was sent.');
 INSERT INTO public.notification_types_enum (type, description) VALUES ('lead_inquiry', 'Receive notification whenever you receive new Enquiry.');
 INSERT INTO public.notification_types_enum (type, description) VALUES ('lead_assigned', 'Receive notification whenever you assigned to new lead.');
