@@ -1225,7 +1225,7 @@ export const retrieveSalesCount = async (
         },
       },
       product_category_type: {
-        in: ['service', 'retail', 'packages', 'vouchers'],
+        not: '',
       },
     },
     _count: {
@@ -1238,6 +1238,34 @@ export const retrieveSalesCount = async (
       id: true,
     },
   })
+
+  let SalesList = []
+
+  if (salesCount) {
+    if (salesCount.length > 0) {
+      salesCount?.map((item) => {
+        if (item.product_category_type !== '') {
+          SalesList.push({
+            label: item.product_category_type,
+            count: item._count.id,
+            per:
+              (
+                ((item._count.id ?? 0) * 100) /
+                (totalSalesCount?._count?.id ?? 0)
+              ).toFixed(2) + '%',
+          })
+        }
+        return item
+      })
+    } else {
+      SalesList = [
+        { label: 'Services', count: 0, per: '0.00%' },
+        { label: 'Products', count: 0, per: '0.00%' },
+        { label: 'Packages', count: 0, per: '0.00%' },
+        { label: 'Gift Vouchers', count: 0, per: '0.00%' },
+      ]
+    }
+  }
   return {
     totalSalesCounts: totalSalesCount?._count?.id ?? 0,
     totalAvailableCategoryTypeCount: salesCount?.reduce((prev, cur) => {
@@ -1250,49 +1278,6 @@ export const retrieveSalesCount = async (
         100) /
         totalSalesCount?._count?.id ?? 0
     ).toFixed(2)}%`,
-    saleStatusCount: {
-      serviceCount:
-        salesCount?.find((item) => item.product_category_type === 'service')
-          ?._count?.id ?? 0,
-      servicePer:
-        (
-          ((salesCount?.find((item) => item.product_category_type === 'service')
-            ?._count?.id ?? 0) *
-            100) /
-          (totalSalesCount?._count?.id ?? 0)
-        ).toFixed(2) + '%',
-      retailCount:
-        salesCount?.find((item) => item.product_category_type === 'retail')
-          ?._count?.id ?? 0,
-      retailPer:
-        (
-          ((salesCount?.find((item) => item.product_category_type === 'retail')
-            ?._count?.id ?? 0) *
-            100) /
-          (totalSalesCount?._count?.id ?? 0)
-        ).toFixed(2) + '%',
-      packagesCount:
-        salesCount?.find((item) => item.product_category_type === 'packages')
-          ?._count?.id ?? 0,
-      packagesPer:
-        (
-          ((salesCount?.find(
-            (item) => item.product_category_type === 'packages'
-          )?._count?.id ?? 0) *
-            100) /
-          (totalSalesCount?._count?.id ?? 0)
-        ).toFixed(2) + '%',
-      vouchersCount:
-        salesCount?.find((item) => item.product_category_type === 'vouchers')
-          ?._count?.id ?? 0,
-      vouchersPer:
-        (
-          ((salesCount?.find(
-            (item) => item.product_category_type === 'vouchers'
-          )?._count?.id ?? 0) *
-            100) /
-          (totalSalesCount?._count?.id ?? 0)
-        ).toFixed(2) + '%',
-    },
+    salesList: SalesList,
   }
 }

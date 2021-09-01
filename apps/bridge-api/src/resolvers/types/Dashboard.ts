@@ -6,6 +6,7 @@ import { retrieveSalesCount } from '../../app/finance/finance'
 export interface DateRangeInput {
   start_date: number
   end_date: number
+  is_active: number
 }
 
 export const BookingStatusInputType = inputObjectType({
@@ -13,6 +14,7 @@ export const BookingStatusInputType = inputObjectType({
   definition(t) {
     t.nonNull.decimal('start_date')
     t.nonNull.decimal('end_date')
+    t.nonNull.int('is_active')
   },
 })
 

@@ -9,36 +9,15 @@ import {
 } from '@ant-design/icons'
 
 interface ICount {
+  label?: string
   count: number
   per: string
 }
 
-interface IAppointment {
-  completed: ICount
-  notCompleted: ICount
-  canceled: ICount
-  noShow: ICount
-}
-
-interface IOnlineAppointment {
-  completed: ICount
-  notCompleted: ICount
-  canceled: ICount
-  noShow: ICount
-  deposits: ICount
-}
-
-interface ISales {
-  services: ICount
-  products: ICount
-  packages: ICount
-  giftVouchers: ICount
-}
-
 interface ITopBoard {
-  appointment: IAppointment
-  onlineAppointment: IOnlineAppointment
-  sales: ISales
+  appointment: ICount[]
+  onlineAppointment: ICount[]
+  sales: ICount[]
   totalBooking: ICount
   totalOnlineBooking: ICount
   totalSalesCount: ICount
@@ -138,41 +117,18 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                   </div>
                 </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Completed</div>
-                    <div className={styles.text}>
-                      {appointment.completed.count} ({appointment.completed.per}
-                      )
+                {appointment?.map((item, index) => (
+                  <Row className={styles.record} key={index}>
+                    <div className={styles.content}>
+                      <div className={`${styles.text} ${styles.label}`}>
+                        {item.label}
+                      </div>
+                      <div className={styles.text}>
+                        {item.count} ({item.per})
+                      </div>
                     </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Waiting</div>
-                    <div className={styles.text}>
-                      {appointment.notCompleted.count} (
-                      {appointment.notCompleted.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Canceled</div>
-                    <div className={styles.text}>
-                      {appointment.canceled.count} ({appointment.canceled.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>No show</div>
-                    <div className={styles.text}>
-                      {appointment.noShow.count} ({appointment.noShow.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}></Row>
+                  </Row>
+                ))}
               </Col>
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
@@ -184,39 +140,18 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                   </div>
                 </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Services</div>
-                    <div className={styles.text}>
-                      {sales.services.count} ({sales.services.per})
+                {sales?.map((item, index) => (
+                  <Row className={styles.record} key={index}>
+                    <div className={styles.content}>
+                      <div className={`${styles.text} ${styles.label}`}>
+                        {item.label}
+                      </div>
+                      <div className={styles.text}>
+                        {item.count} ({item.per})
+                      </div>
                     </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Products</div>
-                    <div className={styles.text}>
-                      {sales.products.count} ({sales.products.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Packages</div>
-                    <div className={styles.text}>
-                      {sales.packages.count} ({sales.packages.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Gift Vouchers</div>
-                    <div className={styles.text}>
-                      {sales.giftVouchers.count} ({sales.giftVouchers.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}></Row>
+                  </Row>
+                ))}
               </Col>
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
@@ -230,51 +165,18 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                   </div>
                 </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Completed</div>
-                    <div className={styles.text}>
-                      {onlineAppointment.completed.count} (
-                      {onlineAppointment.completed.per})
+                {onlineAppointment?.map((item, index) => (
+                  <Row className={styles.record} key={index}>
+                    <div className={styles.content}>
+                      <div className={`${styles.text} ${styles.label}`}>
+                        {item.label}
+                      </div>
+                      <div className={styles.text}>
+                        {item.count} ({item.per})
+                      </div>
                     </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Waiting</div>
-                    <div className={styles.text}>
-                      {onlineAppointment.notCompleted.count} (
-                      {onlineAppointment.notCompleted.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Canceled</div>
-                    <div className={styles.text}>
-                      {onlineAppointment.canceled.count} (
-                      {onlineAppointment.canceled.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>No show</div>
-                    <div className={styles.text}>
-                      {onlineAppointment.noShow.count} (
-                      {onlineAppointment.noShow.per})
-                    </div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Deposits</div>
-                    <div className={styles.text}>
-                      {onlineAppointment.deposits.count} (
-                      {onlineAppointment.deposits.per})
-                    </div>
-                  </div>
-                </Row>
+                  </Row>
+                ))}
               </Col>
             </Row>
           </Col>
