@@ -1,32 +1,49 @@
 import React, { FC, useRef } from 'react'
 import { Button, DotButton } from '@pabau/ui'
-import { DeleteOutlined } from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+  EditOutlined,
+  NotificationOutlined,
+} from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 import styles from './VoucherCard.module.less'
+import classNames from 'classnames'
+export interface DotMenuOptionProps {
+  key: number
+  icon: React.ReactNode
+  label: string
+}
 export interface VoucherCardProps {
-  cardWidth: number
-  backgroundColor1: string
-  backgroundColor2: string
+  cardWidth?: number
+  backgroundColor1?: string
+  backgroundColor2?: string
+  background?: string
   gradientType: string
   bookNowButton?: boolean
   buttonLabel: string
   dotMenuShow?: boolean
   borderColor: string
   voucherType: string
-  voucherNum: number
+  voucherNum?: number
   voucherPrice: number
   voucherPriceLabel: string
-  voucherSoldPrice: number
-  voucherSoldPriceLabel: string
+  voucherSoldPrice?: number
+  voucherSoldPriceLabel?: string
   voucherRelation: string
   voucherRelationLabel: string
-  currencyType: string
-  onMenuClick: () => void
+  currencyType?: string
+  termsConditions?: string
+  voucherBackgroundUrl?: string
+  onMenuClick?: () => void
+  dotMenuOptions?: DotMenuOptionProps[]
 }
 
 export const VoucherCard: FC<VoucherCardProps> = ({
-  cardWidth,
+  cardWidth = 500,
   backgroundColor1,
   backgroundColor2,
+  background,
   gradientType,
   bookNowButton,
   buttonLabel,
@@ -40,19 +57,40 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   voucherSoldPriceLabel,
   voucherRelation,
   voucherRelationLabel,
-  currencyType,
+  currencyType = '$',
+  termsConditions = 'N/A',
+  voucherBackgroundUrl,
   onMenuClick,
+  dotMenuOptions,
 }) => {
+  const { t } = useTranslation('common')
   const cardRef = useRef<HTMLDivElement>(null)
   const voucherTypes = ['flowers', 'valentine', 'birthday']
   const DotMenuOptions = [
     {
+      key: 1,
+      icon: <EditOutlined />,
+      label: 'Edit',
+    },
+    {
       key: 2,
+      icon: <NotificationOutlined />,
+      label: 'Promote',
+    },
+    {
+      key: 3,
       icon: <DeleteOutlined />,
       label: 'Delete',
       onClick: () => {
-        onMenuClick()
+        if (onMenuClick) {
+          onMenuClick()
+        }
       },
+    },
+    {
+      key: 4,
+      icon: <ExclamationCircleOutlined />,
+      label: 'Show terms and conditions',
     },
   ]
   const cardFaceBgColor = {
@@ -62,26 +100,48 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   }
 
   const dotsStyles = {
-    width: `${cardWidth / 25 / 2}px`,
-    height: `${cardWidth / 25}px`,
+    width: `${cardWidth ? `${cardWidth / 25 / 2}px` : '25px'}`,
+    height: `${cardWidth ? `${cardWidth / 25}px` : '10px'}`,
+  }
+
+  const flipCard = () => {
+    if (cardRef?.current) {
+      if (cardRef.current.classList.contains('flip')) {
+        cardRef.current.classList.remove('flip')
+      } else {
+        cardRef.current.classList.add('flip')
+      }
+    }
   }
 
   return (
     <div className={styles.voucherCardMain}>
       <div
         className="flip-card"
-        style={{ width: `${cardWidth}px`, height: `${cardWidth / 2}px` }}
+        style={{
+          width: `${`100%`}`,
+          height: `${cardWidth ? `${cardWidth / 2}px` : '100%'}`,
+        }}
       >
-        <div className="flip-card-inner" ref={cardRef}>
+        <div className="flip-card-inner" ref={cardRef} onClick={flipCard}>
           <div
             className={`flip-card-front ${voucherType}`}
             style={
               !voucherType && !voucherTypes.includes(voucherType)
-                ? { ...cardFaceBgColor }
+                ? voucherBackgroundUrl
+                  ? { backgroundImage: `url(${voucherBackgroundUrl})` }
+                  : background
+                  ? { background: background }
+                  : { ...cardFaceBgColor }
                 : {}
             }
           >
-            <div className={styles.dots}>
+            <div
+              className={classNames(
+                styles.dots,
+                (voucherBackgroundUrl || voucherType) && styles.bgOpacity
+              )}
+            >
               <div className="dotsInner">
                 <div className="dot1" style={{ ...dotsStyles }}></div>
                 <div className="dot2" style={{ ...dotsStyles }}></div>
@@ -91,19 +151,21 @@ export const VoucherCard: FC<VoucherCardProps> = ({
             <div className={styles.frontFaceContent}>
               <div className={styles.pRelative}>
                 <div className={styles.buttonsRow}>
-                  <div>
+                  <div onClick={flipCard}>
                     {bookNowButton && (
                       <Button type="default">{buttonLabel}</Button>
                     )}
                   </div>
-                  <div>
-                    {dotMenuShow && <DotButton menuList={DotMenuOptions} />}
+                  <div onClick={flipCard}>
+                    {dotMenuShow && (
+                      <DotButton menuList={dotMenuOptions ?? DotMenuOptions} />
+                    )}
                   </div>
                 </div>
 
                 <div className={styles.middleRow}>
                   <div>
-                    <h1>{currencyType + voucherPrice}</h1>
+                    <h1>{voucherPrice && currencyType + voucherPrice}</h1>
                     <p>{voucherPriceLabel}</p>
                   </div>
                 </div>
@@ -114,15 +176,16 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                     <p>{voucherRelationLabel}</p>
                   </div>
                   <div className={styles.soldDetails}>
-                    <h1>{currencyType + voucherSoldPrice}</h1>
-                    <p>{voucherSoldPriceLabel}</p>
-                    <h1>#{voucherNum}</h1>
+                    <h1>
+                      {voucherSoldPrice && currencyType + voucherSoldPrice}
+                    </h1>
+                    <p>{voucherSoldPriceLabel && voucherSoldPriceLabel}</p>
+                    <h1>{voucherNum && `#${voucherNum}`}</h1>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           <div className="flip-card-back" style={{ borderColor }}>
             <div className={styles.dots}>
               <div className="dotsInner">
@@ -138,12 +201,8 @@ export const VoucherCard: FC<VoucherCardProps> = ({
             </div>
             <div className={styles.backFaceContent}>
               <div className={styles.pRelative}>
-                <h1>Terms & Conditions</h1>
-                <p>
-                  lorem ipsum, quia dolor sit, amet, consectetur, adipisci
-                  velit, sed quia non numquam eius modi tempora incidunt, ut
-                  labore et dolore magnam aliquam quaerat voluptatem.
-                </p>
+                <h1>{t('ui.vouchercard.back.title')}</h1>
+                <p>{termsConditions}</p>
               </div>
             </div>
           </div>

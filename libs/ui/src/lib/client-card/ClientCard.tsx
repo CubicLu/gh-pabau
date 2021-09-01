@@ -79,6 +79,7 @@ import {
   thirdPartySearchResults,
   appointments,
   clientPackages,
+  vouchers,
   prescriptions,
   testList,
 } from './mock'
@@ -149,6 +150,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
   const [alertItems, setAlertItems] = useState<string[]>([])
   const [addingAlert, setAddingAlert] = useState(false)
   const [currentClientNote, setCurrentClientNote] = useState(-1)
+  const { activeVouchers, expiredVouchers } = vouchers()
 
   const customTabMenutItem = (title, alert) => {
     return (
@@ -211,15 +213,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
       ],
     },
     {
-      key: 10,
+      key: 11,
       content: customTabMenutItem('Gift voucher', 15),
     },
     {
-      key: 11,
+      key: 12,
       content: customTabMenutItem('Loyalty', 7),
     },
     {
-      key: 12,
+      key: 13,
       content: customTabMenutItem('Activities', 8),
     },
   ]
@@ -967,7 +969,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientVaccineHistoryLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientGiftVoucherLayout isEmpty={true} />
+                  <ClientGiftVoucherLayout
+                    isEmpty={false}
+                    activeVouchers={activeVouchers}
+                    expiredVouchers={expiredVouchers}
+                    onCardSelect={(e) => {
+                      console.log('Card selected:', e)
+                      return Promise.resolve(true)
+                    }}
+                  />
                 </div>
                 <div>
                   <ClientLoyaltyLayout
