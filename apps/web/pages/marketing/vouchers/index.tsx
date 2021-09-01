@@ -131,30 +131,30 @@ const GiftVouchers: FC = () => {
   )
 
   useEffect(() => {
-    // setGifts([
-    //   { ...giftCardSettings(t) },
-    //   { ...giftCardSettings(t) },
-    //   {
-    //     ...giftCardSettings(t),
-    //     gradientType: 'linear-gradient',
-    //     voucherType: 'birthday',
-    //   },
-    //   {
-    //     ...giftCardSettings(t),
-    //     gradientType: 'linear-gradient',
-    //     voucherType: 'valentine',
-    //   },
-    //   {
-    //     ...giftCardSettings(t),
-    //     gradientType: 'radial-gradient',
-    //   },
-    //   {
-    //     ...giftCardSettings(t),
-    //     gradientType: 'linear-gradient',
-    //     voucherType: 'flowers',
-    //   },
-    // ])
-    // setDataSource(data)
+    setGifts([
+      { ...giftCardSettings(t) },
+      { ...giftCardSettings(t) },
+      {
+        ...giftCardSettings(t),
+        gradientType: 'linear-gradient',
+        voucherType: 'birthday',
+      },
+      {
+        ...giftCardSettings(t),
+        gradientType: 'linear-gradient',
+        voucherType: 'valentine',
+      },
+      {
+        ...giftCardSettings(t),
+        gradientType: 'radial-gradient',
+      },
+      {
+        ...giftCardSettings(t),
+        gradientType: 'linear-gradient',
+        voucherType: 'flowers',
+      },
+    ])
+    setDataSource(data)
   }, [t])
 
   const onTabChange = (tab) => {
