@@ -194,7 +194,11 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                                 key={label}
                                 onClick={() => {
                                   setMenuPopover(() => false)
-                                  onClick?.() || onMenuClick?.(key)
+                                  if (onClick) {
+                                    onClick?.()
+                                  } else {
+                                    onMenuClick?.(key)
+                                  }
                                 }}
                               >
                                 {icon}
