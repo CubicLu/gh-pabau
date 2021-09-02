@@ -5,6 +5,10 @@ import arya from '../../assets/images/users/arya.png'
 import linda from '../../assets/images/users/linda.png'
 import liza from '../../assets/images/users/liza.png'
 import EmployeeImg from './assets/employees/1.png'
+import { ReactComponent as LabOrderIcon } from '../../assets/images/lab.svg'
+import { ReactComponent as MedicalHistoryIcon } from '../../assets/images/medical-history.svg'
+import { ReactComponent as Note } from '../../assets/images/note.svg'
+import { ReactComponent as Pencil } from '../../assets/images/pencil.svg'
 import { VoucherListProps } from '../client-gift-voucher-layout/ClientGiftVoucherLayout'
 import { VoucherCardProps } from '../voucher-card/VoucherCard'
 import labTests from '../../assets/images/lab-tests.svg'
@@ -1316,5 +1320,113 @@ export const loyaltyData = [
     time: '16:25',
     action: 'Percantage paid on spend - at ringup only',
     points: '+5.00',
+  },
+]
+
+const formData = {
+  patient: 'Bruno Ballardin',
+  lastUpdate: '2021-03-01T00:00:00Z',
+  createdOn: '2021-03-01T00:00:00Z',
+  createdBy: 'Bruno Ballardin',
+  electronicOrderNo: 'AA3655583543',
+  to:
+    'The Doctors Laboratory, 76 Wimpole Street, London, W1G 9RT Tel: 020 7307 7373',
+  requestingDoctor: 'Dr. Anna Chapman',
+  requestDate: '2021-03-01T00:00:00Z',
+  patientId: '326',
+  requestId: 'AA3655583543',
+  dob: '1969-11-28T00:00:00Z',
+  gender: 'Male',
+  labsTests: 'LSH4 (Roaccutane): FBC, U+es, LFTs, Lipid profile',
+  additionalTests: 'Allergy profile 1, Cadmium, Plutonium',
+  fasting: 'Yes',
+  clinicalDetails: 'Acne - severe adult',
+  dateSampleTaken: '–',
+  timeSampleTaken: '–',
+}
+
+export const formFilterButtons = [
+  {
+    id: 1,
+    type: 'Treatment',
+    selected: true,
+    icon: Note,
+  },
+  {
+    id: 2,
+    type: 'Consent',
+    selected: true,
+    icon: Pencil,
+  },
+  {
+    id: 3,
+    type: 'Medical History',
+    selected: true,
+    icon: MedicalHistoryIcon,
+  },
+  {
+    id: 4,
+    type: 'Lab Request',
+    selected: true,
+    icon: LabOrderIcon,
+  },
+]
+
+export const forms = [
+  {
+    id: 1,
+    name: 'LSAH Bloods or Swab Lab Request Form',
+    user: 'Bruno Ballardin',
+    created: '2021-08-21T08:30:00.00Z',
+    type: 'Lab Request',
+    icon: LabOrderIcon,
+    isPinned: false,
+    isAdminForm: false,
+    data: formData,
+  },
+  {
+    id: 2,
+    name: 'Botox Treatment Form',
+    user: 'Erika Chapman',
+    created: '2021-08-20T08:30:00.00Z',
+    type: 'Treatment',
+    icon: Note,
+    isPinned: false,
+    isAdminForm: false,
+    data: {
+      ...formData,
+      patient: 'Erika Chapman',
+      createdBy: 'Erika Chapman',
+    },
+  },
+  {
+    id: 3,
+    name: 'COVID 19 Consent Form',
+    user: 'John Smith',
+    created: '2021-08-19T08:30:00.00Z',
+    type: 'Consent',
+    icon: Pencil,
+    isPinned: false,
+    isAdminForm: false,
+    data: {
+      ...formData,
+      patient: 'John Smith',
+      createdBy: 'John Smith',
+    },
+  },
+  {
+    id: 4,
+    name: 'Medical History Form',
+    user: 'Jane Rache',
+    created: '2021-08-18T08:30:00.00Z',
+    type: 'Medical History',
+    icon: MedicalHistoryIcon,
+    isPinned: false,
+    isAdminForm: true,
+    data: {
+      ...formData,
+      patient: 'Jane Rache',
+      createdBy: 'Jane Rache',
+    },
   },
 ]
