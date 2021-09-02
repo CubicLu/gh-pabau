@@ -1,9 +1,9 @@
-query duplicateContacts {
-  duplicateContacts {
-    ID
-    Fname
-    Lname
-    Email
-    Mobile
-  }
-}
+# query duplicateContacts {
+#   duplicateContacts {
+#     ID
+#     Fname
+#     Lname
+#     Email
+#     Mobile
+#   }
+# }

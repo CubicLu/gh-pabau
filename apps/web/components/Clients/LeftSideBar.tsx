@@ -100,10 +100,10 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.mergeFix}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.mergeFix')}</span>
-            <span>
+            {/* <span>
               {duplicateContactsCount?.duplicateContacts.length > 0 &&
                 duplicateContactsCount?.duplicateContacts.length}
-            </span>
+            </span> */}
           </div>
         </Menu.Item>
         <Menu.Divider />

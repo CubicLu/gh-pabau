@@ -1,5 +1,5 @@
 query clientListContactsCount($active: Int = 1){
-  cmContactsCount(where: {
+  findManyCmContactCount(where: {
     is_active: {
       equals: $active
     }

@@ -19,7 +19,7 @@ import confetti from 'canvas-confetti'
 import {
   useGetContactsQuery,
   useClientListContactsCountQuery,
-  useDuplicateContactsQuery,
+  // useDuplicateContactsQuery,
   useGetLabelsLazyQuery,
   useAddLabelMutation,
   useGetContactsLabelsLazyQuery,
@@ -72,9 +72,10 @@ export const Clients: FC<ClientsProps> = () => {
     loading: getClientsCountLoading,
   } = useClientListContactsCountQuery({ fetchPolicy: 'no-cache' })
 
-  const { data: getDuplicateContactsData } = useDuplicateContactsQuery({
-    fetchPolicy: 'no-cache',
-  })
+  // const { data: getDuplicateContactsData } = useDuplicateContactsQuery({
+  //   fetchPolicy: 'no-cache',
+  // })
+  const duplicateContactsData = []
 
   const [getLabelsQuery] = useGetLabelsLazyQuery({
     fetchPolicy: 'no-cache',
@@ -158,7 +159,7 @@ export const Clients: FC<ClientsProps> = () => {
   }, [])
   const { data: getContactsData } = useGetContactsQuery({
     onCompleted(response) {
-      contactsData = response.cmContacts.map((d) => ({
+      contactsData = response.findManyCmContact.map((d) => ({
         id: d.ID,
         avatar: d.Avatar,
         firstName: d.Fname,
@@ -182,8 +183,8 @@ export const Clients: FC<ClientsProps> = () => {
     if (getClientsCountData) {
       setPaginateData((d) => ({
         ...d,
-        total: getClientsCountData?.cmContactsCount,
-        showingRecords: getContactsData?.cmContacts.length,
+        total: getClientsCountData?.findManyCmContactCount,
+        showingRecords: getContactsData?.findManyCmContact?.length,
       }))
     }
   }, [getContactsData, getClientsCountData])
@@ -233,9 +234,9 @@ export const Clients: FC<ClientsProps> = () => {
     SourceDataProps[][]
   >([])
   const [contactsSourceData, setContactsSourceData] = useState(contactsData)
-  const [duplicateContactsData, setDuplicateContactsData] = useState(
-    getDuplicateContactsData
-  )
+  // const [duplicateContactsData, setDuplicateContactsData] = useState(
+  //   getDuplicateContactsData
+  // )
   const [countLabelS, setCountLabelS] = useState(contactsLabels)
   const [responseLabels, setResponseLabels] = useState(false)
 
@@ -251,9 +252,9 @@ export const Clients: FC<ClientsProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientsList])
 
-  useEffect(() => {
-    setDuplicateContactsData(getDuplicateContactsData)
-  }, [getDuplicateContactsData])
+  // useEffect(() => {
+  //   setDuplicateContactsData(getDuplicateContactsData)
+  // }, [getDuplicateContactsData])
 
   useEffect(() => {
     const duplicateList = []

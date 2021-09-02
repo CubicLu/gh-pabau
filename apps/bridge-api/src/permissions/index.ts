@@ -117,7 +117,7 @@ export const permissions = shield(
     },
     Query: {
       //DuplicateContacts
-      duplicateContacts: rules.authentication.isAuthenticated,
+      // duplicateContacts: rules.authentication.isAuthenticated,
       findManyContactPackage: allow,
       findFirstCmContact: allow,
       findManyBooking: allow,

@@ -4,7 +4,7 @@ query GetContacts(
   $active: Int = 1
   $searchTerm: String
 ) {
-  cmContacts(
+  findManyCmContact(
     skip: $offset
     take: $limit
     where: {

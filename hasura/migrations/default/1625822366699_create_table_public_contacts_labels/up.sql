@@ -1,1 +1,0 @@
-CREATE TABLE "public"."contacts_labels" ("id" serial NOT NULL, "contact_id" integer NOT NULL, "label_id" integer NOT NULL, "created_at" timestamptz NOT NULL DEFAULT now(), "modified_at" timestamptz NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));COMMENT ON TABLE "public"."contacts_labels" IS E'relation between contacts and labels';
