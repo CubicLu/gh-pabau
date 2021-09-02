@@ -80,6 +80,8 @@ import {
   thirdPartySearchResults,
   appointments,
   clientPackages,
+  formFilterButtons,
+  forms,
   vouchers,
   prescriptions,
   testList,
@@ -949,7 +951,22 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientCommunicationsLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientFormsLayout isEmpty={true} />
+                  <ClientFormsLayout
+                    isEmpty={false}
+                    formFilters={formFilterButtons}
+                    forms={forms}
+                    onButtonFilterClick={(e) => {
+                      console.log('Filter button selected:', e) //Removed while integration
+                      return Promise.resolve(true)
+                    }}
+                    onFilterClick={(e) => Promise.resolve(true)}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareCick={(e) => Promise.resolve(true)}
+                    onVersionClick={(e) => Promise.resolve(true)}
+                    onEditClick={(e) => Promise.resolve(true)}
+                    onPinClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
                 </div>
                 <div>
                   <ClientPhotosLayout isEmpty={true} />
