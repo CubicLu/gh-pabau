@@ -1479,7 +1479,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5", "@babel/runtime@^7.10.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.10.5", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.13.8", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.5", "@babel/runtime@^7.14.6", "@babel/runtime@^7.14.8", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5", "@babel/runtime@^7.10.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.10.5", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.13.6", "@babel/runtime@^7.13.8", "@babel/runtime@^7.13.9", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.5", "@babel/runtime@^7.14.6", "@babel/runtime@^7.14.8", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.15.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.3.tgz#2e1c2880ca118e5b2f9988322bd8a7656a32502b"
   integrity sha512-OvwMLqNXkCXSz1kSm58sEsNuhqOx/fKpnUnKnFB5v8uDda5bLNEHNgKPvhDN6IU0LDcnHQ90LlJ0Q6jnyBSIBA==
@@ -9669,7 +9669,7 @@ core-js@^2.4.0, core-js@^2.6.5:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-core-js@^3.0.1, core-js@^3.0.4, core-js@^3.6.4, core-js@^3.6.5, core-js@^3.8.2:
+core-js@^3.0.1, core-js@^3.0.4, core-js@^3.11.0, core-js@^3.6.4, core-js@^3.6.5, core-js@^3.8.2:
   version "3.16.4"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.16.4.tgz#0fb1029a554fc2688c0963d7c900e188188a78e0"
   integrity sha512-Tq4GVE6XCjE+hcyW6hPy0ofN3hwtLudz5ZRdrlCnsnD/xkm/PWQRudzYHiKgZKUcefV6Q57fhDHjZHJP5dpfSg==
@@ -14011,7 +14011,7 @@ html-minifier-terser@^5.0.1:
     relateurl "^0.2.7"
     terser "^4.6.3"
 
-html-parse-stringify@^3.0.1:
+html-parse-stringify@^3.0.0, html-parse-stringify@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/html-parse-stringify/-/html-parse-stringify-3.0.1.tgz#dfc1017347ce9f77c8141a507f233040c59c55d2"
   integrity sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==
@@ -20896,6 +20896,11 @@ react-colorful@^5.1.2:
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.3.0.tgz#bcbae49c1affa9ab9a3c8063398c5948419296bd"
   integrity sha512-zWE5E88zmjPXFhv6mGnRZqKin9s5vip1O3IIGynY9EhZxN8MATUxZkT3e/9OwTEm4DjQBXc6PFWP6AetY+Px+A==
 
+react-compare-slider@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-compare-slider/-/react-compare-slider-2.0.2.tgz#b170f302ebf551357ba585f3fe6dab4aa26615f1"
+  integrity sha512-hL4mZ6asoez23Upoce9T2hbPKRg607lt8A8rYOXDuvL6QtO7ujkmsGS0+6EZe1EIDlmGibXH9jVuXNca6JrUow==
+
 react-confetti@6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/react-confetti/-/react-confetti-6.0.1.tgz#d4f57b5a021dd908a6243b8f63b6009b00818d10"
@@ -20903,10 +20908,10 @@ react-confetti@6.0.1:
   dependencies:
     tween-functions "^1.2.0"
 
-react-copy-to-clipboard@5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/react-copy-to-clipboard/-/react-copy-to-clipboard-5.0.4.tgz#42ec519b03eb9413b118af92d1780c403a5f19bf"
-  integrity sha512-IeVAiNVKjSPeGax/Gmkqfa/+PuMTBhutEvFUaMQLwE2tS0EXrAdgOpWDX26bWTXF3HrioorR7lr08NqeYUWQCQ==
+react-copy-to-clipboard@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/react-copy-to-clipboard/-/react-copy-to-clipboard-5.0.3.tgz#2a0623b1115a1d8c84144e9434d3342b5af41ab4"
+  integrity sha512-9S3j+m+UxDZOM0Qb8mhnT/rMR0NGSrj9A/073yz2DSxPMYhmYFBMYIdI2X4o8AjOjyFsSNxDRnCX6s/gRxpriw==
   dependencies:
     copy-to-clipboard "^3"
     prop-types "^15.5.8"
@@ -21021,10 +21026,10 @@ react-dom@^16.8.3:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-draft-wysiwyg@1.14.7:
-  version "1.14.7"
-  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.14.7.tgz#5d27fe8ad87de7c692dad739b8787f3ac1f3c24e"
-  integrity sha512-D4X8F/ourvQZuqHzCQ6Vs6Tnt6TbGH58kvHQxC+aZGq+45ko2EyatL6G5C/paMaNKDZq2JRe7yAzykneMLpNOg==
+react-draft-wysiwyg@1.14.5:
+  version "1.14.5"
+  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.14.5.tgz#82e34ae3472b815b5d9f70615f40e13afcbc2055"
+  integrity sha512-utbJEs91757QXYoBwKRb/4kB3JdswLlj0heUiAeXs/OxZAUISJXxLMFLBIixRlIcUnNkwxOsMikRshDMtWIS3g==
   dependencies:
     classnames "^2.2.6"
     draftjs-utils "^0.10.2"
@@ -21032,7 +21037,14 @@ react-draft-wysiwyg@1.14.7:
     linkify-it "^2.2.0"
     prop-types "^15.7.2"
 
-react-drag-listview@^0.1.8:
+react-drag-drop-container@6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/react-drag-drop-container/-/react-drag-drop-container-6.1.1.tgz#9ba08eb2bfe14202f179d601227b0ae5b589de48"
+  integrity sha512-GfKE4L/t5TnxOfCEfYkc0tsMvQQ+HXg88NmDwi2nBmFG7JHsZUJjIn1EnI0Uia5xocXtJSrk/9A3cF1ja9kx1g==
+  dependencies:
+    prop-types "^15.6.2"
+
+react-drag-listview@0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/react-drag-listview/-/react-drag-listview-0.1.8.tgz#e04de326ecbe97d6ad84fb68664e405765e30d72"
   integrity sha512-ZJnjFEz89RPZ1DzI8f6LngmtsmJbLry/pMz2tEqABxHA+d8cUFRmVPS1DxZdoz/htc+uri9fCdv4dqIiPz0xIA==
@@ -21100,27 +21112,27 @@ react-google-maps@9.4.5:
     scriptjs "^2.5.8"
     warning "^3.0.0"
 
-react-google-places-autocomplete@3.3.2-alpha.0:
-  version "3.3.2-alpha.0"
-  resolved "https://registry.yarnpkg.com/react-google-places-autocomplete/-/react-google-places-autocomplete-3.3.2-alpha.0.tgz#2618082762b4c1444ee92a951cb47399cbcc95f4"
-  integrity sha512-O/qoThCqEgGMtFBrg/citNa40dPotEo8c27JuKcFNp9Su6zibJzLvo5D4TgDg6dU5AT1R/Gp6MxBt3jKHt+ueQ==
+react-google-places-autocomplete@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-google-places-autocomplete/-/react-google-places-autocomplete-3.3.0.tgz#13f76a9515c7de3c94fc8648b7d21255743b13a6"
+  integrity sha512-vAMWTH6L6OEi8xVr6kZWXHznrYqMilT1JqY31VJUX0XAAqgTfA6xkG3H+yvyErfo0HSFPpQCToN+CyrUc3IxiQ==
   dependencies:
     "@googlemaps/js-api-loader" "^1.11.1"
     "@types/google.maps" "^3.44.1"
-    react-select "^4.3.1"
+    react-select "^4.1.0"
     typescript "^3.9.7"
     use-debounce "^3.4.3"
 
-react-grid-layout@1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/react-grid-layout/-/react-grid-layout-1.2.5.tgz#fa40288d5a1fa783484c44ce78b1e10eb5313d26"
-  integrity sha512-P/NNWAExTX/zEq+RUh6hrIG67UBicDNCOOg9LZe8BAtSdYtCnCGgVmWBS+sIbM0C8RJIiyGsFHh5dIfCddhS/w==
+react-grid-layout@1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-grid-layout/-/react-grid-layout-1.2.4.tgz#d04f9784fe47b27d0dcd3eb92f20e1a17454003c"
+  integrity sha512-AWorwRmkEyOPWF516BDbEhMjGhTCPf6zALQ3HIYrJdRmbbj1n5PDPNEI1eI818zhB07KwGVtF0WBxq2CmA2CNA==
   dependencies:
-    classnames "2.3.1"
+    classnames "2.x"
     lodash.isequal "^4.0.0"
     prop-types "^15.0.0"
     react-draggable "^4.0.0"
-    react-resizable "^3.0.1"
+    react-resizable "^1.10.0"
 
 react-helmet-async@^1.0.2, react-helmet-async@^1.0.7:
   version "1.1.2"
@@ -21149,7 +21161,15 @@ react-html-parser@2.0.2:
   dependencies:
     htmlparser2 "^3.9.0"
 
-react-i18next@11.11.4, react-i18next@^11.3.3:
+react-i18next@11.8.13:
+  version "11.8.13"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.8.13.tgz#9560376f8655b9aaa04f685da8eca0b032034ff9"
+  integrity sha512-KTNuLYnEwI9y54nSEal4yBxXBnfCCfh7t/0p/UHfhlGNcIMu+V4x/y5zGKzbOEK4noQrUzZ+J47RPYH7rMs2ZQ==
+  dependencies:
+    "@babel/runtime" "^7.13.6"
+    html-parse-stringify "^3.0.0"
+
+react-i18next@^11.3.3:
   version "11.11.4"
   resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.11.4.tgz#f6f9a1c827e7a5271377de2bf14db04cb1c9e5ce"
   integrity sha512-ayWFlu8Sc7GAxW1PzMaPtzq+yiozWMxs0P1WeITNVzXAVRhC0Httkzw/IiODBta6seJRBCLrtUeFUSXhAIxlRg==
@@ -21157,13 +21177,22 @@ react-i18next@11.11.4, react-i18next@^11.3.3:
     "@babel/runtime" "^7.14.5"
     html-parse-stringify "^3.0.1"
 
-react-image-crop@8.6.12:
-  version "8.6.12"
-  resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-8.6.12.tgz#fb57e17c3b56ac0a52ba1967c108975b1f132dcd"
-  integrity sha512-3CNz1xfsRRSH/iH023IDMXxzsb1M6RTHHUVsVcb8uFPcjGiA9WisvQ24G1eRDf2j4NlybupOEEdfK2vT0etN6A==
+react-image-crop@8.6.9:
+  version "8.6.9"
+  resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-8.6.9.tgz#35c6ef740493afd98e6143ddc244f64575acec75"
+  integrity sha512-u9t9vtUsQBRtu/Z8A6dpQQcHiLhEDCmcFeaK/9E3fnV0noWSRKdChI0dN43m/IhgPZOdpALXrZaIfkNXVX7sDg==
   dependencies:
     clsx "^1.1.1"
+    core-js "^3.11.0"
     prop-types "^15.7.2"
+
+react-image-magnifiers@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-image-magnifiers/-/react-image-magnifiers-1.4.0.tgz#0472e93491d5a199a278d4efc855f03542214601"
+  integrity sha512-ZszHusdsYteccKGysHXUOgLRGtHqfRYuG1koHh3VAvuhrzF4BEs1Ot5tSe1WA2v+EsjAEfYcrRyi/Is4QDD61A==
+  dependencies:
+    prop-types "^15.7.2"
+    react-input-position "^1.3.1"
 
 react-indiana-drag-scroll@2.0.1:
   version "2.0.1"
@@ -21180,6 +21209,13 @@ react-input-autosize@^3.0.0:
   integrity sha512-nL9uS7jEs/zu8sqwFE5MAPx6pPkNAriACQ2rGLlqmKr2sPGtN7TXTyDdQt4lbNXVx7Uzadb40x8qotIuru6Rhg==
   dependencies:
     prop-types "^15.5.8"
+
+react-input-position@^1.3.1:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/react-input-position/-/react-input-position-1.3.2.tgz#4e1f3b671eb41c0bd9f232846b94328263a7b65b"
+  integrity sha512-0RsvWZ+pBpFki1N4CF7dWWKgQpejQuf9qjrBVdXRE315kk6HBEVk1f8rsod6Rpo88vxPwj5FcBnn7ZlTNq+JRA==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-inspector@^5.1.0:
   version "5.1.1"
@@ -21205,12 +21241,12 @@ react-is@16.13.1, react-is@^16.12.0, react-is@^16.13.1, react-is@^16.7.0, react-
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-jsx-highcharts@4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/react-jsx-highcharts/-/react-jsx-highcharts-4.3.1.tgz#c951f35a6dbe6929ed7ee89a7ffc970f7733cbbd"
-  integrity sha512-Rp3Mw2C79aTl5DUnb2NAtORdHC1KIeMUZBOmdefz+gvwqFPfyX6L6qDYHkdkSZCqd2pIKXXm/hjNoK5xAvl7Nw==
+react-jsx-highcharts@4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/react-jsx-highcharts/-/react-jsx-highcharts-4.2.1.tgz#90ae8635fb9f64bbef4459daa15ee9607592e564"
+  integrity sha512-IDrHGWpL4Y+nz36cwcESf4QVYzUSasrZqMLn2fdVf5DbEv3zM9uJHrrSjONooFYGtrBolXLsuj3oKSqZI17dlA==
   dependencies:
-    "@babel/runtime" "^7.14.6"
+    "@babel/runtime" "^7.13.9"
     uuid "^8.3.2"
 
 react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
@@ -21358,7 +21394,15 @@ react-refresh@^0.9.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.9.0.tgz#71863337adc3e5c2f8a6bfddd12ae3bfe32aafbf"
   integrity sha512-Gvzk7OZpiqKSkxsQvO/mbTN1poglhmAV7gR/DdIrRrSMXraRQQlfikRJOr3Nb9GTMPC5kof948Zy6jJZIFtDvQ==
 
-react-resizable@^3.0.1, react-resizable@^3.0.4:
+react-resizable@^1.10.0:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-1.11.1.tgz#02ca6850afa7a22c1b3e623e64aef71ee252af69"
+  integrity sha512-S70gbLaAYqjuAd49utRHibtHLrHXInh7GuOR+6OO6RO6uleQfuBnWmZjRABfqNEx3C3Z6VPLg0/0uOYFrkfu9Q==
+  dependencies:
+    prop-types "15.x"
+    react-draggable "^4.0.3"
+
+react-resizable@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-3.0.4.tgz#aa20108eff28c52c6fddaa49abfbef8abf5e581b"
   integrity sha512-StnwmiESiamNzdRHbSSvA65b0ZQJ7eVQpPusrSmcpyGKzC0gojhtO62xxH6YOBmepk9dQTBi9yxidL3W4s3EBA==
@@ -21366,7 +21410,7 @@ react-resizable@^3.0.1, react-resizable@^3.0.4:
     prop-types "15.x"
     react-draggable "^4.0.3"
 
-react-select@^4.3.1:
+react-select@^4.1.0:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-4.3.1.tgz#389fc07c9bc7cf7d3c377b7a05ea18cd7399cb81"
   integrity sha512-HBBd0dYwkF5aZk1zP81Wx5UsLIIT2lSvAY2JiJo199LjoLHoivjn9//KsmvQMEFGNhe58xyuOITjfxKCcGc62Q==
@@ -21513,6 +21557,11 @@ react-vertical-timeline-component@3.3.3:
     classnames "^2.2.6"
     prop-types "^15.7.2"
     react-intersection-observer "^8.26.2"
+
+react-zoom-pan-pinch@2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/react-zoom-pan-pinch/-/react-zoom-pan-pinch-2.1.3.tgz#3b84594200343136c0d4397c33fec38dc0ee06ad"
+  integrity sha512-a5AChOWhjo0RmxsNZXGQIlNh3e3nLU6m4V6M+6dlbPNk5d+MtMxgKWyA5zpR06Lp3OZkZVF9nR8JeWSvKwck9g==
 
 react@17.0.2:
   version "17.0.2"
