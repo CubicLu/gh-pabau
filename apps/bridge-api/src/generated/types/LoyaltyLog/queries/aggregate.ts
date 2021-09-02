@@ -4,7 +4,7 @@ export const LoyaltyLogAggregateQuery = queryField('aggregateLoyaltyLog', {
   type: 'AggregateLoyaltyLog',
   args: {
     where: 'LoyaltyLogWhereInput',
-    orderBy: list('LoyaltyLogOrderByInput'),
+    orderBy: list('LoyaltyLogOrderByWithRelationInput'),
     cursor: 'LoyaltyLogWhereUniqueInput',
     distinct: 'LoyaltyLogScalarFieldEnum',
     skip: 'Int',

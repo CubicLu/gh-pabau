@@ -4,7 +4,7 @@ export const InvPaymentAggregateQuery = queryField('aggregateInvPayment', {
   type: 'AggregateInvPayment',
   args: {
     where: 'InvPaymentWhereInput',
-    orderBy: list('InvPaymentOrderByInput'),
+    orderBy: list('InvPaymentOrderByWithRelationInput'),
     cursor: 'InvPaymentWhereUniqueInput',
     distinct: 'InvPaymentScalarFieldEnum',
     skip: 'Int',

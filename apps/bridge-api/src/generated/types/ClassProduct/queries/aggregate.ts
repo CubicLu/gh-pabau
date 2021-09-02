@@ -4,7 +4,7 @@ export const ClassProductAggregateQuery = queryField('aggregateClassProduct', {
   type: 'AggregateClassProduct',
   args: {
     where: 'ClassProductWhereInput',
-    orderBy: list('ClassProductOrderByInput'),
+    orderBy: list('ClassProductOrderByWithRelationInput'),
     cursor: 'ClassProductWhereUniqueInput',
     distinct: 'ClassProductScalarFieldEnum',
     skip: 'Int',

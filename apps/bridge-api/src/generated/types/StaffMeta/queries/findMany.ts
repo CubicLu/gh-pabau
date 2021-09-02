@@ -4,7 +4,7 @@ export const StaffMetaFindManyQuery = queryField('findManyStaffMeta', {
   type: nonNull(list(nonNull('StaffMeta'))),
   args: {
     where: 'StaffMetaWhereInput',
-    orderBy: list('StaffMetaOrderByInput'),
+    orderBy: list('StaffMetaOrderByWithRelationInput'),
     cursor: 'StaffMetaWhereUniqueInput',
     distinct: 'StaffMetaScalarFieldEnum',
     skip: 'Int',

@@ -4,7 +4,7 @@ export const BugLogAggregateQuery = queryField('aggregateBugLog', {
   type: 'AggregateBugLog',
   args: {
     where: 'BugLogWhereInput',
-    orderBy: list('BugLogOrderByInput'),
+    orderBy: list('BugLogOrderByWithRelationInput'),
     cursor: 'BugLogWhereUniqueInput',
     distinct: 'BugLogScalarFieldEnum',
     skip: 'Int',

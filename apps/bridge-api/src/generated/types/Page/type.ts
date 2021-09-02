@@ -32,7 +32,7 @@ export const Page = objectType({
       type: 'UserPermission',
       args: {
         where: 'UserPermissionWhereInput',
-        orderBy: 'UserPermissionOrderByInput',
+        orderBy: 'UserPermissionOrderByWithRelationInput',
         cursor: 'UserPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -46,7 +46,7 @@ export const Page = objectType({
       type: 'CompanyPermission',
       args: {
         where: 'CompanyPermissionWhereInput',
-        orderBy: 'CompanyPermissionOrderByInput',
+        orderBy: 'CompanyPermissionOrderByWithRelationInput',
         cursor: 'CompanyPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -66,7 +66,7 @@ export const Page = objectType({
       type: 'Page',
       args: {
         where: 'PageWhereInput',
-        orderBy: 'PageOrderByInput',
+        orderBy: 'PageOrderByWithRelationInput',
         cursor: 'PageWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

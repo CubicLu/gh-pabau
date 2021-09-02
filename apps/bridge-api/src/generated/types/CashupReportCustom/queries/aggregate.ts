@@ -6,7 +6,7 @@ export const CashupReportCustomAggregateQuery = queryField(
     type: 'AggregateCashupReportCustom',
     args: {
       where: 'CashupReportCustomWhereInput',
-      orderBy: list('CashupReportCustomOrderByInput'),
+      orderBy: list('CashupReportCustomOrderByWithRelationInput'),
       cursor: 'CashupReportCustomWhereUniqueInput',
       distinct: 'CashupReportCustomScalarFieldEnum',
       skip: 'Int',

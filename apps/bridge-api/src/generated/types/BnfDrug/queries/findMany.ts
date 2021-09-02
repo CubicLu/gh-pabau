@@ -4,7 +4,7 @@ export const BnfDrugFindManyQuery = queryField('findManyBnfDrug', {
   type: nonNull(list(nonNull('BnfDrug'))),
   args: {
     where: 'BnfDrugWhereInput',
-    orderBy: list('BnfDrugOrderByInput'),
+    orderBy: list('BnfDrugOrderByWithRelationInput'),
     cursor: 'BnfDrugWhereUniqueInput',
     distinct: 'BnfDrugScalarFieldEnum',
     skip: 'Int',

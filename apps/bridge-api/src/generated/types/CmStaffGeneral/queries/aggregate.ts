@@ -6,7 +6,7 @@ export const CmStaffGeneralAggregateQuery = queryField(
     type: 'AggregateCmStaffGeneral',
     args: {
       where: 'CmStaffGeneralWhereInput',
-      orderBy: list('CmStaffGeneralOrderByInput'),
+      orderBy: list('CmStaffGeneralOrderByWithRelationInput'),
       cursor: 'CmStaffGeneralWhereUniqueInput',
       distinct: 'CmStaffGeneralScalarFieldEnum',
       skip: 'Int',

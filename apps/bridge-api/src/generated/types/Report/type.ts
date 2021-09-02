@@ -81,7 +81,7 @@ export const Report = objectType({
       type: 'UserReport',
       args: {
         where: 'UserReportWhereInput',
-        orderBy: 'UserReportOrderByInput',
+        orderBy: 'UserReportOrderByWithRelationInput',
         cursor: 'UserReportWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -95,7 +95,7 @@ export const Report = objectType({
       type: 'FavoriteReport',
       args: {
         where: 'FavoriteReportWhereInput',
-        orderBy: 'FavoriteReportOrderByInput',
+        orderBy: 'FavoriteReportOrderByWithRelationInput',
         cursor: 'FavoriteReportWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

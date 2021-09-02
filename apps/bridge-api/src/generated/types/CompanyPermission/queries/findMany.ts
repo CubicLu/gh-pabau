@@ -6,7 +6,7 @@ export const CompanyPermissionFindManyQuery = queryField(
     type: nonNull(list(nonNull('CompanyPermission'))),
     args: {
       where: 'CompanyPermissionWhereInput',
-      orderBy: list('CompanyPermissionOrderByInput'),
+      orderBy: list('CompanyPermissionOrderByWithRelationInput'),
       cursor: 'CompanyPermissionWhereUniqueInput',
       distinct: 'CompanyPermissionScalarFieldEnum',
       skip: 'Int',

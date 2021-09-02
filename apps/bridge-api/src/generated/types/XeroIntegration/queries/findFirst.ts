@@ -6,7 +6,7 @@ export const XeroIntegrationFindFirstQuery = queryField(
     type: 'XeroIntegration',
     args: {
       where: 'XeroIntegrationWhereInput',
-      orderBy: list('XeroIntegrationOrderByInput'),
+      orderBy: list('XeroIntegrationOrderByWithRelationInput'),
       cursor: 'XeroIntegrationWhereUniqueInput',
       distinct: 'XeroIntegrationScalarFieldEnum',
       skip: 'Int',

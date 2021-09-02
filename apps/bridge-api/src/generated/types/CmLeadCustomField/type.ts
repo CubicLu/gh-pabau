@@ -37,7 +37,7 @@ export const CmLeadCustomField = objectType({
       type: 'CmLeadCustomFieldOrder',
       args: {
         where: 'CmLeadCustomFieldOrderWhereInput',
-        orderBy: 'CmLeadCustomFieldOrderOrderByInput',
+        orderBy: 'CmLeadCustomFieldOrderOrderByWithRelationInput',
         cursor: 'CmLeadCustomFieldOrderWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

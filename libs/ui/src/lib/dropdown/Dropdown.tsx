@@ -187,7 +187,6 @@ export const Dropdown: FC<DropDownInterface> = ({
               </div>
               {userData?.companyName === company.name ? (
                 <CheckCircleFilled
-                  key={company.id}
                   className={classNames(styles.checkIcon, styles.activeMenu)}
                 />
               ) : (

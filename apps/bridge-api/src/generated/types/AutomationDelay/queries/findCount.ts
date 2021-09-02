@@ -6,7 +6,7 @@ export const AutomationDelayFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AutomationDelayWhereInput',
-      orderBy: list('AutomationDelayOrderByInput'),
+      orderBy: list('AutomationDelayOrderByWithRelationInput'),
       cursor: 'AutomationDelayWhereUniqueInput',
       distinct: 'AutomationDelayScalarFieldEnum',
       skip: 'Int',

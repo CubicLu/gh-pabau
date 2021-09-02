@@ -6,7 +6,7 @@ export const MedicalFormFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'MedicalFormWhereInput',
-      orderBy: list('MedicalFormOrderByInput'),
+      orderBy: list('MedicalFormOrderByWithRelationInput'),
       cursor: 'MedicalFormWhereUniqueInput',
       distinct: 'MedicalFormScalarFieldEnum',
       skip: 'Int',

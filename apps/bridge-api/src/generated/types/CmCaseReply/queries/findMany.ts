@@ -4,7 +4,7 @@ export const CmCaseReplyFindManyQuery = queryField('findManyCmCaseReply', {
   type: nonNull(list(nonNull('CmCaseReply'))),
   args: {
     where: 'CmCaseReplyWhereInput',
-    orderBy: list('CmCaseReplyOrderByInput'),
+    orderBy: list('CmCaseReplyOrderByWithRelationInput'),
     cursor: 'CmCaseReplyWhereUniqueInput',
     distinct: 'CmCaseReplyScalarFieldEnum',
     skip: 'Int',

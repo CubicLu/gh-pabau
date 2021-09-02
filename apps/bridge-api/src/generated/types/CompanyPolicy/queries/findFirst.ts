@@ -6,7 +6,7 @@ export const CompanyPolicyFindFirstQuery = queryField(
     type: 'CompanyPolicy',
     args: {
       where: 'CompanyPolicyWhereInput',
-      orderBy: list('CompanyPolicyOrderByInput'),
+      orderBy: list('CompanyPolicyOrderByWithRelationInput'),
       cursor: 'CompanyPolicyWhereUniqueInput',
       distinct: 'CompanyPolicyScalarFieldEnum',
       skip: 'Int',

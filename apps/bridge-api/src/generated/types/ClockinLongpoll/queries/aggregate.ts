@@ -6,7 +6,7 @@ export const ClockinLongpollAggregateQuery = queryField(
     type: 'AggregateClockinLongpoll',
     args: {
       where: 'ClockinLongpollWhereInput',
-      orderBy: list('ClockinLongpollOrderByInput'),
+      orderBy: list('ClockinLongpollOrderByWithRelationInput'),
       cursor: 'ClockinLongpollWhereUniqueInput',
       distinct: 'ClockinLongpollScalarFieldEnum',
       skip: 'Int',

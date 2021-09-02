@@ -4,7 +4,7 @@ export const CmLeadNoteFindManyQuery = queryField('findManyCmLeadNote', {
   type: nonNull(list(nonNull('CmLeadNote'))),
   args: {
     where: 'CmLeadNoteWhereInput',
-    orderBy: list('CmLeadNoteOrderByInput'),
+    orderBy: list('CmLeadNoteOrderByWithRelationInput'),
     cursor: 'CmLeadNoteWhereUniqueInput',
     distinct: 'CmLeadNoteScalarFieldEnum',
     skip: 'Int',

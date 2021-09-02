@@ -4,7 +4,7 @@ export const ClassNotesAggregateQuery = queryField('aggregateClassNotes', {
   type: 'AggregateClassNotes',
   args: {
     where: 'ClassNotesWhereInput',
-    orderBy: list('ClassNotesOrderByInput'),
+    orderBy: list('ClassNotesOrderByWithRelationInput'),
     cursor: 'ClassNotesWhereUniqueInput',
     distinct: 'ClassNotesScalarFieldEnum',
     skip: 'Int',

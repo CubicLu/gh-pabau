@@ -1,0 +1,305 @@
+.clientLayout {
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  .prescription-list {
+    .prescriptions-header-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      order: 0;
+      flex: 1;
+      width: 100%;
+      .prescriptions-title-wrapper {
+        display: flex;
+        align-items: center;
+        .title-content {
+          margin-left: 12px;
+          h3 {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 18px;
+            color: #3d3d46;
+            margin: 0;
+          }
+          span {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 16px;
+            color: #9292a3;
+            margin: 0;
+          }
+        }
+      }
+      .prescription-actions-wrapper {
+        display: flex;
+        .more-btn {
+          color: #9292a3;
+          &:hover,
+          &:focus,
+          &:active {
+            :global {
+              .anticon {
+                color: #7ec9e0;
+              }
+            }
+          }
+        }
+        .prescription-actions-container {
+          button {
+            border-radius: 4px;
+            color: #9292a3;
+            margin-right: 12px;
+            span {
+              svg {
+                height: 14px;
+                width: 14px;
+              }
+            }
+            .btn-text {
+              font-style: normal;
+              font-weight: normal;
+              font-size: 14px;
+              line-height: 20px;
+            }
+            &:hover,
+            :focus {
+              color: #40a0c1;
+            }
+            @media screen and (min-width: 1024px) and (max-width: 1300px) {
+              min-width: 32px;
+              padding-right: 0;
+              padding-left: 0;
+              text-align: center;
+              border-radius: 50%;
+              width: 32px;
+              height: 32px;
+              font-size: 16px;
+              .anticon {
+                display: block;
+              }
+              .btn-text {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+    .prescriptions-content-wrapper {
+      h3 {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;
+        color: #3d3d46;
+        margin: 0 0 0 46px;
+      }
+    }
+  }
+  .prescriptions-main-wrapper {
+    background: #ffffff;
+    border: 1px solid #ecedf0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    :global {
+      .ant-collapse-content-inactive {
+        .ant-collapse-content-box {
+          padding: 0 12px 12px;
+        }
+      }
+      .ant-collapse-header {
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        position: unset;
+        align-items: center;
+        .ant-collapse-arrow {
+          order: 1;
+          display: flex;
+          align-items: center;
+          margin-left: 12px;
+          position: unset;
+          padding-top: 0;
+          span {
+            svg {
+              font-size: 16px;
+              color: #9292A3;
+            }
+          }
+
+          flex-direction: column;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 1px solid #ecedf0;
+        }
+      }
+    }
+  }
+  .prescriptions-main-wrapper-after {
+    background: #ffffff;
+    border: 1px solid #ecedf0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    :global {
+      .ant-collapse-header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        position: relative;
+        flex-direction: row;
+        padding: 12px !important;
+        align-items: center;
+        .ant-collapse-arrow {
+          order: 1;
+          position: unset;
+          margin-left: 12px;
+          padding-top: 0;
+          display: flex;
+          align-items: center;
+          span {
+            svg {
+              font-size: 16px;
+              color: #9292A3;
+            }
+          }
+
+          flex-direction: column;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 1px solid #ecedf0;
+        }
+      }
+      .ant-collapse-content-box {
+        padding: 0 12px 12px !important;
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    padding: 16px 20px;
+  }
+}
+
+.custom-popover {
+  width: 200px;
+  z-index: 2;
+  :global {
+    .ant-popover-inner {
+      border-radius: 4px;
+      .ant-popover-inner-content {
+        padding: 8px 12px;
+      }
+    }
+  }
+  .prescription-options-wrapper {
+    display: flex;
+    flex-direction: column;
+    .option-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 14px;
+      cursor: pointer;
+      &:last-child {
+        margin-bottom: 0;
+        span {
+          svg {
+            color: #ff5b64;
+          }
+        }
+        h3 {
+          color: #ff5b64;
+        }
+      }
+      span {
+        svg {
+          color: #9292a3;
+          height: 16px;
+          width: 16px;
+        }
+      }
+      h3 {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 22px;
+        color: #9292a3;
+        margin: 0 0 0 8px;
+      }
+    }
+  }
+}
+
+.prescription-options-drawer {
+  :global {
+    .ant-drawer-content-wrapper {
+      .ant-drawer-content {
+        border-radius: 14px 14px 0 0;
+        .ant-drawer-wrapper-body {
+          .ant-drawer-body {
+            padding: 16px 24px 20px 24px;
+          }
+        }
+      }
+    }
+  }
+  .prescription-options-drawer-wrapper {
+    .line {
+      width: 40px;
+      height: 3px;
+      background: #e3e3e5;
+      border-radius: 16px;
+      display: flex;
+      margin: 0 auto 12px;
+    }
+    .prescription-options-wrapper {
+      display: flex;
+      flex-direction: column;
+      .option-item {
+        display: flex;
+        align-items: center;
+        padding: 5px 12px;
+        margin-bottom: 4px;
+        &:last-child {
+          margin-bottom: 0;
+          span {
+            svg {
+              color: #ff5b64;
+            }
+          }
+          h3 {
+            color: #ff5b64;
+          }
+        }
+        span {
+          svg {
+            color: #9292a3;
+            height: 16px;
+            width: 16px;
+          }
+        }
+        h3 {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 22px;
+          color: #9292a3;
+          margin: 0 0 0 8px;
+        }
+      }
+    }
+  }
+}

@@ -21,7 +21,7 @@ export const CompanyBranchGroup = objectType({
       type: 'CompanyBranch',
       args: {
         where: 'CompanyBranchWhereInput',
-        orderBy: 'CompanyBranchOrderByInput',
+        orderBy: 'CompanyBranchOrderByWithRelationInput',
         cursor: 'CompanyBranchWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

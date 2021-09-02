@@ -6,7 +6,7 @@ export const AttachmentHelperLiteFindFirstQuery = queryField(
     type: 'AttachmentHelperLite',
     args: {
       where: 'AttachmentHelperLiteWhereInput',
-      orderBy: list('AttachmentHelperLiteOrderByInput'),
+      orderBy: list('AttachmentHelperLiteOrderByWithRelationInput'),
       cursor: 'AttachmentHelperLiteWhereUniqueInput',
       distinct: 'AttachmentHelperLiteScalarFieldEnum',
       skip: 'Int',

@@ -17,7 +17,7 @@ export const ReportCategory = objectType({
       type: 'Report',
       args: {
         where: 'ReportWhereInput',
-        orderBy: 'ReportOrderByInput',
+        orderBy: 'ReportOrderByWithRelationInput',
         cursor: 'ReportWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

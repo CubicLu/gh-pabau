@@ -6,7 +6,7 @@ export const BookitProGeneralFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'BookitProGeneralWhereInput',
-      orderBy: list('BookitProGeneralOrderByInput'),
+      orderBy: list('BookitProGeneralOrderByWithRelationInput'),
       cursor: 'BookitProGeneralWhereUniqueInput',
       distinct: 'BookitProGeneralScalarFieldEnum',
       skip: 'Int',

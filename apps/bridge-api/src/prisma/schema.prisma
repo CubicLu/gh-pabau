@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["selectRelationCount", "filterJson", "referentialActions"]
+  previewFeatures = ["selectRelationCount", "filterJson", "referentialActions", "orderByRelation"]
 }
 
 datasource db {
@@ -308,7 +308,10 @@ model Company {
   CmLabel                          CmLabel[]
   CmContactLabel                   CmContactLabel[]
   LeadStatus                       LeadStatus[]
+  Activity                         Activity[]
 
+  ActivityUserColumns ActivityUserColumns[]
+  ActivityType        ActivityType[]
   @@map("admin")
 }
 
@@ -1059,6 +1062,7 @@ model MarketingSource {
 
 
   CmExtraPatient CmExtraPatient[]
+  CmLead         CmLead[]
   @@index([company_id], name: "company_id")
   @@index([public], name: "public")
   @@index([name], name: "source_name")
@@ -1907,6 +1911,7 @@ model CmContact {
   CommunicationRecipient    CommunicationRecipient[]
   CmContactCustom           CmContactCustom[]
   CmContactLabel            CmContactLabel[]
+  Activity                  Activity[]
 
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Fname], name: "Fname")
@@ -2056,6 +2061,74 @@ model CmContactCustom {
   @@index([custom_field_id], name: "custom_field_id")
   @@index([company_id], name: "occupier")
   @@map("cm_contacts_custom")
+}
+
+//model ActivityCustomField {
+//  id                Int               @id @default(autoincrement())
+//  company_id        Int
+//  custom_field_id   Int
+//  active            Boolean
+//  basic             Boolean
+//  order             Int
+//  Company           Company           @relation(fields: [company_id], references: [id])
+//  ManageCustomField ManageCustomField @relation(fields: [custom_field_id], references: [id])
+//
+//  @@map("activity_custom_fields")
+//}
+
+model ActivityType {
+  id         Int      @id @default(autoincrement())
+  name       String
+  action     String?
+  badge      String
+  order      Int
+  company_id Int
+  Company    Company? @relation(fields: [company_id], references: [id])
+
+  Activity Activity[]
+  @@map("activity_types")
+}
+
+model ActivityUserColumns {
+  id         Int     @id @default(autoincrement())
+  user_id    Int
+  columns    String
+  company_id Int
+  Company    Company @relation(fields: [company_id], references: [id])
+  User       User?   @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, company_id], name: "company_id_user_id")
+  @@index([company_id, user_id], name: "activity_user_columns_user_id_company_id__index")
+  @@map("activity_user_columns")
+}
+
+model Activity {
+  id             Int          @id @default(autoincrement())
+  created_by     Int
+  assigned_to    Int
+  contact_id     Int
+  lead_id        Int
+  subject        String
+  note           String?
+  available      Boolean      @default(true)
+  status         String
+  due_start_date DateTime
+  due_end_date   DateTime
+  created_at     DateTime     @default(now())
+  updated_at     DateTime?    @updatedAt
+  finished_at    DateTime?
+  type           Int
+  company_id     Int
+  Company        Company      @relation(fields: [company_id], references: [id])
+  User           User         @relation("activityCreatedUser", fields: [created_by], references: [id])
+  CmContact      CmContact    @relation(fields: [contact_id], references: [ID])
+  CmLead         CmLead       @relation(fields: [lead_id], references: [ID])
+  ActivityType   ActivityType @relation(fields: [type], references: [id])
+  AssignedUser   User         @relation("activityAssignedUser", fields: [assigned_to], references: [id])
+
+  @@index([company_id], name: "activity_company_id__index")
+  @@index([company_id, due_start_date, status], name: "activity_company_id_due_start_date_status__index")
+  @@map("activity")
 }
 
 //
@@ -2490,6 +2563,10 @@ model CmLead {
   CmLeadCustomField        CmLeadCustomField[]
   CommunicationRecipient   CommunicationRecipient[]
   CmLeadNote               CmLeadNote[]
+  User                     User?                    @relation(fields: [OwnerID], references: [id])
+  Activity                 Activity[]
+  MarketingSource          MarketingSource?         @relation(fields: [LeadSource], references: [id])
+  LeadStatusData           LeadStatus?              @relation(fields: [LeadStatus], references: [id])
 
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
@@ -7706,6 +7783,7 @@ model LeadStatus {
   is_convert          Int
   Company             Company? @relation(fields: [company_id], references: [id])
 
+  CmLead CmLead[]
   @@map("lead_status")
 }
 
@@ -12536,8 +12614,12 @@ model User {
   Booking                      Booking[]
   InvSale                      InvSale[]
   CompanyOwner                 Company?                       @relation("owner")
+  Activity                     Activity[]                     @relation("activityCreatedUser")
+  CmLead                       CmLead[]
+  AssignedActivity             Activity[]                     @relation("activityAssignedUser")
 
-  PasswordResetAuth PasswordResetAuth[]
+  PasswordResetAuth   PasswordResetAuth[]
+  ActivityUserColumns ActivityUserColumns[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

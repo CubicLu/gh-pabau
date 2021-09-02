@@ -21,7 +21,7 @@ export const TemplateFolder = objectType({
       type: 'MessageTemplate',
       args: {
         where: 'MessageTemplateWhereInput',
-        orderBy: 'MessageTemplateOrderByInput',
+        orderBy: 'MessageTemplateOrderByWithRelationInput',
         cursor: 'MessageTemplateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

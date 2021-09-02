@@ -23,7 +23,7 @@ export const CmLabel = objectType({
       type: 'CmContactLabel',
       args: {
         where: 'CmContactLabelWhereInput',
-        orderBy: 'CmContactLabelOrderByInput',
+        orderBy: 'CmContactLabelOrderByWithRelationInput',
         cursor: 'CmContactLabelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

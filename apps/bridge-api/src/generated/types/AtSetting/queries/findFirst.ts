@@ -4,7 +4,7 @@ export const AtSettingFindFirstQuery = queryField('findFirstAtSetting', {
   type: 'AtSetting',
   args: {
     where: 'AtSettingWhereInput',
-    orderBy: list('AtSettingOrderByInput'),
+    orderBy: list('AtSettingOrderByWithRelationInput'),
     cursor: 'AtSettingWhereUniqueInput',
     distinct: 'AtSettingScalarFieldEnum',
     skip: 'Int',

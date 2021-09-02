@@ -20,13 +20,13 @@ import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { languages } from '@pabau/i18n'
 import { Integrations } from '@sentry/tracing'
 import * as Sentry from '@sentry/react'
+import { ErrorNotification } from '../components/Notification/ErrorNotification'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 
 require('../../../libs/ui/src/styles/antd.less')
-import { Notification, NotificationType } from '@pabau/ui'
 import { UserProvider } from '../context/UserContext'
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
@@ -91,7 +91,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
             Router.replace('/403')
             break
           default:
-            Notification(NotificationType.error, error.message)
+            ErrorNotification(error.message)
             console.log(
               `[GraphQL error]: Message: ${error.message}, Location: ${error.locations}, Path: ${error.path}`
             )

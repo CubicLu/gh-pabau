@@ -6,7 +6,7 @@ export const JobConfigurationFindFirstQuery = queryField(
     type: 'JobConfiguration',
     args: {
       where: 'JobConfigurationWhereInput',
-      orderBy: list('JobConfigurationOrderByInput'),
+      orderBy: list('JobConfigurationOrderByWithRelationInput'),
       cursor: 'JobConfigurationWhereUniqueInput',
       distinct: 'JobConfigurationScalarFieldEnum',
       skip: 'Int',

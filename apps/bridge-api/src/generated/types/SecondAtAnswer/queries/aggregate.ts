@@ -6,7 +6,7 @@ export const SecondAtAnswerAggregateQuery = queryField(
     type: 'AggregateSecondAtAnswer',
     args: {
       where: 'SecondAtAnswerWhereInput',
-      orderBy: list('SecondAtAnswerOrderByInput'),
+      orderBy: list('SecondAtAnswerOrderByWithRelationInput'),
       cursor: 'SecondAtAnswerWhereUniqueInput',
       distinct: 'SecondAtAnswerScalarFieldEnum',
       skip: 'Int',

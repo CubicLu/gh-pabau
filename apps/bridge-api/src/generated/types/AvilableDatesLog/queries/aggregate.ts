@@ -6,7 +6,7 @@ export const AvilableDatesLogAggregateQuery = queryField(
     type: 'AggregateAvilableDatesLog',
     args: {
       where: 'AvilableDatesLogWhereInput',
-      orderBy: list('AvilableDatesLogOrderByInput'),
+      orderBy: list('AvilableDatesLogOrderByWithRelationInput'),
       cursor: 'AvilableDatesLogWhereUniqueInput',
       distinct: 'AvilableDatesLogScalarFieldEnum',
       skip: 'Int',

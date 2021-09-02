@@ -39,7 +39,7 @@ export function useGridData(t) {
           data: [
             {
               title: t('setup.clinic.general.calendar'),
-              href: '/calendar',
+              href: '/settings/calendar',
             },
             {
               title: t('setup.clinic.general.loyalty'),

@@ -17,7 +17,7 @@ export const Timezone = objectType({
       type: 'CompanyDetails',
       args: {
         where: 'CompanyDetailsWhereInput',
-        orderBy: 'CompanyDetailsOrderByInput',
+        orderBy: 'CompanyDetailsOrderByWithRelationInput',
         cursor: 'CompanyDetailsWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

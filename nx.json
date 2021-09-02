@@ -79,10 +79,6 @@
     "i18n": {
       "tags": []
     },
-    "bridge-proxy": {
-      "tags": [],
-      "implicitDependencies": ["bridge-api"]
-    },
     "graphql": {
       "tags": []
     },

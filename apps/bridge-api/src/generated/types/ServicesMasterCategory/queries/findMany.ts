@@ -6,7 +6,7 @@ export const ServicesMasterCategoryFindManyQuery = queryField(
     type: nonNull(list(nonNull('ServicesMasterCategory'))),
     args: {
       where: 'ServicesMasterCategoryWhereInput',
-      orderBy: list('ServicesMasterCategoryOrderByInput'),
+      orderBy: list('ServicesMasterCategoryOrderByWithRelationInput'),
       cursor: 'ServicesMasterCategoryWhereUniqueInput',
       distinct: 'ServicesMasterCategoryScalarFieldEnum',
       skip: 'Int',

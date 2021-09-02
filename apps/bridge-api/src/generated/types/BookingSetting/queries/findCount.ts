@@ -6,7 +6,7 @@ export const BookingSettingFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'BookingSettingWhereInput',
-      orderBy: list('BookingSettingOrderByInput'),
+      orderBy: list('BookingSettingOrderByWithRelationInput'),
       cursor: 'BookingSettingWhereUniqueInput',
       distinct: 'BookingSettingScalarFieldEnum',
       skip: 'Int',

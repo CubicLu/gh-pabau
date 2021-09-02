@@ -300,7 +300,9 @@ export const Table: FC<TableType> = ({
         ?.filter((col: any) => col.visible === true)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((col: any) => {
-          if (
+          if (col?.render) {
+            return col
+          } else if (
             col &&
             (col.dataIndex === 'public' ||
               col.dataIndex === 'is_active' ||

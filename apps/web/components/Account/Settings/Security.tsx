@@ -20,6 +20,11 @@ import { relativeTime } from '../../../helper/relativeTimeFormat'
 import { dateTimeFormatter } from '../../../helper/dateTimeFormat'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './skeleton.module.less'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export interface SecurityProps {
   profile?: {
@@ -28,6 +33,11 @@ export interface SecurityProps {
     full_name?: string
     email: string
     last_login?: string
+    company_details?: {
+      timezone?: {
+        offset_seconds?: number
+      }
+    }
   }
   loading?: boolean
   onSecurityChange: (data) => void
@@ -84,8 +94,7 @@ const Security: FC<SecurityProps> = ({
       setCPassLoading(false)
       Notification(
         NotificationType.error,
-        PasswordErrors[error.message] ||
-          t('account.settings.response.notification.password.error')
+        PasswordErrors[error.message] || error.message
       )
     },
   })
@@ -122,6 +131,34 @@ const Security: FC<SecurityProps> = ({
         t('account.settings.response.notification.password.error.confirm')
       )
     }
+  }
+
+  const LastLogin = () => {
+    const date1 = dayjs().utc()
+    const date2 = dayjs(profile?.last_login).utc()
+
+    let last_login = dayjs(profile?.last_login).format()
+    if (date2.diff(date1, 'second') > 0) {
+      last_login = dayjs(profile?.last_login)
+        .subtract(profile?.company_details?.timezone?.offset_seconds, 'seconds')
+        .format()
+    }
+    return (
+      <>
+        {relativeTime(
+          user?.me?.Company?.details?.language?.toString().slice(0, 2) || 'en',
+          new Date(last_login)
+        )}
+        <span className="lastDate">
+          {' '}
+          |{' '}
+          {dateTimeFormatter({
+            date: new Date(String(last_login)),
+            lan: user?.me?.Company?.details?.language?.toString().slice(0, 2),
+          })}
+        </span>
+      </>
+    )
   }
 
   return (
@@ -355,22 +392,7 @@ const Security: FC<SecurityProps> = ({
                     <div className="whereDescription">
                       <div className="osInfo"></div>
                       <div className="appInfo">
-                        {relativeTime(
-                          user?.me?.Company?.details?.language
-                            ?.toString()
-                            .slice(0, 2) || 'en',
-                          new Date(profile?.last_login)
-                        )}
-                        <span className="lastDate">
-                          {' '}
-                          |{' '}
-                          {dateTimeFormatter({
-                            date: new Date(String(profile?.last_login)),
-                            lan: user?.me?.Company?.details?.language
-                              ?.toString()
-                              .slice(0, 2),
-                          })}
-                        </span>
+                        <LastLogin />
                       </div>
                     </div>
                   </div>

@@ -44,6 +44,7 @@ export const StickyPopout: FC = () => {
   const expandedClasses = {
     prescription: styles.expandedPrescription,
     treatment: styles.expandedForm,
+    consent: styles.expandedForm,
     form: styles.expandedForm,
     email: styles.expandedEmail,
     sms: styles.expandedSMS,
@@ -262,6 +263,13 @@ export const StickyPopout: FC = () => {
                       type={item.type}
                     />
                   )}
+                  {item.type === 'consent' && (
+                    <SelectForm
+                      client={item.client || defaultClient}
+                      receiverData={item.receiverData || ''}
+                      type={item.type}
+                    />
+                  )}
                   {item.type === 'prescription' && (
                     <CreatePrescription
                       client={item.client || defaultClient}
@@ -344,6 +352,13 @@ export const StickyPopout: FC = () => {
                 />
               )}
               {currentPopout.type === 'treatment' && (
+                <SelectForm
+                  client={currentPopout.client || defaultClient}
+                  receiverData={currentPopout.receiverData || ''}
+                  type={currentPopout.type}
+                />
+              )}
+              {currentPopout.type === 'consent' && (
                 <SelectForm
                   client={currentPopout.client || defaultClient}
                   receiverData={currentPopout.receiverData || ''}

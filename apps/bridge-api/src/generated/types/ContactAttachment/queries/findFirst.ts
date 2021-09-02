@@ -6,7 +6,7 @@ export const ContactAttachmentFindFirstQuery = queryField(
     type: 'ContactAttachment',
     args: {
       where: 'ContactAttachmentWhereInput',
-      orderBy: list('ContactAttachmentOrderByInput'),
+      orderBy: list('ContactAttachmentOrderByWithRelationInput'),
       cursor: 'ContactAttachmentWhereUniqueInput',
       distinct: 'ContactAttachmentScalarFieldEnum',
       skip: 'Int',

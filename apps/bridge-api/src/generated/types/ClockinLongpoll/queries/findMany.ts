@@ -6,7 +6,7 @@ export const ClockinLongpollFindManyQuery = queryField(
     type: nonNull(list(nonNull('ClockinLongpoll'))),
     args: {
       where: 'ClockinLongpollWhereInput',
-      orderBy: list('ClockinLongpollOrderByInput'),
+      orderBy: list('ClockinLongpollOrderByWithRelationInput'),
       cursor: 'ClockinLongpollWhereUniqueInput',
       distinct: 'ClockinLongpollScalarFieldEnum',
       skip: 'Int',
