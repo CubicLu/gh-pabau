@@ -1,66 +1,66 @@
-#query ActivityTypesListQuery(
-#  $isActive: Boolean = true
-#  $offset: Int
-#  $limit: Int
-#) {
-#  activity_types(
-#    offset: $offset
-#    limit: $limit
-#    where: { is_active: { _eq: $isActive } }
-#  ) {
-#    __typename
-#    id
-#    name
-#    subject
-#    is_active
-#  }
-#}
-#
-#query ActivityTypesAggregate($isActive: Boolean = true) {
-#  activity_types_aggregate(where: { is_active: { _eq: $isActive } }) {
-#    aggregate {
-#      count
-#    }
-#  }
-#}
-#
-#mutation DeleteActivityType($id: uuid!) {
-#  delete_activity_types_by_pk(id: $id) {
-#    __typename
-#    id
-#  }
-#}
-#
-#mutation InsertActivityTypeOne(
-#  $name: String!
-#  $subject: String!
-#  $is_active: Boolean!
-#) {
-#  insert_activity_types_one(
-#    object: { name: $name, subject: $subject, is_active: $is_active }
-#  ) {
-#    __typename
-#    id
-#    name
-#    subject
-#    is_active
-#  }
-#}
-#
-#mutation UpdateActivityTypeByPk(
-#  $id: uuid!
-#  $name: String!
-#  $subject: String!
-#  $is_active: Boolean
-#) {
-#  update_activity_types_by_pk(
-#    pk_columns: { id: $id }
-#    _set: { name: $name, subject: $subject, is_active: $is_active }
-#  ) {
-#    __typename
-#    id
-#    name
-#    subject
-#    is_active
-#  }
-#}
+query ActivityTypesListQuery(
+  $isActive: Boolean = true
+  $offset: Int
+  $limit: Int
+) {
+  activity_types(
+    offset: $offset
+    limit: $limit
+    where: { is_active: { _eq: $isActive } }
+  ) {
+    __typename
+    id
+    name
+    subject
+    is_active
+  }
+}
+
+query ActivityTypesAggregate($isActive: Boolean = true) {
+  activity_types_aggregate(where: { is_active: { _eq: $isActive } }) {
+    aggregate {
+      count
+    }
+  }
+}
+
+mutation DeleteActivityType($id: uuid!) {
+  delete_activity_types_by_pk(id: $id) {
+    __typename
+    id
+  }
+}
+
+mutation InsertActivityTypeOne(
+  $name: String!
+  $subject: String!
+  $is_active: Boolean!
+) {
+  insert_activity_types_one(
+    object: { name: $name, subject: $subject, is_active: $is_active }
+  ) {
+    __typename
+    id
+    name
+    subject
+    is_active
+  }
+}
+
+mutation UpdateActivityTypeByPk(
+  $id: uuid!
+  $name: String!
+  $subject: String!
+  $is_active: Boolean
+) {
+  update_activity_types_by_pk(
+    pk_columns: { id: $id }
+    _set: { name: $name, subject: $subject, is_active: $is_active }
+  ) {
+    __typename
+    id
+    name
+    subject
+    is_active
+  }
+}

@@ -67,7 +67,6 @@ export const UserProvider: FC = ({ children }) => {
     try {
       return jwt.decode(token, { json: true }) as jwt.JwtPayload & JwtUser
     } catch {
-      console.log('CONTExT;l;;;-----------------------------------')
       return null
     }
   }, [token])
