@@ -20,5 +20,4 @@ const SendSMSStory = ({ ...args }: SendSMSProps) => {
     </div>
   )
 }
-
 export const Basic = SendSMSStory.bind({})
