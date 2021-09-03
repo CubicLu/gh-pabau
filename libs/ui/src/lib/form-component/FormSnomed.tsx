@@ -64,6 +64,7 @@ export const FormSnomed: FC<P> = ({
   const [searchTermArr, setSearchTermArr] = useState<string[]>([])
   const [inputedText, setInputedText] = useState('')
   const [suggestedSearchVal, setSuggestedSearchVal] = useState('')
+  const [readOnly, setReadOnly] = useState(false)
 
   useEffect(() => {
     const snomedAPICall = async (debouncedSearchTerm) => {
@@ -83,6 +84,7 @@ export const FormSnomed: FC<P> = ({
 
       if (searchVal !== '') {
         setLoading(true)
+        setReadOnly(true)
         try {
           const response = await fetch(
             'https://termbrowser.nhs.uk/sct-browser-api/snomed/uk-edition/v20210707/descriptions?query=' +
@@ -108,8 +110,12 @@ export const FormSnomed: FC<P> = ({
             setTerms(tempItems)
           }
           setLoading(false)
+          setReadOnly(false)
+          onFocusEditor()
         } catch (error) {
           setLoading(false)
+          setReadOnly(false)
+          onFocusEditor()
           console.log(error)
         }
       }
@@ -120,6 +126,7 @@ export const FormSnomed: FC<P> = ({
   const clearAllStatus = () => {
     setTerms([])
     setSuggestedSearchVal('')
+    setReadOnly(false)
   }
 
   const onEditorStateChange = (e) => {
@@ -135,6 +142,10 @@ export const FormSnomed: FC<P> = ({
 
   const onEditorFocus = (e) => {
     clearAllStatus()
+  }
+
+  const onFocusEditor = () => {
+    editor.current.focus()
   }
 
   const addEntityToEditorState = (item) => {
@@ -207,6 +218,7 @@ export const FormSnomed: FC<P> = ({
           placeholder={placeHolder}
           onFocus={onEditorFocus}
           handleBeforeInput={onHandleBeforeInput}
+          readOnly={readOnly}
         />
         {terms.length > 0 && (
           <ul className={styles.snomedList}>
