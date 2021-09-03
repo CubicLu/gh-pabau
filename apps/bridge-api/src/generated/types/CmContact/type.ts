@@ -440,6 +440,26 @@ export const CmContact = objectType({
         return root.CmContactLabel
       },
     })
+    t.list.field('Activity', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Activity
+      },
+    })
+    t.nullable.field('ContactPreference', {
+      type: 'ContactPreference',
+      resolve(root: any) {
+        return root.ContactPreference
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmContactCountOutputType',
       resolve(root: any) {

@@ -20,12 +20,10 @@ import { ReactComponent as MailIcon } from '../../assets/images/timeline/mail-ic
 import { ReactComponent as CallIcon } from '../../assets/images/timeline/call-icon.svg'
 import { ReactComponent as UserIcon } from '../../assets/images/contact-sharing/user.svg'
 import { TFunction } from 'react-i18next'
-import {
-  RecordSharing,
-  RecordSharingOptions,
-} from './SharingAndPrivacy/RecordSharing'
+import { RecordSharing } from './SharingAndPrivacy/RecordSharing'
 import { SettingSharing } from './SharingAndPrivacy/SettingSharing'
 import { SharingHistoryProps } from './SharingAndPrivacy/SharingHistory'
+import { CustomDropdownOptionType } from '@pabau/ui'
 
 export const initialValues = {
   salutation: '',
@@ -43,15 +41,6 @@ export const initialValues = {
   MailingStreet: '',
   MailingCity: '',
   MailingPostal: '',
-  OtherStreet: '',
-  OtherProvince: '',
-  OtherCity: '',
-  OtherCountry: '',
-  OtherPostal: '',
-  MarketingOptInEmail: false,
-  MarketingOptInText: false,
-  MarketingOptInPost: false,
-  MarketingOptInPhone: false,
   marketingPromotion: ['subscriptionToReceive'],
 }
 
@@ -96,7 +85,7 @@ export const sectionToShare = (t: TFunction<'common'>): RecordSharing[] => {
 
 export const recordToSharingOption = (
   t: TFunction<'common'>
-): RecordSharingOptions[] => {
+): CustomDropdownOptionType[] => {
   return [
     {
       key: 'restricted',
@@ -110,6 +99,7 @@ export const recordToSharingOption = (
       description: t(
         'create.client.modal.privacy.record.sharing.option.restricted.description'
       ),
+      value: '-1',
     },
     {
       key: 'sharing',
@@ -123,6 +113,7 @@ export const recordToSharingOption = (
       description: t(
         'create.client.modal.privacy.record.sharing.option.sharing.description'
       ),
+      value: '0',
     },
     {
       key: 'access',
@@ -137,6 +128,7 @@ export const recordToSharingOption = (
         'create.client.modal.privacy.record.sharing.option.access.description'
       ),
       isShowPlus: true,
+      value: '1',
     },
   ]
 }

@@ -1,7 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
-    
+
     {
       "type": "node-terminal",
       "request": "launch",
@@ -14,13 +14,6 @@
       "request": "launch",
       "name": "serve bridge-api",
       "command": "yarn serve bridge-api",
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
-      "type": "node-terminal",
-      "request": "launch",
-      "name": "serve bridge-proxy",
-      "command": "yarn serve bridge-proxy",
       "skipFiles": ["<node_internals>/**"]
     },
     {

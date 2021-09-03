@@ -33,6 +33,20 @@ export const MarketingSource = objectType({
         return root.CmExtraPatient
       },
     })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
+      },
+    })
     t.nullable.field('_count', {
       type: 'MarketingSourceCountOutputType',
       resolve(root: any) {

@@ -1673,6 +1673,62 @@ export const Company = objectType({
         return root.LeadStatus
       },
     })
+    t.list.field('Activity', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Activity
+      },
+    })
+    t.list.field('ContactPreference', {
+      type: 'ContactPreference',
+      args: {
+        where: 'ContactPreferenceWhereInput',
+        orderBy: 'ContactPreferenceOrderByWithRelationInput',
+        cursor: 'ContactPreferenceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactPreferenceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactPreference
+      },
+    })
+    t.list.field('ActivityUserColumns', {
+      type: 'ActivityUserColumns',
+      args: {
+        where: 'ActivityUserColumnsWhereInput',
+        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
+        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserColumnsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserColumns
+      },
+    })
+    t.list.field('ActivityType', {
+      type: 'ActivityType',
+      args: {
+        where: 'ActivityTypeWhereInput',
+        orderBy: 'ActivityTypeOrderByWithRelationInput',
+        cursor: 'ActivityTypeWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityTypeScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityType
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

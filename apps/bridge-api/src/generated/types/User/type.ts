@@ -567,6 +567,48 @@ export const User = objectType({
         return root.CompanyOwner
       },
     })
+    t.list.field('Activity', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Activity
+      },
+    })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
+      },
+    })
+    t.list.field('AssignedActivity', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.AssignedActivity
+      },
+    })
     t.list.field('PasswordResetAuth', {
       type: 'PasswordResetAuth',
       args: {
@@ -579,6 +621,20 @@ export const User = objectType({
       },
       resolve(root: any) {
         return root.PasswordResetAuth
+      },
+    })
+    t.list.field('ActivityUserColumns', {
+      type: 'ActivityUserColumns',
+      args: {
+        where: 'ActivityUserColumnsWhereInput',
+        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
+        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserColumnsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserColumns
       },
     })
     t.nullable.field('_count', {

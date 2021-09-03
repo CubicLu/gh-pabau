@@ -5,18 +5,19 @@ import { PabauPlus } from '@pabau/ui'
 import styles from './DropdownWithIcon.module.less'
 
 export interface CustomDropdownProp {
-  data: DropdownOptionType[]
+  data: CustomDropdownOptionType[]
   selectedValue?: string
-  handleChange?: (value: DropdownOptionType) => void
+  handleChange?: (value: CustomDropdownOptionType) => void
 }
 
-interface DropdownOptionType {
+export interface CustomDropdownOptionType {
   key: string
-  icon: ReactNode
   title: string
   displayTitle: string
   description: string
+  icon: ReactNode
   isShowPlus?: boolean
+  value: string
 }
 
 export const CustomDropdown: FC<CustomDropdownProp> = ({
@@ -25,18 +26,18 @@ export const CustomDropdown: FC<CustomDropdownProp> = ({
   handleChange,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
-  const [selected, setSelected] = useState<DropdownOptionType>()
+  const [selected, setSelected] = useState<CustomDropdownOptionType>()
 
   useEffect(() => {
     if (selectedValue) {
-      setSelected(data.find((thread) => thread.key === selectedValue))
+      setSelected(data.find((thread) => thread.value === selectedValue))
     } else if (data.length > 0) {
       setSelected(data[0])
     }
   }, [selectedValue, data])
 
   const handleRadioChange = (e) => {
-    const selectedData = data.find((thread) => thread.key === e.target.value)
+    const selectedData = data.find((thread) => thread.value === e.target.value)
     if (selectedData) {
       setSelected(selectedData)
       handleChange?.(selectedData)
@@ -46,12 +47,12 @@ export const CustomDropdown: FC<CustomDropdownProp> = ({
   const content = () => {
     return (
       <div className={styles.customPopoverContent}>
-        <Radio.Group onChange={handleRadioChange} value={selected?.key}>
+        <Radio.Group onChange={handleRadioChange} value={selected?.value}>
           {data.map((option) => {
             return (
               <Radio
                 key={option.key}
-                value={option.key}
+                value={option.value}
                 className={styles.radioWrapper}
               >
                 <div className={styles.popUpHeader}>

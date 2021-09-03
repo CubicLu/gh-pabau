@@ -1,5 +1,10 @@
 import { Context } from '../../context'
-import { CreateContactInput, CustomFieldType, ContactType } from './types'
+import {
+  CreateContactInput,
+  CustomFieldType,
+  ContactType,
+  ContactPreferenceType,
+} from './types'
 import { CmContact } from '@prisma/client'
 import { createLabel } from './label'
 
@@ -17,6 +22,7 @@ const createContact = async (
   data: ContactType,
   customFields: CustomFieldType[],
   locationId: number[],
+  contactPreferences: ContactPreferenceType,
   language: string,
   companyId: number
 ): Promise<CmContact> => {
@@ -55,6 +61,12 @@ const createContact = async (
           meta_value: language,
         },
       },
+      ContactPreference: {
+        create: {
+          ...contactPreferences,
+          company_id: companyId,
+        },
+      },
     },
   })
 }
@@ -91,6 +103,7 @@ export const create = async (
       id === ctx.authenticated.company && input.limitContactLocations
         ? input.limitContactLocations
         : [],
+      input.contactPreferences,
       !input.data.preferred_language
         ? ctx.authenticated.language?.company
         : input.data.preferred_language,

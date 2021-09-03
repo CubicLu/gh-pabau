@@ -206,6 +206,7 @@ const SendSMSComponent: FC<SendSMSComponentProps> = ({
       </div>
       <ChooseSMSTemplate
         modalVisible={openChooseTemplate}
+        handleClose={() => setOpenChooseTemplate(false)}
         templateList={templateList}
         onSelectTemplate={(template) => {
           setText(template)
@@ -217,6 +218,7 @@ const SendSMSComponent: FC<SendSMSComponentProps> = ({
           setText(template.message)
           setTextWithTag(template.message)
           setTriggerChangeValue(true)
+
           setOpenChooseTemplate(false)
         }}
         onSearchTextChange={(searchText) => {

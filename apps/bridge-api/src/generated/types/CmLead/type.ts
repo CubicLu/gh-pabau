@@ -111,6 +111,38 @@ export const CmLead = objectType({
         return root.CmLeadNote
       },
     })
+    t.nullable.field('User', {
+      type: 'User',
+      resolve(root: any) {
+        return root.User
+      },
+    })
+    t.list.field('Activity', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Activity
+      },
+    })
+    t.nullable.field('MarketingSource', {
+      type: 'MarketingSource',
+      resolve(root: any) {
+        return root.MarketingSource
+      },
+    })
+    t.nullable.field('LeadStatusData', {
+      type: 'LeadStatus',
+      resolve(root: any) {
+        return root.LeadStatusData
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmLeadCountOutputType',
       resolve(root: any) {
