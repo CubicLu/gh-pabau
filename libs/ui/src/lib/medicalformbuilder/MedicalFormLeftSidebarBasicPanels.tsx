@@ -196,11 +196,11 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                 (form) =>
                   form.formName === 'basic_conditions' ||
                   form.formName === 'basic_drugs' ||
-                  form.formName === 'basic_traveldestination' ||
-                  form.formName === 'basic_vaccinescheduler' ||
-                  form.formName === 'basic_vaccinehistory' ||
-                  form.formName === 'basic_snomed' ||
-                  form.formName === 'basic_labtests'
+                  // form.formName === 'basic_traveldestination' ||
+                  // form.formName === 'basic_vaccinescheduler' ||
+                  // form.formName === 'basic_vaccinehistory' ||
+                  // form.formName === 'basic_labtests' ||
+                  form.formName === 'basic_snomed'
               )
               .map((form) => {
                 return snapshot.draggingFromThisWith === form.formName ? (
