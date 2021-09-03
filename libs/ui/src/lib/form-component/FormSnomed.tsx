@@ -3,31 +3,22 @@ import { Editor, EditorState, Modifier, CompositeDecorator } from 'draft-js'
 import styles from './FormComponent.module.less'
 import { useDebounce } from '@react-hook/debounce'
 import { LoadingOutlined } from '@ant-design/icons'
-import { Spin } from 'antd'
+import { Spin, Tooltip } from 'antd'
+import FormSnomedItem from './FormSnomedItem'
+import { SNOMED } from '@pabau/ui'
 
 const antIcon = <LoadingOutlined style={{ fontSize: 20 }} spin />
 
-interface SNOMED {
-  id: string
-  term: string
-  conceptId: string
-  fsn: string
-}
-
 interface P {
   title: string
-  desc: string
   placeHolder: string
-  defaultValue: string
   required: boolean
   onChangeTextValue?: (value: string) => void
 }
 
 export const FormSnomed: FC<P> = ({
   title = '',
-  desc = '',
   placeHolder = '',
-  defaultValue = '',
   required = false,
   onChangeTextValue,
 }) => {
@@ -47,13 +38,11 @@ export const FormSnomed: FC<P> = ({
       .getEntity(props.entityKey)
       .getData()
     return (
-      <span
-        title={`${fsn} - ${conceptId}`}
-        className={'Snomed'}
-        data-offset-key={props.offsetKey}
-      >
-        {term}
-      </span>
+      <Tooltip title={`${fsn} - ${conceptId}`} color={'#108ee9'}>
+        <span className={'Snomed'} data-offset-key={props.offsetKey}>
+          {term}
+        </span>
+      </Tooltip>
     )
   }
 
@@ -72,13 +61,26 @@ export const FormSnomed: FC<P> = ({
   const [terms, setTerms] = useState<SNOMED[]>([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [text, setText] = useState('')
+  const [searchTermArr, setSearchTermArr] = useState<string[]>([])
+  const [inputedText, setInputedText] = useState('')
+  const [suggestedSearchVal, setSuggestedSearchVal] = useState('')
 
   useEffect(() => {
     const snomedAPICall = async (debouncedSearchTerm) => {
-      const searchVal = debouncedSearchTerm.split(' ').pop()
-      console.log('searchVal =', searchVal)
+      const searchValArr = debouncedSearchTerm.trim().split(' ')
+      let searchVal = ''
+      if (searchValArr.length === 1) {
+        searchVal = searchValArr[0]
+      } else if (searchValArr.length > 1) {
+        searchVal =
+          searchValArr[searchValArr.length - 2] +
+          '%20' +
+          searchValArr[searchValArr.length - 1]
+      }
+
       setTerms([])
+      setSuggestedSearchVal('')
+
       if (searchVal !== '') {
         setLoading(true)
         try {
@@ -96,6 +98,7 @@ export const FormSnomed: FC<P> = ({
           const data = await response.json()
           if (data?.matches.length > 0) {
             setSearchTerm(searchVal)
+            setSearchTermArr(searchValArr)
             const tempItems = data?.matches.map((item, index) => ({
               id: index + '-' + item.conceptId,
               term: item.term,
@@ -114,19 +117,24 @@ export const FormSnomed: FC<P> = ({
     snomedAPICall(debouncedSearchTerm)
   }, [debouncedSearchTerm])
 
+  const clearAllStatus = () => {
+    setTerms([])
+    setSuggestedSearchVal('')
+  }
+
   const onEditorStateChange = (e) => {
     const contentState = e.getCurrentContent()
     const inputText = contentState.getPlainText()
-    console.log('inputText', inputText)
-    console.log('text', text)
-    if (inputText.length > text.length) setDebouncedSearchTerm(inputText)
-    if (inputText.length === 0) setTerms([])
-    setText(inputText)
+    if (inputText.length > inputedText.length && suggestedSearchVal !== '')
+      setDebouncedSearchTerm(suggestedSearchVal)
+    if (inputText.length === 0) clearAllStatus()
+    setInputedText(inputText)
+    onChangeTextValue?.(inputText)
     setEditorState(e)
   }
 
   const onEditorFocus = (e) => {
-    setTerms([])
+    clearAllStatus()
   }
 
   const addEntityToEditorState = (item) => {
@@ -175,7 +183,12 @@ export const FormSnomed: FC<P> = ({
 
   const onClickItem = (term: SNOMED) => {
     addEntityToEditorState(term)
-    setTerms([])
+    clearAllStatus()
+  }
+
+  const onHandleBeforeInput = (chars, editorState, eventTimeStamp) => {
+    const newSuggestedSearchVal = suggestedSearchVal + chars
+    setSuggestedSearchVal(newSuggestedSearchVal)
   }
 
   return (
@@ -191,24 +204,19 @@ export const FormSnomed: FC<P> = ({
           editorState={editorState}
           onChange={onEditorStateChange}
           ref={editor}
+          placeholder={placeHolder}
           onFocus={onEditorFocus}
+          handleBeforeInput={onHandleBeforeInput}
         />
         {terms.length > 0 && (
           <ul className={styles.snomedList}>
             {terms.map((term, index) => (
-              <div
-                className={styles.snomedItem}
+              <FormSnomedItem
+                term={term}
+                searchTermArr={searchTermArr}
                 key={term.id}
-                onClick={(e) => onClickItem(term)}
-              >
-                <div className={styles.snomedTitle}>{term.term}</div>
-                <div className={styles.snomedDescription}>
-                  <span className={styles.snomedFsn}>{term.fsn}</span>
-                  <span className={styles.snomedConceptId}>
-                    {term.conceptId}
-                  </span>
-                </div>
-              </div>
+                onClickItem={onClickItem}
+              />
             ))}
           </ul>
         )}

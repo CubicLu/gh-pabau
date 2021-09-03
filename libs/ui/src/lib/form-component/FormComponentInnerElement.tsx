@@ -199,9 +199,7 @@ const FormComponentInnerElement: FC<P> = ({
           {formData && formData.formName === 'form_snomed' && (
             <FormSnomed
               title={formData.txtQuestion}
-              desc={''}
               placeHolder={''}
-              defaultValue={formData.txtDefaults}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
             />
