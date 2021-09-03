@@ -31,8 +31,7 @@ export const columnNames = {
   freeBusy: { label: 'Free/busy', id: 'freeBusy' },
   creator: { label: 'Creator', id: 'creator' },
   addTime: { label: 'Add time', id: 'addTime' },
-  firstName: { label: 'First name', id: 'lead.firstName' },
-  lastName: { label: 'Last name', id: 'lead.lastName' },
+  leadName: { label: 'Lead name', id: 'lead.firstName' },
   leadEmail: { label: 'Lead email', id: 'lead.email' },
   leadPhone: { label: 'Lead phone', id: 'lead.phone' },
   leadCreatedDate: { label: 'Lead created date', id: 'lead.createdDate' },
@@ -161,12 +160,8 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     const leadOptions = useMemo(
       () => [
         {
-          label: t('activityList.column.firstName'),
-          value: columnNames.firstName.label,
-        },
-        {
-          label: t('activityList.column.lastName'),
-          value: columnNames.lastName.label,
+          label: t('activityList.column.leadName'),
+          value: columnNames.leadName.label,
         },
         {
           label: t('activityList.column.leadEmail'),

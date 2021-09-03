@@ -48,7 +48,14 @@ export const prepareSearchObject = (
       subject: { contains: search },
     },
     'Client name': {
-      CmContact: { Fname: { contains: search } },
+      CmContact: {
+        AND: {
+          OR: [
+            { Fname: { contains: search } },
+            { Lname: { contains: search } },
+          ],
+        },
+      },
     },
     'Client email': {
       CmContact: { Email: { contains: search } },
@@ -56,11 +63,15 @@ export const prepareSearchObject = (
     'Client phone': {
       CmContact: { Phone: { contains: search } },
     },
-    'First name': {
-      CmLead: { Fname: { contains: search } },
-    },
-    'Last name': {
-      CmLead: { Lname: { contains: search } },
+    'Lead name': {
+      CmLead: {
+        AND: {
+          OR: [
+            { Fname: { contains: search } },
+            { Lname: { contains: search } },
+          ],
+        },
+      },
     },
     'Assigned to user': {
       AssignedUser: { full_name: { contains: search } },
@@ -133,11 +144,8 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
     'Client phone': {
       CmContact: { Phone: sortOrder },
     },
-    'First name': {
+    'Lead name': {
       CmLead: { Fname: sortOrder },
-    },
-    'Last name': {
-      CmLead: { Lname: sortOrder },
     },
     'Assigned to user': {
       AssignedUser: { full_name: sortOrder },
