@@ -187,15 +187,15 @@ export const General: FC<GeneralProps> = ({
     if (isEdit) {
       editLabelData({ label: newLabel.label, color: selectedColor })
     } else if (!value && newLabel.label) {
-      if (selectedId) {
-        addLabelData({ id: selectedId, label: value, color: selectedColor })
+      if (labelsData.some((item) => item.value === newLabel.label)) {
+        const data = labelsData.find((item) => item.value === newLabel.label)
+        addLabelData({
+          id: data?.id,
+          label: newLabel.label,
+          color: selectedColor,
+        })
       } else {
-        if (labelsData.some((item) => item.value === value)) {
-          const data = labelsData.find((item) => item.value === value)
-          addLabelData({ id: data?.id, label: value, color: selectedColor })
-        } else {
-          addLabelData({ label: value, color: selectedColor })
-        }
+        addLabelData({ label: newLabel.label, color: selectedColor })
       }
     }
     setNewLabel({ label: '', color: '' })

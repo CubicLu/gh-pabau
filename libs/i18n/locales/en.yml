@@ -2957,7 +2957,6 @@ en:
   create.client.modal.privacy.sharing.history.date.label: '{{date}} at {{time}}'
   quickCreate.client.modal.create.success: 'Success! Contact successfully created'
   quickCreate.client.modal.create.contact.exits.error: 'A contact already exists!'
-  quickCreate.client.modal.create.contact.error: 'Error! while add contact'
   quickCreate.number.validation.message: '{{field}} must be a number'
   quickCreate.validation.is.required: '{{field}} is required'
   quickCreate.validation.firstName.required: 'First name is required'
