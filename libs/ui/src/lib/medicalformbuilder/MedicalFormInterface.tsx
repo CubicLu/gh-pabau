@@ -161,3 +161,10 @@ export interface MedicalFormItem {
   rules: RuleProp[]
   advSetting: MedicaFormAdvanceSettingData
 }
+
+export interface SNOMED {
+  id: string
+  term: string
+  conceptId: string
+  fsn: string
+}
