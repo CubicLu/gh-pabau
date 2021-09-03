@@ -1,7 +1,0 @@
-query clientListContactsCount($active: Int = 1){
-  findManyCmContactCount(where: {
-    is_active: {
-      equals: $active
-    }
-  })
-}

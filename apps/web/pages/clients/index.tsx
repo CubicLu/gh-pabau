@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState, useRef } from 'react'
 import LayoutComponent from '../../components/Layout/Layout'
 import { Layout, Tabs } from 'antd'
 import dayjs from 'dayjs'
@@ -21,9 +21,9 @@ import {
   useClientListContactsCountQuery,
   // useDuplicateContactsQuery,
   useGetLabelsLazyQuery,
-  useAddLabelMutation,
-  useGetContactsLabelsLazyQuery,
-  useInsertContactsLabelsMutation,
+  // useAddLabelMutation,
+  // useGetContactsLabelsLazyQuery,
+  // useInsertContactsLabelsMutation,
 } from '@pabau/graphql'
 
 import ClientCreate from '../../components/Clients/ClientCreate'
@@ -52,20 +52,21 @@ export const tab = {
 }
 
 export const Clients: FC<ClientsProps> = () => {
+  const clientRef = useRef(null)
   const [searchText, setSearchText] = useState('')
   const [labelsList, setLabelsList] = useState([])
   const [dataLoaded, setDataLoaded] = useState(false)
-  const [insertContactsLabelsMutaton] = useInsertContactsLabelsMutation({
-    onCompleted(response) {
-      const tempLab = response.insert_contacts_labels.returning[0]
-      setResponseLabels(true)
-      setCountLabelS(() => [...countLabelS, tempLab])
-      getContactsLabelsQuery()
-    },
-    onError(error) {
-      console.error(error)
-    },
-  })
+  // const [insertContactsLabelsMutaton] = useInsertContactsLabelsMutation({
+  //   onCompleted(response) {
+  //     const tempLab = response.insert_contacts_labels.returning[0]
+  //     setResponseLabels(true)
+  //     setCountLabelS(() => [...countLabelS, tempLab])
+  //     // getContactsLabelsQuery()
+  //   },
+  //   onError(error) {
+  //     console.error(error)
+  //   },
+  // })
 
   const {
     data: getClientsCountData,
@@ -80,7 +81,7 @@ export const Clients: FC<ClientsProps> = () => {
   const [getLabelsQuery] = useGetLabelsLazyQuery({
     fetchPolicy: 'no-cache',
     onCompleted(response) {
-      setLabelsList(response?.labels)
+      setLabelsList(response?.findManyCmLabel)
       setDataLoaded(true)
     },
     onError(error) {
@@ -88,66 +89,66 @@ export const Clients: FC<ClientsProps> = () => {
     },
   })
 
-  const [getContactsLabelsQuery] = useGetContactsLabelsLazyQuery({
-    fetchPolicy: 'no-cache',
-    onCompleted(response) {
-      setContactsLabels(response.contacts_labels)
-    },
-    onError(error) {
-      console.error(error)
-    },
-  })
+  // const [getContactsLabelsQuery] = useGetContactsLabelsLazyQuery({
+  //   fetchPolicy: 'no-cache',
+  //   onCompleted(response) {
+  //     setContactsLabels(response.contacts_labels)
+  //   },
+  //   onError(error) {
+  //     console.error(error)
+  //   },
+  // })
 
-  const [addLabelMutation] = useAddLabelMutation({
-    fetchPolicy: 'no-cache',
-    onCompleted(response) {
-      const responseLabel = {
-        id: response.insert_labels_one.id,
-        text: response.insert_labels_one.text,
-        color: response.insert_labels_one.color,
-      }
-      setLabelsList([...labelsList, responseLabel])
+  // const [addLabelMutation] = useAddLabelMutation({
+  //   fetchPolicy: 'no-cache',
+  //   onCompleted(response) {
+  //     const responseLabel = {
+  //       id: response.insert_labels_one.id,
+  //       text: response.insert_labels_one.text,
+  //       color: response.insert_labels_one.color,
+  //     }
+  //     setLabelsList([...labelsList, responseLabel])
 
-      if (selectedRowKeys.length > 0) {
-        setSelectedLabels([...selectedLabels, responseLabel])
+  //     if (selectedRowKeys.length > 0) {
+  //       setSelectedLabels([...selectedLabels, responseLabel])
 
-        const tempData = contactsSourceData.map((contact) => {
-          if (selectedRowKeys.includes(contact.id)) {
-            //insert label to db
-            insertContactsLabelsMutaton({
-              variables: {
-                contact_id: contact.id,
-                label_id: responseLabel.id,
-              },
-            })
+  //       const tempData = contactsSourceData.map((contact) => {
+  //         if (selectedRowKeys.includes(contact.id)) {
+  //           //insert label to db
+  //           insertContactsLabelsMutaton({
+  //             variables: {
+  //               contact_id: contact.id,
+  //               label_id: responseLabel.id,
+  //             },
+  //           })
 
-            return {
-              ...contact,
-              clientLabel: [responseLabel],
-            }
-          }
+  //           return {
+  //             ...contact,
+  //             clientLabel: [responseLabel],
+  //           }
+  //         }
 
-          return contact
-        })
-        setContactsSourceData(tempData)
-      }
-      return responseLabel
-    },
-    onError(error) {
-      console.error(error)
-    },
-  })
+  //         return contact
+  //       })
+  //       setContactsSourceData(tempData)
+  //     }
+  //     return responseLabel
+  //   },
+  //   onError(error) {
+  //     console.error(error)
+  //   },
+  // })
 
-  useEffect(() => {
-    getContactsLabelsQuery()
-  }, [getContactsLabelsQuery])
+  // useEffect(() => {
+  //   getContactsLabelsQuery()
+  // }, [getContactsLabelsQuery])
 
   const [contactsLabels, setContactsLabels] = useState([])
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -167,7 +168,9 @@ export const Clients: FC<ClientsProps> = () => {
         email: d.Email,
         mobileNumber: d.Mobile,
         is_active: d.is_active,
-        clientLabel: [],
+        clientLabel: d.CmContactLabel.map((itm) => {
+          return labelsList.find((i) => i.id === itm.label_id)
+        }),
       }))
       setContactsSourceData(contactsData)
     },
@@ -188,21 +191,6 @@ export const Clients: FC<ClientsProps> = () => {
       }))
     }
   }, [getContactsData, getClientsCountData])
-
-  useEffect(() => {
-    contactsData?.map((fieldContact) => {
-      for (const fieldCL of contactsLabels) {
-        if (fieldCL.contact_id === fieldContact.id) {
-          const labelComplete = {}
-          labelComplete['id'] = fieldCL.label.id
-          labelComplete['text'] = fieldCL.label.text
-          labelComplete['color'] = fieldCL.label.color
-          fieldContact.clientLabel.push(labelComplete)
-        }
-      }
-      return fieldContact
-    })
-  }, [getContactsData, contactsData, contactsLabels])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -587,11 +575,12 @@ export const Clients: FC<ClientsProps> = () => {
       setPaginateData={setPaginateData}
       labelsList={labelsList}
       setLabelsList={setLabelsList}
-      addLabelMutation={addLabelMutation}
+      clientRef={clientRef}
+      // addLabelMutation={addLabelMutation}
       contactsLabels={contactsLabels}
-      getContactsLabelsQuery={getContactsLabelsQuery}
+      // getContactsLabelsQuery={getContactsLabelsQuery}
       getLabelsQuery={getLabelsQuery}
-      insertContactsLabelsMutaton={insertContactsLabelsMutaton}
+      // insertContactsLabelsMutaton={insertContactsLabelsMutaton}
     />
   )
 
@@ -606,7 +595,7 @@ export const Clients: FC<ClientsProps> = () => {
   )
 
   return dataLoaded ? (
-    <div>
+    <div ref={clientRef}>
       <CommonHeader
         title={t('clients.commonHeader')}
         isShowSearch={false}
@@ -675,7 +664,7 @@ export const Clients: FC<ClientsProps> = () => {
                     duplicateData={duplicateDataList}
                     getClientsCountData={getClientsCountData}
                     duplicateContactsCount={duplicateContactsData}
-                    addLabelMutation={addLabelMutation}
+                    // addLabelMutation={addLabelMutation}
                     handleApplyLabel={handleApplyLabel}
                     labelCountAll={labelCountAll}
                     contactsLabels={contactsLabels}

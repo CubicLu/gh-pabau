@@ -31,5 +31,25 @@ query GetContacts(
     MailingCity
     MailingPostal
     is_active
+    CmContactLabel {
+       label_id
+    }
+  }
+}
+
+query clientListContactsCount($active: Int = 1){
+  findManyCmContactCount(where: {
+    is_active: {
+      equals: $active
+    }
+  })
+}
+
+query getLabels{
+  findManyCmLabel {
+    id
+    name
+    color
+    company_id
   }
 }

@@ -125,15 +125,15 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
           >
             {labelsList?.map((label) => {
               return (
-                label?.text && (
+                label?.name && (
                   <Menu.Item
-                    key={`${label.text}`}
-                    onClick={() => handleLabelClick(false, label.text)}
+                    key={`${label.name}`}
+                    onClick={() => handleLabelClick(false, label.name)}
                   >
                     <div className={styles.clientMenuItem}>
                       <span>
                         <TagOutlined />
-                        &nbsp;{label.text}
+                        &nbsp;{label.name}
                       </span>
                       {getValueByKey(labelCountAll, label.id)}
                     </div>

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, RefObject, useState, useEffect } from 'react'
 import {
   TagOutlined,
   ImportOutlined,
@@ -7,7 +7,6 @@ import {
   AppstoreOutlined,
 } from '@ant-design/icons'
 import { Button, Avatar, Table, Checkbox, Pagination } from '@pabau/ui'
-import styles from '../../pages/clients/clients.module.less'
 import { Popover, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
 import { Labels } from '../../pages/clients'
@@ -17,6 +16,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 import { AddLabelMutation, Exact } from '@pabau/graphql'
+import styles from '../../pages/clients/clients.module.less'
 
 interface ClientsContentProps {
   searchText?: string
@@ -49,6 +49,7 @@ interface ClientsContentProps {
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
   >
   setLabelsList?: (val) => void
+  clientRef?: RefObject<HTMLDivElement>
   contactsLabels?: any
   getContactsLabelsQuery?: (val) => void
   getLabelsQuery?: (val) => void
@@ -99,6 +100,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   setPaginateData,
   labelsList,
   setLabelsList,
+  clientRef,
   getContactsLabelsQuery,
   getLabelsQuery,
   addLabelMutation,
@@ -139,8 +141,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       dataIndex: null,
       visible: visiblePrimaryColumns('Avatar'),
       columnType: 'avatar',
-      // eslint-disable-next-line react/display-name
-      render: (data) => {
+      render: function renderAvatar(data) {
         const { firstName } = data
         return (
           <div>
@@ -155,8 +156,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       title: t('clients.content.column.name'),
       dataIndex: null,
       visible: visiblePrimaryColumns('Name'),
-      // eslint-disable-next-line react/display-name
-      render: (data) => {
+      render: function renderName(data) {
         const { firstName = '', lastName = '' } = data
         return <span>{`${firstName} ${lastName}` || ''}</span>
       },
@@ -183,8 +183,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       ),
       dataIndex: null,
       visible: visiblePrimaryColumns('Label'),
-      // eslint-disable-next-line react/display-name
-      render: (data) => {
+      render: function renderLabel(data) {
         const { clientLabel } = data
         return (
           <Popover
@@ -193,34 +192,34 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             content={clientLabel?.map((label) => (
               <Button
                 className={styles.labelButton}
-                key={label.id}
+                key={label?.id}
                 style={{
-                  border: `1px solid ${label.color}`,
-                  color: label.color,
+                  border: `1px solid ${label?.color}`,
+                  color: label?.color,
                 }}
                 backgroundColor={''}
-                onClick={(e) => handleLabelClick(e, label.text)}
+                onClick={(e) => handleLabelClick(e, label?.name)}
                 icon={<TagOutlined />}
               >
-                {label.text}
+                {label?.name}
               </Button>
             ))}
           >
             <div className={styles.labelShow}>
               {clientLabel?.slice(0, 2).map((label) => (
-                <div key={label.id}>
+                <div key={label?.id}>
                   <Button
                     className={styles.labelButton}
-                    key={label.id}
+                    key={label?.id}
                     style={{
-                      border: `1px solid ${label.color}`,
-                      color: label.color,
+                      border: `1px solid ${label?.color}`,
+                      color: label?.color,
                     }}
                     backgroundColor={''}
-                    onClick={(e) => handleLabelClick(e, label.text)}
+                    onClick={(e) => handleLabelClick(e, label?.name)}
                     icon={<TagOutlined />}
                   >
-                    {label.text}
+                    {label?.name}
                   </Button>
                 </div>
               ))}
@@ -269,8 +268,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       title: t('clients.content.column.date_archived'),
       dataIndex: null,
       visible: isArchived,
-      // eslint-disable-next-line react/display-name
-      render: (data) => {
+      render: function renderArchived(data) {
         const { date_archived = '' } = data
         return (
           date_archived && (
@@ -288,6 +286,13 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       },
     },
   ]
+
+  useEffect(() => {
+    if (clientRef.current) {
+      clientRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.currentPage, paginateData.limit])
 
   const onCheckAllChange = () => {
     if (selectedRowKeys.length !== dataSource().length) {
@@ -445,6 +450,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                   ...paginateData,
                   offset: 0,
                   limit: pageSize,
+                  currentPage: 1,
                 })
               }}
             />
