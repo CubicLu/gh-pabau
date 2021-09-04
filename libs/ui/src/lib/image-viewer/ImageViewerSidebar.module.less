@@ -1,0 +1,312 @@
+
+
+.imageViewerSideBar {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 224px;
+  height: calc(100vh - 80px);
+  background-color: transparent;
+  display: grid;
+  grid-template-columns: 200px 24px;
+  transition: transform ease 300ms;
+  &.hideSidebar {
+    transform: translateX(-200px);
+  }
+  > div {
+    &:nth-child(1) {
+      width: 100%;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+      background-color: white;
+      box-shadow: 2px 2px 6px rgba(0, 34, 65, 0.1);
+      position: relative;
+      -webkit-overflow-scrolling: auto;
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+      &::-webkit-scrollbar-track {
+        display: none;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: #c9c9d1;
+      }
+      .albumSelector {
+        width: 100%;
+        height: 37px;
+        padding: 0 24px;
+        display: grid;
+        grid-template-columns: 1fr 1rem;
+        cursor: pointer;
+        border-bottom: 1px solid var(--border-color-base);
+        > div {
+          &:nth-child(1) {
+            font-family: var(--font-family);
+            font-size: 14px;
+            line-height: 37px;
+            color: var(--grey-text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          &:nth-child(2) {
+            width: 12px;
+            height: 37px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            font-size: 14px;
+            color: var(--grey-text-color);
+          }
+        }
+      }
+      .labelsContainer {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        padding: 8px 8px 4px 24px;
+        border-bottom: 1px solid var(--border-color-base);
+        > div {
+          padding: 2px 4px;
+          border-radius: 4px;
+          font-family: var(--font-family);
+          font-size: 12px;
+          white-space: nowrap;
+          margin: 0 4px 4px 0;
+        }
+      }
+      .imageItemYearDivider {
+        width: 100%;
+        height: 37px;
+        border-top: 1px solid var(--border-color-base);
+        border-bottom: 1px solid var(--border-color-base);
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        font-family: var(--font-family);
+        font-size: 12px;
+        line-height: 14px;
+        color: var(--grey-text-color);
+      }
+      .imageItem {
+        display: grid;
+        grid-template-columns: 60px 1fr;
+        width: 100%;
+        height: 104px;
+        > div {
+          &:nth-child(1) {
+            padding-left: 24px;
+            padding-bottom: 1rem;
+            border-right: 1px solid var(--border-color-base);
+            .imageItemDate {
+              position: relative;
+              > p {
+                margin: 0;
+                &:nth-child(1) {
+                  font-family: var(--font-family);
+                  font-size: 12px;
+                  line-height: 14px;
+                  color: var(--grey-text-color);
+                }
+                &:nth-child(1) {
+                  font-family: var(--font-family);
+                  font-size: 14px;
+                  line-height: 1.265;
+                  color: var(--light-grey-color);
+                }
+              }
+              .dot {
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                top: 0;
+                right: -5px;
+                background-color: white;
+                border: 3px solid var(--light-grey-color);
+                border-radius: 50%;
+                &.selected {
+                  border: 3px solid var(--primary-color);
+                }
+              }
+            }
+          }
+          &:nth-child(2) {
+            padding-bottom: 1rem;
+            padding-left: 20px;
+            > div {
+              .imageItemThumbnail {
+                width: 88px;
+                height: 88px;
+                border-radius: 4px;
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-color: transparent;
+                cursor: move;
+                position: relative;
+                .selelctedThumbnail {
+                  width: 100%;
+                  height: 100%;
+                  border: 2px solid var(--primary-color);
+                  border-radius: 4px;
+                  background-color: rgba(#171717, 0.6);
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  z-index: 1;
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  .selectedIndex {
+                    width: auto;
+                    height: 24px;
+                    padding: 0 8px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: var(--font-family);
+                    font-size: 14px;
+                    color: var(--grey-text-color);
+                    background-color: #fcfcfc;
+                    border-radius: 12px;
+                    .checkIcon {
+                      width: 20px;
+                      height: 20px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 18px;
+                      color: var(--primary-color);
+                      margin-right: 4px;
+                    }
+                  }
+                }
+                :global {
+                  .ant-skeleton {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    border-radius: 4px;
+                    z-index: 0;
+                    .ant-skeleton-image {
+                      width: 88px;
+                      height: 88px;
+                      line-height: 88px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      @media (max-width: 1200px) {
+        height: calc(100vh - 60px);
+      }
+      @media (max-width: 767px) {
+        height: calc(100vh - 120px);
+      }
+    }
+    &:nth-child(2) {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      .imageViewerToggle {
+        position: absolute;
+        width: 24px;
+        height: 104px;
+        top: calc(50% - 52px);
+        right: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        pointer-events: auto;
+        color: white;
+      }
+    }
+  }
+
+  @media (max-width: 1200px) {
+    height: calc(100vh - 60px);
+    top: 60px;
+  }
+  @media (max-width: 767px) {
+    height: calc(100vh - 120px);
+    top: 60px;
+  }
+}
+
+.dragItem {
+  z-index: 999999;
+  width: 250px;
+  height: 300px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  @media (max-width: 767px) {
+    width: 150px;
+    height: 180px;
+    transform: translate(50%, -100%);
+  }
+}
+
+.dargItemContainer {
+  z-index: 9999999;
+}
+
+.albumsPopover {
+  :global {
+    padding: 0;
+    .ant-popover-content {
+      .ant-popover-arrow {
+        display: none;
+      }
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.albumsDropdown {
+  width: 152px;
+  padding: 8px 0;
+  .albumDropdownItem {
+    width: 100%;
+    height: 2rem;
+    padding: 0 8px;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    grid-column-gap: 4px;
+    align-items: center;
+    > div {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 2rem;
+      &:nth-child(1) {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--grey-text-color);
+      }
+      &:nth-child(2) {
+        color: var(--primary-color);
+      }
+    }
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
