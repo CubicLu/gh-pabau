@@ -26,10 +26,8 @@ export interface ExtraUserData {
 
 export interface LayoutProps {
   onLogOut?(): void
-  deleteNotification?: MutationFunction
-  updateNotification?: MutationFunction
   readNewsMutation?: MutationFunction
-  readAddMutation?: MutationFunction
+  updateNotificationState?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
   notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
@@ -68,9 +66,7 @@ export const Layout: FC<LayoutProps> = ({
   notifications,
   productNews,
   relativeTime,
-  deleteNotification,
-  updateNotification,
-  readAddMutation,
+  updateNotificationState,
   readNewsMutation,
   taskManagerIFrameComponent,
   clientCreateRender,
@@ -83,10 +79,8 @@ export const Layout: FC<LayoutProps> = ({
     <AntLayout {...rest} className={styles.main}>
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
-          deleteNotification={deleteNotification}
-          updateNotification={updateNotification}
           readNewsMutation={readNewsMutation}
-          readAddMutation={readAddMutation}
+          updateNotificationState={updateNotificationState}
           searchRender={searchRender}
           onMessageIconClick={onMessageIconClick}
           onLogOut={onLogOut}

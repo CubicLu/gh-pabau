@@ -1,16 +1,6 @@
 table:
   name: read_notification
   schema: public
-object_relationships:
-- name: read_by
-  using:
-    manual_configuration:
-      column_mapping:
-        notification: id
-      insertion_order: null
-      remote_table:
-        name: notifications
-        schema: public
 insert_permissions:
 - permission:
     backend_only: false
@@ -18,7 +8,7 @@ insert_permissions:
     columns:
     - company
     - user
-    - read_at
+    - created_at
     - id
     - notification
   role: user
@@ -26,10 +16,12 @@ select_permissions:
 - permission:
     columns:
     - company
-    - user
-    - read_at
+    - created_at
     - id
+    - is_deleted
+    - is_read
     - notification
+    - user
     filter: {}
   role: user
 update_permissions:
@@ -38,7 +30,7 @@ update_permissions:
     columns:
     - company
     - user
-    - read_at
+    - created_at
     - id
     - notification
     filter: {}
