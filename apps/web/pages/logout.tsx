@@ -14,16 +14,10 @@ const Logout = () => {
     ;(async () => {
       localStorage.clear()
       await resetStore()
-      if (router.query.redirect as string) {
-        window.location.href = router.query.redirect as string
-      } else {
-        window.location.href = 'https://crm.pabau.com/logged-out'
-      }
-      /* We only want to run this once */
     })()
-  }, [resetStore, router])
+  }, [resetStore, router]) // We only want to run this once
 
-  return <div></div>
+  return <div>You have been logged out of Pabau2 successfully.</div>
 }
 
 export default Logout

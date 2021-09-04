@@ -48,6 +48,11 @@ export interface LayoutProps {
   clientCreateRender?: () => JSX.Element
   leadCreateRender?: () => JSX.Element
   handleSearch?: (searchTerm: string) => void
+  badgeCountList?: BadgeCountList
+}
+
+interface BadgeCountList {
+  [key: string]: number
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -71,6 +76,7 @@ export const Layout: FC<LayoutProps> = ({
   taskManagerIFrameComponent,
   clientCreateRender,
   leadCreateRender,
+  badgeCountList,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -93,7 +99,11 @@ export const Layout: FC<LayoutProps> = ({
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>
-          <Menu onSideBarCollapsed={onSideBarCollapsed} active={active} />
+          <Menu
+            onSideBarCollapsed={onSideBarCollapsed}
+            active={active}
+            badgeCountList={badgeCountList}
+          />
           <Content
             className={classNames(
               !legacyContent ? styles.layoutContent : styles.layoutIframed,

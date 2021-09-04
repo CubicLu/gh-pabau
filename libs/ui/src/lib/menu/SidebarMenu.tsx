@@ -10,12 +10,15 @@ import {
   WalletOutlined,
   ProfileOutlined,
 } from '@ant-design/icons'
+import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
+import styles from './Menu.module.less'
 
 export interface SidebarMenuItem {
   menuName: string
   icon?: JSX.Element
   path?: string
   children?: SidebarMenuItem[]
+  displayBadge?: boolean
 }
 
 export const sidebarTranslations = {
@@ -50,6 +53,7 @@ export const sidebarTranslations = {
   profile: 'sidebar.mobile.profile',
   chat: 'sidebar.mobile.chat',
   notifications: 'sidebar.mobile.notifications',
+  activities: 'sidebar.activities',
 }
 
 export const sidebarMenu: SidebarMenuItem[] = [
@@ -174,5 +178,11 @@ export const sidebarMenu: SidebarMenuItem[] = [
         path: '/clients/cases',
       },
     ],
+  },
+  {
+    menuName: 'Activities',
+    icon: <ActivityIcon className={styles.activityIcon} />,
+    path: '/activities',
+    displayBadge: true,
   },
 ]

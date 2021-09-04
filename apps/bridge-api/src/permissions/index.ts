@@ -106,6 +106,8 @@ export const permissions = shield(
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
 
+      //Activity
+      upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -198,6 +200,16 @@ export const permissions = shield(
       findManyCmLabel: rules.interceptors.interceptSharedCompanyData,
       // Authentication
       me: rules.authentication.isAuthenticated,
+      // Activity
+      findManyActivityType: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.interceptSharedCompanyData
+      ),
+      findFirstActivityUserColumns: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.interceptAccessToCompanyData,
+        rules.interceptors.injectUser
+      ),
       // Debug
       ping: allow,
       version: allow,

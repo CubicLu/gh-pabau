@@ -4,7 +4,13 @@ import ClientGiftVoucherLayout from './ClientGiftVoucherLayout'
 
 describe('ClientGiftVoucherLayout', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ClientGiftVoucherLayout />)
+    const { baseElement } = render(
+      <ClientGiftVoucherLayout
+        activeVouchers={[]}
+        expiredVouchers={[]}
+        onCardSelect={() => Promise.resolve(true)}
+      />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

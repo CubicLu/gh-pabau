@@ -13,6 +13,7 @@ import {
   ClientFormsLayout,
   ClientPackagesLayout,
   ClientPhotosLayout,
+  ClientPrescriptionsLayout,
   ClientActivitiesLayout,
   ClientVaccineHistoryLayout,
   Button,
@@ -23,7 +24,15 @@ import {
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
-import { Modal, Popover, Input, Badge, Drawer, Tooltip } from 'antd'
+import {
+  Modal,
+  Popover,
+  Input,
+  Badge,
+  Drawer,
+  Tooltip,
+  ConfigProvider,
+} from 'antd'
 import {
   RightOutlined,
   LeftOutlined,
@@ -48,6 +57,7 @@ import { ReactComponent as Note } from '../../assets/images/client-card-ops/note
 import { ReactComponent as Alert } from '../../assets/images/client-card-ops/alert.svg'
 import { ReactComponent as SvgPathway } from '../../assets/images/popout/pathway.svg'
 import { ReactComponent as SvgTreatment } from '../../assets/images/popout/treatment.svg'
+import { ReactComponent as SvgConsent } from '../../assets/images/popout/consent.svg'
 import { ReactComponent as SvgRequest } from '../../assets/images/popout/request.svg'
 import { ReactComponent as SvgPrescription } from '../../assets/images/popout/prescription.svg'
 import { ReactComponent as SvgAppointment } from '../../assets/images/popout/appointment.svg'
@@ -70,6 +80,11 @@ import {
   thirdPartySearchResults,
   appointments,
   clientPackages,
+  formFilterButtons,
+  forms,
+  vouchers,
+  prescriptions,
+  testList,
 } from './mock'
 
 const { TextArea } = Input
@@ -138,6 +153,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
   const [alertItems, setAlertItems] = useState<string[]>([])
   const [addingAlert, setAddingAlert] = useState(false)
   const [currentClientNote, setCurrentClientNote] = useState(-1)
+  const { activeVouchers, expiredVouchers } = vouchers()
 
   const customTabMenutItem = (title, alert) => {
     return (
@@ -187,24 +203,28 @@ const ClientCardModal: FC<ClientCardProps> = ({
         },
         {
           key: 8,
-          content: 'Lab Tests',
+          content: 'Prescriptions',
         },
         {
           key: 9,
+          content: 'Lab Tests',
+        },
+        {
+          key: 10,
           content: 'Vaccine History',
         },
       ],
     },
     {
-      key: 10,
+      key: 11,
       content: customTabMenutItem('Gift voucher', 15),
     },
     {
-      key: 11,
+      key: 12,
       content: customTabMenutItem('Loyalty', 7),
     },
     {
-      key: 12,
+      key: 13,
       content: customTabMenutItem('Activities', 8),
     },
   ]
@@ -273,6 +293,16 @@ const ClientCardModal: FC<ClientCardProps> = ({
       icon: <SvgTreatment className={styles.menuItemIcon} />,
       description: t('dashboard.create.menu.item.treatment.description'),
       handler: () => handleCreatePopout('treatment'),
+    },
+    {
+      name: t('dashboard.create.menu.item.consent.title'),
+      icon: (
+        <div className={styles.pencilIconContainer}>
+          <SvgConsent className={styles.pencilIcon} />
+        </div>
+      ),
+      description: t('dashboard.create.menu.item.consent.description'),
+      handler: () => handleCreatePopout('consent'),
     },
     {
       name: t('dashboard.create.menu.item.request.title'),
@@ -426,6 +456,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
         break
       }
       case 'treatment': {
+        item = {
+          type,
+          title: t('dashboard.create.modal.create.form.title'),
+          receiverData: uuidv4(),
+          client: defaultClient,
+        }
+        break
+      }
+      case 'consent': {
         item = {
           type,
           title: t('dashboard.create.modal.create.form.title'),
@@ -751,7 +790,14 @@ const ClientCardModal: FC<ClientCardProps> = ({
       width={'100%'}
       wrapClassName={styles.clientCard}
     >
-      <>
+      <ConfigProvider
+        getPopupContainer={(node) => {
+          if (node) {
+            return node as HTMLElement
+          }
+          return document.body as HTMLElement
+        }}
+      >
         {moment().format('MM/DD') ===
           moment(clientData.dob).format('MM/DD') && (
           <Confetti
@@ -905,7 +951,22 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientCommunicationsLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientFormsLayout isEmpty={true} />
+                  <ClientFormsLayout
+                    isEmpty={false}
+                    formFilters={formFilterButtons}
+                    forms={forms}
+                    onButtonFilterClick={(e) => {
+                      console.log('Filter button selected:', e) //Removed while integration
+                      return Promise.resolve(true)
+                    }}
+                    onFilterClick={(e) => Promise.resolve(true)}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareCick={(e) => Promise.resolve(true)}
+                    onVersionClick={(e) => Promise.resolve(true)}
+                    onEditClick={(e) => Promise.resolve(true)}
+                    onPinClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
                 </div>
                 <div>
                   <ClientPhotosLayout isEmpty={true} />
@@ -914,13 +975,46 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientDocumentsLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientLabTestsLayout isEmpty={true} />
+                  <ClientPrescriptionsLayout
+                    isEmpty={false}
+                    prescriptions={prescriptions}
+                    onPreviewClick={(e) => {
+                      console.log('Preview selected:', e)
+                      return Promise.resolve(true)
+                    }}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareClick={(e) => Promise.resolve(true)}
+                    onEditClick={(e) => Promise.resolve(true)}
+                    onRepeatClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
+                </div>
+                <div>
+                  <ClientLabTestsLayout
+                    isEmpty={false}
+                    testList={testList}
+                    onViewReportClick={(e) => {
+                      console.log('View report selected:', e)
+                      return Promise.resolve(true)
+                    }}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
                 </div>
                 <div>
                   <ClientVaccineHistoryLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientGiftVoucherLayout isEmpty={true} />
+                  <ClientGiftVoucherLayout
+                    isEmpty={false}
+                    activeVouchers={activeVouchers}
+                    expiredVouchers={expiredVouchers}
+                    onCardSelect={(e) => {
+                      console.log('Card selected:', e)
+                      return Promise.resolve(true)
+                    }}
+                  />
                 </div>
                 <div>
                   <ClientLoyaltyLayout
@@ -987,7 +1081,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
             </div>
           </Drawer>
         )}
-      </>
+      </ConfigProvider>
     </Modal>
   )
 }

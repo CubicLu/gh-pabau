@@ -175,7 +175,10 @@ mutation createOneContact(
   $otherCompanyIds: [Int]
   $customFields: [createContactCustomFieldType]
   $preferredLanguage: String!
+  $privacyPolicy: String
+  $needToKnows: Boolean
   $labels: [labelFieldType]
+  $contactPreferences: ContactPreferenceDataInput
 ) {
   createOneContact(
     data:{
@@ -198,11 +201,14 @@ mutation createOneContact(
       Phone: $phone
       gender: $gender
       preferred_language: $preferredLanguage
+      privacy_policy: $privacyPolicy
+      need_to_knows: $needToKnows
     }
     customFields: $customFields
     limitContactLocations: $limitContactsLocations
     otherCompanyIds: $otherCompanyIds
     labels: $labels
+    contactPreferences: $contactPreferences
   ) {
     ID
   }

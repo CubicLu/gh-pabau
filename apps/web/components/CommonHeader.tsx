@@ -12,7 +12,7 @@ import {
 } from '@pabau/ui'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
-import React, { FC, useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import Search from '../components/Search'
 import { useUser } from '../context/UserContext'
 import { useGridData } from '../hooks/useGridData'
@@ -32,6 +32,8 @@ interface P {
   onChatClick?: () => void
   clientCreateRender?: () => JSX.Element
   leadCreateRender?: () => JSX.Element
+  displayActivity?: boolean
+  renderActivity?: ReactNode
 }
 
 const CommonHeader: FC<P> = ({
@@ -46,6 +48,8 @@ const CommonHeader: FC<P> = ({
   onChatClick,
   clientCreateRender,
   leadCreateRender,
+  displayActivity = false,
+  renderActivity,
 }) => {
   const user = useUser()
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
@@ -110,6 +114,7 @@ const CommonHeader: FC<P> = ({
             )}
             {isContent && <ContentJsx />}
           </div>
+          {displayActivity && <div>{renderActivity}</div>}
           {displayCreateButton && (
             <div className={styles.createPlusIcon}>
               <PlusSquareFilled

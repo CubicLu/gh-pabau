@@ -82,38 +82,41 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     MailingStreet: '',
     MailingCity: '',
     MailingPostal: '',
-    MarketingOptInEmail: false,
-    MarketingOptInText: false,
-    MarketingOptInPost: false,
-    MarketingOptInPhone: false,
-    marketingPromotion: ['subscriptionToReceive'],
+    marketingPromotion: ['needToKnows'],
     recordSharing: {
-      company: 'access',
-      emergencyContact: 'sharing',
-      family: 'sharing',
-      gp: 'sharing',
-      insuranceProvider: 'sharing',
-      nextOfKin: 'restricted',
+      company: 1,
+      emergencyContact: 0,
+      family: 0,
+      gp: 0,
+      insuranceProvider: 0,
+      nextOfKin: -1,
     },
-    privacyPolicy: 'No response',
+    privacyPolicy: '',
     settingSharing: {
-      bookAppointments: true,
-      bookClass: false,
-      loyalty: true,
-      myPackages: false,
-      purchasePackage: false,
-      payments: false,
-      appointments: false,
-      class: false,
-      documents: false,
-      medications: false,
-      allergies: false,
-      gpDetails: false,
+      bookAppointments: 1,
+      bookClass: 0,
+      loyalty: 1,
+      myPackages: 0,
+      purchasePackage: 0,
+      payments: 0,
+      appointments: 0,
+      class: 0,
+      documents: 0,
+      medications: 0,
+      allergies: 0,
+      gpDetails: 0,
     },
-    shareLink: 'https://prelive-crm.new.pabau.com/',
+    shareLink: '',
   })
   const [customFields, setCustomFields] = useState<CustomFieldsProps[]>([])
   const [isVisible, setVisible] = useState(modalVisible)
+  const [accessCode, setAceessCode] = useState(0)
+  const [isSuccess, setSuccess] = useState(false)
+
+  useEffect(() => {
+    const code = Math.floor(1000 + Math.random() * 9000)
+    setAceessCode(code)
+  }, [isSuccess])
 
   const [
     getFieldSettingData,
@@ -154,6 +157,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           NotificationType.success,
           t('quickCreate.client.modal.create.success')
         )
+        setSuccess(!isSuccess)
       }
     },
     onError(error) {
@@ -161,11 +165,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         Notification(
           NotificationType.error,
           t('quickCreate.client.modal.create.contact.exits.error')
-        )
-      } else {
-        Notification(
-          NotificationType.error,
-          t('quickCreate.client.modal.create.contact.error')
         )
       }
     },
@@ -420,10 +419,11 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       mailingStreet: values.MailingStreet,
       mailingPostal: values.MailingPostal,
       mailingCountry: values.MailingCountry,
-      marketingOptInEmail: values.MarketingOptInEmail ? 1 : 0,
-      marketingOptInPhone: values.MarketingOptInPhone ? 1 : 0,
-      marketingOptInPost: values.MarketingOptInPost ? 1 : 0,
-      marketingOptInText: values.MarketingOptInText ? 1 : 0,
+      marketingOptInEmail: values.marketingPromotion.includes('email') ? 1 : 0,
+      marketingOptInPhone: values.marketingPromotion.includes('phone') ? 1 : 0,
+      marketingOptInPost: values.marketingPromotion.includes('postal') ? 1 : 0,
+      marketingOptInText: values.marketingPromotion.includes('sms') ? 1 : 0,
+      needToKnows: values.marketingPromotion.includes('needToKnows'),
       marketingSource: values.MarketingSource
         ? Number.parseInt(values.MarketingSource)
         : 0,
@@ -432,10 +432,33 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       phone: values.Phone,
       gender: values.gender,
       preferredLanguage: values.preferredLanguage.toLowerCase(),
+      privacyPolicy: values.privacyPolicy,
       otherCompanyIds: otherCompanyIds,
       limitContactsLocations: limitContactsLocationsIds,
       labels: values.selectedLabels,
       customFields: customFieldsValue,
+      contactPreferences: {
+        family: values.recordSharing.family,
+        emergency_contact: values.recordSharing.emergencyContact,
+        next_of_kin: values.recordSharing.nextOfKin,
+        insurance_provider: values.recordSharing.insuranceProvider,
+        gp: values.recordSharing.gp,
+        company: values.recordSharing.company,
+        book_appointments: values.settingSharing.bookAppointments,
+        book_class: values.settingSharing.bookClass,
+        loyalty: values.settingSharing.loyalty,
+        my_packages: values.settingSharing.myPackages,
+        purchase_package: values.settingSharing.purchasePackage,
+        payments: values.settingSharing.payments,
+        appointments: values.settingSharing.appointments,
+        class: values.settingSharing.class,
+        documents: values.settingSharing.documents,
+        medications: values.settingSharing.medications,
+        allergies: values.settingSharing.allergies,
+        gp_details: values.settingSharing.gpDetails,
+        share_link: values.shareLink,
+        access_code: accessCode.toString(),
+      },
     }
 
     if (otherCompanyIds.length === 0) {
@@ -483,7 +506,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       initialValues={initialValues}
       validationObject={validationObject}
       isDisabledBtn={checkIsLoading()}
-      companyName={user?.me?.Company?.details?.company_name}
+      companyName={user?.me?.companyName}
+      accessCode={accessCode}
       {...props}
     />
   )

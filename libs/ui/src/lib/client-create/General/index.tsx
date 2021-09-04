@@ -3,7 +3,6 @@ import styles from '../ClientCreate.module.less'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import GeneralComponent from './General'
 import ContactInfo from './ContactInfo'
-import { Subscriptions } from './Subscriptions'
 import Addresses from './Addresses'
 import CustomField from './CustomField'
 import { useTranslation } from 'react-i18next'
@@ -118,9 +117,6 @@ export const Index: FC<GeneralProps> = ({
           setFieldValue={setFieldValue}
           requiredLabel={requiredLabel}
         />
-      )}
-      {fieldsSettings?.find((thread) => thread.field_name === 'opt_in') && (
-        <Subscriptions />
       )}
       {(isAddress() ||
         (limitContactsLocations && limitContactsLocations.length > 0) ||
