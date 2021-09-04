@@ -2,7 +2,14 @@ import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react'
 import styles from '../../pages/activities/index.module.less'
 import { Resizable } from 'react-resizable'
 import ReactDragListView from 'react-drag-listview'
-import { Avatar, Button, CustomIcon, Pagination } from '@pabau/ui'
+import {
+  Avatar,
+  Button,
+  CustomIcon,
+  Pagination,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import { Drawer, Popover, Table, Tooltip, Skeleton, Image } from 'antd'
 import {
   PlusCircleOutlined,
@@ -32,12 +39,8 @@ import {
 import dayjs from 'dayjs'
 import * as Icon from '@ant-design/icons'
 import searchEmpty from '../../assets/images/empty.png'
-
-const rowClassMapper = {
-  Today: styles.todayRow,
-  Overdue: styles.overdueRow,
-  Completed: styles.doneRow,
-}
+import { useUpsertOneActivityUserColumnsMutation } from '@pabau/graphql'
+import { useUser } from '../../context/UserContext'
 
 export type ActivitiesType = {
   width?: number
@@ -153,8 +156,8 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     tabValue,
   }) => {
     const isMobile = useMedia('(max-width: 768px)', false)
-    // const rowSelection =
     const { t } = useTranslationI18()
+    const loggedUser = useUser()
     // const [sourceData, setSourceData] = useState<ActivitiesDataProps[]>([])
 
     const [visibleAddColumnPopover, setVisibleAddColumnPopover] = useState(
@@ -179,6 +182,20 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     )
 
     const [columns, setColumns] = useState([])
+    const [upsertActiveColumn] = useUpsertOneActivityUserColumnsMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('activity.table.dynamic.field.update.message')
+        )
+      },
+      onError() {
+        Notification(
+          NotificationType.error,
+          t('activity.table.dynamic.field.update.error.message')
+        )
+      },
+    })
 
     useEffect(() => {
       if (userActiveColumn.length > 0) {
@@ -208,7 +225,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
       return (
         <span>
           <Popover
-            trigger="click"
             content={() => StatusContent(data, setVisible)}
             placement="bottomRight"
             overlayClassName="statusBtnMenu"
@@ -253,10 +269,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           </span>
         ),
         dataIndex: 'dueDate',
-        // eslint-disable-next-line react/display-name
         render: (date) => (
           <span className={styles.cellFormater}>
-            {dayjs(date).format('DD MMMM YYYY')}
+            {dayjs(date).format('DD MMMM YYYY HH:MM')}
           </span>
         ),
         visible: visibleColumn(columnNames.dueDate.label),
@@ -277,7 +292,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: null,
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { type_name = '', subject, type_badge } = data
           return (
@@ -310,7 +324,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { firstName = '', lastName = '' } = data
           return (
@@ -340,7 +353,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         visible: visibleColumn(columnNames.lead.label),
         editName: t('activityList.column.lead.editName'),
         columnName: columnNames.lead.label,
-        // eslint-disable-next-line react/display-name
         render: ({ description }) => {
           return (
             <span className={styles.cellFormater}>
@@ -365,7 +377,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { firstName = '', lastName = '' } = data
           return (
@@ -390,7 +401,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { email = '' } = data
           return <span className={styles.cellFormater}>{email}</span>
@@ -411,7 +421,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { phone = '' } = data
           return (
@@ -434,11 +443,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ createdDate = '' }) => {
           return (
             <span className={styles.cellFormater}>
-              {createdDate && dayjs(createdDate).format('DD MMMM YYYY')}
+              {createdDate && dayjs(createdDate).format('DD MMMM YYYY HH:MM')}
             </span>
           )
         },
@@ -455,11 +463,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ wonTime = '' }) => {
           return (
             <span className={styles.cellFormater}>
-              {wonTime && dayjs(wonTime).format('DD MMMM YYYY')}
+              {wonTime && dayjs(wonTime).format('DD MMMM YYYY HH:MM')}
             </span>
           )
         },
@@ -474,7 +481,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ owner }) => {
           return (
             owner && (
@@ -505,7 +511,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { leadDoneActivities = '' } = data
           return (
@@ -525,11 +530,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ leadClosedOn = '' }) => {
           return (
             <span className={styles.cellFormater}>
-              {leadClosedOn && dayjs(leadClosedOn).format('DD MMMM YYYY')}
+              {leadClosedOn && dayjs(leadClosedOn).format('DD MMMM YYYY HH:MM')}
             </span>
           )
         },
@@ -547,12 +551,11 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        // eslint-disable-next-line react/display-name
         render: ({ firstActivityTime = '' }) => {
           return (
             <span className={styles.cellFormater}>
               {firstActivityTime &&
-                dayjs(firstActivityTime).format('DD MMMM YYYY')}
+                dayjs(firstActivityTime).format('DD MMMM YYYY HH:MM')}
             </span>
           )
         },
@@ -570,12 +573,11 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        // eslint-disable-next-line react/display-name
         render: ({ leadLastActivityDate = '' }) => {
           return (
             <span className={styles.cellFormater}>
               {leadLastActivityDate &&
-                dayjs(leadLastActivityDate).format('DD MMMM YYYY')}
+                dayjs(leadLastActivityDate).format('DD MMMM YYYY HH:MM')}
             </span>
           )
         },
@@ -593,7 +595,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        // eslint-disable-next-line react/display-name
         render: ({ leadLastActivityDays }) => {
           return (
             <span className={styles.cellFormater}>{leadLastActivityDays}</span>
@@ -613,7 +614,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { leadLostReason = '' } = data
           return <span className={styles.cellFormater}>{leadLostReason}</span>
@@ -635,7 +635,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { leadTotalActivities = 0 } = data
           return (
@@ -655,11 +654,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ leadLostTime = '' }) => {
           return (
             <span className={styles.cellFormater}>
-              {leadLostTime && dayjs(leadLostTime).format('DD MMMM YYYY')}
+              {leadLostTime && dayjs(leadLostTime).format('DD MMMM YYYY HH:MM')}
             </span>
           )
         },
@@ -676,7 +674,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ leadSource }) => {
           return <span className={styles.cellFormater}>{leadSource?.name}</span>
         },
@@ -698,7 +695,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        // eslint-disable-next-line react/display-name
         render: ({ wonBy = '' }) => {
           const [firstName] = wonBy.split(' ')
           return (
@@ -721,6 +717,22 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         hideFooter: true,
       },
       {
+        id: columnNames.leadStage.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.leadStage')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ leadStage }) => {
+          return <span className={styles.cellFormater}>{leadStage}</span>
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.leadStage.label),
+        columnName: columnNames.leadStage.label,
+      },
+      {
         id: columnNames.assignedToUser.id,
         title: (
           <span className="dragHandler">
@@ -729,7 +741,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'assigned',
         skeletonWidth: '50px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { full_name } = data
           return (
@@ -756,7 +767,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           <span className="dragHandler">{t('activityList.column.status')}</span>
         ),
         dataIndex: null,
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           return <div>{RenderStatus(data)}</div>
         },
@@ -849,7 +859,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         columnName: columnNames.addTime.label,
         render: (date) => (
           <span className={styles.cellFormater}>
-            {dayjs(date).format('DD MMMM YYYY')}
+            {dayjs(date).format('DD MMMM YYYY HH:MM')}
           </span>
         ),
       },
@@ -867,7 +877,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         columnName: columnNames.doneTime.label,
         render: (date) => (
           <span className={styles.cellFormater}>
-            {date && dayjs(date).format('DD MMMM YYYY')}
+            {date && dayjs(date).format('DD MMMM YYYY HH:MM')}
           </span>
         ),
       },
@@ -898,7 +908,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'client',
         skeletonWidth: '80px',
         sorter: false,
-        // eslint-disable-next-line react/display-name
         render: ({ label = [] }) => {
           return (
             <div>
@@ -939,7 +948,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { email = '' } = data
           return <span className={styles.cellFormater}>{email}</span>
@@ -960,7 +968,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { phone = '' } = data
           return (
@@ -983,7 +990,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { street = '' } = data
           return <span className={styles.cellFormater}>{street}</span>
@@ -1004,7 +1010,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: (data) => {
           const { city = '' } = data
           return <span className={styles.cellFormater}>{city}</span>
@@ -1025,7 +1030,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ postal = '' }) => {
           return <span className={styles.cellFormater}>{postal}</span>
         },
@@ -1045,7 +1049,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        // eslint-disable-next-line react/display-name
         render: ({ clientTotalActivities }) => {
           return (
             <span className={styles.cellFormater}>{clientTotalActivities}</span>
@@ -1200,7 +1203,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     }
 
     const dragProps = {
-      onDragEnd(fromIndex, toIndex) {
+      async onDragEnd(fromIndex, toIndex) {
         const columns1 = [...columns.filter((data) => data?.visible)]
         if (selectedColumn.includes(columnNames.done.label)) {
           if (toIndex !== 0 && fromIndex !== 0) {
@@ -1214,12 +1217,18 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         const selectColumn = columns1.map((data) => {
           return data?.columnName
         })
-        setSelectedColumn(
-          selectedColumn.includes(columnNames.done.label)
-            ? [columnNames.done.label, ...selectColumn]
-            : selectColumn
-        )
+        const activeColumnName = selectedColumn.includes(columnNames.done.label)
+          ? [columnNames.done.label, ...selectColumn]
+          : selectColumn
+        setSelectedColumn(activeColumnName)
         setColumns(columns1)
+        await upsertActiveColumn({
+          variables: {
+            columns: JSON.stringify({ columns: activeColumnName }),
+            userId: loggedUser?.me?.user,
+            companyId: loggedUser?.me?.company,
+          },
+        })
       },
       nodeSelector: 'th',
       handleSelector: '.dragHandler',
@@ -1268,6 +1277,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
                     setSelectedColumn={setSelectedColumn}
                     visibleAddColumnPopover={visibleAddColumnPopover}
                     setVisibleAddColumnPopover={setVisibleAddColumnPopover}
+                    upsertActiveColumnMutation={upsertActiveColumn}
                   >
                     <Tooltip
                       title={t('activityList.column.addColumns')}
@@ -1410,7 +1420,19 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           components={components}
           className={styles.tableContent}
           rowClassName={(record: ActivitiesDataProps) => {
-            return rowClassMapper[tabValue] ?? ''
+            const dueDate = dayjs(record.dueDate)
+            const now = dayjs()
+            if (record?.status === statuses.done) {
+              return styles.doneRow
+            } else if (now > dueDate) {
+              return styles.overdueRow
+            } else if (
+              now <= dueDate &&
+              now.format('DD') === dueDate.format('DD')
+            ) {
+              return styles.todayRow
+            }
+            return ''
           }}
           onChange={onTableChange}
         />
@@ -1426,6 +1448,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               setSelectedColumn={setSelectedColumn}
               visibleAddColumnPopover={visibleAddColumnPopover}
               setVisibleAddColumnPopover={setVisibleAddColumnPopover}
+              upsertActiveColumnMutation={upsertActiveColumn}
             >
               <Tooltip
                 title={t('activityList.column.addColumns')}

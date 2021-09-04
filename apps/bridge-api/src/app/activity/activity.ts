@@ -100,6 +100,9 @@ export const prepareSearchObject = (
     'Lead email': {
       CmLead: { Email: { contains: search } },
     },
+    'Lead Stage': {
+      CmLead: { LeadStatusData: { status_name: { contains: search } } },
+    },
     'Client street': {
       CmContact: { MailingStreet: { contains: search } },
     },
@@ -146,6 +149,9 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
     },
     'Lead name': {
       CmLead: { Fname: sortOrder },
+    },
+    'Lead Stage': {
+      CmLead: { LeadStatusData: { status_name: sortOrder } },
     },
     'Assigned to user': {
       AssignedUser: { full_name: sortOrder },

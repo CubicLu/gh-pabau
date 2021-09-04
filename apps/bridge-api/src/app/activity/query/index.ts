@@ -56,7 +56,7 @@ export const CmLeadCustomType = objectType({
     t.field('leadLostTime', { type: 'DateTime' })
     t.string('wonBy')
     t.field('MarketingSource', { type: 'MarketingSource' })
-    t.field('LeadStatusData', { type: 'LeadStatus' })
+    t.string('leadStage')
   },
 })
 
@@ -124,6 +124,7 @@ const customFields = [
   'leadLostTime',
   'wonBy',
   'leadLostReason',
+  'leadStage',
 ]
 
 export const ActivityQuery = extendType({
@@ -285,6 +286,7 @@ export const ActivityQuery = extendType({
                       ? item.CmLead?.User?.full_name
                       : '',
                   leadLostReason: leadLost?.lostReason,
+                  leadStage: item.CmLead?.LeadStatusData?.status_name,
                 },
                 CmContact: {
                   ...item.CmContact,

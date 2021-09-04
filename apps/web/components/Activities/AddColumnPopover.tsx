@@ -1,16 +1,17 @@
 import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 import { Input, Popover, Checkbox, Radio, Drawer } from 'antd'
+import { MutationFunction } from '@apollo/client'
 import Highlighter from 'react-highlight-words'
-import { Button, Notification, NotificationType } from '@pabau/ui'
+import { Button } from '@pabau/ui'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { CustomScrollbar } from '../CustomScrollbar/Index'
 import styles from '../../pages/activities/index.module.less'
 import { defaultColumns } from './ActivitiesTable'
 import { useMedia } from 'react-use'
 import { useUser } from '../../context/UserContext'
-import { useUpsertOneActivityUserColumnsMutation } from '@pabau/graphql'
 
 interface AddColumnsProps {
+  upsertActiveColumnMutation: MutationFunction
   children?: ReactNode
   selectedColumn?: string[]
   setSelectedColumn?: (val: string[]) => void
@@ -62,6 +63,7 @@ export const columnNames = {
   leadLostTime: { label: 'Lead lost time', id: 'lead.leadLostTime' },
   leadSource: { label: 'Lead source', id: 'lead.leadSource' },
   wonBy: { label: 'Won by', id: 'lead.wonBy' },
+  leadStage: { label: 'Lead Stage', id: 'lead.leadStage' },
   clientName: { label: 'Client name', id: 'client.firstName' },
   label: { label: 'Label', id: 'client.label' },
   clientEmail: { label: 'Client email', id: 'client.email' },
@@ -82,6 +84,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     setSelectedColumn,
     visibleAddColumnPopover,
     setVisibleAddColumnPopover,
+    upsertActiveColumnMutation,
   }) => {
     const { t } = useTranslationI18()
     const isMobile = useMedia('(max-width: 768px)', false)
@@ -95,21 +98,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     const [visibleOptionsSelect, setVisibleOptionsSelect] = useState([])
     const [defaultColumnList, setDefaultColumnList] = useState([])
     const loggedUser = useUser()
-
-    const [upsertActiveColumn] = useUpsertOneActivityUserColumnsMutation({
-      onCompleted() {
-        Notification(
-          NotificationType.success,
-          t('activity.table.dynamic.field.update.message')
-        )
-      },
-      onError() {
-        Notification(
-          NotificationType.error,
-          t('activity.table.dynamic.field.update.error.message')
-        )
-      },
-    })
 
     const activityOptions = useMemo(
       () => [
@@ -223,6 +211,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           label: t('activityList.column.wonBy'),
           value: columnNames.wonBy.label,
         },
+        {
+          label: t('activityList.column.leadStage'),
+          value: columnNames.leadStage.label,
+        },
       ],
       [t]
     )
@@ -322,7 +314,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
         ...selectedColumnOption.map((data) => data.value),
       ])
       handleVisible()
-      await upsertActiveColumn({
+      await upsertActiveColumnMutation({
         variables: {
           columns: JSON.stringify({ columns: activeColumns }),
           userId: loggedUser?.me?.user,

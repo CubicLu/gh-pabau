@@ -118,6 +118,7 @@ query findManyActivityData(
         leadLostTime
         leadLostReason
         wonBy
+        leadStage
       }
     }
   }

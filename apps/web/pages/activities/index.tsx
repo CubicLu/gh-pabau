@@ -248,6 +248,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
       delete queryOptions.variables.userId
     }
     if (tabValue === 'To do') {
+      delete queryOptions.variables.startDate
       delete queryOptions.variables.endDate
     }
     if (tabValue === 'Overdue') {
