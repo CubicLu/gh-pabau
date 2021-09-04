@@ -41,7 +41,7 @@ mutation insert_notifications_one(
 ) {
   insert_notifications_one(
     object: {
-      template: $type
+      template: $template
       destination: $destination
       variables: $variables
       sent_by: $sent_by
