@@ -1,4 +1,4 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import { MedicalFormTypes, MacroItem } from '@pabau/ui'
 import { cloneDeep } from 'lodash'
 import React, { FC, useState } from 'react'
 import FormCheckBox from './FormCheckBox'
@@ -25,6 +25,8 @@ interface P {
   handleId: string
   formData: MedicalFormTypes
   handlingSaveForm?: (form: MedicalFormTypes) => void
+  onSaveMacroItems?: (macros: MacroItem[]) => void
+  macroItems?: MacroItem[]
 }
 
 const FormComponentInnerElement: FC<P> = ({
@@ -34,8 +36,11 @@ const FormComponentInnerElement: FC<P> = ({
   handleId,
   formData,
   handlingSaveForm,
+  onSaveMacroItems,
+  macroItems = [],
 }) => {
   const [form, setForm] = useState(cloneDeep(formData))
+
   const componentInfos = [
     {
       component: 'form_drawing',
@@ -185,6 +190,8 @@ const FormComponentInnerElement: FC<P> = ({
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
               macro={true}
+              onSaveMacroItems={onSaveMacroItems}
+              macroItems={macroItems}
             />
           )}
           {formData && formData.formName === 'form_textarea' && (
@@ -196,6 +203,8 @@ const FormComponentInnerElement: FC<P> = ({
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
               macro={true}
+              onSaveMacroItems={onSaveMacroItems}
+              macroItems={macroItems}
             />
           )}
           {formData && formData.formName === 'form_snomed' && (

@@ -1,4 +1,4 @@
-import { Button, ButtonTypes, MedicalFormTypes } from '@pabau/ui'
+import { Button, ButtonTypes, MedicalFormTypes, MacroItem } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './FormComponent.module.less'
 import FormComponentInnerElement from './FormComponentInnerElement'
@@ -12,6 +12,8 @@ interface P {
 const FormComponentMain: FC<P> = ({ ...props }) => {
   const { draggedForms, formSaveLabel = '', processSaveForm } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
+  const [macroItems, setMacroItems] = useState<MacroItem[]>([])
+
   useEffect(() => {
     const requiredForms = draggedForms.filter((form) => form.required === true)
     if (
@@ -52,6 +54,10 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
     processSaveForm?.()
   }
 
+  const onSaveMacroItems = (macros: MacroItem[]) => {
+    setMacroItems(macros)
+  }
+
   return (
     <div className={styles.formComponentMain}>
       {draggedForms?.map((form, index) => {
@@ -64,6 +70,8 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
               handleId={form.id}
               formData={form}
               handlingSaveForm={handlingSaveForm}
+              onSaveMacroItems={onSaveMacroItems}
+              macroItems={macroItems}
             />
           </div>
         )

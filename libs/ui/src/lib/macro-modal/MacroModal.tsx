@@ -19,6 +19,7 @@ export interface MacroModalProps {
   onAdd?: (macro: string) => void
   onClose?: () => void
   visible?: boolean
+  onSaveMacroItems?: (macros: MacroItem[]) => void
 }
 
 export const MacroModal: FC<MacroModalProps> = ({
@@ -26,6 +27,7 @@ export const MacroModal: FC<MacroModalProps> = ({
   preMacroItems = [],
   onAdd = () => console.log(),
   onClose = () => console.log(),
+  onSaveMacroItems = (macros: MacroItem[]) => console.log(),
   visible = true,
 }) => {
   const { t } = useTranslation('common')
@@ -66,7 +68,16 @@ export const MacroModal: FC<MacroModalProps> = ({
   const TabMenuContent = (args: unknown) => (
     <TabMenu {...args} menuItems={menuList(macroItems)}>
       {macroItems.map((macro, _index) => (
-        <div key={_index}>{macro.message}</div>
+        <div key={_index}>
+          {macro.message.split('\n').map((item, key) => {
+            return (
+              <span key={'message-' + key}>
+                {item}
+                <br />
+              </span>
+            )
+          })}
+        </div>
       ))}
     </TabMenu>
   )
@@ -96,7 +107,8 @@ export const MacroModal: FC<MacroModalProps> = ({
   }
 
   const onCreateMacro = (macro: MacroItem) => {
-    setMacroItems([
+    console.log('macro', macro)
+    onSaveMacroItems?.([
       ...macroItems,
       {
         id: macroItems.length + 1,
@@ -106,6 +118,16 @@ export const MacroModal: FC<MacroModalProps> = ({
         createdAt: macro.createdAt,
       },
     ])
+    // setMacroItems([
+    //   ...macroItems,
+    //   {
+    //     id: macroItems.length + 1,
+    //     title: macro.title,
+    //     message: macro.message,
+    //     type: macro.type,
+    //     createdAt: macro.createdAt,
+    //   },
+    // ])
     onHideMacroCreateDlg()
     // onAdd?.(macro.title)
   }
@@ -122,7 +144,8 @@ export const MacroModal: FC<MacroModalProps> = ({
         createdAt: item.createdAt,
       }
     })
-    setMacroItems(newMacroItems)
+    onSaveMacroItems?.(newMacroItems)
+    // setMacroItems(newMacroItems)
   }
 
   return (

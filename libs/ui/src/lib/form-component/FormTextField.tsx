@@ -1,7 +1,7 @@
 import { DatePicker, Input, InputNumber } from 'antd'
 import { BookOutlined } from '@ant-design/icons'
 import React, { FC, useState } from 'react'
-import { MacroModal } from '@pabau/ui'
+import { MacroModal, MacroItem } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import styles from './FormComponent.module.less'
 
@@ -14,6 +14,8 @@ interface P {
   required?: boolean
   macro?: boolean
   onChangeTextValue?: (value: string) => void
+  onSaveMacroItems?: (macros: MacroItem[]) => void
+  macroItems?: MacroItem[]
 }
 
 export const FormTextField: FC<P> = ({
@@ -25,6 +27,8 @@ export const FormTextField: FC<P> = ({
   required = false,
   macro = false,
   onChangeTextValue,
+  onSaveMacroItems,
+  macroItems = [],
 }) => {
   const [text, setText] = useState(defaultValue)
   const [showMacroDlg, setShowMacroDlg] = useState(false)
@@ -97,7 +101,8 @@ export const FormTextField: FC<P> = ({
         onAdd={onAddMacro}
         onClose={onHideMacroDlg}
         visible={showMacroDlg}
-        preMacroItems={[]}
+        onSaveMacroItems={onSaveMacroItems}
+        preMacroItems={macroItems}
       />
     </div>
   )
