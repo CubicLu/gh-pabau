@@ -2509,6 +2509,14 @@ en:
   ui.macro.modal.title: 'Macros'
   ui.macro.modal.create: 'Create'
   ui.macro.modal.manage: 'Manage'
+  ui.macro.modal.create.title: 'Create a macro'
+  ui.macro.modal.create.save: 'Save'
+  ui.macro.modal.create.cancel: 'Cancel'
+  ui.macro.modal.create.placeholder.title: 'Title'
+  ui.macro.modal.create.placeholder.message: 'Message'
+  ui.macro.modal.create.type.everywhere: 'Everywhere'
+  ui.macro.modal.create.type.myself: 'Myself only'
+  ui.macro.modal.manage.title: 'Manage macros'
   setup.reports.team-report: Team Report
   setup.reports.search-report: Search by report name
   setup.reports.team.title: Team

@@ -24,7 +24,6 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
       <Modal
         title={title}
         visible={visible}
-        footer={null}
         className={styles.macroManageModal}
         onCancel={() => onClose()}
       >

@@ -1,7 +1,12 @@
 import { DatePicker, Input, InputNumber } from 'antd'
 import { BookOutlined } from '@ant-design/icons'
 import React, { FC, useState } from 'react'
-import { MacroModal, MacroCreateModal, MacroManageModal } from '@pabau/ui'
+import {
+  MacroModal,
+  MacroCreateModal,
+  MacroManageModal,
+  MacroItem,
+} from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import styles from './FormComponent.module.less'
 
@@ -81,6 +86,10 @@ export const FormTextField: FC<P> = ({
     onShowMacroDlg()
   }
 
+  const onCreateMacro = (macro: MacroItem) => {
+    console.log('create macro =', macro)
+  }
+
   return (
     <div className={`${styles.formTextField} ${styles.formComponet}`}>
       {title.length > 0 && (
@@ -125,12 +134,13 @@ export const FormTextField: FC<P> = ({
         visible={showMacroDlg}
       />
       <MacroCreateModal
-        title={t('ui.macro.modal.create')}
+        title={t('ui.macro.modal.create.title')}
         onClose={onHideMacroCreateDlg}
+        onCreateMacro={onCreateMacro}
         visible={showMacroCreateDlg}
       />
       <MacroManageModal
-        title={t('ui.macro.modal.manage')}
+        title={t('ui.macro.modal.manage.title')}
         onClose={onHideMacroManageDlg}
         visible={showMacroManageDlg}
       />

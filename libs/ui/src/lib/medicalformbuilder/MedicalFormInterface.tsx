@@ -168,3 +168,10 @@ export interface SNOMED {
   conceptId: string
   fsn: string
 }
+
+export interface MacroItem {
+  id: number
+  title: string
+  message: string
+  type: number
+}
