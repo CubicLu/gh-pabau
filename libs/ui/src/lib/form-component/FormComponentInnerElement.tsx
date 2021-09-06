@@ -184,6 +184,7 @@ const FormComponentInnerElement: FC<P> = ({
               txtInputType={formData.txtInputType}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
+              macro={true}
             />
           )}
           {formData && formData.formName === 'form_textarea' && (
@@ -194,6 +195,7 @@ const FormComponentInnerElement: FC<P> = ({
               defaultValue={formData.txtDefaults}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
+              macro={true}
             />
           )}
           {formData && formData.formName === 'form_snomed' && (

@@ -1,0 +1,78 @@
+.macro-manage-wrap {
+  position: relative;
+}
+
+.macro-manage-modal {
+  width: 720px !important;
+  :global {
+    .ant-modal-content {
+      padding-right: 20px;
+      .ant-modal-close {
+        font-size: 10px;
+        width: 61px;
+        padding-top: 22px;
+        .ant-modal-close-x {
+          font-size: 10px;
+        }
+      }
+      .ant-modal-header {
+        padding: 40px 40px 24px 40px;
+        .ant-modal-title {
+          font-weight: 500;
+          font-size: 22px;
+          line-height: 28px;
+          color: #3d3d46;
+        }
+      }
+      .ant-modal-body {
+        padding: 0px;
+      }
+    }
+    .ant-tabs.ant-tabs-left {
+      min-height: 40vh !important;
+      max-height: 60vh !important;
+    }
+    .ant-tabs-content.ant-tabs-content-left {
+      height: 100%;
+      padding: 10px;
+    }
+  }
+}
+
+.macro-manage-content {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 20px;
+  .tag-item-content {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: #3d3d46;
+    padding: 16px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+  }
+
+  .tag-item-content-active {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: #54b2d3;
+    padding: 16px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+  }
+}
+
+.macro-manage-content::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+.macro-manage-content::-webkit-scrollbar {
+  width: 2px;
+  background-color: #663434;
+}
+.macro-manage-content::-webkit-scrollbar-thumb {
+  background-color: #dbdbdb;
+  border: 1px solid #d1d1d1;
+}

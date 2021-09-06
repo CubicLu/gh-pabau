@@ -2506,6 +2506,9 @@ en:
   ui.medicalform.setting.requried.tooltip: 'You must use "Required" if you wish to link the answer from the client to a field'
   ui.inputwithtag.addtag: 'Add field'
   ui.inputwithtag.modal.title: 'Add a Personalization'
+  ui.macro.modal.title: 'Macros'
+  ui.macro.modal.create: 'Create'
+  ui.macro.modal.manage: 'Manage'
   setup.reports.team-report: Team Report
   setup.reports.search-report: Search by report name
   setup.reports.team.title: Team
@@ -4855,7 +4858,7 @@ en:
   ui.clientcard.forms.clientsignature: 'Client signature'
   ui.clientcard.forms.all: 'All'
   ui.clientcard.forms.clearall: 'Clear All'
-  ui.clientcard.forms.apply: 'Apply'  
+  ui.clientcard.forms.apply: 'Apply'
   ui.clientcard.forms.nodata: 'No Data'
   ui.clientcard.forms.filterby: 'Filter by'
   ui.clientcard.forms.author: 'Author'
@@ -4898,4 +4901,3 @@ en:
   ui.clientcard-prescriptions.options.edit: 'Edit'
   ui.clientcard-prescriptions.options.repeat: 'Repeat'
   ui.clientcard-prescriptions.options.delete: 'Delete'
-
