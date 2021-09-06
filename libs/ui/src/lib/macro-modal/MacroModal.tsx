@@ -34,9 +34,9 @@ export const MacroModal: FC<MacroModalProps> = ({
   const menuListItem = (macroItem: MacroItem) => {
     return (
       <>
-        <span className={styles.macroMenuListTitle}>{macroItem.title}</span>
+        <span style={{ float: 'left' }}>{macroItem.title}</span>
         {macroItem.type === 1 && (
-          <span className={styles.macroMenuListLock}>
+          <span style={{ float: 'right' }}>
             <LockOutlined />
           </span>
         )}
