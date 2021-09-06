@@ -1,8 +1,11 @@
-import { Modal, List } from 'antd'
+import { Modal, List, Checkbox, Select } from 'antd'
 import { MacroItem } from '@pabau/ui'
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
+import { DeleteOutlined, LockOutlined } from '@ant-design/icons'
 import styles from './MacroManageModal.module.less'
 import { useTranslation } from 'react-i18next'
+
+const { Option } = Select
 
 export interface MacroManageModalProps {
   title?: string
@@ -18,6 +21,24 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
   macroItems = [],
 }) => {
   const { t } = useTranslation('common')
+  const [manageMacroItems, setManageMacroItems] = useState<MacroItem[]>([])
+  useEffect(() => {
+    setManageMacroItems(macroItems)
+  }, [macroItems])
+
+  const onHandleChangeType = (type) => {
+    console.log('type =', type)
+    console.log('macroItems =', macroItems)
+
+    if (typeof type === 'undefined') {
+      setManageMacroItems(macroItems)
+    } else {
+      const filteredMacroItems = macroItems.filter(
+        (item) => item.type === Number(type)
+      )
+      setManageMacroItems(filteredMacroItems)
+    }
+  }
 
   return (
     <div className={styles.macroMangeWrap}>
@@ -29,15 +50,34 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
         footer={null}
       >
         <List
-          dataSource={macroItems}
+          dataSource={manageMacroItems}
           renderItem={(item) => (
             <List.Item key={item.id}>
-              <div>
-                {item.title} - {item.message}
+              <div className={styles.macroItemWrap}>
+                <div className={styles.macroItemTitle}>
+                  <Checkbox>{item.title}</Checkbox>
+                </div>
+                <div className={styles.macroItemType}>
+                  {item.type === 1 && <LockOutlined />}
+                </div>
+                <div className={styles.macroItemCreated}>{item.createdAt}</div>
+                <div className={styles.macroItemDelete}>
+                  <DeleteOutlined />
+                </div>
               </div>
             </List.Item>
           )}
         />
+        <Select
+          className={styles.macroVisibility}
+          onChange={onHandleChangeType}
+          allowClear
+        >
+          <Option value="0">
+            {t('ui.macro.modal.create.type.everywhere')}
+          </Option>
+          <Option value="1">{t('ui.macro.modal.create.type.myself')}</Option>
+        </Select>
       </Modal>
     </div>
   )

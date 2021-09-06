@@ -6,11 +6,11 @@ export const macroList: MacroItem[] = [
     title: 'hello1',
     message: 'hello1hello1',
     type: 0,
-    createdAt: '15 Jun',
+    createdAt: '15 Jun 2021',
   },
   {
     id: 2,
-    title: 'hello2',
+    title: 'hello2 hello2 hello2 hello2',
     message: 'hello2 hello2',
     type: 1,
     createdAt: '15 Jun 2021',
