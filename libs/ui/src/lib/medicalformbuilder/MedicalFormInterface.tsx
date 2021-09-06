@@ -174,4 +174,5 @@ export interface MacroItem {
   title: string
   message: string
   type: number
+  createdAt: string
 }

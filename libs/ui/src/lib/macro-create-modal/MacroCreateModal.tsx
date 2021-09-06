@@ -3,6 +3,7 @@ import { Modal, Input, Radio, Space } from 'antd'
 import React, { FC, useState } from 'react'
 import styles from './MacroCreateModal.module.less'
 import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
 
 const { TextArea } = Input
 
@@ -17,6 +18,7 @@ const defaultMacro: MacroItem = {
   title: '',
   message: '',
   type: 0,
+  createdAt: '',
 }
 
 export const MacroCreateModal: FC<MacroCreateModalProps> = ({
@@ -31,6 +33,7 @@ export const MacroCreateModal: FC<MacroCreateModalProps> = ({
   const [macro, setMacro] = useState<MacroItem>(defaultMacro)
 
   const onOk = () => {
+    macro.createdAt = dayjs().format('DD MMM YYYY')
     onCreateMacro?.(macro)
   }
 

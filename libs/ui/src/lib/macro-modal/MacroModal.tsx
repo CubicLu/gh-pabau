@@ -1,10 +1,10 @@
-import { TabMenu } from '@pabau/ui'
+import { Button, ButtonTypes, TabMenu, MacroItem } from '@pabau/ui'
 import { Modal } from 'antd'
-import { Button, ButtonTypes } from '@pabau/ui'
-import React, { FC } from 'react'
-import { MacroItem, macroList } from './data'
+import React, { FC, ReactNode } from 'react'
+import { macroList } from './data'
 import styles from './MacroModal.module.less'
 import { useTranslation } from 'react-i18next'
+import { LockOutlined } from '@ant-design/icons'
 
 export interface MacroModalProps {
   title?: string
@@ -31,10 +31,23 @@ export const MacroModal: FC<MacroModalProps> = ({
     onAdd?.(macro)
   }
 
+  const menuListItem = (macroItem: MacroItem) => {
+    return (
+      <>
+        <span className={styles.macroMenuListTitle}>{macroItem.title}</span>
+        {macroItem.type === 1 && (
+          <span className={styles.macroMenuListLock}>
+            <LockOutlined />
+          </span>
+        )}
+      </>
+    )
+  }
+
   const menuList = (macroItems: MacroItem[]) => {
-    const _temp: string[] = []
-    for (let i = 0; i < Object.keys(macroItems).length; i++) {
-      _temp.push(macroItems[Object.keys(macroItems)[i]].title)
+    const _temp: Array<ReactNode> = []
+    for (const macroItem of macroItems) {
+      _temp.push(menuListItem(macroItem))
     }
     return _temp
   }

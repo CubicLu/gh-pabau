@@ -1,6 +1,11 @@
 import { Input } from 'antd'
 import React, { FC, useState } from 'react'
-import { MacroModal, MacroCreateModal, MacroManageModal } from '@pabau/ui'
+import {
+  MacroModal,
+  MacroCreateModal,
+  MacroManageModal,
+  MacroItem,
+} from '@pabau/ui'
 import { BookOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import styles from './FormComponent.module.less'
@@ -72,6 +77,10 @@ export const FormTextArea: FC<P> = ({
     onShowMacroDlg()
   }
 
+  const onCreateMacro = (macro: MacroItem) => {
+    console.log('create macro =', macro)
+  }
+
   return (
     <div className={`${styles.formTextArea} ${styles.formComponet}`}>
       {title.length > 0 && (
@@ -108,6 +117,7 @@ export const FormTextArea: FC<P> = ({
       <MacroCreateModal
         title={t('ui.macro.modal.create')}
         onClose={onHideMacroCreateDlg}
+        onCreateMacro={onCreateMacro}
         visible={showMacroCreateDlg}
       />
       <MacroManageModal
