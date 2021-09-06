@@ -49,7 +49,6 @@ interface ClientsContentProps {
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
   >
   setLabelsList?: (val) => void
-  clientRef?: RefObject<HTMLDivElement>
   contactsLabels?: any
   getContactsLabelsQuery?: (val) => void
   getLabelsQuery?: (val) => void
@@ -100,7 +99,6 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   setPaginateData,
   labelsList,
   setLabelsList,
-  clientRef,
   getContactsLabelsQuery,
   getLabelsQuery,
   addLabelMutation,
@@ -165,8 +163,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       title: t('clients.content.column.email'),
       dataIndex: 'email',
       visible: visiblePrimaryColumns('Email'),
-      // eslint-disable-next-line react/display-name
-      render: (email) => {
+      render: function renderEmail(email) {
         return <span>{email || ''}</span>
       },
     },
@@ -189,42 +186,48 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           <Popover
             trigger={'hover'}
             placement={'bottom'}
-            content={clientLabel?.map((label) => (
-              <Button
-                className={styles.labelButton}
-                key={label?.id}
-                style={{
-                  border: `1px solid ${label?.color}`,
-                  color: label?.color,
-                }}
-                backgroundColor={''}
-                onClick={(e) => handleLabelClick(e, label?.name)}
-                icon={<TagOutlined />}
-              >
-                {label?.name}
-              </Button>
-            ))}
+            content={clientLabel?.map(
+              (label, index) =>
+                label && (
+                  <div className={styles.contentLabel}>
+                    <Button
+                      className={styles.labelButton}
+                      key={index}
+                      style={{
+                        border: `1px solid ${label?.color}`,
+                        color: label?.color,
+                      }}
+                      backgroundColor={''}
+                      onClick={(e) => handleLabelClick(e, label?.name)}
+                      icon={<TagOutlined />}
+                    >
+                      {label?.name}
+                    </Button>
+                  </div>
+                )
+            )}
           >
             <div className={styles.labelShow}>
-              {clientLabel?.slice(0, 2).map((label) => (
-                <div key={label?.id}>
-                  <Button
-                    className={styles.labelButton}
-                    key={label?.id}
-                    style={{
-                      border: `1px solid ${label?.color}`,
-                      color: label?.color,
-                    }}
-                    backgroundColor={''}
-                    onClick={(e) => handleLabelClick(e, label?.name)}
-                    icon={<TagOutlined />}
-                  >
-                    {label?.name}
-                  </Button>
-                </div>
-              ))}
+              {clientLabel?.slice(0, 2).map(
+                (label, index) =>
+                  label && (
+                    <Button
+                      className={styles.labelButton}
+                      key={index}
+                      style={{
+                        border: `1px solid ${label?.color}`,
+                        color: label?.color,
+                      }}
+                      backgroundColor={''}
+                      onClick={(e) => handleLabelClick(e, label?.name)}
+                      icon={<TagOutlined />}
+                    >
+                      {label?.name}
+                    </Button>
+                  )
+              )}
               {/*<p>...</p>*/}
-              {clientLabel?.length > 2 ? (
+              {clientLabel?.length > 2 && !clientLabel.includes(undefined) ? (
                 <p>
                   <b>. . .</b>
                 </p>
@@ -286,13 +289,6 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       },
     },
   ]
-
-  useEffect(() => {
-    if (clientRef.current) {
-      clientRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginateData.currentPage, paginateData.limit])
 
   const onCheckAllChange = () => {
     if (selectedRowKeys.length !== dataSource().length) {

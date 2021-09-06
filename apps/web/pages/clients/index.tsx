@@ -3,7 +3,6 @@ import LayoutComponent from '../../components/Layout/Layout'
 import { Layout, Tabs } from 'antd'
 import dayjs from 'dayjs'
 import { useMedia } from 'react-use'
-import styles from './clients.module.less'
 import ClientsHeader from '../../components/Clients/ClientsHeader'
 import LeftSideBar from '../../components/Clients/LeftSideBar'
 import ContentComponent, {
@@ -25,8 +24,8 @@ import {
   // useGetContactsLabelsLazyQuery,
   // useInsertContactsLabelsMutation,
 } from '@pabau/graphql'
-
 import ClientCreate from '../../components/Clients/ClientCreate'
+import styles from './clients.module.less'
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
 
@@ -56,6 +55,7 @@ export const Clients: FC<ClientsProps> = () => {
   const [searchText, setSearchText] = useState('')
   const [labelsList, setLabelsList] = useState([])
   const [dataLoaded, setDataLoaded] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   // const [insertContactsLabelsMutaton] = useInsertContactsLabelsMutation({
   //   onCompleted(response) {
   //     const tempLab = response.insert_contacts_labels.returning[0]
@@ -68,16 +68,6 @@ export const Clients: FC<ClientsProps> = () => {
   //   },
   // })
 
-  const {
-    data: getClientsCountData,
-    loading: getClientsCountLoading,
-  } = useClientListContactsCountQuery({ fetchPolicy: 'no-cache' })
-
-  // const { data: getDuplicateContactsData } = useDuplicateContactsQuery({
-  //   fetchPolicy: 'no-cache',
-  // })
-  const duplicateContactsData = []
-
   const [getLabelsQuery] = useGetLabelsLazyQuery({
     fetchPolicy: 'no-cache',
     onCompleted(response) {
@@ -88,6 +78,16 @@ export const Clients: FC<ClientsProps> = () => {
       console.error(error)
     },
   })
+
+  const {
+    data: getClientsCountData,
+    loading: getClientsCountLoading,
+  } = useClientListContactsCountQuery({ fetchPolicy: 'no-cache' })
+
+  // const { data: getDuplicateContactsData } = useDuplicateContactsQuery({
+  //   fetchPolicy: 'no-cache',
+  // })
+  const duplicateContactsData = []
 
   // const [getContactsLabelsQuery] = useGetContactsLabelsLazyQuery({
   //   fetchPolicy: 'no-cache',
@@ -153,14 +153,22 @@ export const Clients: FC<ClientsProps> = () => {
     showingRecords: 0,
   })
 
-  // let contactsData = []
-  let contactsData = useMemo(() => {
-    const tempContactsData = []
-    return tempContactsData
-  }, [])
   const { data: getContactsData } = useGetContactsQuery({
-    onCompleted(response) {
-      contactsData = response.findManyCmContact.map((d) => ({
+    fetchPolicy: 'no-cache',
+    variables: {
+      offset: paginateData.offset,
+      limit: paginateData.limit,
+      searchTerm: '%' + searchText + '%',
+    },
+  })
+
+  useEffect(() => {
+    getLabelsQuery()
+  }, [getLabelsQuery])
+
+  useEffect(() => {
+    if (getContactsData && labelsList.length > 0) {
+      const contactsData = getContactsData?.findManyCmContact.map((d) => ({
         id: d.ID,
         avatar: d.Avatar,
         firstName: d.Fname,
@@ -173,16 +181,7 @@ export const Clients: FC<ClientsProps> = () => {
         }),
       }))
       setContactsSourceData(contactsData)
-    },
-    fetchPolicy: 'no-cache',
-    variables: {
-      offset: paginateData.offset,
-      limit: paginateData.limit,
-      searchTerm: searchText,
-    },
-  })
-
-  useEffect(() => {
+    }
     if (getClientsCountData) {
       setPaginateData((d) => ({
         ...d,
@@ -190,7 +189,7 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getContactsData?.findManyCmContact?.length,
       }))
     }
-  }, [getContactsData, getClientsCountData])
+  }, [getContactsData, labelsList, getClientsCountData, getClientsCountLoading])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -221,7 +220,7 @@ export const Clients: FC<ClientsProps> = () => {
   const [duplicateDataList, setDuplicateDataList] = useState<
     SourceDataProps[][]
   >([])
-  const [contactsSourceData, setContactsSourceData] = useState(contactsData)
+  const [contactsSourceData, setContactsSourceData] = useState(null)
   // const [duplicateContactsData, setDuplicateContactsData] = useState(
   //   getDuplicateContactsData
   // )
@@ -230,10 +229,6 @@ export const Clients: FC<ClientsProps> = () => {
 
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
-
-  useEffect(() => {
-    getLabelsQuery()
-  }, [getLabelsQuery])
 
   useEffect(() => {
     setSourceData(clientsList)
@@ -290,7 +285,7 @@ export const Clients: FC<ClientsProps> = () => {
   }
 
   useEffect(() => {
-    let filteredData = contactsSourceData?.map((a) => ({ ...a }))
+    let filteredData = contactsSourceData
 
     if (selectedTab === tab.clients) {
       filteredData = contactsSourceData
@@ -328,6 +323,7 @@ export const Clients: FC<ClientsProps> = () => {
       filteredData = filterObject
     }
     setSourceFilteredData(filteredData)
+    if (contactsSourceData) setIsLoading(false)
   }, [searchText, selectedTab, contactsSourceData])
 
   useEffect(() => {
@@ -344,6 +340,13 @@ export const Clients: FC<ClientsProps> = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRowKeys, contactsSourceData, contactsLabels])
+
+  useEffect(() => {
+    if (clientRef.current) {
+      clientRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.currentPage, paginateData.limit])
 
   const handleLabelClick = (e, label) => {
     if (e) {
@@ -571,11 +574,10 @@ export const Clients: FC<ClientsProps> = () => {
       handleRecoverClick={handleRecoverClick}
       paginateData={paginateData}
       onPaginationChange={onPaginationChange}
-      getClientsCountLoading={getClientsCountLoading}
+      getClientsCountLoading={isLoading}
       setPaginateData={setPaginateData}
       labelsList={labelsList}
       setLabelsList={setLabelsList}
-      clientRef={clientRef}
       // addLabelMutation={addLabelMutation}
       contactsLabels={contactsLabels}
       // getContactsLabelsQuery={getContactsLabelsQuery}
@@ -594,8 +596,8 @@ export const Clients: FC<ClientsProps> = () => {
     />
   )
 
-  return dataLoaded ? (
-    <div ref={clientRef}>
+  return (
+    <div>
       <CommonHeader
         title={t('clients.commonHeader')}
         isShowSearch={false}
@@ -740,8 +742,6 @@ export const Clients: FC<ClientsProps> = () => {
         </BasicModal>
       )}
     </div>
-  ) : (
-    <div>Loading...</div>
   )
 }
 
