@@ -35,8 +35,12 @@ export const MacroCreateModal: FC<MacroCreateModalProps> = ({
   const onOk = () => {
     macro.createdAt = dayjs().format('DD MMM YYYY')
     onCreateMacro?.(macro)
+    setMacro(defaultMacro)
   }
-
+  const onCancel = () => {
+    setMacro(defaultMacro)
+    onClose?.()
+  }
   const handleChangeTitle = (value) => {
     const tempMacro = { ...macro, title: value }
     setMacro(tempMacro)
@@ -58,7 +62,7 @@ export const MacroCreateModal: FC<MacroCreateModalProps> = ({
         title={title}
         visible={visible}
         className={styles.macroCreateModal}
-        onCancel={() => onClose()}
+        onCancel={() => onCancel()}
         onOk={() => onOk()}
         okText={t('ui.macro.modal.create.save')}
         cancelText={t('ui.macro.modal.create.cancel')}
@@ -77,6 +81,7 @@ export const MacroCreateModal: FC<MacroCreateModalProps> = ({
               onChange={(e) => handleChangeTitle(e.target.value)}
               onFocus={(e) => setFocusTitle(true)}
               onBlur={(e) => setFocusTitle(false)}
+              value={macro.title}
             />
           </div>
           <div className={styles.messageContainer}>
@@ -95,10 +100,14 @@ export const MacroCreateModal: FC<MacroCreateModalProps> = ({
               onFocus={(e) => setFocusMessage(true)}
               onBlur={(e) => setFocusMessage(false)}
               rows={10}
+              value={macro.message}
             />
           </div>
           <div className={styles.typeContainer}>
-            <Radio.Group onChange={(e) => handleChangeType(e.target.value)}>
+            <Radio.Group
+              onChange={(e) => handleChangeType(e.target.value)}
+              value={macro.type}
+            >
               <Space direction="vertical">
                 <Radio value={0}>
                   {t('ui.macro.modal.create.type.everywhere')}

@@ -6,7 +6,7 @@
   width: 720px !important;
   :global {
     .ant-modal-content {
-      padding-right: 20px;
+      border-radius: 4px;
       .ant-modal-close {
         font-size: 10px;
         width: 61px;
@@ -17,15 +17,23 @@
       }
       .ant-modal-header {
         padding: 40px 40px 24px 40px;
+        border-radius: 4px 4px 0px 0px;
         .ant-modal-title {
           font-weight: 500;
-          font-size: 22px;
-          line-height: 28px;
+          font-size: 16px;
+          line-height: 20px;
           color: #3d3d46;
         }
       }
       .ant-modal-body {
         padding: 0px;
+        max-height: 430px;
+        overflow: auto;
+        .ant-list-split {
+          .ant-list-item {
+            padding: 10px 20px;
+          }
+        }
       }
     }
     .ant-tabs.ant-tabs-left {

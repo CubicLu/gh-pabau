@@ -1,6 +1,13 @@
-import { Button, ButtonTypes, TabMenu, MacroItem } from '@pabau/ui'
+import {
+  Button,
+  ButtonTypes,
+  TabMenu,
+  MacroItem,
+  MacroCreateModal,
+  MacroManageModal,
+} from '@pabau/ui'
 import { Modal } from 'antd'
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useState, useEffect } from 'react'
 import { macroList } from './data'
 import styles from './MacroModal.module.less'
 import { useTranslation } from 'react-i18next'
@@ -9,9 +16,7 @@ import { LockOutlined } from '@ant-design/icons'
 export interface MacroModalProps {
   title?: string
   macroItems?: MacroItem[]
-  onAdd?: (macroItem: MacroItem) => void
-  onShowMacroCreate?: () => void
-  onShowMacroManage?: () => void
+  onAdd?: (macro: string) => void
   onClose?: () => void
   visible?: boolean
 }
@@ -20,16 +25,17 @@ export const MacroModal: FC<MacroModalProps> = ({
   title = 'Add a Macro',
   macroItems = macroList,
   onAdd = () => console.log(),
-  onShowMacroCreate = () => console.log(),
-  onShowMacroManage = () => console.log(),
   onClose = () => console.log(),
   visible = true,
 }) => {
   const { t } = useTranslation('common')
+  const [showSelfDlg, setShowSelfDlg] = useState(false)
+  const [showMacroCreateDlg, setShowMacroCreateDlg] = useState(false)
+  const [showMacroManageDlg, setShowMacroManageDlg] = useState(false)
 
-  const onClick = (macro: MacroItem) => {
-    onAdd?.(macro)
-  }
+  useEffect(() => {
+    setShowSelfDlg(visible)
+  }, [visible])
 
   const menuListItem = (macroItem: MacroItem) => {
     return (
@@ -55,26 +61,46 @@ export const MacroModal: FC<MacroModalProps> = ({
   const TabMenuContent = (args: unknown) => (
     <TabMenu {...args} menuItems={menuList(macroItems)}>
       {macroItems.map((macro, _index) => (
-        <div key={_index} onClick={() => onClick(macro)}>
-          {macro.message}
-        </div>
+        <div key={_index}>{macro.message}</div>
       ))}
     </TabMenu>
   )
 
   const onClickMacro = () => {
-    onShowMacroCreate?.()
+    setShowMacroManageDlg(false)
+    setShowSelfDlg(false)
+    setShowMacroCreateDlg(true)
   }
 
   const onClickManage = () => {
-    onShowMacroManage?.()
+    setShowSelfDlg(false)
+    setShowMacroCreateDlg(false)
+    setShowMacroManageDlg(true)
+  }
+
+  const onHideMacroCreateDlg = () => {
+    setShowMacroCreateDlg(false)
+    setShowMacroManageDlg(false)
+    setShowSelfDlg(true)
+  }
+
+  const onHideMacroManageDlg = () => {
+    setShowMacroCreateDlg(false)
+    setShowMacroManageDlg(false)
+    setShowSelfDlg(true)
+  }
+
+  const onCreateMacro = (macro: MacroItem) => {
+    console.log('macro', macro)
+    onHideMacroCreateDlg()
+    // onAdd?.(macro.title)
   }
 
   return (
     <div className={styles.macroWrap}>
       <Modal
         title={title}
-        visible={visible}
+        visible={showSelfDlg}
         onCancel={() => onClose()}
         footer={null}
         className={styles.macroModal}
@@ -95,6 +121,18 @@ export const MacroModal: FC<MacroModalProps> = ({
           {t('ui.macro.modal.manage')}
         </Button>
       </Modal>
+      <MacroCreateModal
+        title={t('ui.macro.modal.create.title')}
+        onClose={onHideMacroCreateDlg}
+        onCreateMacro={onCreateMacro}
+        visible={showMacroCreateDlg}
+      />
+      <MacroManageModal
+        title={t('ui.macro.modal.manage.title')}
+        onClose={onHideMacroManageDlg}
+        visible={showMacroManageDlg}
+        macroItems={macroItems}
+      />
     </div>
   )
 }

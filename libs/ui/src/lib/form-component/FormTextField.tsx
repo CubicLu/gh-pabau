@@ -1,12 +1,7 @@
 import { DatePicker, Input, InputNumber } from 'antd'
 import { BookOutlined } from '@ant-design/icons'
 import React, { FC, useState } from 'react'
-import {
-  MacroModal,
-  MacroCreateModal,
-  MacroManageModal,
-  MacroItem,
-} from '@pabau/ui'
+import { MacroModal } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import styles from './FormComponent.module.less'
 
@@ -33,8 +28,6 @@ export const FormTextField: FC<P> = ({
 }) => {
   const [text, setText] = useState(defaultValue)
   const [showMacroDlg, setShowMacroDlg] = useState(false)
-  const [showMacroCreateDlg, setShowMacroCreateDlg] = useState(false)
-  const [showMacroManageDlg, setShowMacroManageDlg] = useState(false)
 
   const { t } = useTranslation('common')
 
@@ -53,8 +46,6 @@ export const FormTextField: FC<P> = ({
   }
 
   const onShowMacroDlg = () => {
-    setShowMacroCreateDlg(false)
-    setShowMacroManageDlg(false)
     setShowMacroDlg(true)
   }
 
@@ -64,30 +55,6 @@ export const FormTextField: FC<P> = ({
 
   const onAddMacro = (macro) => {
     console.log('macro', macro)
-  }
-
-  const onShowMacroCreate = () => {
-    setShowMacroDlg(false)
-    setShowMacroManageDlg(false)
-    setShowMacroCreateDlg(true)
-  }
-
-  const onHideMacroCreateDlg = () => {
-    onShowMacroDlg()
-  }
-
-  const onShowMacroManage = () => {
-    setShowMacroDlg(false)
-    setShowMacroCreateDlg(false)
-    setShowMacroManageDlg(true)
-  }
-
-  const onHideMacroManageDlg = () => {
-    onShowMacroDlg()
-  }
-
-  const onCreateMacro = (macro: MacroItem) => {
-    console.log('create macro =', macro)
   }
 
   return (
@@ -129,20 +96,7 @@ export const FormTextField: FC<P> = ({
         title={t('ui.macro.modal.title')}
         onAdd={onAddMacro}
         onClose={onHideMacroDlg}
-        onShowMacroCreate={onShowMacroCreate}
-        onShowMacroManage={onShowMacroManage}
         visible={showMacroDlg}
-      />
-      <MacroCreateModal
-        title={t('ui.macro.modal.create.title')}
-        onClose={onHideMacroCreateDlg}
-        onCreateMacro={onCreateMacro}
-        visible={showMacroCreateDlg}
-      />
-      <MacroManageModal
-        title={t('ui.macro.modal.manage.title')}
-        onClose={onHideMacroManageDlg}
-        visible={showMacroManageDlg}
       />
     </div>
   )
