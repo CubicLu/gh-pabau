@@ -75,6 +75,38 @@ export const columnNames = {
     label: 'Client total activities',
     id: 'client.totalActivities',
   },
+  clientMobile: {
+    label: 'Client mobile',
+    id: 'client.clientMobile',
+  },
+  clientCreatedAt: {
+    label: 'Client created date',
+    id: 'client.clientCreatedAt',
+  },
+  clientSource: {
+    label: 'Client source',
+    id: 'client.clientSource',
+  },
+  clientSalutation: {
+    label: 'Client salutation',
+    id: 'client.clientSalutation',
+  },
+  clientGender: {
+    label: 'Client gender',
+    id: 'client.clientGender',
+  },
+  clientID: {
+    label: 'Client ID',
+    id: 'client.clientID',
+  },
+  clientDOB: {
+    label: 'Client DOB',
+    id: 'client.clientDOB',
+  },
+  clientStatus: {
+    label: 'Client status',
+    id: 'client.clientStatus',
+  },
 }
 
 export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
@@ -215,6 +247,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           label: t('activityList.column.leadStage'),
           value: columnNames.leadStage.label,
         },
+        {
+          label: t('activityList.column.leadDescription'),
+          value: columnNames.leadStage.label,
+        },
       ],
       [t]
     )
@@ -252,6 +288,38 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
         {
           label: t('activityList.column.clientTotalActivities'),
           value: columnNames.clientTotalActivities.label,
+        },
+        {
+          label: t('activityList.column.clientMobile'),
+          value: columnNames.clientMobile.label,
+        },
+        {
+          label: t('activityList.column.clientCreatedAt'),
+          value: columnNames.clientCreatedAt.label,
+        },
+        {
+          label: t('activityList.column.clientSource'),
+          value: columnNames.clientSource.label,
+        },
+        {
+          label: t('activityList.column.clientSalutation'),
+          value: columnNames.clientSalutation.label,
+        },
+        {
+          label: t('activityList.column.clientGender'),
+          value: columnNames.clientGender.label,
+        },
+        {
+          label: t('activityList.column.clientID'),
+          value: columnNames.clientID.label,
+        },
+        {
+          label: t('activityList.column.clientDOB'),
+          value: columnNames.clientDOB.label,
+        },
+        {
+          label: t('activityList.column.clientStatus'),
+          value: columnNames.clientStatus.label,
         },
       ],
       [t]

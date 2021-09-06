@@ -41,6 +41,7 @@ import * as Icon from '@ant-design/icons'
 import searchEmpty from '../../assets/images/empty.png'
 import { useUpsertOneActivityUserColumnsMutation } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
+import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
 
 export type ActivitiesType = {
   width?: number
@@ -1058,6 +1059,150 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         visible: visibleColumn(columnNames.clientTotalActivities.label),
         columnName: columnNames.clientTotalActivities.label,
       },
+      {
+        id: columnNames.clientMobile.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientMobile')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientMobile.label),
+        columnName: columnNames.clientMobile.label,
+      },
+      {
+        id: columnNames.clientCreatedAt.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientCreatedAt')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{date && dayjs(date).format('DD MMMM YYYY HH:MM')}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientCreatedAt.label),
+        columnName: columnNames.clientCreatedAt.label,
+      },
+      {
+        id: columnNames.clientSource.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientSource')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientSource.label),
+        columnName: columnNames.clientSource.label,
+      },
+      {
+        id: columnNames.clientSalutation.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientSalutation')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientSalutation.label),
+        columnName: columnNames.clientSalutation.label,
+      },
+      {
+        id: columnNames.clientGender.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientGender')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientGender.label),
+        columnName: columnNames.clientGender.label,
+      },
+      {
+        id: columnNames.clientID.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientID')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientID.label),
+        columnName: columnNames.clientID.label,
+      },
+      {
+        id: columnNames.clientDOB.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientDOB')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientDOB.label),
+        columnName: columnNames.clientDOB.label,
+      },
+      {
+        id: columnNames.clientStatus.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientStatus')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ clientTotalActivities }) => {
+          return (
+            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.clientStatus.label),
+        columnName: columnNames.clientStatus.label,
+      },
     ]
 
     const [columnItem, setColumnItem] = useState<ColumnProps[]>(columnsData)
@@ -1376,9 +1521,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         <div className={styles.noDataTableBox}>
           <div className={styles.noDataTextStyle}>
             <span className={styles.roundDesign}>
-              <Icon.ContactsOutlined className={styles.icon} />
+              <ActivityIcon className={styles.icon} />
             </span>
-            <p>{t('activityList.empty.activity.label')}</p>
+            <p className={styles.title}>{t('activityList.empty.activity.label')}</p>
+            <p className={styles.titleDesc}>{t('activityList.empty.activity.label.description')}</p>
             <div className={styles.spaceBetweenText} />
             <Button
               className={styles.createTemaplateBtn}

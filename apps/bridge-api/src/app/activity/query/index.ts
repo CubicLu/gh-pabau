@@ -33,6 +33,14 @@ export const CmContactCustomType = objectType({
     t.string('MailingCity')
     t.string('MailingPostal')
     t.int('clientTotalActivities')
+    t.string('Mobile')
+    t.field('CreatedDate', { type: 'DateTime' })
+    t.string('LeadSource')
+    t.string('Salutation')
+    t.string('gender')
+    t.int('ID')
+    t.string('DOB')
+    t.int('is_active')
   },
 })
 
