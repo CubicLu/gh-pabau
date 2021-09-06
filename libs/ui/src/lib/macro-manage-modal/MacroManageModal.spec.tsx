@@ -4,7 +4,7 @@ import { MacroManageModal } from '@pabau/ui'
 
 describe('MacroManageModal', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<MacroManageModal />)
+    const { baseElement } = render(<MacroManageModal macroItems={[]} />)
     expect(baseElement).toBeTruthy()
   })
 })

@@ -97,6 +97,7 @@ export const FormTextField: FC<P> = ({
         onAdd={onAddMacro}
         onClose={onHideMacroDlg}
         visible={showMacroDlg}
+        preMacroItems={[]}
       />
     </div>
   )

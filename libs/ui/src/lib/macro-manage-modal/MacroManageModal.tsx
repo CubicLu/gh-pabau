@@ -12,6 +12,7 @@ export interface MacroManageModalProps {
   visible?: boolean
   onClose?: () => void
   macroItems: MacroItem[]
+  onDeleteMacro?: (id: number) => void
 }
 
 export const MacroManageModal: FC<MacroManageModalProps> = ({
@@ -19,6 +20,7 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
   visible = true,
   onClose = () => console.log(),
   macroItems = [],
+  onDeleteMacro = (id: number) => console.log(),
 }) => {
   const { t } = useTranslation('common')
   const [manageMacroItems, setManageMacroItems] = useState<MacroItem[]>([])
@@ -27,9 +29,6 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
   }, [macroItems])
 
   const onHandleChangeType = (type) => {
-    console.log('type =', type)
-    console.log('macroItems =', macroItems)
-
     if (typeof type === 'undefined') {
       setManageMacroItems(macroItems)
     } else {
@@ -38,6 +37,10 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
       )
       setManageMacroItems(filteredMacroItems)
     }
+  }
+
+  const onHandeMacroItemDelete = (macroId) => {
+    onDeleteMacro?.(macroId)
   }
 
   return (
@@ -61,7 +64,10 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
                   {item.type === 1 && <LockOutlined />}
                 </div>
                 <div className={styles.macroItemCreated}>{item.createdAt}</div>
-                <div className={styles.macroItemDelete}>
+                <div
+                  className={styles.macroItemDelete}
+                  onClick={(e) => onHandeMacroItemDelete(item.id)}
+                >
                   <DeleteOutlined />
                 </div>
               </div>

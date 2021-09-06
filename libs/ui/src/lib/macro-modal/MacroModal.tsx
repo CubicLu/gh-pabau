@@ -15,7 +15,7 @@ import { LockOutlined } from '@ant-design/icons'
 
 export interface MacroModalProps {
   title?: string
-  macroItems?: MacroItem[]
+  preMacroItems?: MacroItem[]
   onAdd?: (macro: string) => void
   onClose?: () => void
   visible?: boolean
@@ -23,7 +23,7 @@ export interface MacroModalProps {
 
 export const MacroModal: FC<MacroModalProps> = ({
   title = 'Add a Macro',
-  macroItems = macroList,
+  preMacroItems = [],
   onAdd = () => console.log(),
   onClose = () => console.log(),
   visible = true,
@@ -32,10 +32,15 @@ export const MacroModal: FC<MacroModalProps> = ({
   const [showSelfDlg, setShowSelfDlg] = useState(false)
   const [showMacroCreateDlg, setShowMacroCreateDlg] = useState(false)
   const [showMacroManageDlg, setShowMacroManageDlg] = useState(false)
+  const [macroItems, setMacroItems] = useState<MacroItem[]>([])
 
   useEffect(() => {
     setShowSelfDlg(visible)
   }, [visible])
+
+  useEffect(() => {
+    setMacroItems(preMacroItems)
+  }, [preMacroItems])
 
   const menuListItem = (macroItem: MacroItem) => {
     return (
@@ -91,9 +96,33 @@ export const MacroModal: FC<MacroModalProps> = ({
   }
 
   const onCreateMacro = (macro: MacroItem) => {
-    console.log('macro', macro)
+    setMacroItems([
+      ...macroItems,
+      {
+        id: macroItems.length + 1,
+        title: macro.title,
+        message: macro.message,
+        type: macro.type,
+        createdAt: macro.createdAt,
+      },
+    ])
     onHideMacroCreateDlg()
     // onAdd?.(macro.title)
+  }
+
+  const onDeleteMacro = (macroId: number) => {
+    const macroIndex = macroItems.findIndex((item) => item.id === macroId)
+    macroIndex !== -1 && macroItems.splice(macroIndex, 1)
+    const newMacroItems = macroItems.map((item, _Index) => {
+      return {
+        id: _Index + 1,
+        title: item.title,
+        message: item.message,
+        type: item.type,
+        createdAt: item.createdAt,
+      }
+    })
+    setMacroItems(newMacroItems)
   }
 
   return (
@@ -132,6 +161,7 @@ export const MacroModal: FC<MacroModalProps> = ({
         onClose={onHideMacroManageDlg}
         visible={showMacroManageDlg}
         macroItems={macroItems}
+        onDeleteMacro={onDeleteMacro}
       />
     </div>
   )
