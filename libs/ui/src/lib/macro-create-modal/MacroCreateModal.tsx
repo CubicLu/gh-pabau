@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 
 const { TextArea } = Input
 
-export interface MacroCreateModalProps {
+interface MacroCreateModalProps {
   title?: string
   visible?: boolean
   onClose?: () => void

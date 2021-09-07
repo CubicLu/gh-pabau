@@ -1,19 +1,18 @@
 import {
   Button,
   ButtonTypes,
-  TabMenu,
   MacroItem,
   MacroCreateModal,
   MacroManageModal,
 } from '@pabau/ui'
 import { Modal, Row, Col } from 'antd'
-import React, { FC, ReactNode, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { macroList } from './data'
 import styles from './MacroModal.module.less'
 import { useTranslation } from 'react-i18next'
 import { LockOutlined } from '@ant-design/icons'
 
-export interface MacroModalProps {
+interface MacroModalProps {
   title?: string
   preMacroItems?: MacroItem[]
   onAdd?: (macro: MacroItem) => void
@@ -29,7 +28,7 @@ export const MacroModal: FC<MacroModalProps> = ({
   onAdd = (macro: MacroItem) => console.log(),
   onClose = () => console.log(),
   onSaveMacroItems = (macros: MacroItem[]) => console.log(),
-  visible = true,
+  visible = false,
 }) => {
   const { t } = useTranslation('common')
   const [showSelfDlg, setShowSelfDlg] = useState(false)

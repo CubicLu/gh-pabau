@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { MacroCreateModal } from '@pabau/ui'
+import { MacroCreateModal } from './MacroCreateModal'
 
 describe('MacroCreateModal', () => {
   it('should render successfully', () => {

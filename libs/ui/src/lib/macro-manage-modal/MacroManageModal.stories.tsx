@@ -1,5 +1,5 @@
 import React from 'react'
-import { MacroManageModal } from '@pabau/ui'
+import { MacroManageModal } from './MacroManageModal'
 export default {
   component: MacroManageModal,
   title: 'UI/Macro Manage Modal',

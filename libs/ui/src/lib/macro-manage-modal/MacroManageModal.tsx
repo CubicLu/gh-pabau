@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 const { Option } = Select
 
-export interface MacroManageModalProps {
+interface MacroManageModalProps {
   title?: string
   visible?: boolean
   onClose?: () => void
@@ -17,7 +17,7 @@ export interface MacroManageModalProps {
 
 export const MacroManageModal: FC<MacroManageModalProps> = ({
   title = 'Manage macros',
-  visible = true,
+  visible = false,
   onClose = () => console.log(),
   macroItems = [],
   onDeleteMacro = (id: number) => console.log(),
@@ -49,7 +49,7 @@ export const MacroManageModal: FC<MacroManageModalProps> = ({
         title={title}
         visible={visible}
         className={styles.macroManageModal}
-        onCancel={() => onClose()}
+        onCancel={() => onClose?.()}
         footer={null}
       >
         <List

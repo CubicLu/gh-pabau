@@ -1,10 +1,15 @@
-import React from 'react'
 import { render } from '@testing-library/react'
-import { MacroManageModal } from '@pabau/ui'
+import React from 'react'
+import { MacroManageModal } from './MacroManageModal'
 
 describe('MacroManageModal', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<MacroManageModal />)
+    const props = {
+      title: 'Manage macros',
+      visible: false,
+      macroItems: [],
+    }
+    const { baseElement } = render(<MacroManageModal {...props} />)
     expect(baseElement).toBeTruthy()
   })
 })

@@ -1,6 +1,5 @@
 import React from 'react'
-import { MacroModal } from '@pabau/ui'
-import { tagList } from './data'
+import { MacroModal } from './MacroModal'
 export default {
   component: MacroModal,
   title: 'UI/Macro Modal',
@@ -13,5 +12,4 @@ const MacroModalStory = ({ ...args }) => <MacroModal {...args} />
 export const Basic = MacroModalStory.bind({})
 Basic.args = {
   title: 'Add a Macro',
-  tagModuleItems: tagList,
 }
