@@ -1,8 +1,5 @@
 import { DatePicker, Input, InputNumber } from 'antd'
-import { BookOutlined } from '@ant-design/icons'
 import React, { FC, useState } from 'react'
-import { MacroModal, MacroItem } from '@pabau/ui'
-import { useTranslation } from 'react-i18next'
 import styles from './FormComponent.module.less'
 
 interface P {
@@ -12,10 +9,7 @@ interface P {
   defaultValue?: string
   txtInputType?: string
   required?: boolean
-  macro?: boolean
   onChangeTextValue?: (value: string) => void
-  onSaveMacroItems?: (macros: MacroItem[]) => void
-  macroItems?: MacroItem[]
 }
 
 export const FormTextField: FC<P> = ({
@@ -25,15 +19,9 @@ export const FormTextField: FC<P> = ({
   defaultValue = '',
   txtInputType = '',
   required = false,
-  macro = false,
   onChangeTextValue,
-  onSaveMacroItems,
-  macroItems = [],
 }) => {
   const [text, setText] = useState(defaultValue)
-  const [showMacroDlg, setShowMacroDlg] = useState(false)
-
-  const { t } = useTranslation('common')
 
   const onTextChange = (e) => {
     setText?.(e.target.value)
@@ -47,18 +35,6 @@ export const FormTextField: FC<P> = ({
 
   function onDateChange(date, dateString) {
     onChangeTextValue?.(dateString)
-  }
-
-  const onShowMacroDlg = () => {
-    setShowMacroDlg(true)
-  }
-
-  const onHideMacroDlg = () => {
-    setShowMacroDlg(false)
-  }
-
-  const onAddMacro = (macro) => {
-    console.log('macro', macro)
   }
 
   return (
@@ -80,9 +56,6 @@ export const FormTextField: FC<P> = ({
             placeholder={placeHolder}
             onChange={onTextChange}
             value={text}
-            prefix={
-              macro === true ? <BookOutlined onClick={onShowMacroDlg} /> : ''
-            }
           />
         )}
         {txtInputType === 'number' && (
@@ -96,14 +69,6 @@ export const FormTextField: FC<P> = ({
           <DatePicker style={{ width: '100%' }} onChange={onDateChange} />
         )}
       </div>
-      <MacroModal
-        title={t('ui.macro.modal.title')}
-        onAdd={onAddMacro}
-        onClose={onHideMacroDlg}
-        visible={showMacroDlg}
-        onSaveMacroItems={onSaveMacroItems}
-        preMacroItems={macroItems}
-      />
     </div>
   )
 }

@@ -10944,6 +10944,11 @@ downshift@^6.0.15:
     react-is "^17.0.2"
     tslib "^2.3.0"
 
+draft-js-autocomplete@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/draft-js-autocomplete/-/draft-js-autocomplete-1.0.4.tgz#284d87792d80bbaaedb4f6ebe48bf23840ba45d6"
+  integrity sha512-r684QPGq2xCOU2HgVGxpbIGfwGppDYnS+eQC4xX2vQ2R1mZ+aYqAKSnqc3czO6BaCP/Me4EIozBCd4sS7H3OEQ==
+
 draft-js@0.11.7:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.11.7.tgz#be293aaa255c46d8a6647f3860aa4c178484a206"

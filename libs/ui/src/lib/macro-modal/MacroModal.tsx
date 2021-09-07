@@ -25,6 +25,7 @@ export interface MacroModalProps {
 export const MacroModal: FC<MacroModalProps> = ({
   title = 'Add a Macro',
   preMacroItems = [],
+  // preMacroItems = macroList,
   onAdd = () => console.log(),
   onClose = () => console.log(),
   onSaveMacroItems = (macros: MacroItem[]) => console.log(),
@@ -34,7 +35,7 @@ export const MacroModal: FC<MacroModalProps> = ({
   const [showSelfDlg, setShowSelfDlg] = useState(false)
   const [showMacroCreateDlg, setShowMacroCreateDlg] = useState(false)
   const [showMacroManageDlg, setShowMacroManageDlg] = useState(false)
-  const [macroItems, setMacroItems] = useState<MacroItem[]>([])
+  const [macroItems, setMacroItems] = useState<MacroItem[]>(macroList)
 
   useEffect(() => {
     setShowSelfDlg(visible)

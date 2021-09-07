@@ -15,6 +15,7 @@ import FormSingleChoice from './FormSingleChoice'
 import FormStaticText from './FormStaticText'
 import FormTextArea from './FormTextArea'
 import FormTextField from './FormTextField'
+import FormTextFieldWithMacro from './FormTextFieldWithMacro'
 import FormTravel from './FormTravel'
 import FormSnomed from './FormSnomed'
 
@@ -180,32 +181,59 @@ const FormComponentInnerElement: FC<P> = ({
               required={formData.required}
             />
           )}
-          {formData && formData.formName === 'form_textfield' && (
-            <FormTextField
-              title={formData.txtQuestion}
-              desc={''}
-              placeHolder={''}
-              defaultValue={formData.txtDefaults}
-              txtInputType={formData.txtInputType}
-              required={formData.required}
-              onChangeTextValue={onChangeTextValue}
-              macro={true}
-              onSaveMacroItems={onSaveMacroItems}
-              macroItems={macroItems}
-            />
-          )}
+          {formData &&
+            formData.formName === 'form_textfield' &&
+            (formData.txtInputType === 'text' ||
+              formData.txtInputType === '') && (
+              <FormTextFieldWithMacro
+                title={formData.txtQuestion}
+                desc={''}
+                placeHolder={''}
+                defaultValue={formData.txtDefaults}
+                required={formData.required}
+                onChangeTextValue={onChangeTextValue}
+                onSaveMacroItems={onSaveMacroItems}
+                macroItems={macroItems}
+                isTextArea={false}
+              />
+            )}
+          {formData &&
+            formData.formName === 'form_textfield' &&
+            formData.txtInputType !== 'text' &&
+            formData.txtInputType !== '' && (
+              <FormTextField
+                title={formData.txtQuestion}
+                desc={''}
+                placeHolder={''}
+                defaultValue={formData.txtDefaults}
+                txtInputType={formData.txtInputType}
+                required={formData.required}
+                onChangeTextValue={onChangeTextValue}
+              />
+            )}
           {formData && formData.formName === 'form_textarea' && (
-            <FormTextArea
+            <FormTextFieldWithMacro
               title={formData.txtQuestion}
               desc={''}
               placeHolder={''}
               defaultValue={formData.txtDefaults}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
-              macro={true}
               onSaveMacroItems={onSaveMacroItems}
               macroItems={macroItems}
+              isTextArea={true}
             />
+            // <FormTextArea
+            //   title={formData.txtQuestion}
+            //   desc={''}
+            //   placeHolder={''}
+            //   defaultValue={formData.txtDefaults}
+            //   required={formData.required}
+            //   onChangeTextValue={onChangeTextValue}
+            //   macro={true}
+            //   onSaveMacroItems={onSaveMacroItems}
+            //   macroItems={macroItems}
+            // />
           )}
           {formData && formData.formName === 'form_snomed' && (
             <FormSnomed
