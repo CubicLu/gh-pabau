@@ -11,7 +11,7 @@ export interface MacroManageModalProps {
   title?: string
   visible?: boolean
   onClose?: () => void
-  macroItems: MacroItem[]
+  macroItems?: MacroItem[]
   onDeleteMacro?: (id: number) => void
 }
 
