@@ -56,6 +56,19 @@
     font-family: 'Circular-Std-Book';
     font-weight: 400;
     overflow: visible;
+    display: flex;
+    align-items: center;
+    .activity-icon {
+      width: 19px;
+      margin-left: -2px;
+    }
+      :global &.ant-menu-item-selected  {
+        .ant-menu-item-icon {
+          .activity-icon {
+            padding-top: 5px;    
+          }
+        }
+      }
     a {
       color: var(--light-grey-color);
     }
@@ -86,6 +99,8 @@
     min-width: 152px;
     height: 32px;
     text-align: center;
+    display: flex;
+    align-items: center;
   }
   .sidebar-btn-align {
     display: flex;
@@ -120,8 +135,4 @@
   .mobile-view-none {
     display: none;
   }
-}
-
-.activity-icon {
-  width: 18px;
 }

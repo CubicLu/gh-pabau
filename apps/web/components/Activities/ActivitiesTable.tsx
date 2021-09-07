@@ -16,6 +16,8 @@ import {
   CheckOutlined,
   TagOutlined,
   DollarCircleFilled,
+  TeamOutlined,
+  RiseOutlined
 } from '@ant-design/icons'
 import { ActivitiesDataProps, statuses, Labels } from '../../pages/activities'
 import AddColumnPopover from './AddColumnPopover'
@@ -329,7 +331,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              {`${firstName} ${lastName}` || ''}
+              <TeamOutlined className={styles.clientIcon}/>{`${firstName} ${lastName}` || ''}
             </span>
           )
         },
@@ -343,17 +345,17 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         selectPrefixIcon: <CustomIcon name={'userFilled'} />,
       },
       {
-        id: columnNames.lead.id,
+        id: columnNames.leadDescription.id,
         title: (
-          <span className="dragHandler">{t('activityList.column.lead')}</span>
+          <span className="dragHandler">{t('activityList.column.leadDescription')}</span>
         ),
         dataIndex: 'lead',
         width: 100,
         editable: true,
         skeletonWidth: '80px',
-        visible: visibleColumn(columnNames.lead.label),
-        editName: t('activityList.column.lead.editName'),
-        columnName: columnNames.lead.label,
+        visible: visibleColumn(columnNames.leadDescription.label),
+        editName: t('activityList.column.leadDescription.editName'),
+        columnName: columnNames.leadDescription.label,
         render: ({ description }) => {
           return (
             <span className={styles.cellFormater}>
@@ -382,7 +384,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              {`${firstName} ${lastName}` || ''}
+              <RiseOutlined className={styles.leadIcon}/>{`${firstName} ${lastName}` || ''}
             </span>
           )
         },
@@ -839,7 +841,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         skeletonWidth: '80px',
         width: 100,
         visible: visibleColumn(columnNames.creator.label),
-        editable: false,
         columnName: columnNames.creator.label,
         render: ({ full_name }) => {
           return <span className={styles.cellFormater}>{full_name}</span>
@@ -1042,6 +1043,25 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         type: cellTypes.string,
       },
       {
+        id: columnNames.clientCountry.id,
+        title: (
+          <span className="dragHandler">
+            {t('activityList.column.clientCountry')}
+          </span>
+        ),
+        dataIndex: 'client',
+        skeletonWidth: '80px',
+        render: ({ country = '' }) => {
+          return <span className={styles.cellFormater}>{country}</span>
+        },
+        width: 100,
+        editable: true,
+        editName: t('activityList.column.clientCountry.editName'),
+        visible: visibleColumn(columnNames.clientCountry.label),
+        columnName: columnNames.clientCountry.label,
+        type: cellTypes.string,
+      },
+      {
         id: columnNames.clientTotalActivities.id,
         title: (
           <span className="dragHandler">
@@ -1068,9 +1088,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ mobile = '' }) => {
           return (
-            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+            <span className={styles.cellFormater}>{mobile}</span>
           )
         },
         width: 100,
@@ -1086,9 +1106,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ createdDate }) => {
           return (
-            <span className={styles.cellFormater}>{date && dayjs(date).format('DD MMMM YYYY HH:MM')}</span>
+            <span className={styles.cellFormater}>{createdDate && dayjs(createdDate).format('DD MMMM YYYY HH:MM')}</span>
           )
         },
         width: 100,
@@ -1104,9 +1124,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ source }) => {
           return (
-            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+            <span className={styles.cellFormater}>{source && source.name}</span>
           )
         },
         width: 100,
@@ -1122,9 +1142,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ salutation = '' }) => {
           return (
-            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+            <span className={styles.cellFormater}>{salutation}</span>
           )
         },
         width: 100,
@@ -1140,9 +1160,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ gender }) => {
           return (
-            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+            <span className={styles.cellFormater}>{gender}</span>
           )
         },
         width: 100,
@@ -1158,9 +1178,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ id }) => {
           return (
-            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+            <span className={styles.cellFormater}>{id}</span>
           )
         },
         width: 100,
@@ -1176,9 +1196,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ DOB }) => {
           return (
-            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+            <span className={styles.cellFormater}>{DOB && dayjs(DOB).format('DD MMMM YYYY')}</span>
           )
         },
         width: 100,
@@ -1194,9 +1214,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: ({ clientTotalActivities }) => {
+        render: ({ status }) => {
+          console.log('status---------', status)
           return (
-            <span className={styles.cellFormater}>{clientTotalActivities}</span>
+            <span className={styles.cellFormater}>{Boolean(status) ? t('basic-crud-table-button-active') : t('basic-crud-table-button-inactive')}</span>
           )
         },
         width: 100,
