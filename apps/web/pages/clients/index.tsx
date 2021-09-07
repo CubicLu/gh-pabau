@@ -20,7 +20,7 @@ import {
   useClientListContactsCountQuery,
   // useDuplicateContactsQuery,
   useGetLabelsLazyQuery,
-  // useAddLabelMutation,
+  useAddLabelMutation,
   // useGetContactsLabelsLazyQuery,
   // useInsertContactsLabelsMutation,
 } from '@pabau/graphql'
@@ -99,49 +99,20 @@ export const Clients: FC<ClientsProps> = () => {
   //   },
   // })
 
-  // const [addLabelMutation] = useAddLabelMutation({
-  //   fetchPolicy: 'no-cache',
-  //   onCompleted(response) {
-  //     const responseLabel = {
-  //       id: response.insert_labels_one.id,
-  //       text: response.insert_labels_one.text,
-  //       color: response.insert_labels_one.color,
-  //     }
-  //     setLabelsList([...labelsList, responseLabel])
-
-  //     if (selectedRowKeys.length > 0) {
-  //       setSelectedLabels([...selectedLabels, responseLabel])
-
-  //       const tempData = contactsSourceData.map((contact) => {
-  //         if (selectedRowKeys.includes(contact.id)) {
-  //           //insert label to db
-  //           insertContactsLabelsMutaton({
-  //             variables: {
-  //               contact_id: contact.id,
-  //               label_id: responseLabel.id,
-  //             },
-  //           })
-
-  //           return {
-  //             ...contact,
-  //             clientLabel: [responseLabel],
-  //           }
-  //         }
-
-  //         return contact
-  //       })
-  //       setContactsSourceData(tempData)
-  //     }
-  //     return responseLabel
-  //   },
-  //   onError(error) {
-  //     console.error(error)
-  //   },
-  // })
-
-  // useEffect(() => {
-  //   getContactsLabelsQuery()
-  // }, [getContactsLabelsQuery])
+  const [addLabelMutation] = useAddLabelMutation({
+    fetchPolicy: 'no-cache',
+    onCompleted(response) {
+      const responseLabel = {
+        id: response.createOneCmLabel.id,
+        name: response.createOneCmLabel.name,
+        color: response.createOneCmLabel.color,
+      }
+      setLabelsList([...labelsList, responseLabel])
+    },
+    onError(error) {
+      console.error(error)
+    },
+  })
 
   const [contactsLabels, setContactsLabels] = useState([])
 
@@ -301,7 +272,7 @@ export const Clients: FC<ClientsProps> = () => {
       filteredData = [...filteredData]
     } else {
       filteredData = contactsSourceData?.filter((item) =>
-        item.clientLabel.some((x) => x.text === selectedTab)
+        item.clientLabel.some((x) => x.name === selectedTab)
       )
     }
     if (searchText) {
@@ -524,9 +495,9 @@ export const Clients: FC<ClientsProps> = () => {
   const countLabels = () => {
     const tempArr = []
     if (responseLabels) {
-      countLabelS.map((item) => tempArr.push(item.label_id))
+      countLabelS.map((item) => tempArr.push(item.label_id)) //handle
     } else {
-      contactsLabels.map((item) => tempArr.push(item.label_id))
+      contactsLabels.map((item) => tempArr.push(item.label_id)) //handle
     }
 
     tempArr.sort()
@@ -578,7 +549,7 @@ export const Clients: FC<ClientsProps> = () => {
       setPaginateData={setPaginateData}
       labelsList={labelsList}
       setLabelsList={setLabelsList}
-      // addLabelMutation={addLabelMutation}
+      addLabelMutation={addLabelMutation}
       contactsLabels={contactsLabels}
       // getContactsLabelsQuery={getContactsLabelsQuery}
       getLabelsQuery={getLabelsQuery}
@@ -666,7 +637,7 @@ export const Clients: FC<ClientsProps> = () => {
                     duplicateData={duplicateDataList}
                     getClientsCountData={getClientsCountData}
                     duplicateContactsCount={duplicateContactsData}
-                    // addLabelMutation={addLabelMutation}
+                    addLabelMutation={addLabelMutation}
                     handleApplyLabel={handleApplyLabel}
                     labelCountAll={labelCountAll}
                     contactsLabels={contactsLabels}

@@ -53,3 +53,15 @@ query getLabels{
     company_id
   }
 }
+
+mutation addLabel($name: String!, $color: String) {
+  createOneCmLabel(data: {
+    name: $name
+    color: $color
+    Company: {}
+  }) {
+    id
+    name
+    color
+  }
+}

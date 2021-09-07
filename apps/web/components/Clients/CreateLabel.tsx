@@ -152,8 +152,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       addLabelMutation({
         variables: {
-          text: newLabel.text,
-          color: newLabel.color,
+          name: newLabel.text,
+          color: selectedColor,
         },
       })
     } else {
