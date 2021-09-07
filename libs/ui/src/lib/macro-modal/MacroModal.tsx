@@ -6,7 +6,7 @@ import {
   MacroCreateModal,
   MacroManageModal,
 } from '@pabau/ui'
-import { Modal } from 'antd'
+import { Modal, Row, Col } from 'antd'
 import React, { FC, ReactNode, useState, useEffect } from 'react'
 import { macroList } from './data'
 import styles from './MacroModal.module.less'
@@ -16,7 +16,7 @@ import { LockOutlined } from '@ant-design/icons'
 export interface MacroModalProps {
   title?: string
   preMacroItems?: MacroItem[]
-  onAdd?: (macro: string) => void
+  onAdd?: (macro: MacroItem) => void
   onClose?: () => void
   visible?: boolean
   onSaveMacroItems?: (macros: MacroItem[]) => void
@@ -26,7 +26,7 @@ export const MacroModal: FC<MacroModalProps> = ({
   title = 'Add a Macro',
   preMacroItems = [],
   // preMacroItems = macroList,
-  onAdd = () => console.log(),
+  onAdd = (macro: MacroItem) => console.log(),
   onClose = () => console.log(),
   onSaveMacroItems = (macros: MacroItem[]) => console.log(),
   visible = true,
@@ -36,6 +36,7 @@ export const MacroModal: FC<MacroModalProps> = ({
   const [showMacroCreateDlg, setShowMacroCreateDlg] = useState(false)
   const [showMacroManageDlg, setShowMacroManageDlg] = useState(false)
   const [macroItems, setMacroItems] = useState<MacroItem[]>(macroList)
+  const [macroMessage, setMacroMessage] = useState('')
 
   useEffect(() => {
     setShowSelfDlg(visible)
@@ -45,32 +46,47 @@ export const MacroModal: FC<MacroModalProps> = ({
     setMacroItems(preMacroItems)
   }, [preMacroItems])
 
-  const menuListItem = (macroItem: MacroItem) => {
-    return (
-      <>
-        <span style={{ float: 'left' }}>{macroItem.title}</span>
-        {macroItem.type === 1 && (
-          <span style={{ float: 'right' }}>
-            <LockOutlined />
-          </span>
-        )}
-      </>
-    )
+  const onMouseEnterHandle = (e, macro: MacroItem) => {
+    setMacroMessage(macro.message)
   }
 
-  const menuList = (macroItems: MacroItem[]) => {
-    const _temp: Array<ReactNode> = []
-    for (const macroItem of macroItems) {
-      _temp.push(menuListItem(macroItem))
-    }
-    return _temp
+  const onMouseOutHandle = (e) => {
+    setMacroMessage('')
   }
 
-  const TabMenuContent = (args: unknown) => (
-    <TabMenu {...args} menuItems={menuList(macroItems)}>
-      {macroItems.map((macro, _index) => (
-        <div key={_index}>
-          {macro.message.split('\n').map((item, key) => {
+  const onAddMacro = (e, macro: MacroItem) => {
+    setShowSelfDlg(false)
+    onAdd?.(macro)
+  }
+
+  const MacroList = () => (
+    <Row className={styles.macroListWrap}>
+      <Col span={8} order={1} className={styles.macroListLeft}>
+        <ul className={styles.macroList}>
+          {macroItems.map((item, _Index) => (
+            <li
+              key={'macro-' + _Index}
+              className={styles.macroListItem}
+              onMouseEnter={(e) => onMouseEnterHandle(e, item)}
+              onMouseOut={(e) => onMouseOutHandle(e)}
+              onClick={(e) => onAddMacro(e, item)}
+            >
+              <div className={styles.macroListPadding}></div>
+              <div className={styles.macroListMain}>
+                <span>{item.title}</span>
+                {item.type === 1 && (
+                  <span style={{ float: 'right' }}>
+                    <LockOutlined />
+                  </span>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Col>
+      <Col span={16} order={2} className={styles.macroListRight}>
+        <div>
+          {macroMessage.split('\n').map((item, key) => {
             return (
               <span key={'message-' + key}>
                 {item}
@@ -79,8 +95,8 @@ export const MacroModal: FC<MacroModalProps> = ({
             )
           })}
         </div>
-      ))}
-    </TabMenu>
+      </Col>
+    </Row>
   )
 
   const onClickMacro = () => {
@@ -108,7 +124,6 @@ export const MacroModal: FC<MacroModalProps> = ({
   }
 
   const onCreateMacro = (macro: MacroItem) => {
-    console.log('macro', macro)
     onSaveMacroItems?.([
       ...macroItems,
       {
@@ -119,18 +134,7 @@ export const MacroModal: FC<MacroModalProps> = ({
         createdAt: macro.createdAt,
       },
     ])
-    // setMacroItems([
-    //   ...macroItems,
-    //   {
-    //     id: macroItems.length + 1,
-    //     title: macro.title,
-    //     message: macro.message,
-    //     type: macro.type,
-    //     createdAt: macro.createdAt,
-    //   },
-    // ])
     onHideMacroCreateDlg()
-    // onAdd?.(macro.title)
   }
 
   const onDeleteMacro = (macroId: number) => {
@@ -146,7 +150,6 @@ export const MacroModal: FC<MacroModalProps> = ({
       }
     })
     onSaveMacroItems?.(newMacroItems)
-    // setMacroItems(newMacroItems)
   }
 
   return (
@@ -158,7 +161,8 @@ export const MacroModal: FC<MacroModalProps> = ({
         footer={null}
         className={styles.macroModal}
       >
-        <TabMenuContent />
+        {/* <TabMenuContent /> */}
+        <MacroList />
         <Button
           type={ButtonTypes.primary}
           className={styles.createButton}

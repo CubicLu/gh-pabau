@@ -27,6 +27,9 @@
       }
       .ant-modal-body {
         padding: 0px;
+        max-height: 430px;
+        min-height: 287px;
+        overflow: auto;
       }
       .ant-tabs-nav {
         width: 240px !important;
@@ -58,6 +61,42 @@
     position: absolute;
     right: 180px;
     top: 35px;
+  }
+  .macro-list-wrap {
+    // min-height: 300px;
+    position: relative;
+  }
+  .macro-list-left {
+    height: 300px;
+    border-right: 1px solid #f0f0f0;
+    overflow-y: auto;
+    .macro-list {
+      list-style-type: none;
+      width: 100%;
+      padding-inline-start: 0px;
+    }
+    .macro-list-item {
+      cursor: pointer;
+      display: flex;
+      .macro-list-padding {
+        width: 3px;
+        height: 32px;
+      }
+      .macro-list-main {
+        padding: 5px 10px;
+        width: 100%;
+      }
+    }
+    .macro-list-item:hover {
+      background-color: #eef7fb;
+      color: #54b2d3;
+      .macro-list-padding {
+        background-color: #54b2d3;
+      }
+    }
+  }
+  .macro-list-right {
+    padding: 5px 10px;
   }
 }
 

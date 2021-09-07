@@ -79,20 +79,59 @@ export const FormTextFieldWithMacro: FC<P> = ({
     setShowMacroDlg(false)
   }
 
+  const addEntityToEditorState = (item) => {
+    // Create selection from range
+    const currentSelectionState = editorState.getSelection()
+    const end = currentSelectionState.getEndOffset()
+    const start = end
+    const selection = currentSelectionState.merge({
+      anchorOffset: start,
+      focusOffset: end,
+    })
+
+    // Create entity
+    const contentState = editorState.getCurrentContent()
+    const contentStateWithEntity = contentState.createEntity(
+      'HASHTAG',
+      'IMMUTABLE',
+      item
+    )
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
+
+    // Replace selection with the new create entity
+    const newContentState = Modifier.replaceText(
+      contentStateWithEntity,
+      selection,
+      item.title,
+      null,
+      entityKey
+    )
+
+    // Push new contentState with type
+    let newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      'insert-autocomplete'
+    )
+
+    newEditorState = EditorState.forceSelection(
+      newEditorState,
+      newContentState.getSelectionAfter()
+    )
+
+    // Update cursor position after inserted content
+    setEditorState(newEditorState)
+  }
+
   const onAddMacro = (macro) => {
-    console.log('macro', macro)
+    addEntityToEditorState(macro)
   }
 
   const onEditorStateChange = (e) => {
     const contentState = e.getCurrentContent()
     const inputText = contentState.getPlainText()
-    console.log('inputText =', inputText)
     onChangeTextValue?.(inputText)
     setEditorState(e)
-  }
-
-  const onEditorFocus = () => {
-    editor.current.focus()
   }
 
   return (
@@ -117,7 +156,6 @@ export const FormTextFieldWithMacro: FC<P> = ({
           placeholder={placeHolder}
           editorState={editorState}
           ref={editor}
-          onFocus={onEditorFocus}
           onChange={onEditorStateChange}
           autocompletes={autocompletes}
         >
