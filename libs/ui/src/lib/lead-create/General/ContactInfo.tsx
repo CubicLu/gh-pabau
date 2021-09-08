@@ -62,34 +62,24 @@ export const ContactInfo: FC<GeneralProps> = ({
             )}
           />
         </AntForm.Item>
-        {isFieldSettingLoading ? (
-          <SkeletonContent />
-        ) : (
-          fieldsSettings?.find((thread) => thread.field_name === 'Mobile') && (
-            <AntForm.Item name={'Mobile'}>
-              <PhoneNumberInput
-                label={`${
-                  fieldsSettings?.find(
-                    (thread) => thread.field_name === 'Mobile'
-                  )?.field_label ||
-                  t('quickCreate.client.modal.general.mobilePhone')
-                }${requiredLabel('Mobile')}`}
-                value={values?.Mobile}
-                onChange={(value) => setFieldValue('Mobile', value)}
-                showValidErrorMessage={false}
-                placeholder={t('common-label-enter', {
-                  what:
-                    fieldsSettings?.find(
-                      (thread) => thread.field_name === 'Mobile'
-                    )?.field_label ||
-                    t(
-                      'quickCreate.client.modal.general.mobilePhone'
-                    ).toLowerCase(),
-                })}
-              />
-            </AntForm.Item>
-          )
-        )}
+        <AntForm.Item name={'Mobile'}>
+          <PhoneNumberInput
+            label={`${
+              fieldsSettings?.find((thread) => thread.field_name === 'Mobile')
+                ?.field_label ||
+              t('quickCreate.client.modal.general.mobilePhone')
+            }${requiredLabel('Mobile')}`}
+            value={values?.Mobile}
+            onChange={(value) => setFieldValue('Mobile', value)}
+            showValidErrorMessage={false}
+            placeholder={t('common-label-enter', {
+              what:
+                fieldsSettings?.find((thread) => thread.field_name === 'Mobile')
+                  ?.field_label ||
+                t('quickCreate.client.modal.general.mobilePhone').toLowerCase(),
+            })}
+          />
+        </AntForm.Item>
         {isFieldSettingLoading ? (
           <SkeletonContent />
         ) : (

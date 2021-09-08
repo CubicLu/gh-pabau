@@ -114,7 +114,6 @@ export interface ClientCreateProps {
   fieldsSettings?: FieldSetting[]
   marketingSources?: CommonProps[]
   limitContactsLocations?: LimitLocation[]
-  otherCompanies?: OtherCompany[]
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
   isSalutationLoading?: boolean
