@@ -130,7 +130,8 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         id === columnNames.leadOwner.id &&
           setSelectedListItem(`${owner?.full_name}`)
         id === columnNames.wonBy.id && setSelectedListItem(wonBy)
-        id === columnNames.leadDescription.id && setSelectedListItem(activityLead)
+        id === columnNames.leadDescription.id &&
+          setSelectedListItem(activityLead)
         setSelectedType(type_name)
         if (id === columnNames.label.id) {
           setSelectedLabels(label)
@@ -635,19 +636,19 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
             <CloseCircleOutlined onClick={toggleVisible} />
           ) : (
             <Tooltip
-                      title={t('activityList.column.edit.tooltip')}
-                      placement={'topRight'}
-                    >
-            <EditOutlined
-              onClick={
-                type === cellTypes.label
-                  ? () => {
-                      labelRef.current.handleVisible(true)
-                      toggleVisible()
-                    }
-                  : () => toggleVisible()
-              }
-            />
+              title={t('activityList.column.edit.tooltip')}
+              placement={'topRight'}
+            >
+              <EditOutlined
+                onClick={
+                  type === cellTypes.label
+                    ? () => {
+                        labelRef.current.handleVisible(true)
+                        toggleVisible()
+                      }
+                    : () => toggleVisible()
+                }
+              />
             </Tooltip>
           )}
         </div>

@@ -123,10 +123,10 @@ export const prepareSearchObject = (
       CmContact: { Mobile: { contains: search } },
     },
     'Client source': {
-      CmContact: { 
+      CmContact: {
         MarketingSourceData: {
-           name: { contains: search }
-        }
+          name: { contains: search },
+        },
       },
     },
     'Client salutation': {
@@ -248,10 +248,10 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
       CmContact: { CreatedDate: sortOrder },
     },
     'Client source': {
-      CmContact: { 
+      CmContact: {
         MarketingSourceData: {
-           name: sortOrder
-        }
+          name: sortOrder,
+        },
       },
     },
     'Client salutation': {

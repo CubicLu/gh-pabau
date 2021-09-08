@@ -1031,6 +1031,9 @@
 .cellFormater{
   text-overflow: ellipsis;
   overflow: hidden;
+  .link {
+    text-decoration: underline;
+  }
   .client-icon, .lead-icon {
     margin-right: 10px;
   }
@@ -1584,3 +1587,21 @@
   position: relative;
 }
 
+.address-collapse {
+  :global {
+    .ant-collapse-item {
+      .ant-collapse-header {
+        padding: 5px 0 10px 24px; 
+        .anticon-caret-right {
+          left: 4px;
+          top: -2px;
+        }
+      }
+      .ant-collapse-content {
+        .ant-collapse-content-box {
+          padding:0 0 0 22px;
+        }
+      }
+    }
+  }
+}

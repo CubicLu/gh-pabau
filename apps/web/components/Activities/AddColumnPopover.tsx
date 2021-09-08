@@ -9,9 +9,7 @@ import styles from '../../pages/activities/index.module.less'
 import { defaultColumns } from './ActivitiesTable'
 import { useMedia } from 'react-use'
 import { useUser } from '../../context/UserContext'
-import {
-  CaretRightOutlined
-} from '@ant-design/icons'
+import { CaretRightOutlined } from '@ant-design/icons'
 
 interface AddColumnsProps {
   upsertActiveColumnMutation: MutationFunction
@@ -462,7 +460,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
       const {
         target: { checked, value },
       } = e
-      console.log("e---------------", e)
       if (
         checked &&
         !selectedColumnOption.some((data) => data.value === value.value)
@@ -478,80 +475,75 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
 
     const prepareClientOptions = (options) => {
       const clientOption = options
-      .filter((data) => data.type === selectedTab)
-      .filter(
-        (data) =>
-          !defaultColumnList.some(
-            (item) => item.value === data.value
-          )
-      )
-      console.log('clientOption', clientOption)
-      const groupColumn = ['Client street', 'Client city', 'Client postcode', 'Client country']
-      let collapseColumn = []
-      let clientColumn = []
-      for (let item of clientOption) {
-        if (groupColumn.includes(item.value)) {
-          collapseColumn.push({...item})
+        .filter((data) => data.type === selectedTab)
+        .filter(
+          (data) => !defaultColumnList.some((item) => item.value === data.value)
+        )
+      const groupColumn = new Set([
+        'Client street',
+        'Client city',
+        'Client postcode',
+        'Client country',
+      ])
+      const collapseColumn = []
+      const clientColumn = []
+      for (const item of clientOption) {
+        if (groupColumn.has(item.value)) {
+          collapseColumn.push({ ...item })
         } else {
-          clientColumn.push({...item})
+          clientColumn.push({ ...item })
         }
       }
-      let collapseIndex = clientOption.findIndex((item) => item.value === collapseColumn?.[0]?.value) ?? 0
+      const collapseIndex =
+        clientOption.findIndex(
+          (item) => item.value === collapseColumn?.[0]?.value
+        ) ?? 0
       clientColumn.splice(collapseIndex, 0, {
         hasCollapse: true,
         collapseTitle: t('activityList.column.address.details'),
-        collapseOptions: collapseColumn
+        collapseOptions: collapseColumn,
       })
-      console.log('collapseColumn-----', collapseColumn)
-      console.log('clientColumn-----', clientColumn)
-      console.log('collapseIndex-----', collapseIndex)
-      console.log('selectedColumnOption------------', selectedColumnOption)
-      return clientColumn.map((data, i) => (
-        data.hasCollapse ? <Collapse
-        ghost
-        defaultActiveKey={['1']}
-        expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-      >
-        <Collapse.Panel header={data.collapseTitle} key="1">
-        {data?.collapseOptions?.map((optionItem, i) => (<Checkbox
-        key={`${selectedTab}_${i}`}
-        checked={selectedColumnOption.some(
-          (item) => item.value === optionItem.value
-        )}
-        value={optionItem}
-        onChange={handleCheckboxChange}
-      >
-        <Highlighter
-          highlightClassName={styles.highlight}
-          searchWords={[searchColumn]}
-          textToHighlight={optionItem.label}
-        >
-          {optionItem.label}
-        </Highlighter>
-      </Checkbox>
-      ))}
-      </Collapse.Panel>
-      </Collapse> : (<Checkbox
-        key={`${selectedTab}_${i}`}
-        checked={selectedColumnOption.some(
-          (item) => item.value === data.value
-        )}
-        value={data}
-        onChange={handleCheckboxChange}
-      >
-        <Highlighter
-          highlightClassName={styles.highlight}
-          searchWords={[searchColumn]}
-          textToHighlight={data.label}
-        >
-          {data.label}
-        </Highlighter>
-      </Checkbox>)
-      ))
+
+      const RenderCheckbox = (optionItem, i) => {
+        const { value, label } = optionItem
+        return (
+          <Checkbox
+            key={`${selectedTab}_${i}`}
+            checked={selectedColumnOption.some((item) => item.value === value)}
+            value={optionItem}
+            onChange={handleCheckboxChange}
+          >
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={[searchColumn]}
+              textToHighlight={label}
+            >
+              {label}
+            </Highlighter>
+          </Checkbox>
+        )
+      }
+      return clientColumn.map((data, i) =>
+        data.hasCollapse ? (
+          <Collapse
+            ghost
+            defaultActiveKey={['1']}
+            className={styles.addressCollapse}
+            expandIcon={({ isActive }) => (
+              <CaretRightOutlined rotate={isActive ? 90 : 0} />
+            )}
+          >
+            <Collapse.Panel header={data.collapseTitle} key="1">
+              {data?.collapseOptions?.map((optionItem, i) =>
+                RenderCheckbox(optionItem, i)
+              )}
+            </Collapse.Panel>
+          </Collapse>
+        ) : (
+          RenderCheckbox(data, i)
+        )
+      )
     }
-    console.log('filterOptions-----------', filterOptions)
-    console.log('tab-----------', selectedTab)
-    console.log('selectedColumn-----------', selectedColumnOption)
 
     const content = () => {
       return (
@@ -608,34 +600,36 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
                     </Radio.Button>
                   </Radio.Group>
                   <div className={styles.checkboxRadioWrapper}>
-                    {selectedTab === 'client' ? prepareClientOptions(filterOptions): filterOptions
-                      .filter((data) => data.type === selectedTab)
-                      .filter(
-                        (data) =>
-                          !defaultColumnList.some(
-                            (item) => item.value === data.value
+                    {selectedTab === 'client'
+                      ? prepareClientOptions(filterOptions)
+                      : filterOptions
+                          .filter((data) => data.type === selectedTab)
+                          .filter(
+                            (data) =>
+                              !defaultColumnList.some(
+                                (item) => item.value === data.value
+                              )
                           )
-                      )
-                      .map((data, i) => {
-                        return (
-                          <Checkbox
-                            key={`${selectedTab}_${i}`}
-                            checked={selectedColumnOption.some(
-                              (item) => item.value === data.value
-                            )}
-                            value={data}
-                            onChange={handleCheckboxChange}
-                          >
-                            <Highlighter
-                              highlightClassName={styles.highlight}
-                              searchWords={[searchColumn]}
-                              textToHighlight={data.label}
-                            >
-                              {data.label}
-                            </Highlighter>
-                          </Checkbox>
-                        )
-                      })}
+                          .map((data, i) => {
+                            return (
+                              <Checkbox
+                                key={`${selectedTab}_${i}`}
+                                checked={selectedColumnOption.some(
+                                  (item) => item.value === data.value
+                                )}
+                                value={data}
+                                onChange={handleCheckboxChange}
+                              >
+                                <Highlighter
+                                  highlightClassName={styles.highlight}
+                                  searchWords={[searchColumn]}
+                                  textToHighlight={data.label}
+                                >
+                                  {data.label}
+                                </Highlighter>
+                              </Checkbox>
+                            )
+                          })}
                   </div>
                 </div>
               </div>

@@ -17,7 +17,7 @@ import {
   TagOutlined,
   DollarCircleFilled,
   TeamOutlined,
-  RiseOutlined
+  RiseOutlined,
 } from '@ant-design/icons'
 import { ActivitiesDataProps, statuses, Labels } from '../../pages/activities'
 import AddColumnPopover from './AddColumnPopover'
@@ -331,7 +331,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              <TeamOutlined className={styles.clientIcon}/>{`${firstName} ${lastName}` || ''}
+              <TeamOutlined className={styles.clientIcon} />
+              <a href="/" className={styles.link}>
+                {`${firstName} ${lastName}` || ''}
+              </a>
             </span>
           )
         },
@@ -347,7 +350,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
       {
         id: columnNames.leadDescription.id,
         title: (
-          <span className="dragHandler">{t('activityList.column.leadDescription')}</span>
+          <span className="dragHandler">
+            {t('activityList.column.leadDescription')}
+          </span>
         ),
         dataIndex: 'lead',
         width: 100,
@@ -384,7 +389,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              <RiseOutlined className={styles.leadIcon}/>{`${firstName} ${lastName}` || ''}
+              <RiseOutlined className={styles.leadIcon} />
+              <a href="/" className={styles.link}>
+                {`${firstName} ${lastName}` || ''}
+              </a>
             </span>
           )
         },
@@ -1089,9 +1097,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'client',
         skeletonWidth: '80px',
         render: ({ mobile = '' }) => {
-          return (
-            <span className={styles.cellFormater}>{mobile}</span>
-          )
+          return <span className={styles.cellFormater}>{mobile}</span>
         },
         width: 100,
         visible: visibleColumn(columnNames.clientMobile.label),
@@ -1108,7 +1114,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         skeletonWidth: '80px',
         render: ({ createdDate }) => {
           return (
-            <span className={styles.cellFormater}>{createdDate && dayjs(createdDate).format('DD MMMM YYYY HH:MM')}</span>
+            <span className={styles.cellFormater}>
+              {createdDate && dayjs(createdDate).format('DD MMMM YYYY HH:MM')}
+            </span>
           )
         },
         width: 100,
@@ -1125,9 +1133,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'client',
         skeletonWidth: '80px',
         render: ({ source }) => {
-          return (
-            <span className={styles.cellFormater}>{source && source.name}</span>
-          )
+          return <span className={styles.cellFormater}>{source?.name}</span>
         },
         width: 100,
         visible: visibleColumn(columnNames.clientSource.label),
@@ -1143,9 +1149,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'client',
         skeletonWidth: '80px',
         render: ({ salutation = '' }) => {
-          return (
-            <span className={styles.cellFormater}>{salutation}</span>
-          )
+          return <span className={styles.cellFormater}>{salutation}</span>
         },
         width: 100,
         visible: visibleColumn(columnNames.clientSalutation.label),
@@ -1161,9 +1165,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'client',
         skeletonWidth: '80px',
         render: ({ gender }) => {
-          return (
-            <span className={styles.cellFormater}>{gender}</span>
-          )
+          return <span className={styles.cellFormater}>{gender}</span>
         },
         width: 100,
         visible: visibleColumn(columnNames.clientGender.label),
@@ -1179,9 +1181,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'client',
         skeletonWidth: '80px',
         render: ({ id }) => {
-          return (
-            <span className={styles.cellFormater}>{id}</span>
-          )
+          return <span className={styles.cellFormater}>{id}</span>
         },
         width: 100,
         visible: visibleColumn(columnNames.clientID.label),
@@ -1198,7 +1198,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         skeletonWidth: '80px',
         render: ({ DOB }) => {
           return (
-            <span className={styles.cellFormater}>{DOB && dayjs(DOB).format('DD MMMM YYYY')}</span>
+            <span className={styles.cellFormater}>
+              {DOB && dayjs(DOB).format('DD MMMM YYYY')}
+            </span>
           )
         },
         width: 100,
@@ -1215,9 +1217,12 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'client',
         skeletonWidth: '80px',
         render: ({ status }) => {
-          console.log('status---------', status)
           return (
-            <span className={styles.cellFormater}>{Boolean(status) ? t('basic-crud-table-button-active') : t('basic-crud-table-button-inactive')}</span>
+            <span className={styles.cellFormater}>
+              {status
+                ? t('basic-crud-table-button-active')
+                : t('basic-crud-table-button-inactive')}
+            </span>
           )
         },
         width: 100,
@@ -1544,8 +1549,12 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
             <span className={styles.roundDesign}>
               <ActivityIcon className={styles.icon} />
             </span>
-            <p className={styles.title}>{t('activityList.empty.activity.label')}</p>
-            <p className={styles.titleDesc}>{t('activityList.empty.activity.label.description')}</p>
+            <p className={styles.title}>
+              {t('activityList.empty.activity.label')}
+            </p>
+            <p className={styles.titleDesc}>
+              {t('activityList.empty.activity.label.description')}
+            </p>
             <div className={styles.spaceBetweenText} />
             <Button
               className={styles.createTemaplateBtn}
