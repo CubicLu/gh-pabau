@@ -74,12 +74,11 @@ export const ContactDataInput = inputObjectType({
 })
 
 export const createContact = mutationField('createOneContact', {
-  type: list('CmContact'),
+  type: 'CmContact',
   args: {
     data: nonNull('ContactDataInput'),
     customFields: list('createContactCustomFieldType'),
     limitContactLocations: list(intArg()),
-    otherCompanyIds: list(intArg()),
     labels: list('labelFieldType'),
     contactPreferences: 'ContactPreferenceDataInput',
   },
@@ -88,6 +87,7 @@ export const createContact = mutationField('createOneContact', {
       where: {
         Fname: { equals: input.data.Fname },
         Lname: { equals: input.data.Lname },
+        Email: { equals: input.data.Email },
         company_id: ctx.authenticated.company,
       },
     })
