@@ -57,13 +57,11 @@ export const Password = extendType({
         token: nonNull(stringArg()),
         newPassword: nonNull(stringArg()),
       },
-      async resolve(_root, { userId, newPassword }, { prismaArray }) {
+      async resolve(_root, { userId, newPassword }, { prisma }: Context) {
         if (!(await validatePassword.isValid(newPassword)))
           throw new Error('Choose a stronger password')
 
-        const { salt, username, full_name } = await prismaArray(
-          undefined
-        ).user.findUnique({
+        const { salt, username, full_name } = await prisma.user.findUnique({
           rejectOnNotFound: true,
           where: {
             id: userId,
@@ -71,19 +69,13 @@ export const Password = extendType({
           select: { username: true, salt: true, full_name: true },
         })
 
-        const password = createPabau1PasswordHash(salt, newPassword)
-
-        const result = await prismaArray(undefined).user.updateMany({
+        const password = createPabau1PasswordHash(newPassword, salt)
+        await prisma.user.update({
           where: {
-            username,
+            id: userId,
           },
-          data: { password, password_algor: 2 },
+          data: { password: password, password_algor: 2 },
         })
-        console.assert(
-          result,
-          'Error 3489734589 - Could not update user password properly.'
-        )
-
         await sendEmail({
           templateType: 'password-reset-confirm',
           to: username,
@@ -114,14 +106,21 @@ export const Password = extendType({
     t.field('forgotPassword', {
       description:
         'Sends a email to yourself, that contains a link to reset your password.',
-      type: 'Boolean',
+      type: 'String',
       args: {
         email: nonNull(stringArg()),
       },
       async resolve(_root, { email }, { prisma }: Context) {
         const token = uuidv4()
 
-        await prisma.passwordResetAuth.upsert({
+        const user = await prisma.user.findFirst({
+          where: { username: { equals: email } },
+        })
+
+        if (!user) {
+          throw new Error('Invalid username')
+        }
+        const data = await prisma.passwordResetAuth.upsert({
           where: { username: email },
           create: {
             username: email,
@@ -133,7 +132,8 @@ export const Password = extendType({
             date: { set: new Date().toISOString() },
           },
         })
-        return true
+
+        return data.key_code
       },
     })
   },

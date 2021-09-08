@@ -77,7 +77,7 @@ const Index: FC = () => {
           <div className={styles.formHead}>
             <h1>
               {!loading ? (
-                data?.findFirstPasswordResetAuth !== null ? (
+                data?.findFirstPasswordResetAuth ? (
                   t('reset.password.title.text', { fallbackLng: 'en' })
                 ) : null
               ) : (
@@ -122,6 +122,7 @@ const Index: FC = () => {
               updateUserPassword({
                 variables: {
                   token: token,
+                  userId: data?.findFirstPasswordResetAuth?.User?.id,
                   newPassword: value.confirmPassword,
                 },
                 optimisticResponse: {},
