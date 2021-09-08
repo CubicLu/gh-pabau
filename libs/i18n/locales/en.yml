@@ -2867,6 +2867,7 @@ en:
   quickCreate.client.modal.general.thirdParty.whoResponsible: 'Who will be responsible for payments?'
   quickCreate.client.modal.general.thirdParty.botox: 'Botox'
   quickCreate.client.modal.general.thirdParty.laser: 'Laser'
+  quickCreate.client.modal.general.location.title: 'Available in locations'
   quickCreate.client.modal.general.addLabel.duplicateError: 'Same Label already Exist'
   create.client.modal.privacy.record.sharing.title: 'Record sharing'
   create.client.modal.privacy.record.sharing.description: 'Sharing a record generated a secure record on Pabau Connect with the client, health professional, third party or relative. You can stop sharing a record at any time (even if it has already been shared).'
