@@ -1,29 +1,12 @@
 module.exports = {
-  presets: [
+  "presets": [
     [
-      'next/babel',
+      "@nrwl/react/babel",
       {
-        'preset-env': {},
-        'styled-jsx': {},
-      },
-    ],
+        "runtime": "automatic",
+        "useBuiltIns": "usage"
+      }
+    ]
   ],
-  plugins: [
-    // [
-    //   'import',
-    //   {
-    //     libraryName: 'antd',
-    //     style: true,
-    //   },
-    // ],
-    // [
-    //   'import',
-    //   {
-    //     libraryName: '@ant-design/icons',
-    //     libraryDirectory: 'es/icons',
-    //     camel2DashComponentName: false,
-    //   },
-    //   '@ant-design/icons',
-    // ],
-  ],
+  "plugins": []
 }

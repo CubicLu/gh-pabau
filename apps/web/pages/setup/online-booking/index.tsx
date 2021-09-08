@@ -21,6 +21,7 @@ import {
   FullScreenReportModal,
   OperationType,
 } from '@pabau/ui'
+import Image from 'next/image'
 import { Avatar, Col, Row, Typography } from 'antd'
 import classNames from 'classnames'
 import Highcharts from 'highcharts'
@@ -56,9 +57,8 @@ export const Index: FC<OnlineBookingProps> = ({
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 767px)', false)
   const [getStarted, setGetStarted] = useState(false)
-  const [builder, setBuilder] = useState<OnlineBookingBuilder>(
-    defaultBuilderData
-  )
+  const [builder, setBuilder] =
+    useState<OnlineBookingBuilder>(defaultBuilderData)
 
   useEffect(() => {
     setBuilder(builderSetting)
@@ -256,7 +256,7 @@ export const Index: FC<OnlineBookingProps> = ({
             <div className={styles.campaignContainer}>
               <div>
                 <div className={styles.icon}>
-                  <img src={SkinHealth} alt="companyLogo" />
+                  <Image src={SkinHealth} alt="companyLogo" />
                 </div>
                 <Title level={4} className={styles.name}>
                   The Skin Clinic - London

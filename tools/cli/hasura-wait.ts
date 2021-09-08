@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import {config} from 'dotenv-flow'
-const retry = require("async-retry")
+import { URL } from 'url'
+import retry from "async-retry";
 
 config({path: 'hasura', default_node_env: 'development'})
 if (process.env.DEBUG) console.table({
@@ -14,12 +15,12 @@ const HASURA_GRAPHQL_ENDPOINT = process.env.HASURA_GRAPHQL_ENDPOINT || "http://l
 
 const url = new URL("/v1/query", process.argv[2] || HASURA_GRAPHQL_ENDPOINT);
 
-retry(async (bail) => {
+retry(async () => {
   console.log(`fetching from ${url}`)
   await fetch(url.toString(), {
     headers: {
       'Content-Type': 'application/json',
-      'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET
+      'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET || ''
     },
     method: 'post',
     body: JSON.stringify({})

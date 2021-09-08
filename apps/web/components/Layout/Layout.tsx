@@ -53,19 +53,15 @@ const Layout: FC<LayoutProps> = ({
 
   const [switchCompany] = useSwitchCompanyMutation()
 
-  const [
-    insertReadNotificationOneMutation,
-  ] = useInsert_Read_Notification_OneMutation()
-  const [
-    updateNotificationsByPkMutation,
-  ] = useUpdate_Notifications_By_PkMutation()
-  const [
-    deleteNotificationsByPkMutation,
-  ] = useDelete_Notifications_By_PkMutation()
+  const [insertReadNotificationOneMutation] =
+    useInsert_Read_Notification_OneMutation()
+  const [updateNotificationsByPkMutation] =
+    useUpdate_Notifications_By_PkMutation()
+  const [deleteNotificationsByPkMutation] =
+    useDelete_Notifications_By_PkMutation()
 
-  const [
-    insertProductNewsReadOneMutation,
-  ] = useInsert_Product_News_Read_OneMutation()
+  const [insertProductNewsReadOneMutation] =
+    useInsert_Product_News_Read_OneMutation()
   useEffect(() => {
     if (productNewsData?.product_news?.length > 0) {
       const news: ProductNews[] = productNewsData?.product_news.map((news) => {
@@ -182,7 +178,7 @@ const Layout: FC<LayoutProps> = ({
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
-        {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
+        {children}
       </PabauLayout>
       <div className={styles.stickyPopoutContainer}>
         <StickyPopout />
