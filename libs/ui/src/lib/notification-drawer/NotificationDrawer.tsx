@@ -24,8 +24,10 @@ export interface ProductNews {
 }
 
 interface P {
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
   readNewsMutation?: MutationFunction
-  updateNotificationState?: MutationFunction
+  readAddMutation?: MutationFunction
   unreadNewsCount?: number
   unreadNotificationCount?: number
   openDrawer?: boolean
@@ -42,7 +44,9 @@ export const NotificationDrawer: FC<P> = ({
   notifications = [],
   productNews = [],
   relativeTime,
-  updateNotificationState,
+  deleteNotification,
+  updateNotification,
+  readAddMutation,
   readNewsMutation,
   unreadNewsCount,
   unreadNotificationCount,
@@ -51,10 +55,19 @@ export const NotificationDrawer: FC<P> = ({
   const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
+  const [notificationData] = useState<NotificationDrawerItemType[]>(
+    notifications
+  )
 
   const closeDrawerMenu = () => {
     setNotificationDrawer(false)
     closeDrawer?.()
+  }
+
+  let lengths = 0
+  for (const item of notificationData) {
+    const length = Object.values(item)[0] ? Object.values(item)[0].length : 0
+    lengths = lengths + length
   }
 
   const renderEmptyPlaceholder = (title: string, hint: string) => (
@@ -127,7 +140,6 @@ export const NotificationDrawer: FC<P> = ({
       )}
 
       {notifyTab === 'Activity' &&
-        notifications?.length > 0 &&
         notifications.map((notify) => {
           return (
             <NotificationItem
@@ -135,12 +147,15 @@ export const NotificationDrawer: FC<P> = ({
               notify={notify}
               relativeTime={relativeTime}
               user={user}
-              updateNotificationState={updateNotificationState}
+              updateMutation={updateNotification}
+              deleteMutation={deleteNotification}
+              readAddMutation={readAddMutation}
             />
           )
         })}
 
-      {!notifications &&
+      {Array.isArray(notifications) &&
+        notifications.length === 0 &&
         notifyTab === 'Activity' &&
         renderEmptyPlaceholder(
           t('notifications.empty.msg'),

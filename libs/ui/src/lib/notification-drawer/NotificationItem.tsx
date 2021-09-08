@@ -15,8 +15,8 @@ export interface NotificationDrawerItemType {
   notificationTypeIcon: string
   title: string
   desc: string
-  is_read: boolean
-  is_deleted: boolean
+  read: number[]
+  users: number[]
   link: string
 }
 
@@ -24,14 +24,18 @@ interface P {
   notify: NotificationDrawerItemType
   relativeTime?: (lan: string, date: Date) => string
   user?: Partial<AuthenticatedUser> & JwtUser
-  updateNotificationState?: MutationFunction
+  updateMutation?: MutationFunction
+  deleteMutation?: MutationFunction
+  readAddMutation?: MutationFunction
 }
 
 export const NotificationItem: FC<P> = ({
   notify,
   relativeTime,
   user,
-  updateNotificationState,
+  updateMutation,
+  deleteMutation,
+  readAddMutation,
 }) => {
   const [notifyTime, setNotifyTime] = useState(
     relativeTime?.('en', notify?.notificationTime)
@@ -59,16 +63,21 @@ export const NotificationItem: FC<P> = ({
     return notificationIcon?.icon
   }
 
+  const isReadNotification = (users) => {
+    return !!users?.find((user_id) => user_id === user?.user)
+  }
+
   const handleOnClick = async (notification) => {
-    const { id, link, is_read, is_deleted } = notification
-    if (!is_read) {
+    const { id, link } = notification
+    const { read } = notification
+
+    if (!isReadNotification(read)) {
       const variables = {
-        id,
+        company: user?.company,
+        notification: id,
         user: user?.user,
-        is_read: true,
-        is_deleted,
       }
-      await updateNotificationState?.({
+      await readAddMutation?.({
         variables,
         optimisticResponse: {},
       })
@@ -79,17 +88,15 @@ export const NotificationItem: FC<P> = ({
   }
 
   const removeSingleNotification = async (notification) => {
-    const { id, is_read } = notification
-    const variables = {
-      id,
-      user: user?.user,
-      is_deleted: true,
-      is_read,
-    }
-    await updateNotificationState?.({
-      variables,
-      optimisticResponse: {},
-    })
+    const { id, users } = notification
+    const sent_to = users.filter((user_id) => user_id !== user?.user)
+    const variables = { id, sent_to }
+    sent_to?.length > 0
+      ? await updateMutation?.({ variables, optimisticResponse: {} })
+      : await deleteMutation?.({
+          variables: { id: notification.id },
+          optimisticResponse: {},
+        })
   }
 
   const getFormattedDate = (date: Date) =>
@@ -157,7 +164,7 @@ export const NotificationItem: FC<P> = ({
             <p>{getNotificationDescOrTitle(notify, 'desc')}</p>
           </div>
           <div className={styles.readStatus}>
-            {!notify?.is_read && <span />}
+            {!isReadNotification(notify?.read) && <span />}
           </div>
         </div>
       </div>
