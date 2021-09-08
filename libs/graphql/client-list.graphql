@@ -3,6 +3,7 @@ query GetContacts(
   $limit: Int
   $active: Int = 1
   $searchTerm: String
+  $labelId: Int
 ) {
   findManyCmContact(
     skip: $offset
@@ -19,6 +20,11 @@ query GetContacts(
           ]
         }
       ]
+      CmContactLabel: {
+        some: {
+          label_id: { equals: $labelId }
+        }
+      }
     }
   ) {
     Avatar
@@ -45,12 +51,26 @@ query clientListContactsCount($active: Int = 1){
   })
 }
 
-query getLabels{
-  findManyCmLabel {
+query getLabels($is_active: Int = 1) {
+  findManyCmLabel(where: {
+    CmContactLabel: {
+      every: {
+        CmContact: {
+          is_active: {equals: $is_active}
+        }
+      }
+    }
+  }) {
     id
     name
     color
     company_id
+    CmContactLabel {
+      id
+      CmContact {
+        is_active
+      }
+    }
   }
 }
 

@@ -621,8 +621,29 @@
       display: none !important;
     }
   }
+  .label-skeleton-wrapper {
+    display: flex;
+    .tag {
+      margin-right: 7px;
+      :global {
+        .ant-skeleton-input {
+          width: 25px;
+        }
+      }
+    }
+    .text {
+      :global {
+        .ant-skeleton-input {
+          width: 100px;
+        }
+      }
+    }
+  }
 }
 
-.contentLabel {
-  color: red;
+.content-label {
+  margin-bottom: 7px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }

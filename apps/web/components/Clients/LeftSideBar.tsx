@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Menu } from 'antd'
+import { Menu, Skeleton } from 'antd'
 import {
   TagOutlined,
   PlusCircleOutlined,
@@ -22,7 +22,7 @@ interface LeftSideBarProps {
   setSelectedTab?: (val) => void
   labels?: Labels[]
   sourceData?: SourceDataProps[]
-  handleLabelClick?: (e, val) => void
+  handleLabelClick?: (e, val, id) => void
   handleClientClick?: () => void
   handleArchivedClick?: () => void
   setLabels?: (val: Labels[]) => void
@@ -67,13 +67,12 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   contactsLabels,
 }) => {
   const { t } = useTranslationI18()
-
   const handleSelectedTab = (e) => {
     setSelectedTab(e.key)
   }
 
   const getValueByKey = (object, key) => {
-    return Object.values(object).find((value) => object[key] === value)
+    return object.find((item) => item.id === key)['count']
   }
 
   return (
@@ -123,24 +122,43 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
             title={'no title'}
             className={styles.modifiedItem}
           >
-            {labelsList?.map((label) => {
-              return (
-                label?.name && (
-                  <Menu.Item
-                    key={`${label.name}`}
-                    onClick={() => handleLabelClick(false, label.name)}
-                  >
-                    <div className={styles.clientMenuItem}>
-                      <span>
-                        <TagOutlined />
-                        &nbsp;{label.name}
-                      </span>
-                      {getValueByKey(labelCountAll, label.id)}
+            {labelsList?.length === 0
+              ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+                  <Menu.Item key={item}>
+                    <div className={styles.labelSkeletonWrapper}>
+                      <Skeleton.Input
+                        className={styles.tag}
+                        active={true}
+                        size="small"
+                      />
+                      <Skeleton.Input
+                        className={styles.text}
+                        active={true}
+                        size="small"
+                      />
                     </div>
                   </Menu.Item>
-                )
-              )
-            })}
+                ))
+              : labelsList?.map((label) => {
+                  return (
+                    label?.name && (
+                      <Menu.Item
+                        key={`${label.name}`}
+                        onClick={() =>
+                          handleLabelClick(false, label.name, label.id)
+                        }
+                      >
+                        <div className={styles.clientMenuItem}>
+                          <span>
+                            <TagOutlined />
+                            &nbsp;{label.name}
+                          </span>
+                          {getValueByKey(labelCountAll, label.id)}
+                        </div>
+                      </Menu.Item>
+                    )
+                  )
+                })}
           </SubMenu>
           <Menu.Item key={tab.createLabel}>
             <CreateLabel
@@ -151,7 +169,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               setLabels={setLabels}
               addLabelMutation={addLabelMutation}
               handleApplyLabel={handleApplyLabel}
-              contactsLabels={contactsLabels}
+              // contactsLabels={contactsLabels}
               sourceData={sourceData}
             >
               <div>

@@ -21,8 +21,6 @@ import {
   // useDuplicateContactsQuery,
   useGetLabelsLazyQuery,
   useAddLabelMutation,
-  // useGetContactsLabelsLazyQuery,
-  // useInsertContactsLabelsMutation,
 } from '@pabau/graphql'
 import ClientCreate from '../../components/Clients/ClientCreate'
 import styles from './clients.module.less'
@@ -56,22 +54,30 @@ export const Clients: FC<ClientsProps> = () => {
   const [labelsList, setLabelsList] = useState([])
   const [dataLoaded, setDataLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  // const [insertContactsLabelsMutaton] = useInsertContactsLabelsMutation({
-  //   onCompleted(response) {
-  //     const tempLab = response.insert_contacts_labels.returning[0]
-  //     setResponseLabels(true)
-  //     setCountLabelS(() => [...countLabelS, tempLab])
-  //     // getContactsLabelsQuery()
-  //   },
-  //   onError(error) {
-  //     console.error(error)
-  //   },
-  // })
+  const [countFilterLabels, setCountFilterLabels] = useState(null)
+  const [filterId, setFilterId] = useState(undefined)
+  const [isActive, setIsActive] = useState(1)
 
   const [getLabelsQuery] = useGetLabelsLazyQuery({
     fetchPolicy: 'no-cache',
     onCompleted(response) {
       setLabelsList(response?.findManyCmLabel)
+      const labels = response?.findManyCmLabel
+      let status
+      const labelCounts = labels
+        .filter((i) => {
+          const { CmContactLabel } = i
+          status = true
+          for (const l of CmContactLabel) {
+            if (l.CmContact.is_active == false) {
+              status = false
+              break
+            }
+          }
+          return status === true
+        })
+        .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
+      setCountFilterLabels(labelCounts)
       setDataLoaded(true)
     },
     onError(error) {
@@ -124,14 +130,21 @@ export const Clients: FC<ClientsProps> = () => {
     showingRecords: 0,
   })
 
-  const { data: getContactsData } = useGetContactsQuery({
-    fetchPolicy: 'no-cache',
-    variables: {
-      offset: paginateData.offset,
-      limit: paginateData.limit,
-      searchTerm: '%' + searchText + '%',
-    },
-  })
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      fetchPolicy: 'no-cache',
+      variables: {
+        active: isActive,
+        offset: paginateData.offset,
+        limit: paginateData.limit,
+        searchTerm: '%' + searchText + '%',
+        labelId: filterId,
+      },
+    }
+    return queryOptions
+  }, [isActive, paginateData.offset, paginateData.limit, searchText, filterId])
+
+  const { data: getContactsData } = useGetContactsQuery(getQueryVariables)
 
   useEffect(() => {
     getLabelsQuery()
@@ -195,7 +208,7 @@ export const Clients: FC<ClientsProps> = () => {
   // const [duplicateContactsData, setDuplicateContactsData] = useState(
   //   getDuplicateContactsData
   // )
-  const [countLabelS, setCountLabelS] = useState(contactsLabels)
+  // const [countLabelS, setCountLabelS] = useState(contactsLabels)
   const [responseLabels, setResponseLabels] = useState(false)
 
   const { t } = useTranslationI18()
@@ -294,6 +307,11 @@ export const Clients: FC<ClientsProps> = () => {
       filteredData = filterObject
     }
     setSourceFilteredData(filteredData)
+    setPaginateData((d) => ({
+      ...d,
+      total: filteredData?.length,
+      showingRecords: filteredData?.length,
+    }))
     if (contactsSourceData) setIsLoading(false)
   }, [searchText, selectedTab, contactsSourceData])
 
@@ -319,11 +337,13 @@ export const Clients: FC<ClientsProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginateData.currentPage, paginateData.limit])
 
-  const handleLabelClick = (e, label) => {
+  const handleLabelClick = (e, label, id) => {
     if (e) {
       e.stopPropagation()
     }
     setSelectedTab(label)
+    setFilterId(id)
+    setIsLoading((val) => !val)
   }
 
   const handleDeleteToggle = () => {
@@ -428,9 +448,9 @@ export const Clients: FC<ClientsProps> = () => {
     return [...newList, ...uniqData]
   }
 
-  useEffect(() => {
-    setCountLabelS(contactsLabels)
-  }, [contactsLabels])
+  // useEffect(() => { // to be removed
+  //   setCountLabelS(contactsLabels)
+  // }, [contactsLabels])
 
   const handleApplyLabel = (selectedLabelList) => {
     const newData = contactsSourceData?.map((data) => {
@@ -492,38 +512,38 @@ export const Clients: FC<ClientsProps> = () => {
     displayConfetti()
   }
 
-  const countLabels = () => {
-    const tempArr = []
-    if (responseLabels) {
-      countLabelS.map((item) => tempArr.push(item.label_id)) //handle
-    } else {
-      contactsLabels.map((item) => tempArr.push(item.label_id)) //handle
-    }
+  // const countLabels = () => { // to be removed
+  //   const tempArr = []
+  //   if (responseLabels) {
+  //     countLabelS.map((item) => tempArr.push(item.label_id)) //handle
+  //   } else {
+  //     contactsLabels.map((item) => tempArr.push(item.label_id)) //handle
+  //   }
 
-    tempArr.sort()
-    let current = null
-    let cnt = 0
-    const tempObj = {}
-    for (const element of tempArr) {
-      if (element !== current) {
-        if (cnt > 0) {
-          tempObj[current] = cnt
-        }
-        current = element
-        cnt = 1
-      } else {
-        cnt++
-      }
-    }
-    if (cnt > 0) {
-      tempObj[current] = cnt
-    }
-    return tempObj
-  }
+  //   tempArr.sort()
+  //   let current = null
+  //   let cnt = 0
+  //   const tempObj = {}
+  //   for (const element of tempArr) {
+  //     if (element !== current) {
+  //       if (cnt > 0) {
+  //         tempObj[current] = cnt
+  //       }
+  //       current = element
+  //       cnt = 1
+  //     } else {
+  //       cnt++
+  //     }
+  //   }
+  //   if (cnt > 0) {
+  //     tempObj[current] = cnt
+  //   }
+  //   return tempObj
+  // }
 
-  countLabels()
+  // countLabels()
 
-  const labelCountAll = countLabels()
+  // const labelCountAll = countLabels()
 
   const renderContentTable = (
     <ContentComponent
@@ -550,9 +570,9 @@ export const Clients: FC<ClientsProps> = () => {
       labelsList={labelsList}
       setLabelsList={setLabelsList}
       addLabelMutation={addLabelMutation}
-      contactsLabels={contactsLabels}
+      // contactsLabels={contactsLabels}
       // getContactsLabelsQuery={getContactsLabelsQuery}
-      getLabelsQuery={getLabelsQuery}
+      // getLabelsQuery={getLabelsQuery}
       // insertContactsLabelsMutaton={insertContactsLabelsMutaton}
     />
   )
@@ -639,8 +659,8 @@ export const Clients: FC<ClientsProps> = () => {
                     duplicateContactsCount={duplicateContactsData}
                     addLabelMutation={addLabelMutation}
                     handleApplyLabel={handleApplyLabel}
-                    labelCountAll={labelCountAll}
-                    contactsLabels={contactsLabels}
+                    labelCountAll={countFilterLabels}
+                    // contactsLabels={contactsLabels}
                     selectedRowKeys={selectedRowKeys}
                   />
                 </Sider>

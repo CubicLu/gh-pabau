@@ -28,7 +28,6 @@ interface CreateLabelsProps {
   labelsList?: any
   selectedRowKeys?: any
   setLabelsList?: (val) => void
-  getContactsLabelsQuery?: () => any
   sourceData?: any
   insertContactsLabelsMutaton?: (val) => void
   contactsLabels?: any
@@ -91,8 +90,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   labelsList,
   selectedRowKeys,
   setLabelsList,
-  getContactsLabelsQuery,
-  // getLabelsQuery,
   sourceData,
   addLabelMutation,
   insertContactsLabelsMutaton,

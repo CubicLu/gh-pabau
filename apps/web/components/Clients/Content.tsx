@@ -21,7 +21,7 @@ import styles from '../../pages/clients/clients.module.less'
 interface ClientsContentProps {
   searchText?: string
   sourceData?: SourceDataProps[]
-  handleLabelClick?: (e, val) => void
+  handleLabelClick?: (e, val, id) => void
   isArchived?: boolean
   labels?: Labels[]
   setLabels?: (val: Labels[]) => void
@@ -49,9 +49,6 @@ interface ClientsContentProps {
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
   >
   setLabelsList?: (val) => void
-  contactsLabels?: any
-  getContactsLabelsQuery?: (val) => void
-  getLabelsQuery?: (val) => void
   insertContactsLabelsMutaton?: (val) => void
 }
 
@@ -99,11 +96,8 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   setPaginateData,
   labelsList,
   setLabelsList,
-  getContactsLabelsQuery,
-  getLabelsQuery,
   addLabelMutation,
   insertContactsLabelsMutaton,
-  contactsLabels,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -198,7 +192,9 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                         color: label?.color,
                       }}
                       backgroundColor={''}
-                      onClick={(e) => handleLabelClick(e, label?.name)}
+                      onClick={(e) =>
+                        handleLabelClick(e, label?.name, label?.id)
+                      }
                       icon={<TagOutlined />}
                     >
                       {label?.name}
@@ -219,7 +215,9 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                         color: label?.color,
                       }}
                       backgroundColor={''}
-                      onClick={(e) => handleLabelClick(e, label?.name)}
+                      onClick={(e) =>
+                        handleLabelClick(e, label?.name, label?.id)
+                      }
                       icon={<TagOutlined />}
                     >
                       {label?.name}
@@ -333,7 +331,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                   border: `1px solid ${label.color}`,
                   color: label.color,
                 }}
-                onClick={(e) => handleLabelClick(e, label.label)}
+                onClick={(e) => handleLabelClick(e, label.label, label?.id)}
                 icon={<TagOutlined />}
               >
                 {label.label}
@@ -373,12 +371,10 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             labelsList={labelsList}
             selectedRowKeys={selectedRowKeys}
             setLabelsList={setLabelsList}
-            getContactsLabelsQuery={getContactsLabelsQuery}
-            getLabelsQuery={getLabelsQuery}
             addLabelMutation={addLabelMutation}
             sourceData={sourceData}
             insertContactsLabelsMutaton={insertContactsLabelsMutaton}
-            contactsLabels={contactsLabels}
+            // contactsLabels={contactsLabels}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),
