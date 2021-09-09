@@ -1,3 +1,7 @@
+.primaryText {
+  cursor: pointer;
+  color: var(--primary-color);
+}
 .financialItems {
   :global {
     .ant-table-thead > tr > th {
@@ -73,5 +77,21 @@
         font-size: 13px;
       }
     }
+  }
+}
+.createStatementModal {
+  :global {
+    .ant-modal-header {
+      border-bottom: none;
+    }
+  }
+
+  .createStatementRow {
+    margin-top: 10px;
+  }
+  .createStatementBtnRow {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
   }
 }

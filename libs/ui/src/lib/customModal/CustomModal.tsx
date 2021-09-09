@@ -204,7 +204,7 @@ export function CustomModal(props: P) {
                       <div className={styles.rightpane}>
                         <SimpleDropdown
                         label={selectedData.modalMenu[1]}
-                          dropdownItems={[selectedData.modalContent[2][0], selectedData.modalContent[2][1], selectedData.modalContent[2][2], selectedData.modalContent[2][3]]}
+                          dropdownItems={[selectedData.modalContent[2][0], selectedData.modalContent[2][1], selectedData.modalContent[2][2], selectedData.modalContent[2][3], selectedData.modalContent[2][4]]}
                           onSelected={(val) => setFieldValue('password_enforce_history', val)}
                           value={values.password_enforce_history}
                         />

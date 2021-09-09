@@ -20,6 +20,7 @@ interface TerminologyTabProps {
   user: number
   opsData: TerminologyConfig[]
   loading?: boolean
+  taxSingular: string
   t: TFunction<'common'>
 }
 
@@ -30,6 +31,7 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
   user,
   opsData,
   loading,
+  taxSingular,
   t,
 }) => {
   const [updateApply, setUpdate] = useState(false)
@@ -118,7 +120,7 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
       items: [
         {
           key: t('business.default.config.key.singular'),
-          value: data?.me?.Company?.details?.tax_name,
+          value: taxSingular,
         },
       ],
     },
@@ -135,8 +137,8 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
       phone: data?.me?.Company?.details?.phone,
       website: data?.me?.Company?.details?.website,
       industry_sector: data?.me?.Company?.details?.industry_sector,
-      language: data?.me?.Company?.details?.language,
-      timezone: data?.me?.Company?.details?.timezone?.db_format,
+      timezone: data?.me?.Company?.details?.timezone?.php_format,
+      timezone_label: data?.me?.Company?.details?.timezone?.label,
       currency: data?.me?.Company?.details?.currency,
       date_formate: data?.me?.Company?.details?.date_format,
       week_start_day: data?.me?.Company?.details?.week_start_day,
@@ -149,7 +151,6 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
       employee_term_plural: data?.me?.Company?.details?.employee_term_plural,
       class_teacher_singular:
         data?.me?.Company?.details?.class_teacher_singular,
-      tax_name: data?.me?.Company?.details?.tax_name,
       secure_medical_forms: data?.me?.Company?.details?.secure_medical_forms,
       disable_prescriptions: data?.me?.Company?.details?.disable_prescriptions,
       is_surgical: data?.me?.Company?.details?.is_surgical,
@@ -192,6 +193,10 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
         meta_name: 'opt_in_phone_lead',
         meta_value: optIns[1].items[3].value ?? '',
       },
+      {
+        meta_name: 'tax_singular',
+        meta_value: config[4].items[0].value ?? '',
+      },
     ]
     if (config) {
       CompanyDetailData.contact_term_singular = config[0].items[0].value
@@ -201,7 +206,6 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
       CompanyDetailData.employee_term_singular = config[2].items[0].value
       CompanyDetailData.employee_term_plural = config[2].items[1].value
       CompanyDetailData.class_teacher_singular = config[3].items[0].value
-      CompanyDetailData.tax_name = config[4].items[0].value
 
       try {
         await updateBusinessDetails({

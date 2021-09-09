@@ -1,5 +1,8 @@
-import React, { FC, useState } from 'react'
-import { InvoiceProp } from './../ClientFinancialsLayout'
+import React, { FC, useState, useEffect } from 'react'
+import {
+  InvoiceProp,
+  InvoiceInvoicePayments,
+} from './../ClientFinancialsLayout'
 import styles from './Tabs.module.less'
 import { DropdownWithIcon } from '@pabau/ui'
 import moment from 'moment'
@@ -9,11 +12,10 @@ import {
   invoicePaymentMethodOptions,
   invoiceEmployeeOptions,
 } from '../../../../pages/test/ClientCardMock'
-import { PlusOutlined, CloseOutlined } from '@ant-design/icons'
+import { PlusOutlined, CloseOutlined, EditFilled } from '@ant-design/icons'
 import classNames from 'classnames'
-import DeleteImg from '../../../../assets/images/delete_circle.png'
-import EditImg from '../../../../assets/images/edit_circle.png'
-import { Modal } from 'antd'
+import { Modal, Dropdown, Menu } from 'antd'
+import { calculateDiscount } from './ItemsTab'
 
 interface Invoice {
   invoice?: InvoiceProp
@@ -27,7 +29,46 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
   const [payments, setPayment] = useState(
     invoice?.payments ? invoice?.payments : []
   )
+  const [invoiceTotal, setInvoiceTotal] = useState(0)
+  const [outStanding, setOutstanding] = useState(invoice?.grandTotal)
+  const [paymentAllocated, setPaymentAllocated] = useState(0)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [
+    selectedPayment,
+    setSelectedPayment,
+  ] = useState<InvoiceInvoicePayments>()
+
+  useEffect(() => {
+    let paymentAllocated_ = 0
+
+    payments.map((p) => {
+      paymentAllocated_ += Number(p.amount)
+      return true
+    })
+
+    const calcOustanding = invoiceTotal - paymentAllocated_
+    setOutstanding(calcOustanding >= 0 ? calcOustanding : 0)
+    setPaymentAllocated(paymentAllocated_)
+
+    setInvoiceTotal(
+      invoice?.items
+        .map((item) => {
+          const subTotal = item.price * item.quantity
+          const discount_ = calculateDiscount(subTotal, item.discount)
+          const discountedTotal = subTotal - discount_
+          const tax_ = (discountedTotal / 100) * item.tax
+          const total = discountedTotal + tax_
+
+          return total
+        })
+        .reduce((a, b) => a + b, 0)
+    )
+  }, [payments, invoiceTotal, invoice])
+
+  const numbertoAmountFormat = (e) => {
+    e = e.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    return e
+  }
 
   const onChangeItem = (obj, key, value) => {
     const payments_ = payments.filter((o) => {
@@ -38,8 +79,30 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
     setPayment(payments_)
   }
 
-  const deleteItem = () => {
+  const deleteItem = (e) => {
+    setSelectedPayment(e)
     setShowDeleteModal(true)
+  }
+
+  const removeItem = () => {
+    const payments_ = payments?.filter((o) => selectedPayment.id !== o.id)
+    setPayment(payments_)
+  }
+
+  const addItem = (e) => {
+    setPayment([
+      ...payments,
+      {
+        id: payments.length + 1,
+        employee: payments[payments.length - 1].employee,
+        method: e,
+        amount: outStanding,
+        date: moment().format('DD/MM/YYYY'),
+        note: '',
+        showNote: false,
+        noteSaved: true,
+      },
+    ])
   }
 
   const renderTableRow = (item) => {
@@ -77,8 +140,12 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
                 'ui.client-card-financial.edit-payment.amount.placeholder'
               )}
               prefix={'£'}
+              type="number"
+              min="0"
+              step="1"
               value={item.amount}
               onChange={(e) => onChangeItem(item, 'amount', e.target.value)}
+              className={styles.editInvoiceItemPriceField}
             />
           </div>
           <div style={{ width: '20%' }}>
@@ -101,7 +168,10 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
               <PlusOutlined />
               {t('ui.client-card-financial.edit-payment.add-note')}
             </span>
-            <span className={styles.closeLabel} onClick={deleteItem}>
+            <span
+              className={styles.closeLabel}
+              onClick={() => deleteItem(item)}
+            >
               <CloseOutlined />
             </span>
           </div>
@@ -114,69 +184,60 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
             )}
             key={item.id}
           >
-            <div className={styles.invoiceFormField}>
-              <label>
-                {t('ui.client-card-financial.edit-payment.add-note')}
-              </label>
-              <TextArea
-                placeholder={t(
-                  'ui.client-card-financial.refund.add-note.placeholder'
-                )}
-                rows={1}
-                value={item.note}
-                onChange={(e) => onChangeItem(item, 'note', e.target.value)}
-              />
-            </div>
             {item.noteSaved && (
-              <div className={styles.invoiceFormEditField}>
-                <span>
-                  <img
-                    src={EditImg}
-                    alt="edit"
-                    onClick={() => {
-                      onChangeItem(item, 'showNote', true)
-                      onChangeItem(item, 'noteSaved', false)
-                    }}
-                  />
-                </span>
-                <span>
-                  <img
-                    src={DeleteImg}
-                    alt="delete"
-                    onClick={() => {
-                      onChangeItem(item, 'note', '')
-                      onChangeItem(item, 'showNote', false)
-                      onChangeItem(item, 'noteSaved', false)
-                    }}
-                  />
+              <div className={styles.invoiceNoteAlert}>
+                <span>{item.note}</span>
+                <span
+                  className={styles.editNoteIcon}
+                  onClick={() => {
+                    onChangeItem(item, 'showNote', true)
+                    onChangeItem(item, 'noteSaved', false)
+                  }}
+                >
+                  <EditFilled />
                 </span>
               </div>
             )}
             {!item.noteSaved && (
-              <div
-                className={styles.formField}
-                style={{
-                  justifyContent: 'flex-end',
-                  display: 'flex',
-                }}
-              >
-                <Button
-                  onClick={() => {
-                    onChangeItem(item, 'showNote', false)
+              <>
+                <div className={styles.invoiceFormField}>
+                  <label style={{ fontSize: 12 }}>
+                    {t('ui.client-card-financial.edit-payment.add-note')}
+                  </label>
+                  <TextArea
+                    placeholder={t(
+                      'ui.client-card-financial.refund.add-note.placeholder'
+                    )}
+                    rows={1}
+                    value={item.note}
+                    onChange={(e) => onChangeItem(item, 'note', e.target.value)}
+                  />
+                </div>
+                <div
+                  className={styles.formField}
+                  style={{
+                    justifyContent: 'flex-end',
+                    display: 'flex',
                   }}
                 >
-                  {t('ui.client-card-financial.refund.cancel')}
-                </Button>
-                <Button
-                  type="primary"
-                  disabled={!item.note}
-                  onClick={() => {
-                    onChangeItem(item, 'noteSaved', true)
-                  }}
-                >
-                  {t('ui.client-card-financial.refund.save-note')}
-                </Button>
-              </div>
+                  <Button
+                    onClick={() => {
+                      onChangeItem(item, 'showNote', false)
+                    }}
+                  >
+                    {t('ui.client-card-financial.refund.cancel')}
+                  </Button>
+                  <Button
+                    type="primary"
+                    disabled={!item.note}
+                    onClick={() => {
+                      onChangeItem(item, 'noteSaved', true)
+                    }}
+                  >
+                    {t('ui.client-card-financial.refund.save-note')}
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         )}
@@ -198,7 +259,9 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
           message={t(
             'ui.client-card-financial.payments.delete-payments-alert-message'
           )}
-          description="Laura Sutton £100 paid by elictronic transfer on Sunday, 12 December 2020"
+          description={`Laura Sutton £${numbertoAmountFormat(
+            selectedPayment ? selectedPayment['amount'] : 0
+          )} paid by elictronic transfer on Sunday, 12 December 2020`}
           type="info"
         />
         <div className={styles.btnRow}>
@@ -208,7 +271,7 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
           <Button
             onClick={() => {
               setShowDeleteModal(false)
-              console.log('Yes Delete')
+              removeItem()
             }}
             type="primary"
             danger
@@ -222,21 +285,23 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
         <div className={styles.invoiceTabSectionHeader}>
           <Title level={5}>{t('ui.client-card-financial.edit-payment')}</Title>
         </div>
-        <div className={styles.invoiceTabSectionTableHeader}>
-          <div style={{ width: '20%' }}>
-            <span>{t('ui.client-card-financial.edit-payment.paid-by')}</span>
+        <div className={styles.invoiceTabSectionScrollContainer}>
+          <div className={styles.invoiceTabSectionTableHeader}>
+            <div style={{ width: '20%' }}>
+              <span>{t('ui.client-card-financial.edit-payment.paid-by')}</span>
+            </div>
+            <div style={{ width: '20%' }}>
+              <span>{t('ui.client-card-financial.edit-payment.method')}</span>
+            </div>
+            <div style={{ width: '20%' }}>
+              <span>{t('ui.client-card-financial.edit-payment.amount')}</span>
+            </div>
+            <div style={{ width: '40%' }}>
+              <span>{t('ui.client-card-financial.edit-payment.date')}</span>
+            </div>
           </div>
-          <div style={{ width: '20%' }}>
-            <span>{t('ui.client-card-financial.edit-payment.method')}</span>
-          </div>
-          <div style={{ width: '20%' }}>
-            <span>{t('ui.client-card-financial.edit-payment.amount')}</span>
-          </div>
-          <div style={{ width: '40%' }}>
-            <span>{t('ui.client-card-financial.edit-payment.date')}</span>
-          </div>
+          {payments.map((i) => renderTableRow(i))}
         </div>
-        {payments.map((i) => renderTableRow(i))}
         <div className={styles.invoiceTabPaymentFooterRow}>
           <div></div>
           <div>
@@ -266,28 +331,51 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
           <div></div>
           <div>
             <div>
-              <span>£0</span>
+              <span>£{numbertoAmountFormat(outStanding)}</span>
             </div>
             <div>
-              <span className={styles.greenText}>£0</span>
+              <span className={styles.greenText}>
+                £{numbertoAmountFormat(paymentAllocated)}
+              </span>
             </div>
             <div>
-              <span>£600</span>
+              <span>£{numbertoAmountFormat(invoiceTotal)}</span>
             </div>
           </div>
         </div>
-        <div className={styles.invoiceTabRow}>
-          <Alert
-            message="£600.00 unallocated from payment will be added as account credit"
-            type="warning"
-          />
-        </div>
+        {paymentAllocated > invoiceTotal && (
+          <div className={styles.invoiceTabRow}>
+            <Alert
+              message={`£${numbertoAmountFormat(
+                paymentAllocated - invoiceTotal
+              )} unallocated from payment will be added as account credit`}
+              type="warning"
+            />
+          </div>
+        )}
         <div className={styles.invoiceTabPaymentActionFooterRow}>
-          <Button onClick={() => console.log('Add Another')}>
-            Add Another
-          </Button>
+          <Dropdown
+            overlay={() => {
+              return (
+                <Menu className={styles.customMenuDropdown}>
+                  <Menu.Item key={3} onClick={() => addItem('Cash')}>
+                    Cash
+                  </Menu.Item>
+                  <Menu.Item key={4} onClick={() => addItem('Card')}>
+                    Card
+                  </Menu.Item>
+                </Menu>
+              )
+            }}
+            placement="bottomRight"
+            trigger={['click']}
+          >
+            <Button>
+              {t('ui.client-card-financial.edit-payment.add-another')}
+            </Button>
+          </Dropdown>
           <Button onClick={() => console.log('Update Payment')} type="primary">
-            Update Payment
+            {t('ui.client-card-financial.edit-payment.update-payment')}
           </Button>
         </div>
       </div>
