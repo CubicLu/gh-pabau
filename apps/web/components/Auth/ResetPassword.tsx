@@ -4,10 +4,7 @@ import { Form, Input, SubmitButton } from 'formik-antd'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from '../../pages/login.module.less'
 import { ResetPasswordValidation } from '@pabau/yup'
-import {
-  ForgotPasswordDocument,
-  SendEmailtoValidateUserDocument,
-} from '@pabau/graphql'
+import { ForgotPasswordDocument } from '@pabau/graphql'
 import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
 
@@ -17,29 +14,15 @@ interface P {
 
 const ResetPassword = ({ onClose }: P): JSX.Element => {
   const { t } = useTranslationI18()
-  const [email, setEmail] = useState('')
-  const [sentEmail, setSentEmail] = useState('')
+  const [sentEmail, setSentEmail] = useState(false)
   const [enable, setEnable] = useState(false)
 
-  const [userValidation, { data, loading }] = useMutation(
-    ForgotPasswordDocument,
-    {
-      onCompleted() {
-        setEnable(true)
-      },
-      onError() {
-        setEnable(false)
-      },
-    }
-  )
-
-  const [sendEmailMutation] = useMutation(SendEmailtoValidateUserDocument, {
+  const [userValidation, { loading }] = useMutation(ForgotPasswordDocument, {
     onCompleted() {
-      setSentEmail('sent')
-      setEmail('')
+      setEnable(true)
     },
     onError() {
-      setSentEmail('error')
+      setEnable(false)
     },
   })
 
@@ -61,39 +44,17 @@ const ResetPassword = ({ onClose }: P): JSX.Element => {
           validationSchema={ResetPasswordValidation}
           validateOnChange={true}
           onSubmit={async (value) => {
-            await sendEmailMutation({
+            await userValidation({
               variables: {
-                to: [value.email],
-                subject: 'Reset Password Request',
-                text: 'Reset Password Request',
-                html: 'Reset Password Request',
-                templateType: 'password-reset-requested',
-                fields: [
-                  {
-                    key: 'url',
-                    value: `${window.location.origin}/resetPassword?id=${data?.forgotPassword}`,
-                  },
-                ],
+                email: value.email,
               },
               optimisticResponse: {},
             })
+            setSentEmail(true)
           }}
-          render={({ isValid, values, errors }) => (
+          render={({ values, isValid }) => (
             <Form className={styles.resetWrap} layout="vertical">
-              {errors.email === undefined &&
-              email !== '' &&
-              data === undefined ? (
-                <Alert
-                  message={t('reset.password.banner.search.title', {
-                    fallbackLng: 'en',
-                  })}
-                  description={t('reset.password.banner.search.description', {
-                    fallbackLng: 'en',
-                  })}
-                  type="error"
-                />
-              ) : null}
-              {sentEmail === 'sent' ? (
+              {sentEmail && enable ? (
                 <Alert
                   message={t('reset.password.banner.email.title', {
                     fallbackLng: 'en',
@@ -104,7 +65,7 @@ const ResetPassword = ({ onClose }: P): JSX.Element => {
                   type="success"
                 />
               ) : null}
-              {sentEmail === 'error' ? (
+              {sentEmail && !enable ? (
                 <Alert
                   message={t('reset.password.banner.email.error.title', {
                     fallbackLng: 'en',
@@ -126,27 +87,17 @@ const ResetPassword = ({ onClose }: P): JSX.Element => {
                 <Input
                   name={'email'}
                   value={values.email}
-                  onChange={async (val) => {
-                    if (
-                      isValid &&
-                      val.target.value !== '' &&
-                      val.target.value.length > 1
-                    ) {
-                      await userValidation({
-                        variables: {
-                          email: val.target.value,
-                        },
-                        optimisticResponse: {},
-                      })
-                    }
-                  }}
                   autoComplete={'off'}
                 />
               </Form.Item>
               <div className={styles.btnReset}>
                 <SubmitButton
-                  className={enable ? styles.btnStarted : styles.btnDisabled}
-                  disabled={!enable}
+                  className={
+                    isValid && values.email !== ''
+                      ? styles.btnStarted
+                      : styles.btnDisabled
+                  }
+                  disabled={values.email === '' ? true : !isValid}
                   type={'primary'}
                   loading={loading}
                 >

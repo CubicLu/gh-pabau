@@ -68,8 +68,10 @@ const Index: FC = () => {
             {data?.findFirstPasswordResetAuth === null && (
               <div className={styles.mainErrorWrap}>
                 <div className={styles.errorPage}>
-                  <div className={styles.message}>Something went wrong!</div>
-                  <h5>Token is not found or Expired, Please try again!</h5>
+                  <div className={styles.message}>
+                    {t('reset.password.error.message')}
+                  </div>
+                  <h5>{t('reset.password.token.expired')}</h5>
                 </div>
               </div>
             )}
@@ -122,8 +124,8 @@ const Index: FC = () => {
               updateUserPassword({
                 variables: {
                   token: token,
-                  userId: data?.findFirstPasswordResetAuth?.User?.id,
-                  newPassword: value.confirmPassword,
+                  newPassword1: value.password,
+                  newPassword2: value.confirmPassword,
                 },
                 optimisticResponse: {},
               })

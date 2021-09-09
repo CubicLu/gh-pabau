@@ -1,4 +1,4 @@
-import { intArg, extendType, nonNull, stringArg } from 'nexus'
+import { extendType, nonNull, stringArg } from 'nexus'
 import { sendEmail } from '../../app/email/email-service'
 import { Context } from '../../context'
 import { v4 as uuidv4 } from 'uuid'
@@ -53,26 +53,46 @@ export const Password = extendType({
       description:
         'Changes the password for the user based on a token received over email',
       args: {
-        userId: nonNull(intArg()),
         token: nonNull(stringArg()),
-        newPassword: nonNull(stringArg()),
+        newPassword1: nonNull(stringArg()),
+        newPassword2: nonNull(stringArg()),
       },
-      async resolve(_root, { userId, newPassword }, { prisma }: Context) {
-        if (!(await validatePassword.isValid(newPassword)))
+      async resolve(
+        _root,
+        { token, newPassword1, newPassword2 },
+        { prisma }: Context
+      ) {
+        if (newPassword1 !== newPassword2)
+          throw new Error('Password and ConfirmPassword is not matched')
+        if (!(await validatePassword.isValid(newPassword1)))
           throw new Error('Choose a stronger password')
+
+        const user = await prisma.passwordResetAuth.findFirst({
+          rejectOnNotFound: true,
+          where: {
+            key_code: { equals: token },
+          },
+          select: {
+            User: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        })
 
         const { salt, username, full_name } = await prisma.user.findUnique({
           rejectOnNotFound: true,
           where: {
-            id: userId,
+            id: user.User.id,
           },
           select: { username: true, salt: true, full_name: true },
         })
 
-        const password = createPabau1PasswordHash(newPassword, salt)
+        const password = createPabau1PasswordHash(newPassword1, salt)
         await prisma.user.update({
           where: {
-            id: userId,
+            id: user.User.id,
           },
           data: { password: password, password_algor: 2 },
         })
@@ -106,7 +126,7 @@ export const Password = extendType({
     t.field('forgotPassword', {
       description:
         'Sends a email to yourself, that contains a link to reset your password.',
-      type: 'String',
+      type: 'Boolean',
       args: {
         email: nonNull(stringArg()),
       },
@@ -133,7 +153,19 @@ export const Password = extendType({
           },
         })
 
-        return data.key_code
+        await sendEmail({
+          templateType: 'password-reset-requested',
+          to: email,
+          subject: 'Reset Password Request',
+          fields: [
+            {
+              key: 'url',
+              value: `http://localhost:4200/resetPassword?id=${data?.key_code}`,
+            },
+          ],
+        })
+
+        return true
       },
     })
   },
