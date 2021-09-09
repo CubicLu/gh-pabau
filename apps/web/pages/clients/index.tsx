@@ -17,7 +17,9 @@ import { intersectionBy, differenceBy, groupBy } from 'lodash'
 import confetti from 'canvas-confetti'
 import {
   useGetContactsQuery,
+  useGetContactsByLabelLazyQuery,
   useClientListContactsCountQuery,
+  useGetContactsByLabelCountLazyQuery,
   // useDuplicateContactsQuery,
   useGetLabelsLazyQuery,
   useAddLabelMutation,
@@ -57,6 +59,7 @@ export const Clients: FC<ClientsProps> = () => {
   const [countFilterLabels, setCountFilterLabels] = useState(null)
   const [filterId, setFilterId] = useState(undefined)
   const [isActive, setIsActive] = useState(1)
+  const [contactsSourceData, setContactsSourceData] = useState(null)
 
   const [getLabelsQuery] = useGetLabelsLazyQuery({
     fetchPolicy: 'no-cache',
@@ -85,10 +88,20 @@ export const Clients: FC<ClientsProps> = () => {
     },
   })
 
-  const {
-    data: getClientsCountData,
-    loading: getClientsCountLoading,
-  } = useClientListContactsCountQuery({ fetchPolicy: 'no-cache' })
+  const getCountVariables = useMemo(() => {
+    const queryVariables = {
+      fetchPolicy: 'no-cache',
+      variables: {
+        active: isActive,
+        searchTerm: '%' + searchText + '%',
+      },
+    }
+    return queryVariables
+  }, [isActive, searchText])
+
+  const { data: getClientsCountData } = useClientListContactsCountQuery(
+    getCountVariables
+  )
 
   // const { data: getDuplicateContactsData } = useDuplicateContactsQuery({
   //   fetchPolicy: 'no-cache',
@@ -130,40 +143,61 @@ export const Clients: FC<ClientsProps> = () => {
     showingRecords: 0,
   })
 
+  const variables = {
+    active: isActive,
+    offset: paginateData.offset,
+    limit: paginateData.limit,
+    searchTerm: '%' + searchText + '%',
+  }
+
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
       fetchPolicy: 'no-cache',
+      variables: variables,
+    }
+    return queryOptions
+  }, [isActive, paginateData.offset, paginateData.limit, searchText])
+
+  const getFilterQueryVariables = useMemo(() => {
+    const queryOptions = {
+      fetchPolicy: 'no-cache',
       variables: {
-        active: isActive,
-        offset: paginateData.offset,
-        limit: paginateData.limit,
-        searchTerm: '%' + searchText + '%',
+        ...variables,
         labelId: filterId,
       },
     }
     return queryOptions
   }, [isActive, paginateData.offset, paginateData.limit, searchText, filterId])
 
+  const getFilterCountQueryVariables = useMemo(() => {
+    const queryOptions = {
+      fetchPolicy: 'no-cache',
+      variables: {
+        active: isActive,
+        searchTerm: '%' + searchText + '%',
+        labelId: filterId,
+      },
+    }
+    return queryOptions
+  }, [isActive, filterId])
+
   const { data: getContactsData } = useGetContactsQuery(getQueryVariables)
+  const [
+    getContactsByLabel,
+    { data: getfilteredContacts },
+  ] = useGetContactsByLabelLazyQuery(getFilterQueryVariables)
+  const [
+    getContactsByLabelCount,
+    { data: getfilteredContactsCount },
+  ] = useGetContactsByLabelCountLazyQuery(getFilterCountQueryVariables)
 
   useEffect(() => {
     getLabelsQuery()
   }, [getLabelsQuery])
 
   useEffect(() => {
-    if (getContactsData && labelsList.length > 0) {
-      const contactsData = getContactsData?.findManyCmContact.map((d) => ({
-        id: d.ID,
-        avatar: d.Avatar,
-        firstName: d.Fname,
-        lastName: d.Lname,
-        email: d.Email,
-        mobileNumber: d.Mobile,
-        is_active: d.is_active,
-        clientLabel: d.CmContactLabel.map((itm) => {
-          return labelsList.find((i) => i.id === itm.label_id)
-        }),
-      }))
+    if (getContactsData && labelsList?.length > 0) {
+      const contactsData = mapContactData(getContactsData)
       setContactsSourceData(contactsData)
     }
     if (getClientsCountData) {
@@ -173,7 +207,37 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getContactsData?.findManyCmContact?.length,
       }))
     }
-  }, [getContactsData, labelsList, getClientsCountData, getClientsCountLoading])
+  }, [getContactsData, labelsList, getClientsCountData])
+
+  useEffect(() => {
+    if (getfilteredContacts) {
+      const filterData = mapContactData(getfilteredContacts)
+      setContactsSourceData(filterData)
+      setDataLoaded(true)
+    }
+    if (getfilteredContactsCount) {
+      setPaginateData((d) => ({
+        ...d,
+        total: getfilteredContactsCount?.findManyCmContactCount,
+        showingRecords: getfilteredContacts?.findManyCmContact?.length,
+      }))
+    }
+  }, [getfilteredContacts, getfilteredContactsCount])
+
+  const mapContactData = (data) => {
+    return data?.findManyCmContact.map((d) => ({
+      id: d.ID,
+      avatar: d.Avatar,
+      firstName: d.Fname,
+      lastName: d.Lname,
+      email: d.Email,
+      mobileNumber: d.Mobile,
+      is_active: d.is_active,
+      clientLabel: d.CmContactLabel.map((itm) => {
+        return labelsList.find((i) => i.id === itm.label_id)
+      }),
+    }))
+  }
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -204,7 +268,6 @@ export const Clients: FC<ClientsProps> = () => {
   const [duplicateDataList, setDuplicateDataList] = useState<
     SourceDataProps[][]
   >([])
-  const [contactsSourceData, setContactsSourceData] = useState(null)
   // const [duplicateContactsData, setDuplicateContactsData] = useState(
   //   getDuplicateContactsData
   // )
@@ -307,12 +370,7 @@ export const Clients: FC<ClientsProps> = () => {
       filteredData = filterObject
     }
     setSourceFilteredData(filteredData)
-    setPaginateData((d) => ({
-      ...d,
-      total: filteredData?.length,
-      showingRecords: filteredData?.length,
-    }))
-    if (contactsSourceData) setIsLoading(false)
+    if (dataLoaded) setIsLoading(false)
   }, [searchText, selectedTab, contactsSourceData])
 
   useEffect(() => {
@@ -344,6 +402,9 @@ export const Clients: FC<ClientsProps> = () => {
     setSelectedTab(label)
     setFilterId(id)
     setIsLoading((val) => !val)
+    setDataLoaded((val) => !val)
+    getContactsByLabel()
+    getContactsByLabelCount()
   }
 
   const handleDeleteToggle = () => {

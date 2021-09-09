@@ -150,10 +150,9 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
                       >
                         <div className={styles.clientMenuItem}>
                           <span>
-                            <TagOutlined />
-                            &nbsp;{label.name}
+                            <TagOutlined /> {label.name}
                           </span>
-                          {getValueByKey(labelCountAll, label.id)}
+                          <span>{getValueByKey(labelCountAll, label.id)}</span>
                         </div>
                       </Menu.Item>
                     )
