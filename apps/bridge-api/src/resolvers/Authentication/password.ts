@@ -160,7 +160,7 @@ export const Password = extendType({
           fields: [
             {
               key: 'url',
-              value: `http://localhost:4200/resetPassword?id=${data?.key_code}`,
+              value: `https://prelive-crm.new.pabau.com/resetPassword?id=${data?.key_code}`,
             },
           ],
         })
