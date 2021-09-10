@@ -40,10 +40,8 @@ export const SendMailOps: FC<SendMailOpsProps> = ({
   const [showChooseTemplate, setShowChooseTemplate] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [selectTemplate, setSelectTemplate] = useState('All Templates')
-  const [
-    chooseEmailTemplate,
-    setChooseEmailTemplate,
-  ] = useState<emailTemplateProps>()
+  const [chooseEmailTemplate, setChooseEmailTemplate] =
+    useState<emailTemplateProps>()
 
   const handleChooseTemplate = (template: emailTemplateProps) => {
     setChooseEmailTemplate(template)

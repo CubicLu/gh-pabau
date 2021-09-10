@@ -325,9 +325,8 @@ const ServiceLocationTab: FC<TabProps> = ({ value, setFieldValue, t }) => {
   const [expandedLocationKeys, setExpandedLocationsKeys] = useState([
     'location-all',
   ])
-  const [autoExpandLocationsParent, setAutoExpandLocationsParent] = useState(
-    true
-  )
+  const [autoExpandLocationsParent, setAutoExpandLocationsParent] =
+    useState(true)
 
   const onExpand = (expandedKeysValue: string[]) => {
     setExpandedKeys(expandedKeysValue)
@@ -710,12 +709,10 @@ export const Discount: NextPage = () => {
   }
 
   const [showModal, setShowModal] = useState<boolean>(false)
-  const [employeeListData, setEmployeeListData] = useState<EmployeeListProps[]>(
-    employeeList
-  )
-  const [initialValue, setInitialValue] = useState<InitialDiscountProps>(
-    defaultValue
-  )
+  const [employeeListData, setEmployeeListData] =
+    useState<EmployeeListProps[]>(employeeList)
+  const [initialValue, setInitialValue] =
+    useState<InitialDiscountProps>(defaultValue)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
 
   const [addMutation] = useMutation(ADD_MUTATION, {

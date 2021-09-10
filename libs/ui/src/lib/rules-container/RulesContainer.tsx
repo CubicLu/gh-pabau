@@ -571,11 +571,10 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                           )
                           const actionEvent_: ActionEventProp[] | undefined =
                             selectedAct?.events
-                          const actionEvent:
-                            | ActionEventProp
-                            | undefined = actionEvent_
-                            ? actionEvent_.find((f) => f.key === t.event)
-                            : undefined
+                          const actionEvent: ActionEventProp | undefined =
+                            actionEvent_
+                              ? actionEvent_.find((f) => f.key === t.event)
+                              : undefined
                           return (
                             <div
                               className={styles.answer}

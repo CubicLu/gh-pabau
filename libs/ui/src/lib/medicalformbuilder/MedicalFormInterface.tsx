@@ -127,27 +127,28 @@ export interface MedicaFormAdvanceSettingData {
   data: MedicalFormAdvancedSettingItem
 }
 
-export const defaultMedicaFormAdvanceSettingData: MedicaFormAdvanceSettingData = {
-  id: 0,
-  shareToClient: 0,
-  reminder: 0,
-  data: {
-    language: 'English (UK)',
-    headingUse: 'use_to_separate',
-    submitButtonLabel: '',
-    ackRedirect: 'ty_page',
-    thkTextType: 'plain_text',
-    thkShowLink: 0,
-    thkAddSocial: 0,
-    thkText: '',
-    redirectText: '',
-    paymentEnable: 0,
-    paymentAmount: 0,
-    cardNumber: '',
-    cardExpiration: '',
-    cardCvv: '',
-  },
-}
+export const defaultMedicaFormAdvanceSettingData: MedicaFormAdvanceSettingData =
+  {
+    id: 0,
+    shareToClient: 0,
+    reminder: 0,
+    data: {
+      language: 'English (UK)',
+      headingUse: 'use_to_separate',
+      submitButtonLabel: '',
+      ackRedirect: 'ty_page',
+      thkTextType: 'plain_text',
+      thkShowLink: 0,
+      thkAddSocial: 0,
+      thkText: '',
+      redirectText: '',
+      paymentEnable: 0,
+      paymentAmount: 0,
+      cardNumber: '',
+      cardExpiration: '',
+      cardCvv: '',
+    },
+  }
 
 export interface MedicalFormItem {
   name: string

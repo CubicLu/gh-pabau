@@ -5,8 +5,7 @@ import ShareReview from './ShareReview'
 export default {
   title: 'UI/ShareReview',
   args: {
-    text:
-      'I felt safe visiting the surgery, everything was in place to maintain a COVID safe environment. The staff are very professional, respectful and courteous. Treatment were fully explained and ...',
+    text: 'I felt safe visiting the surgery, everything was in place to maintain a COVID safe environment. The staff are very professional, respectful and courteous. Treatment were fully explained and ...',
     reviewScore: 5,
     logo: clinicLogo,
     companyName: 'The Grove Practice: Leamington Spa Dentist',
@@ -32,8 +31,7 @@ const ShareReviewStory = ({
   <ShareReview {...{ text, reviewScore, logo, companyName, date, ...args }} />
 )
 export const ShareReviewButton = ShareReviewStory.bind({
-  text:
-    'I felt safe visiting the surgery, everything was in place to maintain a COVID safe environment. The staff are very professional, respectful and courteous. Treatment were fully explained and ...',
+  text: 'I felt safe visiting the surgery, everything was in place to maintain a COVID safe environment. The staff are very professional, respectful and courteous. Treatment were fully explained and ...',
   reviewScore: 5,
   logo: clinicLogo,
   companyName: 'The Grove Practice: Leamington Spa Dentist',

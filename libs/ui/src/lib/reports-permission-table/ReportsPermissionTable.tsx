@@ -79,14 +79,10 @@ export const ReportsPermissionTable: FC<ReportsPermissionTableProps> = ({
   const [teammatePopoverVisible, setTeammatePopOverVisible] = useState({})
   const [isShowMore, setIsShowMore] = useState(false)
   const showLimit = 5
-  const [
-    expandedRecord,
-    setExpandedRecord,
-  ] = useState<PermissionsGroupType | null>(null)
-  const [
-    isShowPermissionChanges,
-    setIsShowPermissionChanges,
-  ] = useState<boolean>(false)
+  const [expandedRecord, setExpandedRecord] =
+    useState<PermissionsGroupType | null>(null)
+  const [isShowPermissionChanges, setIsShowPermissionChanges] =
+    useState<boolean>(false)
   const [permissionChangeModule, setPermissionChangeModule] = useState<{
     record: PermissionsGroupType | PermissionsType
     columnKey: string
@@ -114,134 +110,138 @@ export const ReportsPermissionTable: FC<ReportsPermissionTableProps> = ({
         )
       },
     },
-    ...(permissionColumns ?? []).map((column: PermissionColumnType):
-      | ColumnGroupType<PermissionsGroupType>
-      | ColumnType<PermissionsType> => ({
-      // eslint-disable-next-line react/display-name
-      title: () => (
-        <div>
-          {isListQueryLoader ? (
-            <Skeleton paragraph={false} round active />
-          ) : column.staffMember && column.staffMember.length > 0 ? (
-            <Popover
-              trigger="hover"
-              visible={popoverVisible[column.key]}
-              onVisibleChange={(value) => {
-                setPopOverVisible({ ...popoverVisible, [column.key]: value })
-              }}
-              overlayClassName={styles.staffPopover}
-              content={() => {
-                return (
-                  <div>
+    ...(permissionColumns ?? []).map(
+      (
+        column: PermissionColumnType
+      ):
+        | ColumnGroupType<PermissionsGroupType>
+        | ColumnType<PermissionsType> => ({
+        // eslint-disable-next-line react/display-name
+        title: () => (
+          <div>
+            {isListQueryLoader ? (
+              <Skeleton paragraph={false} round active />
+            ) : column.staffMember && column.staffMember.length > 0 ? (
+              <Popover
+                trigger="hover"
+                visible={popoverVisible[column.key]}
+                onVisibleChange={(value) => {
+                  setPopOverVisible({ ...popoverVisible, [column.key]: value })
+                }}
+                overlayClassName={styles.staffPopover}
+                content={() => {
+                  return (
                     <div>
-                      {column.staffMember?.map((name) => {
-                        return (
-                          <span key={name}>
-                            <Avatar name={name} />
-                          </span>
-                        )
-                      })}
+                      <div>
+                        {column.staffMember?.map((name) => {
+                          return (
+                            <span key={name}>
+                              <Avatar name={name} />
+                            </span>
+                          )
+                        })}
+                      </div>
+                      <span className={styles.trashIcon}>
+                        <DeleteOutlined
+                          onClick={() => {
+                            setDeleteVisible(true)
+                            setPopOverVisible({
+                              ...popoverVisible,
+                              [column.key]: false,
+                            })
+                          }}
+                        />
+                      </span>
                     </div>
-                    <span className={styles.trashIcon}>
-                      <DeleteOutlined
+                  )
+                }}
+              >
+                <div>{column.title}</div>
+              </Popover>
+            ) : column.key !== 'owner' ? (
+              <Popover
+                trigger="hover"
+                visible={teammatePopoverVisible[column.key]}
+                onVisibleChange={(value) => {
+                  setTeammatePopOverVisible({
+                    ...teammatePopoverVisible,
+                    [column.key]: value,
+                  })
+                }}
+                content={() => {
+                  return (
+                    <div>
+                      <Button
                         onClick={() => {
-                          setDeleteVisible(true)
-                          setPopOverVisible({
-                            ...popoverVisible,
+                          setTeammatePopOverVisible({
+                            ...teammatePopoverVisible,
                             [column.key]: false,
                           })
+                          setTabValue?.(0)
                         }}
-                      />
-                    </span>
-                  </div>
-                )
-              }}
-            >
+                      >
+                        {t('reportPermissionTable.deleteModal.addTeamMateBtn')}
+                      </Button>
+                    </div>
+                  )
+                }}
+              >
+                <div>{column.title}</div>
+              </Popover>
+            ) : (
               <div>{column.title}</div>
-            </Popover>
-          ) : column.key !== 'owner' ? (
-            <Popover
-              trigger="hover"
-              visible={teammatePopoverVisible[column.key]}
-              onVisibleChange={(value) => {
-                setTeammatePopOverVisible({
-                  ...teammatePopoverVisible,
-                  [column.key]: value,
+            )}
+          </div>
+        ),
+        key: column.key,
+        dataIndex: `permissions.${column.key}`,
+        align: 'center',
+        render: function RenderPermission(
+          _value,
+          record: PermissionsGroupType | PermissionsType
+        ) {
+          const permissions = (record as PermissionsType).permissions
+          const children = (record as PermissionsGroupType).children
+
+          return !isListQueryLoader ? (
+            <Checkbox
+              value={`${record.key}_${column.key}`}
+              checked={
+                permissions?.[column.key] ??
+                !!children?.find((item) => item.permissions?.[column.key])
+              }
+              disabled={column.isDisabled}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e: CheckboxChangeEvent) => {
+                const children = (record as PermissionsGroupType).children
+                setIsShowPermissionChanges(true)
+                setPermissionChangeModule({
+                  record,
+                  columnKey: column.key,
+                  checked: e.target.checked,
+                  tooltipMessage:
+                    record.key === '0' || record.key === 'custom_report'
+                      ? [
+                          t(
+                            'reportPermissionTable.applyChanges.reviewChanges.customReportMessage'
+                          ),
+                        ]
+                      : record.tooltipMessage
+                      ? [record.tooltipMessage]
+                      : children && children?.length > 0
+                      ? children.map((thread) =>
+                          thread.tooltipMessage ? thread.tooltipMessage : ''
+                        )
+                      : [],
                 })
               }}
-              content={() => {
-                return (
-                  <div>
-                    <Button
-                      onClick={() => {
-                        setTeammatePopOverVisible({
-                          ...teammatePopoverVisible,
-                          [column.key]: false,
-                        })
-                        setTabValue?.(0)
-                      }}
-                    >
-                      {t('reportPermissionTable.deleteModal.addTeamMateBtn')}
-                    </Button>
-                  </div>
-                )
-              }}
-            >
-              <div>{column.title}</div>
-            </Popover>
+            />
           ) : (
-            <div>{column.title}</div>
-          )}
-        </div>
-      ),
-      key: column.key,
-      dataIndex: `permissions.${column.key}`,
-      align: 'center',
-      render: function RenderPermission(
-        _value,
-        record: PermissionsGroupType | PermissionsType
-      ) {
-        const permissions = (record as PermissionsType).permissions
-        const children = (record as PermissionsGroupType).children
-
-        return !isListQueryLoader ? (
-          <Checkbox
-            value={`${record.key}_${column.key}`}
-            checked={
-              permissions?.[column.key] ??
-              !!children?.find((item) => item.permissions?.[column.key])
-            }
-            disabled={column.isDisabled}
-            onClick={(e) => e.stopPropagation()}
-            onChange={(e: CheckboxChangeEvent) => {
-              const children = (record as PermissionsGroupType).children
-              setIsShowPermissionChanges(true)
-              setPermissionChangeModule({
-                record,
-                columnKey: column.key,
-                checked: e.target.checked,
-                tooltipMessage:
-                  record.key === '0' || record.key === 'custom_report'
-                    ? [
-                        t(
-                          'reportPermissionTable.applyChanges.reviewChanges.customReportMessage'
-                        ),
-                      ]
-                    : record.tooltipMessage
-                    ? [record.tooltipMessage]
-                    : children && children?.length > 0
-                    ? children.map((thread) =>
-                        thread.tooltipMessage ? thread.tooltipMessage : ''
-                      )
-                    : [],
-              })
-            }}
-          />
-        ) : (
-          <Skeleton paragraph={false} round active />
-        )
-      },
-    })),
+            <Skeleton paragraph={false} round active />
+          )
+        },
+      })
+    ),
   ]
 
   const onCancelApplyChanges = () => {

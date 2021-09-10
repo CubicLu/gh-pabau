@@ -77,10 +77,8 @@ export const Index: FC = () => {
 
   /*--- Create Modal State ---*/
 
-  const [
-    createTemplateArgs,
-    setCreateTemplateArgs,
-  ] = useState<CreateTemplateModalProps>(null)
+  const [createTemplateArgs, setCreateTemplateArgs] =
+    useState<CreateTemplateModalProps>(null)
 
   /*--- Create Modal State End ---*/
 

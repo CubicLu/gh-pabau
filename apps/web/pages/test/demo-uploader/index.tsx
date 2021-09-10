@@ -24,85 +24,73 @@ const Index: FC = () => {
     {
       key: '1',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['a'],
     },
     {
       key: '2',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['b'],
     },
     {
       key: '3',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['c'],
     },
     {
       key: '4',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['d'],
     },
     {
       key: '5',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['d'],
     },
     {
       key: '6',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['e'],
     },
     {
       key: '7',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['e'],
     },
     {
       key: '8',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['e'],
     },
     {
       key: '9',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['e'],
     },
     {
       key: '10',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['f'],
     },
     {
       key: '11',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['f'],
     },
     {
       key: '12',
       path: 'cdn/file_attachments/3470/avatar_photo/testfilename5.png',
-      url:
-        'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
+      url: 'https://nano.pabau.me/cdn/file_attachments/3470/avatar_photo/testfilename5.png',
       tags: ['v'],
     },
   ]

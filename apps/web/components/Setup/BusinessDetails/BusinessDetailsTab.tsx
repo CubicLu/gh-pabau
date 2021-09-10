@@ -187,21 +187,10 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
       businessLocation,
       businessLocationData,
     } = values
-    const {
-      businessName,
-      businessType,
-      companyEmail,
-      phone,
-      website,
-      logo,
-    } = basicInformation
-    const {
-      currency,
-      dateFormat,
-      defaultLanuageStaff,
-      timezone,
-      weekStart,
-    } = languageSetting
+    const { businessName, businessType, companyEmail, phone, website, logo } =
+      basicInformation
+    const { currency, dateFormat, defaultLanuageStaff, timezone, weekStart } =
+      languageSetting
     const { address, city, country, postcode, region, apt } = businessLocation
 
     CompanyDetailData.business_name = businessName

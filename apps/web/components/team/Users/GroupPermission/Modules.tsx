@@ -43,9 +43,8 @@ const Modules: FC<ModulesProps> = ({
   const { t } = useTranslation('common')
   const { moduleTabData, loaderDatasource, loaderColumns } = useData(t)
 
-  const [moduleData, setModuleData] = useState<ReportsPermissionTableProps>(
-    moduleTabData
-  )
+  const [moduleData, setModuleData] =
+    useState<ReportsPermissionTableProps>(moduleTabData)
 
   const [editUserPermissionMutation] = useUpdateModulePermissionMutation({
     onCompleted() {

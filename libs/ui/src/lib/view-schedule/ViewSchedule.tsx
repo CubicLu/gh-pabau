@@ -65,9 +65,8 @@ export const ViewScheduleModal: FC<ViewScheduleProps> = ({
   join,
 }) => {
   const { t } = useTranslation('common')
-  const [filteredWebinars, setFilteredWebinars] = useState<
-    Partial<IWebinar>[]
-  >()
+  const [filteredWebinars, setFilteredWebinars] =
+    useState<Partial<IWebinar>[]>()
   const [modalState, setModalState] = useState(false)
   const [modalData, setModalData] = useState<Partial<WebinarModalProps>>()
 

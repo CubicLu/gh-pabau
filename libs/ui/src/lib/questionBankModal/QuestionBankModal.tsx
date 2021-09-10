@@ -35,9 +35,8 @@ export const QuestionBankModal: FC<P> = ({
   const [checkedQuestions, setCheckedQuestions] = useState<
     Array<IQuestionOptions>
   >([])
-  const [questionList, setQuestionList] = useState<Array<IQuestionOptions>>(
-    questions
-  )
+  const [questionList, setQuestionList] =
+    useState<Array<IQuestionOptions>>(questions)
 
   const handleChange = (e, key: number) => {
     const data = menuOptions.find(({ key }) => key === e.key)

@@ -45,16 +45,14 @@ export const UserProvider: FC = ({ children }) => {
 
   const [token, setToken] = usePersistedTokenState(null)
   const { resetStore, clearStore } = useApolloClient()
-  const [
-    retrieveAuthenticatedUser,
-    { data },
-  ] = useRetrieveAuthenticatedUserLazyQuery({
-    fetchPolicy: 'cache-first',
-    errorPolicy: 'ignore',
-    onError(e) {
-      console.log('Silent error:', e)
-    },
-  })
+  const [retrieveAuthenticatedUser, { data }] =
+    useRetrieveAuthenticatedUserLazyQuery({
+      fetchPolicy: 'cache-first',
+      errorPolicy: 'ignore',
+      onError(e) {
+        console.log('Silent error:', e)
+      },
+    })
 
   useEffect(() => {
     if (token) {

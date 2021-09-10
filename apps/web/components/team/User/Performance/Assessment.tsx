@@ -44,9 +44,8 @@ const Assessment = () => {
   } = performanceAssessmentData
 
   const [step, setStep] = useState(1)
-  const [managerAss, setManagerAss] = useState<managerAssessmentProps>(
-    managerAssessment
-  )
+  const [managerAss, setManagerAss] =
+    useState<managerAssessmentProps>(managerAssessment)
   const [assPeriod, setAssPeriod] = useState<string>()
   const [isUpcomingAss, setIsUpcomingAss] = useState<boolean>()
 

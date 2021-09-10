@@ -65,14 +65,11 @@ export const Header = ({
   clientCreateRender,
   leadCreateRender,
 }: P): JSX.Element => {
-  const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
-    false
-  )
+  const [openNotificationDrawer, setNotificationDrawer] =
+    useState<boolean>(false)
   const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
-  const [
-    unreadNotificationCount,
-    setUnreadNotificationCount,
-  ] = useState<number>(0)
+  const [unreadNotificationCount, setUnreadNotificationCount] =
+    useState<number>(0)
 
   const isReadNotify = (users: number[]) => {
     return !!users?.find((user_id) => user_id === user?.user)

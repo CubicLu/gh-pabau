@@ -128,10 +128,8 @@ export const Index: FC = () => {
   }, [paginateData.take, paginateData.skip, searchData])
 
   const businessDetails = useGetBusinessDetailsQuery()
-  const {
-    data: medicalForms,
-    loading: loadingMedicalForms,
-  } = useFindMedicalFormsQuery(getQueryVariables)
+  const { data: medicalForms, loading: loadingMedicalForms } =
+    useFindMedicalFormsQuery(getQueryVariables)
 
   const medicalFormsCount = useFindMedicalFormsCountQuery(getQueryVariables)
 
@@ -266,24 +264,26 @@ export const Index: FC = () => {
 
   useEffect(() => {
     if (smsMessageTemplates.data?.findManyMessageTemplate) {
-      const smsMessageTemplateList = smsMessageTemplates.data?.findManyMessageTemplate.map(
-        (smsMessageTemplateItem) => ({
-          template_id: smsMessageTemplateItem.template_id,
-          template_name: smsMessageTemplateItem.template_name,
-        })
-      )
+      const smsMessageTemplateList =
+        smsMessageTemplates.data?.findManyMessageTemplate.map(
+          (smsMessageTemplateItem) => ({
+            template_id: smsMessageTemplateItem.template_id,
+            template_name: smsMessageTemplateItem.template_name,
+          })
+        )
       setSmsMessageTemplateItems(smsMessageTemplateList)
     }
   }, [smsMessageTemplates])
 
   useEffect(() => {
     if (emailMessageTemplates.data?.findManyMessageTemplate) {
-      const emailMessageTemplateList = emailMessageTemplates.data?.findManyMessageTemplate.map(
-        (emailMessageTemplateItem) => ({
-          template_id: emailMessageTemplateItem.template_id,
-          template_name: emailMessageTemplateItem.template_name,
-        })
-      )
+      const emailMessageTemplateList =
+        emailMessageTemplates.data?.findManyMessageTemplate.map(
+          (emailMessageTemplateItem) => ({
+            template_id: emailMessageTemplateItem.template_id,
+            template_name: emailMessageTemplateItem.template_name,
+          })
+        )
       setEmailMessageTemplateItems(emailMessageTemplateList)
     }
   }, [emailMessageTemplates])

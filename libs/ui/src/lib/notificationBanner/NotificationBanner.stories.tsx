@@ -8,8 +8,7 @@ export default {
   title: 'Notification/Banner',
   args: {
     title: 'Enable online payment',
-    desc:
-      'Activate payments with Fresha to benefit from tip collection during and after sale and get access to no show protection, payment terminals, safe online payments and many more.',
+    desc: 'Activate payments with Fresha to benefit from tip collection during and after sale and get access to no show protection, payment terminals, safe online payments and many more.',
     allowClose: true,
     showPaymentButton: true,
     showEmail: false,
@@ -41,8 +40,7 @@ const NotificationBannerStory: React.FC = ({ ...args }) => {
 export const Banner = NotificationBannerStory.bind({})
 Banner.args = {
   title: 'Enable online payment',
-  desc:
-    'Activate payments with Fresha to benefit from tip collection during and after sale and get access to no show protection, payment terminals, safe online payments and many more.',
+  desc: 'Activate payments with Fresha to benefit from tip collection during and after sale and get access to no show protection, payment terminals, safe online payments and many more.',
   imgPath: icon,
   allowClose: true,
   showEmail: false,

@@ -218,14 +218,10 @@ export const Index: FC = () => {
   const [showCreateCourseModal, setShowCreateCourseModal] = useState(false)
   const [showCreatePackageModal, setShowCreatePackageModal] = useState(false)
   const [currentTab, setCurrentTab] = useState('0')
-  const [
-    courseInitialValue,
-    setCourseInitialValue,
-  ] = useState<InitialCoursesProps>(coursesFormikInitialValue)
-  const [
-    packageIntitialValue,
-    setPackageIntialValue,
-  ] = useState<InitialPackagesProps>(packageFormikInitialValue)
+  const [courseInitialValue, setCourseInitialValue] =
+    useState<InitialCoursesProps>(coursesFormikInitialValue)
+  const [packageIntitialValue, setPackageIntialValue] =
+    useState<InitialPackagesProps>(packageFormikInitialValue)
   const [employeeListData, setEmployeeListData] = useState(employeeList)
 
   const onPaginationCoursesChange = (currentPage) => {

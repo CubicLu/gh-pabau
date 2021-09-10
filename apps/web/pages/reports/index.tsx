@@ -55,35 +55,29 @@ const Reports: FC = () => {
     fetchPolicy: 'network-only',
   })
 
-  const [
-    getReportList,
-    { data, error, loading, called },
-  ] = useListReportPermissionLazyQuery({
-    ssr: false,
-    fetchPolicy: 'network-only',
-  })
+  const [getReportList, { data, error, loading, called }] =
+    useListReportPermissionLazyQuery({
+      ssr: false,
+      fetchPolicy: 'network-only',
+    })
 
-  const [
-    getGraphData,
-    { data: graphData, error: graphError },
-  ] = useGraphsDataLazyQuery({
-    variables: {
-      startDate: new Intl.DateTimeFormat('en-US').format(
-        currentDate.setMonth(currentDate.getMonth() - 11)
-      ),
-      endDate: new Intl.DateTimeFormat('en-US').format(new Date()),
-    },
-    ssr: false,
-    fetchPolicy: 'network-only',
-  })
+  const [getGraphData, { data: graphData, error: graphError }] =
+    useGraphsDataLazyQuery({
+      variables: {
+        startDate: new Intl.DateTimeFormat('en-US').format(
+          currentDate.setMonth(currentDate.getMonth() - 11)
+        ),
+        endDate: new Intl.DateTimeFormat('en-US').format(new Date()),
+      },
+      ssr: false,
+      fetchPolicy: 'network-only',
+    })
 
-  const [
-    getCustomReport,
-    { data: customReport, error: customError },
-  ] = useFindCustomReportLazyQuery({
-    ssr: false,
-    fetchPolicy: 'network-only',
-  })
+  const [getCustomReport, { data: customReport, error: customError }] =
+    useFindCustomReportLazyQuery({
+      ssr: false,
+      fetchPolicy: 'network-only',
+    })
 
   const [editMutation] = useUpsertReportMutation({
     onCompleted(data: EditResponseType) {

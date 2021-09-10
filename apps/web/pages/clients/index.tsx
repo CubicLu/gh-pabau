@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import LayoutComponent from '../../components/Layout/Layout'
 import { Layout, Tabs } from 'antd'
 import dayjs from 'dayjs'
@@ -20,15 +20,14 @@ import ClientCreate from '../../components/Clients/ClientCreate'
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
 
-/* eslint-disable-next-line */
-export interface ClientsProps {}
-
+//TODO: dont put this in pages
 export interface Labels {
   label?: string
   count?: number
   color?: string
 }
 
+//TODO remove this
 export const tab = {
   contacts: 'contacts',
   clients: 'clients',
@@ -40,22 +39,20 @@ export const tab = {
   labels: 'labels',
 }
 
-export const Clients: FC<ClientsProps> = () => {
+const Clients = () => {
   const [searchText, setSearchText] = useState('')
   const [sourceData, setSourceData] = useState<SourceDataProps[]>(clientsList)
   const [selectedTab, setSelectedTab] = useState(tab.clients)
-  const [sourceFilteredData, setSourceFilteredData] = useState<
-    SourceDataProps[]
-  >(clientsList)
+  const [sourceFilteredData, setSourceFilteredData] =
+    useState<SourceDataProps[]>(clientsList)
   const [isArchived, setIsArchived] = useState(false)
   const [labels, setLabels] = useState<Labels[]>([])
   const [selectedLabels, setSelectedLabels] = useState<Labels[]>([])
   const [defaultSelectedLabels, setDefaultSelectedLabels] = useState<Labels[]>(
     []
   )
-  const [createClientModalVisible, setCreateClientModalVisible] = useState(
-    false
-  )
+  const [createClientModalVisible, setCreateClientModalVisible] =
+    useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [isEdit, setIsEdit] = useState(false)

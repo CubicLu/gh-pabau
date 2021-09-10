@@ -13,7 +13,7 @@ import { SliderCustom } from '@pabau/ui'
 import { Skeleton } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { CommonProps } from '../../client-create/General'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 
 const { TextArea } = Input
 
@@ -21,7 +21,7 @@ interface GeneralProps {
   values?: InitialDetailsDataProps
   setFieldValue(
     field: keyof InitialDetailsDataProps,
-    values: string | string[] | boolean | number | Dayjs | null
+    values: Dayjs | null
   ): void
   fieldsSettings?: FieldSetting[]
   salutationData?: CommonProps[]
@@ -231,9 +231,9 @@ export const General: FC<GeneralProps> = ({
               <DatePicker
                 onChange={(date) => setFieldValue('DOB', date)}
                 name={'DOB'}
-                value={values?.DOB && dayjs(values?.DOB)}
+                value={values?.DOB}
                 disabledDate={(current) => {
-                  return current && current > dayjs().endOf('day')
+                  return current && current > Dayjs.dayjs().endOf('day')
                 }}
                 format={'DD/MM/YY'}
                 placeholder={'DD/MM/YY'}

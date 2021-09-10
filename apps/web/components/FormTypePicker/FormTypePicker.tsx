@@ -104,9 +104,8 @@ export const FormTypePicker: FC<FormTypeProps> = ({
     },
   }
 
-  const [formTypeInfo, setFormTypesInfo] = useState<FormTypeInfo>(
-    defaultTypeInfos
-  )
+  const [formTypeInfo, setFormTypesInfo] =
+    useState<FormTypeInfo>(defaultTypeInfos)
 
   const showWarningMessage = (name) => {
     confirm({

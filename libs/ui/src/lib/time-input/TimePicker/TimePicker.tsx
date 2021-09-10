@@ -5,7 +5,6 @@ import { PickerTimeProps } from 'antd/lib/date-picker/generatePicker'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import locale from 'antd/lib/date-picker/locale/en_US'
-import { Omit } from 'antd/lib/_util/type'
 import styles from '../TimeInput.module.less'
 
 type Props = Omit<PickerTimeProps<Dayjs>, 'picker'>

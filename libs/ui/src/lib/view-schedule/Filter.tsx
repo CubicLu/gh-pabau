@@ -137,7 +137,7 @@ export const Filter: FC<P> = ({ webinarList, onClear, handleShowResult }) => {
                 key={key}
                 label={label}
                 value={filterObj[id]}
-                dropdownItems={(options as unknown) as string[]}
+                dropdownItems={options as unknown as string[]}
                 onSelected={(val) => handleSelect(id, val)}
               />
             </div>

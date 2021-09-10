@@ -85,18 +85,14 @@ export const Chat = (props: P): JSX.Element => {
   })
   const members = membersData?.findManyUser
 
-  const [
-    fetchDirectHistory,
-    { data: chatDirectHistory },
-  ] = useChatDirectHistoryLazyQuery({
-    fetchPolicy: 'cache-first',
-  })
+  const [fetchDirectHistory, { data: chatDirectHistory }] =
+    useChatDirectHistoryLazyQuery({
+      fetchPolicy: 'cache-first',
+    })
   const [topic, setTopic] = useState<Group | Participant | undefined>()
 
-  const [
-    fetchRoomHistory,
-    { data: chatRoomHistory },
-  ] = useChatRoomHistoryLazyQuery({ fetchPolicy: 'cache-first' })
+  const [fetchRoomHistory, { data: chatRoomHistory }] =
+    useChatRoomHistoryLazyQuery({ fetchPolicy: 'cache-first' })
 
   const { data } = useChatListRoomsQuery({
     fetchPolicy: 'cache-first',

@@ -10,9 +10,8 @@ const Feature: FC<FeatureProps> = ({
   handleFeatureSaveChanges,
   FeatureFields,
 }) => {
-  const [mainFeature, setFeature] = useState<FeaturePermissionProps[]>(
-    FeatureFields
-  )
+  const [mainFeature, setFeature] =
+    useState<FeaturePermissionProps[]>(FeatureFields)
 
   const UnCheckAll = (rowId: string) => {
     const features = mainFeature
@@ -50,8 +49,8 @@ const Feature: FC<FeatureProps> = ({
     const features = mainFeature
     features.map((thread) => {
       if (thread.id === rowId) {
-        thread.permissionFields[index].container[ind].value = !thread
-          .permissionFields[index].container[ind].value
+        thread.permissionFields[index].container[ind].value =
+          !thread.permissionFields[index].container[ind].value
       }
       return thread
     })

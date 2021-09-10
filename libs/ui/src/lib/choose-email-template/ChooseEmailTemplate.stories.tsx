@@ -115,10 +115,8 @@ const ChooseEmailTemplateStory: FC<ChooseEmailTemplateProps> = ({
 }) => {
   const [searchText, setSearchText] = useState('')
   const [selectTemplate, setSelectTemplate] = useState('All Templates')
-  const [
-    chooseEmailTemplate,
-    setChooseEmailTemplate,
-  ] = useState<emailTemplateProps>()
+  const [chooseEmailTemplate, setChooseEmailTemplate] =
+    useState<emailTemplateProps>()
   return (
     <ChooseEmailTemplate
       modalVisible={modalVisible}

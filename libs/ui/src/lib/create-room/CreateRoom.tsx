@@ -142,10 +142,8 @@ export const CreateRoom: FC<CreateRoomProps> = ({
     'Travel Clinic - Subcategory 1',
   ])
   const [autoExpandParent, setAutoExpandParent] = useState(true)
-  const [
-    allEmployeeServicesSelected,
-    setAllEmployeeServicesSelected,
-  ] = useState(false)
+  const [allEmployeeServicesSelected, setAllEmployeeServicesSelected] =
+    useState(false)
 
   const onExpand = (expandedKeysValue: string[]) => {
     setExpandedKeys(expandedKeysValue)

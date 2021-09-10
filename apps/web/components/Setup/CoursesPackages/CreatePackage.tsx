@@ -288,10 +288,8 @@ const Pricing: FC = () => {
     },
   ]
   const [drawer, setDrawer] = useState<boolean>(false)
-  const [
-    buildIntialValues,
-    setBuildIntialValue,
-  ] = useState<BuildIntialValueProps>(buildIntialValue)
+  const [buildIntialValues, setBuildIntialValue] =
+    useState<BuildIntialValueProps>(buildIntialValue)
   const isMobile = useMedia('(max-width: 768px)', false)
 
   const onCourseTableRowClick = (value) => {

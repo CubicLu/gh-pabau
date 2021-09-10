@@ -58,9 +58,9 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
 
   useEffect(() => {
     searchTimer.current && clearTimeout(searchTimer.current)
-    searchTimer.current = ((setTimeout(() => {
+    searchTimer.current = setTimeout(() => {
       onSearch(search)
-    }, 300) as unknown) as number | null) as never
+    }, 300) as unknown as number | null as never
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 

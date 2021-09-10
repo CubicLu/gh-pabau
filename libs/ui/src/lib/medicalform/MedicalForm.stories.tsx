@@ -24,9 +24,8 @@ LeftSidebarBasicHeading.args = {
 const LeftSidebarBasicShortAnswerStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
-export const LeftSidebarBasicShortAnswer = LeftSidebarBasicShortAnswerStory.bind(
-  {}
-)
+export const LeftSidebarBasicShortAnswer =
+  LeftSidebarBasicShortAnswerStory.bind({})
 LeftSidebarBasicShortAnswer.args = {
   type: 'basic',
   component: 'basic_shortanswer',
@@ -55,9 +54,8 @@ LeftSidebarBasicTextBlock.args = {
 const LeftSidebarBasicSingleChoiceStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
-export const LeftSidebarBasicSingleChoice = LeftSidebarBasicSingleChoiceStory.bind(
-  {}
-)
+export const LeftSidebarBasicSingleChoice =
+  LeftSidebarBasicSingleChoiceStory.bind({})
 LeftSidebarBasicSingleChoice.args = {
   type: 'basic',
   component: 'basic_singlechoice',
@@ -66,9 +64,8 @@ LeftSidebarBasicSingleChoice.args = {
 const LeftSidebarBasicMultipleChoiceStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
-export const LeftSidebarBasicMultipleChoice = LeftSidebarBasicMultipleChoiceStory.bind(
-  {}
-)
+export const LeftSidebarBasicMultipleChoice =
+  LeftSidebarBasicMultipleChoiceStory.bind({})
 LeftSidebarBasicMultipleChoice.args = {
   type: 'basic',
   component: 'basic_multiplechoice',
@@ -153,9 +150,8 @@ const LeftSidebarBasicTravelDestinationStory = ({
   component,
   ...rest
 }) => <LeftSidebarElement type={type} component={component} {...rest} />
-export const LeftSidebarBasicTravelDestination = LeftSidebarBasicTravelDestinationStory.bind(
-  {}
-)
+export const LeftSidebarBasicTravelDestination =
+  LeftSidebarBasicTravelDestinationStory.bind({})
 LeftSidebarBasicTravelDestination.args = {
   type: 'basic',
   component: 'basic_traveldestination',
@@ -166,9 +162,8 @@ const LeftSidebarBasicVaccineSchedulerStory = ({
   component,
   ...rest
 }) => <LeftSidebarElement type={type} component={component} {...rest} />
-export const LeftSidebarBasicVaccineScheduler = LeftSidebarBasicVaccineSchedulerStory.bind(
-  {}
-)
+export const LeftSidebarBasicVaccineScheduler =
+  LeftSidebarBasicVaccineSchedulerStory.bind({})
 LeftSidebarBasicVaccineScheduler.args = {
   type: 'basic',
   component: 'basic_vaccinescheduler',
@@ -177,9 +172,8 @@ LeftSidebarBasicVaccineScheduler.args = {
 const LeftSidebarBasicVaccineHistoryStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
-export const LeftSidebarBasicVaccineHistory = LeftSidebarBasicVaccineHistoryStory.bind(
-  {}
-)
+export const LeftSidebarBasicVaccineHistory =
+  LeftSidebarBasicVaccineHistoryStory.bind({})
 LeftSidebarBasicVaccineHistory.args = {
   type: 'basic',
   component: 'basic_vaccinehistory',
@@ -188,9 +182,8 @@ LeftSidebarBasicVaccineHistory.args = {
 const LeftSidebarCustomEmailMarketingStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
-export const LeftSidebarCustomEmailMarketing = LeftSidebarCustomEmailMarketingStory.bind(
-  {}
-)
+export const LeftSidebarCustomEmailMarketing =
+  LeftSidebarCustomEmailMarketingStory.bind({})
 LeftSidebarCustomEmailMarketing.args = {
   type: 'custom',
   component: 'custom_emailmarketing',
@@ -199,9 +192,8 @@ LeftSidebarCustomEmailMarketing.args = {
 const LeftSidebarCustomSmsMarketingStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
-export const LeftSidebarCustomSmsMarketing = LeftSidebarCustomSmsMarketingStory.bind(
-  {}
-)
+export const LeftSidebarCustomSmsMarketing =
+  LeftSidebarCustomSmsMarketingStory.bind({})
 LeftSidebarCustomSmsMarketing.args = {
   type: 'custom',
   component: 'custom_smsmarketing',
@@ -223,9 +215,8 @@ const LeftSidebarCustomLettermarketingStory = ({
   component,
   ...rest
 }) => <LeftSidebarElement type={type} component={component} {...rest} />
-export const LeftSidebarCustomLettermarketing = LeftSidebarCustomLettermarketingStory.bind(
-  {}
-)
+export const LeftSidebarCustomLettermarketing =
+  LeftSidebarCustomLettermarketingStory.bind({})
 LeftSidebarCustomLettermarketing.args = {
   type: 'custom',
   component: 'custom_lettermarketing',
@@ -236,9 +227,8 @@ const LeftSidebarCustomMembershipNumberStory = ({
   component,
   ...rest
 }) => <LeftSidebarElement type={type} component={component} {...rest} />
-export const LeftSidebarCustomMembershipNumber = LeftSidebarCustomMembershipNumberStory.bind(
-  {}
-)
+export const LeftSidebarCustomMembershipNumber =
+  LeftSidebarCustomMembershipNumberStory.bind({})
 LeftSidebarCustomMembershipNumber.args = {
   type: 'custom',
   component: 'custom_membershipnumber',
@@ -249,9 +239,8 @@ const LeftSidebarCustomAuthorizationCodeStory = ({
   component,
   ...rest
 }) => <LeftSidebarElement type={type} component={component} {...rest} />
-export const LeftSidebarCustomAuthorizationCode = LeftSidebarCustomAuthorizationCodeStory.bind(
-  {}
-)
+export const LeftSidebarCustomAuthorizationCode =
+  LeftSidebarCustomAuthorizationCodeStory.bind({})
 LeftSidebarCustomAuthorizationCode.args = {
   type: 'custom',
   component: 'custom_authorizationcode',
@@ -289,9 +278,8 @@ const LeftSidebarCustomPhysicalAddressStory = ({
   component,
   ...rest
 }) => <LeftSidebarElement type={type} component={component} {...rest} />
-export const LeftSidebarCustomPhysicalAddress = LeftSidebarCustomPhysicalAddressStory.bind(
-  {}
-)
+export const LeftSidebarCustomPhysicalAddress =
+  LeftSidebarCustomPhysicalAddressStory.bind({})
 LeftSidebarCustomPhysicalAddress.args = {
   type: 'custom',
   component: 'custom_physicaladdress',
@@ -300,9 +288,8 @@ LeftSidebarCustomPhysicalAddress.args = {
 const LeftSidebarCustomReferredByStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
-export const LeftSidebarCustomReferredBy = LeftSidebarCustomReferredByStory.bind(
-  {}
-)
+export const LeftSidebarCustomReferredBy =
+  LeftSidebarCustomReferredByStory.bind({})
 LeftSidebarCustomReferredBy.args = {
   type: 'custom',
   component: 'custom_referredby',
@@ -313,9 +300,8 @@ const LeftSidebarCustomTelephoneNumberStory = ({
   component,
   ...rest
 }) => <LeftSidebarElement type={type} component={component} {...rest} />
-export const LeftSidebarCustomTelephoneNumber = LeftSidebarCustomTelephoneNumberStory.bind(
-  {}
-)
+export const LeftSidebarCustomTelephoneNumber =
+  LeftSidebarCustomTelephoneNumberStory.bind({})
 LeftSidebarCustomTelephoneNumber.args = {
   type: 'custom',
   component: 'custom_telephonenumber',
@@ -690,9 +676,8 @@ const InnerBasicTravelDestinationStory = ({
     {...rest}
   />
 )
-export const InnerBasicTravelDestination = InnerBasicTravelDestinationStory.bind(
-  {}
-)
+export const InnerBasicTravelDestination =
+  InnerBasicTravelDestinationStory.bind({})
 InnerBasicTravelDestination.args = {
   type: 'basic',
   component: 'basic_traveldestination',
@@ -871,9 +856,8 @@ const InnerCustomMembershipNumberStory = ({
     {...rest}
   />
 )
-export const InnerCustomMembershipNumber = InnerCustomMembershipNumberStory.bind(
-  {}
-)
+export const InnerCustomMembershipNumber =
+  InnerCustomMembershipNumberStory.bind({})
 InnerCustomMembershipNumber.args = {
   type: 'custom',
   component: 'custom_membershipnumber',
@@ -898,9 +882,8 @@ const InnerCustomAuthorizationCodeStory = ({
     {...rest}
   />
 )
-export const InnerCustomAuthorizationCode = InnerCustomAuthorizationCodeStory.bind(
-  {}
-)
+export const InnerCustomAuthorizationCode =
+  InnerCustomAuthorizationCodeStory.bind({})
 InnerCustomAuthorizationCode.args = {
   type: 'custom',
   component: 'custom_authorizationcode',
@@ -1331,9 +1314,8 @@ const SettingBasicTravelDestinationStory = ({
     {...rest}
   />
 )
-export const SettingBasicTravelDestination = SettingBasicTravelDestinationStory.bind(
-  {}
-)
+export const SettingBasicTravelDestination =
+  SettingBasicTravelDestinationStory.bind({})
 SettingBasicTravelDestination.args = {
   type: 'basic',
   component: 'basic_traveldestination',
@@ -1352,9 +1334,8 @@ const SettingBasicVaccineSchedulerStory = ({
     {...rest}
   />
 )
-export const SettingBasicVaccineScheduler = SettingBasicVaccineSchedulerStory.bind(
-  {}
-)
+export const SettingBasicVaccineScheduler =
+  SettingBasicVaccineSchedulerStory.bind({})
 SettingBasicVaccineScheduler.args = {
   type: 'basic',
   component: 'basic_vaccinescheduler',
@@ -1394,9 +1375,8 @@ const SettingCustomEmailMarketingStory = ({
     {...rest}
   />
 )
-export const SettingCustomEmailMarketing = SettingCustomEmailMarketingStory.bind(
-  {}
-)
+export const SettingCustomEmailMarketing =
+  SettingCustomEmailMarketingStory.bind({})
 SettingCustomEmailMarketing.args = {
   type: 'custom',
   component: 'custom_emailmarketing',
@@ -1453,9 +1433,8 @@ const SettingCustomLettermarketingStory = ({
     {...rest}
   />
 )
-export const SettingCustomLettermarketing = SettingCustomLettermarketingStory.bind(
-  {}
-)
+export const SettingCustomLettermarketing =
+  SettingCustomLettermarketingStory.bind({})
 SettingCustomLettermarketing.args = {
   type: 'custom',
   component: 'custom_lettermarketing',
@@ -1474,9 +1453,8 @@ const SettingCustomMembershipNumberStory = ({
     {...rest}
   />
 )
-export const SettingCustomMembershipNumber = SettingCustomMembershipNumberStory.bind(
-  {}
-)
+export const SettingCustomMembershipNumber =
+  SettingCustomMembershipNumberStory.bind({})
 SettingCustomMembershipNumber.args = {
   type: 'custom',
   component: 'custom_membershipnumber',
@@ -1495,9 +1473,8 @@ const SettingCustomAuthorizationCodeStory = ({
     {...rest}
   />
 )
-export const SettingCustomAuthorizationCode = SettingCustomAuthorizationCodeStory.bind(
-  {}
-)
+export const SettingCustomAuthorizationCode =
+  SettingCustomAuthorizationCodeStory.bind({})
 SettingCustomAuthorizationCode.args = {
   type: 'custom',
   component: 'custom_authorizationcode',
@@ -1568,9 +1545,8 @@ const SettingCustomPhysicalAddressStory = ({
     {...rest}
   />
 )
-export const SettingCustomPhysicalAddress = SettingCustomPhysicalAddressStory.bind(
-  {}
-)
+export const SettingCustomPhysicalAddress =
+  SettingCustomPhysicalAddressStory.bind({})
 SettingCustomPhysicalAddress.args = {
   type: 'custom',
   component: 'custom_physicaladdress',
@@ -1608,9 +1584,8 @@ const SettingCustomTelephoneNumberStory = ({
     {...rest}
   />
 )
-export const SettingCustomTelephoneNumber = SettingCustomTelephoneNumberStory.bind(
-  {}
-)
+export const SettingCustomTelephoneNumber =
+  SettingCustomTelephoneNumberStory.bind({})
 SettingCustomTelephoneNumber.args = {
   type: 'custom',
   component: 'custom_telephonenumber',

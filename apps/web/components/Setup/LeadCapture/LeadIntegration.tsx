@@ -16,9 +16,8 @@ import SendLeadDevloperModal from './lead-forms/SendLeadDevloperModal'
 import styles from './LeadSetting.module.less'
 
 export const LeadIntegration: React.FC = () => {
-  const [captureLeadIntegrationStep, setCaptureLeadIntegrationStep] = useState(
-    'Documentation'
-  )
+  const [captureLeadIntegrationStep, setCaptureLeadIntegrationStep] =
+    useState('Documentation')
 
   const [openPabauLeadModal, setPabauLeadModal] = useState(false)
   const [typeOfIntegration, setTypeOfIntegration] = useState('Developer')

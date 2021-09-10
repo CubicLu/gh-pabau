@@ -46,9 +46,8 @@ const Features: FC<FeatureProps> = ({
     invert_fields,
   } = useData(t)
 
-  const [featuresData, setFeaturesData] = useState<ReportsPermissionTableProps>(
-    featureTabData
-  )
+  const [featuresData, setFeaturesData] =
+    useState<ReportsPermissionTableProps>(featureTabData)
 
   const [editMutation] = useUpdateManyUserMutation({
     onError() {
@@ -80,17 +79,16 @@ const Features: FC<FeatureProps> = ({
     },
   })
 
-  const [
-    editAlertNotesMutation,
-  ] = useUpdateDeleteAlertsFeaturePermissionMutation({
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('team.user.update.group.permission.error')
-      )
-      setIsListQueryLoading(false)
-    },
-  })
+  const [editAlertNotesMutation] =
+    useUpdateDeleteAlertsFeaturePermissionMutation({
+      onError() {
+        Notification(
+          NotificationType.error,
+          t('team.user.update.group.permission.error')
+        )
+        setIsListQueryLoading(false)
+      },
+    })
 
   const [updateGroupPermission] = useUpdateFeatureGroupPermissionMutation({
     onCompleted() {

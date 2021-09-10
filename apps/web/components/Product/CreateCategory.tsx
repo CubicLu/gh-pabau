@@ -70,9 +70,8 @@ export const CreateCategory = ({
     disabled: true,
     tax_id: null,
   }
-  const [formikInitialValues, setFormikInitialValues] = useState<
-    Partial<Category>
-  >(defaultCategoryData)
+  const [formikInitialValues, setFormikInitialValues] =
+    useState<Partial<Category>>(defaultCategoryData)
 
   useEffect(() => {
     action === 'Edit' && category

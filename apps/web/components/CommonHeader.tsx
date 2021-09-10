@@ -49,9 +49,8 @@ const CommonHeader: FC<P> = ({
 }) => {
   const user = useUser()
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
-  const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
-    false
-  )
+  const [openNotificationDrawer, setNotificationDrawer] =
+    useState<boolean>(false)
   const [showSearch, setShowSearch] = useState(false)
   const { t } = useTranslationI18()
   const { getParentSetupData } = useGridData(t)

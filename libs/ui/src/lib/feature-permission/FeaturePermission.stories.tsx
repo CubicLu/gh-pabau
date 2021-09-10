@@ -34,8 +34,8 @@ export const FeaturePermissionStory: FC<P> = ({ feature }) => {
     const features = mainFeature
     features.map((thread) => {
       if (thread.id === rowId) {
-        thread.permissionFields[index].container[ind].value = !thread
-          .permissionFields[index].container[ind].value
+        thread.permissionFields[index].container[ind].value =
+          !thread.permissionFields[index].container[ind].value
       }
       return thread
     })

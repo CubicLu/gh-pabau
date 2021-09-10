@@ -55,9 +55,8 @@ export const NotificationDrawer: FC<P> = ({
   const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
-  const [notificationData] = useState<NotificationDrawerItemType[]>(
-    notifications
-  )
+  const [notificationData] =
+    useState<NotificationDrawerItemType[]>(notifications)
 
   const closeDrawerMenu = () => {
     setNotificationDrawer(false)

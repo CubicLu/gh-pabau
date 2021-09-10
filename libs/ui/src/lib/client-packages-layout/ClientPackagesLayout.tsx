@@ -59,9 +59,8 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
   const ref = useRef<HTMLDivElement>(null)
   const isMobile = useMedia('(max-width: 767px)', false)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
-  const [currentItem, setCurrentItem] = useState<ClientPackageItem>(
-    defaultPackageItem
-  )
+  const [currentItem, setCurrentItem] =
+    useState<ClientPackageItem>(defaultPackageItem)
   const [openActions, setOpenActions] = useState(false)
 
   const tableItemActionPopover = (

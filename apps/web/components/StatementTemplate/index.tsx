@@ -121,9 +121,8 @@ export const StatementTemplates: FC<IStatement> = ({
             issuedTo: statementData?.data?.details?.issue_to ?? '',
             issuedBy: statementData?.data?.details?.issue_by ?? '',
             statementDate: dayjs().format('DD/MM/YYYY'),
-            statementPeriodFrom: dayjs(statementPeriodFrom).format(
-              'DD/MM/YYYY'
-            ),
+            statementPeriodFrom:
+              dayjs(statementPeriodFrom).format('DD/MM/YYYY'),
             statementPeriodTo: dayjs(statementPeriodTo).format('DD/MM/YYYY'),
           },
         ]}

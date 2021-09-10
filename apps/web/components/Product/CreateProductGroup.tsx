@@ -52,9 +52,8 @@ const CreateProductGroup = ({
 }: P): JSX.Element => {
   const { t } = useTranslationI18()
   const [expandedKeys, setExpandedKeys] = useState(['all'])
-  const [formikInitialValues, setFormikInitialValues] = useState<
-    typeof newGroup
-  >(newGroup)
+  const [formikInitialValues, setFormikInitialValues] =
+    useState<typeof newGroup>(newGroup)
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [autoExpandParent, setAutoExpandParent] = useState(true)
   const [checkedKeys, setCheckedKeys] = useState<string[]>([])

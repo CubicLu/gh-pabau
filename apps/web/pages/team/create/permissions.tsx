@@ -56,18 +56,16 @@ export interface PermissionsProps {
 export const Permissions: FC<PermissionsProps> = () => {
   const [selectedRole, setSelectedRole] = useState('scheduler')
   const [hideBanner, setHideBanner] = useState(false)
-  const [mainFields, setMainFields] = useState<PermissionFieldType[]>(
-    permissionData
-  )
-  const [mainFeature, setFeature] = useState<FeaturePermissionProps[]>(
-    featurePermissionDta
-  )
+  const [mainFields, setMainFields] =
+    useState<PermissionFieldType[]>(permissionData)
+  const [mainFeature, setFeature] =
+    useState<FeaturePermissionProps[]>(featurePermissionDta)
   const [isVisible, setVisible] = useState(false)
   const isMobile = useMedia('(max-width: 767px)', false)
 
   const onChange = (index: number, ind: number) => {
-    mainFields[index].container[ind].value = !mainFields[index].container[ind]
-      .value
+    mainFields[index].container[ind].value =
+      !mainFields[index].container[ind].value
     setMainFields([...mainFields])
   }
 
@@ -92,8 +90,8 @@ export const Permissions: FC<PermissionsProps> = () => {
     const features = mainFeature
     features.map((thread) => {
       if (thread.id === rowId) {
-        thread.permissionFields[index].container[ind].value = !thread
-          .permissionFields[index].container[ind].value
+        thread.permissionFields[index].container[ind].value =
+          !thread.permissionFields[index].container[ind].value
       }
       return thread
     })

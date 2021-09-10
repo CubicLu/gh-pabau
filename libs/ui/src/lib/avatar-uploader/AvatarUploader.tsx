@@ -1,4 +1,11 @@
-import React, { FC, useEffect, useState, useRef, useCallback } from 'react'
+import React, {
+  FC,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  ComponentPropsWithoutRef,
+} from 'react'
 import ReactCrop from 'react-image-crop'
 import { BasicModal } from '../modal/BasicModal'
 import Avatar from '../avatar/Avatar'
@@ -39,7 +46,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
     y: 25,
     width: 221,
     height: 221,
-  })
+  } as ComponentPropsWithoutRef<typeof ReactCrop>['crop'])
 
   const onImageLoaded = useCallback((img) => {
     imageRef.current = img

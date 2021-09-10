@@ -94,10 +94,8 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
     { data: customFieldData, loading: isCustomFieldLoading },
   ] = useGetLeadCustomFieldsLazyQuery()
 
-  const [
-    getLocationData,
-    { data: locationData, loading: isLocationLoading },
-  ] = useGetLocationListLazyQuery()
+  const [getLocationData, { data: locationData, loading: isLocationLoading }] =
+    useGetLocationListLazyQuery()
 
   const [addMutation] = useCreateOneLeadMutation({
     onCompleted(data) {

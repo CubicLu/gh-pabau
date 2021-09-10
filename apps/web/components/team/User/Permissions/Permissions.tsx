@@ -21,12 +21,10 @@ import {
 
 const Permissions: FC = () => {
   const isMobile = useMedia('(max-width: 767px)', false)
-  const [moduleData, setModuleData] = useState<PermissionFieldType[]>(
-    PermissionFields
-  )
-  const [featureData, setFeatureData] = useState<FeaturePermissionProps[]>(
-    feature
-  )
+  const [moduleData, setModuleData] =
+    useState<PermissionFieldType[]>(PermissionFields)
+  const [featureData, setFeatureData] =
+    useState<FeaturePermissionProps[]>(feature)
   const [reportPermission, setReportPermission] = useState<string[]>(
     reportPermissionsKeys
   )

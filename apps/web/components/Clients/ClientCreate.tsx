@@ -115,10 +115,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const [customFields, setCustomFields] = useState<CustomFieldsProps[]>([])
   const [isVisible, setVisible] = useState(modalVisible)
 
-  const [
-    getFieldSettingData,
-    { data: fieldSettingData, loading },
-  ] = useGetTblModuleFieldsSettingsLazyQuery()
+  const [getFieldSettingData, { data: fieldSettingData, loading }] =
+    useGetTblModuleFieldsSettingsLazyQuery()
 
   const [
     getSalutationData,

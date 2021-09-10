@@ -171,13 +171,10 @@ export const Products = ({
       product: record?.id,
     },
   })
-  const [selectedCategory, setSelectedCategory] = useState<
-    Partial<InvCategory>
-  >()
-  const [
-    loadDefaultProductCustomFields,
-    { data: defaultProductCustomFields },
-  ] = useProductCustomFieldValuesLazyQuery()
+  const [selectedCategory, setSelectedCategory] =
+    useState<Partial<InvCategory>>()
+  const [loadDefaultProductCustomFields, { data: defaultProductCustomFields }] =
+    useProductCustomFieldValuesLazyQuery()
   const [currentTab, setCurrentTab] = useState<number>(null)
   const [groupModalType, setGroupModalType] = useState('')
   const getQueryVariables = useMemo(() => {
@@ -270,50 +267,48 @@ export const Products = ({
     },
     fetchPolicy: 'no-cache',
   })
-  const [
-    updateMutation,
-    { loading: productIsBeingUpdated },
-  ] = useUpdateOneInvProductMutation({
-    onCompleted(product) {
-      changeModalState(false)
-      Notification(
-        NotificationType.success,
-        t('products.list.products.notification.edit.success', {
-          name: product?.updateOneInvProduct?.name,
-        })
-      )
-    },
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('products.list.products.notification.edit.error')
-      )
-    },
-    update: (cache, { data: { updateOneInvProduct } }) => {
-      if (RetrieveProductsGroupByMasterCategoryDocument) {
-        const existing = cache.readQuery({
-          query: RetrieveProductsGroupByMasterCategoryDocument,
-          variables: { ...getQueryVariables },
-        })
-        if (existing) {
-          const key = Object.keys(existing)[0]
-          cache.writeQuery({
-            query: RetrieveProductsGroupByMasterCategoryDocument,
-            ...getQueryVariables,
-            data: {
-              [key]: [...existing[key], updateOneInvProduct],
-            },
+  const [updateMutation, { loading: productIsBeingUpdated }] =
+    useUpdateOneInvProductMutation({
+      onCompleted(product) {
+        changeModalState(false)
+        Notification(
+          NotificationType.success,
+          t('products.list.products.notification.edit.success', {
+            name: product?.updateOneInvProduct?.name,
           })
-        }
-      }
-    },
-    refetchQueries: [
-      {
-        query: RetrieveAllInvProductsDocument,
-        ...getQueryVariables,
+        )
       },
-    ],
-  })
+      onError() {
+        Notification(
+          NotificationType.error,
+          t('products.list.products.notification.edit.error')
+        )
+      },
+      update: (cache, { data: { updateOneInvProduct } }) => {
+        if (RetrieveProductsGroupByMasterCategoryDocument) {
+          const existing = cache.readQuery({
+            query: RetrieveProductsGroupByMasterCategoryDocument,
+            variables: { ...getQueryVariables },
+          })
+          if (existing) {
+            const key = Object.keys(existing)[0]
+            cache.writeQuery({
+              query: RetrieveProductsGroupByMasterCategoryDocument,
+              ...getQueryVariables,
+              data: {
+                [key]: [...existing[key], updateOneInvProduct],
+              },
+            })
+          }
+        }
+      },
+      refetchQueries: [
+        {
+          query: RetrieveAllInvProductsDocument,
+          ...getQueryVariables,
+        },
+      ],
+    })
   const updateOrder = (values: { id: number; product_order: number }) => {
     updateProductOrderMutation({
       variables: {
@@ -328,49 +323,45 @@ export const Products = ({
       },
     })
   }
-  const {
-    data: listAllProducts,
-    loading: loadingAllProducts,
-  } = useRetrieveAllInvProductsQuery({
-    variables: {
-      ...getQueryVariables,
-    },
-    fetchPolicy: 'network-only',
-  })
-  const [
-    createOneInvProductMutation,
-    { loading: addMutationLoading },
-  ] = useCreateOneInvProductMutation({
-    onCompleted(product) {
-      changeModalState(false)
-      Notification(
-        NotificationType.success,
-        t('products.list.products.notification.product.create.success', {
-          name: product?.createOneInvProduct?.name,
-        })
-      )
-    },
-    onError(error) {
-      const err = uniqueConstraintErrorDecoder(error)
-      Notification(
-        NotificationType.error,
-        err?.type === 'UniqueConstraintError'
-          ? t(
-              'products.list.products.notification.product.create.error.uniqueConstraint',
-              {
-                field: err?.field,
-              }
-            )
-          : t('products.list.products.notification.product.create.error')
-      )
-    },
-    refetchQueries: [
-      {
-        query: RetrieveAllInvProductsDocument,
+  const { data: listAllProducts, loading: loadingAllProducts } =
+    useRetrieveAllInvProductsQuery({
+      variables: {
         ...getQueryVariables,
       },
-    ],
-  })
+      fetchPolicy: 'network-only',
+    })
+  const [createOneInvProductMutation, { loading: addMutationLoading }] =
+    useCreateOneInvProductMutation({
+      onCompleted(product) {
+        changeModalState(false)
+        Notification(
+          NotificationType.success,
+          t('products.list.products.notification.product.create.success', {
+            name: product?.createOneInvProduct?.name,
+          })
+        )
+      },
+      onError(error) {
+        const err = uniqueConstraintErrorDecoder(error)
+        Notification(
+          NotificationType.error,
+          err?.type === 'UniqueConstraintError'
+            ? t(
+                'products.list.products.notification.product.create.error.uniqueConstraint',
+                {
+                  field: err?.field,
+                }
+              )
+            : t('products.list.products.notification.product.create.error')
+        )
+      },
+      refetchQueries: [
+        {
+          query: RetrieveAllInvProductsDocument,
+          ...getQueryVariables,
+        },
+      ],
+    })
   const [updateServiceGroup] = useUpdateOneServicesMasterCategoryMutation({
     onCompleted(productGroup) {
       setSelectedCategory(groups[currentTab]?.InvCategory?.[0])

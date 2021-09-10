@@ -22,9 +22,8 @@ const Advanced: FC<AdvancedProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const { advancedTabData, loaderDatasource, loaderColumns } = useData(t)
-  const [advancedData, setAdvancedData] = useState<ReportsPermissionTableProps>(
-    advancedTabData
-  )
+  const [advancedData, setAdvancedData] =
+    useState<ReportsPermissionTableProps>(advancedTabData)
 
   useEffect(() => {
     if (columns.length > 0 && userGroupData.length > 0) {
