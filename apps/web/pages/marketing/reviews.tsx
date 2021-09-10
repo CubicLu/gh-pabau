@@ -426,7 +426,6 @@ const Reviews: FC<ReviewConfig> = () => {
       dataIndex: 'feedback_status',
       className: 'drag-visible',
       visible: true,
-      isHover: true,
     },
   ]
 
@@ -822,23 +821,6 @@ const Reviews: FC<ReviewConfig> = () => {
         )}
       </div>
     )
-  }
-
-  const onHoverHandle = (item) => {
-    const result = dataList.map((itemList) => {
-      if (itemList.id === item.id) {
-        return { ...itemList, isShow: true }
-      }
-      return { ...itemList, isShow: false }
-    })
-    setDataList(result)
-  }
-
-  const onHoverLeave = () => {
-    const resultData = dataList.map((itemList) => {
-      return { ...itemList, isShow: false }
-    })
-    setDataList(resultData)
   }
 
   const updateDataSource = ({ newData }) => {
@@ -1305,7 +1287,7 @@ const Reviews: FC<ReviewConfig> = () => {
                         </div>
                       </Tooltip>
                     ),
-                    visibleData: renderVisibleData(item),
+                    feedback_status: renderVisibleData(item),
                     feedback_comment: (
                       <Tooltip
                         placement="top"
@@ -1318,8 +1300,6 @@ const Reviews: FC<ReviewConfig> = () => {
                 })}
                 loading={loading}
                 isHover={true}
-                onRowHover={onHoverHandle}
-                onLeaveRow={onHoverLeave}
                 updateDataSource={updateDataSource}
                 pagination={dataList?.length > 10 ? {} : false}
               />
