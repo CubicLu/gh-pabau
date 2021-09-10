@@ -51,7 +51,7 @@ const Invoice: FC<InvoiceProps> = ({
       title: t('account.finance.invoice.columns.invoice.no'),
       dataIndex: 'invoice_no',
       visible: true,
-      width: '120px',
+      width: '150px',
       skeletonWidth: '50px',
       render: function render(data) {
         return (
@@ -64,6 +64,9 @@ const Invoice: FC<InvoiceProps> = ({
       dataIndex: 'location',
       visible: true,
       skeletonWidth: '50px',
+      render: function render(data) {
+        return <div style={{ minWidth: '50px' }}>{data}</div>
+      },
     },
     {
       title: t('account.finance.invoice.columns.inv.date'),
