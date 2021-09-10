@@ -82,11 +82,21 @@ query GetContactsByLabel(
   }
 }
 
-query clientListContactsCount($active: Int = 1){
+query clientListContactsCount($active: Int = 1, $searchTerm: String){
   findManyCmContactCount(where: {
     is_active: {
       equals: $active
     }
+    AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm } }
+            { Lname: { contains: $searchTerm } }
+            { Mobile: { contains: $searchTerm } }
+            { Email: { contains: $searchTerm } }
+          ]
+        }
+      ]
   })
 }
 

@@ -108,16 +108,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Divider />
         <SubMenu title={t('clients.leftSidebar.labels')} key="mainLabels">
           <SubMenu
-            style={
-              labelsList.length > 10
-                ? {
-                    minHeight: '200px',
-                    maxHeight: '400px',
-                    overflowY: 'scroll',
-                    overflowX: 'hidden',
-                  }
-                : null
-            }
+            style={labelsList.length > 10 ? {} : null}
             key={tab.labels}
             title={'no title'}
             className={styles.modifiedItem}

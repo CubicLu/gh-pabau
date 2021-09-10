@@ -1,4 +1,4 @@
-import React, { FC, RefObject, useState, useEffect } from 'react'
+import React, { FC, useState } from 'react'
 import {
   TagOutlined,
   ImportOutlined,

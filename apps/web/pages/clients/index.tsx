@@ -16,9 +16,11 @@ import { BasicModal } from '@pabau/ui'
 import { intersectionBy, differenceBy, groupBy } from 'lodash'
 import confetti from 'canvas-confetti'
 import {
-  useGetContactsQuery,
+  // useGetContactsQuery,
+  useGetContactsLazyQuery,
   useGetContactsByLabelLazyQuery,
-  useClientListContactsCountQuery,
+  // useClientListContactsCountQuery,
+  useClientListContactsCountLazyQuery,
   useGetContactsByLabelCountLazyQuery,
   // useDuplicateContactsQuery,
   useGetLabelsLazyQuery,
@@ -58,7 +60,6 @@ export const Clients: FC<ClientsProps> = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [countFilterLabels, setCountFilterLabels] = useState(null)
   const [filterId, setFilterId] = useState(undefined)
-  const [isActive, setIsActive] = useState(1)
   const [contactsSourceData, setContactsSourceData] = useState(null)
 
   const [getLabelsQuery] = useGetLabelsLazyQuery({
@@ -72,7 +73,7 @@ export const Clients: FC<ClientsProps> = () => {
           const { CmContactLabel } = i
           status = true
           for (const l of CmContactLabel) {
-            if (l.CmContact.is_active == false) {
+            if (!!l.CmContact.is_active === false) {
               status = false
               break
             }
@@ -90,18 +91,26 @@ export const Clients: FC<ClientsProps> = () => {
 
   const getCountVariables = useMemo(() => {
     const queryVariables = {
-      fetchPolicy: 'no-cache',
+      // fetchPolicy: 'no-cache',
       variables: {
-        active: isActive,
         searchTerm: '%' + searchText + '%',
       },
     }
     return queryVariables
-  }, [isActive, searchText])
+  }, [searchText])
 
-  const { data: getClientsCountData } = useClientListContactsCountQuery(
-    getCountVariables
-  )
+  // const { data: getClientsCountData } = useClientListContactsCountQuery({
+  //   ...getCountVariables,
+  //   fetchPolicy: 'no-cache',
+  // })
+
+  const [
+    getContactListCount,
+    { data: getClientsCountData },
+  ] = useClientListContactsCountLazyQuery({
+    ...getCountVariables,
+    fetchPolicy: 'no-cache',
+  })
 
   // const { data: getDuplicateContactsData } = useDuplicateContactsQuery({
   //   fetchPolicy: 'no-cache',
@@ -133,7 +142,7 @@ export const Clients: FC<ClientsProps> = () => {
     },
   })
 
-  const [contactsLabels, setContactsLabels] = useState([])
+  // const [contactsLabels, setContactsLabels] = useState([])
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -143,12 +152,13 @@ export const Clients: FC<ClientsProps> = () => {
     showingRecords: 0,
   })
 
-  const variables = {
-    active: isActive,
-    offset: paginateData.offset,
-    limit: paginateData.limit,
-    searchTerm: '%' + searchText + '%',
-  }
+  const variables = useMemo(() => {
+    return {
+      offset: paginateData.offset,
+      limit: paginateData.limit,
+      searchTerm: '%' + searchText + '%',
+    }
+  }, [paginateData.offset, paginateData.limit, searchText])
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -156,44 +166,63 @@ export const Clients: FC<ClientsProps> = () => {
       variables: variables,
     }
     return queryOptions
-  }, [isActive, paginateData.offset, paginateData.limit, searchText])
+  }, [variables])
 
   const getFilterQueryVariables = useMemo(() => {
     const queryOptions = {
-      fetchPolicy: 'no-cache',
+      // fetchPolicy: 'no-cache',
       variables: {
         ...variables,
         labelId: filterId,
       },
     }
     return queryOptions
-  }, [isActive, paginateData.offset, paginateData.limit, searchText, filterId])
+  }, [filterId, variables])
 
   const getFilterCountQueryVariables = useMemo(() => {
     const queryOptions = {
-      fetchPolicy: 'no-cache',
+      // fetchPolicy: 'no-cache',
       variables: {
-        active: isActive,
         searchTerm: '%' + searchText + '%',
         labelId: filterId,
       },
     }
     return queryOptions
-  }, [isActive, filterId])
+  }, [searchText, filterId])
 
-  const { data: getContactsData } = useGetContactsQuery(getQueryVariables)
+  // const { data: getContactsData } = useGetContactsQuery({
+  //   ...getQueryVariables,
+  //   fetchPolicy: 'no-cache',
+  // })
+  const [getContactList, { data: getContactsData }] = useGetContactsLazyQuery({
+    ...getQueryVariables,
+    fetchPolicy: 'no-cache',
+    onCompleted() {
+      setDataLoaded(true)
+    },
+  })
+
   const [
     getContactsByLabel,
     { data: getfilteredContacts },
-  ] = useGetContactsByLabelLazyQuery(getFilterQueryVariables)
+  ] = useGetContactsByLabelLazyQuery({
+    ...getFilterQueryVariables,
+    fetchPolicy: 'no-cache',
+  })
   const [
     getContactsByLabelCount,
     { data: getfilteredContactsCount },
-  ] = useGetContactsByLabelCountLazyQuery(getFilterCountQueryVariables)
+  ] = useGetContactsByLabelCountLazyQuery({
+    ...getFilterCountQueryVariables,
+    fetchPolicy: 'no-cache',
+  })
 
   useEffect(() => {
+    getContactList()
     getLabelsQuery()
-  }, [getLabelsQuery])
+    getContactListCount()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (getContactsData && labelsList?.length > 0) {
@@ -207,6 +236,7 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getContactsData?.findManyCmContact?.length,
       }))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getContactsData, labelsList, getClientsCountData])
 
   useEffect(() => {
@@ -222,6 +252,7 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getfilteredContacts?.findManyCmContact?.length,
       }))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getfilteredContacts, getfilteredContactsCount])
 
   const mapContactData = (data) => {
@@ -272,7 +303,7 @@ export const Clients: FC<ClientsProps> = () => {
   //   getDuplicateContactsData
   // )
   // const [countLabelS, setCountLabelS] = useState(contactsLabels)
-  const [responseLabels, setResponseLabels] = useState(false)
+  // const [responseLabels, setResponseLabels] = useState(false)
 
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -314,6 +345,7 @@ export const Clients: FC<ClientsProps> = () => {
       }
     }
     setDuplicateDataList(duplicateList)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceData])
 
   useEffect(() => {
@@ -321,6 +353,7 @@ export const Clients: FC<ClientsProps> = () => {
     if (selectedTab === tab.clients || selectedTab === tab.archived) {
       setSelectedRowKeys([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab])
 
   const intersectMany = (arrs) => {
@@ -333,8 +366,7 @@ export const Clients: FC<ClientsProps> = () => {
 
   useEffect(() => {
     let filteredData = contactsSourceData
-
-    if (selectedTab === tab.clients) {
+    if (selectedTab === tab.contacts || selectedTab === tab.clients) {
       filteredData = contactsSourceData
     } else if (selectedTab === tab.archived) {
       filteredData = contactsSourceData.filter((item) => item.is_active === 0)
@@ -371,6 +403,7 @@ export const Clients: FC<ClientsProps> = () => {
     }
     setSourceFilteredData(filteredData)
     if (dataLoaded) setIsLoading(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, selectedTab, contactsSourceData])
 
   useEffect(() => {
@@ -386,7 +419,11 @@ export const Clients: FC<ClientsProps> = () => {
       setDefaultSelectedLabels(data)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRowKeys, contactsSourceData, contactsLabels])
+  }, [
+    selectedRowKeys,
+    contactsSourceData,
+    // contactsLabels
+  ])
 
   useEffect(() => {
     if (clientRef.current) {
@@ -705,7 +742,18 @@ export const Clients: FC<ClientsProps> = () => {
               <Layout className={styles.clientBodyWrap}>
                 <Sider>
                   <LeftSideBar
-                    setSelectedTab={setSelectedTab}
+                    setSelectedTab={(e) => {
+                      setIsLoading(true)
+                      setDataLoaded(false)
+                      if (
+                        e.toString() === tab.clients ||
+                        e.toString() === tab.contacts
+                      ) {
+                        getContactList()
+                        getContactListCount()
+                      }
+                      setSelectedTab(e)
+                    }}
                     selectedTab={selectedTab}
                     labels={labels}
                     labelsList={labelsList}

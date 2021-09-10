@@ -111,6 +111,9 @@
 }
 
 .table-content {
+  // height: calc(100vh - 80px);
+  // overflow: auto;
+  // border-left: 1px solid red;
   .avatar-wrapper {
     :global .ant-avatar {
       width: 28px;
@@ -619,6 +622,11 @@
   :global {
     .ant-menu-submenu-title {
       display: none !important;
+    }
+    .ant-menu-sub {
+      height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
   }
   .label-skeleton-wrapper {
