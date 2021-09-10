@@ -172,7 +172,7 @@ const Debt: FC<DebtProps> = ({
       title: t('account.finance.debt.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '110px',
+      width: '150px',
       skeletonWidth: '70px',
       render: function render(data) {
         return (
@@ -185,6 +185,9 @@ const Debt: FC<DebtProps> = ({
       dataIndex: 'location',
       visible: true,
       skeletonWidth: '70px',
+      render: function render(data) {
+        return <div style={{ minWidth: '50px' }}>{data}</div>
+      },
     },
     {
       title: t('account.finance.debt.columns.inv.date'),
