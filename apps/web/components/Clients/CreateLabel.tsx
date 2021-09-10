@@ -34,7 +34,7 @@ interface CreateLabelsProps {
   addLabelMutation?: (
     options?: MutationFunctionOptions<
       AddLabelMutation,
-      Exact<{ text?: string; color?: string }>
+      Exact<{ name?: string; color?: string }>
     >
   ) => Promise<
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
@@ -222,13 +222,21 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       return false
     }
     const diff1 =
-      differenceBy(selectedLabels, defaultSelectedLabels, (obj) => {
-        return obj.label + obj.color
-      }) || []
+      differenceBy(
+        selectedLabels,
+        defaultSelectedLabels,
+        (obj: Record<string, string>) => {
+          return obj.label + obj.color
+        }
+      ) || []
     const diff2 =
-      differenceBy(defaultSelectedLabels, selectedLabels, (obj) => {
-        return obj.label + obj.color
-      }) || []
+      differenceBy(
+        defaultSelectedLabels,
+        selectedLabels,
+        (obj: Record<string, string>) => {
+          return obj.label + obj.color
+        }
+      ) || []
     return diff1.length === 0 && diff2.length === 0
   }
 
