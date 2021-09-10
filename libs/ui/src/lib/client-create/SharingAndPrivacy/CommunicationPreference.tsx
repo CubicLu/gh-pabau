@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react'
 import { Form as AntForm, Radio } from 'formik-antd'
 import { Tooltip, Button, Checkbox } from 'antd'
 import styles from './SharingPrivacy.module.less'
-import { EditOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import { BasicModal, InitialDetailsProps } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 
@@ -15,8 +15,10 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
   const [openModal, setOpenModal] = useState(false)
 
   const handleChange = (e) => {
-    const selected = values?.['marketingPromotion'] ?? []
-    if (e.target.value === 'subscriptionToReceive' && !e.target.checked) {
+    const selected = values?.['marketingPromotion']
+      ? [...values['marketingPromotion']]
+      : []
+    if (e.target.value === 'needToKnows' && !e.target.checked) {
       setOpenModal(true)
     } else {
       if (e.target.checked) {
@@ -35,7 +37,7 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
     const selected = values?.['marketingPromotion'] ?? []
     setFieldValue(
       'marketingPromotion',
-      selected.filter((value) => value !== 'subscriptionToReceive')
+      selected.filter((value) => value !== 'needToKnows')
     )
     setOpenModal(false)
   }
@@ -51,14 +53,11 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
           {t('create.client.modal.privacy.communication.preference.title')}
         </h4>
         <div className={styles.marketingWrapper}>
-          <div className={styles.marketText}>
-            <h6>
-              {t(
-                'create.client.modal.privacy.communication.marketing.promotion.title'
-              )}
-            </h6>
-            <EditOutlined />
-          </div>
+          <h6>
+            {t(
+              'create.client.modal.privacy.communication.marketing.promotion.title'
+            )}
+          </h6>
           <p>
             {t(
               'create.client.modal.privacy.communication.marketing.promotion.description'
@@ -67,6 +66,7 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
           <div className={styles.marketCheckbox}>
             <AntForm.Item name={'marketingPromotion'}>
               <Checkbox.Group
+                name={'marketingPromotion'}
                 options={[
                   {
                     label: t(
@@ -113,7 +113,7 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
                         </Tooltip>
                       </span>
                     ),
-                    value: 'subscriptionToReceive',
+                    value: 'needToKnows',
                     onChange: handleChange,
                   },
                 ]}
@@ -127,12 +127,21 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
           <p>{t('create.client.modal.privacy.privacy.policy.label')}</p>
           <Radio.Group name={'privacyPolicy'}>
             {[
-              t('create.client.modal.privacy.policy.no.response.label'),
-              t('create.client.modal.privacy.policy.accepted.label'),
-              t('create.client.modal.privacy.policy.rejected.label'),
+              {
+                name: t('create.client.modal.privacy.policy.no.response.label'),
+                value: '0',
+              },
+              {
+                name: t('create.client.modal.privacy.policy.accepted.label'),
+                value: '1',
+              },
+              {
+                name: t('create.client.modal.privacy.policy.rejected.label'),
+                value: '-1',
+              },
             ].map((option) => (
-              <Radio key={option} name={option} value={option}>
-                {option}
+              <Radio key={option.name} name={option.name} value={option.value}>
+                {option.name}
               </Radio>
             ))}
           </Radio.Group>

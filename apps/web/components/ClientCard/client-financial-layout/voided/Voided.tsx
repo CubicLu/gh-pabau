@@ -22,7 +22,7 @@ export const Voided: FC<ClientFinancialsLayoutProps> = ({ voidedPayments }) => {
       width: 100,
       visible: true,
       render: function renderItem(value) {
-        return '#' + value
+        return <span className={styles.primaryText}>#{value}</span>
       },
     },
     {

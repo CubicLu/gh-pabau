@@ -40,6 +40,7 @@ export const Security: FC<SecurityProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const [showModal, setShowModal] = useState(false)
+  const [titleModel, setTitleModel] = useState(false)
   const percent =
     (!twoFAstatus ? 0 : 50) +
     (enableSensData === (undefined || 0) ? 0 : 20) +
@@ -109,7 +110,10 @@ export const Security: FC<SecurityProps> = ({
             'business.security.tool.data.password.expiration.modal.menu.history.5password'
           ),
           t(
-            'business.security.tool.data.password.expiration.modal.menu.history.password.enabled.disabled'
+            'business.security.tool.data.password.expiration.modal.menu.history.password.enabled'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.history.password.disabled'
           ),
         ],
         [
@@ -161,7 +165,7 @@ export const Security: FC<SecurityProps> = ({
   }
 
   const handleButtonClick = () => {
-    setShowModal(true)
+    setTitleModel(true)
   }
 
   return (
@@ -226,12 +230,12 @@ export const Security: FC<SecurityProps> = ({
       </div>
       <BasicModal
         title={t('business.security.score')}
-        visible={showModal}
-        onCancel={() => setShowModal(false)}
+        visible={titleModel}
+        onCancel={() => setTitleModel(false)}
         newButtonText={'Ok'}
         centered={true}
         onOk={() => {
-          setShowModal(false)
+          setTitleModel(false)
         }}
       >
         {percent < 30

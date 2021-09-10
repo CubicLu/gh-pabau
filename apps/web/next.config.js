@@ -6,6 +6,9 @@ const withNx = require('@nrwl/next/plugins/with-nx')
 module.exports = {
   env: {
     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
+    api_key: 'AIzaSyB220K3PhuJAa14W5YmpJwzXBYgPyT0BGk',
+    client_id:
+      '312504164675-a6m5avc8ampbs9dshepb3dkbgvqbtaqa.apps.googleusercontent.com',
   },
   async rewrites() {
     return [
