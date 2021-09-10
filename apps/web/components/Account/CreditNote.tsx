@@ -56,6 +56,9 @@ const CreditNotes: FC<CreditNoteProps> = ({
       dataIndex: 'location',
       visible: true,
       skeletonWidth: '100px',
+      render: function render(data) {
+        return <div style={{ minWidth: '50px' }}>{data}</div>
+      },
     },
     {
       title: t('account.finance.credit.note.columns.credit.date'),
@@ -97,7 +100,7 @@ const CreditNotes: FC<CreditNoteProps> = ({
       title: t('account.finance.credit.note.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '100px',
+      width: '150px',
       skeletonWidth: '50px',
       render: function render(data) {
         return (
