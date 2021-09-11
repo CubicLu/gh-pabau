@@ -11,7 +11,7 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 3072
+      memory: 3333
 
 pipelines:
   pull-requests:
@@ -46,9 +46,9 @@ pipelines:
                 - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
                 - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
 
           - step:
@@ -70,7 +70,7 @@ pipelines:
               services:
                 - docker
               script:
-                - while true; do ps -aux && sleep 30; done &
+#                - while true; do ps -aux && sleep 30; done &
                 - |
                   echo "Testing Hasura database is consistent with schema.graphql..."
                   echo "============================================================"
@@ -82,19 +82,40 @@ pipelines:
                 - yarn bridge:start2 &
                 - |
                   echo "Waiting for bridge-api to boot..."
-                  yarn wait-on -t 160000 http-get://localhost:4000
+                  yarn wait-on -t 160000 -w 20000 http-get://localhost:4000
+                - |
                   echo "Waiting for postgres to boot..."
-                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -w 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -d 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                - |
                   echo "Waiting for Hasura to boot..."
-                  docker-compose -f hasura/docker-compose.ci.yml up -d graphql-engine && yarn wait-on -t 60000 -w 20000 http-get://localhost:8080/console || docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine
-                  echo "Ensuring Hasura is really booted..."
+                  docker-compose -f hasura/docker-compose.ci.yml up graphql-engine &
+                  echo "Launched"
+                  yarn wait-on -t 90000 -d 50000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || (docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine; exit 1)
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
+                - |
                   echo "Checking Metadata is consistent so far..."
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
+                - |
                   echo "Exporting Hasura metadata..."
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
+                - |
                   echo "Ensuring everything is identical..."
                   git diff --exit-code --no-ext-diff -p || (git status && exit 1)
+                - |
+                  echo "Waiting for MySQL to boot..."
+                  docker-compose -f tools/pabau1/docker-compose.ci.yml up &
+                  echo "Launched"
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || (docker-compose -f tools/pabau1/docker-compose.ci.yml logs; exit 1)
+                - |
+                  echo "Performing load testing..."
+                  yarn load-testing
+
 
           - step:
               name: build
@@ -242,8 +263,8 @@ pipelines:
                 - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
           - step:
               name: lint
@@ -289,7 +310,7 @@ pipelines:
               services:
                 - docker
               script:
-                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - |
                   echo "Testing Hasura database is consistent with schema.graphql..."
                   echo "============================================================"
@@ -301,19 +322,39 @@ pipelines:
                 - yarn bridge:start2 &
                 - |
                   echo "Waiting for bridge-api to boot..."
-                  yarn wait-on -t 160000 http-get://localhost:4000
+                  yarn wait-on -t 160000 -w 20000 http-get://localhost:4000
+                - |
                   echo "Waiting for postgres to boot..."
-                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -w 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -d 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                - |
                   echo "Waiting for Hasura to boot..."
-                  docker-compose -f hasura/docker-compose.ci.yml up -d graphql-engine && yarn wait-on -t 60000 -w 20000 http-get://localhost:8080/console || docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine
-                  echo "Ensuring Hasura is really booted..."
+                  docker-compose -f hasura/docker-compose.ci.yml up graphql-engine &
+                  echo "Launched"
+                  yarn wait-on -t 90000 -d 50000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || (docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine; exit 1)
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
+                - |
                   echo "Checking Metadata is consistent so far..."
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
+                - |
                   echo "Exporting Hasura metadata..."
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
+                - |
                   echo "Ensuring everything is identical..."
                   git diff --exit-code --no-ext-diff -p || (git status && exit 1)
+                - |
+                  echo "Waiting for MySQL to boot..."
+                  docker-compose -f tools/pabau1/docker-compose.ci.yml up &
+                  echo "Launched"
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || (docker-compose -f tools/pabau1/docker-compose.ci.yml logs; exit 1)
+                - |
+                  echo "Performing load testing..."
+                  yarn load-testing
 
 
           - step:

@@ -413,7 +413,6 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
       })
     }
     if (!showTagButton) inputChars += lastChars
-    props.onChange?.(inputChars)
     if (fullChange) props.onFullChange?.(inputChars)
   }
 
@@ -432,6 +431,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
 
   const onEditorStateChange = (e) => {
     const contentState = e.getCurrentContent()
+    const oldContentState = editorState.getCurrentContent()
     const inputText = contentState.getPlainText()
     const findInfo = findWithRegex(HANDLE_REGEX, inputText)
     if (findInfo) {
@@ -458,8 +458,12 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
         findInfo,
         findTag.length > 0 ? false : true
       )
-    } else {
+    } else if (
+      contentState === oldContentState ||
+      contentState.getPlainText().length <= maxLength
+    ) {
       setEditorState(e)
+      props.onChange?.(contentState.getPlainText())
     }
     triggerSaveInputChars(false)
   }
@@ -531,7 +535,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     const contentState = editorState.getCurrentContent()
     const currentContentLength = contentState.getPlainText('').length
     setLastChars(chars)
-    if (maxLength !== 0 && currentContentLength > maxLength) {
+    if (maxLength !== 0 && currentContentLength + chars.length > maxLength) {
       return 'handled'
     }
   }

@@ -90,6 +90,7 @@ export const financialInvoices = {
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
       paid: false,
+      status: 'outstanding_invoices',
       items: [
         {
           employee: 'Anika Kadir',
@@ -114,10 +115,10 @@ export const financialInvoices = {
       ],
       totalVat: 0,
       amountPaid: 0,
-      subtotal: 2250,
+      subtotal: 600,
       tips: 0,
-      grandTotal: 2250,
-      paymentStatus: 2,
+      grandTotal: 600,
+      paymentStatus: 0,
       paymentStatusTooltip:
         'Full payment received on Sunday, 16 May 2021 at CHISSY BEAUTY STUDIO by Chissy Stylist',
       tip: {
@@ -192,7 +193,8 @@ export const financialInvoices = {
       location: 'The London Skin and Hair Clinic',
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
-      paid: true,
+      paid: false,
+      status: 'outstanding_invoices',
       items: [
         {
           employee: 'Anika Kadir',
@@ -220,7 +222,7 @@ export const financialInvoices = {
       subtotal: 2250,
       tips: 0,
       grandTotal: 2250,
-      paymentStatus: 2,
+      paymentStatus: 1,
     },
     {
       id: '9233432',
@@ -229,6 +231,7 @@ export const financialInvoices = {
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
       paid: false,
+      status: 'outstanding_invoices',
       items: [
         {
           employee: 'Anika Kadir',
@@ -264,7 +267,8 @@ export const financialInvoices = {
       location: 'The London Skin and Hair Clinic',
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
-      paid: false,
+      paid: true,
+      status: 'paid_invoice',
       items: [
         {
           employee: 'Anika Kadir',
@@ -301,6 +305,7 @@ export const financialInvoices = {
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
       paid: false,
+      status: 'unsent_invoices',
       items: [
         {
           employee: 'Anika Kadir',
@@ -336,7 +341,8 @@ export const financialInvoices = {
       location: 'The London Skin and Hair Clinic',
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
-      paid: false,
+      paid: true,
+      status: 'paid_invoice',
       items: [
         {
           employee: 'Anika Kadir',
@@ -373,6 +379,7 @@ export const financialInvoices = {
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
       paid: false,
+      status: 'sent_invoices',
       items: [
         {
           employee: 'Anika Kadir',
@@ -409,6 +416,7 @@ export const financialInvoices = {
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
       paid: false,
+      status: 'sent_invoices',
       items: [
         {
           employee: 'Anika Kadir',
@@ -444,8 +452,8 @@ export const financialPayments = [
   {
     id: 1,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651481,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -455,8 +463,8 @@ export const financialPayments = [
   {
     id: 2,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651482,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -466,8 +474,8 @@ export const financialPayments = [
   {
     id: 3,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651483,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -477,8 +485,8 @@ export const financialPayments = [
   {
     id: 4,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651484,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -488,8 +496,8 @@ export const financialPayments = [
   {
     id: 5,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651485,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -499,8 +507,8 @@ export const financialPayments = [
   {
     id: 6,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651486,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -510,8 +518,8 @@ export const financialPayments = [
   {
     id: 7,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651487,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -521,8 +529,8 @@ export const financialPayments = [
   {
     id: 8,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651488,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -532,8 +540,8 @@ export const financialPayments = [
   {
     id: 9,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651489,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -543,8 +551,8 @@ export const financialPayments = [
   {
     id: 10,
     date: '10/12/2020',
-    invoiceNo: 4564,
-    paymentNo: 923345,
+    invoiceNo: 923345,
+    paymentNo: 1651410,
     location: 'The London Skin and Hair Clinic',
     employee: 'Anika Kadir',
     paidBy: 'Bruno Ballardin',
@@ -740,8 +748,8 @@ export const financialStatements = [
   {
     id: 1,
     refNo: 918715,
-    startDate: '24/07/2021',
-    endDate: '28/07/2021',
+    startDate: '2021-24-07',
+    endDate: '2021-28-07',
     issuedTo: 'Carina Briggs',
     location: 'All',
   },
@@ -784,6 +792,14 @@ export const invoicePaymentMethodOptions = [
   {
     key: 2,
     value: 'Electronic Transfer',
+  },
+  {
+    key: 3,
+    value: 'Cash',
+  },
+  {
+    key: 4,
+    value: 'Card',
   },
 ]
 export const invoiceEmployeeOptions = [
@@ -852,63 +868,6 @@ export const locationOptions = [
     value: 'The London Skin and Hair Clinic',
   },
 ]
-export const serviceData = [
-  {
-    title: 'Select all',
-    key: 'all',
-    children: [
-      {
-        title: 'Seasonal Offers',
-        key: 'Seasonal Offers',
-        children: [
-          {
-            title: '4 ml contour package',
-            key: '4 ml contour package',
-          },
-          {
-            title: '2 ml contour',
-            key: '2 ml contour',
-          },
-          {
-            title: '1 ml filler',
-            key: '1 ml filler',
-          },
-        ],
-      },
-      {
-        title: 'Special Offers (12)',
-        key: 'Special Offers',
-        children: [
-          {
-            title: '4 ml contour package',
-            key: '4 ml contour package special',
-          },
-        ],
-      },
-      {
-        title: 'Face Services (23)',
-        key: 'Face Services',
-        children: [
-          {
-            title: '4 ml contour package',
-            key: '4 ml contour package face',
-          },
-        ],
-      },
-      {
-        title: 'Hair Services (23)',
-        key: 'Hair Services',
-        children: [
-          {
-            title: '4 ml contour package',
-            key: '4 ml contour package hair',
-          },
-        ],
-      },
-    ],
-  },
-]
-
 export default () => {
   return 'Client Card Mock Data'
 }

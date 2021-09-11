@@ -5,16 +5,19 @@ import {
   ClientDashboardLayout,
   ClientAppointmentsLayout,
   ClientCommunicationsLayout,
+  ClientConsentsLayout,
   ClientDocumentsLayout,
   ClientFinancialsLayout,
   ClientGiftVoucherLayout,
   ClientLabTestsLayout,
   ClientLoyaltyLayout,
   ClientFormsLayout,
+  ClientMedicalHistoryLayout,
   ClientPackagesLayout,
   ClientPhotosLayout,
   ClientPrescriptionsLayout,
-  ClientActivitiesLayout,
+  ClientTaskLayout,
+  ClientTreatmentNotesLayout,
   ClientVaccineHistoryLayout,
   Button,
   TabMenu,
@@ -30,6 +33,7 @@ import {
   Input,
   Badge,
   Drawer,
+  Tag,
   Tooltip,
   ConfigProvider,
 } from 'antd'
@@ -80,6 +84,8 @@ import {
   thirdPartySearchResults,
   appointments,
   clientPackages,
+  formFilterButtons,
+  forms,
   vouchers,
   prescriptions,
   testList,
@@ -153,11 +159,16 @@ const ClientCardModal: FC<ClientCardProps> = ({
   const [currentClientNote, setCurrentClientNote] = useState(-1)
   const { activeVouchers, expiredVouchers } = vouchers()
 
-  const customTabMenutItem = (title, alert) => {
+  const customTabMenutItem = (title, alert, tabTotal = 0) => {
     return (
       <div className={styles.customTabMenuItem}>
         <div>{title}</div>
         <div style={{ backgroundImage: `url(${menuAlert})` }}>{alert}</div>
+        {tabTotal !== 0 && (
+          <Tag style={{ marginLeft: 10 }} color="green">
+            £ {tabTotal}
+          </Tag>
+        )}
       </div>
     )
   }
@@ -173,7 +184,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
     },
     {
       key: 2,
-      content: customTabMenutItem('Financials', 5),
+      content: customTabMenutItem('Financials', 5, 200),
     },
     {
       key: 3,
@@ -189,15 +200,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
       children: [
         {
           key: 5,
-          content: 'Forms',
+          content: 'Medical History',
         },
         {
           key: 6,
-          content: 'Photos',
+          content: 'Treatment Notes',
         },
         {
           key: 7,
-          content: 'Documents',
+          content: 'Photos',
         },
         {
           key: 8,
@@ -487,6 +498,10 @@ const ClientCardModal: FC<ClientCardProps> = ({
       JSON.stringify(items)
     )
     await window.localStorage.setItem('pabau_popout_item', JSON.stringify(item))
+    // await window.localStorage.setItem(
+    //   'pabau_popout_fullscreen',
+    //   JSON.stringify(false)
+    // )
     await window.localStorage.setItem('pabau_popout_new', JSON.stringify(true))
     window.dispatchEvent(new Event('storage'))
 
@@ -554,12 +569,9 @@ const ClientCardModal: FC<ClientCardProps> = ({
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
           {alertItems.map((item, index) => (
-            <Tooltip
-              key={`staff-alert-${index}`}
-              title={`Created By William - ${moment().format('DD/MM/YYYY')}`}
-            >
-              <div className={styles.staffAlert}>{item}</div>
-            </Tooltip>
+            <div className={styles.staffAlert} key={`staff-alert-${index}`}>
+              {item}
+            </div>
           ))}
         </div>
       )}
@@ -935,7 +947,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 <div>
                   <ClientAppointmentsLayout isEmpty={true} />
                 </div>
-                <div style={{ paddingBottom: 60 }}>
+                <div>
                   {FinancialTabComponent ? (
                     FinancialTabComponent
                   ) : (
@@ -949,7 +961,22 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientCommunicationsLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientFormsLayout isEmpty={true} />
+                  <ClientFormsLayout
+                    isEmpty={false}
+                    formFilters={formFilterButtons}
+                    forms={forms}
+                    onButtonFilterClick={(e) => {
+                      console.log('Filter button selected:', e) //Removed while integration
+                      return Promise.resolve(true)
+                    }}
+                    onFilterClick={(e) => Promise.resolve(true)}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareCick={(e) => Promise.resolve(true)}
+                    onVersionClick={(e) => Promise.resolve(true)}
+                    onEditClick={(e) => Promise.resolve(true)}
+                    onPinClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
                 </div>
                 <div>
                   <ClientPhotosLayout isEmpty={true} />
@@ -1010,7 +1037,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   />
                 </div>
                 <div>
-                  <ClientActivitiesLayout isEmpty={true} />
+                  <ClientTaskLayout isEmpty={true} />
                 </div>
               </CustomTabMenu>
             </div>

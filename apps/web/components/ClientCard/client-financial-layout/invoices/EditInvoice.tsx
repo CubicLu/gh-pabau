@@ -8,6 +8,7 @@ import {
   Modal,
   Drawer,
   Typography,
+  Tag,
 } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useState } from 'react'
@@ -45,14 +46,40 @@ interface EditInvoiceProps {
 }
 
 const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
+  const [invoice_, setInvoice] = useState(invoice)
+  const [enableCreateBtn, setEnableCreateBtn] = useState(
+    invoice.items.length > 0
+  )
   const { t } = useTranslation('common')
   const { Title } = Typography
 
+  const toggleSentandNotSent = () => {
+    setInvoice({
+      ...invoice_,
+      paymentStatus: invoice_?.paymentStatus === 1 ? 0 : 1,
+    })
+  }
+
   const getInvoiceStatus = (e) => {
     switch (e) {
+      case 0: {
+        return (
+          <span
+            className={styles.sentLabelContainer}
+            onClick={toggleSentandNotSent}
+          >
+            <div className={styles.notSendLabelIcon}></div>{' '}
+            {t('ui.client-card-financial.not-sent')}
+          </span>
+        )
+        break
+      }
       case 1: {
         return (
-          <span>
+          <span
+            className={styles.sentLabelContainer}
+            onClick={toggleSentandNotSent}
+          >
             <CheckCircleFilled /> {t('ui.client-card-financial.sent')}
           </span>
         )
@@ -107,7 +134,14 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
   const renderSubtitle = () => {
     return (
       <div className={styles.editTitleContainer}>
-        {getInvoiceStatus(invoice?.paymentStatus)}
+        {getInvoiceStatus(invoice_?.paymentStatus)}
+        <span style={{ marginLeft: 10 }}>
+          {invoice_.paid ? (
+            <Tag color="green">{t('ui.client-card-financial.paid')}</Tag>
+          ) : (
+            <Tag color="red">{t('ui.client-card-financial.unpaid')}</Tag>
+          )}
+        </span>
       </div>
     )
   }
@@ -154,7 +188,7 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
     <>
       {showRefundModal && (
         <Refund
-          invoice={invoice}
+          invoice={invoice_}
           onModalBackPress={() => {
             setShowRefundModal(false)
           }}
@@ -196,14 +230,14 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
         </div>
 
         <div className={styles.histories}>
-          {invoice?.history?.map((inv, i) => {
+          {invoice_?.history?.map((inv, i) => {
             return (
               <div className={styles.history} key={i}>
                 <div className={styles.left}>
                   <div
                     className={classNames(
                       styles.progLine,
-                      i + 1 === invoice?.history?.length
+                      i + 1 === invoice_?.history?.length
                         ? styles.progLineLastItem
                         : null
                     )}
@@ -350,10 +384,10 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
         operations={[OperationType.create]}
         title={t('ui.client-card-financial.edit-invoice')}
         subTitle={
-          invoice?.paymentStatusTooltip ? (
+          invoice_?.paymentStatusTooltip ? (
             <Tooltip
               placement="bottomRight"
-              title={invoice?.paymentStatusTooltip}
+              title={invoice_?.paymentStatusTooltip}
             >
               {renderSubtitle()}
             </Tooltip>
@@ -382,7 +416,7 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
         onBackClick={() => {
           setShowCheckoutWarningModal(true)
         }}
-        enableCreateBtn={true}
+        enableCreateBtn={enableCreateBtn}
         createBtnText={t('ui.client-card-financial.save-changes')}
         subMenu={[
           t('ui.client-card-financial.details'),
@@ -390,10 +424,11 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
           t('ui.client-card-financial.payments'),
         ]}
         footer={true}
+        className={styles.editInvoiceModal}
       >
-        <DetailsTab invoice={invoice} />
-        <ItemsTab invoice={invoice} />
-        <PaymentsTab invoice={invoice} />
+        <DetailsTab invoice={invoice_} />
+        <ItemsTab invoice_={invoice_} toggleSaveBtn={setEnableCreateBtn} />
+        <PaymentsTab invoice={invoice_} />
       </FullScreenReportModal>
     </>
   )

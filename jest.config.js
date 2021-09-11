@@ -10,6 +10,5 @@ module.exports = {
     '<rootDir>/apps/bridge-api',
     '<rootDir>/libs/i18n',
     '<rootDir>/apps/storage',
-    '<rootDir>/apps/bridge-proxy',
   ],
 }
