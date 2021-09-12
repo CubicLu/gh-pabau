@@ -73,13 +73,9 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   const cardRef = useRef<HTMLDivElement>(null)
   const voucherTypes = ['flowers', 'valentine', 'birthday']
   const [menuPopover, setMenuPopover] = useState(false)
+  const cardFlip = () => cardRef?.current?.classList.toggle('flip')
 
   const defaultMenuOptions: MenuOption[] = [
-    {
-      key: 1,
-      icon: <EditOutlined />,
-      label: 'Edit',
-    },
     {
       key: 1,
       icon: <EditOutlined />,
@@ -108,33 +104,38 @@ export const VoucherCard: FC<VoucherCardProps> = ({
     }, ${backgroundColor1} 3.53%, ${backgroundColor2} 95.41%)`,
   }
 
-  const dotsStyles = {
-    width: `${cardWidth ? `${cardWidth / 25 / 2}px` : '25px'}`,
-    height: `${cardWidth ? `${cardWidth / 25}px` : '10px'}`,
-  }
-
-  const flipCard = () => {
-    if (cardRef?.current) {
-      if (cardRef.current.classList.contains('flip')) {
-        cardRef.current.classList.remove('flip')
-      } else {
-        cardRef.current.classList.add('flip')
-      }
+  const SideClipper = ({ bgOpacity = '', borderColor = '#000' }) => {
+    const clipperStyl = {
+      width: `${cardWidth ? `${cardWidth / 25 / 2}px` : '25px'}`,
+      height: `${cardWidth ? `${cardWidth / 25}px` : '10px'}`,
     }
+    return (
+      <div className={classNames(styles.sideClippers, bgOpacity)}>
+        <div className={styles.clippersInner}>
+          <div
+            className={styles.leftClipper}
+            style={{ ...clipperStyl, borderColor }}
+          ></div>
+          <div
+            className={styles.rightClipper}
+            style={{ ...clipperStyl, borderColor }}
+          ></div>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className={styles.voucherCardMain}>
+    <div className={classNames(styles.voucherCardMain, styles.w100)}>
       <div
-        className="flip-card"
+        className={classNames(styles.flipCard, styles.w100)}
         style={{
-          width: `${`100%`}`,
           height: `${cardWidth ? `${cardWidth / 2}px` : '100%'}`,
         }}
       >
-        <div className="flip-card-inner" ref={cardRef} onClick={flipCard}>
+        <div className={styles.flipCardInner} ref={cardRef} onClick={cardFlip}>
           <div
-            className={`flip-card-front ${voucherType}`}
+            className={classNames(styles.flipCardFront, `${voucherType}`)}
             style={
               !voucherType && !voucherTypes.includes(voucherType)
                 ? voucherBackgroundUrl
@@ -145,27 +146,21 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                 : {}
             }
           >
-            <div
-              className={classNames(
-                styles.dots,
+            <SideClipper
+              bgOpacity={
                 (voucherBackgroundUrl || voucherType) && styles.bgOpacity
-              )}
-            >
-              <div className="dotsInner">
-                <div className="dot1" style={{ ...dotsStyles }}></div>
-                <div className="dot2" style={{ ...dotsStyles }}></div>
-              </div>
-            </div>
+              }
+            />
 
             <div className={styles.frontFaceContent}>
               <div className={styles.pRelative}>
                 <div className={styles.buttonsRow}>
-                  <div onClick={flipCard}>
+                  <div onClick={cardFlip}>
                     {bookNowButton && (
                       <Button type="default">{buttonLabel}</Button>
                     )}
                   </div>
-                  <div onClick={flipCard}>
+                  <div onClick={cardFlip}>
                     {showMenu && (
                       <>
                         <DotButton
@@ -236,19 +231,9 @@ export const VoucherCard: FC<VoucherCardProps> = ({
               </div>
             </div>
           </div>
-          <div className="flip-card-back" style={{ borderColor }}>
-            <div className={styles.dots}>
-              <div className="dotsInner">
-                <div
-                  className="dot1"
-                  style={{ ...dotsStyles, borderColor }}
-                ></div>
-                <div
-                  className="dot2"
-                  style={{ ...dotsStyles, borderColor }}
-                ></div>
-              </div>
-            </div>
+          <div className={styles.flipCardBack} style={{ borderColor }}>
+            <SideClipper borderColor={borderColor} />
+
             <div className={styles.backFaceContent}>
               <div className={styles.pRelative}>
                 <h1>{t('ui.vouchercard.back.title')}</h1>

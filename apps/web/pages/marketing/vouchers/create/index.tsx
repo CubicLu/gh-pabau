@@ -299,7 +299,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
               name="validity"
               size="large"
               placeholder={t('giftvouchers.create.label.validfor')}
-              style={{ width: '100%' }}
+              className={styles.w100}
               value={values?.validity || null}
             >
               <Option value="14 days">
@@ -573,12 +573,12 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                   nextButtonContent={
                     <span className={styles.dFlex}>
                       {t('giftvouchers.create.label.nextstep')}{' '}
-                      <RightOutlined style={{ marginLeft: '5px' }} />
+                      <RightOutlined className={styles.ml5} />
                     </span>
                   }
                   prevButtonContent={
                     <span className={styles.dFlex}>
-                      <LeftOutlined style={{ marginRight: '5px' }} />{' '}
+                      <LeftOutlined className={styles.mr5} />{' '}
                       {t('giftvouchers.create.label.prevstep')}
                     </span>
                   }
@@ -589,7 +589,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                     showExtraBtn && (
                       <Button
                         type="primary"
-                        style={{ marginRight: '10px' }}
+                        className={styles.mr10}
                         onClick={() => handleSubmit()}
                       >
                         {t('giftvouchers.create.label.create')}{' '}
@@ -674,7 +674,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                   </Row>
                 </Wstepper>
               </div>
-              <div style={{ display: 'none' }}>
+              <div className={styles.hidden}>
                 <input
                   type="file"
                   accept=".jpg, .png"

@@ -1,4 +1,16 @@
 .mainCreateVoucher {
+  .w100 {
+    width: 100%;
+  }
+  .ml5 {
+    margin-left: 5px;
+  }
+  .mr5 {
+    margin-right: 5px;
+  }
+  .mr10 {
+    margin-right: 10px;
+  }
   .pl10 {
     padding-left: 10px;
   }
@@ -218,11 +230,10 @@
               &.topMargin {
                 margin-top: 12.5px;
                 margin-bottom: 12.5px;
-              }
-
-              label {
-                margin-left: 12.5px;
-                margin-top: 2.5px;
+                label {
+                  margin-left: 12.5px;
+                  margin-top: 2.5px;
+                }
               }
             }
             :global .services-input {
@@ -251,6 +262,10 @@
                 border-color: #ecedf0;
                 box-shadow: none;
               }
+            }
+
+            textarea {
+              max-height: 300px;
             }
           }
           .themesDiv {
@@ -496,4 +511,8 @@
       right: 20px;
     }
   }
+}
+
+.hidden {
+  display: none;
 }
