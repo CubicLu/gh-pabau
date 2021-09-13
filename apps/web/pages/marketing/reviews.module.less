@@ -545,6 +545,7 @@
 
 .button-visible-wrap {
   justify-content: space-between;
+  opacity:0;
   @media screen and (max-width: 992px) {
     display: flex;
     flex-direction: column;
@@ -851,14 +852,25 @@
 .table-mob {
   :global .ant-table-wrapper {
     .ant-table-tbody {
-      tr td.ant-table-cell:nth-child(6) {
-        max-width: 217px;
-        width: 217px;
-        div {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: block;
+      tr {
+        &:hover {
+        td.ant-table-cell {
+          div {
+            div.reviews_button-visible-wrap__2txN_ {
+              opacity: 1;
+            }
+          }
+        }
+      }
+        td.ant-table-cell:nth-child(6) {
+          max-width: 217px;
+          width: 217px;
+          div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+          }
         }
       }
     }
@@ -917,7 +929,7 @@
 }
 
 .bannerSkeleton {
-  width: 721.13px;
+  width: 635.13px;
   height: 110.42px !important;
 }
 

@@ -121,11 +121,7 @@ const Layout: FC<LayoutProps> = ({
   let legacyPage: false | string = false
   if (data)
     for (const [, row] of data.feature_flags.entries()) {
-      if (
-        router.asPath.substring(1) === row.page_slug ||
-        router.asPath.substring(1) === '/' ||
-        row.page_slug === 'dashboard' // Hack until Nenad can namespace the feature flags)
-      ) {
+      if (router.asPath.substring(1) === row.page_slug) {
         legacyPage = '/' + row.fallback_slug
       }
     }

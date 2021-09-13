@@ -33,7 +33,7 @@ const Payments: FC<PaymentProps> = ({
       title: t('account.finance.payments.columns.invoiceNo'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '120px',
+      width: '150px',
       skeletonWidth: '80px',
       render: function render(data) {
         return (
@@ -47,6 +47,9 @@ const Payments: FC<PaymentProps> = ({
       className: 'drag-visible',
       skeletonWidth: '80px',
       visible: true,
+      render: function render(data) {
+        return <div style={{ minWidth: '50px' }}>{data}</div>
+      },
     },
     {
       title: t('account.finance.payments.columns.date'),

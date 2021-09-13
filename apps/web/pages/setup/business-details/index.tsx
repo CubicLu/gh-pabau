@@ -93,6 +93,8 @@ export const Index: FC = () => {
   const [location, setLocation] = useState('')
   const [historyData, setHistoryData] = useState('')
   const [timeFormat, setTimeFormat] = useState('')
+  const [companyLanguage, setCompanyLanguage] = useState('')
+  const [taxSingular, serTaxSingular] = useState('')
   const router = useRouter()
 
   const tabMenuItems = [
@@ -155,6 +157,8 @@ export const Index: FC = () => {
       setEnableLabs(record?.['lab_enabled'] ?? '')
       setHistoryData(record?.['history_data'])
       setTimeFormat(record?.['time_format'])
+      setCompanyLanguage(record?.['company_language'])
+      serTaxSingular(record?.['tax_singular'])
 
       const force_password_data = data?.me?.Company?.User?.filter(
         (item) => item.id === user?.me?.id
@@ -214,6 +218,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               location={location}
               loading={loading}
+              companyLanguage={companyLanguage}
               t={t}
             />
             <TerminologyTab
@@ -223,6 +228,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               opsData={opsData}
               loading={loading}
+              taxSingular={taxSingular}
               t={t}
             />
             <SystemTab
@@ -260,6 +266,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               location={location}
               loading={loading}
+              companyLanguage={companyLanguage}
               t={t}
             />
             <TerminologyTab
@@ -269,6 +276,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               opsData={opsData}
               loading={loading}
+              taxSingular={taxSingular}
               t={t}
             />
             <SystemTab

@@ -1,4 +1,32 @@
+.editInvoiceModal {
+  :global {
+    .ant-tabs-tab {
+      padding: 10px 60px !important;
+      font-size: 12px;
+      @media screen and (max-width: 767px) {
+        padding: 10px 40px !important;
+        font-size: 12px;
+      }
+    }
+    .ant-tabs.ant-tabs-top > .ant-tabs-nav {
+      @media screen and (max-width: 767px) {
+        position: fixed;
+        z-index: 10;
+      }
+    }
+  }
+}
 .editTitleContainer {
+  :global {
+    .ant-tag-green {
+      color: #52c41a;
+      font-size: 12px;
+    }
+    .ant-tag-red {
+      color: var(--red-color-text);
+      font-size: 12px;
+    }
+  }
   & > span > span {
     margin-left: 20px;
   }
@@ -255,6 +283,9 @@
   :global {
     .ant-modal-content {
       width: 570px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
       .ant-modal-header {
         border-bottom: none;
         padding-top: 25px;
@@ -277,4 +308,16 @@
       }
     }
   }
+}
+.sentLabelContainer {
+  cursor: pointer;
+}
+.notSendLabelIcon {
+  height: 15px;
+  width: 15px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-bottom: -2px;
+  margin-right: 7px;
+  border: 1px solid var(--success-color);
 }

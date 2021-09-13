@@ -454,6 +454,12 @@ export const CmContact = objectType({
         return root.Activity
       },
     })
+    t.nullable.field('ContactPreference', {
+      type: 'ContactPreference',
+      resolve(root: any) {
+        return root.ContactPreference
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmContactCountOutputType',
       resolve(root: any) {

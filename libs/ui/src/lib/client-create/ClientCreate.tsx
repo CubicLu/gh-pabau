@@ -63,20 +63,15 @@ export interface InitialDetailsProps {
   MailingStreet?: string
   MailingCity: string
   MailingPostal: string
-  MarketingOptInEmail?: boolean
-  MarketingOptInText?: boolean
-  MarketingOptInPost?: boolean
-  MarketingOptInPhone?: boolean
   marketingPromotion?: string[]
-  recordSharing?: Record<string, string>
+  recordSharing?: Record<string, number>
   privacyPolicy?: string
-  settingSharing?: Record<string, boolean>
+  settingSharing?: Record<string, number>
   shareLink?: string
   [key: string]:
     | string
     | string[]
-    | Record<string, string>
-    | Record<string, boolean>
+    | Record<string, number>
     | number
     | Dayjs
     | boolean
@@ -119,7 +114,6 @@ export interface ClientCreateProps {
   fieldsSettings?: FieldSetting[]
   marketingSources?: CommonProps[]
   limitContactsLocations?: LimitLocation[]
-  otherCompanies?: OtherCompany[]
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
   isSalutationLoading?: boolean
@@ -130,6 +124,7 @@ export interface ClientCreateProps {
   initialValues: InitialDetailsProps
   isDisabledBtn?: boolean
   companyName?: string
+  accessCode?: number
 }
 
 export interface Label {
@@ -161,6 +156,7 @@ export const ClientCreate: FC<ClientCreateProps> = ({
   validationObject,
   isDisabledBtn,
   companyName,
+  accessCode,
   ...props
 }) => {
   const { t } = useTranslation('common')
@@ -257,6 +253,7 @@ export const ClientCreate: FC<ClientCreateProps> = ({
                 companyName={companyName}
                 values={values}
                 setFieldValue={setFieldValue}
+                accessCode={accessCode}
               />,
             ]}
           </FullScreenReportModal>

@@ -1687,6 +1687,20 @@ export const Company = objectType({
         return root.Activity
       },
     })
+    t.list.field('ContactPreference', {
+      type: 'ContactPreference',
+      args: {
+        where: 'ContactPreferenceWhereInput',
+        orderBy: 'ContactPreferenceOrderByWithRelationInput',
+        cursor: 'ContactPreferenceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactPreferenceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactPreference
+      },
+    })
     t.list.field('ActivityUserColumns', {
       type: 'ActivityUserColumns',
       args: {

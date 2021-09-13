@@ -9,6 +9,7 @@ import {
   financeInvIssuingCompanies,
   financeInvContracts,
   financeInvAppointment,
+  locationOptions,
 } from '../../../../pages/test/ClientCardMock'
 
 interface Invoice {
@@ -32,13 +33,12 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
           onValuesChange={() => console.log('onValuesChange')}
           layout={'vertical'}
         >
-          <Form.Item label={t('ui.client-card-financial.invoice-no')}>
-            <Input
-              placeholder={t('ui.client-card-financial.invoice-no')}
-              name="invoice"
-              size={'large'}
-              value={invoice?.id}
-            />
+          <Form.Item
+            label={t('ui.client-card-financial.invoice-no')}
+            name="invoice"
+            rules={[{ required: true }]}
+          >
+            <Input placeholder={t('ui.client-card-financial.invoice-no')} />
           </Form.Item>
           <Form.Item label={t('ui.client-card-financial.appointment')}>
             <Select
@@ -67,6 +67,23 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
               style={{ width: '100%' }}
               value={moment(invoice?.date)}
             />
+          </Form.Item>
+          <Form.Item label={t('ui.client-card-financial.location')}>
+            <Select
+              size={'large'}
+              defaultValue={locationOptions[0]['key']}
+              onChange={() => console.log('handleChange')}
+              placeholder={t('ui.client-card-financial.location-placeholder')}
+              style={{ width: '100%' }}
+            >
+              {locationOptions.map((is) => {
+                return (
+                  <Option key={is.key} value={is.key}>
+                    {is.value}
+                  </Option>
+                )
+              })}
+            </Select>
           </Form.Item>
           <Form.Item label={t('ui.client-card-financial.issuing-company')}>
             <Select
@@ -107,7 +124,12 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
             <p className={styles.label}>
               {t('ui.client-card-financial.issued-to')}
             </p>
-            <Button type="primary" block size={'large'}>
+            <Button
+              type="primary"
+              block
+              size={'large'}
+              className={styles.issuedToBtn}
+            >
               {invoice?.issuedTo}
             </Button>
             <Button
@@ -123,8 +145,15 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
           <Form.Item
             label={t('ui.client-card-financial.invoice-notes')}
             name="notes"
+            className={styles.invoiceNotesRow}
           >
-            <TextArea rows={4} onChange={() => console.log('handleChange')} />
+            <TextArea
+              rows={4}
+              onChange={() => console.log('handleChange')}
+              placeholder={t(
+                'ui.client-card-financial.invoice-notes-placeholder'
+              )}
+            />
           </Form.Item>
         </Form>
       </div>

@@ -309,6 +309,7 @@ model Company {
   CmContactLabel                   CmContactLabel[]
   LeadStatus                       LeadStatus[]
   Activity                         Activity[]
+  ContactPreference                ContactPreference[]
 
   ActivityUserColumns ActivityUserColumns[]
   ActivityType        ActivityType[]
@@ -1912,6 +1913,7 @@ model CmContact {
   CmContactCustom           CmContactCustom[]
   CmContactLabel            CmContactLabel[]
   Activity                  Activity[]
+  ContactPreference         ContactPreference?
 
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Fname], name: "Fname")
@@ -1957,6 +1959,41 @@ model CmContactLabel {
 
   @@index([contact_id, company_id], name: "cm_contact_label_contact_id_company_id__index")
   @@map("cm_contact_label")
+}
+
+model ContactPreference {
+  id                 Int       @id @default(autoincrement())
+  company_id         Int
+  contact_id         Int
+  family             Int?      @default(0)
+  emergency_contact  Int?      @default(0)
+  next_of_kin        Int?      @default(0)
+  insurance_provider Int?      @default(0)
+  gp                 Int?      @default(0)
+  company            Int?      @default(0)
+  book_appointments  Int?      @default(0)
+  book_class         Int?      @default(0)
+  loyalty            Int?      @default(0)
+  my_packages        Int?      @default(0)
+  purchase_package   Int?      @default(0)
+  payments           Int?      @default(0)
+  appointments       Int?      @default(0)
+  class              Int?      @default(0)
+  documents          Int?      @default(0)
+  medications        Int?      @default(0)
+  allergies          Int?      @default(0)
+  gp_details         Int?      @default(0)
+  share_link         String?   @default("")
+  access_code        String?   @default("")
+  created_at         DateTime? @default(now())
+  updated_at         DateTime? @default(now())
+
+  Company Company   @relation(fields: [company_id], references: [id])
+  Contact CmContact @relation(fields: [contact_id], references: [ID])
+
+  @@unique([company_id, contact_id], name: "unique_company_id_contact_id")
+  @@index([contact_id, company_id], name: "contact_preferences_contact_id_company_id__index")
+  @@map("contact_preferences")
 }
 
 //model cm_contacts_alerts_import_helper {

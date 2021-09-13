@@ -169,6 +169,9 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               setAddActive(true)
               setAdd(val)
             },
+            onMenuOpen: () => {
+              setData(add?.label)
+            },
           }}
         />
       ) : (

@@ -5,7 +5,6 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component'
-import 'react-vertical-timeline-component/style.min.css'
 import { sharingHistory } from '../mock'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'

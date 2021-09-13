@@ -50,11 +50,21 @@ const ClientCard: FC = () => {
         FinancialTabComponent={
           <ClientFinancialsLayout
             tabLabels={[
-              t('ui.client-card-financial.invoices'),
-              t('ui.client-card-financial.payments'),
-              t('ui.client-card-financial.items'),
-              t('ui.client-card-financial.voided'),
-              t('ui.client-card-financial.statements'),
+              `${t('ui.client-card-financial.invoices')} (${
+                tabsProps.invoices.length
+              })`,
+              `${t('ui.client-card-financial.payments')} (${
+                tabsProps.payments.length
+              })`,
+              `${t('ui.client-card-financial.items')} (${
+                tabsProps.items.length
+              })`,
+              `${t('ui.client-card-financial.voided')} (${
+                tabsProps.voidedPayments.length
+              })`,
+              `${t('ui.client-card-financial.statements')} (${
+                tabsProps.statements.length
+              })`,
             ]}
             {...tabsProps}
           >
@@ -69,7 +79,10 @@ const ClientCard: FC = () => {
               invoiceEmployeeOptions={invoiceEmployeeOptions}
             />
             <Voided {...tabsProps} />
-            <Statements {...tabsProps} />
+            <Statements
+              dataProps={tabsProps}
+              locationOptions={locationOptions}
+            />
           </ClientFinancialsLayout>
         }
       />
