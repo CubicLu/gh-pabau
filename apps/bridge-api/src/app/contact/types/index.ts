@@ -67,7 +67,6 @@ export interface CreateContactInput {
   data: ContactInput
   customFields?: CustomFieldType[]
   limitContactLocations?: number[]
-  otherCompanyIds?: number[]
   labels?: LabelType[]
   contactPreferences?: ContactPreferenceType
 }

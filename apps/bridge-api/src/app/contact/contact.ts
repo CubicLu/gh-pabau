@@ -74,47 +74,39 @@ const createContact = async (
 export const create = async (
   ctx: Context,
   input: CreateContactInput
-): Promise<CmContact[]> => {
-  let companyIds = [ctx.authenticated.company]
+): Promise<CmContact> => {
+  const maxCustomId = await findMaxCustomId(ctx, ctx.authenticated.company)
 
-  if (input.otherCompanyIds) {
-    companyIds = [...companyIds, ...input.otherCompanyIds]
+  const inputData: ContactType = {
+    ...input.data,
+    company_id: ctx.authenticated.company,
+    OwnerID: ctx.authenticated.user,
+    DOB: input.data.DOB ? new Date(input.data.DOB) : null,
+    custom_id: maxCustomId,
   }
 
-  const contactList = []
+  delete inputData.preferred_language
 
-  for (const id of companyIds) {
-    const maxCustomId = await findMaxCustomId(ctx, id)
+  const contactData = await createContact(
+    ctx,
+    inputData,
+    input.customFields ? input.customFields : [],
+    input.limitContactLocations ? input.limitContactLocations : [],
+    input.contactPreferences,
+    !input.data.preferred_language
+      ? ctx.authenticated.language?.company
+      : input.data.preferred_language,
+    ctx.authenticated.company
+  )
 
-    const inputData: ContactType = {
-      ...input.data,
-      company_id: id,
-      OwnerID: ctx.authenticated.user,
-      DOB: input.data.DOB ? new Date(input.data.DOB) : null,
-      custom_id: maxCustomId,
-    }
-
-    delete inputData.preferred_language
-
-    const contactData = await createContact(
+  if (input.labels) {
+    await createLabel(
       ctx,
-      inputData,
-      input.customFields ? input.customFields : [],
-      id === ctx.authenticated.company && input.limitContactLocations
-        ? input.limitContactLocations
-        : [],
-      input.contactPreferences,
-      !input.data.preferred_language
-        ? ctx.authenticated.language?.company
-        : input.data.preferred_language,
-      id
+      input.labels,
+      contactData.ID,
+      ctx.authenticated.company
     )
-
-    if (input.labels) {
-      await createLabel(ctx, input.labels, contactData.ID, id)
-    }
-
-    contactList.push(contactData)
   }
-  return contactList
+
+  return contactData
 }

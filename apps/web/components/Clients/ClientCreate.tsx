@@ -15,7 +15,6 @@ import {
   useGetMarketingSourcesLazyQuery,
   useGetContactCustomFieldsLazyQuery,
   useFindManyLimitContactLocationLazyQuery,
-  useFindManySharedCompanyLazyQuery,
   useGetCmLabelsLazyQuery,
   useCreateOneContactMutation,
   GetTblModuleFieldsSettingsQuery,
@@ -139,11 +138,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   ] = useFindManyLimitContactLocationLazyQuery()
 
   const [
-    getOtherCompaniesData,
-    { data: otherCompaniesData, loading: otherCompanyLoading },
-  ] = useFindManySharedCompanyLazyQuery()
-
-  const [
     getCustomFieldData,
     { data: customFieldData, loading: customFieldLoading },
   ] = useGetContactCustomFieldsLazyQuery()
@@ -177,7 +171,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       getMarketingSourceData()
       getLabels()
       getLimitLocationData()
-      getOtherCompaniesData()
       getCustomFieldData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -360,8 +353,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       loading ||
       marketingSourceLoading ||
       locationLoading ||
-      customFieldLoading ||
-      otherCompanyLoading
+      customFieldLoading
     )
   }
 
@@ -373,7 +365,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const handleCreate = async (values, resetForm, setSelectedLabels) => {
     const customFieldsValue: cmFieldsCreateProps[] = []
     const limitContactsLocationsIds: number[] = []
-    const otherCompanyIds: number[] = []
 
     for (const field of Object.keys(values)) {
       let value = values[field]
@@ -403,9 +394,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       } else if (field.includes('limitContactsLocations_') && value) {
         const strVal = field.split('_')
         limitContactsLocationsIds.push(Number.parseInt(strVal[1]))
-      } else if (field.includes('otherCompany_') && value) {
-        const strVal = field.split('_')
-        otherCompanyIds.push(Number.parseInt(strVal[1]))
       }
     }
 
@@ -433,7 +421,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       gender: values.gender,
       preferredLanguage: values.preferredLanguage.toLowerCase(),
       privacyPolicy: values.privacyPolicy,
-      otherCompanyIds: otherCompanyIds,
       limitContactsLocations: limitContactsLocationsIds,
       labels: values.selectedLabels,
       customFields: customFieldsValue,
@@ -459,10 +446,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         share_link: values.shareLink,
         access_code: accessCode.toString(),
       },
-    }
-
-    if (otherCompanyIds.length === 0) {
-      delete variables.otherCompanyIds
     }
 
     if (limitContactsLocationsIds.length === 0) {
@@ -498,7 +481,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       fieldsSettings={fieldSettingData?.findManyTblModuleFieldsSetting}
       marketingSources={marketingSourceData?.findManyMarketingSource}
       limitContactsLocations={limitLocationData?.findManyLimitContactLocation}
-      otherCompanies={otherCompaniesData?.findManySharedCompany}
       isLoading={loading}
       isMarketingSourceLoading={marketingSourceLoading}
       isSalutationLoading={salutationLoading}

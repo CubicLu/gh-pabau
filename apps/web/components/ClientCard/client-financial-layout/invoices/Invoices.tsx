@@ -1,10 +1,13 @@
 import React, { FC, useState, useEffect, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Table, Pagination } from '@pabau/ui'
+import { Table, Pagination, Avatar } from '@pabau/ui'
+import classNames from 'classnames'
+import moment from 'moment'
 import {
   ClientFinancialsLayoutProps,
   InvoiceProp,
 } from './../ClientFinancialsLayout'
+import { ReactComponent as CollapseIcon } from '../../../../assets/images/collapse-icon.svg'
 import styles from './Invoices.module.less'
 import {
   Typography,
@@ -14,12 +17,10 @@ import {
   Space,
   Select,
   DatePicker,
+  Tag,
+  Tooltip,
 } from 'antd'
-import {
-  CloseCircleOutlined,
-  CaretDownOutlined,
-  FilterOutlined,
-} from '@ant-design/icons'
+import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
 import EditInvoice from './EditInvoice'
 import InvoiceFooter from './invoice-footer/InvoiceFooter'
 
@@ -28,6 +29,8 @@ const getInvoiceFilterValues = () => {
     type: 'all',
     employee: 'all',
     location: 'all',
+    dateStart: '',
+    dateEnd: '',
   }
 }
 
@@ -49,7 +52,8 @@ interface P {
 
 export const Invoices: FC<P> = (props) => {
   const { dataProps, invoiceEmployeeOptions, locationOptions } = props
-  const { invoices, totalInvoiced, totalOutstanding } = dataProps
+  const { totalInvoiced, totalOutstanding } = dataProps
+  const [invoices, setInvoices] = useState(dataProps.invoices)
   const { Text, Title } = Typography
   const { Option } = Select
   const { RangePicker } = DatePicker
@@ -66,6 +70,34 @@ export const Invoices: FC<P> = (props) => {
     showingRecords: 0,
   })
   const [invoiceFilter, setInvoiceFilter] = useState(getInvoiceFilterValues())
+
+  const updateInvoiceFilter = (e) => {
+    let tempInvoices = dataProps.invoices
+
+    if (e.type !== 'all' && e.type !== '') {
+      tempInvoices = tempInvoices.filter((i) => i.status === e.type)
+    }
+
+    if (e.employee !== 'all' && e.employee !== '') {
+      tempInvoices = tempInvoices.filter((i) => i.employee === e.employee)
+    }
+
+    if (e.location !== 'all' && e.location !== '') {
+      tempInvoices = tempInvoices.filter((i) => i.location === e.location)
+    }
+
+    if (e.dateStart) {
+      tempInvoices = tempInvoices.filter((i) => {
+        const invDate = moment(i.date, 'DD/MM/YYYY')
+        const startDate = e.dateStart
+        const endDate = e.dateEnd
+        return invDate.isBetween(startDate, endDate)
+      })
+    }
+
+    setInvoices(tempInvoices)
+    setInvoiceFilter(e)
+  }
 
   useEffect(() => {
     if (invoices) {
@@ -92,7 +124,6 @@ export const Invoices: FC<P> = (props) => {
       title: t('ui.client-card-financial.invoice'),
       dataIndex: 'id',
       className: 'columnTitle',
-      width: 100,
       visible: true,
       render: function renderItem(value, row) {
         return (
@@ -110,21 +141,18 @@ export const Invoices: FC<P> = (props) => {
       title: t('ui.client-card-financial.location'),
       dataIndex: 'location',
       className: 'columnTitle',
-      width: 150,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.employee'),
       dataIndex: 'employee',
       className: 'columnTitle',
-      width: 100,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.issued-to'),
       dataIndex: 'issuedTo',
       className: 'columnTitle',
-      width: 100,
       visible: true,
     },
     {
@@ -132,21 +160,69 @@ export const Invoices: FC<P> = (props) => {
       dataIndex: 'paid',
       className: 'columnTitle',
       visible: true,
-      width: 80,
-      render: function renderItem(value) {
-        return value
-          ? t('ui.client-card-financial.paid')
-          : t('ui.client-card-financial.unpaid')
+      render: function renderItem(value, row) {
+        return (
+          <div>
+            {value ? (
+              <Tag color="green">{t('ui.client-card-financial.paid')}</Tag>
+            ) : (
+              <Tag color="red">{t('ui.client-card-financial.unpaid')}</Tag>
+            )}
+            {invoices[0].id === row.id && (
+              <div className={styles.shareIcon}>
+                <Tooltip
+                  trigger={'click'}
+                  arrowPointAtCenter
+                  title={
+                    <div>
+                      <p style={{ margin: 5 }}>
+                        {t('ui.client-card-financial.shared-with')}
+                      </p>
+                      {[row.employee].map((x, index) => {
+                        return (
+                          <span className={styles.avatarIcon} key={index}>
+                            <Avatar key={index} name={x} size="large" />
+                          </span>
+                        )
+                      })}
+                    </div>
+                  }
+                >
+                  <EyeOutlined />
+                </Tooltip>
+              </div>
+            )}
+          </div>
+        )
       },
     },
     {
       title: t('ui.client-card-financial.amount'),
       dataIndex: 'grandTotal',
       className: 'columnTitle',
-      width: 110,
       visible: true,
-      render: function renderItem(value) {
-        return <span>£{value.toFixed(2)}</span>
+      render: function renderItem(value, row) {
+        return (
+          <div className={styles.collapseIconContainer}>
+            <span>£{value.toFixed(2)}</span>
+            <span
+              onClick={() => {
+                if (expandedRow === row['key']) return setExpandedRow(0)
+
+                setExpandedRow(row['key'])
+              }}
+            >
+              <CollapseIcon
+                className={classNames(
+                  styles.collapseIcon,
+                  expandedRow === row['key']
+                    ? styles.collapseIconExpanded
+                    : null
+                )}
+              />
+            </span>
+          </div>
+        )
       },
     },
   ]
@@ -220,7 +296,7 @@ export const Invoices: FC<P> = (props) => {
           <div>
             <Radio.Group
               onChange={(e) =>
-                setInvoiceFilter({ ...invoiceFilter, type: e.target.value })
+                updateInvoiceFilter({ ...invoiceFilter, type: e.target.value })
               }
               value={invoiceFilter.type}
             >
@@ -229,11 +305,17 @@ export const Invoices: FC<P> = (props) => {
                   {t('ui.client-card-financial.invoices.all')}
                 </Radio>
                 <Radio value={'outstanding_invoices'}>
-                  Outstanding invoices
+                  {t('ui.client-card-financial.invoices.outstanding-invoices')}
                 </Radio>
-                <Radio value={'paid_invoice'}>Paid invoice</Radio>
-                <Radio value={'unsent_invoices'}>Unsent invoices</Radio>
-                <Radio value={'sent_invoices'}>Sent Invoices</Radio>
+                <Radio value={'paid_invoice'}>
+                  {t('ui.client-card-financial.invoices.paid-invoice')}
+                </Radio>
+                <Radio value={'unsent_invoices'}>
+                  {t('ui.client-card-financial.invoices.unsent-invoices')}
+                </Radio>
+                <Radio value={'sent_invoices'}>
+                  {t('ui.client-card-financial.invoices.sent-invoices')}
+                </Radio>
               </Space>
             </Radio.Group>
           </div>
@@ -241,10 +323,9 @@ export const Invoices: FC<P> = (props) => {
         <div className={styles.invoicesFilCont}>
           <Text>{t('ui.client-card-financial.employee')}</Text>
           <Select
-            showSearch
             style={{ width: '100%' }}
             onChange={(e) =>
-              setInvoiceFilter({ ...invoiceFilter, employee: e })
+              updateInvoiceFilter({ ...invoiceFilter, employee: e })
             }
             defaultValue={invoiceFilter.employee}
           >
@@ -263,10 +344,9 @@ export const Invoices: FC<P> = (props) => {
         <div className={styles.invoicesFilCont}>
           <Text>{t('ui.client-card-financial.location')}</Text>
           <Select
-            showSearch
             style={{ width: '100%' }}
             onChange={(e) =>
-              setInvoiceFilter({ ...invoiceFilter, location: e })
+              updateInvoiceFilter({ ...invoiceFilter, location: e })
             }
             defaultValue={invoiceFilter.location}
           >
@@ -284,10 +364,18 @@ export const Invoices: FC<P> = (props) => {
         </div>
         <div className={styles.invoicesFilCont}>
           <Text>{t('ui.client-card-financial.invoices.date')}</Text>
-          <RangePicker onChange={(e) => console.log(e)} />
+          <RangePicker
+            onChange={(e) =>
+              updateInvoiceFilter({
+                ...invoiceFilter,
+                dateStart: e[0],
+                dateEnd: e[1],
+              })
+            }
+          />
         </div>
         <div className={styles.invoicesFilCont}>
-          <Button onClick={() => setInvoiceFilter(getInvoiceFilterValues())}>
+          <Button onClick={() => updateInvoiceFilter(getInvoiceFilterValues())}>
             {t('ui.client-card-financial.invoices.clear-all')}
           </Button>
         </div>
@@ -326,25 +414,9 @@ export const Invoices: FC<P> = (props) => {
           }))}
           columns={columns}
           noDataText={t('ui.client-card-financial.invoices')}
-          onExpand={(isExpanded, record) =>
-            setExpandedRow(isExpanded ? record['key'] : undefined)
-          }
-          expandIconColumnIndex={6}
           expandedRowRender={expandedRowRender}
           expandedRowKeys={[expandedRow]}
-          expandIcon={({ expanded, onExpand, record }) =>
-            expanded ? (
-              <CloseCircleOutlined
-                size={28}
-                onClick={(e) => onExpand(record, e)}
-              />
-            ) : (
-              <CaretDownOutlined
-                size={20}
-                onClick={(e) => onExpand(record, e)}
-              />
-            )
-          }
+          expandIcon={() => <span></span>}
         />
         <div className={styles.pagination}>
           <Pagination
