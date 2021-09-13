@@ -1,4 +1,4 @@
-query getClientAppointments($contactId: Int! = 23441120) {
+query getClientAppointments($contactId: Int!) {
   findManyBooking(where: { contact_id: { equals: $contactId } }) {
     id
     company_id
