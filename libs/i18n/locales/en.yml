@@ -8,6 +8,7 @@ en:
   search.placeholder: 'Search clients or leads'
   avatar.balance: Balance
   avatar.account.settings: 'Account Settings'
+  avatar.account.mail: 'Mail'
   avatar.tasks: Tasks
   avatar.give.feedback: 'Give feedback'
   avatar.help.support: 'Help & Support'
@@ -4897,4 +4898,3 @@ en:
   ui.clientcard-prescriptions.options.edit: 'Edit'
   ui.clientcard-prescriptions.options.repeat: 'Repeat'
   ui.clientcard-prescriptions.options.delete: 'Delete'
-

@@ -11,6 +11,7 @@ import {
   QuestionCircleOutlined,
   RightOutlined,
   UserOutlined,
+  MailOutlined,
 } from '@ant-design/icons'
 import {
   Avatar,
@@ -97,6 +98,19 @@ export const Dropdown: FC<DropDownInterface> = ({
           </Link>
         </div>
         <LaunchSVG className={styles.launchLogo} />
+      </Menu.Item>
+      <Menu.Item
+        key="Email"
+        className={classNames(styles.dropdownMenu, styles.avatarSpaceTop)}
+      >
+        <div className={styles.dropdownHeader}>
+          <MailOutlined style={{ color: '#9292A3' }} />
+          <Link href="/setup/gmail/connect">
+            <span className={styles.headerText}>
+              {t('avatar.account.mail')}
+            </span>
+          </Link>
+        </div>
       </Menu.Item>
       <Menu.Item
         key="task"
