@@ -57,7 +57,15 @@ const CreditNotes: FC<CreditNoteProps> = ({
       visible: true,
       skeletonWidth: '100px',
       render: function render(data) {
-        return <div style={{ minWidth: '50px' }}>{data}</div>
+        const item = data?.slice(0, 35)
+        const isLarge = data?.length > 35
+        return (
+          <Tooltip title={isLarge && data}>
+            <div style={{ minWidth: '50px' }}>
+              {isLarge ? item + '...' : data}
+            </div>
+          </Tooltip>
+        )
       },
     },
     {
@@ -76,10 +84,14 @@ const CreditNotes: FC<CreditNoteProps> = ({
       visible: true,
       skeletonWidth: '100px',
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
-            {data}
-          </Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -90,8 +102,14 @@ const CreditNotes: FC<CreditNoteProps> = ({
       visible: true,
       skeletonWidth: '100px',
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={{ color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -100,7 +118,6 @@ const CreditNotes: FC<CreditNoteProps> = ({
       title: t('account.finance.credit.note.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '150px',
       skeletonWidth: '50px',
       render: function render(data) {
         return (
