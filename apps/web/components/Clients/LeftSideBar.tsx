@@ -32,6 +32,7 @@ interface LeftSideBarProps {
   getClientsCountData?: any
   duplicateContactsCount?: any
   labelsList?: any
+  labelLoading?: boolean
   setLabelsList?: (val) => void
   handleApplyLabel?: (val) => void
   labelCountAll?: any
@@ -61,6 +62,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   getClientsCountData,
   duplicateContactsCount,
   labelsList,
+  labelLoading,
   addLabelMutation,
   handleApplyLabel,
   labelCountAll,
@@ -72,7 +74,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   }
 
   const getValueByKey = (object, key) => {
-    return object.find((item) => item.id === key)['count']
+    return object.find((item) => item.id === key)?.['count']
   }
 
   return (
@@ -108,12 +110,20 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Divider />
         <SubMenu title={t('clients.leftSidebar.labels')} key="mainLabels">
           <SubMenu
-            style={labelsList.length > 10 ? {} : null}
+            style={
+              labelsList.length > 10
+                ? {
+                    height: '200px',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                  }
+                : null
+            }
             key={tab.labels}
             title={'no title'}
             className={styles.modifiedItem}
           >
-            {labelsList?.length === 0
+            {labelLoading
               ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
                   <Menu.Item key={item}>
                     <div className={styles.labelSkeletonWrapper}>

@@ -141,5 +141,8 @@ mutation addLabel($name: String!, $color: String) {
     id
     name
     color
+    _count {
+      CmContactLabel
+    }
   }
 }

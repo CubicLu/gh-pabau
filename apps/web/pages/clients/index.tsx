@@ -58,6 +58,7 @@ export const Clients: FC<ClientsProps> = () => {
   const [labelsList, setLabelsList] = useState([])
   const [dataLoaded, setDataLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isLabelLoading, setIsLabelLoading] = useState(true)
   const [countFilterLabels, setCountFilterLabels] = useState(null)
   const [filterId, setFilterId] = useState(undefined)
   const [contactsSourceData, setContactsSourceData] = useState(null)
@@ -66,28 +67,48 @@ export const Clients: FC<ClientsProps> = () => {
     fetchPolicy: 'no-cache',
     onCompleted(response) {
       setLabelsList(response?.findManyCmLabel)
-      const labels = response?.findManyCmLabel
-      let status
-      const labelCounts = labels
-        .filter((i) => {
-          const { CmContactLabel } = i
-          status = true
-          for (const l of CmContactLabel) {
-            if (!!l.CmContact.is_active === false) {
-              status = false
-              break
-            }
-          }
-          return status === true
-        })
-        .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
+      const labelCounts = getAllLabelsCount(response?.findManyCmLabel)
+      // const labels = response?.findManyCmLabel
+      // let status
+      // const labelCounts = labels
+      //   .filter((i) => {
+      //     const { CmContactLabel } = i
+      //     status = true
+      //     for (const l of CmContactLabel) {
+      //       if (!!l.CmContact.is_active === false) {
+      //         status = false
+      //         break
+      //       }
+      //     }
+      //     return status === true
+      //   })
+      //   .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
       setCountFilterLabels(labelCounts)
+      setIsLabelLoading((val) => !val)
       setDataLoaded(true)
     },
     onError(error) {
       console.error(error)
     },
   })
+
+  const getAllLabelsCount = (data) => {
+    const labels = [...data]
+    let status
+    return labels
+      .filter((i) => {
+        const { CmContactLabel } = i
+        status = true
+        for (const l of CmContactLabel) {
+          if (!!l.CmContact.is_active === false) {
+            status = false
+            break
+          }
+        }
+        return status === true
+      })
+      .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
+  }
 
   const getCountVariables = useMemo(() => {
     const queryVariables = {
@@ -136,6 +157,12 @@ export const Clients: FC<ClientsProps> = () => {
         color: response.createOneCmLabel.color,
       }
       setLabelsList([...labelsList, responseLabel])
+      const newCount = [...countFilterLabels]
+      newCount.push({
+        id: response.createOneCmLabel.id,
+        count: response.createOneCmLabel._count.CmContactLabel,
+      })
+      setCountFilterLabels(newCount)
     },
     onError(error) {
       console.error(error)
@@ -225,7 +252,7 @@ export const Clients: FC<ClientsProps> = () => {
   }, [])
 
   useEffect(() => {
-    if (getContactsData && labelsList?.length > 0) {
+    if (getContactsData) {
       const contactsData = mapContactData(getContactsData)
       setContactsSourceData(contactsData)
     }
@@ -236,8 +263,9 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getContactsData?.findManyCmContact?.length,
       }))
     }
+    if (!isLoading) setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getContactsData, labelsList, getClientsCountData])
+  }, [getContactsData, getClientsCountData])
 
   useEffect(() => {
     if (getfilteredContacts) {
@@ -252,6 +280,7 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getfilteredContacts?.findManyCmContact?.length,
       }))
     }
+    if (!isLoading) setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getfilteredContacts, getfilteredContactsCount])
 
@@ -402,7 +431,8 @@ export const Clients: FC<ClientsProps> = () => {
       filteredData = filterObject
     }
     setSourceFilteredData(filteredData)
-    if (dataLoaded) setIsLoading(false)
+    // if (dataLoaded)
+    if (contactsSourceData?.length) setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, selectedTab, contactsSourceData])
 
@@ -743,12 +773,12 @@ export const Clients: FC<ClientsProps> = () => {
                 <Sider>
                   <LeftSideBar
                     setSelectedTab={(e) => {
-                      setIsLoading(true)
-                      setDataLoaded(false)
                       if (
                         e.toString() === tab.clients ||
                         e.toString() === tab.contacts
                       ) {
+                        setDataLoaded(false)
+                        setIsLoading(true)
                         getContactList()
                         getContactListCount()
                       }
@@ -757,6 +787,7 @@ export const Clients: FC<ClientsProps> = () => {
                     selectedTab={selectedTab}
                     labels={labels}
                     labelsList={labelsList}
+                    labelLoading={isLabelLoading}
                     setLabels={setLabels}
                     setLabelsList={setLabelsList}
                     selectedLabels={selectedLabels}
