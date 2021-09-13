@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Typography } from 'antd'
+import { Typography, Tooltip } from 'antd'
 import TableLayout, { FilterValueType } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Dayjs } from 'dayjs'
@@ -33,7 +33,6 @@ const Payments: FC<PaymentProps> = ({
       title: t('account.finance.payments.columns.invoiceNo'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '150px',
       skeletonWidth: '80px',
       render: function render(data) {
         return (
@@ -48,7 +47,15 @@ const Payments: FC<PaymentProps> = ({
       skeletonWidth: '80px',
       visible: true,
       render: function render(data) {
-        return <div style={{ minWidth: '50px' }}>{data}</div>
+        const item = data?.slice(0, 35)
+        const isLarge = data?.length > 35
+        return (
+          <Tooltip title={isLarge && data}>
+            <div style={{ minWidth: '50px' }}>
+              {isLarge ? item + '...' : data}
+            </div>
+          </Tooltip>
+        )
       },
     },
     {
@@ -69,8 +76,14 @@ const Payments: FC<PaymentProps> = ({
       skeletonWidth: '80px',
       visible: true,
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={{ color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
     },
