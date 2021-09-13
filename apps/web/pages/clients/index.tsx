@@ -56,7 +56,7 @@ export const Clients: FC<ClientsProps> = () => {
   const clientRef = useRef(null)
   const [searchText, setSearchText] = useState('')
   const [labelsList, setLabelsList] = useState([])
-  const [dataLoaded, setDataLoaded] = useState(false)
+  // const [dataLoaded, setDataLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isLabelLoading, setIsLabelLoading] = useState(true)
   const [countFilterLabels, setCountFilterLabels] = useState(null)
@@ -85,7 +85,7 @@ export const Clients: FC<ClientsProps> = () => {
       //   .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
       setCountFilterLabels(labelCounts)
       setIsLabelLoading((val) => !val)
-      setDataLoaded(true)
+      // setDataLoaded(true)
     },
     onError(error) {
       console.error(error)
@@ -225,7 +225,7 @@ export const Clients: FC<ClientsProps> = () => {
     ...getQueryVariables,
     fetchPolicy: 'no-cache',
     onCompleted() {
-      setDataLoaded(true)
+      // setDataLoaded(true)
     },
   })
 
@@ -271,7 +271,7 @@ export const Clients: FC<ClientsProps> = () => {
     if (getfilteredContacts) {
       const filterData = mapContactData(getfilteredContacts)
       setContactsSourceData(filterData)
-      setDataLoaded(true)
+      // setDataLoaded(true)
     }
     if (getfilteredContactsCount) {
       setPaginateData((d) => ({
@@ -469,7 +469,7 @@ export const Clients: FC<ClientsProps> = () => {
     setSelectedTab(label)
     setFilterId(id)
     setIsLoading((val) => !val)
-    setDataLoaded((val) => !val)
+    // setDataLoaded((val) => !val)
     getContactsByLabel()
     getContactsByLabelCount()
   }
@@ -777,7 +777,7 @@ export const Clients: FC<ClientsProps> = () => {
                         e.toString() === tab.clients ||
                         e.toString() === tab.contacts
                       ) {
-                        setDataLoaded(false)
+                        // setDataLoaded(false)
                         setIsLoading(true)
                         getContactList()
                         getContactListCount()
