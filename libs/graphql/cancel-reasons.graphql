@@ -1,0 +1,6 @@
+query getCancelReason {
+  findManyCancelReason {
+    id
+    reason_name
+  }
+}
