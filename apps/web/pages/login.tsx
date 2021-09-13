@@ -1,9 +1,16 @@
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
 import { Logo } from '../components/Logo/Logo'
 import { LoginMain } from '../components/Auth/Login'
+import PasswordReset from '../pages/resetPassword/index'
+import { useRouter } from 'next/router'
 import styles from './login.module.less'
 
 const Login = () => {
+  const router = useRouter()
+
+  if (router.asPath.substring(0, 14) === '/resetPassword')
+    return <PasswordReset />
+
   return (
     <div className={styles.signInWrapper}>
       <div className={styles.signInBackground}>
