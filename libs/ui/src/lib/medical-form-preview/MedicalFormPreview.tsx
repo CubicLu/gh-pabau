@@ -5,6 +5,7 @@ import {
   Stepper,
   StepperItem,
   TabMenu,
+  MacroItem,
 } from '@pabau/ui'
 import { Divider, Tag } from 'antd'
 import React, { FC } from 'react'
@@ -28,6 +29,8 @@ export interface MedicalFormPreviewProps {
   stepData: StepperItem[]
   visible: boolean
   closePreviewDialog?: () => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
+  medicalFormMacros?: MacroItem[]
 }
 
 export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
@@ -41,6 +44,8 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
   stepData,
   visible,
   closePreviewDialog,
+  onHandleMacro,
+  medicalFormMacros = [],
 }) => {
   const onCancel = () => {
     closePreviewDialog?.()
@@ -65,6 +70,8 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
                   <FormComponentBuilder
                     previewData={formData}
                     formSaveLabel={formSaveLabel}
+                    onHandleMacro={onHandleMacro}
+                    medicalFormMacros={medicalFormMacros}
                   />
                 )}
               </div>

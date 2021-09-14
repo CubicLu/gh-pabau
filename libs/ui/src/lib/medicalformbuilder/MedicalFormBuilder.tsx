@@ -9,6 +9,7 @@ import {
   NotificationType,
   SmsMessageTemplateItem,
   UserListItem,
+  MacroItem,
 } from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
 import className from 'classnames'
@@ -62,6 +63,7 @@ interface MedicalFormBuilderProps {
   visible: boolean
   onHideFormBuilder: () => void
   onSaveForm?: (MedicalFormItem) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
   preFormName: string
   preFormType: string
   create?: boolean
@@ -69,6 +71,7 @@ interface MedicalFormBuilderProps {
   smsMessageTemplateItems?: SmsMessageTemplateItem[]
   emailMessageTemplateItems?: EmailMessageTemplateItem[]
   userListItems?: UserListItem[]
+  medicalFormMacros?: MacroItem[]
 }
 
 export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
@@ -76,6 +79,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   visible = false,
   onHideFormBuilder,
   onSaveForm,
+  onHandleMacro,
   preFormName = '',
   preFormType = '',
   create = true,
@@ -83,6 +87,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   smsMessageTemplateItems = [],
   emailMessageTemplateItems = [],
   userListItems = [],
+  medicalFormMacros = [],
 }) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
@@ -283,6 +288,8 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               formData={formData}
               formName={formName}
               formSaveLabel={formSaveLabel}
+              onHandleMacro={onHandleMacro}
+              medicalFormMacros={medicalFormMacros}
             />
           )}
         </TabPane>

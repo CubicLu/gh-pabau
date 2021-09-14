@@ -199,7 +199,7 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                   // form.formName === 'basic_traveldestination' ||
                   // form.formName === 'basic_vaccinescheduler' ||
                   // form.formName === 'basic_vaccinehistory' ||
-                  // form.formName === 'basic_labtests' ||
+                  form.formName === 'basic_labtests' ||
                   form.formName === 'basic_snomed'
               )
               .map((form) => {

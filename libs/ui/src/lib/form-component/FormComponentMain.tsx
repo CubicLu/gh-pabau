@@ -7,12 +7,25 @@ interface P {
   draggedForms: MedicalFormTypes[]
   formSaveLabel?: string
   processSaveForm?: () => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
+  medicalFormMacros?: MacroItem[]
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
-  const { draggedForms, formSaveLabel = '', processSaveForm } = props
+  const {
+    draggedForms,
+    formSaveLabel = '',
+    processSaveForm,
+    onHandleMacro,
+    medicalFormMacros = [],
+  } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   const [macroItems, setMacroItems] = useState<MacroItem[]>([])
+
+  useEffect(() => {
+    console.log('medicalFormMacros', medicalFormMacros)
+    setMacroItems(medicalFormMacros)
+  }, [medicalFormMacros])
 
   useEffect(() => {
     const requiredForms = draggedForms.filter((form) => form.required === true)
@@ -54,10 +67,6 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
     processSaveForm?.()
   }
 
-  const onSaveMacroItems = (macros: MacroItem[]) => {
-    setMacroItems(macros)
-  }
-
   return (
     <div className={styles.formComponentMain}>
       {draggedForms?.map((form, index) => {
@@ -70,7 +79,7 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
               handleId={form.id}
               formData={form}
               handlingSaveForm={handlingSaveForm}
-              onSaveMacroItems={onSaveMacroItems}
+              onHandleMacro={onHandleMacro}
               macroItems={macroItems}
             />
           </div>

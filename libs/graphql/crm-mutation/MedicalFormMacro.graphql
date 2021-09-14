@@ -1,0 +1,43 @@
+fragment MedicalFormMacroFields on MedicalFormMacro {
+  id
+  createdAt
+  title
+  message
+  type
+  created_by
+  company_id
+}
+
+fragment MedicalFormMacro on MedicalFormMacro {
+  ...MedicalFormMacroFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneMedicalFormMacro($data: MedicalFormMacroCreateInput!) {
+  createOneMedicalFormMacro(data: $data) {
+    ...MedicalFormMacro
+  }
+}
+
+mutation updateOneMedicalFormMacro($where: MedicalFormMacroWhereUniqueInput!, $data: MedicalFormMacroUpdateInput!) {
+  updateOneMedicalFormMacro(where: $where, data: $data) {
+    ...MedicalFormMacro
+  }
+}
+
+mutation deleteOneMedicalFormMacro($where: MedicalFormMacroWhereUniqueInput!) {
+  deleteOneMedicalFormMacro(where: $where) {
+    ...MedicalFormMacro
+  }
+}
+
+mutation updateManyMedicalFormMacro(
+  $where: MedicalFormMacroWhereInput
+  $data: MedicalFormMacroUpdateManyMutationInput!
+) {
+  updateManyMedicalFormMacro(where: $where, data: $data) {
+    count
+  }
+}

@@ -2506,6 +2506,8 @@ en:
   ui.medicalform.setting.requried.tooltip: 'You must use "Required" if you wish to link the answer from the client to a field'
   ui.inputwithtag.addtag: 'Add field'
   ui.inputwithtag.modal.title: 'Add a Personalization'
+  ui.macro.modal.placeholder: 'Type # to add a macro'
+  ui.macro.modal.add.title: 'Add a macro'
   ui.macro.modal.title: 'Macros'
   ui.macro.modal.create: 'Create'
   ui.macro.modal.manage: 'Manage'
@@ -2516,6 +2518,8 @@ en:
   ui.macro.modal.create.placeholder.message: 'Message'
   ui.macro.modal.create.type.everywhere: 'Everywhere'
   ui.macro.modal.create.type.myself: 'Myself only'
+  ui.macro.modal.create.add.success: 'Macro has been added successfully'
+  ui.macro.modal.create.del.success: 'Macro has been deleted successfully'  
   ui.macro.modal.manage.title: 'Manage macros'
   setup.reports.team-report: Team Report
   setup.reports.search-report: Search by report name
@@ -4591,6 +4595,10 @@ en:
   setup.medical.forms.save.err.text: 'Error! While saving the medical form'
   setup.medical.forms.search.asc: 'Ascending'
   setup.medical.forms.search.desc: 'Descending'
+  setup.medical.forms.macro.create.text: 'Macro has been added successfully'
+  setup.medical.forms.macro.create.err.text: 'Error! While creating the macro'
+  setup.medical.forms.macro.del.text: 'Macro has been deleted successfully'
+  setup.medical.forms.macro.del.err.text: 'Error! While deleting the macro'
   setup.activity.types.lower-case: 'activity types'
   setup.activity.types.create: 'Create Activity Type'
   setup.activity.types.name: 'Name'

@@ -421,7 +421,7 @@ const SettingElement: FC<P> = ({
               filteredComponent[0].component === 'basic_dropdown' ||
               filteredComponent[0].component === 'basic_conditions' ||
               filteredComponent[0].component === 'basic_drugs' ||
-              // filteredComponent[0].component === 'basic_labtests' ||
+              filteredComponent[0].component === 'basic_labtests' ||
               // filteredComponent[0].component === 'basic_traveldestination' ||
               // filteredComponent[0].component === 'basic_vaccinescheduler' ||
               // filteredComponent[0].component === 'basic_vaccinehistory' ||

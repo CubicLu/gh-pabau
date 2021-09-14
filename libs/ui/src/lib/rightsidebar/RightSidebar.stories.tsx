@@ -23,7 +23,7 @@ export default {
           'basic_signature',
           'basic_conditions',
           'basic_drugs',
-          // 'basic_labtests',
+          'basic_labtests',
           // 'basic_traveldestination',
           // 'basic_vaccinescheduler',
           // 'basic_vaccinehistory',

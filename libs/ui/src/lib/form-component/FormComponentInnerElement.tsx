@@ -26,7 +26,7 @@ interface P {
   handleId: string
   formData: MedicalFormTypes
   handlingSaveForm?: (form: MedicalFormTypes) => void
-  onSaveMacroItems?: (macros: MacroItem[]) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
   macroItems?: MacroItem[]
 }
 
@@ -37,8 +37,8 @@ const FormComponentInnerElement: FC<P> = ({
   handleId,
   formData,
   handlingSaveForm,
-  onSaveMacroItems,
   macroItems = [],
+  onHandleMacro,
 }) => {
   const [form, setForm] = useState(cloneDeep(formData))
 
@@ -192,7 +192,7 @@ const FormComponentInnerElement: FC<P> = ({
                 defaultValue={formData.txtDefaults}
                 required={formData.required}
                 onChangeTextValue={onChangeTextValue}
-                onSaveMacroItems={onSaveMacroItems}
+                onHandleMacro={onHandleMacro}
                 macroItems={macroItems}
                 isTextArea={false}
               />
@@ -219,21 +219,10 @@ const FormComponentInnerElement: FC<P> = ({
               defaultValue={formData.txtDefaults}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
-              onSaveMacroItems={onSaveMacroItems}
+              onHandleMacro={onHandleMacro}
               macroItems={macroItems}
               isTextArea={true}
             />
-            // <FormTextArea
-            //   title={formData.txtQuestion}
-            //   desc={''}
-            //   placeHolder={''}
-            //   defaultValue={formData.txtDefaults}
-            //   required={formData.required}
-            //   onChangeTextValue={onChangeTextValue}
-            //   macro={true}
-            //   onSaveMacroItems={onSaveMacroItems}
-            //   macroItems={macroItems}
-            // />
           )}
           {formData && formData.formName === 'form_snomed' && (
             <FormSnomed

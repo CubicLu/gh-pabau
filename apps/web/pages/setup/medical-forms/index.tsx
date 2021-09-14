@@ -19,6 +19,12 @@ import {
   UserOrderByWithRelationInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
+  useCreateOneMedicalFormMacroMutation,
+  useDeleteOneMedicalFormMacroMutation,
+  FindMedicalFormMacrosDocument,
+  useFindMedicalFormMacrosQuery,
+  MedicalFormMacroWhereInput,
+  MedicalFormMacroOrderByWithRelationInput,
 } from '@pabau/graphql'
 import {
   Breadcrumb,
@@ -36,6 +42,7 @@ import {
   TabMenu,
   UserListItem,
 } from '@pabau/ui'
+import { useUser } from '../../../context/UserContext'
 import { Input, Typography } from 'antd'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -71,6 +78,7 @@ export const Index: FC = () => {
   const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
     []
   )
+  const [medicalFormMacros, setMedicalFormMacros] = useState<MacroItem[]>([])
   const [smsMessageTemplateItems, setSmsMessageTemplateItems] = useState<
     SmsMessageTemplateItem[]
   >([])
@@ -99,6 +107,7 @@ export const Index: FC = () => {
   })
 
   const { t } = useTranslationI18()
+  const loggedInUser = useUser()
 
   const getQueryVariables = useMemo(() => {
     const whereQuery: MedicalFormWhereInput = {}
@@ -330,7 +339,6 @@ export const Index: FC = () => {
   })
 
   const saveForm = async (medicalItem) => {
-    console.log('medicalItem =', medicalItem)
     setShowCreateForm(false)
 
     const updateVariables = {
@@ -455,6 +463,116 @@ export const Index: FC = () => {
     setSearchrData(newSearchData)
   }
 
+  const getMacroQueryVariables = useMemo(() => {
+    const whereQuery: MedicalFormMacroWhereInput = {}
+    whereQuery.OR = []
+    whereQuery.OR.push(
+      { created_by: { equals: loggedInUser?.me?.user } },
+      { type: { equals: 0 } }
+    )
+
+    const orderBy: MedicalFormMacroOrderByWithRelationInput = {
+      title: SortOrder.Asc,
+    }
+
+    const macroQueryOptions = {
+      variables: {
+        where: whereQuery,
+        orderBy: orderBy,
+      },
+    }
+    return macroQueryOptions
+  }, [loggedInUser])
+
+  const { data: macros } = useFindMedicalFormMacrosQuery(getMacroQueryVariables)
+
+  useEffect(() => {
+    if (macros?.findManyMedicalFormMacro) {
+      const medicalFormMacroList = macros?.findManyMedicalFormMacro.map(
+        (macro, index) => ({
+          id: macro.id.toString(),
+          title: macro.title,
+          message: macro.message,
+          type: macro.type,
+          createdAt:
+            companyDateFormat === 'd/m/Y'
+              ? dayjs(macro.createdAt).format('DD/MM/YYYY HH:mm:ss')
+              : dayjs(macro.createdAt).format('MM/DD/YYYY HH:mm:ss'),
+        })
+      )
+      setMedicalFormMacros(medicalFormMacroList)
+    }
+  }, [macros, companyDateFormat])
+
+  const [addMacroMutation] = useCreateOneMedicalFormMacroMutation({
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.medical.forms.macro.create.text')
+      )
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.medical.forms.macro.create.err.text')
+      )
+    },
+  })
+
+  const [delMacroMutation] = useDeleteOneMedicalFormMacroMutation({
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.medical.forms.macro.del.text')
+      )
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.medical.forms.macro.del.err.text')
+      )
+    },
+  })
+
+  const onHandleMacro = async (action, macro) => {
+    console.log('macro', macro)
+    if (action === 'add') {
+      const creatMacroVariables = {
+        data: {
+          title: macro.title,
+          createdAt: macro.createdAt,
+          message: macro.message,
+          type: macro.type,
+          Company: {},
+          created_by: loggedInUser?.me?.user,
+        },
+      }
+      await addMacroMutation({
+        variables: creatMacroVariables,
+        refetchQueries: [
+          {
+            query: FindMedicalFormMacrosDocument,
+            ...getMacroQueryVariables,
+          },
+        ],
+      })
+    } else if (action === 'del') {
+      await delMacroMutation({
+        variables: {
+          where: {
+            id: Number(macro.id),
+          },
+        },
+        refetchQueries: [
+          {
+            query: FindMedicalFormMacrosDocument,
+            ...getMacroQueryVariables,
+          },
+        ],
+      })
+    }
+  }
+
   return (
     <Layout>
       <NotificationBanner
@@ -572,6 +690,7 @@ export const Index: FC = () => {
                 smsMessageTemplateItems={smsMessageTemplateItems}
                 emailMessageTemplateItems={emailMessageTemplateItems}
                 userListItems={userListItems}
+                medicalFormMacros={medicalFormMacros}
               />
             )}
           </div>
@@ -591,7 +710,9 @@ export const Index: FC = () => {
             smsMessageTemplateItems={smsMessageTemplateItems}
             emailMessageTemplateItems={emailMessageTemplateItems}
             userListItems={userListItems}
+            medicalFormMacros={medicalFormMacros}
             onSaveForm={saveForm}
+            onHandleMacro={onHandleMacro}
             pagenateParams={paginateData}
             updatePaginateData={updatePaginateData}
           />

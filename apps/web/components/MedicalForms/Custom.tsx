@@ -21,6 +21,7 @@ import {
   Table,
   UserListItem,
   VersionHistory,
+  MacroItem,
 } from '@pabau/ui'
 import { Input } from 'antd'
 // import { useRouter } from 'next/router'
@@ -45,7 +46,9 @@ interface CustomProps {
   smsMessageTemplateItems: SmsMessageTemplateItem[]
   emailMessageTemplateItems: EmailMessageTemplateItem[]
   userListItems: UserListItem[]
+  medicalFormMacros: MacroItem[]
   onSaveForm?: (MedicalFormItem) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
   pagenateParams: Paginate
   updatePaginateData?: (pagenateData: Paginate) => void
 }
@@ -56,9 +59,11 @@ const Custom: FC<CustomProps> = ({
   smsMessageTemplateItems,
   emailMessageTemplateItems,
   userListItems,
+  medicalFormMacros = [],
   onSaveForm,
   pagenateParams,
   updatePaginateData,
+  onHandleMacro,
 }) => {
   const [showVersions, setShowVersions] = useState(false)
   const [currentItem, setCurrentItem] = useState<MedicalFormItem>()
@@ -284,6 +289,8 @@ const Custom: FC<CustomProps> = ({
                   closePreviewDialog={() =>
                     setShowPreview((showPreview) => !showPreview)
                   }
+                  onHandleMacro={onHandleMacro}
+                  medicalFormMacros={medicalFormMacros}
                 />
               )}
               <Button
@@ -441,10 +448,12 @@ const Custom: FC<CustomProps> = ({
         currentForm={selectedItem}
         onHideFormBuilder={() => setEditFormModal(false)}
         onSaveForm={handleSaveForm}
+        onHandleMacro={onHandleMacro}
         create={false}
         smsMessageTemplateItems={smsMessageTemplateItems}
         emailMessageTemplateItems={emailMessageTemplateItems}
         userListItems={userListItems}
+        medicalFormMacros={medicalFormMacros}
       />
       <div className={styles.paginationContainer}>
         <Pagination

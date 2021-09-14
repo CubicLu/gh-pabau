@@ -298,6 +298,7 @@ model Company {
   CreditNoteType                   CreditNoteType[]
   MedicalForm                      MedicalForm[]
   MedicalFormAdvancedSetting       MedicalFormAdvancedSetting[]
+  MedicalFormMacro                 MedicalFormMacro[]
   CmLeadCustomField                CmLeadCustomField[]
   CmLeadCustomFieldOrder           CmLeadCustomFieldOrder[]
   SaleItem                         SaleItem[]
@@ -8383,6 +8384,22 @@ model MedicalForm {
   @@index([company_id], name: "occupier")
   @@index([service_id], name: "service_id")
   @@map("medical_form")
+}
+
+model MedicalFormMacro {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime
+  title      String
+  message    String
+  type       Int
+  created_by Int
+  company_id Int?
+  Company    Company? @relation(fields: [company_id], references: [id])
+
+  @@unique([id, company_id], name: "primary")
+  @@index([created_by], name: "created_by")
+  @@index([company_id], name: "company_id")
+  @@map("medical_form_macro")
 }
 
 //model medical_forms_ios_data {

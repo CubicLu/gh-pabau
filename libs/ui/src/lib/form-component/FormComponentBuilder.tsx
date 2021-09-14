@@ -1,4 +1,4 @@
-import { ArrayItem, MedicalFormTypes, OptionType } from '@pabau/ui'
+import { ArrayItem, MedicalFormTypes, OptionType, MacroItem } from '@pabau/ui'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import FormComponentMain from './FormComponentMain'
@@ -194,12 +194,16 @@ interface P {
   previewData: string
   formSaveLabel?: string
   saveMedicalFormHistory?: (draggedForms: MedicalFormTypes[]) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
+  medicalFormMacros?: MacroItem[]
 }
 
 export const FormComponentBuilder: FC<P> = ({
   previewData,
   formSaveLabel = '',
   saveMedicalFormHistory,
+  onHandleMacro,
+  medicalFormMacros = [],
 }) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
@@ -245,6 +249,8 @@ export const FormComponentBuilder: FC<P> = ({
         draggedForms={draggedForms}
         formSaveLabel={formSaveLabel}
         processSaveForm={processSaveForm}
+        onHandleMacro={onHandleMacro}
+        medicalFormMacros={medicalFormMacros}
       />
     </div>
   )

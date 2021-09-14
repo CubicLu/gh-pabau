@@ -87,7 +87,7 @@ export const FormSnomed: FC<P> = ({
         setReadOnly(true)
         try {
           const response = await fetch(
-            'https://termbrowser.nhs.uk/sct-browser-api/snomed/uk-edition/v20210707/descriptions?query=' +
+            'https://termbrowser.nhs.uk/sct-browser-api/snomed/uk-edition/v20210901/descriptions?query=' +
               searchVal +
               '&limit=50&searchMode=partialMatching&lang=english&statusFilter=activeOnly&skipTo=0&returnLimit=50&normalize=true',
             {

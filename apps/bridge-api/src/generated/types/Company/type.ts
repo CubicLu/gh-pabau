@@ -1533,6 +1533,20 @@ export const Company = objectType({
         return root.MedicalFormAdvancedSetting
       },
     })
+    t.list.field('MedicalFormMacro', {
+      type: 'MedicalFormMacro',
+      args: {
+        where: 'MedicalFormMacroWhereInput',
+        orderBy: 'MedicalFormMacroOrderByWithRelationInput',
+        cursor: 'MedicalFormMacroWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormMacroScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormMacro
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {

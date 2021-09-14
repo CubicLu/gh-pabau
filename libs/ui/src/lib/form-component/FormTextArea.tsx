@@ -15,7 +15,6 @@ interface P {
   required: boolean
   macro?: boolean
   onChangeTextValue?: (value: string) => void
-  onSaveMacroItems?: (macros: MacroItem[]) => void
   macroItems?: MacroItem[]
 }
 
@@ -27,7 +26,6 @@ export const FormTextArea: FC<P> = ({
   required = false,
   macro = false,
   onChangeTextValue,
-  onSaveMacroItems,
   macroItems = [],
 }) => {
   const [text, setText] = useState(defaultValue)
@@ -82,7 +80,6 @@ export const FormTextArea: FC<P> = ({
         onAdd={onAddMacro}
         onClose={onHideMacroDlg}
         visible={showMacroDlg}
-        onSaveMacroItems={onSaveMacroItems}
         preMacroItems={macroItems}
       />
     </div>

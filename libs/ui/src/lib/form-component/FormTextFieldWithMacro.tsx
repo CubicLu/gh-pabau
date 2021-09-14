@@ -1,6 +1,9 @@
 import { BookOutlined } from '@ant-design/icons'
+import { Tooltip } from 'antd'
 import React, { FC, useState } from 'react'
-import { MacroModal, MacroItem } from '@pabau/ui'
+import { MacroModal, MacroItem, RenderHtml } from '@pabau/ui'
+import _ from 'lodash'
+import { tagList } from '../merge-tag-modal/data'
 import cn from 'classnames'
 import Autocomplete from 'draft-js-autocomplete'
 import { Editor, EditorState, Modifier } from 'draft-js'
@@ -14,10 +17,12 @@ interface P {
   defaultValue?: string
   required?: boolean
   onChangeTextValue?: (value: string) => void
-  onSaveMacroItems?: (macros: MacroItem[]) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
   macroItems?: MacroItem[]
   isTextArea?: boolean
 }
+
+const HANDLE_REGEX = /\[.+?]/g
 
 export const FormTextFieldWithMacro: FC<P> = ({
   title = '',
@@ -26,7 +31,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
   defaultValue = '',
   required = false,
   onChangeTextValue,
-  onSaveMacroItems,
+  onHandleMacro,
   macroItems = [],
   isTextArea = false,
 }) => {
@@ -37,6 +42,57 @@ export const FormTextFieldWithMacro: FC<P> = ({
   )
 
   const { t } = useTranslation('common')
+
+  const findTagInfo = (tag) => {
+    const findTag = Object.entries(tagList)
+      .map(([key, value], index) => {
+        const _index = value.items.findIndex((item) => item.tag === tag)
+        if (_index !== -1) {
+          return value.items[_index]
+        }
+        return false
+      })
+      .filter((item) => item)
+    return findTag.length > 0 ? findTag[0] : false
+  }
+
+  const findAndReplaceTag = (orgString) => {
+    let matchArr
+    let replaceTagInfos = {}
+
+    while ((matchArr = HANDLE_REGEX.exec(orgString)) !== null) {
+      const tagInfo = findTagInfo(matchArr[0])
+      let repalceTag = {}
+      repalceTag = tagInfo
+        ? {
+            [tagInfo.tag]:
+              '<button type="button" class="ant-btn ant-btn-primary ant-btn-sm">&lt;-&gt; ' +
+              tagInfo.name +
+              ' (' +
+              tagInfo.module +
+              ') ' +
+              '</button>',
+          }
+        : {
+            [matchArr[0]]:
+              '<button type="button" class="ant-btn ant-btn-danger ant-btn-sm" title="This tag does not exist or will not work with this type of form">' +
+              matchArr[0].substring(1, matchArr[0].length - 1) +
+              '</button>',
+          }
+      replaceTagInfos = { ...replaceTagInfos, ...repalceTag }
+    }
+
+    if (!_.isEmpty(replaceTagInfos)) {
+      const re = new RegExp(
+        '\\' + Object.keys(replaceTagInfos).join('|\\'),
+        'gi'
+      )
+      orgString = orgString.replace(re, function (matched) {
+        return replaceTagInfos[matched]
+      })
+    }
+    return orgString
+  }
 
   const onMatch = (text) =>
     macroItems.filter((hashtag) => hashtag.title.indexOf(text) !== -1)
@@ -51,7 +107,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
     let classNames = 'HashtagListItem'
     classNames += current ? ' current' : ''
     return (
-      <li className={classNames} onClick={onClick}>
+      <li className={classNames} onMouseDown={onClick}>
         <div className="HashtagListItemTitle">{item.title}</div>
         <div className="HashtagListItemMessage">{item.message}</div>
       </li>
@@ -66,7 +122,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
     component: Hasthtag,
     listComponent: List,
     itemComponent: Item,
-    format: (item) => `${item.title}`,
+    format: (item) => `${item.message}`,
   }
 
   const autocompletes = [hashtag]
@@ -102,7 +158,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
     const newContentState = Modifier.replaceText(
       contentStateWithEntity,
       selection,
-      item.title,
+      item.message,
       null,
       entityKey
     )
@@ -124,6 +180,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
   }
 
   const onAddMacro = (macro) => {
+    onHideMacroDlg()
     addEntityToEditorState(macro)
   }
 
@@ -138,7 +195,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
     <div className={`${styles.formTextField} ${styles.formComponet}`}>
       {title.length > 0 && (
         <div className={styles.formComponentTitle}>
-          {title}
+          <RenderHtml __html={findAndReplaceTag(title)} />
           {required && <span className={styles.formRequiredMark}>*</span>}
         </div>
       )}
@@ -153,7 +210,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
         )}
       >
         <Autocomplete
-          placeholder={placeHolder}
+          placeholder={t('ui.macro.modal.placeholder')}
           editorState={editorState}
           ref={editor}
           onChange={onEditorStateChange}
@@ -161,16 +218,18 @@ export const FormTextFieldWithMacro: FC<P> = ({
         >
           <Editor />
         </Autocomplete>
-        <div className={styles.macroBtn} onClick={onShowMacroDlg}>
-          <BookOutlined />
-        </div>
+        <Tooltip arrowPointAtCenter title={t('ui.macro.modal.add.title')}>
+          <div className={styles.macroBtn} onClick={onShowMacroDlg}>
+            <BookOutlined />
+          </div>
+        </Tooltip>
       </div>
       <MacroModal
         title={t('ui.macro.modal.title')}
         onAdd={onAddMacro}
         onClose={onHideMacroDlg}
         visible={showMacroDlg}
-        onSaveMacroItems={onSaveMacroItems}
+        onHandleMacro={onHandleMacro}
         preMacroItems={macroItems}
       />
     </div>

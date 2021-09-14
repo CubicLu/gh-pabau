@@ -33,23 +33,23 @@ const medicalForms = [
   { id: 10, formType: 'basic', formName: 'basic_photo' },
   { id: 11, formType: 'basic', formName: 'basic_conditions' },
   { id: 12, formType: 'basic', formName: 'basic_drugs' },
-  // { id: 13, formType: 'basic', formName: 'basic_labtests' },
+  { id: 13, formType: 'basic', formName: 'basic_labtests' },
   // { id: 14, formType: 'basic', formName: 'basic_traveldestination' },
   // { id: 15, formType: 'basic', formName: 'basic_vaccinescheduler' },
   // { id: 16, formType: 'basic', formName: 'basic_vaccinehistory' },
-  { id: 13, formType: 'basic', formName: 'basic_snomed' },
-  { id: 14, formType: 'custom', formName: 'custom_emailmarketing' },
-  { id: 15, formType: 'custom', formName: 'custom_smsmarketing' },
-  { id: 16, formType: 'custom', formName: 'custom_phonecall' },
-  { id: 17, formType: 'custom', formName: 'custom_lettermarketing' },
-  { id: 18, formType: 'custom', formName: 'custom_membershipnumber' },
-  { id: 19, formType: 'custom', formName: 'custom_authorizationcode' },
-  { id: 20, formType: 'custom', formName: 'custom_company' },
-  { id: 21, formType: 'custom', formName: 'custom_dob' },
-  { id: 22, formType: 'custom', formName: 'custom_gender' },
-  { id: 23, formType: 'custom', formName: 'custom_physicaladdress' },
-  { id: 24, formType: 'custom', formName: 'custom_referredby' },
-  { id: 25, formType: 'custom', formName: 'custom_telephonenumber' },
+  { id: 14, formType: 'basic', formName: 'basic_snomed' },
+  { id: 15, formType: 'custom', formName: 'custom_emailmarketing' },
+  { id: 16, formType: 'custom', formName: 'custom_smsmarketing' },
+  { id: 17, formType: 'custom', formName: 'custom_phonecall' },
+  { id: 18, formType: 'custom', formName: 'custom_lettermarketing' },
+  { id: 19, formType: 'custom', formName: 'custom_membershipnumber' },
+  { id: 20, formType: 'custom', formName: 'custom_authorizationcode' },
+  { id: 21, formType: 'custom', formName: 'custom_company' },
+  { id: 22, formType: 'custom', formName: 'custom_dob' },
+  { id: 23, formType: 'custom', formName: 'custom_gender' },
+  { id: 24, formType: 'custom', formName: 'custom_physicaladdress' },
+  { id: 25, formType: 'custom', formName: 'custom_referredby' },
+  { id: 26, formType: 'custom', formName: 'custom_telephonenumber' },
 ]
 const previewMapping = [
   { heading: 'basic_heading' },
@@ -65,7 +65,7 @@ const previewMapping = [
   { diagram_mini: 'basic_drawing' },
   { signature: 'basic_signature' },
   { cl_drugs: 'basic_drugs' },
-  // { labs_tests: 'basic_labtests' },
+  { labs_tests: 'basic_labtests' },
   // { vaccine_scheduler: 'basic_vaccinescheduler' },
   // { vaccine_history: 'basic_vaccinehistory' },
   { snomed: 'basic_snomed' },
@@ -194,8 +194,6 @@ const reverseForm = (form) => {
 }
 
 const getFormInfo = (form) => {
-  // let name = ''
-  console.log('form =', form)
   let label = ''
   if (form.title) {
     if (typeof form.title === 'object') {

@@ -59,3 +59,20 @@ query getMedicalFormDetails($medicalFormId: Int!) {
     }
   }
 }
+
+query findMedicalFormMacros($where: MedicalFormMacroWhereInput, $orderBy: [MedicalFormMacroOrderByWithRelationInput!]) {
+  findManyMedicalFormMacro(orderBy: $orderBy, where: $where) {
+    id
+    createdAt
+    title
+    message
+    type
+    created_by
+  }
+}
+
+# query deleteMedicalFormMacro($where: MedicalFormMacroWhereUniqueInput) {
+#   deleteOneMedicalFormMacro(where: $where) {
+#     id
+#   }
+# }
