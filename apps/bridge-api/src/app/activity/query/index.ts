@@ -40,7 +40,7 @@ export const CmContactCustomType = objectType({
     t.string('Salutation')
     t.string('gender')
     t.int('ID')
-    t.string('DOB')
+    t.field('DOB', { type: 'DateTime' })
     t.int('is_active')
     t.field('MarketingSourceData', { type: 'MarketingSource' })
   },

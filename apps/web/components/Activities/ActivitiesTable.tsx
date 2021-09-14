@@ -44,6 +44,7 @@ import searchEmpty from '../../assets/images/empty.png'
 import { useUpsertOneActivityUserColumnsMutation } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
 import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
+import { DisplayDateTime, DisplayDate } from '../../hooks/displayDate'
 
 export type ActivitiesType = {
   width?: number
@@ -273,9 +274,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'dueDate',
         render: (date) => (
-          <span className={styles.cellFormater}>
-            {dayjs(date).format('DD MMMM YYYY HH:MM')}
-          </span>
+          <span className={styles.cellFormater}>{DisplayDateTime(date)}</span>
         ),
         visible: visibleColumn(columnNames.dueDate.label),
         width: 120,
@@ -454,10 +453,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        render: ({ createdDate = '' }) => {
+        render: ({ createdDate }) => {
           return (
             <span className={styles.cellFormater}>
-              {createdDate && dayjs(createdDate).format('DD MMMM YYYY HH:MM')}
+              {createdDate && DisplayDateTime(createdDate)}
             </span>
           )
         },
@@ -474,10 +473,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        render: ({ wonTime = '' }) => {
+        render: ({ wonTime }) => {
           return (
             <span className={styles.cellFormater}>
-              {wonTime && dayjs(wonTime).format('DD MMMM YYYY HH:MM')}
+              {wonTime && DisplayDateTime(wonTime)}
             </span>
           )
         },
@@ -541,10 +540,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        render: ({ leadClosedOn = '' }) => {
+        render: ({ leadClosedOn }) => {
           return (
             <span className={styles.cellFormater}>
-              {leadClosedOn && dayjs(leadClosedOn).format('DD MMMM YYYY HH:MM')}
+              {leadClosedOn && DisplayDateTime(leadClosedOn)}
             </span>
           )
         },
@@ -562,11 +561,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        render: ({ firstActivityTime = '' }) => {
+        render: ({ firstActivityTime }) => {
           return (
             <span className={styles.cellFormater}>
-              {firstActivityTime &&
-                dayjs(firstActivityTime).format('DD MMMM YYYY HH:MM')}
+              {firstActivityTime && DisplayDateTime(firstActivityTime)}
             </span>
           )
         },
@@ -584,11 +582,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         dataIndex: 'lead',
         skeletonWidth: '80px',
         sorter: false,
-        render: ({ leadLastActivityDate = '' }) => {
+        render: ({ leadLastActivityDate }) => {
           return (
             <span className={styles.cellFormater}>
-              {leadLastActivityDate &&
-                dayjs(leadLastActivityDate).format('DD MMMM YYYY HH:MM')}
+              {leadLastActivityDate && DisplayDateTime(leadLastActivityDate)}
             </span>
           )
         },
@@ -665,10 +662,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        render: ({ leadLostTime = '' }) => {
+        render: ({ leadLostTime }) => {
           return (
             <span className={styles.cellFormater}>
-              {leadLostTime && dayjs(leadLostTime).format('DD MMMM YYYY HH:MM')}
+              {leadLostTime && DisplayDateTime(leadLostTime)}
             </span>
           )
         },
@@ -868,9 +865,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         editable: false,
         columnName: columnNames.addTime.label,
         render: (date) => (
-          <span className={styles.cellFormater}>
-            {dayjs(date).format('DD MMMM YYYY HH:MM')}
-          </span>
+          <span className={styles.cellFormater}>{DisplayDateTime(date)}</span>
         ),
       },
       {
@@ -887,7 +882,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         columnName: columnNames.doneTime.label,
         render: (date) => (
           <span className={styles.cellFormater}>
-            {date && dayjs(date).format('DD MMMM YYYY HH:MM')}
+            {date && DisplayDateTime(date)}
           </span>
         ),
       },
@@ -1115,7 +1110,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         render: ({ createdDate }) => {
           return (
             <span className={styles.cellFormater}>
-              {createdDate && dayjs(createdDate).format('DD MMMM YYYY HH:MM')}
+              {createdDate && DisplayDate(createdDate)}
             </span>
           )
         },
@@ -1199,7 +1194,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         render: ({ DOB }) => {
           return (
             <span className={styles.cellFormater}>
-              {DOB && dayjs(DOB).format('DD MMMM YYYY')}
+              {DOB && DisplayDate(DOB)}
             </span>
           )
         },
