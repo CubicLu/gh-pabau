@@ -60,19 +60,28 @@ export const Filter: FC<P> = ({ webinarList, onClear, handleShowResult }) => {
       key: 2,
       id: 'category',
       label: 'Category',
-      options: [...new Set(webinarList?.map((webinar) => webinar?.category))],
+      options: [
+        'Select',
+        ...new Set(webinarList?.map((webinar) => webinar?.category)),
+      ],
     },
     {
       key: 3,
       id: 'name',
       label: 'Trainer',
-      options: [...new Set(webinarList?.map((webinar) => webinar?.name))],
+      options: [
+        'Select',
+        ...new Set(webinarList?.map((webinar) => webinar?.name)),
+      ],
     },
     {
       key: 4,
       id: 'difficulty',
       label: 'Difficulty',
-      options: [...new Set(webinarList?.map((webinar) => webinar?.difficulty))],
+      options: [
+        'Select',
+        ...new Set(webinarList?.map((webinar) => webinar?.difficulty)),
+      ],
     },
   ]
 
