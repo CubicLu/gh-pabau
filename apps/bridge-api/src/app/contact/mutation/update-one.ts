@@ -1,7 +1,6 @@
-
-
 import { mutationField, list, nonNull, intArg, inputObjectType } from 'nexus'
 import { Context } from '../../../context'
+import { createLabel } from '../label'
 
 export const UpdateContactCustomFieldType = inputObjectType({
     name: 'UpdateContactCustomFieldType',
@@ -13,6 +12,22 @@ export const UpdateContactCustomFieldType = inputObjectType({
     },
 })
 
+export const UpdateContactLabelType = inputObjectType({
+    name: 'UpdateContactLabelType',
+    definition(t) {
+        t.list.field('createLabels', { type: 'labelFieldType' })
+        t.list.int('deleteLabels')
+    }
+})
+
+export const UpdateContactLocationType = inputObjectType({
+    name: 'UpdateContactLocationType',
+    definition(t) {
+        t.list.int('createLocations')
+        t.list.int('deleteLocations')
+    }
+})
+
 export const updateContact = mutationField('updateOneContact', {
     type: 'Boolean',
     args: {
@@ -20,13 +35,14 @@ export const updateContact = mutationField('updateOneContact', {
        data: nonNull('ContactDataInput'),
        customFields: list('UpdateContactCustomFieldType'),
        contactPreferences: 'ContactPreferenceDataInput',
-       labels: list('labelFieldType'),
+       labels: 'UpdateContactLabelType',
+       limitContactLocations: 'UpdateContactLocationType',
     },
     async resolve(_root, input, ctx: Context) {
 
         const customFieldData = input.customFields.map((cmFields) => {
             return {
-                where:{
+                where: {
                     id: cmFields.id
                 },
                 create: {
@@ -41,50 +57,104 @@ export const updateContact = mutationField('updateOneContact', {
             }
           })
 
-          let contactData
-          for (const item of Object.keys(input.data)) {
-            contactData= {
-                ...contactData,
-                [item]: {set: input.data[item]}
+        let contactData
+        for (const item of Object.keys(input.data)) {
+            if(item !== 'preferred_language')  {
+                contactData= {
+                    ...contactData,
+                    [item]: {set: input.data[item]}
+                }
             }
-          }
+        }
 
-          let contactPreferenceData
-          for (const item of Object.keys(input.contactPreferences)) {
-            contactPreferenceData= {
-                ...contactPreferenceData,
-                [item]: {set: input.contactPreferences[item]}
+        const locationData =  input.limitContactLocations?.createLocations ? 
+           input.limitContactLocations.createLocations.map((id) => {
+            return {
+              company_id: ctx.authenticated.company,
+              location_id: id,
             }
-          }
+        }) : []
 
          await ctx.prisma.cmContact.update({
-            where:{
+            where: {
                 ID: input.contactId
             },
-            data:{
+            data: {
               ...contactData,
-              CmContactCustom:{
+              CmContactCustom: {
                 upsert: [
                     ...customFieldData
                 ]
               },
-              ContactPreference:{
-                  update:{
-                     ...contactPreferenceData
-                  }
+              CmContactLocation: {
+                createMany: {
+                  data: locationData,
+                },
               },
-              ContactMeta:{
-                update: {
-                    where:{
-                        id:90,
+              ContactPreference: {
+                upsert: {
+                    create: {
+                        ...input.contactPreferences,
+                        company_id: ctx.authenticated.company,
                     },
-                    data:{
-                        meta_value: {set:input.data.preferred_language},
-                    }
+                    update: {
+                        ...input.contactPreferences,
+                        company_id: ctx.authenticated.company,
+                    },
                 }
-              },
+            },
+            //   ContactMeta: {
+            //     update: { 
+            //         where: { 
+            //             id: 90,
+            //         },
+            //         data: {
+            //             meta_value: { set:input.data.preferred_language },
+            //         }
+            //     }
+            //   },
             }, 
          })
-         return true
+
+        const transactionData = []
+        if(input.limitContactLocations && input.limitContactLocations?.deleteLocations) {
+            transactionData.push(ctx.prisma.cmContactLocation.deleteMany({
+                where:{
+                    location_id: {
+                        in: input.limitContactLocations.deleteLocations
+                    },
+                    contact_id:input.contactId,
+                    company_id: ctx.authenticated.company,
+                }
+            }))
+        }
+       
+        if(input.labels) {
+            if(input.labels.deleteLabels) {
+                transactionData.push(ctx.prisma.cmContactLabel.deleteMany({
+                    where: {
+                        label_id: {
+                            in: input.labels.deleteLabels
+                        },
+                        contact_id:input.contactId,
+                        company_id: ctx.authenticated.company,
+                    }
+                }))
+            } 
+            if(input.labels.createLabels) {
+                await createLabel(
+                    ctx,
+                    input.labels.createLabels,
+                    input.contactId,
+                    ctx.authenticated.company
+                )
+            }
+        }
+
+        if(transactionData.length > 0) {
+            await ctx.prisma.$transaction(transactionData)
+        }
+        
+        return true
     }
 })
