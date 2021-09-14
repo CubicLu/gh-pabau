@@ -536,7 +536,6 @@ export const Index: FC = () => {
   })
 
   const onHandleMacro = async (action, macro) => {
-    console.log('macro', macro)
     if (action === 'add') {
       const creatMacroVariables = {
         data: {
