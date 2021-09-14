@@ -3330,8 +3330,8 @@ en:
   reset.password.description:
     'Enter the email address associated with your account, and we’ll send
     you a link to reset your password.'
-  reset.password.banner.search.title: 'No search results'
-  reset.password.banner.search.description: 'Your search did not return any results. Please try again'
+  reset.password.error.message: 'Something went wrong!'
+  reset.password.token.expired: 'Token is not found or Expired, Please try again!'
   reset.password.banner.email.title: 'Sent email successfully'
   reset.password.banner.email.description: 'Please check your email for reset password link'
   reset.password.banner.email.error.title: 'Sent email failed'
