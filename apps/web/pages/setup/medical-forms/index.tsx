@@ -41,6 +41,7 @@ import {
   SmsMessageTemplateItem,
   TabMenu,
   UserListItem,
+  MacroItem,
 } from '@pabau/ui'
 import { useUser } from '../../../context/UserContext'
 import { Input, Typography } from 'antd'
@@ -490,7 +491,7 @@ export const Index: FC = () => {
     if (macros?.findManyMedicalFormMacro) {
       const medicalFormMacroList = macros?.findManyMedicalFormMacro.map(
         (macro, index) => ({
-          id: macro.id.toString(),
+          id: macro.id,
           title: macro.title,
           message: macro.message,
           type: macro.type,

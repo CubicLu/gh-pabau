@@ -190,7 +190,9 @@ export function Index() {
             return current > dayjs().endOf('day')
           }}
           disabled={selectedRange.toString() !== 'custom'}
-          onChange={(val) => setSelectedDates(val)}
+          onChange={(val, dateStrings) =>
+            setSelectedDates([dayjs(dateStrings[0]), dayjs(dateStrings[1])])
+          }
         />
       )}
       <div className={styles.footer}>
