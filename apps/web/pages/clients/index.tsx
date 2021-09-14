@@ -56,11 +56,10 @@ export const Clients: FC<ClientsProps> = () => {
   const clientRef = useRef(null)
   const [searchText, setSearchText] = useState('')
   const [labelsList, setLabelsList] = useState([])
-  // const [dataLoaded, setDataLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isLabelLoading, setIsLabelLoading] = useState(true)
   const [countFilterLabels, setCountFilterLabels] = useState(null)
-  const [filterId, setFilterId] = useState(undefined)
+  const [filterIds, setFilterIds] = useState([])
   const [contactsSourceData, setContactsSourceData] = useState(null)
 
   const [getLabelsQuery] = useGetLabelsLazyQuery({
@@ -68,24 +67,8 @@ export const Clients: FC<ClientsProps> = () => {
     onCompleted(response) {
       setLabelsList(response?.findManyCmLabel)
       const labelCounts = getAllLabelsCount(response?.findManyCmLabel)
-      // const labels = response?.findManyCmLabel
-      // let status
-      // const labelCounts = labels
-      //   .filter((i) => {
-      //     const { CmContactLabel } = i
-      //     status = true
-      //     for (const l of CmContactLabel) {
-      //       if (!!l.CmContact.is_active === false) {
-      //         status = false
-      //         break
-      //       }
-      //     }
-      //     return status === true
-      //   })
-      //   .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
       setCountFilterLabels(labelCounts)
       setIsLabelLoading((val) => !val)
-      // setDataLoaded(true)
     },
     onError(error) {
       console.error(error)
@@ -200,28 +183,31 @@ export const Clients: FC<ClientsProps> = () => {
       // fetchPolicy: 'no-cache',
       variables: {
         ...variables,
-        labelId: filterId,
+        labelIds: filterIds,
       },
     }
     return queryOptions
-  }, [filterId, variables])
+  }, [filterIds, variables])
 
   const getFilterCountQueryVariables = useMemo(() => {
     const queryOptions = {
       // fetchPolicy: 'no-cache',
       variables: {
         searchTerm: '%' + searchText + '%',
-        labelId: filterId,
+        labelIds: filterIds,
       },
     }
     return queryOptions
-  }, [searchText, filterId])
+  }, [searchText, filterIds])
 
   // const { data: getContactsData } = useGetContactsQuery({
   //   ...getQueryVariables,
   //   fetchPolicy: 'no-cache',
   // })
-  const [getContactList, { data: getContactsData }] = useGetContactsLazyQuery({
+  const [
+    getContactList,
+    { data: getContactsData, loading: contactsLoading },
+  ] = useGetContactsLazyQuery({
     ...getQueryVariables,
     fetchPolicy: 'no-cache',
     onCompleted() {
@@ -231,14 +217,14 @@ export const Clients: FC<ClientsProps> = () => {
 
   const [
     getContactsByLabel,
-    { data: getfilteredContacts },
+    { data: getfilteredContacts, loading: filteredContactsLoading },
   ] = useGetContactsByLabelLazyQuery({
     ...getFilterQueryVariables,
     fetchPolicy: 'no-cache',
   })
   const [
     getContactsByLabelCount,
-    { data: getfilteredContactsCount },
+    { data: getfilteredContactsCount, loading: filteredCountLoading },
   ] = useGetContactsByLabelCountLazyQuery({
     ...getFilterCountQueryVariables,
     fetchPolicy: 'no-cache',
@@ -263,9 +249,9 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getContactsData?.findManyCmContact?.length,
       }))
     }
-    if (!isLoading) setIsLoading(false)
+    if (!contactsLoading && getContactsData) setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getContactsData, getClientsCountData])
+  }, [getContactsData, getClientsCountData, contactsLoading])
 
   useEffect(() => {
     if (getfilteredContacts) {
@@ -280,9 +266,19 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getfilteredContacts?.findManyCmContact?.length,
       }))
     }
-    if (!isLoading) setIsLoading(false)
+    if (
+      !filteredContactsLoading &&
+      !filteredCountLoading &&
+      getfilteredContacts
+    )
+      setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getfilteredContacts, getfilteredContactsCount])
+  }, [
+    getfilteredContacts,
+    getfilteredContactsCount,
+    filteredContactsLoading,
+    filteredCountLoading,
+  ])
 
   const mapContactData = (data) => {
     return data?.findManyCmContact.map((d) => ({
@@ -432,7 +428,7 @@ export const Clients: FC<ClientsProps> = () => {
     }
     setSourceFilteredData(filteredData)
     // if (dataLoaded)
-    if (contactsSourceData?.length) setIsLoading(false)
+    // if (contactsSourceData?.length) setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, selectedTab, contactsSourceData])
 
@@ -466,8 +462,15 @@ export const Clients: FC<ClientsProps> = () => {
     if (e) {
       e.stopPropagation()
     }
-    setSelectedTab(label)
-    setFilterId(id)
+    setSelectedTab((val) => {
+      if (labelsList?.find((item) => item.name === val)) {
+        return val + ',' + label
+      } else {
+        return label
+      }
+    })
+    const newId = [...filterIds, id]
+    setFilterIds(newId)
     setIsLoading((val) => !val)
     // setDataLoaded((val) => !val)
     getContactsByLabel()

@@ -37,6 +37,26 @@
     &-item {
       display: flex;
       justify-content: space-between;
+      &-label {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        background-color: transparent;
+        padding: 0 16px 0 24px;
+        line-height: 40px;
+        color: #9292a3;
+        border-left: 3px solid transparent;
+        :global .anticon-tag {
+          min-width: 14px;
+          margin-right: 10px;
+          font-size: 14px;
+        }
+        &.active {
+          padding: 0 16px 0 21px;
+          border-left: 3px solid #54b2d3;
+          background-color: #f0fdff;
+        }
+      }
     }
   }
   :global .ant-menu-inline {
