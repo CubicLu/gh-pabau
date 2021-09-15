@@ -221,7 +221,6 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
       dateFormat,
       defaultLanuageStaff,
       timezone,
-      timeZoneLabel,
       weekStart,
     } = languageSetting
     const { address, city, country, postcode, region, apt } = businessLocation
@@ -241,7 +240,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     CompanyDetailData.city = city
     CompanyDetailData.region = region
     CompanyDetailData.country = country
-    CompanyDetailData.timezone_label = timeZoneLabel
+    // CompanyDetailData.timezone_label = timeZoneLabel
 
     const CompanyMeta = [
       {

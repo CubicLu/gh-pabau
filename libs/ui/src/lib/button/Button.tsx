@@ -32,7 +32,7 @@ export const Button: FC<ButtonProps> = ({
   ...props
 }) => (
   <AntButton
-    style={{ ...style, ...{ backgroundColor: backgroundColor } }}
+    style={{ ...style, backgroundColor: backgroundColor }}
     //size={ButtonSize.large}
     disabled={disabled}
     color={color}

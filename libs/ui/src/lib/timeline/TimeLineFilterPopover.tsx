@@ -48,12 +48,12 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
           key: types.appointment,
           children: [
             {
-              title: t('timeline.filter.arrived'),
-              key: statuses.arrived,
+              title: t('timeline.filter.created'),
+              key: statuses.created,
             },
             {
-              title: t('timeline.filter.cancelled'),
-              key: statuses.cancelled,
+              title: t('timeline.filter.arrived'),
+              key: statuses.arrived,
             },
             {
               title: t('timeline.filter.confirmed'),
@@ -74,6 +74,10 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
             {
               title: t('timeline.filter.upcoming'),
               key: statuses.upcoming,
+            },
+            {
+              title: t('timeline.filter.cancelled'),
+              key: statuses.cancelled,
             },
           ],
         },
@@ -100,8 +104,8 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
           ],
         },
         {
-          title: t('timeline.filter.task'),
-          key: types.task,
+          title: t('timeline.filter.activity'),
+          key: types.activity,
         },
         {
           title: t('timeline.filter.document'),
@@ -142,11 +146,11 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
           ],
         },
         {
-          title: t('timeline.filter.medical'),
+          title: t('timeline.filter.forms'),
           key: 'medical',
           children: [
             {
-              title: t('timeline.filter.medicalForm'),
+              title: t('timeline.filter.medicalQuestionnaire'),
               key: types.medicalForm,
             },
             {
@@ -156,6 +160,18 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
             {
               title: t('timeline.filter.lab'),
               key: types.lab,
+            },
+            {
+              title: t('timeline.filter.treatment'),
+              key: types.treatment,
+            },
+            {
+              title: t('timeline.filter.lab'),
+              key: types.lab,
+            },
+            {
+              title: t('timeline.filter.consent'),
+              key: types.consent,
             },
           ],
         },
@@ -173,10 +189,6 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
 
   const onCheck = (checkedKeys) => {
     setSelectedKey(checkedKeys)
-  }
-
-  const onOk = (value) => {
-    setDate(value)
   }
 
   const handleApplyClick = () => {
@@ -209,7 +221,7 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
             showTime={{ format: 'h:mm a' }}
             format={eventDateFormat}
             value={date && [date[0], date[1]]}
-            onOk={onOk}
+            onChange={(value: [Dayjs, Dayjs]) => setDate(value)}
           />
         </div>
         <div className={styles.btnGroupTime}>
@@ -233,6 +245,9 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
       placement={'bottomRight'}
       overlayClassName={styles.filterPopup}
       onVisibleChange={handleVisible}
+      align={{
+        overflow: { adjustX: false, adjustY: false },
+      }}
     >
       {children}
     </Popover>
