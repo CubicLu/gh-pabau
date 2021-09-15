@@ -462,15 +462,27 @@ export const Clients: FC<ClientsProps> = () => {
     if (e) {
       e.stopPropagation()
     }
-    setSelectedTab((val) => {
-      if (labelsList?.find((item) => item.name === val)) {
-        return val + ',' + label
-      } else {
-        return label
-      }
-    })
-    const newId = [...filterIds, id]
-    setFilterIds(newId)
+    // let selectedList = selectedTab.split(',')
+    // if (labelsList?.find((item) => selectedList.includes(item.name))) {
+    //   if (selectedList.includes(label)) {
+    //     selectedList.splice(selectedList.indexOf(label), 1)
+    //   } else {
+    //     selectedList.push(label)
+    //   }
+    // } else {
+    //   selectedList = label
+    // }
+    // setSelectedTab(selectedList.join(','))
+    // setSelectedTab((val) => {
+    //   // if (labelsList?.find((item) => val.includes(item.name))) {
+    //   //   return val + ',' + label
+    //   // } else {
+    //   //   return label
+    //   // }
+    // })
+    // const newId = [...filterIds, id]
+    setSelectedTab(label)
+    setFilterIds(id)
     setIsLoading((val) => !val)
     // setDataLoaded((val) => !val)
     getContactsByLabel()
@@ -717,7 +729,7 @@ export const Clients: FC<ClientsProps> = () => {
       duplicateContactsData={duplicateContactsData}
     />
   )
-
+  console.log('get selected tab========', selectedTab)
   return (
     <div>
       <CommonHeader

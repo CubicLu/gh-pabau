@@ -110,7 +110,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         </Menu.Item>
         <Menu.Divider />
         <SubMenu title={t('clients.leftSidebar.labels')} key="mainLabels">
-          {/* <SubMenu
+          <SubMenu
             style={
               labelsList.length > 10
                 ? {
@@ -144,68 +144,32 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               : labelsList?.map((label) => {
                   return (
                     label?.name && (
-                      <Menu.Item
+                      <div
                         key={`${label.name}`}
                         onClick={() =>
                           handleLabelClick(false, label.name, label.id)
                         }
                       >
-                        <div className={styles.clientMenuItem}>
+                        <div
+                          className={
+                            selectedTab?.split(',').includes(label.name)
+                              ? classNames(
+                                  styles.clientMenuItemLabel,
+                                  styles.active
+                                )
+                              : styles.clientMenuItemLabel
+                          }
+                        >
                           <span>
                             <TagOutlined /> {label.name}
                           </span>
                           <span>{getValueByKey(labelCountAll, label.id)}</span>
                         </div>
-                      </Menu.Item>
+                      </div>
                     )
                   )
                 })}
-          </SubMenu> */}
-          {labelLoading
-            ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-                // <Menu.Item key={item}>
-                <div className={styles.labelSkeletonWrapper} key={item}>
-                  <Skeleton.Input
-                    className={styles.tag}
-                    active={true}
-                    size="small"
-                  />
-                  <Skeleton.Input
-                    className={styles.text}
-                    active={true}
-                    size="small"
-                  />
-                </div>
-                // </Menu.Item>
-              ))
-            : labelsList?.map((label) => {
-                return (
-                  label?.name && (
-                    <div
-                      key={`${label.name}`}
-                      onClick={() =>
-                        handleLabelClick(false, label.name, label.id)
-                      }
-                    >
-                      <div
-                        className={
-                          selectedTab?.split(',').includes(label.name)
-                            ? classNames(
-                                styles.clientMenuItemLabel,
-                                styles.active
-                              )
-                            : styles.clientMenuItemLabel
-                        }
-                      >
-                        <span>
-                          <TagOutlined /> {label.name}
-                        </span>
-                        <span>{getValueByKey(labelCountAll, label.id)}</span>
-                      </div>
-                    </div>
-                  )
-                )
-              })}
+          </SubMenu>
           <Menu.Item key={tab.createLabel}>
             <CreateLabel
               selectedLabels={selectedLabels}
