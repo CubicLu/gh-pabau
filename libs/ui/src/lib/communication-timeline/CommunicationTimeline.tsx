@@ -114,9 +114,9 @@ const headerFilter = {
   voice: 'voice',
 }
 
-const Waveform = dynamic(() => import('./WaveForm'), {
-  ssr: false,
-})
+// const Waveform = dynamic(() => import('./WaveForm'), {
+//   ssr: false,
+// })
 
 export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
   eventsData = [],
@@ -524,9 +524,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
           </span>
         )}
         {event.audioFile && event.type === types.voice && (
-          <div>
-            <Waveform audioFile={event.audioFile} />
-          </div>
+          <div>{/* <Waveform audioFile={event.audioFile} /> */}</div>
         )}
         <div className={styles.clientNameWrap}>
           <div className={styles.clientNameText}>{event.clientName}</div>

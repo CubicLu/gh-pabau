@@ -27,6 +27,7 @@ import {
   CommunicationTimelineProps,
   ActivitiesProps,
   AvatarUploader,
+  // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
@@ -94,6 +95,12 @@ import {
   prescriptions,
   testList,
 } from './mock'
+// import {
+//   topCategories,
+//   categoryOptions,
+//   recipientList,
+//   allDocument,
+// } from '../all-template-modal/mock'
 
 const { TextArea } = Input
 interface PopoutProps {
@@ -210,15 +217,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
       children: [
         {
           key: 5,
-          content: 'Medical History',
+          content: 'Forms',
         },
         {
           key: 6,
-          content: 'Treatment Notes',
+          content: 'Photos',
         },
         {
           key: 7,
-          content: 'Photos',
+          content: 'Documents',
         },
         {
           key: 8,
