@@ -4607,7 +4607,7 @@ model ContactMeta {
   meta_value String
   Contact    CmContact @relation(fields: [contact_id], references: [ID])
 
-  @@unique([contact_id, meta_name], name: "contact_id")
+  @@unique([contact_id, meta_name], name: "unique_contact_id_meta_name")
   @@map("contact_meta")
 }
 
