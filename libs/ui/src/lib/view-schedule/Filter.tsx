@@ -1,8 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Popover } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
-import { IWebinar } from '@pabau/ui'
-import { Button } from '@pabau/ui'
+import { IWebinar, Button } from '@pabau/ui'
 import { SimpleDropdown } from '../simple-dropdown/SimpleDropdown'
 import { useTranslation } from 'react-i18next'
 import styles from './ViewSchedule.module.less'
@@ -60,19 +59,28 @@ export const Filter: FC<P> = ({ webinarList, onClear, handleShowResult }) => {
       key: 2,
       id: 'category',
       label: 'Category',
-      options: [...new Set(webinarList?.map((webinar) => webinar?.category))],
+      options: [
+        'Select',
+        ...new Set(webinarList?.map((webinar) => webinar?.category)),
+      ],
     },
     {
       key: 3,
       id: 'name',
       label: 'Trainer',
-      options: [...new Set(webinarList?.map((webinar) => webinar?.name))],
+      options: [
+        'Select',
+        ...new Set(webinarList?.map((webinar) => webinar?.name)),
+      ],
     },
     {
       key: 4,
       id: 'difficulty',
       label: 'Difficulty',
-      options: [...new Set(webinarList?.map((webinar) => webinar?.difficulty))],
+      options: [
+        'Select',
+        ...new Set(webinarList?.map((webinar) => webinar?.difficulty)),
+      ],
     },
   ]
 
@@ -158,13 +166,20 @@ export const Filter: FC<P> = ({ webinarList, onClear, handleShowResult }) => {
 
   return (
     <Popover
-      placement={'bottomRight'}
+      placement={'left'}
       content={filterPopoverContent()}
       trigger={'click'}
     >
-      <span className={styles.filterBtn}>
+      {/* <span className={styles.filterBtn}>
         <FilterOutlined /> Filter
-      </span>
+      </span> */}
+      <Button
+        className={styles.filterBtn}
+        size="small"
+        icon={<FilterOutlined />}
+      >
+        Filter
+      </Button>
     </Popover>
   )
 }

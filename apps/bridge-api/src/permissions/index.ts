@@ -56,6 +56,7 @@ export const permissions = shield(
       // Send Email
       sendEmail: rules.authentication.isAuthenticated,
       sendEmailTo: rules.authentication.isAuthenticated,
+      resetPassword: allow,
 
       //Page
       createOnePage: rules.authentication.isAuthenticated,
@@ -83,6 +84,7 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+      forgotPassword: allow,
       switchCompany: rules.authentication.isAuthenticated,
 
       upsertUserReportByReportCode: rules.authentication.isAdmin,
@@ -122,6 +124,7 @@ export const permissions = shield(
       findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
+      findManyTimezone: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,

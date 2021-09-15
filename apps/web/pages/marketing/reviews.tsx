@@ -305,26 +305,57 @@ const Reviews: FC<ReviewConfig> = () => {
       variables: {
         take: paginateData.take,
         skip: paginateData.skip,
-        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
-        service: filterValue.service !== '' ? filterValue.service : '%%',
-        rating:
-          filterValue.score !== ''
-            ? filterValue.score === 'Excellent'
-              ? {
-                  lte: 5,
-                  gt: 4,
-                }
-              : filterValue.score === 'Ok'
-              ? {
-                  lte: 4,
-                  gte: 3,
-                }
-              : filterValue.score === 'Bad'
-              ? {
-                  lt: 3,
-                }
-              : {}
-            : {},
+        where:
+          filterValue.employee !== ''
+            ? {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+                User: { full_name: { contains: filterValue.employee } },
+              }
+            : {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+              },
       },
     }
     return queryOptions
@@ -339,26 +370,57 @@ const Reviews: FC<ReviewConfig> = () => {
   const getAllQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
-        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
-        service: filterValue.service !== '' ? filterValue.service : '%%',
-        rating:
-          filterValue.score !== ''
-            ? filterValue.score === 'Excellent'
-              ? {
-                  lte: 5,
-                  gt: 4,
-                }
-              : filterValue.score === 'Ok'
-              ? {
-                  lte: 4,
-                  gte: 3,
-                }
-              : filterValue.score === 'Bad'
-              ? {
-                  lt: 3,
-                }
-              : {}
-            : {},
+        where:
+          filterValue.employee !== ''
+            ? {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+                User: { full_name: { contains: filterValue.employee } },
+              }
+            : {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+              },
       },
     }
     return queryOptions
@@ -426,7 +488,6 @@ const Reviews: FC<ReviewConfig> = () => {
       dataIndex: 'feedback_status',
       className: 'drag-visible',
       visible: true,
-      isHover: true,
     },
   ]
 
@@ -705,7 +766,7 @@ const Reviews: FC<ReviewConfig> = () => {
                       : []
                   }
                   onSelected={(val) => setFieldValue('employee', val)}
-                  value={values.employee}
+                  value={values.employee !== '' ? values.employee : 'SELECT'}
                 />
               </div>
               <div className={styles.filterMenuItem}>
@@ -724,7 +785,7 @@ const Reviews: FC<ReviewConfig> = () => {
                       : []
                   }
                   onSelected={(val) => setFieldValue('service', val)}
-                  value={values.service}
+                  value={values.service !== '' ? values.service : 'SELECT'}
                 />
               </div>
               <div className={styles.filterBtn}>
@@ -822,23 +883,6 @@ const Reviews: FC<ReviewConfig> = () => {
         )}
       </div>
     )
-  }
-
-  const onHoverHandle = (item) => {
-    const result = dataList.map((itemList) => {
-      if (itemList.id === item.id) {
-        return { ...itemList, isShow: true }
-      }
-      return { ...itemList, isShow: false }
-    })
-    setDataList(result)
-  }
-
-  const onHoverLeave = () => {
-    const resultData = dataList.map((itemList) => {
-      return { ...itemList, isShow: false }
-    })
-    setDataList(resultData)
   }
 
   const updateDataSource = ({ newData }) => {
@@ -1297,7 +1341,11 @@ const Reviews: FC<ReviewConfig> = () => {
                       >
                         <div className={styles.avatarWrap}>
                           <Avatar
-                            src={`https://crm.pabau.com/${item?.User?.image}`}
+                            src={
+                              item?.User?.image
+                                ? `https://crm.pabau.com/${item?.User?.image}`
+                                : null
+                            }
                             name={item?.User?.full_name}
                             size="default"
                             isTooltip={false}
@@ -1305,7 +1353,7 @@ const Reviews: FC<ReviewConfig> = () => {
                         </div>
                       </Tooltip>
                     ),
-                    visibleData: renderVisibleData(item),
+                    feedback_status: renderVisibleData(item),
                     feedback_comment: (
                       <Tooltip
                         placement="top"
@@ -1318,8 +1366,6 @@ const Reviews: FC<ReviewConfig> = () => {
                 })}
                 loading={loading}
                 isHover={true}
-                onRowHover={onHoverHandle}
-                onLeaveRow={onHoverLeave}
                 updateDataSource={updateDataSource}
                 pagination={dataList?.length > 10 ? {} : false}
               />

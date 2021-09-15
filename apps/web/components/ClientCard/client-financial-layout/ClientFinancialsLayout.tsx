@@ -34,10 +34,14 @@ export interface InvoiceItemProp {
   id: number
   name: string
   price: number
+  itemPrice?: number
   quantity: number
   discount: number
   tax: number
   totalPrice: number
+  customDiscountType?: string
+  showDiscountDropDown?: boolean
+  customDiscount?: string
 }
 
 export interface InvoiceProp {
@@ -48,6 +52,7 @@ export interface InvoiceProp {
   employee: string
   issuedTo: string
   paid: boolean
+  status?: string
   items: InvoiceItemProp[]
   totalVat: number
   amountPaid: number

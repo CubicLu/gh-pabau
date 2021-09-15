@@ -5,22 +5,28 @@ import {
   ClientDashboardLayout,
   ClientAppointmentsLayout,
   ClientCommunicationsLayout,
+  ClientConsentsLayout,
   ClientDocumentsLayout,
   ClientFinancialsLayout,
   ClientGiftVoucherLayout,
   ClientLabTestsLayout,
   ClientLoyaltyLayout,
   ClientFormsLayout,
+  ClientMedicalHistoryLayout,
   ClientPackagesLayout,
   ClientPhotosLayout,
   ClientPrescriptionsLayout,
-  ClientActivitiesLayout,
+  ClientTaskLayout,
+  ClientTreatmentNotesLayout,
   ClientVaccineHistoryLayout,
   Button,
   TabMenu,
   Avatar,
   Search,
   StickyPopout,
+  CommunicationTimelineProps,
+  ActivitiesProps,
+  AvatarUploader,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
@@ -30,6 +36,7 @@ import {
   Input,
   Badge,
   Drawer,
+  Tag,
   Tooltip,
   ConfigProvider,
 } from 'antd'
@@ -47,6 +54,7 @@ import {
   UndoOutlined,
   CheckCircleFilled,
   SaveOutlined,
+  EditOutlined,
 } from '@ant-design/icons'
 import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -55,7 +63,6 @@ import Confetti from 'react-confetti'
 import { ReactComponent as MedicalHistory } from '../../assets/images/client-card-ops/medical-history.svg'
 import { ReactComponent as Note } from '../../assets/images/client-card-ops/note.svg'
 import { ReactComponent as Alert } from '../../assets/images/client-card-ops/alert.svg'
-import { ReactComponent as SvgPathway } from '../../assets/images/popout/pathway.svg'
 import { ReactComponent as SvgTreatment } from '../../assets/images/popout/treatment.svg'
 import { ReactComponent as SvgConsent } from '../../assets/images/popout/consent.svg'
 import { ReactComponent as SvgRequest } from '../../assets/images/popout/request.svg'
@@ -67,6 +74,7 @@ import { ReactComponent as SvgEmail } from '../../assets/images/popout/email.svg
 import { ReactComponent as SvgLetter } from '../../assets/images/popout/letter.svg'
 import { ReactComponent as SvgCall } from '../../assets/images/popout/call.svg'
 import { ReactComponent as SvgSMS } from '../../assets/images/popout/sms.svg'
+import { ReactComponent as SvgVoiceNote } from '../../assets/images/popout/voice-note.svg'
 import menuAlert from '../../assets/images/menu-alert.svg'
 import styles from './ClientCard.module.less'
 import {
@@ -88,7 +96,6 @@ import {
 } from './mock'
 
 const { TextArea } = Input
-
 interface PopoutProps {
   receiverData: string
   type: string
@@ -128,6 +135,8 @@ export interface ClientCardProps {
   alerts: string[]
   onClose: () => void
   FinancialTabComponent?: ReactNode
+  communicationTabProps?: CommunicationTimelineProps
+  activitiesTabProps?: ActivitiesProps
 }
 
 const ClientCardModal: FC<ClientCardProps> = ({
@@ -139,6 +148,8 @@ const ClientCardModal: FC<ClientCardProps> = ({
   alerts,
   onClose,
   FinancialTabComponent,
+  communicationTabProps,
+  activitiesTabProps,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -154,12 +165,20 @@ const ClientCardModal: FC<ClientCardProps> = ({
   const [addingAlert, setAddingAlert] = useState(false)
   const [currentClientNote, setCurrentClientNote] = useState(-1)
   const { activeVouchers, expiredVouchers } = vouchers()
+  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
+  const [showLetterModal, setShowLetterModal] = useState(false)
+  const [showHeaderOpsDrawer, setShowHeaderOpsDrawer] = useState(false)
 
-  const customTabMenutItem = (title, alert) => {
+  const customTabMenutItem = (title, alert, tabTotal = 0) => {
     return (
       <div className={styles.customTabMenuItem}>
         <div>{title}</div>
         <div style={{ backgroundImage: `url(${menuAlert})` }}>{alert}</div>
+        {tabTotal !== 0 && (
+          <Tag style={{ marginLeft: 10 }} color="green">
+            £ {tabTotal}
+          </Tag>
+        )}
       </div>
     )
   }
@@ -175,7 +194,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
     },
     {
       key: 2,
-      content: customTabMenutItem('Financials', 5),
+      content: customTabMenutItem('Financials', 5, 200),
     },
     {
       key: 3,
@@ -191,15 +210,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
       children: [
         {
           key: 5,
-          content: 'Forms',
+          content: 'Medical History',
         },
         {
           key: 6,
-          content: 'Photos',
+          content: 'Treatment Notes',
         },
         {
           key: 7,
-          content: 'Documents',
+          content: 'Photos',
         },
         {
           key: 8,
@@ -209,22 +228,18 @@ const ClientCardModal: FC<ClientCardProps> = ({
           key: 9,
           content: 'Lab Tests',
         },
-        {
-          key: 10,
-          content: 'Vaccine History',
-        },
       ],
     },
     {
-      key: 11,
+      key: 10,
       content: customTabMenutItem('Gift voucher', 15),
     },
     {
-      key: 12,
+      key: 11,
       content: customTabMenutItem('Loyalty', 7),
     },
     {
-      key: 13,
+      key: 12,
       content: customTabMenutItem('Activities', 8),
     },
   ]
@@ -284,11 +299,6 @@ const ClientCardModal: FC<ClientCardProps> = ({
 
   const menuItems = [
     {
-      name: t('dashboard.create.menu.item.pathway.title'),
-      icon: <SvgPathway className={styles.menuItemIcon} />,
-      description: t('dashboard.create.menu.item.pathway.description'),
-    },
-    {
       name: t('dashboard.create.menu.item.treatment.title'),
       icon: <SvgTreatment className={styles.menuItemIcon} />,
       description: t('dashboard.create.menu.item.treatment.description'),
@@ -328,10 +338,13 @@ const ClientCardModal: FC<ClientCardProps> = ({
     {
       name: t('dashboard.create.menu.item.activity.title'),
       icon: <SvgAppointment className={styles.menuItemIcon} />,
+      description: t('dashboard.create.menu.item.activity.description'),
     },
     {
-      name: t('dashboard.create.menu.item.call.title'),
-      icon: <SvgCall className={styles.svgType} />,
+      name: t('dashboard.create.menu.item.dictation.title'),
+      icon: <SvgVoiceNote className={styles.svgType} />,
+      description: t('dashboard.create.menu.item.dictation.description'),
+      handler: () => handleCreatePopout('voiceNote'),
     },
     {
       name: t('dashboard.create.menu.item.communication.title'),
@@ -356,12 +369,12 @@ const ClientCardModal: FC<ClientCardProps> = ({
     {
       name: t('dashboard.create.menu.item.letter.title'),
       icon: <SvgLetter className={styles.svgType} />,
-      handler: () => handleCreatePopout('email'),
+      handler: () => setShowLetterModal(true),
     },
     {
       name: t('dashboard.create.menu.item.call.title'),
       icon: <SvgCall className={styles.svgType} />,
-      handler: () => handleCreatePopout('form'),
+      handler: () => handleCreatePopout('call'),
     },
   ]
 
@@ -394,7 +407,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
         key={data.name}
       >
         {data.icon}
-        <div>{data.name}</div>
+        <div className={styles.subMenuItemTitle}>{data.name}</div>
       </div>
     )
   }
@@ -455,10 +468,19 @@ const ClientCardModal: FC<ClientCardProps> = ({
         }
         break
       }
+      case 'call': {
+        item = {
+          type,
+          title: t('dashboard.create.menu.item.call.title'),
+          receiverData: uuidv4(),
+          client: defaultClient,
+        }
+        break
+      }
       case 'treatment': {
         item = {
           type,
-          title: t('dashboard.create.modal.create.form.title'),
+          title: t('dashboard.create.modal.create.treatment.note.title'),
           receiverData: uuidv4(),
           client: defaultClient,
         }
@@ -482,6 +504,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
         }
         break
       }
+      case 'voiceNote': {
+        item = {
+          type,
+          title: t('dashboard.create.menu.item.voice.note.title'),
+          receiverData: uuidv4(),
+          client: defaultClient,
+        }
+        break
+      }
     }
     const items = [...popoutList, item]
     await window.localStorage.setItem(
@@ -489,6 +520,10 @@ const ClientCardModal: FC<ClientCardProps> = ({
       JSON.stringify(items)
     )
     await window.localStorage.setItem('pabau_popout_item', JSON.stringify(item))
+    // await window.localStorage.setItem(
+    //   'pabau_popout_fullscreen',
+    //   JSON.stringify(false)
+    // )
     await window.localStorage.setItem('pabau_popout_new', JSON.stringify(true))
     window.dispatchEvent(new Event('storage'))
 
@@ -556,12 +591,9 @@ const ClientCardModal: FC<ClientCardProps> = ({
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
           {alertItems.map((item, index) => (
-            <Tooltip
-              key={`staff-alert-${index}`}
-              title={`Created By William - ${moment().format('DD/MM/YYYY')}`}
-            >
-              <div className={styles.staffAlert}>{item}</div>
-            </Tooltip>
+            <div className={styles.staffAlert} key={`staff-alert-${index}`}>
+              {item}
+            </div>
           ))}
         </div>
       )}
@@ -695,13 +727,13 @@ const ClientCardModal: FC<ClientCardProps> = ({
 
   const mobileHeaderOps = (
     <div className={styles.mobileHeaderOpsContainer}>
-      {showMobileHeaderOps && (
+      {showHeaderOpsDrawer && (
         <>
           <div
             className={styles.item}
             onClick={() => {
               setSubOps(1)
-              setShowMobileHeaderOps(false)
+              setShowHeaderOpsDrawer(false)
             }}
           >
             <MedicalHistory className={styles.headerOpsIcon} /> Medical history
@@ -710,7 +742,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
             className={styles.item}
             onClick={() => {
               setSubOps(2)
-              setShowMobileHeaderOps(false)
+              setShowHeaderOpsDrawer(false)
             }}
           >
             <Note className={styles.headerOpsIcon} /> Notes
@@ -719,18 +751,18 @@ const ClientCardModal: FC<ClientCardProps> = ({
             className={styles.item}
             onClick={() => {
               setSubOps(3)
-              setShowMobileHeaderOps(false)
+              setShowHeaderOpsDrawer(false)
             }}
           >
             <Alert className={styles.headerOpsIcon} /> Staff alerts
           </div>
         </>
       )}
-      {!showMobileHeaderOps && subOps === 1 && (
+      {!showHeaderOpsDrawer && subOps === 1 && (
         <div>{medicalHistoryPopover}</div>
       )}
-      {!showMobileHeaderOps && subOps === 2 && <div>{clientNotesPopover}</div>}
-      {!showMobileHeaderOps && subOps === 3 && <div>{clientAlertsPopover}</div>}
+      {!showHeaderOpsDrawer && subOps === 2 && <div>{clientNotesPopover}</div>}
+      {!showHeaderOpsDrawer && subOps === 3 && <div>{clientAlertsPopover}</div>}
     </div>
   )
 
@@ -782,6 +814,10 @@ const ClientCardModal: FC<ClientCardProps> = ({
     </div>
   )
 
+  const handleChangeImage = (avatar) => {
+    if (client) setClient({ ...client, avatar })
+  }
+
   return (
     <Modal
       visible={visible}
@@ -790,14 +826,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
       width={'100%'}
       wrapClassName={styles.clientCard}
     >
-      <ConfigProvider
-        getPopupContainer={(node) => {
-          if (node) {
-            return node as HTMLElement
-          }
-          return document.body as HTMLElement
-        }}
-      >
+      <ConfigProvider>
         {moment().format('MM/DD') ===
           moment(clientData.dob).format('MM/DD') && (
           <Confetti
@@ -806,6 +835,14 @@ const ClientCardModal: FC<ClientCardProps> = ({
             numberOfPieces={1000}
           />
         )}
+        {/* <AllTemplateModal
+          visible={showLetterModal}
+          title="All Template"
+          topCategories={topCategories}
+          categoryOptions={categoryOptions}
+          recipientList={recipientList}
+          allDocument={allDocument}
+        /> */}
         <div className={styles.clientCardContainer}>
           <div className={styles.clientCardHeader}>
             <div className={styles.clientCardHeaderTitle}>
@@ -816,6 +853,23 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 }}
                 className={styles.backToButton}
               />
+              {isMobile && (
+                <div className={styles.detailsAvatar}>
+                  <div
+                    className={styles.avatarContent}
+                    onClick={() => setShowAvatarUploader(true)}
+                  >
+                    <Avatar src={client?.avatar} size={30} />
+                  </div>
+                  <AvatarUploader
+                    visible={showAvatarUploader}
+                    title={t('ui.clientdetails.uploadavatar.title')}
+                    onCreate={handleChangeImage}
+                    imageURL={client ? client.avatar : ''}
+                    onCancel={() => setShowAvatarUploader(false)}
+                  />
+                </div>
+              )}
               <div
                 className={styles.clientFullName}
                 onClick={() => !search && setSearch(true)}
@@ -831,20 +885,36 @@ const ClientCardModal: FC<ClientCardProps> = ({
             </div>
             <div className={styles.clientCardHeaderOps}>
               {isMobile && (
-                <div className={styles.clientCardHeaderOp}>
-                  <Popover
-                    trigger="click"
-                    placement="bottomRight"
-                    overlayClassName={styles.mobileHeaderOps}
-                    content={mobileHeaderOps}
+                <div>
+                  <Drawer
+                    closable={false}
+                    placement="bottom"
+                    visible={showMobileHeaderOps}
+                    onClose={() => setShowMobileHeaderOps(false)}
+                    className={styles.createContentMobile}
                   >
-                    <div
-                      className={styles.moreButton}
-                      onClick={() => setShowMobileHeaderOps(true)}
-                    >
-                      <MoreOutlined />
+                    <div className={styles.createContentMobileHeader}>
+                      <div
+                        className={styles.handler}
+                        onClick={() => setShowMobileHeaderOps(false)}
+                      />
+                      <div className={styles.title}>
+                        {t('dashboard.create.menu.title.create')}
+                      </div>
                     </div>
-                  </Popover>
+                    <div className={styles.createContentMobileBody}>
+                      {mobileHeaderOps}
+                    </div>
+                  </Drawer>
+                  <div
+                    className={styles.moreButton}
+                    onClick={() => {
+                      setShowMobileHeaderOps(true)
+                      setShowHeaderOpsDrawer(true)
+                    }}
+                  >
+                    <MoreOutlined />
+                  </div>
                 </div>
               )}
               {!isMobile && (
@@ -857,13 +927,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
                       content={medicalHistoryPopover}
                       overlayClassName={styles.clientCardHeaderPopover}
                     >
-                      <Badge
-                        count={<CheckCircleFilled />}
-                        offset={[0, 18]}
-                        style={{ color: '#65cd98' }}
-                      >
-                        <MedicalHistory className={styles.headerOpsIcon} />
-                      </Badge>
+                      <Tooltip title="Medical history">
+                        <Badge
+                          count={<CheckCircleFilled />}
+                          offset={[0, 18]}
+                          style={{ color: '#65cd98' }}
+                        >
+                          <MedicalHistory className={styles.headerOpsIcon} />
+                        </Badge>
+                      </Tooltip>
                     </Popover>
                   </div>
                   <div className={styles.clientCardHeaderOp}>
@@ -874,14 +946,16 @@ const ClientCardModal: FC<ClientCardProps> = ({
                       content={clientNotesPopover}
                       overlayClassName={styles.clientCardHeaderPopover}
                     >
-                      <Badge
-                        count={noteItems.length}
-                        overflowCount={9}
-                        size="small"
-                        style={{ backgroundColor: 'var(--primary-color)' }}
-                      >
-                        <Note className={styles.headerOpsIcon} />
-                      </Badge>
+                      <Tooltip title="Notes">
+                        <Badge
+                          count={noteItems.length}
+                          overflowCount={9}
+                          size="small"
+                          style={{ backgroundColor: 'var(--primary-color)' }}
+                        >
+                          <Note className={styles.headerOpsIcon} />
+                        </Badge>
+                      </Tooltip>
                     </Popover>
                   </div>
                   <div className={styles.clientCardHeaderOp}>
@@ -892,14 +966,16 @@ const ClientCardModal: FC<ClientCardProps> = ({
                       content={clientAlertsPopover}
                       overlayClassName={styles.clientCardHeaderPopover}
                     >
-                      <Badge
-                        count={alertItems.length}
-                        overflowCount={9}
-                        size="small"
-                        style={{ backgroundColor: 'var(--primary-color)' }}
-                      >
-                        <Alert className={styles.headerOpsIcon} />
-                      </Badge>
+                      <Tooltip title="Staff alerts" placement="bottomRight">
+                        <Badge
+                          count={alertItems.length}
+                          overflowCount={9}
+                          size="small"
+                          style={{ backgroundColor: 'var(--primary-color)' }}
+                        >
+                          <Alert className={styles.headerOpsIcon} />
+                        </Badge>
+                      </Tooltip>
                     </Popover>
                   </div>
                 </>
@@ -911,6 +987,8 @@ const ClientCardModal: FC<ClientCardProps> = ({
               {client && (
                 <ClientDetails
                   clientData={client}
+                  onCreateEmail={() => handleCreatePopout('email')}
+                  onCreateCall={() => handleCreatePopout('call')}
                   searchResults={thirdPartySearchResults}
                   appointments={appointments}
                 />
@@ -935,9 +1013,9 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   />
                 </div>
                 <div>
-                  <ClientAppointmentsLayout isEmpty={true} />
+                  <ClientAppointmentsLayout />
                 </div>
-                <div style={{ paddingBottom: 60 }}>
+                <div>
                   {FinancialTabComponent ? (
                     FinancialTabComponent
                   ) : (
@@ -945,10 +1023,19 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   )}
                 </div>
                 <div>
-                  <ClientPackagesLayout items={clientPackages} />
+                  <ClientPackagesLayout
+                    items={clientPackages}
+                    handleSendEmail={(type) => handleCreatePopout(type)}
+                  />
                 </div>
                 <div>
-                  <ClientCommunicationsLayout isEmpty={true} />
+                  <ClientCommunicationsLayout
+                    isLoading={communicationTabProps?.isLoading}
+                    eventsData={communicationTabProps?.eventsData || []}
+                    eventDateFormat={
+                      communicationTabProps?.eventDateFormat || ''
+                    }
+                  />
                 </div>
                 <div>
                   <ClientFormsLayout
@@ -956,7 +1043,6 @@ const ClientCardModal: FC<ClientCardProps> = ({
                     formFilters={formFilterButtons}
                     forms={forms}
                     onButtonFilterClick={(e) => {
-                      console.log('Filter button selected:', e) //Removed while integration
                       return Promise.resolve(true)
                     }}
                     onFilterClick={(e) => Promise.resolve(true)}
@@ -979,7 +1065,6 @@ const ClientCardModal: FC<ClientCardProps> = ({
                     isEmpty={false}
                     prescriptions={prescriptions}
                     onPreviewClick={(e) => {
-                      console.log('Preview selected:', e)
                       return Promise.resolve(true)
                     }}
                     onPrintClick={(e) => Promise.resolve(true)}
@@ -994,7 +1079,6 @@ const ClientCardModal: FC<ClientCardProps> = ({
                     isEmpty={false}
                     testList={testList}
                     onViewReportClick={(e) => {
-                      console.log('View report selected:', e)
                       return Promise.resolve(true)
                     }}
                     onPrintClick={(e) => Promise.resolve(true)}
@@ -1003,15 +1087,11 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   />
                 </div>
                 <div>
-                  <ClientVaccineHistoryLayout isEmpty={true} />
-                </div>
-                <div>
                   <ClientGiftVoucherLayout
                     isEmpty={false}
                     activeVouchers={activeVouchers}
                     expiredVouchers={expiredVouchers}
                     onCardSelect={(e) => {
-                      console.log('Card selected:', e)
                       return Promise.resolve(true)
                     }}
                   />
@@ -1021,13 +1101,12 @@ const ClientCardModal: FC<ClientCardProps> = ({
                     isEmpty={false}
                     data={loyaltyData}
                     onLoyaltySelect={(e) => {
-                      console.log('Loyalty selected:', e) //Removed while integration
                       return Promise.resolve(true)
                     }}
                   />
                 </div>
                 <div>
-                  <ClientActivitiesLayout isEmpty={true} />
+                  <ClientTaskLayout isEmpty={true} />
                 </div>
               </CustomTabMenu>
             </div>
@@ -1042,9 +1121,9 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 onVisibleChange={onChangeVisibleHanlder}
                 visible={isOpenMenu}
               >
-                <Button type="primary" className={styles.createButton}>
+                <div className={styles.createButton}>
                   <PlusOutlined />
-                </Button>
+                </div>
               </Popover>
             )}
             {isMobile && (
@@ -1074,7 +1153,9 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 className={styles.handler}
                 onClick={() => setIsOpenMenu(false)}
               />
-              <div className={styles.title}>Create</div>
+              <div className={styles.title}>
+                {t('dashboard.create.menu.title.create')}
+              </div>
             </div>
             <div className={styles.createContentMobileBody}>
               {plusButtonContent}

@@ -21,7 +21,6 @@ import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
 import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
-import LegacyPage from '../LegacyPage'
 import Login from '../../pages/login'
 
 interface ProductNews {
@@ -174,7 +173,7 @@ const Layout: FC<LayoutProps> = ({
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
-        {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
+        {children}
       </PabauLayout>
       <div className={styles.stickyPopoutContainer}>
         <StickyPopout />
