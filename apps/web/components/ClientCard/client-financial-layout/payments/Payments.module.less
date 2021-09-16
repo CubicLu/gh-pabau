@@ -1,6 +1,7 @@
 .primaryText {
   cursor: pointer;
   color: var(--primary-color);
+  font-size: 12px;
 }
 .payments {
   :global {
@@ -29,6 +30,17 @@
           font-size: 20px;
         }
       }
+    }
+  }
+  .paymentNo {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    align-items: center;
+    color: var(--light-grey-color);
+    font-size: 12px;
+    span:nth-child(2) {
+      color: var(--primary-color);
     }
   }
 }

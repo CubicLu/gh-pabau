@@ -93,6 +93,7 @@ export class NotificationController {
       date,
       time,
       cancellation_reason,
+      company_id,
     })
 
     return {

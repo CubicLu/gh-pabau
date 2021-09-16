@@ -1,30 +1,26 @@
 import React, { FC, useRef } from 'react'
-import { MyLottie as Lottie } from '@pabau/ui'
-import emptyState from '../../assets/lottie/empty-state.json'
+import { CommunicationTimeline, EventsDataProps } from '@pabau/ui'
 import styles from './ClientCommunicationsLayout.module.less'
 
 export interface ClientCommunicationsLayoutProps {
-  isEmpty?: boolean
+  eventsData: EventsDataProps[]
+  eventDateFormat: string
+  isLoading?: boolean
 }
 
 export const ClientCommunicationsLayout: FC<ClientCommunicationsLayoutProps> = ({
-  isEmpty,
+  eventDateFormat,
+  eventsData,
+  isLoading,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   return (
     <div className={styles.clientLayout} ref={ref}>
-      {isEmpty && (
-        <Lottie
-          options={{
-            loop: true,
-            autoPlay: true,
-            animationData: emptyState,
-            rendererSettings: {
-              preserveAspectRatio: 'xMidYMid slice',
-            },
-          }}
-        />
-      )}
+      <CommunicationTimeline
+        eventsData={eventsData}
+        eventDateFormat={eventDateFormat}
+        isLoading={isLoading}
+      />
     </div>
   )
 }

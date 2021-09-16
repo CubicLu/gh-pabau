@@ -44,10 +44,25 @@
 }
 
 .avatar-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   border-radius: 50%;
   border: 2px solid white;
   background-color: white;
-  display: inline-block;
+  cursor: pointer;
+  .userNameContainer {
+    text-align: center;
+    .userName {
+      font-size: 14px;
+      color: var(--light-grey-color);
+    }
+    .selectCounter {
+      font-size: 10px;
+      margin-left: 4px;
+      color: var(--light-grey-border-color);
+    }
+  }
 }
 
 .avatar-loading {
@@ -90,6 +105,44 @@
   }
 }
 
+.select-avatar {
+  box-sizing: border-box;
+  position: relative;
+  :global {
+    .ant-avatar {
+      border: 1px solid var(--primary-color);
+    }
+  }
+    .edit {
+      display: block;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.12))
+        drop-shadow(0 6px 30px rgba(0, 0, 0, 0.14))
+        drop-shadow(0 8px 10px rgba(0, 0, 0, 0.12))
+        drop-shadow(0 -3px 4px rgba(0, 0, 0, 0.1));
+
+      svg {
+        width: 12px;
+        height: 12px;
+        fill: #5bc0de;
+        position: absolute;
+      }
+    }
+}
+
+.normal-avatar {
+  :global {
+    .ant-avatar {
+      border: 1px solid rgba(0, 0, 0, 0);
+    }
+  }
+}
+
 .avatar-status {
   position: absolute;
   left: calc(87.5% - 4px);
@@ -122,3 +175,33 @@
     }
   }
 }
+
+.booking-avatar {
+  box-sizing: border-box;
+  position: relative;
+  :global {
+    .ant-badge {
+      .ant-scroll-number-custom-component {
+        top: 33px;
+        right: 7px;
+      }
+    }
+  }
+}
+
+.bookingBadgeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  svg {
+    width: 11px;
+    height: 9px;
+    fill: white;
+  }
+}
+
+

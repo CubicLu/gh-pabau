@@ -1,51 +1,33 @@
-subscription notifications($user: jsonb) {
-  notifications(
-    order_by: { order: desc }
-    where: { sent_to: { _contains: $user } }
-  ) {
+subscription notifications {
+  notifications(order_by: { created_at: desc }) {
     id
-    sent_to
     created_at
     variables
     destination
     sent_by
-    loop
     notification_type {
       id
       name
       title
       description
     }
-    read_by {
-      user
+    notification_state {
+      is_read
+      is_deleted
     }
   }
 }
 
-mutation update_notifications_by_pk($id: uuid!, $sent_to: jsonb) {
-  update_notifications_by_pk(
-    pk_columns: { id: $id }
-    _set: { sent_to: $sent_to }
-  ) {
-    id
-  }
-}
-
-mutation delete_notifications_by_pk($id: uuid!) {
-  delete_notifications_by_pk(id: $id) {
-    __typename
-    id
-  }
-}
-
-mutation insert_read_notification_one(
-  $company: numeric
-  $notification: uuid
+mutation update_notification_state(
+  $id: uuid
   $user: numeric
+  $is_read: Boolean
+  $is_deleted: Boolean
 ) {
-  insert_read_notification_one(
-    object: { company: $company, notification: $notification, user: $user }
+  update_notification_state(
+    where: { _and: { user: { _eq: $user }, notification_id: { _eq: $id } } }
+    _set: { is_read: $is_read, is_deleted: $is_deleted }
   ) {
-    id
+    affected_rows
   }
 }

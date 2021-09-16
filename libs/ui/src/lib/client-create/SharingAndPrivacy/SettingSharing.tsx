@@ -17,9 +17,10 @@ interface P {
   companyName?: string
   setFieldValue(
     field: keyof InitialDetailsProps,
-    values: Record<string, boolean>
+    values: Record<string, number> | number
   ): void
   values?: InitialDetailsProps
+  accessCode?: number
 }
 
 export interface SettingSharing {
@@ -34,17 +35,20 @@ interface SharingItem {
   icon: ReactNode
   enabled: boolean
 }
-const SettingSharing: FC<P> = ({ companyName, setFieldValue, values }) => {
+const SettingSharing: FC<P> = ({
+  companyName,
+  setFieldValue,
+  values,
+  accessCode,
+}) => {
   const { t } = useTranslation('common')
 
   const settingSharingData = settingSharing(t)
 
-  const QRCodeLink = 'https://prelive-crm.new.pabau.com/'
-
   const handleChange = (checked, itemKey: string) => {
-    const selectedData = values?.['settingSharing']
+    const selectedData = values ? { ...values['settingSharing'] } : {}
     if (selectedData) {
-      selectedData[itemKey] = checked
+      selectedData[itemKey] = checked ? 1 : 0
       setFieldValue('settingSharing', selectedData)
     }
   }
@@ -86,7 +90,11 @@ const SettingSharing: FC<P> = ({ companyName, setFieldValue, values }) => {
                     </div>
                     <div className={styles.btnBottom}>
                       <ButtonCheckbox
-                        checked={values?.['settingSharing']?.[item.key]}
+                        checked={
+                          values?.['settingSharing']?.[item.key] === 1
+                            ? true
+                            : false
+                        }
                         icon={
                           values?.['settingSharing']?.[item.key] ? (
                             <CheckOutlined />
@@ -137,7 +145,7 @@ const SettingSharing: FC<P> = ({ companyName, setFieldValue, values }) => {
               'create.client.modal.privacy.sharing.setting.access.code.description'
             )}
           </p>
-          <h3>2460</h3>
+          <h3>{accessCode}</h3>
         </div>
         <div className={styles.customLink}>
           <h5>
@@ -150,7 +158,11 @@ const SettingSharing: FC<P> = ({ companyName, setFieldValue, values }) => {
           </p>
           <div className={styles.qrCodeSection}>
             <span>
-              <QRCode level={'H'} size={140} value={QRCodeLink} />
+              <QRCode
+                level={'H'}
+                size={140}
+                value={values?.['shareLink'] ?? ''}
+              />
             </span>
             <p>
               {t(

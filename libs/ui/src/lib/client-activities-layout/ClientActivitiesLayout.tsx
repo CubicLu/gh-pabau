@@ -1,18 +1,25 @@
 import React, { FC, useRef } from 'react'
-import { MyLottie as Lottie } from '@pabau/ui'
+import { MyLottie as Lottie, Activities, ActivitiesDataProps } from '@pabau/ui'
 import emptyState from '../../assets/lottie/empty-state.json'
-import styles from './ClientActivitiesLayout.module.less'
+import { eventsData } from '../activities/ActivitiesMock'
 
 export interface ClientActivitiesLayoutProps {
   isEmpty?: boolean
+  eventData?: ActivitiesDataProps[]
+  eventDateFormat?: string
+  isLoading?: boolean
 }
 
 export const ClientActivitiesLayout: FC<ClientActivitiesLayoutProps> = ({
   isEmpty,
+  eventData,
+  isLoading,
+  eventDateFormat,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
+  eventData = [...eventsData]
   return (
-    <div className={styles.clientLayout} ref={ref}>
+    <div ref={ref}>
       {isEmpty && (
         <Lottie
           options={{
@@ -25,6 +32,11 @@ export const ClientActivitiesLayout: FC<ClientActivitiesLayoutProps> = ({
           }}
         />
       )}
+      <Activities
+        isLoading={isLoading}
+        eventsData={eventData}
+        eventDateFormat={eventDateFormat ?? ''}
+      />
     </div>
   )
 }

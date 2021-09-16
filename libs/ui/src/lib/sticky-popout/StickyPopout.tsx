@@ -13,10 +13,14 @@ import { ReactComponent as TypeEmail } from '../../assets/images/popout/TypeEmai
 import { ReactComponent as TypeForm } from '../../assets/images/popout/TypeForm.svg'
 import { ReactComponent as TypeLetter } from '../../assets/images/popout/TypeLetter.svg'
 import { ReactComponent as TypeSMS } from '../../assets/images/popout/TypeSMS.svg'
+import { ReactComponent as TypeCall } from '../../assets/images/popout/TypeCall.svg'
 import { ReactComponent as TypePrescription } from '../../assets/images/popout/TypePrescription.svg'
+import { ReactComponent as TypeVoiceNote } from '../../assets/images/popout/TypeVoiceNote.svg'
 import { SendMail, SendSMS, SelectForm, CreatePrescription } from '@pabau/ui'
 import userAvatar from '../../assets/images/users/austin.png'
 import styles from './StickyPopout.module.less'
+import CreateCall from '../create-call/CreateCall'
+// import CreateVoiceNote from '../create-voice-note/CreateVoiceNote'
 
 interface PopoutProps {
   receiverData?: string
@@ -41,6 +45,7 @@ export const StickyPopout: FC = () => {
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [popouts, setPopouts] = useState<PopoutProps[]>([])
   const [currentPopout, setCurrentPopout] = useState<PopoutProps>({})
+  const [currentStep, setCurrentStep] = useState(1)
   const expandedClasses = {
     prescription: styles.expandedPrescription,
     treatment: styles.expandedForm,
@@ -49,6 +54,8 @@ export const StickyPopout: FC = () => {
     email: styles.expandedEmail,
     sms: styles.expandedSMS,
     letter: styles.expandedLetter,
+    call: styles.expandedCall,
+    voiceNote: styles.expandedVoiceNote,
   }
 
   const handleMinimizeHeader = (e, item: PopoutProps) => {
@@ -95,9 +102,11 @@ export const StickyPopout: FC = () => {
         {type === 'sms' && <TypeSMS className={styles.typeIcon} />}
         {type === 'letter' && <TypeLetter className={styles.typeIcon} />}
         {type === 'form' && <TypeForm className={styles.typeIcon} />}
+        {type === 'call' && <TypeCall className={styles.typeIcon} />}
         {type === 'prescription' && (
           <TypePrescription className={styles.typeIcon} />
         )}
+        {type === 'voiceNote' && <TypeVoiceNote className={styles.typeIcon} />}
       </div>
     )
   }
@@ -117,6 +126,7 @@ export const StickyPopout: FC = () => {
   }
 
   const handleClose = async (item: PopoutProps) => {
+    setCurrentStep(1)
     const findIndex = popouts.findIndex((el) => {
       const { receiverData } = el
       return receiverData === item.receiverData
@@ -181,6 +191,9 @@ export const StickyPopout: FC = () => {
       //   window.localStorage.getItem('pabau_popout_fullscreen') || `${false}`
       // )
       // setIsFullScreen(fullScreen)
+      if (!!item && item.type === 'treatment') {
+        setIsFullScreen(true)
+      }
       if (!!item && item.receiverData) {
         setCurrentPopout({ ...item, ref: createRef() })
       } else {
@@ -256,6 +269,12 @@ export const StickyPopout: FC = () => {
                       onSend={() => handleClose(item)}
                     />
                   )}
+                  {item.type === 'call' && (
+                    <CreateCall
+                      currentStep={currentStep}
+                      setCurrentStep={setCurrentStep}
+                    />
+                  )}
                   {item.type === 'treatment' && (
                     <SelectForm
                       client={item.client || defaultClient}
@@ -276,6 +295,7 @@ export const StickyPopout: FC = () => {
                       receiverData={item.receiverData || ''}
                     />
                   )}
+                  {/* {item.type === 'voiceNote' && <CreateVoiceNote />} */}
                 </div>
               )}
             </div>
@@ -326,6 +346,7 @@ export const StickyPopout: FC = () => {
                 <div
                   className={styles.opsIcon}
                   onClick={() => {
+                    setCurrentStep(1)
                     setIsFullScreen(false)
                     handleClose(currentPopout)
                   }}
@@ -371,6 +392,7 @@ export const StickyPopout: FC = () => {
                   receiverData={currentPopout.receiverData || ''}
                 />
               )}
+              {/* {currentPopout.type === 'voiceNote' && <CreateVoiceNote />} */}
             </div>
           </div>
         </Modal>

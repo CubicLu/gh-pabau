@@ -11,7 +11,7 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 3072
+      memory: 3333
 
 pipelines:
   pull-requests:
@@ -46,9 +46,9 @@ pipelines:
                 - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
                 - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
 
           - step:
@@ -263,8 +263,8 @@ pipelines:
                 - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
           - step:
               name: lint

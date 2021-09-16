@@ -1,4 +1,4 @@
-import { intArg, extendType, nonNull, stringArg } from 'nexus'
+import { extendType, nonNull, stringArg } from 'nexus'
 import { sendEmail } from '../../app/email/email-service'
 import { Context } from '../../context'
 import { v4 as uuidv4 } from 'uuid'
@@ -53,37 +53,49 @@ export const Password = extendType({
       description:
         'Changes the password for the user based on a token received over email',
       args: {
-        userId: nonNull(intArg()),
         token: nonNull(stringArg()),
-        newPassword: nonNull(stringArg()),
+        newPassword1: nonNull(stringArg()),
+        newPassword2: nonNull(stringArg()),
       },
-      async resolve(_root, { userId, newPassword }, { prismaArray }) {
-        if (!(await validatePassword.isValid(newPassword)))
+      async resolve(
+        _root,
+        { token, newPassword1, newPassword2 },
+        { prisma }: Context
+      ) {
+        if (newPassword1 !== newPassword2)
+          throw new Error(`Password confirmation doesn't match Password`)
+        if (!(await validatePassword.isValid(newPassword1)))
           throw new Error('Choose a stronger password')
 
-        const { salt, username, full_name } = await prismaArray(
-          undefined
-        ).user.findUnique({
+        const user = await prisma.passwordResetAuth.findFirst({
           rejectOnNotFound: true,
           where: {
-            id: userId,
+            key_code: { equals: token },
+          },
+          select: {
+            User: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        })
+
+        const { salt, username, full_name } = await prisma.user.findUnique({
+          rejectOnNotFound: true,
+          where: {
+            id: user.User.id,
           },
           select: { username: true, salt: true, full_name: true },
         })
 
-        const password = createPabau1PasswordHash(salt, newPassword)
-
-        const result = await prismaArray(undefined).user.updateMany({
+        const password = createPabau1PasswordHash(newPassword1, salt)
+        await prisma.user.update({
           where: {
-            username,
+            id: user.User.id,
           },
-          data: { password, password_algor: 2 },
+          data: { password: password, password_algor: 2 },
         })
-        console.assert(
-          result,
-          'Error 3489734589 - Could not update user password properly.'
-        )
-
         await sendEmail({
           templateType: 'password-reset-confirm',
           to: username,
@@ -121,7 +133,14 @@ export const Password = extendType({
       async resolve(_root, { email }, { prisma }: Context) {
         const token = uuidv4()
 
-        await prisma.passwordResetAuth.upsert({
+        const user = await prisma.user.findFirst({
+          where: { username: { equals: email } },
+        })
+
+        if (!user) {
+          throw new Error('Invalid username')
+        }
+        const data = await prisma.passwordResetAuth.upsert({
           where: { username: email },
           create: {
             username: email,
@@ -133,6 +152,19 @@ export const Password = extendType({
             date: { set: new Date().toISOString() },
           },
         })
+
+        await sendEmail({
+          templateType: 'password-reset-requested',
+          to: email,
+          subject: 'Reset Password Request',
+          fields: [
+            {
+              key: 'url',
+              value: `https://prelive-crm.new.pabau.com/resetPassword?id=${data?.key_code}`,
+            },
+          ],
+        })
+
         return true
       },
     })

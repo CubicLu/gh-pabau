@@ -31,7 +31,7 @@ import {
   HighchartsProvider,
 } from 'react-jsx-highcharts'
 import { useMedia } from 'react-use'
-import SkinHealth from '../../../assets/images/brands/SkinHealth.png'
+// import SkinHealth from '../../../assets/images/brands/SkinHealth.png'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import {
@@ -256,7 +256,7 @@ export const Index: FC<OnlineBookingProps> = ({
             <div className={styles.campaignContainer}>
               <div>
                 <div className={styles.icon}>
-                  <img src={SkinHealth} alt="companyLogo" />
+                  {/* <Image src={SkinHealth} alt="companyLogo" /> */}
                 </div>
                 <Title level={4} className={styles.name}>
                   The Skin Clinic - London
