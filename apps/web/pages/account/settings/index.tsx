@@ -82,7 +82,7 @@ const Index: FC = () => {
   const { data: notificationsData } = useGetNotificationsDataQuery({
     fetchPolicy: 'network-only',
     variables: {
-      user: user?.me?.id,
+      user: user?.me?.user,
     },
   })
 
@@ -295,7 +295,7 @@ const Index: FC = () => {
               {
                 query: GetNotificationsDataDocument,
                 variables: {
-                  user: user?.me?.id,
+                  user: user?.me?.user,
                 },
               },
             ],
@@ -304,14 +304,14 @@ const Index: FC = () => {
           createPabauNotificationToggle({
             variables: {
               ...el,
-              user: user?.me?.id,
+              user: user?.me?.user,
               company: user?.me?.company,
             },
             refetchQueries: [
               {
                 query: GetNotificationsDataDocument,
                 variables: {
-                  user: user?.me?.id,
+                  user: user?.me?.user,
                 },
               },
             ],
