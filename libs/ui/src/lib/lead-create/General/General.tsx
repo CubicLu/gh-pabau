@@ -231,7 +231,7 @@ export const General: FC<GeneralProps> = ({
               <DatePicker
                 onChange={(date) => setFieldValue('DOB', date)}
                 name={'DOB'}
-                value={values?.DOB && dayjs(values?.DOB)}
+                value={values?.DOB}
                 disabledDate={(current) => {
                   return current && current > dayjs().endOf('day')
                 }}

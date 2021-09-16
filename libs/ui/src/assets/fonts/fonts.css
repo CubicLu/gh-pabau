@@ -14,3 +14,11 @@
   font-family: Circular-Std-Medium;
   src: url('./CircularStd-Medium.otf') format('opentype');
 }
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url('./Roboto-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Roboto-Medium';
+  src: url('./Roboto-Medium.ttf') format('truetype');
+}

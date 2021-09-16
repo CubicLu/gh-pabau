@@ -194,7 +194,7 @@ export const ClientPrescriptionsLayout: FC<ClientPrescriptionsLayoutProps> = ({
       ) : (
         <div className={styles.prescriptionList}>
           {prescriptionList.length > 0 &&
-            prescriptionList.map((item) => (
+            prescriptionList.map((item, index) => (
               <div
                 key={item.id}
                 className={
@@ -220,6 +220,8 @@ export const ClientPrescriptionsLayout: FC<ClientPrescriptionsLayoutProps> = ({
                           <div className={styles.titleContent}>
                             <h3>{item.name}</h3>
                             <span>
+                              {`#${(index + 1).toString().padStart(3, '0')}`}
+                              {`  `}
                               {dayjs(item.date).format('DD MMM YYYY, h:mm A')}
                             </span>
                           </div>
@@ -251,11 +253,14 @@ export const ClientPrescriptionsLayout: FC<ClientPrescriptionsLayoutProps> = ({
                               trigger="click"
                               content={prescriptionsOptions(item)}
                               overlayClassName={styles.customPopover}
-                              onVisibleChange={(val) =>
+                              onVisibleChange={(val) => {
                                 setOpenPrescriptionOptions({
                                   ...openPrescriptionOptions,
                                   [item.id]: val,
                                 })
+                              }}
+                              getPopupContainer={(trigger) =>
+                                trigger.parentElement as HTMLElement
                               }
                             >
                               <Button
