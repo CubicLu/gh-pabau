@@ -67,7 +67,7 @@ export const PabauStaffList = extendType({
           const staffList = await ctx.prisma
             .$queryRaw`SELECT u.id,u.full_name,u.main_contact,u.job_title, u.admin,u.image,u.last_login,g.CellPhone,g.Email,g.City,g.ID as staff_id,r.sickness
                       FROM cm_staff_general g left join users u on g.pabau_id = u.id
-                      left join (SELECT uid,sickness FROM pabau.rota_shifts where start <= ${date} and end >= ${date})  as r on r.uid = g.id
+                      left join (SELECT uid,sickness FROM rota_shifts where start <= ${date} and end >= ${date})  as r on r.uid = g.id
                       WHERE g.Occupier = ${companyId}
                        ${
                          input.admin

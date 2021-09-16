@@ -103,7 +103,7 @@ pipelines:
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
                 - |
                   echo "Ensuring everything is identical..."
-                  git diff --exit-code --no-ext-diff -p || (git status && echo TODO exit 1)
+                  git diff --exit-code --no-ext-diff -p || (git status && exit 1)
                 - |
                   echo "Waiting for MySQL to boot..."
                   docker-compose -f tools/pabau1/docker-compose.ci.yml up &
