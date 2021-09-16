@@ -2,23 +2,24 @@ table:
   name: notifications
   schema: public
 object_relationships:
-- name: notification_state
-  using:
-    manual_configuration:
-      column_mapping:
-        id: notification_id
-      insertion_order: null
-      remote_table:
-        name: notification_state
-        schema: public
 - name: notification_type
   using:
     manual_configuration:
       column_mapping:
-        template: notification_type
+        type: notification_type
       insertion_order: null
       remote_table:
         name: notification_types
+        schema: public
+array_relationships:
+- name: read_by
+  using:
+    manual_configuration:
+      column_mapping:
+        id: notification
+      insertion_order: null
+      remote_table:
+        name: read_notification
         schema: public
 remote_relationships:
 - definition:
@@ -37,41 +38,36 @@ insert_permissions:
     check: {}
     columns:
     - destination
-    - repeat_in
+    - loop
     - sent_by
-    - template
+    - sent_to
+    - type
     - variables
   role: user
 select_permissions:
 - permission:
     columns:
-    - created_at
-    - destination
-    - id
-    - repeat_in
+    - order
     - sent_by
-    - template
-    - updated_at
+    - loop
+    - sent_to
     - variables
-    filter:
-      _and:
-      - notification_state:
-          _and:
-          - user:
-              _eq: X-Hasura-User-Id
-          - is_deleted:
-              _eq: false
-          - company:
-              _eq: X-Hasura-Org-Id
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
   role: user
 update_permissions:
 - permission:
     check: null
     columns:
     - destination
-    - repeat_in
+    - loop
     - sent_by
-    - template
+    - sent_to
+    - type
     - variables
     filter: {}
   role: user
