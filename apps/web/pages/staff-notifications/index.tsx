@@ -138,11 +138,9 @@ export const StaffNotifications: NextPage = () => {
     }
 
     const variables = {
-      type: values.type,
-      sent_to: sent_users,
+      template: values.type,
       destination: values.destination_id,
       sent_by: user.user,
-      // loop: 2,
     }
 
     if (notificationVariable) {

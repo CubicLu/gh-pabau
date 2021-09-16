@@ -1,0 +1,36 @@
+query getInvoices($contactID: Int!, $take: Int, $skip: Int) {
+  sales: findManyInvSale(where: {CmContact: {ID: {equals: $contactID}}, inv_total: {gte: 0}}, take: $take, skip: $skip) {
+    id
+    invoice_no: custom_id
+    guid
+    date
+    created_date
+    type: reference_no
+    paid_amount
+    total
+    Contact: CmContact {
+      ID
+      Fname
+      Lname
+    }
+    issuer_id
+    IssuingCompany {
+      id
+      name
+    }
+    User {
+      id
+      full_name
+    }
+    Biller: InvBiller {
+      User {
+        id
+        full_name
+      }
+    }
+    Location {
+      id
+      name
+    }
+  }
+}

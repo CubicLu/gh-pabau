@@ -509,7 +509,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                                   {indform.isAdminForm && (
                                     <span className={styles.administratorForm}>
                                       <LockFilled />
-                                      <h3>Administrators</h3>
+                                      <h3>Doctors</h3>
                                     </span>
                                   )}
                                 </span>

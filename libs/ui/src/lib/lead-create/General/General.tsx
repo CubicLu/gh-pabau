@@ -233,7 +233,7 @@ export const General: FC<GeneralProps> = ({
                   setFieldValue('DOB', dayjs(dateString))
                 }
                 name={'DOB'}
-                value={values?.DOB && dayjs(values?.DOB)}
+                value={values?.DOB}
                 disabledDate={(current) => {
                   return current && current > dayjs().endOf('day')
                 }}
