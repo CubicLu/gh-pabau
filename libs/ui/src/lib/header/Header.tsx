@@ -30,9 +30,7 @@ interface P {
   notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
   readNewsMutation?: MutationFunction
-  deleteNotification?: MutationFunction
-  updateNotification?: MutationFunction
-  readAddMutation?: MutationFunction
+  updateNotificationState?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
   user?: Partial<AuthenticatedUser> & JwtUser
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
@@ -57,9 +55,7 @@ export const Header = ({
   onMessageIconClick,
   onLogOut,
   relativeTime,
-  deleteNotification,
-  updateNotification,
-  readAddMutation,
+  updateNotificationState,
   readNewsMutation,
   taskManagerIFrameComponent,
   clientCreateRender,
@@ -95,11 +91,15 @@ export const Header = ({
     setUnreadNotify(productNews, 'readUsers', (length) =>
       setUnreadNewsCount(length)
     )
-    setUnreadNotify(notifications, 'read', (length) =>
-      setUnreadNotificationCount(length)
-    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productNews, notifications])
+  }, [productNews])
+
+  useEffect(() => {
+    const unReadNotifications =
+      notifications?.filter((notification) => !notification.is_read)?.length ||
+      0
+    setUnreadNotificationCount(unReadNotifications)
+  }, [notifications])
 
   return (
     <>
@@ -167,10 +167,8 @@ export const Header = ({
           notifications={notifications}
           productNews={productNews}
           relativeTime={relativeTime}
-          deleteNotification={deleteNotification}
-          updateNotification={updateNotification}
           readNewsMutation={readNewsMutation}
-          readAddMutation={readAddMutation}
+          updateNotificationState={updateNotificationState}
         />
       )}
     </>

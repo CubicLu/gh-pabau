@@ -93,17 +93,18 @@
     &:last-child {
       margin-right: 0;
     }
-    .moreButton {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: 1px solid var(--border-color-base);
-    }
   }
+}
+
+.moreButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid var(--border-color-base);
 }
 
 .mobileHeaderOps {
@@ -344,7 +345,7 @@
     height: min-content;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 1024px) {
     background-color: white;
     padding: 0;
     padding-top: 60px;
@@ -356,6 +357,9 @@
 .clientDetails {
   width: 100%;
   padding-bottom: 28px;
+  @media (max-width: 767px) {
+    padding-bottom: 0px;
+  }
 }
 
 .clientCardContent {
@@ -369,12 +373,30 @@
   padding: 8px 20px;
   width: 100%;
   cursor: pointer;
+  &:hover {
+    background-color: #7ec9e0;
+  }
 }
 
 .menuItemIcon {
   width: 28px;
   height: 28px;
   object-fit: cover;
+}
+
+.pencilIconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #3d9588;
+}
+
+.pencilIcon {
+  width: 11px;
+  height: 11px;
 }
 
 .menuItemTexts {
@@ -402,10 +424,9 @@
 }
 
 .svgType {
-  height: 24px;
-  width: 24px;
+  height: 28px;
+  width: 28px;
   object-fit: cover;
-  margin-right: 8px;
 }
 
 .plusContentItems {
@@ -435,7 +456,7 @@
     margin-bottom: 0;
   }
   &:hover {
-    background-color: rgba(black, 0.1);
+    background-color: var(--primary-color);
   }
 }
 
@@ -465,12 +486,20 @@
 }
 
 .createButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 50% !important;
   pointer-events: auto;
   width: 60px !important;
   height: 60px !important;
   font-size: 24px !important;
   padding: 0 !important;
+  background-color: var(--primary-color);
+  cursor: pointer;
+  > span > svg > path {
+    fill: white;
+  }
 }
 
 .clientCreateButton {
@@ -553,6 +582,14 @@
 }
 .createContentMobileBody {
   width: 100%;
+}
+
+.subMenuItemTitle {
+  margin-left: 8px;
+}
+
+.avatarContent {
+  margin-right: 12px;
 }
 
 .pencilIconContainer {

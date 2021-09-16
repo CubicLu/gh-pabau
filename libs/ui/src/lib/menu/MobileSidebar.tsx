@@ -193,15 +193,12 @@ export const MobileSidebar: FC<P> = ({
         </div>
         <div className={styles.buttonMenu}>
           <Link href="/setup">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a style={{ width: '100%' }}>
-              <Button
-                className={classNames(styles.buttonStyles, styles.setUpBtn)}
-                icon={<SettingOutlined />}
-              >
-                {t('sidebar.setup')}
-              </Button>
-            </a>
+            <Button
+              className={classNames(styles.buttonStyles, styles.setUpBtn)}
+              icon={<SettingOutlined />}
+            >
+              {t('sidebar.setup')}
+            </Button>
           </Link>
         </div>
       </Menu>

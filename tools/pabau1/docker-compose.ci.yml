@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_DATABASE: pabau
       MYSQL_PASSWORD: '1234'
-      MYSQL_ROOT_PASSWORD: 'SuperSecret'
+      MYSQL_ROOT_PASSWORD: '1234'
       MYSQL_USER: web
     ports:
       - "3307:3306"

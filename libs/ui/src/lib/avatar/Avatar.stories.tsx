@@ -5,7 +5,7 @@ import userImage from '../../assets/images/user.png'
 export default {
   component: Avatar,
   title: 'Basics/Avatar',
-  args: { isLoading: false, size: 'medium', name: 'user' },
+  args: { isLoading: false, size: 'medium', name: 'UserUser' },
   argTypes: {
     isLoading: { control: { type: 'boolean' } },
     name: { control: { type: 'text' } },
@@ -79,4 +79,11 @@ EditOnHover.args = {
   size: 'large',
   src: userImage,
   edit: true,
+}
+
+export const SelectAvatar = AvatarStory.bind({})
+SelectAvatar.args = {
+  size: 'large',
+  src: userImage,
+  active: 'select',
 }

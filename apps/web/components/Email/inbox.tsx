@@ -10,13 +10,12 @@ import {
   Notification,
   NotificationType,
 } from '@pabau/ui'
-import { Card, Input, Menu, Dropdown, Radio, Badge } from 'antd'
+import { Card, Input, Menu, Dropdown, Radio, Badge, Skeleton } from 'antd'
 import {
   InboxOutlined,
   FileOutlined,
   SendOutlined,
   FolderOpenOutlined,
-  SearchOutlined,
   RedoOutlined,
   FilterOutlined,
   CheckOutlined,
@@ -32,11 +31,12 @@ import {
   DeleteOutlined,
   UpOutlined,
   MailOutlined,
+  CaretDownOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { ReactComponent as Attched } from '../../assets/images/attched.svg'
 import dynamic from 'next/dynamic'
-
+const { Search } = Input
 export interface P {
   tableName?: string
 }
@@ -58,6 +58,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
   const [readEmail, setReadEmail] = useState(false)
   const [emailId, setEmailId] = useState('')
   const [threadsId, setThreadsId] = useState('')
+  const [searchResult, setSearchResult] = useState([])
+  const [showSearch, setShowSearch] = useState(false)
 
   const userSignIn = true
   useEffect(
@@ -113,19 +115,10 @@ export const Inbox: FC<P> = ({ ...props }) => {
   const handleAuthClick = () => {
     gapi.auth2.getAuthInstance().signIn()
   }
-  const totalConverstions = () => {
-    gapi.client.gmail.users.messages
-      .list({
-        userId: 'me',
-      })
-      .then(async (res) => {
-        await setTotalInbox(res.result.messages.length)
-      })
-      .catch((error) => console.log('ERRRR::::', error))
-  }
+
   const updateSigninStatus = (isSignedIn) => {
     if (isSignedIn) {
-      totalConverstions()
+      // totalConverstions()
       listInbox()
       listDraft()
       listSent()
@@ -133,6 +126,55 @@ export const Inbox: FC<P> = ({ ...props }) => {
     } else {
       handleAuthClick()
     }
+  }
+
+  const extractData = (finalEmails) => {
+    const val = finalEmails.map((itm: any, i) => {
+      const rowData = { name: '', time: '', subject: '', isAttched: false }
+      if (itm.result.payload.mimeType === 'multipart/mixed') {
+        rowData.isAttched = true
+      }
+      itm.result.payload.headers.map((x) => {
+        if (x.name === 'From') {
+          rowData.name = x.value.split('<')
+        }
+        if (x.name === 'Date') {
+          rowData.time = x.value
+          // `${dayjs(x.value).format('HH:mm')}`
+        }
+        if (x.name === 'Subject') {
+          rowData.subject = x.value
+        }
+        return 1
+      })
+
+      const todayDiff = dayjs().diff(dayjs(rowData.time), 'day')
+
+      const yearDiff = dayjs().diff(dayjs(rowData.time), 'year')
+
+      if (todayDiff === 0) {
+        rowData.time = `${dayjs(rowData.time).format('HH:mm')}`
+      } else if (yearDiff === 0) {
+        rowData.time = `${dayjs(rowData.time).format('DD MMM ')}`
+      } else if (yearDiff > 0) {
+        rowData.time = `${dayjs(rowData.time).format('DD MMM YYYY')}`
+      }
+
+      const item = {
+        ...rowData,
+        id: itm.result.id,
+        key: itm.result.threadId,
+        name: {
+          name: rowData.name[0],
+          status: itm.result.labelIds.includes('UNREAD'),
+        },
+        isAttched: rowData.isAttched,
+        subject: { name: rowData.subject, subject: itm.result.snippet },
+      }
+      return item
+    })
+
+    return val
   }
 
   const listInboxEmail = async (msg) => {
@@ -147,45 +189,19 @@ export const Inbox: FC<P> = ({ ...props }) => {
       })
     )
 
-    setInboxEmail(
-      finalEmails.map((itm: any) => {
-        if (itm.result.labelIds.includes('UNREAD')) {
-          unreadEmail += 1
-        }
-        const rowData = { name: '', time: '', subject: '', isAttched: false }
-        if (itm.result.payload.mimeType === 'multipart/mixed') {
-          rowData.isAttched = true
-        }
-        itm.result.payload.headers.map((x) => {
-          if (x.name === 'From') {
-            rowData.name = x.value.split('<')
-          }
-          if (x.name === 'Date') {
-            rowData.time = `${dayjs(x.value).format('HH:mm')}`
-          }
-          if (x.name === 'Subject') {
-            rowData.subject = x.value
-          }
-          return 1
-        })
-
-        const item = {
-          ...rowData,
-          id: itm.result.id,
-          key: itm.result.threadId,
-          name: {
-            name: rowData.name[0],
-            status: itm.result.labelIds.includes('UNREAD'),
-          },
-          isAttched: rowData.isAttched,
-          subject: { name: rowData.subject, subject: itm.result.snippet },
-        }
-        return item
-      })
-    )
+    setTotalInbox(finalEmails.length)
+    finalEmails.map((itm: any, i) => {
+      if (itm.result.labelIds.includes('UNREAD')) {
+        unreadEmail += 1
+      }
+      return 1
+    })
+    const val = extractData(finalEmails)
+    setInboxEmail(val)
     setInboxCount(unreadEmail)
     setIsLoading(false)
   }
+
   const listDraftEmail = async (msg) => {
     setIsLoading(true)
     const finalEmails = await Promise.all(
@@ -196,36 +212,11 @@ export const Inbox: FC<P> = ({ ...props }) => {
         })
       })
     )
-    setDraftEmail(
-      finalEmails.map((itm: any) => {
-        const rowData = { name: '', time: '', subject: '' }
-        itm.result.payload.headers.map((x) => {
-          if (x.name === 'From') {
-            rowData.name = x.value.split('<')
-          }
-          if (x.name === 'Date') {
-            rowData.time = `${dayjs(x.value).format('HH:mm')}`
-          }
-          if (x.name === 'Subject') {
-            rowData.subject = x.value
-          }
-          return 1
-        })
-        const item = {
-          ...rowData,
-          id: itm.result.id,
-          key: itm.result.threadId,
-          name: {
-            name: rowData.name[0],
-            status: itm.result.labelIds.includes('UNREAD'),
-          },
-          subject: { name: rowData.subject, subject: itm.result.snippet },
-        }
-        return item
-      })
-    )
+    const val = extractData(finalEmails)
+    setDraftEmail(val)
     setIsLoading(false)
   }
+
   const listSentEmail = async (msg) => {
     setIsLoading(true)
     const finalEmails = await Promise.all(
@@ -236,41 +227,11 @@ export const Inbox: FC<P> = ({ ...props }) => {
         })
       })
     )
-
-    setSentEmail(
-      finalEmails.map((itm: any) => {
-        const rowData = { name: '', time: '', subject: '', isAttched: false }
-        if (itm.result.payload.mimeType === 'multipart/mixed') {
-          rowData.isAttched = true
-        }
-        itm.result.payload.headers.map((x) => {
-          if (x.name === 'To') {
-            rowData.name = x.value.split('<')
-          }
-          if (x.name === 'Date') {
-            rowData.time = `${dayjs(x.value).format('HH:mm')}`
-          }
-          if (x.name === 'Subject') {
-            rowData.subject = x.value
-          }
-          return 1
-        })
-        const item = {
-          ...rowData,
-          id: itm.result.id,
-          key: itm.result.threadId,
-          name: {
-            name: rowData.name[0],
-            status: itm.result.labelIds.includes('UNREAD'),
-          },
-          isAttched: rowData.isAttched,
-          subject: { name: rowData.subject, subject: itm.result.snippet },
-        }
-        return item
-      })
-    )
+    const val = extractData(finalEmails)
+    setSentEmail(val)
     setIsLoading(false)
   }
+
   const listArchiveEmail = async (msg) => {
     setIsLoading(true)
     const finalEmails = await Promise.all(
@@ -329,6 +290,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
     setArchiveEmail(row)
     setIsLoading(false)
   }
+
   const listInbox = () => {
     gapi.client.gmail.users.messages
       .list({
@@ -677,11 +639,28 @@ export const Inbox: FC<P> = ({ ...props }) => {
     )
   }
 
+  const handleTabChange = async (e) => {
+    if (e === '0') {
+      setTotalInbox(inboxEmail.length)
+    }
+    if (e === '1') {
+      setTotalInbox(draftEmail.length)
+    }
+    if (e === '2') {
+      setTotalInbox(sentEmail.length)
+    }
+    if (e === '3') {
+      setTotalInbox(archiveEmail.length)
+    }
+    setShowSearch(false)
+    setReadEmail(false)
+  }
+
   const renderList = (columns, dataSource, rowSelection) => {
     return (
       <Table
         columns={columns}
-        dataSource={dataSource}
+        dataSource={showSearch ? searchResult : dataSource}
         rowSelection={rowSelection}
         loading={isLoading}
         showSizeChanger={dataSource.length > 10}
@@ -690,6 +669,75 @@ export const Inbox: FC<P> = ({ ...props }) => {
         noDataIcon={<MailOutlined />}
       />
     )
+  }
+
+  const filterMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item>
+          <span>Unread</span>
+        </Menu.Item>
+        <Menu.Item>
+          <span>Linked with lead</span>
+        </Menu.Item>
+        <Menu.Item>
+          <span>Linked with an open lead</span>
+        </Menu.Item>
+        <Menu.Item>
+          <span>Not Linked with a lead</span>
+        </Menu.Item>
+      </Menu>
+    )
+  }
+
+  const markMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item>
+          <span>Mark as read</span>
+        </Menu.Item>
+        <Menu.Item>
+          <span>Mark as unread</span>
+        </Menu.Item>
+      </Menu>
+    )
+  }
+
+  const handleSearch = (e) => {
+    if (e.length > 0) {
+      gapi.client.gmail.users.messages
+        .list({
+          userId: 'me',
+          q: e,
+        })
+        .then(async (res) => {
+          setShowSearch(true)
+          if (res.result.messages) {
+            await handleShowResult(res.result.messages)
+          } else {
+            setSearchResult([])
+          }
+        })
+        .catch((error) => setShowSearch(false))
+    } else {
+      setShowSearch(false)
+    }
+  }
+
+  const handleShowResult = async (msg) => {
+    setIsLoading(true)
+
+    const finalEmails = await Promise.all(
+      msg.map(async (msg) => {
+        return await gapi.client.gmail.users.messages.get({
+          userId: 'me',
+          id: msg.id,
+        })
+      })
+    )
+    const val = extractData(finalEmails)
+    setSearchResult(val)
+    setIsLoading(false)
   }
 
   return (
@@ -774,21 +822,39 @@ export const Inbox: FC<P> = ({ ...props }) => {
                     icon={<RedoOutlined />}
                     onClick={() => updateSigninStatus(userSignIn)}
                   />
-                  <Button type="default" icon={<FilterOutlined />}>
-                    Filter
-                  </Button>
-                  <Button type="default" icon={<CheckOutlined />}>
-                    Mark
-                  </Button>
+                  <Dropdown overlay={filterMenu} placement="bottomLeft" arrow>
+                    <Button type="default" icon={<FilterOutlined />}>
+                      Filter <CaretDownOutlined />
+                    </Button>
+                  </Dropdown>
+                  <Dropdown overlay={markMenu} placement="bottomLeft" arrow>
+                    <Button type="default" icon={<CheckOutlined />}>
+                      Mark
+                    </Button>
+                  </Dropdown>
                 </div>
                 <div className={styles.menuRightLast}>
-                  <h5>{totalInbox} converstions</h5>
-                  <Input
+                  {isLoading ? (
+                    <h5>
+                      <Skeleton.Input
+                        style={{ width: 150 }}
+                        active={true}
+                        size={'default'}
+                      />
+                    </h5>
+                  ) : (
+                    <h5>
+                      {showSearch ? searchResult.length : totalInbox}{' '}
+                      converstions
+                    </h5>
+                  )}
+                  <Search
                     placeholder="Search"
-                    suffix={
-                      <SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
-                    }
+                    // suffix={
+                    //   <SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                    // }
                     style={{ borderRadius: '4px', marginRight: '10px' }}
+                    onSearch={(e) => handleSearch(e)}
                   />
                   <Dropdown
                     overlay={moremenu}
@@ -806,18 +872,18 @@ export const Inbox: FC<P> = ({ ...props }) => {
               </div>
             </div>
           )}
-
-          <TabMenu
-            tabPosition={'left'}
-            menuItems={tabItemText}
-            tabBarStyle={{ backgroundColor: '#FFF' }}
-            minHeight="1px"
-            onChange={(e) => {
-              setReadEmail(false)
-            }}
-          >
-            <div className={styles.inboxContainers}>
-              {/* {!readEmail && (
+          <div className={styles.tabWrapper}>
+            <TabMenu
+              tabPosition={'left'}
+              menuItems={tabItemText}
+              tabBarStyle={{ backgroundColor: '#FFF' }}
+              minHeight="1px"
+              onChange={(e) => {
+                handleTabChange(e)
+              }}
+            >
+              <div className={styles.inboxContainers}>
+                {/* {!readEmail && (
                 <Table
                   columns={columns}
                   dataSource={inboxEmail}
@@ -831,26 +897,27 @@ export const Inbox: FC<P> = ({ ...props }) => {
               {readEmail && (
                 <ReadEmail privateMenu={privatemenu} messageId={emailId} />
               )} */}
-              {readEmail
-                ? renderReadEmail()
-                : renderList(columns, inboxEmail, rowSelection)}
-            </div>
-            <div className={styles.inboxContainers}>
-              {readEmail
-                ? renderReadEmail()
-                : renderList(columns, draftEmail, rowSelection)}
-            </div>
-            <div className={styles.inboxContainers}>
-              {readEmail
-                ? renderReadEmail()
-                : renderList(columns, sentEmail, rowSelection)}
-            </div>
-            <div className={styles.inboxContainers}>
-              {readEmail
-                ? renderReadEmail()
-                : renderList(columns, archiveEmail, rowSelection)}
-            </div>
-          </TabMenu>
+                {readEmail
+                  ? renderReadEmail()
+                  : renderList(columns, inboxEmail, rowSelection)}
+              </div>
+              <div className={styles.inboxContainers}>
+                {readEmail
+                  ? renderReadEmail()
+                  : renderList(columns, draftEmail, rowSelection)}
+              </div>
+              <div className={styles.inboxContainers}>
+                {readEmail
+                  ? renderReadEmail()
+                  : renderList(columns, sentEmail, rowSelection)}
+              </div>
+              <div className={styles.inboxContainers}>
+                {readEmail
+                  ? renderReadEmail()
+                  : renderList(columns, archiveEmail, rowSelection)}
+              </div>
+            </TabMenu>
+          </div>
         </Card>
       </Layout>
     </div>

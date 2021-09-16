@@ -5,6 +5,99 @@
   border-radius: 4px;
   position: relative;
   padding-top: 24px;
+  position: relative;
+  .dotButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .moreButtonContainer {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+  &:hover {
+    .moreButtonContainer {
+      display: block;
+    }
+  }
+  @media (max-width: 767px) {
+    padding-top: 0;
+  }
+}
+
+.moreButtonPopover {
+  :global {
+    padding: 6px 0 0;
+    .ant-popover-content {
+      .ant-popover-arrow {
+        display: none;
+      }
+      .ant-popover-inner {
+        .ant-popover-title {
+          display: none;
+        }
+        .ant-popover-inner-content {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.moreButtonContent {
+  width: 160px;
+  padding: 4px 0;
+  .item {
+    width: 100%;
+    height: 32px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .icon {
+      width: 20px;
+      height: 32px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--light-grey-color);
+      &Red {
+        width: 20px;
+        height: 32px;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: var(--red-color-text);
+      }
+    }
+    .title {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--light-grey-color);
+      &Red {
+        font-family: var(--font-family);
+        font-size: 14px;
+        line-height: 22px;
+        color: var(--red-color-text);
+      }
+    }
+    &:hover {
+      background-color: rgba(var(--light-grey-color), .1);
+      .icon {
+        color: var(--primary-color);
+      }
+      .title {
+        color: var(--primary-color);
+      }
+    }
+  }
 }
 
 .arrowRight,
@@ -83,6 +176,16 @@
     width: 116px;
     height: 116px;
     margin-bottom: 20px;
+    .avatarContent > .cardBadge {
+      position: absolute;
+      bottom: -3px;
+      right: 12px;
+    }
+    .avatarContent > .connectionBadge {
+      position: absolute;
+      bottom: 28px;
+      right: -7px;
+    }
     .edit {
       display: none;
       position: absolute;
@@ -114,6 +217,9 @@
     margin-bottom: 4px;
     position: relative;
     cursor: pointer;
+    .inactiveName {
+      color: var(--red-color-text);
+    }
 
     .edit {
       position: absolute;
@@ -163,20 +269,11 @@
     }
     .deactivate {
       cursor: pointer;
-      display: none;
       font-family: var(--font-family);
       line-height: 1rem;
       font-size: 12px;
       color: #ff5b64;
       text-align: center;
-    }
-    &:hover {
-      .active {
-        display: none;
-      }
-      .deactivate {
-        display: block;
-      }
     }
   }
   .detailsLabels {
@@ -197,6 +294,7 @@
       border-radius: 2px;
       border-width: 1px;
       border-style: solid;
+      cursor: pointer;
     }
     .edit {
       position: absolute;
@@ -263,35 +361,44 @@
       font-family: var(--font-family);
       font-size: 14px;
       color: var(--light-grey-color);
+      cursor: default;
     }
 
     .customizeFields {
       height: 24px;
       padding: 0 1rem 0 12px;
+      color: #b8b8c0;
       border: 1px solid #b8b8c0;
       border-radius: 4px;
-      display: flex;
-      align-items: center;
+      display: none;
       cursor: pointer;
       font-family: var(--font-family);
       font-size: 14px;
-      color: #b8b8c0;
+      position: relative;
 
-      :global {
-        .anticon {
-          margin-right: 8px;
-        }
-      }
-
-      &:hover {
-        color: var(--primary-color);
-        border: 1px solid var(--primary-color);
+      .editCustomizeFields {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: -2rem;
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        color: var(--light-grey-color);
+        cursor: pointer;
       }
     }
 
     &:hover {
-      .title {
+      .customizeFields {
+        display: flex;
+        align-items: center;
         color: var(--primary-color);
+        .editCustomizeFields {
+          display: flex;
+        }
       }
     }
   }
@@ -316,6 +423,37 @@
           font-family: var(--font-family);
           font-size: 14px;
           line-height: 22px;
+          color: var(--grey-text-color);
+          &:hover {
+            .phoneCallContent {
+              display: inline-flex;
+              margin-left: 10px;
+              border: 1px solid var(--light-grey-color);
+              border-radius: 3px;
+              .iconContent {
+                padding: 0 5px;
+                &:nth-child(2) {
+                  border-left: 1px solid var(--light-grey-color);
+                }
+              }
+            }
+          }
+          &.emailContent {
+            color: var(--primary-color);
+            cursor: pointer;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+          &.phoneContent {
+            cursor: pointer;
+          }
+          &.emptyContent {
+            cursor: pointer;
+          }
+          > .phoneCallContent {
+            display: none;
+          }
         }
       }
       &:nth-child(2) {
@@ -339,36 +477,118 @@
       }
     }
   }
+  .emptyClientDetailsItem {
+    width: 100%;
+    padding: 8px 0;
+    display: grid;
+    grid-template-columns: 1fr 20px;
+    border-bottom: 1px solid var(--border-color-base);
+    &:last-child {
+      border-bottom: none;
+    }
+    > div {
+      &:nth-child(1) {
+        .title {
+          font-family: var(--font-family);
+          font-size: 12px;
+          line-height: 16px;
+          color: var(--light-grey-color);
+        }
+        .content {
+          font-family: var(--font-family);
+          font-size: 14px;
+          line-height: 22px;
+          color: var(--grey-text-color);
+          &:hover {
+            .phoneCallContent {
+              display: inline-flex;
+              margin-left: 10px;
+              border: 1px solid var(--light-grey-color);
+              border-radius: 3px;
+              .iconContent {
+                padding: 0 5px;
+                &:nth-child(2) {
+                  border-left: 1px solid var(--light-grey-color);
+                }
+              }
+            }
+          }
+          &.emailContent {
+            color: var(--primary-color);
+            cursor: pointer;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+          &.phoneContent {
+            cursor: pointer;
+          }
+          &.emptyContent {
+            cursor: pointer;
+          }
+          > .phoneCallContent {
+            display: none;
+          }
+        }
+      }
+      &:nth-child(2) {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: var(--light-grey-color);
+        font-size: 16px;
+        :global {
+          .anticon {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    &:hover {
+      > div {
+        &:nth-child(2) {
+          display: flex;
+        }
+      }
+    }
+    span {
+      display: none;
+    }
+    &:hover {
+      span {
+        display: block;
+      }
+    }
+  }
 }
 
 .detailsTwo {
   width: 100%;
-  .regDate {
-    font-family: var(--font-family);
-    font-size: 12px;
-    line-height: 15px;
-    font-style: italic;
-    color: var(--light-grey-color);
-    margin-bottom: 26px;
-    padding: 0 24px;
-  }
 
   .section {
     width: 100%;
-    .title {
-      width: 100%;
-      height: 40px;
+    .titleWrapper {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       border-top: 1px solid var(--border-color-base);
       border-bottom: 1px solid var(--border-color-base);
-      background-color: #fdfdfe;
       padding: 0 24px;
-      display: flex;
-      align-items: center;
-      font-family: var(--font-family);
-      font-size: 14px;
-      letter-spacing: 1px;
-      color: var(--light-grey-color);
-      text-transform: uppercase;
+      .title {
+        height: 40px;
+        background-color: #fdfdfe;
+        display: flex;
+        align-items: center;
+        font-family: var(--font-family);
+        font-size: 14px;
+        letter-spacing: 1px;
+        color: var(--light-grey-color);
+        text-transform: uppercase;
+      }
+      .tooltipIcon {
+        margin-left: 8px;
+        color: var(--light-grey-color);
+      }
     }
     .content {
       padding: 20px 24px;
@@ -536,5 +756,156 @@
     line-height: 20px;
     color: var(--light-grey-color);
     cursor: pointer;
+    &:hover {
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+  }
+}
+
+.plusConnectionBadgePopover {
+  > p {
+    cursor: pointer;
+    color: #9292A3;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: left;
+
+    &:last-child {
+      margin-bottom: 0;
+      color: #FF5B64;
+    }
+    > span {
+      margin-right: 10px;
+    }
+  }
+}
+
+.checkConnectionBadgePopover {
+  > p {
+    cursor: pointer;
+    color: #9292A3;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin-bottom: 0;
+
+    > span {
+      margin-right: 10px;
+    }
+  }
+}
+
+.detailsLabelContainer {
+  width: 100%;
+  position: fixed;
+  background-color: white;
+  z-index: 1;
+  padding: 15px 20px 15px 15px;
+  .detailsLabelsMobile {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 40px;
+    padding: 0;
+    position: relative;
+    overflow-x: auto;
+    .detailsLabel {
+      display: inline-block;
+      width: auto;
+      height: 22px;
+      margin: 0 8px 8px 0;
+      padding: 0 8px;
+      font-family: var(--font-family);
+      font-size: 12px;
+      line-height: 20px;
+      border-radius: 2px;
+      border-width: 1px;
+      border-style: solid;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .edit {
+      position: absolute;
+      bottom: 8px;
+      right: -15px;
+      width: 20px;
+      height: 20px;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      display: none;
+      font-size: 16px;
+      color: var(--light-grey-color);
+      cursor: pointer;
+    }
+    &:hover {
+      .edit {
+        display: flex;
+      }
+    }
+  }
+  .edit {
+    position: absolute;
+    bottom: 28px;
+    right: 0px;
+    width: 20px;
+    height: 20px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    font-size: 16px;
+    color: var(--light-grey-color);
+    cursor: pointer;
+  }
+  &:hover {
+    .edit {
+      display: flex;
+    }
+  }
+}
+
+.clientDeleteModal {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  .textContent {
+    width: 70%;
+    padding: 0 24px 0 0;
+    .modalTitle {
+      font-size: 16px;
+      .clientName {
+        font-size: 18px;
+        font-weight: bold;
+        color: black;
+        margin-left: 8px;
+      }
+    }
+    .redText {
+      font-size: 14px;
+      color: var(--red-color-text);
+      margin-bottom: 0;
+    }
+    :global {
+      .ant-badge {
+        .ant-badge-status-text {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .buttonWrapper {
+    display: flex;
+    align-items: flex-end;
+    padding: 0 0 0 16px;
   }
 }

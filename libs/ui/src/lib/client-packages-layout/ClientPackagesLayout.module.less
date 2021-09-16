@@ -2,7 +2,7 @@
   width: 1fr;
   height: 1fr;
   position: relative;
-  
+
   .viewModes {
     z-index: 2;
     position: absolute;
@@ -154,6 +154,13 @@
     border-radius: 50%;
     background-color: #65CD98;
   }
+  .lastSession {
+    width: 4px;
+    height: 4px;
+    margin-right: 4px;
+    border-radius: 50%;
+    background-color: orange;
+  }
   .usedItem {
     width: 4px;
     height: 4px;
@@ -275,7 +282,7 @@
     background-color: #E3E3E5;
   }
 }
-  
+
 .packageItemDrawerBody {
   width: 1fr;
   padding: 12px 24px 20px;
@@ -372,6 +379,19 @@
           border: 1px solid var(--primary-color);
         }
       }
+      .redIcon {
+        display: flex;
+        width: 24px;
+        height: 24px;
+        background-color: var(--error-color);
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        cursor: pointer;
+      }
     }
   }
   .gridPackageName {
@@ -394,19 +414,23 @@
     &.red {
       color: #FF5B64;
     }
+    &.orange {
+      color: orange;
+    }
   }
   .gridPackageProgress {
     margin-top: 8px;
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     > div {
       width: 14px;
       height: 14px;
       display: flex;
       justify-content: center;
       align-items: center;
-      > div {
+      .greenSession {
         width: 12px;
         height: 12px;
         border-radius: 50%;
@@ -415,15 +439,33 @@
         background-size: cover;
         background-repeat: no-repeat;
       }
+      .lastSession {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: orange;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
       &.usedItem:hover {
+        width: 37px;
+        height: 37px;
         > div {
-          width: 14px;
-          height: 14px;
+          width: 35px;
+          height: 35px;
         }
       }
     }
   }
   @media (max-width: 767px) {
     padding: 0 1rem;
+  }
+}
+
+.infoTooltip {
+  width: 350px;
+  p {
+    margin-bottom: 0;
   }
 }

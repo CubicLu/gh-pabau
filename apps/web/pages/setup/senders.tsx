@@ -1,12 +1,14 @@
 import {
   FilterOutlined,
+  GoogleOutlined,
   LeftOutlined,
   MailOutlined,
   MobileOutlined,
+  PhoneOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
 import { Breadcrumb, Button, MobileHeader } from '@pabau/ui'
-import { Col, Row, Typography } from 'antd'
+import { Col, Popover, Row, Tag, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 import Layout from '../../components/Layout/Layout'
@@ -14,6 +16,12 @@ import { useUser } from '../../context/UserContext'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
+import { ReactComponent as Google } from '../../assets/images/google.svg'
+import { ReactComponent as OutLook } from '../../assets/images/outlook.svg'
+import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
+import { ReactComponent as Office } from '../../assets/images/office365.svg'
+
+import React from 'react'
 
 const { Title } = Typography
 
@@ -86,6 +94,29 @@ export const Communications: React.FC = () => {
       router.push('/setup')
     }
   }
+
+  const content = () => {
+    return (
+      <div className={styles.mailOptionContent}>
+        <div className={styles.mailOptionItem}>
+          <Sender /> <p>Create SMS</p>
+        </div>
+        <div className={styles.mailOptionItem}>
+          <GoogleOutlined /> <p>Connect Google</p>
+        </div>
+        <div className={styles.mailOptionItem}>
+          <Office /> <p>Connect Office 365</p>
+        </div>
+        <div className={styles.mailOptionItem}>
+          <MailOutlined /> <p>Other mail account</p>
+        </div>
+        <div className={styles.mailOptionItem}>
+          <PhoneOutlined /> <p>Add phone number</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className={styles.desktopViewNone}>
@@ -123,13 +154,19 @@ export const Communications: React.FC = () => {
                 <FilterOutlined />
                 {t('setup.senders.filter')}
               </Button>
-              <Button
-                onClick={() => router.push('senders/create')}
-                backgroundColor="#54B2D3"
-                className={styles.senderButton}
+              <Popover
+                placement="bottomRight"
+                content={content}
+                trigger="click"
               >
-                {t('setup.senders.create')}
-              </Button>
+                <Button
+                  // onClick={() => router.push('senders/create')}
+                  backgroundColor="#54B2D3"
+                  className={styles.senderButton}
+                >
+                  {t('setup.senders.create')}
+                </Button>
+              </Popover>
             </div>
           </div>
           <div className={styles.cardContent}>
@@ -164,6 +201,46 @@ export const Communications: React.FC = () => {
                   </Button>
                 </Col>
               ))}
+              <Col span={4} xs={12} sm={8} md={6}>
+                <Button
+                  className={styles.senderItem}
+                  onClick={() => router.push('/setup/gmail/connect')}
+                >
+                  <div className={styles.itemHeader}>
+                    <Google />
+
+                    <div className={styles.verifiedWrapper}>
+                      <div className={styles.defaultText}>
+                        <Tag color="red">Stop syncing</Tag>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.itemBody}>
+                    <div>Clinic Bookings</div>
+                    <div className={styles.email}>Account</div>
+                  </div>
+                </Button>
+              </Col>
+              <Col span={4} xs={12} sm={8} md={6}>
+                <Button
+                  className={styles.senderItem}
+                  // onClick={() => router.push(`senders/edit/${item.id}`)}
+                >
+                  <div className={styles.itemHeader}>
+                    <OutLook />
+
+                    <div className={styles.verifiedWrapper}>
+                      <div className={styles.defaultText}>
+                        <Tag color="red">Stop syncing</Tag>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.itemBody}>
+                    <div>Clinic Bookings</div>
+                    <div className={styles.email}>Account</div>
+                  </div>
+                </Button>
+              </Col>
             </Row>
           </div>
         </div>

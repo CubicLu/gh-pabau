@@ -63,7 +63,7 @@ export const Password = extendType({
         { prisma }: Context
       ) {
         if (newPassword1 !== newPassword2)
-          throw new Error('Password and ConfirmPassword is not matched')
+          throw new Error(`Password confirmation doesn't match Password`)
         if (!(await validatePassword.isValid(newPassword1)))
           throw new Error('Choose a stronger password')
 

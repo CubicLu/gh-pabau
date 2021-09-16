@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useRef } from 'react'
 import cn from 'classnames'
 import { Button, Input } from 'antd'
 import {
@@ -7,10 +7,11 @@ import {
   StarFilled,
   SearchOutlined,
 } from '@ant-design/icons'
-import { FormComponentBuilder } from '@pabau/ui'
+import { FormComponentBuilder, MyLottie as Lottie } from '@pabau/ui'
+import emptyState from '../../assets/lottie/empty-state.json'
 import useDebounce from '../../hooks/useDebounce'
 import { useTranslation } from 'react-i18next'
-import { sampleFormList } from './mock'
+import { sampleTreatmentFormList, sampleConsentFormList } from './mock'
 import styles from './SelectForm.module.less'
 
 interface FormItem {
@@ -38,6 +39,7 @@ const SelectFormComponent: FC<SelectFormComponentProps> = ({
   const [searchTerm, setSearchTerm] = useState('')
   const [previewData, setPreviewData] = useState('')
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setPreviewData('')
@@ -90,6 +92,21 @@ const SelectFormComponent: FC<SelectFormComponentProps> = ({
     onSaveDraft?.('formList', items)
   }
 
+  const LottieContent = (
+    <div className={styles.clientLayout} ref={ref}>
+      <Lottie
+        options={{
+          loop: true,
+          autoPlay: true,
+          animationData: emptyState,
+          rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice',
+          },
+        }}
+      />
+    </div>
+  )
+
   useEffect(() => {
     setSearchTerm(searchStr)
   }, [searchStr])
@@ -108,28 +125,49 @@ const SelectFormComponent: FC<SelectFormComponentProps> = ({
 
   return (
     <div className={styles.selectFormComponentContainer}>
-      <div className={styles.selectFormHeader}>
-        <div>
-          <div className={styles.title}>
-            {t('ui.selectform.formtypetitle', { formType })}
+      {formType === 'Treatment' ? (
+        <div className={styles.selectTreatmentFormHeader}>
+          <div>
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchTermInput}
+              prefix={<SearchOutlined />}
+              allowClear
+            />
           </div>
-          <div className={styles.filter}>
-            <Button icon={<FilterOutlined />}>
-              {t('ui.selectform.filter')}
+          <div>
+            <Button className={styles.manage}>
+              {t('ui.selectform.manage')}
             </Button>
           </div>
         </div>
-        <div>
-          <Input
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchTermInput}
-            prefix={<SearchOutlined />}
-            allowClear
-          />
-          <Button className={styles.manage}>{t('ui.selectform.manage')}</Button>
+      ) : (
+        <div className={styles.selectConsentFormHeader}>
+          <div>
+            <div className={styles.title}>
+              {t('ui.selectform.formtypetitle', { formType })}
+            </div>
+            <div className={styles.filter}>
+              <Button icon={<FilterOutlined />}>
+                {t('ui.selectform.filter')}
+              </Button>
+            </div>
+          </div>
+          <div>
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchTermInput}
+              prefix={<SearchOutlined />}
+              allowClear
+            />
+            <Button className={styles.manage}>
+              {t('ui.selectform.manage')}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles.selectFormBody}>
         <div>
           {/* form item list (tab) */}
@@ -167,7 +205,11 @@ const SelectFormComponent: FC<SelectFormComponentProps> = ({
             ))}
         </div>
         <div>
-          <FormComponentBuilder previewData={previewData} />
+          {previewData ? (
+            <FormComponentBuilder previewData={previewData} />
+          ) : (
+            LottieContent
+          )}
         </div>
       </div>
     </div>
@@ -213,16 +255,24 @@ export const SelectForm: FC<SelectFormProps> = ({
       if (findItem) {
         setFormList(findItem.formList)
         setSearchStr(findItem.searchStr)
-        setFormType(type === 'treatment' ? 'Treatment Form' : 'Consent Form')
+        setFormType(type === 'treatment' ? 'Treatment' : 'Consent')
         setDraftContent(contentItems)
       } else {
-        setFormList(sampleFormList)
+        setFormList(
+          type === 'treatment' ? sampleTreatmentFormList : sampleConsentFormList
+        )
         setSearchStr('')
-        setFormType(type === 'treatment' ? 'Treatment Form' : 'Consent Form')
+        setFormType(type === 'treatment' ? 'Treatment' : 'Consent')
         const item = {
           receiverData,
           searchStr: '',
-          formList: sampleFormList.map((el) => ({ ...el, selected: false })),
+          formList:
+            type === 'treatment'
+              ? sampleTreatmentFormList.map((el) => ({
+                  ...el,
+                  selected: false,
+                }))
+              : sampleConsentFormList.map((el) => ({ ...el, selected: false })),
         }
         const items = [...contentItems, item]
         setDraftContent(items)

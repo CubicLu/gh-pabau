@@ -11,7 +11,7 @@ import {
 import { Button, Dropdown, Popover, Skeleton } from 'antd'
 import { Avatar } from '@pabau/ui'
 import Img1 from '../../assets/images/connect/Chest.png'
-import Img2 from '../../assets/images/connect/back.png'
+import Img2 from '../../assets/images/connect/Lip.png'
 import Img3 from '../../assets/images/connect/Lip.png'
 import Img4 from '../../assets/images/connect/Chest.png'
 import { ReactComponent as Reply } from '../../assets/images/reply.svg'
@@ -20,7 +20,6 @@ import { ReactComponent as ReplyAll } from '../../assets/images/reply-all.svg'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { decode } from 'js-base64'
-
 export interface P {
   privateMenu?: React.ReactElement
   messageId: string
@@ -34,6 +33,15 @@ export const ReadEmail: FC<P> = ({
   threadsId,
   hadleSingleDelete,
 }) => {
+  // const elRef = useRef()
+
+  // React.useLayoutEffect(() => {
+  //   if (elRef.current) {
+  //     //elRef.current.style.display = 'unset !important'
+  //     console.log('/ref:::::;', elRef?.current.style)
+  //   }
+  // })
+
   const [responseEmail, setresponseEmail] = useState({
     subject: '',
     name: '',
@@ -45,6 +53,7 @@ export const ReadEmail: FC<P> = ({
   const [emailList, setEmailList] = useState([])
   const [showAllEmail, setShowAllEmail] = useState(false)
   const [deleteEmailId, setDeletEmailId] = useState('')
+  const [printSnippet, setPrintSnippet] = useState('')
 
   useEffect(
     () => {
@@ -97,7 +106,10 @@ export const ReadEmail: FC<P> = ({
       })
     }
 
-    rowData.snippet = decode(part)
+    rowData.snippet = decode(part).replace('"\r\n', '')
+
+    // console.log('remove whitespace::', rowData.snippet.replace('"\r\n', ''))
+
     // rowData.snippet = atob(
     //   part.replace(/_/g, '/').toString().replace(/-/g, '+')
     // ).replace('"\r\n', '')
@@ -121,6 +133,8 @@ export const ReadEmail: FC<P> = ({
       })
 
       const emailData = await extractData(finalEmails?.result)
+      console.log('emial Data::', finalEmails)
+
       setresponseEmail({
         ...responseEmail,
         ...emailData,
@@ -142,6 +156,20 @@ export const ReadEmail: FC<P> = ({
     hadleSingleDelete(deleteEmailId)
   }
 
+  const handlePrint = () => {
+    // const main = document.querySelector('#mainbody').innerHTML
+    // console.log('html div', main)
+
+    const printWindow = window.open('', '_blank', 'left=300')
+    printWindow.document.write(
+      `<html><head><title>${responseEmail.subject}</title>`
+    )
+    printWindow.document.write('</head><body >')
+    printWindow.document.write(printSnippet)
+    printWindow.document.write('</body></html>')
+    printWindow.document.close()
+    printWindow.print()
+  }
   const content = () => {
     return (
       <div className={styles.mailOptionContent}>
@@ -154,7 +182,7 @@ export const ReadEmail: FC<P> = ({
         <div className={styles.mailOptionItem}>
           <Forward /> <p>Forward</p>
         </div>
-        <div className={styles.mailOptionItem}>
+        <div className={styles.mailOptionItem} onClick={() => handlePrint()}>
           <PrinterOutlined /> <p>Print</p>
         </div>
         <div
@@ -296,7 +324,10 @@ export const ReadEmail: FC<P> = ({
                       type="default"
                       shape="circle"
                       icon={<CaretDownOutlined style={{ color: '#9292A3' }} />}
-                      onClick={() => setDeletEmailId(messageId)}
+                      onClick={() => {
+                        setPrintSnippet(responseEmail.snippet)
+                        setDeletEmailId(messageId)
+                      }}
                     />
                   </Popover>
                 </>
@@ -305,7 +336,7 @@ export const ReadEmail: FC<P> = ({
           </div>
         </div>
 
-        <div className={styles.mainBody}>
+        <div className={styles.mainBody} id="mainbody">
           {!isLoading && (
             <div className={styles.mainContainerHeader}>
               <div className={styles.topBar}>
@@ -332,8 +363,16 @@ export const ReadEmail: FC<P> = ({
               <Skeleton />
             </>
           ) : (
-            <div className={styles.mailWrapper}>
-              <div dangerouslySetInnerHTML={{ __html: value.snippet }} />
+            <div
+              className={styles.mailWrapper}
+              // style={{ display: 'flex !important' }}
+            >
+              <div
+                // className={styles.mailTest}
+                // ref={elRef}
+                dangerouslySetInnerHTML={{ __html: value.snippet }}
+              />
+              {/* <iframe srcDoc={value.snippet} title="w"></iframe> */}
             </div>
           )}
           {!isLoading && (
@@ -443,7 +482,10 @@ export const ReadEmail: FC<P> = ({
                                           style={{ color: '#9292A3' }}
                                         />
                                       }
-                                      onClick={() => setDeletEmailId(email.id)}
+                                      onClick={() => {
+                                        setPrintSnippet(email.snippet)
+                                        setDeletEmailId(email.id)
+                                      }}
                                     />
                                   </Popover>
                                 </>
