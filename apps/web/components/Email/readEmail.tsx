@@ -106,7 +106,9 @@ export const ReadEmail: FC<P> = ({
       })
     }
 
-    rowData.snippet = decode(part).replace('"\r\n', '')
+    rowData.snippet = decode(part)
+      .replace('"\r\n', '')
+      .replace('div { display:block !important;}', '')
 
     // console.log('remove whitespace::', rowData.snippet.replace('"\r\n', ''))
 

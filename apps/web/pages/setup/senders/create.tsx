@@ -16,8 +16,11 @@ import {
   CheckCircleFilled,
   MailOutlined,
   MessageOutlined,
+  CheckOutlined,
+  LockOutlined,
+  UnlockOutlined,
 } from '@ant-design/icons'
-import { Collapse, Space } from 'antd'
+import { Collapse, Space, Select } from 'antd'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
@@ -31,7 +34,7 @@ import {
 import { Form } from 'formik-antd'
 
 const { Panel } = Collapse
-
+const { Option } = Select
 export const CreateSender: React.FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
@@ -181,6 +184,7 @@ export const CreateSender: React.FC = () => {
                       handleChange({ target: { value, name: 'fromName' } })
                     }
                   />
+
                   {values.type === 'email' && values.fromName.length > 50 && (
                     <span className={styles.error}>
                       {t(
@@ -248,6 +252,21 @@ export const CreateSender: React.FC = () => {
                           handleChange({ target: { value, name: 'fromEmail' } })
                         }
                       />
+                      <p className={styles.visibilityLabel}>Visibility</p>
+                      <Select
+                        defaultValue={'Private'}
+                        defaultActiveFirstOption={true}
+                        style={{ width: '100%' }}
+                        onChange={handleChange}
+                        menuItemSelectedIcon={<CheckOutlined />}
+                      >
+                        <Option value="private" selected>
+                          <LockOutlined /> Private
+                        </Option>
+                        <Option value="shared">
+                          <UnlockOutlined /> Shared
+                        </Option>
+                      </Select>
                     </div>
                     <div className={styles.formElement}>
                       <Space className={styles.switchItem} size={8}>

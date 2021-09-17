@@ -1,4 +1,5 @@
 import {
+  DownOutlined,
   FilterOutlined,
   GoogleOutlined,
   LeftOutlined,
@@ -101,14 +102,20 @@ export const Communications: React.FC = () => {
         <div className={styles.mailOptionItem}>
           <Sender /> <p>Create SMS</p>
         </div>
-        <div className={styles.mailOptionItem}>
+        <div
+          className={styles.mailOptionItem}
+          onClick={() => router.push('/setup/gmail/connect')}
+        >
           <GoogleOutlined /> <p>Connect Google</p>
         </div>
         <div className={styles.mailOptionItem}>
           <Office /> <p>Connect Office 365</p>
         </div>
-        <div className={styles.mailOptionItem}>
-          <MailOutlined /> <p>Other mail account</p>
+        <div
+          className={styles.mailOptionItem}
+          onClick={() => router.push('senders/create')}
+        >
+          <MailOutlined /> <p>Connect other email</p>
         </div>
         <div className={styles.mailOptionItem}>
           <PhoneOutlined /> <p>Add phone number</p>
@@ -160,11 +167,11 @@ export const Communications: React.FC = () => {
                 trigger="click"
               >
                 <Button
-                  // onClick={() => router.push('senders/create')}
                   backgroundColor="#54B2D3"
                   className={styles.senderButton}
                 >
                   {t('setup.senders.create')}
+                  <DownOutlined />
                 </Button>
               </Popover>
             </div>
@@ -202,10 +209,7 @@ export const Communications: React.FC = () => {
                 </Col>
               ))}
               <Col span={4} xs={12} sm={8} md={6}>
-                <Button
-                  className={styles.senderItem}
-                  onClick={() => router.push('/setup/gmail/connect')}
-                >
+                <Button className={styles.senderItem}>
                   <div className={styles.itemHeader}>
                     <Google />
 
@@ -222,10 +226,7 @@ export const Communications: React.FC = () => {
                 </Button>
               </Col>
               <Col span={4} xs={12} sm={8} md={6}>
-                <Button
-                  className={styles.senderItem}
-                  // onClick={() => router.push(`senders/edit/${item.id}`)}
-                >
+                <Button className={styles.senderItem}>
                   <div className={styles.itemHeader}>
                     <OutLook />
 
