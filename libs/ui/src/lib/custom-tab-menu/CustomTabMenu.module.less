@@ -31,6 +31,7 @@
       }
       &:hover {
         color: var(--primary-color);
+        background-color: #fafafa;
       }
     }
     .expandableItem {
@@ -105,6 +106,10 @@
           color: var(--primary-color);
           border-left: 3px solid white;
         }
+        &:hover {
+          color: var(--primary-color);
+          background-color: #fafafa;
+        }
       }
     }
   }
@@ -126,9 +131,17 @@
   flex-direction: column;
   .mainTabMenuItems {
     width: 100%;
+    margin-top: 60px;
+    position: fixed;
+    height: 40px;
+    z-index: 1;
     :global {
       .ant-tabs {
         width: 100%;
+        @media (max-width: 767px) {
+          background-color: white;
+        }
+        background-color: white;
         .ant-tabs-nav {
           margin: 0;
           height: 40px;
@@ -144,6 +157,12 @@
             font-family: var(--font-family);
             font-size: 14px;
             color: var(--light-grey-color);
+            @media (max-width: 767px) {
+              background-color: white;
+            }
+            &:hover {
+              background-color: #fafafa;
+            }
           }
         }
       }
@@ -169,6 +188,9 @@
   }
   .tabPaneItems {
     width: 100%;
+    margin-top: 100px;
+    background-color: white;
+    // z-index: 20;
     .tabPaneItem {
       display: none;
     }

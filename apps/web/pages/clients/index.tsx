@@ -31,9 +31,7 @@ import styles from './clients.module.less'
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
 
-/* eslint-disable-next-line */
-export interface ClientsProps {}
-
+//TODO: dont put this in pages
 export interface Labels {
   label?: string
   count?: number
@@ -41,6 +39,7 @@ export interface Labels {
   id?: number
 }
 
+//TODO remove this
 export const tab = {
   contacts: 'contacts',
   clients: 'clients',

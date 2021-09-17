@@ -305,26 +305,57 @@ const Reviews: FC<ReviewConfig> = () => {
       variables: {
         take: paginateData.take,
         skip: paginateData.skip,
-        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
-        service: filterValue.service !== '' ? filterValue.service : '%%',
-        rating:
-          filterValue.score !== ''
-            ? filterValue.score === 'Excellent'
-              ? {
-                  lte: 5,
-                  gt: 4,
-                }
-              : filterValue.score === 'Ok'
-              ? {
-                  lte: 4,
-                  gte: 3,
-                }
-              : filterValue.score === 'Bad'
-              ? {
-                  lt: 3,
-                }
-              : {}
-            : {},
+        where:
+          filterValue.employee !== ''
+            ? {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+                User: { full_name: { contains: filterValue.employee } },
+              }
+            : {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+              },
       },
     }
     return queryOptions
@@ -339,26 +370,57 @@ const Reviews: FC<ReviewConfig> = () => {
   const getAllQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
-        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
-        service: filterValue.service !== '' ? filterValue.service : '%%',
-        rating:
-          filterValue.score !== ''
-            ? filterValue.score === 'Excellent'
-              ? {
-                  lte: 5,
-                  gt: 4,
-                }
-              : filterValue.score === 'Ok'
-              ? {
-                  lte: 4,
-                  gte: 3,
-                }
-              : filterValue.score === 'Bad'
-              ? {
-                  lt: 3,
-                }
-              : {}
-            : {},
+        where:
+          filterValue.employee !== ''
+            ? {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+                User: { full_name: { contains: filterValue.employee } },
+              }
+            : {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+              },
       },
     }
     return queryOptions
@@ -690,41 +752,49 @@ const Reviews: FC<ReviewConfig> = () => {
                 <div>
                   <b>{t('setup.business-details.employee.singular')}</b>
                 </div>
-                <SimpleDropdown
-                  name="employee"
-                  dropdownItems={
-                    alldataloading === false &&
-                    Alldata !== undefined &&
-                    Alldata.length > 0
-                      ? ([
-                          ...new Set(
-                            Alldata.map((item) => item.User?.full_name)
-                          ),
-                        ].filter((item) => item !== undefined) as string[])
-                      : []
-                  }
-                  onSelected={(val) => setFieldValue('employee', val)}
-                  value={values.employee}
-                />
+                <div
+                  className={!values.employee ? styles.simpleDropdown : null}
+                >
+                  <SimpleDropdown
+                    name="employee"
+                    dropdownItems={
+                      alldataloading === false &&
+                      Alldata !== undefined &&
+                      Alldata.length > 0
+                        ? ([
+                            ...new Set(
+                              Alldata.map((item) => item.User?.full_name)
+                            ),
+                          ].filter((item) => !!item) as string[])
+                        : []
+                    }
+                    onSelected={(val) => setFieldValue('employee', val)}
+                    value={values.employee !== '' ? values.employee : 'SELECT'}
+                  />
+                </div>
               </div>
               <div className={styles.filterMenuItem}>
                 <div>
                   <b>{t('setup.discount.data.service')}</b>
                 </div>
-                <SimpleDropdown
-                  name="service"
-                  dropdownItems={
-                    alldataloading === false &&
-                    Alldata !== undefined &&
-                    Alldata.length > 0
-                      ? ([
-                          ...new Set(Alldata.map((item) => item.service)),
-                        ].filter((item) => item !== undefined) as string[])
-                      : []
-                  }
-                  onSelected={(val) => setFieldValue('service', val)}
-                  value={values.service}
-                />
+                <div
+                  className={!values.employee ? styles.simpleDropdown : null}
+                >
+                  <SimpleDropdown
+                    name="service"
+                    dropdownItems={
+                      alldataloading === false &&
+                      Alldata !== undefined &&
+                      Alldata.length > 0
+                        ? ([
+                            ...new Set(Alldata.map((item) => item.service)),
+                          ].filter((item) => !!item) as string[])
+                        : []
+                    }
+                    onSelected={(val) => setFieldValue('service', val)}
+                    value={values.service !== '' ? values.service : 'SELECT'}
+                  />
+                </div>
               </div>
               <div className={styles.filterBtn}>
                 <Button
@@ -1279,7 +1349,11 @@ const Reviews: FC<ReviewConfig> = () => {
                       >
                         <div className={styles.avatarWrap}>
                           <Avatar
-                            src={`https://crm.pabau.com/${item?.User?.image}`}
+                            src={
+                              item?.User?.image
+                                ? `https://crm.pabau.com/${item?.User?.image}`
+                                : null
+                            }
                             name={item?.User?.full_name}
                             size="default"
                             isTooltip={false}

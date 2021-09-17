@@ -46,10 +46,17 @@ export const notes = {
 
 export const clientData = {
   fullName: 'Bruno Ballardin',
+  firstName: 'Bruno',
+  lastName: 'Ballardin',
   avatar: userAvatar,
   isActive: true,
   cardOption: '',
-  labels: ['#coporate', '#new-patient', 'new client', '2 no shows'],
+  labels: [
+    { label: '#coporate', color: '#1a89d0', count: 0 },
+    { label: '#new-patient', color: '#1bba2a', count: 0 },
+    { label: 'new client', color: '#467a34', count: 0 },
+    { label: '2 no shows', color: '#6892bf', count: 0 },
+  ],
   onAccount: -540,
   outStanding: 540,
   patientID: '325',

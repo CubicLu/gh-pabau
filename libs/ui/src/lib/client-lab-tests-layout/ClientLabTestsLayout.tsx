@@ -93,7 +93,7 @@ export const ClientLabTestsLayout: FC<ClientLabTestsLayoutProps> = ({
           }}
         >
           <FileTextOutlined />
-          <h3>{t('ui.clientcard-labtests.options.viewreport')}</h3>
+          <span>{t('ui.clientcard-labtests.options.viewreport')}</span>
         </div>
         <div
           className={styles.optionItem}
@@ -103,7 +103,7 @@ export const ClientLabTestsLayout: FC<ClientLabTestsLayoutProps> = ({
           }}
         >
           <PrinterOutlined />
-          <h3>{t('ui.clientcard-labtests.options.print')}</h3>
+          <span>{t('ui.clientcard-labtests.options.print')}</span>
         </div>
         <div
           className={styles.optionItem}
@@ -113,7 +113,7 @@ export const ClientLabTestsLayout: FC<ClientLabTestsLayoutProps> = ({
           }}
         >
           <ShareAltOutlined />
-          <h3>{t('ui.clientcard-labtests.options.share')}</h3>
+          <span>{t('ui.clientcard-labtests.options.share')}</span>
         </div>
         <div
           className={styles.optionItem}
@@ -123,7 +123,7 @@ export const ClientLabTestsLayout: FC<ClientLabTestsLayoutProps> = ({
           }}
         >
           <DeleteOutlined />
-          <h3>{t('ui.clientcard-labtests.options.delete')}</h3>
+          <span>{t('ui.clientcard-labtests.options.delete')}</span>
         </div>
       </div>
     )
@@ -131,7 +131,7 @@ export const ClientLabTestsLayout: FC<ClientLabTestsLayoutProps> = ({
 
   const getExtra = (test) => {
     return (
-      <div>
+      <div className={styles.moreButtonWrapper}>
         {isMobile ? (
           <Button
             shape="circle"
@@ -163,6 +163,9 @@ export const ClientLabTestsLayout: FC<ClientLabTestsLayoutProps> = ({
                 ...openLabTestOptions,
                 [test.id]: val,
               })
+            }
+            getPopupContainer={(trigger) =>
+              trigger.parentElement as HTMLElement
             }
           >
             <Button

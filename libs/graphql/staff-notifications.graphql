@@ -34,20 +34,17 @@ query staff_users($isAdmin: Int = 0, $company: Int) {
 }
 
 mutation insert_notifications_one(
-  $type: String
-  $sent_to: jsonb
+  $template: String
   $variables: jsonb
   $destination: String!
-  $sent_by: Int # $loop: Int
+  $sent_by: Int
 ) {
   insert_notifications_one(
     object: {
-      type: $type
+      template: $template
       destination: $destination
-      sent_to: $sent_to
       variables: $variables
       sent_by: $sent_by
-      # loop: $loop
     }
   ) {
     id

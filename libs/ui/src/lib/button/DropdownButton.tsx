@@ -58,7 +58,7 @@ export const DropdownButton: FC<P> = ({
       arrow
     >
       <AntButton
-        style={{ ...style, ...{ backgroundColor: backgroundColor } }}
+        style={{ ...style, backgroundColor: backgroundColor }}
         disabled={disabled}
         color={color}
         className={className}
