@@ -162,7 +162,6 @@ const Layout: FC<LayoutProps> = ({
           handleSearch={handleSearch}
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
-
         {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
       </PabauLayout>
       <div className={styles.stickyPopoutContainer}>
