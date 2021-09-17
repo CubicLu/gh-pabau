@@ -20,6 +20,7 @@ import { Unauthorized } from '../Unauthorized'
 import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
 import Login from '../../pages/login'
+import LegacyPage from '../LegacyPage'
 
 interface ProductNews {
   id: string
@@ -162,7 +163,7 @@ const Layout: FC<LayoutProps> = ({
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
-        {children}
+        {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
       </PabauLayout>
       <div className={styles.stickyPopoutContainer}>
         <StickyPopout />
