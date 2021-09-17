@@ -76,7 +76,6 @@ export const Clients: FC = () => {
 
   const getAllLabelsCount = (data) => {
     const labels = [...data]
-    let status
     // return labels
     //   .filter((i) => {
     //     const { CmContactLabel } = i
