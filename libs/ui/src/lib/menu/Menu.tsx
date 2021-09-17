@@ -28,8 +28,7 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
   const { t } = useTranslation('common')
   const [collapsed, setCollapsed] = useState(true)
   const [openKeys, setOpenKeys] = useState<string[]>([])
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
-  const [activeMenu, setActive] = useState<string>(active ? active : '')
+  const [activeMenu, setActive] = useState<string>(window.location.pathname)
 
   const handleSidebarCollapse = () => {
     setCollapsed((e) => {
@@ -50,19 +49,17 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
         icon={icon}
         className={classNames(
           styles.sidebarMenu,
-          activeMenu && styles.removeSelected
+          activeMenu !== path && styles.removeSelected,
+          activeMenu === path && styles.menuSelected,
+          activeMenu === path && 'ant-menu-item-selected'
         )}
-        onClick={() => setActive('')}
+        onClick={() => setActive(path)}
       >
         <Link href={path}>
           {t(sidebarTranslations[menuName.toLowerCase().replace(' ', '')])}
         </Link>
       </AntMenu.Item>
     )
-  }
-
-  const onClickMenu = (e) => {
-    setSelectedKeys([e.key])
   }
 
   const sidebarBadge = {
@@ -101,8 +98,6 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
         openKeys={openKeys}
         onOpenChange={onOpenChange}
         multiple={false}
-        selectedKeys={selectedKeys}
-        onClick={onClickMenu}
       >
         {sidebarMenu.map((menuData, index) => {
           const icon = menuData?.displayBadge ? (
@@ -135,12 +130,10 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
                   menuData.menuName.toLowerCase().replace(' ', '')
                 ]
               )}
-              onTitleClick={onClickMenu}
               className={classNames(
                 styles.sidebarMenu,
-                selectedKeys.includes(menuData.menuName + index) &&
-                  !activeMenu &&
-                  styles.subMenuActive
+                menuData.children.map((e) => e.path).indexOf(activeMenu) !==
+                  -1 && styles.subMenuActive
               )}
             >
               {menuData.children.map((subMenu, subIndex) => {
@@ -185,7 +178,9 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
                         }`}
                       />
                     }
-                    className={styles.setupBtn}
+                    className={`${styles.setupBtn} ${
+                      activeMenu === 'setup' ? styles.setupBtnActive : null
+                    }`}
                   >
                     {t('sidebar.setup')}
                   </Button>
