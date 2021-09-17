@@ -51,7 +51,7 @@ export const tab = {
   labels: 'labels',
 }
 
-export const Clients: FC<ClientsProps> = () => {
+export const Clients: FC = () => {
   const clientRef = useRef(null)
   const [searchText, setSearchText] = useState('')
   const [labelsList, setLabelsList] = useState([])
@@ -77,19 +77,42 @@ export const Clients: FC<ClientsProps> = () => {
   const getAllLabelsCount = (data) => {
     const labels = [...data]
     let status
-    return labels
-      .filter((i) => {
-        const { CmContactLabel } = i
-        status = true
-        for (const l of CmContactLabel) {
-          if (!!l.CmContact.is_active === false) {
-            status = false
-            break
+    // return labels
+    //   .filter((i) => {
+    //     const { CmContactLabel } = i
+    //     status = true
+    //     for (const l of CmContactLabel) {
+    //       if (!!l.CmContact.is_active === false) {
+    //         status = false
+    //         break
+    //       }
+    //     }
+    //     return status === true
+    //   })
+    //   .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
+    let cnt
+    return (
+      labels
+        // .filter((i) => {
+        //   const { CmContactLabel } = i
+        //   status = true
+        //   for (const l of CmContactLabel) {
+        //     if (!!l.CmContact.is_active === true) {
+        //       return
+        //     }
+        //   }
+        // })
+        .map((item) => {
+          const { CmContactLabel } = item
+          cnt = 0
+          for (const l of CmContactLabel) {
+            if (!!l.CmContact.is_active === true) {
+              cnt++
+            }
           }
-        }
-        return status === true
-      })
-      .map((item) => ({ id: item.id, count: item.CmContactLabel.length }))
+          return { id: item.id, count: cnt }
+        })
+    )
   }
 
   const getCountVariables = useMemo(() => {
@@ -109,7 +132,7 @@ export const Clients: FC<ClientsProps> = () => {
 
   const [
     getContactListCount,
-    { data: getClientsCountData },
+    { data: getClientsCountData, loading: contactsListCountLoading },
   ] = useClientListContactsCountLazyQuery({
     ...getCountVariables,
     fetchPolicy: 'no-cache',
@@ -248,9 +271,10 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getContactsData?.findManyCmContact?.length,
       }))
     }
-    if (!contactsLoading && getContactsData) setIsLoading(false)
+    if (!contactsLoading && !contactsListCountLoading && getContactsData)
+      setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getContactsData, getClientsCountData, contactsLoading])
+  }, [getContactsData, contactsLoading, contactsListCountLoading])
 
   useEffect(() => {
     if (getfilteredContacts) {
@@ -389,6 +413,10 @@ export const Clients: FC<ClientsProps> = () => {
   }
 
   useEffect(() => {
+    console.log(
+      'the use effect of filter-=-=-=-=-=-=-=-=-=-=',
+      contactsSourceData
+    )
     let filteredData = contactsSourceData
     if (selectedTab === tab.contacts || selectedTab === tab.clients) {
       filteredData = contactsSourceData
@@ -404,7 +432,7 @@ export const Clients: FC<ClientsProps> = () => {
       filteredData = [...filteredData]
     } else {
       filteredData = contactsSourceData?.filter((item) =>
-        item.clientLabel.some((x) => x.name === selectedTab)
+        item.clientLabel.some((x) => selectedTab.includes(x.name))
       )
     }
     if (searchText) {
@@ -425,6 +453,7 @@ export const Clients: FC<ClientsProps> = () => {
       }
       filteredData = filterObject
     }
+    console.log('the filter-=-=-=-=-=-=-=-=-=-=', filteredData)
     setSourceFilteredData(filteredData)
     // if (dataLoaded)
     // if (contactsSourceData?.length) setIsLoading(false)
@@ -461,17 +490,22 @@ export const Clients: FC<ClientsProps> = () => {
     if (e) {
       e.stopPropagation()
     }
-    // let selectedList = selectedTab.split(',')
-    // if (labelsList?.find((item) => selectedList.includes(item.name))) {
-    //   if (selectedList.includes(label)) {
-    //     selectedList.splice(selectedList.indexOf(label), 1)
-    //   } else {
-    //     selectedList.push(label)
-    //   }
-    // } else {
-    //   selectedList = label
-    // }
-    // setSelectedTab(selectedList.join(','))
+    let selectedList = selectedTab.split(',')
+    let selectedfilterIds = filterIds
+    if (labelsList?.find((item) => selectedList.includes(item.name))) {
+      if (selectedList.includes(label)) {
+        selectedList.splice(selectedList.indexOf(label), 1)
+        selectedfilterIds.splice(selectedfilterIds.indexOf(id), 1)
+      } else {
+        selectedList.push(label)
+        selectedfilterIds.push(id)
+      }
+    } else {
+      selectedList = [label]
+      selectedfilterIds = [id]
+    }
+    console.log('Selected list-=-=-=-', selectedList, selectedfilterIds)
+    setSelectedTab(selectedList.join(','))
     // setSelectedTab((val) => {
     //   // if (labelsList?.find((item) => val.includes(item.name))) {
     //   //   return val + ',' + label
@@ -479,9 +513,9 @@ export const Clients: FC<ClientsProps> = () => {
     //   //   return label
     //   // }
     // })
-    // const newId = [...filterIds, id]
-    setSelectedTab(label)
-    setFilterIds(id)
+    // setSelectedTab(label)
+    // const newIds = [...filterIds, id]
+    setFilterIds(selectedfilterIds)
     setIsLoading((val) => !val)
     // setDataLoaded((val) => !val)
     getContactsByLabel()
@@ -728,7 +762,7 @@ export const Clients: FC<ClientsProps> = () => {
       duplicateContactsData={duplicateContactsData}
     />
   )
-  console.log('get selected tab========', selectedTab)
+  console.log('filtered contacts========', sourceFilteredData)
   return (
     <div>
       <CommonHeader

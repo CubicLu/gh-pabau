@@ -417,6 +417,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           <Table
             dataSource={dataSource()}
             scroll={{ x: 'max-content' }}
+            sticky={{ offsetHeader: 80, offsetScroll: 0 }}
             columns={columns}
             pagination={false}
             noDataBtnText={t('clients.noDataBtnText')}
