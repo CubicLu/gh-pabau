@@ -313,6 +313,8 @@ model Company {
 
   ActivityUserColumns ActivityUserColumns[]
   ActivityType        ActivityType[]
+  Album               PhotoAlbum[]
+
   @@map("admin")
 }
 
@@ -1913,6 +1915,7 @@ model CmContact {
   CmContactCustom           CmContactCustom[]
   CmContactLabel            CmContactLabel[]
   Activity                  Activity[]
+  Albums                    PhotoAlbum[]
   ContactPreference         ContactPreference?
 
   @@index([CreatedDate], name: "CreatedDate")
@@ -4427,7 +4430,7 @@ model CompanyVariable {
 //}
 //
 model ContactAttachment {
-  id                Int       @id @default(autoincrement())
+  id                Int         @id @default(autoincrement())
   linkref           String
   contact_id        Int
   company_id        Int
@@ -4438,7 +4441,7 @@ model ContactAttachment {
   connect_public    Boolean
   website_public    Boolean
   attachment_title  String
-  cloud             Boolean   @default(false)
+  cloud             Boolean     @default(false)
   custom_id         Int
   original_path     String
   imported          Int
@@ -4454,8 +4457,9 @@ model ContactAttachment {
   medical_form_id   Int
   tags              String
   medical_uniqid    String
-  Contact           CmContact @relation(fields: [contact_id], references: [ID])
-  Practitioner      User      @relation(fields: [attach_name], references: [full_name])
+  Contact           CmContact   @relation(fields: [contact_id], references: [ID])
+  Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
+  Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
 
   @@index([booking_id], name: "booking_id")
   @@index([cloud], name: "cloud")
@@ -9718,14 +9722,23 @@ model PermissionTemplate {
 //  date_taken    DateTime @default(now())
 //}
 //
-//model photo_album {
-//  id            Int      @id @default(autoincrement())
-//  album_name    String
-//  contact_id    Int
-//  occupier      Int
-//  creation_date DateTime
-//  modified_date DateTime
-//}
+model PhotoAlbum {
+  id            Int       @id @default(autoincrement())
+  album_name    String
+  contact_id    Int
+  company_id    Int       @map("occupier")
+  creation_date DateTime?
+  modified_date DateTime?
+
+  Company Company             @relation(fields: [company_id], references: [id])
+  Contact CmContact           @relation(fields: [contact_id], references: [ID])
+  Photos  ContactAttachment[]
+
+  @@index([company_id], name: "company_id")
+  @@index([contact_id], name: "contact_id")
+  @@map("photo_album")
+}
+
 //
 //model phpbirthday {
 //  Name            String?
