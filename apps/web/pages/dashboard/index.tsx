@@ -96,10 +96,12 @@ export function Index() {
           'YYYYMMDDHHmmss'
         ),
         end_date: dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss'),
+        date_range: filterRange,
         is_active: 1,
       },
     }
     return queryOptions
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterDate])
 
   const { data: appointment_status } = useQuery(

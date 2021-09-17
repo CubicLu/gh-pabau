@@ -12,6 +12,7 @@ query getCompanyLocationList($company_id: Int!, $is_active: Int!) {
 query getDashboardData(
     $start_date: Decimal!
     $end_date: Decimal!
+    $date_range: String!
     $is_active: Int!
   ) {
     getDashboardData(
@@ -19,6 +20,7 @@ query getDashboardData(
         start_date: $start_date
         end_date: $end_date
         is_active: $is_active
+        date_range: $date_range
       }
     )
   }
