@@ -695,7 +695,7 @@ export const Timeline: FC<TimelineProps> = ({
             </div>
             {displayAudio && event.audioFile && event.type === 'activityCall' && (
               <div className={styles.audioWrapper}>
-                {/* <Waveform audioFile={event.audioFile} /> */}WaveForm
+                {/* <Waveform audioFile={event.audioFile} /> */}
                 <ShareIcon className={styles.icon} />
                 <DeleteIcon className={styles.icon} />
               </div>

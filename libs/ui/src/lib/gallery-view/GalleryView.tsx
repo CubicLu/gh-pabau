@@ -49,9 +49,9 @@ import { ReactComponent as Load } from '../../assets/images/load.svg'
 import { ReactComponent as ListIcon } from '../../assets/images/list.svg'
 import { ReactComponent as GridIcon } from '../../assets/images/grid.svg'
 import dayjs from 'dayjs'
-import * as tf from '@tensorflow/tfjs'
+// import * as tf from '@tensorflow/tfjs'
 
-tf.enableProdMode()
+// tf.enableProdMode()
 
 export interface AlbumProps {
   album: AlbumProps[]

@@ -1,5 +1,16 @@
 .pabau-mobile-header {
   background-color: #fff;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  padding: 16px 16px 21px 16px;
+  z-index: 2;
+
+  > div {
+    width: 100%;
+  }
 }
 .menu-header-icon-color {
   color: #9292a3;
@@ -67,7 +78,7 @@
     align-items: center;
     .searchInput {
       position: absolute;
-      right: 40px;
+      right: 16px;
       top: 50%;
       transform: translateY(-50%);
       display: flex;

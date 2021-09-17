@@ -67,6 +67,7 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
   const [currentItem, setCurrentItem] = useState<ClientPackageItem>(
     defaultPackageItem
   )
+
   const [openActions, setOpenActions] = useState(false)
   const [openPopover, setOpenPopover] = useState(false)
   const [openNormalDrawer, setOpenNormalDrawer] = useState(false)

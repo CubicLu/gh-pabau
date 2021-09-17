@@ -82,7 +82,7 @@ const Index: FC = () => {
   const { data: notificationsData } = useGetNotificationsDataQuery({
     fetchPolicy: 'network-only',
     variables: {
-      user: user?.me?.id,
+      user: user?.me?.user,
     },
   })
 
@@ -266,7 +266,7 @@ const Index: FC = () => {
           const variables = {
             data: {
               Company: {},
-              User: { connect: { id: user?.me?.id } },
+              User: { connect: { id: user?.me?.user } },
               UserAlert: { connect: { id: el?.UserAlert?.id } },
               ios_notification: el?.ios_notification || 0,
               sms_notification: el?.sms_notification || 0,
@@ -295,7 +295,7 @@ const Index: FC = () => {
               {
                 query: GetNotificationsDataDocument,
                 variables: {
-                  user: user?.me?.id,
+                  user: user?.me?.user,
                 },
               },
             ],
@@ -304,14 +304,14 @@ const Index: FC = () => {
           createPabauNotificationToggle({
             variables: {
               ...el,
-              user: user?.me?.id,
+              user: user?.me?.user,
               company: user?.me?.company,
             },
             refetchQueries: [
               {
                 query: GetNotificationsDataDocument,
                 variables: {
-                  user: user?.me?.id,
+                  user: user?.me?.user,
                 },
               },
             ],
@@ -484,7 +484,7 @@ const Index: FC = () => {
                 />
                 <Security
                   loading={isLoading}
-                  profile={profileData}
+                  profileData={profileData}
                   onSecurityChange={(passcode) => {
                     setProfileData({ ...profileData, passcode: passcode })
                   }}
