@@ -254,7 +254,7 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 
 In addition to Ticket workflow, if you are doing backend:
 
-1. Run `yarn dev` as per Ticket workflow above.
+1. Run `yarn dev` to launch the backend services.
 1. This should open the local Hasura console on port 9695. You can still use localhost:8080 to view-only, but remember to never make any changes on this port! **ALL CHANGES MUST BE MADE ON PORT 9695**.
 1. Whenever you make a change, you should see a new `/hasura/migrations/default/**/*.sql` file appear!
 1. When you are finished, you can squash all your edits into 1 migration file by running `yarn hasura:cli migrate squash --database-name default --from NNNN --name "My shiny new database stuff"` where `NNNN` is the oldest non-committed datetime stamp you have. At the end, it will ask if you want to delete the migration files, press `y` to choose yes.

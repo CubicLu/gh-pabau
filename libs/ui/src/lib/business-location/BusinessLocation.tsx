@@ -73,57 +73,75 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
   }
 
   const handleChange = (address) => {
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${address.replace(
-        /\s/g,
-        '+'
-      )}&key=${apiKey}`
-    )
-      .then((response) => response.json())
-      .then((res) => {
-        if (res.status === 'OK') {
-          const addressComponents = res.results[0].address_components
-          const streetNumber = addressComponents.find((item) =>
-            item.types.includes('street_number')
-          )
-          const route = addressComponents.find((item) =>
-            item.types.includes('route')
-          )
-          const locality = addressComponents.find((item) =>
-            item.types.includes('locality')
-          )
-          const area1 = addressComponents.find((item) =>
-            item.types.includes('administrative_area_level_1')
-          )
-          const area2 = addressComponents.find((item) =>
-            item.types.includes('administrative_area_level_2')
-          )
-          const country = addressComponents.find((item) =>
-            item.types.includes('country')
-          )
-          const postcode = addressComponents.find((item) =>
-            item.types.includes('postal_code')
-          )
-          detailedAddress = {
-            address: route ? route.long_name : '',
-            postcode: postcode ? postcode.long_name : '',
-            city: locality ? locality.long_name : area2 ? area2.long_name : '',
-            region: [
-              area1 ? area1.long_name : '',
-              area2 ? area2.long_name : '',
-            ].join(', '),
-            country: country ? country.long_name : '',
-            apt: streetNumber ? streetNumber.long_name : '',
+    if (!address) {
+      const data = {
+        address: '',
+        postcode: '',
+        city: '',
+        region: '',
+        country: '',
+        apt: '',
+      }
+      setDetail(data)
+      setDetailForModal(data)
+      return data
+    } else {
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address.replace(
+          /\s/g,
+          '+'
+        )}&key=${apiKey}`
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.status === 'OK') {
+            const addressComponents = res.results[0].address_components
+            const streetNumber = addressComponents.find((item) =>
+              item.types.includes('street_number')
+            )
+            const route = addressComponents.find((item) =>
+              item.types.includes('route')
+            )
+            const locality = addressComponents.find((item) =>
+              item.types.includes('locality')
+            )
+            const area1 = addressComponents.find((item) =>
+              item.types.includes('administrative_area_level_1')
+            )
+            const area2 = addressComponents.find((item) =>
+              item.types.includes('administrative_area_level_2')
+            )
+            const country = addressComponents.find((item) =>
+              item.types.includes('country')
+            )
+            const postcode = addressComponents.find((item) =>
+              item.types.includes('postal_code')
+            )
+            detailedAddress = {
+              address: route ? route.long_name : '',
+              postcode: postcode ? postcode.long_name : '',
+              city: locality
+                ? locality.long_name
+                : area2
+                ? area2.long_name
+                : '',
+              region: [
+                area1 ? area1.long_name : '',
+                area2 ? area2.long_name : '',
+              ].join(', '),
+              country: country ? country.long_name : '',
+              apt: streetNumber ? streetNumber.long_name : '',
+            }
+            setDetail(detailedAddress)
+            setDetailForModal(detailedAddress)
+            onChange?.(address, detailedAddress)
           }
-          setDetail(detailedAddress)
-          setDetailForModal(detailedAddress)
-          onChange?.(address, detailedAddress)
-        }
-      })
-      .catch((error) => {
-        throw new Error(error)
-      })
-    return detailedAddress
+        })
+        .catch((error) => {
+          throw new Error(error)
+        })
+      return detailedAddress
+    }
   }
 
   useEffect(() => {
@@ -156,8 +174,9 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
         <GooglePlacesAutocomplete
           apiKey={apiKey}
           selectProps={{
-            inputValue: data !== null ? data : fullAddress,
+            defaultInputValue: data !== null ? data : fullAddress,
             value: data !== '' ? { label: fullAddress, value: {} } : add,
+            isClearable: true,
             onInputChange: (val) => {
               setData(val)
               setDetailForModal({
@@ -172,6 +191,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
             onMenuOpen: () => {
               setData(add?.label)
             },
+            noOptionsMessage: () => null,
           }}
         />
       ) : (

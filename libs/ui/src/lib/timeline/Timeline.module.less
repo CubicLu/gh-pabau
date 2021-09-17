@@ -6,7 +6,7 @@
     padding: 9px 16px;
     border-bottom: 1px solid #ecedf0;
     h5 {
-      font-size: 12px;
+      font-size: 14px;
       line-height: 22px;
       color: #9292a3;
     }
@@ -27,6 +27,7 @@
         height: 24px;
         width: 24px;
         margin-left: 8px;
+        position: relative;
         :global .anticon {
           margin-left: 0;
         }
@@ -59,7 +60,7 @@
         background: #fff;
         color: #9292a3;
         position: relative;
-        z-index: 9;
+        z-index: 0;
         margin-bottom: 0;
       }
       .line {
@@ -76,7 +77,8 @@
     .follow-content {
       position: relative;
       &:hover {
-         .box-text {
+        transition: 1s ease;
+        .box-text {
            .time-wrap {
              :global .ant-btn-circle {
                min-width: 24px;
@@ -84,7 +86,7 @@
                height: 24px;
                padding: 0;
                display: block;
-               transition: 0.5s ease;
+
              }
            }
          }
@@ -118,6 +120,7 @@
           h4 {
             margin-bottom: 0;
             line-height: 24px;
+            background: none;
             @media screen and (max-width: 400px) {
              width: 142px;
             }
@@ -143,6 +146,9 @@
             cursor: pointer;
             border: 1px solid #9292a3;
             border-radius: 50%;
+            position: absolute;
+            right: 0;
+            top: 20px;
           }
           .active-collapse {
             svg {
@@ -208,7 +214,7 @@
             .icon-arrived {
               position: absolute;
               bottom: -50px;
-              right: 0;
+              right: 30px;
             }
           }
           .status-class {
@@ -257,7 +263,7 @@
         height: auto;
       }
       .collapse-class {
-        height: 24px;
+        height: 23px;
         overflow: hidden;
         display: flex;
         align-items: flex-start !important;
@@ -326,7 +332,7 @@
       .bottom-text {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
         white-space: pre-line;
         h5 {
           font-size: 12px;
@@ -335,9 +341,112 @@
           margin-top: 4px;
           margin-bottom: 8px;
           font-weight: 500;
+          @media screen and (max-width: 767px)  {
+            margin-bottom: -3px;
+          }
         }
       }
-
+      .tag-text {
+        background: none;
+        font-size: 12px;
+        padding: 0;
+        line-height: 16px;
+        color: #9292A3;
+        font-style: unset;
+        width: 100%;
+        padding-top: 8px;
+        margin-top: 8px;
+        border-top: 1px solid #ECEDF0;
+        @media screen and (max-width: 767px)  {
+          margin-top: 0;
+        }
+      }
+      .outcome {
+        display: inline-flex;
+        align-items: center;
+        h5 {
+          margin: 0 15px 0 0;
+          font-size: 12px;
+          line-height: 18px;
+          color: #54B2D3;
+          background: none;
+        }
+      }
+      .edit-Note {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 10px;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        margin: 10px 0;
+        gap: 10px;
+        align-items: center;
+        width: 80%;
+      }
+      .editNoteWidth {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        gap: 10px;
+        border: 1px solid transparent;
+        .edit-icon {
+          opacity: 0;
+        }
+        .bottom-text {
+          width: 100%;
+        }
+        &:hover {
+          border: 1px solid #e5e5e5;
+          .edit-icon {
+            opacity: 1;
+            margin-left: 5px;
+          }
+        }
+      }
+      .editNoteWidth h5 {
+        word-break: break-word;
+      }
+      .add-Note {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 10px;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        margin: 10px 0;
+flex-direction: column;
+        width: 80%;
+        gap: 10px
+      }
+      .add-Note-btn {
+        & :not(:last-child) {
+          margin-right: 10px;
+        }
+      }
+      .audio-wrapper {
+        display: flex;
+        align-items: center;
+        padding-top: 8px;
+        margin-top: 8px;
+        border-top: 1px solid #ECEDF0;
+        h5 {
+          margin: 0 12px;
+          font-size: 12px;
+          line-height: 16px;
+          color: #9292A3;
+          white-space: nowrap;
+        }
+        .icon {
+          min-width: 24px;
+          height: 24px;
+          margin-right: 10px;
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
       h6 {
         font-style: italic;
         font-family: 'Roboto', sans-serif;
@@ -528,6 +637,21 @@
     }
   }
 }
+
+.wrapDotButton {
+  div {
+
+    padding: 0 8px;
+    transition: .5s ease;
+
+    &:hover {
+      background: #e5e5e5;
+      transition: .5s ease;
+
+    }
+  }
+}
+
 .eye-wrap {
   display: flex;
   justify-content: center;
@@ -575,11 +699,13 @@
         line-height: 32px;
         color: #3d3d46;
         min-height: 42px;
+        border-bottom: 1px solid #ECEDF0;
       }
     }
   }
 }
 .filterPopupContent {
+  padding: 16px;
   h5 {
     margin-bottom: 14px;
     font-size: 14px;
@@ -587,6 +713,8 @@
     color: #3d3d46;
   }
   .filter-body {
+    max-height: calc(100vh - 260px);
+    overflow: auto;
     :global .ant-tree {
       .ant-tree-list {
         .ant-tree-list-holder {
@@ -651,3 +779,5 @@
     width: 100%;
   }
 }
+
+

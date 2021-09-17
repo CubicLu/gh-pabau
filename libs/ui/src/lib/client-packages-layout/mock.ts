@@ -1,3 +1,4 @@
+import moment from 'moment'
 import laserChin from '../../assets/images/client-card/package/laser-chin.png'
 import laserLip from '../../assets/images/client-card/package/laser-lip.png'
 import arya from '../../assets/images/users/arya.png'
@@ -11,11 +12,13 @@ export const clientPackages = [
     avatar: arya,
     packageName: 'Laser / Chin',
     packageUsage: 6,
-    expDate: '2021-07-21',
+    expDate: moment().add(1, 'years').format('YYYY-MM-DD'),
     actDate: '2021-07-21',
     valueEach: 0,
     used: 0,
     invoice: 0,
+    lastSaw: 'John Smith',
+    lastVisited: '2021-02-15',
   },
   {
     id: '2',
@@ -23,11 +26,13 @@ export const clientPackages = [
     avatar: linda,
     packageName: 'Laser / Lip',
     packageUsage: 6,
-    expDate: '2021-07-21',
+    expDate: moment().add(1, 'years').format('YYYY-MM-DD'),
     actDate: '2021-07-21',
     valueEach: 0,
-    used: 3,
+    used: 5,
     invoice: 0,
+    lastSaw: 'John Smith',
+    lastVisited: '2021-06-30',
   },
   {
     id: '3',
@@ -40,5 +45,7 @@ export const clientPackages = [
     valueEach: 0,
     used: 6,
     invoice: 0,
+    lastSaw: 'John Smith',
+    lastVisited: '2021-08-15',
   },
 ]

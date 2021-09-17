@@ -1,0 +1,785 @@
+.createCallGlobal {
+  //margin-top: 0;
+  .createCallContainer {
+    margin-top: 80px;
+    text-align: center;
+    .createCallHeaderMessage {
+      font-size: 16px;
+      margin-top: 46px;
+      line-height: 24px;
+      align-items: center;
+      color: #3D3D46;
+    }
+    .createCallBodyMessage {
+      font-family: Circular-Std-Book, -apple-system, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      align-items: center;
+      margin-top: 8px;
+      color: #3D3D46;
+    }
+    .createCallButtons {
+      display: flex;
+      justify-content: center;
+      margin-top: 36px;
+      .webCall {
+        cursor: pointer;
+        height: 200px;
+        margin-right: 24px;
+      }
+      .callLog {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        position: relative;
+        .callLogo {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -100%);
+        }
+      }
+      .createCallConnect {
+        font-family: Circular-Std-Book, -apple-system, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        margin-right: 10px;
+        align-items: flex-end;
+        text-transform: capitalize;
+        color: #FFFFFF;
+      }
+      .createCallLearnMore {
+        font-family: Circular-Std-Book, -apple-system, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        border: none;
+        line-height: 20px;
+        align-items: center;
+        background-color: #FFFFFF;
+        text-align: center;
+        text-transform: capitalize;
+        color: #9292A3;
+      }
+    }
+
+    .createCallSteps {
+      font-family: Circular-Std-Book, -apple-system, sans-serif;
+      align-items: center;
+      margin-top: 225px;
+    }
+
+    .enterNumberHeader {
+      font-family: Circular-Std-Book, -apple-system, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      display: flex;
+      align-items: center;
+      color: #3D3D46;
+    }
+    .enterNumberInfo {
+      text-align: left;
+      font-family: Circular-Std-Book, -apple-system, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 20px;
+      margin-right: 200px;
+      color: #3D3D46;
+    }
+
+    .verifyMessage {
+      text-align: left;
+      font-family: Circular-Std-Book, -apple-system, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 20px;
+      color: #3D3D46;
+    }
+
+    .verifyNumberButton {
+      align-items: center;
+    }
+
+  }
+}
+.createEnterNumberContainer {
+  padding: 20px 16px;
+  h5{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #3D3D46;
+    margin: 0 0 8px;
+  }
+  h6{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #3D3D46;
+    margin: 0 0 16px;
+  }
+  h4{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    color: #3D3D46;
+    margin: 20px 0 12px;
+  }
+  p{
+    display: none
+  }
+  .enterNumberPhoneInput{
+    display: flex;
+    .formPhoneInput{
+      display: flex;
+      .devOne{
+        font-size: 18px;
+        width: 256px;
+        :global .react-tel-input{
+          input.form-control{
+            height: 40px;
+          }
+        }
+      }
+    }
+  }
+  .enterNumberInfo {
+    display: flex;
+   .devOne{
+      font-size: 18px;
+      width: 256px;
+     :global .react-tel-input{
+        input.form-control, .flag-dropdown{
+          height: 40px;
+        }
+      }
+    }
+  }
+
+  .enterNumberTextMe {
+   font-size: 14px;
+    margin-left: 16px;
+    .btnSubmit{
+      border: 1px solid #E8E8E8;
+      box-sizing: border-box;
+      border-radius: 4px;
+      background: #54B2D3;
+      padding: 11px 16px;
+      height: unset;
+      span{
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        color: #FFFFFF;
+        display: block;
+      }
+    }
+  }
+   :global .ant-steps-label-horizontal {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  .createCallSteps {
+    font-family: Circular-Std-Book, -apple-system, sans-serif;
+    align-items: center;
+    margin-top: 225px;
+  }
+  .enterNumberRates {
+
+    div{
+      display: flex;
+      flex-direction: column;
+    }
+    label{
+      margin-bottom: 8px;
+    }
+  }
+
+
+}
+
+.createCallSteps{
+  position: absolute;
+  bottom: 0;
+  width:100%;
+  padding: 20px 16px;
+  border: 1px solid #ECEDF0;
+}
+//.enterNumberSteps {
+//  :global .ant-steps-item {
+//    width: 33.33%;
+//    padding-left: 0 !important;
+//    text-align: center;
+//    .ant-steps-item-container {
+//      display: flex;
+//      flex-direction: column;
+//
+//
+//
+//      .ant-steps-item-title {
+//        padding-right: 0;
+//      }
+//    }
+//  }
+//}
+
+.initiateCall {
+  //position: absolute;
+  .initiateCallCallerInfo {
+    //position: absolute;
+    width: 100%;
+    height: 72px;
+    background: #737387;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 24px;
+    align-items: center;
+    .initialMainWrap {
+      display: flex;
+      align-items: center;
+      :global .anticon-down {
+        color: #fff;
+      }
+      .initialIcon {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        h5, span {
+          margin: 0;
+          font-size: 14px;
+          color: #fff;
+          line-height: 20px;
+        }
+      }
+    }
+    .initiateCallNetwork:after {
+        position: absolute;
+        content: "/";
+        color: red;
+        font-weight: 700;
+        font-size: 1.7em;
+        left: 7px;
+        top: -10px;
+      .Popover {
+        color: #FFFFFF;
+        background-color: darkcyan;
+      }
+    }
+    .callWrapper {
+      display: flex;
+      .initiateCallName {
+        display: flex;
+        align-items: center;
+        h6, span  {
+          color: #fff;
+          font-size: 14px;
+          margin-bottom: 0;
+          line-height: 24px;
+          margin-right: 12px;
+        }
+      }
+    }
+  }
+  .initiateCallStatusBar {
+    width: 100%;
+    //position: relative;
+    height: 86px;
+    left: 0px;
+    background: #eef7fb;
+    .initiateStatusWrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      .microWrap {
+        display: flex;
+        span {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-right: 12px;
+          h6 {
+            font-size: 12px;
+            line-height: 16px;
+            margin: 3px 0 0;
+            justify-content: center;
+            color: #9292A3;
+          }
+        }
+
+      }
+      .audioWrap {
+        display: flex;
+        .headAudio {
+          display: flex;
+          align-items: center;
+          padding-right: 10px;
+          margin-right: 16px;
+          border-right: 1px solid #ECEDF0;
+          .tagIcon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            h6 {
+              font-size: 12px;
+              line-height: 16px;
+              color: #9292A3;
+
+            }
+          }
+        }
+        .initiateCallSpeaker{
+          margin: 16px 0 13px 0;
+        }
+      }
+    }
+    .notesWrapper {
+      padding: 12px 16px;
+      .initiateCallTextArea {
+        border: 1px solid #E8E8E8;
+        box-sizing: border-box;
+        border-radius: 4px;
+      }
+      h5 {
+        font-size: 14px;
+        line-height: 20px;
+        color: #3D3D46;
+        margin-bottom: 0;
+      }
+      .switchBtn {
+        display: flex;
+        align-items: center;
+        margin-top: 16px;
+        :global .ant-switch {
+          margin-left: 12px;
+        }
+      }
+    }
+  }
+  .initiateCallClose {
+    cursor: pointer;
+    font-size: x-large;
+    position: relative;
+    & span{
+      top: 12px;
+      right: 30px;
+      position: absolute;
+    }
+  }
+  .keypadInput {
+    padding: 50px 80px 5px;
+    input {
+      border-color: #54b2d3;
+      background-color: rgb(255 255 255);
+      width: 100%;
+      align-items: center;
+      font-size: 20px;
+      padding: 10px 16px;
+      border-radius: 4px;
+      color: var(--grey-text-color);
+    }
+  }
+  .key-grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    //background-color: #2196F3;
+    padding: 5px 70px 30px;
+    .key-grid-item {
+      cursor: pointer;
+      background-color: rgba(255, 255, 255, 0.8);
+      //border: 1px solid rgba(0, 0, 0, 0.8);
+      padding: 3px;
+      font-size: 30px;
+      text-align: center;
+      color: var(--grey-text-color);
+      p {
+        margin: 0;
+        font-size: 16px;
+      }
+    }
+  }
+}
+.callFailed {
+  .callFailedPopoutMessage {
+    position: relative;
+    padding: 11px 13px;
+    display: flex;
+    .customPopup {
+      display: flex;
+      align-items: flex-start;
+      padding-right: 50px;
+      p {
+        margin-bottom: 0;
+      }
+      svg {
+        margin-right: 8px;
+        width: 22px;
+        height: 22px;
+      }
+    }
+  }
+  .callFailedCallerInfo{
+    //position: absolute;
+    width: 100%;
+    height: 72px;
+    background: #737387;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 24px;
+    align-items: center;
+    .initialMainWrap {
+      display: flex;
+      align-items: center;
+      :global .anticon-down {
+        color: #fff;
+      }
+      .initialIcon {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        h5, span {
+          margin: 0;
+          font-size: 14px;
+          color: #fff;
+          line-height: 20px;
+        }
+      }
+    }
+    .callWrapper {
+      display: flex;
+      .initiateCallName {
+        display: flex;
+        align-items: center;
+        h6, span  {
+          color: #fff;
+          font-size: 14px;
+          margin-bottom: 0;
+          line-height: 24px;
+          margin-right: 12px;
+        }
+      }
+    }
+  }
+  .callFailedStatusBar {
+    width: 100%;
+    //position: relative;
+    height: 86px;
+    left: 0px;
+    background: #eef7fb;
+    .failedStatusWrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 16px 24px;
+      .microWrap {
+        display: flex;
+        span {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-right: 12px;
+          h6 {
+            font-size: 12px;
+            line-height: 16px;
+            margin: 3px 0 0;
+            justify-content: center;
+            color: #9292A3;
+          }
+        }
+
+      }
+      .audioWrap {
+        display: flex;
+        .headAudio {
+          display: flex;
+          align-items: center;
+          padding-right: 10px;
+          margin-right: 16px;
+          border-right: 1px solid #ECEDF0;
+          .tagIcon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            h6 {
+              font-size: 12px;
+              line-height: 16px;
+              color: #9292A3;
+
+            }
+          }
+        }
+
+      }
+    }
+  }
+  .failedNotesWrapper {
+    padding: 12px 16px;
+    .initiateCallTextArea {
+      border: 1px solid #E8E8E8;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+    h5 {
+      font-size: 14px;
+      line-height: 20px;
+      color: #3D3D46;
+      margin-bottom: 0;
+    }
+    .switchBtn {
+      display: flex;
+      align-items: center;
+      margin-top: 16px;
+      :global .ant-switch {
+        margin-left: 12px;
+      }
+    }
+  }
+}
+.verifySmsContainer {
+  padding: 20px 16px;
+  h5{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #3D3D46;
+    margin-bottom: 8px;
+  }
+  p{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #3D3D46;
+    margin: 0 0 12px;
+  }
+  label{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #3D3D46;
+    display: block;
+    margin-bottom: 2px;
+  }
+  input{
+    background: #FFFFFF;
+    border: 1px solid #ECEDF0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 40px;
+  }
+  h6{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    color: #9292A3;
+    margin: 2px 0 0;
+    a{
+      color: #53b1d3;
+    }
+  }
+  button{
+    position: absolute;
+    bottom: 125px;
+    right: 16px;
+  }
+}
+.verifyCallContainer {
+  padding: 20px 16px;
+  h5{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #3D3D46;
+    margin-bottom: 8px;
+  }
+  p{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #3D3D46;
+    margin: 0 0 12px;
+  }
+  label{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #3D3D46;
+    display: block;
+    margin-bottom: 2px;
+  }
+  input{
+    background: #FFFFFF;
+    border: 1px solid #ECEDF0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 40px;
+  }
+  h6{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    color: #9292A3;
+    margin: 2px 0 0;
+    a{
+      color: #53b1d3;
+    }
+  }
+  button{
+    position: absolute;
+    bottom: 125px;
+    right: 16px;
+  }
+}
+
+.verifyCompleteContainer {
+  padding: 20px 16px;
+
+  .verifyCompleteHeader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+    .verifyTick{
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      background-color: #65CD98;
+      text-align: center;
+      span{
+        display: block;
+        svg{
+          width: 10px;
+          padding-top: 2px;
+        }
+      }
+    }
+    p{
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      color: #3D3D46;
+      margin: 0 0 0 8px;
+    }
+  }
+  .verifyChecked{
+    display: flex;
+    margin-bottom: 12px;
+    p{
+      margin: 0 0 0 10px;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 20px;
+      color: #3D3D46;
+      a{
+        color: #53b1d3;
+      }
+    }
+  }
+  h5{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #9292A3;
+    a{
+      color: #53b1d3;
+    }
+  }
+  button{
+    position: absolute;
+    bottom: 125px;
+    right: 16px;
+  }
+}
+
+//.enterNumberHeader {
+//  position: absolute;
+//  width: 187px;
+//  height: 24px;
+//  left: 16px;
+//  bottom: 552px;
+//  font-family: Circular-Std-Book, -apple-system, sans-serif;
+//  font-style: normal;
+//  font-weight: normal;
+//  font-size: 16px;
+//  line-height: 24px;
+//  display: flex;
+//  align-items: center;
+//  color: #3D3D46;
+//
+//}
+ .createCallStep {
+   position: absolute;
+   bottom: 0;
+   padding: 20px;
+   border: 1px solid #eee;
+ }
+.callCompleted {
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 78px);
+  flex-grow: 1;
+  .callCompletedTextArea {
+    flex-grow: 1;
+    height: 100%;
+  }
+  h5 {
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 36px;
+    color: #3D3D46;
+  }
+  .wrapTask {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 16px 0;
+    border-top: 1px solid #ECEDF0;
+
+  }
+  .rateStatus {
+    margin-bottom: 20px;
+  }
+  .callCompletedLabel {
+    display: flex;
+    flex-direction: column;
+
+
+
+    label {
+      font-size: 14px;
+      line-height: 24px;
+      color: #3D3D46;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.initiateCallMicSettings{
+  max-width: 370px;
+  .initiateCallSpeaker{
+    margin: 16px 0 13px 0;
+  }
+  .initiateCallDefault{
+    display: flex;
+    flex-direction: column;
+    .initiatePlayBtn{
+      margin-top: 12px;
+    }
+  }
+}
+.fake-link {
+  color: #54B2D3;
+  cursor: pointer;
+}
