@@ -1,0 +1,3 @@
+table:
+  name: medical_form_macro
+  schema: public
