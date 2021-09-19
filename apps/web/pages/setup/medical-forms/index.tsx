@@ -41,7 +41,7 @@ import {
   SmsMessageTemplateItem,
   TabMenu,
   UserListItem,
-  MacroItem,
+  // MacroItem,
 } from '@pabau/ui'
 // import { useUser } from '../../../context/UserContext'
 import { Input, Typography } from 'antd'
@@ -79,7 +79,8 @@ export const Index: FC = () => {
   const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
     []
   )
-  const [medicalFormMacros, setMedicalFormMacros] = useState<MacroItem[]>([])
+  // const [medicalFormMacros, setMedicalFormMacros] = useState<MacroItem[]>([])
+  const medicalFormMacros = []
   const [smsMessageTemplateItems, setSmsMessageTemplateItems] = useState<
     SmsMessageTemplateItem[]
   >([])
