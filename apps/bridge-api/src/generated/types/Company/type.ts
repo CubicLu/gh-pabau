@@ -1533,20 +1533,6 @@ export const Company = objectType({
         return root.MedicalFormAdvancedSetting
       },
     })
-    t.list.field('MedicalFormMacro', {
-      type: 'MedicalFormMacro',
-      args: {
-        where: 'MedicalFormMacroWhereInput',
-        orderBy: 'MedicalFormMacroOrderByWithRelationInput',
-        cursor: 'MedicalFormMacroWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormMacroScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.MedicalFormMacro
-      },
-    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {
@@ -1741,6 +1727,20 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.ActivityType
+      },
+    })
+    t.list.field('Album', {
+      type: 'PhotoAlbum',
+      args: {
+        where: 'PhotoAlbumWhereInput',
+        orderBy: 'PhotoAlbumOrderByWithRelationInput',
+        cursor: 'PhotoAlbumWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PhotoAlbumScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Album
       },
     })
     t.nullable.field('_count', {
