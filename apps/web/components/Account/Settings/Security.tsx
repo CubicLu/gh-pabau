@@ -27,7 +27,7 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 export interface SecurityProps {
-  profile?: {
+  profileData?: {
     id?: number
     passcode?: number
     full_name?: string
@@ -45,7 +45,7 @@ export interface SecurityProps {
 
 const Security: FC<SecurityProps> = ({
   loading = false,
-  profile,
+  profileData,
   onSecurityChange,
   ...rest
 }) => {
@@ -107,9 +107,9 @@ const Security: FC<SecurityProps> = ({
           setLocationInfo(response)
         })
     }
-    setPasscode(profile?.passcode)
+    setPasscode(profileData?.passcode)
     getIPLocation()
-  }, [profile])
+  }, [profileData])
 
   const changePassword = (passwords) => {
     if (
@@ -135,12 +135,15 @@ const Security: FC<SecurityProps> = ({
 
   const LastLogin = () => {
     const date1 = dayjs().utc()
-    const date2 = dayjs(profile?.last_login).utc()
+    const date2 = dayjs(profileData?.last_login).utc()
 
-    let last_login = dayjs(profile?.last_login).format()
+    let last_login = dayjs(profileData?.last_login).format()
     if (date2.diff(date1, 'second') > 0) {
-      last_login = dayjs(profile?.last_login)
-        .subtract(profile?.company_details?.timezone?.offset_seconds, 'seconds')
+      last_login = dayjs(profileData?.last_login)
+        .subtract(
+          profileData?.company_details?.timezone?.offset_seconds,
+          'seconds'
+        )
         .format()
     }
     return (
@@ -354,7 +357,7 @@ const Security: FC<SecurityProps> = ({
             </div>
           )}
           <Divider className="smallDivider" />
-          {profile?.last_login && (
+          {profileData?.last_login && (
             <Collapse accordion key={'1'} style={{ background: '#fff' }}>
               <Panel
                 header={

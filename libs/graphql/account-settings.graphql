@@ -97,8 +97,5 @@ mutation updateNotificationToggle($id: uuid!, $enabled: Boolean) {
 }
 
 mutation updateUserPassword($currentPassword: String!, $newPassword: String!) {
-  changePassword(
-    currentPassword: $currentPassword
-    newPassword: $newPassword
-  )
+  changePassword(currentPassword: $currentPassword, newPassword: $newPassword)
 }

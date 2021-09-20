@@ -1,0 +1,51 @@
+query getPhotos( $contactID: Int! ) {
+  photos: findManyContactAttachment(where: {Contact: {ID: {equals: $contactID}}, attachment_type: {equals: "contact"}, photo_type: {notIn: "consent,treatment"}}) {
+    id
+    name: attachment_title # if null no-title
+    shared: connect_public
+    created_date: date
+    linkref
+    # company_id
+    # user_id
+    # album_id
+    Contact {
+      ID
+      Fname
+      Lname
+    }
+    Practitioner{
+      id
+      full_name
+    }
+    Album{
+      id
+      name: album_name
+    }
+  }
+}
+
+# {
+#  "contactID": 24790901
+# }
+
+query getAlbums( $contactID: Int! ){
+  albums: findManyPhotoAlbum(where: {Contact: {ID: {equals: $contactID}}}){
+    id
+    name: album_name
+    count: _count{
+      Photos
+    }
+    creation_date
+    modified_date
+    Contact{
+      ID
+      Fname
+      Lname
+    }
+  }
+}
+
+# {
+#  "contactID": 25128890
+# }
+
