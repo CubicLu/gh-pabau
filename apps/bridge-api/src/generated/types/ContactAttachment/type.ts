@@ -40,10 +40,16 @@ export const ContactAttachment = objectType({
         return root.Contact
       },
     })
-    t.field('Practitioner', {
+    t.nullable.field('Practitioner', {
       type: 'User',
       resolve(root: any) {
         return root.Practitioner
+      },
+    })
+    t.nullable.field('Album', {
+      type: 'PhotoAlbum',
+      resolve(root: any) {
+        return root.Album
       },
     })
   },
