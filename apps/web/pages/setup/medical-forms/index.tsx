@@ -19,12 +19,6 @@ import {
   UserOrderByWithRelationInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
-  // useCreateOneMedicalFormMacroMutation,
-  // useDeleteOneMedicalFormMacroMutation,
-  // FindMedicalFormMacrosDocument,
-  // useFindMedicalFormMacrosQuery,
-  // MedicalFormMacroWhereInput,
-  // MedicalFormMacroOrderByWithRelationInput,
 } from '@pabau/graphql'
 import {
   Breadcrumb,
@@ -41,9 +35,10 @@ import {
   SmsMessageTemplateItem,
   TabMenu,
   UserListItem,
-  // MacroItem,
+  useLiveQuery,
+  MacroItem,
 } from '@pabau/ui'
-// import { useUser } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { Input, Typography } from 'antd'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -53,8 +48,56 @@ import Layout from '../../../components/Layout/Layout'
 import Custom from '../../../components/MedicalForms/Custom'
 import Library from '../../../components/MedicalForms/Library'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { gql, useMutation } from '@apollo/client'
 import styles from './index.module.less'
 const { Title } = Typography
+
+const LIST_QUERY_MACRO = gql`
+  query medical_form_macro($createdBy: Int = 0) {
+    medical_form_macro(
+      where: {
+        _or: [{ created_by: { _eq: $createdBy } }, { type: { _eq: 0 } }]
+      }
+    ) {
+      id
+      createdAt
+      title
+      message
+      type
+      created_by
+      company_id
+    }
+  }
+`
+const ADD_MUTATION_MACRO = gql`
+  mutation insert_medical_form_macro_one(
+    $title: String
+    $message: String
+    $type: Int
+    $created_by: Int
+    $company_id: Int
+  ) {
+    insert_medical_form_macro_one(
+      object: {
+        title: $title
+        message: $message
+        type: $type
+        created_by: $created_by
+        company_id: $company_id
+      }
+    ) {
+      id
+    }
+  }
+`
+
+const DELETE_MUTATION_MACRO = gql`
+  mutation delete_medical_form_macro_by_pk($id: Int!) {
+    delete_medical_form_macro_by_pk(id: $id) {
+      id
+    }
+  }
+`
 
 enum Tab {
   Custom = '0',
@@ -79,8 +122,7 @@ export const Index: FC = () => {
   const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
     []
   )
-  // const [medicalFormMacros, setMedicalFormMacros] = useState<MacroItem[]>([])
-  const medicalFormMacros = []
+  const [medicalFormMacros, setMedicalFormMacros] = useState<MacroItem[]>([])
   const [smsMessageTemplateItems, setSmsMessageTemplateItems] = useState<
     SmsMessageTemplateItem[]
   >([])
@@ -109,8 +151,7 @@ export const Index: FC = () => {
   })
 
   const { t } = useTranslationI18()
-  // const loggedInUser = useUser()
-
+  const loggedInUser = useUser()
   const getQueryVariables = useMemo(() => {
     const whereQuery: MedicalFormWhereInput = {}
     whereQuery.AND = []
@@ -465,113 +506,95 @@ export const Index: FC = () => {
     setSearchrData(newSearchData)
   }
 
-  // const getMacroQueryVariables = useMemo(() => {
-  //   const whereQuery: MedicalFormMacroWhereInput = {}
-  //   whereQuery.OR = []
-  //   whereQuery.OR.push(
-  //     { created_by: { equals: loggedInUser?.me?.user } },
-  //     { type: { equals: 0 } }
-  //   )
+  const getMacroQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        createdBy: loggedInUser?.me?.user,
+      },
+    }
+    return queryOptions
+  }, [loggedInUser])
 
-  //   const orderBy: MedicalFormMacroOrderByWithRelationInput = {
-  //     title: SortOrder.Asc,
-  //   }
+  const { data: macros } = useLiveQuery(
+    LIST_QUERY_MACRO,
+    getMacroQueryVariables
+  )
 
-  //   const macroQueryOptions = {
-  //     variables: {
-  //       where: whereQuery,
-  //       orderBy: orderBy,
-  //     },
-  //   }
-  //   return macroQueryOptions
-  // }, [loggedInUser])
+  useEffect(() => {
+    if (typeof macros !== 'undefined' && macros) {
+      const medicalFormMacroList = macros.map((macro, index) => ({
+        id: macro.id,
+        title: macro.title,
+        message: macro.message,
+        type: macro.type,
+        createdAt:
+          companyDateFormat === 'd/m/Y'
+            ? dayjs(macro.createdAt).format('DD/MM/YYYY HH:mm:ss')
+            : dayjs(macro.createdAt).format('MM/DD/YYYY HH:mm:ss'),
+      }))
+      setMedicalFormMacros(medicalFormMacroList)
+    }
+  }, [macros, companyDateFormat])
 
-  // const { data: macros } = useFindMedicalFormMacrosQuery(getMacroQueryVariables)
+  const [addMacroMutation] = useMutation(ADD_MUTATION_MACRO, {
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('setup.medical.forms.macro.create.text')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.medical.forms.macro.create.err.text')
+      )
+    },
+  })
 
-  // useEffect(() => {
-  //   if (macros?.findManyMedicalFormMacro) {
-  //     const medicalFormMacroList = macros?.findManyMedicalFormMacro.map(
-  //       (macro, index) => ({
-  //         id: macro.id,
-  //         title: macro.title,
-  //         message: macro.message,
-  //         type: macro.type,
-  //         createdAt:
-  //           companyDateFormat === 'd/m/Y'
-  //             ? dayjs(macro.createdAt).format('DD/MM/YYYY HH:mm:ss')
-  //             : dayjs(macro.createdAt).format('MM/DD/YYYY HH:mm:ss'),
-  //       })
-  //     )
-  //     setMedicalFormMacros(medicalFormMacroList)
-  //   }
-  // }, [macros, companyDateFormat])
-
-  // const [addMacroMutation] = useCreateOneMedicalFormMacroMutation({
-  //   onCompleted(data) {
-  //     Notification(
-  //       NotificationType.success,
-  //       t('setup.medical.forms.macro.create.text')
-  //     )
-  //   },
-  //   onError(err) {
-  //     Notification(
-  //       NotificationType.error,
-  //       t('setup.medical.forms.macro.create.err.text')
-  //     )
-  //   },
-  // })
-
-  // const [delMacroMutation] = useDeleteOneMedicalFormMacroMutation({
-  //   onCompleted(data) {
-  //     Notification(
-  //       NotificationType.success,
-  //       t('setup.medical.forms.macro.del.text')
-  //     )
-  //   },
-  //   onError(err) {
-  //     Notification(
-  //       NotificationType.error,
-  //       t('setup.medical.forms.macro.del.err.text')
-  //     )
-  //   },
-  // })
+  const [delMacroMutation] = useMutation(DELETE_MUTATION_MACRO, {
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('setup.medical.forms.macro.del.text')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.medical.forms.macro.del.err.text')
+      )
+    },
+  })
 
   const onHandleMacro = async (action, macro) => {
-    // if (action === 'add') {
-    //   const creatMacroVariables = {
-    //     data: {
-    //       title: macro.title,
-    //       createdAt: macro.createdAt,
-    //       message: macro.message,
-    //       type: macro.type,
-    //       Company: {},
-    //       created_by: loggedInUser?.me?.user,
-    //     },
-    //   }
-    //   await addMacroMutation({
-    //     variables: creatMacroVariables,
-    //     refetchQueries: [
-    //       {
-    //         query: FindMedicalFormMacrosDocument,
-    //         ...getMacroQueryVariables,
-    //       },
-    //     ],
-    //   })
-    // } else if (action === 'del') {
-    //   await delMacroMutation({
-    //     variables: {
-    //       where: {
-    //         id: Number(macro.id),
-    //       },
-    //     },
-    //     refetchQueries: [
-    //       {
-    //         query: FindMedicalFormMacrosDocument,
-    //         ...getMacroQueryVariables,
-    //       },
-    //     ],
-    //   })
-    // }
+    if (action === 'add') {
+      const creatMacroVariables = {
+        title: macro.title,
+        message: macro.message,
+        type: macro.type,
+        company_id: loggedInUser?.me?.company,
+        created_by: loggedInUser?.me?.user,
+      }
+      await addMacroMutation({
+        variables: creatMacroVariables,
+        refetchQueries: [
+          {
+            query: LIST_QUERY_MACRO,
+            ...getMacroQueryVariables,
+          },
+        ],
+      })
+    } else if (action === 'del') {
+      await delMacroMutation({
+        variables: { id: Number(macro.id) },
+        refetchQueries: [
+          {
+            query: LIST_QUERY_MACRO,
+            ...getMacroQueryVariables,
+          },
+        ],
+      })
+    }
   }
 
   return (
