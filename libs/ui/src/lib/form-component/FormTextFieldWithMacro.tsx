@@ -5,7 +5,9 @@ import { MacroModal, MacroItem, RenderHtml } from '@pabau/ui'
 import _ from 'lodash'
 import { tagList } from '../merge-tag-modal/data'
 import cn from 'classnames'
-import Autocomplete from 'draft-js-autocomplete'
+// import Autocomplete from 'draft-js-autocomplete'
+
+import AutocompleteCustom from './AutoCompleteCustom'
 import { Editor, EditorState, Modifier } from 'draft-js'
 import { useTranslation } from 'react-i18next'
 import styles from './FormComponent.module.less'
@@ -94,8 +96,9 @@ export const FormTextFieldWithMacro: FC<P> = ({
     return orgString
   }
 
-  const onMatch = (text) =>
-    macroItems.filter((hashtag) => hashtag.title.indexOf(text) !== -1)
+  const onMatch = (text) => {
+    return macroItems.filter((hashtag) => hashtag.title.indexOf(text) !== -1)
+  }
 
   const Hasthtag = ({ children }) => <span className="Hashtag">{children}</span>
 
@@ -209,7 +212,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
           isTextArea === true ? styles.textFieldArea : ''
         )}
       >
-        <Autocomplete
+        <AutocompleteCustom
           placeholder={t('ui.macro.modal.placeholder')}
           editorState={editorState}
           ref={editor}
@@ -217,7 +220,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
           autocompletes={autocompletes}
         >
           <Editor />
-        </Autocomplete>
+        </AutocompleteCustom>
         <Tooltip arrowPointAtCenter title={t('ui.macro.modal.add.title')}>
           <div className={styles.macroBtn} onClick={onShowMacroDlg}>
             <BookOutlined />
