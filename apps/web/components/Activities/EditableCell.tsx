@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
-import { Input, Form, Popover, Select, Drawer, Spin } from 'antd'
+import { Input, Form, Popover, Select, Drawer, Spin, Tooltip } from 'antd'
 import { getDuration, getFunction } from './utils'
 import { merge, debounce } from 'lodash'
 import { ActivitiesDataProps, filterTabsObj } from '../../pages/activities'
@@ -130,7 +130,8 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         id === columnNames.leadOwner.id &&
           setSelectedListItem(`${owner?.full_name}`)
         id === columnNames.wonBy.id && setSelectedListItem(wonBy)
-        id === columnNames.lead.id && setSelectedListItem(activityLead)
+        id === columnNames.leadDescription.id &&
+          setSelectedListItem(activityLead)
         setSelectedType(type_name)
         if (id === columnNames.label.id) {
           setSelectedLabels(label)
@@ -151,7 +152,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         setSelectedListItem(
           `${record?.client?.firstName} ${record?.client?.lastName}`
         )
-      id === columnNames.lead.id &&
+      id === columnNames.leadDescription.id &&
         isMobile &&
         setSelectedListItem(`${record?.activityLead}`)
     }
@@ -195,7 +196,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         const value = !isMobile ? values?.[key] : selectedListItem
         const [firstName, lastName] = value.split(' ')
         values = { client: { firstName, lastName } }
-      } else if (key === columnNames.lead.id) {
+      } else if (key === columnNames.leadDescription.id) {
         values = { [key]: !isMobile ? values?.[key] : selectedListItem }
       } else if (key === columnNames.duration.id) {
         const duration = values?.[key]
@@ -634,16 +635,21 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
           {visible ? (
             <CloseCircleOutlined onClick={toggleVisible} />
           ) : (
-            <EditOutlined
-              onClick={
-                type === cellTypes.label
-                  ? () => {
-                      labelRef.current.handleVisible(true)
-                      toggleVisible()
-                    }
-                  : () => toggleVisible()
-              }
-            />
+            <Tooltip
+              title={t('activityList.column.edit.tooltip')}
+              placement={'topRight'}
+            >
+              <EditOutlined
+                onClick={
+                  type === cellTypes.label
+                    ? () => {
+                        labelRef.current.handleVisible(true)
+                        toggleVisible()
+                      }
+                    : () => toggleVisible()
+                }
+              />
+            </Tooltip>
           )}
         </div>
       </td>

@@ -48,7 +48,14 @@ export const prepareSearchObject = (
       subject: { contains: search },
     },
     'Client name': {
-      CmContact: { Fname: { contains: search } },
+      CmContact: {
+        AND: {
+          OR: [
+            { Fname: { contains: search } },
+            { Lname: { contains: search } },
+          ],
+        },
+      },
     },
     'Client email': {
       CmContact: { Email: { contains: search } },
@@ -56,11 +63,15 @@ export const prepareSearchObject = (
     'Client phone': {
       CmContact: { Phone: { contains: search } },
     },
-    'First name': {
-      CmLead: { Fname: { contains: search } },
-    },
-    'Last name': {
-      CmLead: { Lname: { contains: search } },
+    'Lead name': {
+      CmLead: {
+        AND: {
+          OR: [
+            { Fname: { contains: search } },
+            { Lname: { contains: search } },
+          ],
+        },
+      },
     },
     'Assigned to user': {
       AssignedUser: { full_name: { contains: search } },
@@ -71,7 +82,7 @@ export const prepareSearchObject = (
     Status: {
       status: { contains: search },
     },
-    Lead: {
+    'Lead description': {
       CmLead: { Description: { contains: search } },
     },
     Creator: {
@@ -89,6 +100,9 @@ export const prepareSearchObject = (
     'Lead email': {
       CmLead: { Email: { contains: search } },
     },
+    'Lead stage': {
+      CmLead: { LeadStatusData: { status_name: { contains: search } } },
+    },
     'Client street': {
       CmContact: { MailingStreet: { contains: search } },
     },
@@ -105,6 +119,22 @@ export const prepareSearchObject = (
         },
       },
     },
+    'Client mobile': {
+      CmContact: { Mobile: { contains: search } },
+    },
+    'Client source': {
+      CmContact: {
+        MarketingSourceData: {
+          name: { contains: search },
+        },
+      },
+    },
+    'Client salutation': {
+      CmContact: { Salutation: { contains: search } },
+    },
+    'Client gender': {
+      CmContact: { gender: { contains: search } },
+    },
   }
   return selectedColumn
     .map((item) => {
@@ -117,7 +147,7 @@ export const prepareSearchObject = (
 }
 
 export const prepareSortingObject = (sortOrder: string, field: string) => {
-  const searchMapper = {
+  const sortMapper = {
     'Due date': {
       due_start_date: sortOrder,
     },
@@ -133,11 +163,11 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
     'Client phone': {
       CmContact: { Phone: sortOrder },
     },
-    'First name': {
+    'Lead name': {
       CmLead: { Fname: sortOrder },
     },
-    'Last name': {
-      CmLead: { Lname: sortOrder },
+    'Lead stage': {
+      CmLead: { LeadStatusData: { status_name: sortOrder } },
     },
     'Assigned to user': {
       AssignedUser: { full_name: sortOrder },
@@ -148,7 +178,7 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
     Status: {
       status: sortOrder,
     },
-    Lead: {
+    'Lead description': {
       CmLead: { Description: sortOrder },
     },
     Creator: {
@@ -211,8 +241,36 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
         },
       },
     },
+    'Client mobile': {
+      CmContact: { Mobile: sortOrder },
+    },
+    'Client created date': {
+      CmContact: { CreatedDate: sortOrder },
+    },
+    'Client source': {
+      CmContact: {
+        MarketingSourceData: {
+          name: sortOrder,
+        },
+      },
+    },
+    'Client salutation': {
+      CmContact: { Salutation: sortOrder },
+    },
+    'Client gender': {
+      CmContact: { gender: sortOrder },
+    },
+    'Client ID': {
+      CmContact: { ID: sortOrder },
+    },
+    'Client DOB': {
+      CmContact: { DOB: sortOrder },
+    },
+    'Client status': {
+      CmContact: { is_active: sortOrder === 'asc' ? 'desc' : 'asc' },
+    },
   }
-  return searchMapper[field]
+  return sortMapper[field]
 }
 
 export const calculateLeadLostObject = (
