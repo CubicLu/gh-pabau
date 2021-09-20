@@ -248,6 +248,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
       delete queryOptions.variables.userId
     }
     if (tabValue === 'To do') {
+      delete queryOptions.variables.startDate
       delete queryOptions.variables.endDate
     }
     if (tabValue === 'Overdue') {
@@ -265,7 +266,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
     searchTerm,
     filterDates,
     selectedActivityType,
-    paginateData,
+    paginateData.offset,
+    paginateData.limit,
     selectFilterUser,
     orderValue,
   ])
@@ -438,7 +440,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [filterActivityType])
 
   useEffect(() => {
-    if (selectedDates.length > 0) {
+    if (selectedDates?.length > 0) {
       setFilterDates([
         dayjs(selectedDates[0]).utc().startOf('day'),
         dayjs(selectedDates[1]).utc().endOf('day'),
@@ -1316,6 +1318,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setSelectedColumn={setSelectedColumn}
             userActiveColumn={userActiveColumn}
             setCreateActivityVisible={setCreateActivityVisible}
+            tabValue={tabValue}
           />
         )}
       </Layout>

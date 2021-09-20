@@ -1,18 +1,16 @@
 import { MailOutlined } from '@ant-design/icons'
 import { Button, ButtonProps } from '@pabau/ui'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 
-const EmailSendButton: FC<ButtonProps> = (props) => {
-  const [sent, setSent] = useState(false)
-
+const EmailSendButton: FC<ButtonProps> = ({ disabled, ...props }) => {
   const handleBtnClick = async (e) => {
     await props.onClick?.(e)
-    setSent(true)
+    disabled = true
   }
 
   return (
-    <Button {...props} onClick={handleBtnClick} disabled={sent}>
-      <MailOutlined /> {sent ? 'Sent' : 'Email'}
+    <Button {...props} onClick={handleBtnClick} disabled={disabled}>
+      <MailOutlined /> {disabled ? 'Sent' : 'Email'}
     </Button>
   )
 }

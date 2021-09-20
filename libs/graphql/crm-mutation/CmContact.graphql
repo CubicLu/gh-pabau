@@ -91,6 +91,9 @@ fragment CmContact on CmContact {
   ContactPreference {
     ...ContactPreferenceFields
   }
+  MarketingSourceData {
+    ...MarketingSourceFields
+  }
 }
 
 mutation updateOneCmContact($where: CmContactWhereUniqueInput!, $data: CmContactUpdateInput!) {

@@ -63,7 +63,7 @@ export default class SubscriptionStripe extends SubscriptionService {
             ...item,
             id: item.number,
             amount: (item.total / 100).toFixed(2),
-            date: new Date(item.created * 1000).toLocaleDateString('en-US'),
+            date: new Date(item.created * 1000),
             description: item.description ?? 'Pabau Subscription',
             invoice_link: item.hosted_invoice_url,
             status:
@@ -142,23 +142,17 @@ export default class SubscriptionStripe extends SubscriptionService {
       currency: subscription['plan']?.currency ?? '',
       app_fee: subscription?.application_fee_percent ?? 0,
       interval_unit: subscription['plan']?.interval || '',
-      amount: subscription['plan']?.unit_amount
-        ? subscription['plan']?.unit_amount / 100
+      amount: subscription['plan']?.amount
+        ? subscription['plan']?.amount / 100
         : 0,
       name: subscription['plan']?.nickname || 'Subscription Plan',
       status: subscription?.status || '',
-      created_at: subscription['plan']?.created
-        ? new Date(subscription['plan']?.created * 1000).toLocaleDateString(
-            'en-US'
-          )
-        : '',
-      next_charge_date: subscription?.billing_cycle_anchor
-        ? new Date(
-            subscription?.billing_cycle_anchor * 1000
-          ).toLocaleDateString('en-US')
-        : '',
-      next_charge_amount: subscription['plan']?.unit_amount
-        ? subscription['plan']?.unit_amount / 100
+      created_at: new Date(subscription['plan']?.created ?? ''),
+      next_charge_date: new Date(
+        subscription?.billing_cycle_anchor * 1000 ?? ''
+      ),
+      next_charge_amount: subscription['plan']?.amount
+        ? subscription['plan']?.amount / 100
         : 0,
     }
   }
@@ -175,6 +169,11 @@ export default class SubscriptionStripe extends SubscriptionService {
     let card
     if (res?.data?.length > 0) card = res.data[res?.data?.length - 1]
 
-    return { ...bank, ...card, account_number_ending: bank?.last4 }
+    return {
+      ...bank,
+      ...card,
+      account_number_ending: bank?.last4,
+      account_holder_name: card?.name,
+    }
   }
 }

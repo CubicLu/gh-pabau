@@ -1067,6 +1067,7 @@ model MarketingSource {
 
   CmExtraPatient CmExtraPatient[]
   CmLead         CmLead[]
+  CmContact      CmContact[]
   @@index([company_id], name: "company_id")
   @@index([public], name: "public")
   @@index([name], name: "source_name")
@@ -1918,6 +1919,7 @@ model CmContact {
   Activity                  Activity[]
   Albums                    PhotoAlbum[]
   ContactPreference         ContactPreference?
+  MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
 
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Fname], name: "Fname")
