@@ -62,7 +62,22 @@ update_permissions:
     - company_id
     filter: {}
   role: public
+- permission:
+    check: null
+    columns:
+    - company_id
+    - created_by
+    - id
+    - type
+    - message
+    - title
+    - createdAt
+    filter: {}
+  role: user
 delete_permissions:
 - permission:
     filter: {}
   role: public
+- permission:
+    filter: {}
+  role: user
