@@ -1,4 +1,4 @@
-import { extendType, objectType, list } from 'nexus'
+import { extendType, objectType } from 'nexus'
 import { Context } from '../../../context'
 import { findAllDuplicates } from '../merge-contact.service'
 
