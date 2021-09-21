@@ -6,7 +6,7 @@ export const CmAppointmentCustomFindFirstQuery = queryField(
     type: 'CmAppointmentCustom',
     args: {
       where: 'CmAppointmentCustomWhereInput',
-      orderBy: list('CmAppointmentCustomOrderByInput'),
+      orderBy: list('CmAppointmentCustomOrderByWithRelationInput'),
       cursor: 'CmAppointmentCustomWhereUniqueInput',
       distinct: 'CmAppointmentCustomScalarFieldEnum',
       skip: 'Int',

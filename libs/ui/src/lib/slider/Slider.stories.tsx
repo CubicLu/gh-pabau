@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Slider from './Slider'
 import { SliderProps } from './Slider'
+import SliderCustom from './SliderCustom'
 
 const handleStyle = {
   backgroundColor: '#65CD98',
@@ -13,6 +14,9 @@ const handleStyle = {
 export default {
   component: Slider,
   title: 'Basics/Slider',
+  parameters: {
+    layout: 'fullscreen',
+  },
   args: {
     title: 'Logo size',
     disabled: false,
@@ -45,6 +49,41 @@ export const SliderStory = ({ ...args }: SliderProps): JSX.Element => {
         onChange={handleChange}
         calculatedValue={calculatedValue}
       />
+    </div>
+  )
+}
+
+export const SliderCustomStory = (): JSX.Element => {
+  const data = [
+    {
+      id: 1,
+      name: 'One',
+    },
+    {
+      id: 2,
+      name: 'Two',
+    },
+    {
+      id: 3,
+      name: 'Three',
+    },
+    {
+      id: 4,
+      name: 'Four',
+    },
+    {
+      id: 5,
+      name: 'Five',
+    },
+  ]
+
+  const handleChange = (selectedValue) => {
+    console.log(selectedValue)
+  }
+
+  return (
+    <div style={{ width: '100%' }}>
+      <SliderCustom data={data} handleChange={handleChange} />
     </div>
   )
 }

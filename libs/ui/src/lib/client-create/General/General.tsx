@@ -25,6 +25,7 @@ import { ReactComponent as Droplet } from '../../../assets/images/droplet.svg'
 import { useTranslation } from 'react-i18next'
 import dayjs, { Dayjs } from 'dayjs'
 import { CommonProps } from './index'
+import className from 'classnames'
 
 interface GeneralProps {
   values?: InitialDetailsProps
@@ -41,7 +42,9 @@ interface GeneralProps {
   setSelectedLabels: (val: Label[]) => void
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
+  isSalutationLoading?: boolean
   labelsData: LabelDataProps[]
+  requiredLabel: (name: string) => string
 }
 
 interface Label {
@@ -99,7 +102,9 @@ export const General: FC<GeneralProps> = ({
   setSelectedLabels,
   isLoading = false,
   isMarketingSourceLoading = false,
+  isSalutationLoading = false,
   labelsData,
+  requiredLabel,
 }) => {
   const { t } = useTranslation('common')
   const [visible, setVisible] = useState(false)
@@ -113,6 +118,7 @@ export const General: FC<GeneralProps> = ({
     label: '',
     color: '',
   })
+  const [isSpace, setIsSpace] = useState(false)
 
   const editLabelData = (valueObject) => {
     const labelData = [...labels]
@@ -175,30 +181,36 @@ export const General: FC<GeneralProps> = ({
       setDisplayColorPicker(false)
       setSelectedColor('')
       setSelectedId('')
+    } else if (e.key === ' ') {
+      setIsSpace(true)
     }
   }
 
   const handleVisible = (value) => {
-    if (isEdit) {
-      editLabelData({ label: newLabel.label, color: selectedColor })
-    } else if (!value && newLabel.label) {
-      if (selectedId) {
-        addLabelData({ id: selectedId, label: value, color: selectedColor })
-      } else {
-        if (labelsData.some((item) => item.value === value)) {
-          const data = labelsData.find((item) => item.value === value)
-          addLabelData({ id: data?.id, label: value, color: selectedColor })
+    if (!isSpace) {
+      if (isEdit) {
+        editLabelData({ label: newLabel.label, color: selectedColor })
+      } else if (!value && newLabel.label) {
+        if (labelsData.some((item) => item.value === newLabel.label)) {
+          const data = labelsData.find((item) => item.value === newLabel.label)
+          addLabelData({
+            id: data?.id,
+            label: newLabel.label,
+            color: selectedColor,
+          })
         } else {
-          addLabelData({ label: value, color: selectedColor })
+          addLabelData({ label: newLabel.label, color: selectedColor })
         }
       }
+      setNewLabel({ label: '', color: '' })
+      setVisible(value)
+      setDisplayColorPicker(false)
+      setSelectedColor('')
+      setSelectedId('')
+      setIsEdit(false)
+    } else {
+      setIsSpace(false)
     }
-    setNewLabel({ label: '', color: '' })
-    setVisible(value)
-    setDisplayColorPicker(false)
-    setSelectedColor('')
-    setSelectedId('')
-    setIsEdit(false)
   }
 
   const handleSelect = (label, index) => {
@@ -359,23 +371,47 @@ export const General: FC<GeneralProps> = ({
           ) && (
             <div className={styles.salutation}>
               <AntForm.Item
-                label={t('quickCreate.client.modal.general.salutation')}
+                label={`${t('quickCreate.client.modal.general.salutation')}${
+                  salutationData && salutationData?.length > 0
+                    ? requiredLabel('salutation')
+                    : ''
+                }`}
                 name={'salutation'}
               >
-                <Select name={'salutation'}>
-                  {salutationData?.map((item) => (
-                    <Select.Option key={item.id} value={item.name}>
-                      {item.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                {!isSalutationLoading ? (
+                  <Select
+                    name={'salutation'}
+                    placeholder={t(
+                      'quickCreate.client.modal.general.salutation.placeholder'
+                    )}
+                  >
+                    {salutationData?.map((item) => (
+                      <Select.Option key={item.id} value={item.name}>
+                        {item.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                ) : (
+                  <div className={styles.skeletonWrapper}>
+                    <Skeleton
+                      className={className(
+                        styles.salutationSkeleton,
+                        styles.skeletonInput
+                      )}
+                      paragraph={false}
+                      active
+                    />
+                  </div>
+                )}
               </AntForm.Item>
             </div>
           )}
 
           <div className={styles.firstName}>
             <AntForm.Item
-              label={t('quickCreate.client.modal.general.firstName')}
+              label={`${t('quickCreate.client.modal.general.firstName')} (${t(
+                'quickcreate.required.label'
+              )})`}
               name={'Fname'}
             >
               <Input
@@ -389,7 +425,9 @@ export const General: FC<GeneralProps> = ({
           </div>
           <div className={styles.lastName}>
             <AntForm.Item
-              label={t('quickCreate.client.modal.general.lastName')}
+              label={`${t('quickCreate.client.modal.general.lastName')} (${t(
+                'quickcreate.required.label'
+              )})`}
               name={'Lname'}
             >
               <Input
@@ -409,14 +447,16 @@ export const General: FC<GeneralProps> = ({
           fieldsSettings?.find((thread) => thread.field_name === 'gender') && (
             <AntForm.Item
               className={styles.customCommon}
-              label={t('quickCreate.client.modal.general.gender')}
+              label={`${t(
+                'quickCreate.client.modal.general.gender'
+              )}${requiredLabel('gender')}`}
               name={'gender'}
             >
               <Radio.Group name={'gender'}>
                 {[
-                  t('quickCreate.client.modal.general.gender.other'),
                   t('quickCreate.client.modal.general.gender.male'),
                   t('quickCreate.client.modal.general.gender.female'),
+                  t('quickCreate.client.modal.general.gender.other'),
                 ]?.map((item, index) => (
                   <Radio key={index} value={item} name={'gender'}>
                     {item}
@@ -434,7 +474,13 @@ export const General: FC<GeneralProps> = ({
           ) && (
             <AntForm.Item
               className={styles.customCommon}
-              label={t('quickCreate.client.modal.general.hearOption.label')}
+              label={`${t(
+                'quickCreate.client.modal.general.hearOption.label'
+              )}${
+                marketingSources && marketingSources.length > 0
+                  ? requiredLabel('MarketingSource')
+                  : ''
+              }`}
               name={'MarketingSource'}
             >
               {!isMarketingSourceLoading ? (
@@ -468,7 +514,9 @@ export const General: FC<GeneralProps> = ({
           fieldsSettings?.find((thread) => thread.field_name === 'DOB') && (
             <AntForm.Item
               className={styles.customCommon}
-              label={t('quickCreate.client.modal.general.date')}
+              label={`${t(
+                'quickCreate.client.modal.general.date'
+              )}${requiredLabel('DOB')}`}
               name={'DOB'}
             >
               <DatePicker
@@ -480,6 +528,9 @@ export const General: FC<GeneralProps> = ({
                 }}
                 onChange={(date) => setFieldValue('DOB', date)}
                 placeholder={'DD/MM/YY'}
+                getPopupContainer={(trigger) =>
+                  trigger.parentElement as HTMLElement
+                }
               />
             </AntForm.Item>
           )
@@ -496,7 +547,7 @@ export const General: FC<GeneralProps> = ({
               name={'preferredLanguage'}
               dropdownClassName={styles.generalDropdown}
               size={'middle'}
-              defaultValue={t(
+              placeholder={t(
                 'quickCreate.client.modal.general.preferredLanguage.default'
               )}
             >

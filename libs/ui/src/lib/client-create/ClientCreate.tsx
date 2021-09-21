@@ -6,6 +6,7 @@ import {
 } from '@pabau/ui'
 import { Formik } from 'formik'
 import General, { CommonProps } from './General/index'
+import SharingPrivacy from './SharingAndPrivacy'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
 import { Dayjs } from 'dayjs'
@@ -62,16 +63,20 @@ export interface InitialDetailsProps {
   MailingStreet?: string
   MailingCity: string
   MailingPostal: string
-  OtherStreet?: string
-  OtherProvince?: string
-  OtherCity?: string
-  OtherCountry?: string
-  OtherPostal?: string
-  MarketingOptInEmail?: boolean
-  MarketingOptInText?: boolean
-  MarketingOptInPost?: boolean
-  MarketingOptInPhone?: boolean
-  [key: string]: string | number | Dayjs | boolean | undefined | null
+  marketingPromotion?: string[]
+  recordSharing?: Record<string, number>
+  privacyPolicy?: string
+  settingSharing?: Record<string, number>
+  shareLink?: string
+  [key: string]:
+    | string
+    | string[]
+    | Record<string, number>
+    | number
+    | Dayjs
+    | boolean
+    | undefined
+    | null
 }
 
 export interface FieldSetting {
@@ -109,14 +114,17 @@ export interface ClientCreateProps {
   fieldsSettings?: FieldSetting[]
   marketingSources?: CommonProps[]
   limitContactsLocations?: LimitLocation[]
-  otherCompanies?: OtherCompany[]
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
+  isSalutationLoading?: boolean
   labelsData?: LabelDataProps[]
   validationObject?: {
     [key: string]: Yup.AnyObjectSchema
   }
   initialValues: InitialDetailsProps
+  isDisabledBtn?: boolean
+  companyName?: string
+  accessCode?: number
 }
 
 export interface Label {
@@ -146,6 +154,9 @@ export const ClientCreate: FC<ClientCreateProps> = ({
   labelsData,
   initialValues,
   validationObject,
+  isDisabledBtn,
+  companyName,
+  accessCode,
   ...props
 }) => {
   const { t } = useTranslation('common')
@@ -180,7 +191,14 @@ export const ClientCreate: FC<ClientCreateProps> = ({
           setSubmitting(false)
         }}
       >
-        {({ setFieldValue, handleSubmit, values, isSubmitting }) => (
+        {({
+          setFieldValue,
+          handleSubmit,
+          values,
+          isValid,
+          isSubmitting,
+          submitCount,
+        }) => (
           <FullScreenReportModal
             title={
               !isEdit
@@ -199,7 +217,11 @@ export const ClientCreate: FC<ClientCreateProps> = ({
                 ? t('quickCreate.client.modal.create')
                 : t('common-label-save')
             }
-            enableCreateBtn={!isSubmitting}
+            enableCreateBtn={
+              submitCount === 0
+                ? !(!isSubmitting && isDisabledBtn)
+                : !isSubmitting && isValid
+            }
             onCreate={handleSubmit}
             activated={activated}
             onActivated={onActivated}
@@ -209,17 +231,31 @@ export const ClientCreate: FC<ClientCreateProps> = ({
             }
             onSave={handleSubmit}
             onDelete={handleDelete}
+            subMenu={[
+              t('quickCreate.client.modal.tab.general'),
+              t('quickCreate.client.modal.tab.sharing.privacy'),
+            ]}
           >
-            <General
-              values={values}
-              setFieldValue={setFieldValue}
-              labels={labels}
-              setLabels={setLabels}
-              selectedLabels={selectedLabels}
-              setSelectedLabels={setSelectedLabels}
-              labelsData={labelsData ?? []}
-              {...props}
-            />
+            {[
+              <General
+                key={'general'}
+                values={values}
+                setFieldValue={setFieldValue}
+                labels={labels}
+                setLabels={setLabels}
+                selectedLabels={selectedLabels}
+                setSelectedLabels={setSelectedLabels}
+                labelsData={labelsData ?? []}
+                {...props}
+              />,
+              <SharingPrivacy
+                key={'sharing'}
+                companyName={companyName}
+                values={values}
+                setFieldValue={setFieldValue}
+                accessCode={accessCode}
+              />,
+            ]}
           </FullScreenReportModal>
         )}
       </Formik>

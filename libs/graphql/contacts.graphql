@@ -72,13 +72,6 @@ query findManyLimitContactLocation {
   }
 }
 
-query findManySharedCompany {
-  findManySharedCompany {
-    company_id
-    company_name
-  }
-}
-
 query getContactCustomFields{
   custom: findManyManageCustomFieldCategory {
     id
@@ -167,20 +160,17 @@ mutation createOneContact(
   $marketingOptInPost: Int!
   $marketingOptInText: Int!
   $marketingSource: Int!
-  $otherStreet: String!
-  $otherCity: String!
-  $otherPostal: String!
-  $otherProvince: String!
-  $otherCountry: String!
   $DOB: DateTime
   $mobile: String!
   $phone: String!
   $gender: String!
   $limitContactsLocations: [Int]
-  $otherCompanyIds: [Int]
   $customFields: [createContactCustomFieldType]
   $preferredLanguage: String!
+  $privacyPolicy: String
+  $needToKnows: Boolean
   $labels: [labelFieldType]
+  $contactPreferences: ContactPreferenceDataInput
 ) {
   createOneContact(
     data:{
@@ -198,21 +188,18 @@ mutation createOneContact(
       MarketingOptInPost: $marketingOptInPost
       MarketingOptInText: $marketingOptInText
       MarketingSource: $marketingSource
-      OtherStreet: $otherStreet
-      OtherCity: $otherCity
-      OtherPostal: $otherPostal
-      OtherProvince: $otherProvince
-      OtherCountry: $otherCountry
       DOB: $DOB
       Mobile: $mobile
       Phone: $phone
       gender: $gender
       preferred_language: $preferredLanguage
+      privacy_policy: $privacyPolicy
+      need_to_knows: $needToKnows
     }
     customFields: $customFields
     limitContactLocations: $limitContactsLocations
-    otherCompanyIds: $otherCompanyIds
     labels: $labels
+    contactPreferences: $contactPreferences
   ) {
     ID
   }

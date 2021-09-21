@@ -55,7 +55,6 @@ import { useRouter } from 'next/router'
 import React, {
   FC,
   ReactNode,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -68,7 +67,7 @@ import notificationBannerReviewPageImage from '../../assets/images/notification-
 import { apiURL } from '../../baseUrl'
 import CommonHeader from '../../components/CommonHeader'
 import Layout from '../../components/Layout/Layout'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './reviews.module.less'
 
@@ -172,7 +171,7 @@ const Reviews: FC<ReviewConfig> = () => {
   })
   const crudTableRef = useRef(null)
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const sendResponseEmail = () => {
     const requestOptions = {
@@ -306,26 +305,57 @@ const Reviews: FC<ReviewConfig> = () => {
       variables: {
         take: paginateData.take,
         skip: paginateData.skip,
-        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
-        service: filterValue.service !== '' ? filterValue.service : '%%',
-        rating:
-          filterValue.score !== ''
-            ? filterValue.score === 'Excellent'
-              ? {
-                  lte: 5,
-                  gt: 4,
-                }
-              : filterValue.score === 'Ok'
-              ? {
-                  lte: 4,
-                  gte: 3,
-                }
-              : filterValue.score === 'Bad'
-              ? {
-                  lt: 3,
-                }
-              : {}
-            : {},
+        where:
+          filterValue.employee !== ''
+            ? {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+                User: { full_name: { contains: filterValue.employee } },
+              }
+            : {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+              },
       },
     }
     return queryOptions
@@ -340,26 +370,57 @@ const Reviews: FC<ReviewConfig> = () => {
   const getAllQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
-        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
-        service: filterValue.service !== '' ? filterValue.service : '%%',
-        rating:
-          filterValue.score !== ''
-            ? filterValue.score === 'Excellent'
-              ? {
-                  lte: 5,
-                  gt: 4,
-                }
-              : filterValue.score === 'Ok'
-              ? {
-                  lte: 4,
-                  gte: 3,
-                }
-              : filterValue.score === 'Bad'
-              ? {
-                  lt: 3,
-                }
-              : {}
-            : {},
+        where:
+          filterValue.employee !== ''
+            ? {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+                User: { full_name: { contains: filterValue.employee } },
+              }
+            : {
+                rating:
+                  filterValue.score !== ''
+                    ? filterValue.score === 'Excellent'
+                      ? {
+                          lte: 5,
+                          gt: 4,
+                        }
+                      : filterValue.score === 'Ok'
+                      ? {
+                          lte: 4,
+                          gte: 3,
+                        }
+                      : filterValue.score === 'Bad'
+                      ? {
+                          lt: 3,
+                        }
+                      : { gte: 1, lte: 5 }
+                    : { gte: 1, lte: 5 },
+                service: {
+                  contains:
+                    filterValue.service !== '' ? filterValue.service : '%%',
+                },
+              },
       },
     }
     return queryOptions
@@ -427,7 +488,6 @@ const Reviews: FC<ReviewConfig> = () => {
       dataIndex: 'feedback_status',
       className: 'drag-visible',
       visible: true,
-      isHover: true,
     },
   ]
 
@@ -692,41 +752,49 @@ const Reviews: FC<ReviewConfig> = () => {
                 <div>
                   <b>{t('setup.business-details.employee.singular')}</b>
                 </div>
-                <SimpleDropdown
-                  name="employee"
-                  dropdownItems={
-                    alldataloading === false &&
-                    Alldata !== undefined &&
-                    Alldata.length > 0
-                      ? ([
-                          ...new Set(
-                            Alldata.map((item) => item.User?.full_name)
-                          ),
-                        ].filter((item) => item !== undefined) as string[])
-                      : []
-                  }
-                  onSelected={(val) => setFieldValue('employee', val)}
-                  value={values.employee}
-                />
+                <div
+                  className={!values.employee ? styles.simpleDropdown : null}
+                >
+                  <SimpleDropdown
+                    name="employee"
+                    dropdownItems={
+                      alldataloading === false &&
+                      Alldata !== undefined &&
+                      Alldata.length > 0
+                        ? ([
+                            ...new Set(
+                              Alldata.map((item) => item.User?.full_name)
+                            ),
+                          ].filter((item) => !!item) as string[])
+                        : []
+                    }
+                    onSelected={(val) => setFieldValue('employee', val)}
+                    value={values.employee !== '' ? values.employee : 'SELECT'}
+                  />
+                </div>
               </div>
               <div className={styles.filterMenuItem}>
                 <div>
                   <b>{t('setup.discount.data.service')}</b>
                 </div>
-                <SimpleDropdown
-                  name="service"
-                  dropdownItems={
-                    alldataloading === false &&
-                    Alldata !== undefined &&
-                    Alldata.length > 0
-                      ? ([
-                          ...new Set(Alldata.map((item) => item.service)),
-                        ].filter((item) => item !== undefined) as string[])
-                      : []
-                  }
-                  onSelected={(val) => setFieldValue('service', val)}
-                  value={values.service}
-                />
+                <div
+                  className={!values.employee ? styles.simpleDropdown : null}
+                >
+                  <SimpleDropdown
+                    name="service"
+                    dropdownItems={
+                      alldataloading === false &&
+                      Alldata !== undefined &&
+                      Alldata.length > 0
+                        ? ([
+                            ...new Set(Alldata.map((item) => item.service)),
+                          ].filter((item) => !!item) as string[])
+                        : []
+                    }
+                    onSelected={(val) => setFieldValue('service', val)}
+                    value={values.service !== '' ? values.service : 'SELECT'}
+                  />
+                </div>
               </div>
               <div className={styles.filterBtn}>
                 <Button
@@ -823,23 +891,6 @@ const Reviews: FC<ReviewConfig> = () => {
         )}
       </div>
     )
-  }
-
-  const onHoverHandle = (item) => {
-    const result = dataList.map((itemList) => {
-      if (itemList.id === item.id) {
-        return { ...itemList, isShow: true }
-      }
-      return { ...itemList, isShow: false }
-    })
-    setDataList(result)
-  }
-
-  const onHoverLeave = () => {
-    const resultData = dataList.map((itemList) => {
-      return { ...itemList, isShow: false }
-    })
-    setDataList(resultData)
   }
 
   const updateDataSource = ({ newData }) => {
@@ -977,7 +1028,7 @@ const Reviews: FC<ReviewConfig> = () => {
         response: message,
         feedback: selectedRow?.id,
         uid: user.me.id,
-        company_id: user.me.company.id,
+        company_id: user.me.company,
       }
       addMutation({
         variables: addValue,
@@ -1298,7 +1349,11 @@ const Reviews: FC<ReviewConfig> = () => {
                       >
                         <div className={styles.avatarWrap}>
                           <Avatar
-                            src={`https://crm.pabau.com/${item?.User?.image}`}
+                            src={
+                              item?.User?.image
+                                ? `https://crm.pabau.com/${item?.User?.image}`
+                                : null
+                            }
                             name={item?.User?.full_name}
                             size="default"
                             isTooltip={false}
@@ -1306,7 +1361,7 @@ const Reviews: FC<ReviewConfig> = () => {
                         </div>
                       </Tooltip>
                     ),
-                    visibleData: renderVisibleData(item),
+                    feedback_status: renderVisibleData(item),
                     feedback_comment: (
                       <Tooltip
                         placement="top"
@@ -1319,8 +1374,6 @@ const Reviews: FC<ReviewConfig> = () => {
                 })}
                 loading={loading}
                 isHover={true}
-                onRowHover={onHoverHandle}
-                onLeaveRow={onHoverLeave}
                 updateDataSource={updateDataSource}
                 pagination={dataList?.length > 10 ? {} : false}
               />

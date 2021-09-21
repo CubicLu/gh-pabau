@@ -1,5 +1,12 @@
 import type { CategoryFragment } from '@pabau/graphql'
-import { BasicModal, Button, ImageSelectorModal, CheckboxTree } from '@pabau/ui'
+import {
+  BasicModal,
+  Button,
+  ImageSelectorModal,
+  CheckboxTree,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import { PlusOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Form, Input, SubmitButton } from 'formik-antd'
@@ -7,6 +14,8 @@ import { useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './ProductListComponents.module.less'
+import postData, { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
+import { cdnURL } from '../../baseUrl'
 
 const newGroup = {
   id: 0,
@@ -53,7 +62,7 @@ const CreateProductGroup = ({
   const setInitialValue = (values: typeof newGroup) => {
     setFormikInitialValues(values)
     setCheckedKeys(
-      values?.InvCategory?.map((category) => category?.id.toString())
+      values?.InvCategory?.map((category) => category?.id?.toString())
     )
   }
 
@@ -86,6 +95,7 @@ const CreateProductGroup = ({
             50,
             t('crud-table-input-max-length-validate', {
               what: t('products.list.category.column.name'),
+              max: 50,
             })
           ),
       })}
@@ -98,7 +108,7 @@ const CreateProductGroup = ({
         resetForm()
       }}
     >
-      {({ setFieldValue, resetForm, isValid, values }) =>
+      {({ setFieldValue, resetForm, values }) =>
         ({ visible } && (
           <BasicModal
             visible={visible}
@@ -114,24 +124,32 @@ const CreateProductGroup = ({
               changeModalState(false)
             }}
           >
-            <Form layout="vertical">
-              <div className="nameInput">
-                <label>{t('products.list.products.groupmodal.name')}</label>
-                <Input
-                  name={'name'}
-                  size={'large'}
-                  placeholder={t(
-                    'products.list.products.groupmodal.name.placeholder'
-                  )}
-                />
-              </div>
-              <div style={{ marginTop: '30px' }}>
+            <Form layout="vertical" className={styles.createGroupModal}>
+              <Form.Item name={'name'}>
+                <div className="nameInput">
+                  <label>{t('products.list.products.groupmodal.name')}</label>
+                  <Input
+                    name={'name'}
+                    size={'large'}
+                    placeholder={t(
+                      'products.list.products.groupmodal.name.placeholder'
+                    )}
+                  />
+                </div>
+              </Form.Item>
+              <div
+                style={{
+                  marginTop: '30px',
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                }}
+              >
                 <CheckboxTree
                   treeData={[
                     {
                       children: categories?.map((category) => {
                         return {
-                          key: category?.id.toString(),
+                          key: category?.id?.toString(),
                           title: category?.name,
                         }
                       }),
@@ -180,7 +198,7 @@ const CreateProductGroup = ({
                   </Button>
                 </div>
                 <div>
-                  <SubmitButton type="primary" size="large" disabled={!isValid}>
+                  <SubmitButton type="primary" size="large">
                     {groupModalType === 'Create'
                       ? t('common-label-create')
                       : t('common-label-save')}
@@ -194,9 +212,35 @@ const CreateProductGroup = ({
                 title={t('ui.imageselector.title')}
                 attachButtonText={t('ui.imageselector.attach')}
                 chooseButtonText={t('ui.imageselector.choose')}
-                onOk={(image) => {
-                  setFieldValue('image', image.source)
-                  setShowImageSelector(false)
+                onOk={async (image, file) => {
+                  if (file) {
+                    const reader = new FileReader()
+                    if (file?.type?.match('image.*')) {
+                      reader.readAsDataURL(file)
+                    }
+                    reader.onloadend = async () => {
+                      const data = await postData(
+                        cdnURL + '/api/upload.php',
+                        {
+                          mode: 'upload-cropped-photo',
+                          imageData: reader.result.toString(),
+                          section: 'avatar_photos',
+                          type: 'file_attachments',
+                        },
+                        null
+                      )
+                      if (data.error) {
+                        Notification(NotificationType.error, t(data.code))
+                        return
+                      } else {
+                        setFieldValue('image', getImage(data.path))
+                        setShowImageSelector(false)
+                      }
+                    }
+                  } else {
+                    setFieldValue('image', image.source)
+                    setShowImageSelector(false)
+                  }
                 }}
                 onCancel={() => {
                   setShowImageSelector(false)

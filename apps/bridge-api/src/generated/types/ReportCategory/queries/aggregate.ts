@@ -6,7 +6,7 @@ export const ReportCategoryAggregateQuery = queryField(
     type: 'AggregateReportCategory',
     args: {
       where: 'ReportCategoryWhereInput',
-      orderBy: list('ReportCategoryOrderByInput'),
+      orderBy: list('ReportCategoryOrderByWithRelationInput'),
       cursor: 'ReportCategoryWhereUniqueInput',
       distinct: 'ReportCategoryScalarFieldEnum',
       skip: 'Int',

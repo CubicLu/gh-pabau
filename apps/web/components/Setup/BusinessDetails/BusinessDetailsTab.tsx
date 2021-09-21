@@ -5,10 +5,11 @@ import {
   LanguageSetting,
   Notification,
   NotificationType,
+  AddressDetails,
 } from '@pabau/ui'
 import {
-  GetBussinessDetailsQuery,
-  GetBussinessDetailsDocument,
+  GetBusinessDetailsQuery,
+  GetBusinessDetailsDocument,
   useUpdateCompanyDetailsMutation,
   useSetMultipleMetaDataMutation,
   useUpdateOneCompanyDetailsMutation,
@@ -19,12 +20,13 @@ import { cdnURL } from '../../../baseUrl'
 import { message } from 'antd'
 
 interface BusinessDetailsTabProps {
-  data: GetBussinessDetailsQuery
+  data: GetBusinessDetailsQuery
   addrSuiteNo: string
   forcePassword: number
   user: number
   location: string
   loading?: boolean
+  companyLanguage?: string
   t: TFunction<'common'>
 }
 
@@ -35,6 +37,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
   user,
   location,
   loading,
+  companyLanguage,
   t,
 }) => {
   const [updateApply, setUpdate] = useState(false)
@@ -43,7 +46,11 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
   const [companyLogo, setCompanyLogo] = useState<string>()
 
   useEffect(() => {
-    setCompanyLogo(cdnURL + data?.company?.details?.logo)
+    setCompanyLogo(
+      data?.me?.Company?.details?.logo
+        ? cdnURL + data?.me?.Company?.details?.logo
+        : ''
+    )
   }, [data])
 
   const showUploader = () => {
@@ -81,27 +88,31 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     },
   })
   const basicInformation: BasicInformation = {
-    businessName: data?.company?.details?.company_name,
-    companyEmail: data?.company?.details?.info_email,
-    phone: data?.company?.details?.phone,
-    website: data?.company?.details?.website,
-    logo: cdnURL + data?.company?.details?.logo,
-    businessType: data?.company?.details?.industry_sector,
+    businessName: data?.me?.Company?.details?.company_name,
+    companyEmail: data?.me?.Company?.details?.info_email,
+    phone: data?.me?.Company?.details?.phone,
+    website: data?.me?.Company?.details?.website,
+    logo: cdnURL + data?.me?.Company?.details?.logo,
+    businessType: data?.me?.Company?.details?.industry_sector,
   }
 
   const languageSetting: LanguageSetting = {
-    defaultLanuageStaff:
-      data?.company?.details?.language === 'english'
-        ? ''
-        : data?.company?.details?.language,
-    defaultLanuageClients:
-      data?.company?.details?.language === 'english'
-        ? ''
-        : data?.company?.details?.language,
-    timezone: data?.company?.details?.timezone?.db_format,
-    currency: data?.company?.details?.currency,
-    dateFormat: data?.company?.details?.date_format,
-    weekStart: data?.company?.details?.week_start_day,
+    defaultLanuageStaff: companyLanguage,
+    defaultLanuageClients: companyLanguage,
+    timezone: data?.me?.Company?.details?.timezone?.php_format,
+    currency: data?.me?.Company?.details?.currency,
+    dateFormat: data?.me?.Company?.details?.date_format,
+    weekStart: data?.me?.Company?.details?.week_start_day,
+  }
+
+  const AddressDetails: AddressDetails = {
+    FullAddress: location ?? '',
+    address: data?.me?.Company?.details?.street ?? '',
+    apt: data && addrSuiteNo,
+    postcode: data?.me?.Company?.details?.post_code ?? '',
+    city: data?.me?.Company?.details?.city ?? '',
+    region: data?.me?.Company?.details?.county ?? '',
+    country: data?.me?.Company?.details?.country ?? '',
   }
 
   const handleLogoUpload = (imageData) => {
@@ -114,11 +125,33 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
             },
           },
           where: {
-            details_id: data?.company?.details?.details_id,
+            details_id: data?.me?.Company?.details?.details_id,
           },
         },
       })
       setCompanyLogo(cdnURL + imageData.path)
+      message.success(t('setup.business-details.update.success'))
+    } catch (error) {
+      message.error(t('setup.business-details.update.error'))
+      throw new Error(error)
+    }
+  }
+
+  const onDeleteImage = () => {
+    try {
+      updateBusinessLogo({
+        variables: {
+          data: {
+            logo: {
+              set: '',
+            },
+          },
+          where: {
+            details_id: data?.me?.Company?.details?.details_id,
+          },
+        },
+      })
+      setCompanyLogo('')
       message.success(t('setup.business-details.update.success'))
     } catch (error) {
       message.error(t('setup.business-details.update.error'))
@@ -131,41 +164,42 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     setUpdate(false)
 
     const CompanyDetailData = {
-      details_id: data?.company?.details?.details_id,
-      business_name: data?.company?.details?.company_name,
-      info_email: data?.company?.details?.info_email,
-      phone: data?.company?.details?.phone,
-      website: data?.company?.details?.website,
-      logo: data?.company?.details?.logo,
-      industry_sector: data?.company?.details?.industry_sector,
-      language: data?.company?.details?.language,
-      timezone: data?.company?.details?.timezone?.db_format,
-      currency: data?.company?.details?.currency,
-      date_formate: data?.company?.details?.date_format,
-      week_start_day: data?.company?.details?.week_start_day,
-      contact_term_singular: data?.company?.details?.contact_term_singular,
-      contact_term_plural: data?.company?.details?.contact_term_plural,
-      class_term_singular: data?.company?.details?.class_term_singular,
-      class_term_plural: data?.company?.details?.class_term_plural,
-      employee_term_singular: data?.company?.details?.employee_term_singular,
-      employee_term_plural: data?.company?.details?.employee_term_plural,
-      class_teacher_singular: data?.company?.details?.class_teacher_singular,
-      tax_name: data?.company?.details?.tax_name,
-      secure_medical_forms: data?.company?.details?.secure_medical_forms,
-      disable_prescriptions: data?.company?.details?.disable_prescriptions,
-      is_surgical: data?.company?.details?.is_surgical,
-      medical_approvals: data?.company?.details?.medical_approvals,
-      cycles_display: data?.company?.details?.cycles_display,
-      enable_2fa: data?.company?.details?.enable_2fa,
-      enable_sens_data: data?.company?.details?.enable_sens_data,
+      details_id: data?.me?.Company?.details?.details_id,
+      business_name: data?.me?.Company?.details?.company_name,
+      info_email: data?.me?.Company?.details?.info_email,
+      phone: data?.me?.Company?.details?.phone,
+      website: data?.me?.Company?.details?.website,
+      logo: data?.me?.Company?.details?.logo,
+      industry_sector: data?.me?.Company?.details?.industry_sector,
+      timezone: data?.me?.Company?.details?.timezone?.php_format,
+      timezone_label: data?.me?.Company?.details?.timezone?.label,
+      currency: data?.me?.Company?.details?.currency,
+      date_formate: data?.me?.Company?.details?.date_format,
+      week_start_day: data?.me?.Company?.details?.week_start_day,
+      contact_term_singular: data?.me?.Company?.details?.contact_term_singular,
+      contact_term_plural: data?.me?.Company?.details?.contact_term_plural,
+      class_term_singular: data?.me?.Company?.details?.class_term_singular,
+      class_term_plural: data?.me?.Company?.details?.class_term_plural,
+      employee_term_singular:
+        data?.me?.Company?.details?.employee_term_singular,
+      employee_term_plural: data?.me?.Company?.details?.employee_term_plural,
+      class_teacher_singular:
+        data?.me?.Company?.details?.class_teacher_singular,
+      secure_medical_forms: data?.me?.Company?.details?.secure_medical_forms,
+      disable_prescriptions: data?.me?.Company?.details?.disable_prescriptions,
+      is_surgical: data?.me?.Company?.details?.is_surgical,
+      medical_approvals: data?.me?.Company?.details?.medical_approvals,
+      cycles_display: data?.me?.Company?.details?.cycles_display,
+      enable_2fa: data?.me?.Company?.details?.enable_2fa,
+      enable_sens_data: data?.me?.Company?.details?.enable_sens_data,
       user_id: user,
       force_password: forcePassword,
-      street: data?.company?.details?.street,
+      street: data?.me?.Company?.details?.street,
       address_suite_no: addrSuiteNo,
-      post_code: data?.company?.details?.post_code,
-      city: data?.company?.details?.city,
-      region: data?.company?.details?.county,
-      country: data?.company?.details?.country,
+      post_code: data?.me?.Company?.details?.post_code,
+      city: data?.me?.Company?.details?.city,
+      region: data?.me?.Company?.details?.county,
+      country: data?.me?.Company?.details?.country,
     }
 
     const {
@@ -196,7 +230,6 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     CompanyDetailData.phone = phone
     CompanyDetailData.website = website
     CompanyDetailData.logo = logo
-    CompanyDetailData.language = defaultLanuageStaff
     CompanyDetailData.timezone = timezone
     CompanyDetailData.currency = currency
     CompanyDetailData.date_formate = dateFormat
@@ -207,6 +240,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     CompanyDetailData.city = city
     CompanyDetailData.region = region
     CompanyDetailData.country = country
+    // CompanyDetailData.timezone_label = timeZoneLabel
 
     const CompanyMeta = [
       {
@@ -217,6 +251,10 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         meta_name: 'business_location',
         meta_value: businessLocationData,
       },
+      {
+        meta_name: 'company_language',
+        meta_value: defaultLanuageStaff,
+      },
     ]
 
     try {
@@ -224,7 +262,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         variables: CompanyDetailData,
         refetchQueries: [
           {
-            query: GetBussinessDetailsDocument,
+            query: GetBusinessDetailsDocument,
           },
         ],
       })
@@ -235,7 +273,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: GetBussinessDetailsDocument,
+            query: GetBusinessDetailsDocument,
           },
         ],
       })
@@ -255,20 +293,24 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         onSave={(val) => handleSaveDetail(val)}
         buttonClicked={buttonClicked}
         showUploader={showUploader}
+        onDelete={onDeleteImage}
         companyLogo={companyLogo}
+        AddressDetails={data && AddressDetails}
       />
-      <AvatarUploader
-        visible={showAvatarUploader}
-        title={t('setup.business-details.uploadlogo')}
-        imageURL={''}
-        onCancel={() => setShowAvatarUploader(false)}
-        shape={'rectangle'}
-        width={400}
-        height={200}
-        section={'avatar_photos'}
-        type={'file_attachments'}
-        successHandler={handleLogoUpload}
-      />
+      {showAvatarUploader && (
+        <AvatarUploader
+          visible={showAvatarUploader}
+          title={t('setup.business-details.uploadlogo')}
+          imageURL={companyLogo}
+          onCancel={() => setShowAvatarUploader(false)}
+          shape={'rectangle'}
+          width={400}
+          height={200}
+          section={'avatar_photos'}
+          type={'file_attachments'}
+          successHandler={handleLogoUpload}
+        />
+      )}
     </div>
   )
 }

@@ -11,20 +11,10 @@ import classNames from 'classnames'
 import React, { useState, useEffect } from 'react'
 import styles from './Header.module.less'
 import { Search } from './search/Search'
+import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const AntHeader = Layout.Header
-
-interface Notification {
-  id: string
-  notificationTime: Date
-  notificationType: string
-  notificationTypeIcon?: string
-  title: string
-  desc: string
-  read: number[]
-  users: number[]
-  link: string
-}
 
 interface ProductNews {
   id: string
@@ -36,24 +26,16 @@ interface ProductNews {
   readUsers: number[]
 }
 
-interface UserProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
-}
-
 interface P {
-  notifications?: Notification[]
+  notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
   readNewsMutation?: MutationFunction
-  deleteNotification?: MutationFunction
-  updateNotification?: MutationFunction
-  readAddMutation?: MutationFunction
+  updateNotificationState?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  user?: UserProps
+  user?: Partial<AuthenticatedUser> & JwtUser
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onMessageIconClick?(): void
+  onLogOut?(): void
   // onCreateChannel?: (
   //   name: string,
   //   description: string,
@@ -61,7 +43,8 @@ interface P {
   // ) => void
   // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   taskManagerIFrameComponent?: JSX.Element
-  clientCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
 }
 
 export const Header = ({
@@ -70,22 +53,17 @@ export const Header = ({
   user,
   searchRender,
   onMessageIconClick,
-  // onCreateChannel,
-  // onMessageType,
+  onLogOut,
   relativeTime,
-  deleteNotification,
-  updateNotification,
-  readAddMutation,
+  updateNotificationState,
   readNewsMutation,
   taskManagerIFrameComponent,
   clientCreateRender,
-  ...rest
+  leadCreateRender,
 }: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
   const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
   const [
     unreadNotificationCount,
@@ -93,7 +71,7 @@ export const Header = ({
   ] = useState<number>(0)
 
   const isReadNotify = (users: number[]) => {
-    return users?.find((user_id) => user_id === user?.user) ? true : false
+    return !!users?.find((user_id) => user_id === user?.user)
   }
 
   const setUnreadNotify = (notifyArray, readKey, setter) => {
@@ -113,11 +91,15 @@ export const Header = ({
     setUnreadNotify(productNews, 'readUsers', (length) =>
       setUnreadNewsCount(length)
     )
-    setUnreadNotify(notifications, 'read', (length) =>
-      setUnreadNotificationCount(length)
-    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productNews, notifications])
+  }, [productNews])
+
+  useEffect(() => {
+    const unReadNotifications =
+      notifications?.filter((notification) => !notification.is_read)?.length ||
+      0
+    setUnreadNotificationCount(unReadNotifications)
+  }, [notifications])
 
   return (
     <>
@@ -159,11 +141,15 @@ export const Header = ({
                   />
                 </Badge>
                 <div>
-                  <QuickCreate clientCreateRender={clientCreateRender} />
+                  <QuickCreate
+                    clientCreateRender={clientCreateRender}
+                    leadCreateRender={leadCreateRender}
+                  />
                 </div>
                 <AvatarDropDown
                   taskManagerIFrameComponent={taskManagerIFrameComponent}
                   userData={user}
+                  onLogOut={onLogOut}
                 />
               </div>
             </Col>
@@ -178,20 +164,13 @@ export const Header = ({
           unreadNewsCount={unreadNewsCount}
           unreadNotificationCount={unreadNotificationCount}
           closeDrawer={() => setNotificationDrawer((e) => !e)}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           notifications={notifications}
           productNews={productNews}
           relativeTime={relativeTime}
-          deleteNotification={deleteNotification}
-          updateNotification={updateNotification}
           readNewsMutation={readNewsMutation}
-          readAddMutation={readAddMutation}
+          updateNotificationState={updateNotificationState}
         />
       )}
     </>
   )
 }
-
-export default Header
-export * from './messages/Messages'

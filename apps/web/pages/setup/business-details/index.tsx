@@ -1,5 +1,5 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { useGetBussinessDetailsQuery } from '@pabau/graphql'
+import { useGetBusinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
@@ -10,14 +10,14 @@ import {
 } from '@pabau/ui'
 import { Typography } from 'antd'
 import { useRouter } from 'next/router'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
 import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
 import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
 import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
@@ -91,6 +91,10 @@ export const Index: FC = () => {
   const [addrSuiteNo, setAddrSuiteNo] = useState('')
   const [enableLab, setEnableLabs] = useState('')
   const [location, setLocation] = useState('')
+  const [historyData, setHistoryData] = useState('')
+  const [timeFormat, setTimeFormat] = useState('')
+  const [companyLanguage, setCompanyLanguage] = useState('')
+  const [taxSingular, serTaxSingular] = useState('')
   const router = useRouter()
 
   const tabMenuItems = [
@@ -102,9 +106,9 @@ export const Index: FC = () => {
   ]
   const { getParentSetupData } = useGridData(t)
   const parentMenu = getParentSetupData(router.pathname)
-  const user = useContext(UserContext)
+  const user = useUser()
 
-  const { data, loading } = useGetBussinessDetailsQuery()
+  const { data, loading } = useGetBusinessDetailsQuery()
 
   const handleBack = () => {
     if (parentMenu.length > 0) {
@@ -151,9 +155,13 @@ export const Index: FC = () => {
       setAddrSuiteNo(record?.['address_suite_no'] ?? '')
       setLocation(record?.['business_location'] ?? '')
       setEnableLabs(record?.['lab_enabled'] ?? '')
+      setHistoryData(record?.['history_data'])
+      setTimeFormat(record?.['time_format'])
+      setCompanyLanguage(record?.['company_language'])
+      serTaxSingular(record?.['tax_singular'])
 
-      const force_password_data = data?.company?.User?.filter(
-        (item) => item.id === user?.me.id
+      const force_password_data = data?.me?.Company?.User?.filter(
+        (item) => item.id === user?.me?.id
       )
       if (force_password_data && force_password_data.length > 0) {
         setForcePassword(force_password_data[0].force_password)
@@ -175,7 +183,7 @@ export const Index: FC = () => {
   return (
     <>
       <CommonHeader />
-      <Layout>
+      <Layout {...user}>
         <div className={styles.businessDetailsContainer}>
           <Breadcrumb
             breadcrumbItems={[
@@ -197,23 +205,30 @@ export const Index: FC = () => {
           </div>
         </MobileHeader>
         <div className={styles.tabsForDesktop}>
-          <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
+          <TabMenu
+            tabPosition="left"
+            menuItems={tabMenuItems}
+            minHeight="auto"
+            disabledKeys={loading ? [0, 1, 2, 3, 4] : []}
+          >
             <BusinessDetailTab
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               location={location}
               loading={loading}
+              companyLanguage={companyLanguage}
               t={t}
             />
             <TerminologyTab
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               opsData={opsData}
               loading={loading}
+              taxSingular={taxSingular}
               t={t}
             />
             <SystemTab
@@ -221,13 +236,15 @@ export const Index: FC = () => {
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
               enableLab={enableLab}
-              user={user?.me.id}
+              user={user?.me?.id}
               loading={loading}
+              historyData={historyData}
+              timeFormat={timeFormat}
               t={t}
             />
             <SecurityTab
               data={data}
-              user={user?.me.id}
+              user={user?.me?.id}
               forcePassword={forcePassword}
               passwordExpiration={passwordExpiration}
               addrSuiteNo={addrSuiteNo}
@@ -246,18 +263,20 @@ export const Index: FC = () => {
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               location={location}
               loading={loading}
+              companyLanguage={companyLanguage}
               t={t}
             />
             <TerminologyTab
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               opsData={opsData}
               loading={loading}
+              taxSingular={taxSingular}
               t={t}
             />
             <SystemTab
@@ -265,13 +284,15 @@ export const Index: FC = () => {
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
               enableLab={enableLab}
-              user={user?.me.id}
+              user={user?.me?.id}
               loading={loading}
+              historyData={historyData}
+              timeFormat={timeFormat}
               t={t}
             />
             <SecurityTab
               data={data}
-              user={user?.me.id}
+              user={user?.me?.id}
               forcePassword={forcePassword}
               passwordExpiration={passwordExpiration}
               addrSuiteNo={addrSuiteNo}

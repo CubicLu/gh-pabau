@@ -81,7 +81,7 @@ export const CmStaffGeneral = objectType({
       type: 'HolidayRequest',
       args: {
         where: 'HolidayRequestWhereInput',
-        orderBy: 'HolidayRequestOrderByInput',
+        orderBy: 'HolidayRequestOrderByWithRelationInput',
         cursor: 'HolidayRequestWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -95,7 +95,7 @@ export const CmStaffGeneral = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByInput',
+        orderBy: 'BookingOrderByWithRelationInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -105,11 +105,25 @@ export const CmStaffGeneral = objectType({
         return root.SalonBookings
       },
     })
+    t.list.field('RotaShift', {
+      type: 'RotaShift',
+      args: {
+        where: 'RotaShiftWhereInput',
+        orderBy: 'RotaShiftOrderByWithRelationInput',
+        cursor: 'RotaShiftWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RotaShiftScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.RotaShift
+      },
+    })
     t.list.field('InventoryDiscrepancy', {
       type: 'InventoryDiscrepancy',
       args: {
         where: 'InventoryDiscrepancyWhereInput',
-        orderBy: 'InventoryDiscrepancyOrderByInput',
+        orderBy: 'InventoryDiscrepancyOrderByWithRelationInput',
         cursor: 'InventoryDiscrepancyWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

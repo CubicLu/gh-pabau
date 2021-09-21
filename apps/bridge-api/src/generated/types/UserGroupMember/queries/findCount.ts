@@ -6,7 +6,7 @@ export const UserGroupMemberFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'UserGroupMemberWhereInput',
-      orderBy: list('UserGroupMemberOrderByInput'),
+      orderBy: list('UserGroupMemberOrderByWithRelationInput'),
       cursor: 'UserGroupMemberWhereUniqueInput',
       distinct: 'UserGroupMemberScalarFieldEnum',
       skip: 'Int',

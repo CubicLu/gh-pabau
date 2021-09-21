@@ -18,10 +18,22 @@
     .ant-menu-inline .ant-menu-submenu-title {
       margin: 0px;
     }
+    .ant-menu-inline {
+      .ant-menu-item,
+      .ant-menu-submenu-title {
+        width: 100% !important;
+      }
+    }
     .ant-menu-inline .ant-menu-item::after {
       right: unset;
       left: 0;
     }
+  }
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+  @media screen and (max-width: 767px) {
+    z-index: 3 !important;
   }
 }
 .divborder {
@@ -92,19 +104,18 @@
   }
 }
 .mobile-view-align {
-  height: 60px;
+  height: fit-content;
   display: flex;
   border-bottom: 1px solid var(--border-color-base);
   align-items: center;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding: 21px 16px;
   position: sticky;
   top: 0;
   z-index: 3;
   background-color: #fff;
 }
 .searchBox {
-  padding: 16px 24px;
+  padding: 16px;
   border: 1px solid var(--border-color-base);
 }
 

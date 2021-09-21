@@ -14,7 +14,7 @@ type Timeout = NodeJS.Timeout
 
 export interface ImageSelectorModalProps {
   visible?: boolean
-  onOk?: (image) => void
+  onOk?: (image, file?: File) => void
   onCancel?: () => void
   title?: string
   modalWidth?: number
@@ -41,6 +41,8 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
   const [selectedImg, setSelectedImg] = useState<ImgBlock | undefined>(
     undefined
   )
+  const [uploadImg, setUploadImg] = useState('')
+  const [fileObject, setFileObject] = useState<File>()
 
   const searchTimer = useRef<Timeout | null>(null)
 
@@ -59,6 +61,7 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
     searchTimer.current = ((setTimeout(() => {
       onSearch(search)
     }, 300) as unknown) as number | null) as never
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   useEffect(() => {
@@ -70,18 +73,47 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
 
   const onSelect = () => {
     if (!selectedImg) return
-    onOk?.(selectedImg)
+    if (selectedImg.key === 0) {
+      onOk?.(selectedImg, fileObject)
+    } else {
+      onOk?.(selectedImg)
+    }
   }
 
   const onSearch = (searchTerm = '') => {
     const terms = searchTerm.toLowerCase().split(' ')
-    const list = imgList.filter(
+    let list = imgList.filter(
       ({ tags }) =>
         tags.findIndex((t) => {
           return terms.findIndex((term) => t.toLowerCase().includes(term)) > -1
         }) > -1
     )
+    if (!searchTerm && uploadImg) {
+      list = [
+        {
+          key: 0,
+          source: uploadImg,
+          url: uploadImg,
+          tags: ['new'],
+        },
+        ...list,
+      ]
+    }
     setImageList(searchTerm ? list : list.slice(0, 15))
+  }
+
+  const setUploadImage = (url: string) => {
+    const data = imageList.filter((item) => item.key !== 0)
+    const tempObject = {
+      key: 0,
+      source: url,
+      url: url,
+      tags: ['new'],
+    }
+    const temp = [tempObject, ...data]
+    setImageList(temp)
+    setUploadImg(url)
+    setSelectedImg(tempObject)
   }
 
   return (
@@ -119,12 +151,8 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
                   accept="image/png, image/jpeg"
                   style={{ height: 0, width: 0, visibility: 'hidden' }}
                   onChange={(e) => {
-                    setSelectedImg({
-                      key: 0,
-                      source: e.target.value,
-                      url: e.target.value,
-                      tags: ['custom'],
-                    })
+                    setFileObject(e.target.files?.[0])
+                    setUploadImage(URL.createObjectURL(e.target.files?.[0]))
                   }}
                 />
               </div>

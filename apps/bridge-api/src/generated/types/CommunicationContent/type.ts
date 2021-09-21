@@ -16,7 +16,7 @@ export const CommunicationContent = objectType({
       type: 'Communication',
       args: {
         where: 'CommunicationWhereInput',
-        orderBy: 'CommunicationOrderByInput',
+        orderBy: 'CommunicationOrderByWithRelationInput',
         cursor: 'CommunicationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

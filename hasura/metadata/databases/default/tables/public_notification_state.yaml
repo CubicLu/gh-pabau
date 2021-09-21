@@ -1,0 +1,46 @@
+table:
+  name: notification_state
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - company
+    - created_at
+    - is_deleted
+    - is_read
+    - notification_id
+    - user
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - company
+    - created_at
+    - id
+    - is_deleted
+    - is_read
+    - notification_id
+    - user
+    filter:
+      _and:
+      - user:
+          _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - company
+    - created_at
+    - is_deleted
+    - is_read
+    - notification_id
+    - user
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: user

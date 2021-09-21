@@ -6,7 +6,7 @@ export const GroupPermissionAggregateQuery = queryField(
     type: 'AggregateGroupPermission',
     args: {
       where: 'GroupPermissionWhereInput',
-      orderBy: list('GroupPermissionOrderByInput'),
+      orderBy: list('GroupPermissionOrderByWithRelationInput'),
       cursor: 'GroupPermissionWhereUniqueInput',
       distinct: 'GroupPermissionScalarFieldEnum',
       skip: 'Int',

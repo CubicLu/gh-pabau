@@ -14,7 +14,6 @@
     - [Frontend](#frontend)
     - [Bridge](#bridge)
     - [Backend](#backend)
-    - [bridge-proxy (PDS)](#bridge-proxy-pds)
   - [Code Rules](#code-rules)
   - [Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")](#delineation-between-appswebcomponents-app-components-and-libsui-ui-components)
   - [Our Stack](#our-stack)
@@ -22,7 +21,6 @@
   - [GraphQL workflow](#graphql-workflow)
   - [Troubleshooting](#troubleshooting)
   - [To do (big engineering items)](#to-do-big-engineering-items)
-  - [bridge-proxy (PDS)](#bridge-proxy-pds)
 
 ## Welcome
 
@@ -62,7 +60,7 @@ Notes:
 - [NestJS](https://nestjs.com/) - a backend that only hasura will call, for things like sending email(and converted to Vercel's [Serverless Functions](https://vercel.com/docs/serverless-functions/introduction) at deploy-time)
 - [ant.design](https://ant.design/) - the base for most of our UI components
 - [Vercel](https://vercel.com/) - Our hosting platform for mgmt and web apps
-- [Rancher](https://rancher.com/) Our self-hosted platform for backend, bridge-api, bridge-proxy
+- [Rancher](https://rancher.com/) Our self-hosted platform for backend, bridge-api
 - [React Hooks](https://reactjs.org/docs/hooks-intro.html) - modern React using Functional Programming principles
 - [NextJS](https://nextjs.org/) - frontend framework that uses React
 - [LESS Modules](https://webpack.js.org/loaders/less-loader/#css-modules-gotcha) - our CSS language of choice
@@ -187,12 +185,6 @@ Whenever you add a new route to the backend, you must wait for your PR to be mer
 
 To view the Backend, you can either visit [https://backend.pabau.com](https://backend.pabau.com) or run `yarn nx serve backend` to develop on it locally with live reloading (HMR).
 
-### bridge-proxy (PDS)
-
-To run debug build locally, type `yarn nx serve bridge-proxy` - it listens on port 5006.
-
-To run production build locally, type `docker build -t bridge-proxy -f tools/cicd/bridge-proxy.Dockerfile apps/bridge-proxy/ && docker run --rm -p 5006:5006 -it bridge-proxy`
-
 ## Code Rules
 
 - Communication is paramount. Please discuss your ideas at meetings and open Slack threads about whatever you are pondering or stuck on.
@@ -262,7 +254,7 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
 
 In addition to Ticket workflow, if you are doing backend:
 
-1. Run `yarn dev` as per Ticket workflow above.
+1. Run `yarn dev` to launch the backend services.
 1. This should open the local Hasura console on port 9695. You can still use localhost:8080 to view-only, but remember to never make any changes on this port! **ALL CHANGES MUST BE MADE ON PORT 9695**.
 1. Whenever you make a change, you should see a new `/hasura/migrations/default/**/*.sql` file appear!
 1. When you are finished, you can squash all your edits into 1 migration file by running `yarn hasura:cli migrate squash --database-name default --from NNNN --name "My shiny new database stuff"` where `NNNN` is the oldest non-committed datetime stamp you have. At the end, it will ask if you want to delete the migration files, press `y` to choose yes.

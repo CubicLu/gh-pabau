@@ -11,14 +11,21 @@ import {
 import { Popover } from 'antd'
 import { Button } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
 import styles from './QuickCreate.module.less'
 import { ClientCreate, LeadCreate } from '@pabau/ui'
 import { initialValues } from '../client-create/mock'
+import { initialLeadValues, employeeList } from '../lead-create/mock'
 
 interface QuickCreateProps {
-  clientCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
 }
-export const QuickCreate: FC<QuickCreateProps> = ({ clientCreateRender }) => {
+export const QuickCreate: FC<QuickCreateProps> = ({
+  clientCreateRender,
+  leadCreateRender,
+}) => {
+  const isMobile = useMedia('(max-width: 767px)', false)
   const [visible, setVisible] = useState(false)
   const [clientModalVisible, setClientModalVisible] = useState(false)
   const [leadModalVisible, setLeadModalVisible] = useState(false)
@@ -84,7 +91,7 @@ export const QuickCreate: FC<QuickCreateProps> = ({ clientCreateRender }) => {
         </div>
       </div>
       {clientCreateRender ? (
-        clientModalVisible && clientCreateRender()
+        clientModalVisible && clientCreateRender(toggleCreateClientModal)
       ) : (
         <ClientCreate
           modalVisible={clientModalVisible}
@@ -92,30 +99,34 @@ export const QuickCreate: FC<QuickCreateProps> = ({ clientCreateRender }) => {
           initialValues={initialValues}
         />
       )}
-      <LeadCreate
-        modalVisible={leadModalVisible}
-        handleClose={toggleCreateLeadModal}
-      />
+      {leadCreateRender ? (
+        leadModalVisible && leadCreateRender(toggleCreateLeadModal)
+      ) : (
+        <LeadCreate
+          employeeList={employeeList}
+          initialValues={initialLeadValues}
+          modalVisible={leadModalVisible}
+          handleClose={toggleCreateLeadModal}
+        />
+      )}
     </>
   )
   return (
-    <div className={styles.quickCreateContainer}>
-      <Popover
-        placement="bottomRight"
-        content={QuickCreateContent}
-        trigger="click"
-        visible={visible}
-        onVisibleChange={(e) => setVisible(e)}
+    <Popover
+      placement={isMobile ? 'top' : 'bottomRight'}
+      content={QuickCreateContent}
+      trigger="click"
+      visible={visible}
+      onVisibleChange={(e) => setVisible(e)}
+    >
+      <Button
+        type="default"
+        className={styles.createBtnStyle}
+        onClick={() => setVisible(true)}
       >
-        <Button
-          type="default"
-          className={styles.createBtnStyle}
-          onClick={() => setVisible(true)}
-        >
-          <PlusCircleFilled /> {t('common-label-create')}
-        </Button>
-      </Popover>
-    </div>
+        <PlusCircleFilled /> {t('common-label-create')}
+      </Button>
+    </Popover>
   )
 }
 

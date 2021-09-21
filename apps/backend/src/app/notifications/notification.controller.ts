@@ -23,6 +23,7 @@ interface BodyData {
   company_id: number
   cancellation_reason?: string
   client_id?: number
+  sent_by_name?: string
 }
 
 const requiredFields = [
@@ -47,13 +48,12 @@ export class NotificationController {
       company_id,
       destination,
       service_name,
+      client_name,
+      sent_by_name,
       date,
       time,
       cancellation_reason,
-      client_id,
     } = data
-    const sent_to = []
-    let users = []
     if (type === notificationType.cancelled_appointment_via_calendar.type) {
       requiredFields.push('cancellation_reason')
     }
@@ -69,16 +69,6 @@ export class NotificationController {
       return { success: false, message: errors }
     }
 
-    const staffMembers = await this.notificationService.findStaffMembersByCompany(
-      company_id
-    )
-    const managers = await this.notificationService.findManagersByCompany(
-      company_id
-    )
-    users = [...staffMembers, ...managers]
-
-    const sentUserData = await this.notificationService.findUserById(sent_by)
-    const clientData = await this.notificationService.findClientById(client_id)
     let enableUsers = []
     if (type === notificationType.rescheduled_appointment_via_calendar.type) {
       enableUsers = await this.notificationService.findUserEnabledNotifications(
@@ -92,23 +82,18 @@ export class NotificationController {
       )
     }
 
-    for (const user of enableUsers) {
-      if (users.includes(user)) {
-        sent_to.push(user)
-      }
-    }
-
     const response = await this.notificationService.sendNotification({
       type,
-      sent_to,
+      sent_to: enableUsers,
       sent_by,
       destination,
-      user_name: sentUserData?.full_name,
+      user_name: sent_by_name,
       service_name,
-      client_name: clientData?.full_name,
+      client_name,
       date,
       time,
       cancellation_reason,
+      company_id,
     })
 
     return {

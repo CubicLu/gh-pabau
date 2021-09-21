@@ -4,7 +4,7 @@ export const PackageUsedFindFirstQuery = queryField('findFirstPackageUsed', {
   type: 'PackageUsed',
   args: {
     where: 'PackageUsedWhereInput',
-    orderBy: list('PackageUsedOrderByInput'),
+    orderBy: list('PackageUsedOrderByWithRelationInput'),
     cursor: 'PackageUsedWhereUniqueInput',
     distinct: 'PackageUsedScalarFieldEnum',
     skip: 'Int',

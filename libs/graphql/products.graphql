@@ -172,7 +172,7 @@ query categoryList(
     }
     take: $limit
     skip: $offset
-    orderBy: { order: asc }
+    orderBy: { order: desc }
   ) {
     ...CategoryFields
     _count {
@@ -311,13 +311,14 @@ query retrieveProductsGroupByMasterCategory {
       id
       name
     }
+    image
   }
 }
 
 query retrieveProductGroups {
   findManyInvCategory(
     where: { category_type: { not: { equals: "service" } } }
-    orderBy: { order: asc }
+    orderBy: { order: desc }
   ) {
     ...Category
   }

@@ -15,11 +15,11 @@ import {
   useGetMarketingSourcesLazyQuery,
   useGetContactCustomFieldsLazyQuery,
   useFindManyLimitContactLocationLazyQuery,
-  useFindManySharedCompanyLazyQuery,
   useGetCmLabelsLazyQuery,
   useCreateOneContactMutation,
   GetTblModuleFieldsSettingsQuery,
 } from '@pabau/graphql'
+import { useUser } from '../../context/UserContext'
 
 export interface Label {
   label?: string
@@ -62,13 +62,14 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   ...props
 }) => {
   const { t } = useTranslation('common')
+  const user = useUser()
   const [labelsData, setLabelsData] = useState<LabelDataProps[]>([])
   const [validationObject, setValidationObject] = useState({})
   const [initialValues, setInitialValues] = useState<InitialDetailsProps>({
     salutation: '',
     Fname: '',
     Lname: '',
-    gender: t('quickCreate.client.modal.general.gender.other'),
+    gender: '',
     MarketingSource: '',
     DOB: undefined,
     preferredLanguage: '',
@@ -80,18 +81,41 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     MailingStreet: '',
     MailingCity: '',
     MailingPostal: '',
-    OtherStreet: '',
-    OtherProvince: '',
-    OtherCity: '',
-    OtherCountry: '',
-    OtherPostal: '',
-    MarketingOptInEmail: false,
-    MarketingOptInText: false,
-    MarketingOptInPost: false,
-    MarketingOptInPhone: false,
+    marketingPromotion: ['needToKnows'],
+    recordSharing: {
+      company: 1,
+      emergencyContact: 0,
+      family: 0,
+      gp: 0,
+      insuranceProvider: 0,
+      nextOfKin: -1,
+    },
+    privacyPolicy: '',
+    settingSharing: {
+      bookAppointments: 1,
+      bookClass: 0,
+      loyalty: 1,
+      myPackages: 0,
+      purchasePackage: 0,
+      payments: 0,
+      appointments: 0,
+      class: 0,
+      documents: 0,
+      medications: 0,
+      allergies: 0,
+      gpDetails: 0,
+    },
+    shareLink: '',
   })
   const [customFields, setCustomFields] = useState<CustomFieldsProps[]>([])
   const [isVisible, setVisible] = useState(modalVisible)
+  const [accessCode, setAceessCode] = useState(0)
+  const [isSuccess, setSuccess] = useState(false)
+
+  useEffect(() => {
+    const code = Math.floor(1000 + Math.random() * 9000)
+    setAceessCode(code)
+  }, [isSuccess])
 
   const [
     getFieldSettingData,
@@ -100,7 +124,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
 
   const [
     getSalutationData,
-    { data: salutationData },
+    { data: salutationData, loading: salutationLoading },
   ] = useGetSalutationsLazyQuery()
 
   const [
@@ -110,17 +134,12 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
 
   const [
     getLimitLocationData,
-    { data: limitLocationData },
+    { data: limitLocationData, loading: locationLoading },
   ] = useFindManyLimitContactLocationLazyQuery()
 
   const [
-    getOtherCompaniesData,
-    { data: otherCompaniesData },
-  ] = useFindManySharedCompanyLazyQuery()
-
-  const [
     getCustomFieldData,
-    { data: customFieldData },
+    { data: customFieldData, loading: customFieldLoading },
   ] = useGetContactCustomFieldsLazyQuery()
 
   const [getLabels, { data: labelsQueryData }] = useGetCmLabelsLazyQuery()
@@ -132,6 +151,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           NotificationType.success,
           t('quickCreate.client.modal.create.success')
         )
+        setSuccess(!isSuccess)
       }
     },
     onError(error) {
@@ -139,11 +159,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         Notification(
           NotificationType.error,
           t('quickCreate.client.modal.create.contact.exits.error')
-        )
-      } else {
-        Notification(
-          NotificationType.error,
-          t('quickCreate.client.modal.create.contact.error')
         )
       }
     },
@@ -156,7 +171,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       getMarketingSourceData()
       getLabels()
       getLimitLocationData()
-      getOtherCompaniesData()
       getCustomFieldData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,7 +199,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           item.field_name &&
           item.is_required === 1 &&
           item.field_name !== 'Fname' &&
-          item.field_name !== 'Lname'
+          item.field_name !== 'Lname' &&
+          item.field_name in initialValues
         ) {
           requiredField[item.field_name] = Yup.string().required(
             `${t('quickCreate.validation.is.required', {
@@ -230,21 +245,63 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   }, [limitLocationData])
 
   useEffect(() => {
+    if (salutationData?.findManyUserSalutation?.length > 0) {
+      const initialValuesObj = initialValues
+      initialValuesObj['salutation'] =
+        salutationData?.findManyUserSalutation[0].name
+      setInitialValues(initialValuesObj)
+    } else {
+      const validationObj = validationObject
+      delete validationObj['salutation']
+      setValidationObject(validationObj)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salutationData, initialValues])
+
+  useEffect(() => {
+    if (marketingSourceData?.findManyMarketingSource?.length === 0) {
+      const validationObj = validationObject
+      delete validationObj['MarketingSource']
+      setValidationObject(validationObj)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [marketingSourceData, initialValues])
+
+  useEffect(() => {
     if (customFieldData) {
-      const data = customFieldData.custom.map((thread) => {
-        return {
-          id: thread.id,
-          name: thread.name,
-          CmFields: thread.ManageCustomField.filter(
-            (thread) => thread.is_active
-          ),
+      const data = customFieldData.custom
+        .map((thread) => {
+          return {
+            id: thread.id,
+            name: thread.name,
+            CmFields: thread.ManageCustomField.filter(
+              (thread) => thread.is_active
+            ),
+          }
+        })
+        .filter((thread) => thread.CmFields.length > 0)
+
+      if (customFieldData.generalCustom.length > 0) {
+        const generalCmFields = []
+        for (const general of customFieldData.generalCustom) {
+          if (
+            general.field_type === 'bool' ||
+            general.field_type === 'multiple' ||
+            general.field_type === 'list'
+          ) {
+            if (general.ManageCustomFieldItem.length > 0) {
+              generalCmFields.push(general)
+            }
+          } else {
+            generalCmFields.push(general)
+          }
         }
-      })
-      data.push({
-        id: 0,
-        name: 'General',
-        CmFields: customFieldData.generalCustom,
-      })
+        data.push({
+          id: 0,
+          name: 'General',
+          CmFields: generalCmFields,
+        })
+      }
       setCustomFields(data)
 
       if (data.length > 0) {
@@ -255,13 +312,30 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
             for (const thread of item.CmFields) {
               initialValuesObj[`customField_${thread.id}`] = ''
               if (thread.is_required === 1) {
-                requiredField[
-                  `customField_${thread.id}`
-                ] = Yup.string().required(
-                  `${t('quickCreate.validation.is.required', {
-                    field: thread.field_label,
-                  })}`
-                )
+                requiredField[`customField_${thread.id}`] =
+                  thread.field_type === 'multiple'
+                    ? Yup.array().required(
+                        `${t('quickCreate.validation.is.required', {
+                          field: thread.field_label,
+                        })}`
+                      )
+                    : thread.field_type === 'number'
+                    ? Yup.number()
+                        .required(
+                          `${t('quickCreate.validation.is.required', {
+                            field: thread.field_label,
+                          })}`
+                        )
+                        .typeError(
+                          `${t('quickCreate.number.validation.message', {
+                            field: thread.field_label,
+                          })}`
+                        )
+                    : Yup.string().required(
+                        `${t('quickCreate.validation.is.required', {
+                          field: thread.field_label,
+                        })}`
+                      )
               }
             }
           }
@@ -273,6 +347,16 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customFieldData])
 
+  const checkIsLoading = () => {
+    return (
+      salutationLoading ||
+      loading ||
+      marketingSourceLoading ||
+      locationLoading ||
+      customFieldLoading
+    )
+  }
+
   const handleCloseModal = () => {
     setVisible(false)
     handleClose?.()
@@ -281,7 +365,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const handleCreate = async (values, resetForm, setSelectedLabels) => {
     const customFieldsValue: cmFieldsCreateProps[] = []
     const limitContactsLocationsIds: number[] = []
-    const otherCompanyIds: number[] = []
 
     for (const field of Object.keys(values)) {
       let value = values[field]
@@ -311,9 +394,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       } else if (field.includes('limitContactsLocations_') && value) {
         const strVal = field.split('_')
         limitContactsLocationsIds.push(Number.parseInt(strVal[1]))
-      } else if (field.includes('otherCompany_') && value) {
-        const strVal = field.split('_')
-        otherCompanyIds.push(Number.parseInt(strVal[1]))
       }
     }
 
@@ -327,15 +407,11 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       mailingStreet: values.MailingStreet,
       mailingPostal: values.MailingPostal,
       mailingCountry: values.MailingCountry,
-      otherStreet: values.OtherStreet,
-      otherCity: values.OtherCity,
-      otherPostal: values.OtherPostal,
-      otherProvince: values.OtherProvince,
-      otherCountry: values.OtherCountry,
-      marketingOptInEmail: values.MarketingOptInEmail ? 1 : 0,
-      marketingOptInPhone: values.MarketingOptInPhone ? 1 : 0,
-      marketingOptInPost: values.MarketingOptInPost ? 1 : 0,
-      marketingOptInText: values.MarketingOptInText ? 1 : 0,
+      marketingOptInEmail: values.marketingPromotion.includes('email') ? 1 : 0,
+      marketingOptInPhone: values.marketingPromotion.includes('phone') ? 1 : 0,
+      marketingOptInPost: values.marketingPromotion.includes('postal') ? 1 : 0,
+      marketingOptInText: values.marketingPromotion.includes('sms') ? 1 : 0,
+      needToKnows: values.marketingPromotion.includes('needToKnows'),
       marketingSource: values.MarketingSource
         ? Number.parseInt(values.MarketingSource)
         : 0,
@@ -344,14 +420,32 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       phone: values.Phone,
       gender: values.gender,
       preferredLanguage: values.preferredLanguage.toLowerCase(),
-      otherCompanyIds: otherCompanyIds,
+      privacyPolicy: values.privacyPolicy,
       limitContactsLocations: limitContactsLocationsIds,
       labels: values.selectedLabels,
       customFields: customFieldsValue,
-    }
-
-    if (otherCompanyIds.length === 0) {
-      delete variables.otherCompanyIds
+      contactPreferences: {
+        family: values.recordSharing.family,
+        emergency_contact: values.recordSharing.emergencyContact,
+        next_of_kin: values.recordSharing.nextOfKin,
+        insurance_provider: values.recordSharing.insuranceProvider,
+        gp: values.recordSharing.gp,
+        company: values.recordSharing.company,
+        book_appointments: values.settingSharing.bookAppointments,
+        book_class: values.settingSharing.bookClass,
+        loyalty: values.settingSharing.loyalty,
+        my_packages: values.settingSharing.myPackages,
+        purchase_package: values.settingSharing.purchasePackage,
+        payments: values.settingSharing.payments,
+        appointments: values.settingSharing.appointments,
+        class: values.settingSharing.class,
+        documents: values.settingSharing.documents,
+        medications: values.settingSharing.medications,
+        allergies: values.settingSharing.allergies,
+        gp_details: values.settingSharing.gpDetails,
+        share_link: values.shareLink,
+        access_code: accessCode.toString(),
+      },
     }
 
     if (limitContactsLocationsIds.length === 0) {
@@ -387,12 +481,15 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       fieldsSettings={fieldSettingData?.findManyTblModuleFieldsSetting}
       marketingSources={marketingSourceData?.findManyMarketingSource}
       limitContactsLocations={limitLocationData?.findManyLimitContactLocation}
-      otherCompanies={otherCompaniesData?.findManySharedCompany}
       isLoading={loading}
       isMarketingSourceLoading={marketingSourceLoading}
+      isSalutationLoading={salutationLoading}
       labelsData={labelsData}
       initialValues={initialValues}
       validationObject={validationObject}
+      isDisabledBtn={checkIsLoading()}
+      companyName={user?.me?.companyName}
+      accessCode={accessCode}
       {...props}
     />
   )

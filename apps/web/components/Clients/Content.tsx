@@ -54,7 +54,6 @@ export interface SourceDataProps {
 }
 
 export const ClientsContent: FC<ClientsContentProps> = ({
-  searchText,
   sourceData,
   handleLabelClick,
   isArchived,

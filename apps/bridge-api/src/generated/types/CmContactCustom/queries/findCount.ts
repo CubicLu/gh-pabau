@@ -6,7 +6,7 @@ export const CmContactCustomFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmContactCustomWhereInput',
-      orderBy: list('CmContactCustomOrderByInput'),
+      orderBy: list('CmContactCustomOrderByWithRelationInput'),
       cursor: 'CmContactCustomWhereUniqueInput',
       distinct: 'CmContactCustomScalarFieldEnum',
       skip: 'Int',

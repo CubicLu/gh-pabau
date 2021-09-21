@@ -6,7 +6,7 @@ export const AutomationDelayFindManyQuery = queryField(
     type: nonNull(list(nonNull('AutomationDelay'))),
     args: {
       where: 'AutomationDelayWhereInput',
-      orderBy: list('AutomationDelayOrderByInput'),
+      orderBy: list('AutomationDelayOrderByWithRelationInput'),
       cursor: 'AutomationDelayWhereUniqueInput',
       distinct: 'AutomationDelayScalarFieldEnum',
       skip: 'Int',

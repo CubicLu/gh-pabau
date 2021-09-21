@@ -33,7 +33,7 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
       title: t('business.notification.review'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
           checked: true,
         },
@@ -49,7 +49,7 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
       title: t('business.notification.sms.delivered'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
           checked: true,
         },
@@ -65,7 +65,7 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
       title: t('business.notification.newsletter.delivered'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
           checked: true,
         },
@@ -82,7 +82,7 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
       tooltip: t('business.notification.holiday.tooltip'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
           checked: true,
         },
@@ -98,7 +98,7 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
       title: t('business.notification.refer'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
           checked: true,
         },
@@ -121,7 +121,7 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
       title,
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: true,
           checked: true,
         },

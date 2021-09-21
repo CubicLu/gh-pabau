@@ -6,7 +6,7 @@ export const BookingSettingAggregateQuery = queryField(
     type: 'AggregateBookingSetting',
     args: {
       where: 'BookingSettingWhereInput',
-      orderBy: list('BookingSettingOrderByInput'),
+      orderBy: list('BookingSettingOrderByWithRelationInput'),
       cursor: 'BookingSettingWhereUniqueInput',
       distinct: 'BookingSettingScalarFieldEnum',
       skip: 'Int',

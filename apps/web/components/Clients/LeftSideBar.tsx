@@ -10,7 +10,7 @@ import { ReactComponent as ArchivedIcon } from '../../assets/images/archived-ico
 import styles from '../../pages/clients/clients.module.less'
 import { SourceDataProps } from './Content'
 import CreateLabel from './CreateLabel'
-import { Labels, tab } from '../../pages/clients/index'
+import { Labels, tab } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 const { SubMenu } = Menu
 

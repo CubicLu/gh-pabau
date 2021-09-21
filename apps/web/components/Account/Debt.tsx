@@ -10,6 +10,7 @@ import { tempType } from './Invoice'
 import dayjs, { Dayjs } from 'dayjs'
 import { useDebtsQuery, useDebtCountQuery } from '@pabau/graphql'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { DisplayDate } from '../../hooks/displayDate'
 
 interface DebtProps {
   searchTerm: string
@@ -171,7 +172,6 @@ const Debt: FC<DebtProps> = ({
       title: t('account.finance.debt.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '110px',
       skeletonWidth: '70px',
       render: function render(data) {
         return (
@@ -184,6 +184,17 @@ const Debt: FC<DebtProps> = ({
       dataIndex: 'location',
       visible: true,
       skeletonWidth: '70px',
+      render: function render(data) {
+        const item = data?.slice(0, 35)
+        const isLarge = data?.length > 35
+        return (
+          <Tooltip title={isLarge && data}>
+            <div style={{ minWidth: '50px' }}>
+              {isLarge ? item + '...' : data}
+            </div>
+          </Tooltip>
+        )
+      },
     },
     {
       title: t('account.finance.debt.columns.inv.date'),
@@ -191,7 +202,7 @@ const Debt: FC<DebtProps> = ({
       skeletonWidth: '70px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+        return <Typography.Text>{DisplayDate(data)}</Typography.Text>
       },
     },
     {
@@ -200,10 +211,14 @@ const Debt: FC<DebtProps> = ({
       skeletonWidth: '70px',
       visible: true,
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
-            {data}
-          </Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -214,10 +229,14 @@ const Debt: FC<DebtProps> = ({
       skeletonWidth: '70px',
       visible: true,
       render: function render(debtor) {
+        const item = debtor?.slice(0, 30)
+        const isLarge = debtor?.length > 30
         return (
-          <Typography.Text style={{ color: '#54B2D3' }}>
-            {debtor}
-          </Typography.Text>
+          <Tooltip title={isLarge && debtor}>
+            <Typography.Text style={{ color: '#54B2D3' }}>
+              {isLarge ? item + '...' : debtor}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,

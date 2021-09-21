@@ -1,5 +1,10 @@
 import { Context } from '../../context'
-import { CreateContactInput, CustomFieldType, ContactType } from './types'
+import {
+  CreateContactInput,
+  CustomFieldType,
+  ContactType,
+  ContactPreferenceType,
+} from './types'
 import { CmContact } from '@prisma/client'
 import { createLabel } from './label'
 
@@ -17,6 +22,8 @@ const createContact = async (
   data: ContactType,
   customFields: CustomFieldType[],
   locationId: number[],
+  contactPreferences: ContactPreferenceType,
+  language: string,
   companyId: number
 ): Promise<CmContact> => {
   const customFieldData = customFields.map((cmFields) => {
@@ -48,6 +55,18 @@ const createContact = async (
           data: locationData,
         },
       },
+      ContactMeta: {
+        create: {
+          meta_name: 'preferred_language',
+          meta_value: language,
+        },
+      },
+      ContactPreference: {
+        create: {
+          ...contactPreferences,
+          company_id: companyId,
+        },
+      },
     },
   })
 }
@@ -55,43 +74,39 @@ const createContact = async (
 export const create = async (
   ctx: Context,
   input: CreateContactInput
-): Promise<CmContact[]> => {
-  let companyIds = [ctx.authenticated.company]
+): Promise<CmContact> => {
+  const maxCustomId = await findMaxCustomId(ctx, ctx.authenticated.company)
 
-  if (input.otherCompanyIds) {
-    companyIds = [...companyIds, ...input.otherCompanyIds]
+  const inputData: ContactType = {
+    ...input.data,
+    company_id: ctx.authenticated.company,
+    OwnerID: ctx.authenticated.user,
+    DOB: input.data.DOB ? new Date(input.data.DOB) : null,
+    custom_id: maxCustomId,
   }
 
-  const contactList = []
+  delete inputData.preferred_language
 
-  for (const id of companyIds) {
-    const maxCustomId = await findMaxCustomId(ctx, id)
+  const contactData = await createContact(
+    ctx,
+    inputData,
+    input.customFields ? input.customFields : [],
+    input.limitContactLocations ? input.limitContactLocations : [],
+    input.contactPreferences,
+    !input.data.preferred_language
+      ? ctx.authenticated.language?.company
+      : input.data.preferred_language,
+    ctx.authenticated.company
+  )
 
-    const inputData: ContactType = {
-      ...input.data,
-      company_id: id,
-      preferred_language: !input.data.preferred_language
-        ? ctx.authenticated.language.company
-        : input.data.preferred_language,
-      OwnerID: ctx.authenticated.user,
-      DOB: input.data.DOB ? new Date(input.data.DOB) : null,
-      custom_id: maxCustomId,
-    }
-    const contactData = await createContact(
+  if (input.labels) {
+    await createLabel(
       ctx,
-      inputData,
-      input.customFields ? input.customFields : [],
-      id === ctx.authenticated.company && input.limitContactLocations
-        ? input.limitContactLocations
-        : [],
-      id
+      input.labels,
+      contactData.ID,
+      ctx.authenticated.company
     )
-
-    if (input.labels) {
-      await createLabel(ctx, input.labels, contactData.ID, id)
-    }
-
-    contactList.push(contactData)
   }
-  return contactList
+
+  return contactData
 }

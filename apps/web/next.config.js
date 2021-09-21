@@ -4,8 +4,38 @@ const withImages = require('next-images')
 const withNx = require('@nrwl/next/plugins/with-nx')
 
 module.exports = {
+  experimential: {
+    cpus: 1,
+  },
   env: {
     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
+    api_key: 'AIzaSyB220K3PhuJAa14W5YmpJwzXBYgPyT0BGk',
+    client_id:
+      '312504164675-a6m5avc8ampbs9dshepb3dkbgvqbtaqa.apps.googleusercontent.com',
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/reports/:name',
+        destination: '/reports/[name]?name=:name',
+      },
+      {
+        source: '/clients/:id',
+        destination: '/clients/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/invoice/:id',
+        destination: '/clients/finance/invoice/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/receipt/:id',
+        destination: '/clients/finance/receipt/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/statement/:id',
+        destination: '/clients/finance/statement/[id]?id=:id',
+      },
+    ]
   },
   typescript: {
     // !! WARN !!
@@ -18,7 +48,7 @@ module.exports = {
     // period (in ms) where the server will keep pages in the buffer
     maxInactiveAge: 25 * 60 * 60 * 1000,
     // number of pages that should be kept simultaneously without being disposed
-    pagesBufferLength: 25,
+    pagesBufferLength: 3,
   },
   eslint: {
     // !! WARN !!
@@ -42,7 +72,7 @@ module.exports = {
       'woff2',
       'otf',
     ],
-    inlineImageLimit: 100_000,
+    inlineImageLimit: 9_000,
     ...withAntdLess({
       lessVarsFilePath: 'libs/ui/src/styles/antd.less',
       importLoaders: 3,

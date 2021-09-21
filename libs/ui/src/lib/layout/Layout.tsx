@@ -5,20 +5,10 @@ import classNames from 'classnames'
 import React, { FC, useState } from 'react'
 import { ReactComponent as IllustrationSvg } from './example.svg'
 import styles from './Layout.module.less'
+import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const { Content } = AntLayout
-
-interface Notification {
-  id: string
-  notificationTime: Date
-  notificationType: string
-  notificationTypeIcon?: string
-  title: string
-  desc: string
-  read: number[]
-  users: number[]
-  link: string
-}
 
 interface ProductNews {
   id: string
@@ -30,21 +20,18 @@ interface ProductNews {
   readUsers: number[]
 }
 
-interface UserProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
+export interface ExtraUserData {
+  handleCompanySwitch?(companyId): void
 }
+
 export interface LayoutProps {
-  deleteNotification?: MutationFunction
-  updateNotification?: MutationFunction
+  onLogOut?(): void
   readNewsMutation?: MutationFunction
-  readAddMutation?: MutationFunction
+  updateNotificationState?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  notifications?: Notification[]
+  notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
-  user?: UserProps
+  user?: Partial<AuthenticatedUser> & JwtUser & ExtraUserData
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -58,8 +45,14 @@ export interface LayoutProps {
   taskManagerIFrameComponent?: JSX.Element
   allowed?: boolean
   requireAdminAccess?: boolean
-  clientCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
   handleSearch?: (searchTerm: string) => void
+  badgeCountList?: BadgeCountList
+}
+
+interface BadgeCountList {
+  [key: string]: number
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -72,18 +65,18 @@ export const Layout: FC<LayoutProps> = ({
   isDisplayingFooter = true,
   card,
   children,
+  onLogOut,
   active,
   legacyContent = false,
   notifications,
   productNews,
   relativeTime,
-  deleteNotification,
-  updateNotification,
-  readAddMutation,
+  updateNotificationState,
   readNewsMutation,
-  user,
   taskManagerIFrameComponent,
   clientCreateRender,
+  leadCreateRender,
+  badgeCountList,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -92,24 +85,25 @@ export const Layout: FC<LayoutProps> = ({
     <AntLayout {...rest} className={styles.main}>
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
-          user={user}
-          deleteNotification={deleteNotification}
-          updateNotification={updateNotification}
           readNewsMutation={readNewsMutation}
-          readAddMutation={readAddMutation}
+          updateNotificationState={updateNotificationState}
           searchRender={searchRender}
           onMessageIconClick={onMessageIconClick}
-          // onCreateChannel={onCreateChannel}
-          // onMessageType={onMessageType}
+          onLogOut={onLogOut}
           notifications={notifications}
           productNews={productNews}
           relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}
           clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>
-          <Menu onSideBarCollapsed={onSideBarCollapsed} active={active} />
+          <Menu
+            onSideBarCollapsed={onSideBarCollapsed}
+            active={active}
+            badgeCountList={badgeCountList}
+          />
           <Content
             className={classNames(
               !legacyContent ? styles.layoutContent : styles.layoutIframed,

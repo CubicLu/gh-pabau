@@ -6,7 +6,7 @@ export const ContactInsuranceAggregateQuery = queryField(
     type: 'AggregateContactInsurance',
     args: {
       where: 'ContactInsuranceWhereInput',
-      orderBy: list('ContactInsuranceOrderByInput'),
+      orderBy: list('ContactInsuranceOrderByWithRelationInput'),
       cursor: 'ContactInsuranceWhereUniqueInput',
       distinct: 'ContactInsuranceScalarFieldEnum',
       skip: 'Int',

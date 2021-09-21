@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef } from 'react'
+import React, { FC, useState, useRef, useEffect } from 'react'
 import Cropper, { ReactCropperElement } from 'react-cropper'
 import { message } from 'antd'
 import { BasicModal, Avatar, Button } from '@pabau/ui'
@@ -47,10 +47,17 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
 
   let zoomTo = 0
 
-  const [disabled, setDisabled] = useState(true)
+  // const [disabled, setDisabled] = useState(true)
   const [loading, setLoading] = useState(false)
 
   const cropperRef = useRef<ReactCropperElement>()
+
+  useEffect(() => {
+    if (imageURL) {
+      setImage(imageURL)
+      setCroppedImage(imageURL)
+    }
+  }, [imageURL])
 
   const selectFile = () => {
     if (fileInputRef?.current) {
@@ -60,7 +67,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
 
   const handleImageChange = async (e) => {
     setImage(URL.createObjectURL(e.target.files[0]))
-    setDisabled(false)
+    // setDisabled(false)
     e.target.value = ''
   }
 
@@ -100,7 +107,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
         mode: 'upload-cropped-photo',
         imageData: await cropper
           .getCroppedCanvas({ width: width, height: height })
-          .toDataURL('image/jpeg'),
+          .toDataURL(),
         section: section,
         type: type,
       },
@@ -121,7 +128,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
 
         handleDelete()
         setLoading(false)
-        setDisabled(true)
+        // setDisabled(true)
         successHandler(newImg)
         onCancel?.()
       }
@@ -227,7 +234,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
         <Button onClick={handleClose}>Cancel</Button>
         <Button
           type={'primary'}
-          disabled={disabled}
+          // disabled={disabled}
           loading={loading}
           onClick={handleCreate}
         >

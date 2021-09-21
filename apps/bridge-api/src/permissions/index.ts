@@ -1,9 +1,12 @@
 import { allow, and, or, shield } from 'graphql-shield'
 import * as rules from './types'
 
+console.log('Creating shield...')
+
 export const permissions = shield(
   {
     Mutation: {
+      enroll: rules.authentication.isAuthenticated,
       // Products
       createOneInvProduct: or(
         rules.authentication.isAdmin,
@@ -48,11 +51,12 @@ export const permissions = shield(
       setManyCompanyMeta: rules.authentication.isAdmin,
 
       //Update User Password
-      updateUserPassword: rules.authentication.isAuthenticated,
+      changePassword: rules.authentication.isAuthenticated,
 
       // Send Email
       sendEmail: rules.authentication.isAuthenticated,
       sendEmailTo: rules.authentication.isAuthenticated,
+      resetPassword: allow,
 
       //Page
       createOnePage: rules.authentication.isAuthenticated,
@@ -64,6 +68,7 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin
       ),
+      createOneLead: rules.authentication.isAuthenticated,
       //Country
       createOneCountry: rules.authentication.isAuthenticated,
       //MedicalFormContact
@@ -79,15 +84,11 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
-      ConnectVerifyCredentials: allow,
-      ConnectAuthorizeUser: allow,
-      logout: rules.authentication.isAuthenticated,
+      forgotPassword: allow,
+      switchCompany: rules.authentication.isAuthenticated,
 
-      AuthenticateUser: allow,
-      //resetPassword
-      resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
-      createOneContact: rules.authentication.isAdmin,
+      createOneContact: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -107,8 +108,8 @@ export const permissions = shield(
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
 
-      ConnectGetJWTClient: allow,
-
+      //Activity
+      upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -122,6 +123,7 @@ export const permissions = shield(
       findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
+      findManyTimezone: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
@@ -186,35 +188,37 @@ export const permissions = shield(
       findFirstMedicalFormContact: rules.authentication.isAuthenticated,
       findManyMedicalFormContact: rules.authentication.isAuthenticated,
       findManyMedicalFormContactCount: rules.authentication.isAuthenticated,
-      // //UserPermission
+      // Permissions
       findManyUserPermission: rules.authentication.isAuthenticated,
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
-      findManyCmContact: rules.authentication.isAuthenticated,
-      //Authentication
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
-      validateUser: allow,
       findManyProductsWithAvailableQuantity:
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
         rules.authentication.isAuthenticated,
-      // // CmStaffGeneral
-      findManyCmStaffGeneral: allow,
-      // //Users
-      findManyUser: allow,
-      findFirstUser: allow,
+      findFirstPasswordResetAuth:
+        rules.interceptors.interceptResetPasswordToken,
       //CmLabels
       findManyCmLabel: rules.interceptors.interceptSharedCompanyData,
-      // //Authentication
+      // Authentication
       me: rules.authentication.isAuthenticated,
-      company: rules.authentication.isAuthenticated,
-      //companies: rules.authentication.isAuthenticated,
+      // Activity
+      findManyActivityType: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.interceptSharedCompanyData
+      ),
+      findFirstActivityUserColumns: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.interceptAccessToCompanyData,
+        rules.interceptors.injectUser
+      ),
+      // Debug
       ping: allow,
+      version: allow,
       findManyCustomReportWithPermissions: rules.authentication.isAdmin,
       //user: rules.authentication.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
       staffList: rules.authentication.isAuthenticated,
-      VerifyCredentials: allow,
-      VerifyTwoFaCode: allow,
       //Subscriptions
       subscriptionInvoices: rules.authentication.isAuthenticated,
       subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
@@ -223,6 +227,8 @@ export const permissions = shield(
 
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
+      //statement template
+      getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
       '*': and(

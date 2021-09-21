@@ -5,14 +5,11 @@ import {
   PlusSquareFilled,
   SearchOutlined,
 } from '@ant-design/icons'
-import {
-  useCreateProductModalInitQuery,
-  // usePageAccessAuthorizationQuery,
-} from '@pabau/graphql'
+import { useCreateProductModalInitQuery } from '@pabau/graphql'
 import { Button, MobileSidebar, NotificationDrawer, TabMenu } from '@pabau/ui'
 import { Card, Divider, Input as AntInput, Typography } from 'antd'
 import { useRouter } from 'next/router'
-import React, { SetStateAction, useContext, useEffect, useState } from 'react'
+import React, { SetStateAction, useEffect, useState } from 'react'
 import { useWindowSize } from 'react-use'
 import Layout from '../../components/Layout/Layout'
 import SearchGlobal from '../../components/Search'
@@ -22,7 +19,7 @@ import PurchaseOrder from '../../components/Product/PurchaseOrder'
 import StockTake from '../../components/Product/StockTake'
 import Supplier from '../../components/Product/Supplier'
 import Filter from '../../components/Product/Filter'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './list.module.less'
 
@@ -99,7 +96,7 @@ const ProductList = (): JSX.Element => {
 
   const [, setMessageDrawer] = useState(false)
 
-  const user = useContext(UserContext)
+  const user = useUser()
   const router = useRouter()
 
   useEffect(() => {
@@ -111,8 +108,8 @@ const ProductList = (): JSX.Element => {
   const handleCreate = async () => {
     switch (activeTab) {
       case '0':
-        setShowCreateProduct(true)
         setAction('Create')
+        setShowCreateProduct(true)
         break
       case '1':
         setShowCreateCategoryModal(true)
@@ -251,10 +248,9 @@ const ProductList = (): JSX.Element => {
         <TabMenu
           tabPosition={'top'}
           menuItems={tabItemText}
-          onTabClick={(activeKey) => {
-            setActiveTab(activeKey)
-          }}
+          onTabClick={(activeKey) => setActiveTab(activeKey)}
           tabBarStyle={{ backgroundColor: '#FFF' }}
+          disabledKeys={[2, 3, 4]}
           minHeight="1px"
         >
           <Product
@@ -291,6 +287,7 @@ const ProductList = (): JSX.Element => {
         </TabMenu>
         {openMenuDrawer && (
           <MobileSidebar
+            userData={user?.me}
             searchRender={() => <SearchGlobal />}
             onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
             onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}

@@ -12,6 +12,7 @@ interface Notification {
   date: string | Date
   time: string | Date
   cancellation_reason?: string
+  company_id: number
 }
 
 @Injectable()
@@ -30,6 +31,7 @@ export class NotificationServices {
       sent_to,
       destination,
       sent_by,
+      company_id,
     } = notification
     const variables = {
       who: user_name,
@@ -45,84 +47,48 @@ export class NotificationServices {
 
     const data = {
       query:
-        ' mutation insert_notifications_one(\n    $type: String!\n    $sent_to: jsonb\n    $variables: jsonb\n    $destination: String!\n    $sent_by: Int # $loop: Int\n  ) {\n    insert_notifications_one(\n      object: {\n        type: $type\n        destination: $destination\n        sent_to: $sent_to\n        variables: $variables\n        sent_by: $sent_by\n        # loop: $loop\n      }\n    ) {\n      id\n    }\n  }',
+        ' mutation insert_notifications_one(\n    $template: String!\n    $variables: jsonb\n    $destination: String!\n    $sent_by: Int # $loop: Int\n  ) {\n    insert_notifications_one(\n      object: {\n        template: $template\n        destination: $destination\n               variables: $variables\n        sent_by: $sent_by\n        # loop: $loop\n      }\n    ) {\n      id\n    }\n  }',
       variables: {
-        type,
-        sent_to,
+        template: type,
         variables,
         destination,
         sent_by,
       },
       operationName: 'insert_notifications_one',
     }
+    const headers = {
+      'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+    }
     const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
+      .post(this.GRAPHQL_ENDPOINT, data, { headers })
       .toPromise()
 
     const notificationId = response.data?.data?.insert_notifications_one?.id
+    for (const user of sent_to) {
+      await this.generateNotificationData(notificationId, user, company_id)
+    }
     return { id: notificationId }
   }
 
-  async findUserById(id: number): Promise<{ full_name: string }> {
+  async generateNotificationData(id: string, sent_to: number, company: number) {
     const data = {
-      query: `query MyQuery {\n  findFirstUser(where: { id: { equals : ${id} } } ){\n    full_name\n  }\n}\n`,
-      variables: null,
-      operationName: 'MyQuery',
+      query:
+        'mutation insert_notification_state_one( $company:numeric, $notification_id:uuid,$user:numeric){\n  insert_notification_state_one(object:{\n    company:$company,\n    notification_id:$notification_id,\n    user:$user\n  }){\n   id \n  }\n} ',
+
+      variables: {
+        company: company,
+        notification_id: id,
+        user: sent_to,
+      },
+      operationName: 'insert_notification_state_one',
+    }
+    const headers = {
+      'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
     }
 
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
+    await this.httpService
+      .post(this.GRAPHQL_ENDPOINT, data, { headers })
       .toPromise()
-    const full_name = response.data?.data?.findFirstUser?.full_name
-    return { full_name }
-  }
-
-  async findClientById(id: number): Promise<{ full_name: string }> {
-    const data = {
-      query: `query findClientDetails {\n  findFirstCmContact(where:{ ID :{ equals: ${id} } }) {\n    Fname\n    Lname\n    ID\n  }\n}`,
-      variables: null,
-      operationName: 'findClientDetails',
-    }
-
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
-      .toPromise()
-
-    const client = response.data?.data?.findFirstCmContact
-    const full_name = `${client?.Fname} ${client?.Lname}`
-    return { full_name }
-  }
-
-  async findStaffMembersByCompany(company: number): Promise<[number]> {
-    const data = {
-      query: `query findStaffDetails {\n  findManyCmStaffGeneral(where:{ company_id:{ equals: ${company} } }){\n    Fname\n    ID\n  }\n}`,
-      variables: null,
-      operationName: 'findStaffDetails',
-    }
-
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
-      .toPromise()
-    const staffMembers = response?.data?.data?.findManyCmStaffGeneral.map(
-      (staff) => staff?.ID
-    )
-    return staffMembers
-  }
-
-  async findManagersByCompany(company: number): Promise<[number]> {
-    const data = {
-      query: `query findCompanyManager{\n  findManyUser(where:{ company_id:{ equals:${company} }, staff_read_only: { equals: false } }){\n    id\n    full_name\n  }\n}`,
-      variables: null,
-      operationName: 'findCompanyManager',
-    }
-
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
-      .toPromise()
-    const managers = response?.data?.data?.findManyUser.map(
-      (manager) => manager?.id
-    )
-    return managers
   }
 
   async findUserEnabledNotifications(
@@ -134,9 +100,12 @@ export class NotificationServices {
       variables: null,
       operationName: 'findUserEnabledNotification',
     }
+    const headers = {
+      'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+    }
 
     const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
+      .post(this.GRAPHQL_ENDPOINT, data, { headers })
       .toPromise()
     const users = response.data?.data?.notification_toggle?.map(
       (notification) => notification.user

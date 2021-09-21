@@ -46,10 +46,21 @@ export const interceptors = {
           })
         : (args.where = {
             ...args.where,
-            company_id: {
-              in: [0, ctx.authenticated.company],
-            },
+            company_id: ctx.authenticated.company,
           })
+      return true
+    }
+  ),
+  interceptResetPasswordToken: rule('injectResetPasswordToken')(
+    (_root, args, ctx: Context) => {
+      if (!args?.where?.key_code) return new Error('Token not found')
+
+      args.where = {
+        key_code: args.where.key_code,
+        date: {
+          gte: new Date(Date.now() - 30 * 60000).toJSON(),
+        },
+      }
       return true
     }
   ),

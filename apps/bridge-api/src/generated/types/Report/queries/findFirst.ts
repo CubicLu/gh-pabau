@@ -4,7 +4,7 @@ export const ReportFindFirstQuery = queryField('findFirstReport', {
   type: 'Report',
   args: {
     where: 'ReportWhereInput',
-    orderBy: list('ReportOrderByInput'),
+    orderBy: list('ReportOrderByWithRelationInput'),
     cursor: 'ReportWhereUniqueInput',
     distinct: 'ReportScalarFieldEnum',
     skip: 'Int',

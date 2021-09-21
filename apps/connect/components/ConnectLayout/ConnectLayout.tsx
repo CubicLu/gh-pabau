@@ -6,24 +6,21 @@ import { useMedia } from 'react-use'
 import { ReactComponent as PabauLogo } from '../../assets/images/pabau-logo.svg'
 import ConnectHeader from '../ConnectHeader/ConnectHeader'
 import styles from './ConnectLayout.module.less'
-import { ClientContext } from './interfaces/common'
 
 const { Content } = AntLayout
 
 interface ConnectLayoutProps {
   onChangeLanguage?: (lang) => void
-  clientContext: ClientContext
 }
 
 const ConnectLayout: FC<ConnectLayoutProps> = ({
   onChangeLanguage,
   children,
-  clientContext,
 }) => {
   const isMobile = useMedia('(max-width: 767px)', false)
   return (
     <AntLayout className={styles.connectLayoutContainer}>
-      <ConnectHeader clientContext={clientContext} />
+      <ConnectHeader />
       <Content className={styles.connectLayoutBody}>{children}</Content>
       <Content className={styles.connectLayoutFooter}>
         <div

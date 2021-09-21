@@ -1,50 +1,47 @@
-import React, { FC } from 'react'
-import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
-import { Button } from '@pabau/ui'
+import React, { useState } from 'react'
+import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
-import { LoginValidation } from '@pabau/yup'
-import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
-import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
-import { Exact } from '@pabau/graphql'
-import { QueryLazyOptions } from '@apollo/client'
+import { LoginForm, LoginValidation } from '@pabau/yup'
 import styles from '../../pages/login.module.less'
+import Link from 'next/link'
+import { useLoginMutation } from '@pabau/graphql'
+import ResetPassword from './ResetPassword'
+import { useUser } from '../../context/UserContext'
 
-export interface LoginFormProps {
-  email: string
-  password: string
-  remember?: boolean
-}
+export const LoginMain = (): JSX.Element => {
+  const [page, setPage] = useState<'login' | 'resetPassword'>('login')
+  const { login, logout } = useUser()
+  const [loginMutate] = useLoginMutation()
 
-interface LoginProps {
-  handlePageShow: React.Dispatch<React.SetStateAction<string>>
-  verifyCredentials: (
-    options?: QueryLazyOptions<Exact<{ username: string; password: string }>>
-  ) => void
-}
-
-const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
-  const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
-    if (localStorage?.getItem('token')) {
-      localStorage.removeItem('token')
-    }
+  const loginHandler = async (loginProps: LoginForm) => {
     const { email, password } = loginProps
-    await verifyCredentials({
+    await logout()
+    const result = await loginMutate({
       variables: {
         username: email,
         password: password,
       },
     })
-    return true
+    try {
+      await login(result.data.login)
+    } catch (error) {
+      console.log('LOGIN FAILED', error)
+    }
+    // BEWARE: Don't try and do anything after here because React garbage disposes of this function after login is completed.
   }
+
+  if (page === 'resetPassword')
+    return <ResetPassword onClose={() => setPage('login')} />
 
   return (
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>Log In!!</h6>
+          <h6>Log In</h6>
           <span>
-            Do not have an account? <a>Start a free trial</a>
+            Do not have an account?{' '}
+            <Link href="/signup">Start a free trial</Link>
           </span>
         </div>
       </div>
@@ -56,10 +53,8 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
             remember: false,
           }}
           validationSchema={LoginValidation}
-          onSubmit={async (value: LoginFormProps) => {
-            await loginHandler(value)
-          }}
-          render={({ isValid, values }) => (
+          onSubmit={loginHandler}
+          render={({ isValid }) => (
             <Form layout="vertical">
               <Form.Item
                 label={'Email'}
@@ -81,7 +76,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
               <div className={styles.forgotWrap}>
                 <div
                   className={styles.forgotKey}
-                  onClick={() => handlePageShow('resetPassword')}
+                  onClick={() => setPage('resetPassword')}
                 >
                   Forgot password?
                 </div>
@@ -91,22 +86,15 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
               </div>
               <div className={styles.btnSubmit}>
                 <SubmitButton
-                  className={
-                    isValid && values.email !== '' && values.password !== ''
-                      ? styles.btnStarted
-                      : styles.btnDisabled
-                  }
+                  className={isValid ? styles.btnStarted : styles.btnDisabled}
                   type={'primary'}
-                  disabled={
-                    isValid && values.email !== '' && values.password !== ''
-                      ? false
-                      : true
-                  }
+                  disabled={!isValid}
                 >
                   Confirm
                 </SubmitButton>
               </div>
-              <div className={styles.accessKey}>
+              {/* TODO uncomment them (followings) once something gets done */}
+              {/*<div className={styles.accessKey}>
                 <div className={styles.line}>
                   <span>or access quickly</span>
                 </div>
@@ -115,6 +103,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                 <div className={styles.google}>
                   <Button
                     className={styles.btnStarted}
+                    disabled
                     type={'default'}
                     icon={<GoogleIcon />}
                   >
@@ -123,6 +112,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                 </div>
                 <div className={styles.socialLine}>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<LinkedinFilled />}
@@ -130,6 +120,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                     LinkedIn
                   </Button>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<SSOIcon className={styles.keyIc} />}
@@ -137,7 +128,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                     <span className={styles.iconTxtKey}>SSO</span>
                   </Button>
                 </div>
-              </div>
+              </div>*/}
             </Form>
           )}
         />
@@ -145,5 +136,3 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
     </div>
   )
 }
-
-export default LoginMain

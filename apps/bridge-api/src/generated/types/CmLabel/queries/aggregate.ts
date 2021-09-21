@@ -4,7 +4,7 @@ export const CmLabelAggregateQuery = queryField('aggregateCmLabel', {
   type: 'AggregateCmLabel',
   args: {
     where: 'CmLabelWhereInput',
-    orderBy: list('CmLabelOrderByInput'),
+    orderBy: list('CmLabelOrderByWithRelationInput'),
     cursor: 'CmLabelWhereUniqueInput',
     distinct: 'CmLabelScalarFieldEnum',
     skip: 'Int',

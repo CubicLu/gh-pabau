@@ -80,11 +80,10 @@
     align-items: center;
     width: 100%;
     height: 160px;
-    padding: 12px 55px;
 
     img {
-      width: 160px;
-      height: 160px;
+      width: 140px;
+      height: 140px;
     }
   }
 
@@ -144,22 +143,18 @@
 }
 
 .webinar-banner {
-  background-size: cover;
   background-repeat: no-repeat;
-  height: 157px;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 124px;
+  background-size: 125px 150px;
+  background-position: bottom right;
 }
 
 .webinar-box {
-  width: 270px;
-  height: 180px;
+  width: 290px;
   background-color: #ffffff;
   border: 1px solid #ecedf0;
   border-radius: 4px;
   position: relative;
+  margin-bottom: 24px;
 }
 
 .webinar-text {
@@ -173,6 +168,9 @@
 
     @media screen and (min-width: 1366px) {
       font-size: 14px;
+    }
+    @media screen and (max-width: 767px) {
+      padding-bottom: 8px;
     }
   }
 
@@ -194,7 +192,7 @@
     margin-top: 14px;
     margin-bottom: 0px;
     text-transform: uppercase;
-
+    width: 55%;
     @media screen and (min-width: 1366px) {
       font-size: 10px;
     }
@@ -233,25 +231,14 @@
   height: 25px;
   display: flex;
   align-items: center;
+
   @media screen and (min-width: 1366px) {
     font-size: 14px;
     min-width: 100px;
     padding: 1px 12px;
-
-    span {
-      margin-left: 3px !important;
-    }
   }
-  span {
-    display: inline-flex;
-    align-items: center;
-    &:last-child {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 70px;
-      display: inline-block;
-    }
+  span:last-child {
+    line-height: 100%;
   }
 }
 
@@ -267,24 +254,24 @@
   height: 25px;
   display: flex;
   align-items: center;
-  span {
-    margin-left: 3px !important;
-    display: inline-flex;
-    align-items: center;
-    &:last-child {
-      margin-top: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      display: inline-block;
-      text-overflow: ellipsis;
-      width: 73px;
+  :global .anticon-plus {
+    color: #9292a3;
+  }
+  &:hover,
+  &:focus,
+  &:active {
+    :global span.anticon.anticon-plus {
+      color: #7ec9e0;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
-
   @media screen and (min-width: 1366px) {
     font-size: 12px;
     min-width: 100px;
     padding: 1px 10px;
+  }
+  span:last-child {
+    line-height: 100%;
   }
 }
 

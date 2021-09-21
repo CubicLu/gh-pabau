@@ -6,7 +6,7 @@ export const AccountManagerFindFirstQuery = queryField(
     type: 'AccountManager',
     args: {
       where: 'AccountManagerWhereInput',
-      orderBy: list('AccountManagerOrderByInput'),
+      orderBy: list('AccountManagerOrderByWithRelationInput'),
       cursor: 'AccountManagerWhereUniqueInput',
       distinct: 'AccountManagerScalarFieldEnum',
       skip: 'Int',

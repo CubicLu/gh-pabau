@@ -1,34 +1,27 @@
-import React, { FC, useRef } from 'react'
 import styles from '../../pages/login.module.less'
-import _ from 'lodash'
 import { SubmitButton, Form } from 'formik-antd'
-import { Input } from 'antd'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 import { Button } from '@pabau/ui'
-import { MinusOutlined } from '@ant-design/icons'
-import { JwtUser } from './interfaces/common'
-import { Exact } from '@pabau/graphql'
-import { QueryLazyOptions } from '@apollo/client'
+import PinInput from 'react-pin-input'
+import { useBoolean } from 'react-use'
+import { twoFactorAuth } from '@pabau/yup'
 
-export interface TowStepFormProps {
+interface FormProps {
   code: string
 }
 
-interface TwoStepAuthenticationProps {
-  handlePageShow: (page: string) => void
-  currentUser: JwtUser
-  verifyTwoFaCode: (
-    options?: QueryLazyOptions<Exact<{ pincode: string }>>
-  ) => void
+interface P {
+  onClose: () => void
+  maskedPhoneNumber: string
+  onSubmit(form: FormProps): Promise<{ error: string } | true>
 }
 
-const TwoStepAuthentication: FC<TwoStepAuthenticationProps> = ({
-  handlePageShow,
-  currentUser,
-  verifyTwoFaCode,
-}) => {
-  const inputs = useRef([])
+export const TwoStepAuthentication = ({
+  onClose,
+  onSubmit,
+  maskedPhoneNumber,
+}: P): JSX.Element => {
+  const [isSubmitting, setIsSubmitting] = useBoolean(false)
   return (
     <div>
       <div className={styles.signInForm}>
@@ -36,15 +29,9 @@ const TwoStepAuthentication: FC<TwoStepAuthenticationProps> = ({
           <h6>Two-step authentication</h6>
           <span className={styles.textContent}>
             To continue, please, enter the 6-digit verification code sent to
-            <b>
-              {' '}
-              your phone ending in{' '}
-              {currentUser.CmStaffGeneral.CellPhone.length > 0
-                ? currentUser.CmStaffGeneral.CellPhone.substr(-4)
-                : `N/A`}
-            </b>
+            <b>your phone ending in {maskedPhoneNumber || 'N/A'}</b>
           </span>
-          <span className={styles.textContent}>
+          <span className={styles.textContent} hidden>
             Did not receive a code? <a>Resend.</a>
           </span>
         </div>
@@ -52,80 +39,35 @@ const TwoStepAuthentication: FC<TwoStepAuthenticationProps> = ({
       <div className={styles.twoStepAuth}>
         <Formik
           initialValues={{
-            code: {
-              '0': '',
-              '1': '',
-              '2': '',
-              '3': '',
-              '4': '',
-              '5': '',
-            },
+            code: '',
           }}
-          validationSchema={Yup.object({
-            code: Yup.object().shape({
-              0: Yup.string().required(),
-              1: Yup.string().required(),
-              2: Yup.string().required(),
-              3: Yup.string().required(),
-              4: Yup.string().required(),
-              5: Yup.string().required(),
-            }),
-          })}
-          onSubmit={(value) => {
-            const verificationCode = Object.values(value.code).join('')
-            verifyTwoFaCode({ variables: { pincode: verificationCode } })
+          validationSchema={twoFactorAuth}
+          onSubmit={async ({ code }) => {
+            setIsSubmitting(true)
+            const result = await onSubmit({ code })
+            setIsSubmitting(false)
+            if (result === true) onClose()
           }}
-          render={({ values, setFieldValue }) => {
+          render={({ setFieldValue }) => {
             return (
               <Form>
                 <div className={styles.inputWrap}>
-                  {_.times(6, (i) => {
-                    return (
-                      <div className={styles.customInputWrap} key={i}>
-                        <Form.Item
-                          name={`code[${
-                            Object.keys(values.code)[i.toString()]
-                          }]`}
-                        >
-                          <Input
-                            type="number"
-                            name={`code[${
-                              Object.keys(values.code)[i.toString()]
-                            }]`}
-                            value={values.code[i]}
-                            ref={(ref) => inputs.current.push(ref)}
-                            onChange={(e) => {
-                              if (e.target.value.length <= 1) {
-                                const codeArray = values.code
-                                codeArray[i] = e.target.value
-                                setFieldValue('code', codeArray)
-                                if (i !== 5) {
-                                  inputs.current[i + 1].focus()
-                                }
-                              }
-                            }}
-                            onKeyUp={(e) => {
-                              if (e.keyCode === 8) {
-                                inputs.current[i - 1].focus()
-                              }
-                            }}
-                          />
-                        </Form.Item>
-                        {i === 2 && (
-                          <div className={styles.hyphen}>
-                            <MinusOutlined />
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
+                  <PinInput
+                    length={6}
+                    focus
+                    secret
+                    type="numeric"
+                    onChange={(e) => setFieldValue('code', e, true)}
+                  />
                 </div>
                 <div className={styles.btnAuthWrap}>
-                  <SubmitButton type={'primary'}>Continue</SubmitButton>
+                  <SubmitButton loading={isSubmitting} type={'primary'}>
+                    Continue
+                  </SubmitButton>
                   <Button
                     className={styles.btnSignAuth}
                     type={'default'}
-                    onClick={() => handlePageShow('moreWayAuth')}
+                    onClick={() => onClose()}
                   >
                     Sign in another way
                   </Button>
@@ -138,5 +80,3 @@ const TwoStepAuthentication: FC<TwoStepAuthenticationProps> = ({
     </div>
   )
 }
-
-export default TwoStepAuthentication

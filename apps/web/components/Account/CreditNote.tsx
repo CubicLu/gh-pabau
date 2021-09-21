@@ -6,6 +6,7 @@ import { Dayjs } from 'dayjs'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
 import { useCreditNotesQuery, useCreditNoteCountQuery } from '@pabau/graphql'
+import { DisplayDate } from '../../hooks/displayDate'
 
 interface CreditNoteProps {
   searchTerm: string
@@ -55,6 +56,17 @@ const CreditNotes: FC<CreditNoteProps> = ({
       dataIndex: 'location',
       visible: true,
       skeletonWidth: '100px',
+      render: function render(data) {
+        const item = data?.slice(0, 35)
+        const isLarge = data?.length > 35
+        return (
+          <Tooltip title={isLarge && data}>
+            <div style={{ minWidth: '50px' }}>
+              {isLarge ? item + '...' : data}
+            </div>
+          </Tooltip>
+        )
+      },
     },
     {
       title: t('account.finance.credit.note.columns.credit.date'),
@@ -63,7 +75,7 @@ const CreditNotes: FC<CreditNoteProps> = ({
       width: '120px',
       skeletonWidth: '80px',
       render: function render(data) {
-        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+        return <Typography.Text>{DisplayDate(data)}</Typography.Text>
       },
     },
     {
@@ -72,10 +84,14 @@ const CreditNotes: FC<CreditNoteProps> = ({
       visible: true,
       skeletonWidth: '100px',
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
-            {data}
-          </Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -86,8 +102,14 @@ const CreditNotes: FC<CreditNoteProps> = ({
       visible: true,
       skeletonWidth: '100px',
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={{ color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -96,7 +118,6 @@ const CreditNotes: FC<CreditNoteProps> = ({
       title: t('account.finance.credit.note.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '100px',
       skeletonWidth: '50px',
       render: function render(data) {
         return (

@@ -6,11 +6,11 @@ import {
 } from '@pabau/ui'
 import { Card, Col, Divider, Row, Typography, Spin } from 'antd'
 import classNames from 'classnames'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import CommonHeader from '../../components/CommonHeader'
 import Layout from '../../components/Layout/Layout'
 import SearchResults from '../../components/Setup/SearchResults/Index'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { reportCardsData } from '../../mocks/data'
 import { Unauthorized } from '../../components/Unauthorized'
@@ -37,7 +37,7 @@ const reportHref = {
 
 const Reports: FC = () => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
   const currentDate = new Date()
 
   const [accessReportPage, setAccessReportPage] = useState<boolean>(false)
@@ -155,8 +155,6 @@ const Reports: FC = () => {
       }
 
       setSearchData(searchDataArray)
-    } else {
-      // setTitle('Setup')
     }
   }
 
@@ -242,11 +240,13 @@ const Reports: FC = () => {
       for (const item of temp) {
         if (item.graphDataKey) {
           const graphRecord = graphData?.retrieveReport[item.graphDataKey]
-          const graph = []
-          for (const month of Object.keys(graphRecord)) {
-            graph.push([month, Number.parseFloat(graphRecord[month])])
+          if (graphRecord) {
+            const graph = []
+            for (const month of Object.keys(graphRecord)) {
+              graph.push([month, Number.parseFloat(graphRecord[month])])
+            }
+            item.graphData = graph
           }
-          item.graphData = graph
         }
       }
       setReportsData(temp)

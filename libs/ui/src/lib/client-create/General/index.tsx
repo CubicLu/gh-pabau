@@ -3,7 +3,6 @@ import styles from '../ClientCreate.module.less'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import GeneralComponent from './General'
 import ContactInfo from './ContactInfo'
-import { Subscriptions } from './Subscriptions'
 import Addresses from './Addresses'
 import CustomField from './CustomField'
 import { useTranslation } from 'react-i18next'
@@ -39,7 +38,6 @@ interface GeneralProps {
   fieldsSettings?: FieldSetting[]
   marketingSources?: CommonProps[]
   limitContactsLocations?: LimitLocation[]
-  otherCompanies?: OtherCompany[]
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
   labelsData: LabelDataProps[]
@@ -57,17 +55,40 @@ export const Index: FC<GeneralProps> = ({
   selectedLabels,
   setSelectedLabels,
   limitContactsLocations,
-  otherCompanies,
   isLoading = false,
   labelsData,
   isMarketingSourceLoading,
 }) => {
-  const [moreVisible, setMoreVisible] = useState(false)
+  const [moreVisible, setMoreVisible] = useState(true)
 
   const { t } = useTranslation('common')
 
   const toggleMore = () => {
     setMoreVisible(!moreVisible)
+  }
+
+  const isAddress = () => {
+    if (fieldsSettings && fieldsSettings?.length > 0) {
+      for (const field of fieldsSettings) {
+        if (
+          field.field_name === 'MailingStreet' ||
+          field.field_name === 'MailingProvince' ||
+          field.field_name === 'MailingCity' ||
+          field.field_name === 'MailingCountry' ||
+          field.field_name === 'MailingPostal'
+        ) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  const requiredLabel = (name: string) => {
+    return fieldsSettings?.find((thread) => thread.field_name === name)
+      ?.is_required === 1
+      ? ` (${t('quickcreate.required.label')})`
+      : ''
   }
 
   return (
@@ -85,18 +106,19 @@ export const Index: FC<GeneralProps> = ({
         isLoading={isLoading}
         labelsData={labelsData}
         isMarketingSourceLoading={isMarketingSourceLoading}
+        requiredLabel={requiredLabel}
       />
       {fieldsSettings && (
         <ContactInfo
           values={values}
           fieldsSettings={fieldsSettings}
           setFieldValue={setFieldValue}
+          requiredLabel={requiredLabel}
         />
       )}
-      {fieldsSettings?.find((thread) => thread.field_name === 'opt_in') && (
-        <Subscriptions />
-      )}
-      {fieldsSettings && (
+      {(isAddress() ||
+        (limitContactsLocations && limitContactsLocations.length > 0) ||
+        (customFields && customFields.length > 0)) && (
         <div
           className={`${styles.moreBtn} ${!moreVisible && styles.paddingAtEnd}`}
           onClick={toggleMore}
@@ -107,14 +129,19 @@ export const Index: FC<GeneralProps> = ({
       )}
       {moreVisible && (
         <div className={styles.paddingAtEnd}>
-          {fieldsSettings && <Addresses fieldsSettings={fieldsSettings} />}
+          {isAddress() && fieldsSettings && (
+            <Addresses
+              fieldsSettings={fieldsSettings}
+              requiredLabel={requiredLabel}
+            />
+          )}
           {limitContactsLocations && limitContactsLocations?.length > 0 && (
             <AntForm
               className={styles.subscriptionForm}
               layout={'vertical'}
               requiredMark={false}
             >
-              <h5>Available in locations</h5>
+              <h5>{t('quickCreate.client.modal.general.location.title')}</h5>
               {limitContactsLocations.map((item) => (
                 <AntForm.Item
                   name={`limitContactsLocations_${item.id}`}
@@ -126,26 +153,6 @@ export const Index: FC<GeneralProps> = ({
                       defaultChecked={true}
                     />
                     <p>{item.name}</p>
-                  </div>
-                </AntForm.Item>
-              ))}
-            </AntForm>
-          )}
-          {otherCompanies && otherCompanies.length > 0 && (
-            <AntForm
-              className={styles.subscriptionForm}
-              layout={'vertical'}
-              requiredMark={false}
-            >
-              <h5>Other Companies</h5>
-              {otherCompanies.map((item) => (
-                <AntForm.Item
-                  name={`otherCompany_${item.company_id}`}
-                  key={item.company_id}
-                >
-                  <div className={styles.switchBtn}>
-                    <Switch name={`otherCompany_${item.company_id}`} />
-                    <p>{item.company_name}</p>
                   </div>
                 </AntForm.Item>
               ))}

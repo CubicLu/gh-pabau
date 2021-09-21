@@ -12,8 +12,9 @@ import {
 } from '@pabau/ui'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
-import React, { FC, useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import Search from '../components/Search'
+import { useUser } from '../context/UserContext'
 import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './Setup.module.less'
@@ -28,10 +29,14 @@ interface P {
   displayCreateButton?: boolean
   handleCreate?: () => void
   showChat?: boolean
+  onChatClick?: () => void
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
+  displayActivity?: boolean
+  renderActivity?: ReactNode
 }
 
 const CommonHeader: FC<P> = ({
-  showChat,
   handleSearch,
   title = 'Setup',
   isShowSearch,
@@ -40,7 +45,13 @@ const CommonHeader: FC<P> = ({
   isLeftOutlined = false,
   displayCreateButton = false,
   handleCreate,
+  onChatClick,
+  clientCreateRender,
+  leadCreateRender,
+  displayActivity = false,
+  renderActivity,
 }) => {
+  const user = useUser()
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
@@ -103,6 +114,7 @@ const CommonHeader: FC<P> = ({
             )}
             {isContent && <ContentJsx />}
           </div>
+          {displayActivity && <div>{renderActivity}</div>}
           {displayCreateButton && (
             <div className={styles.createPlusIcon}>
               <PlusSquareFilled
@@ -118,10 +130,10 @@ const CommonHeader: FC<P> = ({
           searchRender={() => <Search />}
           onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
           onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
-          onClickChatDrawer={() => {
-            //TODO:
-            // setMessageDrawer((e) => !e)
-          }}
+          onClickChatDrawer={onChatClick}
+          clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
+          userData={user?.me}
         />
       )}
       {openNotificationDrawer && (

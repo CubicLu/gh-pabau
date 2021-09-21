@@ -1,18 +1,22 @@
-:global {
-  .ant-layout-sider {
-    height: calc(100vh - 80px);
-    background: transparent;
-  }
-}
 .pabau-sidebar {
   user-select: none;
-  background: #ffffff;
+  background: #ffffff !important;
   .sidebar {
     border-right: 0;
     .removeSelected {
       color: var(--light-grey-color);
       &:after {
         display: none;
+      }
+    }
+    .menuSelected {
+      & > span > a {
+        color: var(--primary-color);
+      }
+      :global {
+        .anticon {
+          color: var(--primary-color);
+        }
       }
     }
   }
@@ -55,6 +59,20 @@
     font-size: 14px;
     font-family: 'Circular-Std-Book';
     font-weight: 400;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    .activity-icon {
+      width: 19px;
+      margin-left: -2px;
+    }
+      :global &.ant-menu-item-selected  {
+        .ant-menu-item-icon {
+          .activity-icon {
+            padding-top: 5px;    
+          }
+        }
+      }
     a {
       color: var(--light-grey-color);
     }
@@ -85,6 +103,14 @@
     min-width: 152px;
     height: 32px;
     text-align: center;
+    display: flex;
+    align-items: center;
+  }
+  .setup-btn-active {
+    border: 1px solid var(--primary-color);
+    & > span {
+      color: var(--primary-color);
+    }
   }
   .sidebar-btn-align {
     display: flex;
@@ -104,7 +130,17 @@
     padding-left: 32px;
   }
 }
-
+.badge-icon {
+  :global .ant-badge-count {
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+}
 @media (min-width: 200px) and (max-width: 767px) {
   .mobile-view-none {
     display: none;

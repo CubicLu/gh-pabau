@@ -4,7 +4,7 @@ export const BacsAccountFindManyQuery = queryField('findManyBacsAccount', {
   type: nonNull(list(nonNull('BacsAccount'))),
   args: {
     where: 'BacsAccountWhereInput',
-    orderBy: list('BacsAccountOrderByInput'),
+    orderBy: list('BacsAccountOrderByWithRelationInput'),
     cursor: 'BacsAccountWhereUniqueInput',
     distinct: 'BacsAccountScalarFieldEnum',
     skip: 'Int',

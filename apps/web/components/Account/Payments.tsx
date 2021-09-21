@@ -1,9 +1,10 @@
 import React, { FC } from 'react'
-import { Typography } from 'antd'
+import { Typography, Tooltip } from 'antd'
 import TableLayout, { FilterValueType } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Dayjs } from 'dayjs'
 import { usePaymentsQuery, usePaymentCountQuery } from '@pabau/graphql'
+import { DisplayDate } from '../../hooks/displayDate'
 
 interface PaymentProps {
   searchTerm: string
@@ -32,7 +33,6 @@ const Payments: FC<PaymentProps> = ({
       title: t('account.finance.payments.columns.invoiceNo'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '120px',
       skeletonWidth: '80px',
       render: function render(data) {
         return (
@@ -46,6 +46,17 @@ const Payments: FC<PaymentProps> = ({
       className: 'drag-visible',
       skeletonWidth: '80px',
       visible: true,
+      render: function render(data) {
+        const item = data?.slice(0, 35)
+        const isLarge = data?.length > 35
+        return (
+          <Tooltip title={isLarge && data}>
+            <div style={{ minWidth: '50px' }}>
+              {isLarge ? item + '...' : data}
+            </div>
+          </Tooltip>
+        )
+      },
     },
     {
       title: t('account.finance.payments.columns.date'),
@@ -55,7 +66,7 @@ const Payments: FC<PaymentProps> = ({
       width: '120px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+        return <Typography.Text>{DisplayDate(data)}</Typography.Text>
       },
     },
     {
@@ -65,8 +76,14 @@ const Payments: FC<PaymentProps> = ({
       skeletonWidth: '80px',
       visible: true,
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={{ color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
     },

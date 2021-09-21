@@ -23,6 +23,36 @@ const ClientDetailsStory: FC<ClientDetailsProps> = ({ ...args }) => {
   )
 }
 
+const searchResults = [
+  {
+    name: 'Deddington Health Centre',
+    postCode: 'OX15 0TQ',
+    city: 'Deddington',
+    street: 'Banbury',
+    country: 'United Kingdom',
+    phone: '+44 (0) 1869338611',
+  },
+  {
+    name: 'Deddington Lorem Health Centre',
+    postCode: 'OX15 4TN',
+    city: 'Deddington',
+    street: 'Banbury',
+    country: 'United Kingdom',
+    phone: '+44 (0) 1869338611',
+  },
+]
+
+const sampleAppointments = [
+  {
+    id: '1',
+    firstName: 'Bruno',
+    lastName: 'Ballardin',
+    avatarUrl: userAvatar,
+    mobile: '383299103',
+    email: 'bruno.barllardin@sample.io',
+  },
+]
+
 export const Basic = ClientDetailsStory.bind({})
 Basic.args = {
   clientData: {
@@ -31,14 +61,19 @@ Basic.args = {
     cardOption: [],
     firstName: 'Bruno',
     lastName: 'Ballardin',
-    labels: ['#coporate', '#new-patient', 'new client', '2 no shows'],
+    labels: [
+      { label: '#coporate', color: '#1a89d0', count: 0 },
+      { label: '#new-patient', color: '#1bba2a', count: 0 },
+      { label: 'new client', color: '#467a34', count: 0 },
+      { label: '2 no shows', color: '#6892bf', count: 0 },
+    ],
     onAccount: -540,
     outStanding: 540,
     patientID: '325',
     referredBy: 'Doctor Referral',
     dob: '1969-11-28',
     gender: 'Male',
-    address: '68 Vassall Road, London, SW9 6HY',
+    address: '',
     phone: '383299103',
     email: 'bruno.ballardin@outlook.com',
     regDate: '2021-01-01',
@@ -56,4 +91,6 @@ Basic.args = {
     membershipNumber: 'BL-4444-0000-2222',
     allocatedAuthorisations: '',
   },
+  searchResults: searchResults,
+  appointments: sampleAppointments,
 }

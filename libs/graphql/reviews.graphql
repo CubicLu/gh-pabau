@@ -1,19 +1,13 @@
 query getSocialSurveyFeedback(
   $take: Int
   $skip: Int
-  $full_name: String
-  $rating: IntFilter
-  $service: String
+  $where: SocialSurveyFeedbackWhereInput
 ) {
   findManySocialSurveyFeedback(
     take: $take
     skip: $skip
     orderBy: { date: desc }
-    where: {
-      User: { full_name: { contains: $full_name } }
-      rating: $rating
-      service: { contains: $service }
-    }
+    where: $where
   ) {
     feedback_source
     id
@@ -59,17 +53,11 @@ query getAllSocialSurveyFeedback {
 }
 
 query getAllSocialSurveyFeedbackRecords(
-  $full_name: String
-  $rating: IntFilter
-  $service: String
+  $where: SocialSurveyFeedbackWhereInput
 ) {
   findManySocialSurveyFeedback(
     orderBy: { date: desc }
-    where: {
-      User: { full_name: { contains: $full_name } }
-      rating: $rating
-      service: { contains: $service }
-    }
+    where: $where
   ) {
     id
   }

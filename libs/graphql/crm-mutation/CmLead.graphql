@@ -62,11 +62,14 @@ fragment CmLead on CmLead {
   Company {
     ...CompanyFields
   }
-}
-
-mutation createOneCmLead($data: CmLeadCreateInput!) {
-  createOneCmLead(data: $data) {
-    ...CmLead
+  User {
+    ...UserFields
+  }
+  MarketingSource {
+    ...MarketingSourceFields
+  }
+  LeadStatusData {
+    ...LeadStatusFields
   }
 }
 

@@ -8,6 +8,7 @@ export const InvoiceSkeleton: FC = () => {
       visible={true}
       footer={null}
       centered={true}
+      width={800}
       className={styles.invoiceTemplate}
     >
       <div className={styles.mainLayout}>
@@ -294,11 +295,22 @@ export const InvoiceSkeleton: FC = () => {
                 </div>
               </div>
               <div className={styles.right}>
-                <Skeleton.Input
-                  active
-                  size={'small'}
-                  className={styles.inputSpaywithCardkeleton}
-                />
+                <div className={styles.inner}>
+                  <span className={styles.headerText}>
+                    <Skeleton.Input
+                      active
+                      size={'small'}
+                      className={styles.inputSkeleton}
+                    />
+                  </span>
+                  <span className={styles.infoText}>
+                    <Skeleton.Input
+                      active
+                      size={'small'}
+                      className={styles.grandTotalSkeleton}
+                    />
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -352,8 +364,6 @@ export const InvoiceSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input
@@ -386,8 +396,6 @@ export const InvoiceSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input
@@ -420,8 +428,6 @@ export const InvoiceSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input

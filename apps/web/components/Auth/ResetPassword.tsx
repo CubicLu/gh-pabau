@@ -1,58 +1,31 @@
-import {
-  UserValidationDocument,
-  SendEmailtoValidateUserDocument,
-} from '@pabau/graphql'
-import { useLiveQuery } from '@pabau/ui'
-import { useMutation } from '@apollo/client'
 import { Alert, Button } from 'antd'
 import { Formik } from 'formik'
 import { Form, Input, SubmitButton } from 'formik-antd'
-import React, { FC, useEffect, useMemo, useState } from 'react'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from '../../pages/login.module.less'
 import { ResetPasswordValidation } from '@pabau/yup'
+import { ForgotPasswordDocument } from '@pabau/graphql'
+import { useMutation } from '@apollo/client'
+import React, { useState } from 'react'
 
-interface ResetPasswordProps {
-  handlePageShow: (page: string) => void
+interface P {
+  onClose?(): void
 }
 
-const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
+const ResetPassword = ({ onClose }: P): JSX.Element => {
   const { t } = useTranslationI18()
-  const [email, setEmail] = useState('')
-  const [call, setCall] = useState('')
-  const [sentEmail, setSentEmail] = useState('')
+  const [sentEmail, setSentEmail] = useState(false)
+  const [enable, setEnable] = useState(false)
 
-  const getQueryVariables = useMemo(() => {
-    const queryOptions = {
-      variables: { username: call },
-    }
-    return queryOptions
-  }, [call])
-
-  const { data, loading } = useLiveQuery(
-    UserValidationDocument,
-    getQueryVariables
-  )
-
-  const [sendEmailMutation] = useMutation(SendEmailtoValidateUserDocument, {
+  const [userValidation, { loading }] = useMutation(ForgotPasswordDocument, {
     onCompleted() {
-      setSentEmail('sent')
-      setEmail('')
+      setEnable(true)
     },
     onError() {
-      setSentEmail('error')
+      setEnable(false)
     },
   })
-  useEffect(() => {
-    const timeOutId = setTimeout(() => setCall(email), 50)
-    return () => clearTimeout(timeOutId)
-  }, [email])
 
-  const onchange = (val, valid) => {
-    if (valid && val.target.value !== '') {
-      setEmail(val.target.value)
-    }
-  }
   return (
     <div>
       <div className={styles.signInForm}>
@@ -71,39 +44,17 @@ const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
           validationSchema={ResetPasswordValidation}
           validateOnChange={true}
           onSubmit={async (value) => {
-            await sendEmailMutation({
+            await userValidation({
               variables: {
-                to: email,
-                subject: 'Reset Password Request',
-                text: 'Reset Password Request',
-                html: 'Reset Password Request',
-                templateType: 'password-reset-requested',
-                fields: [
-                  {
-                    key: 'url',
-                    value: `${window.location.origin}/resetPassword?id=${data}`,
-                  },
-                ],
+                email: value.email,
               },
               optimisticResponse: {},
             })
+            setSentEmail(true)
           }}
-          render={({ isValid, values, errors }) => (
+          render={({ values, isValid }) => (
             <Form className={styles.resetWrap} layout="vertical">
-              {errors.email === undefined &&
-              email !== '' &&
-              data === undefined ? (
-                <Alert
-                  message={t('reset.password.banner.search.title', {
-                    fallbackLng: 'en',
-                  })}
-                  description={t('reset.password.banner.search.description', {
-                    fallbackLng: 'en',
-                  })}
-                  type="error"
-                />
-              ) : null}
-              {sentEmail === 'sent' ? (
+              {sentEmail && enable ? (
                 <Alert
                   message={t('reset.password.banner.email.title', {
                     fallbackLng: 'en',
@@ -114,7 +65,7 @@ const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
                   type="success"
                 />
               ) : null}
-              {sentEmail === 'error' ? (
+              {sentEmail && !enable ? (
                 <Alert
                   message={t('reset.password.banner.email.error.title', {
                     fallbackLng: 'en',
@@ -127,35 +78,26 @@ const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
                 />
               ) : null}
               <Form.Item
-                label={t('clients.content.column.email', { fallbackLng: 'en' })}
+                label={t('clients.content.column.email', {
+                  fallbackLng: 'en',
+                })}
                 name={'email'}
                 className={styles.signupInput}
               >
                 <Input
                   name={'email'}
                   value={values.email}
-                  onChange={(val) => onchange(val, isValid)}
                   autoComplete={'off'}
                 />
               </Form.Item>
               <div className={styles.btnReset}>
                 <SubmitButton
                   className={
-                    isValid &&
-                    values.email !== '' &&
-                    email !== '' &&
-                    data !== undefined
+                    isValid && values.email !== ''
                       ? styles.btnStarted
                       : styles.btnDisabled
                   }
-                  disabled={
-                    isValid &&
-                    values.email !== '' &&
-                    email !== '' &&
-                    data !== undefined
-                      ? false
-                      : true
-                  }
+                  disabled={values.email === '' ? true : !isValid}
                   type={'primary'}
                   loading={loading}
                 >
@@ -163,7 +105,7 @@ const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
                 </SubmitButton>
                 <Button
                   className={styles.btnReturn}
-                  onClick={() => handlePageShow('login')}
+                  onClick={() => onClose?.()}
                 >
                   {t('reset.password.login.link.text', { fallbackLng: 'en' })}
                 </Button>
@@ -176,7 +118,9 @@ const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
                   })}
                 </p>
                 <span>
-                  {t('reset.password.start.trial.text', { fallbackLng: 'en' })}
+                  {t('reset.password.start.trial.text', {
+                    fallbackLng: 'en',
+                  })}
                 </span>
               </div>
             </Form>

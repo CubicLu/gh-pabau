@@ -11,12 +11,14 @@ interface GeneralProps {
     values: string | string[] | boolean | number
   ): void
   fieldsSettings: FieldSetting[]
+  requiredLabel: (name: string) => string
 }
 
 export const ContactInfo: FC<GeneralProps> = ({
   setFieldValue,
   values,
   fieldsSettings,
+  requiredLabel,
 }) => {
   const { t } = useTranslation('common')
   return (
@@ -28,7 +30,10 @@ export const ContactInfo: FC<GeneralProps> = ({
         requiredMark={false}
       >
         <AntForm.Item
-          label={t('quickCreate.client.modal.general.email')}
+          label={`${
+            fieldsSettings?.find((thread) => thread.field_name === 'Email')
+              ?.field_label || t('quickCreate.client.modal.general.email')
+          }${requiredLabel('Email')}`}
           name={'Email'}
         >
           <Input
@@ -38,20 +43,31 @@ export const ContactInfo: FC<GeneralProps> = ({
             )}
           />
         </AntForm.Item>
-        {fieldsSettings.find((thread) => thread.field_name === 'Mobile') && (
-          <AntForm.Item name={'Mobile'}>
-            <PhoneNumberInput
-              label={t('quickCreate.client.modal.general.mobilePhone')}
-              value={values?.Mobile}
-              onChange={(value) => {
-                setFieldValue('Mobile', value)
-              }}
-            />
-          </AntForm.Item>
-        )}
+        <AntForm.Item name={'Mobile'}>
+          <PhoneNumberInput
+            label={`${
+              fieldsSettings?.find((thread) => thread.field_name === 'Mobile')
+                ?.field_label ||
+              t('quickCreate.client.modal.general.mobilePhone')
+            }${requiredLabel('Mobile')}`}
+            value={values?.Mobile}
+            onChange={(value) => {
+              setFieldValue('Mobile', value)
+            }}
+            showValidErrorMessage={false}
+            placeholder={t('common-label-enter', {
+              what: t(
+                'quickCreate.client.modal.general.mobilePhone'
+              ).toLowerCase(),
+            })}
+          />
+        </AntForm.Item>
         {fieldsSettings.find((thread) => thread.field_name === 'Phone') && (
           <AntForm.Item
-            label={t('quickCreate.client.modal.general.telephone')}
+            label={`${
+              fieldsSettings?.find((thread) => thread.field_name === 'Phone')
+                ?.field_label || t('quickCreate.client.modal.general.telephone')
+            }${requiredLabel('Phone')}`}
             name={'Phone'}
           >
             <Input name={'Phone'} placeholder={'+ _ ___ _____'} />

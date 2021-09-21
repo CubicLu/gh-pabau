@@ -6,7 +6,7 @@ export const GroupPermissionFindManyQuery = queryField(
     type: nonNull(list(nonNull('GroupPermission'))),
     args: {
       where: 'GroupPermissionWhereInput',
-      orderBy: list('GroupPermissionOrderByInput'),
+      orderBy: list('GroupPermissionOrderByWithRelationInput'),
       cursor: 'GroupPermissionWhereUniqueInput',
       distinct: 'GroupPermissionScalarFieldEnum',
       skip: 'Int',

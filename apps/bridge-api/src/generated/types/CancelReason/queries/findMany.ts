@@ -4,7 +4,7 @@ export const CancelReasonFindManyQuery = queryField('findManyCancelReason', {
   type: nonNull(list(nonNull('CancelReason'))),
   args: {
     where: 'CancelReasonWhereInput',
-    orderBy: list('CancelReasonOrderByInput'),
+    orderBy: list('CancelReasonOrderByWithRelationInput'),
     cursor: 'CancelReasonWhereUniqueInput',
     distinct: 'CancelReasonScalarFieldEnum',
     skip: 'Int',

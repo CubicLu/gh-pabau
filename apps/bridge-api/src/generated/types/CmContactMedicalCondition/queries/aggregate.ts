@@ -6,7 +6,7 @@ export const CmContactMedicalConditionAggregateQuery = queryField(
     type: 'AggregateCmContactMedicalCondition',
     args: {
       where: 'CmContactMedicalConditionWhereInput',
-      orderBy: list('CmContactMedicalConditionOrderByInput'),
+      orderBy: list('CmContactMedicalConditionOrderByWithRelationInput'),
       cursor: 'CmContactMedicalConditionWhereUniqueInput',
       distinct: 'CmContactMedicalConditionScalarFieldEnum',
       skip: 'Int',

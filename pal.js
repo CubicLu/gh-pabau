@@ -37,6 +37,7 @@ module.exports = {
         BnfDrug: ['updateOne', 'deleteOne', 'updateMany', 'upsertOne'],
         CompanyMeta: ['upsertOne'],
         CmContact: ['createOne'],
+        CmLead: ['createOne'],
       },
     },
   },
@@ -76,6 +77,7 @@ module.exports = {
       BnfDrug: ['updateOne', 'deleteOne', 'updateMany', 'upsertOne'],
       CompanyMeta: ['upsertOne'],
       CmContact: ['createOne'],
+      CmLead: ['createOne'],
     },
   },
 }

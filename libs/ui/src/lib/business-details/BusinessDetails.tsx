@@ -3,21 +3,23 @@ import {
   BusinessTypes,
   Button,
   IOption,
-  LanguageDropdown,
   PhoneNumberInput,
   SimpleDropdown,
+  AddressDetails,
 } from '@pabau/ui'
-import { Col, Divider, Row, Skeleton, Image } from 'antd'
+import { Col, Divider, Row, Skeleton, Image, Select } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@apollo/client'
 import { useWindowSize } from 'react-use'
-import currency from '../../assets/currency'
+import { currency } from '../../assets/currency'
 import { bizTypes } from '../../assets/images/biz-types'
-import timezones from '../../assets/timezone'
+import { GetTimezoneListDocument } from '@pabau/graphql'
 import styles from './BusinessDetails.module.less'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { Form, Input } from 'formik-antd'
+import { languageMenu } from '../../assets/images/lang-logos'
 
 export interface BasicInformation {
   businessName: string
@@ -46,7 +48,9 @@ export interface BusinessDetailsProps {
   businessLocation?: string
   buttonClicked?: boolean
   showUploader?: () => void
+  onDelete?: () => void
   companyLogo?: string
+  AddressDetails?: AddressDetails
 }
 
 export const BusinessDetails: FC<BusinessDetailsProps> = ({
@@ -57,11 +61,45 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   languageSetting,
   businessLocation,
   buttonClicked,
+  onDelete,
   showUploader,
   companyLogo,
+  AddressDetails,
 }) => {
   const { t } = useTranslation('common')
   const size = useWindowSize()
+
+  const { data: timezoneList } = useQuery(GetTimezoneListDocument)
+  const weeklist = [
+    {
+      key: 'monday',
+      label: t('business.details.week.day.monday'),
+    },
+    {
+      key: 'tuesday',
+      label: t('business.details.week.day.tuesday'),
+    },
+    {
+      key: 'wednesday',
+      label: t('business.details.week.day.wednesday'),
+    },
+    {
+      key: 'thursday',
+      label: t('business.details.week.day.thursday'),
+    },
+    {
+      key: 'friday',
+      label: t('business.details.week.day.friday'),
+    },
+    {
+      key: 'saturday',
+      label: t('business.details.week.day.saturday'),
+    },
+    {
+      key: 'sunday',
+      label: t('business.details.week.day.sunday'),
+    },
+  ]
 
   const [location, setLocation] = useState('')
   const [businessType, setBusinessType] = useState<IOption[]>(bizTypes)
@@ -113,9 +151,13 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
         defaultLanuageStaff: values.defaultLanuageStaff,
         defaultLanuageClients: values.defaultLanuageClients,
         timezone: values.timezone,
+        timeZoneLabel: timezoneList?.findManyTimezone?.find(
+          (item) => item.php_format === values.timezone
+        )?.label,
         currency: values.currency,
         dateFormat: values.dateFormat,
-        weekStart: values.weekStart,
+        weekStart: weeklist.find((item) => item.label === values.weekStart)
+          ?.key,
       },
       businessLocation: locationDetails,
       businessLocationData: businessLocationData,
@@ -139,7 +181,9 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     timezone: languageSetting?.timezone || '',
     currency: languageSetting?.currency || '',
     dateFormat: languageSetting?.dateFormat || '',
-    weekStart: languageSetting?.weekStart || '',
+    weekStart:
+      weeklist.find((item) => item.key === languageSetting?.weekStart)?.label ||
+      '',
   }
 
   const formikValidationSchema = Yup.object({
@@ -153,12 +197,12 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
 
   const handleLocationChanges = (value, data) => {
     setLocationDetails({
-      address: data.address ?? '',
-      apt: data.apt ?? '',
-      city: data.city ?? '',
-      country: data.country ?? '',
-      postcode: data.postcode ?? '',
-      region: data.region ?? '',
+      address: data?.address ?? '',
+      apt: data?.apt ?? '',
+      city: data?.city ?? '',
+      country: data?.country ?? '',
+      postcode: data?.postcode ?? '',
+      region: data?.region ?? '',
     })
     setBusinessLocationData(value)
   }
@@ -200,26 +244,42 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
               <div className={styles.normalClinicLogo}>
                 <div>
                   {!loading ? (
-                    <Image preview={false} width={200} src={companyLogo} />
+                    companyLogo !== '' ? (
+                      <Image
+                        preview={false}
+                        width={200}
+                        src={companyLogo}
+                        onClick={showUploader}
+                      />
+                    ) : (
+                      <div onClick={showUploader}>
+                        <Skeleton.Image style={{ width: 200 }} />
+                      </div>
+                    )
                   ) : (
                     <Skeleton.Image style={{ width: 200 }} />
                   )}
                 </div>
               </div>
               <div className={styles.normalClinicLogo}>
-                <Button
-                  style={
-                    size.width > 767
-                      ? { margin: '0 16px', verticalAlign: 'middle' }
-                      : { margin: '0 10px', verticalAlign: 'middle' }
-                  }
-                  onClick={showUploader}
-                >
-                  {t('setup.business-details.uploadlogo')}
-                </Button>
-                <Button style={{ verticalAlign: 'middle' }}>
-                  {t('setup.business-details.delete')}
-                </Button>
+                <div>
+                  <Button
+                    style={
+                      size.width > 767
+                        ? { marginRight: '10px', verticalAlign: 'middle' }
+                        : { marginRight: '10px', verticalAlign: 'middle' }
+                    }
+                    onClick={showUploader}
+                  >
+                    {t('setup.business-details.uploadlogo')}
+                  </Button>
+                  <Button
+                    style={{ verticalAlign: 'middle' }}
+                    onClick={onDelete}
+                  >
+                    {t('setup.business-details.delete')}
+                  </Button>
+                </div>
               </div>
               <Row gutter={[48, 0]}>
                 <Divider style={{ marginTop: 10, marginBottom: 25 }} />
@@ -326,13 +386,24 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                     }
                   >
                     {!loading ? (
-                      <LanguageDropdown
-                        label={t('business.details.default.lanuage.staff')}
-                        value={values.defaultLanuageStaff}
-                        onSelected={(value) => {
+                      <Select
+                        onChange={(value) => {
                           setFieldValue('defaultLanuageStaff', value)
                         }}
-                      />
+                        value={values.defaultLanuageStaff}
+                        size={'middle'}
+                      >
+                        {languageMenu.map((country, index) => (
+                          <Select.Option key={index} value={country.shortLabel}>
+                            <img
+                              alt={country.label}
+                              src={country.logo}
+                              style={{ width: '18px', marginBottom: '2px' }}
+                            />{' '}
+                            {country.label}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
                     )}
@@ -348,13 +419,24 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                     }
                   >
                     {!loading ? (
-                      <LanguageDropdown
-                        label={t('business.details.default.lanuage.clients')}
-                        value={values.defaultLanuageClients}
-                        onSelected={(value) =>
+                      <Select
+                        onChange={(value) => {
                           setFieldValue('defaultLanuageClients', value)
-                        }
-                      />
+                        }}
+                        value={values.defaultLanuageClients}
+                        size={'middle'}
+                      >
+                        {languageMenu.map((country, index) => (
+                          <Select.Option key={index} value={country.shortLabel}>
+                            <img
+                              alt={country.label}
+                              src={country.logo}
+                              style={{ width: '18px', marginBottom: '2px' }}
+                            />{' '}
+                            {country.label}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
                     )}
@@ -368,11 +450,20 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                     {!loading ? (
                       <SimpleDropdown
                         label={t('business.details.timezone.label')}
-                        value={values.timezone}
-                        dropdownItems={timezones.map(
-                          (timezone) => timezone.text || ''
+                        value={
+                          timezoneList?.findManyTimezone?.find(
+                            (item) => item.php_format === values.timezone
+                          )?.label
+                        }
+                        dropdownItems={timezoneList?.findManyTimezone?.map(
+                          (time) => time?.label || ''
                         )}
-                        onSelected={(value) => setFieldValue('timezone', value)}
+                        onSelected={(value) => {
+                          const data = timezoneList?.findManyTimezone?.find(
+                            (item) => item?.label === value
+                          )
+                          setFieldValue('timezone', data?.php_format)
+                        }}
                       />
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
@@ -387,9 +478,18 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                     {!loading ? (
                       <SimpleDropdown
                         label={t('business.details.currency.label')}
-                        value={values.currency}
-                        dropdownItems={currency}
-                        onSelected={(value) => setFieldValue('currency', value)}
+                        value={
+                          currency.find(
+                            (item) => item.value === values.currency
+                          )?.name
+                        }
+                        dropdownItems={currency.map((item) => item.name || '')}
+                        onSelected={(value) => {
+                          const data = currency.find(
+                            (item) => item.name === value
+                          )
+                          setFieldValue('currency', data?.value)
+                        }}
                       />
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
@@ -422,7 +522,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 </Col>
                 <Col className="gutter-row" xs={24} sm={12}>
                   <Form.Item
-                    name={'values'}
+                    name={'weekStart'}
                     label={
                       loading ? t('business.details.week.start.label') : ''
                     }
@@ -432,18 +532,10 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                         label={t('business.details.week.start.label')}
                         tooltip={t('business.details.week.start.tooltip')}
                         value={values.weekStart}
-                        dropdownItems={[
-                          t('business.details.week.day.monday'),
-                          t('business.details.week.day.tuesday'),
-                          t('business.details.week.day.wednesday'),
-                          t('business.details.week.day.thursday'),
-                          t('business.details.week.day.friday'),
-                          t('business.details.week.day.saturday'),
-                          t('business.details.week.day.sunday'),
-                        ]}
-                        onSelected={(value) =>
+                        dropdownItems={weeklist.map((item) => item.label)}
+                        onSelected={(value) => {
                           setFieldValue('weekStart', value)
-                        }
+                        }}
                       />
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
@@ -462,6 +554,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 loading={loading}
                 value={location}
                 onChange={handleLocationChanges}
+                AddressDetails={AddressDetails}
               />
             </div>
             <div className={styles.btnSave}>

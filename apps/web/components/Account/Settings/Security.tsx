@@ -13,21 +13,31 @@ import {
 } from '@pabau/ui'
 import { useUpdateUserPasswordMutation } from '@pabau/graphql'
 import { Collapse, Descriptions, Divider, Form, Input, Skeleton } from 'antd'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { browserName, isMobile, osName } from 'react-device-detect'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { relativeTime } from '../../../helper/relativeTimeFormat'
 import { dateTimeFormatter } from '../../../helper/dateTimeFormat'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './skeleton.module.less'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export interface SecurityProps {
-  profile?: {
+  profileData?: {
     id?: number
     passcode?: number
     full_name?: string
     email: string
     last_login?: string
+    company_details?: {
+      timezone?: {
+        offset_seconds?: number
+      }
+    }
   }
   loading?: boolean
   onSecurityChange: (data) => void
@@ -35,7 +45,7 @@ export interface SecurityProps {
 
 const Security: FC<SecurityProps> = ({
   loading = false,
-  profile,
+  profileData,
   onSecurityChange,
   ...rest
 }) => {
@@ -44,7 +54,7 @@ const Security: FC<SecurityProps> = ({
   const [cPassLoading, setCPassLoading] = useState(false)
   const [passcode, setPasscode] = useState(null)
   const [locationInfo, setLocationInfo] = useState(null)
-  const user = useContext(UserContext)
+  const user = useUser()
   const [form] = Form.useForm()
 
   const PasswordErrors = {
@@ -84,8 +94,7 @@ const Security: FC<SecurityProps> = ({
       setCPassLoading(false)
       Notification(
         NotificationType.error,
-        PasswordErrors[error.message] ||
-          t('account.settings.response.notification.password.error')
+        PasswordErrors[error.message] || error.message
       )
     },
   })
@@ -98,9 +107,9 @@ const Security: FC<SecurityProps> = ({
           setLocationInfo(response)
         })
     }
-    setPasscode(profile?.passcode)
+    setPasscode(profileData?.passcode)
     getIPLocation()
-  }, [profile])
+  }, [profileData])
 
   const changePassword = (passwords) => {
     if (
@@ -122,6 +131,37 @@ const Security: FC<SecurityProps> = ({
         t('account.settings.response.notification.password.error.confirm')
       )
     }
+  }
+
+  const LastLogin = () => {
+    const date1 = dayjs().utc()
+    const date2 = dayjs(profileData?.last_login).utc()
+
+    let last_login = dayjs(profileData?.last_login).format()
+    if (date2.diff(date1, 'second') > 0) {
+      last_login = dayjs(profileData?.last_login)
+        .subtract(
+          profileData?.company_details?.timezone?.offset_seconds,
+          'seconds'
+        )
+        .format()
+    }
+    return (
+      <>
+        {relativeTime(
+          user?.me?.Company?.details?.language?.toString().slice(0, 2) || 'en',
+          new Date(last_login)
+        )}
+        <span className="lastDate">
+          {' '}
+          |{' '}
+          {dateTimeFormatter({
+            date: new Date(String(last_login)),
+            lan: user?.me?.Company?.details?.language?.toString().slice(0, 2),
+          })}
+        </span>
+      </>
+    )
   }
 
   return (
@@ -317,7 +357,7 @@ const Security: FC<SecurityProps> = ({
             </div>
           )}
           <Divider className="smallDivider" />
-          {profile?.last_login && (
+          {profileData?.last_login && (
             <Collapse accordion key={'1'} style={{ background: '#fff' }}>
               <Panel
                 header={
@@ -355,22 +395,7 @@ const Security: FC<SecurityProps> = ({
                     <div className="whereDescription">
                       <div className="osInfo"></div>
                       <div className="appInfo">
-                        {relativeTime(
-                          user?.me?.company?.details?.language
-                            ?.toString()
-                            .slice(0, 2) || 'en',
-                          new Date(profile?.last_login)
-                        )}
-                        <span className="lastDate">
-                          {' '}
-                          |{' '}
-                          {dateTimeFormatter({
-                            date: new Date(String(profile?.last_login)),
-                            lan: user?.me?.company?.details?.language
-                              ?.toString()
-                              .slice(0, 2),
-                          })}
-                        </span>
+                        <LastLogin />
                       </div>
                     </div>
                   </div>

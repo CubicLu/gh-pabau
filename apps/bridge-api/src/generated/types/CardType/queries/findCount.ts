@@ -4,7 +4,7 @@ export const CardTypeFindCountQuery = queryField('findManyCardTypeCount', {
   type: nonNull('Int'),
   args: {
     where: 'CardTypeWhereInput',
-    orderBy: list('CardTypeOrderByInput'),
+    orderBy: list('CardTypeOrderByWithRelationInput'),
     cursor: 'CardTypeWhereUniqueInput',
     distinct: 'CardTypeScalarFieldEnum',
     skip: 'Int',

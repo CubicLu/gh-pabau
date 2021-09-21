@@ -1,0 +1,10 @@
+query getRelatedCompanies {
+  me {
+    companies {
+      id
+      isPod
+      logo
+      name
+    }
+  }
+}

@@ -49,6 +49,14 @@ export default {
         appliedToInvoice: 150,
       },
     ],
+    grandTotal: {
+      enabled: 0,
+      label: '',
+    },
+    Total: {
+      enabled: 0,
+      label: '',
+    },
   },
 }
 
@@ -60,6 +68,8 @@ const ReceiptTemplateStory = ({
   clinicDetails,
   receiptDetails,
   paymentDetails,
+  grandTotal,
+  Total,
 }) => (
   <ReceiptTemplateComponents
     visible={visible}
@@ -69,6 +79,8 @@ const ReceiptTemplateStory = ({
     clinicDetails={clinicDetails}
     receiptDetails={receiptDetails}
     paymentDetails={paymentDetails}
+    grandTotal={grandTotal}
+    Total={Total}
   />
 )
 

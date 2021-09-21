@@ -1,8 +1,8 @@
 import { EyeOutlined } from '@ant-design/icons'
 import { BasicModal, Button, Pagination, Table } from '@pabau/ui'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { sendEmailService } from '../../ClientNotificationEmailPreview/sendEmailService'
 import EmailSendButton from './EmailSendButton'
 import styles from './SubscriptionComponents.module.less'
@@ -11,6 +11,8 @@ import {
   useSubscriptionInvoicesQuery,
   useTotalSubscriptionsQuery,
 } from '@pabau/graphql'
+import { DisplayDate } from '../../../hooks/displayDate'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 interface P {
   searchTerm: string
@@ -22,13 +24,14 @@ const InvoiceActivity: FC<P> = (p) => {
   const [dataList, setDataList] = useState<SubscriptionInvoice[]>([])
   const [status, setStatus] = useState<FilterStatus>('ALL')
   const [searchTerm, setSearchTerm] = useState('')
+  const [sendEmails, setSendEmails] = useState<string[]>([])
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -38,44 +41,64 @@ const InvoiceActivity: FC<P> = (p) => {
     {
       title: t('setup.table.column.invoicedate'),
       dataIndex: 'date',
+      key: 'date',
       visible: true,
+      render: (data) => {
+        return <div>{DisplayDate(data)}</div>
+      },
     },
     {
       title: t('setup.table.column.invoice'),
       dataIndex: 'id',
+      key: 'id',
       visible: true,
     },
     {
       title: t('setup.table.column.description'),
       dataIndex: 'description',
+      key: 'description',
       visible: true,
     },
     {
       title: t('setup.table.column.amount'),
       dataIndex: 'amount',
+      key: 'amount',
       visible: true,
+      render: (data) => {
+        return (
+          <div>
+            {stringToCurrencySignConverter(user?.me?.currency)}{' '}
+            {(data as number).toFixed(2)}
+          </div>
+        )
+      },
     },
     {
       title: t('setup.table.column.status'),
       dataIndex: 'status',
+      key: 'status',
       visible: true,
     },
     {
       title: t('setup.table.column.actions'),
       dataIndex: 'invoice_link',
+      key: 'invoice_link',
       visible: true,
       // eslint-disable-next-line react/display-name
-      render: (_, { invoice_link }: SubscriptionInvoice) => (
-        <div>
-          <EmailSendButton
-            style={{ marginRight: 16 }}
-            onClick={() => sendEmail(invoice_link)}
-          />
-          <Button onClick={() => onPreviewInvoice(invoice_link)}>
-            <EyeOutlined /> {t('setup.table.btn.preview')}
-          </Button>
-        </div>
-      ),
+      render: (_, { invoice_link, id }: SubscriptionInvoice) => {
+        return (
+          <div>
+            <EmailSendButton
+              style={{ marginRight: 16 }}
+              disabled={sendEmails.includes(id) ? true : false}
+              onClick={() => sendEmail(id, invoice_link)}
+            />
+            <Button onClick={() => onPreviewInvoice(invoice_link)}>
+              <EyeOutlined /> {t('setup.table.btn.preview')}
+            </Button>
+          </div>
+        )
+      },
     },
   ]
 
@@ -96,7 +119,10 @@ const InvoiceActivity: FC<P> = (p) => {
   })
 
   useEffect(() => {
-    if (paginateData.currentPage !== 1 && p.searchTerm + p.filterValue !== '') {
+    if (
+      paginateData.currentPage !== 1 &&
+      p.searchTerm + p.filterValue !== 'ALL'
+    ) {
       setPaginateData((d) => ({
         ...d,
         offset: 0,
@@ -114,7 +140,7 @@ const InvoiceActivity: FC<P> = (p) => {
   }, [data])
 
   useEffect(() => {
-    if (totalCount) {
+    if (totalCount?.total) {
       setPaginateData((d) => ({
         ...d,
         total: totalCount.total,
@@ -141,7 +167,7 @@ const InvoiceActivity: FC<P> = (p) => {
     setShowPreview(false)
   }
 
-  const sendEmail = (url: string) => {
+  const sendEmail = (id: string, url: string) => {
     const email = user.me.username
     const bodyContent = `${t('setup.subscription.invoice')}: ${url}`
     sendEmailService({
@@ -151,37 +177,51 @@ const InvoiceActivity: FC<P> = (p) => {
       successMessage: t('notifications.email.send.successMessage'),
       failedMessage: t('notifications.email.send.failedMessage'),
     })
+    setSendEmails([...sendEmails, id])
   }
 
   return (
     <div>
       <Table
-        loading={loading}
+        rowKey="key"
+        loading={loading && (user ? true : false)}
         noDataText={t('crud-table-no-search-results')}
-        pagination={dataList?.length > 10 ? {} : false}
+        pagination={dataList?.length > 50 ? {} : false}
         columns={invoiceColumns}
-        dataSource={dataList}
+        dataSource={dataList.map((item, index) => ({
+          ...item,
+          key: index,
+        }))}
       />
       <div style={{ margin: 24 }}>
         <Pagination
           total={paginateData.total}
-          defaultPageSize={10}
+          defaultPageSize={50}
           showSizeChanger={false}
           onChange={onPaginationChange}
           pageSize={paginateData.limit}
           current={paginateData.currentPage}
+          pageSizeOptions={['10', '25', '50', '100']}
           showingRecords={paginateData.showingRecords}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              limit: pageSize,
+            })
+          }}
         />
       </div>
-      <BasicModal
-        wrapClassName={styles.subscriptionInvoiceModal}
-        title={t('setup.subscription.invoice')}
-        visible={showPreview}
-        width="50%"
-        onCancel={onCloseInvoicePreview}
-      >
-        <iframe title={t('setup.subscription.invoice')} src={urlPreview} />
-      </BasicModal>
+      {showPreview && (
+        <BasicModal
+          wrapClassName={styles.subscriptionInvoiceModal}
+          title={t('setup.subscription.invoice')}
+          visible={showPreview}
+          width="50%"
+          onCancel={onCloseInvoicePreview}
+        >
+          <iframe title={t('setup.subscription.invoice')} src={urlPreview} />
+        </BasicModal>
+      )}
     </div>
   )
 }

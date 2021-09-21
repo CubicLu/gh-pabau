@@ -1,16 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ping pong 1`] = `
+exports[`server responds to ping 1`] = `
 Object {
   "data": Object {
     "ping": "pong",
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
   },
 }
 `;

@@ -4,7 +4,7 @@ export const InvPaymentFindFirstQuery = queryField('findFirstInvPayment', {
   type: 'InvPayment',
   args: {
     where: 'InvPaymentWhereInput',
-    orderBy: list('InvPaymentOrderByInput'),
+    orderBy: list('InvPaymentOrderByWithRelationInput'),
     cursor: 'InvPaymentWhereUniqueInput',
     distinct: 'InvPaymentScalarFieldEnum',
     skip: 'Int',

@@ -9,13 +9,7 @@ import { Image, Input } from 'antd'
 import classNames from 'classnames'
 import moment from 'moment'
 import { useRouter } from 'next/router'
-import React, {
-  FunctionComponent,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import React, { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import searchEmpty from '../../../../../libs/ui/src/assets/images/empty.png'
@@ -28,7 +22,7 @@ import {
   GroupPermission,
   ListView,
 } from '../../../components/team/Users'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 import styles from './index.module.less'
 
@@ -41,7 +35,7 @@ export interface userDataProps extends UserProps {
 }
 
 const Index: FunctionComponent = () => {
-  const user = useContext(UserContext)
+  const user = useUser()
   const { t } = useTranslation('common')
   const router = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -369,7 +363,7 @@ const Index: FunctionComponent = () => {
                               isPending(user.staff_id)
                             }
                             owner={user.main_contact}
-                            img={getImage(user.image)}
+                            img={user.image && getImage(user.image)}
                             admin={user.admin}
                             isLoading={loading}
                             isSick={user.sickness === 1}

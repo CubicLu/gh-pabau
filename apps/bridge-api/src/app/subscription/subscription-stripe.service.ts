@@ -38,7 +38,7 @@ export default class SubscriptionStripe extends SubscriptionService {
     let invoices = []
     let has_more = true
 
-    while (has_more) {
+    while (has_more && response?.data) {
       invoices = [
         ...invoices,
         ...response.data
@@ -63,7 +63,7 @@ export default class SubscriptionStripe extends SubscriptionService {
             ...item,
             id: item.number,
             amount: (item.total / 100).toFixed(2),
-            date: new Date(item.created * 1000).toLocaleDateString('en-US'),
+            date: new Date(item.created * 1000),
             description: item.description ?? 'Pabau Subscription',
             invoice_link: item.hosted_invoice_url,
             status:
@@ -74,7 +74,7 @@ export default class SubscriptionStripe extends SubscriptionService {
 
       response = await this.client.invoices.list({
         ...params,
-        starting_after: response.data[response.data.length - 1].id,
+        starting_after: response.data[response.data.length - 1]?.id,
       })
 
       if (invoices.length >= input.limit + input.offset) break
@@ -100,7 +100,7 @@ export default class SubscriptionStripe extends SubscriptionService {
 
     let response = await this.client.invoices.list(params)
     let has_more = true
-    while (has_more) {
+    while (has_more && response?.data) {
       count += response.data
         ?.filter(
           (item) =>
@@ -122,7 +122,7 @@ export default class SubscriptionStripe extends SubscriptionService {
 
       response = await this.client.invoices.list({
         ...params,
-        starting_after: response.data[response.data.length - 1].id,
+        starting_after: response.data[response.data.length - 1]?.id,
       })
 
       has_more = response.has_more ?? false
@@ -135,23 +135,25 @@ export default class SubscriptionStripe extends SubscriptionService {
       customer: this.client_id,
       status: 'active',
     })
-
     const subscription = res.data[res.data.length - 1]
+
     return {
-      id: subscription.id,
-      currency: subscription['plan'].currency,
-      app_fee: subscription.application_fee_percent.toString(),
-      interval_unit: subscription['plan'].interval,
-      amount: subscription['plan'].unit_amount / 100,
-      name: subscription['plan'].nickname,
-      status: subscription.status,
-      created_at: new Date(
-        subscription['plan'].created * 1000
-      ).toLocaleDateString('en-US'),
+      id: subscription?.id ?? '',
+      currency: subscription['plan']?.currency ?? '',
+      app_fee: subscription?.application_fee_percent ?? 0,
+      interval_unit: subscription['plan']?.interval || '',
+      amount: subscription['plan']?.amount
+        ? subscription['plan']?.amount / 100
+        : 0,
+      name: subscription['plan']?.nickname || 'Subscription Plan',
+      status: subscription?.status || '',
+      created_at: new Date(subscription['plan']?.created ?? ''),
       next_charge_date: new Date(
-        subscription.billing_cycle_anchor * 1000
-      ).toLocaleDateString('en-US'),
-      next_charge_amount: subscription['plan'].unit_amount / 100,
+        subscription?.billing_cycle_anchor * 1000 ?? ''
+      ),
+      next_charge_amount: subscription['plan']?.amount
+        ? subscription['plan']?.amount / 100
+        : 0,
     }
   }
   public async getCardDetails(): Promise<SubscriptionCardDetailsOutput> {
@@ -167,6 +169,11 @@ export default class SubscriptionStripe extends SubscriptionService {
     let card
     if (res?.data?.length > 0) card = res.data[res?.data?.length - 1]
 
-    return { ...bank, ...card, account_number_ending: bank?.last4 }
+    return {
+      ...bank,
+      ...card,
+      account_number_ending: bank?.last4,
+      account_holder_name: card?.name,
+    }
   }
 }

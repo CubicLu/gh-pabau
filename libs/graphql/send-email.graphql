@@ -11,13 +11,12 @@ query sendEmailData {
     hash
     merge_tags
   }
-  templates: findManyMessageTemplate(
-    where: { template_type: { contains: "email" } }
-    orderBy: { template_group: asc }
-  ) {
+  templates: findManyMessageTemplate(where: {template_type: {contains: "email"}, template_name: {not: {equals: ""}}, company_id: {not: {equals: 0}}}, orderBy: [{template_group: asc}, {template_name: asc}], distinct: template_name) {
     template_id
     template_name
     template_group
+    subject
+    message
   }
   forms: findManyMedicalForm(
     where: {

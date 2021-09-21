@@ -4,7 +4,7 @@ export const CmBookingNoteFindManyQuery = queryField('findManyCmBookingNote', {
   type: nonNull(list(nonNull('CmBookingNote'))),
   args: {
     where: 'CmBookingNoteWhereInput',
-    orderBy: list('CmBookingNoteOrderByInput'),
+    orderBy: list('CmBookingNoteOrderByWithRelationInput'),
     cursor: 'CmBookingNoteWhereUniqueInput',
     distinct: 'CmBookingNoteScalarFieldEnum',
     skip: 'Int',

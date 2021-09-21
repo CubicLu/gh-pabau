@@ -3,11 +3,11 @@ import { Breadcrumb, Button, Notification, NotificationType } from '@pabau/ui'
 import { Card, Col, Row } from 'antd'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import * as Yup from 'yup'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/ReferralSettings/General'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
@@ -20,7 +20,7 @@ interface P {
 
 const Referral: FC<P> = () => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const ReferralConfigObj = {
     general: {
