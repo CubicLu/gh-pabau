@@ -18,8 +18,8 @@ import { initialValues } from '../client-create/mock'
 import { initialLeadValues, employeeList } from '../lead-create/mock'
 
 interface QuickCreateProps {
-  clientCreateRender?: () => JSX.Element
-  leadCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
 }
 export const QuickCreate: FC<QuickCreateProps> = ({
   clientCreateRender,
@@ -91,7 +91,7 @@ export const QuickCreate: FC<QuickCreateProps> = ({
         </div>
       </div>
       {clientCreateRender ? (
-        clientModalVisible && clientCreateRender()
+        clientModalVisible && clientCreateRender(toggleCreateClientModal)
       ) : (
         <ClientCreate
           modalVisible={clientModalVisible}
@@ -100,7 +100,7 @@ export const QuickCreate: FC<QuickCreateProps> = ({
         />
       )}
       {leadCreateRender ? (
-        leadModalVisible && leadCreateRender()
+        leadModalVisible && leadCreateRender(toggleCreateLeadModal)
       ) : (
         <LeadCreate
           employeeList={employeeList}

@@ -1,25 +1,19 @@
 import React, { FC } from 'react'
 import { Avatar, Typography, Tooltip } from 'antd'
-import TableLayout, { FilterValueType } from './TableLayout'
+import TableLayout, { AccountTabProps } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { Dayjs } from 'dayjs'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
 import { useCreditNotesQuery, useCreditNoteCountQuery } from '@pabau/graphql'
 import { DisplayDate } from '../../hooks/displayDate'
 
-interface CreditNoteProps {
-  searchTerm: string
-  selectedDates: Dayjs[]
-  filterValue: FilterValueType
-  selectedRange: string
-}
-
-const CreditNotes: FC<CreditNoteProps> = ({
+const CreditNotes: FC<AccountTabProps> = ({
   searchTerm,
   selectedDates,
   filterValue,
   selectedRange,
+  accountRef,
+  companyCurrency,
 }) => {
   const { t } = useTranslationI18()
 
@@ -118,7 +112,8 @@ const CreditNotes: FC<CreditNoteProps> = ({
       title: t('account.finance.credit.note.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      skeletonWidth: '50px',
+      skeletonWidth: '80px',
+      width: '140px',
       render: function render(data) {
         return (
           <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
@@ -132,7 +127,7 @@ const CreditNotes: FC<CreditNoteProps> = ({
       width: '100px',
       skeletonWidth: '50px',
       render: function render(data) {
-        return <Typography.Text>£{data}</Typography.Text>
+        return <Typography.Text>{companyCurrency + data}</Typography.Text>
       },
     },
     {
@@ -154,6 +149,7 @@ const CreditNotes: FC<CreditNoteProps> = ({
       aggregateQuery={useCreditNoteCountQuery}
       noDataText={t('account.finance.credit.not.empty.data.text')}
       tabName="creditNote"
+      accountRef={accountRef}
     />
   )
 }
