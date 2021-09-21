@@ -47,6 +47,20 @@ export const MarketingSource = objectType({
         return root.CmLead
       },
     })
+    t.list.field('CmContact', {
+      type: 'CmContact',
+      args: {
+        where: 'CmContactWhereInput',
+        orderBy: 'CmContactOrderByWithRelationInput',
+        cursor: 'CmContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmContact
+      },
+    })
     t.nullable.field('_count', {
       type: 'MarketingSourceCountOutputType',
       resolve(root: any) {

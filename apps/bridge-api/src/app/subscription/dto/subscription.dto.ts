@@ -7,12 +7,12 @@ export interface SubscriptionQueryInputs {
 
 export interface SubscriptionDetailsOutput {
   id: string
-  created_at: string
+  created_at: Date
   currency: string
   name: string
   interval_unit: string
   status: string
-  next_charge_date: string
+  next_charge_date: Date
   next_charge_amount: number
   app_fee: number | string
   amount: number
@@ -20,7 +20,7 @@ export interface SubscriptionDetailsOutput {
 
 export interface SubscriptionCardDetailsOutput {
   id: string
-  created_at: string
+  created_at: Date
   currency: string
   account_number_ending: string
   bank_name: string
