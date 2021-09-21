@@ -62,26 +62,16 @@ export const FormSnomed: FC<P> = ({
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [searchTermArr, setSearchTermArr] = useState<string[]>([])
-  const [inputedText, setInputedText] = useState('')
   const [suggestedSearchVal, setSuggestedSearchVal] = useState('')
+  const [starting, setStarting] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
 
   useEffect(() => {
     const snomedAPICall = async (debouncedSearchTerm) => {
+      const searchVal = debouncedSearchTerm.trim().replace(/\s\s+/g, '%20')
       const searchValArr = debouncedSearchTerm.trim().split(' ')
-      let searchVal = ''
-      if (searchValArr.length === 1) {
-        searchVal = searchValArr[0]
-      } else if (searchValArr.length > 1) {
-        searchVal =
-          searchValArr[searchValArr.length - 2] +
-          '%20' +
-          searchValArr[searchValArr.length - 1]
-      }
-
       setTerms([])
       setSuggestedSearchVal('')
-
       if (searchVal !== '') {
         setLoading(true)
         setReadOnly(true)
@@ -111,10 +101,12 @@ export const FormSnomed: FC<P> = ({
           }
           setLoading(false)
           setReadOnly(false)
+          setStarting(false)
           onFocusEditor()
         } catch (error) {
           setLoading(false)
           setReadOnly(false)
+          setStarting(false)
           onFocusEditor()
           console.log(error)
         }
@@ -127,15 +119,27 @@ export const FormSnomed: FC<P> = ({
     setTerms([])
     setSuggestedSearchVal('')
     setReadOnly(false)
+    setStarting(false)
+  }
+
+  const onHandleBeforeInput = (chars, editorState, eventTimeStamp) => {
+    if (starting) {
+      const newSuggestedSearchVal = suggestedSearchVal + chars
+      setSuggestedSearchVal(newSuggestedSearchVal)
+    }
+    if (chars === '#') {
+      setTerms([])
+      setSuggestedSearchVal('')
+      setStarting(true)
+    }
   }
 
   const onEditorStateChange = (e) => {
     const contentState = e.getCurrentContent()
     const inputText = contentState.getPlainText()
-    if (inputText.length > inputedText.length && suggestedSearchVal !== '')
+    if (starting && suggestedSearchVal !== '')
       setDebouncedSearchTerm(suggestedSearchVal)
     if (inputText.length === 0) clearAllStatus()
-    setInputedText(inputText)
     onChangeTextValue?.(inputText)
     setEditorState(e)
   }
@@ -152,7 +156,7 @@ export const FormSnomed: FC<P> = ({
     // Create selection from range
     const currentSelectionState = editorState.getSelection()
     const end = currentSelectionState.getEndOffset()
-    const start = end - searchTerm.length
+    const start = end - searchTerm.length - 1
     const selection = currentSelectionState.merge({
       anchorOffset: start,
       focusOffset: end,
@@ -195,11 +199,6 @@ export const FormSnomed: FC<P> = ({
   const onClickItem = (term: SNOMED) => {
     addEntityToEditorState(term)
     clearAllStatus()
-  }
-
-  const onHandleBeforeInput = (chars, editorState, eventTimeStamp) => {
-    const newSuggestedSearchVal = suggestedSearchVal + chars
-    setSuggestedSearchVal(newSuggestedSearchVal)
   }
 
   return (
