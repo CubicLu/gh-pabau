@@ -134,6 +134,7 @@ const CommonHeader: FC<P> = ({
           clientCreateRender={clientCreateRender}
           leadCreateRender={leadCreateRender}
           userData={user?.me}
+          onLogout={user?.logout}
         />
       )}
       {openNotificationDrawer && (
