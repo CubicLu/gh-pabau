@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
 
-import { EditorState, CompositeDecorator, getDefaultKeyBinding } from 'draft-js'
-
 import {
-  findWithRegex,
-  getSuggestions,
-  addEntityToEditorState,
-  getMatch,
-  getAutocomplete,
-  getSelectionPosition,
-  isCurrentTextEmpty,
-  isCurrentSelectionAnEntity,
-} from './AutocompleteCustomUtil'
+  EditorState,
+  CompositeDecorator,
+  getDefaultKeyBinding,
+  Modifier,
+} from 'draft-js'
+
+interface IMatch {
+  text: string
+  start: number
+  end: number
+}
 
 const defaultMatch = {
   suggestions: null,
@@ -36,6 +36,162 @@ const AutocompleteCustom = (props) => {
   const [matches, setMatches] = useState({})
   const [match, setMatch] = useState<iMatch>(defaultMatch)
   const [selectedSuggestion, setSelectedSuggestion] = useState(0)
+
+  const findWithRegex = (regex, contentBlock, callback) => {
+    const text = contentBlock.getText()
+    let matchArr
+    const matches: IMatch[] = []
+    while ((matchArr = regex.exec(text)) !== null) {
+      const start = matchArr.index
+      // We trim the match to remove last space
+      // const length = matchArr[0].trim().length
+      const length = matchArr[0].length
+      // Call callback so draft do is job
+      callback(start, start + length)
+      // Add the match to the result
+      matches.push({
+        text: matchArr[2],
+        start: start,
+        end: start + length,
+      })
+    }
+
+    return matches
+  }
+
+  const getSelectionPosition = () => {
+    const selection = window.getSelection()
+
+    if (selection?.rangeCount === 0) return null
+
+    const parent = selection?.getRangeAt(0).startContainer.parentElement
+
+    if (!parent) return null
+
+    const boundingRect = parent.getBoundingClientRect()
+
+    return {
+      left: boundingRect.left,
+      right: boundingRect.right,
+      top: boundingRect.top,
+      bottom: boundingRect.bottom,
+    }
+  }
+
+  const isCurrentTextEmpty = (editorState) => {
+    const selectionState = editorState.getSelection()
+    const anchorKey = selectionState.getAnchorKey()
+    const currentContent = editorState.getCurrentContent()
+    const currentContentBlock = currentContent.getBlockForKey(anchorKey)
+    const currentText = currentContentBlock.getText()
+    return currentText.length === 0
+  }
+
+  const isCurrentSelectionAnEntity = (editorState) => {
+    const selectionState = editorState.getSelection()
+    const anchorKey = selectionState.getAnchorKey()
+    const currentContent = editorState.getCurrentContent()
+    const currentContentBlock = currentContent.getBlockForKey(anchorKey)
+    const startOffset = selectionState.getStartOffset()
+    const endOffset = selectionState.getEndOffset()
+    const entityBefore = currentContentBlock.getEntityAt(startOffset - 1)
+    const entityAfter = currentContentBlock.getEntityAt(endOffset)
+    return entityBefore !== null || entityAfter !== null
+  }
+
+  const getMatch = (editorState, matches) => {
+    const selectionState = editorState.getSelection()
+    const anchorKey = selectionState.getAnchorKey()
+
+    // No matches for this block no need to continue
+    if (!matches[anchorKey]) return null
+    const currentBlockMatches = matches[anchorKey]
+
+    const startOffset = selectionState.getStartOffset()
+
+    // For all matches in this block, we reduce all types
+    // to get the first match, return null if no match found
+    return Object.keys(currentBlockMatches).reduce((previous, type) => {
+      // Only if no match found yet
+      if (previous === null) {
+        // Reduce all matches to get the first one that is in selection
+        // return null if no match found
+        return currentBlockMatches[type].reduce((previous, match) => {
+          const inOffset =
+            startOffset >= match.start && startOffset <= match.end
+          return !inOffset
+            ? previous
+            : {
+                ...match,
+                type,
+              }
+        }, null)
+      }
+
+      return previous
+    }, null)
+  }
+
+  const getAutocomplete = (autocompletes, match) => {
+    return autocompletes.reduce((previous, autocomplete) => {
+      return previous === null && autocomplete.type === match.type
+        ? autocomplete
+        : previous
+    }, null)
+  }
+
+  const getSuggestions = async (autocomplete, match) => {
+    if (typeof autocomplete.onMatch !== 'function') return []
+    // Call onMatch method for found autocomplete
+    try {
+      return await autocomplete.onMatch(match.text)
+    } catch {
+      return []
+    }
+  }
+
+  const addEntityToEditorState = (editorState, item, match) => {
+    // Range text to replace, the type and prefix
+    const { start, end, type, mutability, format } = match
+
+    // Create selection from range
+    const currentSelectionState = editorState.getSelection()
+    const selection = currentSelectionState.merge({
+      anchorOffset: start,
+      focusOffset: end,
+    })
+
+    // Create entity
+    const contentState = editorState.getCurrentContent()
+    const contentStateWithEntity = contentState.createEntity(
+      type,
+      mutability,
+      item
+    )
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
+
+    // Replace selection with the new create entity
+    const newContentState = Modifier.replaceText(
+      contentStateWithEntity,
+      selection,
+      format(item),
+      null,
+      entityKey
+    )
+
+    // Push new contentState with type
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      'insert-autocomplete'
+    )
+
+    // Update cursor position after inserted content
+    return EditorState.forceSelection(
+      newEditorState,
+      newContentState.getSelectionAfter()
+    )
+  }
 
   useEffect(() => {
     const { editorState, onChange } = props
