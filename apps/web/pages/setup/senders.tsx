@@ -18,11 +18,12 @@ import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
 import { ReactComponent as Google } from '../../assets/images/google.svg'
-import { ReactComponent as OutLook } from '../../assets/images/outlook.svg'
+// import { ReactComponent as OutLook } from '../../assets/images/outlook.svg'
 import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
 import { ReactComponent as Office } from '../../assets/images/office365.svg'
+import Login from '../../components/Email/login'
 
-import React from 'react'
+import React, { useState } from 'react'
 
 const { Title } = Typography
 
@@ -85,6 +86,12 @@ export const Communications: React.FC = () => {
   const { t } = useTranslationI18()
   const { getParentSetupData } = useGridData(t)
   const parentMenu = getParentSetupData(router.pathname)
+  const [showLogin, setShowLogin] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [checkStatus, setCheckStatus] = useState(true)
+  const [userLoggedInEmail, setUserLoggedInEmail] = useState('')
+  let popupGoogle = true
+
   const handleBack = () => {
     if (parentMenu.length > 0) {
       router.push({
@@ -96,6 +103,16 @@ export const Communications: React.FC = () => {
     }
   }
 
+  const handleGoogleLogin = (email) => {
+    setUserLoggedInEmail(email)
+    setIsLoggedIn(true)
+  }
+  const handleShowLogin = () => {
+    setCheckStatus(false)
+    setShowLogin(true)
+    popupGoogle = false
+  }
+
   const content = () => {
     return (
       <div className={styles.mailOptionContent}>
@@ -104,7 +121,7 @@ export const Communications: React.FC = () => {
         </div>
         <div
           className={styles.mailOptionItem}
-          onClick={() => router.push('/setup/gmail/connect')}
+          onClick={() => handleShowLogin()}
         >
           <GoogleOutlined /> <p>Connect Google</p>
         </div>
@@ -127,6 +144,18 @@ export const Communications: React.FC = () => {
   return (
     <>
       <div className={styles.desktopViewNone}>
+        {showLogin && (
+          <Login
+            handleGoogleLogin={handleGoogleLogin}
+            checkStatus={checkStatus}
+          />
+        )}
+        {popupGoogle && (
+          <Login
+            handleGoogleLogin={handleGoogleLogin}
+            checkStatus={checkStatus}
+          />
+        )}
         <MobileHeader className={styles.mobileHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.mobileHeaderTextStyle}>
@@ -208,40 +237,42 @@ export const Communications: React.FC = () => {
                   </Button>
                 </Col>
               ))}
-              <Col span={4} xs={12} sm={8} md={6}>
-                <Button className={styles.senderItem}>
-                  <div className={styles.itemHeader}>
-                    <Google />
+              {isLoggedIn && (
+                <Col span={4} xs={12} sm={8} md={6}>
+                  <Button className={styles.senderItem}>
+                    <div className={styles.itemHeader}>
+                      <Google />
 
-                    <div className={styles.verifiedWrapper}>
-                      <div className={styles.defaultText}>
-                        <Tag color="red">Stop syncing</Tag>
+                      <div className={styles.verifiedWrapper}>
+                        <div className={styles.defaultText}>
+                          <Tag color="red">Stop syncing</Tag>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={styles.itemBody}>
-                    <div>Clinic Bookings</div>
-                    <div className={styles.email}>Account</div>
-                  </div>
-                </Button>
-              </Col>
-              <Col span={4} xs={12} sm={8} md={6}>
-                <Button className={styles.senderItem}>
-                  <div className={styles.itemHeader}>
-                    <OutLook />
-
-                    <div className={styles.verifiedWrapper}>
-                      <div className={styles.defaultText}>
-                        <Tag color="red">Stop syncing</Tag>
-                      </div>
+                    <div className={styles.itemBody}>
+                      <div>Clinic Bookings</div>
+                      <div className={styles.email}>{userLoggedInEmail}</div>
                     </div>
-                  </div>
-                  <div className={styles.itemBody}>
-                    <div>Clinic Bookings</div>
-                    <div className={styles.email}>Account</div>
-                  </div>
-                </Button>
-              </Col>
+                  </Button>
+                </Col>
+              )}
+              {/*<Col span={4} xs={12} sm={8} md={6}>*/}
+              {/*  <Button className={styles.senderItem}>*/}
+              {/*    <div className={styles.itemHeader}>*/}
+              {/*      <OutLook />*/}
+
+              {/*      <div className={styles.verifiedWrapper}>*/}
+              {/*        <div className={styles.defaultText}>*/}
+              {/*          <Tag color="red">Stop syncing</Tag>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </div>*/}
+              {/*    <div className={styles.itemBody}>*/}
+              {/*      <div>Clinic Bookings</div>*/}
+              {/*      <div className={styles.email}>Account</div>*/}
+              {/*    </div>*/}
+              {/*  </Button>*/}
+              {/*</Col>*/}
             </Row>
           </div>
         </div>

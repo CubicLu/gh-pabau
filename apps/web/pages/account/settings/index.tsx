@@ -266,7 +266,7 @@ const Index: FC = () => {
           const variables = {
             data: {
               Company: {},
-              User: { connect: { id: user?.me?.id } },
+              User: { connect: { id: user?.me?.user } },
               UserAlert: { connect: { id: el?.UserAlert?.id } },
               ios_notification: el?.ios_notification || 0,
               sms_notification: el?.sms_notification || 0,
@@ -484,7 +484,7 @@ const Index: FC = () => {
                 />
                 <Security
                   loading={isLoading}
-                  profile={profileData}
+                  profileData={profileData}
                   onSecurityChange={(passcode) => {
                     setProfileData({ ...profileData, passcode: passcode })
                   }}

@@ -135,7 +135,6 @@ export const ReadEmail: FC<P> = ({
       })
 
       const emailData = await extractData(finalEmails?.result)
-      console.log('emial Data::', finalEmails)
 
       setresponseEmail({
         ...responseEmail,
@@ -159,9 +158,6 @@ export const ReadEmail: FC<P> = ({
   }
 
   const handlePrint = () => {
-    // const main = document.querySelector('#mainbody').innerHTML
-    // console.log('html div', main)
-
     const printWindow = window.open('', '_blank', 'left=300')
     printWindow.document.write(
       `<html><head><title>${responseEmail.subject}</title>`
