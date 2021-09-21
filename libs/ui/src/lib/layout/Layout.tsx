@@ -45,8 +45,8 @@ export interface LayoutProps {
   taskManagerIFrameComponent?: JSX.Element
   allowed?: boolean
   requireAdminAccess?: boolean
-  clientCreateRender?: () => JSX.Element
-  leadCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
   handleSearch?: (searchTerm: string) => void
   badgeCountList?: BadgeCountList
 }
