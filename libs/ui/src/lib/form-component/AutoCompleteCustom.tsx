@@ -1,5 +1,4 @@
-import React, { Component, useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useEffect } from 'react'
 
 import { EditorState, CompositeDecorator, getDefaultKeyBinding } from 'draft-js'
 
@@ -31,25 +30,8 @@ interface iMatch {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   position: any
 }
-const AutocompleteCustom = (props) => {
-  // static propTypes = {
-  //   editorState: PropTypes.object.isRequired,
-  //   children: PropTypes.element.isRequired,
-  //   onChange: PropTypes.func.isRequired,
-  //   autocompletes: PropTypes.array,
-  //   onFocus: PropTypes.func,
-  //   onBlur: PropTypes.func,
-  //   onDownArrow: PropTypes.func,
-  //   onUpArrow: PropTypes.func,
-  //   onEscape: PropTypes.func,
-  //   onTab: PropTypes.func,
-  //   keyBindingFn: PropTypes.func,
-  //   handleKeyCommand: PropTypes.func
-  // };
 
-  // static defaultProps = {
-  //   autocompletes: []
-  // };
+const AutocompleteCustom = (props) => {
   const [focus, setFocus] = useState<boolean>(false)
   const [matches, setMatches] = useState({})
   const [match, setMatch] = useState<iMatch>(defaultMatch)
