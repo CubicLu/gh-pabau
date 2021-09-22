@@ -238,7 +238,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
           <SelectMenu
             optionList={statusMenu}
             defaultValue={'Pending'}
-            value={value}
+            value={value === '' ? undefined : value}
             onChange={onChange}
           />
         )

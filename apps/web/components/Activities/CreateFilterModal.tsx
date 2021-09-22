@@ -124,6 +124,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
           <DropdownWithCheck
             defaultValue={'is'}
             value={item.operand}
+            className={styles.selectOperand}
             onChange={(value: string) =>
               activityItemChange(value, index, 'operand')
             }
@@ -131,16 +132,18 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             showSearch
             filterOption={true}
           />
-          <FilterMenu
-            columnName={item.filterColumn}
-            personsList={userList}
-            activityTypeOption={activityTypeOption}
-            value={item.menuOption}
-            onChange={(value: string) =>
-              activityItemChange(value, index, 'menuOption')
-            }
-            userId={loggedUser.user}
-          />
+          <div className={styles.filterMenuWrapper}>
+            <FilterMenu
+              columnName={item.filterColumn}
+              personsList={userList}
+              activityTypeOption={activityTypeOption}
+              value={item.menuOption}
+              onChange={(value: string) =>
+                activityItemChange(value, index, 'menuOption')
+              }
+              userId={loggedUser.user}
+            />
+          </div>
           <span
             onClick={() => removeFilterMenu(index)}
             className={styles.minusBlock}
