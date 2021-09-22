@@ -1,0 +1,19 @@
+query getAttachmentById($id: Int!) {
+    data: findFirstContactAttachment(where: {id: {equals: $id}}) {
+        id
+        name: attachment_title
+        shared: connect_public
+        created_date: date
+        linkref
+        contact_id
+        Contact {
+            ID
+            Fname
+            Lname
+        }
+        Practitioner{
+            id
+            full_name
+        }
+    }
+}

@@ -1,14 +1,46 @@
-import React, { FC, useState } from 'react'
-import { Input, Button, Epaper } from '@pabau/ui'
+import React, { FC, useState, useEffect } from 'react'
+import {
+  Input,
+  Button,
+  Epaper,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
+import { useGetAttachmentByIdLazyQuery } from '@pabau/graphql'
 import { Card, Typography } from 'antd'
 import Layout from '../../../components/Layout/Layout'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { getDocument } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 import styles from './index.module.less'
 
 const DocumentViewer: FC = () => {
-  const [showDocumentViewer, setShowDocumentViewer] = useState(false)
-  const [documentId, setDocumentId] = useState(undefined)
+  const { t } = useTranslationI18()
+  const [showDocumentViewer, setShowDocumentViewer] = useState<boolean>(false)
+  const [documentId, setDocumentId] = useState<number>(undefined)
   const [numPages, setNumPages] = useState<number>(0)
-  const [pageNumber, setPageNumber] = useState(1)
+  const [pageNumber, setPageNumber] = useState<number>(1)
+  const [documentData, setDocumentData] = useState(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const [
+    getAttachmentById,
+    { data: getDocumentData, loading: documentLoading },
+  ] = useGetAttachmentByIdLazyQuery()
+
+  useEffect(() => {
+    if (getDocumentData?.data === null) {
+      Notification(NotificationType.warning, t('ui.epaper.null.errormessage'))
+    }
+    if (getDocumentData?.data) {
+      setDocumentData({
+        name: getDocumentData.data.name,
+        url: getDocument(getDocumentData.data.linkref),
+      })
+      setShowDocumentViewer(true)
+    }
+    if (!documentLoading) setIsLoading(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getDocumentData, documentLoading])
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages)
@@ -23,12 +55,14 @@ const DocumentViewer: FC = () => {
       <Layout>
         {!showDocumentViewer ? (
           <Card>
-            <Typography.Title>Document Viewer</Typography.Title>
+            <Typography.Title>
+              {t('test.document.viewer.title')}
+            </Typography.Title>
             <div className={styles.documentInputWrapper}>
               <Input
-                label="Document Id"
+                label={t('test.document.viewer.input.documentid')}
                 name="documentId"
-                placeHolderText="Document Id"
+                placeHolderText={t('test.document.viewer.input.documentid')}
                 onChange={(e) => setDocumentId(Number(e))}
               />
             </div>
@@ -36,19 +70,25 @@ const DocumentViewer: FC = () => {
               <Button
                 type="primary"
                 disabled={!documentId}
-                onClick={() => setShowDocumentViewer(true)}
+                loading={isLoading}
+                onClick={() => {
+                  setIsLoading(true)
+                  getAttachmentById({
+                    variables: {
+                      id: documentId,
+                    },
+                  })
+                }}
               >
-                Show Document
+                {t('test.document.viewer.show.document')}
               </Button>
             </div>
           </Card>
         ) : (
           <div className={styles.documentWrapper}>
             <Epaper
-              title="Ganog’s-Review-of-Medical-Psysiology.pdf"
-              pdfURL={
-                'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf?hsLang=en'
-              }
+              title={documentData?.name}
+              pdfURL={documentData?.url}
               numPages={numPages}
               pageNumber={pageNumber}
               onDocumentLoadSuccess={onDocumentLoadSuccess}
