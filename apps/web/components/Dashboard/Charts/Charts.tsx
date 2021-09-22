@@ -12,12 +12,23 @@ interface ILocation {
   select: boolean
 }
 
+interface IData {
+  label: string
+  value: 0
+}
+
+interface IBookingDetails {
+  status?: string
+  data: IData[]
+}
+
 interface ICharts {
   location: ILocation
   dashboardMode: number
+  Data: IBookingDetails[]
 }
 
-export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
+export const Charts: FC<ICharts> = ({ location, dashboardMode, Data }) => {
   const optionLine: Highcharts.Options = {
     chart: {
       type: 'line',
@@ -121,68 +132,29 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
       ],
     },
   }
-
-  const option1: Highcharts.Options = {
-    title: {
-      text: '',
-    },
-    series: [
-      {
-        name: 'Pencilled-in',
+  const dataList = []
+  if (Data) {
+    Data.map((item) => {
+      dataList.push({
+        name: item.status,
         allowPointSelect: true,
-        data: [0, 1, 4, 3, 2, 1, 2, 3],
+        data: [...new Set(item.data?.map((item) => item.value))],
         type: 'column',
         marker: {
           lineColor: '#54B2D3',
           color: '#54B2D3',
         },
-        pointWidth: 20,
-      },
-      {
-        name: 'Confirmed',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#ED72AA',
-          color: '#ED72AA',
-        },
-        pointWidth: 20,
-      },
-      {
-        name: 'Completed',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#FAAD14',
-          color: '#FAAD14',
-        },
-        pointWidth: 20,
-      },
-      {
-        name: 'Did-not-show',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#6383F1',
-          color: '#6383F1',
-        },
-        pointWidth: 20,
-      },
-      {
-        name: 'Busy',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#ED72AA',
-          color: '#ED72AA',
-        },
-        pointWidth: 20,
-      },
-    ],
+        pointWidth: 5,
+      })
+      return dataList
+    })
+  }
+
+  const option1: Highcharts.Options = {
+    title: {
+      text: '',
+    },
+    series: dataList,
     legend: {
       symbolHeight: 8,
       symbolWidth: 24,
@@ -207,16 +179,10 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
           color: '#9292A3',
         },
       },
-      categories: [
-        'Sat 16',
-        'Sun 17',
-        'Mon 18',
-        'Tue 19',
-        'Wed 20',
-        'Thu 21',
-        'Fri 22',
-        'Sat 23',
-      ],
+      categories:
+        Data?.length > 0
+          ? [...new Set(Data[0].data?.map((item) => item.label))]
+          : [],
     },
     yAxis: [
       {

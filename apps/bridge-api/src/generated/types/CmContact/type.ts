@@ -454,10 +454,30 @@ export const CmContact = objectType({
         return root.Activity
       },
     })
+    t.list.field('Albums', {
+      type: 'PhotoAlbum',
+      args: {
+        where: 'PhotoAlbumWhereInput',
+        orderBy: 'PhotoAlbumOrderByWithRelationInput',
+        cursor: 'PhotoAlbumWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PhotoAlbumScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Albums
+      },
+    })
     t.nullable.field('ContactPreference', {
       type: 'ContactPreference',
       resolve(root: any) {
         return root.ContactPreference
+      },
+    })
+    t.nullable.field('MarketingSourceData', {
+      type: 'MarketingSource',
+      resolve(root: any) {
+        return root.MarketingSourceData
       },
     })
     t.nullable.field('_count', {

@@ -1729,6 +1729,20 @@ export const Company = objectType({
         return root.ActivityType
       },
     })
+    t.list.field('Album', {
+      type: 'PhotoAlbum',
+      args: {
+        where: 'PhotoAlbumWhereInput',
+        orderBy: 'PhotoAlbumOrderByWithRelationInput',
+        cursor: 'PhotoAlbumWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PhotoAlbumScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Album
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

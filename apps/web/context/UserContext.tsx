@@ -80,6 +80,7 @@ export const UserProvider: FC = ({ children }) => {
         companies: data.me.companies,
         imageUrl: data.me.image,
         companyDateFormat: data.me.Company.details.date_format,
+        currency: data.me.Company.details.currency,
       }
     : null
 

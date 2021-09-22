@@ -752,41 +752,49 @@ const Reviews: FC<ReviewConfig> = () => {
                 <div>
                   <b>{t('setup.business-details.employee.singular')}</b>
                 </div>
-                <SimpleDropdown
-                  name="employee"
-                  dropdownItems={
-                    alldataloading === false &&
-                    Alldata !== undefined &&
-                    Alldata.length > 0
-                      ? ([
-                          ...new Set(
-                            Alldata.map((item) => item.User?.full_name)
-                          ),
-                        ].filter((item) => item !== undefined) as string[])
-                      : []
-                  }
-                  onSelected={(val) => setFieldValue('employee', val)}
-                  value={values.employee !== '' ? values.employee : 'SELECT'}
-                />
+                <div
+                  className={!values.employee ? styles.simpleDropdown : null}
+                >
+                  <SimpleDropdown
+                    name="employee"
+                    dropdownItems={
+                      alldataloading === false &&
+                      Alldata !== undefined &&
+                      Alldata.length > 0
+                        ? ([
+                            ...new Set(
+                              Alldata.map((item) => item.User?.full_name)
+                            ),
+                          ].filter((item) => !!item) as string[])
+                        : []
+                    }
+                    onSelected={(val) => setFieldValue('employee', val)}
+                    value={values.employee !== '' ? values.employee : 'SELECT'}
+                  />
+                </div>
               </div>
               <div className={styles.filterMenuItem}>
                 <div>
                   <b>{t('setup.discount.data.service')}</b>
                 </div>
-                <SimpleDropdown
-                  name="service"
-                  dropdownItems={
-                    alldataloading === false &&
-                    Alldata !== undefined &&
-                    Alldata.length > 0
-                      ? ([
-                          ...new Set(Alldata.map((item) => item.service)),
-                        ].filter((item) => item !== undefined) as string[])
-                      : []
-                  }
-                  onSelected={(val) => setFieldValue('service', val)}
-                  value={values.service !== '' ? values.service : 'SELECT'}
-                />
+                <div
+                  className={!values.employee ? styles.simpleDropdown : null}
+                >
+                  <SimpleDropdown
+                    name="service"
+                    dropdownItems={
+                      alldataloading === false &&
+                      Alldata !== undefined &&
+                      Alldata.length > 0
+                        ? ([
+                            ...new Set(Alldata.map((item) => item.service)),
+                          ].filter((item) => !!item) as string[])
+                        : []
+                    }
+                    onSelected={(val) => setFieldValue('service', val)}
+                    value={values.service !== '' ? values.service : 'SELECT'}
+                  />
+                </div>
               </div>
               <div className={styles.filterBtn}>
                 <Button

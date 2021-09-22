@@ -1,16 +1,18 @@
 import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react'
-import { Input, Popover, Checkbox, Radio, Drawer } from 'antd'
+import { Input, Popover, Checkbox, Radio, Drawer, Collapse } from 'antd'
+import { MutationFunction } from '@apollo/client'
 import Highlighter from 'react-highlight-words'
-import { Button, Notification, NotificationType } from '@pabau/ui'
+import { Button } from '@pabau/ui'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { CustomScrollbar } from '../CustomScrollbar/Index'
 import styles from '../../pages/activities/index.module.less'
 import { defaultColumns } from './ActivitiesTable'
 import { useMedia } from 'react-use'
 import { useUser } from '../../context/UserContext'
-import { useUpsertOneActivityUserColumnsMutation } from '@pabau/graphql'
+import { CaretRightOutlined } from '@ant-design/icons'
 
 interface AddColumnsProps {
+  upsertActiveColumnMutation: MutationFunction
   children?: ReactNode
   selectedColumn?: string[]
   setSelectedColumn?: (val: string[]) => void
@@ -23,7 +25,6 @@ export const columnNames = {
   subject: { label: 'Subject', id: 'subject' },
   assignedToUser: { label: 'Assigned to user', id: 'assigned.firstName' },
   status: { label: 'Status', id: 'status' },
-  lead: { label: 'Lead', id: 'activityLead' },
   type: { label: 'Type', id: 'type' },
   duration: { label: 'Duration', id: 'duration' },
   doneTime: { label: 'Done time', id: 'doneTime' },
@@ -31,8 +32,8 @@ export const columnNames = {
   freeBusy: { label: 'Free/busy', id: 'freeBusy' },
   creator: { label: 'Creator', id: 'creator' },
   addTime: { label: 'Add time', id: 'addTime' },
-  firstName: { label: 'First name', id: 'lead.firstName' },
-  lastName: { label: 'Last name', id: 'lead.lastName' },
+  leadDescription: { label: 'Lead description', id: 'lead.description' },
+  leadName: { label: 'Lead name', id: 'lead.firstName' },
   leadEmail: { label: 'Lead email', id: 'lead.email' },
   leadPhone: { label: 'Lead phone', id: 'lead.phone' },
   leadCreatedDate: { label: 'Lead created date', id: 'lead.createdDate' },
@@ -63,6 +64,7 @@ export const columnNames = {
   leadLostTime: { label: 'Lead lost time', id: 'lead.leadLostTime' },
   leadSource: { label: 'Lead source', id: 'lead.leadSource' },
   wonBy: { label: 'Won by', id: 'lead.wonBy' },
+  leadStage: { label: 'Lead stage', id: 'lead.leadStage' },
   clientName: { label: 'Client name', id: 'client.firstName' },
   label: { label: 'Label', id: 'client.label' },
   clientEmail: { label: 'Client email', id: 'client.email' },
@@ -70,9 +72,42 @@ export const columnNames = {
   clientStreet: { label: 'Client street', id: 'client.street' },
   clientCity: { label: 'Client city', id: 'client.city' },
   clientPostCode: { label: 'Client postcode', id: 'client.postcode' },
+  clientCountry: { label: 'Client country', id: 'client.country' },
   clientTotalActivities: {
     label: 'Client total activities',
     id: 'client.totalActivities',
+  },
+  clientMobile: {
+    label: 'Client mobile',
+    id: 'client.clientMobile',
+  },
+  clientCreatedAt: {
+    label: 'Client created date',
+    id: 'client.clientCreatedAt',
+  },
+  clientSource: {
+    label: 'Client source',
+    id: 'client.clientSource',
+  },
+  clientSalutation: {
+    label: 'Client salutation',
+    id: 'client.clientSalutation',
+  },
+  clientGender: {
+    label: 'Client gender',
+    id: 'client.clientGender',
+  },
+  clientID: {
+    label: 'Client ID',
+    id: 'client.clientID',
+  },
+  clientDOB: {
+    label: 'Client DOB',
+    id: 'client.clientDOB',
+  },
+  clientStatus: {
+    label: 'Client status',
+    id: 'client.clientStatus',
   },
 }
 
@@ -83,6 +118,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     setSelectedColumn,
     visibleAddColumnPopover,
     setVisibleAddColumnPopover,
+    upsertActiveColumnMutation,
   }) => {
     const { t } = useTranslationI18()
     const isMobile = useMedia('(max-width: 768px)', false)
@@ -96,21 +132,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     const [visibleOptionsSelect, setVisibleOptionsSelect] = useState([])
     const [defaultColumnList, setDefaultColumnList] = useState([])
     const loggedUser = useUser()
-
-    const [upsertActiveColumn] = useUpsertOneActivityUserColumnsMutation({
-      onCompleted() {
-        Notification(
-          NotificationType.success,
-          t('activity.table.dynamic.field.update.message')
-        )
-      },
-      onError() {
-        Notification(
-          NotificationType.error,
-          t('activity.table.dynamic.field.update.error.message')
-        )
-      },
-    })
 
     const activityOptions = useMemo(
       () => [
@@ -131,7 +152,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           label: t('activityList.column.status'),
           value: columnNames.status.label,
         },
-        { label: t('activityList.column.lead'), value: columnNames.lead.label },
+        // { label: t('activityList.column.lead'), value: columnNames.lead.label },
         { label: t('activityList.column.type'), value: columnNames.type.label },
         {
           label: t('activityList.column.duration'),
@@ -161,12 +182,8 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     const leadOptions = useMemo(
       () => [
         {
-          label: t('activityList.column.firstName'),
-          value: columnNames.firstName.label,
-        },
-        {
-          label: t('activityList.column.lastName'),
-          value: columnNames.lastName.label,
+          label: t('activityList.column.leadName'),
+          value: columnNames.leadName.label,
         },
         {
           label: t('activityList.column.leadEmail'),
@@ -228,6 +245,14 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           label: t('activityList.column.wonBy'),
           value: columnNames.wonBy.label,
         },
+        {
+          label: t('activityList.column.leadStage'),
+          value: columnNames.leadStage.label,
+        },
+        {
+          label: t('activityList.column.leadDescription'),
+          value: columnNames.leadDescription.label,
+        },
       ],
       [t]
     )
@@ -250,6 +275,29 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           label: t('activityList.column.clientPhone'),
           value: columnNames.clientPhone.label,
         },
+        // {
+        //   label: t('activityList.column.address.details'),
+        //   value: 'addressDetails',
+        //   hasCollapse: true,
+        //   collapseValue: [
+        //     {
+        //       label: t('activityList.column.clientStreet'),
+        //       value: columnNames.clientStreet.label,
+        //     },
+        //     {
+        //       label: t('activityList.column.clientCity'),
+        //       value: columnNames.clientCity.label,
+        //     },
+        //     {
+        //       label: t('activityList.column.clientPostcode'),
+        //       value: columnNames.clientPostCode.label,
+        //     },
+        //     {
+        //       label: t('activityList.column.clientCountry'),
+        //       value: columnNames.clientCountry.label,
+        //     },
+        //   ]
+        // },
         {
           label: t('activityList.column.clientStreet'),
           value: columnNames.clientStreet.label,
@@ -263,8 +311,44 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           value: columnNames.clientPostCode.label,
         },
         {
+          label: t('activityList.column.clientCountry'),
+          value: columnNames.clientCountry.label,
+        },
+        {
           label: t('activityList.column.clientTotalActivities'),
           value: columnNames.clientTotalActivities.label,
+        },
+        {
+          label: t('activityList.column.clientMobile'),
+          value: columnNames.clientMobile.label,
+        },
+        {
+          label: t('activityList.column.clientCreatedAt'),
+          value: columnNames.clientCreatedAt.label,
+        },
+        {
+          label: t('activityList.column.clientSource'),
+          value: columnNames.clientSource.label,
+        },
+        {
+          label: t('activityList.column.clientSalutation'),
+          value: columnNames.clientSalutation.label,
+        },
+        {
+          label: t('activityList.column.clientGender'),
+          value: columnNames.clientGender.label,
+        },
+        {
+          label: t('activityList.column.clientID'),
+          value: columnNames.clientID.label,
+        },
+        {
+          label: t('activityList.column.clientDOB'),
+          value: columnNames.clientDOB.label,
+        },
+        {
+          label: t('activityList.column.clientStatus'),
+          value: columnNames.clientStatus.label,
         },
       ],
       [t]
@@ -327,7 +411,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
         ...selectedColumnOption.map((data) => data.value),
       ])
       handleVisible()
-      await upsertActiveColumn({
+      await upsertActiveColumnMutation({
         variables: {
           columns: JSON.stringify({ columns: activeColumns }),
           userId: loggedUser?.me?.user,
@@ -389,6 +473,78 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
       }
     }
 
+    const prepareClientOptions = (options) => {
+      const clientOption = options
+        .filter((data) => data.type === selectedTab)
+        .filter(
+          (data) => !defaultColumnList.some((item) => item.value === data.value)
+        )
+      const groupColumn = new Set([
+        'Client street',
+        'Client city',
+        'Client postcode',
+        'Client country',
+      ])
+      const collapseColumn = []
+      const clientColumn = []
+      for (const item of clientOption) {
+        if (groupColumn.has(item.value)) {
+          collapseColumn.push({ ...item })
+        } else {
+          clientColumn.push({ ...item })
+        }
+      }
+      const collapseIndex =
+        clientOption.findIndex(
+          (item) => item.value === collapseColumn?.[0]?.value
+        ) ?? 0
+      clientColumn.splice(collapseIndex, 0, {
+        hasCollapse: true,
+        collapseTitle: t('activityList.column.address.details'),
+        collapseOptions: collapseColumn,
+      })
+
+      const RenderCheckbox = (optionItem, i) => {
+        const { value, label } = optionItem
+        return (
+          <Checkbox
+            key={`${selectedTab}_${i}`}
+            checked={selectedColumnOption.some((item) => item.value === value)}
+            value={optionItem}
+            onChange={handleCheckboxChange}
+          >
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={[searchColumn]}
+              textToHighlight={label}
+            >
+              {label}
+            </Highlighter>
+          </Checkbox>
+        )
+      }
+      return clientColumn.map((data, i) =>
+        data.hasCollapse ? (
+          <Collapse
+            ghost
+            defaultActiveKey={['1']}
+            className={styles.addressCollapse}
+            expandIcon={({ isActive }) => (
+              <CaretRightOutlined rotate={isActive ? 90 : 0} />
+            )}
+          >
+            <Collapse.Panel header={data.collapseTitle} key="1">
+              {data?.collapseOptions?.map((optionItem, i) =>
+                RenderCheckbox(optionItem, i)
+              )}
+            </Collapse.Panel>
+          </Collapse>
+        ) : (
+          RenderCheckbox(data, i)
+        )
+      )
+    }
+
     const content = () => {
       return (
         <div className={styles.chooseColumnWrapper}>
@@ -444,34 +600,36 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
                     </Radio.Button>
                   </Radio.Group>
                   <div className={styles.checkboxRadioWrapper}>
-                    {filterOptions
-                      .filter((data) => data.type === selectedTab)
-                      .filter(
-                        (data) =>
-                          !defaultColumnList.some(
-                            (item) => item.value === data.value
+                    {selectedTab === 'client'
+                      ? prepareClientOptions(filterOptions)
+                      : filterOptions
+                          .filter((data) => data.type === selectedTab)
+                          .filter(
+                            (data) =>
+                              !defaultColumnList.some(
+                                (item) => item.value === data.value
+                              )
                           )
-                      )
-                      .map((data, i) => {
-                        return (
-                          <Checkbox
-                            key={`${selectedTab}_${i}`}
-                            checked={selectedColumnOption.some(
-                              (item) => item.value === data.value
-                            )}
-                            value={data}
-                            onChange={handleCheckboxChange}
-                          >
-                            <Highlighter
-                              highlightClassName={styles.highlight}
-                              searchWords={[searchColumn]}
-                              textToHighlight={data.label}
-                            >
-                              {data.label}
-                            </Highlighter>
-                          </Checkbox>
-                        )
-                      })}
+                          .map((data, i) => {
+                            return (
+                              <Checkbox
+                                key={`${selectedTab}_${i}`}
+                                checked={selectedColumnOption.some(
+                                  (item) => item.value === data.value
+                                )}
+                                value={data}
+                                onChange={handleCheckboxChange}
+                              >
+                                <Highlighter
+                                  highlightClassName={styles.highlight}
+                                  searchWords={[searchColumn]}
+                                  textToHighlight={data.label}
+                                >
+                                  {data.label}
+                                </Highlighter>
+                              </Checkbox>
+                            )
+                          })}
                   </div>
                 </div>
               </div>

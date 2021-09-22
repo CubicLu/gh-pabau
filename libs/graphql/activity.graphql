@@ -79,6 +79,7 @@ query findManyActivityData(
       note
       status
       client: CmContact {
+        id: ID
         firstName: Fname
         lastName: Lname
         email: Email
@@ -86,6 +87,16 @@ query findManyActivityData(
         street: MailingStreet
         city: MailingCity
         postal: MailingPostal
+        country: MailingCountry
+        mobile: Mobile
+        createdDate: CreatedDate
+        source: MarketingSourceData {
+          name
+        }
+        salutation: Salutation
+        gender
+        DOB
+        status: is_active
         label: CmContactLabel {
           CmLabel {
             id
@@ -118,6 +129,7 @@ query findManyActivityData(
         leadLostTime
         leadLostReason
         wonBy
+        leadStage
       }
     }
   }

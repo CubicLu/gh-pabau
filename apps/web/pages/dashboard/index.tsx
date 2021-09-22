@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Avatar, Button, MobileHeader, RangePicker } from '@pabau/ui'
+import { Avatar, Button, RangePicker } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
+import CommonHeader from '../../components/CommonHeader'
 import styles from './dashboard.module.less'
 import { useUser } from '../../context/UserContext'
 import { useQuery } from '@apollo/client'
@@ -14,10 +15,9 @@ import {
   UpOutlined,
   CheckOutlined,
   CalendarOutlined,
-  LeftOutlined,
 } from '@ant-design/icons'
 import dayjs, { Dayjs } from 'dayjs'
-import { Menu, Dropdown, Drawer, Col, Row, Typography, Select } from 'antd'
+import { Menu, Dropdown, Drawer, Col, Row, Select } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
 import { locationList } from '../../mocks/Dashboard'
@@ -36,7 +36,6 @@ interface ISetUser {
   select: boolean
 }
 
-const { Title } = Typography
 const { Option } = Select
 
 export function Index() {
@@ -108,6 +107,8 @@ export function Index() {
     GetDashboardDataDocument,
     getAppointmentQueryVariables
   )
+
+  console.log('appointment_status', appointment_status)
   useEffect(() => {
     if (appointment_status) {
       if (
@@ -355,20 +356,15 @@ export function Index() {
   return (
     <div>
       <Layout active={'dashboard'}>
-        <MobileHeader className={styles.businessDetailsHeaderMobile}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.marketingTextStyle}>
-              <LeftOutlined />
-              <Title>
-                {user?.me?.admin
-                  ? dashboardMode === 0
-                    ? 'Business Dashboard'
-                    : 'Personal Dashboard'
-                  : 'Personal Dashboard'}
-              </Title>
-            </div>
-          </div>
-        </MobileHeader>
+        <CommonHeader
+          title={
+            user?.me?.admin
+              ? dashboardMode === 0
+                ? 'Business Dashboard'
+                : 'Personal Dashboard'
+              : 'Personal Dashboard'
+          }
+        />
         <div className={styles.dashboardWrapper}>
           <div className={styles.topWrapper}>
             <div className={styles.userBlock}>
@@ -453,6 +449,10 @@ export function Index() {
             <Charts
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}
+              Data={
+                appointment_status?.getDashboardData?.allbooking
+                  ?.bookingsByStatus
+              }
             />
           </div>
         </div>
