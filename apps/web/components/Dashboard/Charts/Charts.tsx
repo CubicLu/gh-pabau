@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { Row, Col, Table } from 'antd'
 import * as Highcharts from 'highcharts'
 import { CustomHighChart } from '@pabau/ui'
+import { ICount } from '../TopBoard/TopBoard'
 import styles from './Charts.module.less'
 import { columns, data } from '../../../mocks/Dashboard'
 
@@ -26,9 +27,17 @@ interface ICharts {
   location: ILocation
   dashboardMode: number
   Data: IBookingDetails[]
+  totalBooking: ICount
+  totalOnlineBooking: ICount
 }
 
-export const Charts: FC<ICharts> = ({ location, dashboardMode, Data }) => {
+export const Charts: FC<ICharts> = ({
+  location,
+  dashboardMode,
+  Data,
+  totalBooking,
+  totalOnlineBooking,
+}) => {
   const optionLine: Highcharts.Options = {
     chart: {
       type: 'line',
@@ -248,7 +257,9 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode, Data }) => {
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.charts}>
             <div className={styles.chartsWrap}>
-              <div className={styles.chartsHeader}>5 booked</div>
+              <div className={styles.chartsHeader}>
+                {totalBooking.count + totalOnlineBooking.count} booked
+              </div>
               <div className={styles.chartsSubHeader}>Recent Appointments</div>
               <div className={styles.chartsExtraHeader}>
                 {location.label}, {location.date}

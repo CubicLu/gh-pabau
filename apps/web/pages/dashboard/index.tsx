@@ -452,6 +452,8 @@ export function Index() {
                 appointment_status?.getDashboardData?.allbooking
                   ?.bookingsByStatus
               }
+              totalBooking={totalBooking}
+              totalOnlineBooking={totalOnlineBooking}
             />
           </div>
         </div>
