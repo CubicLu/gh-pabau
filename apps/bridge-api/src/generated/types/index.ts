@@ -1,3 +1,4 @@
+export * from './ServiceUserPrice'
 export * from './MedicalFormAdvancedSetting'
 export * from './GroupPermission'
 export * from './XeroIntegration'
