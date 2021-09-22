@@ -5,6 +5,7 @@ import {
   Webinar,
   WebinarModal,
   WebinarModalProps,
+  BasicModal,
 } from '@pabau/ui'
 import { Filter, IFilter } from './Filter'
 import { useTranslation } from 'react-i18next'
@@ -14,6 +15,7 @@ import Iva from '../../assets/images/users/rsz_iva.jpg'
 import Joy from '../../assets/images/users/rsz_joy.jpg'
 import { groupBy } from 'lodash'
 import dayjs from 'dayjs'
+import { Button } from 'antd'
 
 const TRAINERS = [
   { name: 'alex', image: Alex },
@@ -222,61 +224,60 @@ export const ViewScheduleModal: FC<ViewScheduleProps> = ({
   }
 
   return (
-    <>
-      <FullScreenReportModal
-        visible={visible}
-        title={t('setup.page.live.upcoming.webinar.title')}
-        onBackClick={onBackClick}
-      >
-        <div className={styles.viewScheduleWrapper}>
-          <div className={styles.scheduleContent}>
-            <h2>{t('modals.webinar.tab.schedule')}</h2>
-            {schedule?.length === 0 ? (
-              <div className={styles.upcomingWrap}>
-                {t('modals.webinar.tab.schedule.empty')}
-              </div>
-            ) : (
-              discoverAndLearnRender(schedule)
-            )}
-          </div>
-          <div className={styles.scheduleContent}>
-            <div className={styles.filterWrap}>
-              <h2>{t('modals.webinar.tab.discover')}</h2>
-              <Filter
-                webinarList={discoverAndLearn}
-                handleShowResult={onFilter}
-                onClear={handleClear}
-              />
+    <FullScreenReportModal
+      visible={visible}
+      title={t('setup.page.live.upcoming.webinar.title')}
+      onBackClick={onBackClick}
+    >
+      <div className={styles.viewScheduleWrapper}>
+        <div className={styles.scheduleContent}>
+          <h2>{t('modals.webinar.tab.schedule')}</h2>
+          {schedule?.length === 0 ? (
+            <div className={styles.upcomingWrap}>
+              {t('modals.webinar.tab.schedule.empty')}
             </div>
-            {discoverAndLearnRender(filteredWebinars as Partial<IWebinar>[])}
-          </div>
+          ) : (
+            discoverAndLearnRender(schedule)
+          )}
         </div>
-      </FullScreenReportModal>
-      <WebinarModal
-        visible={modalState}
-        name={modalData?.name as string}
-        id={modalData?.id as number}
-        description={modalData?.description as string}
-        time={modalData?.time as string}
-        registered_id={modalData?.registered_id}
-        buttonType={modalData?.registered_id ? 'join' : 'register'}
-        course_id={modalData?.course_id as number}
-        webinar_id={modalData?.webinar_id as number}
-        title={modalData?.title as string}
-        onCancel={() => setModalState(false)}
-        isYourSchedule={checkIsInProgress(modalData)}
-        isFinished={checkIsFinished(modalData)}
-        duration={modalData?.duration || 0}
-        onJoin={async (course_id, webinar_id, course_date) => {
-          await join(course_id, webinar_id, course_date)
-          return true
-        }}
-        onRegister={async (course_id, webinar_id, course_date) => {
-          await register(course_id, webinar_id, course_date)
-          return true
-        }}
-      />
-    </>
+        <div className={styles.scheduleContent}>
+          <div className={styles.filterWrap}>
+            <h2>{t('modals.webinar.tab.discover')}</h2>
+            <Filter
+              webinarList={discoverAndLearn}
+              handleShowResult={onFilter}
+              onClear={handleClear}
+            />
+          </div>
+          {discoverAndLearnRender(filteredWebinars as Partial<IWebinar>[])}
+        </div>
+        <WebinarModal
+          visible={modalState}
+          name={modalData?.name as string}
+          id={modalData?.id as number}
+          description={modalData?.description as string}
+          time={modalData?.time as string}
+          registered_id={modalData?.registered_id}
+          buttonType={modalData?.registered_id ? 'join' : 'register'}
+          course_id={modalData?.course_id as number}
+          webinar_id={modalData?.webinar_id as number}
+          title={modalData?.title as string}
+          backgroundImage={modalData?.backgroundImage}
+          onCancel={() => setModalState(false)}
+          isYourSchedule={checkIsInProgress(modalData)}
+          isFinished={checkIsFinished(modalData)}
+          duration={modalData?.duration || 0}
+          onJoin={async (course_id, webinar_id, course_date) => {
+            await join(course_id, webinar_id, course_date)
+            return true
+          }}
+          onRegister={async (course_id, webinar_id, course_date) => {
+            await register(course_id, webinar_id, course_date)
+            return true
+          }}
+        />
+      </div>
+    </FullScreenReportModal>
   )
 }
 

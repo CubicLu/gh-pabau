@@ -90,7 +90,7 @@
   height: 100%;
   justify-content: center;
   text-align: center;
-  width:100px;
+  width: 100px;
 }
 
 .filter-box {
@@ -101,12 +101,12 @@
     margin-bottom: 8px;
   }
   .footer-wrapper {
-   display: flex;
-   justify-content: flex-end;
-   padding: 20px 0;
-   .clear-btn {
-    margin-right: 12px;
-   }
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 0;
+    .clear-btn {
+      margin-right: 12px;
+    }
   }
 }
 
@@ -118,6 +118,14 @@
           padding: 0;
         }
       }
+    }
+  }
+}
+
+.tab-wrapper {
+  :global {
+    .ant-tabs {
+      overflow: visible;
     }
   }
 }
