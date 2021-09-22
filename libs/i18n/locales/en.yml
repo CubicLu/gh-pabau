@@ -162,6 +162,7 @@ en:
   activityList.search.input.name: 'Enter name'
   activityList.select.placeholder: 'Select'
   activityList.select.noData.message: 'There are no data exist'
+  activityList.filter.userGroup.memberCount: '{{count}} members'
   createActivity.select.free: 'Free'
   createActivity.select.busy: 'Busy'
   createActivity.select.client.placeholder: 'Search Client'

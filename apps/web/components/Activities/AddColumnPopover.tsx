@@ -8,8 +8,8 @@ import { CustomScrollbar } from '../CustomScrollbar/Index'
 import styles from '../../pages/activities/index.module.less'
 import { defaultColumns } from './ActivitiesTable'
 import { useMedia } from 'react-use'
-import { useUser } from '../../context/UserContext'
 import { CaretRightOutlined } from '@ant-design/icons'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 interface AddColumnsProps {
   upsertActiveColumnMutation: MutationFunction
@@ -18,6 +18,7 @@ interface AddColumnsProps {
   setSelectedColumn?: (val: string[]) => void
   visibleAddColumnPopover?: boolean
   setVisibleAddColumnPopover?: (val) => void
+  loggedUser?: Partial<AuthenticatedUser> & JwtUser
 }
 export const columnNames = {
   done: { label: 'Done', id: '' },
@@ -119,7 +120,9 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     visibleAddColumnPopover,
     setVisibleAddColumnPopover,
     upsertActiveColumnMutation,
+    loggedUser,
   }) => {
+    console.log('loggedUser---------------', loggedUser)
     const { t } = useTranslationI18()
     const isMobile = useMedia('(max-width: 768px)', false)
     const [searchColumn, setSearchColumn] = useState('')
@@ -131,7 +134,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     const [visibleOptions, setVisibleOptions] = useState([])
     const [visibleOptionsSelect, setVisibleOptionsSelect] = useState([])
     const [defaultColumnList, setDefaultColumnList] = useState([])
-    const loggedUser = useUser()
 
     const activityOptions = useMemo(
       () => [
@@ -414,8 +416,8 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
       await upsertActiveColumnMutation({
         variables: {
           columns: JSON.stringify({ columns: activeColumns }),
-          userId: loggedUser?.me?.user,
-          companyId: loggedUser?.me?.company,
+          userId: loggedUser?.user,
+          companyId: loggedUser?.company,
         },
       })
     }

@@ -1,8 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { stringToBoolean } from './utils'
 
-console.log('Configuring Prisma...')
-
 const DATABASE_URL = process.env.DATABASE_URL
 const PABAU1_MYSQL_USERNAME_PODS = process.env.PABAU1_MYSQL_USERNAME_PODS
 const PABAU1_MYSQL_PASSWORD_PODS = process.env.PABAU1_MYSQL_PASSWORD_PODS
@@ -20,7 +18,11 @@ if (!PABAU1_MYSQL_USERNAME_PODS || !PABAU1_MYSQL_PASSWORD_PODS) {
 }
 
 function getPodDbUrl(urlOrHostname) {
-  if (!urlOrHostname) return DATABASE_URL
+  if (
+    !urlOrHostname ||
+    urlOrHostname === ('https://toshe.pabau.me' || 'http://localhost')
+  )
+    return DATABASE_URL
 
   let url
   try {

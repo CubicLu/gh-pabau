@@ -113,7 +113,8 @@ export const Employees: FC<EmployeesProps> = ({
               }
             >
               <div>
-                <Avatar src={item?.avatar} name={item.name} size={24} />
+                {console.log('render avatar')}
+                <Avatar name={item.name} size={24} />
               </div>
               <div>
                 <span>{item.name}</span>

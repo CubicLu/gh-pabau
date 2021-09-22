@@ -9,6 +9,7 @@ import React, {
 import Layout from '../../components/Layout/Layout'
 import ActivitiesHeader from '../../components/Activities/ActivitiesHeader'
 import ActivitiesTable from '../../components/Activities/ActivitiesTable'
+import { OptionList } from '../../components/Activities/FilterMenu'
 import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tabs, Tooltip, Popover, Skeleton } from 'antd'
@@ -31,6 +32,7 @@ import {
   useFindFirstActivityUserColumnsQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
+import { useUser } from '../../context/UserContext'
 dayjs.extend(utc)
 
 const { TabPane } = Tabs
@@ -177,6 +179,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const isMobile = useMedia('(max-width: 768px)')
   const [sourceData, setSourceData] = useState([])
   const [tabValue, setTabValue] = useState(tabs.toDo)
+  const loggedUser = useUser()
+  console.log('loggedUser---------index------------', loggedUser)
   // const [filterTabValue, setFilterTabValue] = useState(
   //   Object.values(filterTabsObj)
   // )
@@ -200,6 +204,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [filterActivityType, setFilterActivityType] = useState<
     ActivityTypeFilter[]
   >([])
+  const [activityTypeOption, setActivityTypeOption] = useState<OptionList[]>([])
   const [selectedActivityType, setSelectedActivityType] = useState<string[]>([
     'Email',
     'Call',
@@ -378,6 +383,13 @@ export const Index: FC<IndexProps> = ({ client }) => {
         })
       }
       setFilterActivityType(tempData)
+      let item = [...filterData?.findManyActivityType]?.map((item) => {
+        return {
+          id: item.id,
+          name: item.name
+        }
+      })
+      setActivityTypeOption(item)
     }
     if (!filterLoading) setActivityTypeLoading(filterLoading)
   }, [filterData, filterLoading])
@@ -1086,6 +1098,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setSelectFilterUser={setSelectFilterUser}
             personsList={personsList}
             isMobile={isMobile}
+            loggedUser={loggedUser?.me}
+            activityTypeOption={activityTypeOption}
           />
         )}
         <div>
@@ -1139,6 +1153,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setSelectFilterUser={setSelectFilterUser}
             personsList={personsList}
             isMobile={isMobile}
+            loggedUser={loggedUser?.me}
+            activityTypeOption={activityTypeOption}
           />
         )}
         {/* <div className={styles.subHeader}>
@@ -1317,6 +1333,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             userActiveColumn={userActiveColumn}
             setCreateActivityVisible={setCreateActivityVisible}
             tabValue={tabValue}
+            loggedUser={loggedUser?.me}
           />
         )}
       </Layout>

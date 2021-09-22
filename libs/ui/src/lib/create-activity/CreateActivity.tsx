@@ -18,6 +18,7 @@ import {
   UsergroupAddOutlined,
   FileOutlined,
   LinkOutlined,
+  AimOutlined
 } from '@ant-design/icons'
 import Highlighter from 'react-highlight-words'
 import { ReactComponent as UserFilled } from '../../assets/images/activities/user-filled.svg'
@@ -445,8 +446,8 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     fetchOptions={leadOptions}
                     isPrefixIcon={true}
                     prefixIcon={
-                      <div className={styles.dollarIcon}>
-                        <DollarCircleFilled />
+                      <div className={styles.leadIcon}>
+                        <AimOutlined />
                       </div>
                     }
                   />
@@ -467,7 +468,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     isPrefixIcon={true}
                     prefixIcon={
                       <span className={styles.user}>
-                        <UserFilled />
+                        <UserOutlined />
                       </span>
                     }
                   />
