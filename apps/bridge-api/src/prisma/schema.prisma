@@ -4105,6 +4105,7 @@ model CompanyService {
   CompanyRoomService     CompanyRoomService[]
   ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
 
+  ServiceUserPrice ServiceUserPrice[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -4252,21 +4253,23 @@ model CompanyService {
 //  @@index([service_id], name: "service_id")
 //}
 //
-//model company_services_users_tiers {
-//  id                     Int    @id @default(autoincrement())
-//  service_id             Int
-//  user_id                Int
-//  company_id             Int
-//  price                  Float?
-//  duration               String
-//  staff_commission       Float? @default(0.00)
-//  participant_commission Float? @default(0.00)
-//
-//  @@index([company_id], name: "company_id")
-//  @@index([service_id], name: "service_id")
-//  @@index([user_id], name: "user_id")
-//}
-//
+model ServiceUserPrice {
+  id                     Int            @id @default(autoincrement())
+  service_id             Int
+  user_id                Int
+  company_id             Int
+  price                  Float?
+  duration               String
+  staff_commission       Float?         @default(0.00)
+  participant_commission Float?         @default(0.00)
+  CompanyService         CompanyService @relation(fields: [service_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([service_id], name: "service_id")
+  @@index([user_id], name: "user_id")
+  @@map("company_services_users_tiers")
+}
+
 model CompanyVariable {
   id           Int      @id @default(autoincrement())
   company_id   Int      @map("company")
