@@ -314,6 +314,8 @@ model Company {
   ActivityUserColumns ActivityUserColumns[]
   ActivityType        ActivityType[]
   Album               PhotoAlbum[]
+  InsurerContract     InsurerContract[]
+
 
   @@map("admin")
 }
@@ -6116,45 +6118,46 @@ model InsuranceDetail {
   @@map("insurance_details")
 }
 
-//
-//model insurer_contracts {
-//  id                         Int                             @id @default(autoincrement())
-//  name                       String
-//  insurer_id                 Int
-//  company_id                 Int
-//  folder_id                  Int                             @default(1)
-//  contract_type              insurer_contracts_contract_type @default(INSURANCE)
-//  active                     Boolean                         @default(true)
-//  show_bank_details          Boolean                         @default(true)
-//  bank_account               String
-//  bank_number                String
-//  sort_code                  String
-//  bank_name                  String
-//  iban                       String
-//  swift                      String
-//  vat_number                 String
-//  imported                   Int
-//  private_contract           Boolean                         @default(false)
-//  employee_id                Int
-//  full_address               String
-//  registered_company_address String
-//  default_address_to         Boolean                         @default(false)
-//  invoice_template_id        Int?
-//  location_id                Int
-//  last_update                DateTime
-//  mp_rule_name               String
-//  rule_type                  Int
-//  second_service             Float
-//  further_service            Float
-//  action_tax_id              Int
-//  custom_id_template         String?
-//  invoice_prefix             String?
-//  invoice_starting_num       Int
-//  custom_id                  Int
-//
-//  @@index([insurer_id], name: "insurer_id")
-//}
-//
+model InsurerContract {
+  id                         Int                             @id @default(autoincrement())
+  name                       String
+  insurer_id                 Int
+  company_id                 Int?
+  folder_id                  Int                             @default(1)
+  contract_type              insurer_contracts_contract_type @default(INSURANCE)
+  active                     Boolean                         @default(true)
+  show_bank_details          Boolean                         @default(true)
+  bank_account               String
+  bank_number                String
+  sort_code                  String
+  bank_name                  String
+  iban                       String
+  swift                      String
+  vat_number                 String
+  imported                   Int
+  private_contract           Boolean                         @default(false)
+  employee_id                Int
+  full_address               String
+  registered_company_address String
+  default_address_to         Boolean                         @default(false)
+  invoice_template_id        Int?
+  location_id                Int
+  last_update                DateTime
+  mp_rule_name               String
+  rule_type                  Int
+  second_service             Float
+  further_service            Float
+  action_tax_id              Int
+  custom_id_template         String?
+  invoice_prefix             String?
+  invoice_starting_num       Int
+  custom_id                  Int
+  Company                    Company?                        @relation(fields: [company_id], references: [id])
+
+  @@index([insurer_id], name: "insurer_id")
+  @@map("insurer_contracts")
+}
+
 //model insurer_validation {
 //  id        Int    @id @default(autoincrement())
 //  code      String
