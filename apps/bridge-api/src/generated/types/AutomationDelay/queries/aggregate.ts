@@ -6,7 +6,7 @@ export const AutomationDelayAggregateQuery = queryField(
     type: 'AggregateAutomationDelay',
     args: {
       where: 'AutomationDelayWhereInput',
-      orderBy: list('AutomationDelayOrderByInput'),
+      orderBy: list('AutomationDelayOrderByWithRelationInput'),
       cursor: 'AutomationDelayWhereUniqueInput',
       distinct: 'AutomationDelayScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const XeroIntegrationFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'XeroIntegrationWhereInput',
-      orderBy: list('XeroIntegrationOrderByInput'),
+      orderBy: list('XeroIntegrationOrderByWithRelationInput'),
       cursor: 'XeroIntegrationWhereUniqueInput',
       distinct: 'XeroIntegrationScalarFieldEnum',
       skip: 'Int',

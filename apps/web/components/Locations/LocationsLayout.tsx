@@ -29,18 +29,11 @@ import { Avatar, Col, Image, Row, Skeleton, Tooltip, Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik } from 'formik'
 import { useRouter } from 'next/router'
-import React, {
-  FC,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import * as Yup from 'yup'
 import LogoSvg from '../../assets/images/logo.svg'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { getBadgesList } from '../../mocks/Locations'
@@ -52,10 +45,16 @@ import General from './General'
 import LocationDetails from './LocationDetails'
 import styles from './LocationsLayout.module.less'
 import { QuestionCircleOutlined } from '@ant-design/icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import * as Icons from '@fortawesome/free-solid-svg-icons'
 import postData, { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 import { cdnURL } from '../../baseUrl'
 
 const { Title } = Typography
+const iconList = Object.keys(Icons)
+  .filter((key) => key !== 'fas' && key !== 'prefix')
+  .map((icon) => Icons[icon])
+library.add(...iconList)
 
 interface P {
   schema: Schema
@@ -205,14 +204,13 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [tags, setTags] = useState([])
   const [locationIds, setLocationIds] = useState([])
-  const [filterChange, setFilterChange] = useState(true)
   const [allowedLocationCount, setAllowedLocationCount] = useState<number>()
   const [activeLocation, setActiveLocation] = useState<number>()
   const [activeLocationLoading, setActiveLocationLoading] = useState(true)
 
   const router = useRouter()
   const { getParentSetupData } = useGridData(t)
-  const user = useContext(UserContext)
+  const user = useUser()
   const filterFormRef = useRef(null)
 
   const validationSchema = Yup.object().shape({
@@ -297,17 +295,18 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     loading: activeLoading,
   } = useActiveLocationCountQuery()
 
-  const [loadStaffList, { data: staffData }] = useGetLocationStaffListLazyQuery(
-    {
-      ...getStaffQueryVariables,
-      fetchPolicy: 'network-only',
-    }
-  )
+  const [
+    loadStaffList,
+    { data: staffData, loading: staffDataLoading },
+  ] = useGetLocationStaffListLazyQuery({
+    ...getStaffQueryVariables,
+    fetchPolicy: 'network-only',
+  })
 
   const [locationData, setLocationData] = useState(null)
 
   useEffect(() => {
-    if (data?.findManyCompanyBranch) {
+    if (data?.findManyCompanyBranch && !loading) {
       const locationIds = []
       for (const item of data?.findManyCompanyBranch) {
         locationIds.push(item.id)
@@ -316,7 +315,8 @@ const LocationsLayout: FC<P> = ({ schema }) => {
       setLocationData(data?.findManyCompanyBranch)
       loadStaffList()
     }
-  }, [data, loading, filterChange, loadStaffList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, loading])
 
   useEffect(() => {
     if (employeeDataResponse?.findManyCmStaffGeneral) {
@@ -334,7 +334,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }, [employeeDataResponse])
 
   useEffect(() => {
-    if (staffData?.findManyCmStaffGeneral) {
+    if (staffData?.findManyCmStaffGeneral && !staffDataLoading) {
       const locationRecord = []
       for (const item of locationData) {
         const assignedUserData = []
@@ -353,10 +353,12 @@ const LocationsLayout: FC<P> = ({ schema }) => {
         })
       }
       setLocationData(locationRecord)
+    }
+    if (!staffDataLoading) {
       setIsLoading(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staffData])
+  }, [staffData, staffDataLoading])
 
   useEffect(() => {
     if (locationLimit?.findManyCompanySubscription) {
@@ -545,10 +547,11 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     }
     const badges = []
     for (const item of location.AssignedBadge) {
-      badges.push({
-        icon: item.icon,
-        name: item.name,
-      })
+      item.type === 'antd_badge' &&
+        badges.push({
+          icon: item.icon,
+          name: item.name,
+        })
     }
     location.badges = badges
     setInitialValues(location)
@@ -611,7 +614,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
 
     const variables = {
       ...values,
-      image: imageLink ?? values.imageUrl,
+      image: imageLink ?? values.imageUrl ?? '',
       lat: values.position.lat,
       lng: values.position.lng,
       isActive: values.isActive ? 1 : 0,
@@ -659,11 +662,10 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }
 
   const onFilter = (values) => {
+    setIsLoading(true)
     setIsActive(values.status === 'active' ? 1 : 0)
     setTags(values.tags)
-    setIsLoading(true)
     refetch()
-    setFilterChange((value) => !value)
   }
 
   const renderFilter = () => (

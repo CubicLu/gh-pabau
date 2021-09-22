@@ -4,7 +4,7 @@ export const UserMasterFindFirstQuery = queryField('findFirstUserMaster', {
   type: 'UserMaster',
   args: {
     where: 'UserMasterWhereInput',
-    orderBy: list('UserMasterOrderByInput'),
+    orderBy: list('UserMasterOrderByWithRelationInput'),
     cursor: 'UserMasterWhereUniqueInput',
     distinct: 'UserMasterScalarFieldEnum',
     skip: 'Int',

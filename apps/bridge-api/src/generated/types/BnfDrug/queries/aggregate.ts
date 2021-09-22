@@ -4,7 +4,7 @@ export const BnfDrugAggregateQuery = queryField('aggregateBnfDrug', {
   type: 'AggregateBnfDrug',
   args: {
     where: 'BnfDrugWhereInput',
-    orderBy: list('BnfDrugOrderByInput'),
+    orderBy: list('BnfDrugOrderByWithRelationInput'),
     cursor: 'BnfDrugWhereUniqueInput',
     distinct: 'BnfDrugScalarFieldEnum',
     skip: 'Int',

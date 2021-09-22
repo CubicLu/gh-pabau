@@ -1,41 +1,37 @@
 .view-schedule-wrapper {
   max-width: 890px;
   margin: 28px auto 0;
-  @media screen and (max-width: 991px) {
-    max-width: unset;
-    width: 100%;
-  }
 
   .schedule-content {
     background: #fff;
     border-right: 4px;
-
+    margin-bottom: 24px;
     h2 {
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
       line-height: 24px;
       padding: 10px 24px;
-      color: #3D3D46;
-      border-bottom: 1px solid #E4E6EB;
+      color: #3d3d46;
+      border-bottom: 1px solid #e4e6eb;
     }
 
     .upcoming-wrap {
-      height: 140px;
+      height: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
       font-weight: normal;
       font-size: 14px;
       line-height: 22px;
-      color: #3D3D46
+      color: #3d3d46;
     }
 
     .filter-wrap {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #E4E6EB;
+      border-bottom: 1px solid #e4e6eb;
       line-height: 42px;
       padding-right: 24px;
 
@@ -45,22 +41,23 @@
       }
 
       .filter-btn {
-        background: #FFFFFF;
-        border: 1px solid #ECEDF0;
+        background: #ffffff;
+        border: 1px solid #ecedf0;
         border-radius: 4px;
         padding: 1px 9px;
-        color: #9292A3;
+        color: #9292a3;
         font-weight: normal;
         font-size: 14px;
         line-height: 22px;
         cursor: pointer;
-
-        &:focus, &:hover {
-          border: 1px solid #40A0C1;
-          color: #40A0C1;
+        height: 26px !important; 
+        &:focus,
+        &:hover {
+          border: 1px solid #40a0c1;
+          color: #40a0c1;
 
           svg {
-            color: #40A0C1;
+            color: #40a0c1;
           }
         }
 
@@ -75,8 +72,8 @@
     }
 
     .discover-wrap {
-      margin: 4px 24px 24px;
-      border-top: 1px solid #E4E6EB;
+      margin: 0 24px;
+      border-top: 1px solid #e4e6eb;
 
       &:first-child {
         border-top: unset;
@@ -100,6 +97,21 @@
       margin-right: 16px;
     }
   }
+  @media screen and (max-width: 991px) {
+    max-width: unset;
+    width: 100%;
+    padding: 16px;
+    .schedule-content {
+      .discover-wrap {
+        margin: 0 4px 0 18px;
+      }
+    }
+    .webinar-wrapper-modal {
+      .web-box {
+        margin-right: 0;
+      }
+    }
+  }
 }
 
 .filter-container {
@@ -118,7 +130,7 @@
         font-weight: 500;
         font-size: 14px;
         line-height: 20px;
-        color: #9292A3;
+        color: #9292a3;
       }
     }
   }

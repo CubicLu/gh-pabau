@@ -69,7 +69,7 @@ export const WebinarModal: FC<WebinarModalProps> = ({
       if (isYourSchedule) {
         return t('setup.page.live.upcoming.webinar.join.class.label')
       }
-      return 'Registered'
+      return t('setup.page.webinar.modal.registered.label')
     }
     return t('setup.page.webinar.modal.register.label')
   }
@@ -105,11 +105,14 @@ export const WebinarModal: FC<WebinarModalProps> = ({
             </p>
           )}
           {finished && (
-            <h4 style={finished ? { display: 'inline' } : {}}>
-              {dayjs(time)
-                .add(duration, 'minute')
-                .format('MMM DD, YYYY HH:mm:ss')}
-            </h4>
+            <>
+              {' '}
+              <h4 style={finished ? { display: 'inline' } : {}}>
+                {dayjs(time)
+                  .add(duration, 'minute')
+                  .format('MMM DD, YYYY HH:mm:ss')}
+              </h4>
+            </>
           )}
           {!finished && !isYourSchedule && (
             <h4 style={finished ? { display: 'inline' } : {}}>

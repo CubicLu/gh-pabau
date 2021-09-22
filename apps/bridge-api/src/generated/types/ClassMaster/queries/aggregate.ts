@@ -4,7 +4,7 @@ export const ClassMasterAggregateQuery = queryField('aggregateClassMaster', {
   type: 'AggregateClassMaster',
   args: {
     where: 'ClassMasterWhereInput',
-    orderBy: list('ClassMasterOrderByInput'),
+    orderBy: list('ClassMasterOrderByWithRelationInput'),
     cursor: 'ClassMasterWhereUniqueInput',
     distinct: 'ClassMasterScalarFieldEnum',
     skip: 'Int',

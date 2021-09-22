@@ -4,7 +4,7 @@ export const CardTypeFindFirstQuery = queryField('findFirstCardType', {
   type: 'CardType',
   args: {
     where: 'CardTypeWhereInput',
-    orderBy: list('CardTypeOrderByInput'),
+    orderBy: list('CardTypeOrderByWithRelationInput'),
     cursor: 'CardTypeWhereUniqueInput',
     distinct: 'CardTypeScalarFieldEnum',
     skip: 'Int',

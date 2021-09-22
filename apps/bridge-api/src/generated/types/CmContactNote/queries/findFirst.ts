@@ -6,7 +6,7 @@ export const CmContactNoteFindFirstQuery = queryField(
     type: 'CmContactNote',
     args: {
       where: 'CmContactNoteWhereInput',
-      orderBy: list('CmContactNoteOrderByInput'),
+      orderBy: list('CmContactNoteOrderByWithRelationInput'),
       cursor: 'CmContactNoteWhereUniqueInput',
       distinct: 'CmContactNoteScalarFieldEnum',
       skip: 'Int',

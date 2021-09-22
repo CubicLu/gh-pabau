@@ -6,7 +6,7 @@ export const UserAlertPermissionFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'UserAlertPermissionWhereInput',
-      orderBy: list('UserAlertPermissionOrderByInput'),
+      orderBy: list('UserAlertPermissionOrderByWithRelationInput'),
       cursor: 'UserAlertPermissionWhereUniqueInput',
       distinct: 'UserAlertPermissionScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const UserAlertTypeFindFirstQuery = queryField(
     type: 'UserAlertType',
     args: {
       where: 'UserAlertTypeWhereInput',
-      orderBy: list('UserAlertTypeOrderByInput'),
+      orderBy: list('UserAlertTypeOrderByWithRelationInput'),
       cursor: 'UserAlertTypeWhereUniqueInput',
       distinct: 'UserAlertTypeScalarFieldEnum',
       skip: 'Int',

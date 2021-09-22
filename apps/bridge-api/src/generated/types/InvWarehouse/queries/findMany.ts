@@ -4,7 +4,7 @@ export const InvWarehouseFindManyQuery = queryField('findManyInvWarehouse', {
   type: nonNull(list(nonNull('InvWarehouse'))),
   args: {
     where: 'InvWarehouseWhereInput',
-    orderBy: list('InvWarehouseOrderByInput'),
+    orderBy: list('InvWarehouseOrderByWithRelationInput'),
     cursor: 'InvWarehouseWhereUniqueInput',
     distinct: 'InvWarehouseScalarFieldEnum',
     skip: 'Int',

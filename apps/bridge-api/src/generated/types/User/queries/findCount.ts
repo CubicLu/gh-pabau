@@ -4,7 +4,7 @@ export const UserFindCountQuery = queryField('findManyUserCount', {
   type: nonNull('Int'),
   args: {
     where: 'UserWhereInput',
-    orderBy: list('UserOrderByInput'),
+    orderBy: list('UserOrderByWithRelationInput'),
     cursor: 'UserWhereUniqueInput',
     distinct: 'UserScalarFieldEnum',
     skip: 'Int',

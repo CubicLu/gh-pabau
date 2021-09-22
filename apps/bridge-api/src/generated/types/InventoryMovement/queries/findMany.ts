@@ -6,7 +6,7 @@ export const InventoryMovementFindManyQuery = queryField(
     type: nonNull(list(nonNull('InventoryMovement'))),
     args: {
       where: 'InventoryMovementWhereInput',
-      orderBy: list('InventoryMovementOrderByInput'),
+      orderBy: list('InventoryMovementOrderByWithRelationInput'),
       cursor: 'InventoryMovementWhereUniqueInput',
       distinct: 'InventoryMovementScalarFieldEnum',
       skip: 'Int',

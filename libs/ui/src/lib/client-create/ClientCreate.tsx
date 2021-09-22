@@ -6,6 +6,7 @@ import {
 } from '@pabau/ui'
 import { Formik } from 'formik'
 import General, { CommonProps } from './General/index'
+import SharingPrivacy from './SharingAndPrivacy'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
 import { Dayjs } from 'dayjs'
@@ -62,11 +63,20 @@ export interface InitialDetailsProps {
   MailingStreet?: string
   MailingCity: string
   MailingPostal: string
-  MarketingOptInEmail?: boolean
-  MarketingOptInText?: boolean
-  MarketingOptInPost?: boolean
-  MarketingOptInPhone?: boolean
-  [key: string]: string | number | Dayjs | boolean | undefined | null
+  marketingPromotion?: string[]
+  recordSharing?: Record<string, number>
+  privacyPolicy?: string
+  settingSharing?: Record<string, number>
+  shareLink?: string
+  [key: string]:
+    | string
+    | string[]
+    | Record<string, number>
+    | number
+    | Dayjs
+    | boolean
+    | undefined
+    | null
 }
 
 export interface FieldSetting {
@@ -104,7 +114,6 @@ export interface ClientCreateProps {
   fieldsSettings?: FieldSetting[]
   marketingSources?: CommonProps[]
   limitContactsLocations?: LimitLocation[]
-  otherCompanies?: OtherCompany[]
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
   isSalutationLoading?: boolean
@@ -114,6 +123,8 @@ export interface ClientCreateProps {
   }
   initialValues: InitialDetailsProps
   isDisabledBtn?: boolean
+  companyName?: string
+  accessCode?: number
 }
 
 export interface Label {
@@ -144,6 +155,8 @@ export const ClientCreate: FC<ClientCreateProps> = ({
   initialValues,
   validationObject,
   isDisabledBtn,
+  companyName,
+  accessCode,
   ...props
 }) => {
   const { t } = useTranslation('common')
@@ -218,17 +231,31 @@ export const ClientCreate: FC<ClientCreateProps> = ({
             }
             onSave={handleSubmit}
             onDelete={handleDelete}
+            subMenu={[
+              t('quickCreate.client.modal.tab.general'),
+              t('quickCreate.client.modal.tab.sharing.privacy'),
+            ]}
           >
-            <General
-              values={values}
-              setFieldValue={setFieldValue}
-              labels={labels}
-              setLabels={setLabels}
-              selectedLabels={selectedLabels}
-              setSelectedLabels={setSelectedLabels}
-              labelsData={labelsData ?? []}
-              {...props}
-            />
+            {[
+              <General
+                key={'general'}
+                values={values}
+                setFieldValue={setFieldValue}
+                labels={labels}
+                setLabels={setLabels}
+                selectedLabels={selectedLabels}
+                setSelectedLabels={setSelectedLabels}
+                labelsData={labelsData ?? []}
+                {...props}
+              />,
+              <SharingPrivacy
+                key={'sharing'}
+                companyName={companyName}
+                values={values}
+                setFieldValue={setFieldValue}
+                accessCode={accessCode}
+              />,
+            ]}
           </FullScreenReportModal>
         )}
       </Formik>

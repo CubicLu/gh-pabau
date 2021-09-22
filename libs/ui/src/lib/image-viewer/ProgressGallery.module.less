@@ -1,0 +1,104 @@
+.progressGalleryBody {
+  width: 100%;
+  height: 100%;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  .desktop {
+    width: 100%;
+    height: 100%;
+    > div {
+      width: 624px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+
+      > div {
+        &:first-child {
+          padding-top: 152px;
+        }
+        .progressGalleryItem {
+          width: 280px;
+          margin-bottom: 56px;
+
+          .date {
+            white-space: nowrap;
+            width: max-content;
+            padding: 0 1rem;
+            font-family: var(--font-family);
+            font-size: 14px;
+            line-height: 32px;
+            color: var(--grey-text-color);
+            background-color: #e4e6ea;
+            border-radius: 20px;
+            margin: 0;
+            margin-bottom: 8px;
+          }
+        }
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 1px;
+        height: 100%;
+        background-color: var(--border-color-base);
+      }
+    }
+  }
+  .mobile {
+    width: 100%;
+    padding: 1rem;
+    position: relative;
+    &:before {
+      content: '';
+      position: absolute;
+      z-index: 0;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      background-color: var(--border-color-base);
+    }
+    .progressGalleryItem {
+      width: 196px;
+      margin-bottom: 24px;
+      z-index: 1;
+      .date {
+        position: relative;
+        border-radius: 20px;
+        margin-bottom: 8px;
+        width: max-content;
+        height: 32px;
+        > p {
+          position: absolute;
+          top: 0;
+          left: 0;
+          white-space: nowrap;
+          width: max-content;
+          padding: 0 1rem;
+          display: flex;
+          align-items: center;
+          font-family: var(--font-family);
+          font-size: 14px;
+          line-height: 32px;
+          color: var(--grey-text-color);
+          background-color: #e4e6ea;
+          border-radius: 20px;
+        }
+      }
+      &.left {
+        margin-right: auto;
+      }
+
+      &.right {
+        margin-left: auto;
+      }
+    }
+  }
+  @media (max-width: 767px) {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}

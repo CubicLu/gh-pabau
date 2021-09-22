@@ -6,7 +6,7 @@ export const TwoFactorHistoryAggregateQuery = queryField(
     type: 'AggregateTwoFactorHistory',
     args: {
       where: 'TwoFactorHistoryWhereInput',
-      orderBy: list('TwoFactorHistoryOrderByInput'),
+      orderBy: list('TwoFactorHistoryOrderByWithRelationInput'),
       cursor: 'TwoFactorHistoryWhereUniqueInput',
       distinct: 'TwoFactorHistoryScalarFieldEnum',
       skip: 'Int',

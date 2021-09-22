@@ -6,7 +6,7 @@ export const ClockinBreakFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ClockinBreakWhereInput',
-      orderBy: list('ClockinBreakOrderByInput'),
+      orderBy: list('ClockinBreakOrderByWithRelationInput'),
       cursor: 'ClockinBreakWhereUniqueInput',
       distinct: 'ClockinBreakScalarFieldEnum',
       skip: 'Int',

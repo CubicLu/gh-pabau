@@ -6,7 +6,7 @@ export const UserMobilePermissionFindManyQuery = queryField(
     type: nonNull(list(nonNull('UserMobilePermission'))),
     args: {
       where: 'UserMobilePermissionWhereInput',
-      orderBy: list('UserMobilePermissionOrderByInput'),
+      orderBy: list('UserMobilePermissionOrderByWithRelationInput'),
       cursor: 'UserMobilePermissionWhereUniqueInput',
       distinct: 'UserMobilePermissionScalarFieldEnum',
       skip: 'Int',

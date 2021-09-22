@@ -6,7 +6,7 @@ export const PointOfSaleSettingFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'PointOfSaleSettingWhereInput',
-      orderBy: list('PointOfSaleSettingOrderByInput'),
+      orderBy: list('PointOfSaleSettingOrderByWithRelationInput'),
       cursor: 'PointOfSaleSettingWhereUniqueInput',
       distinct: 'PointOfSaleSettingScalarFieldEnum',
       skip: 'Int',

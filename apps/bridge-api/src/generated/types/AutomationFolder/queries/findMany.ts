@@ -6,7 +6,7 @@ export const AutomationFolderFindManyQuery = queryField(
     type: nonNull(list(nonNull('AutomationFolder'))),
     args: {
       where: 'AutomationFolderWhereInput',
-      orderBy: list('AutomationFolderOrderByInput'),
+      orderBy: list('AutomationFolderOrderByWithRelationInput'),
       cursor: 'AutomationFolderWhereUniqueInput',
       distinct: 'AutomationFolderScalarFieldEnum',
       skip: 'Int',

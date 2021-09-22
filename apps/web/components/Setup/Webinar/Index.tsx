@@ -152,8 +152,14 @@ const WebinarCard: FC = () => {
           title={modalData?.title}
           backgroundImage={modalData?.backgroundImage}
           onCancel={handleCloseModal}
-          isYourSchedule={checkIsInProgress(modalData)}
-          isFinished={checkIsFinished(modalData)}
+          isYourSchedule={checkIsInProgress({
+            ...modalData,
+            course_date: modalData.time,
+          })}
+          isFinished={checkIsFinished({
+            ...modalData,
+            course_date: modalData.time,
+          })}
           duration={modalData?.duration}
           onRegister={async (course_id, webinar_id, course_date) => {
             return !!(await enroll({

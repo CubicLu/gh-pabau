@@ -118,6 +118,7 @@ export const General: FC<GeneralProps> = ({
     label: '',
     color: '',
   })
+  const [isSpace, setIsSpace] = useState(false)
 
   const editLabelData = (valueObject) => {
     const labelData = [...labels]
@@ -180,30 +181,36 @@ export const General: FC<GeneralProps> = ({
       setDisplayColorPicker(false)
       setSelectedColor('')
       setSelectedId('')
+    } else if (e.key === ' ') {
+      setIsSpace(true)
     }
   }
 
   const handleVisible = (value) => {
-    if (isEdit) {
-      editLabelData({ label: newLabel.label, color: selectedColor })
-    } else if (!value && newLabel.label) {
-      if (selectedId) {
-        addLabelData({ id: selectedId, label: value, color: selectedColor })
-      } else {
-        if (labelsData.some((item) => item.value === value)) {
-          const data = labelsData.find((item) => item.value === value)
-          addLabelData({ id: data?.id, label: value, color: selectedColor })
+    if (!isSpace) {
+      if (isEdit) {
+        editLabelData({ label: newLabel.label, color: selectedColor })
+      } else if (!value && newLabel.label) {
+        if (labelsData.some((item) => item.value === newLabel.label)) {
+          const data = labelsData.find((item) => item.value === newLabel.label)
+          addLabelData({
+            id: data?.id,
+            label: newLabel.label,
+            color: selectedColor,
+          })
         } else {
-          addLabelData({ label: value, color: selectedColor })
+          addLabelData({ label: newLabel.label, color: selectedColor })
         }
       }
+      setNewLabel({ label: '', color: '' })
+      setVisible(value)
+      setDisplayColorPicker(false)
+      setSelectedColor('')
+      setSelectedId('')
+      setIsEdit(false)
+    } else {
+      setIsSpace(false)
     }
-    setNewLabel({ label: '', color: '' })
-    setVisible(value)
-    setDisplayColorPicker(false)
-    setSelectedColor('')
-    setSelectedId('')
-    setIsEdit(false)
   }
 
   const handleSelect = (label, index) => {

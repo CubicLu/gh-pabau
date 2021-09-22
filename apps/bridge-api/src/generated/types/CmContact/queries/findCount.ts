@@ -4,7 +4,7 @@ export const CmContactFindCountQuery = queryField('findManyCmContactCount', {
   type: nonNull('Int'),
   args: {
     where: 'CmContactWhereInput',
-    orderBy: list('CmContactOrderByInput'),
+    orderBy: list('CmContactOrderByWithRelationInput'),
     cursor: 'CmContactWhereUniqueInput',
     distinct: 'CmContactScalarFieldEnum',
     skip: 'Int',

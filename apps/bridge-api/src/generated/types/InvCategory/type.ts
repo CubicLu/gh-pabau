@@ -34,7 +34,7 @@ export const InvCategory = objectType({
       type: 'InvProduct',
       args: {
         where: 'InvProductWhereInput',
-        orderBy: 'InvProductOrderByInput',
+        orderBy: 'InvProductOrderByWithRelationInput',
         cursor: 'InvProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -72,7 +72,7 @@ export const InvCategory = objectType({
       type: 'CmPurchaseOrder',
       args: {
         where: 'CmPurchaseOrderWhereInput',
-        orderBy: 'CmPurchaseOrderOrderByInput',
+        orderBy: 'CmPurchaseOrderOrderByWithRelationInput',
         cursor: 'CmPurchaseOrderWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

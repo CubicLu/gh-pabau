@@ -6,7 +6,7 @@ export const UserSalutationFindFirstQuery = queryField(
     type: 'UserSalutation',
     args: {
       where: 'UserSalutationWhereInput',
-      orderBy: list('UserSalutationOrderByInput'),
+      orderBy: list('UserSalutationOrderByWithRelationInput'),
       cursor: 'UserSalutationWhereUniqueInput',
       distinct: 'UserSalutationScalarFieldEnum',
       skip: 'Int',

@@ -1,5 +1,5 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { useGetBussinessDetailsQuery } from '@pabau/graphql'
+import { useGetBusinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
@@ -10,14 +10,14 @@ import {
 } from '@pabau/ui'
 import { Typography } from 'antd'
 import { useRouter } from 'next/router'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
 import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
 import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
 import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
@@ -93,6 +93,8 @@ export const Index: FC = () => {
   const [location, setLocation] = useState('')
   const [historyData, setHistoryData] = useState('')
   const [timeFormat, setTimeFormat] = useState('')
+  const [companyLanguage, setCompanyLanguage] = useState('')
+  const [taxSingular, serTaxSingular] = useState('')
   const router = useRouter()
 
   const tabMenuItems = [
@@ -104,9 +106,9 @@ export const Index: FC = () => {
   ]
   const { getParentSetupData } = useGridData(t)
   const parentMenu = getParentSetupData(router.pathname)
-  const user = useContext(UserContext)
+  const user = useUser()
 
-  const { data, loading } = useGetBussinessDetailsQuery()
+  const { data, loading } = useGetBusinessDetailsQuery()
 
   const handleBack = () => {
     if (parentMenu.length > 0) {
@@ -155,8 +157,10 @@ export const Index: FC = () => {
       setEnableLabs(record?.['lab_enabled'] ?? '')
       setHistoryData(record?.['history_data'])
       setTimeFormat(record?.['time_format'])
+      setCompanyLanguage(record?.['company_language'])
+      serTaxSingular(record?.['tax_singular'])
 
-      const force_password_data = data?.company?.User?.filter(
+      const force_password_data = data?.me?.Company?.User?.filter(
         (item) => item.id === user?.me?.id
       )
       if (force_password_data && force_password_data.length > 0) {
@@ -214,6 +218,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               location={location}
               loading={loading}
+              companyLanguage={companyLanguage}
               t={t}
             />
             <TerminologyTab
@@ -223,6 +228,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               opsData={opsData}
               loading={loading}
+              taxSingular={taxSingular}
               t={t}
             />
             <SystemTab
@@ -260,6 +266,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               location={location}
               loading={loading}
+              companyLanguage={companyLanguage}
               t={t}
             />
             <TerminologyTab
@@ -269,6 +276,7 @@ export const Index: FC = () => {
               user={user?.me?.id}
               opsData={opsData}
               loading={loading}
+              taxSingular={taxSingular}
               t={t}
             />
             <SystemTab

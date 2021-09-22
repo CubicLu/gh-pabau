@@ -6,7 +6,7 @@ export const ManageCustomFieldCategoryFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ManageCustomFieldCategoryWhereInput',
-      orderBy: list('ManageCustomFieldCategoryOrderByInput'),
+      orderBy: list('ManageCustomFieldCategoryOrderByWithRelationInput'),
       cursor: 'ManageCustomFieldCategoryWhereUniqueInput',
       distinct: 'ManageCustomFieldCategoryScalarFieldEnum',
       skip: 'Int',

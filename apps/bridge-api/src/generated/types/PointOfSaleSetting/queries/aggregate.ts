@@ -6,7 +6,7 @@ export const PointOfSaleSettingAggregateQuery = queryField(
     type: 'AggregatePointOfSaleSetting',
     args: {
       where: 'PointOfSaleSettingWhereInput',
-      orderBy: list('PointOfSaleSettingOrderByInput'),
+      orderBy: list('PointOfSaleSettingOrderByWithRelationInput'),
       cursor: 'PointOfSaleSettingWhereUniqueInput',
       distinct: 'PointOfSaleSettingScalarFieldEnum',
       skip: 'Int',

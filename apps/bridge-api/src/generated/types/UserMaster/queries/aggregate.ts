@@ -4,7 +4,7 @@ export const UserMasterAggregateQuery = queryField('aggregateUserMaster', {
   type: 'AggregateUserMaster',
   args: {
     where: 'UserMasterWhereInput',
-    orderBy: list('UserMasterOrderByInput'),
+    orderBy: list('UserMasterOrderByWithRelationInput'),
     cursor: 'UserMasterWhereUniqueInput',
     distinct: 'UserMasterScalarFieldEnum',
     skip: 'Int',

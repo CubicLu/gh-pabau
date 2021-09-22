@@ -1,7 +1,6 @@
-import React, { FC } from 'react'
 import Dashboard from './dashboard'
 
-const Index: FC = () => {
+const Index = () => {
   return <Dashboard />
 }
 

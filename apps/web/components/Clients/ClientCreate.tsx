@@ -15,11 +15,11 @@ import {
   useGetMarketingSourcesLazyQuery,
   useGetContactCustomFieldsLazyQuery,
   useFindManyLimitContactLocationLazyQuery,
-  useFindManySharedCompanyLazyQuery,
   useGetCmLabelsLazyQuery,
   useCreateOneContactMutation,
   GetTblModuleFieldsSettingsQuery,
 } from '@pabau/graphql'
+import { useUser } from '../../context/UserContext'
 
 export interface Label {
   label?: string
@@ -62,6 +62,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   ...props
 }) => {
   const { t } = useTranslation('common')
+  const user = useUser()
   const [labelsData, setLabelsData] = useState<LabelDataProps[]>([])
   const [validationObject, setValidationObject] = useState({})
   const [initialValues, setInitialValues] = useState<InitialDetailsProps>({
@@ -80,13 +81,41 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     MailingStreet: '',
     MailingCity: '',
     MailingPostal: '',
-    MarketingOptInEmail: false,
-    MarketingOptInText: false,
-    MarketingOptInPost: false,
-    MarketingOptInPhone: false,
+    marketingPromotion: ['sms', 'email', 'phone', 'postal', 'needToKnows'],
+    recordSharing: {
+      company: 0,
+      emergencyContact: 0,
+      family: 0,
+      gp: 0,
+      insuranceProvider: 0,
+      nextOfKin: 0,
+    },
+    privacyPolicy: '0',
+    settingSharing: {
+      bookAppointments: 1,
+      bookClass: 0,
+      loyalty: 1,
+      myPackages: 0,
+      purchasePackage: 0,
+      payments: 0,
+      appointments: 0,
+      class: 0,
+      documents: 0,
+      medications: 0,
+      allergies: 0,
+      gpDetails: 0,
+    },
+    shareLink: '',
   })
   const [customFields, setCustomFields] = useState<CustomFieldsProps[]>([])
   const [isVisible, setVisible] = useState(modalVisible)
+  const [accessCode, setAceessCode] = useState(0)
+  const [isSuccess, setSuccess] = useState(false)
+
+  useEffect(() => {
+    const code = Math.floor(1000 + Math.random() * 9000)
+    setAceessCode(code)
+  }, [isSuccess])
 
   const [
     getFieldSettingData,
@@ -109,11 +138,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   ] = useFindManyLimitContactLocationLazyQuery()
 
   const [
-    getOtherCompaniesData,
-    { data: otherCompaniesData, loading: otherCompanyLoading },
-  ] = useFindManySharedCompanyLazyQuery()
-
-  const [
     getCustomFieldData,
     { data: customFieldData, loading: customFieldLoading },
   ] = useGetContactCustomFieldsLazyQuery()
@@ -127,6 +151,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           NotificationType.success,
           t('quickCreate.client.modal.create.success')
         )
+        setSuccess(!isSuccess)
       }
     },
     onError(error) {
@@ -134,11 +159,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         Notification(
           NotificationType.error,
           t('quickCreate.client.modal.create.contact.exits.error')
-        )
-      } else {
-        Notification(
-          NotificationType.error,
-          t('quickCreate.client.modal.create.contact.error')
         )
       }
     },
@@ -151,7 +171,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       getMarketingSourceData()
       getLabels()
       getLimitLocationData()
-      getOtherCompaniesData()
       getCustomFieldData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -334,8 +353,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       loading ||
       marketingSourceLoading ||
       locationLoading ||
-      customFieldLoading ||
-      otherCompanyLoading
+      customFieldLoading
     )
   }
 
@@ -347,7 +365,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const handleCreate = async (values, resetForm, setSelectedLabels) => {
     const customFieldsValue: cmFieldsCreateProps[] = []
     const limitContactsLocationsIds: number[] = []
-    const otherCompanyIds: number[] = []
 
     for (const field of Object.keys(values)) {
       let value = values[field]
@@ -377,9 +394,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       } else if (field.includes('limitContactsLocations_') && value) {
         const strVal = field.split('_')
         limitContactsLocationsIds.push(Number.parseInt(strVal[1]))
-      } else if (field.includes('otherCompany_') && value) {
-        const strVal = field.split('_')
-        otherCompanyIds.push(Number.parseInt(strVal[1]))
       }
     }
 
@@ -393,10 +407,11 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       mailingStreet: values.MailingStreet,
       mailingPostal: values.MailingPostal,
       mailingCountry: values.MailingCountry,
-      marketingOptInEmail: values.MarketingOptInEmail ? 1 : 0,
-      marketingOptInPhone: values.MarketingOptInPhone ? 1 : 0,
-      marketingOptInPost: values.MarketingOptInPost ? 1 : 0,
-      marketingOptInText: values.MarketingOptInText ? 1 : 0,
+      marketingOptInEmail: values.marketingPromotion.includes('email') ? 1 : 0,
+      marketingOptInPhone: values.marketingPromotion.includes('phone') ? 1 : 0,
+      marketingOptInPost: values.marketingPromotion.includes('postal') ? 1 : 0,
+      marketingOptInText: values.marketingPromotion.includes('sms') ? 1 : 0,
+      needToKnows: values.marketingPromotion.includes('needToKnows'),
       marketingSource: values.MarketingSource
         ? Number.parseInt(values.MarketingSource)
         : 0,
@@ -405,14 +420,32 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       phone: values.Phone,
       gender: values.gender,
       preferredLanguage: values.preferredLanguage.toLowerCase(),
-      otherCompanyIds: otherCompanyIds,
+      privacyPolicy: values.privacyPolicy,
       limitContactsLocations: limitContactsLocationsIds,
       labels: values.selectedLabels,
       customFields: customFieldsValue,
-    }
-
-    if (otherCompanyIds.length === 0) {
-      delete variables.otherCompanyIds
+      contactPreferences: {
+        family: values.recordSharing.family,
+        emergency_contact: values.recordSharing.emergencyContact,
+        next_of_kin: values.recordSharing.nextOfKin,
+        insurance_provider: values.recordSharing.insuranceProvider,
+        gp: values.recordSharing.gp,
+        company: values.recordSharing.company,
+        book_appointments: values.settingSharing.bookAppointments,
+        book_class: values.settingSharing.bookClass,
+        loyalty: values.settingSharing.loyalty,
+        my_packages: values.settingSharing.myPackages,
+        purchase_package: values.settingSharing.purchasePackage,
+        payments: values.settingSharing.payments,
+        appointments: values.settingSharing.appointments,
+        class: values.settingSharing.class,
+        documents: values.settingSharing.documents,
+        medications: values.settingSharing.medications,
+        allergies: values.settingSharing.allergies,
+        gp_details: values.settingSharing.gpDetails,
+        share_link: values.shareLink,
+        access_code: accessCode.toString(),
+      },
     }
 
     if (limitContactsLocationsIds.length === 0) {
@@ -448,7 +481,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       fieldsSettings={fieldSettingData?.findManyTblModuleFieldsSetting}
       marketingSources={marketingSourceData?.findManyMarketingSource}
       limitContactsLocations={limitLocationData?.findManyLimitContactLocation}
-      otherCompanies={otherCompaniesData?.findManySharedCompany}
       isLoading={loading}
       isMarketingSourceLoading={marketingSourceLoading}
       isSalutationLoading={salutationLoading}
@@ -456,6 +488,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       initialValues={initialValues}
       validationObject={validationObject}
       isDisabledBtn={checkIsLoading()}
+      companyName={user?.me?.companyName}
+      accessCode={accessCode}
       {...props}
     />
   )

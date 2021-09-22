@@ -9,14 +9,12 @@ import {
   MobileSidebar,
   NotificationDrawer,
   SetupSearchInput,
-  UserDataProps,
 } from '@pabau/ui'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
-import React, { FC, useState, useContext } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import Search from '../components/Search'
-import { UserContext } from '../context/UserContext'
-import { getImage } from './Uploaders/UploadHelpers/UploadHelpers'
+import { useUser } from '../context/UserContext'
 import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './Setup.module.less'
@@ -32,12 +30,13 @@ interface P {
   handleCreate?: () => void
   showChat?: boolean
   onChatClick?: () => void
-  clientCreateRender?: () => JSX.Element
-  leadCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
+  displayActivity?: boolean
+  renderActivity?: ReactNode
 }
 
 const CommonHeader: FC<P> = ({
-  showChat,
   handleSearch,
   title = 'Setup',
   isShowSearch,
@@ -49,8 +48,10 @@ const CommonHeader: FC<P> = ({
   onChatClick,
   clientCreateRender,
   leadCreateRender,
+  displayActivity = false,
+  renderActivity,
 }) => {
-  const user = useContext(UserContext)
+  const user = useUser()
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
@@ -113,6 +114,7 @@ const CommonHeader: FC<P> = ({
             )}
             {isContent && <ContentJsx />}
           </div>
+          {displayActivity && <div>{renderActivity}</div>}
           {displayCreateButton && (
             <div className={styles.createPlusIcon}>
               <PlusSquareFilled
@@ -131,15 +133,8 @@ const CommonHeader: FC<P> = ({
           onClickChatDrawer={onChatClick}
           clientCreateRender={clientCreateRender}
           leadCreateRender={leadCreateRender}
-          userData={
-            {
-              company: user?.me?.company?.id,
-              user: user?.me?.id,
-              fullName: user?.me?.full_name,
-              companyName: user?.me?.company?.details?.company_name,
-              image: getImage(user?.me?.image),
-            } as UserDataProps
-          }
+          userData={user?.me}
+          onLogout={user?.logout}
         />
       )}
       {openNotificationDrawer && (

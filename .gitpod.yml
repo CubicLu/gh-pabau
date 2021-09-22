@@ -1,0 +1,15 @@
+tasks:
+  - name: production:web
+    init: |
+      yarn install
+      yarn pipeline-checks
+    command: yarn production:web
+
+vscode:
+  extensions:
+    - 'editorconfig.editorconfig'
+    - 'graphql.vscode-graphql'
+    - 'dbaeumer.vscode-eslint'
+    - 'prisma.prisma'
+    - 'esbenp.prettier-vscode'
+    - 'mikestead.dotenv'

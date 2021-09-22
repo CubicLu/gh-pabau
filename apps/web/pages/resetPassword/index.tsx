@@ -7,7 +7,7 @@ import { Form, Input, SubmitButton } from 'formik-antd'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import React, { FC, useState } from 'react'
 import styles from './index.module.less'
-import { ConfirmPasswordValidation } from '@pabau/yup'
+import { validatePasswordWithConfirm } from '@pabau/yup'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 import { TokenVerificationDocument } from '@pabau/graphql'
@@ -68,8 +68,10 @@ const Index: FC = () => {
             {data?.findFirstPasswordResetAuth === null && (
               <div className={styles.mainErrorWrap}>
                 <div className={styles.errorPage}>
-                  <div className={styles.message}>Something went wrong!</div>
-                  <h5>Token is not found or Expired, Please try again!</h5>
+                  <div className={styles.message}>
+                    {t('reset.password.error.message')}
+                  </div>
+                  <h5>{t('reset.password.token.expired')}</h5>
                 </div>
               </div>
             )}
@@ -77,7 +79,7 @@ const Index: FC = () => {
           <div className={styles.formHead}>
             <h1>
               {!loading ? (
-                data?.findFirstPasswordResetAuth !== null ? (
+                data?.findFirstPasswordResetAuth ? (
                   t('reset.password.title.text', { fallbackLng: 'en' })
                 ) : null
               ) : (
@@ -116,13 +118,14 @@ const Index: FC = () => {
               password: '',
               confirmPassword: '',
             }}
-            validationSchema={ConfirmPasswordValidation}
+            validationSchema={validatePasswordWithConfirm}
             onSubmit={async (value: PasswordFormProps) => {
               setIsLoading(true)
               updateUserPassword({
                 variables: {
                   token: token,
-                  newPassword: value.confirmPassword,
+                  newPassword1: value.password,
+                  newPassword2: value.confirmPassword,
                 },
                 optimisticResponse: {},
               })

@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["selectRelationCount", "filterJson", "referentialActions"]
+  previewFeatures = ["selectRelationCount", "filterJson", "referentialActions", "orderByRelation"]
 }
 
 datasource db {
@@ -308,6 +308,12 @@ model Company {
   CmLabel                          CmLabel[]
   CmContactLabel                   CmContactLabel[]
   LeadStatus                       LeadStatus[]
+  Activity                         Activity[]
+  ContactPreference                ContactPreference[]
+
+  ActivityUserColumns ActivityUserColumns[]
+  ActivityType        ActivityType[]
+  Album               PhotoAlbum[]
 
   @@map("admin")
 }
@@ -1049,16 +1055,18 @@ model CancellationPolicy {
 }
 
 model MarketingSource {
-  id         Int     @id @default(autoincrement())
-  name       String  @map("source_name")
-  company_id Int     @map("occupier")
+  id         Int      @id @default(autoincrement())
+  name       String   @map("source_name")
+  company_id Int      @map("occupier")
   custom_id  Int
   public     Boolean
   imported   Int
-  Company    Company @relation(fields: [company_id], references: [id])
+  Company    Company? @relation(fields: [company_id], references: [id])
 
 
   CmExtraPatient CmExtraPatient[]
+  CmLead         CmLead[]
+  CmContact      CmContact[]
   @@index([company_id], name: "company_id")
   @@index([public], name: "public")
   @@index([name], name: "source_name")
@@ -1907,6 +1915,10 @@ model CmContact {
   CommunicationRecipient    CommunicationRecipient[]
   CmContactCustom           CmContactCustom[]
   CmContactLabel            CmContactLabel[]
+  Activity                  Activity[]
+  Albums                    PhotoAlbum[]
+  ContactPreference         ContactPreference?
+  MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
 
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Fname], name: "Fname")
@@ -1952,6 +1964,41 @@ model CmContactLabel {
 
   @@index([contact_id, company_id], name: "cm_contact_label_contact_id_company_id__index")
   @@map("cm_contact_label")
+}
+
+model ContactPreference {
+  id                 Int       @id @default(autoincrement())
+  company_id         Int
+  contact_id         Int
+  family             Int?      @default(0)
+  emergency_contact  Int?      @default(0)
+  next_of_kin        Int?      @default(0)
+  insurance_provider Int?      @default(0)
+  gp                 Int?      @default(0)
+  company            Int?      @default(0)
+  book_appointments  Int?      @default(0)
+  book_class         Int?      @default(0)
+  loyalty            Int?      @default(0)
+  my_packages        Int?      @default(0)
+  purchase_package   Int?      @default(0)
+  payments           Int?      @default(0)
+  appointments       Int?      @default(0)
+  class              Int?      @default(0)
+  documents          Int?      @default(0)
+  medications        Int?      @default(0)
+  allergies          Int?      @default(0)
+  gp_details         Int?      @default(0)
+  share_link         String?   @default("")
+  access_code        String?   @default("")
+  created_at         DateTime? @default(now())
+  updated_at         DateTime? @default(now())
+
+  Company Company   @relation(fields: [company_id], references: [id])
+  Contact CmContact @relation(fields: [contact_id], references: [ID])
+
+  @@unique([company_id, contact_id], name: "unique_company_id_contact_id")
+  @@index([contact_id, company_id], name: "contact_preferences_contact_id_company_id__index")
+  @@map("contact_preferences")
 }
 
 //model cm_contacts_alerts_import_helper {
@@ -2056,6 +2103,74 @@ model CmContactCustom {
   @@index([custom_field_id], name: "custom_field_id")
   @@index([company_id], name: "occupier")
   @@map("cm_contacts_custom")
+}
+
+//model ActivityCustomField {
+//  id                Int               @id @default(autoincrement())
+//  company_id        Int
+//  custom_field_id   Int
+//  active            Boolean
+//  basic             Boolean
+//  order             Int
+//  Company           Company           @relation(fields: [company_id], references: [id])
+//  ManageCustomField ManageCustomField @relation(fields: [custom_field_id], references: [id])
+//
+//  @@map("activity_custom_fields")
+//}
+
+model ActivityType {
+  id         Int      @id @default(autoincrement())
+  name       String
+  action     String?
+  badge      String
+  order      Int
+  company_id Int
+  Company    Company? @relation(fields: [company_id], references: [id])
+
+  Activity Activity[]
+  @@map("activity_types")
+}
+
+model ActivityUserColumns {
+  id         Int     @id @default(autoincrement())
+  user_id    Int
+  columns    String
+  company_id Int
+  Company    Company @relation(fields: [company_id], references: [id])
+  User       User?   @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, company_id], name: "company_id_user_id")
+  @@index([company_id, user_id], name: "activity_user_columns_user_id_company_id__index")
+  @@map("activity_user_columns")
+}
+
+model Activity {
+  id             Int          @id @default(autoincrement())
+  created_by     Int
+  assigned_to    Int
+  contact_id     Int
+  lead_id        Int
+  subject        String
+  note           String?
+  available      Boolean      @default(true)
+  status         String
+  due_start_date DateTime
+  due_end_date   DateTime
+  created_at     DateTime     @default(now())
+  updated_at     DateTime?    @updatedAt
+  finished_at    DateTime?
+  type           Int
+  company_id     Int
+  Company        Company      @relation(fields: [company_id], references: [id])
+  User           User         @relation("activityCreatedUser", fields: [created_by], references: [id])
+  CmContact      CmContact    @relation(fields: [contact_id], references: [ID])
+  CmLead         CmLead       @relation(fields: [lead_id], references: [ID])
+  ActivityType   ActivityType @relation(fields: [type], references: [id])
+  AssignedUser   User         @relation("activityAssignedUser", fields: [assigned_to], references: [id])
+
+  @@index([company_id], name: "activity_company_id__index")
+  @@index([company_id, due_start_date, status], name: "activity_company_id_due_start_date_status__index")
+  @@map("activity")
 }
 
 //
@@ -2490,6 +2605,10 @@ model CmLead {
   CmLeadCustomField        CmLeadCustomField[]
   CommunicationRecipient   CommunicationRecipient[]
   CmLeadNote               CmLeadNote[]
+  User                     User?                    @relation(fields: [OwnerID], references: [id])
+  Activity                 Activity[]
+  MarketingSource          MarketingSource?         @relation(fields: [LeadSource], references: [id])
+  LeadStatusData           LeadStatus?              @relation(fields: [LeadStatus], references: [id])
 
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
@@ -4313,7 +4432,7 @@ model CompanyVariable {
 //}
 //
 model ContactAttachment {
-  id                Int       @id @default(autoincrement())
+  id                Int         @id @default(autoincrement())
   linkref           String
   contact_id        Int
   company_id        Int
@@ -4324,7 +4443,7 @@ model ContactAttachment {
   connect_public    Boolean
   website_public    Boolean
   attachment_title  String
-  cloud             Boolean   @default(false)
+  cloud             Boolean     @default(false)
   custom_id         Int
   original_path     String
   imported          Int
@@ -4340,8 +4459,9 @@ model ContactAttachment {
   medical_form_id   Int
   tags              String
   medical_uniqid    String
-  Contact           CmContact @relation(fields: [contact_id], references: [ID])
-  Practitioner      User      @relation(fields: [attach_name], references: [full_name])
+  Contact           CmContact   @relation(fields: [contact_id], references: [ID])
+  Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
+  Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
 
   @@index([booking_id], name: "booking_id")
   @@index([cloud], name: "cloud")
@@ -7706,6 +7826,7 @@ model LeadStatus {
   is_convert          Int
   Company             Company? @relation(fields: [company_id], references: [id])
 
+  CmLead CmLead[]
   @@map("lead_status")
 }
 
@@ -9492,7 +9613,7 @@ model PasswordResetAuth {
   id           Int       @id @default(autoincrement())
   key_code     String
   username     String    @unique
-  old_password String
+  old_password String?
   date         DateTime?
   User         User      @relation(fields: [username], references: [username])
 
@@ -9603,14 +9724,23 @@ model PermissionTemplate {
 //  date_taken    DateTime @default(now())
 //}
 //
-//model photo_album {
-//  id            Int      @id @default(autoincrement())
-//  album_name    String
-//  contact_id    Int
-//  occupier      Int
-//  creation_date DateTime
-//  modified_date DateTime
-//}
+model PhotoAlbum {
+  id            Int       @id @default(autoincrement())
+  album_name    String
+  contact_id    Int
+  company_id    Int       @map("occupier")
+  creation_date DateTime?
+  modified_date DateTime?
+
+  Company Company             @relation(fields: [company_id], references: [id])
+  Contact CmContact           @relation(fields: [contact_id], references: [ID])
+  Photos  ContactAttachment[]
+
+  @@index([company_id], name: "company_id")
+  @@index([contact_id], name: "contact_id")
+  @@map("photo_album")
+}
+
 //
 //model phpbirthday {
 //  Name            String?
@@ -12536,8 +12666,12 @@ model User {
   Booking                      Booking[]
   InvSale                      InvSale[]
   CompanyOwner                 Company?                       @relation("owner")
+  Activity                     Activity[]                     @relation("activityCreatedUser")
+  CmLead                       CmLead[]
+  AssignedActivity             Activity[]                     @relation("activityAssignedUser")
 
-  PasswordResetAuth PasswordResetAuth[]
+  PasswordResetAuth   PasswordResetAuth[]
+  ActivityUserColumns ActivityUserColumns[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

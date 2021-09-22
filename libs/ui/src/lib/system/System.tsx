@@ -105,13 +105,20 @@ export const System: FC<SystemProps> = ({
               <SimpleDropdown
                 label={t('business.system.time.format')}
                 tooltip={t('business.system.time.format')}
-                value={configs?.timeFormat}
+                value={
+                  configs?.timeFormat === '12'
+                    ? '12 hours (e.g. 9:00pm)'
+                    : '24 hours (e.g. 21:00)'
+                }
                 dropdownItems={[
                   t('busines.system.time.format.option1'),
                   t('busines.system.time.format.option2'),
                 ]}
                 onSelected={(val) =>
-                  handleItemChange({ key: 'timeFormat', value: val })
+                  handleItemChange({
+                    key: 'timeFormat',
+                    value: val === '12 hours (e.g. 9:00pm)' ? '12' : '24',
+                  })
                 }
               />
             ) : (

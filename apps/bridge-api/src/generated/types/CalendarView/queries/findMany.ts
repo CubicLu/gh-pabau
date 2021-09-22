@@ -4,7 +4,7 @@ export const CalendarViewFindManyQuery = queryField('findManyCalendarView', {
   type: nonNull(list(nonNull('CalendarView'))),
   args: {
     where: 'CalendarViewWhereInput',
-    orderBy: list('CalendarViewOrderByInput'),
+    orderBy: list('CalendarViewOrderByWithRelationInput'),
     cursor: 'CalendarViewWhereUniqueInput',
     distinct: 'CalendarViewScalarFieldEnum',
     skip: 'Int',

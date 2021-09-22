@@ -11,6 +11,7 @@ export const dateTimeFormatter = (props: DateTimeFormatProps) => {
     month: 'long', // numeric, 2-digit, long, short, narrow
     hour: 'numeric', // numeric, 2-digit
     minute: 'numeric', // numeric, 2-digit
+    second: 'numeric', // numeric, 2-digit
     ...props,
   })
   return dateTime

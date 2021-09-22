@@ -6,7 +6,7 @@ export const SessionPackageFindFirstQuery = queryField(
     type: 'SessionPackage',
     args: {
       where: 'SessionPackageWhereInput',
-      orderBy: list('SessionPackageOrderByInput'),
+      orderBy: list('SessionPackageOrderByWithRelationInput'),
       cursor: 'SessionPackageWhereUniqueInput',
       distinct: 'SessionPackageScalarFieldEnum',
       skip: 'Int',

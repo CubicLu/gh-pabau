@@ -1,13 +1,12 @@
 import React, { FC, useState, useEffect } from 'react'
 import cn from 'classnames'
 import { BasicModal as Modal, Button } from '@pabau/ui'
-import { Input } from 'antd'
+import { Input, Image } from 'antd'
 import {
   LeftOutlined,
   CheckCircleFilled,
   SearchOutlined,
 } from '@ant-design/icons'
-import AlbumHover from './AlbumHover'
 import { useTranslation } from 'react-i18next'
 import { imageAlbums as defaultImageAlbums } from './mock'
 import styles from './PhotoGallery.module.less'
@@ -26,11 +25,13 @@ interface ImageItem {
 
 interface Album {
   name: string
+  thumbnail: string
   items: ImageItem[]
 }
 
 const emptyAlbum: Album = {
   name: '',
+  thumbnail: '',
   items: [],
 }
 
@@ -111,10 +112,11 @@ const PhotoGalleryComponent: FC<PhotoGalleryProps> = ({
                   key={`album-item-${index}`}
                   onClick={() => setAlbum(item)}
                 >
-                  <AlbumHover
-                    width="200px"
-                    height="200px"
-                    imageItems={item.items}
+                  <Image
+                    src={item.thumbnail}
+                    preview={false}
+                    width={200}
+                    height={200}
                   />
                   <p className={styles.albumTitle}>{item.name}</p>
                 </div>

@@ -1,0 +1,8 @@
+query getCompanyMeta($name: [String]!) {
+  findManyCompanyMeta(where: {
+    meta_name: {in: $name}
+  }) {
+    meta_name
+    meta_value
+  }
+}

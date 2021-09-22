@@ -6,7 +6,7 @@ export const HealthcodeInsurerAggregateQuery = queryField(
     type: 'AggregateHealthcodeInsurer',
     args: {
       where: 'HealthcodeInsurerWhereInput',
-      orderBy: list('HealthcodeInsurerOrderByInput'),
+      orderBy: list('HealthcodeInsurerOrderByWithRelationInput'),
       cursor: 'HealthcodeInsurerWhereUniqueInput',
       distinct: 'HealthcodeInsurerScalarFieldEnum',
       skip: 'Int',

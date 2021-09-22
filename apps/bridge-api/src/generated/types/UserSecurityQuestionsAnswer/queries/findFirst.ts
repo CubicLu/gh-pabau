@@ -6,7 +6,7 @@ export const UserSecurityQuestionsAnswerFindFirstQuery = queryField(
     type: 'UserSecurityQuestionsAnswer',
     args: {
       where: 'UserSecurityQuestionsAnswerWhereInput',
-      orderBy: list('UserSecurityQuestionsAnswerOrderByInput'),
+      orderBy: list('UserSecurityQuestionsAnswerOrderByWithRelationInput'),
       cursor: 'UserSecurityQuestionsAnswerWhereUniqueInput',
       distinct: 'UserSecurityQuestionsAnswerScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const BookitProSliderFindFirstQuery = queryField(
     type: 'BookitProSlider',
     args: {
       where: 'BookitProSliderWhereInput',
-      orderBy: list('BookitProSliderOrderByInput'),
+      orderBy: list('BookitProSliderOrderByWithRelationInput'),
       cursor: 'BookitProSliderWhereUniqueInput',
       distinct: 'BookitProSliderScalarFieldEnum',
       skip: 'Int',

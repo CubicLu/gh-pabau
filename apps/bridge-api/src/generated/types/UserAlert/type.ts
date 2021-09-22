@@ -19,7 +19,7 @@ export const UserAlert = objectType({
       type: 'UserAlertPermission',
       args: {
         where: 'UserAlertPermissionWhereInput',
-        orderBy: 'UserAlertPermissionOrderByInput',
+        orderBy: 'UserAlertPermissionOrderByWithRelationInput',
         cursor: 'UserAlertPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

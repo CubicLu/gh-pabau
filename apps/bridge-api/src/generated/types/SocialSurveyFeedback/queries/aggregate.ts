@@ -6,7 +6,7 @@ export const SocialSurveyFeedbackAggregateQuery = queryField(
     type: 'AggregateSocialSurveyFeedback',
     args: {
       where: 'SocialSurveyFeedbackWhereInput',
-      orderBy: list('SocialSurveyFeedbackOrderByInput'),
+      orderBy: list('SocialSurveyFeedbackOrderByWithRelationInput'),
       cursor: 'SocialSurveyFeedbackWhereUniqueInput',
       distinct: 'SocialSurveyFeedbackScalarFieldEnum',
       skip: 'Int',

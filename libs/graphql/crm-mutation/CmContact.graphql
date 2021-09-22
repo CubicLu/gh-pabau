@@ -88,6 +88,12 @@ fragment CmContact on CmContact {
   Insurance {
     ...InsuranceDetailFields
   }
+  ContactPreference {
+    ...ContactPreferenceFields
+  }
+  MarketingSourceData {
+    ...MarketingSourceFields
+  }
 }
 
 mutation updateOneCmContact($where: CmContactWhereUniqueInput!, $data: CmContactUpdateInput!) {

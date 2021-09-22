@@ -4,7 +4,7 @@ export const AtConcernAggregateQuery = queryField('aggregateAtConcern', {
   type: 'AggregateAtConcern',
   args: {
     where: 'AtConcernWhereInput',
-    orderBy: list('AtConcernOrderByInput'),
+    orderBy: list('AtConcernOrderByWithRelationInput'),
     cursor: 'AtConcernWhereUniqueInput',
     distinct: 'AtConcernScalarFieldEnum',
     skip: 'Int',

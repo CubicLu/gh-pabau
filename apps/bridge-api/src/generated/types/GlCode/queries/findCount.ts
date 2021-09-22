@@ -4,7 +4,7 @@ export const GlCodeFindCountQuery = queryField('findManyGlCodeCount', {
   type: nonNull('Int'),
   args: {
     where: 'GlCodeWhereInput',
-    orderBy: list('GlCodeOrderByInput'),
+    orderBy: list('GlCodeOrderByWithRelationInput'),
     cursor: 'GlCodeWhereUniqueInput',
     distinct: 'GlCodeScalarFieldEnum',
     skip: 'Int',

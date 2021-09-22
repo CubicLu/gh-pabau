@@ -5,7 +5,6 @@ import {
   Search,
   Dropdown as AvatarDropDown,
   QuickCreate,
-  UserDataProps,
 } from '@pabau/ui'
 import styles from './MobileSidebar.module.less'
 import classNames from 'classnames'
@@ -26,26 +25,29 @@ import User from '../../assets/images/users/stephen.png'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const { SubMenu } = Menu
 
-interface SidebarProps {
+interface P {
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onSideBarClosed: () => void
   onClickNotificationDrawer: () => void
   onClickChatDrawer: () => void
   clientCreateRender?: () => JSX.Element
   leadCreateRender?: () => JSX.Element
-  userData: UserDataProps
+  userData: Partial<AuthenticatedUser> & JwtUser
+  onLogout?: () => void
 }
 
-export const MobileSidebar: FC<SidebarProps> = ({
+export const MobileSidebar: FC<P> = ({
   searchRender,
   onSideBarClosed,
   onClickNotificationDrawer,
   onClickChatDrawer,
   clientCreateRender,
   leadCreateRender,
+  onLogout,
   userData,
 }) => {
   const { t } = useTranslation('common')
@@ -90,9 +92,6 @@ export const MobileSidebar: FC<SidebarProps> = ({
     } else if (e.key?.includes('Chat') && e?.keyPath) {
       onClickChatDrawer()
     }
-    if (e.key?.includes('Marketing')) {
-      await router.push('/marketing/sources')
-    }
     if (path) {
       router.push(path)
       if (router.pathname === path) onSideBarClosed?.()
@@ -109,7 +108,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
       <div className={styles.mobileViewAlign}>
         <div className={styles.menuHeaderHeading}>
           <CloseOutlined
-            className="menuHeaderIconColor"
+            className={styles.menuHeaderIconColor}
             onClick={onSideBarClosed}
           />
           <p>{t('sidebar.mobile.menu')}</p>
@@ -173,7 +172,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
         })}
         <Menu.Item
           className={classNames(styles.sidebarMenu, styles.profileMenu)}
-          icon={<Avatar size={24} src={userData?.image || User} />}
+          icon={<Avatar size={24} src={userData?.imageUrl || User} />}
           onClick={() => {
             setProfileDrawer(true)
           }}
@@ -186,6 +185,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
             userData={userData}
             isOpen={openProfileDrawer}
             onCloseDrawer={() => setProfileDrawer((e) => !e)}
+            onLogOut={onLogout}
           />
         )}
         <div className={styles.buttonMenu}>
@@ -196,15 +196,12 @@ export const MobileSidebar: FC<SidebarProps> = ({
         </div>
         <div className={styles.buttonMenu}>
           <Link href="/setup">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a style={{ width: '100%' }}>
-              <Button
-                className={classNames(styles.buttonStyles, styles.setUpBtn)}
-                icon={<SettingOutlined />}
-              >
-                {t('sidebar.setup')}
-              </Button>
-            </a>
+            <Button
+              className={classNames(styles.buttonStyles, styles.setUpBtn)}
+              icon={<SettingOutlined />}
+            >
+              {t('sidebar.setup')}
+            </Button>
           </Link>
         </div>
       </Menu>

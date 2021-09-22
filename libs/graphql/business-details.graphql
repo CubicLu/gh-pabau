@@ -1,44 +1,45 @@
-query getBussinessDetails {
-  company {
-    details {
-      details_id
-      company_name
-      info_email
-      phone
-      website
-      logo
-      language
-      timezone {
-        db_format
+query getBusinessDetails {
+  me {
+    Company {
+      details {
+        details_id
+        company_name
+        info_email
+        phone
+        website
+        logo
+        timezone {
+          php_format
+          label
+        }
+        currency
+        street
+        city
+        county
+        country
+        post_code
+        contact_term_singular
+        contact_term_plural
+        employee_term_singular
+        employee_term_plural
+        class_teacher_singular
+        class_term_singular
+        class_term_plural
+        cycles_display
+        disable_prescriptions
+        medical_approvals
+        secure_medical_forms
+        is_surgical
+        enable_2fa
+        date_format
+        week_start_day
+        industry_sector
+        enable_sens_data
       }
-      currency
-      street
-      city
-      county
-      country
-      post_code
-      contact_term_singular
-      contact_term_plural
-      employee_term_singular
-      employee_term_plural
-      class_teacher_singular
-      class_term_singular
-      class_term_plural
-      tax_name
-      cycles_display
-      disable_prescriptions
-      medical_approvals
-      secure_medical_forms
-      is_surgical
-      enable_2fa
-      date_format
-      week_start_day
-      industry_sector
-      enable_sens_data
-    }
-    User {
-      id
-      force_password
+      User {
+        id
+        force_password
+      }
     }
   }
   findManyCompanyMeta(
@@ -63,6 +64,8 @@ query getBussinessDetails {
           "address_suite_no"
           "business_location"
           "lab_enabled"
+          "company_language"
+          "tax_singular"
         ]
       }
     }
@@ -79,8 +82,8 @@ mutation updateCompanyDetails(
   $phone: String
   $industry_sector: String
   $website: String
-  $language: String
   $timezone: String
+  $timezone_label: String
   $currency: String
   $date_formate: String
   $week_start_day: String
@@ -91,7 +94,6 @@ mutation updateCompanyDetails(
   $employee_term_singular: String
   $employee_term_plural: String
   $class_teacher_singular: String
-  $tax_name: company_details_tax_name
   $disable_prescriptions: Int
   $secure_medical_forms: Int
   $is_surgical: Int
@@ -114,8 +116,7 @@ mutation updateCompanyDetails(
       info_email: { set: $info_email }
       phone: { set: $phone }
       website: { set: $website }
-      language: { set: $language }
-      timezone: { update: { db_format: { set: $timezone } } }
+      timezone: { update: { php_format: { set: $timezone }, db_format: { set: $timezone }, label: { set: $timezone_label} } }
       currency: { set: $currency }
       date_format: { set: $date_formate }
       week_start_day: { set: $week_start_day }
@@ -127,7 +128,6 @@ mutation updateCompanyDetails(
       employee_term_singular: { set: $employee_term_singular }
       employee_term_plural: { set: $employee_term_plural }
       class_teacher_singular: { set: $class_teacher_singular }
-      tax_name: { set: $tax_name }
       secure_medical_forms: { set: $secure_medical_forms }
       disable_prescriptions: { set: $disable_prescriptions }
       is_surgical: { set: $is_surgical }
@@ -153,9 +153,9 @@ mutation updateCompanyDetails(
     info_email
     phone
     website
-    language
     timezone {
-      db_format
+      php_format
+      label
     }
     currency
     date_format
@@ -168,7 +168,6 @@ mutation updateCompanyDetails(
     employee_term_singular
     employee_term_plural
     class_teacher_singular
-    tax_name
     secure_medical_forms
     disable_prescriptions
     is_surgical
@@ -193,3 +192,10 @@ mutation setMultipleMetaData($company_meta: [CompanyMetaData]!) {
     meta_value
   }
 }
+
+query getTimezoneList {
+    findManyTimezone(distinct: label) {
+      label
+      php_format
+    }
+  }

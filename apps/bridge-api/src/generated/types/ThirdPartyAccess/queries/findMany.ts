@@ -6,7 +6,7 @@ export const ThirdPartyAccessFindManyQuery = queryField(
     type: nonNull(list(nonNull('ThirdPartyAccess'))),
     args: {
       where: 'ThirdPartyAccessWhereInput',
-      orderBy: list('ThirdPartyAccessOrderByInput'),
+      orderBy: list('ThirdPartyAccessOrderByWithRelationInput'),
       cursor: 'ThirdPartyAccessWhereUniqueInput',
       distinct: 'ThirdPartyAccessScalarFieldEnum',
       skip: 'Int',

@@ -1,6 +1,12 @@
 import React, { FC } from 'react'
 import ClientCard, { ClientCardProps } from './ClientCard'
-import { searchResults, notes, clientData } from './mock'
+import {
+  searchResults,
+  notes,
+  clientData,
+  communicationEventsData,
+  ActivityEventsData,
+} from './mock'
 
 export default {
   component: ClientCard,
@@ -21,4 +27,14 @@ Basic.args = {
   searchResults: searchResults,
   medicalConditions: ['Anxiety'],
   alerts: [],
+  communicationTabProps: {
+    eventsData: communicationEventsData,
+    eventDateFormat: 'DD-MM-YYYY, h:mm a',
+    isLoading: false,
+  },
+  activitiesTabProps: {
+    isLoading: false,
+    eventsData: ActivityEventsData,
+    eventDateFormat: 'DD-MM-YYYY, h:mm a',
+  },
 }

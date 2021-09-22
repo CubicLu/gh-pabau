@@ -4,7 +4,7 @@ export const SmsPurchaseAggregateQuery = queryField('aggregateSmsPurchase', {
   type: 'AggregateSmsPurchase',
   args: {
     where: 'SmsPurchaseWhereInput',
-    orderBy: list('SmsPurchaseOrderByInput'),
+    orderBy: list('SmsPurchaseOrderByWithRelationInput'),
     cursor: 'SmsPurchaseWhereUniqueInput',
     distinct: 'SmsPurchaseScalarFieldEnum',
     skip: 'Int',

@@ -12,37 +12,40 @@ import {
   RightOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Avatar, Badge, Drawer, Image, Menu, Popover, Spin } from 'antd'
+import {
+  Avatar,
+  Badge,
+  Drawer,
+  Image,
+  Menu,
+  Popover,
+  Spin,
+  Typography as Text,
+} from 'antd'
 import classNames from 'classnames'
 import Link from 'next/link'
 import QueueAnim from 'rc-queue-anim'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { languageMenu } from '../../assets/images/lang-logos'
 import { ReactComponent as LaunchSVG } from '../../assets/images/launch.svg'
-import { ReactComponent as PABAULOGO } from '../../assets/images/pabaulogo.svg'
 import { ReactComponent as TaskSVG } from '../../assets/images/Vector.svg'
+import { ExtraUserData } from '@pabau/ui'
 import styles from './Dropdown.module.less'
 import { useTranslation } from 'react-i18next'
-import Router from 'next/router'
-
-export interface UserDataProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
-  image?: string
-}
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
-  userData?: UserDataProps
+  onLogOut?(): void
+  userData?: Partial<AuthenticatedUser> & JwtUser & ExtraUserData
   taskManagerIFrameComponent?: JSX.Element
 }
 
 export const Dropdown: FC<DropDownInterface> = ({
   isOpen,
   onCloseDrawer,
+  onLogOut,
   taskManagerIFrameComponent,
   userData,
 }): JSX.Element => {
@@ -50,16 +53,11 @@ export const Dropdown: FC<DropDownInterface> = ({
   const [activeMenu, setActiveMenu] = useState('Menu')
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
   const [activeMenuTitle, setActiveMenuTitle] = useState('Profile')
-  const [user, setCurrentUser] = useState<UserDataProps | null>(null)
 
-  useEffect(() => {
-    setCurrentUser(userData ?? null)
-  }, [userData])
-
-  async function handleLogOut() {
-    localStorage.removeItem('token')
-    window.location.pathname = '/'
-    await Router.push('/')
+  const switchCompanyHandler = (item) => {
+    Number.parseInt(item.key) > 0
+      ? userData?.handleCompanySwitch?.(Number.parseInt(item.key))
+      : console.warn('No Company Selected')
   }
 
   const menu = (
@@ -70,13 +68,17 @@ export const Dropdown: FC<DropDownInterface> = ({
         onClick={() => onClickAvatarMenu('ClinicMenu')}
       >
         <div className={styles.dropdownHeader}>
-          <PABAULOGO />
-          <span className={styles.headerText}>{user?.companyName}</span>
+          <span className={styles.headerText}>
+            {userData?.companyName || '<no name>'}
+          </span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
-        <div className={styles.userName}>{user?.fullName}</div>
+        <div className={styles.userName}>
+          {userData?.fullName || '<no name>'}
+          {userData?.pab1 && <>{` `}(Pabau 1 linked)</>}
+        </div>
         {/* TODO */}
         {/* <div className={styles.userBalance}>
           <p>{t('avatar.balance')}</p>
@@ -146,7 +148,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       </Menu.Item> */}
       <Menu.Item
         key="logout"
-        onClick={handleLogOut}
+        onClick={onLogOut}
         className={styles.dropdownMenu}
       >
         <div className={styles.dropdownHeader}>
@@ -160,9 +162,13 @@ export const Dropdown: FC<DropDownInterface> = ({
 
   const ClinicSubMenu = (
     <QueueAnim interval={300}>
-      <Menu key="2" className={styles.avatarSubMenu}>
+      <Menu
+        key="2"
+        className={styles.avatarSubMenu}
+        onClick={switchCompanyHandler}
+      >
         <Menu.Item
-          key="selectCompany"
+          key={null}
           className={styles.subDropdownList}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}
@@ -174,24 +180,22 @@ export const Dropdown: FC<DropDownInterface> = ({
             </span>
           </div>
         </Menu.Item>
-        <Menu.Item key="company" className={styles.subDropdownList}>
-          <div className={styles.subDropdownListHeader}>
-            <PABAULOGO />
-            <span
-              className={classNames(
-                styles.subDropdownListHeaderText,
-                styles.textNowrap,
-                styles.activeMenu
+        {userData?.companies?.map((company) => {
+          return (
+            <Menu.Item key={company.id} className={styles.subDropdownList}>
+              <div className={styles.subDropdownListHeader}>
+                <Text> {company.name} </Text>
+              </div>
+              {userData?.companyName === company.name ? (
+                <CheckCircleFilled
+                  className={classNames(styles.checkIcon, styles.activeMenu)}
+                />
+              ) : (
+                ''
               )}
-            >
-              {user?.companyName}
-            </span>
-          </div>
-          <CheckCircleFilled
-            className={classNames(styles.checkIcon, styles.activeMenu)}
-          />
-        </Menu.Item>
-        <div style={{ marginTop: '8px' }} />
+            </Menu.Item>
+          )
+        })}
       </Menu>
     </QueueAnim>
   )
@@ -343,7 +347,6 @@ export const Dropdown: FC<DropDownInterface> = ({
     switch (menuName) {
       case 'Menu': {
         setActiveMenuTitle('Profile')
-
         break
       }
       case 'ClinicMenu': {
@@ -378,27 +381,22 @@ export const Dropdown: FC<DropDownInterface> = ({
     switch (activeMenu) {
       case 'Menu': {
         return menu
-
         break
       }
       case 'ClinicMenu': {
         return ClinicSubMenu
-
         break
       }
       case 'FeedbackMenu': {
         return FeedbackMenu
-
         break
       }
       case 'HelpMenu': {
         return HelpMenu
-
         break
       }
       case 'LangMenu': {
         return LangMenu
-
         break
       }
       case 'TaskManagerMenu': {
@@ -442,7 +440,11 @@ export const Dropdown: FC<DropDownInterface> = ({
               size="default"
               style={{ height: '8px', width: '8px' }}
             >
-              <Avatar src={user?.image} size={40} icon={<UserOutlined />} />
+              <Avatar
+                src={userData?.imageUrl}
+                size={40}
+                icon={<UserOutlined />}
+              />
             </Badge>
 
             <CaretDownOutlined

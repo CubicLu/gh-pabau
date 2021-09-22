@@ -10,8 +10,9 @@ RUN yarn install
 COPY . .
 
 # Install Prisma here because it's a devDependency, it doesn't get installed.
-RUN yarn add -D prisma@2.29.0
+RUN yarn add -D prisma@2.29.1
 RUN node_modules/.bin/prisma generate
+RUN yarn add dayjs
 
 EXPOSE 4000
 ENTRYPOINT [ "node", "main.js" ]

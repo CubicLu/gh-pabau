@@ -1,0 +1,165 @@
+query getActivityTypes {
+  findManyActivityType(orderBy: { order: asc }) {
+    id
+    name
+    action
+    badge
+    order
+  }
+}
+
+query activityUserList($isDeleted: Int) {
+  findManyUser(
+    where: { deleted: { equals: $isDeleted } }
+    orderBy: { full_name: asc }
+  ) {
+    id
+    name: full_name
+    avatarURL: image
+  }
+}
+
+query findManyActivityData(
+  $endDate: DateTime
+  $startDate: DateTime
+  $activityType: [String]
+  $status: [String]
+  $userId: Int
+  $search: String
+  $skip: Int
+  $limit: Int
+  $activeColumns: [String]
+  $orderValue: OrderType
+) {
+  findManyActivityData(
+    where: {
+      endDate: $endDate
+      startDate: $startDate
+      activityType: $activityType
+      status: $status
+      userId: $userId
+      search: $search
+      activeColumns: $activeColumns
+      orderValue: $orderValue
+    }
+    skip: $skip
+    take: $limit
+  ) {
+    retrieveActivityCount {
+      reopened
+      pending
+      working
+      awaiting
+      done
+    }
+    count
+    activityData {
+      id
+      dueDate: due_start_date
+      dueEndDate: due_end_date
+      lead_id
+      freeBusy: available
+      addTime: created_at
+      doneTime: finished_at
+      duration
+      assigned: AssignedUser {
+        id
+        full_name
+      }
+      creator: User {
+        id
+        full_name
+      }
+      type: ActivityType {
+        id
+        name
+        badge
+      }
+      subject
+      note
+      status
+      client: CmContact {
+        id: ID
+        firstName: Fname
+        lastName: Lname
+        email: Email
+        phone: Phone
+        street: MailingStreet
+        city: MailingCity
+        postal: MailingPostal
+        country: MailingCountry
+        mobile: Mobile
+        createdDate: CreatedDate
+        source: MarketingSourceData {
+          name
+        }
+        salutation: Salutation
+        gender
+        DOB
+        status: is_active
+        label: CmContactLabel {
+          CmLabel {
+            id
+            name
+            color
+          }
+        }
+        clientTotalActivities
+      }
+      lead: CmLead {
+        firstName: Fname
+        lastName: Lname
+        email: Email
+        phone: Phone
+        description: Description
+        createdDate: CreatedDate
+        wonTime: ConvertDate
+        owner: User {
+          full_name
+        }
+        leadSource: MarketingSource {
+          name
+        }
+        leadClosedOn: ConvertDate
+        leadDoneActivities
+        firstActivityTime
+        leadLastActivityDate
+        leadLastActivityDays
+        leadTotalActivities
+        leadLostTime
+        leadLostReason
+        wonBy
+        leadStage
+      }
+    }
+  }
+}
+
+query findFirstActivityUserColumns {
+  findFirstActivityUserColumns {
+    id
+    company_id
+    user_id
+    columns
+  }
+}
+
+mutation upsertOneActivityUserColumns(
+    $columns: String!
+    $userId: Int!
+    $companyId: Int!
+) {
+  upsertOneActivityUserColumns(
+    where: {
+      company_id_user_id: { user_id: $userId, company_id: $companyId }
+    }
+    update: { columns: { set: $columns } }
+    create: {
+      columns: $columns
+      User: { connect: { id: $userId } }
+      Company: { connect: { id: $companyId } }
+    }
+  ) {
+    id
+  }
+}
