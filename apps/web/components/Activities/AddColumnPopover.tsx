@@ -122,7 +122,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     upsertActiveColumnMutation,
     loggedUser,
   }) => {
-    console.log('loggedUser---------------', loggedUser)
     const { t } = useTranslationI18()
     const isMobile = useMedia('(max-width: 768px)', false)
     const [searchColumn, setSearchColumn] = useState('')

@@ -40,7 +40,7 @@ export const DropdownWithCheck: FC<DropdownWithCheckProps> = ({
       dropdownClassName={styles.dropdownWithCheck}
     >
       {dropdownItems?.map((item) => (
-        <Select.Option key={item.key} value={item.key} >
+        <Select.Option key={item.key} value={item.key}>
           {item.label}
         </Select.Option>
       ))}

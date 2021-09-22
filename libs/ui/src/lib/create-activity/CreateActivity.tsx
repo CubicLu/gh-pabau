@@ -18,7 +18,7 @@ import {
   UsergroupAddOutlined,
   FileOutlined,
   LinkOutlined,
-  AimOutlined
+  AimOutlined,
 } from '@ant-design/icons'
 import Highlighter from 'react-highlight-words'
 import { ReactComponent as UserFilled } from '../../assets/images/activities/user-filled.svg'

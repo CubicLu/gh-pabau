@@ -2,12 +2,7 @@ import React, { useState, FC } from 'react'
 import { Formik } from 'formik'
 import { Dropdown, Menu, Radio, Space } from 'antd'
 import { BasicModal, Button, DropdownWithCheck } from '@pabau/ui'
-import {
-  Checkbox,
-  Form,
-  Input as FormikInput,
-  Select as FormikSelect,
-} from 'formik-antd'
+import { Checkbox, Form, Input as FormikInput } from 'formik-antd'
 import {
   activityItemNames,
   manageOperandBasedOnColumn,
@@ -22,7 +17,6 @@ import {
   LockOutlined,
   UnlockOutlined,
   MinusOutlined,
-  CheckOutlined,
 } from '@ant-design/icons'
 import styles from './CreateFilterModal.module.less'
 import { LabeledValue } from 'antd/lib/tree-select'
@@ -69,7 +63,6 @@ const defaultValue: InitialValueTypes = {
   orFilterOption: [],
 }
 
-const { Option } = FormikSelect
 const RenderFilterMenu: FC<FilterMenuProps> = ({
   items,
   setFieldValue,
@@ -83,10 +76,6 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
     index: number,
     key: string
   ) => {
-    console.log('value---------', value)
-    console.log('index---------', index)
-    console.log('key---------', key)
-    console.log('fieldName---------', fieldName)
     const data = [...items]
     data[index][key] = value
     if (key === 'filterColumn') {
@@ -172,9 +161,9 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   loggedUser,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
-  const [initialValue, setInitialValue] = useState<InitialValueTypes>(
-    defaultValue
-  )
+  // const [initialValue, setInitialValue] = useState<InitialValueTypes>(
+  //   defaultValue
+  // )
 
   const visibilityMenu = (
     setFieldValue: (field: string, value: string | boolean) => void,
@@ -194,7 +183,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
           >
             <Space direction="vertical">
               {visibilityMenuOption.map((menuItem) => (
-                <Radio value={menuItem.value} className={styles.radioBtn}>
+                <Radio
+                  value={menuItem.value}
+                  className={styles.radioBtn}
+                  key={menuItem.value}
+                >
                   <div className={styles.menuWrapper}>
                     <span className={styles.icon}>
                       {menuItem.value === 'private' ? (
@@ -208,20 +201,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                   <span className={styles.desc}>{menuItem.description}</span>
                 </Radio>
               ))}
-              {/* <Radio value="private">
-                <div>
-                  <LockOutlined />
-                  <span>Private</span>
-                </div>
-                <h4>Only the creator can see this filter</h4>
-              </Radio>
-              <Radio value="shared">
-                <div>
-                  <UnlockOutlined />
-                  <span>Shared</span>
-                </div>
-                <h4>All users in the company can see and use this filter</h4>
-              </Radio> */}
             </Space>
           </Radio.Group>
         </Menu.Item>
@@ -245,11 +224,15 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
     ])
   }
 
+  const onSubmit = () => {
+    console.log('Submit call')
+  }
+
   return (
     <Formik
-      initialValues={initialValue}
+      initialValues={defaultValue}
       enableReinitialize={true}
-      onSubmit={() => {}}
+      onSubmit={onSubmit}
     >
       {({ setFieldValue, values, resetForm }) => (
         <BasicModal
@@ -308,7 +291,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 Add Condition
               </Button>
             </div>
-            {console.log('values-----------', values)}
             <div className={styles.filterField}>
               <Form.Item label={'Filter Name'} name={'name'}>
                 <FormikInput name={'name'} placeholder="Enter Filter Name" />

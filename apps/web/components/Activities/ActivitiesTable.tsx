@@ -168,7 +168,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     const [visibleAddColumnPopover, setVisibleAddColumnPopover] = useState(
       false
     )
-    console.log('activityTable user', loggedUser)
     // const [displayData, setDisplayData] = useState([])
     // const [selectedColumn, setSelectedColumn] = useState(defaultColumns)
     const [displayAddColumn, setDisplayAddColumn] = useState(true)
@@ -333,7 +332,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              {/* <UserOutlined className={styles.clientIcon} /> */}
               <a href="/" className={styles.link}>
                 {`${firstName} ${lastName}` || ''}
               </a>
@@ -393,7 +391,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              {/* <AimOutlined className={styles.leadIcon} /> */}
               <a href="/" className={styles.link}>
                 {`${firstName} ${lastName}` || ''}
               </a>

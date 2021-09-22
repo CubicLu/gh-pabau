@@ -1,14 +1,5 @@
-import React, { FC, ReactNode, useState, useEffect } from 'react'
-import {
-  Input,
-  Select,
-  Popover,
-  Divider,
-  Dropdown,
-  Space,
-  Menu,
-  Radio,
-} from 'antd'
+import React, { FC, useState, useEffect } from 'react'
+import { Input, Popover, Divider } from 'antd'
 import {
   DownOutlined,
   FilterOutlined,
@@ -18,8 +9,6 @@ import {
   PlusOutlined,
   CheckOutlined,
   EditOutlined,
-  LockOutlined,
-  UnlockOutlined,
 } from '@ant-design/icons'
 import { Button, TabMenu, Avatar, CustomScrollbar } from '@pabau/ui'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -32,8 +21,6 @@ import { useUserGroupForActivityQuery } from '@pabau/graphql'
 import { PersonList } from './FilterMenu'
 import { CreateFilterModal } from './CreateFilterModal'
 import { OptionList } from './FilterMenu'
-
-const { Option } = Select
 
 interface ClientsHeaderProps {
   totalActivity: number
@@ -48,11 +35,6 @@ interface ClientsHeaderProps {
   isMobile?: boolean
   loggedUser?: Partial<AuthenticatedUser> & JwtUser
   activityTypeOption?: OptionList[]
-}
-
-interface RenderAvatarProps {
-  name?: string
-  icon?: ReactNode
 }
 
 const UserWithIcon = ({
@@ -98,32 +80,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
   }) => {
     const { t } = useTranslationI18()
     const [visible, setVisible] = useState(false)
-    const [userGroup, setUserGroup] = useState([
-      {
-        id: 1,
-        name: 'Business Development Team',
-        memberCount: 4,
-        userId: [],
-      },
-      {
-        id: 2,
-        name: 'Onboarding Team',
-        memberCount: 4,
-        userId: [],
-      },
-      {
-        id: 3,
-        name: 'Partners',
-        memberCount: 4,
-        userId: [],
-      },
-      {
-        id: 4,
-        name: 'Telesales Team',
-        memberCount: 3,
-        userId: [],
-      },
-    ])
+    const [userGroup, setUserGroup] = useState([])
     const [filterOption, setFilterOption] = useState([
       {
         id: 1,
@@ -173,6 +130,8 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     ])
     const [userList, setUserList] = useState([])
     const [showModal, setShowModal] = useState(false)
+    const [searchValue, setSearchValue] = useState('')
+    const [filterValue, setFilterValue] = useState<number>(0)
 
     const { data: userGroupData } = useUserGroupForActivityQuery()
 
@@ -206,14 +165,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
       }
     }, [userGroupData])
 
-    const onChange = (value) => {
-      setSelectFilterUser?.(value)
-    }
-
     const filterContent = () => {
-      const [searchValue, setSearchValue] = useState('')
-      const [filterValue, setFilterValue] = useState<number>(0)
-
       const UserGroupWithIcon = ({ name, memberCount, id }) => {
         return (
           <div
@@ -405,26 +357,6 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                 )}
               </div>
               <div className={styles.buttonFilter}>
-                {/* <div className={styles.dropdownCustom}> */}
-                {/* <FilterOutlined /> */}
-                {/* <Select
-                  showSearch
-                  allowClear
-                  onChange={onChange}
-                  value={selectFilterUser || null}
-                  placeholder={t('activityList.selectPerson.placeholder')}
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {personsList.map((data) => (
-                    <Option key={data.id} value={data.id}>
-                      {data.name}
-                    </Option>
-                  ))}
-                </Select> */}
                 <Popover
                   content={filterContent}
                   trigger="click"

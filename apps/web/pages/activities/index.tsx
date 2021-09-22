@@ -180,7 +180,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [sourceData, setSourceData] = useState([])
   const [tabValue, setTabValue] = useState(tabs.toDo)
   const loggedUser = useUser()
-  console.log('loggedUser---------index------------', loggedUser)
   // const [filterTabValue, setFilterTabValue] = useState(
   //   Object.values(filterTabsObj)
   // )

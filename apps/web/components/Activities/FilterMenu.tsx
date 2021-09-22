@@ -54,7 +54,7 @@ const DateMenu: FC<DateMenuProps> = ({ value, onChange }) => {
       onChange={(value) => onChange(value)}
     >
       {dateMenu.map((item) => (
-        <OptGroup label={item.groupName}>
+        <OptGroup label={item.groupName} key={item.groupName}>
           {item.groupOption.map((option) => (
             <Option key={option.key} value={option.key}>
               {option.label}
@@ -72,18 +72,10 @@ const SelectMenu: FC<SelectMenuProps> = ({
   value,
   onChange,
 }) => {
-  // useEffect(() => {
-  //   if(defaultValue) {
-  //     onChange(defaultValue)
-  //   }
-  // }, [defaultValue])
   return (
     <Select
       showSearch
       allowClear
-      //    onChange={onChange}
-      //    value={selectFilterUser || null}
-      //    placeholder={t('activityList.selectPerson.placeholder')}
       filterOption={(input, option) =>
         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
@@ -109,9 +101,6 @@ const ClientLeadMenu = ({ icon }) => {
       <Select
         showSearch
         allowClear
-        //    onChange={onChange}
-        //    value={selectFilterUser || null}
-        //    placeholder={t('activityList.selectPerson.placeholder')}
         filterOption={(input, option) =>
           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
@@ -142,7 +131,9 @@ const ToggleMenu: FC<ToggleMenuProps> = ({ options, value, onChange }) => {
       onChange={(item) => onChange(item.target.value)}
     >
       {options.map((item) => (
-        <Radio.Button value={item}>{item}</Radio.Button>
+        <Radio.Button value={item} key={item}>
+          {item}
+        </Radio.Button>
       ))}
     </Radio.Group>
   )
@@ -176,7 +167,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         ...personsList,
       ])
     }
-  }, [personsList])
+  }, [personsList, userId])
 
   const renderMenu = () => {
     switch (columnName) {
