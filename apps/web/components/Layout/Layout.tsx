@@ -44,17 +44,7 @@ const Layout: FC<LayoutProps> = ({
   const [productNews, setProductNews] = useState<ProductNews[]>()
   const [showChat, setShowChat] = useState(false)
   const router = useRouter()
-  const data = {
-    feature_flags: [
-      {
-        page_slug: 'reports/9',
-        fallback_slug:
-          'index.php?p=reportmodule&inp=reportdetail&type=contacts&id=9&noheader',
-        __typename: 'feature_flags',
-      },
-    ],
-  }
-  const error = undefined
+  const { data, error } = useDisabledFeaturesQuery()
 
   const { data: notificationData } = useNotificationsSubscription()
   const { data: productNewsData } = useProduct_NewsSubscription()

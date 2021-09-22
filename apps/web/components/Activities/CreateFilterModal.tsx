@@ -12,7 +12,7 @@ import {
   activityItemNames,
   manageOperandBasedOnColumn,
   visibilityMenuOption,
-  activity
+  activity,
 } from './FilterOptionData'
 import { FilterMenu, PersonList, OptionList } from './FilterMenu'
 import {
@@ -125,8 +125,8 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             dropdownClassName={styles.filterColumnWrap}
             defaultValue={'Add time'}
             value={item.filterColumn}
-            onSelect={(value) => 
-                activityItemChange(value, index, 'filterColumn')
+            onSelect={(value) =>
+              activityItemChange(value, index, 'filterColumn')
             }
             showSearch
             filterOption={true}
@@ -135,20 +135,29 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
           <DropdownWithCheck
             defaultValue={'is'}
             value={item.operand}
-            onChange={(value: string) => activityItemChange(value, index, 'operand')}
+            onChange={(value: string) =>
+              activityItemChange(value, index, 'operand')
+            }
             dropdownItems={manageOperandBasedOnColumn?.[item.filterColumn]}
             showSearch
             filterOption={true}
           />
-          <FilterMenu 
+          <FilterMenu
             columnName={item.filterColumn}
             personsList={userList}
             activityTypeOption={activityTypeOption}
             value={item.menuOption}
-            onChange={(value: string) => activityItemChange(value, index, 'menuOption')}
+            onChange={(value: string) =>
+              activityItemChange(value, index, 'menuOption')
+            }
             userId={loggedUser.user}
           />
-          <span onClick={() => removeFilterMenu(index)} className={styles.minusBlock}><MinusOutlined  /></span>
+          <span
+            onClick={() => removeFilterMenu(index)}
+            className={styles.minusBlock}
+          >
+            <MinusOutlined />
+          </span>
         </div>
       ))}
     </>
@@ -160,7 +169,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   setShowModal,
   userList,
   activityTypeOption,
-  loggedUser
+  loggedUser,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
   const [initialValue, setInitialValue] = useState<InitialValueTypes>(
@@ -184,15 +193,21 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
             name="visibility"
           >
             <Space direction="vertical">
-            {visibilityMenuOption.map((menuItem) => (
-                  <Radio value={menuItem.value} className={styles.radioBtn}>
+              {visibilityMenuOption.map((menuItem) => (
+                <Radio value={menuItem.value} className={styles.radioBtn}>
                   <div className={styles.menuWrapper}>
-                    <span className={styles.icon}>{menuItem.value === 'private' ? <LockOutlined /> : <UnlockOutlined />}</span>
+                    <span className={styles.icon}>
+                      {menuItem.value === 'private' ? (
+                        <LockOutlined />
+                      ) : (
+                        <UnlockOutlined />
+                      )}
+                    </span>
                     <span className={styles.title}>{menuItem.label}</span>
                   </div>
                   <span className={styles.desc}>{menuItem.description}</span>
                 </Radio>
-            ))}
+              ))}
               {/* <Radio value="private">
                 <div>
                   <LockOutlined />
@@ -251,91 +266,94 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
           footer={false}
         >
           <Form layout="vertical">
-           <div className={styles.filterContentWrap}>
-            <h5>Show activities that match ALL of these conditions:</h5>
-            <RenderFilterMenu
-              items={values.andFilterOption}
-              setFieldValue={setFieldValue}
-              fieldName="andFilterOption"
-              userList={userList}
-              activityTypeOption={activityTypeOption}
-              loggedUser={loggedUser}
-            />
-            <Button
-            className={styles.btnAdd}
-              type="default"
-              icon={<PlusOutlined />}
-              onClick={() =>
-                AddConditionClick(values, setFieldValue, 'andFilterOption')
-              }
-            >
-              Add Condition
-            </Button>
+            <div className={styles.filterContentWrap}>
+              <h5>Show activities that match ALL of these conditions:</h5>
+              <RenderFilterMenu
+                items={values.andFilterOption}
+                setFieldValue={setFieldValue}
+                fieldName="andFilterOption"
+                userList={userList}
+                activityTypeOption={activityTypeOption}
+                loggedUser={loggedUser}
+              />
+              <Button
+                className={styles.btnAdd}
+                type="default"
+                icon={<PlusOutlined />}
+                onClick={() =>
+                  AddConditionClick(values, setFieldValue, 'andFilterOption')
+                }
+              >
+                Add Condition
+              </Button>
             </div>
             <div className={styles.filterContentWrap}>
-            <h5>And match ANY of these conditions:</h5>
-            <RenderFilterMenu
-              items={values.orFilterOption}
-              setFieldValue={setFieldValue}
-              fieldName="orFilterOption"
-              userList={userList}
-              activityTypeOption={activityTypeOption}
-              loggedUser={loggedUser}
-            />
-            <Button
-             className={styles.btnAdd}
-              type="default"
-              icon={<PlusOutlined />}
-              onClick={() =>
-                AddConditionClick(values, setFieldValue, 'orFilterOption')
-              }
-            >
-              Add Condition
-            </Button>
+              <h5>And match ANY of these conditions:</h5>
+              <RenderFilterMenu
+                items={values.orFilterOption}
+                setFieldValue={setFieldValue}
+                fieldName="orFilterOption"
+                userList={userList}
+                activityTypeOption={activityTypeOption}
+                loggedUser={loggedUser}
+              />
+              <Button
+                className={styles.btnAdd}
+                type="default"
+                icon={<PlusOutlined />}
+                onClick={() =>
+                  AddConditionClick(values, setFieldValue, 'orFilterOption')
+                }
+              >
+                Add Condition
+              </Button>
             </div>
             {console.log('values-----------', values)}
-          <div className={styles.filterField}>
-            <Form.Item label={'Filter Name'} name={'name'}>
-              <FormikInput name={'name'} placeholder="Enter Filter Name" />
-            </Form.Item>
-            <Form.Item label={'Visibility'} name={'visibility'}>
-              <Dropdown
-                trigger={['click']}
-                overlay={visibilityMenu(setFieldValue, values)}
-                visible={visibilityVisible}
-                onVisibleChange={(value) => setVisibilityVisible(value)}
-                getPopupContainer={(node) => node}
-                overlayClassName={styles.visibilityMenu}  
-              >
-                <Button>
-                  <span className={styles.visibilityWrapper}>
-                    {values.visibility === 'private' ? (
-                      <div className={styles.iconText}>
-                        <LockOutlined />
-                        <span>Private</span>
-                      </div>
-                    ) : (
-                      <div className={styles.iconText}>
-                        <UnlockOutlined />
-                        <span>Private</span>
-                      </div>
-                    )}
-                    {visibilityVisible ? <UpOutlined /> : <DownOutlined />}
-                  </span>
-                </Button>
-              </Dropdown>
-            </Form.Item>
+            <div className={styles.filterField}>
+              <Form.Item label={'Filter Name'} name={'name'}>
+                <FormikInput name={'name'} placeholder="Enter Filter Name" />
+              </Form.Item>
+              <Form.Item label={'Visibility'} name={'visibility'}>
+                <Dropdown
+                  trigger={['click']}
+                  overlay={visibilityMenu(setFieldValue, values)}
+                  visible={visibilityVisible}
+                  onVisibleChange={(value) => setVisibilityVisible(value)}
+                  getPopupContainer={(node) => node}
+                  overlayClassName={styles.visibilityMenu}
+                >
+                  <Button>
+                    <span className={styles.visibilityWrapper}>
+                      {values.visibility === 'private' ? (
+                        <div className={styles.iconText}>
+                          <LockOutlined />
+                          <span>Private</span>
+                        </div>
+                      ) : (
+                        <div className={styles.iconText}>
+                          <UnlockOutlined />
+                          <span>Shared</span>
+                        </div>
+                      )}
+                      {visibilityVisible ? <UpOutlined /> : <DownOutlined />}
+                    </span>
+                  </Button>
+                </Dropdown>
+              </Form.Item>
             </div>
             <Checkbox name="saveFilter">
               Save selected columns with the filter
             </Checkbox>
             <div className={styles.btnWrapper}>
-              {false && <Button className={styles.btnDanger} type="primary" danger>Delete</Button>}
+              {false && (
+                <Button className={styles.btnDanger} type="primary" danger>
+                  Delete
+                </Button>
+              )}
               <span>
-              <Button type="default">Preview</Button>
-              <Button type="primary">Save</Button>
+                <Button type="default">Preview</Button>
+                <Button type="primary">Save</Button>
               </span>
-              
             </div>
           </Form>
         </BasicModal>

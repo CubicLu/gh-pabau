@@ -360,13 +360,13 @@ export const statusMenu = [
 
 export const visibilityMenuOption = [
   {
-  value: 'private',
-  label: 'Private',
-  description: 'Only the creator can see this filter',
+    value: 'private',
+    label: 'Private',
+    description: 'Only the creator can see this filter',
   },
   {
     value: 'shared',
     label: 'Shared',
     description: 'All users in the company can see and use this filter',
-    }
+  },
 ]

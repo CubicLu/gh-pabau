@@ -94,7 +94,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     personsList,
     isMobile,
     loggedUser,
-    activityTypeOption
+    activityTypeOption,
   }) => {
     const { t } = useTranslationI18()
     const [visible, setVisible] = useState(false)
@@ -433,7 +433,10 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                   visible={visible}
                   onVisibleChange={(value) => setVisible(value)}
                 >
-                  <Button icon={<FilterOutlined />} className={styles.filterBtn}>
+                  <Button
+                    icon={<FilterOutlined />}
+                    className={styles.filterBtn}
+                  >
                     Select a person
                     <span className={styles.upArrow}>
                       {visible ? <UpOutlined /> : <DownOutlined />}

@@ -41,7 +41,7 @@ export interface DateMenuProps {
 
 const { Option, OptGroup } = Select
 
-const DateMenu: FC<DateMenuProps> = ({value, onChange}) => {
+const DateMenu: FC<DateMenuProps> = ({ value, onChange }) => {
   return (
     <Select
       showSearch
@@ -66,8 +66,12 @@ const DateMenu: FC<DateMenuProps> = ({value, onChange}) => {
   )
 }
 
-const SelectMenu: FC<SelectMenuProps> = ({ optionList, defaultValue, value, onChange }) => {
-
+const SelectMenu: FC<SelectMenuProps> = ({
+  optionList,
+  defaultValue,
+  value,
+  onChange,
+}) => {
   // useEffect(() => {
   //   if(defaultValue) {
   //     onChange(defaultValue)
@@ -98,39 +102,45 @@ const SelectMenu: FC<SelectMenuProps> = ({ optionList, defaultValue, value, onCh
   )
 }
 
-const ClientLeadMenu = ({icon}) => {
+const ClientLeadMenu = ({ icon }) => {
   return (
     <div className={styles.clientWrapper}>
-    <div className={styles.icon}>
-      {icon}
-    </div>
-    <Select
-      showSearch
-      allowClear
-      //    onChange={onChange}
-      //    value={selectFilterUser || null}
-      //    placeholder={t('activityList.selectPerson.placeholder')}
-      filterOption={(input, option) =>
-        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
-      menuItemSelectedIcon={<CheckOutlined />}
-      dropdownClassName={styles.customDropdown}
+      <div className={styles.icon}>{icon}</div>
+      <Select
+        showSearch
+        allowClear
+        //    onChange={onChange}
+        //    value={selectFilterUser || null}
+        //    placeholder={t('activityList.selectPerson.placeholder')}
+        filterOption={(input, option) =>
+          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
+        menuItemSelectedIcon={<CheckOutlined />}
+        dropdownClassName={styles.customDropdown}
       ></Select>
-      </div>
+    </div>
   )
 }
 
-const SubjectMenu: FC<SubjectMenuProps> = ({value, onChange}) => {
+const SubjectMenu: FC<SubjectMenuProps> = ({ value, onChange }) => {
   return (
     <div className={styles.subjectInput}>
-     <FormikInput name="subject" value={value} onChange={(item) => onChange(item.target.value)}/>
-  </div>
+      <FormikInput
+        name="subject"
+        value={value}
+        onChange={(item) => onChange(item.target.value)}
+      />
+    </div>
   )
 }
 
 const ToggleMenu: FC<ToggleMenuProps> = ({ options, value, onChange }) => {
   return (
-    <Radio.Group className={styles.customRadioWrapper} value={value} onChange={(item) => onChange(item.target.value)}>
+    <Radio.Group
+      className={styles.customRadioWrapper}
+      value={value}
+      onChange={(item) => onChange(item.target.value)}
+    >
       {options.map((item) => (
         <Radio.Button value={item}>{item}</Radio.Button>
       ))}
@@ -146,77 +156,107 @@ interface FilterMenuProps {
   activityTypeOption: OptionList[]
   userId: number
 }
+
 export const FilterMenu: FC<FilterMenuProps> = ({
   columnName,
   personsList,
   value,
   onChange,
   activityTypeOption,
-  userId
+  userId,
 }) => {
   const [userList, setUserList] = useState<PersonList[]>([])
-  console.log('columnName-----------------', columnName)
   useEffect(() => {
     if (personsList.length > 0) {
       setUserList([
         {
           id: userId,
-          name: 'Current user'
+          name: 'Current user',
         },
-        ...personsList
+        ...personsList,
       ])
     }
   }, [personsList])
-  const RenderMenu = () => {
+
+  const renderMenu = () => {
     switch (columnName) {
       case 'Add time': {
-        return <DateMenu value={value} onChange={onChange}/>
+        return <DateMenu value={value} onChange={onChange} />
         break
       }
       case 'Assigned to user': {
-        return <SelectMenu optionList={userList} value={value} onChange={onChange}/>
+        return (
+          <SelectMenu optionList={userList} value={value} onChange={onChange} />
+        )
         break
       }
       case 'Client name': {
-        return <ClientLeadMenu icon={<UserOutlined />}/>
+        return <ClientLeadMenu icon={<UserOutlined />} />
         break
       }
       case 'Creator': {
-        return <SelectMenu optionList={userList} value={value} onChange={onChange}/>
+        return (
+          <SelectMenu optionList={userList} value={value} onChange={onChange} />
+        )
         break
       }
       case 'Lead name': {
-        return <ClientLeadMenu icon={<AimOutlined />}/>
+        return <ClientLeadMenu icon={<AimOutlined />} />
         break
       }
       case 'Done': {
-        return <ToggleMenu options={['To do', 'Done']} value={value} onChange={onChange}/>
+        return (
+          <ToggleMenu
+            options={['To do', 'Done']}
+            value={value}
+            onChange={onChange}
+          />
+        )
         break
       }
       case 'Type': {
-        return <SelectMenu optionList={activityTypeOption} value={value} onChange={onChange}/>
+        return (
+          <SelectMenu
+            optionList={activityTypeOption}
+            value={value}
+            onChange={onChange}
+          />
+        )
         break
       }
       case 'Subject': {
-        return <SubjectMenu value={value} onChange={onChange}/>
+        return <SubjectMenu value={value} onChange={onChange} />
         break
       }
       case 'Due date': {
-        return <DateMenu value={value} onChange={onChange}/>
+        return <DateMenu value={value} onChange={onChange} />
         break
       }
       case 'Free/busy': {
-        return <ToggleMenu options={['Free', 'Busy']} value={value} onChange={onChange}/>
+        return (
+          <ToggleMenu
+            options={['Free', 'Busy']}
+            value={value}
+            onChange={onChange}
+          />
+        )
         break
       }
       case 'Status': {
-        return <SelectMenu optionList={statusMenu} defaultValue={'Pending'} value={value} onChange={onChange}/>
+        return (
+          <SelectMenu
+            optionList={statusMenu}
+            defaultValue={'Pending'}
+            value={value}
+            onChange={onChange}
+          />
+        )
         break
       }
     }
   }
 
-  return <RenderMenu />
+  return renderMenu()
 }
 
 export default FilterMenu

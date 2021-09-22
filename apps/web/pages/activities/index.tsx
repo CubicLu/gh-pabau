@@ -383,10 +383,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
         })
       }
       setFilterActivityType(tempData)
-      let item = [...filterData?.findManyActivityType]?.map((item) => {
+      const item = [...filterData?.findManyActivityType]?.map((item) => {
         return {
           id: item.id,
-          name: item.name
+          name: item.name,
         }
       })
       setActivityTypeOption(item)
