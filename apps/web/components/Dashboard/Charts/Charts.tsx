@@ -135,17 +135,42 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode, Data }) => {
   const dataList = []
   if (Data) {
     Data.map((item) => {
-      dataList.push({
-        name: item.status,
-        allowPointSelect: true,
-        data: [...new Set(item.data?.map((item) => item.value))],
-        type: 'column',
-        marker: {
-          lineColor: '#54B2D3',
-          color: '#54B2D3',
-        },
-        pointWidth: 5,
-      })
+      const data = Data[0].status
+      if (data) {
+        dataList.push({
+          name: item.status,
+          allowPointSelect: true,
+          data: item.data?.map((item) => item.value),
+          type: 'column',
+          marker: {
+            lineColor: '#54B2D3',
+            color: '#54B2D3',
+          },
+          pointWidth: 15,
+        })
+      } else {
+        const details = [
+          'Completed',
+          'Waiting',
+          'Canceled',
+          'No Show',
+          'Deposits',
+        ]
+        details.map((item) => {
+          dataList.push({
+            name: item,
+            allowPointSelect: true,
+            data: [0, 0, 0, 0, 0],
+            type: 'column',
+            marker: {
+              lineColor: '#54B2D3',
+              color: '#54B2D3',
+            },
+            pointWidth: 15,
+          })
+          return item
+        })
+      }
       return dataList
     })
   }

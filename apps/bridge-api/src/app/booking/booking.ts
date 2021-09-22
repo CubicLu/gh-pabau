@@ -8,32 +8,61 @@ export const retrieveBookingStatuses = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  const bookingStatusCount = await ctx.prisma.booking.groupBy({
-    by: ['status'],
-    where: {
-      NOT: [{ Contact: null }],
-      start_date: { gte: data.start_date },
-      status: { not: '' },
-      end_date: { lte: data.end_date },
-      Online: { not: data.is_active },
-    },
-    _count: {
-      id: true,
-    },
-  })
-  const onlineBookingStatusCount = await ctx.prisma.booking.groupBy({
-    by: ['status'],
-    where: {
-      NOT: [{ Contact: null }],
-      status: { not: '' },
-      start_date: { gte: data.start_date },
-      end_date: { lte: data.end_date },
-      Online: { equals: data.is_active },
-    },
-    _count: {
-      id: true,
-    },
-  })
+  let bookingStatusCount
+  let onlineBookingStatusCount
+  if (data.date_range !== 'All records') {
+    bookingStatusCount = await ctx.prisma.booking.groupBy({
+      by: ['status'],
+      where: {
+        NOT: [{ Contact: null }],
+        start_date: { gte: data.start_date },
+        status: { not: '' },
+        end_date: { lte: data.end_date },
+        Online: { not: data.is_active },
+      },
+      _count: {
+        id: true,
+      },
+    })
+    onlineBookingStatusCount = await ctx.prisma.booking.groupBy({
+      by: ['status'],
+      where: {
+        NOT: [{ Contact: null }],
+        status: { not: '' },
+        start_date: { gte: data.start_date },
+        end_date: { lte: data.end_date },
+        Online: { equals: data.is_active },
+      },
+      _count: {
+        id: true,
+      },
+    })
+  }
+  if (data.date_range === 'All records') {
+    bookingStatusCount = await ctx.prisma.booking.groupBy({
+      by: ['status'],
+      where: {
+        NOT: [{ Contact: null }],
+        status: { not: '' },
+        Online: { not: data.is_active },
+      },
+      _count: {
+        id: true,
+      },
+    })
+    onlineBookingStatusCount = await ctx.prisma.booking.groupBy({
+      by: ['status'],
+      where: {
+        NOT: [{ Contact: null }],
+        status: { not: '' },
+        Online: { equals: data.is_active },
+      },
+      _count: {
+        id: true,
+      },
+    })
+  }
+
   const totalBookingStatusCount = await ctx.prisma.booking.aggregate({
     where: {
       Online: { not: data.is_active },
@@ -199,8 +228,8 @@ export const retrieveAllBookingData = async (
     })
   }
   let final = []
+  const DataSet = []
   if (details) {
-    const DataSet = []
     if (details.length > 0) {
       details.map((record) => {
         let dataGroupByDateRange
@@ -210,12 +239,11 @@ export const retrieveAllBookingData = async (
         const startDate = dayjs(
           `${data.start_date}` as 'YYYYMMDDHHmmss'
         ).format('YYYY-MM-DD')
+        const month = dayjs(endDate).diff(startDate, 'month')
+        const year = dayjs(endDate).diff(startDate, 'year')
+        const week = dayjs(endDate).diff(startDate, 'week')
+        const day = dayjs(endDate).diff(startDate, 'day')
         if (data.date_range === 'custom') {
-          const month = dayjs(endDate).diff(startDate, 'month')
-          const year = dayjs(endDate).diff(startDate, 'year')
-          const week = dayjs(endDate).diff(startDate, 'week')
-          const day = dayjs(endDate).diff(startDate, 'day')
-
           if (year > 0) {
             dataGroupByDateRange = groupByDateRange(
               record.values,
@@ -236,7 +264,6 @@ export const retrieveAllBookingData = async (
             data.date_range
           )
         }
-
         DataSet.push({
           status: record?.key,
           dateRange: dataGroupByDateRange,
@@ -247,15 +274,12 @@ export const retrieveAllBookingData = async (
         ) {
           final = statusDataByDayMonth('This Month', DataSet, startDate)
         }
-
         if (
           data.date_range === 'This Year' ||
           data.date_range === 'Last Year'
         ) {
-          console.log('-------abc')
           final = statusDataByDayMonth('This Year', DataSet, startDate)
         }
-
         if (
           data.date_range === 'This Week' ||
           data.date_range === 'Last Week' ||
@@ -264,33 +288,25 @@ export const retrieveAllBookingData = async (
         ) {
           final = statusDataByDayMonth('This Week', DataSet, startDate)
         }
-
         if (data.date_range === 'All records') {
           final = statusDataByDayMonth('All records', DataSet, startDate)
+        }
+        if (data.date_range === 'custom') {
+          if (year > 0) {
+            final = statusDataByDayMonth('All records', DataSet, startDate)
+          } else if (month > 0) {
+            final = statusDataByDayMonth('This Year', DataSet, startDate)
+          } else if (week > 0) {
+            final = statusDataByDayMonth('This Month', DataSet, startDate)
+          } else if (day > 0) {
+            final = statusDataByDayMonth('This Week', DataSet, startDate)
+          }
         }
         return record
       })
     } else {
-      if (
-        data.date_range === 'Last Month' ||
-        data.date_range === 'This Month'
-      ) {
-        final = [{ data: weekList }]
-      }
-      if (data.date_range === 'This Year' || data.date_range === 'Last Year') {
-        final = [{ data: monthList }]
-      }
-      if (
-        data.date_range === 'This Week' ||
-        data.date_range === 'Last Week' ||
-        data.date_range === 'Today' ||
-        data.date_range === 'Yesterday'
-      ) {
-        final = [{ data: dayList }]
-      }
+      final = [{ data: [] }]
     }
-
-    //console.log('final------------', final)
   }
 
   return {
@@ -357,10 +373,10 @@ const groupByDateRange = (data, dataRange) => {
 }
 
 const statusDataByDayMonth = (range, DataSet, startDate) => {
-  const Final_data = []
   switch (range) {
     case 'All records':
       {
+        const Final_data = []
         const data = [
           ...new Set(
             DataSet.map((x) => Object.keys(x.dateRange).map((y) => y))
@@ -370,7 +386,6 @@ const statusDataByDayMonth = (range, DataSet, startDate) => {
           data.find(
             (x: []) => x.length === Math.max(...data.map((el: []) => el.length))
           ) ?? []
-        console.log('max', max)
         DataSet.map((record) => {
           const result = []
           max?.map((item) =>
@@ -380,16 +395,14 @@ const statusDataByDayMonth = (range, DataSet, startDate) => {
             })
           )
 
-          if (record.status) {
-            if (record.dateRange) {
-              Object.keys(record.dateRange).map((key) => {
-                const index = result.findIndex((item) => item.label === key)
-                if (index) {
-                  result[index].value = record.dateRange[key].length
-                }
-                return key
-              })
-            }
+          if (record.status && record.dateRange) {
+            Object.keys(record.dateRange).map((key) => {
+              const index = result.findIndex((item) => item.label === key)
+              if (index >= 0) {
+                result[index].value = record.dateRange[key].length
+              }
+              return key
+            })
             Final_data.push({
               status: record.status,
               data: result,
@@ -397,155 +410,111 @@ const statusDataByDayMonth = (range, DataSet, startDate) => {
           }
           return Final_data
         })
+        return uniqBy(Final_data, 'status')
       }
-      return uniqBy(Final_data, 'status')
+
       break
     case 'This Month':
       {
-        const result = weekList
-        if (DataSet) {
-          DataSet.map((record) => {
-            if (record.status) {
-              if (record.dateRange) {
-                Object.keys(record.dateRange).map((key) => {
-                  const diff = dayjs(key).diff(startDate, 'day')
-                  switch (diff) {
-                    case 0:
-                      result[0].value = record.dateRange[key].length
-                      break
-                    case 7:
-                      result[1].value = record.dateRange[key].length
-                      break
-                    case 14:
-                      result[2].value = record.dateRange[key].length
-                      break
-                    case 21:
-                      result[3].value = record.dateRange[key].length
-                      break
-                    case 28:
-                      result[4].value = record.dateRange[key].length
-                      break
-                  }
-                  return result
-                })
+        const Final_data = []
+        DataSet.map((record) => {
+          const result = []
+          weekList?.map((item) =>
+            result.push({
+              label: item.label,
+              value: 0,
+            })
+          )
+          if (record.status && record.dateRange) {
+            Object.keys(record.dateRange).map((key) => {
+              const diff = dayjs(key).diff(startDate, 'day')
+              switch (true) {
+                case diff >= 0 && diff <= 6:
+                  result[0].value = record.dateRange[key].length
+                  break
+                case diff >= 7 && diff <= 13:
+                  result[1].value = record.dateRange[key].length
+                  break
+                case diff >= 14 && diff <= 20:
+                  result[2].value = record.dateRange[key].length
+                  break
+                case diff >= 21 && diff <= 27:
+                  result[3].value = record.dateRange[key].length
+                  break
+                case diff >= 28:
+                  result[4].value = record.dateRange[key].length
+                  break
               }
-              Final_data.push({
-                status: record.status,
-                data: result ?? [],
-              })
-            }
-            return Final_data
-          })
-        }
+              return key
+            })
+            Final_data.push({
+              status: record.status,
+              data: result,
+            })
+          }
+          return Final_data
+        })
+
+        return uniqBy(Final_data, 'status')
       }
-      return uniqBy(Final_data, 'status')
       break
     case 'This Week':
       {
-        const result = dayList
-        if (DataSet) {
-          DataSet.map((record) => {
-            if (record.status) {
-              if (record.dateRange) {
-                Object.keys(record.dateRange).map((key) => {
-                  switch (key) {
-                    case 'Sun':
-                      result[0].value = record.dateRange[key].length
-                      break
-                    case 'Mon':
-                      result[1].value = record.dateRange[key].length
-                      break
-                    case 'Tue':
-                      result[2].value = record.dateRange[key].length
-                      break
-                    case 'Wed':
-                      result[3].value = record.dateRange[key].length
-                      break
-                    case 'Thu':
-                      result[4].value = record.dateRange[key].length
-                      break
-                    case 'Fri':
-                      result[5].value = record.dateRange[key].length
-                      break
-                    case 'Sat':
-                      result[6].value = record.dateRange[key].length
-                      break
-                  }
-                  return key
-                })
+        const Final_data = []
+        DataSet.map((record) => {
+          const result = []
+          dayList?.map((item) =>
+            result.push({
+              label: item.label,
+              value: 0,
+            })
+          )
+          if (record.status && record.dateRange) {
+            Object.keys(record.dateRange).map((key) => {
+              const index = result.findIndex((item) => item.label === key)
+              if (index >= 0) {
+                result[index].value = record.dateRange[key].length
               }
-              Final_data.push({
-                status: record.status,
-                data: result,
-              })
-            }
-            return Final_data
-          })
-        }
+              return key
+            })
+            Final_data.push({
+              status: record.status,
+              data: result,
+            })
+          }
+          return Final_data
+        })
+        return uniqBy(Final_data, 'status')
       }
-      return uniqBy(Final_data, 'status')
       break
     case 'This Year':
       {
-        const result = monthList
-        console.log('DataSet', DataSet)
-        if (DataSet) {
-          DataSet.map((record) => {
-            if (record.status) {
-              if (record.dateRange) {
-                Object.keys(record.dateRange).map((key) => {
-                  switch (key) {
-                    case 'Jan':
-                      result[0].value = record.dateRange[key].length
-                      break
-                    case 'Feb':
-                      result[1].value = record.dateRange[key].length
-                      break
-                    case 'Mar':
-                      result[2].value = record.dateRange[key].length
-                      break
-                    case 'Apr':
-                      result[3].value = record.dateRange[key].length
-                      break
-                    case 'May':
-                      result[4].value = record.dateRange[key].length
-                      break
-                    case 'Jun':
-                      result[5].value = record.dateRange[key].length
-                      break
-                    case 'Jul':
-                      result[6].value = record.dateRange[key].length
-                      break
-                    case 'Aug':
-                      result[7].value = record.dateRange[key].length
-                      break
-                    case 'Sep':
-                      result[8].value = record.dateRange[key].length
-                      break
-                    case 'Oct':
-                      result[9].value = record.dateRange[key].length
-                      break
-                    case 'Nev':
-                      result[10].value = record.dateRange[key].length
-                      break
-                    case 'Dec':
-                      result[11].value = record.dateRange[key].length
-                      break
-                  }
-                  return result
-                })
+        const Final_data = []
+        DataSet.map((record) => {
+          const result = []
+          monthList?.map((item) =>
+            result.push({
+              label: item.label,
+              value: 0,
+            })
+          )
+          if (record.status && record.dateRange) {
+            Object.keys(record.dateRange).map((key) => {
+              const index = result.findIndex((item) => item.label === key)
+              if (index >= 0) {
+                result[index].value = record.dateRange[key].length
               }
-              Final_data.push({
-                status: record.status,
-                data: result ?? [],
-              })
-            }
-            console.log('Final_data', Final_data)
-            return Final_data
-          })
-        }
+              return key
+            })
+            Final_data.push({
+              status: record.status,
+              data: result,
+            })
+          }
+          return Final_data
+        })
+        return uniqBy(Final_data, 'status')
       }
-      return uniqBy(Final_data, 'status')
       break
   }
 }

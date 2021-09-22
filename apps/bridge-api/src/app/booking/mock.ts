@@ -1,9 +1,9 @@
 export const weekList = [
-  { label: 1, value: 0 },
-  { label: 2, value: 0 },
-  { label: 3, value: 0 },
-  { label: 4, value: 0 },
-  { label: 5, value: 0 },
+  { label: 'week1', value: 0 },
+  { label: 'week2', value: 0 },
+  { label: 'week3', value: 0 },
+  { label: 'week4', value: 0 },
+  { label: 'week5', value: 0 },
 ]
 
 export const dayList = [

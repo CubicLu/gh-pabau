@@ -108,7 +108,6 @@ export function Index() {
     getAppointmentQueryVariables
   )
 
-  console.log('appointment_status', appointment_status)
   useEffect(() => {
     if (appointment_status) {
       if (
@@ -241,7 +240,7 @@ export function Index() {
     setSelectedRange(value)
     switch (value) {
       case 'Today': {
-        setSelectedDates([dayjs(), dayjs()])
+        setSelectedDates([dayjs().startOf('day'), dayjs().endOf('day')])
         break
       }
       case 'Yesterday': {
