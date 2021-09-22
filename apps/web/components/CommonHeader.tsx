@@ -30,8 +30,8 @@ interface P {
   handleCreate?: () => void
   showChat?: boolean
   onChatClick?: () => void
-  clientCreateRender?: () => JSX.Element
-  leadCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
   displayActivity?: boolean
   renderActivity?: ReactNode
 }
@@ -134,6 +134,7 @@ const CommonHeader: FC<P> = ({
           clientCreateRender={clientCreateRender}
           leadCreateRender={leadCreateRender}
           userData={user?.me}
+          onLogout={user?.logout}
         />
       )}
       {openNotificationDrawer && (
