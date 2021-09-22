@@ -59,6 +59,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       ? userData?.handleCompanySwitch?.(Number.parseInt(item.key))
       : console.warn('No Company Selected')
   }
+
   const menu = (
     <Menu className={styles.avatarMenu}>
       <Menu.Item
@@ -346,7 +347,6 @@ export const Dropdown: FC<DropDownInterface> = ({
     switch (menuName) {
       case 'Menu': {
         setActiveMenuTitle('Profile')
-
         break
       }
       case 'ClinicMenu': {
@@ -381,27 +381,22 @@ export const Dropdown: FC<DropDownInterface> = ({
     switch (activeMenu) {
       case 'Menu': {
         return menu
-
         break
       }
       case 'ClinicMenu': {
         return ClinicSubMenu
-
         break
       }
       case 'FeedbackMenu': {
         return FeedbackMenu
-
         break
       }
       case 'HelpMenu': {
         return HelpMenu
-
         break
       }
       case 'LangMenu': {
         return LangMenu
-
         break
       }
       case 'TaskManagerMenu': {

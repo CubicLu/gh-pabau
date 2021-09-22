@@ -28,6 +28,7 @@ export interface InvoiceQueryResult {
   id: number
   invoiceNo: string
   debtor: string
+  customerName: string
   contractId: number
   insurerName: string
   total: number
@@ -54,6 +55,7 @@ export interface PaymentQueryResult {
   location: string
   invDate: Date
   customer: string
+  customerName: string
   amount: number
   payment: string
   user: string
@@ -65,6 +67,7 @@ export interface DebtQueryResult {
   location: string
   invDate: Date
   debtor: string
+  customerName: string
   total: number
   creditAmount: number
   paidAmount: number
@@ -83,6 +86,7 @@ export interface CreditNoteQueryResult {
   id: number
   creditNo: string
   debtor: string
+  customerName: string
   insurerName: string
   contractId: number
   customerId: number

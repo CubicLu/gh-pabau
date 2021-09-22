@@ -1,23 +1,17 @@
 import React, { FC } from 'react'
 import { Typography, Tooltip } from 'antd'
-import TableLayout, { FilterValueType } from './TableLayout'
+import TableLayout, { AccountTabProps } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { Dayjs } from 'dayjs'
 import { usePaymentsQuery, usePaymentCountQuery } from '@pabau/graphql'
 import { DisplayDate } from '../../hooks/displayDate'
 
-interface PaymentProps {
-  searchTerm: string
-  selectedDates: Dayjs[]
-  filterValue: FilterValueType
-  selectedRange: string
-}
-
-const Payments: FC<PaymentProps> = ({
+const Payments: FC<AccountTabProps> = ({
   searchTerm,
   selectedDates,
   filterValue,
   selectedRange,
+  accountRef,
+  companyCurrency,
 }) => {
   const { t } = useTranslationI18()
   const PaymentColumns = [
@@ -34,6 +28,7 @@ const Payments: FC<PaymentProps> = ({
       dataIndex: 'invoiceNo',
       visible: true,
       skeletonWidth: '80px',
+      width: '140px',
       render: function render(data) {
         return (
           <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
@@ -95,7 +90,7 @@ const Payments: FC<PaymentProps> = ({
       width: '100px',
       visible: true,
       render: function render(amount) {
-        return <Typography.Text>£{amount}</Typography.Text>
+        return <Typography.Text>{companyCurrency + amount}</Typography.Text>
       },
     },
     {
@@ -125,6 +120,7 @@ const Payments: FC<PaymentProps> = ({
       aggregateQuery={usePaymentCountQuery}
       noDataText={t('account.finance.payments.empty.data.text')}
       tabName="payment"
+      accountRef={accountRef}
     />
   )
 }
