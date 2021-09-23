@@ -26,25 +26,50 @@ export const Password = extendType({
         { prisma, authenticated: { user, company } }: Context
       ) {
         // Get email of user from current pod
-        const { username, full_name } = await prisma.user.findFirst({
+        const {
+          username,
+          full_name,
+          password,
+          salt,
+        } = await prisma.user.findFirst({
           rejectOnNotFound: true,
           where: { id: user, company_id: { equals: company } },
-          select: { username: true, full_name: true },
+          select: {
+            username: true,
+            full_name: true,
+            password: true,
+            salt: true,
+          },
         })
 
-        // As a security measure, we send an email to the username (an email address) to tell them their password was changed
-        await sendEmail({
-          templateType: 'password-reset-confirm',
-          to: username,
-          subject: 'Password Changed Confirmation',
-          fields: [
-            {
-              key: 'name',
-              value: full_name,
+        if (createPabau1PasswordHash(currentPassword, salt) === password) {
+          await prisma.user.updateMany({
+            where: {
+              username: username,
             },
-          ],
-        })
-        return true
+            data: {
+              password: createPabau1PasswordHash(newPassword, salt),
+              password_algor: 2,
+            },
+          })
+
+          // As a security measure, we send an email to the username (an email address) to tell them their password was changed
+          await sendEmail({
+            templateType: 'password-reset-confirm',
+            to: username,
+            subject: 'Password Changed Confirmation',
+            fields: [
+              {
+                key: 'name',
+                value: full_name,
+              },
+            ],
+          })
+          return true
+        } else {
+          throw new Error('Old password not matched!')
+        }
+        return false
       },
     })
 
