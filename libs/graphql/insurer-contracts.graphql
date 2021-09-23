@@ -1,0 +1,6 @@
+query getInsurerContracts($limit: Int = 10, $offset: Int = 0) {
+  contracts: findManyInsurerContract(take: $limit, skip: $offset) {
+    id
+    name
+  }
+}

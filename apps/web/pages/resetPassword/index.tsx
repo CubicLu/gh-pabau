@@ -123,9 +123,9 @@ const Index: FC = () => {
               setIsLoading(true)
               updateUserPassword({
                 variables: {
-                  token: token,
                   newPassword1: value.password,
                   newPassword2: value.confirmPassword,
+                  userId: data?.findFirstPasswordResetAuth?.User?.id,
                 },
                 optimisticResponse: {},
               })

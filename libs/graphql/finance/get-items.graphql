@@ -1,0 +1,29 @@
+query saleItems($guid: String!) {
+  items: findManySaleItem(where: { InvSale: { guid: { equals: $guid } } }) {
+    id
+    name: product_name
+    code: product_code
+    type: product_category_type
+    unit_price
+    gross_total
+    discount: val_tax
+    tax_total
+    quantity
+    Tax {
+      id
+      name
+      value
+      rate
+    }
+    Product {
+      id
+      name
+      image
+      in_stock: _count {
+        InvWarehouseProduct
+      }
+      alert_quantity
+      allow_negative_qty
+    }
+  }
+}

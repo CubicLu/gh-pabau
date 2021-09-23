@@ -1743,6 +1743,20 @@ export const Company = objectType({
         return root.Album
       },
     })
+    t.list.field('InsurerContract', {
+      type: 'InsurerContract',
+      args: {
+        where: 'InsurerContractWhereInput',
+        orderBy: 'InsurerContractOrderByWithRelationInput',
+        cursor: 'InsurerContractWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InsurerContractScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsurerContract
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {
