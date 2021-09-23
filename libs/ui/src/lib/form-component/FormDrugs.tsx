@@ -80,14 +80,18 @@ export const FormDrugs: FC<P> = ({
             const drugLists = data?.map((item, index) => ({
               id: item.medicines._id,
               name: item.medicines.name,
-              dosage: item.medicines.dosage ? item.medicines.dosage : [],
+              dosage: item.medicines.dosage
+                ? item.medicines.dosage
+                : item.bnf?.dosage
+                ? item.bnf?.dosage
+                : [],
               quantities: item.medicines.quantities
                 ? item.medicines.quantities
                 : [],
             }))
             setDrugsAPIList(drugLists)
-            setLoading(false)
           }
+          setLoading(false)
         } catch (error) {
           console.log(error)
           setLoading(false)
@@ -356,7 +360,9 @@ export const FormDrugs: FC<P> = ({
                         {'Adults'}
                       </div>
                       {item.dosageOptions.filter(
-                        (dosage) => dosage.populationType === 'adults'
+                        (dosage) =>
+                          dosage.populationType.toUpperCase() ===
+                          'adults'.toUpperCase()
                       ).length === 0 && (
                         <div
                           key={item.id + '-adults-' + index}
@@ -368,7 +374,11 @@ export const FormDrugs: FC<P> = ({
                         </div>
                       )}
                       {item.dosageOptions
-                        .filter((dosage) => dosage.populationType === 'adults')
+                        .filter(
+                          (dosage) =>
+                            dosage.populationType.toUpperCase() ===
+                            'adults'.toUpperCase()
+                        )
                         .map((dosage, index) => (
                           <div
                             key={item.id + '-adults-' + index}
@@ -384,7 +394,9 @@ export const FormDrugs: FC<P> = ({
                         {'Children'}
                       </div>
                       {item.dosageOptions.filter(
-                        (dosage) => dosage.populationType === 'children'
+                        (dosage) =>
+                          dosage.populationType.toUpperCase() ===
+                          'children'.toUpperCase()
                       ).length === 0 && (
                         <div
                           key={item.id + '-adults-' + index}
@@ -397,7 +409,9 @@ export const FormDrugs: FC<P> = ({
                       )}
                       {item.dosageOptions
                         .filter(
-                          (dosage) => dosage.populationType === 'children'
+                          (dosage) =>
+                            dosage.populationType.toUpperCase() ===
+                            'children'.toUpperCase()
                         )
                         .map((dosage, index) => (
                           <div
