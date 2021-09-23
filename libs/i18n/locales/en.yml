@@ -2429,6 +2429,12 @@ en:
   ui.medicalformbuilder.advanced.payment.cardnumber: 'Card number'
   ui.medicalformbuilder.advanced.payment.addcard: 'Add Card'
   ui.medicalformbuilder.advanced.payment.detail: 'Your details are securely stored with our payment processing partner using bank-grade encryption.'
+  ui.medicalformbuilder.form.drugs.placeholder: 'Type a medication you wish to prescribe'
+  ui.medicalformbuilder.form.drugs.name: 'Name'
+  ui.medicalformbuilder.form.drugs.dosage: 'Dosage'
+  ui.medicalformbuilder.form.drugs.comments: 'Comments'
+  ui.medicalformbuilder.form.drugs.dosage.placeholder: 'Enter dosage'
+  ui.medicalformbuilder.form.drugs.comment.placeholder: 'Enter comments'
   ui.medicalform.setting.title: 'component settings'
   ui.medicalform.setting.save.error: 'Please add an option'
   ui.medicalform.setting.question.title: 'Question'
@@ -2530,7 +2536,7 @@ en:
   ui.macro.modal.create.type.everywhere: 'Everywhere'
   ui.macro.modal.create.type.myself: 'Myself only'
   ui.macro.modal.create.add.success: 'Macro has been added successfully'
-  ui.macro.modal.create.del.success: 'Macro has been deleted successfully'  
+  ui.macro.modal.create.del.success: 'Macro has been deleted successfully'
   ui.macro.modal.manage.title: 'Manage macros'
   setup.reports.team-report: Team Report
   setup.reports.search-report: Search by report name

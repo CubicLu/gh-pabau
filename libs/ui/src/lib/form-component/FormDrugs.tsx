@@ -3,6 +3,8 @@ import { OptionType } from '@pabau/ui'
 import { Button, Input, Select } from 'antd'
 import cn from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useDebounce } from '@react-hook/debounce'
 import sampleLogo from '../../assets/images/form_component_drugs_log_sample.svg'
 import styles from './FormComponent.module.less'
 
@@ -17,27 +19,72 @@ interface P {
   onChangeArrValue?: (value: string[]) => void
 }
 
+interface IDosageData {
+  populationType: string
+  text: string
+}
+
 interface DrugsType {
-  id: number
+  id: string
   name: string
   dosage: string
-  comment: string
-  dosageTooltip: string
-  commentTooltip: string
+  quantity: string
+  dosageOptions: IDosageData[]
+  quantityOptions: string[]
+}
+
+interface IDrugsData {
+  id: string
+  name: string
+  dosage: IDosageData[]
+  quantities: string[]
 }
 
 const dataLists = [
   {
-    id: 1,
+    id: '5ca1cfadfb3775ad3d1de00c',
     name: 'Valbenazine-1',
+    dosage: [
+      {
+        populationType: 'adults',
+        text: 'adults adults adults - 1',
+      },
+      {
+        populationType: 'children',
+        text: 'children children children - 1',
+      },
+    ],
+    quantities: ['500mg tab, 32', '1000mg tab, 32'],
   },
   {
-    id: 2,
+    id: '5ca1cfadfb3775ad3d1de01c',
     name: 'Valbenazine-2',
+    dosage: [
+      {
+        populationType: 'adults',
+        text: 'adults adults adults - 2',
+      },
+      {
+        populationType: 'children',
+        text: 'children children children - 2',
+      },
+    ],
+    quantities: ['1500mg tab, 32', '11000mg tab, 32'],
   },
   {
-    id: 3,
+    id: '5ca1cfadfb3775ad3d1de02c',
     name: 'Valbenazine-3',
+    dosage: [
+      {
+        populationType: 'adults',
+        text: 'adults adults adults - 3',
+      },
+      {
+        populationType: 'children',
+        text: 'children children children - 3',
+      },
+    ],
+    quantities: ['2500mg tab, 32', '21000mg tab, 32'],
   },
 ]
 
@@ -52,40 +99,60 @@ export const FormDrugs: FC<P> = ({
   onChangeArrValue,
 }) => {
   const [items, setItems] = useState<DrugsType[]>([])
-  const [selItemId, setSelItemId] = useState(-1)
+  const [selItemId, setSelItemId] = useState('')
   const [editStatusDosage, setEditStatusDosage] = useState(false)
-  const [editStatusComment, setEditStatusComment] = useState(false)
+  const [editStatusQuantity, setEditStatusQuantity] = useState(false)
   const [showDosageTooltip, setShowDosageTooltip] = useState(false)
-  const [showCommentTooltip, setShowCommentTooltip] = useState(false)
-  const [selectedItem, setSelectedItem] = useState(0)
+  const [showQuantityTooltip, setShowQuantityTooltip] = useState(false)
+  const [selectedItem, setSelectedItem] = useState('')
+  const [drugsAPIList, setDrugsAPIList] = useState<IDrugsData[]>([])
+  const [drugsSearchTerms, setDrugsSearchTerms] = useDebounce('', 1000)
+  const { t } = useTranslation('common')
 
   useEffect(() => {
-    let drugItems: DrugsType[] = []
-    drugItems = Object.entries(paramItems).map(([key, value]) => ({
-      id: value.id,
-      name: value.name,
-      dosage: '',
-      comment: '',
-      dosageTooltip: dosageTooltip,
-      commentTooltip: commentTooltip,
-    }))
-    setItems(drugItems)
+    const drugsAPICall = async (drugsSearchTerms) => {
+      const searchVal = drugsSearchTerms.trim()
+      if (searchVal !== '') {
+        try {
+          setDrugsAPIList(dataLists)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+    drugsAPICall(drugsSearchTerms)
+  }, [drugsSearchTerms])
+
+  useEffect(() => {
+    // let drugItems: DrugsType[] = []
+    // drugItems = Object.entries(paramItems).map(([key, value]) => ({
+    //   id: value.id,
+    //   name: value.name,
+    //   dosage: '',
+    //   comment: '',
+    //   dosageTooltip: dosageTooltip,
+    //   commentTooltip: commentTooltip,
+    // }))
+    // setItems(drugItems)
   }, [paramItems])
 
   function refreshDrugs() {
     setEditStatusDosage(false)
-    setEditStatusComment(false)
+    console.log('StatusQuantity1=false')
+    setEditStatusQuantity(false)
     setShowDosageTooltip(false)
-    setShowCommentTooltip(false)
-    setSelItemId(-1)
+    setShowQuantityTooltip(false)
+    setSelItemId('')
   }
 
   const onDrugsBlur = () => {
     setEditStatusDosage(false)
-    setEditStatusComment(false)
+    console.log('StatusQuantity2=false')
+    setEditStatusQuantity(false)
   }
 
-  const onDrugsChange = (index, value) => {
+  const onDrugsChange = (id, value) => {
+    const index = items.findIndex((item) => item.id === id)
     const tempItems = [...items]
     const itemValue = {
       ...items[index],
@@ -97,22 +164,26 @@ export const FormDrugs: FC<P> = ({
 
   const onSelectDosageItem = (id) => {
     setSelItemId(id)
-    setEditStatusComment(false)
-    setShowCommentTooltip(false)
+    console.log('StatusQuantity3=false')
+    setEditStatusQuantity(false)
+    setShowQuantityTooltip(false)
     setEditStatusDosage(true)
     setShowDosageTooltip(true)
   }
 
-  const onSelectCommentItem = (e, id) => {
-    e.stopPropagation()
+  const onSelectQuantityItem = (e, id) => {
+    if (e) e.stopPropagation()
+    console.log('id =', id)
     setSelItemId(id)
     setEditStatusDosage(false)
     setShowDosageTooltip(false)
-    setEditStatusComment(true)
-    setShowCommentTooltip(true)
+    console.log('StatusQuantity4=true')
+    setEditStatusQuantity(true)
+    setShowQuantityTooltip(true)
   }
 
-  const onDeleteItem = (index) => {
+  const onDeleteItem = (id) => {
+    const index = items.findIndex((item) => item.id === id)
     const tempItems = [...items]
     tempItems.splice(index, 1)
     setItems(tempItems)
@@ -122,30 +193,9 @@ export const FormDrugs: FC<P> = ({
 
   const onKeyUp = (event) => {
     if (event.charCode === 13) {
+      console.log('refreshDrugs1')
       refreshDrugs()
     }
-  }
-
-  function onChange(value) {
-    const selData = dataLists.filter((data) => data.id === value)
-    if (selData.length > 0) {
-      const tempItems = [
-        ...items,
-        {
-          id: items.length,
-          name: selData[0].name,
-          dosage: '',
-          comment: '',
-          dosageTooltip: dosageTooltip,
-          commentTooltip: commentTooltip,
-        },
-      ]
-      setItems(tempItems)
-      onSelectDosageItem(tempItems.length)
-      const ids = tempItems.map((item) => item.id.toString())
-      onChangeArrValue?.(ids)
-    }
-    setSelectedItem(0)
   }
 
   function onBlur() {
@@ -160,18 +210,52 @@ export const FormDrugs: FC<P> = ({
     console.log('search:', val)
   }
 
-  const onAddDosage = (index, value) => {
-    onDrugsChange(index, { dosage: value })
+  const onAddDosage = (id, value) => {
+    onDrugsChange(id, { dosage: value })
+    console.log('refreshDrugs2')
+    refreshDrugs()
+    onSelectQuantityItem(null, id)
+  }
+
+  const onAddQuantity = (id, value) => {
+    onDrugsChange(id, { quantity: value })
+    console.log('refreshDrugs3')
     refreshDrugs()
   }
 
-  const onAddComment = (index, value) => {
-    onDrugsChange(index, { comment: value })
-    refreshDrugs()
+  // const onRefreshDrugs = () => {
+  //   console.log('refreshDrugs4')
+  //   refreshDrugs()
+  // }
+
+  const onHandleSearch = (value) => {
+    console.log('onHandleSearch', value)
+    setDrugsSearchTerms(value)
   }
 
-  const onRefreshDrugs = () => {
-    refreshDrugs()
+  const onHandleChange = (value) => {
+    const addedData = items.filter((item) => item.id === value)
+    if (addedData.length === 0) {
+      const selData = drugsAPIList.filter((data) => data.id === value)
+      if (selData.length > 0) {
+        const tempItems = [
+          ...items,
+          {
+            id: selData[0].id,
+            name: selData[0].name,
+            dosage: '',
+            quantity: '',
+            dosageOptions: selData[0].dosage,
+            quantityOptions: selData[0].quantities,
+          },
+        ]
+        setItems(tempItems)
+        onSelectDosageItem(value)
+        const ids = tempItems.map((item) => item.id.toString())
+        onChangeArrValue?.(ids)
+      }
+    }
+    setSelectedItem('')
   }
 
   return (
@@ -187,12 +271,21 @@ export const FormDrugs: FC<P> = ({
       )}
       <div className={styles.formDrugsOptions}>
         <Select
-          showSearch
+          showSearch={true}
           size="middle"
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onSearch={onSearch}
+          // value={selectedItem}
+          placeholder={t('ui.medicalformbuilder.form.drugs.placeholder')}
+          style={{ width: '100%', marginTop: '10px' }}
+          defaultActiveFirstOption={false}
+          showArrow={true}
+          // filterOption={false}
+          onSearch={onHandleSearch}
+          onChange={onHandleChange}
+          notFoundContent={null}
+          // onChange={onChange}
+          // onFocus={onFocus}
+          // onBlur={onBlur}
+          // onSearch={onSearch}
           filterOption={(input, option) =>
             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
@@ -201,27 +294,28 @@ export const FormDrugs: FC<P> = ({
               .toLowerCase()
               .localeCompare(optionB?.children.toLowerCase())
           }
-          style={{ width: '100%', marginTop: '10px' }}
-          value={selectedItem}
         >
-          <Option value={0} key={0}>
-            Type a medication you wish to prescribe
-          </Option>
-          {dataLists.map((item, index) => (
-            <Option key={index + 1} value={item.id}>
+          {drugsAPIList.map((item, index) => (
+            <Option key={'druglist-' + item.id} value={item.id}>
               {item.name}
             </Option>
           ))}
         </Select>
         <div className={styles.formDrugsOptionsContent}>
           <div className={styles.formDrugsOptionsHeader}>
-            <div className={styles.formDrugsOptionsName}>Name</div>
-            <div className={styles.formDrugsOptionsDosage}>Dosage</div>
-            <div className={styles.formDrugsOptionsComment}>Comments</div>
+            <div className={styles.formDrugsOptionsName}>
+              {t('ui.medicalformbuilder.form.drugs.name')}
+            </div>
+            <div className={styles.formDrugsOptionsDosage}>
+              {t('ui.medicalformbuilder.form.drugs.dosage')}
+            </div>
+            <div className={styles.formDrugsOptionsComment}>
+              {t('ui.medicalformbuilder.form.drugs.comments')}
+            </div>
           </div>
           <div className={styles.formDrugsOptionsBody}>
             {items.map((item, index) => (
-              <>
+              <div key={'drugs-' + item.id}>
                 <div className={styles.formDrugsOptionsItem}>
                   <div
                     className={styles.formDrugsOptionsItemArea}
@@ -239,10 +333,12 @@ export const FormDrugs: FC<P> = ({
                       {selItemId === item.id && editStatusDosage ? (
                         <Input
                           autoFocus
-                          placeholder={'Enter dosage'}
+                          placeholder={t(
+                            'ui.medicalformbuilder.form.drugs.dosage.placeholder'
+                          )}
                           value={item.dosage}
                           onChange={(e) =>
-                            onDrugsChange(index, { dosage: e.target.value })
+                            onDrugsChange(item.id, { dosage: e.target.value })
                           }
                           onBlur={onDrugsBlur}
                           onKeyPress={(e) => onKeyUp(e)}
@@ -251,7 +347,7 @@ export const FormDrugs: FC<P> = ({
                         <>
                           {item.dosage}
                           <Button onClick={() => onSelectDosageItem(item.id)}>
-                            edit
+                            {t('ui.medicalformbuilder.form.edit')}
                           </Button>
                         </>
                       )}
@@ -259,27 +355,29 @@ export const FormDrugs: FC<P> = ({
                     <div
                       className={cn(
                         styles.formDrugsOptionsComment,
-                        item.comment === '' ? styles.height100 : ''
+                        item.quantity === '' ? styles.height100 : ''
                       )}
                     >
-                      {selItemId === item.id && editStatusComment ? (
+                      {selItemId === item.id && editStatusQuantity ? (
                         <Input
                           autoFocus
-                          placeholder={'Enter comments'}
-                          value={item.comment}
+                          placeholder={t(
+                            'ui.medicalformbuilder.form.drugs.dosage.placeholder'
+                          )}
+                          value={item.quantity}
                           onChange={(e) =>
-                            onDrugsChange(index, { comment: e.target.value })
+                            onDrugsChange(item.id, { quantity: e.target.value })
                           }
                           onBlur={onDrugsBlur}
                           onKeyPress={(e) => onKeyUp(e)}
                         />
                       ) : (
                         <>
-                          {item.comment}
+                          {item.quantity}
                           <Button
-                            onClick={(e) => onSelectCommentItem(e, item.id)}
+                            onClick={(e) => onSelectQuantityItem(e, item.id)}
                           >
-                            edit
+                            {t('ui.medicalformbuilder.form.edit')}
                           </Button>
                         </>
                       )}
@@ -287,45 +385,66 @@ export const FormDrugs: FC<P> = ({
                   </div>
                   <div
                     className={styles.formDrugsOptionsItemAction}
-                    onClick={() => onDeleteItem(index)}
+                    onClick={() => onDeleteItem(item.id)}
                   >
                     <DeleteOutlined />
                   </div>
                 </div>
                 <div
-                  onClick={() => onRefreshDrugs()}
+                  // onClick={() => onRefreshDrugs()}
                   className={cn(
                     styles.formDrugsOptionsItemTooltip,
                     selItemId === item.id &&
-                      (showDosageTooltip || showCommentTooltip)
+                      (showDosageTooltip || showQuantityTooltip)
                       ? ''
                       : styles.hide
                   )}
                 >
                   {showDosageTooltip && (
                     <>
-                      <div
-                        className={styles.formDrugsOptionsItemTooltipItem}
-                        onClick={() => onAddDosage(index, item.dosageTooltip)}
-                      >
-                        {item.dosageTooltip}
-                      </div>
-                      <img src={sampleLogo} alt="" />
+                      <div>{'Adults'}</div>
+                      {item.dosageOptions
+                        .filter((dosage) => dosage.populationType === 'adults')
+                        .map((dosage, index) => (
+                          <div
+                            key={item.id + '-adults-' + index}
+                            className={styles.formDrugsOptionsItemTooltipItem}
+                            onClick={() => onAddDosage(item.id, dosage.text)}
+                          >
+                            {dosage.text}
+                          </div>
+                        ))}
+                      <div>{'Children'}</div>
+                      {item.dosageOptions
+                        .filter(
+                          (dosage) => dosage.populationType === 'children'
+                        )
+                        .map((dosage, index) => (
+                          <div
+                            key={item.id + '-children-' + index}
+                            className={styles.formDrugsOptionsItemTooltipItem}
+                            onClick={() => onAddDosage(item.id, dosage.text)}
+                          >
+                            {dosage.text}
+                          </div>
+                        ))}
                     </>
                   )}
-                  {showCommentTooltip && (
+                  {showQuantityTooltip && (
                     <>
-                      <div
-                        className={styles.formDrugsOptionsItemTooltipItem}
-                        onClick={() => onAddComment(index, item.commentTooltip)}
-                      >
-                        {item.commentTooltip}
-                      </div>
-                      <img src={sampleLogo} alt="" />
+                      {item.quantityOptions.map((quantity, index) => (
+                        <div
+                          key={item.id + '-quantity-' + index}
+                          className={styles.formDrugsOptionsItemTooltipItem}
+                          onClick={() => onAddQuantity(item.id, quantity)}
+                        >
+                          {quantity}
+                        </div>
+                      ))}
                     </>
                   )}
                 </div>
-              </>
+              </div>
             ))}
           </div>
         </div>
