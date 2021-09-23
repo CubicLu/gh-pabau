@@ -3751,6 +3751,7 @@ model CompanyBranch {
   InventoryMovement       InventoryMovement[]
   InvSale                 InvSale[]
 
+  ServiceLocationPrice ServiceLocationPrice[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -4107,7 +4108,8 @@ model CompanyService {
   CompanyRoomService     CompanyRoomService[]
   ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
 
-  ServiceUserPrice ServiceUserPrice[]
+  ServiceUserPrice     ServiceUserPrice[]
+  ServiceLocationPrice ServiceLocationPrice[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -7971,16 +7973,21 @@ model LeadStatus {
 //  loc_name    String?
 //  loc_date    String?
 //}
-//
-//model location_service_price {
-//  id          Int   @id @default(autoincrement())
-//  location_id Int   @default(0)
-//  service_id  Int   @default(0)
-//  price       Float @default(0.00)
-//
-//  @@index([location_id, service_id], name: "foreign")
-//}
-//
+
+model ServiceLocationPrice {
+  id          Int   @id @default(autoincrement())
+  location_id Int   @default(0)
+  service_id  Int   @default(0)
+  price       Float @default(0.00)
+
+  CompanyService CompanyService? @relation(fields: [service_id], references: [id])
+  Location       CompanyBranch?  @relation(fields: [location_id], references: [id])
+
+  @@index([service_id], name: "service_id")
+  @@index([location_id], name: "location_id")
+  @@map("location_service_price")
+}
+
 //model login_attempts {
 //  id                  Int      @id @default(autoincrement())
 //  username            String   @unique
