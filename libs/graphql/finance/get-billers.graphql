@@ -1,5 +1,5 @@
-query getBillers($userID_string: String!, $userID_int: Int!) {
-  findManyInvBiller(where: {User: {deleted: {not: {equals: 1}}}}) {
+query getBillers($service_id: Int = 0) {
+  billers: findManyInvBiller(where: {User: {deleted: {not: {equals: 1}}}}, orderBy: {name: asc}) {
     id
     name
     email
@@ -9,19 +9,8 @@ query getBillers($userID_string: String!, $userID_int: Int!) {
       id
       full_name
       image
-      Company {
-        CompanyService(where: {disabledusers: {not: {contains: $userID_string}}}) {
-          id
-          name
-          disabledusers
-          price
-          ServiceUserPrice(where: {user_id: {equals: $userID_int}}) {
-            id
-            price
-            user_id
-            service_id
-          }
-        }
+      ServiceUserPrice(where: {service_id: {equals: $service_id}}) {
+        price
       }
     }
   }

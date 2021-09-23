@@ -21,5 +21,11 @@ export const ServiceUserPrice = objectType({
         return root.CompanyService
       },
     })
+    t.field('User', {
+      type: 'User',
+      resolve(root: any) {
+        return root.User
+      },
+    })
   },
 })

@@ -4265,6 +4265,7 @@ model ServiceUserPrice {
   staff_commission       Float?         @default(0.00)
   participant_commission Float?         @default(0.00)
   CompanyService         CompanyService @relation(fields: [service_id], references: [id])
+  User                   User           @relation(fields: [user_id], references: [id])
 
   @@index([company_id], name: "company_id")
   @@index([service_id], name: "service_id")
@@ -12678,6 +12679,7 @@ model User {
 
   PasswordResetAuth   PasswordResetAuth[]
   ActivityUserColumns ActivityUserColumns[]
+  ServiceUserPrice    ServiceUserPrice[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

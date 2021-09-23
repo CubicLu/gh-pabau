@@ -14,6 +14,9 @@ fragment ServiceUserPrice on ServiceUserPrice {
   CompanyService {
     ...CompanyServiceFields
   }
+  User {
+    ...UserFields
+  }
 }
 
 mutation createOneServiceUserPrice($data: ServiceUserPriceCreateInput!) {
