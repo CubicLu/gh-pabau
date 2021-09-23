@@ -13,6 +13,7 @@ export interface TwoHorizontalSideBySideProps {
   isDragging: boolean
   selectedIndex: SelectIndexProps[]
   albums: ImageViewerAlbum[]
+  selectedAlbum?: ImageViewerAlbum
   zoomInMode: ZoomInMode
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedIndex: React.Dispatch<React.SetStateAction<SelectIndexProps[]>>
@@ -23,6 +24,7 @@ export const TwoHorizontalSideBySide: FC<TwoHorizontalSideBySideProps> = ({
   isDragging,
   selectedIndex,
   albums,
+  selectedAlbum,
   zoomInMode,
   setIsDragging,
   setSelectedIndex,
@@ -49,14 +51,16 @@ export const TwoHorizontalSideBySide: FC<TwoHorizontalSideBySideProps> = ({
 
   const getImageUrl = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].origin : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum ? currentAlbum?.imageList?.[imageIndex]?.origin : ''
   }
 
   const getImageDate = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].date : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum
+      ? (currentAlbum?.imageList?.[imageIndex]?.date as string)
+      : ''
   }
 
   const setDragging = (viewerIndex) => {
@@ -117,14 +121,14 @@ export const TwoHorizontalSideBySide: FC<TwoHorizontalSideBySideProps> = ({
           }}
         >
           <ImageViewerEx
-            imageViewerExId="horizontal-side-by-side-one"
+            imageViewerExId={'horizontal-side-by-side-one'}
             {...selectedIndex[0].option}
             dragging={setDragging(0)}
             width={width}
             height={height / 2}
             src={
               selectedIndex[0].imageIndex >= 0
-                ? getImageUrl(selectedIndex[0])
+                ? getImageUrl(selectedIndex[0]) || ''
                 : ''
             }
             viewMagnifier={zoomInMode !== ZoomInMode.zoomInNone}
@@ -147,14 +151,14 @@ export const TwoHorizontalSideBySide: FC<TwoHorizontalSideBySideProps> = ({
           }}
         >
           <ImageViewerEx
-            imageViewerExId="horizontal-side-by-side-two"
+            imageViewerExId={'horizontal-side-by-side-two'}
             {...selectedIndex[1].option}
             dragging={setDragging(1)}
             width={width}
             height={height / 2}
             src={
               selectedIndex[1].imageIndex >= 0
-                ? getImageUrl(selectedIndex[1])
+                ? getImageUrl(selectedIndex[1]) || ''
                 : ''
             }
             viewMagnifier={zoomInMode !== ZoomInMode.zoomInNone}
