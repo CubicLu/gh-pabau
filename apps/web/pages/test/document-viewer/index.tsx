@@ -16,7 +16,7 @@ import styles from './index.module.less'
 const DocumentViewer: FC = () => {
   const { t } = useTranslationI18()
   const [showDocumentViewer, setShowDocumentViewer] = useState<boolean>(false)
-  const [documentId, setDocumentId] = useState<number>(undefined)
+  const [documentId, setDocumentId] = useState<number>(0)
   const [numPages, setNumPages] = useState<number>(0)
   const [pageNumber, setPageNumber] = useState<number>(1)
   const [documentData, setDocumentData] = useState(null)
@@ -34,7 +34,7 @@ const DocumentViewer: FC = () => {
     if (getDocumentData?.data) {
       setDocumentData({
         name: getDocumentData.data.name,
-        url: getDocument(getDocumentData.data.linkref),
+        url: getDocument(getDocumentData.data.url),
       })
       setShowDocumentViewer(true)
     }
@@ -56,13 +56,13 @@ const DocumentViewer: FC = () => {
         {!showDocumentViewer ? (
           <Card>
             <Typography.Title>
-              {t('test.document.viewer.title')}
+              {t('contact.document.viewer.title')}
             </Typography.Title>
             <div className={styles.documentInputWrapper}>
               <Input
-                label={t('test.document.viewer.input.documentid')}
+                label={t('contact.document.viewer.input.documentid')}
                 name="documentId"
-                placeHolderText={t('test.document.viewer.input.documentid')}
+                placeHolderText={t('contact.document.viewer.input.documentid')}
                 onChange={(e) => setDocumentId(Number(e))}
               />
             </div>
@@ -80,7 +80,7 @@ const DocumentViewer: FC = () => {
                   })
                 }}
               >
-                {t('test.document.viewer.show.document')}
+                {t('contact.document.viewer.show.document')}
               </Button>
             </div>
           </Card>

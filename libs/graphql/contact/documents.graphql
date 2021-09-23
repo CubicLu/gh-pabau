@@ -4,10 +4,9 @@ query getAttachmentById($id: Int!) {
         name: attachment_title
         shared: connect_public
         created_date: date
-        linkref
+        url:linkref
         contact_id
         Contact {
-            ID
             Fname
             Lname
         }
