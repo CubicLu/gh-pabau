@@ -235,9 +235,7 @@ export const Charts: FC<ICharts> = ({
               <div className={styles.chartsHeader}>{totalSalesCount.count}</div>
               <div className={styles.chartsSubHeader}>Recent sales</div>
               <div className={styles.chartsExtraHeader}>
-                {dashboardMode === 1
-                  ? `${location.label},` + location.date
-                  : 'all locations, last 7 days'}
+                {location.label}, {location.date}
               </div>
               <CustomHighChart options={optionLine} />
             </div>

@@ -16,20 +16,8 @@ export const groupByDateRange = (data, dataRange) => {
       )
       return data1
     }
-    case 'Last Year': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('month').format('MMM')
-      )
-      return data1
-    }
     case 'This Month': {
       const data1 = groupBy(data, (item) => dayjs(`${item}`).startOf('week'))
-      return data1
-    }
-    case 'Last Month': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('week').format('YYYY-MM-DD')
-      )
       return data1
     }
     case 'This Week': {
@@ -37,24 +25,6 @@ export const groupByDateRange = (data, dataRange) => {
         dayjs(`${item}`).startOf('day').format('ddd')
       )
 
-      return data1
-    }
-    case 'Last Week': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('day').format('ddd')
-      )
-      return data1
-    }
-    case 'Today': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('day').format('ddd')
-      )
-      return data1
-    }
-    case 'Yesterday': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('day').format('ddd')
-      )
       return data1
     }
   }
@@ -83,7 +53,6 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
               value: 0,
             })
           )
-
           if (record.status && record.dateRange) {
             Object.keys(record.dateRange).map((key) => {
               const index = result.findIndex((item) => item.label === key)
@@ -101,7 +70,6 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
         })
         return uniqBy(Final_data, 'status')
       }
-
       break
     case 'This Month':
       {

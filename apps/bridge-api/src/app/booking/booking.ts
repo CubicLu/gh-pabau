@@ -199,6 +199,8 @@ export const retrieveAllBookingChartData = async (
     },
   })
   const details = []
+  let final = []
+  const DataSet = []
 
   if (bookingStatusData) {
     bookingStatusCount.map((status) => {
@@ -226,8 +228,6 @@ export const retrieveAllBookingChartData = async (
       return status
     })
   }
-  let final = []
-  const DataSet = []
   if (details) {
     if (details.length > 0) {
       details.map((record) => {
@@ -242,64 +242,84 @@ export const retrieveAllBookingChartData = async (
         const year = dayjs(endDate).diff(startDate, 'year')
         const week = dayjs(endDate).diff(startDate, 'week')
         const day = dayjs(endDate).diff(startDate, 'day')
-        if (data.date_range === 'custom') {
-          if (year > 0) {
+        switch (true) {
+          case data.date_range === 'Last Month' ||
+            data.date_range === 'This Month':
+            dataGroupByDateRange = groupByDateRange(record.values, 'This Month')
+            break
+          case data.date_range === 'This Year' ||
+            data.date_range === 'Last Year':
+            dataGroupByDateRange = groupByDateRange(record.values, 'This Year')
+            break
+          case data.date_range === 'This Week' ||
+            data.date_range === 'Last Week' ||
+            data.date_range === 'Today' ||
+            data.date_range === 'Yesterday':
+            dataGroupByDateRange = groupByDateRange(record.values, 'This Week')
+            break
+          case data.date_range === 'All records':
             dataGroupByDateRange = groupByDateRange(
               record.values,
               'All records'
             )
-          } else if (month > 0) {
-            dataGroupByDateRange = groupByDateRange(record.values, 'This Year')
-          } else if (week > 0) {
-            dataGroupByDateRange = groupByDateRange(record.values, 'This Month')
-          } else if (day > 0) {
-            dataGroupByDateRange = groupByDateRange(record.values, 'This Week')
-          }
-        } else if (data.date_range === 'All records') {
-          dataGroupByDateRange = groupByDateRange(record.values, 'All records')
-        } else {
-          dataGroupByDateRange = groupByDateRange(
-            record.values,
-            data.date_range
-          )
+            break
+          case data.date_range === 'custom':
+            if (year > 0) {
+              dataGroupByDateRange = groupByDateRange(
+                record.values,
+                'All records'
+              )
+            } else if (month > 0) {
+              dataGroupByDateRange = groupByDateRange(
+                record.values,
+                'This Year'
+              )
+            } else if (week > 0) {
+              dataGroupByDateRange = groupByDateRange(
+                record.values,
+                'This Month'
+              )
+            } else if (day > 0) {
+              dataGroupByDateRange = groupByDateRange(
+                record.values,
+                'This Week'
+              )
+            }
+            break
         }
         DataSet.push({
           status: record?.key,
           dateRange: dataGroupByDateRange,
         })
-        if (
-          data.date_range === 'Last Month' ||
-          data.date_range === 'This Month'
-        ) {
-          final = statusDataByDayMonth('This Month', DataSet, startDate)
-        }
-        if (
-          data.date_range === 'This Year' ||
-          data.date_range === 'Last Year'
-        ) {
-          final = statusDataByDayMonth('This Year', DataSet, startDate)
-        }
-        if (
-          data.date_range === 'This Week' ||
-          data.date_range === 'Last Week' ||
-          data.date_range === 'Today' ||
-          data.date_range === 'Yesterday'
-        ) {
-          final = statusDataByDayMonth('This Week', DataSet, startDate)
-        }
-        if (data.date_range === 'All records') {
-          final = statusDataByDayMonth('All records', DataSet, startDate)
-        }
-        if (data.date_range === 'custom') {
-          if (year > 0) {
-            final = statusDataByDayMonth('All records', DataSet, startDate)
-          } else if (month > 0) {
-            final = statusDataByDayMonth('This Year', DataSet, startDate)
-          } else if (week > 0) {
+        switch (true) {
+          case data.date_range === 'Last Month' ||
+            data.date_range === 'This Month':
             final = statusDataByDayMonth('This Month', DataSet, startDate)
-          } else if (day > 0) {
+            break
+          case data.date_range === 'This Year' ||
+            data.date_range === 'Last Year':
+            final = statusDataByDayMonth('This Year', DataSet, startDate)
+            break
+          case data.date_range === 'This Week' ||
+            data.date_range === 'Last Week' ||
+            data.date_range === 'Today' ||
+            data.date_range === 'Yesterday':
             final = statusDataByDayMonth('This Week', DataSet, startDate)
-          }
+            break
+          case data.date_range === 'All records':
+            final = statusDataByDayMonth('All records', DataSet, startDate)
+            break
+          case data.date_range === 'custom':
+            if (year > 0) {
+              final = statusDataByDayMonth('All records', DataSet, startDate)
+            } else if (month > 0) {
+              final = statusDataByDayMonth('This Year', DataSet, startDate)
+            } else if (week > 0) {
+              final = statusDataByDayMonth('This Month', DataSet, startDate)
+            } else if (day > 0) {
+              final = statusDataByDayMonth('This Week', DataSet, startDate)
+            }
+            break
         }
         return record
       })
@@ -307,7 +327,6 @@ export const retrieveAllBookingChartData = async (
       final = [{ data: [] }]
     }
   }
-
   return {
     bookingsByStatus: final,
   }
