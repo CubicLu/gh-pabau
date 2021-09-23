@@ -147,8 +147,12 @@ const Layout: FC<LayoutProps> = ({
         onMessageIconClick={() => setShowChat((e) => !e)}
         legacyContent={!!legacyPage}
         taskManagerIFrameComponent={<TaskManagerIFrame />}
-        clientCreateRender={() => <ClientCreate />}
-        leadCreateRender={() => <LeadCreate />}
+        clientCreateRender={(handleClose) => (
+          <ClientCreate handleClose={handleClose} />
+        )}
+        leadCreateRender={(handleClose) => (
+          <LeadCreate handleClose={handleClose} />
+        )}
         {...props}
       >
         <CommonHeader
@@ -156,8 +160,12 @@ const Layout: FC<LayoutProps> = ({
           title="Pabau"
           isShowSearch={true}
           onChatClick={() => setShowChat((e) => !e)}
-          clientCreateRender={() => <ClientCreate />}
-          leadCreateRender={() => <LeadCreate />}
+          clientCreateRender={(handleClose) => (
+            <ClientCreate handleClose={handleClose} />
+          )}
+          leadCreateRender={(handleClose) => (
+            <LeadCreate handleClose={handleClose} />
+          )}
           handleSearch={handleSearch}
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />

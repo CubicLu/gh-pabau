@@ -123,7 +123,6 @@ export const Filter: FC<P> = ({ webinarList, onClear, handleShowResult }) => {
         setDifficulty(value !== 'Select' ? value : null)
         break
       case 'length':
-        console.log('value', value)
         setLength(value !== 'Select' ? checkWebinarLength(value) : null)
         break
     }
@@ -192,7 +191,7 @@ function checkWebinarLength(
       return { min: 20, max: 40 }
     case '40 to 60 minutes':
       return { min: 40, max: 60 }
-    case 'Bellow 20 minutes':
+    case 'Below 20 minutes':
       return { min: 0, max: 20 }
     case 'Above 60 minutes':
       return { min: 60, max: 200 }

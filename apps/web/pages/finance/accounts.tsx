@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   AvatarList,
   Button,
@@ -43,6 +43,7 @@ import {
   useIssuingCompaniesQuery,
   useCreditNoteTypesLazyQuery,
 } from '@pabau/graphql'
+import stringToCurrencySignConverter from '../../helper/stringToCurrencySignConverter'
 
 interface FilterList {
   id: number
@@ -54,6 +55,7 @@ const WAIT_INTERVAL = 400
 export function Account() {
   const [showModal, setShowModal] = useState(false)
   const user = useUser()
+  const accountRef = useRef(null)
 
   const { t } = useTranslationI18()
   const tabMenuItems = [
@@ -468,7 +470,7 @@ export function Account() {
   }
 
   return (
-    <React.Fragment>
+    <div ref={accountRef}>
       <CommonHeader />
       <Layout active={'account'} {...user}>
         <div
@@ -546,37 +548,47 @@ export function Account() {
           </div>
         </div>
         <Divider style={{ margin: 0 }} />
-        <TabMenu
-          tabPosition="top"
-          menuItems={tabMenuItems}
-          tabBarStyle={{ backgroundColor: '#FFF' }}
-          onTabClick={(activeKey) => setActiveTab(activeKey)}
-        >
-          <Invoice
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <Payments
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <Debt
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <CreditNote
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-        </TabMenu>
+        <div className={styles.tabWrapper}>
+          <TabMenu
+            tabPosition="top"
+            menuItems={tabMenuItems}
+            tabBarStyle={{ backgroundColor: '#FFF' }}
+            onTabClick={(activeKey) => setActiveTab(activeKey)}
+          >
+            <Invoice
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+            <Payments
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+            <Debt
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+            <CreditNote
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+          </TabMenu>
+        </div>
         <Modal
           title={t('account.finance.send.reminder.modal.title')}
           visible={showModal}
@@ -595,7 +607,7 @@ export function Account() {
           />
         </Modal>
       </Layout>
-    </React.Fragment>
+    </div>
   )
 }
 

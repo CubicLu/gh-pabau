@@ -43,8 +43,8 @@ interface P {
   // ) => void
   // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   taskManagerIFrameComponent?: JSX.Element
-  clientCreateRender?: () => JSX.Element
-  leadCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
 }
 
 export const Header = ({
