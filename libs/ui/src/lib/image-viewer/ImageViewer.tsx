@@ -46,16 +46,19 @@ import sixSideMode from '../../assets//images/image-viewer/comparing/six-side.sv
 import sixSideActiveMode from '../../assets//images/image-viewer/comparing/six-side-active.svg'
 import photoGalleryMode from '../../assets//images/image-viewer/comparing/photo-gallery.svg'
 import photoGalleryActiveMode from '../../assets//images/image-viewer/comparing/photo-gallery-active.svg'
+
 import styles from './ImageViewer.module.less'
+
 export interface AlbumImageTag {
   label?: string
   color?: string
   count?: number
 }
 export interface AlbumImageItem {
+  id: number
   origin: string
   date: string
-  tags?: AlbumImageTag[]
+  tags?: AlbumImageTag[] | string
 }
 
 export enum ComparingMode {
@@ -165,14 +168,19 @@ const defaultProgressGalleryIndex: SelectIndexProps[] = [
 ]
 
 export interface ImageViewerAlbum {
+  id?: number
   name: string
-  imageList: AlbumImageItem[]
+  imageList?: AlbumImageItem[]
+  imageCount?: number
 }
 
 export interface ImageViewerProps {
   visible: boolean
   title: string
   albums: ImageViewerAlbum[]
+  currentAlbum?: ImageViewerAlbum
+  selectedPhotoId?: number
+  onAlbumSelect?: (album) => void
   onClose: () => void
 }
 
@@ -180,18 +188,22 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   visible,
   title,
   albums,
+  currentAlbum,
+  selectedPhotoId,
+  onAlbumSelect,
   onClose,
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
   const [editTitle, setEditTitle] = useState(false)
+  const [isDefaultPhoto, setIsDefaultPhoto] = useState(false)
   const [comparingMode, setComparingMode] = useState<ComparingMode>(
     ComparingMode['single-photo']
   )
   const [showComparingMode, setShowComparingMode] = useState(false)
   const [showZoomInMode, setShowZoomInMode] = useState(false)
   const [showOperations, setShowOperations] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(selectedPhotoId ? false : true)
   const [openPresent, setOpenPresent] = useState(false)
   const comparingModes = [
     {
@@ -276,7 +288,9 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   const isMobile = useMedia('(max-width: 767px)', false)
   const [hoverModeIndex, setHoverModeIndex] = useState(0)
   const [albumList, setAlbumList] = useState<ImageViewerAlbum[]>([])
-  const [currentLabels, setCurrentLabels] = useState<AlbumImageTag[]>([])
+  const [currentLabels, setCurrentLabels] = useState<AlbumImageTag[] | string>(
+    []
+  )
 
   const handleClickPresent = () => {
     if (comparingMode === ComparingMode['progress-gallery']) {
@@ -305,7 +319,9 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
       const albumIndex = albumList.findIndex((el) => el.name === selectedAlbum)
       if (albumIndex >= 0) {
         const album = { ...albumList[albumIndex] }
-        album.imageList[imageIndex].tags = [...val]
+        if (album?.imageList) {
+          album.imageList[imageIndex].tags = [...val]
+        }
         albumItems.splice(albumIndex, 1, album)
       }
       setAlbumList(albumItems)
@@ -313,7 +329,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   }
 
   useEffect(() => {
-    setViewerTitle(title || 'Untitled Single photo')
+    setViewerTitle(`${title || 'Untitled'} Single photo`)
   }, [title, t])
 
   useEffect(() => {
@@ -322,9 +338,9 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
       selectedIndex[0].imageIndex >= 0
     ) {
       const { imageIndex, album: selectedAlbum } = selectedIndex[0]
-      const album = albums.find((el) => el.name === selectedAlbum)
+      const album = albums?.find((el) => el.name === selectedAlbum)
       if (album) {
-        setCurrentLabels(album.imageList[imageIndex].tags || [])
+        setCurrentLabels(album?.imageList?.[imageIndex]?.tags || [])
       } else {
         setCurrentLabels([])
       }
@@ -332,10 +348,33 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   }, [albums, comparingMode, selectedIndex])
 
   useEffect(() => {
-    if (albums.length > 0) {
+    if (albums?.length > 0) {
       setAlbumList(albums)
     }
   }, [albums])
+
+  useEffect(() => {
+    if (currentAlbum?.imageList?.length && !isDefaultPhoto) {
+      const imgIndex = currentAlbum?.imageList?.findIndex(
+        (el) => el?.id === selectedPhotoId
+      )
+      if (imgIndex !== -1) {
+        const selected = [
+          {
+            album: currentAlbum?.name as string,
+            imageIndex: imgIndex as number,
+            option: {
+              scale: 1,
+              positionX: 0,
+              positionY: 0,
+            },
+          },
+        ]
+        setSelectedIndex(selected)
+        setIsDefaultPhoto(() => true)
+      }
+    }
+  }, [currentAlbum, isDefaultPhoto, selectedPhotoId])
 
   const comparingModeList = (
     <div className={styles.comparingModeList}>
@@ -349,7 +388,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             setSelectedIndex(defaultIndex)
             setProgressGalleryIndex(defaultProgressGalleryIndex)
             setSidebarOpen(true)
-            setViewerTitle(`Untitled ${item.title}`)
+            setViewerTitle(`${title || 'Untitled'} ${item.title}`)
           }}
           onMouseOver={() => setHoverModeIndex(index)}
         >
@@ -500,24 +539,34 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                 )}
                 {!editTitle && comparingMode === ComparingMode['single-photo'] && (
                   <div className={styles.tags}>
-                    {currentLabels.map((tag, index) => (
-                      <div
-                        className={styles.imageTagItem}
-                        key={`tag-item-${index}`}
-                        style={{
-                          color: tag.color,
-                          border: `1px solid ${tag.color}`,
-                        }}
-                      >
-                        {`#${tag.label}`}
+                    {typeof currentLabels === 'string' ? (
+                      <div className={styles.imageTagItem}>
+                        {`#${currentLabels}`}
                       </div>
-                    ))}
+                    ) : (
+                      (currentLabels as AlbumImageTag[])?.map((tag, index) => (
+                        <div
+                          className={styles.imageTagItem}
+                          key={`tag-item-${index}`}
+                          style={{
+                            color: tag.color,
+                            border: `1px solid ${tag.color}`,
+                          }}
+                        >
+                          {`#${tag.label}`}
+                        </div>
+                      ))
+                    )}
                   </div>
                 )}
               </div>
               {!isMobile && (
                 <CreateLabels
-                  labels={currentLabels}
+                  labels={
+                    typeof currentLabels === 'string'
+                      ? []
+                      : (currentLabels as AlbumImageTag[])
+                  }
                   setLabels={(val) => setLabels(val)}
                 >
                   {createLabelsChild}
@@ -609,6 +658,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   zoomInMode={zoomInMode}
                   selectedIndex={selectedIndex}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                 />
               )}
               {comparingMode === ComparingMode['comparing-slider'] && (
@@ -620,6 +670,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   zoomInMode={zoomInMode}
                   selectedIndex={selectedIndex}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                 />
               )}
               {comparingMode === ComparingMode['two-vertical-side-by-side'] && (
@@ -631,6 +682,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   zoomInMode={zoomInMode}
                   selectedIndex={selectedIndex}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                 />
               )}
               {comparingMode ===
@@ -643,6 +695,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   zoomInMode={zoomInMode}
                   selectedIndex={selectedIndex}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                 />
               )}
               {comparingMode === ComparingMode['three-side-by-side'] && (
@@ -654,6 +707,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   zoomInMode={zoomInMode}
                   selectedIndex={selectedIndex}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                 />
               )}
               {comparingMode === ComparingMode['four-side-by-side'] && (
@@ -665,6 +719,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   zoomInMode={zoomInMode}
                   selectedIndex={selectedIndex}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                 />
               )}
               {comparingMode === ComparingMode['six-side-by-side'] && (
@@ -676,6 +731,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   zoomInMode={zoomInMode}
                   selectedIndex={selectedIndex}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                 />
               )}
               {comparingMode === ComparingMode['progress-gallery'] && (
@@ -685,6 +741,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   setZoomInMode={setZoomInMode}
                   zoomInMode={zoomInMode}
                   albums={albums}
+                  selectedAlbum={currentAlbum}
                   onChangeIndex={(selected) =>
                     setProgressGalleryIndex(selected)
                   }
@@ -742,7 +799,10 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                 ? progressGalleryIndex
                 : selectedIndex
             }
+            setSelectedIndex={() => setSelectedIndex(defaultIndex)}
             albums={albums}
+            selectedAlbum={currentAlbum}
+            onAlbumSelect={(album) => onAlbumSelect?.(album)}
             sidebarOpen={sidebarOpen}
             setIsDragging={setIsDragging}
             setSidebarOpen={setSidebarOpen}
@@ -751,7 +811,11 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             <div className={styles.imageViewerModalFooter}>
               <div>
                 <CreateLabels
-                  labels={currentLabels}
+                  labels={
+                    typeof currentLabels === 'string'
+                      ? []
+                      : (currentLabels as AlbumImageTag[])
+                  }
                   setLabels={(val) => setLabels(val)}
                 >
                   {createLabelsChild}
