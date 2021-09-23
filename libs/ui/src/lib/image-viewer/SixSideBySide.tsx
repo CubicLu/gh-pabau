@@ -14,6 +14,7 @@ export interface SixSideBySideProps {
   isDragging: boolean
   selectedIndex: SelectIndexProps[]
   albums: ImageViewerAlbum[]
+  selectedAlbum?: ImageViewerAlbum
   zoomInMode: ZoomInMode
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedIndex: React.Dispatch<React.SetStateAction<SelectIndexProps[]>>
@@ -24,6 +25,7 @@ export const SixSideBySide: FC<SixSideBySideProps> = ({
   isDragging,
   selectedIndex,
   albums,
+  selectedAlbum,
   zoomInMode,
   setIsDragging,
   setSelectedIndex,
@@ -74,14 +76,16 @@ export const SixSideBySide: FC<SixSideBySideProps> = ({
 
   const getImageUrl = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].origin : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum ? currentAlbum?.imageList?.[imageIndex]?.origin : ''
   }
 
   const getImageDate = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].date : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum
+      ? (currentAlbum?.imageList?.[imageIndex]?.date as string)
+      : ''
   }
 
   const setDragging = (viewerIndex) => {
@@ -154,7 +158,7 @@ export const SixSideBySide: FC<SixSideBySideProps> = ({
               height={isMobile ? height / 3 : height / 2}
               src={
                 selectedIndex[index].imageIndex >= 0
-                  ? getImageUrl(selectedIndex[index])
+                  ? getImageUrl(selectedIndex[index]) || ''
                   : ''
               }
               viewMagnifier={zoomInMode !== ZoomInMode.zoomInNone}
