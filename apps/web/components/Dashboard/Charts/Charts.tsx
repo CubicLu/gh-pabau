@@ -27,17 +27,57 @@ interface ICharts {
   location: ILocation
   dashboardMode: number
   Data: IBookingDetails[]
+  salesData: IBookingDetails[]
   totalBooking: ICount
   totalOnlineBooking: ICount
+  totalSalesCount: ICount
 }
 
 export const Charts: FC<ICharts> = ({
   location,
   dashboardMode,
   Data,
+  salesData,
   totalBooking,
   totalOnlineBooking,
+  totalSalesCount,
 }) => {
+  const List = []
+  if (salesData) {
+    salesData.map((item) => {
+      const data = salesData[0].status
+      if (data) {
+        List.push({
+          type: 'line',
+          name: item.status,
+          allowPointSelect: true,
+          data: item.data?.map((item) => item.value),
+          marker: {
+            lineWidth: 2,
+            fillColor: 'white',
+            lineColor: '#54B2D3',
+            symbol: 'circle',
+          },
+        })
+      } else {
+        const details = ['Services', 'Products', 'Packages', 'Gift Vouchers']
+        details.map((item) => {
+          List.push({
+            name: item,
+            allowPointSelect: true,
+            data: [0, 0, 0, 0],
+            type: 'line',
+            marker: {
+              lineColor: '#54B2D3',
+              color: '#54B2D3',
+            },
+          })
+          return item
+        })
+      }
+      return List
+    })
+  }
   const optionLine: Highcharts.Options = {
     chart: {
       type: 'line',
@@ -46,52 +86,7 @@ export const Charts: FC<ICharts> = ({
       text: '',
       align: 'left',
     },
-    series: [
-      {
-        type: 'line',
-        name: 'Pencilled-in',
-        data: [380, 0, 0, 0, 45, 0, 0, 0],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: '#54B2D3',
-          symbol: 'circle',
-        },
-      },
-      {
-        type: 'line',
-        name: 'Packages',
-        data: [0, 0, 0, 0, 0, 0, 0, 0],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: 'green',
-          symbol: 'circle',
-        },
-      },
-      {
-        type: 'line',
-        name: 'Services',
-        data: [],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: '#FAAD14',
-          symbol: 'circle',
-        },
-      },
-      {
-        type: 'line',
-        name: 'Products',
-        data: [],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: '#6383F1',
-          symbol: 'circle',
-        },
-      },
-    ],
+    series: List,
     legend: {
       itemMarginTop: 15,
       itemStyle: {
@@ -129,16 +124,10 @@ export const Charts: FC<ICharts> = ({
           color: '#9292A3',
         },
       },
-      categories: [
-        'Sat 16',
-        'Sun 17',
-        'Mon 18',
-        'Tue 19',
-        'Wed 20',
-        'Thu 21',
-        'Fri 22',
-        'Sat 23',
-      ],
+      categories:
+        salesData?.length > 0
+          ? [...new Set(salesData[0].data?.map((item) => item.label))]
+          : [],
     },
   }
   const dataList = []
@@ -243,7 +232,7 @@ export const Charts: FC<ICharts> = ({
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.charts}>
             <div className={styles.chartsWrap}>
-              <div className={styles.chartsHeader}>£0</div>
+              <div className={styles.chartsHeader}>{totalSalesCount.count}</div>
               <div className={styles.chartsSubHeader}>Recent sales</div>
               <div className={styles.chartsExtraHeader}>
                 {dashboardMode === 1

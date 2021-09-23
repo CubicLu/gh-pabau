@@ -2,9 +2,12 @@ import { extendType, inputObjectType, arg } from 'nexus'
 import { Context } from '../../context'
 import {
   retrieveBookingStatuses,
-  retrieveAllBookingData,
+  retrieveAllBookingChartData,
 } from '../../app/booking/booking'
-import { retrieveSalesCount } from '../../app/finance/finance'
+import {
+  retrieveSalesCount,
+  retrieveSalesChartData,
+} from '../../app/finance/finance'
 
 export interface DateRangeInput {
   start_date: number
@@ -35,11 +38,13 @@ export const getDashboardData = extendType({
       async resolve(_root, { data }, ctx: Context) {
         const bookingStatus = await retrieveBookingStatuses(ctx, data)
         const salesStatus = await retrieveSalesCount(ctx, data)
-        const allbooking = await retrieveAllBookingData(ctx, data)
+        const allbooking = await retrieveAllBookingChartData(ctx, data)
+        const allSales = await retrieveSalesChartData(ctx, data)
         return {
           bookingStatus: bookingStatus,
           salesStatus: salesStatus,
           allbooking: allbooking,
+          allSales: allSales,
         }
       },
     })
