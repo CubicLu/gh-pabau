@@ -147,7 +147,6 @@ export const FormDrugs: FC<P> = ({
 
   const onDrugsBlur = () => {
     setEditStatusDosage(false)
-    console.log('StatusQuantity2=false')
     setEditStatusQuantity(false)
   }
 
@@ -319,7 +318,7 @@ export const FormDrugs: FC<P> = ({
                 <div className={styles.formDrugsOptionsItem}>
                   <div
                     className={styles.formDrugsOptionsItemArea}
-                    onClick={() => onSelectDosageItem(item.id)}
+                    // onClick={() => onSelectDosageItem(item.id)}
                   >
                     <div className={styles.formDrugsOptionsName}>
                       {item.name}
