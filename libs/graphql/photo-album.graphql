@@ -1,0 +1,44 @@
+query getUncatPhotos($contactId: Int!) {
+  findManyContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "contact" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: 0 }
+    }
+  ) {
+    id
+    origin: linkref
+    date
+    tags
+  }
+}
+
+query getPhotoAlbum($albumId: Int!, $contactId: Int!) {
+  findFirstPhotoAlbum(
+    where: { id: { equals: $albumId }, contact_id: { equals: $contactId } }
+  ) {
+    id
+    name: album_name
+    contact_id
+    imageList: Photos {
+      id
+      origin: linkref
+      date
+      tags
+    }
+    imageCount: _count {
+      imageList: Photos
+    }
+  }
+}
+
+query getPhotoAlbums($contactId: Int!) {
+  findManyPhotoAlbum(where: { contact_id: { equals: $contactId } }) {
+    id
+    name: album_name
+    imageCount: _count {
+      imageList: Photos
+    }
+  }
+}
