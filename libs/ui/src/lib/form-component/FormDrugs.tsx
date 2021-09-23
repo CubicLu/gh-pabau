@@ -138,14 +138,16 @@ export const FormDrugs: FC<P> = ({
 
   function refreshDrugs() {
     setEditStatusDosage(false)
-    console.log('StatusQuantity1=false')
     setEditStatusQuantity(false)
     setShowDosageTooltip(false)
     setShowQuantityTooltip(false)
     setSelItemId('')
   }
 
-  const onDrugsBlur = () => {
+  const onDrugsBlur = (e) => {
+    if (e) e.stopPropagation()
+    setShowDosageTooltip(false)
+    setShowQuantityTooltip(false)
     setEditStatusDosage(false)
     setEditStatusQuantity(false)
   }
@@ -163,7 +165,6 @@ export const FormDrugs: FC<P> = ({
 
   const onSelectDosageItem = (id) => {
     setSelItemId(id)
-    console.log('StatusQuantity3=false')
     setEditStatusQuantity(false)
     setShowQuantityTooltip(false)
     setEditStatusDosage(true)
@@ -172,11 +173,9 @@ export const FormDrugs: FC<P> = ({
 
   const onSelectQuantityItem = (e, id) => {
     if (e) e.stopPropagation()
-    console.log('id =', id)
     setSelItemId(id)
     setEditStatusDosage(false)
     setShowDosageTooltip(false)
-    console.log('StatusQuantity4=true')
     setEditStatusQuantity(true)
     setShowQuantityTooltip(true)
   }
@@ -192,43 +191,23 @@ export const FormDrugs: FC<P> = ({
 
   const onKeyUp = (event) => {
     if (event.charCode === 13) {
-      console.log('refreshDrugs1')
       refreshDrugs()
     }
   }
 
-  function onBlur() {
-    console.log('blur')
-  }
-
-  function onFocus() {
-    console.log('focus')
-  }
-
-  function onSearch(val) {
-    console.log('search:', val)
-  }
-
-  const onAddDosage = (id, value) => {
+  const onAddDosage = (e, id, value) => {
+    if (e) e.stopPropagation()
     onDrugsChange(id, { dosage: value })
-    console.log('refreshDrugs2')
     refreshDrugs()
     onSelectQuantityItem(null, id)
   }
 
   const onAddQuantity = (id, value) => {
     onDrugsChange(id, { quantity: value })
-    console.log('refreshDrugs3')
     refreshDrugs()
   }
 
-  // const onRefreshDrugs = () => {
-  //   console.log('refreshDrugs4')
-  //   refreshDrugs()
-  // }
-
   const onHandleSearch = (value) => {
-    console.log('onHandleSearch', value)
     setDrugsSearchTerms(value)
   }
 
@@ -277,14 +256,8 @@ export const FormDrugs: FC<P> = ({
           style={{ width: '100%', marginTop: '10px' }}
           defaultActiveFirstOption={false}
           showArrow={true}
-          // filterOption={false}
           onSearch={onHandleSearch}
           onChange={onHandleChange}
-          notFoundContent={null}
-          // onChange={onChange}
-          // onFocus={onFocus}
-          // onBlur={onBlur}
-          // onSearch={onSearch}
           filterOption={(input, option) =>
             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
@@ -339,7 +312,7 @@ export const FormDrugs: FC<P> = ({
                           onChange={(e) =>
                             onDrugsChange(item.id, { dosage: e.target.value })
                           }
-                          onBlur={onDrugsBlur}
+                          onBlur={(e) => onDrugsBlur(e)}
                           onKeyPress={(e) => onKeyUp(e)}
                         />
                       ) : (
@@ -367,7 +340,7 @@ export const FormDrugs: FC<P> = ({
                           onChange={(e) =>
                             onDrugsChange(item.id, { quantity: e.target.value })
                           }
-                          onBlur={onDrugsBlur}
+                          onBlur={(e) => onDrugsBlur(e)}
                           onKeyPress={(e) => onKeyUp(e)}
                         />
                       ) : (
@@ -408,7 +381,9 @@ export const FormDrugs: FC<P> = ({
                           <div
                             key={item.id + '-adults-' + index}
                             className={styles.formDrugsOptionsItemTooltipItem}
-                            onClick={() => onAddDosage(item.id, dosage.text)}
+                            onMouseDown={(e) =>
+                              onAddDosage(e, item.id, dosage.text)
+                            }
                           >
                             {dosage.text}
                           </div>
@@ -422,7 +397,9 @@ export const FormDrugs: FC<P> = ({
                           <div
                             key={item.id + '-children-' + index}
                             className={styles.formDrugsOptionsItemTooltipItem}
-                            onClick={() => onAddDosage(item.id, dosage.text)}
+                            onMouseDown={(e) =>
+                              onAddDosage(e, item.id, dosage.text)
+                            }
                           >
                             {dosage.text}
                           </div>
