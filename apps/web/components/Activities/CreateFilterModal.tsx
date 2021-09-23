@@ -2,13 +2,8 @@ import React, { useState, FC } from 'react'
 import { Formik } from 'formik'
 import { Dropdown, Menu, Radio, Space } from 'antd'
 import { BasicModal, Button, DropdownWithCheck } from '@pabau/ui'
-import { Checkbox, Form, Input as FormikInput } from 'formik-antd'
-import {
-  activityItemNames,
-  manageOperandBasedOnColumn,
-  visibilityMenuOption,
-  activity,
-} from './FilterOptionData'
+import { Checkbox, Form, Input as FormikInput, SubmitButton } from 'formik-antd'
+import { getData } from './FilterOptionData'
 import { FilterMenu, PersonList, OptionList } from './FilterMenu'
 import {
   PlusOutlined,
@@ -21,6 +16,9 @@ import {
 import styles from './CreateFilterModal.module.less'
 import { LabeledValue } from 'antd/lib/tree-select'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { TFunction } from 'react-i18next'
+import * as Yup from 'yup'
 
 interface FilterOptionType {
   type: string
@@ -46,6 +44,7 @@ interface FilterMenuProps {
   userList: PersonList[]
   activityTypeOption: OptionList[]
   loggedUser: Partial<AuthenticatedUser> & JwtUser
+  t: TFunction<'common'>
 }
 
 interface CreateFilterModalProps {
@@ -70,7 +69,9 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
   userList,
   activityTypeOption = [],
   loggedUser,
+  t,
 }) => {
+  const { activityItemNames, manageOperandBasedOnColumn, activity } = getData(t)
   const activityItemChange = (
     value: string | number | LabeledValue,
     index: number,
@@ -89,6 +90,9 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
       }
       if (value === 'Free/busy') {
         data[index].menuOption = 'Free'
+      }
+      if (value === 'Status') {
+        data[index].menuOption = 'Pending'
       }
       if (value === 'Type') {
         data[index].menuOption = 1
@@ -167,6 +171,8 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   // const [initialValue, setInitialValue] = useState<InitialValueTypes>(
   //   defaultValue
   // )
+  const { t } = useTranslationI18()
+  const { visibilityMenuOption } = getData(t)
 
   const visibilityMenu = (
     setFieldValue: (field: string, value: string | boolean) => void,
@@ -235,6 +241,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
     <Formik
       initialValues={defaultValue}
       enableReinitialize={true}
+      validationSchema={Yup.object().shape({
+        name: Yup.string()
+          .required(t('create.filter.modal.filter.name.required'))
+          .max(50, t('create.filter.modal.filter.name.max.validation.message')),
+      })}
       onSubmit={onSubmit}
     >
       {({ setFieldValue, values, resetForm }) => (
@@ -242,7 +253,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
           className={styles.filterModalWrapper}
           visible={showModal}
           centered
-          title={'Create Filter'}
+          title={t('create.filter.modal.title')}
           onCancel={() => {
             setShowModal(false)
             resetForm()
@@ -253,7 +264,8 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         >
           <Form layout="vertical">
             <div className={styles.filterContentWrap}>
-              <h5>Show activities that match ALL of these conditions:</h5>
+              <h5>{t('create.filter.modal.all.condition.title')}</h5>
+              {console.log('values-----------', values)}
               <RenderFilterMenu
                 items={values.andFilterOption}
                 setFieldValue={setFieldValue}
@@ -261,6 +273,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 userList={userList}
                 activityTypeOption={activityTypeOption}
                 loggedUser={loggedUser}
+                t={t}
               />
               <Button
                 className={styles.btnAdd}
@@ -270,11 +283,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                   AddConditionClick(values, setFieldValue, 'andFilterOption')
                 }
               >
-                Add Condition
+                {t('create.filer.modal.add.condition.btn')}
               </Button>
             </div>
             <div className={styles.filterContentWrap}>
-              <h5>And match ANY of these conditions:</h5>
+              <h5>{t('create.filter.modal.any.condition.title')}</h5>
               <RenderFilterMenu
                 items={values.orFilterOption}
                 setFieldValue={setFieldValue}
@@ -282,6 +295,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 userList={userList}
                 activityTypeOption={activityTypeOption}
                 loggedUser={loggedUser}
+                t={t}
               />
               <Button
                 className={styles.btnAdd}
@@ -291,14 +305,23 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                   AddConditionClick(values, setFieldValue, 'orFilterOption')
                 }
               >
-                Add Condition
+                {t('create.filer.modal.add.condition.btn')}
               </Button>
             </div>
             <div className={styles.filterField}>
-              <Form.Item label={'Filter Name'} name={'name'}>
-                <FormikInput name={'name'} placeholder="Enter Filter Name" />
+              <Form.Item
+                label={t('create.filter.modal.filter.name.label')}
+                name={'name'}
+              >
+                <FormikInput
+                  name={'name'}
+                  placeholder={t('create.filter.modal.filter.name.placeholder')}
+                />
               </Form.Item>
-              <Form.Item label={'Visibility'} name={'visibility'}>
+              <Form.Item
+                label={t('create.filter.modal.visibility.label')}
+                name={'visibility'}
+              >
                 <Dropdown
                   trigger={['click']}
                   overlay={visibilityMenu(setFieldValue, values)}
@@ -312,12 +335,16 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                       {values.visibility === 'private' ? (
                         <div className={styles.iconText}>
                           <LockOutlined />
-                          <span>Private</span>
+                          <span>
+                            {t('create.filter.modal.visibility.private')}
+                          </span>
                         </div>
                       ) : (
                         <div className={styles.iconText}>
                           <UnlockOutlined />
-                          <span>Shared</span>
+                          <span>
+                            {t('create.filter.modal.visibility.shared')}
+                          </span>
                         </div>
                       )}
                       {visibilityVisible ? <UpOutlined /> : <DownOutlined />}
@@ -327,17 +354,21 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               </Form.Item>
             </div>
             <Checkbox name="saveFilter">
-              Save selected columns with the filter
+              {t('create.filter.modal.save.filter.checkbox.label')}
             </Checkbox>
             <div className={styles.btnWrapper}>
               {false && (
                 <Button className={styles.btnDanger} type="primary" danger>
-                  Delete
+                  {t('create.filter.modal.delete.button.label')}
                 </Button>
               )}
-              <span>
-                <Button type="default">Preview</Button>
-                <Button type="primary">Save</Button>
+              <span className={styles.previewWrapper}>
+                <Button type="default">
+                  {t('create.filter.modal.preview.button.label')}
+                </Button>
+                <SubmitButton type="primary" className={styles.submitBtn}>
+                  {t('create.filter.modal.save.button.label')}
+                </SubmitButton>
               </span>
             </div>
           </Form>

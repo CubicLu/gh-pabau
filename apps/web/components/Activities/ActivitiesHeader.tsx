@@ -44,6 +44,7 @@ const UserWithIcon = ({
   filterValue,
   setFilterValue,
   isLoggedInUser = false,
+  t,
 }) => {
   return (
     <div
@@ -56,7 +57,11 @@ const UserWithIcon = ({
       <div className={styles.userTab}>
         <Avatar src={image} name={name} size={28} />
         <h4>{name}</h4>
-        {isLoggedInUser && <span className={styles.youText}>(You)</span>}
+        {isLoggedInUser && (
+          <span className={styles.youText}>
+            {t('activity.filter.popover.user.you.label')}
+          </span>
+        )}
       </div>
       <span className={styles.checkIcon}>
         {filterValue === id && <CheckOutlined />}
@@ -222,7 +227,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                 )}
                 onClick={() => setFilterValue(0)}
               >
-                <h4>Everyone</h4>
+                <h4>{t('activity.filter.popover.owner.everyone.label')}</h4>
                 {filterValue === 0 && <CheckOutlined />}
               </div>
               <UserWithIcon
@@ -232,6 +237,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                 filterValue={filterValue}
                 setFilterValue={setFilterValue}
                 isLoggedInUser={true}
+                t={t}
               />
               <Divider />
               {userGroup.map((item) => (
@@ -252,6 +258,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                     image={data?.avatarURL && getImage(data?.avatarURL)}
                     filterValue={filterValue}
                     setFilterValue={setFilterValue}
+                    t={t}
                   />
                 </div>
               ))}
@@ -263,7 +270,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               icon={<PlusOutlined />}
               onClick={() => setShowModal(true)}
             >
-              Add new filter
+              {t('activity.filter.popover.add.new.filter.label')}
             </Button>
           </div>
         </>
@@ -303,7 +310,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               icon={<PlusOutlined />}
               onClick={() => setShowModal(true)}
             >
-              Add new filter
+              {t('activity.filter.popover.add.new.filter.label')}
             </Button>
           </div>
         </>
@@ -311,19 +318,21 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
 
       return (
         <div className={styles.filterBody}>
-          <h5>Filter</h5>
+          <h5>{t('activity.filter.popover.title')}</h5>
           <Input
             allowClear
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             addonAfter={<SearchOutlined />}
-            placeholder="Search owner or filter"
+            placeholder={t('activity.filter.popover.search.input.placeholder')}
           />
           <TabMenu
-            menuItems={['Owners', 'Filters']}
+            menuItems={[
+              t('activity.filter.popover.owner.tab.label'),
+              t('activity.filter.popover.filter.tab.label'),
+            ]}
             tabPosition="top"
             minHeight="1px"
-            // onChange={(activeTab) => handleChangeTab(activeTab)}
           >
             {ownerTabContent}
             {filterTabContent}
@@ -369,7 +378,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                     icon={<FilterOutlined />}
                     className={styles.filterBtn}
                   >
-                    Select a person
+                    {t('activity.filter.popover.label')}
                     <span className={styles.upArrow}>
                       {visible ? <UpOutlined /> : <DownOutlined />}
                     </span>
@@ -405,23 +414,6 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             />
             <div className={styles.dropdownCustom}>
               <FilterOutlined />
-              {/* <Select
-                showSearch
-                allowClear
-                onChange={onChange}
-                value={selectFilterUser || null}
-                placeholder={t('activityList.selectPerson.placeholder')}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-              >
-                {personsList.map((data) => (
-                  <Option key={data.id} value={data.id}>
-                    {data.name}
-                  </Option>
-                ))}
-              </Select> */}
               <Popover
                 content={filterContent}
                 trigger="click"
@@ -430,7 +422,12 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                 visible={visible}
                 onVisibleChange={() => setVisible(false)}
               >
-                <Button type="primary">Click me</Button>
+                <Button icon={<FilterOutlined />} className={styles.filterBtn}>
+                  {t('activity.filter.popover.label')}
+                  <span className={styles.upArrow}>
+                    {visible ? <UpOutlined /> : <DownOutlined />}
+                  </span>
+                </Button>
               </Popover>
             </div>
           </>

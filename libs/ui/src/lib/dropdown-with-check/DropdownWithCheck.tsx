@@ -13,7 +13,6 @@ export interface DropdownWithCheckProps extends SelectProps<SelectValue> {
   dropdownItems?: DropdownItemType[]
   placeHolderText?: string
   onSelected?: (value: string | number | LabeledValue) => void
-  optionLabelProp?: string
   menuItemSelectedIcon?: ReactNode
 }
 
@@ -23,7 +22,6 @@ export const DropdownWithCheck: FC<DropdownWithCheckProps> = ({
   placeHolderText = '',
   size = 'middle',
   onSelected,
-  optionLabelProp = 'value',
   menuItemSelectedIcon = <CheckOutlined />,
   ...props
 }) => {
@@ -34,7 +32,6 @@ export const DropdownWithCheck: FC<DropdownWithCheckProps> = ({
       size={size}
       defaultValue={value === '' ? undefined : value}
       placeholder={placeHolderText}
-      optionLabelProp={optionLabelProp}
       menuItemSelectedIcon={menuItemSelectedIcon}
       {...props}
       dropdownClassName={styles.dropdownWithCheck}

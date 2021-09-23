@@ -1,9 +1,11 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Select, Radio } from 'antd'
-import { dateMenu, statusMenu } from './FilterOptionData'
+import { getData } from './FilterOptionData'
 import { UserOutlined, CheckOutlined, AimOutlined } from '@ant-design/icons'
 import { FormikInput } from '@pabau/ui'
 import styles from './CreateFilterModal.module.less'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { TFunction } from 'react-i18next'
 
 export interface PersonList {
   id: number
@@ -22,7 +24,7 @@ export interface OptionList {
 }
 
 export interface ToggleMenuProps {
-  options: string[]
+  options: OptionList[]
   value: string | number
   onChange: (item: string | number) => void
 }
@@ -37,11 +39,13 @@ export interface SelectMenuProps {
 export interface DateMenuProps {
   value: string | number
   onChange: (item: string | number) => void
+  t: TFunction<'common'>
 }
 
 const { Option, OptGroup } = Select
 
-const DateMenu: FC<DateMenuProps> = ({ value, onChange }) => {
+const DateMenu: FC<DateMenuProps> = ({ value, onChange, t }) => {
+  const { dateMenu } = getData(t)
   return (
     <Select
       showSearch
@@ -131,8 +135,8 @@ const ToggleMenu: FC<ToggleMenuProps> = ({ options, value, onChange }) => {
       onChange={(item) => onChange(item.target.value)}
     >
       {options.map((item) => (
-        <Radio.Button value={item} key={item}>
-          {item}
+        <Radio.Button value={item.id} key={item.id}>
+          {item.name}
         </Radio.Button>
       ))}
     </Radio.Group>
@@ -156,7 +160,9 @@ export const FilterMenu: FC<FilterMenuProps> = ({
   activityTypeOption,
   userId,
 }) => {
+  const { t } = useTranslationI18()
   const [userList, setUserList] = useState<PersonList[]>([])
+  const { statusMenu, freeBusyOption, doneOption } = getData(t)
   useEffect(() => {
     if (personsList.length > 0) {
       setUserList([
@@ -172,7 +178,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
   const renderMenu = () => {
     switch (columnName) {
       case 'Add time': {
-        return <DateMenu value={value} onChange={onChange} />
+        return <DateMenu value={value} onChange={onChange} t={t} />
         break
       }
       case 'Assigned to user': {
@@ -197,11 +203,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       }
       case 'Done': {
         return (
-          <ToggleMenu
-            options={['To do', 'Done']}
-            value={value}
-            onChange={onChange}
-          />
+          <ToggleMenu options={doneOption} value={value} onChange={onChange} />
         )
         break
       }
@@ -220,13 +222,13 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         break
       }
       case 'Due date': {
-        return <DateMenu value={value} onChange={onChange} />
+        return <DateMenu value={value} onChange={onChange} t={t} />
         break
       }
       case 'Free/busy': {
         return (
           <ToggleMenu
-            options={['Free', 'Busy']}
+            options={freeBusyOption}
             value={value}
             onChange={onChange}
           />
