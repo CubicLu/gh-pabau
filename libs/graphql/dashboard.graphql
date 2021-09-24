@@ -1,7 +1,6 @@
-query getCompanyLocationList($company_id: Int!, $is_active: Int!) {
+query getCompanyLocationList($is_active: Int = 1) {
     findManyCompanyBranch(
       where: {
-        company_id: { equals: $company_id }
         is_active: { equals: $is_active }
       }
     ) {
@@ -10,17 +9,53 @@ query getCompanyLocationList($company_id: Int!, $is_active: Int!) {
   }
 
 query getDashboardData(
-    $start_date: Decimal!
-    $end_date: Decimal!
-    $date_range: String!
-    $is_active: Int!
+    $start_date: Decimal
+    $end_date: Decimal
   ) {
     getDashboardData(
       data: {
         start_date: $start_date
         end_date: $end_date
-        is_active: $is_active
-        date_range: $date_range
       }
-    )
+    ){
+      bookingStatusCount{
+        totalBooking
+        totalBookingPer
+        totalOnlineBooking
+        totalBookingStatusCounts
+        appointmentList{
+          label
+          count
+          per
+        }
+        onlineAppointmentList{
+					label
+          count
+          per
+        }
+      }
+      salesCount{
+        totalAvailableCategoryTypePer
+        totalAvailableCategoryTypeCount
+        salesList{
+          label
+          count
+          per
+        }
+      }
+      allbooking{
+        status
+        data{
+          label
+          value
+        }
+      }
+      allSales{
+        status
+        data{
+          label
+          value
+        }
+      }
+    }
   }

@@ -111,3 +111,16 @@ export const data = [
     percentage: '-',
   },
 ]
+
+export const dateRangeList = [
+  { value: 'All records', label: 'All records' },
+  { value: 'Today', label: 'Today' },
+  { value: 'Yesterday', label: 'Yesterday' },
+  { value: 'This Week', label: 'This week' },
+  { value: 'Last Week', label: 'Last week' },
+  { value: 'This Month', label: 'This month' },
+  { value: 'Last Month', label: 'Last month' },
+  { value: 'This Year', label: 'This year' },
+  { value: 'Last Year', label: 'Last year' },
+  { value: 'custom', label: 'Custom' },
+]

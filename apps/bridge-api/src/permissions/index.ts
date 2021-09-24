@@ -123,8 +123,8 @@ export const permissions = shield(
       findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
-      getDashboardData: allow,
       findManyTimezone: allow,
+      getDashboardData: rules.authentication.isAuthenticated,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,

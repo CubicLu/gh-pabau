@@ -1260,20 +1260,7 @@ export const retrieveSalesCount = async (
   )
   let salesCount
   const SalesList = []
-  if (data.date_range === 'All records') {
-    salesCount = await ctx.prisma.saleItem.groupBy({
-      by: ['product_category_type'],
-      where: {
-        NOT: [{ InvSale: null }],
-        product_category_type: {
-          not: '',
-        },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  } else {
+  if (data.start_date && data.end_date) {
     salesCount = await ctx.prisma.saleItem.groupBy({
       by: ['product_category_type'],
       where: {
@@ -1292,28 +1279,39 @@ export const retrieveSalesCount = async (
         id: true,
       },
     })
+  } else {
+    salesCount = await ctx.prisma.saleItem.groupBy({
+      by: ['product_category_type'],
+      where: {
+        NOT: [{ InvSale: null }],
+        product_category_type: {
+          not: '',
+        },
+      },
+      _count: {
+        id: true,
+      },
+    })
   }
   const totalSalesCount = await ctx.prisma.invSale.aggregate({
     _count: {
       id: true,
     },
   })
-  if (salesCount) {
-    salesCount?.map((item) => {
-      if (item.product_category_type !== '') {
-        SalesList.push({
-          label: item.product_category_type,
-          count: item._count.id,
-          per:
-            (
-              ((item._count.id ?? 0) * 100) /
-              (totalSalesCount?._count?.id ?? 0)
-            ).toFixed(2) + '%',
-        })
-      }
-      return item
-    })
-  }
+  salesCount?.map((item) => {
+    if (item.product_category_type !== '') {
+      SalesList.push({
+        label: item.product_category_type,
+        count: item._count.id,
+        per:
+          (
+            ((item._count.id ?? 0) * 100) /
+            (totalSalesCount?._count?.id ?? 0)
+          ).toFixed(2) + '%',
+      })
+    }
+    return item
+  })
   return {
     totalSalesCounts: totalSalesCount?._count?.id ?? 0,
     totalAvailableCategoryTypeCount: salesCount?.reduce((prev, cur) => {
@@ -1334,204 +1332,158 @@ export const retrieveSalesChartData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
+  let allSalesCount
+  let allSalesCountData
+  let final = []
+  const details = []
+  const DataSet = []
   const start_date = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
     'YYYY-MM-DDTHH:mm:ssZ'
   )
   const end_date = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
     'YYYY-MM-DDTHH:mm:ssZ'
   )
-  let allSalesCount
-  let allSalesCountData
-  let final = []
-  const details = []
-  const DataSet = []
-  if (data.date_range === 'All records') {
-    allSalesCount = await ctx.prisma.saleItem.groupBy({
-      by: ['product_category_type'],
-      where: {
-        NOT: [{ InvSale: null }],
-        product_category_type: {
-          not: '',
-        },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  } else {
-    allSalesCount = await ctx.prisma.saleItem.groupBy({
-      by: ['product_category_type'],
-      where: {
-        NOT: [{ InvSale: null }],
-        InvSale: {
-          date: {
-            gte: start_date,
-            lte: end_date,
-          },
-        },
-        product_category_type: {
-          not: '',
-        },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  }
-  if (data.date_range === 'All records') {
-    allSalesCountData = await ctx.prisma.saleItem.findMany({
-      where: {
-        NOT: [{ InvSale: null }],
-        product_category_type: {
-          not: '',
-        },
-      },
-      select: {
-        product_category_type: true,
-        InvSale: {
-          select: {
-            date: true,
-          },
-        },
-      },
-    })
-  } else {
-    allSalesCountData = await ctx.prisma.saleItem.findMany({
-      where: {
-        NOT: [{ InvSale: null }],
-        InvSale: {
-          date: {
-            gte: start_date,
-            lte: end_date,
-          },
-        },
-        product_category_type: {
-          not: '',
-        },
-      },
-      select: {
-        product_category_type: true,
-        InvSale: {
-          select: {
-            date: true,
-          },
-        },
-      },
-    })
-  }
-  if (allSalesCountData) {
-    allSalesCount.map((status, i) => {
-      const data = allSalesCountData.filter(
-        (item) => item.product_category_type === status?.product_category_type
-      )
+  const endDate = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DD'
+  )
+  const startDate = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DD'
+  )
+  const month = dayjs(endDate).diff(startDate, 'month')
+  const year = dayjs(endDate).diff(startDate, 'year')
+  const week = dayjs(endDate).diff(startDate, 'week')
+  const day = dayjs(endDate).diff(startDate, 'day')
 
-      details.push({
-        key: status?.product_category_type,
-        values: [...new Set(data.map((item) => item?.InvSale?.date))].filter(
-          (item) => !!item
-        ),
-      })
-      return status
+  if (data.start_date && data.end_date) {
+    allSalesCount = await ctx.prisma.saleItem.groupBy({
+      by: ['product_category_type'],
+      where: {
+        NOT: [{ InvSale: null }],
+        InvSale: {
+          date: {
+            gte: start_date,
+            lte: end_date,
+          },
+        },
+        product_category_type: {
+          not: '',
+        },
+      },
+      _count: {
+        id: true,
+      },
+    })
+  } else {
+    allSalesCount = await ctx.prisma.saleItem.groupBy({
+      by: ['product_category_type'],
+      where: {
+        NOT: [{ InvSale: null }],
+        product_category_type: {
+          not: '',
+        },
+      },
+      _count: {
+        id: true,
+      },
     })
   }
-  if (details) {
-    if (details.length > 0) {
-      details.map((record) => {
-        let dataGroupByDateRange
-        const endDate = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
-          'YYYY-MM-DD'
-        )
-        const startDate = dayjs(
-          `${data.start_date}` as 'YYYYMMDDHHmmss'
-        ).format('YYYY-MM-DD')
-        const month = dayjs(endDate).diff(startDate, 'month')
-        const year = dayjs(endDate).diff(startDate, 'year')
-        const week = dayjs(endDate).diff(startDate, 'week')
-        const day = dayjs(endDate).diff(startDate, 'day')
-        switch (true) {
-          case data.date_range === 'Last Month' ||
-            data.date_range === 'This Month':
-            dataGroupByDateRange = groupByDateRange(record.values, 'This Month')
-            break
-          case data.date_range === 'This Year' ||
-            data.date_range === 'Last Year':
-            dataGroupByDateRange = groupByDateRange(record.values, 'This Year')
-            break
-          case data.date_range === 'This Week' ||
-            data.date_range === 'Last Week' ||
-            data.date_range === 'Today' ||
-            data.date_range === 'Yesterday':
-            dataGroupByDateRange = groupByDateRange(record.values, 'This Week')
-            break
-          case data.date_range === 'All records':
-            dataGroupByDateRange = groupByDateRange(
-              record.values,
-              'All records'
-            )
-            break
-          case data.date_range === 'custom':
-            if (year > 0) {
-              dataGroupByDateRange = groupByDateRange(
-                record.values,
-                'All records'
-              )
-            } else if (month > 0) {
-              dataGroupByDateRange = groupByDateRange(
-                record.values,
-                'This Year'
-              )
-            } else if (week > 0) {
-              dataGroupByDateRange = groupByDateRange(
-                record.values,
-                'This Month'
-              )
-            } else if (day > 0) {
-              dataGroupByDateRange = groupByDateRange(
-                record.values,
-                'This Week'
-              )
-            }
-            break
-        }
-        DataSet.push({
-          status: record?.key,
-          dateRange: dataGroupByDateRange,
-        })
-        switch (true) {
-          case data.date_range === 'Last Month' ||
-            data.date_range === 'This Month':
-            final = statusDataByDayMonth('This Month', DataSet, startDate)
-            break
-          case data.date_range === 'This Year' ||
-            data.date_range === 'Last Year':
-            final = statusDataByDayMonth('This Year', DataSet, startDate)
-            break
-          case data.date_range === 'This Week' ||
-            data.date_range === 'Last Week' ||
-            data.date_range === 'Today' ||
-            data.date_range === 'Yesterday':
-            final = statusDataByDayMonth('This Week', DataSet, startDate)
-            break
-          case data.date_range === 'All records':
-            final = statusDataByDayMonth('All records', DataSet, startDate)
-            break
-          case data.date_range === 'custom':
-            if (year > 0) {
-              final = statusDataByDayMonth('All records', DataSet, startDate)
-            } else if (month > 0) {
-              final = statusDataByDayMonth('This Year', DataSet, startDate)
-            } else if (week > 0) {
-              final = statusDataByDayMonth('This Month', DataSet, startDate)
-            } else if (day > 0) {
-              final = statusDataByDayMonth('This Week', DataSet, startDate)
-            }
-            break
-        }
-        return record
+  if (data.start_date && data.end_date) {
+    allSalesCountData = await ctx.prisma.saleItem.findMany({
+      where: {
+        NOT: [{ InvSale: null }],
+        InvSale: {
+          date: {
+            gte: start_date,
+            lte: end_date,
+          },
+        },
+        product_category_type: {
+          not: '',
+        },
+      },
+      select: {
+        product_category_type: true,
+        InvSale: {
+          select: {
+            date: true,
+          },
+        },
+      },
+    })
+  } else {
+    allSalesCountData = await ctx.prisma.saleItem.findMany({
+      where: {
+        NOT: [{ InvSale: null }],
+        product_category_type: {
+          not: '',
+        },
+      },
+      select: {
+        product_category_type: true,
+        InvSale: {
+          select: {
+            date: true,
+          },
+        },
+      },
+    })
+  }
+  allSalesCount?.map((status) => {
+    const data = allSalesCountData?.filter(
+      (item) => item.product_category_type === status?.product_category_type
+    )
+    details.push({
+      key: status?.product_category_type,
+      values: [...new Set(data.map((item) => item?.InvSale?.date))].filter(
+        (item) => !!item
+      ),
+    })
+    return status
+  })
+
+  if (details?.length > 0) {
+    details.map((record) => {
+      let dataGroupByDateRange
+      switch (true) {
+        case year > 0:
+          dataGroupByDateRange = groupByDateRange(record.values, 'All records')
+          break
+        case month > 0:
+          dataGroupByDateRange = groupByDateRange(record.values, 'This Year')
+          break
+        case week > 0:
+          dataGroupByDateRange = groupByDateRange(record.values, 'This Month')
+          break
+        case day > 0:
+          dataGroupByDateRange = groupByDateRange(record.values, 'This Week')
+          break
+        default:
+          dataGroupByDateRange = groupByDateRange(record.values, 'All records')
+      }
+      DataSet.push({
+        status: record?.key,
+        dateRange: dataGroupByDateRange,
       })
-    } else {
-      final = [{ data: [] }]
-    }
+      switch (true) {
+        case year > 0:
+          final = statusDataByDayMonth('All records', DataSet, startDate)
+          break
+        case month > 0:
+          final = statusDataByDayMonth('This Year', DataSet, startDate)
+          break
+        case week > 0:
+          final = statusDataByDayMonth('This Month', DataSet, startDate)
+          break
+        case day > 0:
+          final = statusDataByDayMonth('This Week', DataSet, startDate)
+          break
+        default:
+          final = statusDataByDayMonth('All records', DataSet, startDate)
+      }
+      return record
+    })
+  } else {
+    final = [{ data: [] }]
   }
 
   return {

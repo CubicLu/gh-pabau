@@ -1,6 +1,38 @@
-import { weekList, dayList, monthList } from './mock'
 import { groupBy, uniqBy } from 'lodash'
 import dayjs from 'dayjs'
+
+const weekList = [
+  { label: 'week1' },
+  { label: 'week2' },
+  { label: 'week3' },
+  { label: 'week4' },
+  { label: 'week5' },
+]
+
+const dayList = [
+  { label: 'Sun' },
+  { label: 'Mon' },
+  { label: 'Tue' },
+  { label: 'Wed' },
+  { label: 'Thu' },
+  { label: 'Fri' },
+  { label: 'Sat' },
+]
+
+const monthList = [
+  { label: 'Jan' },
+  { label: 'Feb' },
+  { label: 'Mar' },
+  { label: 'Apr' },
+  { label: 'May' },
+  { label: 'Jun' },
+  { label: 'Jul' },
+  { label: 'Aug' },
+  { label: 'Sep' },
+  { label: 'Oct' },
+  { label: 'Nev' },
+  { label: 'Dec' },
+]
 
 export const groupByDateRange = (data, dataRange) => {
   switch (dataRange) {
@@ -111,7 +143,6 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
           }
           return Final_data
         })
-
         return uniqBy(Final_data, 'status')
       }
       break

@@ -20,7 +20,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Menu, Dropdown, Drawer, Col, Row, Select } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
-import { locationList } from '../../mocks/Dashboard'
+import { locationList, dateRangeList } from '../../mocks/Dashboard'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { ICount } from '../../components/Dashboard/TopBoard/TopBoard'
 import {
@@ -91,12 +91,14 @@ export function Index() {
   const getAppointmentQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
-        start_date: dayjs(new Date(`${filterDate[0]}`)).format(
-          'YYYYMMDDHHmmss'
-        ),
-        end_date: dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss'),
-        date_range: filterRange,
-        is_active: 1,
+        start_date:
+          filterRange !== 'All records'
+            ? dayjs(new Date(`${filterDate[0]}`)).format('YYYYMMDDHHmmss')
+            : undefined,
+        end_date:
+          filterRange !== 'All records'
+            ? dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss')
+            : undefined,
       },
     }
     return queryOptions
@@ -111,54 +113,56 @@ export function Index() {
   useEffect(() => {
     if (appointment_status) {
       if (
-        (appointment_status?.getDashboardData?.bookingStatus?.appointmentList)
-          .length > 0
+        (appointment_status?.getDashboardData?.bookingStatusCount
+          ?.appointmentList).length > 0
       ) {
         setAppointment(
-          appointment_status?.getDashboardData?.bookingStatus?.appointmentList
+          appointment_status?.getDashboardData?.bookingStatusCount
+            ?.appointmentList
         )
       } else {
         setAppointment(defaultAppointmentList)
       }
       if (
-        (appointment_status?.getDashboardData?.bookingStatus
+        (appointment_status?.getDashboardData?.bookingStatusCount
           ?.onlineAppointmentList).length > 0
       ) {
         setOnlineAppointment(
-          appointment_status?.getDashboardData?.bookingStatus
+          appointment_status?.getDashboardData?.bookingStatusCount
             ?.onlineAppointmentList
         )
       } else {
         setOnlineAppointment(defaultOnlineAppointmentList)
       }
       if (
-        (appointment_status?.getDashboardData?.salesStatus?.salesList).length >
-        0
+        (appointment_status?.getDashboardData?.salesCount?.salesList).length > 0
       ) {
-        setSales(appointment_status?.getDashboardData?.salesStatus?.salesList)
+        setSales(appointment_status?.getDashboardData?.salesCount?.salesList)
       } else {
         setSales(defaultSalesList)
       }
       setTotalBooking({
         count:
-          appointment_status?.getDashboardData?.bookingStatus?.totalBooking,
+          appointment_status?.getDashboardData?.bookingStatusCount
+            ?.totalBooking,
         per:
-          appointment_status?.getDashboardData?.bookingStatus?.totalBookingPer,
+          appointment_status?.getDashboardData?.bookingStatusCount
+            ?.totalBookingPer,
       })
       setTotalOnlineBooking({
         count:
-          appointment_status?.getDashboardData?.bookingStatus
+          appointment_status?.getDashboardData?.bookingStatusCount
             ?.totalOnlineBooking,
         per:
-          appointment_status?.getDashboardData?.bookingStatus
+          appointment_status?.getDashboardData?.bookingStatusCount
             ?.totalOnlineBookingPer,
       })
       setTotalSalesCount({
         count:
-          appointment_status?.getDashboardData?.salesStatus
+          appointment_status?.getDashboardData?.salesCount
             ?.totalAvailableCategoryTypeCount,
         per:
-          appointment_status?.getDashboardData?.salesStatus
+          appointment_status?.getDashboardData?.salesCount
             ?.totalAvailableCategoryTypePer,
       })
     }
@@ -168,7 +172,7 @@ export function Index() {
   useEffect(() => {
     const List = [...userListData]
     if (locations && userListData.length === 1) {
-      locations?.findManyCompanyBranch?.map((item) => {
+      locations.findManyCompanyBranch?.map((item) => {
         List.push({
           key: item.name,
           label: item.name,
@@ -306,16 +310,11 @@ export function Index() {
         onChange={onDataRangeSelect}
         value={selectedRange}
       >
-        <Option value="All records">All records</Option>
-        <Option value="Today">Today</Option>
-        <Option value="Yesterday">Yesterday</Option>
-        <Option value="This Week">This week</Option>
-        <Option value="Last Week">Last week</Option>
-        <Option value="This Month">This month</Option>
-        <Option value="Last Month">Last month</Option>
-        <Option value="This Year">This year</Option>
-        <Option value="Last Year">Last year</Option>
-        <Option value="custom">Custom</Option>
+        {dateRangeList.map((record) => (
+          <Option value={record.value} key={record.value}>
+            {record.value}
+          </Option>
+        ))}
       </Select>
       {selectedRange === 'custom' && (
         <RangePicker
@@ -448,7 +447,7 @@ export function Index() {
             <Charts
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}
-              Data={
+              BookingData={
                 appointment_status?.getDashboardData?.allbooking
                   ?.bookingsByStatus
               }
@@ -475,7 +474,7 @@ export function Index() {
           <div className={styles.headerStick} />
           <div className={styles.headerTitle}>Choose Location</div>
           <Menu className={styles.customMenuDropdown}>
-            {userListData.map((menu) => {
+            {userListData?.map((menu) => {
               return (
                 <Menu.Item
                   key={menu.key}
