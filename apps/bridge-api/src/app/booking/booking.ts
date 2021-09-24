@@ -147,76 +147,67 @@ export const retrieveAllBookingChartData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  const bookingCount = await ctx.prisma.booking.groupBy({
-    by: ['status'],
-    where: {
-      NOT: [{ Contact: null }],
-      status: { not: '' },
-    },
-    _count: {
-      id: true,
-      start_date: true,
-    },
-  })
-
-  const bookingStatusCount = await ctx.prisma.booking.groupBy({
-    by: ['status'],
-    where: {
-      NOT: [{ Contact: null }],
-      start_date: { gte: data.start_date },
-      status: { not: '' },
-      end_date: { lte: data.end_date },
-    },
-    _count: {
-      id: true,
-      start_date: true,
-    },
-  })
-
-  const bookingStatusData = await ctx.prisma.booking.findMany({
-    where: {
-      NOT: [{ Contact: null }],
-      start_date: { gte: data.start_date },
-      status: { not: '' },
-      end_date: { lte: data.end_date },
-    },
-    select: {
-      id: true,
-      start_date: true,
-      status: true,
-    },
-  })
-
-  const bookingData = await ctx.prisma.booking.findMany({
-    where: {
-      NOT: [{ Contact: null }],
-      status: { not: '' },
-    },
-    select: {
-      id: true,
-      start_date: true,
-      status: true,
-    },
-  })
-  const details = []
+  let bookingCount
+  let bookingData
   let final = []
+  const details = []
   const DataSet = []
-
-  if (bookingStatusData) {
-    bookingStatusCount.map((status) => {
-      const data = bookingStatusData.filter(
-        (item) => item.status === status?.status
-      )
-      details.push({
-        key: status?.status,
-        values: [...new Set(data.map((item) => item.start_date))].filter(
-          (item) => !!item
-        ),
-      })
-      return status
+  if (data.date_range === 'All records') {
+    bookingCount = await ctx.prisma.booking.groupBy({
+      by: ['status'],
+      where: {
+        NOT: [{ Contact: null }],
+        status: { not: '' },
+      },
+      _count: {
+        id: true,
+        start_date: true,
+      },
+    })
+  } else {
+    bookingCount = await ctx.prisma.booking.groupBy({
+      by: ['status'],
+      where: {
+        NOT: [{ Contact: null }],
+        start_date: { gte: data.start_date },
+        status: { not: '' },
+        end_date: { lte: data.end_date },
+      },
+      _count: {
+        id: true,
+        start_date: true,
+      },
     })
   }
-  if (data.date_range === 'All records' && bookingData) {
+
+  if (data.date_range === 'All records') {
+    bookingData = await ctx.prisma.booking.findMany({
+      where: {
+        NOT: [{ Contact: null }],
+        status: { not: '' },
+      },
+      select: {
+        id: true,
+        start_date: true,
+        status: true,
+      },
+    })
+  } else {
+    bookingData = await ctx.prisma.booking.findMany({
+      where: {
+        NOT: [{ Contact: null }],
+        start_date: { gte: data.start_date },
+        status: { not: '' },
+        end_date: { lte: data.end_date },
+      },
+      select: {
+        id: true,
+        start_date: true,
+        status: true,
+      },
+    })
+  }
+  if (bookingData) {
     bookingCount.map((status) => {
       const data = bookingData.filter((item) => item.status === status?.status)
       details.push({

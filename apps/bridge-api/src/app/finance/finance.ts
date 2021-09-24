@@ -1259,7 +1259,7 @@ export const retrieveSalesCount = async (
     'YYYY-MM-DDTHH:mm:ssZ'
   )
   let salesCount
-
+  const SalesList = []
   if (data.date_range === 'All records') {
     salesCount = await ctx.prisma.saleItem.groupBy({
       by: ['product_category_type'],
@@ -1293,15 +1293,11 @@ export const retrieveSalesCount = async (
       },
     })
   }
-
   const totalSalesCount = await ctx.prisma.invSale.aggregate({
     _count: {
       id: true,
     },
   })
-
-  const SalesList = []
-
   if (salesCount) {
     salesCount?.map((item) => {
       if (item.product_category_type !== '') {
@@ -1344,95 +1340,86 @@ export const retrieveSalesChartData = async (
   const end_date = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
     'YYYY-MM-DDTHH:mm:ssZ'
   )
-
-  const allSalesCount = await ctx.prisma.saleItem.groupBy({
-    by: ['product_category_type'],
-    where: {
-      NOT: [{ InvSale: null }],
-      product_category_type: {
-        not: '',
-      },
-    },
-    _count: {
-      id: true,
-    },
-  })
-
-  const salesCount = await ctx.prisma.saleItem.groupBy({
-    by: ['product_category_type'],
-    where: {
-      NOT: [{ InvSale: null }],
-      InvSale: {
-        date: {
-          gte: start_date,
-          lte: end_date,
-        },
-      },
-      product_category_type: {
-        not: '',
-      },
-    },
-    _count: {
-      id: true,
-    },
-  })
-
-  const allSalesCountData = await ctx.prisma.saleItem.findMany({
-    where: {
-      NOT: [{ InvSale: null }],
-      product_category_type: {
-        not: '',
-      },
-    },
-    select: {
-      product_category_type: true,
-      InvSale: {
-        select: {
-          date: true,
-        },
-      },
-    },
-  })
-
-  const salesCountData = await ctx.prisma.saleItem.findMany({
-    where: {
-      NOT: [{ InvSale: null }],
-      InvSale: {
-        date: {
-          gte: start_date,
-          lte: end_date,
-        },
-      },
-      product_category_type: {
-        not: '',
-      },
-    },
-    select: {
-      product_category_type: true,
-      InvSale: {
-        select: {
-          date: true,
-        },
-      },
-    },
-  })
+  let allSalesCount
+  let allSalesCountData
+  let final = []
   const details = []
-
-  if (salesCountData) {
-    salesCount.map((status) => {
-      const data = salesCountData.filter(
-        (item) => item.product_category_type === status?.product_category_type
-      )
-      details.push({
-        key: status?.product_category_type,
-        values: [...new Set(data.map((item) => item?.InvSale?.date))].filter(
-          (item) => !!item
-        ),
-      })
-      return status
+  const DataSet = []
+  if (data.date_range === 'All records') {
+    allSalesCount = await ctx.prisma.saleItem.groupBy({
+      by: ['product_category_type'],
+      where: {
+        NOT: [{ InvSale: null }],
+        product_category_type: {
+          not: '',
+        },
+      },
+      _count: {
+        id: true,
+      },
+    })
+  } else {
+    allSalesCount = await ctx.prisma.saleItem.groupBy({
+      by: ['product_category_type'],
+      where: {
+        NOT: [{ InvSale: null }],
+        InvSale: {
+          date: {
+            gte: start_date,
+            lte: end_date,
+          },
+        },
+        product_category_type: {
+          not: '',
+        },
+      },
+      _count: {
+        id: true,
+      },
     })
   }
-  if (data.date_range === 'All records' && allSalesCountData) {
+  if (data.date_range === 'All records') {
+    allSalesCountData = await ctx.prisma.saleItem.findMany({
+      where: {
+        NOT: [{ InvSale: null }],
+        product_category_type: {
+          not: '',
+        },
+      },
+      select: {
+        product_category_type: true,
+        InvSale: {
+          select: {
+            date: true,
+          },
+        },
+      },
+    })
+  } else {
+    allSalesCountData = await ctx.prisma.saleItem.findMany({
+      where: {
+        NOT: [{ InvSale: null }],
+        InvSale: {
+          date: {
+            gte: start_date,
+            lte: end_date,
+          },
+        },
+        product_category_type: {
+          not: '',
+        },
+      },
+      select: {
+        product_category_type: true,
+        InvSale: {
+          select: {
+            date: true,
+          },
+        },
+      },
+    })
+  }
+  if (allSalesCountData) {
     allSalesCount.map((status, i) => {
       const data = allSalesCountData.filter(
         (item) => item.product_category_type === status?.product_category_type
@@ -1447,9 +1434,6 @@ export const retrieveSalesChartData = async (
       return status
     })
   }
-
-  let final = []
-  const DataSet = []
   if (details) {
     if (details.length > 0) {
       details.map((record) => {
