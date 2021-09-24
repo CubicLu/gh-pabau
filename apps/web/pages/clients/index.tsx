@@ -493,24 +493,9 @@ const Clients = () => {
           handleClose={isEdit ? closeEditModal : toggleCreateClientModal}
           handleSubmit={handleCreateClient}
           isEdit={isEdit}
+          contactId={25236524}
           activated={active}
           onActivated={(val) => setActive(val)}
-          editedValues={
-            isEdit && {
-              Fname: editedValues?.firstName,
-              Lname: editedValues?.lastName,
-              gender: t('quickCreate.client.modal.general.gender.other'),
-              MarketingSource: t(
-                'quickCreate.client.modal.general.hearOption.selectOption'
-              ),
-              DOB: dayjs(editedValues?.dob, 'DD-MM-YYYY'),
-              Email: editedValues?.email,
-              Mobile: editedValues?.mobileNumber,
-              Phone: '',
-              MailingCity: editedValues?.city,
-              MailingPostal: editedValues?.postal,
-            }
-          }
           handleDelete={handleDeleteToggle}
           deleteModalVisible={deleteModal}
           onDelete={showDeleteConfirm}

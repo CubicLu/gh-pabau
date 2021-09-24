@@ -20,6 +20,7 @@ import {
   GetTblModuleFieldsSettingsQuery,
 } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
+import { gql, useLazyQuery } from '@apollo/client'
 
 export interface Label {
   label?: string
@@ -42,7 +43,7 @@ export interface ClientCreateWebProps {
   onSearchTextChange?: (string) => void
   handleSubmit?: (val) => void
   isEdit?: boolean
-  editedValues?: InitialDetailsProps
+  contactId?: number
   activated?: boolean
   onActivated?: (val: boolean) => void
   defaultLabels?: Label[]
@@ -52,11 +53,75 @@ export interface ClientCreateWebProps {
   onDelete?: () => void
 }
 
+const query = gql`
+  query findFirstCmContact($id: Int) {
+    contact: findFirstCmContact(where: { ID: { equals: $id } }) {
+      Fname
+      Lname
+      Salutation
+      gender
+      MarketingSource
+      DOB
+      Email
+      Mobile
+      Phone
+      MailingProvince
+      MailingCountry
+      MailingStreet
+      MailingCity
+      MailingPostal
+      MarketingOptInPost
+      MarketingOptInText
+      MarketingOptInEmail
+      MarketingOptInPhone
+      needToKnows: need_to_knows
+      privacyPolicy: privacy_policy
+      contactPreference: ContactPreference {
+        family
+        emergencyContact: emergency_contact
+        nextOfKin: next_of_kin
+        insuranceProvider: insurance_provider
+        gp
+        company
+        bookAppointments: book_appointments
+        bookClass: book_class
+        loyalty
+        myPackages: my_packages
+        purchasePackage: purchase_package
+        payments
+        appointments
+        class
+        documents
+        medications
+        allergies
+        gpDetails: gp_details
+        shareLink: share_link
+        accessCode: access_code
+      }
+      customField: CmContactCustom {
+        custom_field_id
+        custom_field_label
+        custom_field_value
+      }
+      location: CmContactLocation {
+        location_id
+      }
+      labels: CmContactLabel {
+        id: label_id
+      }
+      contactMeta: ContactMeta(
+        where: { meta_name: { equals: "preferred_language" } }
+      ) {
+        meta_value
+      }
+    }
+  }
+`
 export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   modalVisible = true,
   handleClose,
   isEdit = false,
-  editedValues,
+  contactId,
   defaultLabels,
   defaultSelectedLabels,
   ...props
@@ -92,9 +157,9 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     },
     privacyPolicy: '0',
     settingSharing: {
-      bookAppointments: 1,
+      bookAppointments: 0,
       bookClass: 0,
-      loyalty: 1,
+      loyalty: 0,
       myPackages: 0,
       purchasePackage: 0,
       payments: 0,
@@ -111,10 +176,13 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const [isVisible, setVisible] = useState(modalVisible)
   const [accessCode, setAceessCode] = useState(0)
   const [isSuccess, setSuccess] = useState(false)
+  const [editLabels, setEditLabels] = useState([])
 
   useEffect(() => {
-    const code = Math.floor(1000 + Math.random() * 9000)
-    setAceessCode(code)
+    if (!isEdit) {
+      setAceessCode(Math.floor(1000 + Math.random() * 9000))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess])
 
   const [
@@ -142,7 +210,19 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     { data: customFieldData, loading: customFieldLoading },
   ] = useGetContactCustomFieldsLazyQuery()
 
-  const [getLabels, { data: labelsQueryData }] = useGetCmLabelsLazyQuery()
+  const [
+    getLabels,
+    { data: labelsQueryData, loading: labelLoading },
+  ] = useGetCmLabelsLazyQuery()
+
+  const [
+    getContact,
+    { data: contactData, loading: editContactLoading },
+  ] = useLazyQuery(query, {
+    variables: {
+      id: contactId,
+    },
+  })
 
   const [addMutation] = useCreateOneContactMutation({
     onCompleted(data) {
@@ -177,6 +257,20 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   }, [isVisible])
 
   useEffect(() => {
+    if (
+      !loading &&
+      !marketingSourceLoading &&
+      !locationLoading &&
+      !customFieldLoading &&
+      !labelLoading &&
+      isEdit
+    ) {
+      getContact()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, marketingSourceLoading, locationLoading, customFieldLoading])
+
+  useEffect(() => {
     const requiredField = {
       Fname: Yup.string().required(
         t('quickCreate.validation.firstName.required')
@@ -184,13 +278,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       Lname: Yup.string().required(
         t('quickCreate.validation.lastName.required')
       ),
-    }
-    let initialValuesObj = initialValues
-    if (isEdit && editedValues) {
-      initialValuesObj = {
-        ...initialValuesObj,
-        ...editedValues,
-      }
     }
     if (fieldSettingData) {
       const data: GetTblModuleFieldsSettingsQuery = fieldSettingData
@@ -210,10 +297,9 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         }
       }
     }
-    setInitialValues(initialValuesObj)
     setValidationObject(requiredField)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fieldSettingData, isEdit, editedValues])
+  }, [fieldSettingData])
 
   useEffect(() => {
     if (
@@ -256,7 +342,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       setValidationObject(validationObj)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [salutationData, initialValues])
+  }, [salutationData])
 
   useEffect(() => {
     if (marketingSourceData?.findManyMarketingSource?.length === 0) {
@@ -265,7 +351,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       setValidationObject(validationObj)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [marketingSourceData, initialValues])
+  }, [marketingSourceData])
 
   useEffect(() => {
     if (customFieldData) {
@@ -347,13 +433,102 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customFieldData])
 
+  useEffect(() => {
+    const values = initialValues
+    const marketingPromotionValues = []
+    if (contactData) {
+      const data = contactData.contact
+      for (const key of Object.keys(values)) {
+        if (key === 'recordSharing') {
+          if (data.contactPreference) {
+            Object.keys(values['recordSharing']).map(
+              (key) =>
+                (values['recordSharing'][key] = data.contactPreference[key])
+            )
+          }
+        } else if (key === 'settingSharing') {
+          if (data.contactPreference) {
+            Object.keys(values['settingSharing']).map(
+              (key) =>
+                (values['settingSharing'][key] = data.contactPreference[key])
+            )
+          }
+        } else if (key === 'shareLink') {
+          values['shareLink'] = data.contactPreference?.shareLink ?? ''
+        } else if (key === 'marketingPromotion') {
+          if (data.MarketingOptInPost) {
+            marketingPromotionValues.push('postal')
+          }
+          if (data.MarketingOptInEmail) {
+            marketingPromotionValues.push('email')
+          }
+          if (data.MarketingOptInPhone) {
+            marketingPromotionValues.push('phone')
+          }
+          if (data.MarketingOptInText) {
+            marketingPromotionValues.push('sms')
+          }
+          if (data.need_to_knows) {
+            marketingPromotionValues.push('needToKnows')
+          }
+          values['marketingPromotion'] = marketingPromotionValues
+        } else if (key === 'preferredLanguage') {
+          if (data.contactMeta.length > 0) {
+            values['preferredLanguage'] = data.contactMeta[0].meta_value
+          }
+        } else if (key === 'MarketingSource') {
+          if (
+            marketingSourceData?.findManyMarketingSource.find(
+              (source) => source.id === Number.parseInt(data['MarketingSource'])
+            )
+          ) {
+            values['MarketingSource'] = data['MarketingSource'].toString()
+          }
+        } else if (key.includes('customField_')) {
+          if (data.customField.length > 0) {
+            const id = Number.parseInt(key.split('_')[1])
+            if (
+              data.customField.find((field) => field.custom_field_id === id)
+            ) {
+              values[key] = data.customField.find(
+                (field) => field.custom_field_id === id
+              ).custom_field_value
+            }
+          }
+        } else {
+          values[key] = data[key]
+        }
+      }
+      setAceessCode(
+        data.contactPreference?.accessCode ??
+          Math.floor(1000 + Math.random() * 9000)
+      )
+      if (data.labels.length > 0) {
+        const labelData = data.labels.map((label) => {
+          const findLabel = labelsData.find(
+            (labelData) => labelData.id === label.id
+          )
+          return {
+            id: label.id,
+            label: findLabel.value,
+            color: findLabel.color,
+          }
+        })
+        setEditLabels(labelData)
+      }
+      setInitialValues({ ...values })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactData])
+
   const checkIsLoading = () => {
     return (
       salutationLoading ||
       loading ||
       marketingSourceLoading ||
       locationLoading ||
-      customFieldLoading
+      customFieldLoading ||
+      editContactLoading
     )
   }
 
@@ -481,15 +656,18 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       fieldsSettings={fieldSettingData?.findManyTblModuleFieldsSetting}
       marketingSources={marketingSourceData?.findManyMarketingSource}
       limitContactsLocations={limitLocationData?.findManyLimitContactLocation}
-      isLoading={loading}
+      isLoading={!isEdit ? loading : checkIsLoading()}
       isMarketingSourceLoading={marketingSourceLoading}
       isSalutationLoading={salutationLoading}
       labelsData={labelsData}
+      defaultLabels={editLabels}
+      defaultSelectedLabels={editLabels}
       initialValues={initialValues}
       validationObject={validationObject}
       isDisabledBtn={checkIsLoading()}
       companyName={user?.me?.companyName}
       accessCode={accessCode}
+      isEdit={isEdit}
       {...props}
     />
   )
