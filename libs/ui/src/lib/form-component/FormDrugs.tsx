@@ -76,6 +76,7 @@ export const FormDrugs: FC<P> = ({
             }
           )
           const data = await response.json()
+          console.log('drugs data =', data)
           if (data?.length > 0) {
             const drugLists = data?.map((item, index) => ({
               id: item.medicines._id,
