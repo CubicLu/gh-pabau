@@ -20,19 +20,7 @@ export interface ClientPhotosLayoutProps {
 export const ClientPhotosLayout: FC<ClientPhotosLayoutProps> = ({
   isEmpty,
 }) => {
-  const images = [
-    backMassage,
-    backPlain,
-    sholder,
-    eyeDark,
-    handsMassage,
-    // necked,
-    // backMassage2,
-    // back,
-    // backs,
-    // face,
-    // facial,
-  ]
+  const images = [backMassage, backPlain, sholder, eyeDark, handsMassage]
 
   const albumList = {
     album: [
@@ -213,73 +201,12 @@ export const ClientPhotosLayout: FC<ClientPhotosLayoutProps> = ({
         ],
         album: [],
       },
-      // {
-      //   id: '5',
-      //   albumTitle: 'Five',
-      //   albumImage: [
-      //     backs,
-      //     face,
-      //     facial,
-      //     handsMassage,
-      //     necked,
-      //     backMassage2,
-      //     backPlain,
-      //     eyeDark,
-      //   ],
-      //   album: [],
-      // },
-      // {
-      //   id: '6',
-      //   albumTitle: 'Six',
-      //   albumImage: [
-      //     backMassage,
-      //     backPlain,
-      //     back,
-      //     eyeDark,
-      //     handsMassage,
-      //     sholder,
-      //     backMassage2,
-      //     backs,
-      //   ],
-      //   album: [],
-      // },
-      // {
-      //   id: '7',
-      //   albumTitle: 'Seven',
-      //   albumImage: [
-      //     sholder,
-      //     handsMassage,
-      //     backMassage2,
-      //     backs,
-      //     backMassage,
-      //     backPlain,
-      //     back,
-      //     eyeDark,
-      //   ],
-      //   album: [],
-      // },
-      // {
-      //   id: '8',
-      //   albumTitle: 'Eight',
-      //   albumImage: [
-      //     backPlain,
-      //     eyeDark,
-      //     necked,
-      //     face,
-      //     facial,
-      //     backs,
-      //     eyeDark,
-      //     handsMassage,
-      //   ],
-      //   album: [],
-      // },
     ],
     id: '1',
     albumTitle: 'Album',
     albumImage: [],
   }
 
-  // const ref = useRef<HTMLDivElement>(null)
   return (
     <div className={styles.clientLayout}>
       <GalleryView albumList={albumList as AlbumProps} images={images} />
