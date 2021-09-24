@@ -63,7 +63,7 @@ export default class SubscriptionStripe extends SubscriptionService {
             ...item,
             id: item.number,
             amount: (item.total / 100).toFixed(2),
-            date: new Date(item.created * 1000),
+            date: new Date(item.created * 1000).toLocaleDateString('en-US'),
             description: item.description ?? 'Pabau Subscription',
             invoice_link: item.hosted_invoice_url,
             status:
