@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons'
-import { OptionType } from '@pabau/ui'
+import { OptionType, RenderHtml } from '@pabau/ui'
 import { Button, Input, Select } from 'antd'
 import cn from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
@@ -294,7 +294,7 @@ export const FormDrugs: FC<P> = ({
                           placeholder={t(
                             'ui.medicalformbuilder.form.drugs.dosage.placeholder'
                           )}
-                          value={item.dosage}
+                          value={item.dosage.replaceAll('&#8239;', ' ')}
                           onChange={(e) =>
                             onDrugsChange(item.id, { dosage: e.target.value })
                           }
@@ -303,7 +303,8 @@ export const FormDrugs: FC<P> = ({
                         />
                       ) : (
                         <>
-                          {item.dosage}
+                          {/* {item.dosage} */}
+                          <RenderHtml __html={item.dosage} />
                           <Button onClick={() => onSelectDosageItem(item.id)}>
                             {t('ui.medicalformbuilder.form.edit')}
                           </Button>
@@ -321,7 +322,7 @@ export const FormDrugs: FC<P> = ({
                           placeholder={t(
                             'ui.medicalformbuilder.form.drugs.dosage.placeholder'
                           )}
-                          value={item.quantity}
+                          value={item.quantity.replaceAll('&#8239;', ' ')}
                           onChange={(e) =>
                             onDrugsChange(item.id, { quantity: e.target.value })
                           }
@@ -330,7 +331,8 @@ export const FormDrugs: FC<P> = ({
                         />
                       ) : (
                         <>
-                          {item.quantity}
+                          {/* {item.quantity} */}
+                          <RenderHtml __html={item.quantity} />
                           <Button
                             onClick={(e) => onSelectQuantityItem(e, item.id)}
                           >
@@ -351,84 +353,98 @@ export const FormDrugs: FC<P> = ({
                   className={cn(
                     styles.formDrugsOptionsItemTooltip,
                     selItemId === item.id &&
-                      (showDosageTooltip || showQuantityTooltip)
+                      ((showDosageTooltip &&
+                        (item.dosageOptions.filter((dosage) =>
+                          dosage.populationType
+                            .toLowerCase()
+                            .includes('adult'.toLowerCase())
+                        ).length > 0 ||
+                          item.dosageOptions.filter((dosage) =>
+                            dosage.populationType
+                              .toLowerCase()
+                              .includes('children'.toLowerCase())
+                          ).length > 0)) ||
+                        (showQuantityTooltip &&
+                          item.quantityOptions.length > 0))
                       ? ''
                       : styles.hide
                   )}
                 >
-                  {showDosageTooltip && (
-                    <>
-                      <div className={styles.formDrugsOptionsItemTooltipTitle}>
-                        {'Adults'}
-                      </div>
-                      {item.dosageOptions.filter((dosage) =>
-                        dosage.populationType
-                          .toLowerCase()
-                          .includes('adult'.toLowerCase())
-                      ).length === 0 && (
-                        <div
-                          key={item.id + '-adults-' + index}
-                          className={
-                            styles.formDrugsOptionsItemTooltipItemEmpty
-                          }
-                        >
-                          {'---'}
-                        </div>
-                      )}
-                      {item.dosageOptions
-                        .filter((dosage) =>
-                          dosage.populationType
-                            .toLowerCase()
-                            .includes('adult'.toLowerCase())
-                        )
-                        .map((dosage, index) => (
-                          <div
-                            key={item.id + '-adults-' + index}
-                            className={styles.formDrugsOptionsItemTooltipItem}
-                            onMouseDown={(e) =>
-                              onAddDosage(e, item.id, dosage.text)
-                            }
-                          >
-                            {dosage.text}
-                          </div>
-                        ))}
-                      <div className={styles.formDrugsOptionsItemTooltipTitle}>
-                        {'Children'}
-                      </div>
-                      {item.dosageOptions.filter((dosage) =>
+                  {showDosageTooltip &&
+                    (item.dosageOptions.filter((dosage) =>
+                      dosage.populationType
+                        .toLowerCase()
+                        .includes('adult'.toLowerCase())
+                    ).length > 0 ||
+                      item.dosageOptions.filter((dosage) =>
                         dosage.populationType
                           .toLowerCase()
                           .includes('children'.toLowerCase())
-                      ).length === 0 && (
-                        <div
-                          key={item.id + '-children-' + index}
-                          className={
-                            styles.formDrugsOptionsItemTooltipItemEmpty
-                          }
-                        >
-                          {'---'}
-                        </div>
-                      )}
-                      {item.dosageOptions
-                        .filter((dosage) =>
-                          dosage.populationType
-                            .toLowerCase()
-                            .includes('children'.toLowerCase())
-                        )
-                        .map((dosage, index) => (
-                          <div
-                            key={item.id + '-children-' + index}
-                            className={styles.formDrugsOptionsItemTooltipItem}
-                            onMouseDown={(e) =>
-                              onAddDosage(e, item.id, dosage.text)
-                            }
-                          >
-                            {dosage.text}
-                          </div>
-                        ))}
-                    </>
-                  )}
-                  {showQuantityTooltip && (
+                      ).length > 0) && (
+                      <>
+                        {item.dosageOptions
+                          .filter((dosage) =>
+                            dosage.populationType
+                              .toLowerCase()
+                              .includes('adult'.toLowerCase())
+                          )
+                          .map((dosage, index) => (
+                            <>
+                              <div
+                                className={
+                                  styles.formDrugsOptionsItemTooltipTitle
+                                }
+                              >
+                                {/* {dosage.populationType} */}
+                                <RenderHtml __html={dosage.populationType} />
+                              </div>
+                              <div
+                                key={item.id + '-adults-' + index}
+                                className={
+                                  styles.formDrugsOptionsItemTooltipItem
+                                }
+                                onMouseDown={(e) =>
+                                  onAddDosage(e, item.id, dosage.text)
+                                }
+                              >
+                                {/* {dosage.text} */}
+                                <RenderHtml __html={dosage.text} />
+                              </div>
+                            </>
+                          ))}
+                        {item.dosageOptions
+                          .filter((dosage) =>
+                            dosage.populationType
+                              .toLowerCase()
+                              .includes('children'.toLowerCase())
+                          )
+                          .map((dosage, index) => (
+                            <>
+                              <div
+                                className={
+                                  styles.formDrugsOptionsItemTooltipTitle
+                                }
+                              >
+                                {/* {dosage.populationType} */}
+                                <RenderHtml __html={dosage.populationType} />
+                              </div>
+                              <div
+                                key={item.id + '-children-' + index}
+                                className={
+                                  styles.formDrugsOptionsItemTooltipItem
+                                }
+                                onMouseDown={(e) =>
+                                  onAddDosage(e, item.id, dosage.text)
+                                }
+                              >
+                                {/* {dosage.text} */}
+                                <RenderHtml __html={dosage.text} />
+                              </div>
+                            </>
+                          ))}
+                      </>
+                    )}
+                  {showQuantityTooltip && item.quantityOptions.length > 0 && (
                     <>
                       {item.quantityOptions.map((quantity, index) => (
                         <div
@@ -438,7 +454,8 @@ export const FormDrugs: FC<P> = ({
                             onAddQuantity(e, item.id, quantity)
                           }
                         >
-                          {quantity}
+                          {/* {quantity} */}
+                          <RenderHtml __html={quantity} />
                         </div>
                       ))}
                     </>
