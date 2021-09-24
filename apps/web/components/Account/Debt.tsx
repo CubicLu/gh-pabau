@@ -2,33 +2,28 @@ import React, { FC, useState } from 'react'
 import { Avatar, Typography, Tooltip } from 'antd'
 import { ButtonLabel, Stepper } from '@pabau/ui'
 import { MailOutlined, BellOutlined } from '@ant-design/icons'
-import TableLayout, { FilterValueType } from './TableLayout'
+import TableLayout, { AccountTabProps } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
 import { tempType } from './Invoice'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { useDebtsQuery, useDebtCountQuery } from '@pabau/graphql'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { DisplayDate } from '../../hooks/displayDate'
-
-interface DebtProps {
-  searchTerm: string
-  selectedDates: Dayjs[]
-  filterValue: FilterValueType
-  selectedRange: string
-}
 
 interface ActionType {
   communication_id: number
   time: Date
 }
 
-const Debt: FC<DebtProps> = ({
+const Debt: FC<AccountTabProps> = ({
   searchTerm,
   selectedDates,
   filterValue,
   selectedRange,
+  accountRef,
+  companyCurrency,
 }) => {
   const [isHealthcodeEnabled, setIsHealthcodeEnabled] = useState<boolean>(false)
   const { t } = useTranslationI18()
@@ -172,7 +167,8 @@ const Debt: FC<DebtProps> = ({
       title: t('account.finance.debt.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      skeletonWidth: '70px',
+      skeletonWidth: '80px',
+      width: '140px',
       render: function render(data) {
         return (
           <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
@@ -275,7 +271,7 @@ const Debt: FC<DebtProps> = ({
       render: function render(_, { balance, status }) {
         return (
           <Typography.Text type={!status ? 'danger' : undefined}>
-            £{balance}
+            {companyCurrency + balance}
           </Typography.Text>
         )
       },
@@ -370,6 +366,7 @@ const Debt: FC<DebtProps> = ({
       noDataText={t('account.finance.debt.empty.data.text')}
       setIsHealthcodeEnabled={setIsHealthcodeEnabled}
       tabName="debt"
+      accountRef={accountRef}
     />
   )
 }

@@ -13,6 +13,7 @@ export interface SinglePhotoProps {
   isDragging: boolean
   selectedIndex: SelectIndexProps[]
   albums: ImageViewerAlbum[]
+  selectedAlbum?: ImageViewerAlbum
   zoomInMode: ZoomInMode
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedIndex: React.Dispatch<React.SetStateAction<SelectIndexProps[]>>
@@ -23,8 +24,8 @@ export const SinglePhoto: FC<SinglePhotoProps> = ({
   isDragging,
   selectedIndex,
   albums,
+  selectedAlbum,
   zoomInMode,
-  setIsDragging,
   setSelectedIndex,
   setZoomInMode,
 }) => {
@@ -48,14 +49,16 @@ export const SinglePhoto: FC<SinglePhotoProps> = ({
 
   const getImageUrl = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].origin : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum ? currentAlbum?.imageList?.[imageIndex]?.origin : ''
   }
 
   const getImageDate = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].date : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum
+      ? (currentAlbum?.imageList?.[imageIndex]?.date as string)
+      : ''
   }
 
   const handleChangeImageOption = (option, itemIndex) => {
@@ -108,14 +111,14 @@ export const SinglePhoto: FC<SinglePhotoProps> = ({
             height={height}
             src={
               selectedIndex[0].imageIndex >= 0
-                ? getImageUrl(selectedIndex[0])
+                ? getImageUrl(selectedIndex[0]) || ''
                 : ''
             }
             viewMagnifier={zoomInMode !== ZoomInMode.zoomInNone}
             magnifierZoomInValue={zoomInMode}
             date={
               selectedIndex[0].imageIndex >= 0
-                ? getImageDate(selectedIndex[0])
+                ? getImageDate(selectedIndex[0]) || ''
                 : ''
             }
             datePos={isMobile ? 'top' : 'bottom'}
