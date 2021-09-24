@@ -82,24 +82,30 @@ export class NotificationController {
       )
     }
 
-    const response = await this.notificationService.sendNotification({
-      type,
-      sent_to: enableUsers,
-      sent_by,
-      destination,
-      user_name: sent_by_name,
-      service_name,
-      client_name,
-      date,
-      time,
-      cancellation_reason,
-      company_id,
-    })
-
-    return {
-      success: true,
-      message: 'Notification pushed successfully',
-      response,
+    if (enableUsers.length > 0) {
+      const response = await this.notificationService.sendNotification({
+        type,
+        sent_to: enableUsers,
+        sent_by,
+        destination,
+        user_name: sent_by_name,
+        service_name,
+        client_name,
+        date,
+        time,
+        cancellation_reason,
+        company_id,
+      })
+      return {
+        success: true,
+        message: 'Notification pushed successfully.',
+        response,
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Not found any users to send notification.',
+      }
     }
   }
 }
