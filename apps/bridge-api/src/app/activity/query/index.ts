@@ -32,7 +32,17 @@ export const CmContactCustomType = objectType({
     t.string('MailingStreet')
     t.string('MailingCity')
     t.string('MailingPostal')
+    t.string('MailingCountry')
     t.int('clientTotalActivities')
+    t.string('Mobile')
+    t.field('CreatedDate', { type: 'DateTime' })
+    t.string('LeadSource')
+    t.string('Salutation')
+    t.string('gender')
+    t.int('ID')
+    t.field('DOB', { type: 'DateTime' })
+    t.int('is_active')
+    t.field('MarketingSourceData', { type: 'MarketingSource' })
   },
 })
 
@@ -56,7 +66,7 @@ export const CmLeadCustomType = objectType({
     t.field('leadLostTime', { type: 'DateTime' })
     t.string('wonBy')
     t.field('MarketingSource', { type: 'MarketingSource' })
-    t.field('LeadStatusData', { type: 'LeadStatus' })
+    t.string('leadStage')
   },
 })
 
@@ -124,6 +134,7 @@ const customFields = [
   'leadLostTime',
   'wonBy',
   'leadLostReason',
+  'leadStage',
 ]
 
 export const ActivityQuery = extendType({
@@ -285,6 +296,7 @@ export const ActivityQuery = extendType({
                       ? item.CmLead?.User?.full_name
                       : '',
                   leadLostReason: leadLost?.lostReason,
+                  leadStage: item.CmLead?.LeadStatusData?.status_name,
                 },
                 CmContact: {
                   ...item.CmContact,

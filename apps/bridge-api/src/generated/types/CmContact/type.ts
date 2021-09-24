@@ -474,6 +474,12 @@ export const CmContact = objectType({
         return root.ContactPreference
       },
     })
+    t.nullable.field('MarketingSourceData', {
+      type: 'MarketingSource',
+      resolve(root: any) {
+        return root.MarketingSourceData
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmContactCountOutputType',
       resolve(root: any) {

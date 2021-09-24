@@ -125,7 +125,7 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
         <div className={styles.policyWrap}>
           <h6>{t('create.client.modal.privacy.privacy.policy.title')}</h6>
           <p>{t('create.client.modal.privacy.privacy.policy.label')}</p>
-          <Radio.Group name={'privacyPolicy'}>
+          <Radio.Group name={'privacyPolicy'} value={values?.privacyPolicy}>
             {[
               {
                 name: t('create.client.modal.privacy.policy.no.response.label'),
