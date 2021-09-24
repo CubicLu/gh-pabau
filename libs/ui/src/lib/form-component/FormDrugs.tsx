@@ -90,6 +90,7 @@ export const FormDrugs: FC<P> = ({
                 ? item.medicines.quantities
                 : [],
             }))
+            console.log('drugLists', drugLists)
             setDrugsAPIList(drugLists)
           }
           setLoading(false)
@@ -360,10 +361,10 @@ export const FormDrugs: FC<P> = ({
                       <div className={styles.formDrugsOptionsItemTooltipTitle}>
                         {'Adults'}
                       </div>
-                      {item.dosageOptions.filter(
-                        (dosage) =>
-                          dosage.populationType.toUpperCase() ===
-                          'adults'.toUpperCase()
+                      {item.dosageOptions.filter((dosage) =>
+                        dosage.populationType
+                          .toLowerCase()
+                          .includes('adult'.toLowerCase())
                       ).length === 0 && (
                         <div
                           key={item.id + '-adults-' + index}
@@ -375,10 +376,10 @@ export const FormDrugs: FC<P> = ({
                         </div>
                       )}
                       {item.dosageOptions
-                        .filter(
-                          (dosage) =>
-                            dosage.populationType.toUpperCase() ===
-                            'adults'.toUpperCase()
+                        .filter((dosage) =>
+                          dosage.populationType
+                            .toLowerCase()
+                            .includes('adult'.toLowerCase())
                         )
                         .map((dosage, index) => (
                           <div
@@ -394,13 +395,13 @@ export const FormDrugs: FC<P> = ({
                       <div className={styles.formDrugsOptionsItemTooltipTitle}>
                         {'Children'}
                       </div>
-                      {item.dosageOptions.filter(
-                        (dosage) =>
-                          dosage.populationType.toUpperCase() ===
-                          'children'.toUpperCase()
+                      {item.dosageOptions.filter((dosage) =>
+                        dosage.populationType
+                          .toLowerCase()
+                          .includes('children'.toLowerCase())
                       ).length === 0 && (
                         <div
-                          key={item.id + '-adults-' + index}
+                          key={item.id + '-children-' + index}
                           className={
                             styles.formDrugsOptionsItemTooltipItemEmpty
                           }
@@ -409,10 +410,10 @@ export const FormDrugs: FC<P> = ({
                         </div>
                       )}
                       {item.dosageOptions
-                        .filter(
-                          (dosage) =>
-                            dosage.populationType.toUpperCase() ===
-                            'children'.toUpperCase()
+                        .filter((dosage) =>
+                          dosage.populationType
+                            .toLowerCase()
+                            .includes('children'.toLowerCase())
                         )
                         .map((dosage, index) => (
                           <div
