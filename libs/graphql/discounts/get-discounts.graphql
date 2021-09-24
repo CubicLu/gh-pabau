@@ -1,0 +1,20 @@
+query getDiscounts(
+  $discount_id: Int
+  $name: String
+  $rate: Float
+  $type: String
+) {
+  findManyInvTaxRate(
+    where: {
+      id: { equals: $discount_id }
+      name: { equals: $name }
+      rate: { equals: $rate }
+      type: { equals: $type }
+    }
+  ) {
+    id
+    name
+    rate
+    type
+  }
+}
