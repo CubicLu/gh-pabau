@@ -231,6 +231,15 @@ export const permissions = shield(
       getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
+      //TEMP
+      findManyServicesMasterCategory: allow,
+      //createOneBooking: allow,
+      findFirstCompany: allow,
+      findManyCmStaffGeneral: allow,
+      findManyCompanyBranch: allow,
+      findManyRotaShift: allow,
+      Public_MasterCategories: allow,
+      Public_ServiceCategories: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData
