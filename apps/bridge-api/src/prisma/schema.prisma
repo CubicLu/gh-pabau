@@ -1891,14 +1891,14 @@ model CmContact {
   need_to_knows             Boolean?                    @default(false)
   contact_type              Int                         @default(0)
   SocialSurveyFeedback      SocialSurveyFeedback?
-  CmContactAlert            CmContactAlert[]
+  ContactAlert              ContactAlert[]
   AccountBalance            AccountBalance[]
   AccountBalanceLog         AccountBalanceLog[]
   CmContactLocation         CmContactLocation[]
   CmContactTravel           CmContactTravel[]
   CmContactViewed           CmContactViewed[]
   CmContactMedicalCondition CmContactMedicalCondition[]
-  CmContactNote             CmContactNote[]
+  ContactNote               ContactNote[]
   MedicalFormContact        MedicalFormContact[]
   CmExtraGym                CmExtraGym[]
   CmExtraPatient            CmExtraPatient[]
@@ -2349,7 +2349,7 @@ model CmContactViewed {
   @@map("cm_contacts_viewed")
 }
 
-model CmContactAlert {
+model ContactAlert {
   ID                    Int                      @id @default(autoincrement())
   OwnerID               Int
   ContactID             Int
@@ -2383,7 +2383,7 @@ model CmContactMedicalCondition {
   @@map("cm_contact_medical_conditions")
 }
 
-model CmContactNote {
+model ContactNote {
 
   ID          Int                     @id @default(autoincrement())
   OwnerID     Int
@@ -2727,7 +2727,7 @@ model MedicalCondition {
   custom_id  String
   is_common  Int
 
-  CmContactAlert            CmContactAlert[]
+  ContactAlert              ContactAlert[]
   CmContactMedicalCondition CmContactMedicalCondition[]
   @@index([name], name: "name")
   @@map("cm_medical_conditions")
@@ -12644,14 +12644,14 @@ model User {
   InvBiller                    InvBiller[]
   UserAlertType                UserAlertType?
   UserAlertPermission          UserAlertPermission[]
-  CmContactAlert               CmContactAlert[]
+  ContactAlert                 ContactAlert[]
   CmStaffGeneral               CmStaffGeneral?
   CompanyNote                  CompanyNote[]
   TrainCourseDate              TrainCourseDate[]
   SocialSurveyFeedbackResponse SocialSurveyFeedbackResponse[]
   CmContactTravel              CmContactTravel[]
   CmContactViewed              CmContactViewed[]
-  CmContactNote                CmContactNote[]
+  ContactNote                  ContactNote[]
   InvProduct                   InvProduct[]
   InvPayment                   InvPayment[]
   MessageTemplate              MessageTemplate[]

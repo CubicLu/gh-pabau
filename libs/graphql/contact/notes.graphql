@@ -1,7 +1,7 @@
 query getClientHeader($contactId: Int!) {
   notes:findUniqueCmContact(where: {ID: $contactId}) {
     ID
-    clientNotes:CmContactNote(orderBy: { CreatedDate: desc }) {
+    clientNotes:ContactNote(orderBy: { CreatedDate: desc }) {
       ID
       Note
       CreatedDate
@@ -13,7 +13,7 @@ query getClientHeader($contactId: Int!) {
     appointmentNotes:Booking(orderBy: { create_date: desc } ) {
       title
     }
-    staffAlerts:CmContactAlert(orderBy: { CreatedDate: desc } ) {
+    staffAlerts:ContactAlert(orderBy: { CreatedDate: desc } ) {
       Note
       CreatedDate
       User {
