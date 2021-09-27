@@ -19,6 +19,7 @@ import {
   UserOrderByWithRelationInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
+  useFindManyUserGroupsQuery,
 } from '@pabau/graphql'
 import {
   Breadcrumb,
@@ -35,6 +36,7 @@ import {
   SmsMessageTemplateItem,
   TabMenu,
   UserListItem,
+  UserGroupListItem,
   useLiveQuery,
   MacroItem,
 } from '@pabau/ui'
@@ -135,6 +137,10 @@ export const Index: FC = () => {
       full_name: 'Appointment owner',
     },
   ])
+
+  const [userGroupListItems, setUserGroupListItems] = useState<
+    UserGroupListItem[]
+  >([])
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -238,6 +244,8 @@ export const Index: FC = () => {
   }
 
   const userLists = useFindUserQuery(getUserListQueryVariables)
+
+  const { data: userGroups } = useFindManyUserGroupsQuery()
 
   useEffect(() => {
     if (businessDetails?.data?.me?.Company?.details?.date_format)
@@ -353,6 +361,16 @@ export const Index: FC = () => {
       setUserListItems(userList)
     }
   }, [userLists])
+
+  useEffect(() => {
+    if (userGroups?.findManyUserGroup) {
+      const userGroupList = userGroups?.findManyUserGroup.map((userGroup) => ({
+        id: userGroup.id,
+        group_name: userGroup.group_name,
+      }))
+      setUserGroupListItems(userGroupList)
+    }
+  }, [userGroups])
 
   const [addMutation] = useCreateOneMedicalFormMutation({
     onCompleted(data) {
@@ -714,6 +732,7 @@ export const Index: FC = () => {
                 smsMessageTemplateItems={smsMessageTemplateItems}
                 emailMessageTemplateItems={emailMessageTemplateItems}
                 userListItems={userListItems}
+                userGroupListItems={userGroupListItems}
                 medicalFormMacros={medicalFormMacros}
               />
             )}
@@ -734,6 +753,7 @@ export const Index: FC = () => {
             smsMessageTemplateItems={smsMessageTemplateItems}
             emailMessageTemplateItems={emailMessageTemplateItems}
             userListItems={userListItems}
+            userGroupListItems={userGroupListItems}
             medicalFormMacros={medicalFormMacros}
             onSaveForm={saveForm}
             onHandleMacro={onHandleMacro}

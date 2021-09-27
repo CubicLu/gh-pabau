@@ -12884,7 +12884,7 @@ model UserGroup {
   Company            Company             @relation(fields: [company_id], references: [id])
   Permission         PermissionTemplate? @relation(fields: [permission_id], references: [id])
   UserGroupMember    UserGroupMember[]
-  GroupPermission    GroupPermission[]
+  // GroupPermission    GroupPermission[]
 
   @@map("user_groups")
 }
@@ -14170,14 +14170,14 @@ model XeroIntegration {
 //}
 
 model GroupPermission {
-  id                  Int       @id @default(autoincrement())
+  id                  Int     @id @default(autoincrement())
   company_id          Int
   group_id            Int
   module_permissions  String
   feature_permissions String
   report_permissions  String
-  UserGroup           UserGroup @relation(fields: [group_id], references: [id])
-  Company             Company   @relation(fields: [company_id], references: [id])
+  // UserGroup           UserGroup @relation(fields: [group_id], references: [id])
+  Company             Company @relation(fields: [company_id], references: [id])
 
   @@map("group_permissions")
 }

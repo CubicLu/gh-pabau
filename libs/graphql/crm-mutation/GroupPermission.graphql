@@ -9,9 +9,6 @@ fragment GroupPermissionFields on GroupPermission {
 
 fragment GroupPermission on GroupPermission {
   ...GroupPermissionFields
-  UserGroup {
-    ...UserGroupFields
-  }
   Company {
     ...CompanyFields
   }

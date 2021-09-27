@@ -613,13 +613,54 @@
   cursor: pointer;
 }
 .formComponentButton {
+  display: flex;
+  flex-direction: row;
   padding: 36px 40px;
+  .btnCircle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px !important;
+    margin-left: 10px;
+    :global {
+      .anticon {
+        line-height: 0;
+      }
+      .ant-popover-inner-content {
+        padding: 0;
+      }
+    }
+  }
   :global {
     .ant-btn {
       width: 100%;
     }
   }
 }
+
+.lockPanel {
+  .lockItem {
+    padding: 3px 0px;
+    .lockTitle {
+      margin-left: 5px;
+    }
+  }
+}
+
+.lockGroup {
+  margin-bottom: 10px;
+}
+
+.lockDivider {
+  border-top: 1px solid #ecedf0;
+  font-size: 12px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #9292A3;
+  text-transform: uppercase;
+  padding-top: 15px;
+}
+
 .formRequiredMark {
   color: red;
   margin-left: 3px;

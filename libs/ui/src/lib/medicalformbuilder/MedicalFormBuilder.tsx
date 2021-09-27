@@ -9,6 +9,7 @@ import {
   NotificationType,
   SmsMessageTemplateItem,
   UserListItem,
+  UserGroupListItem,
   MacroItem,
 } from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
@@ -71,6 +72,7 @@ interface MedicalFormBuilderProps {
   smsMessageTemplateItems?: SmsMessageTemplateItem[]
   emailMessageTemplateItems?: EmailMessageTemplateItem[]
   userListItems?: UserListItem[]
+  userGroupListItems?: UserGroupListItem[]
   medicalFormMacros?: MacroItem[]
 }
 
@@ -87,6 +89,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   smsMessageTemplateItems = [],
   emailMessageTemplateItems = [],
   userListItems = [],
+  userGroupListItems = [],
   medicalFormMacros = [],
 }) => {
   const { t } = useTranslation('common')
@@ -290,6 +293,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               formSaveLabel={formSaveLabel}
               onHandleMacro={onHandleMacro}
               medicalFormMacros={medicalFormMacros}
+              userGroupListItems={userGroupListItems}
             />
           )}
         </TabPane>

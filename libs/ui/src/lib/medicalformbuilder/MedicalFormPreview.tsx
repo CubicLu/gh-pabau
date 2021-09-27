@@ -13,6 +13,7 @@ interface P {
   formName: string
   formSaveLabel?: string
   medicalFormMacros?: MacroItem[]
+  userGroupListItems?: UserGroupListItem[]
 }
 const MedicalFormPreview: FC<P> = ({
   visible,
@@ -22,6 +23,7 @@ const MedicalFormPreview: FC<P> = ({
   formName = '',
   formSaveLabel = '',
   medicalFormMacros = [],
+  userGroupListItems = [],
 }) => {
   return (
     <div className={styles.medicalFormEditPanel}>
@@ -43,6 +45,7 @@ const MedicalFormPreview: FC<P> = ({
         closePreviewDialog={closePreviewDialog}
         onHandleMacro={onHandleMacro}
         medicalFormMacros={medicalFormMacros}
+        userGroupListItems={userGroupListItems}
       />
     </div>
   )

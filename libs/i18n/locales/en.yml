@@ -2373,6 +2373,8 @@ en:
   ui.medicalformbuilder.form.street.question: 'Street Address'
   ui.medicalformbuilder.form.uploadimage: 'Upload Images'
   ui.medicalformbuilder.form.uploadpdf: 'Upload PDF'
+  ui.medicalformbuilder.form.lock.allusers: 'Visible to all users'
+  ui.medicalformbuilder.form.lock.me: 'Visible to me'
   ui.medicalformbuilder.left.tab.general: 'GENERAL'
   ui.medicalformbuilder.left.tab.components: 'COMPONENTS'
   ui.medicalformbuilder.medicalhistory.tooltip: 'We will automatically request the client to update there medical history after the below term'

@@ -20,6 +20,7 @@ import {
   SmsMessageTemplateItem,
   Table,
   UserListItem,
+  UserGroupListItem,
   VersionHistory,
   MacroItem,
 } from '@pabau/ui'
@@ -46,6 +47,7 @@ interface CustomProps {
   smsMessageTemplateItems: SmsMessageTemplateItem[]
   emailMessageTemplateItems: EmailMessageTemplateItem[]
   userListItems: UserListItem[]
+  userGroupListItems: UserGroupListItem[]
   medicalFormMacros: MacroItem[]
   onSaveForm?: (MedicalFormItem) => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
@@ -59,6 +61,7 @@ const Custom: FC<CustomProps> = ({
   smsMessageTemplateItems,
   emailMessageTemplateItems,
   userListItems,
+  userGroupListItems = [],
   medicalFormMacros = [],
   onSaveForm,
   pagenateParams,
@@ -291,6 +294,7 @@ const Custom: FC<CustomProps> = ({
                   }
                   onHandleMacro={onHandleMacro}
                   medicalFormMacros={medicalFormMacros}
+                  userGroupListItems={userGroupListItems}
                 />
               )}
               <Button
@@ -453,6 +457,7 @@ const Custom: FC<CustomProps> = ({
         smsMessageTemplateItems={smsMessageTemplateItems}
         emailMessageTemplateItems={emailMessageTemplateItems}
         userListItems={userListItems}
+        userGroupListItems={userGroupListItems}
         medicalFormMacros={medicalFormMacros}
       />
       <div className={styles.paginationContainer}>

@@ -1,7 +1,14 @@
-import { Button, ButtonTypes, MedicalFormTypes, MacroItem } from '@pabau/ui'
+import {
+  Button,
+  ButtonTypes,
+  MedicalFormTypes,
+  MacroItem,
+  UserGroupListItem,
+} from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './FormComponent.module.less'
 import FormComponentInnerElement from './FormComponentInnerElement'
+import FormSaveButton from './FormSaveButton'
 
 interface P {
   draggedForms: MedicalFormTypes[]
@@ -9,6 +16,7 @@ interface P {
   processSaveForm?: () => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
   medicalFormMacros?: MacroItem[]
+  userGroupListItems?: UserGroupListItem[]
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
@@ -18,14 +26,18 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
     processSaveForm,
     onHandleMacro,
     medicalFormMacros = [],
+    userGroupListItems = [],
   } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   const [macroItems, setMacroItems] = useState<MacroItem[]>([])
 
   useEffect(() => {
-    console.log('medicalFormMacros', medicalFormMacros)
     setMacroItems(medicalFormMacros)
   }, [medicalFormMacros])
+
+  useEffect(() => {
+    console.log('userGroupListItems', userGroupListItems)
+  }, [userGroupListItems])
 
   useEffect(() => {
     const requiredForms = draggedForms.filter((form) => form.required === true)
@@ -86,16 +98,12 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
         )
       })}
       {draggedForms?.length > 0 && (
-        <div className={styles.formComponentButton}>
-          <Button
-            type={ButtonTypes.primary}
-            size="middle"
-            disabled={disableSaveButton}
-            onClick={onSaveForm}
-          >
-            {formSaveLabel === '' ? 'Save Form' : formSaveLabel}
-          </Button>
-        </div>
+        <FormSaveButton
+          saveForm={onSaveForm}
+          disableSaveButton={disableSaveButton}
+          formSaveLabel={formSaveLabel}
+          userGroupListItems={userGroupListItems}
+        />
       )}
     </div>
   )

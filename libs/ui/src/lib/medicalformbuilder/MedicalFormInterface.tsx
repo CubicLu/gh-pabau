@@ -176,3 +176,8 @@ export interface MacroItem {
   type: number
   createdAt: string
 }
+
+export interface UserGroupListItem {
+  id: number
+  group_name: string
+}

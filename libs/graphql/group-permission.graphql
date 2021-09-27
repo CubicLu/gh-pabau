@@ -4,12 +4,12 @@ query findManyUserGroups {
     company_id
     group_name
     group_description
-    GroupPermission {
-      group_id
-      feature_permissions
-      module_permissions
-      report_permissions
-    }
+    # GroupPermission {
+    #   group_id
+    #   feature_permissions
+    #   module_permissions
+    #   report_permissions
+    # }
     UserGroupMember {
       group_id
       User {
