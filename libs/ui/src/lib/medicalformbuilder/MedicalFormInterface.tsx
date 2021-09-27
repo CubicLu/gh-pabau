@@ -152,6 +152,7 @@ export const defaultMedicaFormAdvanceSettingData: MedicaFormAdvanceSettingData =
 export interface MedicalFormItem {
   name: string
   formType: string
+  serviceId: string
   createdAt: string
   version: MedicalFormVersion
   status: string
@@ -180,4 +181,14 @@ export interface MacroItem {
 export interface UserGroupListItem {
   id: number
   group_name: string
+}
+
+export interface CompanyListItem {
+  id: number
+  name: string
+}
+
+export interface LabListItem {
+  id: number
+  name: string
 }

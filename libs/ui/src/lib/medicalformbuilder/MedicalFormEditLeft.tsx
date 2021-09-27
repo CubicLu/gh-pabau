@@ -2,6 +2,7 @@ import {
   defaultSelectedFormInfos,
   MedicalForms,
   SelectedForms,
+  CompanyListItem,
 } from '@pabau/ui'
 import { Collapse } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
@@ -19,12 +20,15 @@ interface P {
   isEditing: () => boolean
   medicalForms: MedicalForms[]
   changeFormName: (formName: string) => void
+  changeService: (services: Array<string | number>) => void
   changeFormType: (formType: string) => void
   formName: string
   medicalFormType: string
+  medicalFormServices: string
   changeLayout: (noRight: boolean) => void
   runPreviewPdf: () => void
   handlingClickLeft: (componentName: string) => void
+  companyServiceListItems: CompanyListItem[]
 }
 
 const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
@@ -34,12 +38,15 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
     isEditing,
     medicalForms,
     changeFormName,
+    changeService,
     changeFormType,
     formName,
     medicalFormType = '',
+    medicalFormServices = '',
     changeLayout,
     runPreviewPdf,
     handlingClickLeft,
+    companyServiceListItems = [],
   } = props
 
   const [selectedFormTypes, setSelectedFormTypes] = useState<SelectedForms>(
@@ -162,8 +169,11 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
             isEditing={isEditing}
             onSelectFormType={onSelectFormType}
             changeFormName={changeFormName}
+            changeService={changeService}
             formName={formName}
             medicalFormType={medicalFormType}
+            medicalFormServices={medicalFormServices}
+            companyServiceListItems={companyServiceListItems}
           />
           {isEpaper && <MedicalFormUploadButtons onPreviewPdf={onPreviewPdf} />}
         </Panel>

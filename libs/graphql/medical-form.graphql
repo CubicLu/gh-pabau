@@ -15,6 +15,7 @@ query findMedicalForms(
     created_at
     form_type
     company_id
+    service_id
     data
     MedicalFormAdvancedSetting {
       id
@@ -36,7 +37,10 @@ query findMessageTemplate(
     template_name
   }
 }
-query findUser($where: UserWhereInput, $orderBy: [UserOrderByWithRelationInput!]) {
+query findUser(
+  $where: UserWhereInput
+  $orderBy: [UserOrderByWithRelationInput!]
+) {
   findManyUser(orderBy: $orderBy, where: $where) {
     id
     full_name
@@ -49,6 +53,7 @@ query getMedicalFormDetails($medicalFormId: Int!) {
     name
     created_at
     form_type
+    service_id
     company_id
     data
     MedicalFormAdvancedSetting {
@@ -60,19 +65,16 @@ query getMedicalFormDetails($medicalFormId: Int!) {
   }
 }
 
-# query findMedicalFormMacros($where: MedicalFormMacroWhereInput, $orderBy: [MedicalFormMacroOrderByWithRelationInput!]) {
-#   findManyMedicalFormMacro(orderBy: $orderBy, where: $where) {
-#     id
-#     createdAt
-#     title
-#     message
-#     type
-#     created_by
-#   }
-# }
+query findManyCompanyServices {
+  findManyCompanyService {
+    id
+    name
+  }
+}
 
-# query deleteMedicalFormMacro($where: MedicalFormMacroWhereUniqueInput) {
-#   deleteOneMedicalFormMacro(where: $where) {
-#     id
-#   }
-# }
+query findManyLabs {
+  findManyLab(where: { is_active: { equals: 1 } }) {
+    id
+    lab_name
+  }
+}

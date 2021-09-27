@@ -11,6 +11,7 @@ describe('MedicalFormBuilder', () => {
         visible={true}
         preFormName=""
         preFormType=""
+        preFormServices=""
         create={true}
       />
     )

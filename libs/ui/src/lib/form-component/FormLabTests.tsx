@@ -1,7 +1,7 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { OptionType } from '@pabau/ui'
+import { OptionType, LabListItem } from '@pabau/ui'
 import { Select } from 'antd'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import styles from './FormComponent.module.less'
 
 const { Option } = Select
@@ -10,6 +10,7 @@ interface P {
   desc: string
   paramItems: OptionType[]
   required: boolean
+  labListItems?: LabListItem[]
   onChangeArrValue?: (value: string[]) => void
 }
 
@@ -32,14 +33,26 @@ const FormLabTests: FC<P> = ({
   paramItems,
   required = false,
   onChangeArrValue,
+  labListItems = [],
 }) => {
   const [addedItems, setaddedItems] = useState<OptionType[]>([])
   const [selectedItem, setSelectedItem] = useState(0)
+  const [labList, setLabList] = useState<LabListItem[]>([])
+
+  useEffect(() => {
+    console.log('labListItems', labListItems)
+    setLabList(labListItems)
+  }, [labListItems])
 
   const onChange = (value) => {
-    const addedItem = dataLists.filter((item) => item.id === value)
+    const addedItem = labList.filter((item) => item.id === value)
     if (addedItem.length > 0) {
-      const tempItems = [...addedItems, addedItem[0]]
+      const t = {
+        id: addedItem[0].id,
+        name: addedItem[0].name,
+        editing: false,
+      }
+      const tempItems = [...addedItems, t]
       setaddedItems(tempItems)
       const ids = tempItems.map((item) => item.id.toString())
       onChangeArrValue?.(ids)
@@ -78,7 +91,7 @@ const FormLabTests: FC<P> = ({
       {desc.length > 0 && (
         <div className={styles.formComponentChoiceDescription}>{desc}</div>
       )}
-      {dataLists.length > 0 && (
+      {labList.length > 0 && (
         <div className={styles.formLabTestsOptions}>
           <Select
             showSearch
@@ -98,11 +111,8 @@ const FormLabTests: FC<P> = ({
             style={{ width: '100%', marginTop: '10px' }}
             value={selectedItem}
           >
-            <Option value={0} key={0}>
-              Select tests to order
-            </Option>
-            {dataLists.map((item, index) => (
-              <Option key={index + 1} value={item.id}>
+            {labList.map((item, index) => (
+              <Option key={'labListItems-' + index} value={item.id}>
                 {item.name}
               </Option>
             ))}

@@ -7,6 +7,7 @@ import {
   TabMenu,
   MacroItem,
   UserGroupListItem,
+  LabListItem,
 } from '@pabau/ui'
 import { Divider, Tag } from 'antd'
 import React, { FC } from 'react'
@@ -33,6 +34,7 @@ export interface MedicalFormPreviewProps {
   onHandleMacro?: (action: string, macro: MacroItem) => void
   medicalFormMacros?: MacroItem[]
   userGroupListItems?: UserGroupListItem[]
+  labListItems?: LabListItem[]
 }
 
 export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
@@ -49,6 +51,7 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
   onHandleMacro,
   medicalFormMacros = [],
   userGroupListItems = [],
+  labListItems = [],
 }) => {
   const onCancel = () => {
     closePreviewDialog?.()
@@ -76,6 +79,7 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
                     onHandleMacro={onHandleMacro}
                     medicalFormMacros={medicalFormMacros}
                     userGroupListItems={userGroupListItems}
+                    labListItems={labListItems}
                   />
                 )}
               </div>

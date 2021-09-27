@@ -20,6 +20,8 @@ import {
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
   useFindManyUserGroupsQuery,
+  useFindManyCompanyServicesQuery,
+  useFindManyLabsQuery,
 } from '@pabau/graphql'
 import {
   Breadcrumb,
@@ -37,6 +39,8 @@ import {
   TabMenu,
   UserListItem,
   UserGroupListItem,
+  CompanyListItem,
+  LabListItem,
   useLiveQuery,
   MacroItem,
 } from '@pabau/ui'
@@ -142,6 +146,12 @@ export const Index: FC = () => {
     UserGroupListItem[]
   >([])
 
+  const [companyServiceListItems, setCompanyServiceListItems] = useState<
+    CompanyListItem[]
+  >([])
+
+  const [labListItems, setLabListItems] = useState<LabListItem[]>([])
+
   const [paginateData, setPaginateData] = useState({
     total: 0,
     skip: 0,
@@ -246,6 +256,8 @@ export const Index: FC = () => {
   const userLists = useFindUserQuery(getUserListQueryVariables)
 
   const { data: userGroups } = useFindManyUserGroupsQuery()
+  const { data: companyServices } = useFindManyCompanyServicesQuery()
+  const { data: labs } = useFindManyLabsQuery()
 
   useEffect(() => {
     if (businessDetails?.data?.me?.Company?.details?.date_format)
@@ -261,6 +273,7 @@ export const Index: FC = () => {
           key: medicalForm.id.toString(),
           name: medicalForm.name,
           formType: medicalForm.form_type,
+          serviceId: medicalForm.service_id,
           createdAt:
             companyDateFormat === 'd/m/Y'
               ? dayjs(medicalForm.created_at).format('DD/MM/YYYY HH:mm:ss')
@@ -372,6 +385,28 @@ export const Index: FC = () => {
     }
   }, [userGroups])
 
+  useEffect(() => {
+    if (companyServices?.findManyCompanyService) {
+      const companyServiceList = companyServices?.findManyCompanyService.map(
+        (companyService) => ({
+          id: companyService.id,
+          name: companyService.name,
+        })
+      )
+      setCompanyServiceListItems(companyServiceList)
+    }
+  }, [companyServices])
+
+  useEffect(() => {
+    if (labs?.findManyLab) {
+      const labList = labs?.findManyLab.map((lab) => ({
+        id: lab.id,
+        name: lab.lab_name,
+      }))
+      setLabListItems(labList)
+    }
+  }, [labs])
+
   const [addMutation] = useCreateOneMedicalFormMutation({
     onCompleted(data) {
       Notification(
@@ -401,7 +436,6 @@ export const Index: FC = () => {
 
   const saveForm = async (medicalItem) => {
     setShowCreateForm(false)
-
     const updateVariables = {
       where: {
         id: Number(medicalItem.key),
@@ -409,6 +443,7 @@ export const Index: FC = () => {
       data: {
         name: { set: medicalItem.name },
         data: { set: medicalItem.formData },
+        service_id: { set: medicalItem.serviceId },
         form_type: {
           set:
             medicalItem.formType === 'medicalHistory'
@@ -464,7 +499,7 @@ export const Index: FC = () => {
         printout: '',
         user_created: 0,
         encoded: 0,
-        service_id: '',
+        service_id: medicalItem.serviceId,
         temp_static: 0,
         old_data: '',
         form_category: '',
@@ -726,6 +761,7 @@ export const Index: FC = () => {
                 previewData=""
                 preFormName=""
                 preFormType=""
+                preFormServices=""
                 onHideFormBuilder={() => setShowCreateForm(false)}
                 onSaveForm={saveForm}
                 create={true}
@@ -733,7 +769,9 @@ export const Index: FC = () => {
                 emailMessageTemplateItems={emailMessageTemplateItems}
                 userListItems={userListItems}
                 userGroupListItems={userGroupListItems}
+                labListItems={labListItems}
                 medicalFormMacros={medicalFormMacros}
+                companyServiceListItems={companyServiceListItems}
               />
             )}
           </div>
@@ -754,6 +792,8 @@ export const Index: FC = () => {
             emailMessageTemplateItems={emailMessageTemplateItems}
             userListItems={userListItems}
             userGroupListItems={userGroupListItems}
+            labListItems={labListItems}
+            companyServiceListItems={companyServiceListItems}
             medicalFormMacros={medicalFormMacros}
             onSaveForm={saveForm}
             onHandleMacro={onHandleMacro}

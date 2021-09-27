@@ -11,6 +11,8 @@ import {
   UserListItem,
   UserGroupListItem,
   MacroItem,
+  CompanyListItem,
+  LabListItem,
 } from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
 import className from 'classnames'
@@ -29,6 +31,7 @@ const defaultMedicalForm = {
   key: '',
   name: '',
   formType: 'Treatment form',
+  serviceId: '',
   createdAt: '23/10/2020',
   version: {
     currentVersion: '3',
@@ -67,12 +70,15 @@ interface MedicalFormBuilderProps {
   onHandleMacro?: (action: string, macro: MacroItem) => void
   preFormName: string
   preFormType: string
+  preFormServices: string
   create?: boolean
   currentForm?: MedicalFormItem
   smsMessageTemplateItems?: SmsMessageTemplateItem[]
   emailMessageTemplateItems?: EmailMessageTemplateItem[]
   userListItems?: UserListItem[]
   userGroupListItems?: UserGroupListItem[]
+  labListItems?: LabListItem[]
+  companyServiceListItems?: CompanyListItem[]
   medicalFormMacros?: MacroItem[]
 }
 
@@ -84,17 +90,23 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   onHandleMacro,
   preFormName = '',
   preFormType = '',
+  preFormServices = '',
   create = true,
   currentForm = null,
   smsMessageTemplateItems = [],
   emailMessageTemplateItems = [],
   userListItems = [],
   userGroupListItems = [],
+  labListItems = [],
   medicalFormMacros = [],
+  companyServiceListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
   const [medicalFormType, setMedicalFormType] = useState(preFormType)
+  const [medicalFormServices, setMedicalFormServices] = useState(
+    preFormServices
+  )
   const [formSaveLabel, setFormSaveLabel] = useState('')
   const [
     currentMedicalForm,
@@ -124,6 +136,10 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   }, [preFormType])
 
   useEffect(() => {
+    setMedicalFormServices(preFormServices)
+  }, [preFormServices])
+
+  useEffect(() => {
     if (currentForm) {
       setCurrentMedicalForm(currentForm)
     }
@@ -141,6 +157,11 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
     setFormName(formName)
     if (currentMedicalForm) currentMedicalForm.name = formName
     if (defaultMedicalForm) defaultMedicalForm.name = formName
+  }
+
+  const changeService = (services) => {
+    if (currentMedicalForm) currentMedicalForm.serviceId = services.toString()
+    if (defaultMedicalForm) defaultMedicalForm.serviceId = services.toString()
   }
 
   const triggerChangeForms = (forms) => {
@@ -271,10 +292,12 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
           <MedicalFormEdit
             previewData={previewData}
             changeFormName={changeFormName}
+            changeService={changeService}
             changeFormType={changeFormType}
             clickedCreateForm={clickedCreateForm}
             clickedPreviewForm={clickedPreviewForm}
             clearCreateFormBtn={clearCreateFormBtn}
+            companyServiceListItems={companyServiceListItems}
             getFormData={getFormData}
             onSaveForm={handleSaveForm}
             formName={formName}
@@ -283,6 +306,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               create ? defaultMedicalForm?.rules : currentMedicalForm?.rules
             }
             medicalFormType={medicalFormType}
+            medicalFormServices={medicalFormServices}
           />
           {visiblePreview === true && (
             <MedicalFormPreview
@@ -294,6 +318,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               onHandleMacro={onHandleMacro}
               medicalFormMacros={medicalFormMacros}
               userGroupListItems={userGroupListItems}
+              labListItems={labListItems}
             />
           )}
         </TabPane>

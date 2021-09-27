@@ -36,7 +36,10 @@ export default {
 const AddSuggestionStory = ({ ...args }) => <AddSuggestion {...args} />
 export const BasicAddSuggestion = AddSuggestionStory.bind({})
 BasicAddSuggestion.args = {
-  options: ['Category', 'All inclusive'],
+  options: [
+    { id: 1, name: 'Category' },
+    { id: 2, name: 'All inclusive' },
+  ],
   defaultSelected: ['Category', 'All inclusive'],
   label: 'Select Suggestions',
   onChange: (data: Array<string | number>) => {

@@ -21,6 +21,8 @@ import {
   Table,
   UserListItem,
   UserGroupListItem,
+  LabListItem,
+  CompanyListItem,
   VersionHistory,
   MacroItem,
 } from '@pabau/ui'
@@ -48,6 +50,8 @@ interface CustomProps {
   emailMessageTemplateItems: EmailMessageTemplateItem[]
   userListItems: UserListItem[]
   userGroupListItems: UserGroupListItem[]
+  labListItems: LabListItem[]
+  companyServiceListItems: CompanyListItem[]
   medicalFormMacros: MacroItem[]
   onSaveForm?: (MedicalFormItem) => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
@@ -62,6 +66,8 @@ const Custom: FC<CustomProps> = ({
   emailMessageTemplateItems,
   userListItems,
   userGroupListItems = [],
+  labListItems = [],
+  companyServiceListItems = [],
   medicalFormMacros = [],
   onSaveForm,
   pagenateParams,
@@ -295,6 +301,7 @@ const Custom: FC<CustomProps> = ({
                   onHandleMacro={onHandleMacro}
                   medicalFormMacros={medicalFormMacros}
                   userGroupListItems={userGroupListItems}
+                  labListItems={labListItems}
                 />
               )}
               <Button
@@ -449,6 +456,7 @@ const Custom: FC<CustomProps> = ({
         previewData={selectedItem?.formData}
         preFormName={selectedItem?.name}
         preFormType={selectedItem?.formType}
+        preFormServices={selectedItem?.serviceId}
         currentForm={selectedItem}
         onHideFormBuilder={() => setEditFormModal(false)}
         onSaveForm={handleSaveForm}
@@ -458,7 +466,9 @@ const Custom: FC<CustomProps> = ({
         emailMessageTemplateItems={emailMessageTemplateItems}
         userListItems={userListItems}
         userGroupListItems={userGroupListItems}
+        labListItems={labListItems}
         medicalFormMacros={medicalFormMacros}
+        companyServiceListItems={companyServiceListItems}
       />
       <div className={styles.paginationContainer}>
         <Pagination

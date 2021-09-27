@@ -5,6 +5,7 @@ import {
   Notification,
   NotificationType,
   RuleProp,
+  CompanyListItem,
 } from '@pabau/ui'
 import { Col, Modal, Row } from 'antd'
 import { cloneDeep, isEqual } from 'lodash'
@@ -303,6 +304,7 @@ interface P {
   previewData: string
   changeFormName: (formName: string) => void
   changeFormType: (formType: string) => void
+  changeService: (services: Array<string | number>) => void
   clickedCreateForm: boolean
   clickedPreviewForm: boolean
   clearCreateFormBtn: () => void
@@ -311,13 +313,16 @@ interface P {
   triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
   medicalFormType: string
+  medicalFormServices: string
   currentRules?: RuleProp[]
   currentAdvSettings?: MedicaFormAdvanceSettingData
+  companyServiceListItems?: CompanyListItem[]
 }
 
 const MedicalFormEdit: FC<P> = ({
   previewData,
   changeFormName,
+  changeService,
   changeFormType,
   clickedCreateForm,
   clearCreateFormBtn,
@@ -327,8 +332,10 @@ const MedicalFormEdit: FC<P> = ({
   triggerChangeForms,
   formName,
   medicalFormType = '',
+  medicalFormServices = '',
   currentRules = [],
   currentAdvSettings = defaultMedicaFormAdvanceSettingData,
+  companyServiceListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
@@ -822,10 +829,13 @@ const MedicalFormEdit: FC<P> = ({
             refreshDraggedForms={refreshDraggedForms}
             isEditing={isEditing}
             medicalForms={medicalForms}
+            companyServiceListItems={companyServiceListItems}
             changeFormName={changeFormName}
+            changeService={changeService}
             changeFormType={changeFormType}
             formName={formName}
             medicalFormType={medicalFormType}
+            medicalFormServices={medicalFormServices}
             changeLayout={changeLayout}
             runPreviewPdf={runPreviewPdf}
             handlingClickLeft={handlingClickLeft}

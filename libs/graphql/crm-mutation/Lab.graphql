@@ -1,0 +1,45 @@
+fragment LabFields on Lab {
+  id
+  company_id
+  is_active
+  lab_name
+  lab_email
+  lab_street
+  lab_street2
+  lab_city
+  lab_county
+  lab_postal
+  lab_phone
+  lab_provider_no
+}
+
+fragment Lab on Lab {
+  ...LabFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneLab($data: LabCreateInput!) {
+  createOneLab(data: $data) {
+    ...Lab
+  }
+}
+
+mutation updateOneLab($where: LabWhereUniqueInput!, $data: LabUpdateInput!) {
+  updateOneLab(where: $where, data: $data) {
+    ...Lab
+  }
+}
+
+mutation deleteOneLab($where: LabWhereUniqueInput!) {
+  deleteOneLab(where: $where) {
+    ...Lab
+  }
+}
+
+mutation updateManyLab($where: LabWhereInput, $data: LabUpdateManyMutationInput!) {
+  updateManyLab(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,4 +1,4 @@
-import { MedicalFormTypes, MacroItem } from '@pabau/ui'
+import { MedicalFormTypes, MacroItem, LabListItem } from '@pabau/ui'
 import { cloneDeep } from 'lodash'
 import React, { FC, useState } from 'react'
 import FormCheckBox from './FormCheckBox'
@@ -28,6 +28,7 @@ interface P {
   handlingSaveForm?: (form: MedicalFormTypes) => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
   macroItems?: MacroItem[]
+  labListItems?: LabListItem[]
 }
 
 const FormComponentInnerElement: FC<P> = ({
@@ -38,6 +39,7 @@ const FormComponentInnerElement: FC<P> = ({
   formData,
   handlingSaveForm,
   macroItems = [],
+  labListItems = [],
   onHandleMacro,
 }) => {
   const [form, setForm] = useState(cloneDeep(formData))
@@ -265,6 +267,7 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               paramItems={formData.arrItems}
               required={formData.required}
+              labListItems={labListItems}
               onChangeArrValue={onChangeArrValue}
             />
           )}

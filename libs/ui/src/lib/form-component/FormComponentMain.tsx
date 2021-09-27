@@ -1,9 +1,8 @@
 import {
-  Button,
-  ButtonTypes,
   MedicalFormTypes,
   MacroItem,
   UserGroupListItem,
+  LabListItem,
 } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './FormComponent.module.less'
@@ -17,6 +16,7 @@ interface P {
   onHandleMacro?: (action: string, macro: MacroItem) => void
   medicalFormMacros?: MacroItem[]
   userGroupListItems?: UserGroupListItem[]
+  labListItems?: LabListItem[]
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
@@ -27,6 +27,7 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
     onHandleMacro,
     medicalFormMacros = [],
     userGroupListItems = [],
+    labListItems = [],
   } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   const [macroItems, setMacroItems] = useState<MacroItem[]>([])
@@ -34,10 +35,6 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
   useEffect(() => {
     setMacroItems(medicalFormMacros)
   }, [medicalFormMacros])
-
-  useEffect(() => {
-    console.log('userGroupListItems', userGroupListItems)
-  }, [userGroupListItems])
 
   useEffect(() => {
     const requiredForms = draggedForms.filter((form) => form.required === true)
@@ -93,6 +90,7 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
               handlingSaveForm={handlingSaveForm}
               onHandleMacro={onHandleMacro}
               macroItems={macroItems}
+              labListItems={labListItems}
             />
           </div>
         )
