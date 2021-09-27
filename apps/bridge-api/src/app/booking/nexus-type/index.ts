@@ -23,8 +23,6 @@ const BookingStatusDetails = objectType({
     t.string('totalBookingPer')
     t.int('totalOnlineBooking')
     t.string('totalOnlineBookingPer')
-    t.string('totalBookingStatusCounts')
-    t.string('totalBookingCountOnline')
     t.list.field('appointmentList', { type: CountDetails })
     t.list.field('onlineAppointmentList', { type: CountDetails })
   },
@@ -33,7 +31,6 @@ const BookingStatusDetails = objectType({
 const SalesCount = objectType({
   name: 'salesCount',
   definition(t) {
-    t.int('totalSalesCounts')
     t.string('totalAvailableCategoryTypePer')
     t.int('totalAvailableCategoryTypeCount')
     t.list.field('salesList', { type: CountDetails })
@@ -49,7 +46,7 @@ const ChartValue = objectType({
 })
 
 const ChartData = objectType({
-  name: 'allbooking',
+  name: 'bookingsByStatus',
   definition(t) {
     t.string('status')
     t.list.field('data', { type: ChartValue })
@@ -57,10 +54,24 @@ const ChartData = objectType({
 })
 
 const SaleChartData = objectType({
-  name: 'allSales',
+  name: 'salesByProductCategoryType',
   definition(t) {
     t.string('status')
     t.list.field('data', { type: ChartValue })
+  },
+})
+
+const bookingsByStatus = objectType({
+  name: 'allbooking',
+  definition(t) {
+    t.list.field('bookingsByStatus', { type: ChartData })
+  },
+})
+
+const salesByProductCategoryType = objectType({
+  name: 'allSales',
+  definition(t) {
+    t.list.field('salesByProductCategoryType', { type: SaleChartData })
   },
 })
 
@@ -69,7 +80,7 @@ export const DashboardResponseType = objectType({
   definition(t) {
     t.field('bookingStatusCount', { type: BookingStatusDetails })
     t.field('salesCount', { type: SalesCount })
-    t.list.field('allbooking', { type: ChartData })
-    t.list.field('allSales', { type: SaleChartData })
+    t.field('allbooking', { type: bookingsByStatus })
+    t.field('allSales', { type: salesByProductCategoryType })
   },
 })

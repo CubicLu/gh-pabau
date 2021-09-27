@@ -1293,11 +1293,6 @@ export const retrieveSalesCount = async (
       },
     })
   }
-  const totalSalesCount = await ctx.prisma.invSale.aggregate({
-    _count: {
-      id: true,
-    },
-  })
   salesCount?.map((item) => {
     if (item.product_category_type !== '') {
       SalesList.push({
@@ -1306,24 +1301,29 @@ export const retrieveSalesCount = async (
         per:
           (
             ((item._count.id ?? 0) * 100) /
-            (totalSalesCount?._count?.id ?? 0)
+            salesCount?.reduce((prev, cur) => {
+              return prev + cur._count.id ?? 0
+            }, 0)
           ).toFixed(2) + '%',
       })
     }
     return item
   })
   return {
-    totalSalesCounts: totalSalesCount?._count?.id ?? 0,
     totalAvailableCategoryTypeCount: salesCount?.reduce((prev, cur) => {
       return prev + cur._count.id ?? 0
     }, 0),
-    totalAvailableCategoryTypePer: `${(
-      (salesCount?.reduce((prev, cur) => {
-        return prev + cur._count.id ?? 0
-      }, 0) *
-        100) /
-        totalSalesCount?._count?.id ?? 0
-    ).toFixed(2)}%`,
+    totalAvailableCategoryTypePer: `${
+      salesCount?.length > 0
+        ? (salesCount?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0) *
+            100) /
+          salesCount?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0)
+        : 0
+    }%`,
     salesList: SalesList,
   }
 }
@@ -1483,7 +1483,7 @@ export const retrieveSalesChartData = async (
       return record
     })
   } else {
-    final = [{ data: [] }]
+    final = null
   }
 
   return {

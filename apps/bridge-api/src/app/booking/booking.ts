@@ -63,20 +63,6 @@ export const retrieveBookingStatuses = async (
     })
   }
 
-  const totalBookingCount = await ctx.prisma.booking.aggregate({
-    _count: {
-      id: true,
-    },
-  })
-  const totalBookingCountOnline = await ctx.prisma.booking.aggregate({
-    where: {
-      Online: { equals: 1 },
-    },
-    _count: {
-      id: true,
-    },
-  })
-
   BookingStatusCount?.map((item) => {
     appointment.push({
       label: item.status,
@@ -84,7 +70,9 @@ export const retrieveBookingStatuses = async (
       per:
         (
           ((item._count.id ?? 0) * 100) /
-          (totalBookingCount?._count?.id ?? 0)
+          BookingStatusCount?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0)
         ).toFixed(2) + '%',
     })
     return item
@@ -96,7 +84,9 @@ export const retrieveBookingStatuses = async (
       per:
         (
           ((item._count.id ?? 0) * 100) /
-          (totalBookingCountOnline?._count?.id ?? 0)
+          BookingStatusCountOnline?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0)
         ).toFixed(2) + '%',
     })
     return item
@@ -106,25 +96,31 @@ export const retrieveBookingStatuses = async (
     totalBooking: BookingStatusCount?.reduce((prev, cur) => {
       return prev + cur._count.id ?? 0
     }, 0), // total bookings for only required status
-    totalBookingPer: `${(
-      (BookingStatusCount?.reduce((prev, cur) => {
-        return prev + cur._count.id ?? 0
-      }, 0) *
-        100) /
-        totalBookingCount?._count?.id ?? 0
-    ).toFixed(2)}%`,
+    totalBookingPer: `${
+      BookingStatusCount?.length > 0
+        ? (BookingStatusCount?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0) *
+            100) /
+          BookingStatusCount?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0)
+        : 0
+    }%`,
     totalOnlineBooking: BookingStatusCountOnline?.reduce((prev, cur) => {
       return prev + cur._count.id ?? 0
     }, 0), // total online bookings for only required status
-    totalOnlineBookingPer: `${(
-      (BookingStatusCountOnline?.reduce((prev, cur) => {
-        return prev + cur._count.id ?? 0
-      }, 0) *
-        100) /
-        totalBookingCountOnline?._count?.id ?? 0
-    ).toFixed(2)}%`,
-    totalBookingStatusCounts: totalBookingCount?._count?.id, // total bookings
-    totalBookingCountOnline: totalBookingCountOnline?._count?.id, // total online bookings
+    totalOnlineBookingPer: `${
+      BookingStatusCountOnline?.length > 0
+        ? (BookingStatusCountOnline?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0) *
+            100) /
+          BookingStatusCountOnline?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0)
+        : 0
+    }%`,
     appointmentList: appointment,
     onlineAppointmentList: onlineAppointment,
   }
@@ -259,7 +255,7 @@ export const retrieveAllBookingChartData = async (
       return record
     })
   } else {
-    final = [{ data: [] }]
+    final = null
   }
   return {
     bookingsByStatus: final,

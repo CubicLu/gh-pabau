@@ -42,9 +42,8 @@ export const Charts: FC<ICharts> = ({
   totalSalesCount,
 }) => {
   const List = []
-  salesData?.map((item) => {
-    const data = salesData[0].status
-    if (data) {
+  if (salesData) {
+    salesData.map((item) => {
       List.push({
         type: 'line',
         name: item.status,
@@ -57,24 +56,25 @@ export const Charts: FC<ICharts> = ({
           symbol: 'circle',
         },
       })
-    } else {
-      const details = ['Services', 'Products', 'Packages', 'Gift Vouchers']
-      details.map((item) => {
-        List.push({
-          name: item,
-          allowPointSelect: true,
-          data: [0, 0, 0, 0],
-          type: 'line',
-          marker: {
-            lineColor: '#54B2D3',
-            color: '#54B2D3',
-          },
-        })
-        return item
+      return item
+    })
+  } else {
+    const details = ['Services', 'Products', 'Packages', 'Gift Vouchers']
+    details.map((item) => {
+      List.push({
+        name: item,
+        allowPointSelect: true,
+        data: [0, 0, 0, 0],
+        type: 'line',
+        marker: {
+          lineColor: '#54B2D3',
+          color: '#54B2D3',
+        },
       })
-    }
-    return List
-  })
+      return item
+    })
+  }
+
   const optionLine: Highcharts.Options = {
     chart: {
       type: 'line',
@@ -121,16 +121,14 @@ export const Charts: FC<ICharts> = ({
           color: '#9292A3',
         },
       },
-      categories:
-        salesData?.length > 0
-          ? [...new Set(salesData[0].data?.map((item) => item.label))]
-          : [],
+      categories: salesData
+        ? [...new Set(salesData[0].data?.map((item) => item.label))]
+        : [],
     },
   }
   const dataList = []
-  BookingData?.map((item) => {
-    const data = BookingData[0].status
-    if (data) {
+  if (BookingData) {
+    BookingData?.map((item) => {
       dataList.push({
         name: item.status,
         allowPointSelect: true,
@@ -142,31 +140,25 @@ export const Charts: FC<ICharts> = ({
         },
         pointWidth: 15,
       })
-    } else {
-      const details = [
-        'Completed',
-        'Waiting',
-        'Canceled',
-        'No Show',
-        'Deposits',
-      ]
-      details.map((item) => {
-        dataList.push({
-          name: item,
-          allowPointSelect: true,
-          data: [0, 0, 0, 0, 0],
-          type: 'column',
-          marker: {
-            lineColor: '#54B2D3',
-            color: '#54B2D3',
-          },
-          pointWidth: 15,
-        })
-        return item
+      return item
+    })
+  } else {
+    const details = ['Completed', 'Waiting', 'Canceled', 'No Show', 'Deposits']
+    details.map((item) => {
+      dataList.push({
+        name: item,
+        allowPointSelect: true,
+        data: [0, 0, 0, 0, 0],
+        type: 'column',
+        marker: {
+          lineColor: '#54B2D3',
+          color: '#54B2D3',
+        },
+        pointWidth: 15,
       })
-    }
-    return dataList
-  })
+      return item
+    })
+  }
 
   const option1: Highcharts.Options = {
     title: {
@@ -197,10 +189,9 @@ export const Charts: FC<ICharts> = ({
           color: '#9292A3',
         },
       },
-      categories:
-        BookingData?.length > 0
-          ? [...new Set(BookingData[0].data?.map((item) => item.label))]
-          : [],
+      categories: BookingData
+        ? [...new Set(BookingData[0].data?.map((item) => item.label))]
+        : [],
     },
     yAxis: [
       {

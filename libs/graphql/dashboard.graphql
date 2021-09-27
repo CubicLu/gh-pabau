@@ -22,7 +22,7 @@ query getDashboardData(
         totalBooking
         totalBookingPer
         totalOnlineBooking
-        totalBookingStatusCounts
+        totalOnlineBookingPer
         appointmentList{
           label
           count
@@ -43,18 +43,22 @@ query getDashboardData(
           per
         }
       }
-      allbooking{
+     allbooking{
+      bookingsByStatus{
         status
         data{
           label
           value
         }
       }
+    }
       allSales{
-        status
-        data{
-          label
-          value
+        salesByProductCategoryType{
+          status
+          data{
+            label
+            value
+          }
         }
       }
     }
