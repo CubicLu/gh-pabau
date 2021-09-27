@@ -1,0 +1,87 @@
+.cardContent{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    min-height: 140px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px 15px;
+    overflow: hidden;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}   
+
+.leadTitleContent{  
+    display: flex;
+    width: 100%;
+    font-weight: 500;
+    font-size: 20px;
+    color: #3d3d46;
+    cursor: pointer
+}
+
+.btnWrapper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    align-items: center;
+}
+.labelsContent{
+    padding: 3px 0px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.label{
+    padding: 3px 5px 2px;
+    font-size: 15px;
+    margin-bottom: 8px;
+}   
+
+.statusContent{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.statusBtn {
+    :global{
+        .ant-btn[disabled]{
+            color: white;
+            cursor:auto;
+        }
+    }
+   button {
+    padding: 3px 11px;
+    height: 27px;
+    margin-right: 8px;
+    font-size: 12px;
+  }
+  
+}
+
+.statusArrow{
+    font-size: 20px;
+}
+
+.ownerClientContent{
+    width: 100%;
+    display: flex;
+    padding-bottom: 3px;
+    flex-grow: 1;
+    align-items: flex-end;
+    box-sizing: border-box;
+    margin-top: 2px;
+}
+
+.contactContent{
+    display: flex;
+    gap: 10px;
+}
+
+.contactContentName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #737387;
+}
+
