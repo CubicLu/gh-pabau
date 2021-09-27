@@ -111,6 +111,9 @@ const FormLabTests: FC<P> = ({
             style={{ width: '100%', marginTop: '10px' }}
             value={selectedItem}
           >
+            <Option value={0} key={0}>
+              Select tests to order
+            </Option>
             {labList.map((item, index) => (
               <Option key={'labListItems-' + index} value={item.id}>
                 {item.name}
