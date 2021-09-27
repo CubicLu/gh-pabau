@@ -6,6 +6,7 @@ import {
   NotificationDrawer,
   QuickCreate,
 } from '@pabau/ui'
+import Link from 'next/link'
 import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
 import React, { useState, useEffect } from 'react'
@@ -116,7 +117,9 @@ export const Header = ({
         >
           <Row>
             <Col md={6} lg={8}>
-              <Logo />
+              <Link href="/">
+                <Logo style={{ cursor: 'pointer' }} />
+              </Link>
             </Col>
             <Col md={8} lg={8} className={styles.headerSearchCenter}>
               <div style={{ width: '400px' }}>
