@@ -949,6 +949,7 @@ en:
   add-button-filter-cancel: Cancel
   add-button-filter-header-text-status: Status
   navigation-breadcrumb-setup: Setup
+  common-quick-add: Quick add (SHIFT +)
   common-label-delete: Delete
   common-label-add: Add
   common-label-create: Create
@@ -1012,6 +1013,7 @@ en:
   quickcreate.client: Client
   quickcreate.lead: Lead
   quickcreate.sms: SMS
+  quickcreate.activity: Activity
   quickcreate.sale: Sale
   quickcreate.newsletter: Newsletter
   chat.header: Chat

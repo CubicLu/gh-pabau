@@ -57,7 +57,7 @@
 }
 
 .quick-create-item {
-  width: 64px;
+  width: 82px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,13 +84,33 @@
 
   &:hover {
     p {
-      color: #54b2a3;
+      color: var(--primary-color);
     }
     .quick-create-item-icon {
-      color: #54b2a3;
-      border: 1px solid #54b2d3;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
       background-color: #f5fafd;
+      & > svg {
+        path {
+          fill: var(--primary-color);
+        }
+      }
     }
+  }
+
+  & > p {
+    text-align: center;
+  }
+
+  & > p.controlTag {
+    background: #fafafa;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    font-size: 10px;
+    height: 23px;
+    margin: 0;
+    padding: 0;
+    width: 53px;
   }
 }
 
