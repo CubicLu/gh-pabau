@@ -123,9 +123,7 @@ export default class SubscriptionGoCardless extends SubscriptionService {
       interval_unit: subscription.interval_unit,
       status: subscription.status,
       app_fee: subscription.app_fee,
-      next_charge_date: new Date(
-        subscription.upcoming_payments[0]?.charge_date ?? ''
-      ),
+      next_charge_date: subscription.upcoming_payments[0]?.charge_date ?? '',
       next_charge_amount: subscription.upcoming_payments[0]?.amount
         ? Number(subscription.upcoming_payments[0]?.amount) / 100
         : 0,
