@@ -1,13 +1,4 @@
-import {
-  objectType,
-  extendType,
-  list,
-  nonNull,
-  intArg,
-  stringArg,
-  inputObjectType,
-  nullable,
-} from 'nexus'
+import { extendType, intArg, inputObjectType, nullable } from 'nexus'
 import { Context } from '../../../context'
 import { PublicMasterCategoryResponse } from '../nexus-type/index'
 
@@ -30,11 +21,11 @@ export const Public_MasterCategories = extendType({
         skip: intArg(),
         take: intArg(),
       },
-      async resolve(_, input, ctx: Context) {
-        return ctx.prisma.serviceCategory.findMany({
+      resolve(_, input, ctx: Context) {
+        return ctx.prisma.servicesMasterCategory.findMany({
           where: input.where,
           orderBy: {
-            cat_order: 'asc',
+            ord: 'asc',
           },
           skip: input.skip,
           take: input.take,

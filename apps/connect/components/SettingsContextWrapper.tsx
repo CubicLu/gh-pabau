@@ -5,9 +5,6 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { useGetCompanyBySlugQuery } from '@pabau/graphql'
 import { SettingsContext } from '../context/settings-context'
 
-export interface Settings {
-  company_id: number
-}
 const SettingsContextWrapper: FunctionComponent = ({ children }) => {
   const router = useRouter()
 
@@ -22,10 +19,9 @@ const SettingsContextWrapper: FunctionComponent = ({ children }) => {
     data: companySettingsResult,
   } = useGetCompanyBySlugQuery({
     variables: {
-      slug: 'nenad-clinic',
+      slug: companySlug,
     },
   })
-
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
   if (errorSettings) {
@@ -53,7 +49,7 @@ const SettingsContextWrapper: FunctionComponent = ({ children }) => {
   if (!companySettingsResult === null) {
     return <div>Invalid Company</div>
   }
-
+  console.log(companySettingsResult?.findFirstCompany)
   return (
     <SettingsContext.Provider value={companySettingsResult?.findFirstCompany}>
       {children}

@@ -11,17 +11,17 @@ import {
 import { Button } from '@pabau/ui'
 import * as Yup from 'yup'
 import classnames from 'classnames'
-import { MasterCategory } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
+import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
+import { Image } from 'antd'
 
 export interface P {
-  items: MasterCategory[]
   onSelected: (id: number) => void
 }
 
-export const ServiceCategorySelector: FC<P> = ({ items, onSelected }) => {
+export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
   const [showMasterCategories, setShowMasterCategories] = useState(true)
   const [selectedData, setSelectedData] = useSelectedDataStore()
   const [isGroup, setIsGroup] = useState<boolean>(false)
@@ -36,7 +36,20 @@ export const ServiceCategorySelector: FC<P> = ({ items, onSelected }) => {
     onSelected(id)
   }
 
+  const {
+    loading: loadingServices,
+    error: errorServices,
+    data: servicesCategorised,
+  } = useCompanyServicesCategorisedQuery({
+    variables: {
+      company_id: settings?.id,
+    },
+  })
+
   const { t } = useTranslationI18()
+
+  if (errorServices) return <div>Error!</div>
+  if (loadingServices) return <div>Loading...</div>
 
   return (
     <div className={styles.consultation}>
@@ -127,14 +140,20 @@ export const ServiceCategorySelector: FC<P> = ({ items, onSelected }) => {
       {showMasterCategories ? (
         <div>
           <div className={styles.custCard}>
-            {items.map((item) => (
+            {servicesCategorised.Public_MasterCategories?.map((item) => (
               <div
                 key={item.id}
                 className={styles.chooseServiceTypeItem}
                 onClick={() => handleSelectedMasterCategory(item.id)}
               >
                 <div className={styles.section1}>
-                  <div>{item.icon}</div>
+                  <Image
+                    preview={false}
+                    height={'40px'}
+                    width={'40px'}
+                    src={'https://crm.pabau.com' + item.image}
+                    alt={item.name}
+                  />
                   <p className={styles.cardText}>{item.name}</p>
                 </div>
 
@@ -157,22 +176,28 @@ export const ServiceCategorySelector: FC<P> = ({ items, onSelected }) => {
       ) : (
         <div className={styles.slide}>
           <div className={styles.custCard}>
-            {items
-              .find((row) => row.id === selectedData.masterCategoryID)
-              ?.categories.map((item) => (
-                <div
-                  key={item.id}
-                  className={styles.chooseServiceTypeItem}
-                  onClick={() => handleSelectedCategory(item.id)}
-                >
-                  <div className={styles.section1}>
-                    <div>{item.icon}</div>
-                    <p className={styles.cardText}>{item.name}</p>
-                  </div>
-
-                  <RightOutlined />
+            {servicesCategorised.Public_MasterCategories.find(
+              (row) => row.id === selectedData.masterCategoryID
+            )?.Public_ServiceCategories?.map((item) => (
+              <div
+                key={item.id}
+                className={styles.chooseServiceTypeItem}
+                onClick={() => handleSelectedCategory(item.id)}
+              >
+                <div className={styles.section1}>
+                  <Image
+                    preview={false}
+                    height={'40px'}
+                    width={'40px'}
+                    src={'https://crm.pabau.com' + item.image}
+                    alt={item.name}
+                  />
+                  <p className={styles.cardText}>{item.name}</p>
                 </div>
-              ))}
+
+                <RightOutlined />
+              </div>
+            ))}
             <div className={styles.btnView}></div>
           </div>
         </div>

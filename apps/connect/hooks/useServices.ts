@@ -19,44 +19,35 @@ export default function useServices() {
   if (error) return []
   if (loading || !servicesCategorised) return []
   return servicesCategorised
+}
 
-  // return servicesCategorised.serviceMasterCategories.map(
-  //   (row) => {
-  //     return {
-  //       id: row.id,
-  //       name: row.name,
-  //       icon: row.image ? (
-  //         <Image
-  //           preview={false}
-  //           height={'40px'}
-  //           width={'40px'}
-  //           src={'https://crm.pabau.com' + row.image}
-  //           alt={row.name}
-  //         />
-  //       ) : null,
-  //       categories: row.ServiceCategory.map((cat) => {
-  //         return {
-  //           id: cat.id,
-  //           name: cat.name,
-  //           icon: row.image ? (
-  //             <Image
-  //               preview={false}
-  //               height={'40px'}
-  //               width={'40px'}
-  //               src={'https://crm.pabau.com' + row.image}
-  //               alt={row.name}
-  //             />
-  //           ) : null,
-  //           services: cat.CompanyService.map((service) => {
-  //             return {
-  //               review: 1,
-  //               rating: 5,
-  //               ...service,
-  //             }
-  //           }),
-  //         }
-  //       }),
-  //     }
-  //   }
-  // )
+const findServiceByIDs = (serviceIDs: number[]) => {
+  const services = []
+  for (const mcat of masterCategories) {
+    if (mcat.categories) {
+      for (const cat of mcat.categories) {
+        if (cat.services) {
+          for (const s of cat.services) {
+            if (serviceIDs.includes(s.id)) {
+              services.push(s)
+            }
+          }
+        }
+      }
+    }
+  }
+  return services
+}
+
+const findMasterCategoryIDByCategoryID = (categoryID: number) => {
+  for (const mcat of masterCategories) {
+    if (mcat.categories) {
+      for (const cat of mcat.categories) {
+        if (cat.id === categoryID) {
+          return mcat.id
+        }
+      }
+    }
+  }
+  return null
 }

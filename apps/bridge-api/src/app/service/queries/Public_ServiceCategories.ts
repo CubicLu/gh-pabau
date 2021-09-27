@@ -1,23 +1,12 @@
-import {
-  objectType,
-  extendType,
-  list,
-  nonNull,
-  intArg,
-  stringArg,
-  inputObjectType,
-  nullable,
-} from 'nexus'
+import { extendType, intArg, inputObjectType, nullable } from 'nexus'
 import { Context } from '../../../context'
-import {
-  PublicMasterCategoryResponse,
-  PublicServiceCategoryResponse,
-} from '../nexus-type/index'
+import { PublicServiceCategoryResponse } from '../nexus-type/index'
 
 export const PSCInput = inputObjectType({
   name: 'PSCInput',
   definition(t) {
     t.nonNull.int('company_id')
+    t.int('master_cat_id')
   },
 })
 
@@ -32,11 +21,11 @@ export const Public_ServiceCategories = extendType({
         skip: intArg(),
         take: intArg(),
       },
-      async resolve(_, input, ctx: Context) {
-        return ctx.prisma.companyService.findMany({
+      async resolve(root, input, ctx: Context) {
+        return ctx.prisma.serviceCategory.findMany({
           where: input.where,
           orderBy: {
-            service_order: 'asc',
+            cat_order: 'asc',
           },
           skip: input.skip,
           take: input.take,

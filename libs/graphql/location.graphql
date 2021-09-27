@@ -40,24 +40,6 @@ query locations(
   }
 }
 
-query onlineBookableLocations($company_id: Int) {
-  findManyCompanyBranch(where: { company_id: { equals: $company_id } }) {
-    id
-    address
-    street
-    city
-    county
-    name
-    postcode
-    online_bookings
-    phone
-    website
-    bookable_online
-    lat
-    lng
-  }
-}
-
 mutation insertLocation(
   $name: String!
   $isActive: Int!

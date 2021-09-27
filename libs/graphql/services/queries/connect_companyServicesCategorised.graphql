@@ -1,31 +1,29 @@
- query companyServicesCategorised($company_id: Int) {
-   findManyServicesMasterCategory(
-     where: { company_id: { equals: $company_id } }
-   ) {
-     id
-     company_id
-     image
-     name
-     ord
-     type
-     ServiceCategory {
-       id
-       name
-       image
-       online_enabled
-       cat_order
-       CompanyService {
-         id
-         name
-         price
-         online_book
-         disabled_locations
-         disabledusers
-         duration
-         friendly_name
-         max_clients
-         online_only_service
-       }
-     }
-   }
- }
+query companyServicesCategorised($company_id: Int!) {
+  Public_MasterCategories(where: {company_id: $company_id}) {
+    company_id
+    id
+    image
+    name
+    Public_ServiceCategories {
+      company_id
+      id
+      cat_order
+      group_color
+      deposit_amount
+      image
+      name
+      Public_Services {
+        price
+        online_only_service
+        online_book
+        name
+        max_clients
+        id
+        friendly_name
+        duration
+        disabled_locations
+        disabled_users
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react'
+import React, { useState, FC, useContext } from 'react'
 import {
   QuestionCircleOutlined,
   ClockCircleOutlined,
@@ -15,7 +15,7 @@ import {
 import { useMedia } from 'react-use'
 import { Button } from '@pabau/ui'
 
-import { Rate, Modal, Badge, Popover, Tooltip } from 'antd'
+import { Rate, Modal, Badge, Popover, Tooltip, Image } from 'antd'
 import { data, voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
 import styles from './ServiceSelector.module.less'
 import ClassNames from 'classnames'
@@ -27,12 +27,13 @@ import { ReactComponent as SelectAllIcon } from '../../assets/images/SelectAll.s
 import { ReactComponent as Promocode } from '../../assets/images/coupenCode.svg'
 import { ReactComponent as SkinHealth } from '../../assets/images/skin-health-logo.svg'
 import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
+import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
+import { SettingsContext } from '../../context/settings-context'
 export interface P {
-  items: MasterCategory[]
   onSelected: () => void
 }
 
-const ServiceSelector: FC<P> = ({ items, onSelected }) => {
+const ServiceSelector: FC<P> = ({ onSelected }) => {
   // CRAP
   const [showmodal, setshowmodal] = useState(false)
   const [visible, setvisible] = useState(false)
@@ -49,8 +50,18 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
   const [virtualServicesOnly, setVirtualServicesOnly] = useState<boolean>(false)
   const [totalEstimate, setTotalEstimate] = useState<number>(0)
   const [viewVouchers, setViewVouchers] = useState<boolean>(false)
-
+  const settings = useContext(SettingsContext)
   const { t } = useTranslationI18()
+
+  const {
+    loading: loadingServices,
+    error: errorServices,
+    data: servicesCategorised,
+  } = useCompanyServicesCategorisedQuery({
+    variables: {
+      company_id: settings?.id,
+    },
+  })
 
   // EVENT HANDLERS
 
@@ -229,13 +240,13 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
   }
   const renderServices = (category: Category | undefined) => {
     if (typeof category === 'undefined') {
-      category = items
-        .find(
-          (item) =>
-            item.id === selectedData.masterCategoryID ||
-            !selectedData.masterCategoryID
-        )
-        ?.categories.find((item) => item.id === selectedData.categoryID)
+      category = servicesCategorised.Public_MasterCategories.find(
+        (item) =>
+          item.id === selectedData.masterCategoryID ||
+          !selectedData.masterCategoryID
+      )?.Public_ServiceCategories.find(
+        (item) => item.id === selectedData.categoryID
+      )
     }
 
     if (!category) {
@@ -243,8 +254,9 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
     }
 
     const hasOnlineConsultations =
-      typeof category?.services.find((s) => s.online_only_service === 1) !==
-      'undefined'
+      typeof category?.Public_Services.find(
+        (s) => s.online_only_service === 1
+      ) !== 'undefined'
         ? true
         : false
     return (
@@ -284,7 +296,7 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
             )
           ) : null}
           {!viewVouchers
-            ? category.services.map((val) => renderService(val))
+            ? category.Public_Services.map((val) => renderService(val))
             : !isMobile &&
               VoucherData.map((item) => (
                 <div key={item.id}>{rendervoucher(item)}</div>
@@ -325,7 +337,7 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
                   color: '#65CD98',
                 }}
               >
-                {category.services.length}
+                {category.Public_Services.length}
               </span>
             )}
             {!isMobile && (
@@ -336,7 +348,7 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
                   color: '#54B2D3',
                 }}
               >
-                {category.services.length}
+                {category.Public_Services.length}
               </span>
             )}
             {isMobile &&
@@ -382,7 +394,7 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
               <SelectAllIcon />
               <span>All</span>
             </div>
-            {items.map((item) => (
+            {servicesCategorised.Public_MasterCategories.map((item) => (
               <div
                 className={ClassNames(
                   styles.serviceselectall,
@@ -399,7 +411,13 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
                   <CheckCircleFilled className={styles.checkfill} />
                 )}
 
-                {item.icon}
+                <Image
+                  preview={false}
+                  height={'40px'}
+                  width={'40px'}
+                  src={'https://crm.pabau.com' + item.image}
+                  alt={item.name}
+                />
                 <span>{item.name}</span>
               </div>
             ))}
@@ -436,19 +454,23 @@ const ServiceSelector: FC<P> = ({ items, onSelected }) => {
               <div className={styles.servicelist}>
                 {!viewVouchers ? (
                   !selectedData.masterCategoryID ? (
-                    items.map((masterCategory) => (
-                      <div key={masterCategory.id}>
-                        {masterCategory.categories.map((val) => {
-                          return renderCategoryItem(val)
-                        })}
-                      </div>
-                    ))
+                    servicesCategorised.Public_MasterCategories.map(
+                      (masterCategory) => (
+                        <div key={masterCategory.id}>
+                          {masterCategory.Public_ServiceCategories.map(
+                            (val) => {
+                              return renderCategoryItem(val)
+                            }
+                          )}
+                        </div>
+                      )
+                    )
                   ) : (
-                    items
-                      .find((item) => item.id === selectedData.masterCategoryID)
-                      .categories.map((val) => {
-                        return renderCategoryItem(val)
-                      })
+                    servicesCategorised.Public_MasterCategories.find(
+                      (item) => item.id === selectedData.masterCategoryID
+                    ).Public_ServiceCategories.map((val) => {
+                      return renderCategoryItem(val)
+                    })
                   )
                 ) : (
                   <div>

@@ -15,11 +15,7 @@ import styles from './index.module.less'
 import moment from 'moment'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import {
-  useCompanyServicesCategorisedQuery,
-  useCreateAppointmentMutation,
-} from '@pabau/graphql'
-import { Image } from 'antd'
+import { useCreateAppointmentMutation } from '@pabau/graphql'
 
 import { BookingData } from '../../types/booking'
 import { SettingsContext } from '../../context/settings-context'
@@ -73,63 +69,10 @@ export function Index() {
   const { t } = useTranslationI18()
   const settings = useContext(SettingsContext)
 
-  const {
-    loading: loadingServices,
-    error: errorServices,
-    data: servicesCategorised,
-  } = useCompanyServicesCategorisedQuery({
-    variables: {
-      company_id: settings?.id,
-    },
-  })
-
   const [createBooking] = useCreateAppointmentMutation({
     onCompleted(data) {},
     onError(err) {},
   })
-
-  if (errorServices) return <div>Error!</div>
-  if (loadingServices) return <div>Loading...</div>
-
-  const masterCategories = servicesCategorised.findManyServicesMasterCategory.map(
-    (row) => {
-      return {
-        id: row.id,
-        name: row.name,
-        icon: row.image ? (
-          <Image
-            preview={false}
-            height={'40px'}
-            width={'40px'}
-            src={'https://crm.pabau.com' + row.image}
-            alt={row.name}
-          />
-        ) : null,
-        categories: row.ServiceCategory.map((cat) => {
-          return {
-            id: cat.id,
-            name: cat.name,
-            icon: row.image ? (
-              <Image
-                preview={false}
-                height={'40px'}
-                width={'40px'}
-                src={'https://crm.pabau.com' + row.image}
-                alt={row.name}
-              />
-            ) : null,
-            services: cat.CompanyService.map((service) => {
-              return {
-                review: 1,
-                rating: 5,
-                ...service,
-              }
-            }),
-          }
-        }),
-      }
-    }
-  )
 
   const rech = () => {
     setCurrentStep(currentStep + 1)
@@ -177,37 +120,6 @@ export function Index() {
     setuser(user)
   }
 
-  const findServiceByIDs = (serviceIDs: number[]) => {
-    const services = []
-    for (const mcat of masterCategories) {
-      if (mcat.categories) {
-        for (const cat of mcat.categories) {
-          if (cat.services) {
-            for (const s of cat.services) {
-              if (serviceIDs.includes(s.id)) {
-                services.push(s)
-              }
-            }
-          }
-        }
-      }
-    }
-    return services
-  }
-
-  const findMasterCategoryIDByCategoryID = (categoryID: number) => {
-    for (const mcat of masterCategories) {
-      if (mcat.categories) {
-        for (const cat of mcat.categories) {
-          if (cat.id === categoryID) {
-            return mcat.id
-          }
-        }
-      }
-    }
-    return null
-  }
-
   return (
     <div className={styles.onlineBooking}>
       <Header
@@ -224,7 +136,6 @@ export function Index() {
           {currentStep === 0 && (
             <>
               <ServiceCategorySelector
-                items={masterCategories}
                 onSelected={() => {
                   setCurrentStep(currentStep + 1)
                 }}
@@ -241,7 +152,6 @@ export function Index() {
           {currentStep === 1 && (
             <div className={styles.slide1}>
               <ServiceSelector
-                items={masterCategories}
                 onSelected={() => {
                   setCurrentStep(currentStep + 1)
                 }}

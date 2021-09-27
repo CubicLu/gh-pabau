@@ -2,18 +2,18 @@ export interface MasterCategory {
   id: number
   name: string
   active: boolean
-  icon: JSX.Element
+  image: string
   addonIcon?: JSX.Element
-  categories: Category[]
+  Public_ServiceCategories: Category[]
 }
 
 export interface Category {
   id: number
   name: string
-  icon: JSX.Element
-  video: boolean
+  image: string
+  video?: boolean
   active: boolean
-  services: Service[]
+  Public_Services: Service[]
 }
 
 export interface Service {
@@ -23,7 +23,6 @@ export interface Service {
   duration: string
   price: string
   online_only_service?: number
-  selected: boolean
   review: number
-  is_bundle: boolean
+  is_bundle?: boolean
 }
