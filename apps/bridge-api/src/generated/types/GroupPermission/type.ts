@@ -13,6 +13,12 @@ export const GroupPermission = objectType({
     t.string('module_permissions')
     t.string('feature_permissions')
     t.string('report_permissions')
+    t.field('UserGroup', {
+      type: 'UserGroup',
+      resolve(root: any) {
+        return root.UserGroup
+      },
+    })
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {

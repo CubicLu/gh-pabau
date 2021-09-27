@@ -43,6 +43,20 @@ export const UserGroup = objectType({
         return root.UserGroupMember
       },
     })
+    t.list.field('GroupPermission', {
+      type: 'GroupPermission',
+      args: {
+        where: 'GroupPermissionWhereInput',
+        orderBy: 'GroupPermissionOrderByWithRelationInput',
+        cursor: 'GroupPermissionWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'GroupPermissionScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.GroupPermission
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserGroupCountOutputType',
       resolve(root: any) {
