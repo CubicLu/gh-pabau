@@ -9,25 +9,16 @@ export default {
   title: 'KanbanCard',
   args: {
     leadTitle: 'Lead Title',
-
     onLeadTitleClickHandler: () => {
       return
     },
-
     labels: ['#Label1', '#Label2'],
-
     leadOwnerName: 'Owner Name',
-
     leadOwnerImg: userImage,
-
     contactId: 'contact id',
-
     contactName: 'Contact Name',
-
     contactImg: noUser,
-
     activityStatus: 'future activity scheduled',
-
     leadStatus: 'Open',
   },
 }
@@ -74,7 +65,9 @@ KanbanCardLostComponentStory.args = {
   leadStatus: 'Lost',
 }
 
-export const KanbanCardActiveStatusOverdueComponentStory = KanbanCardComponent.bind({})
+export const KanbanCardActiveStatusOverdueComponentStory = KanbanCardComponent.bind(
+  {}
+)
 
 KanbanCardActiveStatusOverdueComponentStory.args = {
   activityStatus: 'activity overdue',
