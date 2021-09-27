@@ -436,6 +436,7 @@ export const Index: FC = () => {
 
   const saveForm = async (medicalItem) => {
     setShowCreateForm(false)
+    console.log('medicalItem', medicalItem)
     const updateVariables = {
       where: {
         id: Number(medicalItem.key),
@@ -451,37 +452,37 @@ export const Index: FC = () => {
               : medicalItem.formType,
         },
         updated_at: { set: dayjs() },
-        MedicalFormAdvancedSetting:
-          Number(medicalItem.advSetting.id) === 0
-            ? {
-                create: [
-                  {
-                    share_to_client:
-                      medicalItem.advSetting.shareToClient === 1 ? true : false,
-                    reminder: medicalItem.advSetting.reminder,
-                    data: JSON.stringify(medicalItem.advSetting.data),
-                  },
-                ],
-              }
-            : {
-                update: [
-                  {
-                    data: {
-                      share_to_client: {
-                        set:
-                          medicalItem.advSetting.shareToClient === 1
-                            ? true
-                            : false,
-                      },
-                      reminder: { set: medicalItem.advSetting.reminder },
-                      data: JSON.stringify(medicalItem.advSetting.data),
-                    },
-                    where: {
-                      id: Number(medicalItem.advSetting.id),
-                    },
-                  },
-                ],
-              },
+        MedicalFormAdvancedSetting: {},
+        // Number(medicalItem.advSetting.id) === 0
+        //   ? {
+        //       create: [
+        //         {
+        //           share_to_client:
+        //             medicalItem.advSetting.shareToClient === 1 ? true : false,
+        //           reminder: medicalItem.advSetting.reminder,
+        //           data: JSON.stringify(medicalItem.advSetting.data),
+        //         },
+        //       ],
+        //     }
+        //   : {
+        //       update: [
+        //         {
+        //           data: {
+        //             share_to_client: {
+        //               set:
+        //                 medicalItem.advSetting.shareToClient === 1
+        //                   ? true
+        //                   : false,
+        //             },
+        //             reminder: { set: medicalItem.advSetting.reminder },
+        //             data: JSON.stringify(medicalItem.advSetting.data),
+        //           },
+        //           where: {
+        //             id: Number(medicalItem.advSetting.id),
+        //           },
+        //         },
+        //       ],
+        //     },
       },
     }
 
@@ -521,6 +522,8 @@ export const Index: FC = () => {
         },
       },
     }
+    console.log('creatVariables', creatVariables)
+    console.log('updateVariables', updateVariables)
 
     await (medicalItem.key !== ''
       ? editMutation({
