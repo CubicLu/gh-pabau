@@ -1,0 +1,28 @@
+query findGmailConnection($companyId: Int, $userId: Int) {
+  gmail_connection(where: {company_id: {_eq: $companyId}, user_id: {_eq: $userId}}){
+    id
+    email
+  }
+}
+
+
+mutation InsertGmailConnection (
+     $apiKey: String!
+     $email: String!
+     $companyId: Int
+     $userId: Int
+ ){
+  insert_gmail_connection_one(object: {api_key: $apiKey, email: $email, company_id: $companyId, user_id: $userId}) {
+   id
+    user_id
+    updated_at
+    created_at
+  }
+}
+
+mutation deleteGmailConnection($email: String!, $companyId: Int, $userId: Int) {
+  delete_gmail_connection(where: {company_id: {_eq: $companyId}, user_id: {_eq: $userId}, email: {_eq: $email}}) {
+    affected_rows
+  }
+}
+

@@ -3,7 +3,7 @@ import { gapi } from 'gapi-script'
 // import { useRouter } from 'next/router'
 
 export interface P {
-  handleGoogleLogin?: (isLogin) => void
+  handleGoogleLogin?: (email, token) => void
   checkStatus: boolean
 }
 export const Login: FC<P> = ({ handleGoogleLogin, checkStatus }) => {
@@ -55,7 +55,9 @@ export const Login: FC<P> = ({ handleGoogleLogin, checkStatus }) => {
           .getAuthInstance()
           .currentUser.get()
           .getBasicProfile()
-          .getEmail()
+          .getEmail(),
+        gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse()
+          .access_token
       )
     } else {
       !checkStatus && handleAuthClick()

@@ -1,0 +1,91 @@
+table:
+  name: gmail_connection
+  schema: public
+remote_relationships:
+- definition:
+    hasura_fields:
+    - company_id
+    remote_field:
+      findFirstCompany:
+        arguments:
+          where:
+            id:
+              equals: $company_id
+    remote_schema: CRM
+  name: fk_gmail_connection_company_id
+- definition:
+    hasura_fields:
+    - user_id
+    remote_field:
+      findFirstUser:
+        arguments:
+          where:
+            id:
+              equals: $user_id
+    remote_schema: CRM
+  name: fk_gmail_connection_user_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - api_key
+    - company_id
+    - email
+    - user_id
+  role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - api_key
+    - company_id
+    - email
+    - user_id
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - id
+    - email
+    - company_id
+    - user_id
+    - api_key
+    - created_at
+    - updated_at
+    filter: {}
+  role: public
+- permission:
+    columns:
+    - id
+    - email
+    - company_id
+    - user_id
+    - api_key
+    - created_at
+    - updated_at
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - api_key
+    - company_id
+    - email
+    - user_id
+    filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - api_key
+    - company_id
+    - email
+    - user_id
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: user

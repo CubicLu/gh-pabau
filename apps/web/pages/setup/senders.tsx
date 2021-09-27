@@ -1,5 +1,6 @@
 import {
   DownOutlined,
+  ExclamationCircleOutlined,
   FilterOutlined,
   GoogleOutlined,
   LeftOutlined,
@@ -9,11 +10,14 @@ import {
   PlusSquareFilled,
 } from '@ant-design/icons'
 import { Breadcrumb, Button, MobileHeader } from '@pabau/ui'
-import { Col, Popover, Row, Tag, Typography } from 'antd'
+import {
+  InsertGmailConnectionDocument,
+  FindGmailConnectionDocument,
+} from '@pabau/graphql'
+import { Col, Modal, Popover, Row, Tag, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 import Layout from '../../components/Layout/Layout'
-import { useUser } from '../../context/UserContext'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
@@ -22,8 +26,13 @@ import { ReactComponent as Google } from '../../assets/images/google.svg'
 import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
 import { ReactComponent as Office } from '../../assets/images/office365.svg'
 import Login from '../../components/Email/login'
+import Revoke from '../../components/Email/revoke'
+// import { useQuery } from '@apollo/client'
+import { useUser } from '../../context/UserContext'
 
 import React, { useState } from 'react'
+import { useLazyQuery, useMutation } from '@apollo/client'
+const { confirm } = Modal
 
 const { Title } = Typography
 
@@ -87,10 +96,20 @@ export const Communications: React.FC = () => {
   const { getParentSetupData } = useGridData(t)
   const parentMenu = getParentSetupData(router.pathname)
   const [showLogin, setShowLogin] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   const [checkStatus, setCheckStatus] = useState(true)
-  const [userLoggedInEmail, setUserLoggedInEmail] = useState('')
-  let popupGoogle = true
+  const [revoke, setRevoke] = useState(false)
+
+  const popupGoogle = true
+  const { me } = useUser()
+  const [insertConnection] = useMutation(InsertGmailConnectionDocument, {
+    onCompleted() {
+      console.log()
+    },
+    onError(e) {
+      console.log(e)
+    },
+  })
 
   const handleBack = () => {
     if (parentMenu.length > 0) {
@@ -103,14 +122,60 @@ export const Communications: React.FC = () => {
     }
   }
 
-  const handleGoogleLogin = (email) => {
-    setUserLoggedInEmail(email)
-    setIsLoggedIn(true)
+  const handleRemoveLink = async () => {
+    await showConfirm()
+    loadConnection()
+    // setIsLoggedIn(true)
   }
-  const handleShowLogin = () => {
-    setCheckStatus(false)
-    setShowLogin(true)
-    popupGoogle = false
+
+  const handleGoogleLogin = async (email, token) => {
+    !checkStatus &&
+      (await insertConnection({
+        variables: {
+          apiKey: token,
+          email: email,
+          companyId: me.company,
+          userId: me.user,
+        },
+        optimisticResponse: {},
+        refetchQueries: [
+          {
+            query: FindGmailConnectionDocument,
+            variables: {
+              companyId: me.company,
+              userId: me.user,
+            },
+          },
+        ],
+      }))
+  }
+
+  // const { data } = useQuery(FindGmailConnectionDocument, {
+  //   variables: {
+  //     companyId: me.company,
+  //     userId: me.user,
+  //   },
+  // })
+
+  const [loadConnection, { data }] = useLazyQuery(FindGmailConnectionDocument, {
+    variables: {
+      companyId: me.company,
+      userId: me.user,
+    },
+  })
+
+  const handleShowLogin = async () => {
+    // ?.gmail_connection.length
+    await loadConnection()
+
+    if (data?.gmail_connection.length > 0) {
+      setIsLoggedIn(true)
+      return 1
+    } else {
+      setCheckStatus(false)
+      setShowLogin(true)
+      setIsLoggedIn(true)
+    }
   }
 
   const content = () => {
@@ -141,6 +206,21 @@ export const Communications: React.FC = () => {
     )
   }
 
+  const showConfirm = () => {
+    confirm({
+      title: 'Unlink your Google account',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you wish to unlink your Google account?',
+      onOk() {
+        setRevoke(true)
+        setIsLoggedIn(false)
+      },
+      onCancel() {
+        console.log('Close popup')
+      },
+    })
+  }
+  // console.log('data value:::', data?.gmail_connection.length, isLoggedIn)
   return (
     <>
       <div className={styles.desktopViewNone}>
@@ -150,10 +230,19 @@ export const Communications: React.FC = () => {
             checkStatus={checkStatus}
           />
         )}
+
         {popupGoogle && (
           <Login
             handleGoogleLogin={handleGoogleLogin}
             checkStatus={checkStatus}
+          />
+        )}
+
+        {revoke && (
+          <Revoke
+            email={data?.gmail_connection[0].email}
+            companyId={me.company}
+            userId={me.user}
           />
         )}
         <MobileHeader className={styles.mobileHeader}>
@@ -237,21 +326,25 @@ export const Communications: React.FC = () => {
                   </Button>
                 </Col>
               ))}
-              {isLoggedIn && (
+              {data?.gmail_connection.length > 0 && isLoggedIn && (
                 <Col span={4} xs={12} sm={8} md={6}>
                   <Button className={styles.senderItem}>
                     <div className={styles.itemHeader}>
                       <Google />
-
                       <div className={styles.verifiedWrapper}>
-                        <div className={styles.defaultText}>
+                        <div
+                          className={styles.defaultText}
+                          onClick={() => handleRemoveLink()}
+                        >
                           <Tag color="red">Stop syncing</Tag>
                         </div>
                       </div>
                     </div>
                     <div className={styles.itemBody}>
                       <div>Clinic Bookings</div>
-                      <div className={styles.email}>{userLoggedInEmail}</div>
+                      <div className={styles.email}>
+                        {data?.gmail_connection[0].email}
+                      </div>
                     </div>
                   </Button>
                 </Col>
