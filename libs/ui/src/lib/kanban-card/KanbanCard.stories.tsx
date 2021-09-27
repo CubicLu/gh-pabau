@@ -74,9 +74,7 @@ KanbanCardLostComponentStory.args = {
   leadStatus: 'Lost',
 }
 
-export const KanbanCardActiveStatusOverdueComponentStory = KanbanCardComponent.bind(
-  {}
-)
+export const KanbanCardActiveStatusOverdueComponentStory = KanbanCardComponent.bind({})
 
 KanbanCardActiveStatusOverdueComponentStory.args = {
   activityStatus: 'activity overdue',
