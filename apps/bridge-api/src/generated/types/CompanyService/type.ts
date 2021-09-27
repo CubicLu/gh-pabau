@@ -76,6 +76,20 @@ export const CompanyService = objectType({
         return root.ServiceCategory
       },
     })
+    t.list.field('SocialSurveyFeedback', {
+      type: 'SocialSurveyFeedback',
+      args: {
+        where: 'SocialSurveyFeedbackWhereInput',
+        orderBy: 'SocialSurveyFeedbackOrderByWithRelationInput',
+        cursor: 'SocialSurveyFeedbackWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SocialSurveyFeedbackScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SocialSurveyFeedback
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyServiceCountOutputType',
       resolve(root: any) {

@@ -27,7 +27,6 @@ export interface P {
   charge: string
   type: string
   services: number
-  getinfo: (val) => void
   member: number
   backToStep?: (val: number) => void
 }
@@ -41,7 +40,6 @@ export interface userType {
 const BookingDetails: FC<P> = ({
   changescreen,
   charge,
-  getinfo,
   member,
   backToStep,
 }) => {
@@ -210,7 +208,6 @@ const BookingDetails: FC<P> = ({
                 initialValues={userData}
                 validationSchema={formikValidationSchema}
                 onSubmit={(values) => {
-                  // getinfo(values)
                   //changescreen()
                   // setdata(values)
                   console.log(values)
@@ -308,7 +305,6 @@ const BookingDetails: FC<P> = ({
               initialValues={uservalue}
               validationSchema={formikValidation}
               onSubmit={(values) => {
-                getinfo(mem[0])
                 changescreen()
                 // setdata(values)
                 console.log(values)

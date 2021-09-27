@@ -19,7 +19,7 @@ import { Rate, Modal, Badge, Popover, Tooltip, Image } from 'antd'
 import { data, voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
 import styles from './ServiceSelector.module.less'
 import ClassNames from 'classnames'
-import { MasterCategory, Category, Service } from '../../types/services'
+import { Category, Service } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 
@@ -148,7 +148,9 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                 />
 
                 <span className={styles.consultationReview} onClick={(e) => {}}>
-                  {val.online_only_service ? 0 : val.review}
+                  {val.online_only_service
+                    ? 0
+                    : val.Public_SocialSurveyFeedback.length}
                   &nbsp;
                   {t('connect.onlinebooking.selector.review')}
                 </span>

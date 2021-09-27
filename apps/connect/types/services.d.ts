@@ -25,4 +25,14 @@ export interface Service {
   online_only_service?: number
   review: number
   is_bundle?: boolean
+  Public_SocialSurveyFeedback: SocialSurveyFeedback[]
+}
+
+export interface SocialSurveyFeedback {
+  id: number
+  date: number
+  feedback_comment: string
+  feedback_name: string
+  feedback_status: string
+  rating: number
 }

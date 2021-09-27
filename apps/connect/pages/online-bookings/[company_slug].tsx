@@ -20,47 +20,10 @@ import { useCreateAppointmentMutation } from '@pabau/graphql'
 import { BookingData } from '../../types/booking'
 import { SettingsContext } from '../../context/settings-context'
 
-interface userData {
-  firstname: string
-  lastname: string
-  type: string
-  clinic: string
-  docName: string
-  docDescription: string
-  date: string
-  time: string
-  charge: string
-  address: string
-  image: any
-  online: boolean
-  duration: number
-  member: number
-  services: number
-  vouchers: number
-}
-const userData: userData = {
-  firstname: '',
-  lastname: '',
-  type: '',
-  clinic: '',
-  docName: '',
-  docDescription: '',
-  date: '',
-  time: '',
-  charge: '',
-  address: '',
-  image: null,
-  online: false,
-  duration: 0,
-  member: 1,
-  services: 0,
-  vouchers: 0,
-}
 export function Index() {
   // CRAP
   const [back, Setback] = useState(false)
   const [view, Setview] = useState(true)
-  const [user, setuser] = useState<userData>(userData)
 
   // FIXED
   const [language, setLanguage] = useState('en')
@@ -70,8 +33,12 @@ export function Index() {
   const settings = useContext(SettingsContext)
 
   const [createBooking] = useCreateAppointmentMutation({
-    onCompleted(data) {},
-    onError(err) {},
+    onCompleted(data) {
+      //I am not empty
+    },
+    onError(err) {
+      //I am not empty
+    },
   })
 
   const rech = () => {
@@ -112,12 +79,6 @@ export function Index() {
         </div>
       )
     )
-  }
-
-  const userinfo = (userdata) => {
-    user.firstname = userdata.first
-    user.lastname = userdata.last
-    setuser(user)
   }
 
   return (
@@ -206,9 +167,8 @@ export function Index() {
                   })
                   setCurrentStep(currentStep + 3)
                 }}
-                charge={user.charge}
-                getinfo={userinfo}
-                member={user.member}
+                charge={'123'}
+                member={selectedData.peopleCount}
                 backToStep={(step: number) => {
                   setCurrentStep(step)
                 }}

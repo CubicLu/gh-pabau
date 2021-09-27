@@ -23,6 +23,15 @@ query companyServicesCategorised($company_id: Int!) {
         duration
         disabled_locations
         disabled_users
+        rating
+        Public_SocialSurveyFeedback {
+          date
+          feedback_comment
+          feedback_name
+          feedback_status
+          id
+          rating
+        }
       }
     }
   }

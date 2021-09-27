@@ -28,6 +28,9 @@ fragment SocialSurveyFeedback on SocialSurveyFeedback {
   User {
     ...UserFields
   }
+  CompanyService {
+    ...CompanyServiceFields
+  }
 }
 
 mutation createOneSocialSurveyFeedback($data: SocialSurveyFeedbackCreateInput!) {

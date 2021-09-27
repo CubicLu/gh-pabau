@@ -1,5 +1,6 @@
 import { objectType } from 'nexus'
 import { Context } from '../../../context'
+import { PublicSocialSurveyFeedbackResponse } from '../../survey/nexus-type'
 
 export const PublicMasterCategoryResponse = objectType({
   name: 'PublicMasterCategoryResponse',
@@ -63,5 +64,31 @@ export const PublicServiceResponse = objectType({
     t.string('friendly_name')
     t.int('max_clients')
     t.int('online_only_service')
+    t.float('rating', {
+      resolve(parent, input, ctx: Context) {
+        // const res = ctx.prisma.socialSurveyFeedback.aggregate({
+        //   _avg: {
+        //     rating: true,
+        //   },
+        //   where: { service_id: parent.id || undefined },
+        // })
+        // console.log(res)
+        return 5
+      },
+    })
+    t.list.field('Public_SocialSurveyFeedback', {
+      type: PublicSocialSurveyFeedbackResponse,
+      resolve(parent, input, ctx: Context) {
+        return ctx.prisma.companyService
+          .findUnique({
+            where: { id: parent.id || undefined },
+          })
+          .SocialSurveyFeedback({
+            where: {
+              public_use: 1,
+            },
+          })
+      },
+    })
   },
 })

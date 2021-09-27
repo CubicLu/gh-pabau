@@ -41,7 +41,7 @@ const actions = {
 export const useSelectedDataStore = (shouldListen = true) => {
   const setState = useState(globalState)[1]
 
-  const dispatch = (actionIdentifier, payload): void => {
+  const dispatch = (actionIdentifier: string, payload: unknown): void => {
     const newState = actions[actionIdentifier](globalState, payload)
     globalState = { ...globalState, ...newState }
 

@@ -77,6 +77,7 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                 </span>
                 <p>{t('connect.onlinebooking.selector.me')}</p>
               </div>
+
               <div
                 className={classnames(
                   styles.userInfo,
@@ -158,7 +159,7 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                 </div>
 
                 <RightOutlined />
-                {item.addonIcon && <div>{item.addonIcon}</div>}
+                {/*{item.addonIcon && <div>{item.addonIcon}</div>}*/}
               </div>
             ))}
             <div className={styles.btnView}>
@@ -198,7 +199,7 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                 <RightOutlined />
               </div>
             ))}
-            <div className={styles.btnView}></div>
+            <div className={styles.btnView}>&nbsp;</div>
           </div>
         </div>
       )}
