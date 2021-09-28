@@ -105,7 +105,7 @@ export const KanbanCard: FC<KanbanCardProps> = ({
         {leadTitle}
       </div>
 
-      <div className={styles.btnWrapper}>
+      <div className={styles.labelAndBtn}>
         <div className={styles.labelsContent}>
           {leadStatus !== `Open` && (
             <div className={styles.statusBtn}>
@@ -123,7 +123,7 @@ export const KanbanCard: FC<KanbanCardProps> = ({
         <div className={styles.statusContent}>{activeStatusComponent()}</div>
       </div>
       <div className={styles.ownerClientContent}>
-        <div className={styles.leadOwnerContent}>
+        <div>
           <Avatar name={leadOwnerName} src={leadOwnerImg} size={`small`} />
         </div>
         {contactId && (
