@@ -16,10 +16,8 @@ import {
 } from './types'
 import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
-import {
-  groupByDateRange,
-  statusDataByDayMonth,
-} from '../booking/statusByDateRange'
+import { statusDataByDayMonth } from '../booking/statusByDateRange'
+import { groupBy } from 'lodash'
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -1419,35 +1417,45 @@ export const retrieveSalesChartData = async (
         case year > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'All records'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('year').format('YYYY')
+            ),
           })
           final = statusDataByDayMonth('All records', DataSet, startDate)
           break
         case month > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'This Year'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('month').format('MMM')
+            ),
           })
           final = statusDataByDayMonth('This Year', DataSet, startDate)
           break
         case week > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'This Month'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('week')
+            ),
           })
           final = statusDataByDayMonth('This Month', DataSet, startDate)
           break
         case day > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'This Week'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('day').format('ddd')
+            ),
           })
           final = statusDataByDayMonth('This Week', DataSet, startDate)
           break
         default:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'All records'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('year').format('YYYY')
+            ),
           })
           final = statusDataByDayMonth('All records', DataSet, startDate)
       }

@@ -1,4 +1,4 @@
-import { groupBy, uniqBy } from 'lodash'
+import { uniqBy } from 'lodash'
 import dayjs from 'dayjs'
 
 const weekList = [
@@ -33,33 +33,6 @@ const monthList = [
   { label: 'Nev' },
   { label: 'Dec' },
 ]
-
-export const groupByDateRange = (data, dataRange) => {
-  switch (dataRange) {
-    case 'All records': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('year').format('YYYY')
-      )
-      return data1
-    }
-    case 'This Year': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('month').format('MMM')
-      )
-      return data1
-    }
-    case 'This Month': {
-      const data1 = groupBy(data, (item) => dayjs(`${item}`).startOf('week'))
-      return data1
-    }
-    case 'This Week': {
-      const data1 = groupBy(data, (item) =>
-        dayjs(`${item}`).startOf('day').format('ddd')
-      )
-      return data1
-    }
-  }
-}
 
 export const statusDataByDayMonth = (range, DataSet, startDate) => {
   switch (range) {

@@ -1,7 +1,8 @@
 import { Context } from '../../context'
 import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
-import { groupByDateRange, statusDataByDayMonth } from './statusByDateRange'
+import { statusDataByDayMonth } from './statusByDateRange'
+import { groupBy } from 'lodash'
 
 export const retrieveBookingStatuses = async (
   ctx: Context,
@@ -103,6 +104,11 @@ export const retrieveAllBookingChartData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
+  const bookingCount = await ctx.prisma.$queryRaw`SELECT
+    status, COUNT(status)
+    FROM salon_bookings
+    where start_date between ${data.start_date} and ${data.end_date} and contact_id>0 and status!=''
+    GROUP BY status`
   let final = []
   const details = []
   const DataSet = []
@@ -117,20 +123,6 @@ export const retrieveAllBookingChartData = async (
   const year = dayjs(endDate).diff(startDate, 'year')
   const week = dayjs(endDate).diff(startDate, 'week')
   const day = dayjs(endDate).diff(startDate, 'day')
-
-  const bookingCount = await ctx.prisma.booking.groupBy({
-    by: ['status'],
-    where: {
-      NOT: [{ Contact: null }],
-      start_date: { gte: data.start_date ?? undefined },
-      status: { not: '' },
-      end_date: { lte: data.end_date ?? undefined },
-    },
-    _count: {
-      id: true,
-      start_date: true,
-    },
-  })
   const bookingData = await ctx.prisma.booking.findMany({
     where: {
       NOT: [{ Contact: null }],
@@ -160,35 +152,45 @@ export const retrieveAllBookingChartData = async (
         case year > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'All records'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('year').format('YYYY')
+            ),
           })
           final = statusDataByDayMonth('All records', DataSet, startDate)
           break
         case month > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'This Year'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('month').format('MMM')
+            ),
           })
           final = statusDataByDayMonth('This Year', DataSet, startDate)
           break
         case week > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'This Month'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('week')
+            ),
           })
           final = statusDataByDayMonth('This Month', DataSet, startDate)
           break
         case day > 0:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'This Week'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('day').format('ddd')
+            ),
           })
           final = statusDataByDayMonth('This Week', DataSet, startDate)
           break
         default:
           DataSet.push({
             status: record?.key,
-            dateRange: groupByDateRange(record.values, 'All records'),
+            dateRange: groupBy(data, (item) =>
+              dayjs(`${item}`).startOf('year').format('YYYY')
+            ),
           })
           final = statusDataByDayMonth('All records', DataSet, startDate)
       }
