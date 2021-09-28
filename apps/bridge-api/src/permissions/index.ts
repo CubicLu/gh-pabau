@@ -234,10 +234,10 @@ export const permissions = shield(
       //createOneBooking: allow,
       findFirstCompany: allow,
       findManyCmStaffGeneral: allow,
-      findManyCompanyBranch: allow,
       findManyRotaShift: allow,
       Public_MasterCategories: allow,
       Public_ServiceCategories: allow,
+      Public_Locations: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData

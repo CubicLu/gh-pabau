@@ -5,7 +5,7 @@ import { PublicSocialSurveyFeedbackResponse } from '../../survey/nexus-type'
 export const PublicMasterCategoryResponse = objectType({
   name: 'PublicMasterCategoryResponse',
   definition(t) {
-    t.id('id')
+    t.int('id')
     t.int('company_id')
     t.string('image')
     t.string('name')
@@ -31,7 +31,7 @@ export const PublicMasterCategoryResponse = objectType({
 export const PublicServiceCategoryResponse = objectType({
   name: 'PublicServiceCategoryResponse',
   definition(t) {
-    t.id('id')
+    t.int('id')
     t.int('company_id')
     t.string('name')
     t.int('cat_order')
@@ -54,7 +54,7 @@ export const PublicServiceCategoryResponse = objectType({
 export const PublicServiceResponse = objectType({
   name: 'PublicServiceResponse',
   definition(t) {
-    t.id('id')
+    t.int('id')
     t.string('name')
     t.float('price')
     t.int('online_book')

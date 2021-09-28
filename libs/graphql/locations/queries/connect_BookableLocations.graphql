@@ -1,17 +1,22 @@
-query onlineBookableLocations($company_id: Int) {
-  findManyCompanyBranch(where: { company_id: { equals: $company_id } }) {
-    id
+query onlineBookableLocations($company_id: Int!) {
+  Public_Locations(where: {company_id: $company_id}) {
     address
-    street
     city
+    color
     county
-    name
-    postcode
-    online_bookings
-    phone
-    website
-    bookable_online
-    lat
+    email
+    id
+    is_default
     lng
+    lat
+    loc_order
+    name
+    notice
+    phone
+    postcode
+    region
+    send_conf_email
+    street
+    website
   }
 }

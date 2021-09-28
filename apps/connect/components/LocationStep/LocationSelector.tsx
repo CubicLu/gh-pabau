@@ -54,7 +54,7 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
     },
   })
   const [searchLocation, setSearchLocation] = useState<boolean>(
-    locationsResult?.findManyCompanyBranch.length > 5
+    locationsResult?.Public_Locations.length > 5
   )
 
   if (loadingLocations) return <div>Error!</div>
@@ -107,7 +107,7 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
         <div className={Styles.slide1}>
           <div className={Styles.chooseWrapper}>
             <p className={Styles.chooseHeading}>{formattedAddress}</p>
-            {locationsResult.findManyCompanyBranch.map((val) => (
+            {locationsResult.Public_Locations.map((val) => (
               <div
                 key={val.id}
                 onClick={() => {

@@ -3,7 +3,7 @@ import { objectType } from 'nexus'
 export const PublicSocialSurveyFeedbackResponse = objectType({
   name: 'Public_SocialSurveyFeedback',
   definition(t) {
-    t.id('id')
+    t.int('id')
     t.int('rating')
     t.int('date')
     t.string('feedback_comment')

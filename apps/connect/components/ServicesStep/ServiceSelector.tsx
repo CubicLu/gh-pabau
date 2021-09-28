@@ -15,8 +15,8 @@ import {
 import { useMedia } from 'react-use'
 import { Button } from '@pabau/ui'
 
-import { Rate, Modal, Badge, Popover, Tooltip, Image } from 'antd'
-import { data, voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
+import { Rate, Modal, Badge, Tooltip, Image } from 'antd'
+import { voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
 import styles from './ServiceSelector.module.less'
 import ClassNames from 'classnames'
 import { Category, Service } from '../../types/services'
@@ -25,24 +25,24 @@ import { useSelectedDataStore } from '../../store/selectedData'
 
 import { ReactComponent as SelectAllIcon } from '../../assets/images/SelectAll.svg'
 import { ReactComponent as Promocode } from '../../assets/images/coupenCode.svg'
-import { ReactComponent as SkinHealth } from '../../assets/images/skin-health-logo.svg'
-import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
 import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
 import { SettingsContext } from '../../context/settings-context'
+import ServiceReviewsModal from '../Modals/ServiceReviewsModal'
+import ServiceInfoModal from '../Modals/ServiceInfoModal'
 export interface P {
   onSelected: () => void
 }
 
 const ServiceSelector: FC<P> = ({ onSelected }) => {
+  const [showReviewsModal, setShowReviewsModal] = useState(false)
+  const [showServiceInfoModal, setShowServiceInfoModal] = useState(false)
+  const [previewService, setPreviewService] = useState(null)
   // CRAP
-  const [showmodal, setshowmodal] = useState(false)
-  const [visible, setvisible] = useState(false)
-  const [popover, setpopover] = useState(true)
+
   const [Vcount, setVcount] = useState(0)
   const [Vprice, setVprice] = useState(0)
   const [VoucherData, setVoucherData] = useState(voucherData)
   const [mbactive, setmbactive] = useState(true)
-  const [infomodal, setinfomodal] = useState(false)
   const isMobile = useMedia('(max-width: 768px)', false)
 
   //HOOKS
@@ -86,7 +86,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
             let newSelectedServices = []
             if (isSelected) {
               newSelectedServices = selectedData.services.filter(
-                (el) => el !== val.id
+                (el) => el.id !== val.id
               )
               setTotalEstimate(totalEstimate - Number.parseFloat(val.price))
             } else {
@@ -147,7 +147,13 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                   defaultValue={val.online_only_service ? 0 : 5}
                 />
 
-                <span className={styles.consultationReview} onClick={(e) => {}}>
+                <span
+                  className={styles.consultationReview}
+                  onClick={(e) => {
+                    setPreviewService(val)
+                    setShowReviewsModal(true)
+                  }}
+                >
                   {val.online_only_service
                     ? 0
                     : val.Public_SocialSurveyFeedback.length}
@@ -172,7 +178,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
               <InfoCircleFilled style={{ color: '#20BAB1' }} />
               <p>You may need a patch test</p>
             </div>
-            <p onClick={() => setinfomodal(true)}>more info</p>
+            <p onClick={() => setShowServiceInfoModal(true)}>more info</p>
           </div>
         )}
       </div>
@@ -550,146 +556,21 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
           </Button>
         </div>
       )}
-      <Modal
-        className={styles.mainmodal}
-        visible={infomodal}
-        onCancel={() => {
-          setinfomodal(false)
-        }}
-        footer={null}
-      >
-        <div className={styles.iconDiv}></div>
-        <span className={styles.headerText}>Patch test</span>
-        <p className={styles.bodyText}>
-          To make sure your skin doesen’t react to the products used in your
-          treatment, please book a patch test for at least 48 hours before your
-          appointment.
-        </p>
-        <p className={styles.bodyText}>
-          To make sure your skin doesen’t react to the products used in your
-          treatment, please book a patch test for at least 48 hours before your
-          appointment.
-        </p>
-        <Button
-          className={styles.footerBtn}
-          type={'primary'}
-          onClick={() => {
-            setinfomodal(false)
+      {showServiceInfoModal && (
+        <ServiceInfoModal
+          closeModalHandler={() => {
+            setShowServiceInfoModal(false)
           }}
-        >
-          I understand
-        </Button>
-      </Modal>
-      <Modal
-        className={styles.consultationModal}
-        visible={showmodal}
-        footer={null}
-        width={682}
-        onCancel={() => {
-          setvisible(false)
-          setTimeout(() => {
-            setshowmodal(false)
-          }, 1)
-        }}
-      >
-        <>
-          <div className={styles.logoHeader}> {isMobile && <SkinHealth />}</div>
-          <h5 className={styles.modalHeader}>Botox Area 1 reviews</h5>
-          <div className={styles.modalSubHeader}>
-            <h5>1 {t('connect.onlinebooking.selector.modal.review')}</h5>
-            <div className={styles.rightBar}>
-              <p>{t('connect.onlinebooking.selector.modal.sort')}:</p>
-              <Popover
-                overlayClassName={styles.dropMenu}
-                content={
-                  <div
-                    className={styles.menu}
-                    onClick={() => setvisible(!visible)}
-                  >
-                    <span
-                      onClick={() => setpopover(true)}
-                      className={ClassNames(
-                        styles.list,
-                        popover && styles.active
-                      )}
-                    >
-                      <CheckOutlined />{' '}
-                      <p>
-                        {t(
-                          'connect.onlinebooking.selector.modal.relevent.first'
-                        )}
-                      </p>
-                    </span>
-                    <span
-                      onClick={() => setpopover(false)}
-                      className={ClassNames(
-                        styles.list,
-                        !popover && styles.active
-                      )}
-                    >
-                      <CheckOutlined />{' '}
-                      <p>
-                        {t(
-                          'connect.onlinebooking.selector.modal.relevent.second'
-                        )}
-                      </p>
-                    </span>
-                  </div>
-                }
-                placement="bottomRight"
-                trigger="click"
-                visible={visible}
-              >
-                <h6 onClick={() => setvisible(!visible)}>
-                  {t('connect.onlinebooking.selector.modal.relevent.first')}
-                  {visible ? <UpOutlined /> : <DownOutlined />}
-                </h6>
-              </Popover>
-            </div>
-          </div>
-
-          <div className={styles.modalBody}>
-            {data.map((val) => (
-              <div className={styles.cardReview} key={val.id}>
-                <div className={styles.reviewHeader}>
-                  <img
-                    src={val.source}
-                    className={styles.reviewImg}
-                    alt={'nothing'}
-                  />
-                  <span className={styles.reviewName}>{val.name}</span>
-                  <div className={styles.reviewRate}>
-                    <Badge dot className={styles.dot} />
-                    <span
-                      className={
-                        val.rating === 5
-                          ? styles.reviewRateName
-                          : val.rating < 2
-                          ? styles.reviewRateValue
-                          : styles.reviewRatePrice
-                      }
-                    >
-                      {val.rating}/5
-                    </span>
-                    <Badge dot className={styles.dot} />
-                  </div>
-                  <span className={styles.reviewRateMonth}>
-                    {val.month}{' '}
-                    {t('connect.onlinebooking.selector.modal.month')}
-                  </span>
-                </div>
-                <p className={styles.reviewDescption}>{val.description}</p>
-              </div>
-            ))}
-          </div>
-          {isMobile && (
-            <div className={styles.footerModal}>
-              <p>{t('connect.onlinebooking.footer.data')}</p>
-              <LogoSvg style={{ height: '15px', width: '60px' }} />
-            </div>
-          )}
-        </>
-      </Modal>
+        ></ServiceInfoModal>
+      )}
+      {showReviewsModal && (
+        <ServiceReviewsModal
+          service={previewService}
+          closeModalHandler={() => {
+            setShowReviewsModal(false)
+          }}
+        ></ServiceReviewsModal>
+      )}
     </>
   )
 }
