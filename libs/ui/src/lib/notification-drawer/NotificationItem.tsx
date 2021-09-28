@@ -92,8 +92,7 @@ export const NotificationItem: FC<P> = ({
     })
   }
 
-  const getFormattedDate = (date: Date) =>
-    Intl.DateTimeFormat('en-US').format(new Date(date))
+  const getFormattedDate = (date: string) => date.replaceAll('-', '/')
 
   const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
     const { variables, notificationType, sentBy, desc } = notification
@@ -115,7 +114,7 @@ export const NotificationItem: FC<P> = ({
         const replaceVariable = `[${key}]`
         let variableValue = variables[key]
 
-        if (key === 'date') {
+        if (key === 'date' && variableValue?.includes('-')) {
           variableValue = getFormattedDate(variableValue)
         }
 
