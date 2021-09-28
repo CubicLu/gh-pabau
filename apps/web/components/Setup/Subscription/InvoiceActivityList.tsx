@@ -90,10 +90,15 @@ const InvoiceActivity: FC<P> = (p) => {
           <div>
             <EmailSendButton
               style={{ marginRight: 16 }}
-              disabled={sendEmails.includes(id) ? true : false}
+              disabled={
+                sendEmails.includes(id) || invoice_link === null ? true : false
+              }
               onClick={() => sendEmail(id, invoice_link)}
             />
-            <Button onClick={() => onPreviewInvoice(invoice_link)}>
+            <Button
+              onClick={() => onPreviewInvoice(invoice_link)}
+              disabled={invoice_link === null ? true : false}
+            >
               <EyeOutlined /> {t('setup.table.btn.preview')}
             </Button>
           </div>
@@ -119,16 +124,6 @@ const InvoiceActivity: FC<P> = (p) => {
   })
 
   useEffect(() => {
-    if (
-      paginateData.currentPage !== 1 &&
-      p.searchTerm + p.filterValue !== 'ALL'
-    ) {
-      setPaginateData((d) => ({
-        ...d,
-        offset: 0,
-        currentPage: 1,
-      }))
-    }
     setStatus(p.filterValue as FilterStatus)
     setSearchTerm(p.searchTerm)
   }, [p, paginateData])
