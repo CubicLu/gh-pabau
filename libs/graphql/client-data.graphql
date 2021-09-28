@@ -1,45 +1,44 @@
-query ClientsData($limit: Int = 10, $offset: Int = 0, $searchTerm: String) {
-    clients_data(
-        limit: $limit
-        offset: $offset
-        order_by: { is_liked: desc }
-        where: {
-            _or: [
-                { _and: [{ name: { _ilike: $searchTerm } }] }
-                { _and: [{ label: { _ilike: $searchTerm } }] }
-                { _and: [{ category: { _ilike: $searchTerm } }] }
-                { _and: [{ format: { _ilike: $searchTerm } }] }
-            ]
-        }
-    ) {
-        id
-        name
-        label
-        format
-        fieldFor
-        category
-        is_mendatory
-        is_liked
-        is_private
-        is_active
-        is_locked
-        created_date
-    }
+query ClientsData($cursor: CmContactWhereUniqueInput) {
+  findManyCmContact(take: 10, cursor: $cursor) {
+    id: ID
+    firstName: Fname
+    lastName: Lname
+    is_active
+    email: Email
+    mobileNumber: Mobile
+    #    label?: Labels[]
+    #    is_active?: number
+    #    date_archived?: string
+    #    dob?: string
+    #    postal?: string
+    #    city?: string
+    #    priceQuote?: string
+    #    orderNotes?: string
+    #    setupFee?: string
+    #    is_dismissed?: boolean
+  }
 }
 
-query ClientsDataAggregate($searchTerm: String) {
-    clients_data_aggregate(
-        where: {
-        _or: [
-            { _and: [{ name: { _ilike: $searchTerm } }] }
-            { _and: [{ label: { _ilike: $searchTerm } }] }
-            { _and: [{ category: { _ilike: $searchTerm } }] }
-            { _and: [{ format: { _ilike: $searchTerm } }] }
-        ]
-        }
-    ) {
-        aggregate {
-            count
-        }
+query ClientsDataAggregate {
+  findManyCmContactCount
+}
+
+query ClientsGetNextAppointments($id: Int!, $start_date: Decimal!) {
+  findFirstCmContact(where: { ID: { equals: $id } }) {
+    Booking(where: { start_date: { gt: $start_date } }) {
+      id
+      apptDate: start_date
+      #@@@ TODO: add more fields here
     }
+  }
+}
+
+query ClientsGetAppointments($id: Int!, $cursor: BookingWhereUniqueInput) {
+  findFirstCmContact(where: { ID: { equals: $id } }) {
+    Booking(take: 10, cursor: $cursor, orderBy: { create_date: desc }) {
+      id
+      apptDate: start_date
+      #@@@ TODO: add more fields here
+    }
+  }
 }

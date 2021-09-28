@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import {
   TagOutlined,
   ImportOutlined,
@@ -15,10 +15,10 @@ import CreateLabel from './CreateLabel'
 import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
+import { useClientsDataQuery } from '@pabau/graphql'
 
-interface ClientsContentProps {
+interface P {
   searchText?: string
-  sourceData?: SourceDataProps[]
   handleLabelClick?: (e, val) => void
   isArchived?: boolean
   labels?: Labels[]
@@ -35,26 +35,7 @@ interface ClientsContentProps {
   handleRecoverClick?: (val) => void
 }
 
-export interface SourceDataProps {
-  id: number
-  firstName?: string
-  lastName?: string
-  email?: string
-  mobileNumber?: string
-  label?: Labels[]
-  is_active?: number
-  date_archived?: string
-  dob?: string
-  postal?: string
-  city?: string
-  priceQuote?: string
-  orderNotes?: string
-  setupFee?: string
-  is_dismissed?: boolean
-}
-
-export const ClientsContent: FC<ClientsContentProps> = ({
-  sourceData,
+export const ClientsContent = ({
   handleLabelClick,
   isArchived,
   labels,
@@ -69,9 +50,12 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   handleApplyLabel,
   handleRowClick,
   handleRecoverClick,
-}) => {
+}: P) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
+
+  const { data } = useClientsDataQuery()
+
   const [selectedPrimaryColumn, setSelectedPrimaryColumn] = useState([
     'Avatar',
     'Name',
@@ -225,35 +209,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     },
   ]
 
-  const onCheckAllChange = () => {
-    if (selectedRowKeys.length !== dataSource().length) {
-      setSelectedRowKeys(dataSource().map((data) => data.id))
-    } else {
-      setSelectedRowKeys([])
-    }
-  }
-
   const handleMobileSelectRow = (id) => {
     const selectedData = [...selectedRowKeys]
     const index = selectedData.indexOf(id)
     index === -1 ? selectedData.push(id) : selectedData.splice(index, 1)
     setSelectedRowKeys([...selectedData])
-  }
-
-  const dataSource = () => {
-    if (isArchived) {
-      return sourceData?.map((e: { id }) => ({
-        key: e.id,
-        ...e,
-      }))
-    } else {
-      return sourceData
-        ?.filter((e) => e.is_active === 1)
-        .map((e: { id }) => ({
-          key: e.id,
-          ...e,
-        }))
-    }
   }
 
   const mobileLabelPopupContent = (data) => {
@@ -284,6 +244,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     return <Tooltip title={title}>{icon}</Tooltip>
   }
 
+  if (!data) return <>...</>
   return (
     <div className={styles.tableContent}>
       {!isMobile && selectedRowKeys.length > 0 && (
@@ -291,10 +252,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           <Checkbox
             indeterminate={
               selectedRowKeys.length > 0 &&
-              selectedRowKeys.length !== dataSource().length
+              selectedRowKeys.length !== data.findManyCmContact.length
             }
-            onChange={onCheckAllChange}
-            checked={selectedRowKeys.length === dataSource().length}
+            //@@@TODO
+            // onChange={onCheckAllChange}
+            checked={selectedRowKeys.length === data.findManyCmContact.length}
           ></Checkbox>
           <CreateLabel
             selectedLabels={selectedLabels}
@@ -345,7 +307,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       )}
       {!isMobile ? (
         <Table
-          dataSource={dataSource()}
+          dataSource={data.findManyCmContact}
           scroll={{ x: 'max-content' }}
           columns={columns}
           pagination={false}
@@ -358,8 +320,18 @@ export const ClientsContent: FC<ClientsContentProps> = ({
         />
       ) : (
         <div className={styles.clientMainWrapper}>
-          {dataSource().map((data: SourceDataProps) => {
-            return (
+          {data.findManyCmContact
+
+            //TODO move this .map() to .graphql
+            .map((e) => ({
+              ...e,
+              label: [
+                { label: 'abcd', color: 'red' },
+                { label: 'asdf', color: 'green' },
+              ],
+            }))
+
+            .map((data) => (
               <div
                 key={data.id}
                 className={classNames(styles.clientMobWrap, {
@@ -406,8 +378,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                   </Popover>
                 </div>
               </div>
-            )
-          })}
+            ))}
         </div>
       )}
     </div>

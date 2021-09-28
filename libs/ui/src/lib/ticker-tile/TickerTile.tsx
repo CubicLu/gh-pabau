@@ -6,7 +6,7 @@ import styles from './TickerTile.module.less'
 
 export interface TickerTileProps {
   title: string
-  items: ReactNode[]
+  items?: ReactNode[]
   speed: number
   showCount?: boolean
   showDots?: boolean
@@ -39,13 +39,13 @@ export const TickerTile: FC<TickerTileProps> = ({
       <div className={styles.tickerTileTitle}>{title}</div>
       <div className={styles.tickerTileContent}>
         {!isBlank &&
-          items.length === 1 &&
+          items?.length === 1 &&
           items.map((tile, index) => (
             <div className={styles.tickerTile} key={`ticker-tile-${index}`}>
               {tile}
             </div>
           ))}
-        {!isBlank && items.length > 1 && (
+        {!isBlank && items && items.length > 1 && (
           <Carousel
             dotPosition="right"
             autoplay={true}
@@ -60,10 +60,10 @@ export const TickerTile: FC<TickerTileProps> = ({
             ))}
           </Carousel>
         )}
-        {!isBlank && showCount && (
+        {!isBlank && showCount && items && (
           <div className={styles.tickerCount}>{items.length}</div>
         )}
-        {!isBlank && showDots && (
+        {!isBlank && showDots && items && (
           <div className={styles.tickerDots}>
             {items.map((_, index) => (
               <div
@@ -79,7 +79,12 @@ export const TickerTile: FC<TickerTileProps> = ({
         )}
         {isBlank && (
           <div className={styles.noItem}>
-            {noItemImage && noItemImage}
+            {noItemImage && (
+              <div className={styles.noTicketItemImage}>
+                <div className={styles.circle} />
+                {noItemImage}
+              </div>
+            )}
             <span>{noItemText || ''}</span>
           </div>
         )}
