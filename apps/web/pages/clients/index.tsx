@@ -493,14 +493,10 @@ const Clients = () => {
           handleClose={isEdit ? closeEditModal : toggleCreateClientModal}
           handleSubmit={handleCreateClient}
           isEdit={isEdit}
-          contactId={25236524}
-          activated={active}
-          onActivated={(val) => setActive(val)}
+          contactId={editedValues.id}
           handleDelete={handleDeleteToggle}
           deleteModalVisible={deleteModal}
           onDelete={showDeleteConfirm}
-          defaultLabels={isEdit ? editedValues.label : labels}
-          defaultSelectedLabels={isEdit && editedValues.label}
         />
       )}
       {!isEdit && (

@@ -133,29 +133,31 @@ export const Index: FC<GeneralProps> = ({
               requiredLabel={requiredLabel}
             />
           )}
-          {limitContactsLocations && limitContactsLocations?.length > 0 && (
-            <AntForm
-              className={styles.subscriptionForm}
-              layout={'vertical'}
-              requiredMark={false}
-            >
-              <h5>{t('quickCreate.client.modal.general.location.title')}</h5>
-              {limitContactsLocations.map((item) => (
-                <AntForm.Item
-                  name={`limitContactsLocations_${item.id}`}
-                  key={item.id}
-                >
-                  <div className={styles.switchBtn}>
-                    <Switch
-                      name={`limitContactsLocations_${item.id}`}
-                      defaultChecked={true}
-                    />
-                    <p>{item.name}</p>
-                  </div>
-                </AntForm.Item>
-              ))}
-            </AntForm>
-          )}
+          {!isLoading &&
+            limitContactsLocations &&
+            limitContactsLocations?.length > 0 && (
+              <AntForm
+                className={styles.subscriptionForm}
+                layout={'vertical'}
+                requiredMark={false}
+              >
+                <h5>{t('quickCreate.client.modal.general.location.title')}</h5>
+                {limitContactsLocations.map((item) => (
+                  <AntForm.Item
+                    name={`limitContactsLocations_${item.id}`}
+                    key={item.id}
+                  >
+                    <div className={styles.switchBtn}>
+                      <Switch
+                        name={`limitContactsLocations_${item.id}`}
+                        defaultChecked={true}
+                      />
+                      <p>{item.name}</p>
+                    </div>
+                  </AntForm.Item>
+                ))}
+              </AntForm>
+            )}
           {!isLoading && customFields && customFields?.length > 0 && (
             <CustomField
               customFields={customFields}

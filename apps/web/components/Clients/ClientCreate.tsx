@@ -18,9 +18,12 @@ import {
   useGetCmLabelsLazyQuery,
   useCreateOneContactMutation,
   GetTblModuleFieldsSettingsQuery,
+  useFindEditContactDetailLazyQuery,
+  useUpdateOneContactMutation,
+  Status,
 } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
-import { gql, useLazyQuery } from '@apollo/client'
+import dayjs from 'dayjs'
 
 export interface Label {
   label?: string
@@ -41,90 +44,20 @@ export interface ClientCreateWebProps {
   onSelectTemplate?: (string) => void
   searchText?: string
   onSearchTextChange?: (string) => void
-  handleSubmit?: (val) => void
+  handleSubmit?: (val?) => void
   isEdit?: boolean
   contactId?: number
-  activated?: boolean
-  onActivated?: (val: boolean) => void
-  defaultLabels?: Label[]
-  defaultSelectedLabels?: Label[]
   handleDelete?: () => void
   deleteModalVisible?: boolean
   onDelete?: () => void
 }
 
-const query = gql`
-  query findFirstCmContact($id: Int) {
-    contact: findFirstCmContact(where: { ID: { equals: $id } }) {
-      Fname
-      Lname
-      Salutation
-      gender
-      MarketingSource
-      DOB
-      Email
-      Mobile
-      Phone
-      MailingProvince
-      MailingCountry
-      MailingStreet
-      MailingCity
-      MailingPostal
-      MarketingOptInPost
-      MarketingOptInText
-      MarketingOptInEmail
-      MarketingOptInPhone
-      needToKnows: need_to_knows
-      privacyPolicy: privacy_policy
-      contactPreference: ContactPreference {
-        family
-        emergencyContact: emergency_contact
-        nextOfKin: next_of_kin
-        insuranceProvider: insurance_provider
-        gp
-        company
-        bookAppointments: book_appointments
-        bookClass: book_class
-        loyalty
-        myPackages: my_packages
-        purchasePackage: purchase_package
-        payments
-        appointments
-        class
-        documents
-        medications
-        allergies
-        gpDetails: gp_details
-        shareLink: share_link
-        accessCode: access_code
-      }
-      customField: CmContactCustom {
-        custom_field_id
-        custom_field_label
-        custom_field_value
-      }
-      location: CmContactLocation {
-        location_id
-      }
-      labels: CmContactLabel {
-        id: label_id
-      }
-      contactMeta: ContactMeta(
-        where: { meta_name: { equals: "preferred_language" } }
-      ) {
-        meta_value
-      }
-    }
-  }
-`
 export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   modalVisible = true,
   handleClose,
   isEdit = false,
   contactId,
-  defaultLabels,
-  defaultSelectedLabels,
-  ...props
+  handleSubmit,
 }) => {
   const { t } = useTranslation('common')
   const user = useUser()
@@ -176,7 +109,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const [isVisible, setVisible] = useState(modalVisible)
   const [accessCode, setAceessCode] = useState(0)
   const [isSuccess, setSuccess] = useState(false)
-  const [editLabels, setEditLabels] = useState([])
+  const [labels, setLabels] = useState([])
+  const [active, setActive] = useState(false)
 
   useEffect(() => {
     if (!isEdit) {
@@ -218,10 +152,12 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const [
     getContact,
     { data: contactData, loading: editContactLoading },
-  ] = useLazyQuery(query, {
+  ] = useFindEditContactDetailLazyQuery({
     variables: {
       id: contactId,
     },
+    ssr: false,
+    fetchPolicy: 'network-only',
   })
 
   const [addMutation] = useCreateOneContactMutation({
@@ -240,6 +176,18 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           NotificationType.error,
           t('quickCreate.client.modal.create.contact.exits.error')
         )
+      }
+    },
+  })
+
+  const [updateMutation] = useUpdateOneContactMutation({
+    onCompleted(data) {
+      if (data) {
+        Notification(
+          NotificationType.success,
+          t('quickCreate.client.modal.update.success')
+        )
+        setSuccess(!isSuccess)
       }
     },
   })
@@ -268,7 +216,14 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       getContact()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, marketingSourceLoading, locationLoading, customFieldLoading])
+  }, [
+    loading,
+    marketingSourceLoading,
+    locationLoading,
+    customFieldLoading,
+    isEdit,
+    labelLoading,
+  ])
 
   useEffect(() => {
     const requiredField = {
@@ -436,7 +391,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   useEffect(() => {
     const values = initialValues
     const marketingPromotionValues = []
-    if (contactData) {
+    if (contactData?.contact) {
       const data = contactData.contact
       for (const key of Object.keys(values)) {
         if (key === 'recordSharing') {
@@ -468,7 +423,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           if (data.MarketingOptInText) {
             marketingPromotionValues.push('sms')
           }
-          if (data.need_to_knows) {
+          if (data.needToKnows) {
             marketingPromotionValues.push('needToKnows')
           }
           values['marketingPromotion'] = marketingPromotionValues
@@ -479,7 +434,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         } else if (key === 'MarketingSource') {
           if (
             marketingSourceData?.findManyMarketingSource.find(
-              (source) => source.id === Number.parseInt(data['MarketingSource'])
+              (source) => source.id === data['MarketingSource']
             )
           ) {
             values['MarketingSource'] = data['MarketingSource'].toString()
@@ -500,7 +455,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         }
       }
       setAceessCode(
-        data.contactPreference?.accessCode ??
+        Number.parseInt(data.contactPreference?.accessCode) ??
           Math.floor(1000 + Math.random() * 9000)
       )
       if (data.labels.length > 0) {
@@ -514,9 +469,20 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
             color: findLabel.color,
           }
         })
-        setEditLabels(labelData)
+        setLabels(labelData)
+      }
+      if (data.active === 'Enable') {
+        setActive(true)
+      } else if (data.active === 'Disable') {
+        setActive(false)
       }
       setInitialValues({ ...values })
+    } else if (contactData && !editContactLoading) {
+      handleSubmit?.()
+      Notification(
+        NotificationType.error,
+        t('quickCreate.client.modal.update.detail.error')
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contactData])
@@ -534,13 +500,20 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
 
   const handleCloseModal = () => {
     setVisible(false)
+    setLabels([])
+    setActive(false)
     handleClose?.()
+  }
+
+  const onActivated = (value) => {
+    setActive(value)
   }
 
   const handleCreate = async (values, resetForm, setSelectedLabels) => {
     const customFieldsValue: cmFieldsCreateProps[] = []
     const limitContactsLocationsIds: number[] = []
-
+    const deleteLabels: number[] = []
+    let createLabels = values.selectedLabels
     for (const field of Object.keys(values)) {
       let value = values[field]
 
@@ -561,7 +534,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
               id: Number.parseInt(strVal[1]),
               value:
                 matchedField.field_type === 'date'
-                  ? value.format('YYYY-MM-DD')
+                  ? dayjs(value).format('YYYY-MM-DD')
                   : value.toString(),
             })
           }
@@ -572,11 +545,25 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       }
     }
 
+    if (isEdit && contactData.contact?.labels.length > 0) {
+      for (const label of contactData.contact.labels) {
+        if (
+          !values.selectedLabels.find((selected) => selected.id === label.id)
+        ) {
+          deleteLabels.push(label.id)
+        } else {
+          createLabels = createLabels.filter(
+            (selected) => selected.id !== label.id
+          )
+        }
+      }
+    }
+
     const variables = {
       firstName: values.Fname,
       lastName: values.Lname,
       email: values.Email,
-      salutation: values.salutation,
+      salutation: values.salutation ?? '',
       mailingProvince: values.MailingProvince,
       mailingCity: values.MailingCity,
       mailingStreet: values.MailingStreet,
@@ -596,8 +583,12 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       gender: values.gender,
       preferredLanguage: values.preferredLanguage.toLowerCase(),
       privacyPolicy: values.privacyPolicy,
-      limitContactsLocations: limitContactsLocationsIds,
-      labels: values.selectedLabels,
+      labels: !isEdit
+        ? createLabels
+        : {
+            createLabels,
+            deleteLabels,
+          },
       customFields: customFieldsValue,
       contactPreferences: {
         family: values.recordSharing.family,
@@ -623,8 +614,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       },
     }
 
-    if (limitContactsLocationsIds.length === 0) {
-      delete variables.limitContactsLocations
+    if (limitContactsLocationsIds.length > 0 && !isEdit) {
+      variables['limitContactsLocations'] = limitContactsLocationsIds
     }
 
     if (values.selectedLabels.length === 0) {
@@ -635,14 +626,30 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       delete variables.customFields
     }
 
-    const response = await addMutation({
-      variables,
-      optimisticResponse: {},
-    })
+    let response
+    if (!isEdit) {
+      response = await addMutation({
+        variables,
+        optimisticResponse: {},
+      })
+    } else {
+      response = await updateMutation({
+        variables: {
+          ...variables,
+          status: active ? Status.Enable : Status.Disable,
+          contactId,
+        },
+        optimisticResponse: {},
+      })
+    }
 
     if (response.data) {
       resetForm()
       setSelectedLabels([])
+      if (isEdit) {
+        handleSubmit?.()
+        setActive(false)
+      }
     }
   }
 
@@ -660,15 +667,16 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       isMarketingSourceLoading={marketingSourceLoading}
       isSalutationLoading={salutationLoading}
       labelsData={labelsData}
-      defaultLabels={editLabels}
-      defaultSelectedLabels={editLabels}
+      defaultLabels={labels}
+      defaultSelectedLabels={labels}
       initialValues={initialValues}
       validationObject={validationObject}
       isDisabledBtn={checkIsLoading()}
       companyName={user?.me?.companyName}
       accessCode={accessCode}
       isEdit={isEdit}
-      {...props}
+      activated={active}
+      onActivated={onActivated}
     />
   )
 }
