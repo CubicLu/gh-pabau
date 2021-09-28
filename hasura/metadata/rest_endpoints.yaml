@@ -1,9 +1,0 @@
-- definition:
-    query:
-      collection_name: allowed-queries
-      query_name: notification
-  url: notification/create
-  methods:
-  - POST
-  name: notification
-  comment: null
