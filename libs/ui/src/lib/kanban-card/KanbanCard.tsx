@@ -139,7 +139,7 @@ export const KanbanCard: FC<KanbanCardProps> = ({
         <div>
           <Activities
             eventsData={eventsData}
-            eventDateFormat={`'DD-MM-YYYY, h:mm a'`}
+            eventDateFormat={'DD-MM-YYYY, h:mm a'}
             isLoading={false}
           />
         </div>
