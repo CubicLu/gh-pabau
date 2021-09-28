@@ -12,7 +12,7 @@ query getDashboardData(
     $start_date: Decimal
     $end_date: Decimal
   ) {
-    getDashboardData(
+    dashboardData(
       data: {
         start_date: $start_date
         end_date: $end_date

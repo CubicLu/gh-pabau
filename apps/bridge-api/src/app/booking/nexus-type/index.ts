@@ -76,7 +76,7 @@ const salesByProductCategoryType = objectType({
 })
 
 export const DashboardResponseType = objectType({
-  name: 'getDashboardData',
+  name: 'dashboardData',
   definition(t) {
     t.field('bookingStatusCount', { type: BookingStatusDetails })
     t.field('salesCount', { type: SalesCount })

@@ -124,7 +124,7 @@ export const permissions = shield(
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
-      getDashboardData: rules.authentication.isAuthenticated,
+      dashboardData: rules.authentication.isAuthenticated,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,

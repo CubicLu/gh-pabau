@@ -90,16 +90,17 @@ export function Index() {
 
   const getAppointmentQueryVariables = useMemo(() => {
     const queryOptions = {
-      variables: {
-        start_date:
-          filterRange !== 'All records'
-            ? dayjs(new Date(`${filterDate[0]}`)).format('YYYYMMDDHHmmss')
-            : undefined,
-        end_date:
-          filterRange !== 'All records'
-            ? dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss')
-            : undefined,
-      },
+      variables:
+        filterRange !== 'All records'
+          ? {
+              start_date: dayjs(new Date(`${filterDate[0]}`)).format(
+                'YYYYMMDDHHmmss'
+              ),
+              end_date: dayjs(new Date(`${filterDate[1]}`)).format(
+                'YYYYMMDDHHmmss'
+              ),
+            }
+          : null,
     }
     return queryOptions
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,56 +114,54 @@ export function Index() {
   useEffect(() => {
     if (appointment_status) {
       if (
-        (appointment_status?.getDashboardData?.bookingStatusCount
-          ?.appointmentList).length > 0
+        (appointment_status?.dashboardData?.bookingStatusCount?.appointmentList)
+          .length > 0
       ) {
         setAppointment(
-          appointment_status?.getDashboardData?.bookingStatusCount
-            ?.appointmentList
+          appointment_status?.dashboardData?.bookingStatusCount?.appointmentList
         )
       } else {
         setAppointment(defaultAppointmentList)
       }
       if (
-        (appointment_status?.getDashboardData?.bookingStatusCount
+        (appointment_status?.dashboardData?.bookingStatusCount
           ?.onlineAppointmentList).length > 0
       ) {
         setOnlineAppointment(
-          appointment_status?.getDashboardData?.bookingStatusCount
+          appointment_status?.dashboardData?.bookingStatusCount
             ?.onlineAppointmentList
         )
       } else {
         setOnlineAppointment(defaultOnlineAppointmentList)
       }
       if (
-        (appointment_status?.getDashboardData?.salesCount?.salesList).length > 0
+        (appointment_status?.dashboardData?.salesCount?.salesList).length > 0
       ) {
-        setSales(appointment_status?.getDashboardData?.salesCount?.salesList)
+        setSales(appointment_status?.dashboardData?.salesCount?.salesList)
       } else {
         setSales(defaultSalesList)
       }
       setTotalBooking({
         count:
-          appointment_status?.getDashboardData?.bookingStatusCount
-            ?.totalBooking,
+          appointment_status?.dashboardData?.bookingStatusCount?.totalBooking,
         per:
-          appointment_status?.getDashboardData?.bookingStatusCount
+          appointment_status?.dashboardData?.bookingStatusCount
             ?.totalBookingPer,
       })
       setTotalOnlineBooking({
         count:
-          appointment_status?.getDashboardData?.bookingStatusCount
+          appointment_status?.dashboardData?.bookingStatusCount
             ?.totalOnlineBooking,
         per:
-          appointment_status?.getDashboardData?.bookingStatusCount
+          appointment_status?.dashboardData?.bookingStatusCount
             ?.totalOnlineBookingPer,
       })
       setTotalSalesCount({
         count:
-          appointment_status?.getDashboardData?.salesCount
+          appointment_status?.dashboardData?.salesCount
             ?.totalAvailableCategoryTypeCount,
         per:
-          appointment_status?.getDashboardData?.salesCount
+          appointment_status?.dashboardData?.salesCount
             ?.totalAvailableCategoryTypePer,
       })
     }
@@ -448,11 +447,10 @@ export function Index() {
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}
               BookingData={
-                appointment_status?.getDashboardData?.allbooking
-                  ?.bookingsByStatus
+                appointment_status?.dashboardData?.allbooking?.bookingsByStatus
               }
               salesData={
-                appointment_status?.getDashboardData?.allSales
+                appointment_status?.dashboardData?.allSales
                   ?.salesByProductCategoryType
               }
               totalBooking={totalBooking}

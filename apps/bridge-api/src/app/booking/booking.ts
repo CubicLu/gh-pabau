@@ -7,61 +7,34 @@ export const retrieveBookingStatuses = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  let BookingStatusCountOnline
-  let BookingStatusCount
   const onlineAppointment = []
   const appointment = []
 
-  if (data.start_date && data.end_date) {
-    BookingStatusCount = await ctx.prisma.booking.groupBy({
-      by: ['status'],
-      where: {
-        NOT: [{ Contact: null }],
-        status: { not: '' },
-        start_date: { gte: data.start_date },
-        end_date: { lte: data.end_date },
-      },
-      _count: {
-        id: true,
-      },
-    })
-    BookingStatusCountOnline = await ctx.prisma.booking.groupBy({
-      by: ['status'],
-      where: {
-        NOT: [{ Contact: null }],
-        status: { not: '' },
-        start_date: { gte: data.start_date },
-        end_date: { lte: data.end_date },
-        Online: { equals: 1 },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  }
-  if (!data.start_date && !data.end_date) {
-    BookingStatusCount = await ctx.prisma.booking.groupBy({
-      by: ['status'],
-      where: {
-        NOT: [{ Contact: null }],
-        status: { not: '' },
-      },
-      _count: {
-        id: true,
-      },
-    })
-    BookingStatusCountOnline = await ctx.prisma.booking.groupBy({
-      by: ['status'],
-      where: {
-        NOT: [{ Contact: null }],
-        status: { not: '' },
-        Online: { equals: 1 },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  }
+  const BookingStatusCount = await ctx.prisma.booking.groupBy({
+    by: ['status'],
+    where: {
+      NOT: [{ Contact: null }],
+      status: { not: '' },
+      start_date: { gte: data.start_date ?? undefined },
+      end_date: { lte: data.end_date ?? undefined },
+    },
+    _count: {
+      id: true,
+    },
+  })
+  const BookingStatusCountOnline = await ctx.prisma.booking.groupBy({
+    by: ['status'],
+    where: {
+      NOT: [{ Contact: null }],
+      status: { not: '' },
+      start_date: { gte: data.start_date ?? undefined },
+      end_date: { lte: data.end_date ?? undefined },
+      Online: { equals: 1 },
+    },
+    _count: {
+      id: true,
+    },
+  })
 
   BookingStatusCount?.map((item) => {
     appointment.push({
@@ -130,8 +103,6 @@ export const retrieveAllBookingChartData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  let bookingCount
-  let bookingData
   let final = []
   const details = []
   const DataSet = []
@@ -147,60 +118,32 @@ export const retrieveAllBookingChartData = async (
   const week = dayjs(endDate).diff(startDate, 'week')
   const day = dayjs(endDate).diff(startDate, 'day')
 
-  if (data.start_date && data.end_date) {
-    bookingCount = await ctx.prisma.booking.groupBy({
-      by: ['status'],
-      where: {
-        NOT: [{ Contact: null }],
-        start_date: { gte: data.start_date },
-        status: { not: '' },
-        end_date: { lte: data.end_date },
-      },
-      _count: {
-        id: true,
-        start_date: true,
-      },
-    })
-  } else {
-    bookingCount = await ctx.prisma.booking.groupBy({
-      by: ['status'],
-      where: {
-        NOT: [{ Contact: null }],
-        status: { not: '' },
-      },
-      _count: {
-        id: true,
-        start_date: true,
-      },
-    })
-  }
-  if (data.start_date && data.end_date) {
-    bookingData = await ctx.prisma.booking.findMany({
-      where: {
-        NOT: [{ Contact: null }],
-        start_date: { gte: data.start_date },
-        status: { not: '' },
-        end_date: { lte: data.end_date },
-      },
-      select: {
-        id: true,
-        start_date: true,
-        status: true,
-      },
-    })
-  } else {
-    bookingData = await ctx.prisma.booking.findMany({
-      where: {
-        NOT: [{ Contact: null }],
-        status: { not: '' },
-      },
-      select: {
-        id: true,
-        start_date: true,
-        status: true,
-      },
-    })
-  }
+  const bookingCount = await ctx.prisma.booking.groupBy({
+    by: ['status'],
+    where: {
+      NOT: [{ Contact: null }],
+      start_date: { gte: data.start_date ?? undefined },
+      status: { not: '' },
+      end_date: { lte: data.end_date ?? undefined },
+    },
+    _count: {
+      id: true,
+      start_date: true,
+    },
+  })
+  const bookingData = await ctx.prisma.booking.findMany({
+    where: {
+      NOT: [{ Contact: null }],
+      start_date: { gte: data.start_date ?? undefined },
+      status: { not: '' },
+      end_date: { lte: data.end_date ?? undefined },
+    },
+    select: {
+      id: true,
+      start_date: true,
+      status: true,
+    },
+  })
   bookingCount?.map((status) => {
     const data = bookingData?.filter((item) => item.status === status?.status)
     details.push({
@@ -213,43 +156,40 @@ export const retrieveAllBookingChartData = async (
   })
   if (details?.length > 0) {
     details.map((record) => {
-      let dataGroupByDateRange
-
       switch (true) {
         case year > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'All records')
-          break
-        case month > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'This Year')
-          break
-        case week > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'This Month')
-          break
-        case day > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'This Week')
-          break
-        default:
-          dataGroupByDateRange = groupByDateRange(record.values, 'All records')
-      }
-      DataSet.push({
-        status: record?.key,
-        dateRange: dataGroupByDateRange,
-      })
-
-      switch (true) {
-        case year > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'All records'),
+          })
           final = statusDataByDayMonth('All records', DataSet, startDate)
           break
         case month > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'This Year'),
+          })
           final = statusDataByDayMonth('This Year', DataSet, startDate)
           break
         case week > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'This Month'),
+          })
           final = statusDataByDayMonth('This Month', DataSet, startDate)
           break
         case day > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'This Week'),
+          })
           final = statusDataByDayMonth('This Week', DataSet, startDate)
           break
         default:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'All records'),
+          })
           final = statusDataByDayMonth('All records', DataSet, startDate)
       }
       return record

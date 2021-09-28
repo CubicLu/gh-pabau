@@ -56,7 +56,6 @@ export const groupByDateRange = (data, dataRange) => {
       const data1 = groupBy(data, (item) =>
         dayjs(`${item}`).startOf('day').format('ddd')
       )
-
       return data1
     }
   }

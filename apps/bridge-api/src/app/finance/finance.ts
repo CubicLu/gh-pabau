@@ -1258,41 +1258,33 @@ export const retrieveSalesCount = async (
   const end_date = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
     'YYYY-MM-DDTHH:mm:ssZ'
   )
-  let salesCount
   const SalesList = []
-  if (data.start_date && data.end_date) {
-    salesCount = await ctx.prisma.saleItem.groupBy({
-      by: ['product_category_type'],
-      where: {
-        NOT: [{ InvSale: null }],
-        InvSale: {
-          date: {
-            gte: start_date,
-            lte: end_date,
+  const salesCount = await ctx.prisma.saleItem.groupBy({
+    by: ['product_category_type'],
+    where:
+      start_date !== 'Invalid Date'
+        ? {
+            NOT: [{ InvSale: null }],
+            InvSale: {
+              date: {
+                gte: start_date,
+                lte: end_date,
+              },
+            },
+            product_category_type: {
+              not: '',
+            },
+          }
+        : {
+            NOT: [{ InvSale: null }],
+            product_category_type: {
+              not: '',
+            },
           },
-        },
-        product_category_type: {
-          not: '',
-        },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  } else {
-    salesCount = await ctx.prisma.saleItem.groupBy({
-      by: ['product_category_type'],
-      where: {
-        NOT: [{ InvSale: null }],
-        product_category_type: {
-          not: '',
-        },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  }
+    _count: {
+      id: true,
+    },
+  })
   salesCount?.map((item) => {
     if (item.product_category_type !== '') {
       SalesList.push({
@@ -1332,8 +1324,6 @@ export const retrieveSalesChartData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  let allSalesCount
-  let allSalesCountData
   let final = []
   const details = []
   const DataSet = []
@@ -1354,80 +1344,62 @@ export const retrieveSalesChartData = async (
   const week = dayjs(endDate).diff(startDate, 'week')
   const day = dayjs(endDate).diff(startDate, 'day')
 
-  if (data.start_date && data.end_date) {
-    allSalesCount = await ctx.prisma.saleItem.groupBy({
-      by: ['product_category_type'],
-      where: {
-        NOT: [{ InvSale: null }],
-        InvSale: {
-          date: {
-            gte: start_date,
-            lte: end_date,
+  const allSalesCount = await ctx.prisma.saleItem.groupBy({
+    by: ['product_category_type'],
+    where:
+      start_date !== 'Invalid Date'
+        ? {
+            NOT: [{ InvSale: null }],
+            InvSale: {
+              date: {
+                gte: start_date,
+                lte: end_date,
+              },
+            },
+            product_category_type: {
+              not: '',
+            },
+          }
+        : {
+            NOT: [{ InvSale: null }],
+            product_category_type: {
+              not: '',
+            },
           },
-        },
-        product_category_type: {
-          not: '',
-        },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  } else {
-    allSalesCount = await ctx.prisma.saleItem.groupBy({
-      by: ['product_category_type'],
-      where: {
-        NOT: [{ InvSale: null }],
-        product_category_type: {
-          not: '',
-        },
-      },
-      _count: {
-        id: true,
-      },
-    })
-  }
-  if (data.start_date && data.end_date) {
-    allSalesCountData = await ctx.prisma.saleItem.findMany({
-      where: {
-        NOT: [{ InvSale: null }],
-        InvSale: {
-          date: {
-            gte: start_date,
-            lte: end_date,
+    _count: {
+      id: true,
+    },
+  })
+  const allSalesCountData = await ctx.prisma.saleItem.findMany({
+    where:
+      start_date !== 'Invalid Date'
+        ? {
+            NOT: [{ InvSale: null }],
+            InvSale: {
+              date: {
+                gte: start_date,
+                lte: end_date,
+              },
+            },
+            product_category_type: {
+              not: '',
+            },
+          }
+        : {
+            NOT: [{ InvSale: null }],
+            product_category_type: {
+              not: '',
+            },
           },
-        },
-        product_category_type: {
-          not: '',
-        },
-      },
-      select: {
-        product_category_type: true,
-        InvSale: {
-          select: {
-            date: true,
-          },
+    select: {
+      product_category_type: true,
+      InvSale: {
+        select: {
+          date: true,
         },
       },
-    })
-  } else {
-    allSalesCountData = await ctx.prisma.saleItem.findMany({
-      where: {
-        NOT: [{ InvSale: null }],
-        product_category_type: {
-          not: '',
-        },
-      },
-      select: {
-        product_category_type: true,
-        InvSale: {
-          select: {
-            date: true,
-          },
-        },
-      },
-    })
-  }
+    },
+  })
   allSalesCount?.map((status) => {
     const data = allSalesCountData?.filter(
       (item) => item.product_category_type === status?.product_category_type
@@ -1443,41 +1415,40 @@ export const retrieveSalesChartData = async (
 
   if (details?.length > 0) {
     details.map((record) => {
-      let dataGroupByDateRange
       switch (true) {
         case year > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'All records')
-          break
-        case month > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'This Year')
-          break
-        case week > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'This Month')
-          break
-        case day > 0:
-          dataGroupByDateRange = groupByDateRange(record.values, 'This Week')
-          break
-        default:
-          dataGroupByDateRange = groupByDateRange(record.values, 'All records')
-      }
-      DataSet.push({
-        status: record?.key,
-        dateRange: dataGroupByDateRange,
-      })
-      switch (true) {
-        case year > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'All records'),
+          })
           final = statusDataByDayMonth('All records', DataSet, startDate)
           break
         case month > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'This Year'),
+          })
           final = statusDataByDayMonth('This Year', DataSet, startDate)
           break
         case week > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'This Month'),
+          })
           final = statusDataByDayMonth('This Month', DataSet, startDate)
           break
         case day > 0:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'This Week'),
+          })
           final = statusDataByDayMonth('This Week', DataSet, startDate)
           break
         default:
+          DataSet.push({
+            status: record?.key,
+            dateRange: groupByDateRange(record.values, 'All records'),
+          })
           final = statusDataByDayMonth('All records', DataSet, startDate)
       }
       return record

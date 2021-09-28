@@ -21,7 +21,7 @@ export interface DateRangeInput {
 export const dashboardData = extendType({
   type: 'Query',
   definition(t) {
-    t.field('getDashboardData', {
+    t.field('dashboardData', {
       type: DashboardResponseType,
       description: 'get booking status count for particular status',
       args: {
