@@ -1,23 +1,56 @@
 import React, { FC, useEffect } from 'react'
 import { gapi } from 'gapi-script'
 import { useRouter } from 'next/router'
+// import { FindGmailConnectionDocument } from '@pabau/graphql'
+// import { useLazyQuery } from '@apollo/client'
+// import { useQuery } from '@apollo/client'
+// import { useUser } from '../../context/UserContext'
 
 export interface P {
   tableName?: string
 }
 
 export const Connect: FC<P> = ({ ...props }) => {
+  // const { me } = useUser()
+
+  // const [loadConnection, { data, loading, error }] = useLazyQuery(
+  //   FindGmailConnectionDocument,
+  //   {
+  //     variables: {
+  //       companyId: me.company,
+  //       userId: me.user,
+  //     },
+  //     onCompleted: (data) => {
+  //       console.log('data', data)
+  //       handleClick().then(() => console.log())
+  //     },
+  //   }
+  // )
+
   const router = useRouter()
   const userSignIn = false
   useEffect(
     () => {
+      // loadConnection()
       handleClick()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [userSignIn]
   )
+  // const { data } = useQuery(FindGmailConnectionDocument, {
+  //   variables: {
+  //     companyId: me.company,
+  //     userId: me.user,
+  //   },
+  // })
+  // console.log('connection data::', data)
+  const handleClick = async () => {
+    // if (data?.gmail_connection.length) {
+    //   console.log('connection data::', data, loading)
+    // } else {
+    //   gapi.load('client:auth2', initClient)
+    // }
 
-  const handleClick = () => {
     gapi.load('client:auth2', initClient)
   }
   const initClient = () => {

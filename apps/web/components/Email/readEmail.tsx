@@ -63,6 +63,8 @@ export const ReadEmail: FC<P> = ({
     [messageId]
   )
 
+  // const customStyle = ''
+
   const extractData = (x) => {
     const rowData = {
       name: '',
@@ -96,22 +98,26 @@ export const ReadEmail: FC<P> = ({
     let part = ''
 
     if (x.payload.mimeType === 'text/html') {
-      part = x.body.data
+      console.log('x data:::', x)
+      part = x.payload.body.data ? x.payload.body.data : ''
     } else {
       x.payload.parts.map((x) => {
         if (x.mimeType === 'text/html') {
-          part = x.body.data
+          part = x.body.data ? x.body.data : ''
         }
         return 1
       })
     }
 
-    rowData.snippet = decode(part)
-      .replace('"\r\n', '')
-      .replace('div { display:block !important;}', '')
+    rowData.snippet = decode(part).replace('"\r\n', '')
+    // .replace('div { display:block !important;}', '')
+    console.log('part', rowData.snippet)
+    const bodyContent = rowData.snippet.split('<body')
+    // const styleContent = bodyContent[0].split('<style')
+    // customStyle = `<style ${styleContent[1]}`
+    rowData.snippet = `<body ${bodyContent[1]}`
 
-    // console.log('remove whitespace::', rowData.snippet.replace('"\r\n', ''))
-
+    // console.log(` Body ::: ${rowData.snippet}`)
     // rowData.snippet = atob(
     //   part.replace(/_/g, '/').toString().replace(/-/g, '+')
     // ).replace('"\r\n', '')

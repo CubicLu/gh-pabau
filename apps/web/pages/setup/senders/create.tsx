@@ -310,25 +310,26 @@ export const CreateSender: React.FC = () => {
                         />
                       </div>
                     )}
-                    <div className={styles.formElement}>
-                      <Space className={styles.switchItem} size={8}>
-                        <Switch
-                          checked={values.isAutoUploadReplies}
-                          onChange={(value) =>
-                            handleChange({
-                              target: { value, name: 'isAutoUploadReplies' },
-                            })
-                          }
-                        />
-                        <div>
-                          {t('setup.senders.create.form.field.autoupload')}
-                        </div>
-                        <PabauPlus
-                          label={t('common-label-plus')}
-                          modalType="Marketing"
-                        />
-                      </Space>
-                    </div>
+
+                    {/*<div className={styles.formElement}>*/}
+                    {/*  <Space className={styles.switchItem} size={8}>*/}
+                    {/*    <Switch*/}
+                    {/*      checked={values.isAutoUploadReplies}*/}
+                    {/*      onChange={(value) =>*/}
+                    {/*        handleChange({*/}
+                    {/*          target: { value, name: 'isAutoUploadReplies' },*/}
+                    {/*        })*/}
+                    {/*      }*/}
+                    {/*    />*/}
+                    {/*    <div>*/}
+                    {/*      {t('setup.senders.create.form.field.autoupload')}*/}
+                    {/*    </div>*/}
+                    {/*    <PabauPlus*/}
+                    {/*      label={t('common-label-plus')}*/}
+                    {/*      modalType="Marketing"*/}
+                    {/*    />*/}
+                    {/*  </Space>*/}
+                    {/*</div>*/}
                   </>
                 )}
               </div>

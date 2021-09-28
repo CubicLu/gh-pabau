@@ -354,7 +354,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
     </div>,
     <div key="3">
       <FolderOpenOutlined />
-      Arachive{' '}
+      Archive{' '}
     </div>,
   ]
   const columns = [
@@ -739,7 +739,6 @@ export const Inbox: FC<P> = ({ ...props }) => {
     setSearchResult(val)
     setIsLoading(false)
   }
-
   return (
     <div className={styles.emailContainer}>
       <Layout>
@@ -844,8 +843,14 @@ export const Inbox: FC<P> = ({ ...props }) => {
                     </h5>
                   ) : (
                     <h5>
-                      {showSearch ? searchResult.length : totalInbox}{' '}
-                      converstions
+                      {showSearch
+                        ? searchResult.length >= 100
+                          ? '100+ '
+                          : searchResult.length
+                        : totalInbox >= 100
+                        ? '100+ '
+                        : totalInbox}{' '}
+                      conversations
                     </h5>
                   )}
                   <Search
