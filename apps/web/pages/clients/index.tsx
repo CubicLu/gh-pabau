@@ -1,22 +1,19 @@
 import { useEffect, useState } from 'react'
 import LayoutComponent from '../../components/Layout/Layout'
 import { Layout, Tabs } from 'antd'
-import dayjs from 'dayjs'
 import { useMedia } from 'react-use'
 import styles from './clients.module.less'
 import ClientsHeader from '../../components/Clients/ClientsHeader'
 import LeftSideBar from '../../components/Clients/LeftSideBar'
-import ContentComponent, {
-  SourceDataProps,
-} from '../../components/Clients/Content'
+import ContentComponent from '../../components/Clients/Content'
 import CommonHeader from '../../components/CommonHeader'
 import MergeComponent from '../../components/Clients/MergeComponent'
-import { clientsList } from '../../mocks/ClientsList'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { BasicModal } from '@pabau/ui'
-import { intersectionBy, differenceBy, groupBy } from 'lodash'
 import confetti from 'canvas-confetti'
 import ClientCreate from '../../components/Clients/ClientCreate'
+import router from 'next/router'
+
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
 
@@ -39,15 +36,10 @@ export const tab = {
   labels: 'labels',
 }
 
-const Clients = () => {
+export const Clients = () => {
   const [searchText, setSearchText] = useState('')
-  const [sourceData, setSourceData] = useState<SourceDataProps[]>(clientsList)
   const [selectedTab, setSelectedTab] = useState(tab.clients)
-  const [sourceFilteredData, setSourceFilteredData] = useState<
-    SourceDataProps[]
-  >(clientsList)
   const [isArchived, setIsArchived] = useState(false)
-  const [labels, setLabels] = useState<Labels[]>([])
   const [selectedLabels, setSelectedLabels] = useState<Labels[]>([])
   const [defaultSelectedLabels, setDefaultSelectedLabels] = useState<Labels[]>(
     []
@@ -58,58 +50,10 @@ const Clients = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [isEdit, setIsEdit] = useState(false)
-  const [editedValues, setEditedValues] = useState<SourceDataProps>()
   const [active, setActive] = useState(true)
-  const [duplicateDataList, setDuplicateDataList] = useState<
-    SourceDataProps[][]
-  >([])
   const { t } = useTranslationI18()
 
   const isMobile = useMedia('(max-width: 768px)', false)
-
-  useEffect(() => {
-    setSourceData(clientsList)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientsList])
-
-  useEffect(() => {
-    setSourceFilteredData(sourceData)
-    const duplicateList = []
-    const newList = sourceData.filter((data) => !data.is_dismissed)
-    const data = groupBy(newList, (data) => {
-      return `${data.firstName}_${data.lastName}` || data.email
-    })
-    const dataKeysOfName = Object.keys(data)
-    const uniqDataWithName = []
-    const uniqData = []
-    for (const key of dataKeysOfName) {
-      if (data[key].length === 1) {
-        uniqDataWithName.push(...data[key])
-      } else {
-        duplicateList.push(data[key])
-      }
-    }
-    const data1 = groupBy(uniqDataWithName, (item) => {
-      return item.email
-    })
-    const dataKeysOfEmail = Object.keys(data1)
-    for (const key of dataKeysOfEmail) {
-      if (data1[key].length === 1) {
-        uniqData.push(...data1[key])
-      } else {
-        duplicateList.push(data1[key])
-      }
-    }
-    setDuplicateDataList(duplicateList)
-  }, [sourceData])
-
-  useEffect(() => {
-    const uniqLabel = countsLabel()
-    setLabels(uniqLabel)
-    setSelectedLabels(uniqLabel)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sourceData])
 
   useEffect(() => {
     selectedTab === tab.archived ? setIsArchived(true) : setIsArchived(false)
@@ -117,90 +61,6 @@ const Clients = () => {
       setSelectedRowKeys([])
     }
   }, [selectedTab])
-
-  const intersectMany = (arrs) => {
-    let res = arrs[0]
-    for (let i = 1; i < arrs.length; i++) {
-      res = intersectionBy(res, arrs[i], 'label')
-    }
-    return res
-  }
-
-  useEffect(() => {
-    let filteredData = [...sourceData]
-    if (selectedTab === tab.clients) {
-      filteredData = sourceData
-    } else if (selectedTab === tab.archived) {
-      filteredData = sourceData.filter((item) => item.is_active === 0)
-    } else if (
-      selectedTab === tab.contacts ||
-      selectedTab === tab.mergeFix ||
-      selectedTab === tab.createLabel ||
-      selectedTab === tab.import ||
-      selectedTab === tab.export
-    ) {
-      filteredData = [...filteredData]
-    } else {
-      filteredData = sourceData.filter((item) =>
-        item.label.some((x) => x.label === selectedTab)
-      )
-    }
-    if (searchText) {
-      const filterObject = []
-      for (const data of filteredData) {
-        for (const key of Object.keys(data)) {
-          if (
-            (key === 'firstName' ||
-              key === 'lastName' ||
-              key === 'email' ||
-              key === 'mobileNumber') &&
-            `${data[key]}`.toLowerCase().includes(searchText.toLowerCase())
-          ) {
-            filterObject.push(data)
-            break
-          }
-        }
-      }
-      filteredData = filterObject
-    }
-    setSourceFilteredData(filteredData)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText, selectedTab, sourceData])
-
-  useEffect(() => {
-    const selectedData = sourceData.filter((item) =>
-      selectedRowKeys?.includes(item.id)
-    )
-    const labelsArray = selectedData.map((data) => {
-      return data.label
-    })
-    const data = intersectMany(labelsArray) || []
-    setSelectedLabels(data)
-    setDefaultSelectedLabels(data)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRowKeys, sourceData])
-
-  const countsLabel = () => {
-    const labelsWithCount = sourceData.reduce((p, c) => {
-      for (const label of c.label) {
-        const name = label.label
-        if (!Object.prototype.hasOwnProperty.call(p, name)) {
-          p[name] = { count: 0, color: label.color }
-        }
-        p[name].count = p[name].count + 1
-      }
-      return p
-    }, {})
-    const formatLabels = Object.keys(labelsWithCount).map((k) => {
-      return {
-        label: k,
-        count: labelsWithCount[k].count,
-        color: labelsWithCount[k].color,
-      }
-    })
-    return formatLabels
-  }
 
   const handleLabelClick = (e, label) => {
     if (e) {
@@ -213,85 +73,8 @@ const Clients = () => {
     setDeleteModal((e) => !e)
   }
 
-  const showDeleteConfirm = () => {
-    let newSourceData = []
-    if (isEdit) {
-      newSourceData = sourceData.filter((data) => {
-        return data.id !== editedValues.id
-      })
-      setIsEdit(false)
-    } else if (!isArchived) {
-      newSourceData = sourceData.map((data) => {
-        const temp = { ...data }
-        if (selectedRowKeys.includes(temp.id)) {
-          temp.is_active = 0
-          temp.date_archived = dayjs().format('DD-MM-YYYY, h:mm:ss a')
-        }
-        return temp
-      })
-    } else {
-      newSourceData = sourceData.filter((data) => {
-        return !selectedRowKeys.includes(data.id)
-      })
-    }
-    setSourceData(newSourceData)
-    setSelectedRowKeys([])
-    setDeleteModal(false)
-  }
-
-  const handleCreateClient = (values) => {
-    if (isEdit) {
-      const activeValue = active ? 1 : 0
-      const editedClient = {
-        id: editedValues.id,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        mobileNumber: values.phoneNumber,
-        label: values.selectedLabels,
-        is_active: activeValue,
-        date_archived:
-          editedValues.is_active === 1 && activeValue === 0
-            ? dayjs().format('DD-MM-YYYY, h:mm:ss a')
-            : editedValues.date_archived,
-        dob: dayjs(values.dateOfBirth).format('DD-MM-YYYY'),
-        postal: values.postCode,
-        city: values.city,
-        priceQuote: editedValues.priceQuote,
-        orderNotes: editedValues.orderNotes,
-        setupFee: editedValues.setupFee,
-      }
-      const editedIndex = sourceData.findIndex(
-        (data) => data.id === editedValues.id
-      )
-      const data = [...sourceData]
-      data.splice(editedIndex, 1, editedClient)
-      setSourceData(data)
-      setIsEdit(false)
-    } else {
-      const newClient = {
-        id: sourceData.length + 1,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        mobileNumber: values.phoneNumber,
-        label: values.selectedLabels,
-        is_active: 1,
-        date_archived: '',
-        dob: dayjs(values.dateOfBirth).format('DD-MM-YYYY'),
-        postal: values.postCode,
-        city: values.city,
-        priceQuote: '',
-        orderNotes: '',
-        setupFee: '',
-      }
-      setSourceData((prevState) => [...prevState, newClient])
-      setCreateClientModalVisible(false)
-    }
-  }
-
   const toggleCreateClientModal = () => {
-    setCreateClientModalVisible(!createClientModalVisible)
+    setCreateClientModalVisible((e) => !e)
   }
 
   const closeEditModal = () => {
@@ -299,59 +82,8 @@ const Clients = () => {
     setActive(false)
   }
 
-  const uniqLabel = (oldLabelList, selectedLabelList) => {
-    const newList = [...selectedLabelList]
-    const removedLabel: Labels[] = differenceBy(
-      defaultSelectedLabels,
-      selectedLabelList
-    )
-    const uniqData = oldLabelList.filter((data) => {
-      return (
-        !newList.some((item) => item.label === data.label) &&
-        !removedLabel.some((item) => item.label === data.label)
-      )
-    })
-    return [...newList, ...uniqData]
-  }
-
-  const handleApplyLabel = (selectedLabelList) => {
-    const newData = sourceData.map((data) => {
-      const temp: SourceDataProps = { ...data }
-
-      if (selectedRowKeys.includes(data.id)) {
-        temp.label = uniqLabel(data.label, selectedLabelList)
-      }
-      return temp
-    })
-    setSourceData(newData)
-  }
-
-  const handleRowClick = (value) => {
-    setEditedValues(value)
-    setActive(!!value.is_active)
-    setIsEdit((e) => !e)
-  }
-
-  const handleRecoverClick = (recoverData) => {
-    const newSourceData = sourceData.map((data) => {
-      const temp = { ...data }
-      if (data.id === recoverData.id) {
-        temp.is_active = 1
-      }
-      return temp
-    })
-    setSourceData(newSourceData)
-  }
-
-  const handleDismiss = (dismissData) => {
-    const newSourceData = sourceData.map((data) => {
-      const temp = { ...data }
-      if (data.id === dismissData[1].id) {
-        temp.is_dismissed = true
-      }
-      return temp
-    })
-    setSourceData(newSourceData)
+  const handleRowClick = ({ id }) => {
+    router.push('/clients/[id]', `/clients/${id}`, { scroll: true })
   }
 
   const randomInRange = (min, max) => {
@@ -367,22 +99,11 @@ const Clients = () => {
     })
   }
 
-  const handleMerge = (data) => {
-    displayConfetti()
-  }
-
-  const handleMergeAll = (data) => {
-    displayConfetti()
-  }
-
   const renderContentTable = (
     <ContentComponent
       searchText={searchText}
-      sourceData={sourceFilteredData}
       handleLabelClick={handleLabelClick}
       isArchived={isArchived}
-      labels={labels}
-      setLabels={setLabels}
       selectedLabels={selectedLabels}
       setSelectedLabels={setSelectedLabels}
       handleDeleteClick={handleDeleteToggle}
@@ -390,18 +111,18 @@ const Clients = () => {
       setSelectedRowKeys={setSelectedRowKeys}
       defaultSelectedLabels={defaultSelectedLabels}
       setDefaultSelectedLabels={setDefaultSelectedLabels}
-      handleApplyLabel={handleApplyLabel}
+      handleApplyLabel={() => console.log('TODO')}
       handleRowClick={handleRowClick}
-      handleRecoverClick={handleRecoverClick}
+      // handleRecoverClick={handleRecoverClick}
     />
   )
 
   const renderMergeComponent = (
     <MergeComponent
-      duplicateData={duplicateDataList}
-      onDismiss={handleDismiss}
-      onMerge={handleMerge}
-      onMergeAll={handleMergeAll}
+      // duplicateData={duplicateDataList}
+      // onDismiss={handleDismiss}
+      onMerge={() => displayConfetti()}
+      onMergeAll={() => displayConfetti()}
     />
   )
 
@@ -464,13 +185,9 @@ const Clients = () => {
                   <LeftSideBar
                     setSelectedTab={setSelectedTab}
                     selectedTab={selectedTab}
-                    labels={labels}
-                    setLabels={setLabels}
                     selectedLabels={selectedLabels}
                     setSelectedLabels={setSelectedLabels}
-                    sourceData={sourceData}
                     handleLabelClick={handleLabelClick}
-                    duplicateData={duplicateDataList}
                   />
                 </Sider>
                 <Content>
@@ -491,31 +208,31 @@ const Clients = () => {
         <ClientCreate
           modalVisible={createClientModalVisible || isEdit}
           handleClose={isEdit ? closeEditModal : toggleCreateClientModal}
-          handleSubmit={handleCreateClient}
+          handleSubmit={() => console.log('TODO')}
           isEdit={isEdit}
           activated={active}
           onActivated={(val) => setActive(val)}
-          editedValues={
-            isEdit && {
-              Fname: editedValues?.firstName,
-              Lname: editedValues?.lastName,
-              gender: t('quickCreate.client.modal.general.gender.other'),
-              MarketingSource: t(
-                'quickCreate.client.modal.general.hearOption.selectOption'
-              ),
-              DOB: dayjs(editedValues?.dob, 'DD-MM-YYYY'),
-              Email: editedValues?.email,
-              Mobile: editedValues?.mobileNumber,
-              Phone: '',
-              MailingCity: editedValues?.city,
-              MailingPostal: editedValues?.postal,
-            }
-          }
+          // editedValues={
+          //   isEdit && {
+          //     Fname: editedValues?.firstName,
+          //     Lname: editedValues?.lastName,
+          //     gender: t('quickCreate.client.modal.general.gender.other'),
+          //     MarketingSource: t(
+          //       'quickCreate.client.modal.general.hearOption.selectOption'
+          //     ),
+          //     DOB: dayjs(editedValues?.dob, 'DD-MM-YYYY'),
+          //     Email: editedValues?.email,
+          //     Mobile: editedValues?.mobileNumber,
+          //     Phone: '',
+          //     MailingCity: editedValues?.city,
+          //     MailingPostal: editedValues?.postal,
+          //   }
+          // }
           handleDelete={handleDeleteToggle}
           deleteModalVisible={deleteModal}
-          onDelete={showDeleteConfirm}
-          defaultLabels={isEdit ? editedValues.label : labels}
-          defaultSelectedLabels={isEdit && editedValues.label}
+          onDelete={() => console.log('TODO')}
+          // defaultLabels={isEdit ? editedValues.label : labels}
+          // defaultSelectedLabels={isEdit && editedValues?.label}
         />
       )}
       {!isEdit && (
@@ -525,7 +242,7 @@ const Clients = () => {
           visible={deleteModal}
           title={t('clients.content.delete.title')}
           newButtonText={t('clients.content.delete.confirm.yes')}
-          onOk={showDeleteConfirm}
+          onOk={() => console.log('TODO')}
           onCancel={handleDeleteToggle}
         >
           <span
