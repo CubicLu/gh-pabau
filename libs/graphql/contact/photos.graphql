@@ -57,42 +57,6 @@ query getAlbums($contactID: Int!) {
 #  "contactID": 25128890
 # }
 
-mutation createContactPhoto(
-  $contact_id: Int!
-  $album_id: Int!
-  $uploaded_by: Int!
-  $image_url: String!
-) {
-  createOneContactAttachment(
-    data: {
-      attachment_size: "1"
-      attachment_title: "1"
-      attachment_type: "1"
-      booking_id: 10
-      broken: 10
-      broken_check: 10
-      connect_public: false
-      custom_contact_id: 10
-      custom_id: 10
-      date: 10
-      imported: 10
-      in_folder: 10
-      linkref: "a"
-      medical_form_id: 10
-      medical_uniqid: "a"
-      old_linkref: "a"
-      original_path: "a"
-      photo_type: "a"
-      tags: "a"
-      user_id: 10
-      website_public: false
-      Company: { connect: { id: 8901 } }
-      Contact: { connect: { ID: 22459581 } }
-    }
-  ) {
-    id
-  }
-}
 
 mutation createContactPhoto(
   $contact_id: Int!
