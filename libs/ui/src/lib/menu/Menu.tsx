@@ -131,7 +131,6 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
                 ]
               )}
               className={classNames(
-                styles.sidebarMenu,
                 menuData.children.map((e) => e.path).indexOf(activeMenu) !==
                   -1 && styles.subMenuActive
               )}

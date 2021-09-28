@@ -64,7 +64,7 @@ export default class SubscriptionGoCardless extends SubscriptionService {
         ...item,
         invoice_link: `${this.ctx.authenticated?.remote_url}/pages/contacts/gocardless.php?${params}`,
         amount: (Number(item.amount) / 100).toFixed(2),
-        date: new Date(item.charge_date),
+        date: item.charge_date,
         status:
           item.status?.replace('_', ' ')[0].toUpperCase() +
           item.status?.replace('_', ' ').slice(1),
@@ -123,9 +123,7 @@ export default class SubscriptionGoCardless extends SubscriptionService {
       interval_unit: subscription.interval_unit,
       status: subscription.status,
       app_fee: subscription.app_fee,
-      next_charge_date: new Date(
-        subscription.upcoming_payments[0]?.charge_date ?? ''
-      ),
+      next_charge_date: subscription.upcoming_payments[0]?.charge_date ?? '',
       next_charge_amount: subscription.upcoming_payments[0]?.amount
         ? Number(subscription.upcoming_payments[0]?.amount) / 100
         : 0,
