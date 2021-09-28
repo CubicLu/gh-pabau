@@ -1,0 +1,46 @@
+table:
+  name: block_out_options
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - backgroundColor
+    - defaultTime
+    - is_active
+    - name
+    - paidBlockOut
+    - type
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    - type
+    - is_active
+    - paidBlockOut
+    - backgroundColor
+    - defaultTime
+    - created_at
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - backgroundColor
+    - defaultTime
+    - is_active
+    - name
+    - paidBlockOut
+    - type
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

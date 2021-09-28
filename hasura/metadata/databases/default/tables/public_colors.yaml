@@ -1,0 +1,21 @@
+table:
+  name: colors
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - created_at
+    - updated_at
+    - color
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - color
+    - id
+    - updated_at
+    filter: {}
+  role: public

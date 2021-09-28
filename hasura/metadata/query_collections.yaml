@@ -1,1 +1,10 @@
-[]
+- name: allowed-queries
+  definition:
+    queries:
+    - name: notification
+      query: |-
+        mutation MyQuery($type:String,$sent_to:jsonb,$variables:jsonb,$destination:String,$sent_by:Int) {
+          insert_notifications_one(object:{ type:$type,destination:$destination,sent_to:$sent_to,variables:$variables,sent_by:$sent_by }) {
+            id,
+          }
+        }

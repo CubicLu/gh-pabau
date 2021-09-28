@@ -1,0 +1,53 @@
+table:
+  name: candidate_list
+  schema: public
+array_relationships:
+- name: job_candidates
+  using:
+    foreign_key_constraint_on:
+      column: candidate_id
+      table:
+        name: job_candidates
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - first_name
+    - last_name
+    - rating
+    - phone
+    - created_at
+    - updated_at
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - id
+    - first_name
+    - last_name
+    - rating
+    - phone
+    - created_at
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - id
+    - first_name
+    - last_name
+    - rating
+    - phone
+    - created_at
+    - updated_at
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

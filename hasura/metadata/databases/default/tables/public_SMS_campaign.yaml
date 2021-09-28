@@ -1,0 +1,42 @@
+table:
+  name: SMS_campaign
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - last_modified
+    - name
+    - order
+    - sent_date
+    - sent_to
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - created_at
+    - id
+    - last_modified
+    - name
+    - order
+    - sent_date
+    - sent_to
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - last_modified
+    - name
+    - order
+    - sent_date
+    - sent_to
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public
