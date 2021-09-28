@@ -208,7 +208,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     return (
       <div>
         <div className={styles.scrollerTag}>
-          {labels.map((label, index) => {
+          {labels?.map((label, index) => {
             return (
               <div key={index}>
                 {label?.label && (
