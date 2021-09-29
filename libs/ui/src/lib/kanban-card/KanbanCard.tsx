@@ -7,16 +7,16 @@ import { Tag, Tooltip } from 'antd'
 import { CustomButton } from '../button/Button.stories'
 
 export interface KanbanCardProps {
-  leadTitle?: string
-  onLeadTitleClickHandler?: () => void
-  labels?: string[]
-  leadOwnerName?: string
-  leadOwnerImg?: string
+  leadTitle: string
+  onLeadTitleClickHandler: () => void
+  labels: string[]
+  leadOwnerName: string
+  leadOwnerImg: string
   contactId?: string
-  contactName?: string
-  contactImg?: string
-  activityStatus?: string
-  leadStatus?: string
+  contactName: string
+  contactImg: string
+  activityStatus: string
+  leadStatus: string
 }
 
 export const KanbanCard: FC<KanbanCardProps> = ({
