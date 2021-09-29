@@ -1,11 +1,9 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import styles from './KanbanCard.module.less'
 
 import { Avatar } from '../avatar/Avatar'
 import * as Icons from '@ant-design/icons'
-import { Tag } from 'antd'
-import { Activities } from '../activities/Activities'
-import { eventsData } from '../activities/ActivitiesMock'
+import { Tag, Tooltip } from 'antd'
 import { CustomButton } from '../button/Button.stories'
 
 export interface KanbanCardProps {
@@ -33,16 +31,11 @@ export const KanbanCard: FC<KanbanCardProps> = ({
   activityStatus,
   leadStatus,
 }) => {
-  const [isOpenActivity, setIsOpenActivity] = useState(false)
   let cardBackground,
     btnColor,
     borderColor = `White`
 
   activityStatus = activityStatus?.toLowerCase()
-
-  const onStatusClickHandler = () => {
-    setIsOpenActivity(!isOpenActivity)
-  }
 
   const mapLabels = labels?.map((label, index) => {
     return (
@@ -85,12 +78,21 @@ export const KanbanCard: FC<KanbanCardProps> = ({
   const activeStatusComponent = () => {
     const { color, SelectedIcon } = activityStatusIconAndColor(activityStatus)
 
-    return React.createElement(Icons?.[SelectedIcon], {
+    const activityStatusIcon = React.createElement(Icons?.[SelectedIcon], {
       style: { color: color },
       className: styles.statusArrow,
-      onClick: onStatusClickHandler,
       size: 2,
     })
+
+    return (
+      <Tooltip
+        title="Activity Schedule"
+        trigger={['click']}
+        overlayStyle={{ width: '150px' }}
+      >
+        {activityStatusIcon}
+      </Tooltip>
+    )
   }
 
   return (
@@ -135,15 +137,6 @@ export const KanbanCard: FC<KanbanCardProps> = ({
           </div>
         )}
       </div>
-      {isOpenActivity && (
-        <div>
-          <Activities
-            eventsData={eventsData}
-            eventDateFormat={'DD-MM-YYYY, h:mm a'}
-            isLoading={false}
-          />
-        </div>
-      )}
     </div>
   )
 }
