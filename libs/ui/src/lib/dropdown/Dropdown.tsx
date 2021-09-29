@@ -22,6 +22,7 @@ import {
   Popover,
   Spin,
   Typography as Text,
+  Tooltip,
 } from 'antd'
 import classNames from 'classnames'
 import Link from 'next/link'
@@ -98,7 +99,7 @@ export const Dropdown: FC<DropDownInterface> = ({
             </span>
           </Link>
         </div>
-        <LaunchSVG className={styles.launchLogo} />
+        {/* <LaunchSVG className={styles.launchLogo} /> */}
       </Menu.Item>
       <Menu.Item
         key="Email"
@@ -230,10 +231,27 @@ export const Dropdown: FC<DropDownInterface> = ({
             </p>
           </div>
         </Menu.Item>
-        <Menu.Item key="helpUs" className={styles.avatarHelpSubList}>
-          <div className={styles.feedbackAlignContent}>
-            <InfoCircleOutlined className="" />
-            <span className="">{t('avatar.give.feedback.helpus')}</span>
+        <Menu.Item
+          key="helpUs"
+          className={styles.avatarHelpSubList}
+          onClick={() =>
+            window.open(
+              'https://community.pabau.com/c/feature-requests/5',
+              '_blank'
+            )
+          }
+        >
+          <div
+            className={classNames(
+              styles.feedbackAlignContent,
+              styles.feedbackSpaceContent
+            )}
+          >
+            <span>
+              <InfoCircleOutlined className="" />
+              <span className="">{t('avatar.give.feedback.helpus')}</span>
+            </span>
+            <LaunchSVG className={styles.launchLogo} />
           </div>
         </Menu.Item>
         <Menu.Item
@@ -439,32 +457,54 @@ export const Dropdown: FC<DropDownInterface> = ({
           placement="bottomRight"
           overlayClassName={styles.avatarPopover}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: '20px',
-              cursor: 'pointer',
-            }}
+          <Tooltip
+            placement="bottomRight"
+            title={
+              <div
+                style={{
+                  paddingLeft: 10,
+                  fontSize: 11,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-end',
+                }}
+              >
+                <span>{userData?.fullName}</span>
+                <span>{userData?.companyName}</span>
+              </div>
+            }
           >
-            <Badge
-              dot
-              color="#65CD98"
-              offset={[-2, 30]}
-              size="default"
-              style={{ height: '8px', width: '8px' }}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                paddingLeft: '20px',
+                cursor: 'pointer',
+              }}
             >
-              <Avatar
-                src={userData?.imageUrl}
-                size={40}
-                icon={<UserOutlined />}
-              />
-            </Badge>
+              <Badge
+                dot
+                color="#65CD98"
+                offset={[-2, 30]}
+                size="default"
+                style={{ height: '8px', width: '8px' }}
+              >
+                <Avatar
+                  src={
+                    userData?.imageUrl
+                      ? `${'https://cdn.pabau.com'}${userData.imageUrl}`
+                      : null
+                  }
+                  size={40}
+                  icon={<UserOutlined />}
+                />
+              </Badge>
 
-            <CaretDownOutlined
-              style={{ paddingLeft: '5px', color: '#9292A3' }}
-            />
-          </div>
+              <CaretDownOutlined
+                style={{ paddingLeft: '5px', color: '#9292A3' }}
+              />
+            </div>
+          </Tooltip>
         </Popover>
       </div>
 
