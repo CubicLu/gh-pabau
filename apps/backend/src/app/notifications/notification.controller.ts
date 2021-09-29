@@ -83,6 +83,9 @@ export class NotificationController {
     }
 
     if (enableUsers.length > 0) {
+      if (enableUsers.includes(sent_by)) {
+        enableUsers = enableUsers.filter((user) => user != sent_by)
+      }
       const response = await this.notificationService.sendNotification({
         type,
         sent_to: enableUsers,
