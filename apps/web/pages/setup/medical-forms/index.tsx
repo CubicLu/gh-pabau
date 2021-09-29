@@ -376,6 +376,7 @@ export const Index: FC = () => {
   }, [userLists])
 
   useEffect(() => {
+    console.log('userGroups', userGroups)
     if (userGroups?.findManyUserGroup) {
       const userGroupList = userGroups?.findManyUserGroup.map((userGroup) => ({
         id: userGroup.id,
@@ -386,6 +387,7 @@ export const Index: FC = () => {
   }, [userGroups])
 
   useEffect(() => {
+    console.log('companyServices', companyServices)
     if (companyServices?.findManyCompanyService) {
       const companyServiceList = companyServices?.findManyCompanyService.map(
         (companyService) => ({
@@ -398,6 +400,7 @@ export const Index: FC = () => {
   }, [companyServices])
 
   useEffect(() => {
+    console.log('lab', labs)
     if (labs?.findManyLab) {
       const labList = labs?.findManyLab.map((lab) => ({
         id: lab.id,
