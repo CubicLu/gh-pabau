@@ -1059,11 +1059,13 @@ en:
   sidebar.stock.suppliers: Suppliers
   sidebar.marketing: Marketing
   sidebar.marketing.campaigns: Campaigns
+  sidebar.marketing.broadcasts: Broadcasts
   sidebar.marketing.reivews: Reviews
   sidebar.marketing.giftvouchers: 'Gift Vouchers'
   sidebar.marketing.referraltracker: 'Referral tracker'
   sidebar.marketing.loyalty: Loyalty
   sidebar.marketing.fanancials: Financials
+  sidebar.marketing.money: Money
   sidebar.financials.accounts: Accounts
   sidebar.financials.cashup: Cashup
   sidebar.contacts: Contacts
