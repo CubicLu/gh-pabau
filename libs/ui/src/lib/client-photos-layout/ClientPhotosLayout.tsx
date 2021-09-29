@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import styles from './ClientPhotosLayout.module.less'
-import { AlbumProps, GalleryView } from '../gallery-view/GalleryView'
+import { AlbumProps, GalleryView } from '@pabau/ui'
 import backMassage from '../../assets/images/gallery-album/image1.jpg'
 import backPlain from '../../assets/images/gallery-album/image2.jpg'
 import sholder from '../../assets/images/gallery-album/image3.png'
@@ -15,201 +15,33 @@ import backs from '../../assets/images/gallery-album/image10.jpg'
 
 export interface ClientPhotosLayoutProps {
   isEmpty?: boolean
+  albumList?: AlbumProps
+  unCatImagesAlbum?: AlbumProps
 }
 
 export const ClientPhotosLayout: FC<ClientPhotosLayoutProps> = ({
-  isEmpty,
+  albumList,
+  unCatImagesAlbum,
 }) => {
-  const images = [backMassage, backPlain, sholder, eyeDark, handsMassage]
-
-  const albumList = {
-    album: [
-      {
-        id: '1',
-        albumTitle: 'Ordinary',
-        albumImage: [backPlain, eyeDark, necked, backMassage],
-        album: [
-          {
-            id: '2',
-            albumTitle: 'Ordinary1',
-            albumImage: [
-              backPlain,
-              eyeDark,
-              necked,
-              face,
-              facial,
-              backs,
-              handsMassage,
-              face,
-            ],
-            album: [
-              {
-                id: '4',
-                albumTitle: 'Ordinary12',
-                albumImage: [backMassage, backPlain, back, backMassage2, backs],
-                album: [],
-              },
-            ],
-          },
-          {
-            id: '5',
-            albumTitle: 'Ordinary2',
-            albumImage: [
-              sholder,
-              handsMassage,
-              backMassage2,
-              backs,
-              backMassage,
-              backPlain,
-              back,
-              eyeDark,
-            ],
-            album: [
-              {
-                id: '6',
-                albumTitle: 'Ordinary21',
-                albumImage: [
-                  handsMassage,
-                  sholder,
-                  backMassage2,
-                  backs,
-                  backMassage,
-                  backPlain,
-                  back,
-                  eyeDark,
-                ],
-                album: [],
-              },
-              {
-                id: '7',
-                albumTitle: 'Ordinary22',
-                albumImage: [
-                  backMassage,
-                  backPlain,
-                  back,
-                  eyeDark,
-                  handsMassage,
-                  sholder,
-                  backMassage2,
-                  backs,
-                ],
-                album: [],
-              },
-            ],
-          },
-          {
-            id: '8',
-            albumTitle: 'Ordinary3',
-            albumImage: [
-              face,
-              facial,
-              backs,
-              eyeDark,
-              handsMassage,
-              sholder,
-              backMassage2,
-            ],
-            album: [],
-          },
-          {
-            id: '9',
-            albumTitle: 'Ordinary4',
-            albumImage: [
-              handsMassage,
-              sholder,
-              backMassage2,
-              backs,
-              backMassage,
-              backPlain,
-              back,
-              eyeDark,
-            ],
-            album: [
-              {
-                id: '10',
-                albumTitle: 'Ordinary41',
-                albumImage: [
-                  backMassage,
-                  backPlain,
-                  handsMassage,
-                  backMassage2,
-                  eyeDark,
-                  back,
-                  eyeDark,
-                ],
-                album: [],
-              },
-              {
-                id: '11',
-                albumTitle: 'Ordinary42',
-                albumImage: [
-                  sholder,
-                  backMassage2,
-                  backs,
-                  backMassage,
-                  backPlain,
-                  back,
-                  eyeDark,
-                ],
-                album: [],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: '2',
-        albumTitle: 'Two',
-        albumImage: [
-          sholder,
-          handsMassage,
-          backMassage2,
-          backs,
-          backMassage,
-          backPlain,
-          back,
-          eyeDark,
-        ],
-        album: [],
-      },
-      {
-        id: '3',
-        albumTitle: 'Three',
-        albumImage: [
-          backPlain,
-          eyeDark,
-          necked,
-          face,
-          facial,
-          backs,
-          handsMassage,
-        ],
-        album: [],
-      },
-      {
-        id: '4',
-        albumTitle: 'Four',
-        albumImage: [
-          face,
-          sholder,
-          necked,
-          backMassage2,
-          backPlain,
-          eyeDark,
-          necked,
-          facial,
-        ],
-        album: [],
-      },
+  const images = {
+    id: 0,
+    albumTitle: 'Uncateogrized',
+    albumImages: [
+      { img: backMassage, isSensitive: false },
+      { img: backPlain, isSensitive: false },
+      { img: sholder, isSensitive: false },
+      { img: eyeDark, isSensitive: false },
+      { img: handsMassage, isSensitive: false },
     ],
-    id: '1',
-    albumTitle: 'Album',
-    albumImage: [],
+    albums: [],
   }
 
   return (
     <div className={styles.clientLayout}>
-      <GalleryView albumList={albumList as AlbumProps} images={images} />
+      <GalleryView
+        albumList={albumList as AlbumProps}
+        images={unCatImagesAlbum as AlbumProps}
+      />
     </div>
   )
 }

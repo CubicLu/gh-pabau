@@ -1,4 +1,4 @@
-query getUncatPhotos($contactId: Int!) {
+query getUncatPhotos($contactId: Int!, $skip: Int = 0, $take: Int = 25) {
   findManyContactAttachment(
     where: {
       contact_id: { equals: $contactId }
@@ -6,6 +6,8 @@ query getUncatPhotos($contactId: Int!) {
       photo_type: { notIn: "consent,treatment" }
       album_id: { equals: 0 }
     }
+    skip: $skip
+    take: $take
   ) {
     id
     origin: linkref
@@ -39,6 +41,10 @@ query getPhotoAlbums($contactId: Int!) {
     name: album_name
     imageCount: _count {
       imageList: Photos
+    }
+    Photos {
+      id
+      linkref
     }
   }
 }

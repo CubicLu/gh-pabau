@@ -375,12 +375,16 @@ export const FolderData: FC<FolderDataProps> = React.memo(
       {
         title: 'Name',
         dataIndex: 'name',
+        classNames: 'maxWidth',
         // eslint-disable-next-line react/display-name
         render: (value) => {
           const filename = value[0] ? value[0].split('/') : []
           const fileData = value[0] ? value[0].split('.') : []
           return (
-            <div className={styles.folderContentFirst}>
+            <div
+              className={styles.folderContentFirst}
+              style={{ border: '1px solid red' }}
+            >
               <Checkbox
                 checked={checkedData.includes(value[0] as never)}
                 onChange={(e) => handleOnChange(e.target.checked, value)}
