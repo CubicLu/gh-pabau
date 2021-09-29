@@ -1,14 +1,14 @@
 import React, { FC, useState } from 'react'
 import {
   PlusCircleFilled,
-  UserAddOutlined,
-  RiseOutlined,
-  MessageOutlined,
-  MailOutlined,
+  UserOutlined,
+  AimOutlined,
   WalletOutlined,
   CloseOutlined,
 } from '@ant-design/icons'
-import { Popover } from 'antd'
+import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
+import { Popover, Tooltip } from 'antd'
+import useKeyboardShortcut from './../../helper/useKeyboardShortCut/useKeyboardShortcut'
 import { Button } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
@@ -57,36 +57,34 @@ export const QuickCreate: FC<QuickCreateProps> = ({
             onClick={toggleCreateClientModal}
           >
             <div className={styles.quickCreateItemIcon}>
-              <UserAddOutlined />
+              <UserOutlined />
             </div>
             <p>{t('quickcreate.client')}</p>
+            <p className={styles.controlTag}>SHIFT + C</p>
           </div>
           <div
             className={styles.quickCreateItem}
             onClick={toggleCreateLeadModal}
           >
             <div className={styles.quickCreateItemIcon}>
-              <RiseOutlined />
+              <AimOutlined />
             </div>
-            <p>{t('quickcreate.lead')}</p>
+            <p>{t('quickcreate.lead')} </p>
+            <p className={styles.controlTag}>SHIFT + L</p>
           </div>
           <div className={styles.quickCreateItem}>
             <div className={styles.quickCreateItemIcon}>
-              <MessageOutlined />
+              <ActivityIcon />
             </div>
-            <p>{t('quickcreate.sms')}</p>
+            <p>{t('quickcreate.activity')}</p>
+            <p className={styles.controlTag}>SHIFT + A</p>
           </div>
           <div className={styles.quickCreateItem}>
             <div className={styles.quickCreateItemIcon}>
               <WalletOutlined />
             </div>
             <p>{t('quickcreate.sale')}</p>
-          </div>
-          <div className={styles.quickCreateItem}>
-            <div className={styles.quickCreateItemIcon}>
-              <MailOutlined />
-            </div>
-            <p>{t('quickcreate.newsletter')}</p>
+            <p className={styles.controlTag}>SHIFT + S</p>
           </div>
         </div>
       </div>
@@ -111,6 +109,23 @@ export const QuickCreate: FC<QuickCreateProps> = ({
       )}
     </>
   )
+
+  useKeyboardShortcut(['Shift', '+'], () => setVisible(!visible), {
+    overrideSystem: false,
+  })
+
+  useKeyboardShortcut(['Shift', '='], () => setVisible(!visible), {
+    overrideSystem: false,
+  })
+
+  useKeyboardShortcut(['Shift', 'C'], () => toggleCreateClientModal(), {
+    overrideSystem: false,
+  })
+
+  useKeyboardShortcut(['Shift', 'L'], () => toggleCreateLeadModal(), {
+    overrideSystem: false,
+  })
+
   return (
     <Popover
       placement={isMobile ? 'top' : 'bottomRight'}
@@ -119,13 +134,15 @@ export const QuickCreate: FC<QuickCreateProps> = ({
       visible={visible}
       onVisibleChange={(e) => setVisible(e)}
     >
-      <Button
-        type="default"
-        className={styles.createBtnStyle}
-        onClick={() => setVisible(true)}
-      >
-        <PlusCircleFilled /> {t('common-label-create')}
-      </Button>
+      <Tooltip title={t('common-quick-add')}>
+        <Button
+          type="default"
+          className={styles.createBtnStyle}
+          onClick={() => setVisible(true)}
+        >
+          <PlusCircleFilled /> {t('common-label-create')}
+        </Button>
+      </Tooltip>
     </Popover>
   )
 }

@@ -119,7 +119,6 @@ export const permissions = shield(
     },
     Query: {
       findManyContactPackage: allow,
-      findFirstCmContact: allow,
       findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,

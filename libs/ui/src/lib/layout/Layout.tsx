@@ -7,6 +7,7 @@ import { ReactComponent as IllustrationSvg } from './example.svg'
 import styles from './Layout.module.less'
 import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
+import Head from 'next/head'
 
 const { Content } = AntLayout
 
@@ -82,93 +83,169 @@ export const Layout: FC<LayoutProps> = ({
   const [collapsed, setCollapsed] = useState(true)
   const onSideBarCollapsed = (collapsed) => setCollapsed(collapsed)
   return (
-    <AntLayout {...rest} className={styles.main}>
-      <AntLayout style={{ background: '#F7F7F9' }}>
-        <Header
-          readNewsMutation={readNewsMutation}
-          updateNotificationState={updateNotificationState}
-          searchRender={searchRender}
-          onMessageIconClick={onMessageIconClick}
-          onLogOut={onLogOut}
-          notifications={notifications}
-          productNews={productNews}
-          relativeTime={relativeTime}
-          taskManagerIFrameComponent={taskManagerIFrameComponent}
-          clientCreateRender={clientCreateRender}
-          leadCreateRender={leadCreateRender}
-          {...rest}
+    <>
+      <Head>
+        <link
+          rel="apple-touch-icon"
+          sizes="57x57"
+          href="/apple-icon-57x57.png"
         />
-        <AntLayout className={styles.headerMargin}>
-          <Menu
-            onSideBarCollapsed={onSideBarCollapsed}
-            active={active}
-            badgeCountList={badgeCountList}
-          />
-          <Content
-            className={classNames(
-              !legacyContent ? styles.layoutContent : styles.layoutIframed,
-              collapsed ? styles.collapsedSidebarMargin : styles.sidebarMargin
-            )}
-          >
-            <Content
-              style={{
-                position: 'relative',
-                minHeight: 'calc(100vh - 146px)',
-                borderRadius: '4px',
-              }}
-            >
-              {card ? (
-                <Card
-                  title={pageTitle}
-                  style={{ width: '50vmin', margin: '0 auto' }}
-                >
-                  {children}
-                </Card>
-              ) : (
-                <>
-                  {pageTitle && <h1>{pageTitle}</h1>}
-                  {children}
-                </>
-              )}
-            </Content>
-            {isDisplayingFooter && <Footer />}
-          </Content>
+        <link
+          rel="apple-touch-icon"
+          sizes="60x60"
+          href="/apple-icon-60x60.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="72x72"
+          href="/apple-icon-72x72.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="76x76"
+          href="/apple-icon-76x76.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="114x114"
+          href="/apple-icon-114x114.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="120x120"
+          href="/apple-icon-120x120.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="144x144"
+          href="/apple-icon-144x144.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="152x152"
+          href="/apple-icon-152x152.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-icon-180x180.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/android-icon-192x192.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="96x96"
+          href="/favicon-96x96.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/manifest.json" />
+        <title>Pabau 2</title>
+      </Head>
 
-          {onNewClicked && (
+      <AntLayout {...rest} className={styles.main}>
+        <AntLayout style={{ background: '#F7F7F9' }}>
+          <Header
+            readNewsMutation={readNewsMutation}
+            updateNotificationState={updateNotificationState}
+            searchRender={searchRender}
+            onMessageIconClick={onMessageIconClick}
+            onLogOut={onLogOut}
+            notifications={notifications}
+            productNews={productNews}
+            relativeTime={relativeTime}
+            taskManagerIFrameComponent={taskManagerIFrameComponent}
+            clientCreateRender={clientCreateRender}
+            leadCreateRender={leadCreateRender}
+            {...rest}
+          />
+          <AntLayout className={styles.headerMargin}>
+            <Menu
+              onSideBarCollapsed={onSideBarCollapsed}
+              active={active}
+              badgeCountList={badgeCountList}
+            />
             <Content
-              style={{
-                padding: '1em',
-                boxShadow: '0 0px 9px -4px rgba(0,0,0,0.8)',
-                borderRadius: '0.5em',
-                backgroundColor: '#f4f4f4',
-                position: 'relative',
-                marginBottom: '0',
-              }}
+              className={classNames(
+                !legacyContent ? styles.layoutContent : styles.layoutIframed,
+                collapsed ? styles.collapsedSidebarMargin : styles.sidebarMargin
+              )}
             >
-              <h4>Related guides</h4>
-              <ul>
-                <li>
-                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                  <a>Setting up a Marketing Source</a>
-                </li>
-              </ul>
-              <div
+              <Content
                 style={{
-                  position: 'absolute',
-                  top: '-2em',
-                  right: '0px',
-                  left: '50%',
-                  bottom: '0',
-                  overflow: 'hidden',
+                  position: 'relative',
+                  minHeight: 'calc(100vh - 146px)',
+                  borderRadius: '4px',
                 }}
               >
-                <IllustrationSvg width={600} height={200} />
-              </div>
+                {card ? (
+                  <Card
+                    title={pageTitle}
+                    style={{ width: '50vmin', margin: '0 auto' }}
+                  >
+                    {children}
+                  </Card>
+                ) : (
+                  <>
+                    {pageTitle && <h1>{pageTitle}</h1>}
+                    {children}
+                  </>
+                )}
+              </Content>
+              {isDisplayingFooter && <Footer />}
             </Content>
-          )}
+
+            {onNewClicked && (
+              <Content
+                style={{
+                  padding: '1em',
+                  boxShadow: '0 0px 9px -4px rgba(0,0,0,0.8)',
+                  borderRadius: '0.5em',
+                  backgroundColor: '#f4f4f4',
+                  position: 'relative',
+                  marginBottom: '0',
+                }}
+              >
+                <h4>Related guides</h4>
+                <ul>
+                  <li>
+                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                    <a>Setting up a Marketing Source</a>
+                  </li>
+                </ul>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '-2em',
+                    right: '0px',
+                    left: '50%',
+                    bottom: '0',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <IllustrationSvg width={600} height={200} />
+                </div>
+              </Content>
+            )}
+          </AntLayout>
         </AntLayout>
       </AntLayout>
-    </AntLayout>
+    </>
   )
 }
 
