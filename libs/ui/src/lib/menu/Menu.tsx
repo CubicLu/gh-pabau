@@ -155,13 +155,13 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
           <Tooltip title={collapsed ? t('sidebar.setup') : ''} placement="left">
             <div
               className={styles.sidebarBtnAlign}
-              onClick={() => setActive('setup')}
+              onClick={() => setActive('/setup')}
             >
               <Link href="/setup">
                 {collapsed ? (
                   <SettingOutlined
                     className={`${
-                      activeMenu === 'setup'
+                      activeMenu === '/setup'
                         ? styles.activeSidebarMenu
                         : styles.sidebarMenu
                     }`}
@@ -171,14 +171,14 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
                     icon={
                       <SettingOutlined
                         className={`${
-                          activeMenu === 'setup'
+                          activeMenu === '/setup'
                             ? styles.activeSidebarMenu
                             : styles.sidebarMenu
                         }`}
                       />
                     }
                     className={`${styles.setupBtn} ${
-                      activeMenu === 'setup' ? styles.setupBtnActive : null
+                      activeMenu === '/setup' ? styles.setupBtnActive : null
                     }`}
                   >
                     {t('sidebar.setup')}
