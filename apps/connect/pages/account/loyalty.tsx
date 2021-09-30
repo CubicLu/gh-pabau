@@ -116,7 +116,7 @@ export const Loyalty = () => {
           {!isMobile ? (
             <>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   {
                     breadcrumbName: t('connect.account.title'),
                     path: 'account',

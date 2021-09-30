@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Header } from '../../components/Connect/header'
-import './online-booking.module.less'
 import { Footer } from '../../components/Connect/footer'
 import Selector, {
   CategoryItem,
@@ -9,8 +8,7 @@ import Selector, {
 import Clinic from '../../components/Connect/clinic/clinic'
 import BookingDatail from '../../components/Connect/bookingdetails/Bookingdetail'
 import ScreenTwo from '../../components/Connect/screentwo/ScreenTwo'
-import moment from 'moment'
-//import Conformation from '../../components/Connect/conformation/conformation'
+import dayjs from 'dayjs'
 import Payment from '../../components/Connect/payment/Payment'
 import Booked from '../../components/Connect/bookingconform/booking'
 import PatientInfo from '../../components/Connect/patientinformatioon/PatientInfo'
@@ -23,9 +21,6 @@ import styles from './online-booking.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { employes } from '../../mocks/connect/employMock'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import './online-booking.module.less'
-/* eslint-disable-next-line */
-export interface OnlineBookingProps {}
 interface userData {
   firstname: string
   lastname: string
@@ -62,13 +57,12 @@ const userData: userData = {
   services: 0,
   vouchers: 0,
 }
-export function OnlineBooking(props: OnlineBookingProps) {
+export function OnlineBooking(): JSX.Element {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
   const [proD, setproD] = useState<SelectItem[]>()
   const [ispro, setispro] = useState(false)
   const [back, Setback] = useState(false)
-  //const [appointmentDate, setAppointmentDate] = useState<Date>()
   const [view, Setview] = useState(true)
   const [indicator, setindicator] = useState(false)
   const [serviceid, setserviceid] = useState<number>()
@@ -106,9 +100,9 @@ export function OnlineBooking(props: OnlineBookingProps) {
     }
   }
   const slot = (slotData) => {
-    const day = moment(slotData.date).format('DD')
-    const month = moment(slotData.date).format('MMMM')
-    const word = moment(slotData.date).format('dddd')
+    const day = dayjs(slotData.date).format('DD')
+    const month = dayjs(slotData.date).format('MMMM')
+    const word = dayjs(slotData.date).format('dddd')
     user.docDescription = slotData.description
     user.docName = slotData.name
     user.date = `${word}, ${day}th ${month}`

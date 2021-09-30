@@ -49,7 +49,7 @@ export const GPDetails = () => {
           {!isMobile ? (
             <>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   {
                     breadcrumbName: t('connect.account.title'),
                     path: 'connect/account',
