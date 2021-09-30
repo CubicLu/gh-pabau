@@ -8,6 +8,7 @@ import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
 import { useOnlineBookableLocationsQuery } from '@pabau/graphql'
 import { getDistanceFromLatLonInKm } from '../../helpers/DistanceHelper'
+import { canIBookLocation } from '../../helpers/LocationPermissionsHelper'
 export interface P {
   onSelected: () => void
 }
@@ -107,33 +108,36 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
         <div className={Styles.slide1}>
           <div className={Styles.chooseWrapper}>
             <p className={Styles.chooseHeading}>{formattedAddress}</p>
-            {locationsResult.Public_Locations.map((val) => (
-              <div
-                key={val.id}
-                onClick={() => {
-                  setSelectedData('SET_LOCATION', val)
-                  onSelected()
-                }}
-                className={Styles.contentBox}
-              >
-                <div className={Styles.rightContent}>
-                  <p className={Styles.clinicName}>{val.name}</p>
-                  <p>{val.address}</p>
-                  {val.lat !== 0 && userLocation.lat !== 0 && (
-                    <p>
-                      {'~ '}
-                      {getDistanceFromLatLonInKm(
-                        userLocation.lat,
-                        userLocation.lng,
-                        val.lat,
-                        val.lng
-                      ).toFixed(1)}
-                      {' km'}
-                    </p>
-                  )}
+            {locationsResult.Public_Locations.map((val) => {
+              if (!canIBookLocation(val.id, selectedData.services)) return false
+              return (
+                <div
+                  key={val.id}
+                  onClick={() => {
+                    setSelectedData('SET_LOCATION', val)
+                    onSelected()
+                  }}
+                  className={Styles.contentBox}
+                >
+                  <div className={Styles.rightContent}>
+                    <p className={Styles.clinicName}>{val.name}</p>
+                    <p>{val.address}</p>
+                    {val.lat !== 0 && userLocation.lat !== 0 && (
+                      <p>
+                        {'~ '}
+                        {getDistanceFromLatLonInKm(
+                          userLocation.lat,
+                          userLocation.lng,
+                          val.lat,
+                          val.lng
+                        ).toFixed(1)}
+                        {' km'}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
             <div className={Styles.btnWrap}>
               <Button>{t('connect.onlinebooking.clinic.viewall')}</Button>
             </div>

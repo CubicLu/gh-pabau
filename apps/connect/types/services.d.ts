@@ -19,12 +19,16 @@ export interface Category {
 export interface Service {
   id: number
   name: string
+  friendly_name: string
   rating: number
   duration: string
   price: string
+  online_book?: number
   online_only_service?: number
-  review: number
-  is_bundle?: boolean
+  rating: number
+  max_clients: number
+  disabled_locations: string | null
+  disabled_users: string | null
   Public_SocialSurveyFeedback: SocialSurveyFeedback[]
 }
 
