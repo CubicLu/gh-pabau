@@ -23,19 +23,6 @@ export const ClientPhotosLayout: FC<ClientPhotosLayoutProps> = ({
   albumList,
   unCatImagesAlbum,
 }) => {
-  const images = {
-    id: 0,
-    albumTitle: 'Uncateogrized',
-    albumImages: [
-      { img: backMassage, isSensitive: false },
-      { img: backPlain, isSensitive: false },
-      { img: sholder, isSensitive: false },
-      { img: eyeDark, isSensitive: false },
-      { img: handsMassage, isSensitive: false },
-    ],
-    albums: [],
-  }
-
   return (
     <div className={styles.clientLayout}>
       <GalleryView

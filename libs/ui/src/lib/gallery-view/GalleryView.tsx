@@ -52,10 +52,27 @@ import dayjs from 'dayjs'
 
 export interface GalleryProps {
   albumList: AlbumProps
-  images: AlbumProps
+  images: ImageProps[]
+  listImages: ImageProps[]
+  loadMorePhotos?: (albumId: number, pageId?: number) => void
+  onAlbumClick?: (albumId: number, listView: boolean) => void
+  loading?: boolean
+  setTableView?: (view: boolean) => void
+  currentTablePage?: number
+  onPageChange?: (page: number) => void
 }
 
-export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
+export const GalleryView: FC<GalleryProps> = ({
+  albumList,
+  images,
+  listImages,
+  loadMorePhotos,
+  onAlbumClick,
+  loading = false,
+  setTableView,
+  currentTablePage = 1,
+  onPageChange,
+}) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
   const [data, setData] = useState(albumList)
@@ -75,9 +92,8 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
   const [newAlbumName, setNewAlbumName] = useState('')
   const [createAlbumDrawer, setCreateAlbumDrawer] = useState(false)
   const [selectAll, setSelectAll] = useState(false)
-  const [selectedImage, setSelectedImage] = useState([])
+  const [selectedImage, setSelectedImage] = useState<ImageProps[]>([])
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(true)
   const [dragAlbumTitle, setDragAlbumTitle] = useState('')
   const [imagesList, setImagesList] = useState(images)
@@ -86,7 +102,6 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
   const [albumDeleteData, setAlbumDeleteData] = useState({} as AlbumProps)
   const [errorMessage, setErrorMessage] = useState('')
   const [listView, setListView] = useState(false)
-  const [imageListTableData, setImageListTableData] = useState([])
 
   useEffect(() => {
     setCurrentData(albumList)
@@ -96,19 +111,6 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
   useEffect(() => {
     setImagesList(images)
   }, [images])
-
-  useEffect(() => {
-    const temp = []
-    if (listView) {
-      imagesList?.albumImages?.map((img) => {
-        return temp.push({
-          name: img?.img,
-          lastModified: dayjs().format('DD.MM.YYYY') as string,
-        } as never)
-      })
-      setImageListTableData(temp)
-    }
-  }, [imagesList, listView])
 
   const employee = ['will lawsons', 'jessica Winter', 'Jeff Hackley']
   const services = ['abc', 'xyz', 'ert', 'botox']
@@ -254,8 +256,9 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
     if (newAlbumName !== '') {
       if (newAlbumName.length <= 20) {
         tempData.albums.push({
-          id: newAlbumName,
+          id: 1,
           albumTitle: newAlbumName,
+          imageCount: 0,
           albumImages: [],
           albums: [],
         })
@@ -295,6 +298,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
     ]
     setBreadcrumbs(temp)
     setCurrentData(currentData.albums?.[index])
+    onAlbumClick?.(currentData.albums?.[index].id, listView)
     const alterImg = currentData.albums?.[index].albumImages.map((x, id) => ({
       id,
       isSensitive: false,
@@ -315,6 +319,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
       tempData = { ...tempData.albums[x.index] }
     }
     newData = index ? tempData : newData
+    onAlbumClick?.(newData?.id, listView)
     setCurrentData(newData)
     setBreadcrumbs(breadcrumbs.slice(0, index + 1))
     const alterImg = newData.albumImages.map((x, id) => ({
@@ -373,10 +378,10 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
   }
   const handleOnChange = async (checked: boolean, img) => {
     const storeImg = [...selectedImage]
-    const idx = storeImg.indexOf(img as never)
-    checked ? storeImg.push(img as never) : storeImg.splice(idx, 1)
+    const idx = storeImg.indexOf(img)
+    checked ? storeImg.push(img) : storeImg.splice(idx, 1)
     storeImg.length > 0 ? setShowMenu(true) : setShowMenu(false)
-    await setSelectedImage([...storeImg])
+    setSelectedImage([...storeImg])
   }
   const handleBulkHide = () => {
     const currentSensitive = currentData
@@ -454,7 +459,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
     if (data !== '') {
       const dropData = { ...currentData }
       const fileData = data.split('/')
-      const imagesDrop = imagesList?.albumImages
+      const imagesDrop = imagesList
       if (dropData.albumTitle === 'Album') {
         dropData.albums.map((albumData) => {
           if (albumData.albumTitle === dragAlbumTitle) {
@@ -470,7 +475,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
           }
           return 1
         })
-        setImagesList({ ...imagesList, albumImages: imagesDrop })
+        setImagesList(imagesDrop)
         setData(dropData)
         setCurrentData(dropData)
       } else {
@@ -577,35 +582,15 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
     setCurrentData(deleteData)
     setAlbumDelete((e) => !e)
   }
-  const imageListColumns = [
-    {
-      title: t('galley.list.view.photo.name'),
-      dataIndex: 'name',
-      // eslint-disable-next-line react/display-name
-      render: (value) => {
-        const filename = value.split('/') || 'name'
-        return (
-          <div className={styles.imageListContentWrap}>
-            <Card bordered={false}>
-              <img src={value} alt={'none'} height={35} width={50} />
-            </Card>
-            <div>
-              <p>{filename[filename.length - 1]}</p>
-            </div>
-          </div>
-        )
-      },
-    },
-    {
-      title: t('galley.list.view.photo.last.modified'),
-      dataIndex: 'lastModified',
-    },
-  ]
+  const setContentView = (view: boolean) => {
+    setListView(view)
+    setTableView?.(view)
+  }
 
   return (
     <div className={styles.mainLayout}>
       <div style={{ marginTop: '20px' }}>
-        {breadcrumbs.length <= 1 ? (
+        {breadcrumbs.length <= 1 && !showMenu ? (
           <div className={styles.headerText}>
             <div className={styles.breadcrumbs}>
               <Breadcrumb separator=">">
@@ -805,7 +790,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
               <div className={styles.viewContainer}>
                 <div
                   className={styles.viewItem}
-                  onClick={() => setListView(false)}
+                  onClick={() => setContentView(false)}
                 >
                   {!listView ? (
                     <GridIcon style={{ fill: '#54B2D3' }} />
@@ -815,7 +800,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
                 </div>
                 <div
                   className={styles.viewItem}
-                  onClick={() => setListView(true)}
+                  onClick={() => setContentView(true)}
                 >
                   {listView ? (
                     <ListIcon style={{ fill: '#54B2D3' }} />
@@ -961,7 +946,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
                 <div className={styles.viewContainer}>
                   <div
                     className={styles.viewItem}
-                    onClick={() => setListView(false)}
+                    onClick={() => setContentView(false)}
                   >
                     {!listView ? (
                       <GridIcon style={{ fill: '#54B2D3' }} />
@@ -971,7 +956,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
                   </div>
                   <div
                     className={styles.viewItem}
-                    onClick={() => setListView(true)}
+                    onClick={() => setContentView(true)}
                   >
                     {listView ? (
                       <ListIcon style={{ fill: '#54B2D3' }} />
@@ -986,7 +971,8 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
         )}{' '}
         <div>
           <AlbumData
-            data={currentData}
+            data={{ ...currentData, albumImages: imagesList }}
+            listImages={listImages}
             onFolderClick={onFolderClick}
             selectedImage={selectedImage}
             handleOnChange={handleOnChange}
@@ -1005,116 +991,12 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
             handleAlbumDelete={handleAlbumDelete}
             listView={listView}
             setCurrentData={setCurrentData}
+            loadeMorePhotos={(id) => loadMorePhotos?.(id)}
+            currentPage={currentTablePage}
+            onPageChange={(page) => onPageChange?.(page)}
           />
         </div>
       </div>
-      {breadcrumbs.length <= 1 && listView ? (
-        <div className={styles.imageListViewWrap}>
-          <Table
-            pagination={false}
-            dataSource={imageListTableData}
-            columns={imageListColumns}
-          />
-        </div>
-      ) : (
-        <div className={breadcrumbs.length <= 1 ? styles.galleryImage : ''}>
-          {breadcrumbs.length <= 1 && (
-            <h3 className={styles.photoLabel}>Photos</h3>
-          )}
-          {
-            breadcrumbs.length <= 1 && (
-              <AlbumData
-                data={imagesList}
-                onFolderClick={onFolderClick}
-                selectedImage={selectedImage}
-                handleOnChange={handleOnChange}
-                loading={loading}
-                setSelectedImage={setSelectedImage}
-                showMenu={showMenu}
-                setOpenDeleteModal={setOpenDeleteModal}
-                openDeleteModal={openDeleteModal}
-                handleImageMove={handleImageMove}
-                drop={drop}
-                allowDrop={allowDrop}
-                drag={drag}
-                handleDownload={handleDownload}
-                imgDownload={imgDownload}
-                dragAlbum={dragAlbum}
-                handleAlbumDelete={handleAlbumDelete}
-                listView={listView}
-                setCurrentData={() => false}
-              />
-            )
-            // imagesList.map((img, i) => {
-            //   return (
-            //     <div className={styles.imageAlbum} key={img}>
-            //       <img
-            //         src={img}
-            //         alt={img}
-            //         draggable="true"
-            //         id={img}
-            //         onDragStart={(event) => drag(event)}
-            //       />
-            //       {/* {i === 2 && (
-            //         <div className={styles.shareIcon}>
-            //           <Tooltip
-            //             trigger={'click'}
-            //             arrowPointAtCenter
-            //             title={
-            //               <div>
-            //                 <p style={{ margin: '0' }}>Shared with</p>
-            //                 {employee.map((x, index) => {
-            //                   return (
-            //                     index !== 2 && (
-            //                       <span style={{ margin: '5px' }}>
-            //                         <Avatar
-            //                           size="small"
-            //                           className={styles.avtarIcon}
-            //                           key={index}
-            //                           name={x}
-            //                         />
-            //                       </span>
-            //                     )
-            //                   )
-            //                 })}
-            //               </div>
-            //             }
-            //           >
-            //             <EyeOutlined />
-            //           </Tooltip>
-            //         </div>
-            //       )}
-            //       {i === 1 && (
-            //         <div className={styles.imageAlbumIcon}>
-            //           <div
-            //             className={styles.centerBorder}
-            //             style={{
-            //               padding: '3px 2px',
-            //               borderRight: '1px solid #fff',
-            //             }}
-            //           >
-            //             <ImageGallery />
-            //           </div>
-            //           <div
-            //             className={styles.centerBorder}
-            //             style={{ padding: '3px 2px' }}
-            //           >
-            //             <ImageGallery />
-            //           </div>
-            //         </div>
-            //       )}
-            //       {i === 4 && (
-            //         <div className={styles.imageAlbumIconClock}>
-            //           <Clock />
-            //           <Load />
-            //         </div>
-            //       )} */}
-            //     </div>
-            //   )
-            // })
-          }
-        </div>
-      )}
 
       <BasicModal
         modalWidth={600}
