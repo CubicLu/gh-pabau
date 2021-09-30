@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import styles from './ClientPhotosLayout.module.less'
-import { AlbumProps, GalleryView } from '@pabau/ui'
+import { AlbumProps, GalleryView, ImageProps } from '@pabau/ui'
 import backMassage from '../../assets/images/gallery-album/image1.jpg'
 import backPlain from '../../assets/images/gallery-album/image2.jpg'
 import sholder from '../../assets/images/gallery-album/image3.png'
@@ -16,18 +16,19 @@ import backs from '../../assets/images/gallery-album/image10.jpg'
 export interface ClientPhotosLayoutProps {
   isEmpty?: boolean
   albumList?: AlbumProps
-  unCatImagesAlbum?: AlbumProps
+  unCatImagesAlbum?: ImageProps[]
 }
 
 export const ClientPhotosLayout: FC<ClientPhotosLayoutProps> = ({
   albumList,
-  unCatImagesAlbum,
+  unCatImagesAlbum = [],
 }) => {
   return (
     <div className={styles.clientLayout}>
       <GalleryView
         albumList={albumList as AlbumProps}
-        images={unCatImagesAlbum as AlbumProps}
+        images={unCatImagesAlbum}
+        listImages={unCatImagesAlbum}
       />
     </div>
   )
