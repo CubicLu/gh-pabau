@@ -1,10 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Badge, Layout, Menu as AntMenu, Tooltip } from 'antd'
-import {
-  SettingOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons'
+import { SettingOutlined } from '@ant-design/icons'
 import { Button } from '../../index'
 import styles from './Menu.module.less'
 import classNames from 'classnames'
@@ -15,27 +11,24 @@ const { SubMenu } = AntMenu
 const { Sider } = Layout
 
 interface P {
-  onSideBarCollapsed?: (collapsed: boolean) => void
   active?: string
   badgeCountList?: BadgeCountList
+  collapsedProp: boolean
 }
 
 interface BadgeCountList {
   [key: string]: number
 }
 
-export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
+export const Menu: FC<P> = ({ badgeCountList, collapsedProp }) => {
   const { t } = useTranslation('common')
   const [collapsed, setCollapsed] = useState(true)
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [activeMenu, setActive] = useState<string>(window.location.pathname)
 
-  const handleSidebarCollapse = () => {
-    setCollapsed((e) => {
-      onSideBarCollapsed?.(!e)
-      return !e
-    })
-  }
+  useEffect(() => {
+    setCollapsed(!collapsedProp)
+  }, [collapsedProp])
 
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1)
@@ -79,19 +72,6 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
         overflowX: 'hidden',
       }}
     >
-      <div>
-        {React.createElement(
-          collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-          {
-            className: classNames(
-              styles.sidebarCollapseIcon,
-              styles.sidebarMenu,
-              collapsed && styles.sidebarCollapsed
-            ),
-            onClick: handleSidebarCollapse,
-          }
-        )}
-      </div>
       <AntMenu
         mode="inline"
         className={styles.sidebar}
