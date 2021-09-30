@@ -1,19 +1,22 @@
 query getContactHeader($contactId: Int!) {
-  notes:findUniqueCmContact(where: {ID: $contactId}) {
+  notes: findUniqueCmContact(where: { ID: $contactId }) {
     ID
-    contactNotes:ContactNote(orderBy: { CreatedDate: desc }) {
+    contactNotes: ContactNote(
+      where: { Note: { not: { equals: "" } } }
+      orderBy: { CreatedDate: desc }
+    ) {
       ID
       Note
       CreatedDate
-    	User {
+      User {
         full_name
         image
       }
     }
-    appointmentNotes:Booking(orderBy: { create_date: desc } ) {
+    appointment: Booking(orderBy: { create_date: desc }) {
       title
     }
-    staffAlerts:ContactAlert(orderBy: { CreatedDate: desc } ) {
+    staff: ContactAlert(orderBy: { CreatedDate: desc }) {
       Note
       CreatedDate
       User {
