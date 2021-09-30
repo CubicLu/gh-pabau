@@ -1,7 +1,7 @@
-query getClientHeader($contactId: Int!) {
+query getContactHeader($contactId: Int!) {
   notes:findUniqueCmContact(where: {ID: $contactId}) {
     ID
-    clientNotes:ContactNote(orderBy: { CreatedDate: desc }) {
+    contactNotes:ContactNote(orderBy: { CreatedDate: desc }) {
       ID
       Note
       CreatedDate
