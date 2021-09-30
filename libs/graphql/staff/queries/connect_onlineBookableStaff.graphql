@@ -1,0 +1,13 @@
+query onlineBookableStaff($company_id: Int!) {
+  Public_Staff(where: { company_id: $company_id }) {
+    Avatar
+    ID
+    Location
+    DefaultLocation
+    Public_User {
+      image
+      full_name
+      id
+    }
+  }
+}

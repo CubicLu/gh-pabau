@@ -862,7 +862,7 @@ model BookingStatus {
   track_time  Int                         @default(1)
   Company     Company?                    @relation(fields: [company_id], references: [id])
 
-  @@unique([value, company_id], name: "value")
+  @@unique([value, company_id], name: "unique_value_company_id")
   @@map("booking_statuses")
 }
 
@@ -3522,7 +3522,7 @@ model CommunicationContent {
   body           String
   Communications Communication[]
 
-  @@unique([company_id, hash], name: "company_id")
+  @@unique([company_id, hash], name: "unique_company_id_hash")
   @@map("communications_content")
 }
 
@@ -4105,6 +4105,7 @@ model CompanyService {
   CompanyRoomService     CompanyRoomService[]
   ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
   SocialSurveyFeedback   SocialSurveyFeedback[]
+  ServiceUserTier        ServiceUserTier[]
 
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
@@ -4253,21 +4254,25 @@ model CompanyService {
 //  @@index([service_id], name: "service_id")
 //}
 //
-//model company_services_users_tiers {
-//  id                     Int    @id @default(autoincrement())
-//  service_id             Int
-//  user_id                Int
-//  company_id             Int
-//  price                  Float?
-//  duration               String
-//  staff_commission       Float? @default(0.00)
-//  participant_commission Float? @default(0.00)
-//
-//  @@index([company_id], name: "company_id")
-//  @@index([service_id], name: "service_id")
-//  @@index([user_id], name: "user_id")
-//}
-//
+
+model ServiceUserTier {
+  id                     Int             @id @default(autoincrement())
+  service_id             Int
+  user_id                Int
+  company_id             Int
+  price                  Float?
+  duration               String
+  staff_commission       Float?          @default(0.00)
+  participant_commission Float?          @default(0.00)
+  User                   User?           @relation(fields: [user_id], references: [id])
+  CompanyService         CompanyService? @relation(fields: [service_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([service_id], name: "service_id")
+  @@index([user_id], name: "user_id")
+  @@map("company_services_users_tiers")
+}
+
 model CompanyVariable {
   id           Int      @id @default(autoincrement())
   company_id   Int      @map("company")
@@ -4613,7 +4618,7 @@ model ContactMeta {
   meta_value String
   Contact    CmContact @relation(fields: [contact_id], references: [ID])
 
-  @@unique([contact_id, meta_name], name: "contact_id")
+  @@unique([contact_id, meta_name], name: "unique_contact_id_meta")
   @@map("contact_meta")
 }
 
@@ -11609,7 +11614,7 @@ model StaffMeta {
   meta_value String?
   User       User?   @relation(fields: [staff_id], references: [id])
 
-  @@unique([staff_id, meta_name], name: "staff_id")
+  @@unique([staff_id, meta_name], name: "unique_staff_id")
   @@map("staff_meta")
 }
 
@@ -12672,6 +12677,7 @@ model User {
   Activity                     Activity[]                     @relation("activityCreatedUser")
   CmLead                       CmLead[]
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
+  ServiceUserTier              ServiceUserTier[]
 
   PasswordResetAuth   PasswordResetAuth[]
   ActivityUserColumns ActivityUserColumns[]

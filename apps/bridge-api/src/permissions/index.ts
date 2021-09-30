@@ -238,6 +238,7 @@ export const permissions = shield(
       Public_MasterCategories: allow,
       Public_ServiceCategories: allow,
       Public_Locations: allow,
+      Public_Staff: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData

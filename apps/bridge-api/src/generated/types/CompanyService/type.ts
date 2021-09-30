@@ -90,6 +90,20 @@ export const CompanyService = objectType({
         return root.SocialSurveyFeedback
       },
     })
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
+      args: {
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserTier
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyServiceCountOutputType',
       resolve(root: any) {

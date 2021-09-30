@@ -1,6 +1,7 @@
 import { extendType, intArg, inputObjectType, nullable } from 'nexus'
 import { Context } from '../../../context'
-import { PublicStaffResponse, PublicUserResponse } from '../nexus-type/index'
+import { PublicStaffResponse } from '../nexus-type/index'
+import moment from 'moment'
 
 const PSTInput = inputObjectType({
   name: 'PSTInput',
@@ -22,7 +23,13 @@ export const Public_Staff = extendType({
       },
       async resolve(root, input, ctx: Context) {
         return ctx.prisma.cmStaffGeneral.findMany({
-          where: input.where,
+          where: {
+            ...input.where,
+            RotaShift: {
+              some: { start: { gt: moment().format('YYYYMMDDHHmmss') } },
+            },
+            User: { hide_online_bookings: 0 },
+          },
           skip: input.skip,
           take: input.take,
         })

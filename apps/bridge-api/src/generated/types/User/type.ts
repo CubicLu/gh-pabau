@@ -609,6 +609,20 @@ export const User = objectType({
         return root.AssignedActivity
       },
     })
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
+      args: {
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserTier
+      },
+    })
     t.list.field('PasswordResetAuth', {
       type: 'PasswordResetAuth',
       args: {

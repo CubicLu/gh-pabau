@@ -22,7 +22,7 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
     data: staffResult,
   } = useOnlineBookableStaffQuery({
     variables: {
-      shift_start: Number.parseInt(moment().format('YYYYMMDD000000')),
+      //shift_start: Number.parseInt(moment().format('YYYYMMDD000000')),
       company_id: settings.id,
     },
   })
@@ -32,9 +32,9 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
   return (
     <div className={Styles.mainBox}>
       <h4>{t('connect.onlinebooking.employes.title')}</h4>
-      {staffResult.findManyCmStaffGeneral.map((val) => (
+      {staffResult.Public_Staff.map((val) => (
         <div
-          key={val.User.id}
+          key={val.Public_User.id}
           onClick={() => {
             setSelectedData('SET_EMPLOYEE', val)
             onSelected()
@@ -49,7 +49,7 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
             <div className={Styles.userDetailWrapper}>
               <div className={Styles.userDetail}>
                 <div className={Styles.userdetailInner}>
-                  <p className={Styles.userName}>{val.User.full_name}</p>
+                  <p className={Styles.userName}>{val.Public_User.full_name}</p>
                   {val.description && (
                     <QuestionCircleOutlined
                       onClick={(e) => {
