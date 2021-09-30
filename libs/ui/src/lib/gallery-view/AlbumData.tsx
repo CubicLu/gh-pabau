@@ -137,6 +137,8 @@ export interface AlbumDataProps {
   loadeMorePhotos?: (albumId: number) => void
   currentPage: number
   onPageChange: (page: number) => void
+  tableLoading?: boolean
+  lazyLoading?: boolean
 }
 
 export const AlbumData: FC<AlbumDataProps> = ({
@@ -163,6 +165,8 @@ export const AlbumData: FC<AlbumDataProps> = ({
   loadeMorePhotos,
   currentPage,
   onPageChange,
+  tableLoading = false,
+  lazyLoading = false,
 }) => {
   const isMobile = useMedia('(max-width: 767px)', false)
   const { t } = useTranslation('common')
@@ -806,18 +810,20 @@ export const AlbumData: FC<AlbumDataProps> = ({
                     </div>
                   </div>
                 )}
-                {(loading || data?.imageCount > data?.albumImages?.length) && (
-                  <div
-                    className={styles.albumImagesDiv}
-                    style={{
-                      borderTop:
-                        data?.albums?.length > 0 ? '1px solid #ecedf0' : '',
-                      marginTop: data?.albums?.length > 0 ? '50px' : '0px',
-                    }}
-                  >
-                    <div className={styles.loadingText}>Loading...</div>
-                  </div>
-                )}
+                {(lazyLoading ||
+                  data?.imageCount > data?.albumImages?.length) &&
+                  !listView && (
+                    <div
+                      className={styles.albumImagesDiv}
+                      style={{
+                        borderTop:
+                          data?.albums?.length > 0 ? '1px solid #ecedf0' : '',
+                        marginTop: data?.albums?.length > 0 ? '50px' : '0px',
+                      }}
+                    >
+                      <div className={styles.loadingText}>Loading...</div>
+                    </div>
+                  )}
                 {isMobile && showMenu && (
                   <div className={styles.bottomBar}>
                     <ToTopOutlined onClick={() => setMenuDrawer(true)} />
@@ -915,7 +921,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                 <Table
                   columns={albumImageColumn}
                   dataSource={albumImageList}
-                  loading={loading}
+                  loading={tableLoading}
                   pagination={false}
                 />
               )}

@@ -178,6 +178,16 @@ const Photos = () => {
         setTableView={(view) => {
           if (!view) {
             setCurrAlbumImages(null)
+            setLazyLoading({
+              ...lazyLoading,
+              currentPage: 1,
+            })
+          } else {
+            setTableImages(null)
+            setPaginatedData({
+              ...paginatedData,
+              currentPage: 1,
+            })
           }
           setListView(view)
         }}
@@ -188,7 +198,8 @@ const Photos = () => {
         onPageChange={(page) =>
           setPaginatedData({ ...paginatedData, currentPage: page })
         }
-        loading={lazyAlbumImagesLoading || paginatedAlbumImagesLoading}
+        tableLoading={paginatedAlbumImagesLoading}
+        lazyLoading={lazyAlbumImagesLoading}
       />
     </ClientCardLayout>
   )

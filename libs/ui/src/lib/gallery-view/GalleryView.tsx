@@ -60,6 +60,8 @@ export interface GalleryProps {
   setTableView?: (view: boolean) => void
   currentTablePage?: number
   onPageChange?: (page: number) => void
+  tableLoading?: boolean
+  lazyLoading?: boolean
 }
 
 export const GalleryView: FC<GalleryProps> = ({
@@ -72,6 +74,8 @@ export const GalleryView: FC<GalleryProps> = ({
   setTableView,
   currentTablePage = 1,
   onPageChange,
+  tableLoading = false,
+  lazyLoading = false,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -977,6 +981,8 @@ export const GalleryView: FC<GalleryProps> = ({
             selectedImage={selectedImage}
             handleOnChange={handleOnChange}
             loading={loading}
+            tableLoading={tableLoading}
+            lazyLoading={lazyLoading}
             setSelectedImage={setSelectedImage}
             showMenu={showMenu}
             setOpenDeleteModal={setOpenDeleteModal}
