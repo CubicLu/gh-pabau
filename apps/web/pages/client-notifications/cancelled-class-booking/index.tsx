@@ -1,5 +1,6 @@
 import { Notification, NotificationType } from '@pabau/ui'
 import React, { FC, useRef, useState } from 'react'
+import { useUser } from '../../../context/UserContext'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
 import ClientNotification from '../../../components/ClientNotification/Index'
 import CancelAppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/CancelAppointmentEmailPreview'
@@ -13,6 +14,7 @@ const Index: FC = () => {
   )
   const ref = useRef(null)
   const { t } = useTranslationI18()
+  const user = useUser()
 
   const showNotification = (email) => {
     if (selectedTab === 'emailPreview') {
@@ -83,9 +85,9 @@ const Index: FC = () => {
   }
 
   return (
-    <Layout>
+    <Layout {...user}>
       <CommonNotificationHeader
-        breadcrumbItems={[
+        items={[
           {
             path: 'setup',
             breadcrumbName: t('notifications.breadcrumb.setup'),
@@ -103,6 +105,7 @@ const Index: FC = () => {
         selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
+
       <ClientNotification
         ref={ref}
         onSelectedTab={(value) => setSelectedTab(value)}

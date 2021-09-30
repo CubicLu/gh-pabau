@@ -31,10 +31,10 @@ import Invoice from '../../components/Account/Invoice'
 import Payments from '../../components/Account/Payments'
 import Debt from '../../components/Account/Debt'
 import CreditNote from '../../components/Account/CreditNote'
+import CommonHeader from '../../components/CommonHeader'
 import { FilterValueType } from '../../components/Account/TableLayout'
 import styles from './accounts.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
 import { Formik } from 'formik'
 import { useUser } from '../../context/UserContext'
@@ -473,8 +473,35 @@ export function Account() {
 
   return (
     <div ref={accountRef}>
-      <CommonHeader />
       <Layout active={'account'} {...user}>
+        <CommonHeader
+          isShowSearch
+          searchInputPlaceHolder={searchPlaceHoler[activeTab]}
+          handleSearch={(value) => setSearchValue(value)}
+          title={t('account.finance.title')}
+          searchValue={searchValue}
+        >
+          <Dropdown
+            overlay={dateRange}
+            placement="bottomRight"
+            trigger={['click']}
+            visible={showDateFilter}
+            onVisibleChange={(val) => setShowDateFilter(val)}
+          >
+            <CalendarOutlined className={styles.marketingIconStyle} />
+          </Dropdown>
+
+          <Popover
+            trigger="click"
+            content={renderFilter}
+            placement="bottomRight"
+            overlayClassName={styles.filterPopOver}
+            visible={isPopOverVisible}
+            onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+          >
+            <FilterOutlined className={styles.marketingIconStyle} />
+          </Popover>
+        </CommonHeader>
         <div
           className={classNames(styles.desktopHeader, styles.mobileViewNone)}
         >
@@ -493,6 +520,7 @@ export function Account() {
                 onChange={(item) => {
                   setSearchValue(item)
                 }}
+                searchValue={searchValue}
               />
             </div>
             <Dropdown
@@ -549,6 +577,7 @@ export function Account() {
             </Popover>
           </div>
         </div>
+
         <Divider style={{ margin: 0 }} />
         <div className={styles.tabWrapper}>
           <TabMenu

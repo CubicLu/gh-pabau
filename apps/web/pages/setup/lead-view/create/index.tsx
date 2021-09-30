@@ -1,10 +1,10 @@
-import { LeftOutlined } from '@ant-design/icons'
 import { gql } from '@apollo/client'
-import { Breadcrumb, Button, Checkbox, Input, MobileHeader } from '@pabau/ui'
+import { Breadcrumb, Button, Checkbox, Input } from '@pabau/ui'
 import { Col, Form as AntForm, Row, Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik, FormikErrors } from 'formik'
-import Link from 'next/link'
+import CommonHeader from '../../../../components/CommonHeader'
+import useWindowSize from '../../../../hooks/useWindowSize'
 import React, { FC, useState } from 'react'
 import Layout from '../../../../components/Layout/Layout'
 import FieldRow from '../../../../components/Setup/LeadView/FieldRow'
@@ -67,6 +67,7 @@ const ADD_MUTATION = gql`
 `
 
 export const LeadCreateView: FC<LeadSchema> = () => {
+  const size = useWindowSize()
   const [schema, setSchema] = useState<LeadSchema>({
     full: 'Create Lead View',
     fullLower: 'create lead view',
@@ -384,46 +385,52 @@ export const LeadCreateView: FC<LeadSchema> = () => {
   }
 
   return (
-    <Formik
-      enableReinitialize={true}
-      validate={(e) => {
-        if (schema) {
-          Object.entries(schema.fields).reduce((a, c) => {
-            if (
-              c[1].required &&
-              c[1].min && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              c[1].min > e[c[0]].length
-            ) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              a[c[0]] = `Required ${c[1].full}.`
-            }
-            return a
-            // eslint-disable-next-line
+    <Layout>
+      <Formik
+        enableReinitialize={true}
+        validate={(e) => {
+          if (schema) {
+            Object.entries(schema.fields).reduce((a, c) => {
+              if (
+                c[1].required &&
+                c[1].min && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                c[1].min > e[c[0]].length
+              ) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                a[c[0]] = `Required ${c[1].full}.`
+              }
+              return a
+              // eslint-disable-next-line
           }, {} as FormikErrors<any>)
-        }
-      }}
-      onSubmit={(values, { resetForm }) => {
-        console.log('formik onsubmit', values)
-        // onSubmit(values, { resetForm })
-      }}
-      //initialValues={typeof modalShowing === 'object' ? modalShowing : undefined}
-      initialValues={formikFields()}
-      // requiredMark={required}
-    >
-      <div className={styles.leadsViewCreatePage}>
-        <MobileHeader className={styles.marketingSourceHeader}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.marketingTextStyle}>
-              <Link href="/">
-                <LeftOutlined />
-              </Link>
-            </div>
-          </div>
-        </MobileHeader>
-
-        <Layout>
+          }
+        }}
+        onSubmit={(values, { resetForm }) => {
+          console.log('formik onsubmit', values)
+          // onSubmit(values, { resetForm })
+        }}
+        //initialValues={typeof modalShowing === 'object' ? modalShowing : undefined}
+        initialValues={formikFields()}
+        // requiredMark={required}
+      >
+        <div className={styles.leadsViewCreatePage}>
+          <CommonHeader
+            isLeftOutlined
+            reversePath="/setup/lead-view"
+            title={schema.full || schema.short}
+          >
+            {ADD_MUTATION && (
+              <Checkbox
+                defaultChecked={false}
+                onClick={() => {
+                  // setSpecialBoolean((e) => !e)
+                }}
+              >
+                {schema?.fields?.is_active?.full}
+              </Checkbox>
+            )}
+          </CommonHeader>
           <div
             className={classNames(
               styles.tableMainHeading,
@@ -432,7 +439,7 @@ export const LeadCreateView: FC<LeadSchema> = () => {
           >
             <div style={{ background: '#FFF' }}>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   { breadcrumbName: 'Setup', path: 'setup' },
                   {
                     breadcrumbName: schema.full || schema.short,
@@ -505,10 +512,22 @@ export const LeadCreateView: FC<LeadSchema> = () => {
                 })}
               </div>
             </AntForm>
+            {size.width < 768 && (
+              <div className={styles.footer}>
+                <Button
+                  className={styles.createSourceBtn}
+                  type="primary"
+                  disabled={true}
+                  onClick={createNew}
+                >
+                  {schema?.createButtonLabel}
+                </Button>
+              </div>
+            )}
           </div>
-        </Layout>
-      </div>
-    </Formik>
+        </div>
+      </Formik>
+    </Layout>
   )
 }
 

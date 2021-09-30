@@ -14,6 +14,8 @@ interface WizardProps {
   background?: string
   allowDisablePrevious?: boolean
   finishDisablesNextStep?: boolean
+  hideNextStep?: boolean
+  hidePrevStep?: boolean
   hideStep?: boolean
 }
 
@@ -30,6 +32,8 @@ export const Wizard: React.FC<WizardProps> = ({
   allowDisablePrevious = true,
   finishDisablesNextStep = true,
   hideStep = false,
+  hideNextStep = false,
+  hidePrevStep = false,
 }) => {
   return (
     <div
@@ -39,16 +43,20 @@ export const Wizard: React.FC<WizardProps> = ({
         gridTemplateColumns: `1fr `.repeat(hideStep ? 2 : 3),
       }}
     >
-      <div>
-        <Button
-          onClick={(event) => onPrev?.()}
-          disabled={
-            active <= 0 || (active === allSteps - 1 && allowDisablePrevious)
-          }
-        >
-          {previousButtonContent || 'Previous Step'}
-        </Button>
-      </div>
+      {hidePrevStep ? (
+        <div />
+      ) : (
+        <div>
+          <Button
+            onClick={() => onPrev?.()}
+            disabled={
+              active <= 0 || (active === allSteps - 1 && allowDisablePrevious)
+            }
+          >
+            {previousButtonContent || 'Previous Step'}
+          </Button>
+        </div>
+      )}
       {!hideStep && (
         <span
           className={classnames(styles.breadcrumbgraytxt, styles.centeredtext)}
@@ -56,31 +64,37 @@ export const Wizard: React.FC<WizardProps> = ({
           Step {active + 1}/{allSteps}
         </span>
       )}
-      {nextButtonDecorator ? (
-        <div className={styles.nextButtonDecorator}>
-          {nextButtonDecorator}
-          <Button
-            type="primary"
-            onClick={(event) => onNext?.()}
-            disabled={
-              disableNextStep ||
-              (allSteps - 1 <= active && finishDisablesNextStep)
-            }
-          >
-            {nextButtonContent || 'Next Step'}
-          </Button>
-        </div>
+      {hideNextStep ? (
+        <div />
       ) : (
-        <Button
-          type="primary"
-          onClick={(event) => onNext?.()}
-          disabled={
-            disableNextStep ||
-            (allSteps - 1 <= active && finishDisablesNextStep)
-          }
-        >
-          {nextButtonContent || 'Next Step'}
-        </Button>
+        <>
+          {nextButtonDecorator ? (
+            <div className={styles.nextButtonDecorator}>
+              {nextButtonDecorator}
+              <Button
+                type="primary"
+                onClick={() => onNext?.()}
+                disabled={
+                  disableNextStep ||
+                  (allSteps - 1 <= active && finishDisablesNextStep)
+                }
+              >
+                {nextButtonContent || 'Next Step'}
+              </Button>
+            </div>
+          ) : (
+            <Button
+              type="primary"
+              onClick={() => onNext?.()}
+              disabled={
+                disableNextStep ||
+                (allSteps - 1 <= active && finishDisablesNextStep)
+              }
+            >
+              {nextButtonContent || 'Next Step'}
+            </Button>
+          )}{' '}
+        </>
       )}
     </div>
   )

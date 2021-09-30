@@ -1,8 +1,4 @@
-import {
-  LeftOutlined,
-  PlusSquareFilled,
-  SearchOutlined,
-} from '@ant-design/icons'
+import { PlusSquareFilled, SearchOutlined } from '@ant-design/icons'
 import {
   FindMedicalFormsDocument,
   MedicalFormOrderByWithRelationInput,
@@ -31,7 +27,6 @@ import {
   MedicalFilter,
   MedicalFormBuilder,
   MedicalFormItem,
-  MobileHeader,
   Notification,
   NotificationBanner,
   NotificationType,
@@ -47,12 +42,12 @@ import {
 import { useUser } from '../../../context/UserContext'
 import { Input, Typography } from 'antd'
 import dayjs from 'dayjs'
-import Link from 'next/link'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import notificationBannerImage from '../../../assets/images/notification-image.png'
 import Layout from '../../../components/Layout/Layout'
 import Custom from '../../../components/MedicalForms/Custom'
 import Library from '../../../components/MedicalForms/Library'
+import CommonHeader from '../../../components/CommonHeader'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { gql, useMutation } from '@apollo/client'
 import styles from './index.module.less'
@@ -671,51 +666,40 @@ export const Index: FC = () => {
 
       <div className={styles.medicalFormsContainer}>
         <div className={styles.desktopViewNone}>
-          {currentTab === Tab.Custom && (
-            <MobileHeader className={styles.mobileHeader}>
-              <div className={styles.allContentAlignMobile}>
-                <div className={styles.mobileHeaderTextStyle}>
-                  <Link href="/setup">
-                    <LeftOutlined />
-                  </Link>
-                  <p>{t('setup.medical.forms.patientFormName')}</p>
-                </div>
-                <div className={styles.mobileHeaderOpsStyle}>
-                  <MedicalFilter />
-                  <PlusSquareFilled
-                    className={styles.plusIconStyle}
-                    onClick={() => setShowCreateForm(true)}
-                  />
-                </div>
-              </div>
-            </MobileHeader>
-          )}
-          {currentTab === Tab.Library && (
-            <MobileHeader className={styles.mobileHeader}>
-              <div className={styles.allContentAlignMobile}>
-                <div className={styles.mobileHeaderTextStyle}>
-                  <Link href="/setup">
-                    <LeftOutlined />
-                  </Link>
-                  <p>{t('setup.medical.forms.patientFormName')}</p>
-                </div>
-                <div className={styles.mobileHeaderOpsStyle}>
-                  <Input
-                    value={searchData.searchValue}
-                    onChange={(e) =>
-                      changeSearchData({ searchValue: e.target.value })
-                    }
-                    placeholder={t('setup.medical.forms.searchLibrary')}
-                  />
-                </div>
-              </div>
-            </MobileHeader>
-          )}
+          <CommonHeader
+            title={t('setup.medical.forms.patientFormName')}
+            isLeftOutlined
+            reversePath="/setup"
+            isShowSearch
+            searchValue={
+              currentTab === Tab.Library ? query : searchData.searchValue
+            }
+            searchInputPlaceHolder={
+              currentTab === Tab.Library
+                ? t('setup.medical.forms.searchLibrary')
+                : t('setup.medical.forms.searchMyForms')
+            }
+            handleSearch={(value) => {
+              currentTab === Tab.Library
+                ? setQuery(value)
+                : changeSearchData({ searchValue: value })
+            }}
+          >
+            {currentTab === Tab.Custom && (
+              <>
+                <MedicalFilter mobileView />
+                <PlusSquareFilled
+                  className={styles.plusIconStyle}
+                  onClick={() => setShowCreateForm(true)}
+                />
+              </>
+            )}
+          </CommonHeader>
         </div>
         <div className={styles.medicalFormsHeader}>
           <div>
             <Breadcrumb
-              breadcrumbItems={[
+              items={[
                 {
                   breadcrumbName: t('navigation-breadcrumb-setup'),
                   path: 'setup',

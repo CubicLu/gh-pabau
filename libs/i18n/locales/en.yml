@@ -954,6 +954,7 @@ en:
   common-label-add: Add
   common-label-create: Create
   common-label-cancel: Cancel
+  common-label-send: Send
   common-label-save: Save
   common-label-select: Select {{what}}
   common-label-enter: Enter {{what}}
