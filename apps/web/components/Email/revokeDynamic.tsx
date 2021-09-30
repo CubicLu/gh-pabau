@@ -45,8 +45,8 @@ export const Revoke: FC<P> = ({ email, companyId, userId }) => {
       .then(
         async () => {
           // gapi.auth2.getAuthInstance().signOut()
-          // gapi.auth2.getAuthInstance().disconnect()
-          gapi.client.setToken(null)
+          const auth2 = gapi.auth2.getAuthInstance()
+          auth2.signOut().then(auth2.disconnect())
           await removeGmailConnection()
         },
         function (error) {

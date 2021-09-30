@@ -478,7 +478,6 @@ export const Dropdown: FC<DropDownInterface> = ({
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                paddingLeft: '20px',
                 cursor: 'pointer',
               }}
             >

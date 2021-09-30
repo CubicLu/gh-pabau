@@ -30,7 +30,7 @@ import Revoke from '../../components/Email/revoke'
 // import { useQuery } from '@apollo/client'
 import { useUser } from '../../context/UserContext'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 const { confirm } = Modal
 
@@ -99,6 +99,11 @@ export const Communications: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true)
   const [checkStatus, setCheckStatus] = useState(true)
   const [revoke, setRevoke] = useState(false)
+
+  useEffect(() => {
+    loadConnection()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, revoke, checkStatus])
 
   const popupGoogle = true
   const { me } = useUser()

@@ -2,6 +2,7 @@ query findGmailConnection($companyId: Int, $userId: Int) {
   gmail_connection(where: {company_id: {_eq: $companyId}, user_id: {_eq: $userId}}){
     id
     email
+    api_key
   }
 }
 
