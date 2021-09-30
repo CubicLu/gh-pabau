@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   TabMenu,
   ClientAppointmentCard,
@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { ReactComponent as BookmarkOutlined } from '../../assets/images/bookmark.svg'
 import { ReactComponent as UserDeleteImg } from '../../assets/images/client-card/user-delete.svg'
 import { clientAppointments } from './mock'
-import styles from './ClientAppointmentsLayout.module.less'
+import styles from './ClientAppointments.module.less'
 import { CheckboxValueType } from 'antd/lib/checkbox/Group'
 import User1 from '../../assets/images/user1.png'
 import User5 from '../../assets/images/user5.png'
@@ -42,6 +42,7 @@ interface Employee {
 }
 
 export interface ClientAppointmentItem {
+  id: number
   serviceName: string
   employee: Employee
   otherEmployees?: Employee[]
@@ -57,11 +58,30 @@ export interface ClientAppointmentItem {
   isVideoCall: number
 }
 
-export const ClientAppointmentsLayout: FC = () => {
+interface P {
+  appointments?: ClientAppointmentItem[]
+}
+
+//TODO: remove these dummy funcctions
+const deleteAppointment = (
+  a: unknown = undefined,
+  b: unknown = undefined,
+  c: unknown = undefined
+) => console.log('TODO')
+const handleCancelAppointment = (
+  a: unknown = undefined,
+  b: unknown = undefined,
+  c: unknown = undefined
+) => console.log('TODO')
+const editNote = (
+  a: unknown = undefined,
+  b: unknown = undefined,
+  c: unknown = undefined
+) => console.log('TODO')
+
+export const ClientAppointments = ({ appointments }: P) => {
   const ref = useRef<HTMLDivElement>(null)
-  const [appointments, setAppointments] = useState<ClientAppointmentItem[]>(
-    clientAppointments
-  )
+
   const personList = [
     { name: 'Hugo Miller', avatar: User9 },
     { name: 'Aydin Austin', avatar: User5 },
@@ -146,12 +166,6 @@ export const ClientAppointmentsLayout: FC = () => {
     }
   }
 
-  const deleteAppointment = (index: number) => {
-    const arr = [...appointments]
-    arr.splice(index, 1)
-    setAppointments([...arr])
-  }
-
   const changeTempServiceFilter = (values) => {
     setTempServiceFilter(values)
   }
@@ -160,24 +174,12 @@ export const ClientAppointmentsLayout: FC = () => {
     setTempStatusFilter(values)
   }
 
-  const handleCancelAppointment = (index) => {
-    const resultArr = [...appointments]
-    resultArr[index].status = AppointmentStatus.cancelled
-    setAppointments([...resultArr])
-  }
-
-  const editNote = (index, value) => {
-    const resultArr = [...appointments]
-    resultArr[index].notes = value
-    setAppointments([...resultArr])
-  }
-
   const noShowAppointmentTabTitle = (
     <>
       {t('client.appointments.layout.tab.no.shows')}
       <span style={{ color: 'red' }}>
         {` (${
-          appointments.filter(
+          appointments?.filter(
             (item) => item.status === AppointmentStatus.noShow
           ).length
         })`}
@@ -186,7 +188,6 @@ export const ClientAppointmentsLayout: FC = () => {
   )
 
   const purpleColorDot = <div className={styles.purpleColorDot}></div>
-
   const yellowColorDot = <div className={styles.yellowColorDot}></div>
 
   const appointmentsFilterPopover = (
@@ -208,7 +209,7 @@ export const ClientAppointmentsLayout: FC = () => {
               </span>
               <span className={styles.serviceCounter}>
                 {`(${
-                  appointments.filter(
+                  appointments?.filter(
                     (el) => el.serviceName === 'Brachioplasty'
                   ).length
                 })`}
@@ -222,7 +223,7 @@ export const ClientAppointmentsLayout: FC = () => {
               </span>
               <span className={styles.serviceCounter}>
                 {`(${
-                  appointments.filter(
+                  appointments?.filter(
                     (el) => el.serviceName === 'Abdominoplasty'
                   ).length
                 })`}
@@ -248,7 +249,7 @@ export const ClientAppointmentsLayout: FC = () => {
               }
               checkList={tempPersonFilter}
               counter={
-                appointments.filter((el) => item.name === el.employee.name)
+                appointments?.filter((el) => item.name === el.employee.name)
                   .length
               }
             />
@@ -1652,5 +1653,3 @@ export const ClientAppointmentsLayout: FC = () => {
     </div>
   )
 }
-
-export default ClientAppointmentsLayout
