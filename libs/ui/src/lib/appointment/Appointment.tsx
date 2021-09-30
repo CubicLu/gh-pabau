@@ -238,7 +238,10 @@ export const Appointment: FC<P> = ({
             activeSocialIcons.length > 0) && <Divider />}
 
           {medicalMessage && (
-            <Row justify="center" style={{ marginBottom: '20px', width: 440 }}>
+            <Row
+              justify="center"
+              style={{ marginBottom: '20px', maxWidth: 440 }}
+            >
               <span className={styles.breaktext}>{medicalMessage}</span>
             </Row>
           )}

@@ -3,7 +3,6 @@ import {
   CloudDownloadOutlined,
   FileSearchOutlined,
   FilterOutlined,
-  LeftOutlined,
   LineChartOutlined,
   MoreOutlined,
   QuestionCircleOutlined,
@@ -22,7 +21,6 @@ import {
   Button,
   ChartData,
   CircleGraph,
-  MobileHeader,
   PabauPlus,
   ReportHelpSidebar,
   Switch,
@@ -40,7 +38,6 @@ import {
 } from '@pabau/ui'
 import { Col, Drawer, Input, Row, Space, Typography } from 'antd'
 import classNames from 'classnames'
-import Link from 'next/link'
 import userImage from '../../assets/images/user.png'
 import {
   getFormattedDateLabel,
@@ -54,6 +51,7 @@ import {
   makeServiceGroups,
 } from '../../helper/teamReportHelper'
 import Layout from './../../components/Layout/Layout'
+import CommonHeader from '../../components/CommonHeader'
 import { useTranslationI18 } from './../../hooks/useTranslationI18'
 import styles from './report.module.less'
 import FilterDrawer from './../../components/team/Report/FilterDrawer'
@@ -520,65 +518,58 @@ export function Report(props: ReportProps) {
 
   return (
     <>
-      <div className={styles.desktopViewNone}>
-        <MobileHeader className={styles.mobileHeader}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.mobileHeaderTextStyle}>
-              <Link href="/setup">
-                <LeftOutlined />
-              </Link>
-              <p>{t('setup.reports.title')}</p>
-            </div>
-            <Button
-              className={styles.btnCircle}
-              shape="circle"
-              icon={<MoreOutlined />}
-              onClick={() => setMobileDrawer(!mobileDrawer)}
-            />
-            {mobileDrawer && (
-              <Drawer
-                placement="bottom"
-                closable={true}
-                onClose={() => setMobileDrawer(false)}
-                visible={mobileDrawer}
-                className={styles.mobileDrawer}
-                height={170}
-              >
-                <div className={styles.headerStick} />
-                <Space size={16} direction="vertical">
-                  <Space size={8} className={styles.drawerButton}>
-                    <CloudDownloadOutlined />
-                    <div onClick={handleDownload}>
-                      {t('setup.reports.download')} (
-                      {t('setup.reports.coming-soon')})
-                    </div>
-                  </Space>
-                  <Space size={8} className={styles.drawerButton}>
-                    <SettingOutlined />
-                    <div onClick={handleSettings}>
-                      {t('setup.reports.settings')} (
-                      {t('setup.reports.coming-soon')})
-                    </div>
-                  </Space>
-                  <Space size={8} className={styles.drawerButton}>
-                    <QuestionCircleOutlined />
-                    <div onClick={() => setShowHelpSidebar(true)}>
-                      {t('setup.reports.help')}
-                    </div>
-                  </Space>
-                </Space>
-              </Drawer>
-            )}
-          </div>
-        </MobileHeader>
-      </div>
-
       <Layout active={'setup'}>
+        <CommonHeader
+          isLeftOutlined
+          reversePath="/setup"
+          title={t('setup.reports.title')}
+        >
+          <Button
+            className={styles.btnCircle}
+            shape="circle"
+            icon={<MoreOutlined />}
+            onClick={() => setMobileDrawer(!mobileDrawer)}
+          />
+          {mobileDrawer && (
+            <Drawer
+              placement="bottom"
+              closable={true}
+              onClose={() => setMobileDrawer(false)}
+              visible={mobileDrawer}
+              className={styles.mobileDrawer}
+              height={170}
+            >
+              <div className={styles.headerStick} />
+              <Space size={16} direction="vertical">
+                <Space size={8} className={styles.drawerButton}>
+                  <CloudDownloadOutlined />
+                  <div onClick={handleDownload}>
+                    {t('setup.reports.download')} (
+                    {t('setup.reports.coming-soon')})
+                  </div>
+                </Space>
+                <Space size={8} className={styles.drawerButton}>
+                  <SettingOutlined />
+                  <div onClick={handleSettings}>
+                    {t('setup.reports.settings')} (
+                    {t('setup.reports.coming-soon')})
+                  </div>
+                </Space>
+                <Space size={8} className={styles.drawerButton}>
+                  <QuestionCircleOutlined />
+                  <div onClick={() => setShowHelpSidebar(true)}>
+                    {t('setup.reports.help')}
+                  </div>
+                </Space>
+              </Space>
+            </Drawer>
+          )}
+        </CommonHeader>
         <div className={styles.cardWrapper}>
           <div className={classNames(styles.cardHeader, styles.mobileViewNone)}>
             <div>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   { breadcrumbName: t('setup.reports.title'), path: 'setup' },
                   { breadcrumbName: t('setup.reports.team-report'), path: '' },
                 ]}

@@ -5,6 +5,8 @@ import { Form as AntForm, Input, Select } from 'formik-antd'
 import { NextPage } from 'next'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
+import useWindowSize from '../../hooks/useWindowSize'
+import CommonHeader from '../../components/CommonHeader'
 import { useUser } from '../../context/UserContext'
 import { notificationVariables } from '../../mocks/StaffNotifications'
 import styles from './staff-notifications.module.less'
@@ -64,6 +66,7 @@ export const StaffNotifications: NextPage = () => {
 
   const [user, setUser] = useState<LoggedUser>()
   const loggedUser = useUser()
+  const size = useWindowSize()
 
   useEffect(() => {
     const me = loggedUser?.me
@@ -175,10 +178,13 @@ export const StaffNotifications: NextPage = () => {
   return (
     <div>
       <Layout>
+        <CommonHeader title="Notification" />
         <div className={styles.mainContainer}>
           <Row>
             <Col md={8}>
-              <h1 style={{ fontSize: 18 }}>Notification</h1>
+              {size.width > 767 && (
+                <h1 style={{ fontSize: 18 }}>Notification</h1>
+              )}
               <Formik
                 innerRef={formRef}
                 initialValues={initialValues}

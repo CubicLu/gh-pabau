@@ -1,4 +1,3 @@
-import { LeftOutlined } from '@ant-design/icons'
 import { SetupGridProps, SetupGridSubMenuMobile } from '@pabau/ui'
 import classNames from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
@@ -25,12 +24,6 @@ const GridSubMenuMobile: FC<P> = ({ handleBack, data, setSMSModalVisible }) => {
     <div
       className={classNames(styles.gridMobileWrapper, styles.desktopViewNone)}
     >
-      <div className={styles.listIcon}>
-        <LeftOutlined onClick={handleBack} />
-        <div className={styles.textContent}>
-          {data && data.length > 0 ? data[0].title : ''}
-        </div>
-      </div>
       {data?.[0]?.image && (
         <div
           style={{

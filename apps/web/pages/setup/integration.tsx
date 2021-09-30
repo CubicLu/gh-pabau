@@ -106,7 +106,7 @@ export const Integration: FC = () => {
   const [searchItemsArray, setSearchItemsArray] = useState<SearchItemProps[]>(
     []
   )
-  const isMobile = useMedia('(min-width: 541px)')
+  const isMobile = useMedia('(min-width: 768px)')
 
   const handleSearch = (searchTerm: string) => {
     setSearchValue(searchTerm)
@@ -128,37 +128,47 @@ export const Integration: FC = () => {
 
   return (
     <div>
-      <CommonHeader title={t('integration.page.title')} isLeftOutlined={true} />
       <Layout {...user}>
+        <CommonHeader
+          title={t('integration.page.title')}
+          isLeftOutlined
+          reversePath="/setup"
+          isShowSearch
+          handleSearch={handleSearch}
+          searchInputPlaceHolder={t('integration.search')}
+          searchValue={searchValue}
+        />
         <div className={styles.mainDiv}>
           <div className={styles.headWrapper}>
             {isMobile && (
-              <div>
-                <Breadcrumb
-                  breadcrumbItems={[
-                    {
-                      breadcrumbName: t(
-                        'basic-crud-table-header-breadcrumb-setup-link'
-                      ),
-                      path: 'setup',
-                    },
-                    {
-                      breadcrumbName: t('integration.breadcrumbs'),
-                      path: '/integration',
-                    },
-                  ]}
-                />
+              <>
+                <div>
+                  <Breadcrumb
+                    items={[
+                      {
+                        breadcrumbName: t(
+                          'basic-crud-table-header-breadcrumb-setup-link'
+                        ),
+                        path: 'setup',
+                      },
+                      {
+                        breadcrumbName: t('integration.breadcrumbs'),
+                        path: 'integration',
+                      },
+                    ]}
+                  />
 
-                <Title>{t('integration.page.title')}</Title>
-              </div>
+                  <Title>{t('integration.page.title')}</Title>
+                </div>
+                <div className={styles.searchWrapper}>
+                  <SetupSearchInput
+                    searchValue={searchValue}
+                    onChange={handleSearch}
+                    placeholder={t('integration.search')}
+                  />
+                </div>
+              </>
             )}
-
-            <div className={styles.searchWrapper}>
-              <SetupSearchInput
-                onChange={handleSearch}
-                placeholder={t('integration.search')}
-              />
-            </div>
           </div>
           {!searchValue ? (
             <div className={styles.manageWrapper}>
