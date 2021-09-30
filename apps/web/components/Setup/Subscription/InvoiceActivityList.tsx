@@ -37,6 +37,7 @@ const InvoiceActivity: FC<P> = (p) => {
   })
   const [showPreview, setShowPreview] = useState(false)
   const [urlPreview, setUrlPreview] = useState('')
+
   const invoiceColumns = [
     {
       title: t('setup.table.column.invoicedate'),
@@ -64,11 +65,11 @@ const InvoiceActivity: FC<P> = (p) => {
       dataIndex: 'amount',
       key: 'amount',
       visible: true,
-      render: (data) => {
+      render: (_, { amount, currency }: SubscriptionInvoice) => {
         return (
           <div>
-            {stringToCurrencySignConverter(user?.me?.currency)}{' '}
-            {(data as number).toFixed(2)}
+            {stringToCurrencySignConverter(currency)}{' '}
+            {(amount as number).toFixed(2)}
           </div>
         )
       },
@@ -85,7 +86,7 @@ const InvoiceActivity: FC<P> = (p) => {
       key: 'invoice_link',
       visible: true,
       // eslint-disable-next-line react/display-name
-      render: (_, { invoice_link, id }: SubscriptionInvoice) => {
+      render: (_, { invoice_link, id, status }: SubscriptionInvoice) => {
         return (
           <div>
             <EmailSendButton

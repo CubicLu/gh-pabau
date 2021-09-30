@@ -166,7 +166,7 @@ query categoryList(
 ) {
   findManyInvCategory(
     where: {
-      category_type: { not: { equals: "service" } }
+      category_type: { in: [ "retail", "injectable", "consumable" ] }
       disabled: { equals: $disabled }
       name: { contains: $searchTerm }
     }
@@ -181,7 +181,7 @@ query categoryList(
   }
   findManyInvCategoryCount(
     where: {
-      category_type: { not: { equals: "service" } }
+      category_type: { in: [ "retail", "injectable", "consumable" ] }
       disabled: { equals: $disabled }
       name: { contains: $searchTerm }
     }
@@ -307,7 +307,11 @@ query retrieveProductsGroupByMasterCategory {
     id
     name
     ord
-    InvCategory {
+    InvCategory(where: {
+      category_type: { in: [ "retail", "injectable", "consumable" ] }
+    },
+      orderBy: { order: desc }
+    ) {
       id
       name
     }
@@ -317,7 +321,7 @@ query retrieveProductsGroupByMasterCategory {
 
 query retrieveProductGroups {
   findManyInvCategory(
-    where: { category_type: { not: { equals: "service" } } }
+    where: { category_type: { in: [ "retail", "injectable", "consumable" ] } }
     orderBy: { order: desc }
   ) {
     ...Category
@@ -333,7 +337,7 @@ query createProductModalInit {
     ...ProductTaxFields
   }
   findManyInvCategory(
-    where: { category_type: { not: { equals: "service" } } }
+    where: { category_type: { in: [ "retail", "injectable", "consumable" ] } }
     orderBy: { order: asc }
   ) {
     ...Category
@@ -484,4 +488,30 @@ mutation updateOneServicesMasterCategory(
   ) {
     ...ServicesMasterCategory
   }
+}
+
+query retrieveProductCountByCategory($active: Int = 1, $search: String = "") {
+  findManyInvCategory(where: {
+    category_type: { in: [ "retail", "injectable", "consumable" ] }
+  },
+    orderBy: { order: asc }
+  ) {
+    id
+    name
+    count: InvProduct(where: {
+      is_active: {equals: $active}
+      AND: {
+        name: { contains: $search }
+      }
+    }) {
+      name
+      is_active
+    }
+  }
+  total: findManyProductsWithAvailableQuantityCount(
+    where: {
+      active: $active
+      search: $search
+    }
+  )
 }

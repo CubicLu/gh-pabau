@@ -1,12 +1,11 @@
 import React, { FC } from 'react'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Avatar, Button } from '@pabau/ui'
-import { SourceDataProps } from './Content'
 import styles from '../../pages/clients/clients.module.less'
 import noDuplicateData from '../../assets/images/no-dupliacte-data.png'
 
 interface MergeComponentProps {
-  duplicateData?: SourceDataProps[][]
+  duplicateData?: any[] //TODO: use the type from @pabau/graphql, once you've written the query
   onDismiss?: (val) => void
   onMerge?: (val) => void
   onMergeAll?: (val) => void
