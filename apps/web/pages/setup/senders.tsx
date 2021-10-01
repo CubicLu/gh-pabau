@@ -3,7 +3,6 @@ import {
   ExclamationCircleOutlined,
   FilterOutlined,
   GoogleOutlined,
-  LeftOutlined,
   MailOutlined,
   MobileOutlined,
   PhoneOutlined,

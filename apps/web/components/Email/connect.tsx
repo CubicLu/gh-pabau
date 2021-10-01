@@ -30,6 +30,7 @@ export const Connect: FC<P> = ({ ...props }) => {
   const router = useRouter()
   const userSignIn = false
   useEffect(
+    //   variables: {
     () => {
       // loadConnection()
       handleClick()
@@ -38,7 +39,7 @@ export const Connect: FC<P> = ({ ...props }) => {
     [userSignIn]
   )
   // const { data } = useQuery(FindGmailConnectionDocument, {
-  //   variables: {
+
   //     companyId: me.company,
   //     userId: me.user,
   //   },

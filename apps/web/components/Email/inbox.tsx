@@ -35,6 +35,8 @@ import {
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { ReactComponent as Attched } from '../../assets/images/attched.svg'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+
 import dynamic from 'next/dynamic'
 const { Search } = Input
 export interface P {
@@ -45,6 +47,7 @@ const ReadEmail = dynamic(() => import('./readEmail'), {
   ssr: false,
 })
 export const Inbox: FC<P> = ({ ...props }) => {
+  const { t } = useTranslationI18()
   //const [userSignIn, setUserSignIn] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [inboxEmail, setInboxEmail] = useState([])
@@ -338,7 +341,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
   const tabItemText = [
     <div key="0">
       <InboxOutlined />
-      Inbox{' '}
+      {t('setup.email.inbox.tab.item.inbox')}{' '}
       <Badge
         count={inboxCount}
         style={{ backgroundColor: '#40A0C1', marginLeft: '60px' }}
@@ -346,15 +349,15 @@ export const Inbox: FC<P> = ({ ...props }) => {
     </div>,
     <div key="1">
       <FileOutlined />
-      Draft{' '}
+      {t('setup.email.inbox.tab.item.draft')}{' '}
     </div>,
     <div key="2">
       <SendOutlined />
-      Sent{' '}
+      {t('setup.email.inbox.tab.item.sent')}{' '}
     </div>,
     <div key="3">
       <FolderOpenOutlined />
-      Archive{' '}
+      {t('setup.email.inbox.tab.item.archive')}{' '}
     </div>,
   ]
   const columns = [
@@ -457,13 +460,13 @@ export const Inbox: FC<P> = ({ ...props }) => {
       <Menu.Item>
         <span style={{ color: 'grey' }}>
           <SettingOutlined />
-          Go to mail settings
+          {t('setup.email.inbox.more.menu.settings')}
         </span>
       </Menu.Item>
       <Menu.Item>
         <span style={{ color: 'grey' }}>
           <CloudServerOutlined />
-          Automations(2)
+          {t('setup.email.inbox.more.menu.automations')}
         </span>
       </Menu.Item>
     </Menu>
@@ -480,11 +483,11 @@ export const Inbox: FC<P> = ({ ...props }) => {
             <div>
               <div>
                 {' '}
-                <LockOutlined /> Share this within your company
+                <LockOutlined />{' '}
+                {t('setup.email.inbox.private.menu.share.title')}
               </div>
               <p className={styles.converstionText}>
-                This email conversation will be visiable to others only when
-                it`s linked to clients ans leads in Pabau
+                {t('setup.email.inbox.private.menu.share.description')}
               </p>
             </div>
           </div>
@@ -495,10 +498,11 @@ export const Inbox: FC<P> = ({ ...props }) => {
             <div>
               <div>
                 {' '}
-                <LockOutlined /> Keep conversation private
+                <LockOutlined />{' '}
+                {t('setup.email.inbox.private.menu.private.title')}
               </div>
               <p className={styles.converstionText}>
-                You will not be able to share any records with this 3rd party.
+                {t('setup.email.inbox.private.menu.private.description')}
               </p>
             </div>
           </div>
@@ -554,7 +558,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
           await setReadEmail(false)
           Notification(
             NotificationType.success,
-            'Email has been move into delete'
+            t('setup.email.inbox.notification.delete.mail')
           )
         })
     } else {
@@ -567,7 +571,10 @@ export const Inbox: FC<P> = ({ ...props }) => {
           // await updateSigninStatus(userSignIn)
           // setIsLoading(true)
           await setReadEmail(false)
-          Notification(NotificationType.success, 'Email has been delete')
+          Notification(
+            NotificationType.success,
+            t('setup.email.inbox.notification.delete.mail')
+          )
         })
     }
     setIsLoading(true)
@@ -585,7 +592,10 @@ export const Inbox: FC<P> = ({ ...props }) => {
         // await updateSigninStatus(userSignIn)
         // setIsLoading(true)
         await setReadEmail(false)
-        Notification(NotificationType.success, 'Email has been delete')
+        Notification(
+          NotificationType.success,
+          t('setup.email.inbox.notification.delete.mail')
+        )
       })
     setIsLoading(true)
     await updateSigninStatus(userSignIn)
@@ -604,7 +614,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
         await updateSigninStatus(userSignIn)
         Notification(
           NotificationType.success,
-          'Email has been updated as mark as read'
+          t('setup.email.inbox.notification.mark.as.read')
         )
       })
     setIsLoading(false)
@@ -622,7 +632,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
         await updateSigninStatus(userSignIn)
         Notification(
           NotificationType.success,
-          'Email has been move into archive'
+          t('setup.email.inbox.notification.move.archive')
         )
       })
     setIsLoading(false)
@@ -665,7 +675,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
         loading={isLoading}
         showSizeChanger={dataSource.length > 10}
         onRowClick={(e) => handleRowClick(e)}
-        noDataText={'No mail found '}
+        noDataText={t('setup.email.inbox.no.mail.text')}
         noDataIcon={<MailOutlined />}
       />
     )
@@ -675,16 +685,16 @@ export const Inbox: FC<P> = ({ ...props }) => {
     return (
       <Menu>
         <Menu.Item>
-          <span>Unread</span>
+          <span>{t('setup.email.inbox.filter.menu.unread')}</span>
         </Menu.Item>
         <Menu.Item>
-          <span>Linked with lead</span>
+          <span>{t('setup.email.inbox.filter.menu.linked.lead')}</span>
         </Menu.Item>
         <Menu.Item>
-          <span>Linked with an open lead</span>
+          <span>{t('setup.email.inbox.filter.menu.linked.open.lead')}</span>
         </Menu.Item>
         <Menu.Item>
-          <span>Not Linked with a lead</span>
+          <span>{t('setup.email.inbox.filter.menu.not.linked.lead')}</span>
         </Menu.Item>
       </Menu>
     )
@@ -694,10 +704,10 @@ export const Inbox: FC<P> = ({ ...props }) => {
     return (
       <Menu>
         <Menu.Item>
-          <span>Mark as read</span>
+          <span>{t('setup.email.inbox.mark.menu.read')}</span>
         </Menu.Item>
         <Menu.Item>
-          <span>Mark as unread</span>
+          <span>{t('setup.email.inbox.mark.menu.unread')}</span>
         </Menu.Item>
       </Menu>
     )
