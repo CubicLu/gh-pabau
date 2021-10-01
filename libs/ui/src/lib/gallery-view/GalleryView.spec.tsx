@@ -8,13 +8,12 @@ describe('GalleryView', () => {
       <GalleryView
         key={1}
         albumList={{
-          albumImages: [],
+          albumImage: [],
           albumTitle: '',
-          albums: [],
+          album: [],
           imageCount: 0,
           id: 0,
         }}
-        listImages={[]}
         images={[]}
       />
     )
