@@ -49,6 +49,9 @@ fragment CompanyService on CompanyService {
   Company {
     ...CompanyFields
   }
+  Product {
+    ...InvProductFields
+  }
   ServiceCategory {
     ...ServiceCategoryFields
   }
