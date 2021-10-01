@@ -103,7 +103,6 @@ export const Communications: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, revoke, checkStatus])
 
-  const popupGoogle = true
   const { me } = useUser()
   const [insertConnection] = useMutation(InsertGmailConnectionDocument, {
     onCompleted() {
@@ -222,13 +221,6 @@ export const Communications: React.FC = () => {
         />
       )}
 
-      {popupGoogle && (
-        <Login
-          handleGoogleLogin={handleGoogleLogin}
-          checkStatus={checkStatus}
-        />
-      )}
-
       {revoke && (
         <Revoke
           email={data?.gmail_connection[0].email}
@@ -326,23 +318,6 @@ export const Communications: React.FC = () => {
                 </Button>
               </Col>
             )}
-            {/*<Col span={4} xs={12} sm={8} md={6}>*/}
-            {/*  <Button className={styles.senderItem}>*/}
-            {/*    <div className={styles.itemHeader}>*/}
-            {/*      <OutLook />*/}
-
-            {/*      <div className={styles.verifiedWrapper}>*/}
-            {/*        <div className={styles.defaultText}>*/}
-            {/*          <Tag color="red">Stop syncing</Tag>*/}
-            {/*        </div>*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*    <div className={styles.itemBody}>*/}
-            {/*      <div>Clinic Bookings</div>*/}
-            {/*      <div className={styles.email}>Account</div>*/}
-            {/*    </div>*/}
-            {/*  </Button>*/}
-            {/*</Col>*/}
           </Row>
         </div>
       </div>
