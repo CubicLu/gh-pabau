@@ -42,14 +42,9 @@ const FormLabTests: FC<P> = ({
   const [labTestsList, setLabTestsList] = useState<InvProductsListItem[]>([])
 
   useEffect(() => {
+    console.log('labTestsListItems', labTestsListItems)
     console.log('invProductsListItems', invProductsListItems)
     if (labTestsListItems.length > 0 && invProductsListItems.length > 0) {
-      const result = labTestsListItems.filter(function (labTestsListItem) {
-        return invProductsListItems.some(function (invProductsListItem) {
-          return labTestsListItem.id === invProductsListItem.category_id
-        })
-      })
-      console.log(result)
       const result1 = invProductsListItems.filter(function (
         invProductsListItem
       ) {
@@ -57,8 +52,12 @@ const FormLabTests: FC<P> = ({
           return labTestsListItem.id === invProductsListItem.category_id
         })
       })
-      console.log(result1)
-      setLabTestsList(result1)
+      console.log('result1', result1)
+      const result = invProductsListItems.filter((o1) =>
+        labTestsListItems.some((o2) => o1.category_id === o2.id)
+      )
+      console.log('result', result)
+      setLabTestsList(result)
     }
   }, [labTestsListItems, invProductsListItems])
 
