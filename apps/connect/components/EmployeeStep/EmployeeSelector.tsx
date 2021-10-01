@@ -5,13 +5,11 @@ import { useOnlineBookableStaffQuery } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
-import moment from 'moment'
 export interface P {
   onSelected: () => void
 }
 
 const EmployeeSelector: FC<P> = ({ onSelected }) => {
-  const [showmodal, setshowmodal] = useState(false)
   const { t } = useTranslationI18()
   const [selectedData, setSelectedData] = useSelectedDataStore()
   const settings = useContext(SettingsContext)
@@ -29,6 +27,21 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
 
   if (errorStaff) return <div>Error!</div>
   if (loadingStaff) return <div>Loading...</div>
+
+  const calculateTotalServiceCost = (serviceUserTiers) => {
+    let totalCost = 0
+    for (const s of selectedData.services) {
+      let servicePrice = s.price
+      for (const ut of serviceUserTiers) {
+        if (ut.service_id === s.id) {
+          servicePrice = ut.price
+        }
+      }
+      totalCost += servicePrice
+    }
+    return totalCost
+  }
+
   return (
     <div className={Styles.mainBox}>
       <h4>{t('connect.onlinebooking.employes.title')}</h4>
@@ -50,20 +63,15 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.userDetail}>
                 <div className={Styles.userdetailInner}>
                   <p className={Styles.userName}>{val.Public_User.full_name}</p>
-                  {val.description && (
-                    <QuestionCircleOutlined
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setshowmodal(true)
-                      }}
-                    />
-                  )}
+                  {false && <QuestionCircleOutlined />}
                 </div>
-                <p>{val?.description}</p>
+                <p>&nbsp;</p>
               </div>
 
               <p className={Styles.userCharge}>
-                {val.charges ? `£${val.charges}` : ''}
+                {`£${calculateTotalServiceCost(
+                  val.Public_User.Public_ServiceUserTier
+                )}`}
               </p>
             </div>
           </div>

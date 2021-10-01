@@ -1,5 +1,6 @@
 import { objectType } from 'nexus'
 import { Context } from '../../../context'
+import { PublicServiceUserTierResponse } from '../../service/nexus-type/Public_ServiceUserTier'
 
 export const PublicStaffResponse = objectType({
   name: 'Public_Staff',
@@ -27,5 +28,15 @@ export const PublicUserResponse = objectType({
     t.int('id')
     t.string('full_name')
     t.string('image')
+    t.list.field('Public_ServiceUserTier', {
+      type: PublicServiceUserTierResponse,
+      resolve(parent, input, ctx: Context) {
+        return ctx.prisma.user
+          .findUnique({
+            where: { id: parent.id || undefined },
+          })
+          .ServiceUserTier()
+      },
+    })
   },
 })

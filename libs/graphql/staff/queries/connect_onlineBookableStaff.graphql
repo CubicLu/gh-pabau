@@ -5,9 +5,14 @@ query onlineBookableStaff($company_id: Int!) {
     Location
     DefaultLocation
     Public_User {
-      image
-      full_name
       id
+      full_name
+      image
+      Public_ServiceUserTier {
+        duration
+        price
+        service_id
+      }
     }
   }
 }

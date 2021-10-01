@@ -233,12 +233,12 @@ export const permissions = shield(
       featureRequestsWeeklyAvg: allow,
       //createOneBooking: allow,
       findFirstCompany: allow,
-      findManyCmStaffGeneral: allow,
       findManyRotaShift: allow,
       Public_MasterCategories: allow,
       Public_ServiceCategories: allow,
       Public_Locations: allow,
       Public_Staff: allow,
+      Public_Shifts: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData

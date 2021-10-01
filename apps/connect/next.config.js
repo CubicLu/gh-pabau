@@ -6,6 +6,14 @@ module.exports = {
   env: {
     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
   },
+  async rewrites() {
+    return [
+      {
+        source: '/online-bookings/:company_slug',
+        destination: '/reports/[company_slug]?company_slug=:company_slug',
+      },
+    ]
+  },
   trailingSlash: false,
   ...withImages({
     fileExtensions: [

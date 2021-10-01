@@ -46,7 +46,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       shift_end: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
     },
   })
-
+  console.log(selectedData)
   const {
     loading: loadingBookings,
     error: errorBookings,
@@ -300,7 +300,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               {selectedData.employee.ID === 0
                 ? t('connect.onlinebooking.date&time.chooseanyone')
                 : `${t('connect.onlinebooking.date&time.d&tfor')} ${
-                    selectedData.employee.User.full_name
+                    selectedData.employee.Public_User.full_name
                   } ${t('connect.onlinebooking.date&time.appointment')}`}
             </h4>
             <div className={Styles.mobileHeader}>
@@ -341,7 +341,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
             {selectedData.employee.ID === 0
               ? t('connect.onlinebooking.date&time.chooseanyone')
               : `${t('conn  ect.onlinebooking.date&time.d&tfor')} ${
-                  selectedData.employee.User.full_name
+                  selectedData.employee.Public_User.full_name
                 } ${t('connect.onlinebooking.date&time.appointment')}`}
           </h4>
           <h4>{selectedDate.format('MMMM YYYY')}</h4>
