@@ -85,7 +85,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   children,
   className,
   onAssigneeClick,
-  customOptionBtn,
+  customOptionBtn = null,
   avatar,
   ...props
 }) => {
@@ -116,7 +116,10 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
           className={styles.fullScreenModalHeader}
           style={{
             borderBottom: hideHeaderEdge ? 'unset' : undefined,
-            gridTemplateColumns: '1fr '.repeat(center ? 3 : 2),
+            gridTemplateColumns:
+              operations?.length > 0 || customOptionBtn
+                ? '1fr '.repeat(center ? 3 : 2)
+                : '1fr',
           }}
         >
           <div>
@@ -136,15 +139,92 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
             </div>
           </div>
           {center && <div className={styles.centeredItem}>{center}</div>}
-          <div className={styles.fullScreenModalOps}>
-            {customOptionBtn && customOptionBtn}
-            {operations.map((operation) => (
-              <React.Fragment key={operation}>
-                {operation === OperationType.active && (
-                  <div
-                    className={styles.operationSwitch}
-                    style={isMobile ? { marginRight: '0px' } : {}}
-                  >
+          {(operations?.length || customOptionBtn) && (
+            <div className={styles.fullScreenModalOps}>
+              {customOptionBtn && customOptionBtn}
+              {operations.map((operation) => (
+                <React.Fragment key={operation}>
+                  {isMobile && operation === OperationType.active && (
+                    <div
+                      className={styles.operationSwitch}
+                      style={isMobile ? { marginRight: '0px' } : {}}
+                    >
+                      {activeBtnText || 'Active'}
+                      <Switch
+                        size="small"
+                        checked={active}
+                        onChange={(checked) => handleChangeActive(checked)}
+                        style={{ marginLeft: '12px' }}
+                      />
+                    </div>
+                  )}
+                  {(!isMobile || forceDesktopOperations) && (
+                    <>
+                      {!active && operation === OperationType.reset && (
+                        <Button
+                          onClick={() => onReset?.()}
+                          style={{ marginRight: '1rem' }}
+                        >
+                          {resetBtnText || 'Reset'}
+                        </Button>
+                      )}
+                      {!active && operation === OperationType.delete && (
+                        <Button
+                          onClick={() => onDelete?.()}
+                          style={{ marginRight: '1rem' }}
+                          type="text"
+                        >
+                          {deleteBtnText || 'Delete'}
+                        </Button>
+                      )}
+                      {!active && operation === OperationType.save && (
+                        <Button
+                          onClick={() => onSave?.()}
+                          style={{ marginRight: '1rem' }}
+                        >
+                          {saveBtnText || 'Save'}
+                        </Button>
+                      )}
+                      {operation === OperationType.assignee && (
+                        <div
+                          className={styles.assigneeWrap}
+                          onClick={onAssigneeClick}
+                        >
+                          <h5>{assigneeTitle}</h5>
+                          <Avatar
+                            className={styles.avatarIcon}
+                            name={assigneeName}
+                            size="large"
+                            src={avatar}
+                            zIndex={1}
+                          />
+                          <h6>{assigneeName}</h6>
+                        </div>
+                      )}
+                      {operation === OperationType.create && (
+                        <Button
+                          type="primary"
+                          disabled={!enableCreateBtn}
+                          onClick={() => onCreate?.()}
+                        >
+                          {createBtnText || 'Create'}
+                        </Button>
+                      )}
+                      {operation === OperationType.close && (
+                        <Button type="text" onClick={() => onClose?.()}>
+                          Esc
+                          <CloseOutlined className={styles.closeIcon} />
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </React.Fragment>
+              ))}
+              {!isMobile &&
+                operations.includes(OperationType.active) &&
+                !props.footer &&
+                !forceDesktopOperations && (
+                  <div className={styles.operationSwitch}>
                     {activeBtnText || 'Active'}
                     <Switch
                       size="small"
@@ -154,83 +234,8 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                     />
                   </div>
                 )}
-                {(!isMobile || forceDesktopOperations) && (
-                  <>
-                    {!active && operation === OperationType.reset && (
-                      <Button
-                        onClick={() => onReset?.()}
-                        style={{ marginRight: '1rem' }}
-                      >
-                        {resetBtnText || 'Reset'}
-                      </Button>
-                    )}
-                    {!active && operation === OperationType.delete && (
-                      <Button
-                        onClick={() => onDelete?.()}
-                        style={{ marginRight: '1rem' }}
-                        type="text"
-                      >
-                        {deleteBtnText || 'Delete'}
-                      </Button>
-                    )}
-                    {!active && operation === OperationType.save && (
-                      <Button
-                        onClick={() => onSave?.()}
-                        style={{ marginRight: '1rem' }}
-                      >
-                        {saveBtnText || 'Save'}
-                      </Button>
-                    )}
-                    {operation === OperationType.assignee && (
-                      <div
-                        className={styles.assigneeWrap}
-                        onClick={onAssigneeClick}
-                      >
-                        <h5>{assigneeTitle}</h5>
-                        <Avatar
-                          className={styles.avatarIcon}
-                          name={assigneeName}
-                          size="large"
-                          src={avatar}
-                          zIndex={1}
-                        />
-                        <h6>{assigneeName}</h6>
-                      </div>
-                    )}
-                    {operation === OperationType.create && (
-                      <Button
-                        type="primary"
-                        disabled={!enableCreateBtn}
-                        onClick={() => onCreate?.()}
-                      >
-                        {createBtnText || 'Create'}
-                      </Button>
-                    )}
-                    {operation === OperationType.close && (
-                      <Button type="text" onClick={() => onClose?.()}>
-                        Esc
-                        <CloseOutlined className={styles.closeIcon} />
-                      </Button>
-                    )}
-                  </>
-                )}
-              </React.Fragment>
-            ))}
-            {isMobile &&
-              operations.includes(OperationType.active) &&
-              !props.footer &&
-              !forceDesktopOperations && (
-                <div className={styles.operationSwitch}>
-                  {activeBtnText || 'Active'}
-                  <Switch
-                    size="small"
-                    checked={active}
-                    onChange={(checked) => handleChangeActive(checked)}
-                    style={{ marginLeft: '12px' }}
-                  />
-                </div>
-              )}
-          </div>
+            </div>
+          )}
         </div>
 
         <ConfigProvider

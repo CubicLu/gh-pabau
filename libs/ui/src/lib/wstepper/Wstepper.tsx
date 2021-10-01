@@ -10,6 +10,8 @@ interface WStepperProps {
   data: StepperItem[]
   disableNextStep?: boolean
   onActiveStepChange?: (index) => void
+  hideNextStep?: boolean
+  hidePrevStep?: boolean
 }
 
 export const Wstepper: React.FC<WStepperProps> = ({
@@ -18,6 +20,8 @@ export const Wstepper: React.FC<WStepperProps> = ({
   data,
   disableNextStep = false,
   onActiveStepChange,
+  hideNextStep = false,
+  hidePrevStep = false,
 }) => {
   const [index, setIndex] = React.useState(0)
 
@@ -45,6 +49,8 @@ export const Wstepper: React.FC<WStepperProps> = ({
         active={index}
         allSteps={data.length}
         disableNextStep={disableNextStep}
+        hideNextStep={hideNextStep}
+        hidePrevStep={hidePrevStep}
       />
     </div>
   )

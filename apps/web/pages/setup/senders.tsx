@@ -9,7 +9,7 @@ import {
   PhoneOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
-import { Breadcrumb, Button, MobileHeader } from '@pabau/ui'
+import { Breadcrumb, Button } from '@pabau/ui'
 import {
   InsertGmailConnectionDocument,
   FindGmailConnectionDocument,
@@ -18,7 +18,7 @@ import { Col, Modal, Popover, Row, Tag, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 import Layout from '../../components/Layout/Layout'
-import { useGridData } from '../../hooks/useGridData'
+import CommonHeader from '../../components/CommonHeader'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
 import { ReactComponent as Google } from '../../assets/images/google.svg'
@@ -93,8 +93,7 @@ export const Communications: React.FC = () => {
   const user = useUser()
   const router = useRouter()
   const { t } = useTranslationI18()
-  const { getParentSetupData } = useGridData(t)
-  const parentMenu = getParentSetupData(router.pathname)
+
   const [showLogin, setShowLogin] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(true)
   const [checkStatus, setCheckStatus] = useState(true)
@@ -115,17 +114,6 @@ export const Communications: React.FC = () => {
       console.log(e)
     },
   })
-
-  const handleBack = () => {
-    if (parentMenu.length > 0) {
-      router.push({
-        pathname: '/setup',
-        query: { menu: parentMenu[0]?.keyValue },
-      })
-    } else {
-      router.push('/setup')
-    }
-  }
 
   const handleRemoveLink = async () => {
     await showConfirm()
@@ -227,155 +215,139 @@ export const Communications: React.FC = () => {
   }
   // console.log('data value:::', data?.gmail_connection.length, isLoggedIn)
   return (
-    <>
-      <div className={styles.desktopViewNone}>
-        {showLogin && (
-          <Login
-            handleGoogleLogin={handleGoogleLogin}
-            checkStatus={checkStatus}
-          />
-        )}
+    <Layout {...user} active={'setup'}>
+      {showLogin && (
+        <Login
+          handleGoogleLogin={handleGoogleLogin}
+          checkStatus={checkStatus}
+        />
+      )}
 
-        {popupGoogle && (
-          <Login
-            handleGoogleLogin={handleGoogleLogin}
-            checkStatus={checkStatus}
-          />
-        )}
+      {popupGoogle && (
+        <Login
+          handleGoogleLogin={handleGoogleLogin}
+          checkStatus={checkStatus}
+        />
+      )}
 
-        {revoke && (
-          <Revoke
-            email={data?.gmail_connection[0].email}
-            companyId={me.company}
-            userId={me.user}
-          />
-        )}
-        <MobileHeader className={styles.mobileHeader}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.mobileHeaderTextStyle}>
-              <LeftOutlined onClick={handleBack} />
-              <p>{t('setup.senders.title')}</p>
-            </div>
-            <div className={styles.mobileHeaderOpsStyle}>
-              <FilterOutlined className={styles.filterIconStyle} />
-              <PlusSquareFilled
-                className={styles.plusIconStyle}
-                onClick={() => router.push('senders/create')}
-              />
-            </div>
+      {revoke && (
+        <Revoke
+          email={data?.gmail_connection[0].email}
+          companyId={me.company}
+          userId={me.user}
+        />
+      )}
+      <CommonHeader
+        isLeftOutlined
+        reversePath="/setup"
+        title={t('setup.senders.title')}
+      >
+        <FilterOutlined className={styles.filterIconStyle} />
+        <PlusSquareFilled
+          className={styles.plusIconStyle}
+          onClick={() => router.push('senders/create')}
+        />
+      </CommonHeader>
+      <div className={styles.cardWrapper}>
+        <div className={styles.cardHeader}>
+          <div>
+            <Breadcrumb
+              items={[
+                { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                { breadcrumbName: t('setup.senders.title'), path: '' },
+              ]}
+            />
+            <Title>{t('setup.senders.title')}</Title>
           </div>
-        </MobileHeader>
-      </div>
-
-      <Layout {...user} active={'setup'}>
-        <div className={styles.cardWrapper}>
-          <div className={styles.cardHeader}>
-            <div>
-              <Breadcrumb
-                breadcrumbItems={[
-                  { breadcrumbName: t('sidebar.setup'), path: 'setup' },
-                  { breadcrumbName: t('setup.senders.title'), path: '' },
-                ]}
-              />
-              <Title>{t('setup.senders.title')}</Title>
-            </div>
-            <div className={styles.actions}>
-              <Button>
-                <FilterOutlined />
-                {t('setup.senders.filter')}
+          <div className={styles.actions}>
+            <Button>
+              <FilterOutlined />
+              {t('setup.senders.filter')}
+            </Button>
+            <Popover placement="bottomRight" content={content} trigger="click">
+              <Button backgroundColor="#54B2D3" className={styles.senderButton}>
+                {t('setup.senders.create')}
+                <DownOutlined />
               </Button>
-              <Popover
-                placement="bottomRight"
-                content={content}
-                trigger="click"
-              >
-                <Button
-                  backgroundColor="#54B2D3"
-                  className={styles.senderButton}
-                >
-                  {t('setup.senders.create')}
-                  <DownOutlined />
-                </Button>
-              </Popover>
-            </div>
-          </div>
-          <div className={styles.cardContent}>
-            <Row gutter={16}>
-              {senderItems.map((item, index) => (
-                <Col span={4} xs={12} sm={8} md={6} key={index}>
-                  <Button
-                    className={styles.senderItem}
-                    onClick={() => router.push(`senders/edit/${item.id}`)}
-                  >
-                    <div className={styles.itemHeader}>
-                      {item.type === 'email' ? (
-                        <MailOutlined className={styles.itemIcon} />
-                      ) : (
-                        <MobileOutlined className={styles.itemIcon} />
-                      )}
-                      <div className={styles.verifiedWrapper}>
-                        {item.isDefaultSender && (
-                          <div className={styles.defaultText}>
-                            {t('setup.senders.default')}
-                          </div>
-                        )}
-                        {item.isEnableReplies && <Verified />}
-                      </div>
-                    </div>
-                    <div className={styles.itemBody}>
-                      <div>{item.fromName}</div>
-                      {item.fromEmail && (
-                        <div className={styles.email}>{item.fromEmail}</div>
-                      )}
-                    </div>
-                  </Button>
-                </Col>
-              ))}
-              {data?.gmail_connection.length > 0 && isLoggedIn && (
-                <Col span={4} xs={12} sm={8} md={6}>
-                  <Button className={styles.senderItem}>
-                    <div className={styles.itemHeader}>
-                      <Google />
-                      <div className={styles.verifiedWrapper}>
-                        <div
-                          className={styles.defaultText}
-                          onClick={() => handleRemoveLink()}
-                        >
-                          <Tag color="red">Stop syncing</Tag>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.itemBody}>
-                      <div>Clinic Bookings</div>
-                      <div className={styles.email}>
-                        {data?.gmail_connection[0].email}
-                      </div>
-                    </div>
-                  </Button>
-                </Col>
-              )}
-              {/*<Col span={4} xs={12} sm={8} md={6}>*/}
-              {/*  <Button className={styles.senderItem}>*/}
-              {/*    <div className={styles.itemHeader}>*/}
-              {/*      <OutLook />*/}
-
-              {/*      <div className={styles.verifiedWrapper}>*/}
-              {/*        <div className={styles.defaultText}>*/}
-              {/*          <Tag color="red">Stop syncing</Tag>*/}
-              {/*        </div>*/}
-              {/*      </div>*/}
-              {/*    </div>*/}
-              {/*    <div className={styles.itemBody}>*/}
-              {/*      <div>Clinic Bookings</div>*/}
-              {/*      <div className={styles.email}>Account</div>*/}
-              {/*    </div>*/}
-              {/*  </Button>*/}
-              {/*</Col>*/}
-            </Row>
+            </Popover>
           </div>
         </div>
-      </Layout>
-    </>
+        <div className={styles.cardContent}>
+          <Row gutter={16}>
+            {senderItems.map((item, index) => (
+              <Col span={4} xs={24} sm={12} md={6} key={index}>
+                <Button
+                  className={styles.senderItem}
+                  onClick={() => router.push(`senders/edit/${item.id}`)}
+                >
+                  <div className={styles.itemHeader}>
+                    {item.type === 'email' ? (
+                      <MailOutlined className={styles.itemIcon} />
+                    ) : (
+                      <MobileOutlined className={styles.itemIcon} />
+                    )}
+                    <div className={styles.verifiedWrapper}>
+                      {item.isDefaultSender && (
+                        <div className={styles.defaultText}>
+                          {t('setup.senders.default')}
+                        </div>
+                      )}
+                      {item.isEnableReplies && <Verified />}
+                    </div>
+                  </div>
+                  <div className={styles.itemBody}>
+                    <div>{item.fromName}</div>
+                    {item.fromEmail && (
+                      <div className={styles.email}>{item.fromEmail}</div>
+                    )}
+                  </div>
+                </Button>
+              </Col>
+            ))}
+            {data?.gmail_connection.length > 0 && isLoggedIn && (
+              <Col span={4} xs={12} sm={8} md={6}>
+                <Button className={styles.senderItem}>
+                  <div className={styles.itemHeader}>
+                    <Google />
+                    <div className={styles.verifiedWrapper}>
+                      <div
+                        className={styles.defaultText}
+                        onClick={() => handleRemoveLink()}
+                      >
+                        <Tag color="red">Stop syncing</Tag>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.itemBody}>
+                    <div>Clinic Bookings</div>
+                    <div className={styles.email}>
+                      {data?.gmail_connection[0].email}
+                    </div>
+                  </div>
+                </Button>
+              </Col>
+            )}
+            {/*<Col span={4} xs={12} sm={8} md={6}>*/}
+            {/*  <Button className={styles.senderItem}>*/}
+            {/*    <div className={styles.itemHeader}>*/}
+            {/*      <OutLook />*/}
+
+            {/*      <div className={styles.verifiedWrapper}>*/}
+            {/*        <div className={styles.defaultText}>*/}
+            {/*          <Tag color="red">Stop syncing</Tag>*/}
+            {/*        </div>*/}
+            {/*      </div>*/}
+            {/*    </div>*/}
+            {/*    <div className={styles.itemBody}>*/}
+            {/*      <div>Clinic Bookings</div>*/}
+            {/*      <div className={styles.email}>Account</div>*/}
+            {/*    </div>*/}
+            {/*  </Button>*/}
+            {/*</Col>*/}
+          </Row>
+        </div>
+      </div>
+    </Layout>
   )
 }
 

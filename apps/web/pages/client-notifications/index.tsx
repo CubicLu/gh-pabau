@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Typography, Modal } from 'antd'
 import { PauseCircleOutlined, MessageOutlined } from '@ant-design/icons'
+import { useUser } from '../../context/UserContext'
 import {
   TabMenu,
   Breadcrumb,
@@ -9,6 +10,7 @@ import {
   DropdownButton as DropDownButton,
 } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
+import useWindowSize from '../../hooks/useWindowSize'
 import CommonHeader from '../../components/CommonHeader'
 import notificationData from '../../assets/notificationData'
 import notificationBannerImage from '../../assets/images/notification-image.png'
@@ -21,6 +23,8 @@ const { Title } = Typography
 const Index: FC = () => {
   const [hideBanner, setHideBanner] = useState(false)
   const { t } = useTranslationI18()
+  const size = useWindowSize()
+  const user = useUser()
 
   const menuItems = [
     {
@@ -82,22 +86,34 @@ const Index: FC = () => {
     }
   }
   return (
-    <>
-      <CommonHeader />
-      <Layout>
-        <NotificationBanner
-          title={t('notifications.banner.title')}
-          desc={t('notifications.banner.desc')}
-          imgPath={notificationBannerImage}
-          allowClose={true}
-          setHide={[hideBanner, setHideBanner]}
-          showPaymentTitle={t('notifications.banner.enablePayment')}
-        />
-        <div className={styles.clientNotificationsContent}>
+    <Layout {...user}>
+      <CommonHeader
+        isLeftOutlined
+        title={t('notifications.breadcrumb.notificationMessage')}
+        reversePath="/setup"
+      >
+        <DropDownButton
+          placement="bottomRight"
+          menuItems={options}
+          onMenuClick={(val) => handleOptionClick(val)}
+        >
+          {t('notifications.manageOptions')}
+        </DropDownButton>
+      </CommonHeader>
+      <NotificationBanner
+        title={t('notifications.banner.title')}
+        desc={t('notifications.banner.desc')}
+        imgPath={notificationBannerImage}
+        allowClose={true}
+        setHide={[hideBanner, setHideBanner]}
+        showPaymentTitle={t('notifications.banner.enablePayment')}
+      />
+      <div className={styles.clientNotificationsContent}>
+        {size.width > 767 && (
           <div className={styles.clientNotificationTop}>
             <div>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   {
                     breadcrumbName: t('notifications.breadcrumb.setup'),
                     path: 'setup',
@@ -124,38 +140,38 @@ const Index: FC = () => {
               </DropDownButton>
             </div>
           </div>
-          <div className={styles.clientInnerNotifciationsDesktop}>
-            <TabMenu
-              tabPosition="left"
-              menuItems={menuItems.map((menuItem) => menuItem.name)}
-              minHeight="592px"
-            >
-              {menuItems.map((item) => (
-                <NotificationMessages
-                  key={item.value}
-                  notificationData={notificationData({ t })?.[item.value]}
-                  onClick={handleNotificationClick}
-                />
-              ))}
-            </TabMenu>
-          </div>
-          <div className={styles.clientInnerNotifciationsMobile}>
-            <TabMenu
-              tabPosition="top"
-              menuItems={menuItems.map((menuItem) => menuItem.name)}
-            >
-              {menuItems.map((item) => (
-                <NotificationMessages
-                  key={item.value}
-                  notificationData={notificationData({ t })?.[item.value]}
-                  onClick={handleNotificationClick}
-                />
-              ))}
-            </TabMenu>
-          </div>
+        )}
+        <div className={styles.clientInnerNotifciationsDesktop}>
+          <TabMenu
+            tabPosition="left"
+            menuItems={menuItems.map((menuItem) => menuItem.name)}
+            minHeight="592px"
+          >
+            {menuItems.map((item) => (
+              <NotificationMessages
+                key={item.value}
+                notificationData={notificationData({ t })?.[item.value]}
+                onClick={handleNotificationClick}
+              />
+            ))}
+          </TabMenu>
         </div>
-      </Layout>
-    </>
+        <div className={styles.clientInnerNotifciationsMobile}>
+          <TabMenu
+            tabPosition="top"
+            menuItems={menuItems.map((menuItem) => menuItem.name)}
+          >
+            {menuItems.map((item) => (
+              <NotificationMessages
+                key={item.value}
+                notificationData={notificationData({ t })?.[item.value]}
+                onClick={handleNotificationClick}
+              />
+            ))}
+          </TabMenu>
+        </div>
+      </div>
+    </Layout>
   )
 }
 

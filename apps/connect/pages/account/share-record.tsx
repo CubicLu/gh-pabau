@@ -31,7 +31,7 @@ export const ShareRecord = () => {
       <div className={styles.shareRecord}>
         <div className={styles.shareRecordHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('account.settings.account.title'),
                 path: 'connect/account',

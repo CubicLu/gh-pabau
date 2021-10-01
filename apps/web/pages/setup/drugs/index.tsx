@@ -1,7 +1,9 @@
 import React, { FC, useState, useEffect } from 'react'
 import { gql, useMutation } from '@apollo/client'
-import { useMedia } from 'react-use'
 import Layout from '../../../components/Layout/Layout'
+import CommonHeader from '../../../components/CommonHeader'
+import useWindowSize from '../../../hooks/useWindowSize'
+import AddButton from '../../../components/AddButton'
 import {
   CreateDrugsModal,
   CreateDrugDataType,
@@ -19,21 +21,15 @@ import {
   Pagination,
   useLiveQuery,
   BasicModal as DeleteModal,
-  ButtonSize as InputSize,
-  Input,
   Notification,
   NotificationType,
 } from '@pabau/ui'
 import { Row, Col } from 'antd'
 import {
-  SearchOutlined,
   ApartmentOutlined,
   EditOutlined,
   DeleteOutlined,
-  PlusSquareFilled,
-  LeftOutlined,
 } from '@ant-design/icons'
-import { useRouter } from 'next/router'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
@@ -156,9 +152,7 @@ export interface P {
 
 export const Index: FC<P> = ({ ...props }) => {
   const { t } = useTranslationI18()
-  const isMobileView = useMedia('(max-width: 767px)', false)
-  const router = useRouter()
-  const [showMobileViewSearch, setShowMobileViewSearch] = useState(false)
+  const size = useWindowSize()
 
   const [isLoading, setIsLoading] = useState(false)
   const [paginationState, setPaginationState] = useState(true)
@@ -270,91 +264,33 @@ export const Index: FC<P> = ({ ...props }) => {
 
   const tabItems = [t('setup.drugs.tab.drugs'), t('setup.drugs.tab.library')]
 
-  const handleBack = () => {
-    router.push('/setup')
-  }
-
-  const dragsHeader = () => (
+  const DrugsHeader = () => (
     <div className={styles.header}>
       <div className="leftDiv">
-        {!isMobileView ? (
-          <>
-            <div>
-              <Breadcrumb
-                breadcrumbItems={[
-                  { breadcrumbName: t('sidebar.setup'), path: 'setup' },
-                  { breadcrumbName: t('setup.drugs.title'), path: 'drugs' },
-                ]}
-              />
-            </div>
-            <h3 className={styles.drugsHeading}>{t('setup.drugs.title')}</h3>
-          </>
-        ) : (
-          <>
-            <LeftOutlined className={styles.backToSetup} onClick={handleBack} />
-            <h3 className={styles.drugsHeadingMobile}>
-              {t('setup.drugs.title')}
-            </h3>
-          </>
-        )}
-      </div>
-      <div className="rightDiv">
-        {isMobileView ? (
-          <span>
-            {!showMobileViewSearch ? (
-              <SearchOutlined
-                className="search-icon"
-                onClick={() =>
-                  setShowMobileViewSearch(
-                    (showMobileViewSearch) => !showMobileViewSearch
-                  )
-                }
-              />
-            ) : (
-              <Input
-                size={InputSize['medium']}
-                placeHolderText={t('setup.drugs.search.placeholder')}
-                suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
-                onChange={(val) => {
-                  setSearchTerm(val)
-                }}
-              />
-            )}
-          </span>
-        ) : (
-          <Input
-            size={InputSize['large']}
-            className={styles.searchDrugsListing}
-            placeHolderText={t('setup.drugs.search.placeholder')}
-            suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
-            onChange={(val) => {
-              setSearchTerm(val)
-            }}
+        <div>
+          <Breadcrumb
+            items={[
+              { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+              { breadcrumbName: t('setup.drugs.title'), path: 'drugs' },
+            ]}
           />
-        )}
-        {showCreateBtn && (
-          <div>
-            {isMobileView ? (
-              <PlusSquareFilled
-                className="plus-btn"
-                onClick={() =>
-                  toggleCreateDrugModal((createDrugModal) => !createDrugModal)
-                }
-              />
-            ) : (
-              <Button
-                type="primary"
-                size="large"
-                onClick={() =>
-                  toggleCreateDrugModal((createDrugModal) => !createDrugModal)
-                }
-              >
-                {t('setup.drugs.create.text')}
-              </Button>
-            )}
-          </div>
-        )}
+        </div>
+        <h3 className={styles.drugsHeading}>{t('setup.drugs.title')}</h3>
       </div>
+      <AddButton
+        onFilterSource={() => false}
+        addFilter={false}
+        schema={{
+          createButtonLabel: t('setup.drugs.create.text'),
+          searchPlaceholder: t('setup.drugs.search.placeholder'),
+        }}
+        isCreateButtonVisible={showCreateBtn}
+        onClick={() => toggleCreateDrugModal(() => !createDrugModal)}
+        tableSearch
+        onSearch={(text) => setSearchTerm(text)}
+        needTranslation
+        searchTerm={searchTerm}
+      />
     </div>
   )
 
@@ -399,7 +335,7 @@ export const Index: FC<P> = ({ ...props }) => {
   )
 
   const [addMutation] = useMutation(ADD_MUTATION, {
-    onCompleted(data) {
+    onCompleted() {
       toggleCreateDrugModal((createDrugModal) => !createDrugModal)
       Notification(
         NotificationType.success,
@@ -416,14 +352,14 @@ export const Index: FC<P> = ({ ...props }) => {
   })
 
   const [editMutation] = useMutation(EDIT_MUTATION, {
-    onCompleted(data) {
+    onCompleted() {
       setEditModal(false)
       Notification(
         NotificationType.success,
         t('setup.drugs.notification.edit.success')
       )
     },
-    onError(err) {
+    onError() {
       Notification(
         NotificationType.error,
         t('setup.drugs.notification.edit.error')
@@ -432,7 +368,7 @@ export const Index: FC<P> = ({ ...props }) => {
   })
 
   const [deleteMutation] = useMutation(DELETE_MUTATION, {
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType.success,
         t('setup.drugs.notification.delete.success')
@@ -480,10 +416,31 @@ export const Index: FC<P> = ({ ...props }) => {
   }
 
   return (
-    <div className={styles.setupDragsContainer}>
-      <Layout>
+    <Layout>
+      <CommonHeader
+        isLeftOutlined
+        reversePath="/setup"
+        title={t('setup.drugs.title')}
+        isShowSearch
+        searchInputPlaceHolder={t('setup.drugs.search.placeholder')}
+        handleSearch={(text) => setSearchTerm(text)}
+        searchValue={searchTerm}
+      >
+        <AddButton
+          onFilterSource={() => false}
+          onSearch={(text) => setSearchTerm(text)}
+          schema={{
+            createButtonLabel: t('setup.drugs.create.text'),
+          }}
+          tableSearch={false}
+          onClick={() => toggleCreateDrugModal(() => !createDrugModal)}
+          needTranslation={false}
+          addFilter={false}
+        />
+      </CommonHeader>
+      <div className={styles.setupDragsContainer}>
         <div className={styles.drugsListingMain}>
-          {dragsHeader()}
+          {size.width > 767 && <DrugsHeader />}
           <div className={styles.body}>
             <TabMenu
               tabPosition="top"
@@ -592,8 +549,8 @@ export const Index: FC<P> = ({ ...props }) => {
             </span>
           </DeleteModal>
         </div>
-      </Layout>
-    </div>
+      </div>
+    </Layout>
   )
 }
 

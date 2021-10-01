@@ -8,18 +8,17 @@ import {
   PhoneNumberInput,
   Notification,
   NotificationType,
-  MobileHeader,
   Preloader,
   useLiveQuery,
 } from '@pabau/ui'
 import Layout from '../../../../components/Layout/Layout'
-import { Typography } from 'antd'
+import { Typography, Layout as AntLayout } from 'antd'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { Form, Input, SubmitButton, Checkbox } from 'formik-antd'
 import { LeftOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
-
+const { Header: AntHeader } = AntLayout
 const { Title } = Typography
 
 const GET_RECORD = gql`
@@ -292,7 +291,7 @@ export const Index: FC = () => {
     </div>
   ) : isMobile ? (
     <div>
-      <MobileHeader className={styles.editLabMobileHeader}>
+      <AntHeader className={styles.editLabMobileHeader}>
         <Formik
           enableReinitialize={true}
           initialValues={response.data}
@@ -342,7 +341,7 @@ export const Index: FC = () => {
             </Form>
           )}
         </Formik>
-      </MobileHeader>
+      </AntHeader>
     </div>
   ) : (
     <Layout active={'Lab'}>
@@ -371,7 +370,7 @@ export const Index: FC = () => {
                 <div className={styles.editHead}>
                   <div className={styles.headBreadTitle}>
                     <Breadcrumb
-                      breadcrumbItems={[
+                      items={[
                         { breadcrumbName: 'Setup', path: 'setup' },
                         { breadcrumbName: 'Labs', path: 'setup/labs' },
                         { breadcrumbName: 'Edit Lab', path: '' },

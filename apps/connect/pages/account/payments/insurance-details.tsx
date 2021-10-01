@@ -26,7 +26,7 @@ const InsuranceDetails: FC = () => {
       <div className={styles.insuranceDetails}>
         <div className={styles.insuranceDetailsHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
                 path: 'connect/account',
