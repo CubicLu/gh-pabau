@@ -12,7 +12,8 @@ import {
   UserGroupListItem,
   MacroItem,
   CompanyListItem,
-  LabListItem,
+  LabTestsListItem,
+  InvProductsListItem,
 } from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
 import className from 'classnames'
@@ -77,9 +78,10 @@ interface MedicalFormBuilderProps {
   emailMessageTemplateItems?: EmailMessageTemplateItem[]
   userListItems?: UserListItem[]
   userGroupListItems?: UserGroupListItem[]
-  labListItems?: LabListItem[]
+  labTestsListItems?: LabTestsListItem[]
   companyServiceListItems?: CompanyListItem[]
   medicalFormMacros?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
 }
 
 export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
@@ -97,9 +99,10 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   emailMessageTemplateItems = [],
   userListItems = [],
   userGroupListItems = [],
-  labListItems = [],
+  labTestsListItems = [],
   medicalFormMacros = [],
   companyServiceListItems = [],
+  invProductsListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
@@ -218,6 +221,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   }
 
   const handleSaveForm = (formData) => {
+    console.log('formData', formData)
     clearCreateFormBtn()
     if (create) {
       if (defaultMedicalForm) {
@@ -307,6 +311,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
             }
             medicalFormType={medicalFormType}
             medicalFormServices={medicalFormServices}
+            labTestsListItems={labTestsListItems}
           />
           {visiblePreview === true && (
             <MedicalFormPreview
@@ -318,7 +323,8 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               onHandleMacro={onHandleMacro}
               medicalFormMacros={medicalFormMacros}
               userGroupListItems={userGroupListItems}
-              labListItems={labListItems}
+              labTestsListItems={labTestsListItems}
+              invProductsListItems={invProductsListItems}
             />
           )}
         </TabPane>

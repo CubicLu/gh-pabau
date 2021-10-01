@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { OptionType, LabListItem } from '@pabau/ui'
+import { OptionType, LabTestsListItem, InvProductsListItem } from '@pabau/ui'
 import { Select } from 'antd'
 import React, { FC, useState, useEffect } from 'react'
 import styles from './FormComponent.module.less'
@@ -10,7 +10,8 @@ interface P {
   desc: string
   paramItems: OptionType[]
   required: boolean
-  labListItems?: LabListItem[]
+  labTestsListItems?: LabTestsListItem[]
+  invProductsListItems?: InvProductsListItem[]
   onChangeArrValue?: (value: string[]) => void
 }
 
@@ -33,19 +34,36 @@ const FormLabTests: FC<P> = ({
   paramItems,
   required = false,
   onChangeArrValue,
-  labListItems = [],
+  labTestsListItems = [],
+  invProductsListItems = [],
 }) => {
   const [addedItems, setaddedItems] = useState<OptionType[]>([])
   const [selectedItem, setSelectedItem] = useState(0)
-  const [labList, setLabList] = useState<LabListItem[]>([])
+  const [labTestsList, setLabTestsList] = useState<InvProductsListItem[]>([])
 
   useEffect(() => {
-    console.log('labListItems', labListItems)
-    setLabList(labListItems)
-  }, [labListItems])
+    console.log('invProductsListItems', invProductsListItems)
+    if (labTestsListItems.length > 0 && invProductsListItems.length > 0) {
+      const result = labTestsListItems.filter(function (labTestsListItem) {
+        return invProductsListItems.some(function (invProductsListItem) {
+          return labTestsListItem.id === invProductsListItem.category_id
+        })
+      })
+      console.log(result)
+      const result1 = invProductsListItems.filter(function (
+        invProductsListItem
+      ) {
+        return labTestsListItems.some(function (labTestsListItem) {
+          return labTestsListItem.id === invProductsListItem.category_id
+        })
+      })
+      console.log(result1)
+      setLabTestsList(result1)
+    }
+  }, [labTestsListItems, invProductsListItems])
 
   const onChange = (value) => {
-    const addedItem = labList.filter((item) => item.id === value)
+    const addedItem = labTestsList.filter((item) => item.id === value)
     if (addedItem.length > 0) {
       const t = {
         id: addedItem[0].id,
@@ -91,7 +109,7 @@ const FormLabTests: FC<P> = ({
       {desc.length > 0 && (
         <div className={styles.formComponentChoiceDescription}>{desc}</div>
       )}
-      {labList.length > 0 && (
+      {labTestsList.length > 0 && (
         <div className={styles.formLabTestsOptions}>
           <Select
             showSearch
@@ -112,10 +130,10 @@ const FormLabTests: FC<P> = ({
             value={selectedItem}
           >
             <Option value={0} key={0}>
-              Select tests to order
+              Select lab tests to order
             </Option>
-            {labList.map((item, index) => (
-              <Option key={'labListItems-' + index} value={item.id}>
+            {labTestsList.map((item, index) => (
+              <Option key={'labTestsListItems-' + index} value={item.id}>
                 {item.name}
               </Option>
             ))}

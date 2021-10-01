@@ -1,4 +1,4 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import { MedicalFormTypes, LabTestsListItem } from '@pabau/ui'
 import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -28,6 +28,7 @@ import vaccineSchedulerIcon from '../../assets/images/medicalform_vaccineschedul
 import SettingElementAdvanced from './SettingElementAdvanced'
 import SettingElementFileUpload from './SettingElementFileUpload'
 import SettingElementMultiOptions from './SettingElementMultiOptions'
+import SettingElementMultiSelect from './SettingElementMultiSelect'
 import SettingElementOption from './SettingElementOption'
 import SettingElementQuestion from './SettingElementQuestion'
 import SettingElementSignature from './SettingElementSignature'
@@ -45,6 +46,7 @@ interface P {
   selectedForm: MedicalFormTypes
   handleSave?: (form: MedicalFormTypes) => void
   handleDelete?: () => void
+  labTestsListItems?: LabTestsListItem[]
 }
 
 const SettingElement: FC<P> = ({
@@ -53,6 +55,7 @@ const SettingElement: FC<P> = ({
   selectedForm,
   handleSave,
   handleDelete,
+  labTestsListItems,
 }) => {
   const { t } = useTranslation('common')
   const [form, setForm] = useState(_.cloneDeep(selectedForm))
@@ -478,6 +481,13 @@ const SettingElement: FC<P> = ({
                 value={form.txtBlock}
                 valueWithTag={form.txtBlockWithTag}
                 onChangeText={onChangeText}
+              />
+            )}
+            {filteredComponent[0].component === 'basic_labtests' && (
+              <SettingElementMultiSelect
+                onChange={eventhandler}
+                paramItems={selectedForm.arrItems ? selectedForm.arrItems : []}
+                options={labTestsListItems}
               />
             )}
             {(filteredComponent[0].component === 'basic_singlechoice' ||

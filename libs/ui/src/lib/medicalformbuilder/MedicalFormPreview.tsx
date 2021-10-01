@@ -2,7 +2,8 @@ import {
   MedicalFormPreview as MedicalFormPreviewPanel,
   MacroItem,
   UserGroupListItem,
-  LabListItem,
+  LabTestsListItem,
+  InvProductsListItem,
 } from '@pabau/ui'
 import React, { FC } from 'react'
 import styles from './MedicalFormBuilder.module.less'
@@ -15,8 +16,9 @@ interface P {
   formName: string
   formSaveLabel?: string
   medicalFormMacros?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
   userGroupListItems?: UserGroupListItem[]
-  labListItems?: LabListItem[]
+  labTestsListItems?: LabTestsListItem[]
 }
 const MedicalFormPreview: FC<P> = ({
   visible,
@@ -26,8 +28,9 @@ const MedicalFormPreview: FC<P> = ({
   formName = '',
   formSaveLabel = '',
   medicalFormMacros = [],
+  invProductsListItems = [],
   userGroupListItems = [],
-  labListItems = [],
+  labTestsListItems = [],
 }) => {
   return (
     <div className={styles.medicalFormEditPanel}>
@@ -50,7 +53,8 @@ const MedicalFormPreview: FC<P> = ({
         onHandleMacro={onHandleMacro}
         medicalFormMacros={medicalFormMacros}
         userGroupListItems={userGroupListItems}
-        labListItems={labListItems}
+        labTestsListItems={labTestsListItems}
+        invProductsListItems={invProductsListItems}
       />
     </div>
   )

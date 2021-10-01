@@ -298,7 +298,7 @@ model Company {
   CreditNoteType                   CreditNoteType[]
   MedicalForm                      MedicalForm[]
   MedicalFormAdvancedSetting       MedicalFormAdvancedSetting[]
-  Lab                              Lab[]
+  // Lab                              Lab[]
   // MedicalFormMacro                 MedicalFormMacro[]
   CmLeadCustomField                CmLeadCustomField[]
   CmLeadCustomFieldOrder           CmLeadCustomFieldOrder[]
@@ -7588,25 +7588,25 @@ model JobStatus {
 //  row_count    Int
 //}
 //
-model Lab {
-  id              Int      @id @default(autoincrement())
-  company_id      Int?
-  is_active       Int
-  lab_name        String
-  lab_email       String
-  lab_street      String
-  lab_street2     String
-  lab_city        String
-  lab_county      String
-  lab_postal      String
-  lab_phone       String
-  lab_provider_no String
-  // CompanyDetails  CompanyDetails @relation(fields: [company_id], references: [company_id])
-  Company         Company? @relation(fields: [company_id], references: [id])
+// model Lab {
+//   id              Int      @id @default(autoincrement())
+//   company_id      Int?
+//   is_active       Int
+//   lab_name        String
+//   lab_email       String
+//   lab_street      String
+//   lab_street2     String
+//   lab_city        String
+//   lab_county      String
+//   lab_postal      String
+//   lab_phone       String
+//   lab_provider_no String
+//   // CompanyDetails  CompanyDetails @relation(fields: [company_id], references: [company_id])
+//   Company         Company? @relation(fields: [company_id], references: [id])
 
-  @@unique([id, company_id], name: "primary")
-  @@map("labs")
-}
+//   @@unique([id, company_id], name: "primary")
+//   @@map("labs")
+// }
 
 //
 //model lab_product_template {

@@ -188,7 +188,13 @@ export interface CompanyListItem {
   name: string
 }
 
-export interface LabListItem {
+export interface LabTestsListItem {
   id: number
   name: string
+}
+
+export interface InvProductsListItem {
+  id: number
+  name: string
+  category_id: number
 }

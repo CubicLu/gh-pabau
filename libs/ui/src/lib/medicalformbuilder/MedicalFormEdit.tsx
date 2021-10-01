@@ -6,6 +6,7 @@ import {
   NotificationType,
   RuleProp,
   CompanyListItem,
+  LabTestsListItem,
 } from '@pabau/ui'
 import { Col, Modal, Row } from 'antd'
 import { cloneDeep, isEqual } from 'lodash'
@@ -275,6 +276,7 @@ const getFormInfo = (form) => {
       form.cssClass === 'select' ||
       form.cssClass === 'staticImage' ||
       form.cssClass === 'diagram_mini' ||
+      form.cssClass === 'labs_tests' ||
       form.cssClass === 'image') &&
     typeof form.values !== 'string'
   ) {
@@ -317,6 +319,7 @@ interface P {
   currentRules?: RuleProp[]
   currentAdvSettings?: MedicaFormAdvanceSettingData
   companyServiceListItems?: CompanyListItem[]
+  labTestsListItems?: LabTestsListItem[]
 }
 
 const MedicalFormEdit: FC<P> = ({
@@ -336,6 +339,7 @@ const MedicalFormEdit: FC<P> = ({
   currentRules = [],
   currentAdvSettings = defaultMedicaFormAdvanceSettingData,
   companyServiceListItems = [],
+  labTestsListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
@@ -357,6 +361,7 @@ const MedicalFormEdit: FC<P> = ({
       const reversedFormObject = {
         form_structure: reversedFormData,
       }
+      console.log('reversedFormObject =', reversedFormObject)
       const formData = btoa(
         unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
       )
@@ -464,6 +469,7 @@ const MedicalFormEdit: FC<P> = ({
   }
 
   const handlingSaveForm = (form) => {
+    console.log('handlingSaveForm', form)
     const index = draggedForms.findIndex((item) => item['id'] === form.id)
     if (index !== -1) {
       draggedForms.splice(index, 1, form)
@@ -869,6 +875,7 @@ const MedicalFormEdit: FC<P> = ({
                 handlingFormSetting={handlingFormSetting}
                 handlingDeleteForm={handlingDeleteForm}
                 handlingSaveForm={handlingSaveForm}
+                labTestsListItems={labTestsListItems}
               />
             )}
           </Col>

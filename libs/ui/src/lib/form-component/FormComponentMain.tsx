@@ -2,7 +2,8 @@ import {
   MedicalFormTypes,
   MacroItem,
   UserGroupListItem,
-  LabListItem,
+  LabTestsListItem,
+  InvProductsListItem,
 } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './FormComponent.module.less'
@@ -15,8 +16,9 @@ interface P {
   processSaveForm?: () => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
   medicalFormMacros?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
   userGroupListItems?: UserGroupListItem[]
-  labListItems?: LabListItem[]
+  labTestsListItems?: LabTestsListItem[]
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
@@ -26,8 +28,9 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
     processSaveForm,
     onHandleMacro,
     medicalFormMacros = [],
+    invProductsListItems = [],
     userGroupListItems = [],
-    labListItems = [],
+    labTestsListItems = [],
   } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   const [macroItems, setMacroItems] = useState<MacroItem[]>([])
@@ -90,7 +93,8 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
               handlingSaveForm={handlingSaveForm}
               onHandleMacro={onHandleMacro}
               macroItems={macroItems}
-              labListItems={labListItems}
+              labTestsListItems={labTestsListItems}
+              invProductsListItems={invProductsListItems}
             />
           </div>
         )

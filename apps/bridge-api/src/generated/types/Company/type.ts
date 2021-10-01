@@ -1533,20 +1533,6 @@ export const Company = objectType({
         return root.MedicalFormAdvancedSetting
       },
     })
-    t.list.field('Lab', {
-      type: 'Lab',
-      args: {
-        where: 'LabWhereInput',
-        orderBy: 'LabOrderByWithRelationInput',
-        cursor: 'LabWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'LabScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.Lab
-      },
-    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {

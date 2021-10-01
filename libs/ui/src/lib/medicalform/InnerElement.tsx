@@ -34,6 +34,7 @@ import InnerMedicalFormRadio from './InnerMedicalFormRadio'
 import InnerMedicalFormRequired from './InnerMedicalFormRequired'
 import InnerMedicalFormSign from './InnerMedicalFormSign'
 import InnerMedicalFormTitle from './InnerMedicalFormTitle'
+import InnerMedicalFormMultiSelect from './InnerMedicalFormMultiSelect'
 
 interface P {
   required: boolean
@@ -439,6 +440,11 @@ export const InnerElement: FC<P> = ({
                   formData.txtQuestion !== '') &&
                   formData.formName === 'basic_multiplechoice' && (
                     <InnerMedicalFormCheckbox options={formData.arrItems} />
+                  )}
+                {((formData.arrItems && formData.arrItems.length > 0) ||
+                  formData.txtQuestion !== '') &&
+                  formData.formName === 'basic_labtests' && (
+                    <InnerMedicalFormMultiSelect options={formData.arrItems} />
                   )}
                 {formData.signData &&
                   formData.signData.length > 0 &&

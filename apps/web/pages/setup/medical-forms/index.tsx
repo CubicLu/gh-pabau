@@ -1,6 +1,5 @@
 import { PlusSquareFilled, SearchOutlined } from '@ant-design/icons'
 import {
-  FindMedicalFormsDocument,
   MedicalFormOrderByWithRelationInput,
   MedicalFormWhereInput,
   MessageTemplateOrderByWithRelationInput,
@@ -9,6 +8,7 @@ import {
   useCreateOneMedicalFormMutation,
   useFindMedicalFormsCountQuery,
   useFindMedicalFormsQuery,
+  FindMedicalFormsDocument,
   useFindMessageTemplateQuery,
   useFindUserQuery,
   useGetBusinessDetailsQuery,
@@ -17,7 +17,8 @@ import {
   useUpdateOneMedicalFormMutation,
   useFindManyUserGroupsQuery,
   useFindManyCompanyServicesQuery,
-  useFindManyLabsQuery,
+  useFindManyLabTestsQuery,
+  useFindInvProductsQuery,
 } from '@pabau/graphql'
 import {
   Breadcrumb,
@@ -35,7 +36,8 @@ import {
   UserListItem,
   UserGroupListItem,
   CompanyListItem,
-  LabListItem,
+  LabTestsListItem,
+  InvProductsListItem,
   useLiveQuery,
   MacroItem,
 } from '@pabau/ui'
@@ -145,7 +147,12 @@ export const Index: FC = () => {
     CompanyListItem[]
   >([])
 
-  const [labListItems, setLabListItems] = useState<LabListItem[]>([])
+  const [labTestsListItems, setLabTestsListItems] = useState<
+    LabTestsListItem[]
+  >([])
+  const [invProductsListItems, setInvProductsListItems] = useState<
+    InvProductsListItem[]
+  >([])
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -252,7 +259,8 @@ export const Index: FC = () => {
 
   const { data: userGroups } = useFindManyUserGroupsQuery()
   const { data: companyServices } = useFindManyCompanyServicesQuery()
-  const { data: labs } = useFindManyLabsQuery()
+  const { data: labTests } = useFindManyLabTestsQuery()
+  const { data: invProducts } = useFindInvProductsQuery()
 
   useEffect(() => {
     if (businessDetails?.data?.me?.Company?.details?.date_format)
@@ -395,15 +403,29 @@ export const Index: FC = () => {
   }, [companyServices])
 
   useEffect(() => {
-    console.log('lab', labs)
-    if (labs?.findManyLab) {
-      const labList = labs?.findManyLab.map((lab) => ({
-        id: lab.id,
-        name: lab.lab_name,
+    console.log('labTests', labTests)
+    if (labTests?.findManyInvCategory) {
+      const labTestsList = labTests?.findManyInvCategory.map((labTest) => ({
+        id: labTest.id,
+        name: labTest.name,
       }))
-      setLabListItems(labList)
+      setLabTestsListItems(labTestsList)
     }
-  }, [labs])
+  }, [labTests])
+
+  useEffect(() => {
+    console.log('invProducts', invProducts)
+    if (invProducts?.findManyInvProduct) {
+      const invProductsList = invProducts?.findManyInvProduct.map(
+        (invProduct) => ({
+          id: invProduct.id,
+          name: invProduct.name,
+          category_id: invProduct.category_id,
+        })
+      )
+      setInvProductsListItems(invProductsList)
+    }
+  }, [invProducts])
 
   const [addMutation] = useCreateOneMedicalFormMutation({
     onCompleted(data) {
@@ -759,7 +781,8 @@ export const Index: FC = () => {
                 emailMessageTemplateItems={emailMessageTemplateItems}
                 userListItems={userListItems}
                 userGroupListItems={userGroupListItems}
-                labListItems={labListItems}
+                labTestsListItems={labTestsListItems}
+                invProductsListItems={invProductsListItems}
                 medicalFormMacros={medicalFormMacros}
                 companyServiceListItems={companyServiceListItems}
               />
@@ -782,7 +805,8 @@ export const Index: FC = () => {
             emailMessageTemplateItems={emailMessageTemplateItems}
             userListItems={userListItems}
             userGroupListItems={userGroupListItems}
-            labListItems={labListItems}
+            labTestsListItems={labTestsListItems}
+            invProductsListItems={invProductsListItems}
             companyServiceListItems={companyServiceListItems}
             medicalFormMacros={medicalFormMacros}
             onSaveForm={saveForm}

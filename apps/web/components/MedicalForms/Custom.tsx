@@ -21,10 +21,11 @@ import {
   Table,
   UserListItem,
   UserGroupListItem,
-  LabListItem,
+  LabTestsListItem,
   CompanyListItem,
   VersionHistory,
   MacroItem,
+  InvProductsListItem,
 } from '@pabau/ui'
 import { Input } from 'antd'
 // import { useRouter } from 'next/router'
@@ -50,8 +51,9 @@ interface CustomProps {
   emailMessageTemplateItems: EmailMessageTemplateItem[]
   userListItems: UserListItem[]
   userGroupListItems: UserGroupListItem[]
-  labListItems: LabListItem[]
+  labTestsListItems: LabTestsListItem[]
   companyServiceListItems: CompanyListItem[]
+  invProductsListItems?: InvProductsListItem[]
   medicalFormMacros: MacroItem[]
   onSaveForm?: (MedicalFormItem) => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
@@ -66,9 +68,10 @@ const Custom: FC<CustomProps> = ({
   emailMessageTemplateItems,
   userListItems,
   userGroupListItems = [],
-  labListItems = [],
+  labTestsListItems = [],
   companyServiceListItems = [],
   medicalFormMacros = [],
+  invProductsListItems = [],
   onSaveForm,
   pagenateParams,
   updatePaginateData,
@@ -301,7 +304,8 @@ const Custom: FC<CustomProps> = ({
                   onHandleMacro={onHandleMacro}
                   medicalFormMacros={medicalFormMacros}
                   userGroupListItems={userGroupListItems}
-                  labListItems={labListItems}
+                  labTestsListItems={labTestsListItems}
+                  invProductsListItems={invProductsListItems}
                 />
               )}
               <Button
@@ -466,9 +470,10 @@ const Custom: FC<CustomProps> = ({
         emailMessageTemplateItems={emailMessageTemplateItems}
         userListItems={userListItems}
         userGroupListItems={userGroupListItems}
-        labListItems={labListItems}
+        labTestsListItems={labTestsListItems}
         medicalFormMacros={medicalFormMacros}
         companyServiceListItems={companyServiceListItems}
+        invProductsListItems={invProductsListItems}
       />
       <div className={styles.paginationContainer}>
         <Pagination
