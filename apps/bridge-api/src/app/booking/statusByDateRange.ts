@@ -1,37 +1,31 @@
 import { uniqBy } from 'lodash'
 import dayjs from 'dayjs'
 
-const weekList = [
-  { label: 'week1' },
-  { label: 'week2' },
-  { label: 'week3' },
-  { label: 'week4' },
-  { label: 'week5' },
-]
+const weekList = ['week1', 'week2', 'week3', 'week4', 'week5']
 
 const dayList = [
-  { label: 'Sun' },
-  { label: 'Mon' },
-  { label: 'Tue' },
-  { label: 'Wed' },
-  { label: 'Thu' },
-  { label: 'Fri' },
-  { label: 'Sat' },
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
 ]
 
 const monthList = [
-  { label: 'Jan' },
-  { label: 'Feb' },
-  { label: 'Mar' },
-  { label: 'Apr' },
-  { label: 'May' },
-  { label: 'Jun' },
-  { label: 'Jul' },
-  { label: 'Aug' },
-  { label: 'Sep' },
-  { label: 'Oct' },
-  { label: 'Nev' },
-  { label: 'Dec' },
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ]
 
 export const statusDataByDayMonth = (range, DataSet, startDate) => {
@@ -41,15 +35,13 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
         const Final_data = []
         let data = []
         data = [
-          ...new Set(
-            DataSet.map((x) => Object.keys(x.dateRange).map((y) => y))
-          ),
+          ...new Set(DataSet.map((x) => x.dateRange[0].map((y) => y.label))),
         ]
         const max =
           data.find(
             (x: []) => x.length === Math.max(...data.map((el: []) => el.length))
           ) ?? []
-        DataSet.map((record) => {
+        DataSet?.map((record) => {
           const result = []
           max?.map((item) =>
             result.push({
@@ -57,11 +49,11 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
               value: 0,
             })
           )
-          if (record.status && record.dateRange) {
-            Object.keys(record.dateRange).map((key) => {
-              const index = result.findIndex((item) => item.label === key)
+          if (record.status && record.dateRange[0]) {
+            record.dateRange[0].map((key) => {
+              const index = result.findIndex((item) => item.label === key.label)
               if (index >= 0) {
-                result[index].value = record.dateRange[key].length
+                result[index].value += key.value
               }
               return key
             })
@@ -80,30 +72,31 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
         const Final_data = []
         DataSet.map((record) => {
           const result = []
-          weekList?.map((item) =>
+          weekList.map((item) =>
             result.push({
-              label: item.label,
+              label: item,
               value: 0,
             })
           )
-          if (record.status && record.dateRange) {
-            Object.keys(record.dateRange).map((key) => {
-              const diff = dayjs(key).diff(startDate, 'day')
+          if (record.status && record.dateRange[0]) {
+            record.dateRange[0].map((key) => {
+              const date = dayjs(key.label).format('YYYY-MM-DD')
+              const diff = dayjs(date).diff(startDate, 'day')
               switch (true) {
                 case diff >= 0 && diff <= 6:
-                  result[0].value = record.dateRange[key].length
+                  result[0].value += key.value
                   break
                 case diff >= 7 && diff <= 13:
-                  result[1].value = record.dateRange[key].length
+                  result[1].value += key.value
                   break
                 case diff >= 14 && diff <= 20:
-                  result[2].value = record.dateRange[key].length
+                  result[2].value += key.value
                   break
                 case diff >= 21 && diff <= 27:
-                  result[3].value = record.dateRange[key].length
+                  result[3].value += key.value
                   break
                 case diff >= 28:
-                  result[4].value = record.dateRange[key].length
+                  result[4].value += key.value
                   break
               }
               return key
@@ -121,19 +114,19 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
     case 'This Week':
       {
         const Final_data = []
-        DataSet.map((record) => {
+        DataSet?.map((record) => {
           const result = []
           dayList?.map((item) =>
             result.push({
-              label: item.label,
+              label: item,
               value: 0,
             })
           )
-          if (record.status && record.dateRange) {
-            Object.keys(record.dateRange).map((key) => {
-              const index = result.findIndex((item) => item.label === key)
+          if (record.status && record.dateRange[0]) {
+            record.dateRange[0].map((key) => {
+              const index = result.findIndex((item) => item.label === key.label)
               if (index >= 0) {
-                result[index].value = record.dateRange[key].length
+                result[index].value += key.value
               }
               return key
             })
@@ -150,19 +143,19 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
     case 'This Year':
       {
         const Final_data = []
-        DataSet.map((record) => {
+        DataSet?.map((record) => {
           const result = []
           monthList?.map((item) =>
             result.push({
-              label: item.label,
+              label: item,
               value: 0,
             })
           )
-          if (record.status && record.dateRange) {
-            Object.keys(record.dateRange).map((key) => {
-              const index = result.findIndex((item) => item.label === key)
+          if (record.status && record.dateRange[0]) {
+            record.dateRange[0].map((key) => {
+              const index = result.findIndex((item) => item.label === key.label)
               if (index >= 0) {
-                result[index].value = record.dateRange[key].length
+                result[index].value += key.value
               }
               return key
             })

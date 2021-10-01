@@ -17,7 +17,6 @@ import {
 import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
 import { statusDataByDayMonth } from '../booking/statusByDateRange'
-import { groupBy } from 'lodash'
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -1257,42 +1256,30 @@ export const retrieveSalesCount = async (
     'YYYY-MM-DDTHH:mm:ssZ'
   )
   const SalesList = []
-  const salesCount = await ctx.prisma.saleItem.groupBy({
-    by: ['product_category_type'],
-    where:
-      start_date !== 'Invalid Date'
-        ? {
-            NOT: [{ InvSale: null }],
-            InvSale: {
-              date: {
-                gte: start_date,
-                lte: end_date,
-              },
-            },
-            product_category_type: {
-              not: '',
-            },
-          }
-        : {
-            NOT: [{ InvSale: null }],
-            product_category_type: {
-              not: '',
-            },
-          },
-    _count: {
-      id: true,
-    },
-  })
-  salesCount?.map((item) => {
+  let sale = []
+  if (data.start_date && data.end_date) {
+    sale = await ctx.prisma
+      .$queryRaw`select product_category_type, count(sale_id) from inv_sale_items a
+    inner join inv_sales b on b.id=a.sale_id
+    WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('')
+    group by product_category_type`
+  } else {
+    sale = await ctx.prisma
+      .$queryRaw`select product_category_type, count(sale_id) from inv_sale_items a
+    inner join inv_sales b on b.id=a.sale_id
+    WHERE sale_id>0 and product_category_type not in ('')
+    group by product_category_type`
+  }
+  sale?.map((item) => {
     if (item.product_category_type !== '') {
       SalesList.push({
         label: item.product_category_type,
-        count: item._count.id,
+        count: item['count(sale_id)'],
         per:
           (
-            ((item._count.id ?? 0) * 100) /
-            salesCount?.reduce((prev, cur) => {
-              return prev + cur._count.id ?? 0
+            ((item['count(sale_id)'] ?? 0) * 100) /
+            sale?.reduce((prev, cur) => {
+              return prev + cur['count(sale_id)'] ?? 0
             }, 0)
           ).toFixed(2) + '%',
       })
@@ -1300,17 +1287,17 @@ export const retrieveSalesCount = async (
     return item
   })
   return {
-    totalAvailableCategoryTypeCount: salesCount?.reduce((prev, cur) => {
-      return prev + cur._count.id ?? 0
+    totalAvailableCategoryTypeCount: sale?.reduce((prev, cur) => {
+      return prev + cur['count(sale_id)'] ?? 0
     }, 0),
     totalAvailableCategoryTypePer: `${
-      salesCount?.length > 0
-        ? (salesCount?.reduce((prev, cur) => {
-            return prev + cur._count.id ?? 0
+      sale?.length > 0
+        ? (sale?.reduce((prev, cur) => {
+            return prev + cur['count(sale_id)'] ?? 0
           }, 0) *
             100) /
-          salesCount?.reduce((prev, cur) => {
-            return prev + cur._count.id ?? 0
+          sale?.reduce((prev, cur) => {
+            return prev + cur['count(sale_id)'] ?? 0
           }, 0)
         : 0
     }%`,
@@ -1323,8 +1310,8 @@ export const retrieveSalesChartData = async (
   data: DateRangeInput
 ) => {
   let final = []
-  const details = []
-  const DataSet = []
+  let sale
+  let saleDataSet = []
   const start_date = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
     'YYYY-MM-DDTHH:mm:ssZ'
   )
@@ -1342,130 +1329,86 @@ export const retrieveSalesChartData = async (
   const week = dayjs(endDate).diff(startDate, 'week')
   const day = dayjs(endDate).diff(startDate, 'day')
 
-  const allSalesCount = await ctx.prisma.saleItem.groupBy({
-    by: ['product_category_type'],
-    where:
-      start_date !== 'Invalid Date'
-        ? {
-            NOT: [{ InvSale: null }],
-            InvSale: {
-              date: {
-                gte: start_date,
-                lte: end_date,
-              },
-            },
-            product_category_type: {
-              not: '',
-            },
-          }
-        : {
-            NOT: [{ InvSale: null }],
-            product_category_type: {
-              not: '',
-            },
-          },
-    _count: {
-      id: true,
-    },
-  })
-  const allSalesCountData = await ctx.prisma.saleItem.findMany({
-    where:
-      start_date !== 'Invalid Date'
-        ? {
-            NOT: [{ InvSale: null }],
-            InvSale: {
-              date: {
-                gte: start_date,
-                lte: end_date,
-              },
-            },
-            product_category_type: {
-              not: '',
-            },
-          }
-        : {
-            NOT: [{ InvSale: null }],
-            product_category_type: {
-              not: '',
-            },
-          },
-    select: {
-      product_category_type: true,
-      InvSale: {
-        select: {
-          date: true,
-        },
-      },
-    },
-  })
-  allSalesCount?.map((status) => {
-    const data = allSalesCountData?.filter(
-      (item) => item.product_category_type === status?.product_category_type
-    )
-    details.push({
-      key: status?.product_category_type,
-      values: [...new Set(data.map((item) => item?.InvSale?.date))].filter(
-        (item) => !!item
-      ),
-    })
-    return status
-  })
-
-  if (details?.length > 0) {
-    details.map((record) => {
-      switch (true) {
-        case year > 0:
-          DataSet.push({
-            status: record?.key,
-            dateRange: groupBy(data, (item) =>
-              dayjs(`${item}`).startOf('year').format('YYYY')
-            ),
-          })
-          final = statusDataByDayMonth('All records', DataSet, startDate)
-          break
-        case month > 0:
-          DataSet.push({
-            status: record?.key,
-            dateRange: groupBy(data, (item) =>
-              dayjs(`${item}`).startOf('month').format('MMM')
-            ),
-          })
-          final = statusDataByDayMonth('This Year', DataSet, startDate)
-          break
-        case week > 0:
-          DataSet.push({
-            status: record?.key,
-            dateRange: groupBy(data, (item) =>
-              dayjs(`${item}`).startOf('week')
-            ),
-          })
-          final = statusDataByDayMonth('This Month', DataSet, startDate)
-          break
-        case day > 0:
-          DataSet.push({
-            status: record?.key,
-            dateRange: groupBy(data, (item) =>
-              dayjs(`${item}`).startOf('day').format('ddd')
-            ),
-          })
-          final = statusDataByDayMonth('This Week', DataSet, startDate)
-          break
-        default:
-          DataSet.push({
-            status: record?.key,
-            dateRange: groupBy(data, (item) =>
-              dayjs(`${item}`).startOf('year').format('YYYY')
-            ),
-          })
-          final = statusDataByDayMonth('All records', DataSet, startDate)
+  const getSalesDataSet = (saleSet) => {
+    const dataset = []
+    saleSet.map((record) => {
+      const index = dataset.findIndex(
+        (item) => item.product_category_type === record.product_category_type
+      )
+      if (index === -1) {
+        const filter = saleSet.filter(
+          (item) => item.product_category_type === record.product_category_type
+        )
+        const result = []
+        dataset.push({
+          status: record.product_category_type,
+          dateRange: filter.map((i) => {
+            result.push({
+              label: i.grouping,
+              value: i['count(sale_id)'],
+            })
+            return result
+          }),
+        })
       }
-      return record
+      return dataset
     })
-  } else {
-    final = null
+    return dataset
   }
 
+  switch (true) {
+    case year > 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('')
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('All records', saleDataSet, startDate)
+      break
+    case month > 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        MONTHNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('')
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('This Year', saleDataSet, startDate)
+      break
+    case week > 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        DATE(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('')
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('This Month', saleDataSet, startDate)
+      break
+    case day >= 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        DAYNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('')
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('This Week', saleDataSet, startDate)
+      break
+    default:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE product_category_type not in ('')
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('All records', saleDataSet, startDate)
+      break
+  }
   return {
-    salesByProductCategoryType: final,
+    salesByProductCategoryType: final ?? null,
   }
 }

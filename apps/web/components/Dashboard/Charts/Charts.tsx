@@ -42,7 +42,7 @@ export const Charts: FC<ICharts> = ({
   totalSalesCount,
 }) => {
   const List = []
-  if (salesData) {
+  if (salesData && salesData.length > 0) {
     salesData.map((item) => {
       List.push({
         type: 'line',
@@ -121,14 +121,15 @@ export const Charts: FC<ICharts> = ({
           color: '#9292A3',
         },
       },
-      categories: salesData
-        ? [...new Set(salesData[0].data?.map((item) => item.label))]
-        : [],
+      categories:
+        salesData && salesData.length > 0
+          ? [...new Set(salesData[0]?.data?.map((item) => item.label))]
+          : [],
     },
   }
   const dataList = []
-  if (BookingData) {
-    BookingData?.map((item) => {
+  if (BookingData && BookingData.length > 0) {
+    BookingData.map((item) => {
       dataList.push({
         name: item.status,
         allowPointSelect: true,
@@ -189,9 +190,10 @@ export const Charts: FC<ICharts> = ({
           color: '#9292A3',
         },
       },
-      categories: BookingData
-        ? [...new Set(BookingData[0].data?.map((item) => item.label))]
-        : [],
+      categories:
+        BookingData && BookingData.length > 0
+          ? [...new Set(BookingData[0]?.data?.map((item) => item.label))]
+          : [],
     },
     yAxis: [
       {
