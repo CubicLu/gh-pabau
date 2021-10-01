@@ -1,16 +1,14 @@
 import React, { FC, useState } from 'react'
-import { useRouter } from 'next/router'
 import { useMedia } from 'react-use'
 import { Button, TabMenu } from '@pabau/ui'
 import { Row, Col, Card } from 'antd'
 import { Breadcrumb } from '@pabau/ui'
-import { LeftOutlined } from '@ant-design/icons'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/PosConfiguration/General'
 import Appearance from '../../../components/Setup/Settings/PosConfiguration/Appearance'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import CommonHeader from '../../../components/CommonHeader'
 import styles from './pos-configuration.module.less'
-import { useGridData } from '../../../hooks/useGridData'
 import { useUser } from '../../../context/UserContext'
 
 interface P {
@@ -20,7 +18,6 @@ interface P {
 
 const PosConfiguration: FC<P> = () => {
   const { t } = useTranslationI18()
-  const router = useRouter()
   const user = useUser()
   const PosConfigObj = {
     general: {
@@ -201,24 +198,6 @@ const PosConfiguration: FC<P> = () => {
   const handleSave = (): void => {
     console.log('Save Object', posConfigObj)
   }
-  const { getParentSetupData } = useGridData(t)
-  let path = router.pathname
-  const pathArray = router.pathname.split('/')
-  if (pathArray.length > 3) {
-    pathArray.pop()
-    path = pathArray.join('/')
-  }
-  const parentMenu = getParentSetupData(path)
-  const handleBack = () => {
-    if (parentMenu.length > 0) {
-      router.push({
-        pathname: '/setup',
-        query: { menu: parentMenu[0]?.keyValue },
-      })
-    } else {
-      router.push('/setup')
-    }
-  }
 
   const tabItems = [
     t('setup.settings.pos.configuration.tab.items.general'),
@@ -228,34 +207,17 @@ const PosConfiguration: FC<P> = () => {
   return (
     <div className={styles.mainWrapper}>
       <Layout {...user}>
+        <CommonHeader
+          title={t('setup.settings.pos.configuration.header')}
+          isLeftOutlined
+          reversePath="/setup"
+        />
         <Card className={styles.posConfigurationContainer}>
-          <div className={styles.hideDesktopView}>
-            <Row className={styles.mobDevice}>
-              <Col>
-                <div className={styles.mobTopHead}>
-                  <div className={styles.mobTopHeadRow}>
-                    <LeftOutlined onClick={handleBack} />{' '}
-                    <h6>
-                      {' '}
-                      {t(
-                        'setup.settings.pos.configuration.point.settings.title'
-                      )}
-                    </h6>
-                  </div>
-                  <p>
-                    {t(
-                      'setup.settings.pos.configuration.point.settings.sub.title'
-                    )}
-                  </p>
-                </div>
-              </Col>
-            </Row>
-          </div>
           <div className={styles.hideMobileView}>
-            <Row className={styles.mainWrapper}>
+            <Row>
               <Col span={20} className={styles.titleWrapper}>
                 <Breadcrumb
-                  breadcrumbItems={[
+                  items={[
                     {
                       breadcrumbName: t(
                         'setup.settings.pos.configuration.point.settings.breadcrumb.setup'
@@ -277,7 +239,7 @@ const PosConfiguration: FC<P> = () => {
                   </p>
                 </div>
               </Col>
-              <Col span={'auto'} className={styles.titleSaveBtn}>
+              <Col span={4} className={styles.titleSaveBtn}>
                 <Button
                   type="primary"
                   className={styles.saveBtn}

@@ -23,10 +23,10 @@ export const Payments = () => {
       <div className={styles.payments}>
         <div className={styles.paymentsHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
-                path: '/account',
+                path: 'account',
               },
               {
                 breadcrumbName: t('connect.account.payments'),

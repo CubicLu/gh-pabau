@@ -216,7 +216,7 @@ export const Appointments = () => {
         <div className={styles.appointments}>
           <div className={styles.appointmentsHeader}>
             <Breadcrumb
-              breadcrumbItems={[
+              items={[
                 {
                   breadcrumbName: t('connect.account.title'),
                   path: 'account',

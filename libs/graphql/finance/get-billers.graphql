@@ -1,0 +1,17 @@
+query getBillers($service_id: Int = 0) {
+  billers: findManyInvBiller(where: {User: {deleted: {not: {equals: 1}}}}, orderBy: {name: asc}) {
+    id
+    name
+    email
+    company_id
+    is_disabled
+    User {
+      id
+      full_name
+      image
+      ServiceUserPrice(where: {service_id: {equals: $service_id}}) {
+        price
+      }
+    }
+  }
+}

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import LayoutComponent from '../../components/Layout/Layout'
+import { useUser } from '../../context/UserContext'
+import useWindowSize from '../../hooks/useWindowSize'
 import { Layout, Tabs } from 'antd'
-import { useMedia } from 'react-use'
+import AddButton from '../../components/AddButton'
 import styles from './clients.module.less'
 import ClientsHeader from '../../components/Clients/ClientsHeader'
 import LeftSideBar from '../../components/Clients/LeftSideBar'
@@ -52,8 +54,8 @@ export const Clients = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [active, setActive] = useState(true)
   const { t } = useTranslationI18()
-
-  const isMobile = useMedia('(max-width: 768px)', false)
+  const size = useWindowSize()
+  const user = useUser()
 
   useEffect(() => {
     selectedTab === tab.archived ? setIsArchived(true) : setIsArchived(false)
@@ -128,28 +130,33 @@ export const Clients = () => {
 
   return (
     <div>
-      <CommonHeader
-        title={t('clients.commonHeader')}
-        isShowSearch={false}
-        displayCreateButton={true}
-        handleCreate={toggleCreateClientModal}
-      />
-      <LayoutComponent active={'clients'} isDisplayingFooter={false}>
+      <LayoutComponent active={'clients'} isDisplayingFooter={false} {...user}>
+        <CommonHeader
+          isShowSearch
+          searchInputPlaceHolder={t('clients.header.search.placeHolder')}
+          handleSearch={(searchTerm) => setSearchText(searchTerm)}
+          title={t('clients.commonHeader')}
+          searchValue={searchText}
+        >
+          <AddButton
+            onClick={toggleCreateClientModal}
+            onFilterSource={() => false}
+            addFilter={true}
+            schema={{
+              createButtonLabel: t('setup.taxrate.newbtn'),
+            }}
+            tableSearch={false}
+            needTranslation={true}
+          />
+        </CommonHeader>
         <div>
-          {isMobile && (
+          {size.width < 768 && (
             <Tabs
               style={{ minHeight: '0vh' }}
               className={styles.tabContentWrap}
               onChange={(val) => setSelectedTab(val)}
               defaultActiveKey={selectedTab}
             >
-              <div>
-                <ClientsHeader
-                  searchText={searchText}
-                  setSearchText={setSearchText}
-                  toggleCreateClientModal={toggleCreateClientModal}
-                />
-              </div>
               <TabPane tab={t('clients.leftSidebar.clients')} key={tab.clients}>
                 {renderContentTable}
               </TabPane>
@@ -173,7 +180,7 @@ export const Clients = () => {
               </TabPane>
             </Tabs>
           )}
-          {!isMobile && (
+          {size.width > 767 && (
             <div>
               <ClientsHeader
                 searchText={searchText}
