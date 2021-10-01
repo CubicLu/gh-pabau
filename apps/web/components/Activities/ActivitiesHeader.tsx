@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react'
-import { Input, Popover, Divider } from 'antd'
+import { Input, Popover, Divider, Tooltip } from 'antd'
 import {
   DownOutlined,
   FilterOutlined,
@@ -9,27 +9,49 @@ import {
   PlusOutlined,
   CheckOutlined,
   EditOutlined,
+  LockOutlined,
+  UnlockOutlined,
 } from '@ant-design/icons'
-import { Button, TabMenu, Avatar, CustomScrollbar } from '@pabau/ui'
+import {
+  Button,
+  TabMenu,
+  Avatar,
+  CustomScrollbar,
+  SetupSearchInput,
+} from '@pabau/ui'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from '../../pages/activities/index.module.less'
 import { ActivitiesDataProps } from '../../pages/activities'
 import classNames from 'classnames'
 import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
-import { useUserGroupForActivityQuery } from '@pabau/graphql'
-import { PersonList } from './FilterMenu'
-import { CreateFilterModal } from './CreateFilterModal'
-import { OptionList } from './FilterMenu'
+import { useUserGroupForActivityQuery, useUpsertOneActivityUserStateMutation, useFilterOptionForActivityQuery } from '@pabau/graphql'
+import { PersonList, OptionList } from './FilterMenu'
+import { CreateFilterModal, FilterOptionType, InitialValueTypes, FilterDataProps } from './CreateFilterModal'
+import Highlighter from 'react-highlight-words'
+
+interface FilterOptionItemType {
+  id: number
+  name: string
+  shared: boolean
+  owner: string
+  userId: number
+  updated_at: Date
+  columns: string[]
+  andFilterOption: FilterOptionType
+  orFilterOption: FilterOptionType
+}
 
 interface ClientsHeaderProps {
   totalActivity: number
+  selectedColumn: string[]
+  filterData: FilterDataProps
   sourceData?: ActivitiesDataProps[]
   searchText?: string
   setSearchText?: (term: string) => void
   createActivityVisible?: boolean
   toggleCreateActivityModal?: () => void
-  selectFilterUser?: string
+  selectFilterUser?: number[]
   setSelectFilterUser?: (val) => void
   personsList?: PersonList[]
   isMobile?: boolean
@@ -37,14 +59,28 @@ interface ClientsHeaderProps {
   activityTypeOption?: OptionList[]
 }
 
-const UserWithIcon = ({
+interface UserWithIconProps {
+  image: string
+  name: string
+  id: number
+  filterValue: number
+  setFilterValue: (value: number) => void
+  t
+  isLoggedInUser?: boolean
+  needHighlighter?: boolean
+  searchValue?: string
+}
+
+const UserWithIcon: FC<UserWithIconProps> = ({
   image,
   name,
   id,
   filterValue,
   setFilterValue,
-  isLoggedInUser = false,
   t,
+  isLoggedInUser = false,
+  needHighlighter = false,
+  searchValue,
 }) => {
   return (
     <div
@@ -56,7 +92,17 @@ const UserWithIcon = ({
     >
       <div className={styles.userTab}>
         <Avatar src={image} name={name} size={28} />
-        <h4>{name}</h4>
+        {needHighlighter ? (
+          <h4>
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={[searchValue]}
+              textToHighlight={name}
+            />
+          </h4>
+        ) : (
+          <h4>{name}</h4>
+        )}
         {isLoggedInUser && (
           <span className={styles.youText}>
             {t('activity.filter.popover.user.you.label')}
@@ -82,63 +128,51 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     isMobile,
     loggedUser,
     activityTypeOption,
+    filterData,
+    selectedColumn
   }) => {
     const { t } = useTranslationI18()
     const [visible, setVisible] = useState(false)
     const [userGroup, setUserGroup] = useState([])
-    const [filterOption, setFilterOption] = useState([
-      {
-        id: 1,
-        name: '2  Month Report - Outstanding',
-        isSelected: true,
-      },
-      {
-        id: 2,
-        name: 'All outstanding inbound leads',
-        isSelected: false,
-      },
-      {
-        id: 3,
-        name: 'Deal created last month',
-        isSelected: false,
-      },
-      {
-        id: 4,
-        name: 'FT View',
-        isSelected: false,
-      },
-      {
-        id: 5,
-        name: 'FT View',
-        isSelected: false,
-      },
-      {
-        id: 6,
-        name: 'FT View',
-        isSelected: false,
-      },
-      {
-        id: 7,
-        name: 'FT View',
-        isSelected: false,
-      },
-      {
-        id: 8,
-        name: 'FT View',
-        isSelected: false,
-      },
-      {
-        id: 9,
-        name: 'FT View',
-        isSelected: false,
-      },
-    ])
-    const [userList, setUserList] = useState([])
+    const [filterOption, setFilterOption] = useState<FilterOptionItemType[]>([])
+    const [userList, setUserList] = useState<PersonList[]>([])
     const [showModal, setShowModal] = useState(false)
     const [searchValue, setSearchValue] = useState('')
     const [filterValue, setFilterValue] = useState<number>(0)
+    const [filterGroupValue, setFilterGroupValue] = useState<number>()
+    const [activeFilterId, setActiveFilterId] = useState<number>()
+    const [filterUserList, setFilterUserList] = useState<PersonList[]>([])
+    const [filterUserGroup, setFilterUserGroup] = useState([])
+    const [filterOptionItem, setFilterOptionItem] = useState<
+      FilterOptionItemType[]
+    >([])
+    const [searchItemCount, setSearchItemCount] = useState<number>(0)
+    const [filterModalData, setFilterModalData] = useState<InitialValueTypes>()
 
     const { data: userGroupData } = useUserGroupForActivityQuery()
+    const { data: userFilterData } = useFilterOptionForActivityQuery({
+      variables: {
+        userId: loggedUser?.user,
+      },
+    })
+    const [upsertActiveColumn] = useUpsertOneActivityUserStateMutation()
+
+    useEffect(() => {
+      if (filterData.type === 'user') {
+        setFilterValue(filterData.id)
+        setSelectFilterUser([filterData.id])
+      } else if (filterData.type === 'userGroup') {
+        setFilterGroupValue(filterData.id)
+        setFilterValue(undefined)
+        const item =
+          userGroup.find((group) => group.id === filterData.id)?.userId ?? []
+        setSelectFilterUser([...item])
+      } else if (filterData.type === 'filter') {
+        setFilterValue(undefined)
+        setActiveFilterId(filterData.id)
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filterData, userGroup])
 
     useEffect(() => {
       if (personsList.length > 0) {
@@ -150,8 +184,8 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     }, [personsList, loggedUser])
 
     useEffect(() => {
-      if (userGroupData?.findManyUserGroup) {
-        const groupData = userGroupData.findManyUserGroup
+      if (userGroupData?.userGroup) {
+        const groupData = userGroupData.userGroup
           ?.map((item) => {
             if (item._count?.UserGroupMember !== 0) {
               return {
@@ -170,23 +204,116 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
       }
     }, [userGroupData])
 
+    useEffect(() => {
+      if (userFilterData?.filterOption) {
+        const filterData = userFilterData.filterOption
+          ?.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+              shared: item.shared,
+              userId: item.user_id,
+              owner: item.User?.full_name,
+              updated_at: item.updated_at,
+              isFilterOwner: item.user_id === loggedUser?.user,
+              columns: JSON.parse(item.columns)?.columns ?? [],
+              andFilterOption: JSON.parse(item.data)?.andFilterOption ?? [],
+              orFilterOption: JSON.parse(item.data)?.orFilterOption ?? [],
+            }
+          })
+          .filter((item) => item)
+        console.log('isFilterOwner---------------', filterData)
+        setFilterOption(filterData)
+      }
+    }, [userFilterData])
+
+    useEffect(() => {
+      if (searchValue) {
+        const userSearchResult = personsList
+          .map((item) => {
+            if (item?.name?.toLowerCase().includes(searchValue.toLowerCase())) {
+              return item
+            }
+            return undefined
+          })
+          .filter((item) => item)
+        const userGroupSearchResult = userGroup
+          .map((item) => {
+            if (item?.name?.toLowerCase().includes(searchValue.toLowerCase())) {
+              return item
+            }
+            return undefined
+          })
+          .filter((item) => item)
+        const filterSearchResult = filterOption
+          .map((item) => {
+            if (item?.name?.toLowerCase().includes(searchValue.toLowerCase())) {
+              return item
+            }
+            return undefined
+          })
+          .filter((item) => item)
+        const totalCount =
+          userSearchResult.length +
+          userGroupSearchResult.length +
+          filterSearchResult.length
+        setSearchItemCount(totalCount)
+        setFilterUserList(userSearchResult)
+        setFilterUserGroup(userGroupSearchResult)
+        setFilterOptionItem(filterSearchResult)
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchValue])
+
     const filterContent = () => {
-      const UserGroupWithIcon = ({ name, memberCount, id }) => {
+      const UserGroupWithIcon = ({
+        name,
+        memberCount,
+        id,
+        userId,
+        needHighlighter = false,
+      }) => {
         return (
           <div
             className={classNames(
               styles.userSubWrapper,
-              filterValue === id && styles.active
+              filterGroupValue === id && styles.active
             )}
-            onClick={() => setFilterValue(id)}
+            onClick={async () => {
+              setFilterGroupValue(id)
+              setFilterValue(undefined)
+              setActiveFilterId(undefined)
+              setSelectFilterUser([...userId])
+              await upsertActiveColumn({
+                variables: {
+                  userGroupFilterId: id,
+                  userId: loggedUser?.user,
+                  companyId: loggedUser?.company,
+                  update: {
+                    user_group_filter: { set: id },
+                    user_filter: { set: null },
+                  },
+                },
+              })
+            }}
           >
             <div className={styles.subChildWrapper}>
               <div className={styles.avtarIcon}>
                 <Avatar icon={<UsergroupAddOutlined />} size={28} />
               </div>
               <div className={styles.subChildContent}>
-                <h6>{name}</h6>
-                <span>
+                {needHighlighter ? (
+                  <h6>
+                    <Highlighter
+                      highlightClassName={styles.highlight}
+                      searchWords={[searchValue]}
+                      textToHighlight={name}
+                    />
+                  </h6>
+                ) : (
+                  <h6>{name}</h6>
+                )}
+                <span className={styles.countText}>
                   {t('activityList.filter.userGroup.memberCount', {
                     count: memberCount,
                   })}
@@ -195,154 +322,330 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             </div>
             <span className={styles.checkIcon}>
               {' '}
-              {filterValue === id && <CheckOutlined />}
+              {filterGroupValue === id && <CheckOutlined />}
             </span>
           </div>
         )
       }
 
-      const OnFilterOptionChange = (id) => {
-        const filterValue = [...filterOption].map((item) => {
-          if (item.id === id) {
-            item.isSelected = true
-          } else {
-            item.isSelected = false
-          }
-          return item
-        })
-        setFilterOption(filterValue)
-      }
-
       const ownerTabContent = (
-        <>
-          <CustomScrollbar
-            autoHide={true}
-            style={{ width: '300px', height: '300px' }}
-          >
-            <div className={styles.userContentList}>
-              <div
-                className={classNames(
-                  styles.titleWrapper,
-                  filterValue === 0 && styles.active
-                )}
-                onClick={() => setFilterValue(0)}
-              >
-                <h4>{t('activity.filter.popover.owner.everyone.label')}</h4>
-                {filterValue === 0 && <CheckOutlined />}
-              </div>
-              <UserWithIcon
-                image={loggedUser?.imageUrl && getImage(loggedUser?.imageUrl)}
-                name={loggedUser?.fullName}
-                id={10}
-                filterValue={filterValue}
-                setFilterValue={setFilterValue}
-                isLoggedInUser={true}
-                t={t}
-              />
-              <Divider />
-              {userGroup.map((item) => (
-                <div key={item.id}>
-                  <UserGroupWithIcon
-                    name={item.name}
-                    memberCount={item.memberCount}
-                    id={item.id}
-                  />
-                </div>
-              ))}
-              {userGroup.length > 0 && <Divider />}
-              {userList.map((data) => (
-                <div key={data.id}>
-                  <UserWithIcon
-                    id={data.id}
-                    name={data.name}
-                    image={data?.avatarURL && getImage(data?.avatarURL)}
-                    filterValue={filterValue}
-                    setFilterValue={setFilterValue}
-                    t={t}
-                  />
-                </div>
-              ))}
-            </div>
-          </CustomScrollbar>
-          <div className={styles.footerBtn}>
-            <Button
-              type="default"
-              icon={<PlusOutlined />}
-              onClick={() => setShowModal(true)}
+        <CustomScrollbar
+          autoHide={true}
+          style={{ width: '300px', height: '300px' }}
+        >
+          <div className={styles.userContentList}>
+            <div
+              className={classNames(
+                styles.titleWrapper,
+                filterValue === 0 && styles.active
+              )}
+              onClick={async () => {
+                setFilterValue(0)
+                setFilterGroupValue(undefined)
+                setActiveFilterId(undefined)
+                setSelectFilterUser([])
+                await upsertActiveColumn({
+                  variables: {
+                    userFilterId: 0,
+                    userId: loggedUser?.user,
+                    companyId: loggedUser?.company,
+                    update: {
+                      user_filter: { set: 0 },
+                      user_group_filter: { set: null },
+                      custom_filter: { set: null }
+                    },
+                  },
+                })
+              }}
             >
-              {t('activity.filter.popover.add.new.filter.label')}
-            </Button>
-          </div>
-        </>
-      )
-
-      const filterTabContent = (
-        <>
-          <CustomScrollbar
-            autoHide={true}
-            style={{ width: '300px', height: '300px' }}
-          >
-            {filterOption.map((item) => (
-              <div
-                key={item.id}
-                className={classNames(
-                  styles.filterOption,
-                  item.isSelected && styles.active
-                )}
-                onClick={() => OnFilterOptionChange(item.id)}
-              >
-                <span>{item.name}</span>
-                <div
-                  className={styles.iconWrapper}
-                  onClick={() => setShowModal(true)}
-                >
-                  <EditOutlined />{' '}
-                  <span className={styles.checkIcon}>
-                    {item.isSelected && <CheckOutlined />}
-                  </span>
-                </div>
+              <h4>{t('activity.filter.popover.owner.everyone.label')}</h4>
+              {filterValue === 0 && <CheckOutlined />}
+            </div>
+            <UserWithIcon
+              image={loggedUser?.imageUrl && getImage(loggedUser?.imageUrl)}
+              name={loggedUser?.fullName}
+              id={loggedUser?.user}
+              filterValue={filterValue}
+              setFilterValue={async (id) => {
+                setFilterValue(id)
+                setFilterGroupValue(undefined)
+                setActiveFilterId(undefined)
+                setSelectFilterUser([id])
+                await upsertActiveColumn({
+                  variables: {
+                    userFilterId: id,
+                    userId: loggedUser?.user,
+                    companyId: loggedUser?.company,
+                    update: {
+                      user_filter: { set: id },
+                      user_group_filter: { set: null },
+                      custom_filter: { set: null }
+                    },
+                  },
+                })
+              }}
+              isLoggedInUser={true}
+              t={t}
+            />
+            <Divider />
+            {userGroup.map((item) => (
+              <div key={item.id}>
+                <UserGroupWithIcon
+                  name={item.name}
+                  memberCount={item.memberCount}
+                  id={item.id}
+                  userId={item.userId}
+                />
               </div>
             ))}
-          </CustomScrollbar>
-          <div className={styles.footerBtn}>
-            <Button
-              type="default"
-              icon={<PlusOutlined />}
-              onClick={() => setShowModal(true)}
-            >
-              {t('activity.filter.popover.add.new.filter.label')}
-            </Button>
+            {userGroup.length > 0 && <Divider />}
+            {userList.map((data) => (
+              <div key={data.id}>
+                <UserWithIcon
+                  id={data.id}
+                  name={data.name}
+                  image={data?.avatarURL && getImage(data?.avatarURL)}
+                  filterValue={filterValue}
+                  setFilterValue={async (id) => {
+                    setFilterValue(id)
+                    setFilterGroupValue(undefined)
+                    setActiveFilterId(undefined)
+                    setSelectFilterUser([id])
+                    await upsertActiveColumn({
+                      variables: {
+                        userFilterId: id,
+                        userId: loggedUser?.user,
+                        companyId: loggedUser?.company,
+                        update: {
+                          user_filter: { set: id },
+                          user_group_filter: { set: null },
+                          custom_filter: { set: null }
+                        },
+                      },
+                    })
+                  }}
+                  t={t}
+                />
+              </div>
+            ))}
           </div>
-        </>
+        </CustomScrollbar>
+      )
+
+      const onEditIconClick = (item) => {
+        let modalData = {
+          name: item.name,
+          isFilterOwner: item.isFilterOwner,
+          andFilterOption: item.andFilterOption,
+          orFilterOption: item.orFilterOption,
+          id: item.id,
+          visibility: item.shared ? 'shared' : 'private',
+          saveFilter: item.columns?.length > 0,
+          creatorName: item.owner,
+          lastUpdatedDate: item.updated_at
+        }
+        setFilterModalData(modalData)
+        setShowModal(true)
+      }
+
+      const renderFilter = (items, needHighlighter = false) => {
+        return items.map((item) => (
+          <div
+            key={item.id}
+            className={classNames(
+              styles.filterOption,
+              activeFilterId === item.id && styles.active
+            )}
+          >
+            <div className={styles.filterCategory} onClick={async () => {
+              setActiveFilterId(item.id)
+              setFilterGroupValue(undefined)
+              setFilterValue(undefined)
+              await upsertActiveColumn({
+                variables: {
+                  customFilterId: item.id,
+                  userId: loggedUser?.user,
+                  companyId: loggedUser?.company,
+                  update: {
+                    user_filter: { set: null },
+                    user_group_filter: { set: null },
+                    custom_filter: { set: item.id },
+                  },
+                },
+              })
+            }}>
+              <div>{item.shared ? <UnlockOutlined /> : <LockOutlined />}</div>
+              <span className={styles.itemName}>
+                {needHighlighter ? (
+                  <Highlighter
+                    highlightClassName={styles.highlight}
+                    searchWords={[searchValue]}
+                    textToHighlight={item.name}
+                  />
+                ) : (
+                  item.name
+                )}
+              </span>
+            </div>
+            <div
+              className={styles.iconWrapper}
+              onClick={() => onEditIconClick(item)}
+            >
+              {item.userId === loggedUser.user ? (
+                <EditOutlined />
+              ) : (
+                <div className={styles.strikeWrapper}>
+                  <Tooltip
+                    title={t('create.filter.modal.shared.filter.tooltip', {
+                      name: item.owner,
+                    })}
+                  >
+                    <div className={styles.strikeLine}>
+                      <EditOutlined />
+                    </div>
+                  </Tooltip>
+                </div>
+              )}{' '}
+              <span className={styles.checkIcon}>
+                {activeFilterId === item.id && <CheckOutlined />}
+              </span>
+            </div>
+          </div>
+        ))
+      }
+
+      const filterTabContent = (
+        <CustomScrollbar
+          autoHide={true}
+          style={{ width: '300px', height: '300px' }}
+        >
+          {renderFilter(filterOption)}
+        </CustomScrollbar>
       )
 
       return (
         <div className={styles.filterBody}>
           <h5>{t('activity.filter.popover.title')}</h5>
-          <Input
-            allowClear
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            addonAfter={<SearchOutlined />}
-            placeholder={t('activity.filter.popover.search.input.placeholder')}
-          />
-          <TabMenu
-            menuItems={[
-              t('activity.filter.popover.owner.tab.label'),
-              t('activity.filter.popover.filter.tab.label'),
-            ]}
-            tabPosition="top"
-            minHeight="1px"
-          >
-            {ownerTabContent}
-            {filterTabContent}
-          </TabMenu>
+          <div className={styles.searchInput}>
+            <SetupSearchInput
+              onChange={(e) => setSearchValue(e)}
+              placeholder={t(
+                'activity.filter.popover.search.input.placeholder'
+              )}
+            />
+          </div>
+          {searchValue ? (
+            !searchItemCount ? (
+              <div className={styles.filterNotFound}>
+                <h5>{t('create.filter.modal.no.search.label')}</h5>
+                <h6>{t('create.filter.modal.no.search.desc')}</h6>
+              </div>
+            ) : (
+              <CustomScrollbar
+                autoHide={true}
+                style={{ width: '300px', height: '300px' }}
+              >
+                <div className={styles.filterLabel}>
+                  {t('create.filter.modal.search.result.match.label', {
+                    count: searchItemCount,
+                  })}
+                </div>
+                {filterUserGroup.length > 0 && (
+                  <div className={styles.filterUserGroup}>
+                    {filterUserGroup.map((item) => (
+                      <div key={item.id}>
+                        <UserGroupWithIcon
+                          name={item.name}
+                          memberCount={item.memberCount}
+                          id={item.id}
+                          userId={item.userId}
+                          needHighlighter={true}
+                        />
+                      </div>
+                    ))}
+                    <Divider />
+                  </div>
+                )}
+                {filterUserList.length > 0 && (
+                  <div>
+                    {filterUserList.map((data) => (
+                      <div key={data.id}>
+                        <UserWithIcon
+                          id={data.id}
+                          name={data.name}
+                          image={data?.avatarURL && getImage(data?.avatarURL)}
+                          filterValue={filterValue}
+                          setFilterValue={async (id) => {
+                            setFilterValue(id)
+                            setSelectFilterUser([id])
+                            await upsertActiveColumn({
+                              variables: {
+                                userFilterId: id,
+                                userId: loggedUser?.user,
+                                companyId: loggedUser?.company,
+                                update: {
+                                  user_filter: { set: id },
+                                  user_group_filter: { set: null },
+                                  custom_filter: { set: null },
+                                },
+                              },
+                            })
+                          }}
+                          t={t}
+                          needHighlighter={true}
+                          searchValue={searchValue}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {filterOptionItem.length > 0 && (
+                  <div className={styles.filterUserGroup}>
+                    <Divider />
+                    <div>{renderFilter(filterOptionItem, true)}</div>
+                  </div>
+                )}
+              </CustomScrollbar>
+            )
+          ) : (
+            <TabMenu
+              menuItems={[
+                t('activity.filter.popover.owner.tab.label'),
+                t('activity.filter.popover.filter.tab.label'),
+              ]}
+              tabPosition="top"
+              minHeight="1px"
+            >
+              {ownerTabContent}
+              {filterTabContent}
+            </TabMenu>
+          )}
+          <div className={styles.footerBtn}>
+            <Button
+              type="default"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setFilterModalData(undefined)
+                setShowModal(true)
+              }}
+            >
+              {t('activity.filter.popover.add.new.filter.label')}
+            </Button>
+          </div>
           <CreateFilterModal
             showModal={showModal}
             setShowModal={() => setShowModal(false)}
             userList={userList}
             activityTypeOption={activityTypeOption}
             loggedUser={loggedUser}
+            data={filterModalData}
+            selectedColumn={selectedColumn}
+            upsertActiveColumn={upsertActiveColumn}
+            setSelectFilterUser={setSelectFilterUser}
+            setFilterValue={setFilterValue}
+            setActiveFilterId={setActiveFilterId}
+            activeFilterId={activeFilterId}
+            filterData={filterData}
           />
         </div>
       )

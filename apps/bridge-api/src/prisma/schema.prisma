@@ -311,10 +311,11 @@ model Company {
   Activity                         Activity[]
   ContactPreference                ContactPreference[]
 
-  ActivityUserColumns ActivityUserColumns[]
-  ActivityType        ActivityType[]
-  Album               PhotoAlbum[]
+  ActivityUserState ActivityUserState[]
+  ActivityType      ActivityType[]
+  Album             PhotoAlbum[]
 
+  ActivityUserFilters ActivityUserFilters[]
   @@map("admin")
 }
 
@@ -2131,17 +2132,37 @@ model ActivityType {
   @@map("activity_types")
 }
 
-model ActivityUserColumns {
-  id         Int     @id @default(autoincrement())
-  user_id    Int
-  columns    String
-  company_id Int
-  Company    Company @relation(fields: [company_id], references: [id])
-  User       User?   @relation(fields: [user_id], references: [id])
+model ActivityUserState {
+  id                Int     @id @default(autoincrement())
+  user_id           Int
+  columns           String?
+  company_id        Int
+  user_filter       Int?
+  user_group_filter Int?
+  custom_filter     Int?
+  Company           Company @relation(fields: [company_id], references: [id])
+  User              User?   @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, company_id], name: "company_id_user_id")
   @@index([company_id, user_id], name: "activity_user_columns_user_id_company_id__index")
-  @@map("activity_user_columns")
+  @@map("activity_user_state")
+}
+
+model ActivityUserFilters {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  company_id Int
+  name       String
+  columns    String?
+  data       String?
+  shared     Boolean   @default(true)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  User       User      @relation(fields: [user_id], references: [id])
+  Company    Company   @relation(fields: [company_id], references: [id])
+
+  @@index([company_id, user_id], name: "activity_user_filters_company_id_user_id__index")
+  @@map("activity_user_filters")
 }
 
 model Activity {
@@ -12671,7 +12692,8 @@ model User {
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
 
   PasswordResetAuth   PasswordResetAuth[]
-  ActivityUserColumns ActivityUserColumns[]
+  ActivityUserState   ActivityUserState[]
+  ActivityUserFilters ActivityUserFilters[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
@@ -14436,6 +14458,11 @@ enum company_branches_attachments_type {
 enum company_details_tax_name {
   VAT
   GST
+}
+
+enum filter_type {
+  Owner
+  Filter
 }
 
 enum company_services_deposit_type {

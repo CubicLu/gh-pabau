@@ -109,7 +109,7 @@ export const permissions = shield(
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
 
       //Activity
-      upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
+      upsertOneActivityUserState: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -208,11 +208,16 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptSharedCompanyData
       ),
-      findFirstActivityUserColumns: and(
+      findFirstActivityUserState: and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.injectUser
       ),
+      // findManyActivityUserFilters: and(
+      //   rules.authentication.isAuthenticated,
+      //   rules.interceptors.injectUser,
+      //   rules.interceptors.interceptAccessToCompanyData
+      // ),
       // Debug
       ping: allow,
       version: allow,

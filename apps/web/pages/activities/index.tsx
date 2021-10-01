@@ -7,7 +7,9 @@ import React, {
   useMemo,
 } from 'react'
 import Layout from '../../components/Layout/Layout'
-import ActivitiesHeader from '../../components/Activities/ActivitiesHeader'
+import ActivitiesHeader, {
+  FilterDataProps,
+} from '../../components/Activities/ActivitiesHeader'
 import ActivitiesTable from '../../components/Activities/ActivitiesTable'
 import { OptionList } from '../../components/Activities/FilterMenu'
 import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
@@ -29,7 +31,7 @@ import {
   useGetActivityTypesQuery,
   useActivityUserListQuery,
   useFindManyActivityDataQuery,
-  useFindFirstActivityUserColumnsQuery,
+  useFindFirstActivityUserStateQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
@@ -192,7 +194,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [selectedDates, setSelectedDates] = useState<Dayjs[]>([])
   const [createActivityVisible, setCreateActivityVisible] = useState(false)
   const [events, setEvents] = useState<EventsData[]>([])
-  const [selectFilterUser, setSelectFilterUser] = useState()
+  const [selectFilterUser, setSelectFilterUser] = useState<number[]>([])
   const [personsList, setPersonsList] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   // const [overdueCount, setOverDueCount] = useState(0)
@@ -219,6 +221,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     currentPage: 1,
     showingRecords: 0,
   })
+  const [userFilterData, setUserFilterData] = useState<FilterDataProps>({})
   const [activityTypeLoading, setActivityTypeLoading] = useState<boolean>(true)
   const [selectedColumn, setSelectedColumn] = useState<string[]>([])
   const [userActiveColumn, setUserActiveColumn] = useState<string[]>([])
@@ -229,6 +232,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
+  console.log('userActiveColumn---------------------', userActiveColumn)
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
@@ -248,7 +252,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
       delete queryOptions.variables.search
       delete queryOptions.variables.activeColumns
     }
-    if (!selectFilterUser) {
+    if (selectFilterUser.length === 0) {
       delete queryOptions.variables.userId
     }
     if (tabValue === 'To do') {
@@ -279,7 +283,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const {
     data: activityActiveResponse,
     loading: activityActiveLoading,
-  } = useFindFirstActivityUserColumnsQuery()
+  } = useFindFirstActivityUserStateQuery()
 
   const {
     loading: filterLoading,
@@ -475,11 +479,30 @@ export const Index: FC<IndexProps> = ({ client }) => {
   // }, [])
 
   useEffect(() => {
-    if (activityActiveResponse?.findFirstActivityUserColumns) {
+    if (activityActiveResponse?.findFirstActivityUserState) {
       const data = JSON.parse(
-        activityActiveResponse?.findFirstActivityUserColumns?.columns
+        activityActiveResponse?.findFirstActivityUserState?.columns
       )
-      const column = data?.columns
+      const column = data?.columns ?? []
+      const temp: FilterDataProps = {}
+      if (activityActiveResponse?.findFirstActivityUserState?.user_filter) {
+        temp.type = 'user'
+        temp.id =
+          activityActiveResponse?.findFirstActivityUserState?.user_filter
+      } else if (
+        activityActiveResponse?.findFirstActivityUserState?.custom_filter
+      ) {
+        temp.type = 'filter'
+        temp.id =
+          activityActiveResponse?.findFirstActivityUserState?.custom_filter
+      } else if (
+        activityActiveResponse?.findFirstActivityUserState?.user_group_filter
+      ) {
+        temp.type = 'userGroup'
+        temp.id =
+          activityActiveResponse?.findFirstActivityUserState?.user_group_filter
+      }
+      setUserFilterData(temp)
       setUserActiveColumn(column)
     }
   }, [activityActiveResponse])
@@ -1099,6 +1122,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
             isMobile={isMobile}
             loggedUser={loggedUser?.me}
             activityTypeOption={activityTypeOption}
+            filterData={userFilterData}
+            selectedColumn={selectedColumn}
           />
         )}
         <div>
@@ -1154,6 +1179,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
             isMobile={isMobile}
             loggedUser={loggedUser?.me}
             activityTypeOption={activityTypeOption}
+            filterData={userFilterData}
+            selectedColumn={selectedColumn}
           />
         )}
         {/* <div className={styles.subHeader}>

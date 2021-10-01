@@ -417,6 +417,9 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           columns: JSON.stringify({ columns: activeColumns }),
           userId: loggedUser?.user,
           companyId: loggedUser?.company,
+          update: {
+            columns: { set: JSON.stringify({ columns: activeColumns }) },
+          },
         },
       })
     }
@@ -601,6 +604,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
                     </Radio.Button>
                   </Radio.Group>
                   <div className={styles.checkboxRadioWrapper}>
+                    {console.log('filterOptions---------------', filterOptions)}
                     {selectedTab === 'client'
                       ? prepareClientOptions(filterOptions)
                       : filterOptions
@@ -608,7 +612,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
                           .filter(
                             (data) =>
                               !defaultColumnList.some(
-                                (item) => item.value === data.value
+                                (item) => {
+                                  console.log('item' ,item)
+                                  return item.value === data.value
+                                }
                               )
                           )
                           .map((data, i) => {

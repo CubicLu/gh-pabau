@@ -16,7 +16,7 @@ export const retrieveActivityGraphData = async (
       ActivityType: { name: { in: input.where?.activityType } },
       status: { in: input.where?.status },
       AssignedUser: {
-        id: { equals: input.where?.userId },
+        id: { in: input.where?.userId },
       },
       AND: {
         OR: searchQuery,

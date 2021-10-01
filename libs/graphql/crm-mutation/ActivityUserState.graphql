@@ -1,0 +1,46 @@
+fragment ActivityUserStateFields on ActivityUserState {
+  id
+  user_id
+  columns
+  company_id
+  user_filter
+  user_group_filter
+  custom_filter
+}
+
+fragment ActivityUserState on ActivityUserState {
+  ...ActivityUserStateFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneActivityUserState($data: ActivityUserStateCreateInput!) {
+  createOneActivityUserState(data: $data) {
+    ...ActivityUserState
+  }
+}
+
+mutation updateOneActivityUserState($where: ActivityUserStateWhereUniqueInput!, $data: ActivityUserStateUpdateInput!) {
+  updateOneActivityUserState(where: $where, data: $data) {
+    ...ActivityUserState
+  }
+}
+
+mutation deleteOneActivityUserState($where: ActivityUserStateWhereUniqueInput!) {
+  deleteOneActivityUserState(where: $where) {
+    ...ActivityUserState
+  }
+}
+
+mutation updateManyActivityUserState(
+  $where: ActivityUserStateWhereInput
+  $data: ActivityUserStateUpdateManyMutationInput!
+) {
+  updateManyActivityUserState(where: $where, data: $data) {
+    count
+  }
+}

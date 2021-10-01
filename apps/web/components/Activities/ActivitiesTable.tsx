@@ -41,7 +41,7 @@ import {
 import dayjs from 'dayjs'
 import * as Icon from '@ant-design/icons'
 import searchEmpty from '../../assets/images/empty.png'
-import { useUpsertOneActivityUserColumnsMutation } from '@pabau/graphql'
+import { useUpsertOneActivityUserStateMutation } from '@pabau/graphql'
 import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
 import { DisplayDateTime, DisplayDate } from '../../hooks/displayDate'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
@@ -187,7 +187,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     )
 
     const [columns, setColumns] = useState([])
-    const [upsertActiveColumn] = useUpsertOneActivityUserColumnsMutation({
+    const [upsertActiveColumn] = useUpsertOneActivityUserStateMutation({
       onCompleted() {
         Notification(
           NotificationType.success,
@@ -1428,6 +1428,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
             columns: JSON.stringify({ columns: activeColumnName }),
             userId: loggedUser?.user,
             companyId: loggedUser?.company,
+            update: {
+              columns: { set: JSON.stringify({ columns: activeColumnName }) },
+            },
           },
         })
       },

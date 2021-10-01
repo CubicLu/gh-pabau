@@ -623,18 +623,32 @@ export const User = objectType({
         return root.PasswordResetAuth
       },
     })
-    t.list.field('ActivityUserColumns', {
-      type: 'ActivityUserColumns',
+    t.list.field('ActivityUserState', {
+      type: 'ActivityUserState',
       args: {
-        where: 'ActivityUserColumnsWhereInput',
-        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
-        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        where: 'ActivityUserStateWhereInput',
+        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        cursor: 'ActivityUserStateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ActivityUserColumnsScalarFieldEnum',
+        distinct: 'ActivityUserStateScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ActivityUserColumns
+        return root.ActivityUserState
+      },
+    })
+    t.list.field('ActivityUserFilters', {
+      type: 'ActivityUserFilters',
+      args: {
+        where: 'ActivityUserFiltersWhereInput',
+        orderBy: 'ActivityUserFiltersOrderByWithRelationInput',
+        cursor: 'ActivityUserFiltersWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserFiltersScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserFilters
       },
     })
     t.nullable.field('_count', {

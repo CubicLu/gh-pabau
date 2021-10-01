@@ -1,7 +1,7 @@
-import React, { useState, FC } from 'react'
+import React, { useState, FC, useEffect } from 'react'
 import { Formik } from 'formik'
 import { Dropdown, Menu, Radio, Space } from 'antd'
-import { BasicModal, Button, DropdownWithCheck } from '@pabau/ui'
+import { BasicModal, Button, DropdownWithCheck, Notification, NotificationType } from '@pabau/ui'
 import { Checkbox, Form, Input as FormikInput, SubmitButton } from 'formik-antd'
 import { getData } from './FilterOptionData'
 import { FilterMenu, PersonList, OptionList } from './FilterMenu'
@@ -19,19 +19,33 @@ import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { TFunction } from 'react-i18next'
 import * as Yup from 'yup'
+import classNames from 'classnames'
+import { DisplayDate } from '../../hooks/displayDate'
+import { MutationFunction } from '@apollo/client'
+import { useDeleteActivityUserFilterMutation, FilterOptionForActivityDocument, useCreateActivityFilterMutation, useUpdateActivityFilterMutation } from '@pabau/graphql'
+import { values } from 'lodash'
 
-interface FilterOptionType {
+export interface FilterDataProps {
+  id?: number
+  type?: string
+}
+
+export interface FilterOptionType {
   type: string
   filterColumn: string
   operand: string
   menuOption: string | number
 }
-interface InitialValueTypes {
+export interface InitialValueTypes {
+  id: number
   name: string
   visibility: string
+  isFilterOwner: boolean
   saveFilter: boolean
   andFilterOption: FilterOptionType[]
   orFilterOption: FilterOptionType[]
+  creatorName?: string
+  lastUpdatedDate?: Date
 }
 
 interface FilterMenuProps {
@@ -42,8 +56,10 @@ interface FilterMenuProps {
   ) => void
   fieldName: string
   userList: PersonList[]
+  isFilterOwner: boolean
   activityTypeOption: OptionList[]
   loggedUser: Partial<AuthenticatedUser> & JwtUser
+  isEdit: boolean
   t: TFunction<'common'>
 }
 
@@ -53,13 +69,25 @@ interface CreateFilterModalProps {
   userList: PersonList[]
   activityTypeOption: OptionList[]
   loggedUser: Partial<AuthenticatedUser> & JwtUser
+  selectedColumn: string[]
+  upsertActiveColumn: MutationFunction
+  setSelectFilterUser: (item: string[]) => void
+  setFilterValue: (item: number) => void
+  setActiveFilterId: (item: number) => void
+  activeFilterId: number
+  filterData: FilterDataProps
+  data?: InitialValueTypes
 }
 const defaultValue: InitialValueTypes = {
   name: '',
+  id: undefined,
   visibility: 'private',
+  isFilterOwner: true,
   saveFilter: false,
   andFilterOption: [],
   orFilterOption: [],
+  creatorName: '',
+  lastUpdatedDate: undefined,
 }
 
 const RenderFilterMenu: FC<FilterMenuProps> = ({
@@ -69,6 +97,8 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
   userList,
   activityTypeOption = [],
   loggedUser,
+  isFilterOwner,
+  isEdit,
   t,
 }) => {
   const { activityItemNames, manageOperandBasedOnColumn, activity } = getData(t)
@@ -97,6 +127,9 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
       if (value === 'Type') {
         data[index].menuOption = 1
       }
+      if (value === 'Add time' || value === 'Due date') {
+        data[index].menuOption = 'last quarter'
+      }
     }
     setFieldValue(fieldName, data)
   }
@@ -113,6 +146,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             defaultValue={'Activity'}
             dropdownItems={activity}
             value={item.type}
+            disabled={!isFilterOwner}
           />
           <DropdownWithCheck
             dropdownClassName={styles.filterColumnWrap}
@@ -123,6 +157,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             }
             showSearch
             filterOption={true}
+            disabled={!isFilterOwner}
             dropdownItems={activityItemNames}
           />
           <DropdownWithCheck
@@ -134,6 +169,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             }
             dropdownItems={manageOperandBasedOnColumn?.[item.filterColumn]}
             showSearch
+            disabled={!isFilterOwner}
             filterOption={true}
           />
           <div className={styles.filterMenuWrapper}>
@@ -146,14 +182,16 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
                 activityItemChange(value, index, 'menuOption')
               }
               userId={loggedUser.user}
+              disabled={!isFilterOwner}
+              isEdit={isEdit}
             />
           </div>
-          <span
-            onClick={() => removeFilterMenu(index)}
-            className={styles.minusBlock}
+          <div
+            onClick={() => isFilterOwner && removeFilterMenu(index)}
+            className={classNames(styles.minusBlock, !isFilterOwner && styles.disable)}
           >
             <MinusOutlined />
-          </span>
+          </div>
         </div>
       ))}
     </>
@@ -166,13 +204,107 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   userList,
   activityTypeOption,
   loggedUser,
+  data,
+  selectedColumn,
+  upsertActiveColumn,
+  setSelectFilterUser,
+  filterData,
+  setFilterValue,
+  setActiveFilterId,
+  activeFilterId
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
-  // const [initialValue, setInitialValue] = useState<InitialValueTypes>(
-  //   defaultValue
-  // )
+  const [initialValue, setInitialValue] = useState<InitialValueTypes>(defaultValue)
   const { t } = useTranslationI18()
   const { visibilityMenuOption } = getData(t)
+
+  const [deleteMutation] = useDeleteActivityUserFilterMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        `Success! ${t('create.filter.modal.deleted.filter.message')}`
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        `Error! ${t('create.filter.modal.deleted.filter.error.message')}`
+      )
+    },
+  })
+
+  const [addMutation] = useCreateActivityFilterMutation({
+    async onCompleted(data) {
+      console.log('data------------', data)
+      if (data?.createOneActivityUserFilters) {
+        let id = data?.createOneActivityUserFilters?.id
+        setActiveFilterId(id)
+        setFilterValue(undefined)
+        await upsertActiveColumn({
+          variables: {
+            customFilterId: id,
+            userId: loggedUser?.user,
+            companyId: loggedUser?.company,
+            update: {
+              user_filter: { set: null },
+              user_group_filter: { set: null },
+              custom_filter: { set: id },
+            },
+          },
+        })
+      }
+      Notification(
+        NotificationType.success,
+        `Success! ${t('create.filter.modal.create.filter.message')}`
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        `Error! ${t('create.filter.modal.create.filter.error.message')}`
+      )
+    },
+  })
+
+  const [editMutation] = useUpdateActivityFilterMutation({
+    async onCompleted(data) {
+      if (data?.updateOneActivityUserFilters) {
+        let id = data?.updateOneActivityUserFilters?.id
+        setActiveFilterId(id)
+        setFilterValue(undefined)
+        await upsertActiveColumn({
+          variables: {
+            customFilterId: id,
+            userId: loggedUser?.user,
+            companyId: loggedUser?.company,
+            update: {
+              user_filter: { set: null },
+              user_group_filter: { set: null },
+              custom_filter: { set: id },
+            },
+          },
+        })
+      }
+      Notification(
+        NotificationType.success,
+        `Success! ${t('create.filter.modal.edit.filter.message')}`
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        `Error! ${t('create.filter.modal.edit.filter.error.message')}`
+      )
+    },
+  })
+
+  useEffect(() => {
+    if (data?.id) {
+      setInitialValue(data)
+    } else {
+      setInitialValue(defaultValue)
+    }
+  }, [data])
 
   const visibilityMenu = (
     setFieldValue: (field: string, value: string | boolean) => void,
@@ -228,32 +360,107 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         type: 'Activity',
         filterColumn: 'Add time',
         operand: 'is',
-        menuOption: '',
+        menuOption: 'last quarter',
       },
     ])
   }
 
-  const onSubmit = () => {
-    console.log('Submit call')
+  const onSubmit = async (values: InitialValueTypes) => {
+    console.log('Submit call', values)
+    let data = {
+      name: values.name,
+      data: JSON.stringify({andFilterOption: values.andFilterOption, orFilterOption: values.orFilterOption}),
+      shared: values.visibility === 'private' ? false : true,
+      columns: values.saveFilter ? JSON.stringify({ columns: selectedColumn }) : null
+    }
+    await (values.id
+      ? editMutation({
+          variables: {
+            id: values.id,
+            ...data
+          },
+          refetchQueries: [
+            {
+              query: FilterOptionForActivityDocument,
+              variables: {
+                userId: loggedUser.user
+              }
+            }
+          ],
+        })
+      : addMutation({
+          variables: data,
+          refetchQueries: [
+            {
+              query: FilterOptionForActivityDocument,
+              variables: {
+                userId: loggedUser.user
+              }
+            }
+          ],
+        }))
+    setShowModal(false)
+    console.log('data---------------------', data)
+  }
+
+  const onDeleteFilter = async (values) => {
+    await deleteMutation({
+      variables: {
+        id: values.id
+      },
+      optimisticResponse: {},
+      refetchQueries: [
+        {
+          query: FilterOptionForActivityDocument,
+          variables: {
+            userId: loggedUser.user
+          }
+        }
+      ],
+    })
+    console.log("activeFilterId----------", activeFilterId)
+    console.log("values.id----------", values.id)
+    if (activeFilterId === values.id) {
+      setSelectFilterUser([])
+      await upsertActiveColumn({
+        variables: {
+          userFilterId: 0,
+          userId: loggedUser?.user,
+          companyId: loggedUser?.company,
+          update: {
+            user_filter: { set: 0 },
+            user_group_filter: { set: null },
+            custom_filter: { set: null }
+          },
+        },
+      })
+      setFilterValue(0)
+    }
+    setShowModal(false)
   }
 
   return (
     <Formik
-      initialValues={defaultValue}
+      initialValues={initialValue}
       enableReinitialize={true}
       validationSchema={Yup.object().shape({
         name: Yup.string()
           .required(t('create.filter.modal.filter.name.required'))
           .max(50, t('create.filter.modal.filter.name.max.validation.message')),
       })}
-      onSubmit={onSubmit}
+      onSubmit={async (values, {resetForm}) => {
+        await onSubmit(values)
+        resetForm()
+      }}
     >
       {({ setFieldValue, values, resetForm }) => (
         <BasicModal
           className={styles.filterModalWrapper}
           visible={showModal}
           centered
-          title={t('create.filter.modal.title')}
+          title={values.id ? t('edit.activity.filter.modal.title', {
+            name: values.name
+          }) : t('create.filter.modal.title')}
           onCancel={() => {
             setShowModal(false)
             resetForm()
@@ -273,12 +480,15 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 userList={userList}
                 activityTypeOption={activityTypeOption}
                 loggedUser={loggedUser}
+                isFilterOwner={values.isFilterOwner}
+                isEdit={!!values.id}
                 t={t}
               />
               <Button
-                className={styles.btnAdd}
+                className={classNames(styles.btnAdd, !values.isFilterOwner && styles.disable)}
                 type="default"
                 icon={<PlusOutlined />}
+                disabled={!values.isFilterOwner}
                 onClick={() =>
                   AddConditionClick(values, setFieldValue, 'andFilterOption')
                 }
@@ -295,12 +505,15 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 userList={userList}
                 activityTypeOption={activityTypeOption}
                 loggedUser={loggedUser}
+                isFilterOwner={values.isFilterOwner}
+                isEdit={!!values.id}
                 t={t}
               />
               <Button
-                className={styles.btnAdd}
+                className={classNames(styles.btnAdd, !values.isFilterOwner && styles.disable)}
                 type="default"
                 icon={<PlusOutlined />}
+                disabled={!values.isFilterOwner}
                 onClick={() =>
                   AddConditionClick(values, setFieldValue, 'orFilterOption')
                 }
@@ -315,22 +528,25 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               >
                 <FormikInput
                   name={'name'}
+                  disabled={!values.isFilterOwner}
                   placeholder={t('create.filter.modal.filter.name.placeholder')}
                 />
               </Form.Item>
               <Form.Item
                 label={t('create.filter.modal.visibility.label')}
                 name={'visibility'}
-              >
+              > 
+              <span className={classNames(!values.isFilterOwner && styles.btnProvider)}>
                 <Dropdown
                   trigger={['click']}
                   overlay={visibilityMenu(setFieldValue, values)}
                   visible={visibilityVisible}
+                  disabled={!values.isFilterOwner}
                   onVisibleChange={(value) => setVisibilityVisible(value)}
                   getPopupContainer={(node) => node}
                   overlayClassName={styles.visibilityMenu}
                 >
-                  <Button>
+                  <Button className={classNames(!values.isFilterOwner, styles.disable)}>
                     <span className={styles.visibilityWrapper}>
                       {values.visibility === 'private' ? (
                         <div className={styles.iconText}>
@@ -351,22 +567,36 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                     </span>
                   </Button>
                 </Dropdown>
+                </span>
               </Form.Item>
             </div>
-            <Checkbox name="saveFilter">
+            <Checkbox name="saveFilter" disabled={!values.isFilterOwner}>
               {t('create.filter.modal.save.filter.checkbox.label')}
             </Checkbox>
+            {!values.isFilterOwner && <div className={styles.creatorWrapper}>
+              <span>
+               {t('create.filter.modal.creator.name', {
+                 name: values.creatorName
+               })}  
+              </span>
+              <div className={styles.circle}/>
+              <span>
+               {t('create.filter.modal.last.modified.label', {
+                 date: DisplayDate(values.lastUpdatedDate)
+               })}
+              </span>
+            </div>}
             <div className={styles.btnWrapper}>
-              {false && (
-                <Button className={styles.btnDanger} type="primary" danger>
+              {(values.isFilterOwner && values.id) && (
+                <Button className={styles.btnDanger} type="primary" danger onClick={() => onDeleteFilter(values)}>
                   {t('create.filter.modal.delete.button.label')}
                 </Button>
               )}
               <span className={styles.previewWrapper}>
-                <Button type="default">
+                <Button type="default" disabled={!values.isFilterOwner} className={classNames(!values.isFilterOwner, styles.disable)}>
                   {t('create.filter.modal.preview.button.label')}
                 </Button>
-                <SubmitButton type="primary" className={styles.submitBtn}>
+                <SubmitButton type="primary" className={classNames(styles.submitBtn, !values.isFilterOwner && styles.disable)} disabled={!values.isFilterOwner}>
                   {t('create.filter.modal.save.button.label')}
                 </SubmitButton>
               </span>

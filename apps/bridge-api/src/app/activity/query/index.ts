@@ -118,7 +118,7 @@ export const ActivityWhereInputType = inputObjectType({
     t.field('endDate', { type: 'DateTime' })
     t.list.field('activityType', { type: 'String' })
     t.list.field('status', { type: 'String' })
-    t.int('userId')
+    t.list.field('userId', { type: 'Int' })
     t.string('search')
     t.list.string('activeColumns')
     t.field('orderValue', { type: 'OrderType' })
@@ -193,7 +193,7 @@ export const ActivityQuery = extendType({
               ActivityType: { name: { in: input.where?.activityType } },
               status: { in: input.where?.status },
               AssignedUser: {
-                id: { equals: input.where?.userId },
+                id: { in: input.where?.userId },
               },
               AND: {
                 OR: prepareSearchQuery,
@@ -317,7 +317,7 @@ export const ActivityQuery = extendType({
                 ActivityType: { name: { in: input.where?.activityType } },
                 status: { in: input.where?.status },
                 AssignedUser: {
-                  id: { equals: input.where?.userId },
+                  id: { in: input.where?.userId },
                 },
                 AND: {
                   OR: prepareSearchQuery,
