@@ -25,6 +25,7 @@ import {
   CommunicationTimelineProps,
   ActivitiesProps,
   AvatarUploader,
+  ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -55,7 +56,7 @@ import {
   SaveOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useRef } from 'react'
+import React, { FC, useState, useRef, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -114,8 +115,14 @@ interface ClientNote {
   date: string
 }
 
+interface ClientNotes {
+  client: ClientNote[]
+  // appointment: ClientNote[]
+}
+
 interface P {
   client: ClientData
+  notes: ClientNotes
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
@@ -124,6 +131,7 @@ interface P {
 
 const ClientCardModal: FC<P> = ({
   client,
+  notes,
   onClose,
   tabs,
   activeTab,
@@ -145,6 +153,13 @@ const ClientCardModal: FC<P> = ({
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [showLetterModal, setShowLetterModal] = useState(false)
   const [showHeaderOpsDrawer, setShowHeaderOpsDrawer] = useState(false)
+
+  console.log('appoinments---------', appointments)
+
+  // useEffect(() => {
+  //   setNoteItems(notes.notes)
+  //   setAlertItems(notes.staffAlerts)
+  // }, [notes])
 
   const customTabMenutItem = (title, alert, tabTotal = 0) => {
     return (
@@ -538,11 +553,12 @@ const ClientCardModal: FC<P> = ({
       className={styles.clientAlertsPopover}
       style={{ width: isMobile ? '320px' : '472px' }}
     >
+      {console.log('alert items-=-=-=-', alertItems)}
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
-          {alertItems.map((item, index) => (
+          {alertItems?.map((item, index) => (
             <div className={styles.staffAlert} key={`staff-alert-${index}`}>
-              {item}
+              {item.Note}
             </div>
           ))}
         </div>
@@ -584,16 +600,22 @@ const ClientCardModal: FC<P> = ({
             className={styles.clientNotesContainer}
             ref={clientNotePopoverRef}
           >
-            {noteItems.map((item, index) => (
+            {noteItems?.map((item, index) => (
               <div key={`client-${index}`} className={styles.clientNote}>
                 {index !== currentClientNote && (
                   <div className={styles.clientNoteItem}>
                     <div>
-                      <Avatar src={item.avatar} name={item.client} size={32} />
+                      <Avatar
+                        src={item.User.avatar}
+                        name={item.User.client}
+                        size={32}
+                      />
                     </div>
                     <div>
                       <div className={styles.content}>{item.content}</div>
-                      <div className={styles.client}>{`By ${item.client}`}</div>
+                      <div
+                        className={styles.client}
+                      >{`By ${item.User.client}`}</div>
                       <div className={styles.date}>{`On ${moment(
                         item.date
                       ).format('D MMM YYYY hh:mm A')}`}</div>
@@ -891,7 +913,7 @@ const ClientCardModal: FC<P> = ({
                     >
                       <Tooltip title="Notes">
                         <Badge
-                          count={noteItems.length}
+                          count={noteItems?.length}
                           overflowCount={9}
                           size="small"
                           style={{ backgroundColor: 'var(--primary-color)' }}
@@ -911,7 +933,7 @@ const ClientCardModal: FC<P> = ({
                     >
                       <Tooltip title="Staff alerts" placement="bottomRight">
                         <Badge
-                          count={alertItems.length}
+                          count={alertItems?.length}
                           overflowCount={9}
                           size="small"
                           style={{ backgroundColor: 'var(--primary-color)' }}
@@ -921,6 +943,7 @@ const ClientCardModal: FC<P> = ({
                       </Tooltip>
                     </Popover>
                   </div>
+                  <ClientHeaderDetails />
                 </>
               )}
             </div>

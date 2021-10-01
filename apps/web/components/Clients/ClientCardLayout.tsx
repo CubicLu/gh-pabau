@@ -1,7 +1,11 @@
 import { useRouter } from 'next/router'
-import { useBasicContactDetailsQuery } from '@pabau/graphql'
+import {
+  useBasicContactDetailsQuery,
+  useGetContactHeaderQuery,
+} from '@pabau/graphql'
 import { ClientCard, TabItem } from '@pabau/ui'
 import React, { ComponentPropsWithoutRef, FC } from 'react'
+import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 import Layout from '../Layout/Layout'
 
 interface P
@@ -17,6 +21,12 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     ssr: false,
     variables: { id: clientId },
   })
+  const { data: contactData } = useGetContactHeaderQuery({
+    skip: !router.query['id'],
+    ssr: false,
+    variables: { contactId: clientId },
+  })
+
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
     { key: 'appointments', name: 'Appointments' },
@@ -83,6 +93,16 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     //   content: customTabMenutItem('Activities', 8),
     // },
   ] as const
+  console.log('NOTESSSSSSS--', contactData)
+
+  const getContactNotesWithUrl = (notes) => {
+    return notes?.map((item) => {
+      return {
+        ...item,
+        User: { ...item?.User, avatar: getImage(item?.User.avatar) },
+      }
+    })
+  }
 
   return (
     <Layout>
@@ -107,6 +127,11 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }
+        notes={{
+          notes: getContactNotesWithUrl(contactData?.notes[0]?.contactNotes),
+          appointments: contactData?.notes[0]?.appointment,
+          staffAlerts: contactData?.notes[0]?.staff,
+        }}
       >
         {children}
       </ClientCard>
