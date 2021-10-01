@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Avatar, Button, RangePicker } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
-import CommonHeader from '../../components/CommonHeader'
 import styles from './dashboard.module.less'
 import { useUser } from '../../context/UserContext'
 import { useMedia } from 'react-use'
@@ -11,6 +10,7 @@ import {
   CheckOutlined,
   CalendarOutlined,
 } from '@ant-design/icons'
+import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
 import { Menu, Dropdown, Drawer, Col, Row, Select } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
@@ -225,7 +225,24 @@ export function Index() {
                 : 'Personal Dashboard'
               : 'Personal Dashboard'
           }
-        />
+        >
+          <Dropdown
+            overlay={dateFilter}
+            placement="bottomRight"
+            trigger={['click']}
+            visible={openDateModel}
+          >
+            <Button icon={<CalendarOutlined />} onClick={handleDateFilter}>
+              {filterRange === 'custom'
+                ? `${Intl.DateTimeFormat('en').format(
+                    new Date(`${filterRange[0]}`)
+                  )} - ${Intl.DateTimeFormat('en').format(
+                    new Date(`${filterRange[1]}`)
+                  )}`
+                : `${filterRange.replace('-', ' ')}`}
+            </Button>
+          </Dropdown>
+        </CommonHeader>
         <div className={styles.dashboardWrapper}>
           <div className={styles.topWrapper}>
             <div className={styles.userBlock}>
@@ -271,22 +288,27 @@ export function Index() {
               </div>
             </div>
             <div className={styles.userRight}>
-              <Dropdown
-                overlay={dateFilter}
-                placement="bottomRight"
-                trigger={['click']}
-                visible={!isMobile ? openDateModel : false}
-              >
-                <Button icon={<CalendarOutlined />} onClick={handleDateFilter}>
-                  {filterRange === 'custom'
-                    ? `${Intl.DateTimeFormat('en').format(
-                        new Date(`${filterRange[0]}`)
-                      )} - ${Intl.DateTimeFormat('en').format(
-                        new Date(`${filterRange[1]}`)
-                      )}`
-                    : `${filterRange.replace('-', ' ')}`}
-                </Button>
-              </Dropdown>
+              {!isMobile && (
+                <Dropdown
+                  overlay={dateFilter}
+                  placement="bottomRight"
+                  trigger={['click']}
+                  visible={openDateModel}
+                >
+                  <Button
+                    icon={<CalendarOutlined />}
+                    onClick={handleDateFilter}
+                  >
+                    {filterRange === 'custom'
+                      ? `${Intl.DateTimeFormat('en').format(
+                          new Date(`${filterRange[0]}`)
+                        )} - ${Intl.DateTimeFormat('en').format(
+                          new Date(`${filterRange[1]}`)
+                        )}`
+                      : `${filterRange.replace('-', ' ')}`}
+                  </Button>
+                </Dropdown>
+              )}
             </div>
           </div>
           <div className={styles.bottomWrapper}>

@@ -7,6 +7,7 @@ import React, { FC, useState, useEffect } from 'react'
 import { useMedia } from 'react-use'
 import paymentUpdateBanner from '../../assets/images/payment-update-banner.png'
 import Layout from '../../components/Layout/Layout'
+import CommonHeader from '../../components/CommonHeader'
 import AccountInformation from '../../components/Setup/Subscription/AccountInformation'
 import BillingInformation from '../../components/Setup/Subscription/BillingInformation'
 import InvoiceActivity from '../../components/Setup/Subscription/InvoiceActivityList'
@@ -83,6 +84,26 @@ const Subscription: FC = () => {
 
   return (
     <Layout>
+      <CommonHeader
+        isLeftOutlined
+        reversePath="/setup"
+        title={`Pabau ${t('setup.subscription')}`}
+        isShowSearch={activeTab === '0' ? true : false}
+        searchInputPlaceHolder={t('setup.crud.subscription.searchholder')}
+        handleSearch={handleSearch}
+        searchValue={searchTerm}
+      >
+        {activeTab === '0' && (
+          <Popover
+            trigger="click"
+            content={filterContent}
+            placement="bottomRight"
+            overlayClassName={styles.filterPopover}
+          >
+            <FilterOutlined className={styles.marketingIconStyle} />
+          </Popover>
+        )}
+      </CommonHeader>
       <NotificationBanner
         title={t('notifications.banner.title')}
         desc={t('notifications.banner.desc')}
@@ -94,39 +115,42 @@ const Subscription: FC = () => {
         imgPath={paymentUpdateBanner}
       />
       <Card bodyStyle={{ padding: 0 }}>
-        <div className={styles.headerContainer}>
-          <div>
-            <Breadcrumb
-              breadcrumbItems={[
-                { breadcrumbName: t('sidebar.setup'), path: 'setup' },
-                { breadcrumbName: t('setup.subscription'), path: '' },
-              ]}
-            />
-            <Title>Pabau {t('setup.subscription')}</Title>
-          </div>
-          {activeTab === '0' && (
-            <div className={styles.searchBarContainer}>
-              <Search
-                placeholder={t('setup.crud.subscription.searchholder')}
-                allowClear
-                onSearch={handleSearch}
-                className={styles.searchBar}
+        {!isMobile && (
+          <div className={styles.headerContainer}>
+            <div>
+              <Breadcrumb
+                items={[
+                  { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                  { breadcrumbName: t('setup.subscription'), path: '' },
+                ]}
               />
-              <div className={styles.btnWrapperFilter}>
-                <Popover
-                  trigger="click"
-                  content={filterContent}
-                  placement="bottomRight"
-                  overlayClassName={styles.filterPopover}
-                >
-                  <Button className={styles.filterBtn}>
-                    <FilterOutlined /> {t('setup.crud.filter')}
-                  </Button>
-                </Popover>
-              </div>
+              <Title>Pabau {t('setup.subscription')}</Title>
             </div>
-          )}
-        </div>
+            {activeTab === '0' && (
+              <div className={styles.searchBarContainer}>
+                <Search
+                  placeholder={t('setup.crud.subscription.searchholder')}
+                  allowClear
+                  onSearch={handleSearch}
+                  className={styles.searchBar}
+                  value={searchTerm}
+                />
+                <div className={styles.btnWrapperFilter}>
+                  <Popover
+                    trigger="click"
+                    content={filterContent}
+                    placement="bottomRight"
+                    overlayClassName={styles.filterPopover}
+                  >
+                    <Button className={styles.filterBtn}>
+                      <FilterOutlined /> {t('setup.crud.filter')}
+                    </Button>
+                  </Popover>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         <Divider style={{ margin: 0 }} />
         <TabMenu
           tabPosition={'top'}

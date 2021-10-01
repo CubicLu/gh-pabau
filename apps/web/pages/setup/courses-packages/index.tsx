@@ -1,4 +1,3 @@
-import { LeftOutlined } from '@ant-design/icons'
 import {
   AvatarList,
   Breadcrumb,
@@ -10,6 +9,8 @@ import { Typography } from 'antd'
 import React, { FC, useState } from 'react'
 import AddButton from '../../../components/AddButton'
 import Layout from '../../../components/Layout/Layout'
+import useWindowSize from '../../../hooks/useWindowSize'
+import CommonHeader from '../../../components/CommonHeader'
 import CreateCourse, {
   InitialCoursesProps,
 } from '../../../components/Setup/CoursesPackages/CreateCourse'
@@ -49,7 +50,7 @@ const packageFormikInitialValue: InitialPackagesProps = {
 
 export const Index: FC = () => {
   const { t } = useTranslationI18()
-
+  const size = useWindowSize()
   const onFilterSource = () => {
     return
   }
@@ -281,11 +282,27 @@ export const Index: FC = () => {
   return (
     <>
       <Layout>
-        <div className={styles.coursesWrapper}>
-          <div className={styles.hideMobileView}>
+        <CommonHeader
+          isLeftOutlined
+          reversePath="/setup"
+          title={t('setup.courses-and-packages')}
+          isShowSearch
+          handleSearch={onSearch}
+        >
+          <AddButton
+            onFilterSource={onFilterSource}
+            schema={currentTab === '1' ? packageSchema : courseSchema}
+            tableSearch={false}
+            onClick={handleCreatenNew}
+            needTranslation={false}
+            addFilter={true}
+          />
+        </CommonHeader>
+        {size.width > 767 && (
+          <div className={styles.coursesWrapper}>
             <div className={styles.header}>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   { path: 'setup', breadcrumbName: t('sidebar.setup') },
                   {
                     path: '',
@@ -307,22 +324,7 @@ export const Index: FC = () => {
               addFilter={true}
             />
           </div>
-          <div className={styles.hideDesktopView}>
-            <div className={styles.courseWrap}>
-              <LeftOutlined className={styles.leftIcon} />{' '}
-              <h6>{t('setup.courses-and-packages')}</h6>
-            </div>
-            <AddButton
-              onFilterSource={onFilterSource}
-              onSearch={onSearch}
-              schema={currentTab === '1' ? packageSchema : courseSchema}
-              tableSearch={true}
-              onClick={handleCreatenNew}
-              needTranslation={false}
-              addFilter={true}
-            />
-          </div>
-        </div>
+        )}
         <div className={styles.tableBackground}>
           <TabbedTable
             tabItems={[

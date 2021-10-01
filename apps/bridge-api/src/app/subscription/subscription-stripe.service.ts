@@ -69,6 +69,7 @@ export default class SubscriptionStripe extends SubscriptionService {
             ...item,
             id: item.invoice ?? item.id,
             amount: (item.amount / 100).toFixed(2),
+            currency: item.currency?.toUpperCase(),
             date: new Date(item.created * 1000).toLocaleDateString('en-US'),
             description: item.description ?? 'Pabau Invoice',
             invoice_link: item.receipt_url,
@@ -149,12 +150,26 @@ export default class SubscriptionStripe extends SubscriptionService {
     })
     const subscription = res.data[res.data.length - 1]
 
-    const date = new Date(subscription?.billing_cycle_anchor * 1000)
-    date.setMonth(date.getMonth() + 1)
+    const currentDate = new Date()
+    const billingDay = new Date(
+      subscription?.billing_cycle_anchor * 1000
+    ).getDate()
+
+    const nextChargeDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      billingDay
+    )
+
+    if (currentDate > nextChargeDate) {
+      nextChargeDate.setMonth(nextChargeDate.getMonth() + 1)
+    }
 
     return {
       id: subscription?.id ?? '',
-      currency: subscription['plan']?.currency ?? '',
+      currency: subscription['plan']?.currency
+        ? subscription['plan']?.currency?.toUpperCase()
+        : '',
       app_fee: subscription?.application_fee_percent ?? 0,
       interval_unit: subscription['plan']?.interval || '',
       amount: subscription['plan']?.amount
@@ -163,7 +178,7 @@ export default class SubscriptionStripe extends SubscriptionService {
       name: subscription['plan']?.nickname || 'Subscription Plan',
       status: subscription?.status || '',
       created_at: new Date(subscription['plan']?.created ?? ''),
-      next_charge_date: date.toLocaleDateString('en-US'),
+      next_charge_date: nextChargeDate.toLocaleDateString('en-US'),
       next_charge_amount: subscription['plan']?.amount
         ? subscription['plan']?.amount / 100
         : 0,
