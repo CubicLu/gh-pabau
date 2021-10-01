@@ -78,7 +78,7 @@ export const InvSale = objectType({
         return root.Company
       },
     })
-    t.field('Location', {
+    t.nullable.field('Location', {
       type: 'CompanyBranch',
       resolve(root: any) {
         return root.Location
@@ -160,6 +160,20 @@ export const InvSale = objectType({
       },
       resolve(root: any) {
         return root.SaleItem
+      },
+    })
+    t.list.field('Voucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Voucher
       },
     })
     t.nullable.field('_count', {
