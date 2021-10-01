@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { GalleryView, AlbumProps, ImageProps } from '@pabau/ui'
+import { AlbumProps, ImageProps, ClientPhotosLayout } from '@pabau/ui'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import {
   useGetPhotoAlbumsQuery,
@@ -18,12 +18,12 @@ const Photos = () => {
   const [listView, setListView] = useState(false)
 
   const [lazyLoading, setLazyLoading] = useState({
-    limit: 40,
+    perPage: 32,
     currentPage: 1,
   })
 
   const [paginatedData, setPaginatedData] = useState({
-    limit: 20,
+    perPage: 20,
     currentPage: 1,
   })
 
@@ -42,8 +42,8 @@ const Photos = () => {
     variables: {
       contactId: router.query.id ? Number(router.query.id) : 0,
       albumId: albumId,
-      skip: (lazyLoading?.currentPage - 1) * lazyLoading?.limit,
-      take: lazyLoading?.limit,
+      skip: (lazyLoading?.currentPage - 1) * lazyLoading?.perPage,
+      take: lazyLoading?.perPage,
     },
   })
 
@@ -55,8 +55,8 @@ const Photos = () => {
     variables: {
       contactId: router.query.id ? Number(router.query.id) : 0,
       albumId: albumId,
-      skip: (paginatedData?.currentPage - 1) * paginatedData?.limit,
-      take: paginatedData?.limit,
+      skip: (paginatedData?.currentPage - 1) * paginatedData?.perPage,
+      take: paginatedData?.perPage,
     },
   })
 
@@ -76,15 +76,17 @@ const Photos = () => {
           albumTitle: item?.name,
           modifiedDate: item?.modified_date || item?.creation_date,
           imageCount: item?.imageCount?.imageList,
-          albumImages: item?.Photos?.map((el) => {
+          albumImage: item?.Photos?.map((el) => {
             return {
               id: el?.id,
               date: el?.date,
-              img: attachmentsBaseUrl + el?.linkref,
+              img: !el?.linkref?.includes('href')
+                ? attachmentsBaseUrl + el?.linkref
+                : el?.linkref,
               isSensitive: false,
             }
           }),
-          albums: item?.albums ? iterateTo(item?.albums) : [],
+          album: item?.albums ? iterateTo(item?.albums) : [],
         }
       })
     }
@@ -92,11 +94,14 @@ const Photos = () => {
       const innerAlbums = iterateTo(albumsData?.findManyPhotoAlbum)
       const cAlbums = {
         id: 0,
-        albumTitle: 'Uncategorized',
+        albumTitle:
+          unCatImagesCount?.aggregateContactAttachment?.count?._all > 0
+            ? 'Uncategorized'
+            : '',
         imageCount:
           unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
-        albumImages: [],
-        albums: innerAlbums,
+        albumImage: [],
+        album: innerAlbums,
       }
       setAlbums(cAlbums)
     }
@@ -111,7 +116,9 @@ const Photos = () => {
       const images = lazyAlbumImages?.findManyContactAttachment?.map((el) => {
         return {
           id: el?.id,
-          img: attachmentsBaseUrl + el?.origin,
+          img: !el?.origin?.includes('href')
+            ? attachmentsBaseUrl + el?.origin
+            : el?.origin,
           date: el?.date,
           isSensitive: false,
         }
@@ -132,7 +139,9 @@ const Photos = () => {
         (el) => {
           return {
             id: el?.id,
-            img: attachmentsBaseUrl + el?.origin,
+            img: !el?.origin?.includes('href')
+              ? attachmentsBaseUrl + el?.origin
+              : el?.origin,
             date: el?.date,
             isSensitive: false,
           }
@@ -144,7 +153,27 @@ const Photos = () => {
 
   return (
     <ClientCardLayout clientId={Number(router.query.id)} activeTab="photos">
-      <GalleryView
+      <ClientPhotosLayout
+        albumList={albums}
+        images={currAlbumImages}
+        onAlbumClick={(id, listView) => {
+          if (id !== albumId) {
+            setAlbumId(id)
+            if (listView) {
+              setTableImages([])
+              setPaginatedData({
+                ...paginatedData,
+                currentPage: 1,
+              })
+            } else {
+              setCurrAlbumImages([])
+              setLazyLoading({
+                ...lazyLoading,
+                currentPage: 1,
+              })
+            }
+          }
+        }}
         loadMorePhotos={(id, page = null) => {
           setAlbumId(id)
           if (page) {
@@ -159,25 +188,9 @@ const Photos = () => {
             })
           }
         }}
-        onAlbumClick={(id, listView) => {
-          setAlbumId(id)
-          if (listView) {
-            setTableImages([])
-            setPaginatedData({
-              ...paginatedData,
-              currentPage: 1,
-            })
-          } else {
-            setCurrAlbumImages([])
-            setLazyLoading({
-              ...lazyLoading,
-              currentPage: 1,
-            })
-          }
-        }}
-        setTableView={(view) => {
+        onViewChange={(view) => {
           if (!view) {
-            setCurrAlbumImages(null)
+            setCurrAlbumImages([])
             setLazyLoading({
               ...lazyLoading,
               currentPage: 1,
@@ -191,15 +204,18 @@ const Photos = () => {
           }
           setListView(view)
         }}
-        albumList={albums}
-        images={currAlbumImages}
-        listImages={tableImages}
         currentTablePage={paginatedData?.currentPage}
+        tablePageSize={paginatedData?.perPage}
         onPageChange={(page) =>
           setPaginatedData({ ...paginatedData, currentPage: page })
         }
-        tableLoading={paginatedAlbumImagesLoading}
         lazyLoading={lazyAlbumImagesLoading}
+        pageLoading={paginatedAlbumImagesLoading}
+        gridImagesLimit={lazyLoading?.perPage}
+        tableImages={tableImages}
+        pageSizeChange={(perPage) => {
+          setPaginatedData({ ...paginatedData, currentPage: 1, perPage })
+        }}
       />
     </ClientCardLayout>
   )

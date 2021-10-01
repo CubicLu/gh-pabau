@@ -24,6 +24,7 @@ import {
   NotificationType,
   FormikInput,
   Avatar,
+  ImageViewer,
 } from '@pabau/ui'
 import { BasicModal } from '../modal/BasicModal'
 import AlbumData, { ImageProps, AlbumProps } from './AlbumData'
@@ -53,29 +54,33 @@ import dayjs from 'dayjs'
 export interface GalleryProps {
   albumList: AlbumProps
   images: ImageProps[]
-  listImages: ImageProps[]
-  loadMorePhotos?: (albumId: number, pageId?: number) => void
-  onAlbumClick?: (albumId: number, listView: boolean) => void
-  loading?: boolean
-  setTableView?: (view: boolean) => void
-  currentTablePage?: number
-  onPageChange?: (page: number) => void
-  tableLoading?: boolean
+  onAlbumClick?: (albumId: number, table: boolean) => void
+  loadMorePhotos?: (albumId: number, page?: number) => void
   lazyLoading?: boolean
+  pageLoading?: boolean
+  gridImagesLimit?: number
+  currentTablePage?: number
+  tablePageSize?: number
+  onPageChange?: (page: number) => void
+  tableImages?: ImageProps[]
+  onViewChange?: (view: boolean) => void
+  pageSizeChange?: (size: number) => void
 }
 
 export const GalleryView: FC<GalleryProps> = ({
   albumList,
   images,
-  listImages,
-  loadMorePhotos,
   onAlbumClick,
-  loading = false,
-  setTableView,
-  currentTablePage = 1,
-  onPageChange,
-  tableLoading = false,
+  loadMorePhotos,
   lazyLoading = false,
+  pageLoading = false,
+  gridImagesLimit = 20,
+  currentTablePage = 1,
+  tablePageSize = 20,
+  onPageChange,
+  tableImages = [],
+  onViewChange,
+  pageSizeChange,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -96,8 +101,9 @@ export const GalleryView: FC<GalleryProps> = ({
   const [newAlbumName, setNewAlbumName] = useState('')
   const [createAlbumDrawer, setCreateAlbumDrawer] = useState(false)
   const [selectAll, setSelectAll] = useState(false)
-  const [selectedImage, setSelectedImage] = useState<ImageProps[]>([])
+  const [selectedImage, setSelectedImage] = useState([])
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(true)
   const [dragAlbumTitle, setDragAlbumTitle] = useState('')
   const [imagesList, setImagesList] = useState(images)
@@ -106,20 +112,30 @@ export const GalleryView: FC<GalleryProps> = ({
   const [albumDeleteData, setAlbumDeleteData] = useState({} as AlbumProps)
   const [errorMessage, setErrorMessage] = useState('')
   const [listView, setListView] = useState(false)
+  const [showStudio, setShowStudio] = useState(false)
 
-  useEffect(() => {
-    setCurrentData(albumList)
-    setData(albumList)
-  }, [albumList])
+  const [tableLoading, setTableLoading] = useState(false)
+  const [gridLoading, setGridLoading] = useState(false)
 
   useEffect(() => {
     setImagesList(images)
   }, [images])
 
+  useEffect(() => {
+    setData(albumList)
+    setCurrentData(albumList)
+  }, [albumList])
+
+  useEffect(() => {
+    setGridLoading(lazyLoading)
+  }, [lazyLoading])
+
+  useEffect(() => {
+    setTableLoading(pageLoading)
+  }, [pageLoading])
+
   const employee = ['will lawsons', 'jessica Winter', 'Jeff Hackley']
   const services = ['abc', 'xyz', 'ert', 'botox']
-  const basePath =
-    'https://d1zv2aa70wpiur.cloudfront.net/tfjs_quant_nsfw_mobilenet/'
 
   const text = <span>{t('galley.view.album.filter.title')}</span>
   const albumText = (
@@ -153,7 +169,6 @@ export const GalleryView: FC<GalleryProps> = ({
       <h5>{t('galley.list.arrow.content.none')}</h5>
     </div>
   )
-
   const albumContent = (
     <div className={styles.albumContentBody}>
       <div className={styles.menuItems}>
@@ -235,10 +250,9 @@ export const GalleryView: FC<GalleryProps> = ({
       </div>
     </div>
   )
-
   const menu = (
     <Menu className={styles.menuItemList}>
-      {currentData?.albums?.map((albumValue) => (
+      {currentData?.album?.map((albumValue) => (
         <Menu.Item
           key={albumValue.albumTitle.toString()}
           onClick={() => handleImageMove(albumValue.albumTitle)}
@@ -259,12 +273,12 @@ export const GalleryView: FC<GalleryProps> = ({
     const tempData = { ...currentData }
     if (newAlbumName !== '') {
       if (newAlbumName.length <= 20) {
-        tempData.albums.push({
-          id: 1,
+        tempData.album.push({
+          id: 0,
           albumTitle: newAlbumName,
+          albumImage: [],
           imageCount: 0,
-          albumImages: [],
-          albums: [],
+          album: [],
         })
         setCurrentData(tempData)
         setCreateAlbum(false)
@@ -277,7 +291,6 @@ export const GalleryView: FC<GalleryProps> = ({
       setErrorMessage(t('galley.list.create.album.blank.error'))
     }
   }
-
   const handleSelectAll = () => {
     if (selectAll) {
       setSelectAll(false)
@@ -285,10 +298,9 @@ export const GalleryView: FC<GalleryProps> = ({
       setSelectedImage([])
     } else {
       setSelectAll(true)
-      setSelectedImage([...currentData.albumImages] as never)
+      setSelectedImage([...currentData.albumImage] as never)
     }
   }
-
   const handleClearFilter = () => {
     setEmployeeValue(t('galley.list.filter.all.value'))
     setServicesValue(t('galley.list.filter.all.value'))
@@ -298,21 +310,24 @@ export const GalleryView: FC<GalleryProps> = ({
     let temp = [...breadcrumbs]
     temp = [
       ...temp,
-      { title: currentData.albums?.[index].albumTitle, index: index },
+      { title: currentData.album[index].albumTitle, index: index },
     ]
     setBreadcrumbs(temp)
-    setCurrentData(currentData.albums?.[index])
-    onAlbumClick?.(currentData.albums?.[index].id, listView)
-    const alterImg = currentData.albums?.[index].albumImages.map((x, id) => ({
+    setCurrentData(currentData.album[index])
+    onAlbumClick?.(currentData.album[index]?.id, listView)
+    if (!listView && currentData.album[index]?.imageCount > 0) {
+      setGridLoading(true)
+    }
+    if (listView && currentData.album[index]?.imageCount > 0) {
+      setTableLoading(true)
+    }
+    const alterImg = currentData.album[index].albumImage.map((x, id) => ({
       id,
       isSensitive: false,
       img: x,
     }))
-    // setCurrentData({
-    //   ...currentData.albums?.[index],
-    //   albumImages: alterImg as [],
-    // })
-    saveNudityData({ ...currentData.albums?.[index], albumImage: alterImg })
+    setCurrentData({ ...currentData.album[index], albumImage: alterImg as [] })
+    saveNudityData({ ...currentData.album[index], albumImage: alterImg })
   }
 
   const onBreadCrumbsClick = (index) => {
@@ -320,28 +335,34 @@ export const GalleryView: FC<GalleryProps> = ({
     const wantData = breadcrumbs.slice(1, index + 1)
     let tempData = { ...newData }
     for (const x of wantData) {
-      tempData = { ...tempData.albums[x.index] }
+      tempData = { ...tempData.album[x.index] }
     }
     newData = index ? tempData : newData
-    onAlbumClick?.(newData?.id, listView)
     setCurrentData(newData)
     setBreadcrumbs(breadcrumbs.slice(0, index + 1))
-    const alterImg = newData.albumImages.map((x, id) => ({
+    onAlbumClick?.(newData?.id, listView)
+    if (!listView && newData?.imageCount > 0) {
+      setGridLoading(true)
+    }
+    if (listView && newData?.imageCount > 0) {
+      setTableLoading(true)
+    }
+    const alterImg = newData.albumImage.map((x, id) => ({
       id,
       isSensitive: false,
       img: x,
     }))
-    // setCurrentData({ ...newData, albumImages: alterImg as [] })
+    setCurrentData({ ...newData, albumImage: alterImg as [] })
     saveNudityData({ ...newData, albumImage: alterImg })
   }
 
   const handleImageMove = (album) => {
     const moveAlbum = { ...currentData }
-    moveAlbum.albums.map((albumData) => {
+    moveAlbum.album.map((albumData) => {
       return (
         albumData.albumTitle === album &&
         selectedImage.map((img: ImageProps) =>
-          albumData.albumImages.push(img.img as never)
+          albumData.albumImage.push(img.img as never)
         )
       )
     })
@@ -352,8 +373,8 @@ export const GalleryView: FC<GalleryProps> = ({
   const handleDelete = () => {
     const moveAlbum = { ...currentData }
     selectedImage.map((img: ImageProps) => {
-      const idx = moveAlbum.albumImages.findIndex((i) => i.img === img.img)
-      return moveAlbum.albumImages.splice(idx, 1)
+      const idx = moveAlbum.albumImage.findIndex((i) => i.img === img.img)
+      return moveAlbum.albumImage.splice(idx, 1)
     })
     setCurrentData(moveAlbum)
     setSelectedImage([])
@@ -382,15 +403,15 @@ export const GalleryView: FC<GalleryProps> = ({
   }
   const handleOnChange = async (checked: boolean, img) => {
     const storeImg = [...selectedImage]
-    const idx = storeImg.indexOf(img)
-    checked ? storeImg.push(img) : storeImg.splice(idx, 1)
+    const idx = storeImg.indexOf(img as never)
+    checked ? storeImg.push(img as never) : storeImg.splice(idx, 1)
     storeImg.length > 0 ? setShowMenu(true) : setShowMenu(false)
-    setSelectedImage([...storeImg])
+    await setSelectedImage([...storeImg])
   }
   const handleBulkHide = () => {
     const currentSensitive = currentData
     if (status) {
-      const showAll = currentSensitive.albumImages.map((item) => {
+      const showAll = currentSensitive.albumImage.map((item) => {
         let obj = { ...item }
         obj = {
           ...item,
@@ -398,10 +419,10 @@ export const GalleryView: FC<GalleryProps> = ({
         }
         return obj
       })
-      setCurrentData({ ...currentSensitive, albumImages: showAll })
+      setCurrentData({ ...currentSensitive, albumImage: showAll })
       setStatus(false)
     } else {
-      setCurrentData({ ...currentSensitive, albumImages: sensitiveImg })
+      setCurrentData({ ...currentSensitive, albumImage: sensitiveImg })
       setStatus(true)
     }
   }
@@ -465,9 +486,9 @@ export const GalleryView: FC<GalleryProps> = ({
       const fileData = data.split('/')
       const imagesDrop = imagesList
       if (dropData.albumTitle === 'Album') {
-        dropData.albums.map((albumData) => {
+        dropData.album.map((albumData) => {
           if (albumData.albumTitle === dragAlbumTitle) {
-            albumData.albumImages.push(data)
+            albumData.albumImage.push(data)
             const idx = imagesDrop.indexOf(data)
             imagesDrop.splice(idx, 1)
             Notification(
@@ -483,12 +504,12 @@ export const GalleryView: FC<GalleryProps> = ({
         setData(dropData)
         setCurrentData(dropData)
       } else {
-        dropData.albums.map((albumData) => {
+        dropData.album.map((albumData) => {
           if (albumData.albumTitle === dragAlbumTitle) {
-            albumData.albumImages.push(data)
-            dropData.albumImages.map((dropAlbum, i) => {
+            albumData.albumImage.push(data)
+            dropData.albumImage.map((dropAlbum, i) => {
               if (dropAlbum.img === data) {
-                dropData.albumImages.splice(i, 1)
+                dropData.albumImage.splice(i, 1)
                 return Notification(
                   NotificationType.success,
                   `${fileData[fileData.length - 1]} has been moved ${
@@ -512,21 +533,21 @@ export const GalleryView: FC<GalleryProps> = ({
     if (albumDataTitle !== '') {
       const dropData = { ...currentData }
       let transferAlbum = {}
-      dropData.albums.map((albums) => {
+      dropData.album.map((albums) => {
         if (albums.albumTitle === albumDataTitle) {
           transferAlbum = albums
         }
         return 1
       })
-      dropData.albums.map((albumData) => {
+      dropData.album.map((albumData) => {
         if (
           albumData.albumTitle === dragAlbumTitle &&
           albumData.albumTitle !== albumDataTitle
         ) {
-          albumData.albums.push(transferAlbum as AlbumProps)
-          dropData.albums.map((dropAlbum, i) => {
+          albumData.album.push(transferAlbum as AlbumProps)
+          dropData.album.map((dropAlbum, i) => {
             if (dropAlbum.albumTitle === albumDataTitle) {
-              dropData.albums.splice(i, 1)
+              dropData.album.splice(i, 1)
             }
             return 1
           })
@@ -576,19 +597,20 @@ export const GalleryView: FC<GalleryProps> = ({
   }
   const onDelete = () => {
     const deleteData = { ...currentData }
-    deleteData.albums.map((x, i) => {
+    deleteData.album.map((x, i) => {
       return (
         x.albumTitle === albumDeleteData.albumTitle &&
-        deleteData.albums.splice(i, 1)
+        deleteData.album.splice(i, 1)
       )
     })
     deleteData.albumTitle === 'Album' && setData(deleteData)
     setCurrentData(deleteData)
     setAlbumDelete((e) => !e)
   }
-  const setContentView = (view: boolean) => {
+
+  const changeContentView = (view: boolean) => {
     setListView(view)
-    setTableView?.(view)
+    onViewChange?.(view)
   }
 
   return (
@@ -794,7 +816,7 @@ export const GalleryView: FC<GalleryProps> = ({
               <div className={styles.viewContainer}>
                 <div
                   className={styles.viewItem}
-                  onClick={() => setContentView(false)}
+                  onClick={() => changeContentView(false)}
                 >
                   {!listView ? (
                     <GridIcon style={{ fill: '#54B2D3' }} />
@@ -804,7 +826,7 @@ export const GalleryView: FC<GalleryProps> = ({
                 </div>
                 <div
                   className={styles.viewItem}
-                  onClick={() => setContentView(true)}
+                  onClick={() => changeContentView(true)}
                 >
                   {listView ? (
                     <ListIcon style={{ fill: '#54B2D3' }} />
@@ -815,174 +837,176 @@ export const GalleryView: FC<GalleryProps> = ({
               </div>
             </div>
           </div>
-        ) : showMenu ? (
-          <div>
-            <div className={styles.headerText}>
-              <span>
-                <button
-                  className={styles.selectButton}
-                  onClick={handleSelectAll}
-                >
-                  <b>
-                    <MinusOutlined />
-                  </b>
-                </button>
-                <Popover content={arrowContent} placement="bottom">
-                  <CaretDownOutlined style={{ color: '#54B2D3' }} />
-                </Popover>
-              </span>
-              {!isMobile && (
-                <div className={styles.rightSide}>
-                  <Button type="ghost" onClick={() => handleImageStudio()}>
-                    <EyeOutlined />
-                    Studio {`(${selectedImage.length})`}
-                  </Button>
-                  <Button type="ghost" onClick={() => handleDownload()}>
-                    <DownloadOutlined />
-                    {t('galley.list.album.download.button')}{' '}
-                    {`(${selectedImage.length})`}
-                  </Button>
-                  <Dropdown overlay={menu} placement="bottomRight">
-                    <Button type="ghost">
-                      <EnterOutlined />
-                      {t('galley.list.album.move.button')}{' '}
-                      {`(${selectedImage.length})`}
-                    </Button>
-                  </Dropdown>
-                  <Button className={styles.shareTextBtn} type="ghost">
-                    <Share />
-                    <span>
-                      {t('galley.list.album.share.button')}{' '}
-                      {`(${selectedImage.length})`}
-                    </span>
-                  </Button>
-                  <Button type="ghost">
-                    <TagOutlined />
-                    {t('galley.list.album.tag.button')}{' '}
-                    {`(${selectedImage.length})`}
-                  </Button>
-                  <Button
-                    type="ghost"
-                    onClick={() => {
-                      setOpenDeleteModal(!openDeleteModal)
-                    }}
-                  >
-                    <DeleteOutlined />
-                    {t('galley.list.album.delete.button')}{' '}
-                    {`(${selectedImage.length})`}
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
         ) : (
-          <div className={styles.headerMenu}>
-            <div className={styles.breadcrumbs}>
-              <Breadcrumb separator=">">
-                {breadcrumbs.map((x, i) => (
-                  <Breadcrumb.Item
-                    onClick={() => onBreadCrumbsClick(i)}
-                    className={styles.breadcrumbsTitle}
-                    key={i}
-                  >
-                    {x.title}
-                  </Breadcrumb.Item>
-                ))}
-              </Breadcrumb>
-            </div>
-            <div className={styles.headerText}>
-              <h2>{breadcrumbs[breadcrumbs.length - 1].title}</h2>
-              <div className={styles.rightSide}>
-                <button
-                  className={styles.btnVisible}
-                  onClick={() => handleBulkHide()}
-                >
-                  {status ? (
-                    <Tooltip
-                      placement="topLeft"
-                      title={t('galley.list.sensitive.show.image.text')}
-                    >
-                      <EyeOutlined />
-                    </Tooltip>
-                  ) : (
-                    <Tooltip
-                      placement="topLeft"
-                      title={t('galley.list.sensitive.hide.image.text')}
-                    >
-                      <EyeInvisibleOutlined />
-                    </Tooltip>
-                  )}
-                </button>
-                <button className={styles.btnFilter}>
-                  <FilterOutlined />
-                </button>
-                <Drawer
-                  placement={'bottom'}
-                  closable={false}
-                  onClose={() => setCreateAlbumDrawer((e) => !e)}
-                  visible={createAlbumDrawer}
-                  className={styles.menuContentMobile}
-                >
-                  {createContent}
-                </Drawer>
-                {!isMobile ? (
-                  <Popover
-                    placement="bottomRight"
-                    content={createContent}
-                    trigger="click"
-                    visible={createPopover}
-                  >
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          <>
+            {showMenu ? (
+              <div>
+                <div className={styles.headerText}>
+                  <span>
                     <button
-                      className={styles.btnCreate}
-                      onClick={() => setCreatePopover((e) => !e)}
+                      className={styles.selectButton}
+                      onClick={handleSelectAll}
                     >
-                      <PlusOutlined /> {t('galley.view.album.create')}
+                      <b>
+                        <MinusOutlined />
+                      </b>
                     </button>
-                  </Popover>
-                ) : (
-                  <button
-                    className={styles.btnCreate}
-                    onClick={() => setCreateAlbumDrawer((e) => !e)}
-                  >
-                    <PlusOutlined /> {t('galley.view.album.create')}
-                  </button>
-                )}
-                <div className={styles.viewContainer}>
-                  <div
-                    className={styles.viewItem}
-                    onClick={() => setContentView(false)}
-                  >
-                    {!listView ? (
-                      <GridIcon style={{ fill: '#54B2D3' }} />
+                    <Popover content={arrowContent} placement="bottom">
+                      <CaretDownOutlined style={{ color: '#54B2D3' }} />
+                    </Popover>
+                  </span>
+                  {!isMobile && (
+                    <div className={styles.rightSide}>
+                      <Button type="ghost" onClick={() => handleImageStudio()}>
+                        <EyeOutlined />
+                        Studio {`(${selectedImage.length})`}
+                      </Button>
+                      <Button type="ghost" onClick={() => handleDownload()}>
+                        <DownloadOutlined />
+                        {t('galley.list.album.download.button')}{' '}
+                        {`(${selectedImage.length})`}
+                      </Button>
+                      <Dropdown overlay={menu} placement="bottomRight">
+                        <Button type="ghost">
+                          <EnterOutlined />
+                          {t('galley.list.album.move.button')}{' '}
+                          {`(${selectedImage.length})`}
+                        </Button>
+                      </Dropdown>
+                      <Button className={styles.shareTextBtn} type="ghost">
+                        <Share />
+                        <span>
+                          {t('galley.list.album.share.button')}{' '}
+                          {`(${selectedImage.length})`}
+                        </span>
+                      </Button>
+                      <Button type="ghost">
+                        <TagOutlined />
+                        {t('galley.list.album.tag.button')}{' '}
+                        {`(${selectedImage.length})`}
+                      </Button>
+                      <Button
+                        type="ghost"
+                        onClick={() => {
+                          setOpenDeleteModal(!openDeleteModal)
+                        }}
+                      >
+                        <DeleteOutlined />
+                        {t('galley.list.album.delete.button')}{' '}
+                        {`(${selectedImage.length})`}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className={styles.headerMenu}>
+                <div className={styles.breadcrumbs}>
+                  <Breadcrumb separator=">">
+                    {breadcrumbs.map((x, i) => (
+                      <Breadcrumb.Item
+                        onClick={() => onBreadCrumbsClick(i)}
+                        className={styles.breadcrumbsTitle}
+                        key={i}
+                      >
+                        {x.title}
+                      </Breadcrumb.Item>
+                    ))}
+                  </Breadcrumb>
+                </div>
+                <div className={styles.headerText}>
+                  <h2>{breadcrumbs[breadcrumbs.length - 1].title}</h2>
+                  <div className={styles.rightSide}>
+                    <button
+                      className={styles.btnVisible}
+                      onClick={() => handleBulkHide()}
+                    >
+                      {status ? (
+                        <Tooltip
+                          placement="topLeft"
+                          title={t('galley.list.sensitive.show.image.text')}
+                        >
+                          <EyeOutlined />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip
+                          placement="topLeft"
+                          title={t('galley.list.sensitive.hide.image.text')}
+                        >
+                          <EyeInvisibleOutlined />
+                        </Tooltip>
+                      )}
+                    </button>
+                    <button className={styles.btnFilter}>
+                      <FilterOutlined />
+                    </button>
+                    <Drawer
+                      placement={'bottom'}
+                      closable={false}
+                      onClose={() => setCreateAlbumDrawer((e) => !e)}
+                      visible={createAlbumDrawer}
+                      className={styles.menuContentMobile}
+                    >
+                      {createContent}
+                    </Drawer>
+                    {!isMobile ? (
+                      <Popover
+                        placement="bottomRight"
+                        content={createContent}
+                        trigger="click"
+                        visible={createPopover}
+                      >
+                        <button
+                          className={styles.btnCreate}
+                          onClick={() => setCreatePopover((e) => !e)}
+                        >
+                          <PlusOutlined /> {t('galley.view.album.create')}
+                        </button>
+                      </Popover>
                     ) : (
-                      <GridIcon />
+                      <button
+                        className={styles.btnCreate}
+                        onClick={() => setCreateAlbumDrawer((e) => !e)}
+                      >
+                        <PlusOutlined /> {t('galley.view.album.create')}
+                      </button>
                     )}
-                  </div>
-                  <div
-                    className={styles.viewItem}
-                    onClick={() => setContentView(true)}
-                  >
-                    {listView ? (
-                      <ListIcon style={{ fill: '#54B2D3' }} />
-                    ) : (
-                      <ListIcon />
-                    )}
+                    <div className={styles.viewContainer}>
+                      <div
+                        className={styles.viewItem}
+                        onClick={() => changeContentView(false)}
+                      >
+                        {!listView ? (
+                          <GridIcon style={{ fill: '#54B2D3' }} />
+                        ) : (
+                          <GridIcon />
+                        )}
+                      </div>
+                      <div
+                        className={styles.viewItem}
+                        onClick={() => changeContentView(true)}
+                      >
+                        {listView ? (
+                          <ListIcon style={{ fill: '#54B2D3' }} />
+                        ) : (
+                          <ListIcon />
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            )}
+          </>
         )}{' '}
         <div>
           <AlbumData
-            data={{ ...currentData, albumImages: imagesList }}
-            listImages={listImages}
+            data={{ ...currentData, albumImage: imagesList || [] }}
             onFolderClick={onFolderClick}
             selectedImage={selectedImage}
             handleOnChange={handleOnChange}
             loading={loading}
-            tableLoading={tableLoading}
-            lazyLoading={lazyLoading}
             setSelectedImage={setSelectedImage}
             showMenu={showMenu}
             setOpenDeleteModal={setOpenDeleteModal}
@@ -997,13 +1021,25 @@ export const GalleryView: FC<GalleryProps> = ({
             handleAlbumDelete={handleAlbumDelete}
             listView={listView}
             setCurrentData={setCurrentData}
-            loadeMorePhotos={(id) => loadMorePhotos?.(id)}
-            currentPage={currentTablePage}
-            onPageChange={(page) => onPageChange?.(page)}
+            loadMorePhotos={loadMorePhotos}
+            gridLoading={gridLoading}
+            gridImagesLimit={gridImagesLimit}
+            tableLoading={tableLoading}
+            currentTablePage={currentTablePage}
+            tablePageSize={tablePageSize}
+            onPageChange={onPageChange}
+            tableImages={tableImages}
+            pageSizeChange={pageSizeChange}
           />
         </div>
       </div>
 
+      <ImageViewer
+        visible={showStudio}
+        albums={[]}
+        title="Title"
+        onClose={() => setShowStudio(() => false)}
+      />
       <BasicModal
         modalWidth={600}
         onCancel={() => setCreateAlbum((e) => !e)}

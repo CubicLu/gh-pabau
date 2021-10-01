@@ -1,34 +1,60 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC } from 'react'
 import styles from './ClientPhotosLayout.module.less'
 import { AlbumProps, GalleryView, ImageProps } from '@pabau/ui'
-import backMassage from '../../assets/images/gallery-album/image1.jpg'
-import backPlain from '../../assets/images/gallery-album/image2.jpg'
-import sholder from '../../assets/images/gallery-album/image3.png'
-import eyeDark from '../../assets/images/gallery-album/image4.png'
-import handsMassage from '../../assets/images/gallery-album/image5.jpg'
-import necked from '../../assets/images/gallery-album/image6.jpg'
-import backMassage2 from '../../assets/images/gallery-album/image8.jpg'
-import back from '../../assets/images/gallery-album/image9.jpg'
-import face from '../../assets/images/gallery-album/image11.jpg'
-import facial from '../../assets/images/gallery-album/image12.jpg'
-import backs from '../../assets/images/gallery-album/image10.jpg'
 
 export interface ClientPhotosLayoutProps {
-  isEmpty?: boolean
-  albumList?: AlbumProps
-  unCatImagesAlbum?: ImageProps[]
+  albumList: AlbumProps
+  images: ImageProps[]
+  onAlbumClick?: (albumId: number, table: boolean) => void
+  loadMorePhotos?: (albumId: number, page?: number) => void
+  lazyLoading?: boolean
+  pageLoading?: boolean
+  gridImagesLimit?: number
+  currentTablePage?: number
+  tablePageSize?: number
+  onPageChange?: (page: number) => void
+  tableImages?: ImageProps[]
+  onViewChange?: (view: boolean) => void
+  pageSizeChange?: (size: number) => void
 }
 
 export const ClientPhotosLayout: FC<ClientPhotosLayoutProps> = ({
-  albumList,
-  unCatImagesAlbum = [],
+  albumList = {
+    album: [],
+    albumTitle: '',
+    id: 0,
+    albumImage: [],
+    imageCount: 0,
+  },
+  images = [],
+  onAlbumClick,
+  loadMorePhotos,
+  lazyLoading = false,
+  pageLoading = false,
+  gridImagesLimit = 20,
+  currentTablePage = 1,
+  tablePageSize = 20,
+  onPageChange,
+  tableImages = [],
+  onViewChange,
+  pageSizeChange,
 }) => {
   return (
     <div className={styles.clientLayout}>
       <GalleryView
-        albumList={albumList as AlbumProps}
-        images={unCatImagesAlbum}
-        listImages={unCatImagesAlbum}
+        albumList={albumList}
+        images={images}
+        onAlbumClick={onAlbumClick}
+        loadMorePhotos={loadMorePhotos}
+        lazyLoading={lazyLoading}
+        pageLoading={pageLoading}
+        gridImagesLimit={gridImagesLimit}
+        currentTablePage={currentTablePage}
+        tablePageSize={tablePageSize}
+        onPageChange={onPageChange}
+        tableImages={tableImages}
+        onViewChange={onViewChange}
+        pageSizeChange={pageSizeChange}
       />
     </div>
   )
