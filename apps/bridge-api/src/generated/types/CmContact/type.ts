@@ -480,6 +480,34 @@ export const CmContact = objectType({
         return root.MarketingSourceData
       },
     })
+    t.list.field('Voucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Voucher
+      },
+    })
+    t.list.field('PurchasedVoucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PurchasedVoucher
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmContactCountOutputType',
       resolve(root: any) {

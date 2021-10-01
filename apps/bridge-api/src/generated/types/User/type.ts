@@ -637,6 +637,20 @@ export const User = objectType({
         return root.ActivityUserColumns
       },
     })
+    t.list.field('ServiceUserPrice', {
+      type: 'ServiceUserPrice',
+      args: {
+        where: 'ServiceUserPriceWhereInput',
+        orderBy: 'ServiceUserPriceOrderByWithRelationInput',
+        cursor: 'ServiceUserPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserPrice
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {
