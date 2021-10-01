@@ -749,29 +749,31 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                     </Tooltip>
                   </div>
                 )}
-                <div className={styles.detailsLabels}>
-                  {clientLabels.map((label, index) => (
-                    <div
-                      className={styles.detailsLabel}
-                      key={`client-label-${index}`}
-                      style={{
-                        color: label.color,
-                        borderColor: label.color,
-                        backgroundColor: `rgba(${label.color}, 0.5)`,
-                      }}
-                    >
-                      {label.label}
+                {clientLabels?.length && (
+                  <div className={styles.detailsLabels}>
+                    {clientLabels?.map((label, index) => (
+                      <div
+                        className={styles.detailsLabel}
+                        key={`client-label-${index}`}
+                        style={{
+                          color: label.color,
+                          borderColor: label.color,
+                          backgroundColor: `rgba(${label.color}, 0.5)`,
+                        }}
+                      >
+                        {label.label}
+                      </div>
+                    ))}
+                    <div className={styles.edit}>
+                      <CreateLabels
+                        labels={clientLabels}
+                        setLabels={(val) => setLabels(val)}
+                      >
+                        <PlusCircleOutlined />
+                      </CreateLabels>
                     </div>
-                  ))}
-                  <div className={styles.edit}>
-                    <CreateLabels
-                      labels={clientLabels}
-                      setLabels={(val) => setLabels(val)}
-                    >
-                      <PlusCircleOutlined />
-                    </CreateLabels>
                   </div>
-                </div>
+                )}
                 {!customizingFields && (
                   <div className={styles.detailsContainer}>
                     <div className={styles.title}>
@@ -1166,10 +1168,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
           </Carousel>
         </div>
       )}
-      {isMobile && (
+      {isMobile && clientLabels?.length > 0 && (
         <div className={styles.detailsLabelContainer}>
           <div className={styles.detailsLabelsMobile}>
-            {clientLabels.map((label, index) => (
+            {clientLabels?.map((label, index) => (
               <div
                 className={styles.detailsLabel}
                 key={`client-label-mobile-${index}`}

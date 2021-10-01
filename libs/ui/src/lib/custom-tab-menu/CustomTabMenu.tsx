@@ -111,16 +111,21 @@ export const CustomTabMenu: FC<P> = ({
       <div className={styles.mainTabMenuItems}>
         <Tabs
           tabPosition={tabPosition}
-          onChange={(name) => onActiveChanged?.(name)}
+          onChange={(name) => {
+            const clickedTab = tabs?.find((el) => el?.name === name)
+            if (clickedTab?.childTabs?.length === 0) {
+              onActiveChanged?.(clickedTab?.key)
+            }
+          }}
         >
           {tabs?.map((tab) => {
-            const { childTabs, name } = tab
+            const { childTabs, name, key } = tab
             return (
-              <TabPane tab={<span>{name}</span>} key={name}>
+              <TabPane tab={<span>{name}</span>} key={key}>
                 {childTabs && childTabs.length > 0 && (
                   <Tabs
                     tabPosition={tabPosition}
-                    onChange={(name) => onActiveChanged?.(name)}
+                    onChange={() => onActiveChanged?.(key)}
                   >
                     {childTabs.map(({ key, name }) => (
                       <TabPane tab={<span>{name}</span>} key={key} />

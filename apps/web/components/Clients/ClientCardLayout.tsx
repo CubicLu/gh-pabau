@@ -13,7 +13,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
   const { data } = useBasicContactDetailsQuery({
-    skip: !router.query['id'],
+    skip: !router.query.id,
     ssr: false,
     variables: { id: clientId },
   })
