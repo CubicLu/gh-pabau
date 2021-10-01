@@ -141,6 +141,7 @@ const getFormInfo = (form) => {
       form.cssClass === 'select' ||
       form.cssClass === 'staticImage' ||
       form.cssClass === 'diagram_mini' ||
+      form.cssClass === 'labs_tests' ||
       form.cssClass === 'image') &&
     typeof form.values !== 'string'
   ) {
@@ -206,7 +207,6 @@ interface P {
   medicalFormMacros?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
   userGroupListItems?: UserGroupListItem[]
-  labTestsListItems?: LabTestsListItem[]
 }
 
 export const FormComponentBuilder: FC<P> = ({
@@ -216,7 +216,6 @@ export const FormComponentBuilder: FC<P> = ({
   onHandleMacro,
   medicalFormMacros = [],
   userGroupListItems = [],
-  labTestsListItems = [],
   invProductsListItems = [],
 }) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
@@ -266,7 +265,6 @@ export const FormComponentBuilder: FC<P> = ({
         onHandleMacro={onHandleMacro}
         medicalFormMacros={medicalFormMacros}
         userGroupListItems={userGroupListItems}
-        labTestsListItems={labTestsListItems}
         invProductsListItems={invProductsListItems}
       />
     </div>

@@ -10,23 +10,9 @@ interface P {
   desc: string
   paramItems: OptionType[]
   required: boolean
-  labTestsListItems?: LabTestsListItem[]
   invProductsListItems?: InvProductsListItem[]
   onChangeArrValue?: (value: string[]) => void
 }
-
-const dataLists = [
-  {
-    id: 1,
-    name: 'DL7',
-    editing: false,
-  },
-  {
-    id: 2,
-    name: 'V5 Vitamin',
-    editing: false,
-  },
-]
 
 const FormLabTests: FC<P> = ({
   title = '',
@@ -34,7 +20,6 @@ const FormLabTests: FC<P> = ({
   paramItems,
   required = false,
   onChangeArrValue,
-  labTestsListItems = [],
   invProductsListItems = [],
 }) => {
   const [addedItems, setaddedItems] = useState<OptionType[]>([])
@@ -42,24 +27,15 @@ const FormLabTests: FC<P> = ({
   const [labTestsList, setLabTestsList] = useState<InvProductsListItem[]>([])
 
   useEffect(() => {
-    console.log('labTestsListItems', labTestsListItems)
+    console.log('paramItems', paramItems)
     console.log('invProductsListItems', invProductsListItems)
-    if (labTestsListItems.length > 0 && invProductsListItems.length > 0) {
-      const result1 = invProductsListItems.filter(function (
-        invProductsListItem
-      ) {
-        return labTestsListItems.some(function (labTestsListItem) {
-          return labTestsListItem.id === invProductsListItem.category_id
-        })
-      })
-      console.log('result1', result1)
+    if (paramItems.length > 0 && invProductsListItems.length > 0) {
       const result = invProductsListItems.filter((o1) =>
-        labTestsListItems.some((o2) => o1.category_id === o2.id)
+        paramItems.some((o2) => o1.category_id === o2.id)
       )
-      console.log('result', result)
       setLabTestsList(result)
     }
-  }, [labTestsListItems, invProductsListItems])
+  }, [paramItems, invProductsListItems])
 
   const onChange = (value) => {
     const addedItem = labTestsList.filter((item) => item.id === value)

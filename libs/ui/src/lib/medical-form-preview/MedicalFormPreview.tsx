@@ -36,7 +36,6 @@ export interface MedicalFormPreviewProps {
   medicalFormMacros?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
   userGroupListItems?: UserGroupListItem[]
-  labTestsListItems?: LabTestsListItem[]
 }
 
 export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
@@ -54,7 +53,6 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
   medicalFormMacros = [],
   invProductsListItems = [],
   userGroupListItems = [],
-  labTestsListItems = [],
 }) => {
   const onCancel = () => {
     closePreviewDialog?.()
@@ -82,7 +80,6 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
                     onHandleMacro={onHandleMacro}
                     medicalFormMacros={medicalFormMacros}
                     userGroupListItems={userGroupListItems}
-                    labTestsListItems={labTestsListItems}
                     invProductsListItems={invProductsListItems}
                   />
                 )}

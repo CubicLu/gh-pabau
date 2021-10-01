@@ -33,7 +33,6 @@ interface P {
   handlingSaveForm?: (form: MedicalFormTypes) => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
   macroItems?: MacroItem[]
-  labTestsListItems?: LabTestsListItem[]
   invProductsListItems?: InvProductsListItem[]
 }
 
@@ -45,7 +44,6 @@ const FormComponentInnerElement: FC<P> = ({
   formData,
   handlingSaveForm,
   macroItems = [],
-  labTestsListItems = [],
   invProductsListItems = [],
   onHandleMacro,
 }) => {
@@ -274,7 +272,6 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               paramItems={formData.arrItems}
               required={formData.required}
-              labTestsListItems={labTestsListItems}
               invProductsListItems={invProductsListItems}
               onChangeArrValue={onChangeArrValue}
             />

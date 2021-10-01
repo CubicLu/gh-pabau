@@ -323,7 +323,6 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               onHandleMacro={onHandleMacro}
               medicalFormMacros={medicalFormMacros}
               userGroupListItems={userGroupListItems}
-              labTestsListItems={labTestsListItems}
               invProductsListItems={invProductsListItems}
             />
           )}

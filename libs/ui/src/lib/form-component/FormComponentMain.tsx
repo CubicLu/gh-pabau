@@ -18,7 +18,6 @@ interface P {
   medicalFormMacros?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
   userGroupListItems?: UserGroupListItem[]
-  labTestsListItems?: LabTestsListItem[]
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
@@ -30,7 +29,6 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
     medicalFormMacros = [],
     invProductsListItems = [],
     userGroupListItems = [],
-    labTestsListItems = [],
   } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   const [macroItems, setMacroItems] = useState<MacroItem[]>([])
@@ -93,7 +91,6 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
               handlingSaveForm={handlingSaveForm}
               onHandleMacro={onHandleMacro}
               macroItems={macroItems}
-              labTestsListItems={labTestsListItems}
               invProductsListItems={invProductsListItems}
             />
           </div>

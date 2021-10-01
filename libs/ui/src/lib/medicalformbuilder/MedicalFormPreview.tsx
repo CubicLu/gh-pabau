@@ -18,7 +18,6 @@ interface P {
   medicalFormMacros?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
   userGroupListItems?: UserGroupListItem[]
-  labTestsListItems?: LabTestsListItem[]
 }
 const MedicalFormPreview: FC<P> = ({
   visible,
@@ -30,7 +29,6 @@ const MedicalFormPreview: FC<P> = ({
   medicalFormMacros = [],
   invProductsListItems = [],
   userGroupListItems = [],
-  labTestsListItems = [],
 }) => {
   return (
     <div className={styles.medicalFormEditPanel}>
@@ -53,7 +51,6 @@ const MedicalFormPreview: FC<P> = ({
         onHandleMacro={onHandleMacro}
         medicalFormMacros={medicalFormMacros}
         userGroupListItems={userGroupListItems}
-        labTestsListItems={labTestsListItems}
         invProductsListItems={invProductsListItems}
       />
     </div>

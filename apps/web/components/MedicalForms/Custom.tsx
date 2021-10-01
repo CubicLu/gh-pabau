@@ -304,7 +304,6 @@ const Custom: FC<CustomProps> = ({
                   onHandleMacro={onHandleMacro}
                   medicalFormMacros={medicalFormMacros}
                   userGroupListItems={userGroupListItems}
-                  labTestsListItems={labTestsListItems}
                   invProductsListItems={invProductsListItems}
                 />
               )}
