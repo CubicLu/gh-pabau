@@ -12,29 +12,20 @@ interface ResponseType {
 
 interface BodyData {
   type: string
-  sent_to: number[]
   sent_by: number
   destination?: string
-  user_name: string
   service_name: string
   client_name: string
   date: string
   time: string
   company_id: number
   cancellation_reason?: string
-  client_id?: number
   sent_by_name?: string
+  current_date?: string | Date
+  current_time?: string | Date
 }
 
-const requiredFields = [
-  'type',
-  'sent_by',
-  'user_name',
-  'service_name',
-  'client_id',
-  'date',
-  'time',
-]
+const requiredFields = ['type', 'sent_by', 'service_name', 'date', 'time']
 
 @Controller()
 export class NotificationController {
@@ -52,6 +43,8 @@ export class NotificationController {
       sent_by_name,
       date,
       time,
+      current_date,
+      current_time,
       cancellation_reason,
     } = data
     if (type === notificationType.cancelled_appointment_via_calendar.type) {
@@ -83,9 +76,6 @@ export class NotificationController {
     }
 
     if (enableUsers.length > 0) {
-      if (enableUsers.includes(sent_by)) {
-        enableUsers = enableUsers.filter((user) => user != sent_by)
-      }
       const response = await this.notificationService.sendNotification({
         type,
         sent_to: enableUsers,
@@ -97,6 +87,8 @@ export class NotificationController {
         date,
         time,
         cancellation_reason,
+        current_date,
+        current_time,
         company_id,
       })
       return {
