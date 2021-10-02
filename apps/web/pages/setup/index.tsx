@@ -13,6 +13,7 @@ import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './setup.module.less'
 import { useUser } from '../../context/UserContext'
+import CommonHeader from '../../components/CommonHeader'
 
 export interface LoadingType {
   videoLoader: boolean
@@ -32,20 +33,20 @@ const Index: FC = () => {
   const user = useUser()
 
   useEffect(() => {
-    if (router.query?.menu) {
+    if (router.query?.menu && isMobile) {
       const menu = router.query.menu
       const selectedMenuData = setupGridData.filter(
         (thread) => thread.keyValue === menu
       )
       if (selectedMenuData.length > 0) {
         setMenuData(selectedMenuData)
-        setShowSubMenu((value) => !value)
+        setShowSubMenu(() => true)
       }
     } else {
       setShowSubMenu(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query.menu])
+  }, [router.query.menu, isMobile])
 
   const handleSearch = (searchTerm: string) => {
     setSearchValue(searchTerm)
@@ -110,17 +111,28 @@ const Index: FC = () => {
 
   return (
     <div>
-      <Layout
-        active={'setup'}
-        isDisplayingFooter={false}
-        handleSearch={handleSearch}
-        {...user}
-      >
+      <Layout active={'setup'} isDisplayingFooter={false} {...user}>
+        <CommonHeader
+          handleSearch={handleSearch}
+          searchInputPlaceHolder={t('setup.reports.search.text.placeholder')}
+          searchValue={searchValue}
+          title={
+            showSubMenu
+              ? selectedMenuData && selectedMenuData.length > 0
+                ? selectedMenuData[0].title
+                : ''
+              : t('setup.page.title')
+          }
+          isShowSearch={!showSubMenu}
+          isLeftOutlined={showSubMenu}
+          reversePath="/setup"
+        />
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>
             <div className={styles.search}>
               <SetupSearchInput
+                searchValue={searchValue}
                 onChange={handleSearch}
                 placeholder={t('setup.page.search.placeholder')}
               />

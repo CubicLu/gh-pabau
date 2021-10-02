@@ -97,42 +97,44 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
 
   useEffect(() => {
     if (viewMagnifier && magnifierZoomInValue) {
-      toCanvas(
-        document.querySelector(
-          `#image-viewer-ex-${imageViewerExId}`
-        ) as HTMLElement
-      ).then((_) => {
+      if (document?.querySelector(`#image-viewer-ex-${imageViewerExId}`)) {
         toCanvas(
-          document.querySelector(
+          document?.querySelector(
             `#image-viewer-ex-${imageViewerExId}`
           ) as HTMLElement
-        ).then((canvas) => {
-          const screenshotData = canvas.toDataURL()
-          setScreenshot(screenshotData)
-          // load large screenshot
-          const img = new Image()
-          img.crossOrigin = 'Anonymous'
-          img.addEventListener('load', () => {
-            const { width, height } = img
-            const canvasLg = document.createElement('canvas')
-            const ctxLg = canvasLg.getContext('2d')
-            canvasLg.width = width * magnifierZoomInValue
-            canvasLg.height = height * magnifierZoomInValue
-            ctxLg?.drawImage(
-              img,
-              0,
-              0,
-              width * magnifierZoomInValue,
-              height * magnifierZoomInValue
-            )
-            setLargeScreenshot(canvasLg.toDataURL())
+        ).then((_) => {
+          toCanvas(
+            document?.querySelector(
+              `#image-viewer-ex-${imageViewerExId}`
+            ) as HTMLElement
+          ).then((canvas) => {
+            const screenshotData = canvas.toDataURL()
+            setScreenshot(screenshotData)
+            // load large screenshot
+            const img = new Image()
+            img.crossOrigin = 'Anonymous'
+            img.addEventListener('load', () => {
+              const { width, height } = img
+              const canvasLg = document.createElement('canvas')
+              const ctxLg = canvasLg.getContext('2d')
+              canvasLg.width = width * magnifierZoomInValue
+              canvasLg.height = height * magnifierZoomInValue
+              ctxLg?.drawImage(
+                img,
+                0,
+                0,
+                width * magnifierZoomInValue,
+                height * magnifierZoomInValue
+              )
+              setLargeScreenshot(canvasLg.toDataURL())
+            })
+            img.addEventListener('error', () => {
+              setLargeScreenshot('')
+            })
+            img.src = screenshotData
           })
-          img.addEventListener('error', () => {
-            setLargeScreenshot('')
-          })
-          img.src = screenshotData
         })
-      })
+      }
     } else {
       setScreenshot('')
       setLargeScreenshot('')

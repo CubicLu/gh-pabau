@@ -5,7 +5,7 @@ import { Breadcrumb } from './Breadcrumb'
 
 describe('Breadcrumb', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Breadcrumb breadcrumbItems={[]} />)
+    const { baseElement } = render(<Breadcrumb items={[]} />)
     expect(baseElement).toBeTruthy()
   })
 })

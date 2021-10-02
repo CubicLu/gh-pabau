@@ -93,7 +93,7 @@ export const ReportsCard: React.FC<ReportsCardProps> = ({
 
                 <Tooltip
                   formatter={function () {
-                    return chartLabel === 'int'
+                    return chartLabel === 'int' || chartLabel === '0'
                       ? `${this.key} - ${this.y}`
                       : `${this.key} - ${chartLabel + this.y}`
                   }}

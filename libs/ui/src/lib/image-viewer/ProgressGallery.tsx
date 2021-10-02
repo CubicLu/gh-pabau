@@ -14,6 +14,7 @@ import styles from './ProgressGallery.module.less'
 export interface ProgressGalleryProps {
   isDragging: boolean
   albums: ImageViewerAlbum[]
+  selectedAlbum?: ImageViewerAlbum
   zoomInMode: ZoomInMode
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
   setZoomInMode: React.Dispatch<React.SetStateAction<ZoomInMode>>
@@ -23,6 +24,7 @@ export interface ProgressGalleryProps {
 export const ProgressGallery: FC<ProgressGalleryProps> = ({
   isDragging,
   albums,
+  selectedAlbum,
   zoomInMode,
   setIsDragging,
   setZoomInMode,
@@ -88,14 +90,16 @@ export const ProgressGallery: FC<ProgressGalleryProps> = ({
 
   const getImageUrl = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].origin : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum ? currentAlbum?.imageList?.[imageIndex]?.origin : ''
   }
 
   const getImageDate = (selectedIndex) => {
     const { album, imageIndex } = selectedIndex
-    const currentAlbum = albums.find((el) => el.name === album)
-    return currentAlbum ? currentAlbum.imageList[imageIndex].date : ''
+    const currentAlbum = selectedAlbum || albums.find((el) => el.name === album)
+    return currentAlbum
+      ? (currentAlbum?.imageList?.[imageIndex]?.date as string)
+      : ''
   }
 
   const getNextDraggableIndex = () => {
@@ -145,7 +149,9 @@ export const ProgressGallery: FC<ProgressGalleryProps> = ({
                         width={280}
                         height={372}
                         src={
-                          selected.imageIndex >= 0 ? getImageUrl(selected) : ''
+                          selected.imageIndex >= 0
+                            ? getImageUrl(selected) || ''
+                            : ''
                         }
                         viewMagnifier={zoomInMode !== ZoomInMode.zoomInNone}
                         magnifierZoomInValue={zoomInMode}
@@ -188,7 +194,9 @@ export const ProgressGallery: FC<ProgressGalleryProps> = ({
                         width={280}
                         height={372}
                         src={
-                          selected.imageIndex >= 0 ? getImageUrl(selected) : ''
+                          selected.imageIndex >= 0
+                            ? getImageUrl(selected) || ''
+                            : ''
                         }
                         viewMagnifier={zoomInMode !== ZoomInMode.zoomInNone}
                         magnifierZoomInValue={zoomInMode}
@@ -235,7 +243,9 @@ export const ProgressGallery: FC<ProgressGalleryProps> = ({
                   dragging={isDragging && index === getNextDraggableIndex()}
                   width={196}
                   height={260}
-                  src={selected.imageIndex >= 0 ? getImageUrl(selected) : ''}
+                  src={
+                    selected.imageIndex >= 0 ? getImageUrl(selected) || '' : ''
+                  }
                   viewMagnifier={zoomInMode !== ZoomInMode.zoomInNone}
                   magnifierZoomInValue={zoomInMode}
                   date={selected.imageIndex >= 0 ? getImageDate(selected) : ''}

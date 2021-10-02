@@ -19,6 +19,7 @@ import Service from './Services/Service'
 import Performance from './Performance/Performance'
 import Emergency from './Emergency/Emergency'
 import CustomizeFields from './PersonalDetail/CustomizeFields'
+import CommonHeader from '../../../components/CommonHeader'
 import AvatarImage from '../../../assets/images/avatar.png'
 import { LeftOutlined } from '@ant-design/icons'
 const { TabPane } = Tabs
@@ -65,6 +66,11 @@ const Index: FC = () => {
   return (
     <div className={styles.userDetailMain}>
       <Layout>
+        <CommonHeader
+          isLeftOutlined
+          reversePath="/team/users"
+          title={userDetail.name}
+        />
         <div className={styles.userDetailMainWrapper}>
           <div className={styles.userDetailWrapper}>
             <div className={styles.mobileUserHeader}>
@@ -73,7 +79,7 @@ const Index: FC = () => {
             <div className={styles.userDetailHeader}>
               <div>
                 <Breadcrumb
-                  breadcrumbItems={[
+                  items={[
                     { breadcrumbName: 'Users', path: 'team/users' },
                     { breadcrumbName: userDetail.name, path: '' },
                   ]}

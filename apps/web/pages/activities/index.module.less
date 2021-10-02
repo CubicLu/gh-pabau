@@ -24,11 +24,11 @@
       align-items: center;
       margin-right: 10px;
       flex-wrap: nowrap;
-      color: #9292A3;
+      color: #9292a3;
       h5 {
         font-size: 14px;
         line-height: 22px;
-        color: #9292A3;
+        color: #9292a3;
         margin-bottom: 0;
         white-space: nowrap;
         margin-right: 10px;
@@ -38,24 +38,24 @@
       display: flex;
       position: relative;
       :global {
-          .ant-select {
-            .ant-select-selector {
-              padding-left: 30px;
-              width: 202px;
-              .ant-select-selection-search {
-                margin-left: 15px;
-              }
-              .ant-select-selection-item {
-                display: flex;
-                align-items: center;
-                height: 30px;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                display: block;
-              }
+        .ant-select {
+          .ant-select-selector {
+            padding-left: 30px;
+            width: 202px;
+            .ant-select-selection-search {
+              margin-left: 15px;
+            }
+            .ant-select-selection-item {
+              display: flex;
+              align-items: center;
+              height: 30px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              display: block;
             }
           }
+        }
         .anticon.anticon-filter {
           position: absolute;
           left: 10px;
@@ -63,7 +63,7 @@
           transform: translateY(-50%);
           z-index: 1;
           svg {
-            fill: #9292A3;
+            fill: #9292a3;
           }
         }
       }
@@ -93,23 +93,30 @@
   }
 }
 .activity-wrapper {
-
   .activities-circle {
     display: flex;
     align-items: center;
-    color: #9292A3;
+    color: #9292a3;
     h5 {
       font-size: 14px;
       line-height: 22px;
       text-align: center;
-      color: #9292A3;
+      color: #9292a3;
       margin: 0 5px 0 0;
     }
-
   }
 }
 .client-body-wrap {
   background: #fff;
+}
+
+.createPlusIcon {
+  display: flex;
+  .plus-icon-style {
+    color: var(--primary-color);
+    font-size: 25px;
+    border-radius: 4px;
+  }
 }
 
 .table-content {
@@ -127,8 +134,8 @@
               }
               .dragHandler {
                 display: -webkit-box;
-               -webkit-line-clamp: 1;
-               -webkit-box-orient: vertical;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
                 cursor: grab;
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -146,11 +153,11 @@
                   flex: 1;
                   align-items: center;
                   display: flex;
-                } 
+                }
               }
-              border-right: 2px solid #F1F1F1;
-              &:hover{
-                border-right-color:#54B2D3;
+              border-right: 2px solid #f1f1f1;
+              &:hover {
+                border-right-color: #54b2d3;
               }
             }
           }
@@ -167,13 +174,13 @@
               white-space: nowrap;
 
               &:hover {
-                background: #EEF7FB;
+                background: #eef7fb;
               }
             }
             td.ant-table-column-sort {
-                background: transparent !important;
+              background: transparent !important;
               &:hover {
-                background: #EEF7FB !important;
+                background: #eef7fb !important;
               }
             }
           }
@@ -184,7 +191,7 @@
 
   .subject-wrapper {
     display: flex;
-    color: #54B2D3;
+    color: #54b2d3;
     align-items: center;
     width: 100%;
     .dot-wrapper {
@@ -198,7 +205,7 @@
     }
     svg {
       path {
-        fill: #54B2D3;
+        fill: #54b2d3;
       }
     }
   }
@@ -212,7 +219,6 @@
       line-height: 28px;
       display: flex;
       align-items: center;
-
     }
   }
   .done-row {
@@ -286,16 +292,16 @@
         tr {
           th {
             height: 54px;
-            border-bottom: 1px solid #F1F1F1;
+            border-bottom: 1px solid #f1f1f1;
             cursor: pointer;
             background: transparent;
             &:before {
               display: none;
             }
-          &:first-child {
-            min-width: 30px;
-            max-width: 30px;
-          }
+            &:first-child {
+              min-width: 30px;
+              max-width: 30px;
+            }
             flex: 1 auto;
             .ant-table-selection {
               .ant-checkbox-wrapper {
@@ -309,22 +315,21 @@
         tr {
           td {
             height: 54px;
-            border-bottom: 1px solid #F1F1F1;
-              .ant-checkbox-wrapper {
-                .ant-checkbox {
-                  .ant-checkbox-inner {
-                    width: 18px;
-                    height: 18px;
-                    border-radius: 50%;
-                  }
+            border-bottom: 1px solid #f1f1f1;
+            .ant-checkbox-wrapper {
+              .ant-checkbox {
+                .ant-checkbox-inner {
+                  width: 18px;
+                  height: 18px;
+                  border-radius: 50%;
                 }
               }
+            }
           }
         }
       }
     }
   }
-
 
   :global .ant-table-tbody .ant-table-cell {
     padding: 6px 16px;
@@ -492,7 +497,7 @@
               line-height: 40px !important;
             }
             .ant-select-selection-search {
-               margin-left: 15px;
+              margin-left: 15px;
               .ant-select-selection-search-input {
                 height: 40px;
                 line-height: 40px !important;
@@ -507,22 +512,22 @@
           transform: translateY(-50%);
           z-index: 1;
           svg {
-            fill: #9292A3;
+            fill: #9292a3;
           }
         }
       }
     }
-  :global {
-    .ant-input-group-wrapper {
-      width: 49%;
-      .ant-input-wrapper {
-        // width: 95%;
-        .ant-input-affix-wrapper {
-          height: 40px;
+    :global {
+      .ant-input-group-wrapper {
+        width: 49%;
+        .ant-input-wrapper {
+          // width: 95%;
+          .ant-input-affix-wrapper {
+            height: 40px;
+          }
         }
       }
     }
-  }
   }
   .subHeader {
     flex-direction: column;
@@ -542,7 +547,7 @@
           margin-right: 24px;
         }
         &.active {
-          color: #54B2D3;
+          color: #54b2d3;
           :global {
             svg {
               path {
@@ -568,7 +573,8 @@
   }
   .activity-wrapper {
     .activities-circle {
-      margin-right: 35px;
+      margin-right: 0px;
+      margin-left: 15px;
     }
   }
 }
@@ -578,7 +584,7 @@
   :global {
     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
       color: #54b2d3;
-      text-shadow: 0 0 .25px currentColor;
+      text-shadow: 0 0 0.25px currentColor;
     }
     .ant-tabs-nav {
       margin-bottom: 0;
@@ -597,8 +603,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 15px 56px 15px 18px;
-  background: #FFFFFF;
-  border-bottom: 1px solid  #F1F1F1;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f1f1;
   &-Left {
     display: flex;
     align-items: center;
@@ -612,7 +618,7 @@
         margin-right: 24px;
       }
       &.active {
-        color: #54B2D3;
+        color: #54b2d3;
         :global {
           svg {
             path {
@@ -646,29 +652,29 @@
 .tabs-class {
   height: 100%;
   :global {
-      .ant-tabs-nav {
-        margin-bottom: 0;
-        .ant-tabs-nav-wrap {
+    .ant-tabs-nav {
+      margin-bottom: 0;
+      .ant-tabs-nav-wrap {
+        width: 100%;
+        .ant-tabs-nav-list {
+          overflow: auto;
+          display: flex;
+          background: #fff;
+          justify-content: space-between;
           width: 100%;
-          .ant-tabs-nav-list {
-            overflow: auto;
-            display: flex;
-            background: #fff;
-            justify-content: space-between;
-            width: 100%;
-            .ant-tabs-tab {
-              border-bottom: 1px solid #F1F1F1;
-              flex: 1;
-              padding: 11px 24px;
-              margin: 0;
-              justify-content: center;
-              .ant-tabs-ink-bar-animated {
-                height: 3px;
-              }
+          .ant-tabs-tab {
+            border-bottom: 1px solid #f1f1f1;
+            flex: 1;
+            padding: 11px 24px;
+            margin: 0;
+            justify-content: center;
+            .ant-tabs-ink-bar-animated {
+              height: 3px;
             }
           }
         }
       }
+    }
     .ant-tabs.ant-tabs-left > .ant-tabs-nav {
       width: 200px;
     }
@@ -714,9 +720,9 @@
       color: #54b2d3;
     }
     .ant-tabs-left
-    > .ant-tabs-content-holder
-    > .ant-tabs-content
-    > .ant-tabs-tabpane {
+      > .ant-tabs-content-holder
+      > .ant-tabs-content
+      > .ant-tabs-tabpane {
       padding-left: 0;
     }
   }
@@ -744,12 +750,12 @@
     border-radius: 50%;
     :global .anticon {
       cursor: pointer;
-      color: #9292A3;
+      color: #9292a3;
       svg {
         width: 24px;
         height: 24px;
         &:hover {
-          fill: #54B2D3;
+          fill: #54b2d3;
         }
       }
     }
@@ -760,7 +766,11 @@
     }
   }
 }
-:global .statusBtnMenu.ant-popover .ant-popover-inner > .ant-popover-inner-content > div {
+:global
+  .statusBtnMenu.ant-popover
+  .ant-popover-inner
+  > .ant-popover-inner-content
+  > div {
   color: red;
   & > div {
     &:not(:last-child) {
@@ -769,10 +779,10 @@
   }
 }
 .choose-column-wrapper {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 2px;
   width: 285px;
-  .custom-scroll-bar{
+  .custom-scroll-bar {
     width: 100% !important;
     height: 330px !important;
     margin-right: 5px;
@@ -797,11 +807,11 @@
     .content-ele {
       flex: 1;
       h5 {
-        background: #E4E6EA;
+        background: #e4e6ea;
         margin: 0 0 19px;
         font-size: 14px;
         line-height: 22px;
-        color: #9292A3;
+        color: #9292a3;
         padding: 0 16px;
       }
       :global .ant-radio-group {
@@ -809,8 +819,9 @@
         align-items: stretch;
         .ant-radio-button-wrapper {
           font-size: 14px;
-          color: #9292A3;
-          box-shadow: inset 1px 0px 0px #d9d9d9, inset 0px 0px 3px #d9d9d9, inset 0px -1px 0px #d9d9d9;
+          color: #9292a3;
+          box-shadow: inset 1px 0px 0px #d9d9d9, inset 0px 0px 3px #d9d9d9,
+            inset 0px -1px 0px #d9d9d9;
           &:first-child {
             border-radius: 4px 0px 0px 4px;
           }
@@ -823,11 +834,12 @@
             border-radius: 0px 4px 4px 0px;
           }
           &.ant-radio-button-wrapper-checked {
-            background: #F2F5F7;
+            background: #f2f5f7;
             border: none;
             font-size: 14px;
-            color: #BFBFBF;
-            box-shadow: inset 1px 0px 0px #d9d9d9, inset 0px 0px 3px #d9d9d9, inset 0px -1px 0px #d9d9d9;
+            color: #bfbfbf;
+            box-shadow: inset 1px 0px 0px #d9d9d9, inset 0px 0px 3px #d9d9d9,
+              inset 0px -1px 0px #d9d9d9;
             &:before {
               display: none;
             }
@@ -845,11 +857,11 @@
             font-size: 14px;
             line-height: 22px;
             margin: 0;
-            color: #9292A3;
+            color: #9292a3;
           }
-        &:last-child {
-          margin-bottom: 0;
-        }
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
         .checkbox-radio-wrapper {
           display: flex;
@@ -857,11 +869,11 @@
           width: 100%;
           margin-top: 16px;
 
-            :global .ant-checkbox-wrapper {
-              width: 100%;
-              margin-bottom: 8px;
-              margin-left: 0;
-            }
+          :global .ant-checkbox-wrapper {
+            width: 100%;
+            margin-bottom: 8px;
+            margin-left: 0;
+          }
         }
         :global {
           .ant-checkbox-group {
@@ -872,7 +884,6 @@
                 margin-top: 0;
               }
             }
-
           }
         }
       }
@@ -906,7 +917,7 @@
         .ant-popover-title {
           font-size: 14px;
           line-height: 22px;
-          color: #9292A3;
+          color: #9292a3;
           padding: 9px 16px;
           border: none;
         }
@@ -917,7 +928,8 @@
     }
   }
 }
-.column-mobile, .statusMobileDrawer {
+.column-mobile,
+.statusMobileDrawer {
   .line {
     position: absolute;
     top: 10px;
@@ -927,7 +939,7 @@
     height: 4px;
     display: flex;
     justify-content: center;
-    background: #E3E3E5;
+    background: #e3e3e5;
     border-radius: 16px;
   }
   :global {
@@ -960,17 +972,17 @@
       button {
         margin-left: 28px;
       }
-     :global .anticon {
+      :global .anticon {
         margin-right: 10px;
         width: 13px;
         height: 13px;
-         position: absolute;
-         left: 0;
-         top: 50%;
-         transform: translateY(-50%);
-         svg {
-           fill: #54B2D3;
-         }
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        svg {
+          fill: #54b2d3;
+        }
       }
     }
     .btnFooter {
@@ -1028,20 +1040,21 @@
     }
   }
 }
-.cellFormater{
+.cellFormater {
   text-overflow: ellipsis;
   overflow: hidden;
   .link {
     text-decoration: underline;
   }
-  .client-icon, .lead-icon {
+  .client-icon,
+  .lead-icon {
     margin-right: 10px;
   }
 }
 .editable-cell-value-wrap {
   padding-right: 0;
   display: flex;
-  align-items:center;
+  align-items: center;
   height: 100%;
   :global .anticon-close-circle {
     cursor: pointer;
@@ -1049,7 +1062,7 @@
       width: 24px;
       height: 24px;
       path {
-        fill: #54B2D3;
+        fill: #54b2d3;
       }
     }
   }
@@ -1058,14 +1071,14 @@
       cursor: pointer;
       min-width: 24px;
       height: 24px;
-      border: 1px solid #40A0C1;
+      border: 1px solid #40a0c1;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       svg {
         path {
-          fill: #54B2D3;
+          fill: #54b2d3;
         }
       }
     }
@@ -1097,14 +1110,14 @@
     font-size: 12px;
     line-height: 15px;
     margin-bottom: 0;
-    color: #9292A3;
+    color: #9292a3;
     padding: 16px 16px 8px;
 
     @media screen and (max-width: 767px) {
       font-size: 17px;
       line-height: 22px;
       text-align: center;
-      color: #3D3D46;
+      color: #3d3d46;
     }
   }
   :global {
@@ -1120,10 +1133,9 @@
             .ant-input-affix-wrapper {
               line-height: 30px;
               border-radius: 6px;
-
             }
             .ant-picker {
-              border: 1px solid #ECEDF0;
+              border: 1px solid #ecedf0;
               box-sizing: border-box;
               border-radius: 4px;
               height: 40px;
@@ -1147,7 +1159,7 @@
       position: relative;
       padding: 4px 16px;
       &:hover {
-        background: #EEF7FB;
+        background: #eef7fb;
       }
       :global .anticon-check {
         position: absolute;
@@ -1155,7 +1167,7 @@
         top: 50%;
         transform: translateY(-50%);
         svg {
-          fill: #54B2D3;
+          fill: #54b2d3;
         }
       }
       .profile-title {
@@ -1166,22 +1178,21 @@
         h5 {
           font-size: 14px;
           line-height: 22px;
-          color: #3D3D46;
+          color: #3d3d46;
           margin-left: 8px;
           margin-bottom: 0;
           padding: 0 !important;
 
           &.active {
-            color: #54B2D3;
+            color: #54b2d3;
             svg {
               path {
-                fill: #54B2D3;
+                fill: #54b2d3;
               }
             }
           }
         }
       }
-
     }
     @media screen and (max-width: 767px) {
       max-height: 190px;
@@ -1194,7 +1205,7 @@
     position: relative;
     padding: 4px 16px;
     &:hover {
-      background: #EEF7FB;
+      background: #eef7fb;
     }
     :global .anticon-check {
       position: absolute;
@@ -1202,7 +1213,7 @@
       top: 50%;
       transform: translateY(-50%);
       svg {
-        fill: #54B2D3;
+        fill: #54b2d3;
       }
     }
     .profile-title {
@@ -1213,29 +1224,28 @@
       h5 {
         font-size: 14px;
         line-height: 22px;
-        color: #3D3D46;
+        color: #3d3d46;
         margin-left: 8px;
         margin-bottom: 0;
         padding: 0 !important;
 
         &.active {
-          color: #54B2D3;
+          color: #54b2d3;
           svg {
             path {
-              fill: #54B2D3;
+              fill: #54b2d3;
             }
           }
         }
       }
     }
-
   }
   .select-wrap {
-      position: relative;
+    position: relative;
     .prefixIconWrap {
       .dollarIcon {
-          position: absolute;
-          top: -2px;
+        position: absolute;
+        top: -2px;
       }
       position: absolute;
       left: 26px;
@@ -1318,9 +1328,9 @@
       .ant-popover-inner {
         .ant-popover-inner-content {
           padding: 0 !important;
-          .ant-input-affix-wrapper{
-             margin: 16px 16px 8px;
-             width: calc(100% - 32px);
+          .ant-input-affix-wrapper {
+            margin: 16px 16px 8px;
+            width: calc(100% - 32px);
             .ant-input-suffix {
               .anticon-close-circle {
                 color: rgba(0, 0, 0, 0.25);
@@ -1333,7 +1343,7 @@
   }
 }
 .drag-line-handle {
-  border-color: #54B2D3 !important;
+  border-color: #54b2d3 !important;
 }
 
 .react-resizable {
@@ -1591,7 +1601,7 @@
   :global {
     .ant-collapse-item {
       .ant-collapse-header {
-        padding: 5px 0 10px 24px; 
+        padding: 5px 0 10px 24px;
         .anticon-caret-right {
           left: 4px;
           top: -2px;
@@ -1599,7 +1609,7 @@
       }
       .ant-collapse-content {
         .ant-collapse-content-box {
-          padding:0 0 0 22px;
+          padding: 0 0 0 22px;
         }
       }
     }

@@ -24,6 +24,7 @@ import {
   NotificationType,
   FormikInput,
   Avatar,
+  ImageViewer,
 } from '@pabau/ui'
 import { BasicModal } from '../modal/BasicModal'
 import AlbumData, { ImageProps } from './AlbumData'
@@ -49,9 +50,6 @@ import { ReactComponent as Load } from '../../assets/images/load.svg'
 import { ReactComponent as ListIcon } from '../../assets/images/list.svg'
 import { ReactComponent as GridIcon } from '../../assets/images/grid.svg'
 import dayjs from 'dayjs'
-// import * as tf from '@tensorflow/tfjs'
-
-// tf.enableProdMode()
 
 export interface AlbumProps {
   album: AlbumProps[]
@@ -97,6 +95,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
   const [errorMessage, setErrorMessage] = useState('')
   const [listView, setListView] = useState(false)
   const [imageListTableData, setImageListTableData] = useState([])
+  const [showStudio, setShowStudio] = useState(false)
 
   useEffect(() => {
     const temp = []
@@ -342,6 +341,13 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
     setShowMenu(false)
     setOpenDeleteModal(false)
   }
+
+  const handleImageStudio = () => {
+    console.log('SELECTED IMAGES:', selectedImage)
+    console.log('C:', currentData)
+    // setShowStudio(() => true)
+  }
+
   const handleDownload = () => {
     selectedImage.map((img: ImageProps) => {
       return imgDownload(img.img)
@@ -831,7 +837,7 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
                   </span>
                   {!isMobile && (
                     <div className={styles.rightSide}>
-                      <Button type="ghost">
+                      <Button type="ghost" onClick={() => handleImageStudio()}>
                         <EyeOutlined />
                         Studio {`(${selectedImage.length})`}
                       </Button>
@@ -1080,6 +1086,12 @@ export const GalleryView: FC<GalleryProps> = ({ albumList, images }) => {
             })}
         </div>
       )}
+      <ImageViewer
+        visible={showStudio}
+        albums={[]}
+        title="Title"
+        onClose={() => setShowStudio(() => false)}
+      />
       <BasicModal
         modalWidth={600}
         onCancel={() => setCreateAlbum((e) => !e)}

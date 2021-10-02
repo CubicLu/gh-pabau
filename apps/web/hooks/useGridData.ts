@@ -283,11 +283,6 @@ export function useGridData(t) {
         },
         { title: t('setup.developer.API'), data: [], href: '/setup/api' },
         {
-          title: t('setup.developer.credit'),
-          data: [],
-          href: '/setup/credit-notes',
-        },
-        {
           title: t('setup.developer.departments'),
           data: [],
           href: '/setup/departments',
@@ -303,6 +298,18 @@ export function useGridData(t) {
           href: '/setup/appointment-statuses',
         },
         {
+          title: t('setup.activity.types'),
+          data: [],
+          href: '/setup/activity-types',
+        },
+      ],
+      expandTitle: [
+        {
+          title: t('setup.developer.credit'),
+          data: [],
+          href: '/setup/credit-notes',
+        },
+        {
           title: t('setup.developer.lead'),
           data: [],
           href: '/setup/lead-groups',
@@ -312,13 +319,6 @@ export function useGridData(t) {
           data: [],
           href: '/setup/petty-cash',
         },
-        {
-          title: t('setup.activity.types'),
-          data: [],
-          href: '/setup/activity-types',
-        },
-      ],
-      expandTitle: [
         {
           title: t('setup.developer.salutations'),
           data: [],

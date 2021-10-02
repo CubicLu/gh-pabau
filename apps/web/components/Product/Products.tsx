@@ -25,6 +25,7 @@ import {
   useDeleteOneServicesMasterCategoryMutation,
   useLocationsAndProductQuantityQuery,
   useDeleteOneInvProductMutation,
+  useRetrieveProductCountByCategoryQuery,
 } from '@pabau/graphql'
 import type { Product } from './CreateProduct/CreateProduct'
 import {
@@ -36,7 +37,7 @@ import {
   TabMenu,
   ConfirmationDialog,
 } from '@pabau/ui'
-import { Dropdown, Menu, Spin } from 'antd'
+import { Dropdown, Menu, Spin, Tooltip } from 'antd'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { useWindowSize } from 'react-use'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -55,6 +56,14 @@ interface P {
   action: 'Edit' | 'Create'
   changeModalState: (state: boolean) => void
   isEditing: () => void
+}
+
+interface CategoryType extends InvCategory {
+  count: number
+}
+
+interface MasterCategory extends ServicesMasterCategory {
+  InvCategory: CategoryType[]
 }
 
 export const Products = ({
@@ -337,6 +346,24 @@ export const Products = ({
     },
     fetchPolicy: 'network-only',
   })
+
+  const getCountQueryVariables = useMemo(() => {
+    const queryOptions = {
+      active: filterByStatus,
+      search: search,
+    }
+    if (!search) {
+      delete queryOptions.search
+    }
+    return queryOptions
+  }, [filterByStatus, search])
+
+  const { data: countData } = useRetrieveProductCountByCategoryQuery({
+    variables: {
+      ...getCountQueryVariables,
+    },
+    fetchPolicy: 'network-only',
+  })
   const [
     createOneInvProductMutation,
     { loading: addMutationLoading },
@@ -416,8 +443,10 @@ export const Products = ({
             {
               id: 0,
               name: t('products.list.filter.all'),
+              count: countData.total ?? 0,
             },
-            ...modal?.findManyInvCategory,
+            // ...modal?.findManyInvCategory,
+            ...getCategoriesBindCount(modal?.findManyInvCategory),
           ],
         },
         {
@@ -426,11 +455,53 @@ export const Products = ({
           image: '',
           InvCategory: [],
         },
-        ...data?.findManyServicesMasterCategory,
+        // ...data?.findManyServicesMasterCategory,
+        ...getMasterCategoriesBindCount(data?.findManyServicesMasterCategory),
       ])
       setCurrentTab(1)
     }
-  }, [data, fetchingInitialData, loading, modal?.findManyInvCategory, t])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    data,
+    fetchingInitialData,
+    loading,
+    modal?.findManyInvCategory,
+    t,
+    countData,
+  ])
+
+  const getCategoriesBindCount = (categories) => {
+    if (countData && categories) {
+      const list = [...categories]
+      return getProductCount(list)
+    } else {
+      return categories
+    }
+  }
+
+  const getMasterCategoriesBindCount = (masterCategories) => {
+    if (countData && masterCategories) {
+      const categories = [...masterCategories]
+      return [...categories].map((item) => {
+        return {
+          ...item,
+          InvCategory: getProductCount(item?.InvCategory),
+        }
+      })
+    } else {
+      return masterCategories
+    }
+  }
+
+  const getProductCount = (list) => {
+    return list?.map((item) => {
+      return {
+        ...item,
+        count: countData.findManyInvCategory.find((i) => i.id === item.id)
+          ?.count.length,
+      }
+    })
+  }
 
   const GroupsItem = ({ shorten = false }) => {
     const [showOps, setShowOps] = useState(false)
@@ -520,6 +591,16 @@ export const Products = ({
   const onPaginationChange = (currentPage: number) => {
     const offset = paginateData.limit * (currentPage - 1)
     setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+  }
+
+  const resetPagination = () => {
+    setPaginateData({
+      total: 0,
+      offset: 0,
+      limit: 50,
+      currentPage: 1,
+      showingRecords: 0,
+    })
   }
 
   const handleEditEvent = (id: number) => {
@@ -667,15 +748,31 @@ export const Products = ({
     </div>
   )
 
-  const renderCategoryDropdown = (masterCategory: ServicesMasterCategory) => (
+  const getOverflowText = (text) => {
+    return <Tooltip title={text}>{text}</Tooltip>
+  }
+
+  const renderCategoryDropdown = (masterCategory: MasterCategory) => (
     <Menu style={{ maxHeight: '400px', overflowY: 'auto' }}>
       {masterCategory?.InvCategory?.map((category) => (
         <Menu.Item
           key={category.id}
-          onClick={() => setSelectedCategory(category)}
+          onClick={() => {
+            setSelectedCategory(category)
+            resetPagination()
+          }}
           className={selectedCategory?.id === category.id && 'filterByStatus'}
         >
-          {category?.name}
+          <div className={styles.categoryListWrapper}>
+            <span className={styles.listCategory}>
+              {category?.name?.length > 20
+                ? getOverflowText(category?.name)
+                : category?.name}
+            </span>
+            <div className={styles.countWrapper}>
+              <div className={styles.countContainer}>{category?.count}</div>
+            </div>
+          </div>
         </Menu.Item>
       ))}
     </Menu>
@@ -690,6 +787,7 @@ export const Products = ({
             <div className={styles.productsHeader}>
               <Dropdown
                 overlay={() => renderCategoryDropdown(group)}
+                overlayClassName={styles.filterMenu}
                 trigger={['hover']}
                 placement="bottomLeft"
               >
