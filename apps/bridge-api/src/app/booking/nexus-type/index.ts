@@ -75,8 +75,18 @@ const salesByProductCategoryType = objectType({
   },
 })
 
-const columns = objectType({
+const retailColumns = objectType({
   name: 'retailSalesDetails',
+  definition(t) {
+    t.string('name')
+    t.int('units')
+    t.float('value')
+    t.string('per')
+  },
+})
+
+const serviceColumns = objectType({
+  name: 'serviceSalesDetails',
   definition(t) {
     t.string('name')
     t.int('units')
@@ -88,14 +98,14 @@ const columns = objectType({
 const retailSalesData = objectType({
   name: 'retailSales',
   definition(t) {
-    t.list.field('retailSalesDetails', { type: columns })
+    t.list.field('retailSalesDetails', { type: retailColumns })
   },
 })
 
 const serviceSalesData = objectType({
   name: 'serviceSales',
   definition(t) {
-    t.list.field('serviceSalesDetails', { type: columns })
+    t.list.field('serviceSalesDetails', { type: serviceColumns })
   },
 })
 
