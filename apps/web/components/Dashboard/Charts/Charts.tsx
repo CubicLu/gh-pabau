@@ -4,7 +4,7 @@ import * as Highcharts from 'highcharts'
 import { CustomHighChart } from '@pabau/ui'
 import { ICount } from '../TopBoard/TopBoard'
 import styles from './Charts.module.less'
-import { columns, data } from '../../../mocks/Dashboard'
+import { columns } from '../../../mocks/Dashboard'
 
 interface ILocation {
   key: string
@@ -23,6 +23,13 @@ interface IChartDetails {
   data: IData[]
 }
 
+interface ITableColumns {
+  name: string
+  per: string
+  units: number
+  value: number
+}
+
 interface ICharts {
   location: ILocation
   dashboardMode: number
@@ -31,6 +38,8 @@ interface ICharts {
   totalBooking: ICount
   totalOnlineBooking: ICount
   totalSalesCount: ICount
+  productDetails: ITableColumns[]
+  serviceDetails: ITableColumns[]
 }
 
 export const Charts: FC<ICharts> = ({
@@ -40,6 +49,8 @@ export const Charts: FC<ICharts> = ({
   totalBooking,
   totalOnlineBooking,
   totalSalesCount,
+  productDetails,
+  serviceDetails,
 }) => {
   const List = []
   if (salesData && salesData.length > 0) {
@@ -249,7 +260,7 @@ export const Charts: FC<ICharts> = ({
           <div className={styles.chartsTable}>
             <Table
               columns={columns}
-              dataSource={data}
+              dataSource={productDetails}
               title={() => 'Products'}
               pagination={false}
             />
@@ -259,7 +270,7 @@ export const Charts: FC<ICharts> = ({
           <div className={styles.chartsTable}>
             <Table
               columns={columns}
-              dataSource={data}
+              dataSource={serviceDetails}
               title={() => 'Services'}
               pagination={false}
             />

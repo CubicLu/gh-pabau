@@ -20,7 +20,7 @@ export const columns = [
   },
   {
     title: 'Percentage',
-    dataIndex: 'percentage',
+    dataIndex: 'per',
   },
 ]
 

@@ -52,14 +52,30 @@ query getDashboardData(
         }
       }
     }
-      allSales{
-        salesByProductCategoryType{
-          status
-          data{
-            label
-            value
-          }
+    allSales{
+      salesByProductCategoryType{
+        status
+        data{
+          label
+          value
         }
       }
     }
+    retailSales{
+      retailSalesDetails{
+        name
+        units
+        value
+        per
+      }
+    }
+    serviceSales{
+      serviceSalesDetails{
+        name
+        units
+        value
+        per
+      }
+    }
   }
+}

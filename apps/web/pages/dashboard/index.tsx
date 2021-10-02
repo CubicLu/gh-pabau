@@ -473,6 +473,14 @@ export function Index() {
               totalBooking={totalBooking}
               totalOnlineBooking={totalOnlineBooking}
               totalSalesCount={totalSalesCount}
+              productDetails={
+                appointment_status?.dashboardData?.retailSales
+                  ?.retailSalesDetails
+              }
+              serviceDetails={
+                appointment_status?.dashboardData?.serviceSales
+                  ?.serviceSalesDetails
+              }
             />
           </div>
         </div>

@@ -75,6 +75,30 @@ const salesByProductCategoryType = objectType({
   },
 })
 
+const columns = objectType({
+  name: 'retailSalesDetails',
+  definition(t) {
+    t.string('name')
+    t.int('units')
+    t.float('value')
+    t.string('per')
+  },
+})
+
+const retailSalesData = objectType({
+  name: 'retailSales',
+  definition(t) {
+    t.list.field('retailSalesDetails', { type: columns })
+  },
+})
+
+const serviceSalesData = objectType({
+  name: 'serviceSales',
+  definition(t) {
+    t.list.field('serviceSalesDetails', { type: columns })
+  },
+})
+
 export const DashboardResponseType = objectType({
   name: 'dashboardData',
   definition(t) {
@@ -82,5 +106,7 @@ export const DashboardResponseType = objectType({
     t.field('salesCount', { type: SalesCount })
     t.field('allbooking', { type: bookingsByStatus })
     t.field('allSales', { type: salesByProductCategoryType })
+    t.field('retailSales', { type: retailSalesData })
+    t.field('serviceSales', { type: serviceSalesData })
   },
 })

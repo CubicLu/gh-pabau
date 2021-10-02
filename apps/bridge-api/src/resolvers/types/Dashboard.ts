@@ -7,6 +7,8 @@ import {
 import {
   retrieveSalesCount,
   retrieveSalesChartData,
+  retrieveRetailSalesData,
+  retrieveServiceSalesData,
 } from '../../app/finance/finance'
 import {
   DashboardInputType,
@@ -32,11 +34,15 @@ export const dashboardData = extendType({
         const salesCount = await retrieveSalesCount(ctx, data)
         const allbooking = await retrieveAllBookingChartData(ctx, data)
         const allSales = await retrieveSalesChartData(ctx, data)
+        const retailSales = await retrieveRetailSalesData(ctx, data)
+        const serviceSales = await retrieveServiceSalesData(ctx, data)
         return {
           bookingStatusCount: bookingStatusCount,
           salesCount: salesCount,
           allbooking: allbooking,
           allSales: allSales,
+          retailSales: retailSales,
+          serviceSales: serviceSales,
         }
       },
     })
