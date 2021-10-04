@@ -120,7 +120,6 @@ export const permissions = shield(
     Query: {
       findManyContactPackage: allow,
       findFirstCmContact: allow,
-      findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
@@ -233,12 +232,12 @@ export const permissions = shield(
       featureRequestsWeeklyAvg: allow,
       //createOneBooking: allow,
       findFirstCompany: allow,
-      findManyRotaShift: allow,
       Public_MasterCategories: allow,
       Public_ServiceCategories: allow,
       Public_Locations: allow,
       Public_Staff: allow,
       Public_Shifts: allow,
+      Public_Bookings: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData

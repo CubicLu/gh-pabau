@@ -26,10 +26,10 @@ export const Public_Shifts = extendType({
       resolve(_, input, ctx: Context) {
         return ctx.prisma.rotaShift.findMany({
           where: {
-            company_id: input.company_id,
-            uid: input.uid ? input.uid : undefined,
-            start: input.start ? { gte: input.start } : undefined,
-            end: input.end ? { lte: input.end } : undefined,
+            company_id: input.where.company_id,
+            uid: input.where.uid ? input.where.uid : undefined,
+            start: input.where.start ? { gte: input.where.start } : undefined,
+            end: input.where.end ? { lte: input.where.end } : undefined,
             holiday_id: 0,
             last_published: { not: null },
           },

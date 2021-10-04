@@ -6,6 +6,7 @@ import styles from './conformation.module.less'
 import { Verification, RenderProduct } from './verification'
 import { tooltip } from '../../../web/mocks/connect/confirmMock'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { useSelectedDataStore } from '../../store/selectedData'
 
 export interface datatype {
   key: number
@@ -80,6 +81,7 @@ const Conformation: FC<ConformationProps> = ({
     }
   }
   const { t } = useTranslationI18()
+  const [selectedData, setSelectedData] = useSelectedDataStore()
 
   return (
     <div className={styles.confirmMainWrapper}>

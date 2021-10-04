@@ -27,7 +27,6 @@ export interface P {
   charge: string
   type: string
   services: number
-  member: number
   backToStep?: (val: number) => void
 }
 export interface userType {
@@ -37,12 +36,7 @@ export interface userType {
   phone: string
   count: number
 }
-const BookingDetails: FC<P> = ({
-  changescreen,
-  charge,
-  member,
-  backToStep,
-}) => {
+const BookingDetails: FC<P> = ({ changescreen, charge, backToStep }) => {
   const settings = useContext(SettingsContext)
   const [selectedData, setSelectedData] = useSelectedDataStore()
   const { t } = useTranslationI18()
@@ -50,7 +44,7 @@ const BookingDetails: FC<P> = ({
   const [verify, setverify] = useState(false)
   const list = () => {
     const arry = []
-    for (let i = 0; i < member; i++) {
+    for (let i = 0; i < selectedData.peopleCount; i++) {
       arry.push({ count: i + 1, first: '', last: '', email: '', phone: '' })
     }
     return arry

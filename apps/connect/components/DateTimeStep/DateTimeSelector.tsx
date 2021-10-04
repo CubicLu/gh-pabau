@@ -12,13 +12,13 @@ import {
 import ClassNames from 'classnames'
 import {
   useBookingAvailableShiftsQuery,
-  useGetBookingsBetweeenDatesByUidQuery,
+  useGetBookingsBetweenDatesByUidQuery,
 } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { decimalToISO8601 } from '../../helpers/DatesHelper'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
-
+import useShifts from '../../hooks/useShifts'
 export interface P {
   onSelected: () => void
 }
@@ -46,49 +46,29 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       shift_end: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
     },
   })
-  console.log(selectedData)
+
   const {
     loading: loadingBookings,
     error: errorBookings,
     data: bookingsResult,
-  } = useGetBookingsBetweeenDatesByUidQuery({
+  } = useGetBookingsBetweenDatesByUidQuery({
     variables: {
       start_date: Number.parseInt(moment().format('YYYYMMDD000000')),
       end_date: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
       company_id: settings.id,
-      user_id: selectedData.employee.ID,
+      user_id: selectedData.employee.Public_User.id,
     },
   })
+
+  const [getShiftsOnDate, dateHasShift, getDateTimeslots] = useShifts(
+    shiftsResult,
+    bookingsResult
+  )
 
   if (errorShifts || errorBookings) return <div>Error!</div>
   if (loadingShifts || loadingBookings) return <div>Loading...</div>
 
   const shiftsByDate = []
-  for (const shift of shiftsResult.findManyRotaShift) {
-    if (!selectedData.employee || selectedData.employee.ID === shift.uid) {
-      const index = shift.start.toString().substring(0, 8)
-      if (!shiftsByDate[index]) {
-        shiftsByDate[index] = [shift]
-      } else {
-        shiftsByDate[index].push(shift)
-      }
-    }
-  }
-
-  const getShiftsOnDate = (date) => {
-    const shiftsIndex = date.format('YYYYMMDD')
-    if (shiftsByDate[shiftsIndex]?.length > 0) {
-      return {
-        key: shiftsIndex,
-        shifts: shiftsByDate[shiftsIndex],
-        morning: true,
-        afternoon: true,
-        evening: false,
-      }
-    } else {
-      return false
-    }
-  }
   const dateCellRender = (value) => {
     const shifts = getShiftsOnDate(value)
     if (!shifts) {
@@ -119,52 +99,11 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       </div>
     )
   }
-  const dateHasShift = (date) => {
-    const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
-    if (shiftsByDate[shiftsIndex]) {
-      return false
-    }
-    return true
-  }
 
   const dateSelectedHandler = (date) => {
     setSelectedDate(date)
   }
 
-  const getDateTimeslots = (date) => {
-    const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
-    if (!shiftsByDate[shiftsIndex]) {
-      return []
-    }
-    const shift = shiftsByDate[shiftsIndex][0]
-    const shiftStart = moment(decimalToISO8601(shift.start))
-    const shiftEnd = moment(decimalToISO8601(shift.end))
-
-    const timeslots = []
-    for (
-      let date = moment(shiftStart);
-      date.isBefore(shiftEnd);
-      date.add(15, 'minutes')
-    ) {
-      timeslots.push(date.format('HH:mm'))
-    }
-
-    const takenTimeslots = []
-    for (const b of bookingsResult.findManyBooking.filter(
-      (b) =>
-        b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
-    )) {
-      for (
-        let apptDate = moment(decimalToISO8601(b.start_date));
-        apptDate.isBefore(moment(decimalToISO8601(b.end_date)));
-        apptDate.add(15, 'minutes')
-      ) {
-        takenTimeslots.push(apptDate.format('HH:mm'))
-      }
-    }
-
-    return timeslots.filter((t) => !takenTimeslots.includes(t))
-  }
   const renderTimeslots = () => {
     const timeslots = getDateTimeslots(selectedDate)
     const usedTimeslots = []
@@ -340,7 +279,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
           <h4 className={Styles.headTitle}>
             {selectedData.employee.ID === 0
               ? t('connect.onlinebooking.date&time.chooseanyone')
-              : `${t('conn  ect.onlinebooking.date&time.d&tfor')} ${
+              : `${t('connect.onlinebooking.date&time.d&tfor')} ${
                   selectedData.employee.Public_User.full_name
                 } ${t('connect.onlinebooking.date&time.appointment')}`}
           </h4>

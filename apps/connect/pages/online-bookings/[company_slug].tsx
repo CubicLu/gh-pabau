@@ -141,39 +141,34 @@ export function Index() {
             />
           )}
           {currentStep === 5 && (
-            <div>
-              <BookingDetails
-                changescreen={function () {
-                  createBooking({
-                    variables: {
-                      user_id: selectedData.employee.ID,
-                      company_id: settings.id,
-                      location_id: selectedData.location.id,
-                      service_id: 2691491,
-                      contact_id: 22293092,
-                      unique_id: '123',
-                      start_date: selectedData.dateTime.format(
-                        'YYYYMMDDHHmm00'
-                      ),
-                      end_date: moment(selectedData.dateTime)
-                        .add(15, 'm')
-                        .format('YYYYMMDDHHmm00'),
-                      sent_sms: 0,
-                      sent_email: 0,
-                      sent_email_reminder: false,
-                      sent_survey: 0,
-                      issued_to: 22293092,
-                    },
-                  })
-                  setCurrentStep(currentStep + 3)
-                }}
-                charge={'123'}
-                member={selectedData.peopleCount}
-                backToStep={(step: number) => {
-                  setCurrentStep(step)
-                }}
-              />
-            </div>
+            <BookingDetails
+              changescreen={function () {
+                createBooking({
+                  variables: {
+                    user_id: selectedData.employee.ID,
+                    company_id: settings.id,
+                    location_id: selectedData.location.id,
+                    service_id: 2691491,
+                    contact_id: 22293092,
+                    unique_id: '123',
+                    start_date: selectedData.dateTime.format('YYYYMMDDHHmm00'),
+                    end_date: moment(selectedData.dateTime)
+                      .add(15, 'm')
+                      .format('YYYYMMDDHHmm00'),
+                    sent_sms: 0,
+                    sent_email: 0,
+                    sent_email_reminder: false,
+                    sent_survey: 0,
+                    issued_to: 22293092,
+                  },
+                })
+                setCurrentStep(currentStep + 3)
+              }}
+              charge={'123'}
+              backToStep={(step: number) => {
+                setCurrentStep(step)
+              }}
+            />
           )}
           {currentStep === 6 && (
             <div>
