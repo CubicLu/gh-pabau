@@ -6106,6 +6106,8 @@ model InsuranceContractPrice {
   Contract ContactInsurance @relation(fields: [contract_id], references: [id])
 
   @@index([company_id], name: "company_id")
+  @@index([contract_id], name: "contract_id")
+  @@index([product_id], name: "product_id")
   @@map("insurance_cp_amount")
 }
 
