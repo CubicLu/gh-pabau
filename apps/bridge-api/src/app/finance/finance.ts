@@ -1438,12 +1438,14 @@ export const retrieveRetailSalesData = async (
   const Details = []
   if (ratailData) {
     ratailData.map((item) => {
-      Details.push({
-        name: item.product_category_name,
-        units: item['SUM(a.quantity)'],
-        value: item['SUM(b.total)'].toFixed(2),
-        per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
-      })
+      if (item.product_category_name) {
+        Details.push({
+          name: item.product_category_name,
+          units: item['SUM(a.quantity)'],
+          value: item['SUM(b.total)'].toFixed(2),
+          per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
+        })
+      }
       return Details
     })
     if (ratailData.length > 0) {
@@ -1487,12 +1489,14 @@ export const retrieveServiceSalesData = async (
   const Details = []
   if (serviceData) {
     serviceData.map((item) => {
-      Details.push({
-        name: item.product_category_name,
-        units: item['SUM(a.quantity)'],
-        value: item['SUM(b.total)'].toFixed(2),
-        per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
-      })
+      if (item.product_category_name) {
+        Details.push({
+          name: item.product_category_name,
+          units: item['SUM(a.quantity)'],
+          value: item['SUM(b.total)'].toFixed(2),
+          per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
+        })
+      }
       return Details
     })
     if (serviceData.length > 0) {

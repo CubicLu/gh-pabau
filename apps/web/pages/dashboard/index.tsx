@@ -361,24 +361,7 @@ export function Index() {
                 : 'Personal Dashboard'
               : 'Personal Dashboard'
           }
-        >
-          <Dropdown
-            overlay={dateFilter}
-            placement="bottomRight"
-            trigger={['click']}
-            visible={openDateModel}
-          >
-            <Button icon={<CalendarOutlined />} onClick={handleDateFilter}>
-              {filterRange === 'custom'
-                ? `${Intl.DateTimeFormat('en').format(
-                    new Date(`${filterRange[0]}`)
-                  )} - ${Intl.DateTimeFormat('en').format(
-                    new Date(`${filterRange[1]}`)
-                  )}`
-                : `${filterRange.replace('-', ' ')}`}
-            </Button>
-          </Dropdown>
-        </CommonHeader>
+        ></CommonHeader>
         <div className={styles.dashboardWrapper}>
           <div className={styles.topWrapper}>
             <div className={styles.userBlock}>
@@ -428,7 +411,7 @@ export function Index() {
                 overlay={dateFilter}
                 placement="bottomRight"
                 trigger={['click']}
-                visible={!isMobile ? openDateModel : false}
+                visible={openDateModel}
               >
                 <Button icon={<CalendarOutlined />} onClick={handleDateFilter}>
                   {filterRange === 'custom'

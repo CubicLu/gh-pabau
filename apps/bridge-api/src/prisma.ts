@@ -20,6 +20,7 @@ if (!PABAU1_MYSQL_USERNAME_PODS || !PABAU1_MYSQL_PASSWORD_PODS) {
 }
 
 function getPodDbUrl(urlOrHostname) {
+  return 'mysql://root:pabau2jfdiosjfofelwjkhnfiouewhfjklsdhf@toshe.pabau.me:3754/pabau'
   if (!urlOrHostname) return DATABASE_URL
 
   let url
