@@ -15,7 +15,7 @@ export const LeadStatus = objectType({
     t.string('email_template_from')
     t.int('is_default')
     t.int('is_convert')
-    t.int('pipeline_id')
+    t.nullable.int('pipeline_id')
     t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {

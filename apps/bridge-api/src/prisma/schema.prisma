@@ -7842,7 +7842,7 @@ model LeadStatus {
   email_template_from String
   is_default          Int
   is_convert          Int
-  pipeline_id         Int
+  pipeline_id         Int?
   Company             Company?  @relation(fields: [company_id], references: [id])
   Pipeline            Pipeline? @relation(fields: [pipeline_id], references: [id])
 
