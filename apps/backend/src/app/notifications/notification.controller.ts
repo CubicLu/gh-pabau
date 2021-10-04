@@ -23,9 +23,8 @@ interface BodyData {
   sent_by_name?: string
   current_date?: string | Date
   current_time?: string | Date
+  appointment_with: number
 }
-
-const requiredFields = ['type', 'sent_by', 'service_name', 'date', 'time']
 
 @Controller()
 export class NotificationController {
@@ -45,37 +44,46 @@ export class NotificationController {
       time,
       current_date,
       current_time,
+      appointment_with,
       cancellation_reason,
     } = data
+
+    const requiredFields = [
+      'type',
+      'sent_by',
+      'service_name',
+      'date',
+      'time',
+      'appointment_with',
+    ]
+
     if (type === notificationType.cancelled_appointment_via_calendar.type) {
       requiredFields.push('cancellation_reason')
     }
 
     const errors: string[] = []
-    Object.keys(data).map((key) => {
-      if (!data[key] && requiredFields.includes(key)) {
-        errors.push(`${key} is required`)
+    for (const field of requiredFields) {
+      if (!data[field]) {
+        errors.push(`${field} is required`)
       }
-    })
+    }
 
     if (errors.length > 0) {
       return { success: false, message: errors }
     }
 
     let enableUsers = []
-    if (type === notificationType.rescheduled_appointment_via_calendar.type) {
-      enableUsers = await this.notificationService.findUserEnabledNotifications(
-        company_id,
-        notificationType.new_appointment_via_calendar.name
-      )
-    } else {
-      enableUsers = await this.notificationService.findUserEnabledNotifications(
-        company_id,
-        notificationType[type].name
-      )
-    }
+    enableUsers = await this.notificationService.findUserEnabledNotifications(
+      company_id,
+      type === notificationType.rescheduled_appointment_via_calendar.type
+        ? notificationType.new_appointment_via_calendar.name
+        : notificationType[type].name
+    )
+    enableUsers = enableUsers.filter(
+      (user) => user === appointment_with && user !== sent_by
+    )
 
-    if (enableUsers.length > 0) {
+    if (enableUsers?.length > 0) {
       const response = await this.notificationService.sendNotification({
         type,
         sent_to: enableUsers,
