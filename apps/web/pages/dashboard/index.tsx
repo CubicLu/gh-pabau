@@ -442,6 +442,13 @@ export function Index() {
                     )}`
                   : filterRange
               }
+              newClientCount={
+                appointment_status?.dashboardData?.allDetails?.newClientCount
+              }
+              avgBill={appointment_status?.dashboardData?.allDetails?.avgBiller}
+              revPerHour={
+                appointment_status?.dashboardData?.allDetails?.RevPerhour
+              }
             />
             <Charts
               location={location}

@@ -1482,7 +1482,6 @@ export const retrieveServiceSalesData = async (
     where a.product_category_type="service" and product_category_type not in ('') and a.product_id>0
     GROUP BY a.product_category_name`
   }
-
   const total = serviceData?.reduce((prev, cur) => {
     return prev + cur['SUM(b.total)'] ?? 0
   }, 0)
@@ -1512,5 +1511,67 @@ export const retrieveServiceSalesData = async (
   }
   return {
     serviceSalesDetails: Details ?? [],
+  }
+}
+export const retriveOtherDetails = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  const endDate = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DD'
+  )
+  const startDate = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DD'
+  )
+  const month = dayjs(endDate).diff(startDate, 'month')
+  const year = dayjs(endDate).diff(startDate, 'year')
+  const week = dayjs(endDate).diff(startDate, 'week')
+  const day = dayjs(endDate).diff(startDate, 'day')
+  let newClientCount = 0
+  if (data.start_date && data.end_date) {
+    newClientCount = await ctx.prisma
+      .$queryRaw`SELECT count(CreatedDate) from cm_contacts WHERE CreatedDate BETWEEN ${data.start_date} and ${data.end_date}`
+  } else {
+    newClientCount = await ctx.prisma
+      .$queryRaw`SELECT count(CreatedDate) from cm_contacts`
+  }
+  let avgBiller = 0
+  if (data.start_date && data.end_date) {
+    avgBiller = await ctx.prisma
+      .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.date BETWEEN ${data.start_date} and ${data.end_date}`
+  } else {
+    avgBiller = await ctx.prisma
+      .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id`
+  }
+  let total = 0
+  if (data.start_date && data.end_date) {
+    total = await ctx.prisma
+      .$queryRaw`SELECT SUM(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.date BETWEEN ${data.start_date} and ${data.end_date}`
+  } else {
+    total = await ctx.prisma
+      .$queryRaw`SELECT SUM(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id`
+  }
+  let RevPerhour = 0
+  switch (true) {
+    case year > 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (year * month * week * day * 24)
+      break
+    case month > 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (month * week * day * 24)
+      break
+    case week > 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (week * day * 24)
+      break
+    case day > 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (day * 24)
+      break
+    default:
+      RevPerhour = total[0]['SUM(b.total)'] / (year * month * week * day * 24)
+      break
+  }
+  return {
+    newClientCount: newClientCount[0]['count(CreatedDate)'] ?? 0,
+    avgBiller: (avgBiller[0]['AVG(b.total)'] ?? 0).toFixed(2),
+    RevPerhour: (RevPerhour ?? 0).toFixed(2),
   }
 }

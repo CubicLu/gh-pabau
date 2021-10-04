@@ -109,6 +109,15 @@ const serviceSalesData = objectType({
   },
 })
 
+const otherDashboardDetails = objectType({
+  name: 'allDetails',
+  definition(t) {
+    t.int('newClientCount')
+    t.string('avgBiller')
+    t.string('RevPerhour')
+  },
+})
+
 export const DashboardResponseType = objectType({
   name: 'dashboardData',
   definition(t) {
@@ -118,5 +127,6 @@ export const DashboardResponseType = objectType({
     t.field('allSales', { type: salesByProductCategoryType })
     t.field('retailSales', { type: retailSalesData })
     t.field('serviceSales', { type: serviceSalesData })
+    t.field('allDetails', { type: otherDashboardDetails })
   },
 })

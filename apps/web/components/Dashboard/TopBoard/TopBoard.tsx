@@ -22,6 +22,9 @@ interface ITopBoard {
   totalOnlineBooking: ICount
   totalSalesCount: ICount
   filterRange: string
+  newClientCount: number
+  avgBill: string
+  revPerHour: string
 }
 
 export const TopBoard: FC<ITopBoard> = ({
@@ -32,6 +35,9 @@ export const TopBoard: FC<ITopBoard> = ({
   totalOnlineBooking,
   totalSalesCount,
   filterRange,
+  newClientCount,
+  avgBill,
+  revPerHour,
 }) => {
   return (
     <div>
@@ -47,7 +53,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   />
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.title}>42</div>
+                  <div className={styles.title}>{newClientCount}</div>
                   <div className={styles.description}>New clients</div>
                 </div>
               </div>
@@ -63,7 +69,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   />
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.title}>£82.50</div>
+                  <div className={styles.title}>£{avgBill}</div>
                   <div className={styles.description}>Average bill</div>
                 </div>
               </div>
@@ -79,7 +85,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   />
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.title}>£82.50</div>
+                  <div className={styles.title}>£{revPerHour}</div>
                   <div className={styles.description}>Rev. per hour</div>
                 </div>
               </div>

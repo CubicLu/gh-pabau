@@ -77,5 +77,10 @@ query getDashboardData(
         per
       }
     }
+    allDetails{
+      newClientCount
+      avgBiller
+      RevPerhour
+    }
   }
 }
