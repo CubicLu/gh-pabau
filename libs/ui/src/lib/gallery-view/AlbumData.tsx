@@ -501,10 +501,10 @@ export const AlbumData: FC<AlbumDataProps> = ({
 
   const calculateAlbumLength = (currentAlbum) => {
     let albumImageLen = 0
-    albumImageLen = currentAlbum?.albumImage?.length
+    albumImageLen = currentAlbum?.imageCount
     const checkLength = (innerAlbum) => {
       innerAlbum.map((x) => {
-        albumImageLen += x.albumImage?.length
+        albumImageLen += x.imageCount
         return x.album?.length > 0 ? checkLength(x.album) : albumImageLen
       })
     }
