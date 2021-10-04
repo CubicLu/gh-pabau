@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.634",
+  "version": "2.0.627",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
@@ -322,7 +322,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 68,
+  "bump-rebuild-all": 66,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }
