@@ -1,0 +1,23 @@
+.mobile-grid-vs-list {
+  :global {
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+      background-color: transparent !important;
+    }
+    span.ant-radio-button + span {
+      color: var(--light-grey-color);
+    }
+    span.ant-radio-button-checked + span {
+      color: var(--primary-color);
+    }
+  }
+  display: flex;
+  label {
+    padding: 0px;
+    border: none !important;
+    height: 25px;
+
+    span:last-child {
+      font-size: 19px;
+    }
+  }
+}

@@ -1,4 +1,9 @@
-import { BellOutlined, MailOutlined } from '@ant-design/icons'
+import {
+  BellOutlined,
+  MailOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from '@ant-design/icons'
 import { MutationFunction } from '@apollo/client'
 import {
   Dropdown as AvatarDropDown,
@@ -46,6 +51,8 @@ interface P {
   taskManagerIFrameComponent?: JSX.Element
   clientCreateRender?: (handleClose?: () => void) => JSX.Element
   leadCreateRender?: (handleClose?: () => void) => JSX.Element
+  sidebarCollapsed?: boolean
+  toggleSidebar?: (e: boolean) => void
 }
 
 export const Header = ({
@@ -61,10 +68,13 @@ export const Header = ({
   taskManagerIFrameComponent,
   clientCreateRender,
   leadCreateRender,
+  sidebarCollapsed,
+  toggleSidebar,
 }: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
+  const [sidebarcollapsed, setSidebarcollapsed] = useState(sidebarCollapsed)
   const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
   const [
     unreadNotificationCount,
@@ -116,17 +126,48 @@ export const Header = ({
           }}
         >
           <Row>
-            <Col md={6} lg={8}>
-              <Link href="/">
-                <Logo style={{ cursor: 'pointer' }} />
-              </Link>
+            <Col md={6} lg={6}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <div>
+                  {React.createElement(
+                    sidebarcollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                    {
+                      className: classNames(
+                        styles.sidebarCollapseIcon,
+                        sidebarcollapsed && styles.sidebarCollapsed
+                      ),
+                      onClick: () => {
+                        if (toggleSidebar) {
+                          toggleSidebar(!sidebarcollapsed)
+                        }
+                        setSidebarcollapsed(!sidebarcollapsed)
+                      },
+                    }
+                  )}
+                </div>
+                <Link href="/">
+                  <Logo style={{ cursor: 'pointer' }} />
+                </Link>
+              </div>
             </Col>
-            <Col md={8} lg={8} className={styles.headerSearchCenter}>
+            <Col md={8} lg={12} className={styles.headerSearchCenter}>
               <div style={{ width: '400px' }}>
                 {searchRender ? searchRender(<Search />) : <Search />}
               </div>
+              <div style={{ marginLeft: 10 }}>
+                <QuickCreate
+                  clientCreateRender={clientCreateRender}
+                  leadCreateRender={leadCreateRender}
+                />
+              </div>
             </Col>
-            <Col md={10} lg={8} className={styles.headerIconEnd}>
+            <Col md={10} lg={6} className={styles.headerIconEnd}>
               <div className={styles.headerAlign}>
                 <Badge
                   count={unreadNewsCount + unreadNotificationCount}
@@ -143,12 +184,6 @@ export const Header = ({
                     onClick={() => onMessageIconClick?.()}
                   />
                 </Badge>
-                <div>
-                  <QuickCreate
-                    clientCreateRender={clientCreateRender}
-                    leadCreateRender={leadCreateRender}
-                  />
-                </div>
                 <AvatarDropDown
                   taskManagerIFrameComponent={taskManagerIFrameComponent}
                   userData={user}

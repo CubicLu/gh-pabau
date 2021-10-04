@@ -157,6 +157,34 @@ export const InvProduct = objectType({
         return root.InventoryMovement
       },
     })
+    t.list.field('Package', {
+      type: 'Package',
+      args: {
+        where: 'PackageWhereInput',
+        orderBy: 'PackageOrderByWithRelationInput',
+        cursor: 'PackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Package
+      },
+    })
+    t.list.field('PackageService', {
+      type: 'Package',
+      args: {
+        where: 'PackageWhereInput',
+        orderBy: 'PackageOrderByWithRelationInput',
+        cursor: 'PackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PackageService
+      },
+    })
     t.list.field('SaleItem', {
       type: 'SaleItem',
       args: {
@@ -169,6 +197,20 @@ export const InvProduct = objectType({
       },
       resolve(root: any) {
         return root.SaleItem
+      },
+    })
+    t.list.field('CompanyService', {
+      type: 'CompanyService',
+      args: {
+        where: 'CompanyServiceWhereInput',
+        orderBy: 'CompanyServiceOrderByWithRelationInput',
+        cursor: 'CompanyServiceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CompanyServiceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CompanyService
       },
     })
     t.nullable.field('_count', {

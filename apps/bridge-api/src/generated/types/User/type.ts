@@ -219,18 +219,18 @@ export const User = objectType({
         return root.UserAlertPermission
       },
     })
-    t.list.field('CmContactAlert', {
-      type: 'CmContactAlert',
+    t.list.field('ContactAlert', {
+      type: 'ContactAlert',
       args: {
-        where: 'CmContactAlertWhereInput',
-        orderBy: 'CmContactAlertOrderByWithRelationInput',
-        cursor: 'CmContactAlertWhereUniqueInput',
+        where: 'ContactAlertWhereInput',
+        orderBy: 'ContactAlertOrderByWithRelationInput',
+        cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactAlertScalarFieldEnum',
+        distinct: 'ContactAlertScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactAlert
+        return root.ContactAlert
       },
     })
     t.nullable.field('CmStaffGeneral', {
@@ -309,18 +309,18 @@ export const User = objectType({
         return root.CmContactViewed
       },
     })
-    t.list.field('CmContactNote', {
-      type: 'CmContactNote',
+    t.list.field('ContactNote', {
+      type: 'ContactNote',
       args: {
-        where: 'CmContactNoteWhereInput',
-        orderBy: 'CmContactNoteOrderByWithRelationInput',
-        cursor: 'CmContactNoteWhereUniqueInput',
+        where: 'ContactNoteWhereInput',
+        orderBy: 'ContactNoteOrderByWithRelationInput',
+        cursor: 'ContactNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactNoteScalarFieldEnum',
+        distinct: 'ContactNoteScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactNote
+        return root.ContactNote
       },
     })
     t.list.field('InvProduct', {
@@ -635,6 +635,20 @@ export const User = objectType({
       },
       resolve(root: any) {
         return root.ActivityUserColumns
+      },
+    })
+    t.list.field('ServiceUserPrice', {
+      type: 'ServiceUserPrice',
+      args: {
+        where: 'ServiceUserPriceWhereInput',
+        orderBy: 'ServiceUserPriceOrderByWithRelationInput',
+        cursor: 'ServiceUserPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserPrice
       },
     })
     t.nullable.field('_count', {

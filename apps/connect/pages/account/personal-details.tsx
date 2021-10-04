@@ -277,7 +277,7 @@ export const PersonalDetails = () => {
           {!isMobile ? (
             <>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   {
                     breadcrumbName: t('connect.account.title'),
                     path: 'connect/account',
