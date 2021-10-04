@@ -1771,6 +1771,20 @@ export const Company = objectType({
         return root.Voucher
       },
     })
+    t.list.field('Package', {
+      type: 'Package',
+      args: {
+        where: 'PackageWhereInput',
+        orderBy: 'PackageOrderByWithRelationInput',
+        cursor: 'PackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Package
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

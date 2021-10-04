@@ -1,4 +1,4 @@
-import { extendType, intArg, nonNull, stringArg } from 'nexus'
+import { extendType, nonNull, stringArg } from 'nexus'
 import { sendEmail } from '../../app/email/email-service'
 import { Context } from '../../context'
 import { v4 as uuidv4 } from 'uuid'
@@ -78,13 +78,13 @@ export const Password = extendType({
       description:
         'Changes the password for the user based on a token received over email',
       args: {
+        token: nonNull(stringArg()),
         newPassword1: nonNull(stringArg()),
         newPassword2: nonNull(stringArg()),
-        userId: nonNull(intArg()),
       },
       async resolve(
         _root,
-        { newPassword1, newPassword2, userId },
+        { token, newPassword1, newPassword2 },
         { prisma }: Context
       ) {
         if (newPassword1 !== newPassword2)
@@ -92,10 +92,24 @@ export const Password = extendType({
         if (!(await validatePassword.isValid(newPassword1)))
           throw new Error('Choose a stronger password')
 
+        const user = await prisma.passwordResetAuth.findFirst({
+          rejectOnNotFound: true,
+          where: {
+            key_code: { equals: token },
+          },
+          select: {
+            User: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        })
+
         const { salt, username, full_name } = await prisma.user.findUnique({
           rejectOnNotFound: true,
           where: {
-            id: userId,
+            id: user.User.id,
           },
           select: { username: true, salt: true, full_name: true },
         })
@@ -103,7 +117,7 @@ export const Password = extendType({
         const password = createPabau1PasswordHash(newPassword1, salt)
         await prisma.user.update({
           where: {
-            id: userId,
+            id: user.User.id,
           },
           data: { password: password, password_algor: 2 },
         })

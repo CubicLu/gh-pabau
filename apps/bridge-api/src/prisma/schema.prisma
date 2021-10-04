@@ -318,6 +318,7 @@ model Company {
 
 
   Voucher Voucher[]
+  Package Package[]
   @@map("admin")
 }
 
@@ -4114,6 +4115,7 @@ model CompanyService {
   invoice_item_name      String?
   online_only_service    Int
   Company                Company                           @relation(fields: [company_id], references: [id])
+  Product                InvProduct?                       @relation(fields: [product_id], references: [id])
   CompanyRoomService     CompanyRoomService[]
   ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
 
@@ -4634,13 +4636,13 @@ model ContactMeta {
 }
 
 model ContactPackage {
-  id                   Int             @id @default(autoincrement())
+  id                   Int           @id @default(autoincrement())
   contact_id           Int
   package_id           Int
   invoice_id           Int?
   activation_date      DateTime
   expiration_date      DateTime
-  company_id           Int?            @map("occupier")
+  company_id           Int?          @map("occupier")
   CreatedDate          DateTime
   sold_by              Int
   code                 String
@@ -4651,9 +4653,9 @@ model ContactPackage {
   package_code         String
   old_invoice_id       Int
   custom_id            Int
-  contact              CmContact?      @relation(fields: [contact_id], references: [ID])
-  invoice              InvSale?        @relation(fields: [invoice_id], references: [id])
-  session_package      SessionPackage? @relation(fields: [package_id], references: [id])
+  contact              CmContact?    @relation(fields: [contact_id], references: [ID])
+  invoice              InvSale?      @relation(fields: [invoice_id], references: [id])
+  Package              Package?      @relation(fields: [package_id], references: [id])
   contact_package_used PackageUsed[]
 
 
@@ -6680,8 +6682,11 @@ model InvProduct {
   InvWarehouseProduct       InvWarehouseProduct[]
   CmProductCustomField      CmProductCustomField[]
   InventoryMovement         InventoryMovement[]
+  Package                   Package[]              @relation("PackageProduct")
+  PackageService            Package[]              @relation("PackageServiceProduct")
 
-  SaleItem SaleItem[] @relation("fk_inv_sale_product_id")
+  SaleItem       SaleItem[]       @relation("fk_inv_sale_product_id")
+  CompanyService CompanyService[]
   @@unique([company_id, id], name: "primary")
   @@unique([company_id, name], name: "unique_product_name")
   @@unique([company_id, old_barcode], name: "unique_product_barcode")
@@ -11173,7 +11178,7 @@ model ServicesMasterCategory {
 //  @@index([service_id], name: "service_id")
 //}
 
-model SessionPackage {
+model Package {
   id                        Int             @id @default(autoincrement())
   name                      String
   description               String?
@@ -11200,8 +11205,13 @@ model SessionPackage {
   sold_online               Int             @default(1)
   contact_packages          ContactPackage?
 
+  Company        Company?    @relation(fields: [company_id], references: [id])
+  ServiceProduct InvProduct? @relation(fields: [service_product_id], references: [id], name: "PackageServiceProduct")
+  Product        InvProduct? @relation(fields: [product_id], references: [id], name: "PackageProduct")
+
 
   @@index([company_id], name: "company_id")
+  @@index([product_id], name: "product_id")
   @@index([service_product_id], name: "service_product_id")
   @@index([session_package_master_id], name: "session_package_master_id")
   @@map("session_packages")
