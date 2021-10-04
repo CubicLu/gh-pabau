@@ -379,19 +379,11 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <PictureOutlined style={{ color: '#9292A3' }} />
           &nbsp;&nbsp;&nbsp;
           {t('galley.list.album.add.album.button')}
-          <div className={styles.leftItem}>
-            <RightOutlined />
-          </div>
         </div>
         <div className={styles.menuItem}>
           <CalendarOutlined style={{ color: '#9292A3' }} />
           &nbsp;&nbsp;&nbsp;
           {t('galley.list.album.change.date.button')}
-        </div>
-        <div className={styles.menuItem}>
-          <EditOutlined style={{ color: '#9292A3' }} />
-          &nbsp;&nbsp;&nbsp;
-          {t('galley.list.album.rename.button')}
         </div>
         <div className={styles.menuItem}>
           <ShareAltOutlined style={{ color: '#9292A3' }} />

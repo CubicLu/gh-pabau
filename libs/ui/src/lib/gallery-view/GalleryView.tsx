@@ -649,17 +649,6 @@ export const GalleryView: FC<GalleryProps> = ({
                   </Popover>
                   <Popover
                     placement="bottomRight"
-                    title={albumText}
-                    content={albumContent}
-                    trigger="click"
-                    className={styles.filterMenu}
-                  >
-                    <Button type="ghost" style={{ margin: '10px 0' }}>
-                      {t('galley.view.album.view.album')} <DownOutlined />
-                    </Button>
-                  </Popover>
-                  <Popover
-                    placement="bottomRight"
                     content={createContent}
                     trigger="click"
                     visible={createPopover}
