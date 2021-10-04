@@ -14,7 +14,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(90deg, var(--primary-color) 50%, transparent 50%), linear-gradient(90deg, var(--primary-color) 50%, transparent 50%), linear-gradient(0deg, var(--primary-color) 50%, transparent 50%), linear-gradient(0deg, var(--primary-color) 50%, transparent 50%);
+    background: linear-gradient(
+        90deg,
+        var(--primary-color) 50%,
+        transparent 50%
+      ),
+      linear-gradient(90deg, var(--primary-color) 50%, transparent 50%),
+      linear-gradient(0deg, var(--primary-color) 50%, transparent 50%),
+      linear-gradient(0deg, var(--primary-color) 50%, transparent 50%);
     background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
     background-size: 7px 2px, 7px 2px, 2px 7px, 2px 7px;
     background-position: 0px 0px, 100% 100%, 0px 100%, 100% 0px;
@@ -47,12 +54,24 @@
     }
   }
   .loadingImage {
-    position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
-    background-color: rgba(black, .1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(black, 0.1);
+    :global {
+      .ant-skeleton-image {
+        width: 220px;
+        height: 220px;
+        background: transparent;
+
+        svg {
+          width: 110px;
+          height: 110px;
+        }
+      }
+    }
   }
   .preparingMagnifier {
     position: absolute;
@@ -60,7 +79,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(white, .1);
+    background-color: rgba(white, 0.1);
   }
   .empty {
     position: absolute;

@@ -208,9 +208,12 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
           <div
             className={classNames(
               styles.albumDropdownItem,
-              currentAlbum?.id &&
-                currentAlbum?.id === item?.id &&
-                styles.selected
+              (currentAlbum?.id && currentAlbum?.id === item?.id) ||
+                (currentAlbum?.id === null &&
+                  currentAlbum?.name === 'Uncategorized' &&
+                  item?.name === 'Uncategorized')
+                ? styles.selected
+                : ''
             )}
             key={`album-dropdown-item-${index}`}
             onClick={() => {
