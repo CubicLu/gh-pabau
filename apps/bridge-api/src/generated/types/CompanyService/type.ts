@@ -56,6 +56,12 @@ export const CompanyService = objectType({
         return root.Company
       },
     })
+    t.nullable.field('Product', {
+      type: 'InvProduct',
+      resolve(root: any) {
+        return root.Product
+      },
+    })
     t.list.field('CompanyRoomService', {
       type: 'CompanyRoomService',
       args: {

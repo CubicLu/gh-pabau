@@ -1,0 +1,20 @@
+query getPackages {
+  packages: findManyPackage(where: {deleted: {equals: 0}}, orderBy: {name: asc}) {
+    id
+    name
+    description
+    price
+    session_count
+    duration
+    service_product_id
+    product_id
+    disabledusers
+    ServiceProduct{
+      Service: CompanyService {
+        id 
+        name
+        color
+      }
+    }
+  }
+}
