@@ -1,10 +1,11 @@
 import React, { FC } from 'react'
-import { Row, Col, Table } from 'antd'
+import { Row, Col, Table, Skeleton } from 'antd'
 import * as Highcharts from 'highcharts'
 import { CustomHighChart } from '@pabau/ui'
 import { ICount } from '../TopBoard/TopBoard'
 import styles from './Charts.module.less'
 import { columns } from '../../../mocks/Dashboard'
+import { useTranslation } from 'react-i18next'
 
 interface ILocation {
   key: string
@@ -40,6 +41,7 @@ interface ICharts {
   totalSalesCount: ICount
   productDetails: ITableColumns[]
   serviceDetails: ITableColumns[]
+  loading: boolean
 }
 
 export const Charts: FC<ICharts> = ({
@@ -51,7 +53,9 @@ export const Charts: FC<ICharts> = ({
   totalSalesCount,
   productDetails,
   serviceDetails,
+  loading,
 }) => {
+  const { t } = useTranslation('connect')
   const List = []
   if (salesData && salesData.length > 0) {
     salesData.map((item) => {
@@ -70,7 +74,20 @@ export const Charts: FC<ICharts> = ({
       return item
     })
   } else {
-    const details = ['Services', 'Products', 'Packages', 'Gift Vouchers']
+    const details = [
+      t('dashboard.chart.service.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.chart.product.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.chart.package.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.chart.gift.label', {
+        fallbackLng: 'en',
+      }),
+    ]
     details.map((item) => {
       List.push({
         name: item,
@@ -155,7 +172,23 @@ export const Charts: FC<ICharts> = ({
       return item
     })
   } else {
-    const details = ['Completed', 'Waiting', 'Canceled', 'No Show', 'Deposits']
+    const details = [
+      t('dashboard.complete.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.waiting.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.cancel.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.no.show.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.deposits.label', {
+        fallbackLng: 'en',
+      }),
+    ]
     details.map((item) => {
       dataList.push({
         name: item,
@@ -231,12 +264,34 @@ export const Charts: FC<ICharts> = ({
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.charts}>
             <div className={styles.chartsWrap}>
-              <div className={styles.chartsHeader}>{totalSalesCount.count}</div>
-              <div className={styles.chartsSubHeader}>Recent sales</div>
-              <div className={styles.chartsExtraHeader}>
-                {location.label}, {location.date}
+              <div className={styles.chartsHeader}>
+                {!loading ? (
+                  totalSalesCount.count
+                ) : (
+                  <Skeleton.Input active className={styles.titleSkeleton} />
+                )}
               </div>
-              <CustomHighChart options={optionLine} />
+              <div className={styles.chartsSubHeader}>
+                {!loading ? (
+                  t('dashboard.recent.sales', {
+                    fallbackLng: 'en',
+                  })
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
+              </div>
+              <div className={styles.chartsExtraHeader}>
+                {!loading ? (
+                  location.label + `, ${location.date}`
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
+              </div>
+              {!loading ? (
+                <CustomHighChart options={optionLine} />
+              ) : (
+                <Skeleton.Input active className={styles.chartSkeleton} />
+              )}
             </div>
           </div>
         </Col>
@@ -244,13 +299,38 @@ export const Charts: FC<ICharts> = ({
           <div className={styles.charts}>
             <div className={styles.chartsWrap}>
               <div className={styles.chartsHeader}>
-                {totalBooking.count + totalOnlineBooking.count} booked
+                {!loading ? (
+                  `${totalBooking.count + totalOnlineBooking.count} ${t(
+                    'dashboard.booked.label',
+                    {
+                      fallbackLng: 'en',
+                    }
+                  )}`
+                ) : (
+                  <Skeleton.Input active className={styles.titleSkeleton} />
+                )}
               </div>
-              <div className={styles.chartsSubHeader}>Recent Appointments</div>
+              <div className={styles.chartsSubHeader}>
+                {!loading ? (
+                  t('dashboard.recent.appointments.label', {
+                    fallbackLng: 'en',
+                  })
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
+              </div>
               <div className={styles.chartsExtraHeader}>
-                {location.label}, {location.date}
+                {!loading ? (
+                  location.label + `, ${location.date}`
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
               </div>
-              <CustomHighChart options={option1} />
+              {!loading ? (
+                <CustomHighChart options={option1} />
+              ) : (
+                <Skeleton.Input active className={styles.chartSkeleton} />
+              )}
             </div>
           </div>
         </Col>
@@ -258,22 +338,80 @@ export const Charts: FC<ICharts> = ({
       <Row gutter={16}>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.chartsTable}>
-            <Table
-              columns={columns}
-              dataSource={productDetails}
-              title={() => 'Products'}
-              pagination={false}
-            />
+            {!loading ? (
+              <Table
+                columns={columns}
+                dataSource={productDetails}
+                title={() =>
+                  t('dashboard.product.table.label', {
+                    fallbackLng: 'en',
+                  })
+                }
+                pagination={false}
+              />
+            ) : (
+              <Table
+                rowKey="key"
+                pagination={false}
+                dataSource={[...Array.from({ length: 8 })].map((_, index) => ({
+                  key: `key${index}`,
+                }))}
+                columns={[...Array.from({ length: 4 })].map((column, index) => {
+                  return {
+                    render: function renderPlaceholder() {
+                      return (
+                        <Skeleton
+                          key={index}
+                          title
+                          active={true}
+                          paragraph={false}
+                          className={styles.tableSkeleton}
+                        />
+                      )
+                    },
+                  }
+                })}
+              />
+            )}
           </div>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.chartsTable}>
-            <Table
-              columns={columns}
-              dataSource={serviceDetails}
-              title={() => 'Services'}
-              pagination={false}
-            />
+            {!loading ? (
+              <Table
+                columns={columns}
+                dataSource={serviceDetails}
+                title={() =>
+                  t('dashboard.service.table.label', {
+                    fallbackLng: 'en',
+                  })
+                }
+                pagination={false}
+              />
+            ) : (
+              <Table
+                rowKey="key"
+                pagination={false}
+                dataSource={[...Array.from({ length: 8 })].map((_, index) => ({
+                  key: `key${index}`,
+                }))}
+                columns={[...Array.from({ length: 4 })].map((column, index) => {
+                  return {
+                    render: function renderPlaceholder() {
+                      return (
+                        <Skeleton
+                          key={index}
+                          title
+                          active={true}
+                          paragraph={false}
+                          className={styles.tableSkeleton}
+                        />
+                      )
+                    },
+                  }
+                })}
+              />
+            )}
           </div>
         </Col>
       </Row>

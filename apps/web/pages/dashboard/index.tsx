@@ -17,7 +17,7 @@ import {
 } from '@ant-design/icons'
 import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
-import { Menu, Dropdown, Drawer, Col, Row, Select } from 'antd'
+import { Menu, Dropdown, Drawer, Col, Row, Select, Skeleton } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
 import { locationList, dateRangeList } from '../../mocks/Dashboard'
@@ -28,6 +28,7 @@ import {
   defaultOnlineAppointmentList,
   defaultSalesList,
 } from '../../mocks/Dashboard'
+import { useTranslation } from 'react-i18next'
 
 interface ISetUser {
   key: string
@@ -41,6 +42,7 @@ const { Option } = Select
 export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
   const user = useUser()
+  const { t } = useTranslation('connect')
   const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
@@ -106,7 +108,7 @@ export function Index() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterDate])
 
-  const { data: appointment_status } = useQuery(
+  const { data: appointment_status, loading } = useQuery(
     GetDashboardDataDocument,
     getAppointmentQueryVariables
   )
@@ -337,14 +339,18 @@ export function Index() {
             setOpenDateModel(false)
           }}
         >
-          Cancel
+          {t('dashboard.filter.cancel.button', {
+            fallbackLng: 'en',
+          })}
         </Button>
         <Button
           type="primary"
           style={{ marginLeft: 16 }}
           onClick={onDateFilterApply}
         >
-          Apply
+          {t('dashboard.filter.apply.button', {
+            fallbackLng: 'en',
+          })}
         </Button>
       </div>
     </div>
@@ -355,74 +361,107 @@ export function Index() {
       <Layout active={'dashboard'}>
         <CommonHeader
           title={
-            user?.me?.admin
-              ? dashboardMode === 0
-                ? 'Business Dashboard'
-                : 'Personal Dashboard'
-              : 'Personal Dashboard'
+            !loading
+              ? user?.me?.admin
+                ? dashboardMode === 0
+                  ? t('dashboard.business.dashboard', {
+                      fallbackLng: 'en',
+                    })
+                  : t('dashboard.personal.dashboard', {
+                      fallbackLng: 'en',
+                    })
+                : t('dashboard.personal.dashboard', {
+                    fallbackLng: 'en',
+                  })
+              : ''
           }
         ></CommonHeader>
         <div className={styles.dashboardWrapper}>
           <div className={styles.topWrapper}>
             <div className={styles.userBlock}>
-              <Avatar size="large" src={getImage(user?.me?.image)} />
+              {!loading ? (
+                <Avatar size="large" src={getImage(user?.me?.image)} />
+              ) : (
+                <Skeleton.Avatar size={'large'} shape={'circle'} />
+              )}
               <div className={styles.detailBlock}>
-                <div className={styles.topTitle}>
-                  <div className={styles.title}>
-                    {dashboardMode === 1 ? user?.me?.full_name : location.label}
-                  </div>{' '}
-                  {dashboardMode === 1 ? null : !isMobile ? (
-                    <Dropdown
-                      overlay={customMenu}
-                      placement="bottomCenter"
-                      onVisibleChange={(val) => setOpenUserList(val)}
-                    >
-                      <div
-                        className={styles.downIcon}
-                        onClick={() => setOpenUserList(!openUserList)}
-                      >
-                        {!openUserList ? <DownOutlined /> : <UpOutlined />}
-                      </div>
-                    </Dropdown>
-                  ) : (
-                    <div className={styles.downIcon} onClick={showDrawer}>
-                      {!visible ? <DownOutlined /> : <UpOutlined />}
+                {!loading ? (
+                  <>
+                    <div className={styles.topTitle}>
+                      <div className={styles.title}>
+                        {dashboardMode === 1
+                          ? user?.me?.full_name
+                          : location.label}
+                      </div>{' '}
+                      {dashboardMode === 1 ? null : !isMobile ? (
+                        <Dropdown
+                          overlay={customMenu}
+                          placement="bottomCenter"
+                          onVisibleChange={(val) => setOpenUserList(val)}
+                        >
+                          <div
+                            className={styles.downIcon}
+                            onClick={() => setOpenUserList(!openUserList)}
+                          >
+                            {!openUserList ? <DownOutlined /> : <UpOutlined />}
+                          </div>
+                        </Dropdown>
+                      ) : (
+                        <div className={styles.downIcon} onClick={showDrawer}>
+                          {!visible ? <DownOutlined /> : <UpOutlined />}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                {user?.me?.admin ? (
-                  <div
-                    className={styles.topDescription}
-                    onClick={handleDashboardMode}
-                  >
-                    {dashboardMode === 0
-                      ? 'Business dashboard'
-                      : 'Personal dashboard'}
-                  </div>
+                    {user?.me?.admin ? (
+                      <div
+                        className={styles.topDescription}
+                        onClick={handleDashboardMode}
+                      >
+                        {dashboardMode === 0
+                          ? t('dashboard.business.dashboard', {
+                              fallbackLng: 'en',
+                            })
+                          : t('dashboard.personal.dashboard', {
+                              fallbackLng: 'en',
+                            })}
+                      </div>
+                    ) : (
+                      <div className={styles.topDescription}>
+                        {t('dashboard.personal.dashboard', {
+                          fallbackLng: 'en',
+                        })}
+                      </div>
+                    )}
+                  </>
                 ) : (
-                  <div className={styles.topDescription}>
-                    Personal dashboard
-                  </div>
+                  <Skeleton.Input active className={styles.titleSkeleton} />
                 )}
               </div>
             </div>
             <div className={styles.userRight}>
-              <Dropdown
-                overlay={dateFilter}
-                placement="bottomRight"
-                trigger={['click']}
-                visible={openDateModel}
-              >
-                <Button icon={<CalendarOutlined />} onClick={handleDateFilter}>
-                  {filterRange === 'custom'
-                    ? `${Intl.DateTimeFormat('en').format(
-                        new Date(`${filterDate[0]}`)
-                      )} - ${Intl.DateTimeFormat('en').format(
-                        new Date(`${filterDate[1]}`)
-                      )}`
-                    : `${filterRange.replace('-', ' ')}`}
-                </Button>
-              </Dropdown>
+              {!loading ? (
+                <Dropdown
+                  overlay={dateFilter}
+                  placement="bottomRight"
+                  trigger={['click']}
+                  visible={openDateModel}
+                >
+                  <Button
+                    icon={<CalendarOutlined />}
+                    onClick={handleDateFilter}
+                  >
+                    {filterRange === 'custom'
+                      ? `${Intl.DateTimeFormat('en').format(
+                          new Date(`${filterDate[0]}`)
+                        )} - ${Intl.DateTimeFormat('en').format(
+                          new Date(`${filterDate[1]}`)
+                        )}`
+                      : `${filterRange.replace('-', ' ')}`}
+                  </Button>
+                </Dropdown>
+              ) : (
+                <Skeleton.Input active className={styles.titleSkeleton} />
+              )}
             </div>
           </div>
           <div className={styles.bottomWrapper}>
@@ -449,6 +488,7 @@ export function Index() {
               revPerHour={
                 appointment_status?.dashboardData?.allDetails?.RevPerhour
               }
+              loading={loading}
             />
             <Charts
               location={location}
@@ -471,6 +511,7 @@ export function Index() {
                 appointment_status?.dashboardData?.serviceSales
                   ?.serviceSalesDetails
               }
+              loading={loading}
             />
           </div>
         </div>
@@ -485,7 +526,11 @@ export function Index() {
           height={350}
         >
           <div className={styles.headerStick} />
-          <div className={styles.headerTitle}>Choose Location</div>
+          <div className={styles.headerTitle}>
+            {t('dashboard.choose.location', {
+              fallbackLng: 'en',
+            })}
+          </div>
           <Menu className={styles.customMenuDropdown}>
             {userListData?.map((menu) => {
               return (
@@ -513,7 +558,9 @@ export function Index() {
                 style={{ width: '100%' }}
                 onClick={() => setVisible(false)}
               >
-                cancel
+                {t('dashboard.filter.cancel.button', {
+                  fallbackLng: 'en',
+                })}
               </Button>
             </Col>
             <Col xs={12}>
@@ -524,7 +571,9 @@ export function Index() {
                   setVisible(false)
                 }}
               >
-                apply
+                {t('dashboard.filter.apply.button', {
+                  fallbackLng: 'en',
+                })}
               </Button>
             </Col>
           </Row>
