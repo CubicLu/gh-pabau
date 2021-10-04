@@ -92,18 +92,18 @@ export const CmContact = objectType({
         return root.SocialSurveyFeedback
       },
     })
-    t.list.field('CmContactAlert', {
-      type: 'CmContactAlert',
+    t.list.field('ContactAlert', {
+      type: 'ContactAlert',
       args: {
-        where: 'CmContactAlertWhereInput',
-        orderBy: 'CmContactAlertOrderByWithRelationInput',
-        cursor: 'CmContactAlertWhereUniqueInput',
+        where: 'ContactAlertWhereInput',
+        orderBy: 'ContactAlertOrderByWithRelationInput',
+        cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactAlertScalarFieldEnum',
+        distinct: 'ContactAlertScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactAlert
+        return root.ContactAlert
       },
     })
     t.list.field('AccountBalance', {
@@ -190,18 +190,18 @@ export const CmContact = objectType({
         return root.CmContactMedicalCondition
       },
     })
-    t.list.field('CmContactNote', {
-      type: 'CmContactNote',
+    t.list.field('ContactNote', {
+      type: 'ContactNote',
       args: {
-        where: 'CmContactNoteWhereInput',
-        orderBy: 'CmContactNoteOrderByWithRelationInput',
-        cursor: 'CmContactNoteWhereUniqueInput',
+        where: 'ContactNoteWhereInput',
+        orderBy: 'ContactNoteOrderByWithRelationInput',
+        cursor: 'ContactNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactNoteScalarFieldEnum',
+        distinct: 'ContactNoteScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactNote
+        return root.ContactNote
       },
     })
     t.list.field('MedicalFormContact', {

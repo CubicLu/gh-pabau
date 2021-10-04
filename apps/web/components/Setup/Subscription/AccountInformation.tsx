@@ -146,7 +146,8 @@ const AccountInformation: FC = () => {
                 style={{ fontSize: 13, marginTop: 4 }}
               />
               <Link className={styles.link} style={{ marginLeft: 8 }}>
-                {data?.me?.Company?.remote_url?.replace('https://', '')}
+                {data?.me?.Company?.remote_url?.replace('https://', '') ??
+                  'crm.pabau.com'}
               </Link>
             </Row>
             <Row style={{ marginTop: 16 }}>
