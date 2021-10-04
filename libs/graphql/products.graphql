@@ -515,3 +515,20 @@ query retrieveProductCountByCategory($active: Int = 1, $search: String = "") {
     }
   )
 }
+
+query getProducts($take: Int = 100, $skip: Int = 0) {
+  products: findManyInvProduct(where: {InvCategory: {category_type: {equals: "retail"}}, AND: {is_active: {equals: 1}}}, orderBy: {name: asc}, skip: $skip, take: $take) {
+    id
+    name
+    image
+    price
+    is_active
+    Category: InvCategory {
+      id
+      name
+    }
+    stock: _count {
+      count: InvWarehouseProduct
+    }
+  }
+}
