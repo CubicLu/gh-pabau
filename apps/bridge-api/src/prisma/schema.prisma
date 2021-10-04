@@ -5,7 +5,8 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
+  url      = "mysql://root:pabau2jfdiosjfofelwjkhnfiouewhfjklsdhf@toshe.pabau.me:3754/pabau"
 }
 
 model TwoFactorHistory {
@@ -317,8 +318,9 @@ model Company {
   InsurerContract     InsurerContract[]
 
 
-  Voucher Voucher[]
-  Package Package[]
+  Voucher                Voucher[]
+  Package                Package[]
+  InsuranceContractPrice InsuranceContractPrice[]
   @@map("admin")
 }
 
@@ -4612,6 +4614,7 @@ model ContactInsurance {
   imported          Int
   CmContact         CmContact? @relation(fields: [contact_id], references: [ID])
 
+  InsuranceContractPrice InsuranceContractPrice[]
   @@index([contact_id], name: "contact_id")
   @@map("contact_insurance")
 }
@@ -6083,24 +6086,29 @@ model HolidayRequest {
 //  updated_date DateTime?
 //  sql          String?
 //}
-//
-//model insurance_cp_amount {
-//  id          Int   @id @default(autoincrement())
-//  contract_id Int
-//  product_id  Int
-//  price       Float
-//  price_0     Float @default(0.00)
-//  price_1     Float @default(0.00)
-//  price_2     Float @default(0.00)
-//  price_3     Float @default(0.00)
-//  price_4     Float @default(0.00)
-//  price_5     Float @default(0.00)
-//  price_6     Float @default(0.00)
-//  company_id  Int
-//
-//  @@index([company_id], name: "company_id")
-//}
-//
+
+model InsuranceContractPrice {
+  id          Int   @id @default(autoincrement())
+  contract_id Int
+  product_id  Int
+  price       Float
+  price_0     Float @default(0.00)
+  price_1     Float @default(0.00)
+  price_2     Float @default(0.00)
+  price_3     Float @default(0.00)
+  price_4     Float @default(0.00)
+  price_5     Float @default(0.00)
+  price_6     Float @default(0.00)
+  company_id  Int
+
+  Company  Company          @relation(fields: [company_id], references: [id])
+  Product  InvProduct       @relation(fields: [product_id], references: [id])
+  Contract ContactInsurance @relation(fields: [contract_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@map("insurance_cp_amount")
+}
+
 model InsuranceDetail {
 
   id                Int                @id @default(autoincrement())
@@ -6684,8 +6692,9 @@ model InvProduct {
   Package                   Package[]              @relation("PackageProduct")
   PackageService            Package[]              @relation("PackageServiceProduct")
 
-  SaleItem       SaleItem[]       @relation("fk_inv_sale_product_id")
-  CompanyService CompanyService[]
+  SaleItem               SaleItem[]               @relation("fk_inv_sale_product_id")
+  CompanyService         CompanyService[]
+  InsuranceContractPrice InsuranceContractPrice[]
   @@unique([company_id, id], name: "primary")
   @@unique([company_id, name], name: "unique_product_name")
   @@unique([company_id, old_barcode], name: "unique_product_barcode")
