@@ -5,8 +5,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  // url      = env("DATABASE_URL")
-  url      = "mysql://root:pabau2jfdiosjfofelwjkhnfiouewhfjklsdhf@toshe.pabau.me:3754/pabau"
+  url      = env("DATABASE_URL")
 }
 
 model TwoFactorHistory {
