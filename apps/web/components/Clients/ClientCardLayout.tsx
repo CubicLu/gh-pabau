@@ -1,8 +1,12 @@
 import { useRouter } from 'next/router'
-import { useBasicContactDetailsQuery } from '@pabau/graphql'
+import {
+  useBasicContactDetailsQuery,
+  useGetMarketingSourcesQuery,
+} from '@pabau/graphql'
 import { ClientCard, TabItem } from '@pabau/ui'
 import React, { ComponentPropsWithoutRef, FC } from 'react'
 import Layout from '../Layout/Layout'
+import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -12,11 +16,17 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
-  const { data } = useBasicContactDetailsQuery({
+
+  const { data, loading } = useBasicContactDetailsQuery({
     skip: !router.query['id'],
     ssr: false,
     variables: { id: clientId },
   })
+
+  const { data: referredByOptions } = useGetMarketingSourcesQuery({
+    skip: !router.query['id'],
+  })
+
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
     { key: 'appointments', name: 'Appointments' },
@@ -93,20 +103,38 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         onTabChanged={(key) =>
           router.push(key === 'dashboard' ? baseUrl : `${baseUrl}/${key}`)
         }
+        referredByOptions={referredByOptions?.findManyMarketingSource}
+        loading={loading || !router.query['id']}
         client={
-          data
+          data?.findFirstCmContact
             ? ({
-                fullName:
-                  data?.findFirstCmContact.Fname +
-                  ' ' +
-                  data?.findFirstCmContact.Lname,
-                gender: data?.findFirstCmContact.gender,
+                ...data.findFirstCmContact,
+                fullName: `${data.findFirstCmContact.firstName}
+                  ${data.findFirstCmContact.lastName}`,
+                referredBy: data.findFirstCmContact.marketingSource?.name,
+                avatar: data.findFirstCmContact.avatar
+                  ? getImage(data.findFirstCmContact.avatar)
+                  : '',
                 phone: {
-                  mobile: '',
-                  home: '',
+                  mobile: data.findFirstCmContact.mobile,
+                  home: data.findFirstCmContact.home,
                 },
+                address: [
+                  data.findFirstCmContact.street,
+                  data.findFirstCmContact.city,
+                  data.findFirstCmContact.county,
+                  data.findFirstCmContact.postCode,
+                  data.findFirstCmContact.country,
+                ]
+                  .filter((val) => val?.trim())
+                  .join(', '),
                 relationships: [],
-                labels: [],
+                labels: data.findFirstCmContact.labelData.map((data) => {
+                  return {
+                    label: data.labelDetail.label,
+                    color: data.labelDetail.color,
+                  }
+                }),
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }

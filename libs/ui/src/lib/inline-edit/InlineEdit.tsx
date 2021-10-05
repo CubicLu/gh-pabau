@@ -180,13 +180,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
             <div>
               <Form.Item
                 name={fieldTitle}
-                initialValue={
-                  phoneType === 'mobile'
-                    ? initialValue['mobile']
-                    : phoneType === 'home'
-                    ? initialValue['home']
-                    : ''
-                }
+                initialValue={initialValue['mobile']}
               >
                 <Input />
               </Form.Item>

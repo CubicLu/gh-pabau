@@ -217,6 +217,15 @@
     margin-bottom: 4px;
     position: relative;
     cursor: pointer;
+    .skeletonName{
+      width: 150px;
+      :global{
+        .ant-skeleton-title {
+          margin-top: 0;
+          height: 21px;
+        }
+      }
+    }
     .inactiveName {
       color: var(--red-color-text);
     }
@@ -250,6 +259,15 @@
     margin-bottom: 1rem;
     align-items: center;
     justify-content: center;
+    .skeletonStatus{
+      width: 100px;
+      :global{
+        .ant-skeleton-title {
+          margin-top: 4px;
+          height: 15px;
+        }
+      }
+    }
     .active {
       cursor: pointer;
       display: flex;
@@ -315,6 +333,16 @@
         display: flex;
       }
     }
+    .skeletonLabel{
+      width: 100px;
+      margin: 0 8px 8px 0;
+      :global{
+        .ant-skeleton-title {
+          margin: 0px;
+          height: 22px;
+        }
+      }
+    }
   }
   .onAccountContainer {
     display: grid;
@@ -362,6 +390,15 @@
       font-size: 14px;
       color: var(--light-grey-color);
       cursor: default;
+      .skeletonTitle{
+        width: 55px;
+        :global{
+          .ant-skeleton-title {
+            margin: 0px;
+            height: 22px;
+          }
+        }
+      }
     }
 
     .customizeFields {
@@ -438,12 +475,30 @@
           font-size: 12px;
           line-height: 16px;
           color: var(--light-grey-color);
+          .skeletonTitle{
+            width: 100px;
+            :global{
+              .ant-skeleton-title {
+                margin: 0px;
+                height: 20px;
+              }
+            }
+          }
         }
         .content {
           font-family: var(--font-family);
           font-size: 14px;
           line-height: 22px;
           color: var(--grey-text-color);
+          .skeletonContent{
+            width: 150px;
+            :global{
+              .ant-skeleton-title {
+                margin-top: 4px;
+                height: 22px;
+              }
+            }
+          }
           .phoneLeftContent {
             display: flex;
             align-items: center;

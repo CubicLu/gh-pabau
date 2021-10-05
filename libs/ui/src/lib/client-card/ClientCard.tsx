@@ -25,6 +25,7 @@ import {
   CommunicationTimelineProps,
   ActivitiesProps,
   AvatarUploader,
+  ReferredByOption,
   // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -120,6 +121,8 @@ interface P {
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
   activeTab?: string
+  referredByOptions?: ReferredByOption[]
+  loading?: boolean
 }
 
 const ClientCardModal: FC<P> = ({
@@ -129,6 +132,8 @@ const ClientCardModal: FC<P> = ({
   activeTab,
   children,
   onTabChanged,
+  referredByOptions,
+  loading,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -933,6 +938,8 @@ const ClientCardModal: FC<P> = ({
                 onCreateCall={() => handleCreatePopout('call')}
                 searchResults={thirdPartySearchResults}
                 appointments={appointments}
+                referredByOptions={referredByOptions}
+                loading={loading}
               />
             </div>
             <div className={styles.clientCardContent}>

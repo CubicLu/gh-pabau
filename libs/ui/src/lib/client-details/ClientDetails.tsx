@@ -38,6 +38,7 @@ import {
   Tooltip,
   Modal,
   Badge,
+  Skeleton,
 } from 'antd'
 import { CarouselRef } from 'antd/lib/carousel'
 import cn from 'classnames'
@@ -62,6 +63,11 @@ interface Labels {
   label?: string
   count?: number
   color?: string
+}
+
+export interface ReferredByOption {
+  id: number
+  name: string
 }
 
 export interface PhoneProp {
@@ -116,6 +122,8 @@ interface Appointment {
 
 export interface ClientDetailsProps {
   clientData: ClientData
+  referredByOptions?: ReferredByOption[]
+  loading?: boolean
   onCreateEmail: () => void
   onCreateCall: () => void
   searchResults: SearchItem[]
@@ -149,6 +157,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   onCreateCall,
   searchResults,
   appointments,
+  referredByOptions,
+  loading,
 }) => {
   const { t } = useTranslation('common')
   const [initFields, setInitFields] = useState(false)
@@ -166,7 +176,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       fieldName: 'referredBy',
       title: t('ui.clientdetails.referredby'),
       value: '',
-      selectOptions: ['Doctor Referral', 'David', 'Tom', 'Mark'],
+      selectOptions: [],
     },
     {
       type: 'date',
@@ -332,6 +342,19 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       setInitFields(true)
     }
   }, [clientData, fieldsOrder, initFields])
+
+  useEffect(() => {
+    const result = fieldsOrder.map((item) => {
+      if (item.fieldName === 'referredBy') {
+        item.selectOptions = referredByOptions?.map((option) => {
+          return option.name
+        })
+      }
+      return item
+    })
+    setFieldsOrder([...result])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [referredByOptions])
 
   const handleOpenAddModal = (type: RelationshipType) => {
     setType(type)
@@ -674,339 +697,261 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         <div className={styles.detailsContent}>
           <Carousel autoplay={false} dots={false} ref={ref}>
             <div className={styles.detailsOne}>
-              <div className={styles.detailsOneContent}>
-                <div className={styles.detailsAvatar}>
-                  <div className={styles.avatarContent}>
-                    <Avatar src={client?.avatar} size={112} />
-                    <div
-                      className={styles.cardBadge}
-                      onClick={handleCardBadgeUpdate}
-                    >
-                      {cardBadgeUpdate === CardBadgeUpdateType.delete ? (
-                        <Tooltip
-                          placement="top"
-                          overlayInnerStyle={{
-                            borderRadius: '3px',
-                          }}
-                          title={deleteCardTooltipTitle}
-                        >
-                          <div>
-                            <CardBadgeComponent
-                              primaryBadge={<CardImg />}
-                              secondaryBadge={<DeleteImg />}
+              {loading ? (
+                <div className={styles.detailsOne}>
+                  <div className={styles.detailsOneContent}>
+                    <div className={styles.detailsAvatar}>
+                      <Skeleton.Avatar active size={112} shape={'circle'} />
+                    </div>
+                    <div className={styles.detailsClientName}>
+                      <Skeleton
+                        className={styles.skeletonName}
+                        paragraph={false}
+                        active
+                      />
+                    </div>
+                    <div className={styles.detailsActiveStatus}>
+                      <Skeleton
+                        className={styles.skeletonStatus}
+                        paragraph={false}
+                        active
+                        round
+                      />
+                    </div>
+                    <div className={styles.detailsLabels}>
+                      {[...Array.from({ length: 4 })].map((item, index) => (
+                        <Skeleton
+                          className={styles.skeletonLabel}
+                          paragraph={false}
+                          active
+                          key={index}
+                        />
+                      ))}
+                    </div>
+                    <div className={styles.detailsContainer}>
+                      <div className={styles.title}>
+                        <Skeleton
+                          className={styles.skeletonTitle}
+                          paragraph={false}
+                          active
+                        />
+                      </div>
+                    </div>
+                    {[...Array.from({ length: 7 })].map((item, index) => (
+                      <div className={styles.clientDetailsItem} key={index}>
+                        <div>
+                          <div className={styles.title}>
+                            <Skeleton
+                              className={styles.skeletonTitle}
+                              paragraph={false}
+                              active
                             />
                           </div>
-                        </Tooltip>
-                      ) : (
-                        <CardBadgeComponent
-                          primaryBadge={<CardImg />}
-                          secondaryBadge={updateCardBadgeComponent()}
-                        />
-                      )}
-                    </div>
-                    <div className={styles.connectionBadge}>
-                      {connectionBadgeUpdate ===
-                      ConnectionBadgeUpdateType.check ? (
-                        <Popover
-                          placement="topRight"
-                          title={pabauConnectPopoverTitle}
-                          content={plusConnectionBadgePopoverContent}
-                          trigger="click"
-                        >
-                          <Tooltip
-                            placement="top"
-                            overlayInnerStyle={{
-                              maxWidth: '128px',
-                              borderRadius: '3px',
-                            }}
-                            title={checkConnectionBadgeTooltipTitle}
-                          >
-                            <div>
-                              <ConnectionBadgeComponent
-                                primaryBadge={<ConnectionImg />}
-                                secondaryBadge={updateConnectionBadgeComponent()}
-                              />
-                            </div>
-                          </Tooltip>
-                        </Popover>
-                      ) : (
-                        <Popover
-                          placement="topRight"
-                          title={pabauConnectPopoverTitle}
-                          content={checkConnectionBadgePopoverContent}
-                          trigger="click"
-                        >
-                          <Tooltip
-                            placement="top"
-                            overlayInnerStyle={{
-                              maxWidth: '128px',
-                              borderRadius: '3px',
-                            }}
-                            title={plusConnectionBadgeTooltipTitle}
-                          >
-                            <div>
-                              <ConnectionBadgeComponent
-                                primaryBadge={<ConnectionImg />}
-                                secondaryBadge={updateConnectionBadgeComponent()}
-                              />
-                            </div>
-                          </Tooltip>
-                        </Popover>
-                      )}
-                    </div>
-                  </div>
-                  <div
-                    className={styles.edit}
-                    onClick={() => setShowAvatarUploader(true)}
-                  >
-                    <EditOutlined />
-                  </div>
-                </div>
-                <div className={styles.detailsClientName}>
-                  <div className={!activeClient ? styles.inactiveName : ''}>
-                    <ClientInfoInlineEdit
-                      fieldTitle="First Name"
-                      keyValue="firstName"
-                      type={InlineEditDataTypes.text}
-                      initialValue={client?.firstName}
-                      onUpdateValue={handleUpdateClientInfo}
-                    >
-                      {client?.firstName}
-                    </ClientInfoInlineEdit>{' '}
-                    <ClientInfoInlineEdit
-                      fieldTitle="Last Name"
-                      keyValue="lastName"
-                      type={InlineEditDataTypes.text}
-                      initialValue={client?.lastName}
-                      onUpdateValue={handleUpdateClientInfo}
-                    >
-                      {client?.lastName}
-                    </ClientInfoInlineEdit>
-                  </div>
-                  <div className={styles.edit}>
-                    <EditOutlined />
-                  </div>
-                </div>
-                {activeClient && (
-                  <div className={styles.detailsActiveStatus}>
-                    <Popconfirm
-                      title={t('ui.clientdetails.deactive.confirm')}
-                      onConfirm={() => setActiveClient(false)}
-                    >
-                      <Tooltip title="Inactive">
-                        <div className={styles.active}>
-                          <div className={styles.greenDot} />
-                          {t('ui.clientdetails.active')}
+                          <div className={styles.content}>
+                            <Skeleton
+                              className={styles.skeletonContent}
+                              paragraph={false}
+                              active
+                              round
+                            />
+                          </div>
                         </div>
-                      </Tooltip>
-                    </Popconfirm>
-                  </div>
-                )}
-                {!activeClient && (
-                  <div className={styles.detailsActiveStatus}>
-                    <Tooltip title="Activate">
-                      <div
-                        className={styles.deactivate}
-                        onClick={() => setActiveClient(true)}
-                      >
-                        {t('ui.clientdetails.deactivate')}
                       </div>
-                    </Tooltip>
-                  </div>
-                )}
-                <div className={styles.detailsLabels}>
-                  {clientLabels.map((label, index) => (
-                    <div
-                      className={styles.detailsLabel}
-                      key={`client-label-${index}`}
-                      style={{
-                        color: label.color,
-                        borderColor: label.color,
-                        backgroundColor: `rgba(${label.color}, 0.5)`,
-                      }}
-                    >
-                      {label.label}
-                    </div>
-                  ))}
-                  <div className={styles.edit}>
-                    <CreateLabels
-                      labels={clientLabels}
-                      setLabels={(val) => setLabels(val)}
-                    >
-                      <PlusCircleOutlined />
-                    </CreateLabels>
+                    ))}
                   </div>
                 </div>
-                {!customizingFields && (
-                  <div className={styles.detailsContainer}>
-                    <div className={styles.title}>
-                      {t('ui.clientdetails.details')}
+              ) : (
+                <div className={styles.detailsOneContent}>
+                  <div className={styles.detailsAvatar}>
+                    <div className={styles.avatarContent}>
+                      <Avatar src={client?.avatar} size={112} />
+                      <div
+                        className={styles.cardBadge}
+                        onClick={handleCardBadgeUpdate}
+                      >
+                        {cardBadgeUpdate === CardBadgeUpdateType.delete ? (
+                          <Tooltip
+                            placement="top"
+                            overlayInnerStyle={{
+                              borderRadius: '3px',
+                            }}
+                            title={deleteCardTooltipTitle}
+                          >
+                            <div>
+                              <CardBadgeComponent
+                                primaryBadge={<CardImg />}
+                                secondaryBadge={<DeleteImg />}
+                              />
+                            </div>
+                          </Tooltip>
+                        ) : (
+                          <CardBadgeComponent
+                            primaryBadge={<CardImg />}
+                            secondaryBadge={updateCardBadgeComponent()}
+                          />
+                        )}
+                      </div>
+                      <div className={styles.connectionBadge}>
+                        {connectionBadgeUpdate ===
+                        ConnectionBadgeUpdateType.check ? (
+                          <Popover
+                            placement="topRight"
+                            title={pabauConnectPopoverTitle}
+                            content={plusConnectionBadgePopoverContent}
+                            trigger="click"
+                          >
+                            <Tooltip
+                              placement="top"
+                              overlayInnerStyle={{
+                                maxWidth: '128px',
+                                borderRadius: '3px',
+                              }}
+                              title={checkConnectionBadgeTooltipTitle}
+                            >
+                              <div>
+                                <ConnectionBadgeComponent
+                                  primaryBadge={<ConnectionImg />}
+                                  secondaryBadge={updateConnectionBadgeComponent()}
+                                />
+                              </div>
+                            </Tooltip>
+                          </Popover>
+                        ) : (
+                          <Popover
+                            placement="topRight"
+                            title={pabauConnectPopoverTitle}
+                            content={checkConnectionBadgePopoverContent}
+                            trigger="click"
+                          >
+                            <Tooltip
+                              placement="top"
+                              overlayInnerStyle={{
+                                maxWidth: '128px',
+                                borderRadius: '3px',
+                              }}
+                              title={plusConnectionBadgeTooltipTitle}
+                            >
+                              <div>
+                                <ConnectionBadgeComponent
+                                  primaryBadge={<ConnectionImg />}
+                                  secondaryBadge={updateConnectionBadgeComponent()}
+                                />
+                              </div>
+                            </Tooltip>
+                          </Popover>
+                        )}
+                      </div>
                     </div>
                     <div
-                      className={styles.customizeFields}
-                      onClick={() => setCustomizingFields(true)}
+                      className={styles.edit}
+                      onClick={() => setShowAvatarUploader(true)}
                     >
-                      {t('ui.clientdetails.customise')}
-                      <Tooltip
-                        title={t('ui.clientdetails.customise.edit')}
-                        overlayStyle={{ width: '100px' }}
+                      <EditOutlined />
+                    </div>
+                  </div>
+                  <div className={styles.detailsClientName}>
+                    <div className={!activeClient ? styles.inactiveName : ''}>
+                      <ClientInfoInlineEdit
+                        fieldTitle="First Name"
+                        keyValue="firstName"
+                        type={InlineEditDataTypes.text}
+                        initialValue={client?.firstName}
+                        onUpdateValue={handleUpdateClientInfo}
                       >
+                        {client?.firstName}
+                      </ClientInfoInlineEdit>{' '}
+                      <ClientInfoInlineEdit
+                        fieldTitle="Last Name"
+                        keyValue="lastName"
+                        type={InlineEditDataTypes.text}
+                        initialValue={client?.lastName}
+                        onUpdateValue={handleUpdateClientInfo}
+                      >
+                        {client?.lastName}
+                      </ClientInfoInlineEdit>
+                    </div>
+                    <div className={styles.edit}>
+                      <EditOutlined />
+                    </div>
+                  </div>
+                  {activeClient && (
+                    <div className={styles.detailsActiveStatus}>
+                      <Popconfirm
+                        title={t('ui.clientdetails.deactive.confirm')}
+                        onConfirm={() => setActiveClient(false)}
+                      >
+                        <Tooltip title="Inactive">
+                          <div className={styles.active}>
+                            <div className={styles.greenDot} />
+                            {t('ui.clientdetails.active')}
+                          </div>
+                        </Tooltip>
+                      </Popconfirm>
+                    </div>
+                  )}
+                  {!activeClient && (
+                    <div className={styles.detailsActiveStatus}>
+                      <Tooltip title="Activate">
                         <div
-                          className={styles.editCustomizeFields}
-                          onClick={() => setCustomizingFields(true)}
+                          className={styles.deactivate}
+                          onClick={() => setActiveClient(true)}
                         >
-                          <EditOutlined />
+                          {t('ui.clientdetails.deactivate')}
                         </div>
                       </Tooltip>
                     </div>
+                  )}
+                  <div className={styles.detailsLabels}>
+                    {clientLabels.map((label, index) => (
+                      <div
+                        className={styles.detailsLabel}
+                        key={`client-label-${index}`}
+                        style={{
+                          color: label.color,
+                          borderColor: label.color,
+                          backgroundColor: `rgba(${label.color}, 0.5)`,
+                        }}
+                      >
+                        {label.label}
+                      </div>
+                    ))}
+                    <div className={styles.edit}>
+                      <CreateLabels
+                        labels={clientLabels}
+                        setLabels={(val) => setLabels(val)}
+                      >
+                        <PlusCircleOutlined />
+                      </CreateLabels>
+                    </div>
                   </div>
-                )}
-                {!customizingFields &&
-                  fieldsOrder.map((field, index) => (
-                    <React.Fragment key={`client-details-item-${index}`}>
-                      {field.type === InlineEditDataTypes.address ? (
-                        <div
-                          className={
-                            field.value
-                              ? styles.clientDetailsItem
-                              : styles.emptyClientDetailsItem
-                          }
+                  {!customizingFields && (
+                    <div className={styles.detailsContainer}>
+                      <div className={styles.title}>
+                        {t('ui.clientdetails.details')}
+                      </div>
+                      <div
+                        className={styles.customizeFields}
+                        onClick={() => setCustomizingFields(true)}
+                      >
+                        {t('ui.clientdetails.customise')}
+                        <Tooltip
+                          title={t('ui.clientdetails.customise.edit')}
+                          overlayStyle={{ width: '100px' }}
                         >
-                          <div>
-                            <div className={styles.title}>{field.title}</div>
-                            <div
-                              className={cn(
-                                styles.content,
-                                client[field.fieldName]
-                                  ? ''
-                                  : styles.emptyContent
-                              )}
-                            >
-                              {field.value}
-                            </div>
-                          </div>
                           <div
-                            className={styles.addAddress}
-                            onClick={(e) => {
-                              e.preventDefault()
-                              setShowAddressModal(true)
-                            }}
+                            className={styles.editCustomizeFields}
+                            onClick={() => setCustomizingFields(true)}
                           >
-                            <PlusCircleOutlined /> <h5>Add Address</h5>
-                          </div>
-                        </div>
-                      ) : field.type === InlineEditDataTypes.phone ? (
-                        <div
-                          className={
-                            field.value['mobile'] || field.value['home']
-                              ? styles.clientDetailsItem
-                              : styles.emptyClientDetailsItem
-                          }
-                        >
-                          <div className={styles.emptyHoverTag}>
-                            <div className={styles.title}>{field.title}</div>
-                            <div
-                              className={cn(
-                                styles.content,
-                                styles.phoneContent,
-                                client[field.fieldName]
-                                  ? ''
-                                  : styles.emptyContent
-                              )}
-                            >
-                              <InlineEdit
-                                fieldTitle={field.title}
-                                orderIndex={getFieldName(field.title)}
-                                type={field.type}
-                                initialValue={
-                                  client[field.fieldName] ||
-                                  t('ui.clientdetails.empty')
-                                }
-                                onUpdateValue={handleUpdatePhoneFieldValue}
-                                selectOptions={field.selectOptions}
-                              >
-                                {!field.value['mobile'] &&
-                                !field.value['home'] ? (
-                                  t('ui.clientdetails.empty')
-                                ) : (
-                                  <div className={styles.phoneLeftContent}>
-                                    <div className={styles.phoneContentTitle}>
-                                      {field.value['mobile'] && (
-                                        <span>{`${field.value['mobile']} (Mobile)`}</span>
-                                      )}
-                                      {field.value['home'] && (
-                                        <span>{`${field.value['home']} (Home)`}</span>
-                                      )}
-                                    </div>
-                                    <div className={styles.phoneCallContent}>
-                                      <Tooltip
-                                        placement="top"
-                                        title="Call with Caller"
-                                      >
-                                        <div
-                                          className={styles.iconContent}
-                                          onClick={(e) => {
-                                            e.stopPropagation()
-                                            if (client[field.fieldName])
-                                              onCreateCall()
-                                          }}
-                                        >
-                                          <PhoneFilled />
-                                        </div>
-                                      </Tooltip>
-                                      <div className={styles.iconContent}>
-                                        <DownOutlined />
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </InlineEdit>
-                            </div>
-                          </div>
-                          <div className={styles.edit}>
                             <EditOutlined />
                           </div>
-                        </div>
-                      ) : field.type === InlineEditDataTypes.list &&
-                        !isMobile ? (
-                        <div
-                          className={
-                            field.value
-                              ? styles.clientDetailsItem
-                              : styles.emptyClientDetailsItem
-                          }
-                        >
-                          <div>
-                            <div className={styles.title}>{field.title}</div>
-                            <div
-                              className={cn(
-                                styles.content,
-                                client[field.fieldName]
-                                  ? ''
-                                  : styles.emptyContent
-                              )}
-                            >
-                              <InlineEdit
-                                fieldTitle={field.title}
-                                orderIndex={getFieldName(field.title)}
-                                type={field.type}
-                                initialValue={
-                                  client[field.fieldName] ||
-                                  t('ui.clientdetails.empty')
-                                }
-                                selectOptions={field.selectOptions}
-                                onUpdateValue={handleUpdateFieldValue}
-                              >
-                                {field.value || t('ui.clientdetails.empty')}
-                              </InlineEdit>
-                            </div>
-                          </div>
-                          <div className={styles.edit}>
-                            <EditOutlined />
-                          </div>
-                        </div>
-                      ) : (
-                        !isMobile && (
+                        </Tooltip>
+                      </div>
+                    </div>
+                  )}
+                  {!customizingFields &&
+                    fieldsOrder.map((field, index) => (
+                      <React.Fragment key={`client-details-item-${index}`}>
+                        {field.type === InlineEditDataTypes.address ? (
                           <div
                             className={
                               field.value
@@ -1021,75 +966,225 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   styles.content,
                                   client[field.fieldName]
                                     ? ''
-                                    : styles.emptyContent,
-                                  field.value ? styles.emailContent : ''
+                                    : styles.emptyContent
                                 )}
-                                onClick={() =>
-                                  field.type === InlineEditDataTypes.email &&
-                                  client[field.fieldName] &&
-                                  onCreateEmail()
-                                }
                               >
-                                {field.type !== 'date' && (
-                                  <InlineEdit
-                                    fieldTitle={field.title}
-                                    orderIndex={getFieldName(field.title)}
-                                    type={field.type}
-                                    initialValue={
-                                      client[field.fieldName] ||
-                                      t('ui.clientdetails.empty')
-                                    }
-                                    onUpdateValue={handleUpdateFieldValue}
-                                  >
-                                    {field.value ? (
-                                      field.value
-                                    ) : (
-                                      <span>{t('ui.clientdetails.empty')}</span>
-                                    )}
-                                  </InlineEdit>
+                                {field.value}
+                              </div>
+                            </div>
+                            <div
+                              className={styles.addAddress}
+                              onClick={(e) => {
+                                e.preventDefault()
+                                setShowAddressModal(true)
+                              }}
+                            >
+                              <PlusCircleOutlined /> <h5>Add Address</h5>
+                            </div>
+                          </div>
+                        ) : field.type === InlineEditDataTypes.phone ? (
+                          <div
+                            className={
+                              field.value['mobile'] || field.value['home']
+                                ? styles.clientDetailsItem
+                                : styles.emptyClientDetailsItem
+                            }
+                          >
+                            <div className={styles.emptyHoverTag}>
+                              <div className={styles.title}>{field.title}</div>
+                              <div
+                                className={cn(
+                                  styles.content,
+                                  styles.phoneContent,
+                                  client[field.fieldName]
+                                    ? ''
+                                    : styles.emptyContent
                                 )}
-                                {field.type === 'date' && (
-                                  <InlineEdit
-                                    fieldTitle={field.title}
-                                    orderIndex={getFieldName(field.title)}
-                                    type={field.type}
-                                    initialValue={moment(
-                                      client[field.fieldName]
-                                    ).format('DD/MM/YYYY')}
-                                    dateFormat="DD/MM/YYYY"
-                                    onUpdateValue={handleUpdateFieldValue}
-                                  >
-                                    {field.value &&
-                                    typeof field.value === 'string'
-                                      ? `${moment(field.value).format(
-                                          'YYYY-MM-DD'
-                                        )} (${moment(field.value).fromNow(
-                                          true
-                                        )})`
-                                      : t('ui.clientdetails.empty')}
-                                  </InlineEdit>
-                                )}
+                              >
+                                <InlineEdit
+                                  fieldTitle={field.title}
+                                  orderIndex={getFieldName(field.title)}
+                                  type={field.type}
+                                  initialValue={
+                                    client[field.fieldName] ||
+                                    t('ui.clientdetails.empty')
+                                  }
+                                  onUpdateValue={handleUpdatePhoneFieldValue}
+                                  selectOptions={field.selectOptions}
+                                >
+                                  {!field.value['mobile'] &&
+                                  !field.value['home'] ? (
+                                    t('ui.clientdetails.empty')
+                                  ) : (
+                                    <div className={styles.phoneLeftContent}>
+                                      <div className={styles.phoneContentTitle}>
+                                        {field.value['mobile'] && (
+                                          <span>{`${field.value['mobile']} (Mobile)`}</span>
+                                        )}
+                                        {field.value['home'] && (
+                                          <span>{`${field.value['home']} (Home)`}</span>
+                                        )}
+                                      </div>
+                                      <div className={styles.phoneCallContent}>
+                                        <Tooltip
+                                          placement="top"
+                                          title="Call with Caller"
+                                        >
+                                          <div
+                                            className={styles.iconContent}
+                                            onClick={(e) => {
+                                              e.stopPropagation()
+                                              if (client[field.fieldName])
+                                                onCreateCall()
+                                            }}
+                                          >
+                                            <PhoneFilled />
+                                          </div>
+                                        </Tooltip>
+                                        <div className={styles.iconContent}>
+                                          <DownOutlined />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </InlineEdit>
                               </div>
                             </div>
                             <div className={styles.edit}>
                               <EditOutlined />
                             </div>
                           </div>
-                        )
-                      )}
-                    </React.Fragment>
-                  ))}
-                {customizingFields && (
-                  <CustomizeFields
-                    defaultOrder={fieldsOrder}
-                    onCancel={() => setCustomizingFields(false)}
-                    onChange={(order) => {
-                      setFieldsOrder(order)
-                      setCustomizingFields(false)
-                    }}
-                  />
-                )}
-              </div>
+                        ) : field.type === InlineEditDataTypes.list &&
+                          !isMobile ? (
+                          <div
+                            className={
+                              field.value
+                                ? styles.clientDetailsItem
+                                : styles.emptyClientDetailsItem
+                            }
+                          >
+                            <div>
+                              <div className={styles.title}>{field.title}</div>
+                              <div
+                                className={cn(
+                                  styles.content,
+                                  client[field.fieldName]
+                                    ? ''
+                                    : styles.emptyContent
+                                )}
+                              >
+                                <InlineEdit
+                                  fieldTitle={field.title}
+                                  orderIndex={getFieldName(field.title)}
+                                  type={field.type}
+                                  initialValue={
+                                    client[field.fieldName] ||
+                                    t('ui.clientdetails.empty')
+                                  }
+                                  selectOptions={field.selectOptions}
+                                  onUpdateValue={handleUpdateFieldValue}
+                                >
+                                  {field.value || t('ui.clientdetails.empty')}
+                                </InlineEdit>
+                              </div>
+                            </div>
+                            <div className={styles.edit}>
+                              <EditOutlined />
+                            </div>
+                          </div>
+                        ) : (
+                          !isMobile && (
+                            <div
+                              className={
+                                field.value
+                                  ? styles.clientDetailsItem
+                                  : styles.emptyClientDetailsItem
+                              }
+                            >
+                              <div>
+                                <div className={styles.title}>
+                                  {field.title}
+                                </div>
+                                <div
+                                  className={cn(
+                                    styles.content,
+                                    client[field.fieldName]
+                                      ? ''
+                                      : styles.emptyContent,
+                                    field.value &&
+                                      field.type === InlineEditDataTypes.email
+                                      ? styles.emailContent
+                                      : ''
+                                  )}
+                                  onClick={() =>
+                                    field.type === InlineEditDataTypes.email &&
+                                    client[field.fieldName] &&
+                                    onCreateEmail()
+                                  }
+                                >
+                                  {field.type !== 'date' && (
+                                    <InlineEdit
+                                      fieldTitle={field.title}
+                                      orderIndex={getFieldName(field.title)}
+                                      type={field.type}
+                                      initialValue={
+                                        client[field.fieldName] ||
+                                        t('ui.clientdetails.empty')
+                                      }
+                                      onUpdateValue={handleUpdateFieldValue}
+                                    >
+                                      {field.value ? (
+                                        field.value
+                                      ) : (
+                                        <span>
+                                          {t('ui.clientdetails.empty')}
+                                        </span>
+                                      )}
+                                    </InlineEdit>
+                                  )}
+                                  {field.type === 'date' && (
+                                    <InlineEdit
+                                      fieldTitle={field.title}
+                                      orderIndex={getFieldName(field.title)}
+                                      type={field.type}
+                                      initialValue={moment(
+                                        client[field.fieldName]
+                                      ).format('DD/MM/YYYY')}
+                                      dateFormat="DD/MM/YYYY"
+                                      onUpdateValue={handleUpdateFieldValue}
+                                    >
+                                      {field.value &&
+                                      typeof field.value === 'string'
+                                        ? `${moment(field.value).format(
+                                            'YYYY-MM-DD'
+                                          )} (${moment(field.value).fromNow(
+                                            true
+                                          )})`
+                                        : t('ui.clientdetails.empty')}
+                                    </InlineEdit>
+                                  )}
+                                </div>
+                              </div>
+                              <div className={styles.edit}>
+                                <EditOutlined />
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </React.Fragment>
+                    ))}
+                  {customizingFields && (
+                    <CustomizeFields
+                      defaultOrder={fieldsOrder}
+                      onCancel={() => setCustomizingFields(false)}
+                      onChange={(order) => {
+                        setFieldsOrder(order)
+                        setCustomizingFields(false)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
             <div className={styles.detailsTwo}>
               <div className={styles.section}>
