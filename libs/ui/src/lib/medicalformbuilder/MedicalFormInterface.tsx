@@ -198,3 +198,8 @@ export interface InvProductsListItem {
   name: string
   category_id: number
 }
+
+export interface MedicalConditionsListItem {
+  id: number
+  name: string
+}

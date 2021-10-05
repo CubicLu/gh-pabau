@@ -1,7 +1,7 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { OptionType } from '@pabau/ui'
+import { OptionType, MedicalConditionsListItem } from '@pabau/ui'
 import { Select } from 'antd'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import styles from './FormComponent.module.less'
 
 const { Option } = Select
@@ -10,51 +10,33 @@ interface P {
   desc?: string
   paramItems?: OptionType[]
   required?: boolean
+  medicalConditionsListItems?: MedicalConditionsListItem[]
   onChangeArrValue?: (value: string[]) => void
 }
-
-const dataLists = [
-  {
-    id: 1,
-    name: 'Medical Condition - 1',
-    editing: false,
-  },
-  {
-    id: 2,
-    name: 'Medical Condition - 2',
-    editing: false,
-  },
-  {
-    id: 3,
-    name: 'Medical Condition - 3',
-    editing: false,
-  },
-  {
-    id: 4,
-    name: 'Medical Condition - 4',
-    editing: false,
-  },
-  {
-    id: 5,
-    name: 'Medical Condition - 5',
-    editing: false,
-  },
-  {
-    id: 6,
-    name: 'Medical Condition - 6',
-    editing: false,
-  },
-]
 
 const FormMedicalConditions: FC<P> = ({
   title = '',
   desc = '',
   paramItems,
   required = false,
+  medicalConditionsListItems = [],
   onChangeArrValue,
 }) => {
   const [addedItems, setaddedItems] = useState<OptionType[]>([])
+  const [dataLists, setDataLists] = useState<OptionType[]>([])
   const [selectedItem, setSelectedItem] = useState(0)
+
+  useEffect(() => {
+    setDataLists(
+      medicalConditionsListItems.map((medicalConditionsListItem) => {
+        return {
+          id: medicalConditionsListItem.id,
+          name: medicalConditionsListItem.name,
+          editing: false,
+        }
+      })
+    )
+  }, [medicalConditionsListItems])
 
   const onChange = (value) => {
     const addedItem = dataLists.filter((item) => item.id === value)

@@ -14,6 +14,7 @@ import {
   CompanyListItem,
   LabTestsListItem,
   InvProductsListItem,
+  MedicalConditionsListItem,
 } from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
 import className from 'classnames'
@@ -82,6 +83,7 @@ interface MedicalFormBuilderProps {
   companyServiceListItems?: CompanyListItem[]
   medicalFormMacros?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
 }
 
 export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
@@ -103,6 +105,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   medicalFormMacros = [],
   companyServiceListItems = [],
   invProductsListItems = [],
+  medicalConditionsListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
@@ -324,6 +327,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               medicalFormMacros={medicalFormMacros}
               userGroupListItems={userGroupListItems}
               invProductsListItems={invProductsListItems}
+              medicalConditionsListItems={medicalConditionsListItems}
             />
           )}
         </TabPane>

@@ -22,6 +22,7 @@ import {
   UserListItem,
   UserGroupListItem,
   LabTestsListItem,
+  MedicalConditionsListItem,
   CompanyListItem,
   VersionHistory,
   MacroItem,
@@ -54,6 +55,7 @@ interface CustomProps {
   labTestsListItems: LabTestsListItem[]
   companyServiceListItems: CompanyListItem[]
   invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
   medicalFormMacros: MacroItem[]
   onSaveForm?: (MedicalFormItem) => void
   onHandleMacro?: (action: string, macro: MacroItem) => void
@@ -72,6 +74,7 @@ const Custom: FC<CustomProps> = ({
   companyServiceListItems = [],
   medicalFormMacros = [],
   invProductsListItems = [],
+  medicalConditionsListItems = [],
   onSaveForm,
   pagenateParams,
   updatePaginateData,
@@ -305,6 +308,7 @@ const Custom: FC<CustomProps> = ({
                   medicalFormMacros={medicalFormMacros}
                   userGroupListItems={userGroupListItems}
                   invProductsListItems={invProductsListItems}
+                  medicalConditionsListItems={medicalConditionsListItems}
                 />
               )}
               <Button
@@ -473,6 +477,7 @@ const Custom: FC<CustomProps> = ({
         medicalFormMacros={medicalFormMacros}
         companyServiceListItems={companyServiceListItems}
         invProductsListItems={invProductsListItems}
+        medicalConditionsListItems={medicalConditionsListItems}
       />
       <div className={styles.paginationContainer}>
         <Pagination

@@ -1,8 +1,8 @@
 import {
   MedicalFormTypes,
   MacroItem,
-  LabTestsListItem,
   InvProductsListItem,
+  MedicalConditionsListItem,
 } from '@pabau/ui'
 import { cloneDeep } from 'lodash'
 import React, { FC, useState } from 'react'
@@ -34,6 +34,7 @@ interface P {
   onHandleMacro?: (action: string, macro: MacroItem) => void
   macroItems?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
 }
 
 const FormComponentInnerElement: FC<P> = ({
@@ -45,6 +46,7 @@ const FormComponentInnerElement: FC<P> = ({
   handlingSaveForm,
   macroItems = [],
   invProductsListItems = [],
+  medicalConditionsListItems = [],
   onHandleMacro,
 }) => {
   const [form, setForm] = useState(cloneDeep(formData))
@@ -245,6 +247,7 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               paramItems={formData.arrItems}
               required={formData.required}
+              medicalConditionsListItems={medicalConditionsListItems}
               onChangeArrValue={onChangeArrValue}
             />
           )}

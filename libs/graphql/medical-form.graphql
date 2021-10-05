@@ -96,3 +96,14 @@ query findInvProducts {
     category_id
   }
 }
+
+query findManyMedicalCondtions {
+  findManyMedicalCondition {
+    id
+    name
+    company_id
+    custom_id
+    is_common
+  }
+}
+

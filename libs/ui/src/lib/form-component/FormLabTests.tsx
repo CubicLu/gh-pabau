@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { OptionType, LabTestsListItem, InvProductsListItem } from '@pabau/ui'
+import { OptionType, InvProductsListItem } from '@pabau/ui'
 import { Select } from 'antd'
 import React, { FC, useState, useEffect } from 'react'
 import styles from './FormComponent.module.less'

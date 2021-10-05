@@ -19,6 +19,7 @@ import {
   useFindManyCompanyServicesQuery,
   useFindManyLabTestsQuery,
   useFindInvProductsQuery,
+  useFindManyMedicalCondtionsQuery,
 } from '@pabau/graphql'
 import {
   Breadcrumb,
@@ -38,6 +39,7 @@ import {
   CompanyListItem,
   LabTestsListItem,
   InvProductsListItem,
+  MedicalConditionsListItem,
   useLiveQuery,
   MacroItem,
 } from '@pabau/ui'
@@ -153,6 +155,9 @@ export const Index: FC = () => {
   const [invProductsListItems, setInvProductsListItems] = useState<
     InvProductsListItem[]
   >([])
+  const [medicalConditionsListItems, setMedicalConditionsListItems] = useState<
+    MedicalConditionsListItem[]
+  >([])
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -261,6 +266,7 @@ export const Index: FC = () => {
   const { data: companyServices } = useFindManyCompanyServicesQuery()
   const { data: labTests } = useFindManyLabTestsQuery()
   const { data: invProducts } = useFindInvProductsQuery()
+  const { data: medicalConditions } = useFindManyMedicalCondtionsQuery()
 
   useEffect(() => {
     if (businessDetails?.data?.me?.Company?.details?.date_format)
@@ -426,6 +432,18 @@ export const Index: FC = () => {
       setInvProductsListItems(invProductsList)
     }
   }, [invProducts])
+  useEffect(() => {
+    console.log('medicalConditions', medicalConditions)
+    if (medicalConditions?.findManyMedicalCondition) {
+      const medicalConditionsList = medicalConditions?.findManyMedicalCondition.map(
+        (medicalCondition) => ({
+          id: medicalCondition.id,
+          name: medicalCondition.name,
+        })
+      )
+      setMedicalConditionsListItems(medicalConditionsList)
+    }
+  }, [medicalConditions])
 
   const [addMutation] = useCreateOneMedicalFormMutation({
     onCompleted(data) {
@@ -542,8 +560,6 @@ export const Index: FC = () => {
         },
       },
     }
-    console.log('creatVariables', creatVariables)
-    console.log('updateVariables', updateVariables)
 
     await (medicalItem.key !== ''
       ? editMutation({
@@ -783,6 +799,7 @@ export const Index: FC = () => {
                 userGroupListItems={userGroupListItems}
                 labTestsListItems={labTestsListItems}
                 invProductsListItems={invProductsListItems}
+                medicalConditionsListItems={medicalConditionsListItems}
                 medicalFormMacros={medicalFormMacros}
                 companyServiceListItems={companyServiceListItems}
               />
@@ -807,6 +824,7 @@ export const Index: FC = () => {
             userGroupListItems={userGroupListItems}
             labTestsListItems={labTestsListItems}
             invProductsListItems={invProductsListItems}
+            medicalConditionsListItems={medicalConditionsListItems}
             companyServiceListItems={companyServiceListItems}
             medicalFormMacros={medicalFormMacros}
             onSaveForm={saveForm}

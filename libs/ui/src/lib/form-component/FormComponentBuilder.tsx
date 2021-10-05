@@ -4,8 +4,8 @@ import {
   OptionType,
   MacroItem,
   UserGroupListItem,
-  LabTestsListItem,
   InvProductsListItem,
+  MedicalConditionsListItem,
 } from '@pabau/ui'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -206,6 +206,7 @@ interface P {
   onHandleMacro?: (action: string, macro: MacroItem) => void
   medicalFormMacros?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
   userGroupListItems?: UserGroupListItem[]
 }
 
@@ -217,6 +218,7 @@ export const FormComponentBuilder: FC<P> = ({
   medicalFormMacros = [],
   userGroupListItems = [],
   invProductsListItems = [],
+  medicalConditionsListItems = [],
 }) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
@@ -266,6 +268,7 @@ export const FormComponentBuilder: FC<P> = ({
         medicalFormMacros={medicalFormMacros}
         userGroupListItems={userGroupListItems}
         invProductsListItems={invProductsListItems}
+        medicalConditionsListItems={medicalConditionsListItems}
       />
     </div>
   )
