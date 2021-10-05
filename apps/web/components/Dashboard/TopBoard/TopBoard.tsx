@@ -7,7 +7,7 @@ import {
   FolderOutlined,
   FileTextOutlined,
 } from '@ant-design/icons'
-import { useTranslation } from 'react-i18next'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 export interface ICount {
   label?: string
@@ -42,7 +42,7 @@ export const TopBoard: FC<ITopBoard> = ({
   revPerHour,
   loading,
 }) => {
-  const { t } = useTranslation('connect')
+  const { t } = useTranslationI18()
   return (
     <div>
       <div className={styles.mainCard}>

@@ -28,7 +28,7 @@ import {
   defaultOnlineAppointmentList,
   defaultSalesList,
 } from '../../mocks/Dashboard'
-import { useTranslation } from 'react-i18next'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 interface ISetUser {
   key: string
@@ -42,7 +42,7 @@ const { Option } = Select
 export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
   const user = useUser()
-  const { t } = useTranslation('connect')
+  const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)

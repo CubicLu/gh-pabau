@@ -5,7 +5,7 @@ import { CustomHighChart } from '@pabau/ui'
 import { ICount } from '../TopBoard/TopBoard'
 import styles from './Charts.module.less'
 import { columns } from '../../../mocks/Dashboard'
-import { useTranslation } from 'react-i18next'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 interface ILocation {
   key: string
@@ -55,7 +55,7 @@ export const Charts: FC<ICharts> = ({
   serviceDetails,
   loading,
 }) => {
-  const { t } = useTranslation('connect')
+  const { t } = useTranslationI18()
   const List = []
   if (salesData && salesData.length > 0) {
     salesData.map((item) => {
