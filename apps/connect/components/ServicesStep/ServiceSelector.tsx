@@ -90,7 +90,13 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
       return null
     }
 
-    const priceRange = getServicePriceRange(val)
+    let priceRange = {
+      low: 0,
+      high: 0,
+    }
+    if (settings.BookitProGeneral.show_prices !== 'No') {
+      priceRange = getServicePriceRange(val)
+    }
 
     const isSelected =
       selectedData.services.findIndex((service) => service.id === val.id) > -1
@@ -128,19 +134,26 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                 </Tooltip>
               )}
             </span>
-            <span className={styles.consultationPrice}>
-              £{' '}
-              {priceRange.low !== priceRange.high
-                ? priceRange.low + '-' + priceRange.high
-                : priceRange.low}
-            </span>{' '}
+            {settings.BookitProGeneral.show_prices !== 'No' && (
+              <span className={styles.consultationPrice}>
+                £{' '}
+                {priceRange.low !== priceRange.high
+                  ? priceRange.low + '-' + priceRange.high
+                  : priceRange.low}
+              </span>
+            )}
           </div>
           <div className={styles.mobiledata}>
             <span style={{ display: 'flex', alignItems: 'center' }}>
-              <span className={styles.consultationTime}>
-                {val.duration} {t('connect.onlinebooking.selector.mini')}
-              </span>
-              <ClockCircleOutlined />{' '}
+              {settings.BookitProGeneral.show_duration !== 'No' && (
+                <>
+                  <span className={styles.consultationTime}>
+                    {val.duration} {t('connect.onlinebooking.selector.mini')}
+                  </span>
+                  <ClockCircleOutlined />{' '}
+                </>
+              )}
+
               {!isMobile && val.is_bundle && (
                 <div style={{ display: 'flex', marginLeft: '5px' }}>
                   <Badge color="gray" />{' '}
@@ -163,7 +176,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
             className={styles.consultationLine}
             style={{ marginBottom: '0' }}
           >
-            {!isMobile && (
+            {!isMobile && settings.BookitProGeneral.allow_rating && (
               <div style={{ height: '40px' }}>
                 <Rate
                   disabled
