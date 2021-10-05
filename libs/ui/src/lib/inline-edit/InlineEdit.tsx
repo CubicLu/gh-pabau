@@ -245,7 +245,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
       onUpdateValue(orderIndex, value, phoneType.toLowerCase())
     }
     toggleVisible()
-    Notification(NotificationType.success, `${fieldTitle} updated tovalue `)
+    Notification(NotificationType.success, `${fieldTitle} updated to ${value}`)
   }
 
   const popoverContent = () => {
