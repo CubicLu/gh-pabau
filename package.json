@@ -322,7 +322,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 68,
+  "bump-rebuild-all": 69,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }
