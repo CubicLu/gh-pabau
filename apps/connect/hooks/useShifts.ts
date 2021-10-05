@@ -1,10 +1,12 @@
-import { useState } from 'react'
 import { useSelectedDataStore } from '../store/selectedData'
 import moment from 'moment'
 import { decimalToISO8601 } from '../helpers/DatesHelper'
+import { useContext } from 'react'
+import { SettingsContext } from '../context/settings-context'
 
 export default function useShifts(shiftsResult, bookingsResult) {
   const [selectedData] = useSelectedDataStore()
+  const settings = useContext(SettingsContext)
   const shiftsByDate = []
   if (shiftsResult) {
     for (const shift of shiftsResult.Public_Shifts) {
@@ -19,14 +21,12 @@ export default function useShifts(shiftsResult, bookingsResult) {
     }
   }
 
-  const [shifts, setShifts] = useState(shiftsByDate)
-
   const getShiftsOnDate = (date) => {
     const shiftsIndex = date.format('YYYYMMDD')
-    if (shifts[shiftsIndex]?.length > 0) {
+    if (shiftsByDate[shiftsIndex]?.length > 0) {
       return {
         key: shiftsIndex,
-        shifts: shifts[shiftsIndex],
+        shifts: shiftsByDate[shiftsIndex],
         morning: true,
         afternoon: true,
         evening: false,
@@ -38,7 +38,7 @@ export default function useShifts(shiftsResult, bookingsResult) {
 
   const dateHasShift = (date) => {
     const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
-    if (shifts[shiftsIndex]) {
+    if (shiftsByDate[shiftsIndex]) {
       return false
     }
     return true
@@ -57,7 +57,7 @@ export default function useShifts(shiftsResult, bookingsResult) {
     for (
       let date = moment(shiftStart);
       date.isBefore(shiftEnd);
-      date.add(15, 'minutes')
+      date.add(settings.BookitProGeneral.interval, 'minutes')
     ) {
       timeslots.push(date.format('HH:mm'))
     }
@@ -70,7 +70,7 @@ export default function useShifts(shiftsResult, bookingsResult) {
       for (
         let apptDate = moment(decimalToISO8601(b.start_date));
         apptDate.isBefore(moment(decimalToISO8601(b.end_date)));
-        apptDate.add(15, 'minutes')
+        apptDate.add(settings.BookitProGeneral.interval, 'minutes')
       ) {
         takenTimeslots.push(apptDate.format('HH:mm'))
       }

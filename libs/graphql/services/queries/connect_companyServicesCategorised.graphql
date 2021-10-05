@@ -32,6 +32,12 @@ query companyServicesCategorised($company_id: Int!) {
           id
           rating
         }
+        Public_ServiceUserTier {
+          duration
+          price
+          service_id
+          user_id
+        }
       }
     }
   }

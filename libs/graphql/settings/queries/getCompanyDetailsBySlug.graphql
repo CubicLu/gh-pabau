@@ -1,5 +1,5 @@
 query getCompanyBySlug($slug: String = "") {
-  findFirstCompany(where: { slug: { equals: $slug } }) {
+  findFirstCompany(where: {slug: {equals: $slug}}) {
     id
     image
     remote_connect
@@ -47,6 +47,21 @@ query getCompanyBySlug($slug: String = "") {
       email_confirm_id
       sms_id
       slot_interval
+    }
+    details {
+      company_name
+      website
+      street
+      info_email
+      phone
+      logo
+      currency
+      date_format
+      week_start_day
+    }
+    CompanyMeta(where: {meta_name: {startsWith: "connect"}}) {
+      meta_name
+      meta_value
     }
   }
 }

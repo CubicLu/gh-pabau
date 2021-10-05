@@ -1,11 +1,11 @@
-import React, { FunctionComponent } from 'react'
+import React, { FC } from 'react'
 import { Spin } from 'antd'
 import { useRouter } from 'next/router'
 import { LoadingOutlined } from '@ant-design/icons'
 import { useGetCompanyBySlugQuery } from '@pabau/graphql'
 import { SettingsContext } from '../context/settings-context'
 
-const SettingsContextWrapper: FunctionComponent = ({ children }) => {
+const SettingsContextWrapper: FC = ({ children }) => {
   const router = useRouter()
 
   const companySlug =
@@ -16,7 +16,7 @@ const SettingsContextWrapper: FunctionComponent = ({ children }) => {
   const {
     loading: loadingSettings,
     error: errorSettings,
-    data: companySettingsResult,
+    data: csr,
   } = useGetCompanyBySlugQuery({
     variables: {
       slug: companySlug,
@@ -46,12 +46,29 @@ const SettingsContextWrapper: FunctionComponent = ({ children }) => {
     )
   }
 
-  if (!companySettingsResult === null) {
+  if (!csr === null) {
     return <div>Invalid Company</div>
   }
-  console.log(companySettingsResult?.findFirstCompany)
+
+  const meta = []
+  for (const m of csr?.findFirstCompany.CompanyMeta) {
+    meta[m.meta_name] = m.meta_value
+  }
+  if (csr.findFirstCompany.remote_url === null) {
+    meta['pod_url'] = 'https://crm.pabau.com'
+  } else {
+    meta['pod_url'] = csr.findFirstCompany.remote_url
+  }
+
   return (
-    <SettingsContext.Provider value={companySettingsResult?.findFirstCompany}>
+    <SettingsContext.Provider
+      value={{
+        ...csr.findFirstCompany,
+        BookingSetting: { ...csr.findFirstCompany.BookingSetting[0] },
+        BookitProGeneral: { ...csr.findFirstCompany.BookitProGeneral[0] },
+        ...meta,
+      }}
+    >
       {children}
     </SettingsContext.Provider>
   )

@@ -41,6 +41,22 @@ export interface BookitProGeneral {
   show_prices: string
   terms_conditions: string
 }
+export interface CompanyDetails {
+  company_name: string
+  website: string
+  street: string
+  info_email: string
+  phone: string
+  logo: string
+  currency: string
+  date_format: string
+  week_start_day: string
+}
+
+export interface CompanyMeta {
+  meta_name: string
+  meta_value: string
+}
 
 export interface Settings {
   id: number
@@ -48,6 +64,8 @@ export interface Settings {
   remote_connect: string
   remote_url: string
   slug: string
-  BookingSettings: BookingSettings[]
-  BookitProGeneral: BookitProGeneral[]
+  BookingSettings: BookingSettings
+  BookitProGeneral: BookitProGeneral
+  details: CompanyDetails
+  CompanyMeta: CompanyMeta[]
 }

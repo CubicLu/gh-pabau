@@ -15,7 +15,6 @@ import {
   useGetBookingsBetweenDatesByUidQuery,
 } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { decimalToISO8601 } from '../../helpers/DatesHelper'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
 import useShifts from '../../hooks/useShifts'
@@ -68,7 +67,6 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
   if (errorShifts || errorBookings) return <div>Error!</div>
   if (loadingShifts || loadingBookings) return <div>Loading...</div>
 
-  const shiftsByDate = []
   const dateCellRender = (value) => {
     const shifts = getShiftsOnDate(value)
     if (!shifts) {

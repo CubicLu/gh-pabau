@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import styles from './Header.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { ReactComponent as SkinHealth } from '../assets/images/skin-health-logo.svg'
 import { useMedia } from 'react-use'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
+import { SettingsContext } from '../context/settings-context'
 export interface P {
   currentStep: number
   back: () => void
@@ -12,6 +12,7 @@ export interface P {
 export const Header: FC<P> = ({ currentStep, back, visible }) => {
   const isMobile = useMedia('(max-width: 768px)', false)
   const { t } = useTranslationI18()
+  const settings = useContext(SettingsContext)
   const type = () => {
     if (currentStep === 1) {
       return t('connect.onlinebooking.header.service')
@@ -35,7 +36,11 @@ export const Header: FC<P> = ({ currentStep, back, visible }) => {
   }
   return (
     <div className={styles.header}>
-      <SkinHealth className={styles.headerLogo} />
+      <img
+        src={'https://crm.pabau.com' + settings.details.logo}
+        alt={settings.details.name}
+        className={styles.headerLogo}
+      />
       <div className={styles.headerInner}>
         <div className={styles.textCenter}>{type()}</div>
         {currentStep <= 7 && (

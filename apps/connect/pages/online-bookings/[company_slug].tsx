@@ -6,9 +6,7 @@ import ServiceCategorySelector from '../../components/ServicesStep/ServiceCatego
 import ServiceSelector from '../../components/ServicesStep/ServiceSelector'
 import LocationSelector from '../../components/LocationStep/LocationSelector'
 import BookingDetails from '../../components/BookingDetailsStep/BookingDetails'
-import Payment from '../../components/payment/Payment'
-import Booked from '../../components/bookingconform/booking'
-import PatientInfo from '../../components/patientinformatioon/PatientInfo'
+import BookingConfirmation from '../../components/BookingConfirmationStep/BookingConfirmation'
 import EmployeeSelector from '../../components/EmployeeStep/EmployeeSelector'
 import DateTimeSelector from '../../components/DateTimeStep/DateTimeSelector'
 import styles from './index.module.less'
@@ -30,6 +28,7 @@ export function Index() {
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [selectedData, setSelectedData] = useState<BookingData>()
   const { t } = useTranslationI18()
+
   const settings = useContext(SettingsContext)
 
   const [createBooking] = useCreateAppointmentMutation({
@@ -105,7 +104,9 @@ export function Index() {
                 {t('connect.onlinebooking.first.description')}
                 <span>
                   &nbsp;
-                  <a href={'online-booking/045787498450'}>045787498450</a>
+                  <a href={'tel:' + settings.details.phone}>
+                    {settings.details.phone}
+                  </a>
                 </span>
               </div>
             </>
@@ -142,70 +143,56 @@ export function Index() {
           )}
           {currentStep === 5 && (
             <BookingDetails
-              changescreen={function () {
-                createBooking({
-                  variables: {
-                    user_id: selectedData.employee.ID,
-                    company_id: settings.id,
-                    location_id: selectedData.location.id,
-                    service_id: 2691491,
-                    contact_id: 22293092,
-                    unique_id: '123',
-                    start_date: selectedData.dateTime.format('YYYYMMDDHHmm00'),
-                    end_date: moment(selectedData.dateTime)
-                      .add(15, 'm')
-                      .format('YYYYMMDDHHmm00'),
-                    sent_sms: 0,
-                    sent_email: 0,
-                    sent_email_reminder: false,
-                    sent_survey: 0,
-                    issued_to: 22293092,
-                  },
-                })
+              onConfirmed={function () {
+                console.log(selectedData)
+                // createBooking({
+                //   variables: {
+                //     user_id: selectedData.employee.ID,
+                //     company_id: settings.id,
+                //     location_id: selectedData.location.id,
+                //     service_id: 2691491,
+                //     contact_id: 22293092,
+                //     unique_id: '123',
+                //     start_date: selectedData.dateTime.format('YYYYMMDDHHmm00'),
+                //     end_date: moment(selectedData.dateTime)
+                //       .add(15, 'm')
+                //       .format('YYYYMMDDHHmm00'),
+                //     sent_sms: 0,
+                //     sent_email: 0,
+                //     sent_email_reminder: false,
+                //     sent_survey: 0,
+                //     issued_to: 22293092,
+                //   },
+                //})
                 setCurrentStep(currentStep + 3)
               }}
-              charge={'123'}
               backToStep={(step: number) => {
                 setCurrentStep(step)
               }}
             />
           )}
-          {currentStep === 6 && (
-            <div>
-              <PatientInfo
-                changescreen={rech}
-                image={user.image}
-                firstname={user.firstname}
-                lastname={user.lastname}
-                translation={t}
-              />
-            </div>
-          )}
-          {currentStep === 7 && (
-            <div>
-              <Payment
-                changescreen={rech}
-                type={user.type}
-                translation={t}
-                price={user.charge}
-              />
-            </div>
-          )}
-          {currentStep === 8 && (
-            <div>
-              <Booked
-                address={user.address}
-                type={user.type}
-                doctor={user.docName}
-                date={user.date}
-                time={user.time}
-                description={user.docDescription}
-                translation={t}
-                online={user.online}
-                duration={user.duration}
-              />
-            </div>
-          )}
+          {/*{currentStep === 6 && (*/}
+          {/*  <div>*/}
+          {/*    <PatientInfo*/}
+          {/*      changescreen={rech}*/}
+          {/*      image={user.image}*/}
+          {/*      firstname={user.firstname}*/}
+          {/*      lastname={user.lastname}*/}
+          {/*      translation={t}*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {/*{currentStep === 7 && (*/}
+          {/*  <div>*/}
+          {/*    <Payment*/}
+          {/*      changescreen={rech}*/}
+          {/*      type={user.type}*/}
+          {/*      translation={t}*/}
+          {/*      price={user.charge}*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {currentStep === 8 && <BookingConfirmation />}
           {currentStep === 9 && <div></div>}
         </div>
       </div>

@@ -9,6 +9,8 @@ let globalState: BookingData = {
   location: null,
   peopleCount: 1,
   dateTime: null,
+  totalCost: 0,
+  members: [],
 }
 
 let listeners = []
@@ -35,6 +37,12 @@ const actions = {
   },
   SET_DATETIME: (curState, dateTime) => {
     return { dateTime: dateTime }
+  },
+  SET_TOTAL_COST: (curState, totalCost) => {
+    return { totalCost: totalCost }
+  },
+  SET_MEMBERS: (curState, members) => {
+    return { members: members }
   },
 }
 

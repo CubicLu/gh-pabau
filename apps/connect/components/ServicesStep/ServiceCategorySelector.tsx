@@ -51,12 +51,18 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
   if (errorServices) return <div>Error!</div>
   if (loadingServices) return <div>Loading...</div>
 
+  let masterCategory = null
+  if (!showMasterCategories && selectedData.masterCategoryID) {
+    masterCategory = servicesCategorised.Public_MasterCategories.find(
+      (row) => row.id === selectedData.masterCategoryID
+    )
+  }
   return (
     <div className={styles.consultation}>
       {showMasterCategories ? (
         <>
           <div className={styles.alertMsg}>
-            <p>{t('connect.onlinebooking.selector.information')}</p>
+            {settings.connect_intro_message}
           </div>
           <div className={styles.prsongroup}>
             <h5>{t('connect.onlinebooking.selector.group.description')}</h5>
@@ -139,47 +145,43 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
       ) : null}
 
       {showMasterCategories ? (
-        <div>
-          <div className={styles.custCard}>
-            {servicesCategorised.Public_MasterCategories?.map((item) => (
-              <div
-                key={item.id}
-                className={styles.chooseServiceTypeItem}
-                onClick={() => handleSelectedMasterCategory(item.id)}
-              >
-                <div className={styles.section1}>
-                  <Image
-                    preview={false}
-                    height={'40px'}
-                    width={'40px'}
-                    src={'https://crm.pabau.com' + item.image}
-                    alt={item.name}
-                  />
-                  <p className={styles.cardText}>{item.name}</p>
-                </div>
-
-                <RightOutlined />
-                {/*{item.addonIcon && <div>{item.addonIcon}</div>}*/}
+        <div className={styles.custCard}>
+          {servicesCategorised.Public_MasterCategories?.map((item) => (
+            <div
+              key={item.id}
+              className={styles.chooseServiceTypeItem}
+              onClick={() => handleSelectedMasterCategory(item.id)}
+            >
+              <div className={styles.section1}>
+                <Image
+                  preview={false}
+                  height={'40px'}
+                  width={'40px'}
+                  src={settings.pod_url + item.image}
+                  alt={item.name}
+                />
+                <p className={styles.cardText}>{item.name}</p>
               </div>
-            ))}
-            <div className={styles.btnView}>
-              <Button
-                onClick={() => {
-                  onSelected(null)
-                }}
-                className={styles.viewBut}
-              >
-                {t('connect.onlinebooking.selector.viewall')}
-              </Button>
+
+              <RightOutlined />
+              {/*{item.addonIcon && <div>{item.addonIcon}</div>}*/}
             </div>
+          ))}
+          <div className={styles.btnView}>
+            <Button
+              onClick={() => {
+                onSelected(null)
+              }}
+              className={styles.viewBut}
+            >
+              {t('connect.onlinebooking.selector.viewall')}
+            </Button>
           </div>
         </div>
       ) : (
         <div className={styles.slide}>
           <div className={styles.custCard}>
-            {servicesCategorised.Public_MasterCategories.find(
-              (row) => row.id === selectedData.masterCategoryID
-            )?.Public_ServiceCategories?.map((item) => (
+            {masterCategory?.Public_ServiceCategories?.map((item) => (
               <div
                 key={item.id}
                 className={styles.chooseServiceTypeItem}
@@ -190,7 +192,10 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                     preview={false}
                     height={'40px'}
                     width={'40px'}
-                    src={'https://crm.pabau.com' + item.image}
+                    src={
+                      settings.pod_url +
+                      (item.image !== '' ? item.image : masterCategory.image)
+                    }
                     alt={item.name}
                   />
                   <p className={styles.cardText}>{item.name}</p>

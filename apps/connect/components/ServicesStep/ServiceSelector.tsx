@@ -6,7 +6,6 @@ import {
   LaptopOutlined,
   DownOutlined,
   UpOutlined,
-  CheckOutlined,
   InfoCircleFilled,
   CheckCircleFilled,
   ArrowRightOutlined,
@@ -15,7 +14,7 @@ import {
 import { useMedia } from 'react-use'
 import { Button } from '@pabau/ui'
 
-import { Rate, Modal, Badge, Tooltip, Image } from 'antd'
+import { Rate, Badge, Tooltip, Image } from 'antd'
 import { voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
 import styles from './ServiceSelector.module.less'
 import ClassNames from 'classnames'
@@ -66,6 +65,23 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
   // EVENT HANDLERS
 
   // RENDER HELPERS
+  const getServicePriceRange = (service) => {
+    let lowPrice = service.price
+    let highPrice = service.price
+    for (const tier of service.Public_ServiceUserTier) {
+      if (tier.price < lowPrice) {
+        lowPrice = tier.price
+      } else if (tier.price > highPrice) {
+        highPrice = tier.price
+      }
+    }
+
+    return {
+      low: lowPrice,
+      high: highPrice,
+    }
+  }
+
   const renderService = (val: Service) => {
     if (
       (virtualServicesOnly && val.online_only_service !== 1) ||
@@ -73,6 +89,9 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
     ) {
       return null
     }
+
+    const priceRange = getServicePriceRange(val)
+
     const isSelected =
       selectedData.services.findIndex((service) => service.id === val.id) > -1
         ? true
@@ -109,7 +128,12 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                 </Tooltip>
               )}
             </span>
-            <span className={styles.consultationPrice}>£ {val.price}</span>{' '}
+            <span className={styles.consultationPrice}>
+              £{' '}
+              {priceRange.low !== priceRange.high
+                ? priceRange.low + '-' + priceRange.high
+                : priceRange.low}
+            </span>{' '}
           </div>
           <div className={styles.mobiledata}>
             <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -313,7 +337,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
         {!isMobile && (
           <div className={styles.servicedata}>
             {t('connect.onlinebooking.first.description')}
-            <span>&nbsp;045787498450</span>
+            <span>&nbsp;{settings.details.phone}</span>
           </div>
         )}
       </div>
@@ -521,7 +545,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                         ))}
                         <div className={styles.servicedata}>
                           {t('connect.onlinebooking.first.description')}
-                          <span>&nbsp;045787498450</span>
+                          <span>&nbsp;{settings.details.phone}</span>
                         </div>
                       </div>
                     )}

@@ -1,17 +1,19 @@
-import React, { FC, useState, useContext } from 'react'
+import React, { FC, useContext } from 'react'
 import Styles from './EmployeeSelector.module.less'
-import { QuestionCircleOutlined } from '@ant-design/icons'
+//import { QuestionCircleOutlined } from '@ant-design/icons'
 import { useOnlineBookableStaffQuery } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
+import useServices from '../../hooks/useServices'
 export interface P {
   onSelected: () => void
 }
 
 const EmployeeSelector: FC<P> = ({ onSelected }) => {
   const { t } = useTranslationI18()
-  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const [, setSelectedData] = useSelectedDataStore()
+  const [getTotalServiceCost] = useServices()
   const settings = useContext(SettingsContext)
 
   const {
@@ -28,20 +30,6 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
   if (errorStaff) return <div>Error!</div>
   if (loadingStaff) return <div>Loading...</div>
 
-  const calculateTotalServiceCost = (serviceUserTiers) => {
-    let totalCost = 0
-    for (const s of selectedData.services) {
-      let servicePrice = s.price
-      for (const ut of serviceUserTiers) {
-        if (ut.service_id === s.id) {
-          servicePrice = ut.price
-        }
-      }
-      totalCost += servicePrice
-    }
-    return totalCost
-  }
-
   return (
     <div className={Styles.mainBox}>
       <h4>{t('connect.onlinebooking.employes.title')}</h4>
@@ -57,19 +45,20 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
           <div className={Styles.contentBox}>
             <img
               src={'https://crm.pabau.com/' + val.Avatar}
+              alt="User Avatar"
               className={Styles.userImage}
             />
             <div className={Styles.userDetailWrapper}>
               <div className={Styles.userDetail}>
                 <div className={Styles.userdetailInner}>
                   <p className={Styles.userName}>{val.Public_User.full_name}</p>
-                  {false && <QuestionCircleOutlined />}
+                  {/*{false && <QuestionCircleOutlined />}*/}
                 </div>
                 <p>&nbsp;</p>
               </div>
 
               <p className={Styles.userCharge}>
-                {`£${calculateTotalServiceCost(
+                {`£${getTotalServiceCost(
                   val.Public_User.Public_ServiceUserTier
                 )}`}
               </p>
