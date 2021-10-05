@@ -1,0 +1,32 @@
+query getServices($userID: Int = 0, $locationID: Int = 0, $contractID: Int = 0, $take: Int = 100, $skip: Int = 0) {
+  services: findManyCompanyService(skip: $skip, take: $take) {
+    id
+    name
+    color
+    availability
+    description
+    duration
+    disabledusers
+    disabled_locations
+    Product {
+      id
+      price
+      InsuranceContractPrice(where: {Contract: {id: {equals: $contractID}}}) {
+        id
+        price
+      }
+    }
+    ServiceCategory {
+      id
+      name
+    }
+    ServiceUserPrice(where: {User: {id: {equals: $userID}}}) {
+      id
+      price
+    }
+    ServiceLocationPrice(where: {Location: {id: {equals: $locationID}}}) {
+      id
+      price
+    }
+  }
+}
