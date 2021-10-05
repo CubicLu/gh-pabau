@@ -1,8 +1,11 @@
 query getStages {
- stages: findManyLeadStatus {
+  stages: findManyLeadStatus {
     id
-    status_name
-    status_order
-    pipeline_id
+    name: status_name
+    order: status_order
+    Pipeline {
+      id
+      name
+    }
   }
 }
