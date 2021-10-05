@@ -151,6 +151,7 @@ const AutocompleteCustom = (props) => {
   }
 
   const addEntityToEditorState = (editorState, item, match) => {
+    const { selectSnomed } = props
     // Range text to replace, the type and prefix
     const { start, end, type, mutability, format } = match
 
@@ -185,6 +186,8 @@ const AutocompleteCustom = (props) => {
       newContentState,
       'insert-autocomplete'
     )
+
+    selectSnomed?.()
 
     // Update cursor position after inserted content
     return EditorState.forceSelection(

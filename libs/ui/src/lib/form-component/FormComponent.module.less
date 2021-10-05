@@ -198,6 +198,110 @@
   .textFieldWithMacroValue:focus {
     border: 1px solid #54b2d3;
   }
+
+  .textFieldWithSnomed {
+    border: 1px solid #ecedf0;
+    color: rgba(0, 0, 0, 0.65);
+    border-radius: 2px;
+    display: inline-block;
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+    :global {
+      .DraftEditor-root {
+        padding: 0 12px 0px 12px;
+        cursor: text;
+      }
+      .snomedList {
+        margin: 2px 0 0 0;
+        list-style-type: none;
+        position: absolute;
+        width: 100%;
+        border: 1px solid lightblue;
+        z-index: 10000000;
+        background-color: white;
+        overflow-y: auto;
+        max-height: 250px;
+        padding-inline-start: 0px;
+      }
+      .snomedListItem {
+        padding: 12px;
+        border-bottom: 1px solid #ecedf0;
+      }
+
+      .snomedListItem.current {
+        background: #eef7fb;
+      }
+
+      .snomedListItem:hover {
+        background: #eef7fb;
+      }
+
+      .public-DraftStyleDefault-block {
+        margin: 0.6em 0;
+      }
+      .Hashtag {
+        color: green;
+      }
+    }
+
+    .snomed {
+      background: lightblue;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .snomedLoading {
+      margin-top: 10px;
+      position: absolute;
+      left: 50%;
+      :global {
+        .ant-spin-spinning {
+          position: relative;
+          left: -50%;
+        }
+      }
+    }
+
+    .snomedTitle {
+      font-size: 14px;
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      color: #3d3d46;
+    }
+    .snomedDescription {
+      font-size: 12px;
+      line-height: 14px;
+      display: flow-root;
+      align-items: center;
+      color: #9292a3;
+      .snomedFsn {
+        float: left;
+        width: 80%;
+      }
+      .snomedConceptId {
+        float: right;
+        text-align: right;
+        width: 20%;
+      }
+    }
+    .snomedHighLight {
+      color: #54b2d3;
+      font-weight: bolder;
+      background-color: transparent;
+      padding: 0;
+    }
+  }
+  .textFieldWithSnomed:hover {
+    border: 1px solid #54b2d3;
+  }
+
+  .textFieldWithSnomed:focus {
+    border: 1px solid #54b2d3;
+  }
 }
 
 .formTextArea {
@@ -656,7 +760,7 @@
   font-size: 12px;
   margin-top: 15px;
   margin-bottom: 10px;
-  color: #9292A3;
+  color: #9292a3;
   text-transform: uppercase;
   padding-top: 15px;
 }
@@ -784,7 +888,7 @@
 
   :global {
     .public-DraftStyleDefault-block {
-      margin: 0.5em 0;
+      margin: 0.6em 0;
     }
 
     .Snomed {

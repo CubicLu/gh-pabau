@@ -1,20 +1,23 @@
 import React, { FC, useState, useEffect } from 'react'
-import { Editor, EditorState, Modifier, CompositeDecorator } from 'draft-js'
-import styles from './FormComponent.module.less'
 import { useDebounce } from '@react-hook/debounce'
 import { LoadingOutlined } from '@ant-design/icons'
-import { Spin, Tooltip } from 'antd'
-import FormSnomedItem from './FormSnomedItem'
 import { SNOMED } from '@pabau/ui'
-
-const antIcon = <LoadingOutlined style={{ fontSize: 20 }} spin />
+import _ from 'lodash'
+import AutocompleteCustom from './AutoCompleteCustom'
+import { Editor, EditorState, Modifier } from 'draft-js'
+import { Spin } from 'antd'
+import Highlighter from 'react-highlight-words'
+import styles from './FormComponent.module.less'
 
 interface P {
-  title: string
-  placeHolder: string
-  required: boolean
+  title?: string
+  placeHolder?: string
+  required?: boolean
   onChangeTextValue?: (value: string) => void
 }
+
+const antIcon = <LoadingOutlined style={{ fontSize: 20 }} spin />
+let g_searchTermArr: string[] = []
 
 export const FormSnomed: FC<P> = ({
   title = '',
@@ -22,64 +25,31 @@ export const FormSnomed: FC<P> = ({
   required = false,
   onChangeTextValue,
 }) => {
-  const editor = React.useRef<Editor | null>(null)
-  function findLinkEntities(contentBlock, callback, contentState) {
-    contentBlock.findEntityRanges((character) => {
-      const entityKey = character.getEntity()
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'HASHTAG'
-      )
-    }, callback)
-  }
-
-  const Link = (props) => {
-    const { term, fsn, conceptId } = props.contentState
-      .getEntity(props.entityKey)
-      .getData()
-    return (
-      <Tooltip title={`${fsn} - ${conceptId}`} color={'#108ee9'}>
-        <span className={'Snomed'} data-offset-key={props.offsetKey}>
-          {term}
-        </span>
-      </Tooltip>
-    )
-  }
-
-  const decorator = new CompositeDecorator([
-    {
-      strategy: findLinkEntities,
-      component: Link,
-    },
-  ])
-
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(decorator)
-  )
-
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useDebounce('', 1000)
   const [terms, setTerms] = useState<SNOMED[]>([])
-  const [loading, setLoading] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [searchTermArr, setSearchTermArr] = useState<string[]>([])
-  const [suggestedSearchVal, setSuggestedSearchVal] = useState('')
+  const editor = React.useRef<Editor | null>(null)
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  )
   const [starting, setStarting] = useState(false)
-  const [readOnly, setReadOnly] = useState(false)
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useDebounce('', 500)
+  const [searchTermArr, setSearchTermArr] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
+
+  g_searchTermArr = searchTermArr
 
   useEffect(() => {
     const snomedAPICall = async (debouncedSearchTerm) => {
-      const searchVal = debouncedSearchTerm.trim().replace(/\s\s+/g, '%20')
-      const searchValArr = debouncedSearchTerm.trim().split(' ')
-      setTerms([])
-      setSuggestedSearchVal('')
+      const startPos = debouncedSearchTerm.lastIndexOf('#')
+      const termString = debouncedSearchTerm.slice(startPos + 1)
+      const searchVal = termString.trim().replace(/\s\s+/g, '%20')
+      setStarting(false)
       if (searchVal !== '') {
         setLoading(true)
-        setReadOnly(true)
         try {
           const response = await fetch(
             'https://termbrowser.nhs.uk/sct-browser-api/snomed/uk-edition/v20210901/descriptions?query=' +
               searchVal +
-              '&limit=50&searchMode=partialMatching&lang=english&statusFilter=activeOnly&skipTo=0&returnLimit=50&normalize=true',
+              '&limit=50&searchMode=partialMatching&lang=english&statusFilter=activeOnly&skipTo=0&returnLimit=200&normalize=true',
             {
               method: 'GET',
               mode: 'cors',
@@ -89,8 +59,6 @@ export const FormSnomed: FC<P> = ({
           )
           const data = await response.json()
           if (data?.matches.length > 0) {
-            setSearchTerm(searchVal)
-            setSearchTermArr(searchValArr)
             const tempItems = data?.matches.map((item, index) => ({
               id: index + '-' + item.conceptId,
               term: item.term,
@@ -98,139 +66,117 @@ export const FormSnomed: FC<P> = ({
               fsn: item.fsn,
             }))
             setTerms(tempItems)
+            editor.current.blur()
+            editor.current.focus()
           }
           setLoading(false)
-          setReadOnly(false)
-          setStarting(false)
-          onFocusEditor()
-        } catch (error) {
+        } catch {
           setLoading(false)
-          setReadOnly(false)
-          setStarting(false)
-          onFocusEditor()
-          console.log(error)
+          setSearchTermArr([])
         }
       }
     }
     snomedAPICall(debouncedSearchTerm)
   }, [debouncedSearchTerm])
 
-  const clearAllStatus = () => {
-    setTerms([])
-    setSuggestedSearchVal('')
-    setReadOnly(false)
-    setStarting(false)
+  const onMatch = (text) => {
+    let searchText = ''
+    if (text.lastIndexOf('#') === -1) {
+      searchText = text
+    } else {
+      const startPos = text.lastIndexOf('#')
+      searchText = text.slice(startPos + 1)
+    }
+    const searchValArr = searchText.trim().split(' ')
+    setSearchTermArr(searchValArr)
+    return terms.filter(
+      (snomed) =>
+        snomed.term.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
+    )
   }
 
-  const onHandleBeforeInput = (chars, editorState, eventTimeStamp) => {
-    if (starting) {
-      const newSuggestedSearchVal = suggestedSearchVal + chars
-      setSuggestedSearchVal(newSuggestedSearchVal)
-    }
-    if (chars === '#') {
-      setTerms([])
-      setSuggestedSearchVal('')
-      setStarting(true)
-    }
+  const Hasthtag = ({ children }) => <span className="Hashtag">{children}</span>
+
+  const List = ({ display, children }) => {
+    return <ul className="snomedList">{children}</ul>
   }
+
+  const onSelectSnomed = () => {
+    setTerms([])
+  }
+
+  const Item = ({ item, current, onClick }) => {
+    let classNames = 'snomedListItem'
+    classNames += current ? ' current' : ''
+    return (
+      <li className={classNames} onMouseDown={onClick}>
+        <div className={styles.snomedTitle}>
+          <Highlighter
+            highlightClassName={styles.snomedHighLight}
+            searchWords={g_searchTermArr}
+            autoEscape={true}
+            textToHighlight={item.term}
+          />
+        </div>
+        <div className={styles.snomedDescription}>
+          <span className={styles.snomedFsn}>{item.fsn}</span>
+          <span className={styles.snomedConceptId}>{item.conceptId}</span>
+        </div>
+      </li>
+    )
+  }
+
+  const hashtag = {
+    prefix: '#',
+    type: 'HASHTAG',
+    mutability: 'IMMUTABLE',
+    onMatch: onMatch,
+    component: Hasthtag,
+    listComponent: List,
+    itemComponent: Item,
+    format: (item) => `${item.term}`,
+  }
+
+  const autocompletes = [hashtag]
 
   const onEditorStateChange = (e) => {
     const contentState = e.getCurrentContent()
     const inputText = contentState.getPlainText()
-    if (starting && suggestedSearchVal !== '')
-      setDebouncedSearchTerm(suggestedSearchVal)
-    if (inputText.length === 0) clearAllStatus()
+    if (inputText.lastIndexOf('#') === -1) {
+      setStarting(false)
+      setTerms([])
+    }
+    if (starting) setDebouncedSearchTerm(inputText)
     onChangeTextValue?.(inputText)
     setEditorState(e)
   }
 
-  const onEditorFocus = (e) => {
-    clearAllStatus()
-  }
-
-  const onFocusEditor = () => {
-    editor.current.focus()
-  }
-
-  const addEntityToEditorState = (item) => {
-    // Create selection from range
-    const currentSelectionState = editorState.getSelection()
-    const end = currentSelectionState.getEndOffset()
-    const start = end - searchTerm.length - 1
-    const selection = currentSelectionState.merge({
-      anchorOffset: start,
-      focusOffset: end,
-    })
-
-    // Create entity
-    const contentState = editorState.getCurrentContent()
-    const contentStateWithEntity = contentState.createEntity(
-      'HASHTAG',
-      'IMMUTABLE',
-      item
-    )
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-
-    // Replace selection with the new create entity
-    const newContentState = Modifier.replaceText(
-      contentStateWithEntity,
-      selection,
-      item.term,
-      null,
-      entityKey
-    )
-
-    // Push new contentState with type
-    let newEditorState = EditorState.push(
-      editorState,
-      newContentState,
-      'insert-autocomplete'
-    )
-
-    newEditorState = EditorState.forceSelection(
-      newEditorState,
-      newContentState.getSelectionAfter()
-    )
-
-    // Update cursor position after inserted content
-    setEditorState(newEditorState)
-  }
-
-  const onClickItem = (term: SNOMED) => {
-    addEntityToEditorState(term)
-    clearAllStatus()
+  const onHandleBeforeInput = (chars, editorState, eventTimeStamp) => {
+    if (chars === '#') {
+      setStarting(true)
+    }
   }
 
   return (
-    <div className={`${styles.formSnomedArea} ${styles.formComponet}`}>
+    <div className={`${styles.formTextField} ${styles.formComponet}`}>
       {title.length > 0 && (
         <div className={styles.formComponentTitle}>
           {title}
           {required && <span className={styles.formRequiredMark}>*</span>}
         </div>
       )}
-      <div className={styles.formSnomedAreaValue}>
-        <Editor
+
+      <div className={styles.textFieldWithSnomed}>
+        <AutocompleteCustom
+          placeholder={placeHolder}
           editorState={editorState}
           onChange={onEditorStateChange}
-          ref={editor}
-          placeholder={placeHolder}
-          onFocus={onEditorFocus}
           handleBeforeInput={onHandleBeforeInput}
-          readOnly={readOnly}
-        />
-        {terms.length > 0 && (
-          <ul className={styles.snomedList}>
-            {terms.map((term, index) => (
-              <FormSnomedItem
-                term={term}
-                searchTermArr={searchTermArr}
-                key={term.id}
-                onClickItem={onClickItem}
-              />
-            ))}
-          </ul>
-        )}
+          autocompletes={autocompletes}
+          selectSnomed={onSelectSnomed}
+        >
+          <Editor ref={editor} />
+        </AutocompleteCustom>
         {loading && (
           <div className={styles.snomedLoading}>
             <Spin indicator={antIcon} />
