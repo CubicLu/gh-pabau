@@ -1,0 +1,55 @@
+query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
+  findManyCmLead(limit: $limit, skip: $skip) {
+    lead_id: ID
+    Name: Fname
+    Avatar
+    lastName: Lname
+    OwnerID
+    ContactID
+    Title
+    status: EnumStatus
+    LastUpdated
+    User {
+      id
+      username
+    }
+    Activity {
+      id
+      note
+      subject
+      due_start_date
+      due_end_date
+      created_by
+      status
+    }
+  }
+}
+
+# query getKanbanLeads($limit: Int=10, $skip:Int=0){
+#   getKanbanLeads(limit:$limit, skip:$skip){
+#     lead_id: ID
+#     Name: Fname
+#     Avatar
+#     lastName: Lname
+#     OwnerID
+#     ContactID
+#     title
+#     status: EnumStatus
+#     labels
+#     LastUpdated
+# 		Contact{
+#       ID
+#     }
+#    	Owner: User{
+#       id
+#       full_name
+#       image
+#     }
+#     Activity{
+#       id
+#       note
+#       subject
+#     }
+#     LeadStatusData
+#   }
+# }
