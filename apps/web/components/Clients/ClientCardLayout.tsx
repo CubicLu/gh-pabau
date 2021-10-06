@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router'
+import { useState, useMemo, useEffect } from 'react'
 import {
   useBasicContactDetailsQuery,
-  useGetContactHeaderQuery,
+  useGetContactHeaderLazyQuery,
+  useGetClientNotesCountQuery,
 } from '@pabau/graphql'
 import { ClientCard, TabItem } from '@pabau/ui'
 import React, { ComponentPropsWithoutRef, FC } from 'react'
@@ -16,16 +18,29 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
-  const { data } = useBasicContactDetailsQuery({
-    skip: !router.query['id'],
+  const [contactData, setContactData] = useState(null)
+  const [notesCountData, setNotesCountData] = useState(null)
+
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      skip: !router.query['id'],
+      ssr: false,
+      variables: { id: clientId },
+    }
+    return queryOptions
+  }, [clientId, router.query])
+
+  const { data } = useBasicContactDetailsQuery(getQueryVariables)
+
+  const [
+    getContactDetails,
+    { data: contactDetails, loading: notesCountLoading },
+  ] = useGetContactHeaderLazyQuery({
     ssr: false,
     variables: { id: clientId },
   })
-  const { data: contactData } = useGetContactHeaderQuery({
-    skip: !router.query['id'],
-    ssr: false,
-    variables: { contactId: clientId },
-  })
+
+  const { data: countData } = useGetClientNotesCountQuery(getQueryVariables)
 
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
@@ -93,13 +108,39 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     //   content: customTabMenutItem('Activities', 8),
     // },
   ] as const
-  console.log('NOTESSSSSSS--', contactData)
+
+  useEffect(() => {
+    if (contactDetails?.notes) {
+      setContactData(() => {
+        return {
+          notes: getContactNotesWithUrl(contactDetails?.notes[0]?.contact),
+          appointments: getContactNotesWithUrl(
+            contactDetails?.notes[0]?.appointment
+          ),
+        }
+      })
+    }
+  }, [contactDetails])
+
+  useEffect(() => {
+    if (countData?.count) {
+      setNotesCountData(() => {
+        return {
+          notes: countData?.count[0]?.notes?.length || 0,
+          appointments: countData?.count[0]?.appointments?.length || 0,
+        }
+      })
+    }
+  }, [countData])
 
   const getContactNotesWithUrl = (notes) => {
     return notes?.map((item) => {
       return {
         ...item,
-        User: { ...item?.User, avatar: getImage(item?.User.avatar) },
+        user: {
+          ...item?.user,
+          avatar: item?.user?.avatar && getImage(item?.user?.avatar),
+        },
       }
     })
   }
@@ -127,11 +168,10 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }
-        notes={{
-          notes: getContactNotesWithUrl(contactData?.notes[0]?.contactNotes),
-          appointments: contactData?.notes[0]?.appointment,
-          staffAlerts: contactData?.notes[0]?.staff,
-        }}
+        notes={contactData}
+        notesCount={notesCountData}
+        notesCountLoading={notesCountLoading}
+        getContactDetails={getContactDetails}
       >
         {children}
       </ClientCard>

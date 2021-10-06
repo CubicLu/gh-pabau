@@ -56,7 +56,7 @@ import {
   SaveOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useRef, useEffect } from 'react'
+import React, { FC, useState, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -108,21 +108,49 @@ interface PopoutProps {
   title: string
 }
 
-interface ClientNote {
+export interface ClientNote {
   avatar: string
   content: string
   client: string
   date: string
 }
 
-interface ClientNotes {
-  client: ClientNote[]
-  // appointment: ClientNote[]
+interface UserDetails {
+  client?: string
+  avatar?: string
+}
+
+export interface ClientNoteDetails {
+  ID?: string
+  content: string
+  date: string
+  user: UserDetails
+}
+
+export interface ClientAppointmentDetails {
+  title: string
+  date?: number
+  user?: UserDetails
+}
+
+export interface ClientNotes {
+  notes: ClientNoteDetails[]
+  appointments: ClientAppointmentDetails[]
+  // staffAlerts: ClientNoteDetails[]
+}
+
+export interface ClientNotesCount {
+  notes: number
+  appointments: number
+  // staff: number
 }
 
 interface P {
   client: ClientData
   notes: ClientNotes
+  notesCount: ClientNotesCount
+  notesCountLoading: boolean
+  getContactDetails: () => void
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
@@ -132,6 +160,9 @@ interface P {
 const ClientCardModal: FC<P> = ({
   client,
   notes,
+  notesCount,
+  notesCountLoading,
+  getContactDetails,
   onClose,
   tabs,
   activeTab,
@@ -153,13 +184,6 @@ const ClientCardModal: FC<P> = ({
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [showLetterModal, setShowLetterModal] = useState(false)
   const [showHeaderOpsDrawer, setShowHeaderOpsDrawer] = useState(false)
-
-  console.log('appoinments---------', appointments)
-
-  // useEffect(() => {
-  //   setNoteItems(notes.notes)
-  //   setAlertItems(notes.staffAlerts)
-  // }, [notes])
 
   const customTabMenutItem = (title, alert, tabTotal = 0) => {
     return (
@@ -553,12 +577,11 @@ const ClientCardModal: FC<P> = ({
       className={styles.clientAlertsPopover}
       style={{ width: isMobile ? '320px' : '472px' }}
     >
-      {console.log('alert items-=-=-=-', alertItems)}
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
           {alertItems?.map((item, index) => (
             <div className={styles.staffAlert} key={`staff-alert-${index}`}>
-              {item.Note}
+              {item}
             </div>
           ))}
         </div>
@@ -605,17 +628,11 @@ const ClientCardModal: FC<P> = ({
                 {index !== currentClientNote && (
                   <div className={styles.clientNoteItem}>
                     <div>
-                      <Avatar
-                        src={item.User.avatar}
-                        name={item.User.client}
-                        size={32}
-                      />
+                      <Avatar src={item.avatar} name={item.client} size={32} />
                     </div>
                     <div>
                       <div className={styles.content}>{item.content}</div>
-                      <div
-                        className={styles.client}
-                      >{`By ${item.User.client}`}</div>
+                      <div className={styles.client}>{`By ${item.client}`}</div>
                       <div className={styles.date}>{`On ${moment(
                         item.date
                       ).format('D MMM YYYY hh:mm A')}`}</div>
@@ -883,68 +900,14 @@ const ClientCardModal: FC<P> = ({
                 </div>
               )}
               {!isMobile && (
-                <>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Medical history'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={medicalHistoryPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Medical history">
-                        <Badge
-                          count={<CheckCircleFilled />}
-                          offset={[0, 18]}
-                          style={{ color: '#65cd98' }}
-                        >
-                          <MedicalHistory className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Notes'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientNotesPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Notes">
-                        <Badge
-                          count={noteItems?.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Note className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Staff alerts'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientAlertsPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Staff alerts" placement="bottomRight">
-                        <Badge
-                          count={alertItems?.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Alert className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <ClientHeaderDetails />
-                </>
+                <ClientHeaderDetails
+                  notes={notes}
+                  notesCount={notesCount}
+                  notesCountLoading={notesCountLoading}
+                  getContactDetails={getContactDetails}
+                  handleEditClientNote={handleEditClientNote}
+                  handleDeleteClientNote={handleDeleteClientNote}
+                />
               )}
             </div>
           </div>
