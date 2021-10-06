@@ -265,7 +265,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
 
   const [addMutation] = useCreateActivityFilterMutation({
     async onCompleted(data) {
-      console.log('data------------', data)
       if (data?.createOneActivityUserFilters) {
         const id = data?.createOneActivityUserFilters?.id
         setActiveFilterId(id)
@@ -416,7 +415,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   }
 
   const onSubmit = async (values: InitialValueTypes) => {
-    console.log('Submit call', values)
     const data = {
       name: values.name,
       data: JSON.stringify({
@@ -479,8 +477,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         },
       ],
     })
-    console.log('activeFilterId----------', activeFilterId)
-    console.log('values.id----------', values.id)
     if (activeFilterId === values.id) {
       setSelectFilterUser([])
       await upsertActiveColumn({
@@ -544,7 +540,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         >
           <Form layout="vertical">
             <div className={styles.filterContentWrap}>
-              {console.log('values-----------', values)}
               <h5>{t('create.filter.modal.all.condition.title')}</h5>
               <RenderFilterMenu
                 items={values.andFilterOption}

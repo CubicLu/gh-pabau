@@ -195,8 +195,6 @@ export const ActivityQuery = extendType({
         )
 
         const where = input.where
-        console.log('where----------------', where)
-
         try {
           const prepareSearchQuery =
             where?.search &&
@@ -224,8 +222,6 @@ export const ActivityQuery = extendType({
           if (prepareOrFilterQuery) {
             orQuery.push(...prepareOrFilterQuery)
           }
-          console.log('andQuery---------', andQuery)
-          console.log('orQuery---------', orQuery)
           const graphData = await retrieveActivityGraphData(
             ctx,
             where,

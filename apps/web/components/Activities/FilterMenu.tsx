@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useMemo } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Select, Radio, Spin } from 'antd'
 import { getData } from './FilterOptionData'
 import { UserOutlined, CheckOutlined, AimOutlined } from '@ant-design/icons'
@@ -122,7 +122,6 @@ const ClientLeadMenu = ({
   disabled,
   options,
 }) => {
-  console.log('clientLeadMenu options', value)
   const [
     fetchContactName,
     { data: contactData },
@@ -161,10 +160,8 @@ const ClientLeadMenu = ({
         })
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit])
-  console.log('isEdit----------', isEdit, name)
-  console.log('clientName-----------------', clientName)
-  console.log('leadName-----------------', leadName)
   return (
     <div className={styles.clientWrapper}>
       <div className={styles.icon}>{icon}</div>
@@ -252,8 +249,6 @@ export const FilterMenu: FC<FilterMenuProps> = ({
   const [leadLoading, setLeadLoading] = useState(false)
   const [clientOption, setClientOption] = useState([])
   const [clientLoading, setClientLoading] = useState(false)
-
-  console.log('isEdit-------------', isEdit)
 
   const { statusMenu, freeBusyOption, doneOption } = getData(t)
   const [fetchLead, { data, loading }] = useFindManyLeadsLazyQuery()

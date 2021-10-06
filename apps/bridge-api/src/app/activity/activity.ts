@@ -1,5 +1,5 @@
 import { Context } from '../../context'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear'
 import { LeadNoteType, LeadResponse, FilterOptionType } from './types'
@@ -736,28 +736,15 @@ export const prepareFilterQuery = async (
     ) {
       continue
     }
-    console.log('1')
     const prepareInnerObject = await prepareOperandQuery(
       item.filterColumn,
       item.menuOption,
       item.operand,
       ctx
     )
-    console.log('2')
     queryObject.push(
       bindQueryIntoModelVariable(item.filterColumn, prepareInnerObject)
     )
   }
-  // let queryObject = await Promise.all(items?.map(async (item) => {
-  //   console.log('item-----------', item)
-  //   if ((item.operand !== 'is empty' && item.operand !== 'is not empty') && item.menuOption === '') {
-  //     return undefined
-  //   }
-  //   console.log('1')
-  //   let prepareInnerObject = await prepareOperandQuery(item.filterColumn, item.menuOption, item.operand, ctx);
-  //   console.log('2')
-  //   return bindQueryIntoModelVariable(item.filterColumn, prepareInnerObject)
-  // }).filter(item => item))
-  console.log('queryObject--------------', JSON.stringify(queryObject))
   return queryObject
 }

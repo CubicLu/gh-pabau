@@ -212,11 +212,6 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.injectUser
       ),
-      // findManyActivityUserFilters: and(
-      //   rules.authentication.isAuthenticated,
-      //   rules.interceptors.injectUser,
-      //   rules.interceptors.interceptAccessToCompanyData
-      // ),
       // Debug
       ping: allow,
       version: allow,

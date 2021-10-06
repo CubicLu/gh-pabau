@@ -7,10 +7,11 @@ import React, {
   useMemo,
 } from 'react'
 import Layout from '../../components/Layout/Layout'
-import ActivitiesHeader, {
+import ActivitiesHeader from '../../components/Activities/ActivitiesHeader'
+import {
+  FilterDataProps,
   FilterDataObjectType,
-} from '../../components/Activities/ActivitiesHeader'
-import { FilterDataProps } from '../../components/Activities/CreateFilterModal'
+} from '../../components/Activities/CreateFilterModal'
 import ActivitiesTable from '../../components/Activities/ActivitiesTable'
 import { OptionList } from '../../components/Activities/FilterMenu'
 import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
@@ -238,7 +239,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
-  console.log('filterDataObject---------------------', filterDataObject)
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
@@ -492,7 +492,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
       const data = JSON.parse(response?.columns)
       const column = data?.columns ?? []
       const temp: FilterDataProps = {}
-      console.log('data---------------', response)
       if (response?.user_filter) {
         temp.type = 'user'
         temp.id = response?.user_filter

@@ -238,6 +238,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
           .filter((item) => item)
         setFilterOption(filterData)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userFilterData])
 
     useEffect(() => {
