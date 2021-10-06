@@ -69,6 +69,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
 
   const handleClose = (val) => {
     setVisible(val)
+    form.resetFields()
   }
 
   const renderItem = () => {

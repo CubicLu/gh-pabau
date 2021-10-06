@@ -130,7 +130,7 @@ export interface ClientDetailsProps {
   onCreateCall: () => void
   searchResults: SearchItem[]
   appointments: Appointment[]
-  dateFormat: string
+  dateFormat?: string
 }
 
 enum FieldType {
@@ -1121,6 +1121,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                       type={field.type}
                                       initialValue={
                                         field.value &&
+                                        dateFormat &&
                                         typeof field.value === 'string'
                                           ? dayjs(field.value).format(
                                               dateFormat

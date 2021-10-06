@@ -125,7 +125,7 @@ interface P {
   referredByOptions?: ReferredByOption[]
   loading?: boolean
   customFields?: FieldOrderItem[]
-  dateFormat: string
+  dateFormat?: string
 }
 
 const ClientCardModal: FC<P> = ({
