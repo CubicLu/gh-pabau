@@ -97,7 +97,7 @@ const BookingConfirmation: FC<P> = () => {
             <div className={styles.location}>
               <img src={location} alt={'not_img'} />
               <div className={styles.locText}>
-                <h6>{t('connect.onlinebooking.booked.skin')}</h6>
+                <h6>{settings.details.company_name}</h6>
                 <p>{selectedData.location.address}</p>
                 <p>{selectedData.location.email}</p>
               </div>

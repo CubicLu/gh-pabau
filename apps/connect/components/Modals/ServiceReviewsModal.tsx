@@ -90,7 +90,7 @@ const ServiceReviewsModal: FC<P> = ({ service, closeModalHandler }) => {
           {service.Public_SocialSurveyFeedback.map((val) => (
             <div className={styles.cardReview} key={val.id}>
               <div className={styles.reviewHeader}>
-                <img src={null} className={styles.reviewImg} alt={'nothing'} />
+                {/*<img src={null} className={styles.reviewImg} alt={'nothing'} />*/}
                 <span className={styles.reviewName}>{val.feedback_name}</span>
                 <div className={styles.reviewRate}>
                   <Badge dot className={styles.dot} />

@@ -24,7 +24,7 @@ export const Public_Bookings = extendType({
         take: intArg(),
       },
       resolve(_, input, ctx: Context) {
-        return ctx.prisma.booking.findMany({
+        const sms_sender = ctx.prisma.booking.findMany({
           where: {
             company_id: input.where.company_id,
             UID: input.where.uid ? input.where.uid : undefined,

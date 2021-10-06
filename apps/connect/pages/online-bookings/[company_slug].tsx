@@ -144,7 +144,6 @@ export function Index() {
           {currentStep === 5 && (
             <BookingDetails
               onConfirmed={function () {
-                console.log(selectedData)
                 // createBooking({
                 //   variables: {
                 //     user_id: selectedData.employee.ID,
@@ -163,7 +162,7 @@ export function Index() {
                 //     sent_survey: 0,
                 //     issued_to: 22293092,
                 //   },
-                //})
+                // })
                 setCurrentStep(currentStep + 3)
               }}
               backToStep={(step: number) => {
