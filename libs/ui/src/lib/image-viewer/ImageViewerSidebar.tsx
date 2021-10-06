@@ -5,7 +5,7 @@ import {
   LeftOutlined,
   CaretDownOutlined,
 } from '@ant-design/icons'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import cn from 'classnames'
 import { Popover, Skeleton } from 'antd'
 import {
@@ -17,14 +17,18 @@ import {
 import { DragDropContainer } from 'react-drag-drop-container'
 import sidebarToggle from '../../assets//images/image-viewer/sidebar-toggle.svg'
 import styles from './ImageViewerSidebar.module.less'
+import classNames from 'classnames'
 
 export interface ImageViewerSidebarProps {
   comparingMode: ComparingMode
   sidebarOpen: boolean
   albums: ImageViewerAlbum[]
+  selectedAlbum?: ImageViewerAlbum
   selectedIndex: SelectIndexProps[]
+  setSelectedIndex?: () => void
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onAlbumSelect?: (album) => void
 }
 
 const ImageViewerSidebarItem = ({
@@ -45,11 +49,10 @@ const ImageViewerSidebarItem = ({
   selectedIndex: SelectIndexProps[]
 }) => {
   const [source, setSource] = useState('')
-  const handleDragStart = (item) => {
-    const { album, imageIndex } = item
+  const handleDragStart = () => {
     if (
       !selectedIndex.find(
-        (el) => el.album === album && el.imageIndex === imageIndex
+        (el) => el.album === currentAlbum && el.imageIndex === imageIndex
       )
     ) {
       setSidebarOpen(false)
@@ -118,6 +121,7 @@ const ImageViewerSidebarItem = ({
       img.src = origin
     }
   }, [source, origin])
+
   return (
     <DragDropContainer
       dragData={{
@@ -126,13 +130,8 @@ const ImageViewerSidebarItem = ({
         option: { scale: 1, positionX: 0, positionY: 0 },
       }}
       dragClone={false}
-      onDragStart={() =>
-        handleDragStart({
-          album: currentAlbum,
-          imageIndex,
-        })
-      }
-      onDragEnd={() => handleDragEnd()}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       customDragElement={
         <div
           className={styles.dragItem}
@@ -189,30 +188,55 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
   comparingMode,
   sidebarOpen,
   albums,
+  selectedAlbum,
   selectedIndex,
+  setSelectedIndex,
   setIsDragging,
   setSidebarOpen,
+  onAlbumSelect,
 }) => {
   const [imageItems, setImageItems] = useState<AlbumImageItem[]>([])
-  const [currentAlbum, setCurrentAlbum] = useState('')
+  const [currentAlbum, setCurrentAlbum] = useState<ImageViewerAlbum | null>(
+    null
+  )
   const [openAlbumDrop, setOpenAlbumDrop] = useState(false)
 
   const albumsDropdown = (
     <div className={styles.albumsDropdown}>
-      {albums.map((item, index) => (
-        <div
-          className={styles.albumDropdownItem}
-          key={`album-dropdown-item-${index}`}
-          onClick={() => {
-            setImageItems(item.imageList)
-            setCurrentAlbum(item.name)
-            setOpenAlbumDrop(false)
-          }}
-        >
-          <div>{item.name}</div>
-          <div>{item.imageList.length}</div>
+      {albums?.length > 0 ? (
+        albums?.map((item, index) => (
+          <div
+            className={classNames(
+              styles.albumDropdownItem,
+              (currentAlbum?.id && currentAlbum?.id === item?.id) ||
+                (currentAlbum?.id === null &&
+                  currentAlbum?.name === 'Uncategorized' &&
+                  item?.name === 'Uncategorized')
+                ? styles.selected
+                : ''
+            )}
+            key={item?.id}
+            onClick={() => {
+              onAlbumSelect?.(item)
+              setImageItems(item?.imageList as AlbumImageItem[])
+              setCurrentAlbum(item)
+              setOpenAlbumDrop(false)
+              setSelectedIndex?.()
+            }}
+          >
+            <div>{item.name}</div>
+            <div>
+              {item?.imageCount
+                ? item?.imageCount || 0
+                : item.imageList?.length || 0}
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className={styles.albumDropdownItem}>
+          <div>No Album</div>
         </div>
-      ))}
+      )}
     </div>
   )
 
@@ -220,9 +244,9 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
     let status = false
     for (const el of selectedIndex) {
       if (
-        el.album === currentAlbum &&
+        el.album === currentAlbum?.name &&
         el.imageIndex >= 0 &&
-        moment(date).isSame(imageItems[el.imageIndex].date, 'day')
+        dayjs(date).isSame(imageItems[el.imageIndex].date, 'day')
       ) {
         status = true
         break
@@ -232,11 +256,29 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
   }
 
   useEffect(() => {
-    if (albums.length > 0 && currentAlbum === '') {
-      setCurrentAlbum(albums[0].name)
-      setImageItems(albums[0].imageList)
+    const compare = (a, b) => {
+      if (dayjs(a.date) > dayjs(b.date)) {
+        return -1
+      }
+      if (dayjs(a.date) < dayjs(b.date)) {
+        return 1
+      }
+      return 0
     }
-  }, [albums, currentAlbum])
+
+    if (albums?.length > 0 && !selectedAlbum) {
+      const sortedImages = albums[0]?.imageList?.sort(compare)
+      albums[0].imageList = sortedImages
+      setCurrentAlbum(albums[0])
+      setImageItems(albums[0]?.imageList as AlbumImageItem[])
+    }
+    if (selectedAlbum) {
+      const sortedImages = selectedAlbum?.imageList?.sort(compare) || []
+      selectedAlbum.imageList = sortedImages
+      setCurrentAlbum(selectedAlbum)
+      setImageItems(selectedAlbum?.imageList as AlbumImageItem[])
+    }
+  }, [albums, selectedAlbum])
 
   return (
     <div
@@ -256,22 +298,21 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
           overlayClassName={styles.albumsPopover}
         >
           <div className={styles.albumSelector}>
-            <div>{currentAlbum}</div>
-            <div>
-              <CaretDownOutlined />
-            </div>
+            <div>{albums?.length > 0 ? currentAlbum?.name : 'No Album'}</div>
+            {albums?.length > 0 && (
+              <div>
+                <CaretDownOutlined />
+              </div>
+            )}
           </div>
         </Popover>
-        {imageItems.map((item, index) => (
-          <React.Fragment key={`image-item-${index}`}>
+        {imageItems?.map((item, index) => (
+          <React.Fragment key={item?.id}>
             {(index === 0 ||
-              !moment(imageItems[index - 1].date).isSame(
-                item.date,
-                'year'
-              )) && (
+              !dayjs(imageItems[index - 1].date).isSame(item.date, 'year')) && (
               <>
                 <div className={styles.imageItemYearDivider}>
-                  {moment(item.date).format('YYYY')}
+                  {dayjs(item.date).format('YYYY')}
                 </div>
                 <div className={styles.imageItem} style={{ height: '1rem' }}>
                   <div />
@@ -282,13 +323,13 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
             <div className={styles.imageItem}>
               <div>
                 {(index === 0 ||
-                  !moment(imageItems[index - 1].date).isSame(
+                  !dayjs(imageItems[index - 1].date).isSame(
                     item.date,
                     'day'
                   )) && (
                   <div className={styles.imageItemDate}>
-                    <p>{moment(item.date).format('DD')}</p>
-                    <p>{moment(item.date).format('MMM')}</p>
+                    <p>{dayjs(item?.date).format('DD')}</p>
+                    <p>{dayjs(item?.date).format('MMM')}</p>
                     <div
                       className={
                         checkSelectedStatusForSameDate(item.date)
@@ -300,10 +341,10 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
                 )}
               </div>
               <div>
-                <React.Fragment key={`${currentAlbum}-${index}`}>
+                <React.Fragment key={item?.id}>
                   <ImageViewerSidebarItem
                     comparingMode={comparingMode}
-                    currentAlbum={currentAlbum}
+                    currentAlbum={currentAlbum?.name || ''}
                     origin={item.origin}
                     imageIndex={index}
                     selectedIndex={selectedIndex}

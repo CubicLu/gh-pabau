@@ -128,7 +128,7 @@ export const Login = extendType({
             select: userSelect,
           })
           console.log(`[auth] pod login: legacy=${user.id} pod=${user2.id}`)
-          new UserService(prismaArray, user2).updateLastLogin()
+          new UserService(prismaArray, user2).updateLastLogin(false)
           return generateJWT(user2)
         } else {
           console.log(`[auth] legacy login: legacy=${user.id}`)
@@ -155,19 +155,19 @@ export const Login = extendType({
           select: { username: true },
         })
         // Get remote_url user for new company from legacy db
-        const {
-          Company: { remote_url },
-        } = await prismaArray(undefined).user.findFirst({
+        const legacyUser = await prismaArray(undefined).user.findFirst({
           rejectOnNotFound: true,
           where: {
             company_id: { equals: companyId },
             username: { equals: username },
           },
-          select: { Company: { select: { remote_url: true } } },
+          select: { id: true, Company: { select: { remote_url: true } } },
         })
-
+        new UserService(prismaArray, legacyUser).updateLastLogin()
         // Get pod user for new company (if remote_url)
-        const newPodUser = await prismaArray(remote_url).user.findFirst({
+        const newPodUser = await prismaArray(
+          legacyUser.Company.remote_url
+        ).user.findFirst({
           rejectOnNotFound: true,
           where: {
             company_id: companyId,
@@ -175,7 +175,7 @@ export const Login = extendType({
           },
           select: userSelect,
         })
-        new UserService(prismaArray, newPodUser).updateLastLogin()
+        new UserService(prismaArray, newPodUser).updateLastLogin(false)
         return generateJWT(newPodUser)
       },
     })

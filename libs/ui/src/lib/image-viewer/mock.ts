@@ -33,42 +33,52 @@ export const albums = [
     name: 'Botox gallery',
     imageList: [
       {
+        id: 20,
         date: '2021-05-12',
         origin: album201,
       },
       {
+        id: 21,
         date: '2021-05-12',
         origin: album202,
       },
       {
+        id: 22,
         date: '2021-05-12',
         origin: album203,
       },
       {
+        id: 23,
         date: '2021-05-14',
         origin: album204,
       },
       {
+        id: 24,
         date: '2021-05-16',
         origin: album205,
       },
       {
+        id: 25,
         date: '2021-05-19',
         origin: album206,
       },
       {
+        id: 26,
         date: '2021-05-21',
         origin: album207,
       },
       {
+        id: 27,
         date: '2021-05-22',
         origin: album208,
       },
       {
+        id: 28,
         date: '2021-05-25',
         origin: album209,
       },
       {
+        id: 29,
         date: '2021-05-27',
         origin: album210,
       },
@@ -78,38 +88,47 @@ export const albums = [
     name: 'Album 1',
     imageList: [
       {
+        id: 1,
         date: '2021-05-12',
         origin: album101,
       },
       {
+        id: 2,
         date: '2021-05-12',
         origin: album102,
       },
       {
+        id: 3,
         date: '2021-05-12',
         origin: album103,
       },
       {
+        id: 4,
         date: '2021-05-14',
         origin: album104,
       },
       {
+        id: 5,
         date: '2021-05-16',
         origin: album105,
       },
       {
+        id: 6,
         date: '2021-05-19',
         origin: album106,
       },
       {
+        id: 7,
         date: '2021-05-21',
         origin: album107,
       },
       {
+        id: 8,
         date: '2021-05-22',
         origin: album108,
       },
       {
+        id: 9,
         date: '2021-05-25',
         origin: album109,
       },
@@ -119,42 +138,52 @@ export const albums = [
     name: 'Breast Augmentation',
     imageList: [
       {
+        id: 10,
         date: '2021-05-12',
         origin: album301,
       },
       {
+        id: 11,
         date: '2021-05-12',
         origin: album302,
       },
       {
+        id: 12,
         date: '2021-05-12',
         origin: album303,
       },
       {
+        id: 13,
         date: '2021-05-14',
         origin: album304,
       },
       {
+        id: 14,
         date: '2021-05-16',
         origin: album305,
       },
       {
+        id: 15,
         date: '2021-05-19',
         origin: album306,
       },
       {
+        id: 16,
         date: '2021-05-21',
         origin: album307,
       },
       {
+        id: 17,
         date: '2021-05-22',
         origin: album308,
       },
       {
+        id: 18,
         date: '2021-05-25',
         origin: album309,
       },
       {
+        id: 19,
         date: '2021-05-27',
         origin: album310,
       },

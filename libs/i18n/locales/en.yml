@@ -884,6 +884,30 @@ en:
   ui.report-help-sidebar.kpis-care-factor-title: 'Care Factor'
   ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
   ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
+  ui.gp-search.yourPractice: 'Your practice'
+  ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are
+          currently registered as a patient'
+  ui.gp-search.searchInput.placeholder: 'Enter a postcode or search by the name'
+  ui.gp-search.searchInput.addPracticeManually: 'Add practice manually'
+  ui.gp-search.searchInput.setAsPracticeButton: 'Set as a practice'
+  ui.gp-search.searchInput.resultMessage: 'Select your practice from the results below'
+  ui.gp-search.addPrqacticeModal.gpServeyName: 'GP surgery name'
+  ui.gp-search.addPrqacticeModal.streetAddress: 'Street address'
+  ui.gp-search.addPrqacticeModal.Postcode: 'Postcode'
+  ui.gp-search.addPrqacticeModal.country: 'Country'
+  ui.gp-search.addPrqacticeModal.AddPracticeButton: 'Add Practice'
+  ui.gp-search.addPracticeModal.validation.surveyName: 'GP Survey name is required'
+  ui.gp-search.addPracticeModal.validation.postCode: 'Postcode name is invalid'
+  ui.gp-search.addPracticeModal.validation.streetAddress: 'Street Address is required'
+  ui.gp-search.addPracticeModal.validation.country: 'Country is invalid'
+  ui.gp-search.sucessModal.sucessHeading: 'Success!'
+  ui.gp-search.sucessModal.sucessMessage: 'Your Pabau connect account is now successfully link to your GP'
+  ui.gp-search.sucessModal.successApprovalMsg: 'With your approval, your clinics can now:'
+  ui.gp-search.sucessModal.messageYourGP: 'Message your GP'
+  ui.gp-search.sucessModal.SharemedicalRecord: 'Share medical record'
+  ui.gp-search.sucessModal.bookGpAppointments: 'Book GP appointments'
+  ui.gp-search.sucessModal.Refer: 'Refer'
+  ui.gp-search.sucessModal.great: 'Great'
   marketingsource-title-short: Source
   marketingsource-status-field: Status
   marketingsource-name: Name
@@ -926,10 +950,12 @@ en:
   add-button-filter-cancel: Cancel
   add-button-filter-header-text-status: Status
   navigation-breadcrumb-setup: Setup
+  common-quick-add: Quick add (SHIFT +)
   common-label-delete: Delete
   common-label-add: Add
   common-label-create: Create
   common-label-cancel: Cancel
+  common-label-send: Send
   common-label-save: Save
   common-label-select: Select {{what}}
   common-label-enter: Enter {{what}}
@@ -989,6 +1015,7 @@ en:
   quickcreate.client: Client
   quickcreate.lead: Lead
   quickcreate.sms: SMS
+  quickcreate.activity: Activity
   quickcreate.sale: Sale
   quickcreate.newsletter: Newsletter
   chat.header: Chat
@@ -1034,11 +1061,13 @@ en:
   sidebar.stock.suppliers: Suppliers
   sidebar.marketing: Marketing
   sidebar.marketing.campaigns: Campaigns
+  sidebar.marketing.broadcasts: Broadcasts
   sidebar.marketing.reivews: Reviews
   sidebar.marketing.giftvouchers: 'Gift Vouchers'
   sidebar.marketing.referraltracker: 'Referral tracker'
   sidebar.marketing.loyalty: Loyalty
   sidebar.marketing.fanancials: Financials
+  sidebar.marketing.money: Money
   sidebar.financials.accounts: Accounts
   sidebar.financials.cashup: Cashup
   sidebar.contacts: Contacts
@@ -3267,7 +3296,7 @@ en:
   business.security.tool.data.force.title: 'Force 2FA'
   business.security.tool.data.force.modal.title: 'Force 2FA'
   business.security.tool.data.force.modal.btn: 'Save'
-  business.security.manage.bulk.action.model: 'Are you sure you wish for all of your users to reset there passwords on next login?'
+  business.security.manage.bulk.action.model: 'Are you sure you wish for all of your users to reset their passwords on next login?'
   business.security.tool.data.force.name: 'Force all users to use 2 factor authentication'
   business.security.tool.data.force.modal.content: 'Two-factor authentication adds an extra layer of security to your Pabau account. By asking you to enter a verification code after entering the correct email address and password, it will protect you from potential attackers who also might have gained access to your email address. It will ensure that the secure data you share with your clients stays secure, as they will need to enter a verification code as well. /n*SMS credits are mandatory, in order for the two-factor authentication to work.'
   business.security.tool.data.password.expiration.title: 'Password Expiration'
@@ -4507,7 +4536,7 @@ en:
   setup.locations.title: 'Locations'
   setup.locations.title.short: 'Location'
   setup.locations.header.create.title: 'Create Location'
-  setup.locations.header.search.placeholder: 'Search by name, city or tag'
+  setup.locations.header.search.placeholder: 'Search by name'
   setup.locations.notification.create.success: 'You have successfully created a location'
   setup.locations.notification.create.error: 'While creating a location'
   setup.locations.notification.edit.success: 'You have successfully updated a location'
@@ -4571,6 +4600,7 @@ en:
   setup.locations.allowed.location.label: 'Allowed Locations'
   setup.locations.active.location.label: 'Total Active Locations'
   setup.locations.allowed.location.tooltip.label: 'This is the number of locations you are allowed on your subscription'
+  setup.locations.noDataText: 'No Location'
   employees.title.label: 'Employees'
   employees.description.text: 'Choose which team members would required access to this location'
   employees.load.more.button.label: 'Load More'

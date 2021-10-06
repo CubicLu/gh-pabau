@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react'
 import styles from './ImageViewerEx.module.less'
 import cn from 'classnames'
+import { Skeleton } from 'antd'
 import { toCanvas } from 'html-to-image'
 import { GlassMagnifier } from 'react-image-magnifiers'
 import { useTranslation } from 'react-i18next'
@@ -53,6 +54,7 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
   const { t } = useTranslation('common')
   const viewerRef = React.createRef<ReactZoomPanPinchRef>()
   const [imageData, setImageData] = useState('')
+  const [currScale, setCurrScale] = useState(scale)
   const [screenshot, setScreenshot] = useState('')
   const [largeScreenshot, setLargeScreenshot] = useState('')
 
@@ -69,6 +71,12 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
         const { width: imgWidth, height: imgHeight } = img
+        if (imgWidth < width) {
+          setCurrScale(width / imgWidth)
+        } else {
+          setCurrScale(1)
+        }
+
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
         canvas.width = imgWidth
@@ -81,8 +89,8 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
           imgHeight,
           0,
           0,
-          width,
-          (width * imgHeight) / imgWidth
+          imgWidth > width ? width : imgWidth,
+          imgHeight > height ? (width * imgHeight) / imgWidth : imgHeight
         )
         setImageData(canvas.toDataURL())
       })
@@ -97,42 +105,44 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
 
   useEffect(() => {
     if (viewMagnifier && magnifierZoomInValue) {
-      toCanvas(
-        document.querySelector(
-          `#image-viewer-ex-${imageViewerExId}`
-        ) as HTMLElement
-      ).then((_) => {
+      if (document?.querySelector(`#image-viewer-ex-${imageViewerExId}`)) {
         toCanvas(
-          document.querySelector(
+          document?.querySelector(
             `#image-viewer-ex-${imageViewerExId}`
           ) as HTMLElement
-        ).then((canvas) => {
-          const screenshotData = canvas.toDataURL()
-          setScreenshot(screenshotData)
-          // load large screenshot
-          const img = new Image()
-          img.crossOrigin = 'Anonymous'
-          img.addEventListener('load', () => {
-            const { width, height } = img
-            const canvasLg = document.createElement('canvas')
-            const ctxLg = canvasLg.getContext('2d')
-            canvasLg.width = width * magnifierZoomInValue
-            canvasLg.height = height * magnifierZoomInValue
-            ctxLg?.drawImage(
-              img,
-              0,
-              0,
-              width * magnifierZoomInValue,
-              height * magnifierZoomInValue
-            )
-            setLargeScreenshot(canvasLg.toDataURL())
+        ).then((_) => {
+          toCanvas(
+            document?.querySelector(
+              `#image-viewer-ex-${imageViewerExId}`
+            ) as HTMLElement
+          ).then((canvas) => {
+            const screenshotData = canvas.toDataURL()
+            setScreenshot(screenshotData)
+            // load large screenshot
+            const img = new Image()
+            img.crossOrigin = 'Anonymous'
+            img.addEventListener('load', () => {
+              const { width, height } = img
+              const canvasLg = document.createElement('canvas')
+              const ctxLg = canvasLg.getContext('2d')
+              canvasLg.width = width * magnifierZoomInValue
+              canvasLg.height = height * magnifierZoomInValue
+              ctxLg?.drawImage(
+                img,
+                0,
+                0,
+                width * magnifierZoomInValue,
+                height * magnifierZoomInValue
+              )
+              setLargeScreenshot(canvasLg.toDataURL())
+            })
+            img.addEventListener('error', () => {
+              setLargeScreenshot('')
+            })
+            img.src = screenshotData
           })
-          img.addEventListener('error', () => {
-            setLargeScreenshot('')
-          })
-          img.src = screenshotData
         })
-      })
+      }
     } else {
       setScreenshot('')
       setLargeScreenshot('')
@@ -179,7 +189,7 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
           <TransformWrapper
             ref={viewerRef}
             minScale={1}
-            initialScale={scale}
+            initialScale={currScale}
             initialPositionX={positionX}
             initialPositionY={positionY}
             limitToBounds={false}
@@ -212,7 +222,11 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
           />
         </div>
       )}
-      {src && !imageData && <div className={styles.loadingImage} />}
+      {src && !imageData && (
+        <div className={styles.loadingImage}>
+          <Skeleton.Image />
+        </div>
+      )}
       {src && viewMagnifier && (!screenshot || !largeScreenshot) && (
         <div className={styles.preparingMagnifier} />
       )}

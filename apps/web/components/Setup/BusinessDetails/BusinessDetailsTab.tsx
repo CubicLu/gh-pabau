@@ -44,6 +44,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [buttonClicked, setButtonClicked] = useState(false)
   const [companyLogo, setCompanyLogo] = useState<string>()
+  const [deleteLogo, setDeleteLogo] = useState(false)
 
   useEffect(() => {
     setCompanyLogo(
@@ -116,24 +117,29 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
   }
 
   const handleLogoUpload = (imageData) => {
-    try {
-      updateBusinessLogo({
-        variables: {
-          data: {
-            logo: {
-              set: imageData.path,
+    if (!deleteLogo) {
+      try {
+        updateBusinessLogo({
+          variables: {
+            data: {
+              logo: {
+                set: imageData.path,
+              },
+            },
+            where: {
+              details_id: data?.me?.Company?.details?.details_id,
             },
           },
-          where: {
-            details_id: data?.me?.Company?.details?.details_id,
-          },
-        },
-      })
-      setCompanyLogo(cdnURL + imageData.path)
-      message.success(t('setup.business-details.update.success'))
-    } catch (error) {
-      message.error(t('setup.business-details.update.error'))
-      throw new Error(error)
+        })
+        setCompanyLogo(cdnURL + imageData.path)
+        message.success(t('setup.business-details.update.success'))
+      } catch (error) {
+        message.error(t('setup.business-details.update.error'))
+        throw new Error(error)
+      }
+    }
+    if (deleteLogo) {
+      onDeleteImage()
     }
   }
 
@@ -157,6 +163,10 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
       message.error(t('setup.business-details.update.error'))
       throw new Error(error)
     }
+  }
+
+  const handleDelete = () => {
+    setDeleteLogo(true)
   }
 
   const handleSaveDetail = async (values) => {
@@ -222,6 +232,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
       defaultLanuageStaff,
       timezone,
       weekStart,
+      timeZoneLabel,
     } = languageSetting
     const { address, city, country, postcode, region, apt } = businessLocation
 
@@ -240,7 +251,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     CompanyDetailData.city = city
     CompanyDetailData.region = region
     CompanyDetailData.country = country
-    // CompanyDetailData.timezone_label = timeZoneLabel
+    CompanyDetailData.timezone_label = timeZoneLabel
 
     const CompanyMeta = [
       {
@@ -303,12 +314,16 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
           title={t('setup.business-details.uploadlogo')}
           imageURL={companyLogo}
           onCancel={() => setShowAvatarUploader(false)}
+          onDelete={handleDelete}
           shape={'rectangle'}
           width={400}
           height={200}
           section={'avatar_photos'}
           type={'file_attachments'}
-          successHandler={handleLogoUpload}
+          successHandler={(val) => {
+            setDeleteLogo(false)
+            handleLogoUpload(val)
+          }}
         />
       )}
     </div>

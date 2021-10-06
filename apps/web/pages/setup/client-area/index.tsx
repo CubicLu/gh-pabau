@@ -1,9 +1,7 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
 import { Typography } from 'antd'
 import { Breadcrumb, Switch, Stepper } from '@pabau/ui'
-import { LeftOutlined } from '@ant-design/icons'
 import confetti from 'canvas-confetti'
-import { useRouter } from 'next/router'
 import Layout from '../../../components/Layout/Layout'
 import CommonHeader from '../../../components/CommonHeader'
 import {
@@ -19,6 +17,7 @@ import {
   ClientAreaWidgets,
   ClientAreaShare,
 } from '../../../components/Setup/ClientArea'
+import useWindowSize from '../../../hooks/useWindowSize'
 import { ReactComponent as ExternalLink } from '../../../assets/images/external-link.svg'
 import styles from './index.module.less'
 
@@ -37,6 +36,7 @@ export const Index: FC<ClientAreaProps> = ({
   shareSetting = defaultShareData,
 }) => {
   const clientAreaRef = useRef(null)
+  const size = useWindowSize()
   const [step, setStep] = useState(0)
   const [setting, setSetting] = useState<ClientAreaBuilderSetting>(
     defaultBuilderSetting
@@ -64,35 +64,27 @@ export const Index: FC<ClientAreaProps> = ({
     }
   }, [step])
 
-  const router = useRouter()
-
-  const handleBack = () => {
-    router.back()
-  }
-
   return (
     <div ref={clientAreaRef}>
-      <CommonHeader />
       <Layout>
+        <CommonHeader isLeftOutlined reversePath="/setup" title="Client Area" />
+
         <div className={styles.clientAreaContainer}>
           <div className={styles.clientAreaHeader}>
-            <div className={styles.clientAreaBreadcrumb}>
-              <Breadcrumb
-                breadcrumbItems={[
-                  { breadcrumbName: 'Setup', path: '/setup' },
-                  {
-                    breadcrumbName: 'Client Area',
-                    path: '/setup/client-area',
-                  },
-                ]}
-              />
-              <Title>Client Area</Title>
-            </div>
-            <div className={styles.clientAreaBreadcrumbMobile}>
-              <Title>
-                <LeftOutlined onClick={handleBack} /> Client Area
-              </Title>
-            </div>
+            {size.width > 767 && (
+              <div className={styles.clientAreaBreadcrumb}>
+                <Breadcrumb
+                  items={[
+                    { breadcrumbName: 'Setup', path: 'setup' },
+                    {
+                      breadcrumbName: 'Client Area',
+                      path: 'setup/client-area',
+                    },
+                  ]}
+                />
+                <Title>Client Area</Title>
+              </div>
+            )}
             <div className={styles.clientAreaOps}>
               <div className={styles.reviewLink}>
                 Your current Pabau portal address <Switch size="small" />
