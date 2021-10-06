@@ -1,0 +1,66 @@
+fragment PackageFields on Package {
+  id
+  name
+  description
+  session_count
+  duration
+  price
+  activities
+  company_id
+  CreatedDate
+  imported
+  inactive
+  deleted
+  product_id
+  service_product_id
+  hard_deleted
+  session_package_master_id
+  tax_id
+  custom_service_name
+  custom_price_item
+  empty_name
+  old_price
+  old_duration
+  disabledusers
+  sold_online
+}
+
+fragment Package on Package {
+  ...PackageFields
+  contact_packages {
+    ...ContactPackageFields
+  }
+  Company {
+    ...CompanyFields
+  }
+  ServiceProduct {
+    ...InvProductFields
+  }
+  Product {
+    ...InvProductFields
+  }
+}
+
+mutation createOnePackage($data: PackageCreateInput!) {
+  createOnePackage(data: $data) {
+    ...Package
+  }
+}
+
+mutation updateOnePackage($where: PackageWhereUniqueInput!, $data: PackageUpdateInput!) {
+  updateOnePackage(where: $where, data: $data) {
+    ...Package
+  }
+}
+
+mutation deleteOnePackage($where: PackageWhereUniqueInput!) {
+  deleteOnePackage(where: $where) {
+    ...Package
+  }
+}
+
+mutation updateManyPackage($where: PackageWhereInput, $data: PackageUpdateManyMutationInput!) {
+  updateManyPackage(where: $where, data: $data) {
+    count
+  }
+}
