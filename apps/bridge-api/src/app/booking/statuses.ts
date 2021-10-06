@@ -1,7 +1,7 @@
 import { Context } from '../../context'
 import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
-import { statusDataByDayMonth } from './statusByDateRange'
+import { statusDataByDayMonth } from './statuses.service'
 
 export const retrieveBookingStatuses = async (
   ctx: Context,
@@ -96,8 +96,9 @@ export const retrieveBookingStatuses = async (
           }, 0)
         : 0
     }%`,
-    appointmentList: appointment,
-    onlineAppointmentList: onlineAppointment,
+    appointmentList: appointment.length > 0 ? appointment : null,
+    onlineAppointmentList:
+      onlineAppointment.length > 0 ? onlineAppointment : null,
   }
 }
 

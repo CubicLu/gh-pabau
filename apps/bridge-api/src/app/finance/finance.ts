@@ -16,7 +16,7 @@ import {
 } from './types'
 import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
-import { statusDataByDayMonth } from '../booking/statusByDateRange'
+import { statusDataByDayMonth } from '../booking/statuses.service'
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -1301,7 +1301,7 @@ export const retrieveSalesCount = async (
           }, 0)
         : 0
     }%`,
-    salesList: SalesList,
+    salesList: SalesList.length > 0 ? SalesList : null,
   }
 }
 
@@ -1517,37 +1517,47 @@ export const retriveOtherDetails = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  const endDate = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
-    'YYYY-MM-DD'
-  )
-  const startDate = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
-    'YYYY-MM-DD'
-  )
-  const month = dayjs(endDate).diff(startDate, 'month')
-  const year = dayjs(endDate).diff(startDate, 'year')
-  const week = dayjs(endDate).diff(startDate, 'week')
-  const day = dayjs(endDate).diff(startDate, 'day')
+  let year = 0
+  let month = 0
+  let week = 0
+  let day = 0
+  let total = 0
   let newClientCount = 0
-  if (data.start_date && data.end_date) {
-    newClientCount = await ctx.prisma
-      .$queryRaw`SELECT count(CreatedDate) from cm_contacts WHERE CreatedDate BETWEEN ${data.start_date} and ${data.end_date}`
-  } else {
-    newClientCount = await ctx.prisma
-      .$queryRaw`SELECT count(CreatedDate) from cm_contacts`
-  }
   let avgBiller = 0
   if (data.start_date && data.end_date) {
+    const endDate = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+      'YYYY-MM-DD'
+    )
+    const startDate = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+      'YYYY-MM-DD'
+    )
+    month = dayjs(endDate).diff(startDate, 'month')
+    year = dayjs(endDate).diff(startDate, 'year')
+    week = dayjs(endDate).diff(startDate, 'week')
+    day = dayjs(endDate).diff(startDate, 'day')
+    newClientCount = await ctx.prisma
+      .$queryRaw`SELECT count(CreatedDate) from cm_contacts WHERE CreatedDate BETWEEN ${data.start_date} and ${data.end_date}`
     avgBiller = await ctx.prisma
       .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.date BETWEEN ${data.start_date} and ${data.end_date}`
-  } else {
-    avgBiller = await ctx.prisma
-      .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id`
-  }
-  let total = 0
-  if (data.start_date && data.end_date) {
     total = await ctx.prisma
       .$queryRaw`SELECT SUM(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.date BETWEEN ${data.start_date} and ${data.end_date}`
   } else {
+    const allRecordDates = await ctx.prisma
+      .$queryRaw`SELECT MIN(b.created_date),MAX(b.created_date) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id`
+    const startDate = dayjs(
+      `${allRecordDates[0]['MIN(b.created_date)']}` as 'YYYY-MM-DDTHH:mm:ssZ'
+    ).format('YYYY-MM-DD')
+    const endDate = dayjs(
+      `${allRecordDates[0]['MAX(b.created_date)']}` as 'YYYY-MM-DDTHH:mm:ssZ'
+    ).format('YYYY-MM-DD')
+    month = dayjs(endDate).diff(startDate, 'month')
+    year = dayjs(endDate).diff(startDate, 'year')
+    week = dayjs(endDate).diff(startDate, 'week')
+    day = dayjs(endDate).diff(startDate, 'day')
+    newClientCount = await ctx.prisma
+      .$queryRaw`SELECT count(CreatedDate) from cm_contacts`
+    avgBiller = await ctx.prisma
+      .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id`
     total = await ctx.prisma
       .$queryRaw`SELECT SUM(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id`
   }
@@ -1562,11 +1572,8 @@ export const retriveOtherDetails = async (
     case week > 0:
       RevPerhour = total[0]['SUM(b.total)'] / (week * day * 24)
       break
-    case day > 0:
+    case day >= 0:
       RevPerhour = total[0]['SUM(b.total)'] / (day * 24)
-      break
-    default:
-      RevPerhour = total[0]['SUM(b.total)'] / (year * month * week * day * 24)
       break
   }
   return {

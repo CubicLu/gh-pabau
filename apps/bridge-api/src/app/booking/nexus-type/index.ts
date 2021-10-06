@@ -38,7 +38,7 @@ const SalesCount = objectType({
 })
 
 const ChartValue = objectType({
-  name: 'data',
+  name: 'chartDataSet',
   definition(t) {
     t.string('label')
     t.int('value')
@@ -49,7 +49,7 @@ const ChartData = objectType({
   name: 'bookingsByStatus',
   definition(t) {
     t.string('status')
-    t.list.field('data', { type: ChartValue })
+    t.list.field('chartDataSet', { type: ChartValue })
   },
 })
 
@@ -57,7 +57,7 @@ const SaleChartData = objectType({
   name: 'salesByProductCategoryType',
   definition(t) {
     t.string('status')
-    t.list.field('data', { type: ChartValue })
+    t.list.field('chartDataSet', { type: ChartValue })
   },
 })
 
@@ -110,7 +110,7 @@ const serviceSalesData = objectType({
 })
 
 const otherDashboardDetails = objectType({
-  name: 'allDetails',
+  name: 'otherSalesDetails',
   definition(t) {
     t.int('newClientCount')
     t.string('avgBiller')
@@ -127,6 +127,6 @@ export const DashboardResponseType = objectType({
     t.field('allSales', { type: salesByProductCategoryType })
     t.field('retailSales', { type: retailSalesData })
     t.field('serviceSales', { type: serviceSalesData })
-    t.field('allDetails', { type: otherDashboardDetails })
+    t.field('otherSalesDetails', { type: otherDashboardDetails })
   },
 })

@@ -21,7 +21,7 @@ interface IData {
 
 interface IChartDetails {
   status?: string
-  data: IData[]
+  chartDataSet: IData[]
 }
 
 interface ITableColumns {
@@ -63,7 +63,7 @@ export const Charts: FC<ICharts> = ({
         type: 'line',
         name: item.status,
         allowPointSelect: true,
-        data: item.data?.map((item) => item.value),
+        data: item.chartDataSet?.map((item) => item.value),
         marker: {
           lineWidth: 2,
           fillColor: 'white',
@@ -151,7 +151,7 @@ export const Charts: FC<ICharts> = ({
       },
       categories:
         salesData && salesData.length > 0
-          ? [...new Set(salesData[0]?.data?.map((item) => item.label))]
+          ? [...new Set(salesData[0]?.chartDataSet?.map((item) => item.label))]
           : [],
     },
   }
@@ -161,7 +161,7 @@ export const Charts: FC<ICharts> = ({
       dataList.push({
         name: item.status,
         allowPointSelect: true,
-        data: item.data?.map((item) => item.value),
+        data: item.chartDataSet?.map((item) => item.value),
         type: 'column',
         marker: {
           lineColor: '#54B2D3',
@@ -236,7 +236,11 @@ export const Charts: FC<ICharts> = ({
       },
       categories:
         BookingData && BookingData.length > 0
-          ? [...new Set(BookingData[0]?.data?.map((item) => item.label))]
+          ? [
+              ...new Set(
+                BookingData[0]?.chartDataSet?.map((item) => item.label)
+              ),
+            ]
           : [],
     },
     yAxis: [
@@ -282,7 +286,7 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label + `, ${location.date}`
+                  location.label + `, ${location.date ?? ''}`
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}
@@ -321,7 +325,7 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label + `, ${location.date}`
+                  location.label + `, ${location.date ?? ''}`
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}

@@ -59,7 +59,7 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
             })
             Final_data.push({
               status: record.status,
-              data: result,
+              chartDataSet: result,
             })
           }
           return Final_data
@@ -103,7 +103,7 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
             })
             Final_data.push({
               status: record.status,
-              data: result,
+              chartDataSet: result,
             })
           }
           return Final_data
@@ -132,7 +132,7 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
             })
             Final_data.push({
               status: record.status,
-              data: result,
+              chartDataSet: result,
             })
           }
           return Final_data
@@ -161,7 +161,7 @@ export const statusDataByDayMonth = (range, DataSet, startDate) => {
             })
             Final_data.push({
               status: record.status,
-              data: result,
+              chartDataSet: result,
             })
           }
           return Final_data

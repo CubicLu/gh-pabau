@@ -108,67 +108,47 @@ export function Index() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterDate])
 
-  const { data: appointment_status, loading } = useQuery(
+  const { data: appointmentStatus, loading } = useQuery(
     GetDashboardDataDocument,
     getAppointmentQueryVariables
   )
 
   useEffect(() => {
-    if (appointment_status) {
-      if (
-        (appointment_status?.dashboardData?.bookingStatusCount?.appointmentList)
-          .length > 0
-      ) {
-        setAppointment(
-          appointment_status?.dashboardData?.bookingStatusCount?.appointmentList
-        )
-      } else {
-        setAppointment(defaultAppointmentList)
-      }
-      if (
-        (appointment_status?.dashboardData?.bookingStatusCount
-          ?.onlineAppointmentList).length > 0
-      ) {
-        setOnlineAppointment(
-          appointment_status?.dashboardData?.bookingStatusCount
-            ?.onlineAppointmentList
-        )
-      } else {
-        setOnlineAppointment(defaultOnlineAppointmentList)
-      }
-      if (
-        (appointment_status?.dashboardData?.salesCount?.salesList).length > 0
-      ) {
-        setSales(appointment_status?.dashboardData?.salesCount?.salesList)
-      } else {
-        setSales(defaultSalesList)
-      }
-      setTotalBooking({
-        count:
-          appointment_status?.dashboardData?.bookingStatusCount?.totalBooking,
-        per:
-          appointment_status?.dashboardData?.bookingStatusCount
-            ?.totalBookingPer,
-      })
-      setTotalOnlineBooking({
-        count:
-          appointment_status?.dashboardData?.bookingStatusCount
-            ?.totalOnlineBooking,
-        per:
-          appointment_status?.dashboardData?.bookingStatusCount
-            ?.totalOnlineBookingPer,
-      })
-      setTotalSalesCount({
-        count:
-          appointment_status?.dashboardData?.salesCount
-            ?.totalAvailableCategoryTypeCount,
-        per:
-          appointment_status?.dashboardData?.salesCount
-            ?.totalAvailableCategoryTypePer,
-      })
-    }
+    setAppointment(
+      appointmentStatus?.dashboardData?.bookingStatusCount?.appointmentList ??
+        defaultAppointmentList
+    )
+    setOnlineAppointment(
+      appointmentStatus?.dashboardData?.bookingStatusCount
+        ?.onlineAppointmentList ?? defaultOnlineAppointmentList
+    )
+    setSales(
+      appointmentStatus?.dashboardData?.salesCount?.salesList ??
+        defaultSalesList
+    )
+    setTotalBooking({
+      count: appointmentStatus?.dashboardData?.bookingStatusCount?.totalBooking,
+      per:
+        appointmentStatus?.dashboardData?.bookingStatusCount?.totalBookingPer,
+    })
+    setTotalOnlineBooking({
+      count:
+        appointmentStatus?.dashboardData?.bookingStatusCount
+          ?.totalOnlineBooking,
+      per:
+        appointmentStatus?.dashboardData?.bookingStatusCount
+          ?.totalOnlineBookingPer,
+    })
+    setTotalSalesCount({
+      count:
+        appointmentStatus?.dashboardData?.salesCount
+          ?.totalAvailableCategoryTypeCount,
+      per:
+        appointmentStatus?.dashboardData?.salesCount
+          ?.totalAvailableCategoryTypePer,
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appointment_status])
+  }, [appointmentStatus])
 
   useEffect(() => {
     const List = [...userListData]
@@ -231,14 +211,8 @@ export function Index() {
     </div>
   )
   const onDateFilterApply = () => {
-    if (selectedRange !== 'custom') {
-      setFilterDate([...selectedDates])
-      setFilterRange(selectedRange)
-    }
-    if (selectedRange === 'custom') {
-      setFilterDate(selectedDates)
-      setFilterRange('custom')
-    }
+    setFilterDate([...selectedDates])
+    setFilterRange(selectedRange)
     setOpenDateModel(false)
   }
   const onDataRangeSelect = (value) => {
@@ -356,6 +330,8 @@ export function Index() {
     </div>
   )
 
+  console.log('user?.me?.full_name', user)
+
   return (
     <div>
       <Layout active={'dashboard'}>
@@ -380,7 +356,7 @@ export function Index() {
           <div className={styles.topWrapper}>
             <div className={styles.userBlock}>
               {!loading ? (
-                <Avatar size="large" src={getImage(user?.me?.image)} />
+                <Avatar size="large" src={getImage(user?.me?.imageUrl)} />
               ) : (
                 <Skeleton.Avatar size={'large'} shape={'circle'} />
               )}
@@ -390,7 +366,7 @@ export function Index() {
                     <div className={styles.topTitle}>
                       <div className={styles.title}>
                         {dashboardMode === 1
-                          ? user?.me?.full_name
+                          ? `${user?.me?.fullName}`
                           : location.label}
                       </div>{' '}
                       {dashboardMode === 1 ? null : !isMobile ? (
@@ -482,11 +458,14 @@ export function Index() {
                   : filterRange
               }
               newClientCount={
-                appointment_status?.dashboardData?.allDetails?.newClientCount
+                appointmentStatus?.dashboardData?.otherSalesDetails
+                  ?.newClientCount
               }
-              avgBill={appointment_status?.dashboardData?.allDetails?.avgBiller}
+              avgBill={
+                appointmentStatus?.dashboardData?.otherSalesDetails?.avgBiller
+              }
               revPerHour={
-                appointment_status?.dashboardData?.allDetails?.RevPerhour
+                appointmentStatus?.dashboardData?.otherSalesDetails?.RevPerhour
               }
               loading={loading}
             />
@@ -494,21 +473,21 @@ export function Index() {
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}
               BookingData={
-                appointment_status?.dashboardData?.allbooking?.bookingsByStatus
+                appointmentStatus?.dashboardData?.allbooking?.bookingsByStatus
               }
               salesData={
-                appointment_status?.dashboardData?.allSales
+                appointmentStatus?.dashboardData?.allSales
                   ?.salesByProductCategoryType
               }
               totalBooking={totalBooking}
               totalOnlineBooking={totalOnlineBooking}
               totalSalesCount={totalSalesCount}
               productDetails={
-                appointment_status?.dashboardData?.retailSales
+                appointmentStatus?.dashboardData?.retailSales
                   ?.retailSalesDetails
               }
               serviceDetails={
-                appointment_status?.dashboardData?.serviceSales
+                appointmentStatus?.dashboardData?.serviceSales
                   ?.serviceSalesDetails
               }
               loading={loading}

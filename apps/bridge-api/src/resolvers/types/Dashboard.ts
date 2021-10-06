@@ -3,7 +3,7 @@ import { Context } from '../../context'
 import {
   retrieveBookingStatuses,
   retrieveAllBookingChartData,
-} from '../../app/booking/booking'
+} from '../../app/booking/statuses'
 import {
   retrieveSalesCount,
   retrieveSalesChartData,
@@ -37,7 +37,7 @@ export const dashboardData = extendType({
         const allSales = await retrieveSalesChartData(ctx, data)
         const retailSales = await retrieveRetailSalesData(ctx, data)
         const serviceSales = await retrieveServiceSalesData(ctx, data)
-        const allDetails = await retriveOtherDetails(ctx, data)
+        const otherSalesDetails = await retriveOtherDetails(ctx, data)
         return {
           bookingStatusCount: bookingStatusCount,
           salesCount: salesCount,
@@ -45,7 +45,7 @@ export const dashboardData = extendType({
           allSales: allSales,
           retailSales: retailSales,
           serviceSales: serviceSales,
-          allDetails: allDetails,
+          otherSalesDetails: otherSalesDetails,
         }
       },
     })
