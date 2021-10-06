@@ -30,6 +30,7 @@ import {
   CreateLabels,
 } from '@pabau/ui'
 import { Modal as AntModal, Input, Popover, Drawer, Tooltip } from 'antd'
+import UppyModal, { UploadingImageProps } from './UppyUploaderModal'
 import singlePhotoMode from '../../assets//images/image-viewer/comparing/single-photo.svg'
 import singlePhotoActiveMode from '../../assets//images/image-viewer/comparing/single-photo-active.svg'
 import comparingSliderMode from '../../assets//images/image-viewer/comparing/comparing-slider.svg'
@@ -46,7 +47,8 @@ import sixSideMode from '../../assets//images/image-viewer/comparing/six-side.sv
 import sixSideActiveMode from '../../assets//images/image-viewer/comparing/six-side-active.svg'
 import photoGalleryMode from '../../assets//images/image-viewer/comparing/photo-gallery.svg'
 import photoGalleryActiveMode from '../../assets//images/image-viewer/comparing/photo-gallery-active.svg'
-
+import { ReactComponent as CameraCircleFilled } from '../../assets//images/image-viewer/camera-circle-filled.svg'
+import { ReactComponent as PhotoCircleFilled } from '../../assets//images/image-viewer/photo-circle-filled.svg'
 import styles from './ImageViewer.module.less'
 
 export interface AlbumImageTag {
@@ -195,6 +197,11 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
+  const [showUppyModal, setShowUppyModal] = useState(false)
+  const [uploadingImages, setUploadingImages] = useState<
+    UploadingImageProps[]
+  >()
+  const [cameraClick, setCameraClick] = useState(true)
   const [editTitle, setEditTitle] = useState(false)
   const [isDefaultPhoto, setIsDefaultPhoto] = useState(false)
   const [comparingMode, setComparingMode] = useState<ComparingMode>(
@@ -790,8 +797,34 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   </div>
                 </div>
               )}
+
+              {!isMobile && (
+                <div className={styles.uppyButtons}>
+                  <div>
+                    <PhotoCircleFilled
+                      onClick={() => {
+                        setCameraClick(false)
+                        setShowUppyModal(true)
+                      }}
+                    />
+                    <CameraCircleFilled
+                      onClick={() => {
+                        setCameraClick(true)
+                        setShowUppyModal(() => true)
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+          <UppyModal
+            isCamera={cameraClick}
+            visible={showUppyModal}
+            onClose={() => setShowUppyModal(() => false)}
+            uploadingImages={uploadingImages}
+            setUploadingImages={setUploadingImages}
+          />
           <ImageViewerSidebar
             comparingMode={comparingMode}
             selectedIndex={
@@ -820,6 +853,22 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                 >
                   {createLabelsChild}
                 </CreateLabels>
+                <div className={styles.uppyButtons}>
+                  <div>
+                    <PhotoCircleFilled
+                      onClick={() => {
+                        setCameraClick(false)
+                        setShowUppyModal(true)
+                      }}
+                    />
+                    <CameraCircleFilled
+                      onClick={() => {
+                        setCameraClick(true)
+                        setShowUppyModal(() => true)
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
               <div>
                 <Tooltip title={t('ui.imageviewer.comparingmode.tooltip')}>

@@ -1,0 +1,388 @@
+.uppyModal {
+  :global {
+    .ant-modal-content {
+      position: relative;
+      border-radius: 0px;
+    }
+    .ant-modal-body > div {
+      padding: 0px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    width: 100vw;
+    max-width: 100vw;
+    top: 0;
+    :global {
+      .ant-modal {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        width: 100%;
+        height: 100vh;
+        top: 0 !important;
+        left: 0 !important;
+      }
+      .ant-modal-content {
+        border-radius: 0;
+        height: 100%;
+      }
+      .ant-modal-body {
+        padding: 0;
+        height: 100vh;
+      }
+    }
+  }
+
+  .uppyModalHeader {
+    width: 100%;
+    height: 72px;
+    background-color: #3d3d46;
+    padding: 0px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+
+    > span {
+      position: absolute;
+      font-size: 24px;
+      color: #ffffff;
+      line-height: 0px;
+    }
+
+    > div.title {
+      display: flex;
+      align-items: center;
+
+      @media screen and (max-width: 767px) {
+        justify-content: center;
+        width: 100%;
+      }
+
+      > span:first-child {
+        line-height: 0px;
+        svg {
+          height: 24px;
+          width: 24px;
+
+          path {
+            fill: #ffffff;
+          }
+        }
+      }
+      > span:last-child {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 22px;
+        line-height: 28px;
+        color: #ffffff;
+        padding-left: 12px;
+      }
+    }
+    > div.title + div {
+      > span {
+        color: #9292a3;
+        font-size: 16px;
+        cursor: pointer;
+
+        &:hover {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .uppyModalBody {
+    background-color: lightgray;
+    min-height: 550px;
+    position: relative;
+
+    @media screen and (max-width: 767px) {
+      min-height: calc(100vh - 172px);
+    }
+
+    :global {
+      .uppy-Dashboard-inner {
+        width: 100% !important;
+        // border: 2px solid red;
+        border-radius: 0px !important;
+        background-color: lightgray !important;
+        border: none !important;
+
+        .uppy-Dashboard-AddFiles-info {
+          display: none;
+        }
+        [data-uppy-acquirer-id~='MyDevice'] {
+          display: none;
+        }
+        [data-uppy-acquirer-id~='Webcam'] {
+          display: none;
+        }
+        // .uppy-Webcam-buttonContainer {
+        //     display: flex;
+        //     justify-content: flex-end;
+        //     align-items: center;
+        //     > button:last-child {
+        //       display: none;
+        //     }
+        // }
+        .uppy-Dashboard-innerWrap {
+          border-radius: 0px !important;
+          .uppy-DashboardContent-panel {
+            border-radius: 0px !important;
+
+            .uppy-Webcam-footer {
+              display: none;
+            }
+
+            .uppy-Webcam-videoContainer {
+              background-color: silver;
+              > video {
+                width: 100%;
+              }
+            }
+          }
+        }
+        .uppy-DashboardContent-bar {
+          display: none;
+        }
+      }
+    }
+
+    &.allowCamera {
+      :global {
+        .uppy-Dashboard-AddFiles-title {
+          display: none;
+        }
+      }
+    }
+
+    &.cameraDiv,
+    &.uploadDiv {
+      @media screen and (max-width: 767px) {
+        > div {
+          height: calc(100vh - 172px);
+
+          :global {
+            .uppy-Root {
+              height: 100%;
+
+              .uppy-Dashboard {
+                height: 100%;
+
+                .uppy-Dashboard-inner {
+                  height: calc(100vh - 172px) !important;
+
+                  .uppy-Dashboard-innerWrap {
+                    align-items: center;
+                  }
+
+                  //   .uppy-Webcam-footer {
+                  //     width: 100%;
+                  //     justify-content: flex-end;
+
+                  //     .uppy-Webcam-buttonContainer button:first-child {
+                  //       margin-right: 0px !important;
+                  //       svg {
+                  //         width: 22.5px;
+                  //         height: 22.5px;
+                  //       }
+                  //     }
+                  //   }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .addedImagesDiv {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: absolute;
+      z-index: 9999;
+      top: 0;
+      width: 100%;
+      height: 100%;
+
+      .addedImagesDivInner {
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        .addedImagesFixer {
+          position: absolute;
+          display: flex;
+          flex-wrap: nowrap;
+          overflow: auto hidden;
+          bottom: 0;
+          width: 100%;
+          min-height: 125px;
+          padding-top: 5px;
+          background-color: rgba(0, 0, 0, 0.25);
+
+          &::-webkit-scrollbar {
+            height: 6px;
+            background-color: transparent;
+          }
+          &::-webkit-scrollbar-track {
+            background-color: transparent;
+          }
+          &::-webkit-scrollbar-thumb {
+            border-radius: 100px;
+            background-color: #777;
+          }
+
+          > div {
+            position: relative;
+            display: inline-block;
+            min-width: 100px;
+            min-height: 100px;
+            margin: 8px 8px 8px 8px;
+            border: 1px solid #9292a3;
+            border-radius: 2px;
+            filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.15));
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            cursor: pointer;
+
+            .imgLoading {
+              position: absolute;
+              border-radius: 2px;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(14, 9, 23, 0.4);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .deleteImageIcon {
+              border: 2px solid #9292a3;
+              border-radius: 100%;
+              width: fit-content;
+              padding: 2px 5px;
+              height: fit-content;
+              background-color: #ffffff !important;
+              color: #9292a3;
+              position: absolute;
+              top: -10px;
+              right: -10px;
+
+              > span {
+                line-height: 0px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .uppyModalFooter {
+    background-color: #3d3d46;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 24px;
+
+    @media screen and (max-width: 767px) {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+    }
+
+    > div {
+      width: fit-content;
+    }
+
+    > div:first-child {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+    }
+
+    > div:nth-child(2) {
+      svg.camIcon,
+      svg.photoIcon {
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+
+        > path:first-child {
+          fill: #ff5b64;
+        }
+        > path:last-child {
+          fill: #ffffff;
+        }
+
+        &:hover {
+          > path:first-child {
+            fill: #c14f56;
+          }
+        }
+      }
+      .closeCamBtn {
+        border-radius: 100%;
+        height: 60px;
+        width: 60px;
+        background-color: #ff5b64;
+        border-color: #ff5b64;
+        color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > span {
+          font-size: 24px;
+          line-height: 0px;
+        }
+        &:hover {
+          background-color: #c14f56;
+        }
+      }
+    }
+
+    > div:last-child {
+      button {
+        width: 66px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 20px;
+          display: flex;
+          align-items: center;
+          text-align: center;
+          text-transform: capitalize;
+          color: #ffffff;
+        }
+
+        &:hover {
+          background: #ffffff !important;
+          columns: #3d3d46 !important;
+          border-color: #ffffff !important;
+          > span {
+            color: #3d3d46 !important;
+          }
+        }
+      }
+    }
+  }
+}
