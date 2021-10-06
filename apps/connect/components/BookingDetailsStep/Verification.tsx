@@ -11,7 +11,7 @@ export interface P {
 
 export const Verification: FC<P> = ({ backToStep }) => {
   const { t } = useTranslationI18()
-  const [selectedData] = useSelectedDataStore()
+  const { selectedData } = useSelectedDataStore()
   const [getTotalServiceCost] = useServices()
 
   return (

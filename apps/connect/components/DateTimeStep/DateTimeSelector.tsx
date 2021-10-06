@@ -31,7 +31,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
   // FIXED
   const { t } = useTranslationI18()
   const [selectedDate, setSelectedDate] = useState(moment())
-  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const settings = useContext(SettingsContext)
 
   const {
@@ -139,7 +139,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
                     const hour = Number.parseInt(val.substring(0, 2))
                     const minute = Number.parseInt(val.substring(3, 5))
                     setSelectedData(
-                      'SET_DATETIME',
+                      actionTypes.SET_DATETIME,
                       moment(selectedDate).set({ hour: hour, minute: minute })
                     )
                     onSelected()

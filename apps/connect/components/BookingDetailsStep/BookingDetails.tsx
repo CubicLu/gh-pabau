@@ -9,7 +9,7 @@ import img from '../../../web/assets/images/connect/facebook.png'
 import img1 from '../../../web/assets/images/connect/Google.png'
 import { UserOutlined } from '@ant-design/icons'
 import { Verification } from './Verification'
-import { countrylist } from '../../../web/mocks/connect/mock'
+import { countrylist } from '../../mocks/mock'
 import { SettingsContext } from '../../context/settings-context'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -24,7 +24,7 @@ export interface P {
 
 const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
   const settings = useContext(SettingsContext)
-  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const { t } = useTranslationI18()
   const [valid, setvalid] = useState(false)
   const [verify, setverify] = useState(false)
@@ -213,7 +213,7 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
           initialValues={uservalue}
           validationSchema={formikValidation}
           onSubmit={(values) => {
-            setSelectedData('SET_MEMBERS', members)
+            setSelectedData(actionTypes.SET_MEMBERS, members)
             onConfirmed()
           }}
         >

@@ -1,6 +1,6 @@
-import img from '../../assets/images/connect/emp_moal.png'
-import blue from '../../assets/images/connect/blue.png'
-import purple from '../../assets/images/connect/purple.png'
+import img from '../../web/assets/images/connect/emp_moal.png'
+import blue from '../../web/assets/images/connect/blue.png'
+import purple from '../../web/assets/images/connect/purple.png'
 export const data = [
   {
     key: 1,
@@ -13,7 +13,7 @@ export const data = [
 ]
 export const voucherData = [
   {
-    key: 1,
+    id: 1,
     value: '100',
     valueDescription: 'Voucher value',
     type: 'Family',
@@ -25,7 +25,7 @@ export const voucherData = [
     active: false,
   },
   {
-    key: 2,
+    id: 2,
     value: '100',
     valueDescription: 'Voucher value',
     type: 'Family',

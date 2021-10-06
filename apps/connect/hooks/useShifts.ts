@@ -5,7 +5,7 @@ import { useContext } from 'react'
 import { SettingsContext } from '../context/settings-context'
 
 export default function useShifts(shiftsResult, bookingsResult) {
-  const [selectedData] = useSelectedDataStore()
+  const { selectedData } = useSelectedDataStore()
   const settings = useContext(SettingsContext)
   const shiftsByDate = []
   if (shiftsResult) {
@@ -63,7 +63,7 @@ export default function useShifts(shiftsResult, bookingsResult) {
     }
 
     const takenTimeslots = []
-    for (const b of bookingsResult.Public_Bookings.filter(
+    for (const b of bookingsResult.Public_Bookings?.filter(
       (b) =>
         b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
     )) {

@@ -1,8 +1,8 @@
-import Choose from '../../assets/images/connect/choose.png'
-import image3 from '../../assets/images/connect/mike.png'
-import image2 from '../../assets/images/connect/alex.png'
-import image1 from '../../assets/images/connect/alisa.png'
-import image4 from '../../assets/images/connect/victoria.png'
+import Choose from '../../web/assets/images/connect/choose.png'
+import image3 from '../../web/assets/images/connect/mike.png'
+import image2 from '../../web/assets/images/connect/alex.png'
+import image1 from '../../web/assets/images/connect/alisa.png'
+import image4 from '../../web/assets/images/connect/victoria.png'
 import { EmployData } from '../../../connect/components/EmployeeStep/employ'
 export const employes: EmployData[] = [
   {

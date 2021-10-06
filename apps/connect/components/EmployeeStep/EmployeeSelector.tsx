@@ -12,7 +12,7 @@ export interface P {
 
 const EmployeeSelector: FC<P> = ({ onSelected }) => {
   const { t } = useTranslationI18()
-  const [, setSelectedData] = useSelectedDataStore()
+  const { setSelectedData, actionTypes } = useSelectedDataStore()
   const [getTotalServiceCost] = useServices()
   const settings = useContext(SettingsContext)
 
@@ -37,7 +37,7 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
         <div
           key={val.Public_User.id}
           onClick={() => {
-            setSelectedData('SET_EMPLOYEE', val)
+            setSelectedData(actionTypes.SET_EMPLOYEE, val)
             onSelected()
           }}
           className={Styles.oldBox}

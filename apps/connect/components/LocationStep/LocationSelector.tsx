@@ -15,7 +15,7 @@ export interface P {
 
 const LocationSelector: FC<P> = ({ onSelected }) => {
   const [auto, setauto] = useState(true)
-  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const { t } = useTranslationI18()
   const settings = useContext(SettingsContext)
 
@@ -114,7 +114,7 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
                 <div
                   key={val.id}
                   onClick={() => {
-                    setSelectedData('SET_LOCATION', val)
+                    setSelectedData(actionTypes.SET_LOCATION, val)
                     onSelected()
                   }}
                   className={Styles.contentBox}

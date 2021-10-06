@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Button } from '@pabau/ui'
 import styles from './ConfirmationBox.module.less'
 import { Verification, RenderProduct } from './Verification'
-import { tooltip } from '../../../web/mocks/connect/confirmMock'
+import { tooltip } from '../../mocks/confirmMock'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 
@@ -79,7 +79,7 @@ const ConfirmationBox: FC<ConformationProps> = ({
     }
   }
   const { t } = useTranslationI18()
-  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
 
   return (
     <div className={styles.confirmMainWrapper}>

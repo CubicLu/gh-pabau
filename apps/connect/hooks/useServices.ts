@@ -1,7 +1,7 @@
 import { useSelectedDataStore } from '../store/selectedData'
 
 export default function useServices() {
-  const [selectedData] = useSelectedDataStore()
+  const { selectedData } = useSelectedDataStore()
 
   const getTotalServiceCost = (serviceUserTiers) => {
     let totalCost = 0

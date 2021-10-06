@@ -14,7 +14,7 @@ export interface P {}
 
 const BookingConfirmation: FC<P> = () => {
   const settings = useContext(SettingsContext)
-  const [selectedData] = useSelectedDataStore()
+  const { selectedData } = useSelectedDataStore()
   const { t } = useTranslationI18()
 
   return (

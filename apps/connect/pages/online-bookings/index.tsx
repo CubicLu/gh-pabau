@@ -15,10 +15,10 @@ import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
 import Employ, { EmployData } from '../../components/EmployeeStep/employ'
 import DateTimeSelector from '../../components/DateTimeStep/DateTime'
-import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
+import { defaultItems } from '../../mocks/onlineBooking'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { employes } from '../../../web/mocks/connect/employMock'
+import { employes } from '../../mocks/employMock'
 import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
 /* eslint-disable-next-line */
 export interface OnlineBookingProps {

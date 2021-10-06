@@ -15,7 +15,7 @@ import { useMedia } from 'react-use'
 import { Button } from '@pabau/ui'
 
 import { Rate, Badge, Tooltip, Image } from 'antd'
-import { voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
+import { voucherData } from '../../mocks/ScreenTwoMock'
 import styles from './ServiceSelector.module.less'
 import ClassNames from 'classnames'
 import { Category, Service } from '../../types/services'
@@ -45,7 +45,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
   const isMobile = useMedia('(max-width: 768px)', false)
 
   //HOOKS
-  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const [virtualServicesOnly, setVirtualServicesOnly] = useState<boolean>(false)
   const [totalEstimate, setTotalEstimate] = useState<number>(0)
   const [viewVouchers, setViewVouchers] = useState<boolean>(false)
@@ -118,7 +118,10 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
               newSelectedServices = [...selectedData.services, val]
               setTotalEstimate(totalEstimate + Number.parseFloat(val.price))
             }
-            setSelectedData('SET_SELECTED_SERVICES', newSelectedServices)
+            setSelectedData(
+              actionTypes.SET_SELECTED_SERVICES,
+              newSelectedServices
+            )
           }}
         >
           <div className={styles.consultationLine}>
@@ -364,7 +367,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
           style={{ margin: '12px 0', cursor: 'pointer' }}
           key={category.id}
           onClick={() => {
-            setSelectedData('SET_CATEGORY_ID', category.id)
+            setSelectedData(actionTypes.SET_CATEGORY_ID, category.id)
           }}
         >
           <span
@@ -432,7 +435,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                   styles.serviceselectallSelect
               )}
               onClick={() => {
-                setSelectedData('SET_MASTER_CATEGORY_ID', null)
+                setSelectedData(actionTypes.SET_MASTER_CATEGORY_ID, null)
                 setViewVouchers(false)
               }}
             >
@@ -448,7 +451,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                 )}
                 key={item.id}
                 onClick={() => {
-                  setSelectedData('SET_MASTER_CATEGORY_ID', item.id)
+                  setSelectedData(actionTypes.SET_MASTER_CATEGORY_ID, item.id)
                   setViewVouchers(false)
                 }}
               >
@@ -473,7 +476,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
               )}
               onClick={() => {
                 setViewVouchers(true)
-                setSelectedData('SET_MASTER_CATEGORY_ID', null)
+                setSelectedData(actionTypes.SET_MASTER_CATEGORY_ID, null)
               }}
             >
               {Vcount > 0 && (

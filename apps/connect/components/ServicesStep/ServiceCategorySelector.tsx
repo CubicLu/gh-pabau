@@ -23,16 +23,16 @@ export interface P {
 
 export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
   const [showMasterCategories, setShowMasterCategories] = useState(true)
-  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const settings = useContext(SettingsContext)
   const handleSelectedMasterCategory = (id: number) => {
     setShowMasterCategories(false)
-    setSelectedData('SET_MASTER_CATEGORY_ID', id)
+    setSelectedData(actionTypes.SET_MASTER_CATEGORY_ID, id)
   }
 
   const handleSelectedCategory = (id: number) => {
-    setSelectedData('SET_CATEGORY_ID', id)
+    setSelectedData(actionTypes.SET_CATEGORY_ID, id)
     onSelected(id)
   }
 
@@ -73,7 +73,7 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                   !isGroup && styles.active
                 )}
                 onClick={() => {
-                  setSelectedData('SET_PEOPLE_COUNT', 1)
+                  setSelectedData(actionTypes.SET_PEOPLE_COUNT, 1)
                   setIsGroup(false)
                 }}
               >
@@ -90,7 +90,7 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                   isGroup && styles.active
                 )}
                 onClick={() => {
-                  setSelectedData('SET_PEOPLE_COUNT', 2)
+                  setSelectedData(actionTypes.SET_PEOPLE_COUNT, 2)
                   setIsGroup(true)
                 }}
               >
@@ -129,7 +129,7 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                         autoComplete="off"
                         onChange={(values) => {
                           setSelectedData(
-                            'SET_PEOPLE_COUNT',
+                            actionTypes.SET_PEOPLE_COUNT,
                             Number(values.target.value)
                           )
                           setFieldValue('persons', values.target.value)

@@ -20,7 +20,6 @@ export interface Service {
   id: number
   name: string
   friendly_name: string
-  rating: number
   duration: string
   price: string
   online_book?: number
@@ -29,6 +28,7 @@ export interface Service {
   max_clients: number
   disabled_locations: string | null
   disabled_users: string | null
+  is_bundle?: boolean
   Public_SocialSurveyFeedback: SocialSurveyFeedback[]
 }
 

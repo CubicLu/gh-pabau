@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BookingData } from '../types/booking'
 
-let globalState: BookingData = {
+let selectedData: BookingData = {
   services: [],
   categoryID: null,
   masterCategoryID: null,
@@ -11,6 +11,18 @@ let globalState: BookingData = {
   dateTime: null,
   totalCost: 0,
   members: [],
+}
+
+enum actionTypes {
+  SET_SELECTED_SERVICES = 'SET_SELECTED_SERVICES',
+  SET_MASTER_CATEGORY_ID = 'SET_MASTER_CATEGORY_ID',
+  SET_CATEGORY_ID = 'SET_CATEGORY_ID',
+  SET_LOCATION = 'SET_LOCATION',
+  SET_PEOPLE_COUNT = 'SET_PEOPLE_COUNT',
+  SET_EMPLOYEE = 'SET_EMPLOYEE',
+  SET_DATETIME = 'SET_DATETIME',
+  SET_TOTAL_COST = 'SET_TOTAL_COST',
+  SET_MEMBERS = 'SET_MEMBERS',
 }
 
 let listeners = []
@@ -47,14 +59,17 @@ const actions = {
 }
 
 export const useSelectedDataStore = (shouldListen = true) => {
-  const setState = useState(globalState)[1]
+  const setState = useState(selectedData)[1]
 
-  const dispatch = (actionIdentifier: string, payload: unknown): void => {
-    const newState = actions[actionIdentifier](globalState, payload)
-    globalState = { ...globalState, ...newState }
+  const setSelectedData = (
+    actionIdentifier: string,
+    payload: unknown
+  ): void => {
+    const newState = actions[actionIdentifier](selectedData, payload)
+    selectedData = { ...selectedData, ...newState }
 
     for (const listener of listeners) {
-      listener(globalState)
+      listener(selectedData)
     }
   }
 
@@ -70,5 +85,5 @@ export const useSelectedDataStore = (shouldListen = true) => {
     }
   }, [setState, shouldListen])
 
-  return [globalState, dispatch]
+  return { selectedData, setSelectedData, actionTypes }
 }
