@@ -49,6 +49,7 @@ import { ConnectionBadgeComponent } from './ConnectionBadgeComponent'
 import ClientInfoInlineEdit from './ClientInfoInlineEdit'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
+import dayjs from 'dayjs'
 import { ReactComponent as DefaultPayerBupa } from '../../assets/images/default-payer-bupa.svg'
 import { ReactComponent as MedicalCenterGrey } from '../../assets/images/medical-center-grey.svg'
 import { ReactComponent as MedicalCenter } from '../../assets/images/medical-center.svg'
@@ -123,11 +124,13 @@ interface Appointment {
 export interface ClientDetailsProps {
   clientData: ClientData
   referredByOptions?: ReferredByOption[]
+  customFields?: FieldOrderItem[]
   loading?: boolean
   onCreateEmail: () => void
   onCreateCall: () => void
   searchResults: SearchItem[]
   appointments: Appointment[]
+  dateFormat: string
 }
 
 enum FieldType {
@@ -159,12 +162,14 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   appointments,
   referredByOptions,
   loading,
+  customFields,
+  dateFormat,
 }) => {
   const { t } = useTranslation('common')
   const [initFields, setInitFields] = useState(false)
   const defaultFieldOrder = [
     {
-      type: 'text',
+      type: 'string',
       field: FieldType.patientId,
       fieldName: 'patientID',
       title: t('ui.clientdetails.patientid'),
@@ -201,7 +206,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       value: '',
     },
     {
-      type: 'phone',
+      type: 'basicPhone',
       field: FieldType.mobile,
       fieldName: 'phone',
       title: t('ui.clientdetails.mobilephone'),
@@ -355,6 +360,13 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setFieldsOrder([...result])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [referredByOptions])
+
+  useEffect(() => {
+    if (customFields) {
+      setFieldsOrder([...fieldsOrder, ...customFields])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customFields])
 
   const handleOpenAddModal = (type: RelationshipType) => {
     setType(type)
@@ -764,7 +776,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                 <div className={styles.detailsOneContent}>
                   <div className={styles.detailsAvatar}>
                     <div className={styles.avatarContent}>
-                      <Avatar src={client?.avatar} size={112} />
+                      <Avatar
+                        src={client?.avatar}
+                        size={112}
+                        name={client?.fullName}
+                      />
                       <div
                         className={styles.cardBadge}
                         onClick={handleCardBadgeUpdate}
@@ -964,9 +980,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                               <div
                                 className={cn(
                                   styles.content,
-                                  client[field.fieldName]
-                                    ? ''
-                                    : styles.emptyContent
+                                  field.value ? '' : styles.emptyContent
                                 )}
                               >
                                 {field.value}
@@ -982,7 +996,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                               <PlusCircleOutlined /> <h5>Add Address</h5>
                             </div>
                           </div>
-                        ) : field.type === InlineEditDataTypes.phone ? (
+                        ) : field.type === InlineEditDataTypes.basicPhone ? (
                           <div
                             className={
                               field.value['mobile'] || field.value['home']
@@ -996,9 +1010,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                 className={cn(
                                   styles.content,
                                   styles.phoneContent,
-                                  client[field.fieldName]
-                                    ? ''
-                                    : styles.emptyContent
+                                  field.value ? '' : styles.emptyContent
                                 )}
                               >
                                 <InlineEdit
@@ -1006,8 +1018,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   orderIndex={getFieldName(field.title)}
                                   type={field.type}
                                   initialValue={
-                                    client[field.fieldName] ||
-                                    t('ui.clientdetails.empty')
+                                    field.value || t('ui.clientdetails.empty')
                                   }
                                   onUpdateValue={handleUpdatePhoneFieldValue}
                                   selectOptions={field.selectOptions}
@@ -1054,44 +1065,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                               <EditOutlined />
                             </div>
                           </div>
-                        ) : field.type === InlineEditDataTypes.list &&
-                          !isMobile ? (
-                          <div
-                            className={
-                              field.value
-                                ? styles.clientDetailsItem
-                                : styles.emptyClientDetailsItem
-                            }
-                          >
-                            <div>
-                              <div className={styles.title}>{field.title}</div>
-                              <div
-                                className={cn(
-                                  styles.content,
-                                  client[field.fieldName]
-                                    ? ''
-                                    : styles.emptyContent
-                                )}
-                              >
-                                <InlineEdit
-                                  fieldTitle={field.title}
-                                  orderIndex={getFieldName(field.title)}
-                                  type={field.type}
-                                  initialValue={
-                                    client[field.fieldName] ||
-                                    t('ui.clientdetails.empty')
-                                  }
-                                  selectOptions={field.selectOptions}
-                                  onUpdateValue={handleUpdateFieldValue}
-                                >
-                                  {field.value || t('ui.clientdetails.empty')}
-                                </InlineEdit>
-                              </div>
-                            </div>
-                            <div className={styles.edit}>
-                              <EditOutlined />
-                            </div>
-                          </div>
                         ) : (
                           !isMobile && (
                             <div
@@ -1108,9 +1081,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                 <div
                                   className={cn(
                                     styles.content,
-                                    client[field.fieldName]
-                                      ? ''
-                                      : styles.emptyContent,
+                                    field.value ? '' : styles.emptyContent,
                                     field.value &&
                                       field.type === InlineEditDataTypes.email
                                       ? styles.emailContent
@@ -1118,7 +1089,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   )}
                                   onClick={() =>
                                     field.type === InlineEditDataTypes.email &&
-                                    client[field.fieldName] &&
+                                    field.value &&
                                     onCreateEmail()
                                   }
                                 >
@@ -1128,10 +1099,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                       orderIndex={getFieldName(field.title)}
                                       type={field.type}
                                       initialValue={
-                                        client[field.fieldName] ||
+                                        field.value ||
                                         t('ui.clientdetails.empty')
                                       }
                                       onUpdateValue={handleUpdateFieldValue}
+                                      selectOptions={field.selectOptions}
                                     >
                                       {field.value ? (
                                         field.value
@@ -1147,16 +1119,22 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                       fieldTitle={field.title}
                                       orderIndex={getFieldName(field.title)}
                                       type={field.type}
-                                      initialValue={moment(
-                                        client[field.fieldName]
-                                      ).format('DD/MM/YYYY')}
-                                      dateFormat="DD/MM/YYYY"
+                                      initialValue={
+                                        field.value &&
+                                        typeof field.value === 'string'
+                                          ? dayjs(field.value).format(
+                                              dateFormat
+                                            )
+                                          : ''
+                                      }
+                                      dateFormat={dateFormat}
                                       onUpdateValue={handleUpdateFieldValue}
                                     >
                                       {field.value &&
+                                      dateFormat &&
                                       typeof field.value === 'string'
-                                        ? `${moment(field.value).format(
-                                            'YYYY-MM-DD'
+                                        ? `${dayjs(field.value).format(
+                                            dateFormat
                                           )} (${moment(field.value).fromNow(
                                             true
                                           )})`

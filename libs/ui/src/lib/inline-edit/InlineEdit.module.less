@@ -1190,6 +1190,21 @@
   .edit-popup {
     width: 300px;
     :global {
+      .ant-form-item {
+        .ant-form-item-control {
+          .ant-form-item-control-input {
+            .ant-form-item-control-input-content {
+              .ant-checkbox-group, .ant-radio-group {
+                display: flex;
+                .ant-checkbox-wrapper, .ant-radio-wrapper {
+                  display: flex;
+                  align-items: center;
+                }
+              }
+            }
+          }
+        }
+      }
       .ant-input-affix-wrapper {
         line-height: 30px;
         .ant-input-suffix {

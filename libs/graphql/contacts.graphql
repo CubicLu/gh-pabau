@@ -25,6 +25,18 @@ query basicContactDetails($id: Int!) {
     marketingSource:MarketingSourceData{
       name
     }
+    customField: CmContactCustom{
+      title: custom_field_label
+      id: custom_field_id
+      value: custom_field_value
+      detail: ManageCustomField{
+        type: field_type
+        id
+        item: ManageCustomFieldItem{
+          item_label
+        }
+      }
+    }
   }
 }
 query findContacts($searchTerm1: String, $searchTerm2: String) {

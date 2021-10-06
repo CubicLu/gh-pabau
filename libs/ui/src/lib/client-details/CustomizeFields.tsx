@@ -140,15 +140,13 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                                 {item.type === InlineEditDataTypes.email && (
                                   <MailOutlined />
                                 )}
-                                {item.type === InlineEditDataTypes.dropdown && (
+                                {item.type === InlineEditDataTypes.list && (
                                   <FontColorsOutlined />
                                 )}
-                                {item.type ===
-                                  InlineEditDataTypes.multipleChoice && (
+                                {item.type === InlineEditDataTypes.multiple && (
                                   <FontColorsOutlined />
                                 )}
-                                {item.type ===
-                                  InlineEditDataTypes.singleChoice && (
+                                {item.type === InlineEditDataTypes.bool && (
                                   <FontColorsOutlined />
                                 )}
                                 {item.type === InlineEditDataTypes.number && (

@@ -1,11 +1,12 @@
 import React, { FC, useState } from 'react'
-import { Input, Form, Popover, Select } from 'antd'
+import { Input, Form, Popover, Select, Checkbox, Radio } from 'antd'
 import {
   DatePicker,
   Button,
   Notification,
   NotificationType,
   PhoneProp,
+  PhoneNumberInput,
 } from '@pabau/ui'
 import dayjs from 'dayjs'
 import { useMedia } from 'react-use'
@@ -13,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import styles from './InlineEdit.module.less'
 
 const { Option } = Select
+const { TextArea } = Input
 
 export interface InlineEditProps {
   children?: React.ReactNode
@@ -32,12 +34,11 @@ export const InlineEditDataTypes = {
   number: 'number',
   email: 'email',
   text: 'text',
+  string: 'string',
   url: 'url',
-  dropdown: 'dropdown',
-  singleLineText: 'single line',
-  paragraphText: 'paragraph text',
-  multipleChoice: 'multiple choice',
-  singleChoice: 'single choice',
+  multiple: 'multiple',
+  bool: 'bool',
+  basicPhone: 'basicPhone',
   localizedMessage: 'localized message',
   list: 'list',
   address: 'address',
@@ -78,6 +79,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item
               initialValue={
+                initialValue &&
                 typeof initialValue === 'string' &&
                 dayjs(initialValue, dateFormat)
               }
@@ -111,30 +113,43 @@ export const InlineEdit: FC<InlineEditProps> = ({
             </Form.Item>
           </div>
         )
-      case InlineEditDataTypes.dropdown:
+      case InlineEditDataTypes.text:
         return (
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item name={fieldTitle} initialValue={initialValue}>
-              <Input />
+              <TextArea rows={4} />
             </Form.Item>
           </div>
         )
-      case InlineEditDataTypes.multipleChoice:
+      case InlineEditDataTypes.multiple:
         return (
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item name={fieldTitle} initialValue={initialValue}>
-              <Input />
+              <Checkbox.Group
+                name={fieldTitle}
+                options={
+                  selectOptions && selectOptions?.length > 0
+                    ? selectOptions
+                    : []
+                }
+              />
             </Form.Item>
           </div>
         )
-      case InlineEditDataTypes.singleChoice:
+      case InlineEditDataTypes.bool:
         return (
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item name={fieldTitle} initialValue={initialValue}>
-              <Input />
+              <Radio.Group>
+                {selectOptions?.map((option, index) => (
+                  <Radio key={index} value={option}>
+                    {option}
+                  </Radio>
+                ))}
+              </Radio.Group>
             </Form.Item>
           </div>
         )
@@ -173,7 +188,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
             </div>
           </div>
         )
-      case InlineEditDataTypes.phone:
+      case InlineEditDataTypes.basicPhone:
         return (
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
@@ -214,6 +229,19 @@ export const InlineEdit: FC<InlineEditProps> = ({
             </div>
           </div>
         )
+      case InlineEditDataTypes.phone:
+        return (
+          <div className={styles.editPopup}>
+            <h5>{`Edit ${fieldTitle}`}</h5>
+            <Form.Item name={fieldTitle} initialValue={initialValue}>
+              <PhoneNumberInput
+                label={''}
+                onChange={(value) => form.setFieldsValue({ fieldTitle, value })}
+                showValidErrorMessage={false}
+              />
+            </Form.Item>
+          </div>
+        )
       default:
         return (
           <div className={styles.editPopup}>
@@ -233,7 +261,10 @@ export const InlineEdit: FC<InlineEditProps> = ({
       value = dayjs(values?.[key]).format('YYYY-MM-DD')
     } else {
       const updatedValue = { ...values }
-      value = updatedValue?.[key]
+      value =
+        typeof updatedValue?.[key] === 'object'
+          ? updatedValue?.[key].join(', ')
+          : updatedValue?.[key]
     }
     if (orderIndex) {
       onUpdateValue(orderIndex, value, phoneType.toLowerCase())

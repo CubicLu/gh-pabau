@@ -26,6 +26,7 @@ import {
   ActivitiesProps,
   AvatarUploader,
   ReferredByOption,
+  FieldOrderItem,
   // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -123,6 +124,8 @@ interface P {
   activeTab?: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
+  customFields?: FieldOrderItem[]
+  dateFormat: string
 }
 
 const ClientCardModal: FC<P> = ({
@@ -134,6 +137,8 @@ const ClientCardModal: FC<P> = ({
   onTabChanged,
   referredByOptions,
   loading,
+  customFields,
+  dateFormat,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -940,6 +945,8 @@ const ClientCardModal: FC<P> = ({
                 appointments={appointments}
                 referredByOptions={referredByOptions}
                 loading={loading}
+                customFields={customFields}
+                dateFormat={dateFormat}
               />
             </div>
             <div className={styles.clientCardContent}>
