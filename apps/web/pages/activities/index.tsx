@@ -8,8 +8,9 @@ import React, {
 } from 'react'
 import Layout from '../../components/Layout/Layout'
 import ActivitiesHeader, {
-  FilterDataProps,
+  FilterDataObjectType,
 } from '../../components/Activities/ActivitiesHeader'
+import { FilterDataProps } from '../../components/Activities/CreateFilterModal'
 import ActivitiesTable from '../../components/Activities/ActivitiesTable'
 import { OptionList } from '../../components/Activities/FilterMenu'
 import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
@@ -229,10 +230,14 @@ export const Index: FC<IndexProps> = ({ client }) => {
     field: 'Due date',
     order: 'asc',
   })
+  const [
+    filterDataObject,
+    setFilterDataObject,
+  ] = useState<FilterDataObjectType>()
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
-  console.log('userActiveColumn---------------------', userActiveColumn)
+  console.log('filterDataObject---------------------', filterDataObject)
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
@@ -245,6 +250,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
         activityType: selectedActivityType,
         userId: selectFilterUser,
         activeColumns: selectedColumn,
+        filterOption: filterDataObject,
         orderValue,
       },
     }
@@ -278,6 +284,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     paginateData.limit,
     selectFilterUser,
     orderValue,
+    filterDataObject,
   ])
 
   const {
@@ -480,27 +487,32 @@ export const Index: FC<IndexProps> = ({ client }) => {
 
   useEffect(() => {
     if (activityActiveResponse?.findFirstActivityUserState) {
-      const data = JSON.parse(
-        activityActiveResponse?.findFirstActivityUserState?.columns
-      )
+      const response = activityActiveResponse.findFirstActivityUserState
+      const data = JSON.parse(response?.columns)
       const column = data?.columns ?? []
       const temp: FilterDataProps = {}
-      if (activityActiveResponse?.findFirstActivityUserState?.user_filter) {
+      console.log('data---------------', response)
+      if (response?.user_filter) {
         temp.type = 'user'
-        temp.id =
-          activityActiveResponse?.findFirstActivityUserState?.user_filter
-      } else if (
-        activityActiveResponse?.findFirstActivityUserState?.custom_filter
-      ) {
+        temp.id = response?.user_filter
+      } else if (response?.custom_filter) {
+        const activityFilterResponse = response?.ActivityUserFilters
         temp.type = 'filter'
-        temp.id =
-          activityActiveResponse?.findFirstActivityUserState?.custom_filter
-      } else if (
-        activityActiveResponse?.findFirstActivityUserState?.user_group_filter
-      ) {
+        temp.id = response?.custom_filter
+        if (activityFilterResponse) {
+          temp.filter = {
+            andFilterOption: JSON.parse(activityFilterResponse?.data)
+              ?.andFilterOption,
+            column: JSON.parse(activityFilterResponse?.columns)?.columns,
+            orFilterOption: JSON.parse(activityFilterResponse?.data)
+              ?.orFilterOption,
+            name: activityFilterResponse?.name,
+            shared: activityFilterResponse?.shared,
+          }
+        }
+      } else if (response?.user_group_filter) {
         temp.type = 'userGroup'
-        temp.id =
-          activityActiveResponse?.findFirstActivityUserState?.user_group_filter
+        temp.id = response?.user_group_filter
       }
       setUserFilterData(temp)
       setUserActiveColumn(column)
@@ -1124,6 +1136,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             activityTypeOption={activityTypeOption}
             filterData={userFilterData}
             selectedColumn={selectedColumn}
+            setFilterDataObject={setFilterDataObject}
           />
         )}
         <div>
@@ -1181,6 +1194,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             activityTypeOption={activityTypeOption}
             filterData={userFilterData}
             selectedColumn={selectedColumn}
+            setFilterDataObject={setFilterDataObject}
           />
         )}
         {/* <div className={styles.subHeader}>

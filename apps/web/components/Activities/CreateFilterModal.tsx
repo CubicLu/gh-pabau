@@ -1,7 +1,13 @@
 import React, { useState, FC, useEffect } from 'react'
 import { Formik } from 'formik'
 import { Dropdown, Menu, Radio, Space } from 'antd'
-import { BasicModal, Button, DropdownWithCheck, Notification, NotificationType } from '@pabau/ui'
+import {
+  BasicModal,
+  Button,
+  DropdownWithCheck,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import { Checkbox, Form, Input as FormikInput, SubmitButton } from 'formik-antd'
 import { getData } from './FilterOptionData'
 import { FilterMenu, PersonList, OptionList } from './FilterMenu'
@@ -22,19 +28,32 @@ import * as Yup from 'yup'
 import classNames from 'classnames'
 import { DisplayDate } from '../../hooks/displayDate'
 import { MutationFunction } from '@apollo/client'
-import { useDeleteActivityUserFilterMutation, FilterOptionForActivityDocument, useCreateActivityFilterMutation, useUpdateActivityFilterMutation } from '@pabau/graphql'
-import { values } from 'lodash'
+import {
+  useDeleteActivityUserFilterMutation,
+  FilterOptionForActivityDocument,
+  useCreateActivityFilterMutation,
+  useUpdateActivityFilterMutation,
+} from '@pabau/graphql'
+
+export interface FilterDataObjectType {
+  name: string
+  shared: boolean
+  andFilterOption: FilterOptionType[]
+  orFilterOption: FilterOptionType[]
+  column: string[]
+}
 
 export interface FilterDataProps {
   id?: number
   type?: string
+  filter?: FilterDataObjectType
 }
 
 export interface FilterOptionType {
   type: string
   filterColumn: string
   operand: string
-  menuOption: string | number
+  menuOption: string
 }
 export interface InitialValueTypes {
   id: number
@@ -76,6 +95,7 @@ interface CreateFilterModalProps {
   setActiveFilterId: (item: number) => void
   activeFilterId: number
   filterData: FilterDataProps
+  setFilterDataObject: (value: FilterDataObjectType) => void
   data?: InitialValueTypes
 }
 const defaultValue: InitialValueTypes = {
@@ -113,19 +133,19 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
       data[index].operand = 'is'
       data[index].menuOption = ''
       if (value === 'Assigned to user' || value === 'Creator') {
-        data[index].menuOption = loggedUser?.user
+        data[index].menuOption = loggedUser?.user?.toString()
       }
       if (value === 'Done') {
         data[index].menuOption = 'To do'
       }
       if (value === 'Free/busy') {
-        data[index].menuOption = 'Free'
+        data[index].menuOption = '1'
       }
       if (value === 'Status') {
         data[index].menuOption = 'Pending'
       }
       if (value === 'Type') {
-        data[index].menuOption = 1
+        data[index].menuOption = '1'
       }
       if (value === 'Add time' || value === 'Due date') {
         data[index].menuOption = 'last quarter'
@@ -173,22 +193,29 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             filterOption={true}
           />
           <div className={styles.filterMenuWrapper}>
-            <FilterMenu
-              columnName={item.filterColumn}
-              personsList={userList}
-              activityTypeOption={activityTypeOption}
-              value={item.menuOption}
-              onChange={(value: string) =>
-                activityItemChange(value, index, 'menuOption')
-              }
-              userId={loggedUser.user}
-              disabled={!isFilterOwner}
-              isEdit={isEdit}
-            />
+            {!(
+              item.operand === 'is not empty' || item.operand === 'is empty'
+            ) && (
+              <FilterMenu
+                columnName={item.filterColumn}
+                personsList={userList}
+                activityTypeOption={activityTypeOption}
+                value={item.menuOption}
+                onChange={(value: string) =>
+                  activityItemChange(value, index, 'menuOption')
+                }
+                userId={loggedUser.user}
+                disabled={!isFilterOwner}
+                isEdit={isEdit}
+              />
+            )}
           </div>
           <div
             onClick={() => isFilterOwner && removeFilterMenu(index)}
-            className={classNames(styles.minusBlock, !isFilterOwner && styles.disable)}
+            className={classNames(
+              styles.minusBlock,
+              !isFilterOwner && styles.disable
+            )}
           >
             <MinusOutlined />
           </div>
@@ -211,10 +238,13 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   filterData,
   setFilterValue,
   setActiveFilterId,
-  activeFilterId
+  activeFilterId,
+  setFilterDataObject,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
-  const [initialValue, setInitialValue] = useState<InitialValueTypes>(defaultValue)
+  const [initialValue, setInitialValue] = useState<InitialValueTypes>(
+    defaultValue
+  )
   const { t } = useTranslationI18()
   const { visibilityMenuOption } = getData(t)
 
@@ -237,18 +267,28 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
     async onCompleted(data) {
       console.log('data------------', data)
       if (data?.createOneActivityUserFilters) {
-        let id = data?.createOneActivityUserFilters?.id
+        const id = data?.createOneActivityUserFilters?.id
         setActiveFilterId(id)
         setFilterValue(undefined)
         await upsertActiveColumn({
           variables: {
-            customFilterId: id,
             userId: loggedUser?.user,
             companyId: loggedUser?.company,
             update: {
               user_filter: { set: null },
               user_group_filter: { set: null },
-              custom_filter: { set: id },
+              ActivityUserFilters: { connect: { id: id } },
+            },
+            create: {
+              User: {
+                connect: { id: loggedUser?.user },
+              },
+              Company: {
+                connect: { id: loggedUser?.company },
+              },
+              ActivityUserFilters: {
+                connect: { id: id },
+              },
             },
           },
         })
@@ -269,18 +309,28 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   const [editMutation] = useUpdateActivityFilterMutation({
     async onCompleted(data) {
       if (data?.updateOneActivityUserFilters) {
-        let id = data?.updateOneActivityUserFilters?.id
+        const id = data?.updateOneActivityUserFilters?.id
         setActiveFilterId(id)
         setFilterValue(undefined)
         await upsertActiveColumn({
           variables: {
-            customFilterId: id,
             userId: loggedUser?.user,
             companyId: loggedUser?.company,
             update: {
               user_filter: { set: null },
               user_group_filter: { set: null },
-              custom_filter: { set: id },
+              ActivityUserFilters: { connect: { id: id } },
+            },
+            create: {
+              User: {
+                connect: { id: loggedUser?.user },
+              },
+              Company: {
+                connect: { id: loggedUser?.company },
+              },
+              ActivityUserFilters: {
+                connect: { id: id },
+              },
             },
           },
         })
@@ -367,25 +417,30 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
 
   const onSubmit = async (values: InitialValueTypes) => {
     console.log('Submit call', values)
-    let data = {
+    const data = {
       name: values.name,
-      data: JSON.stringify({andFilterOption: values.andFilterOption, orFilterOption: values.orFilterOption}),
+      data: JSON.stringify({
+        andFilterOption: values.andFilterOption,
+        orFilterOption: values.orFilterOption,
+      }),
       shared: values.visibility === 'private' ? false : true,
-      columns: values.saveFilter ? JSON.stringify({ columns: selectedColumn }) : null
+      columns: values.saveFilter
+        ? JSON.stringify({ columns: selectedColumn })
+        : null,
     }
     await (values.id
       ? editMutation({
           variables: {
             id: values.id,
-            ...data
+            ...data,
           },
           refetchQueries: [
             {
               query: FilterOptionForActivityDocument,
               variables: {
-                userId: loggedUser.user
-              }
-            }
+                userId: loggedUser.user,
+              },
+            },
           ],
         })
       : addMutation({
@@ -394,43 +449,57 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
             {
               query: FilterOptionForActivityDocument,
               variables: {
-                userId: loggedUser.user
-              }
-            }
+                userId: loggedUser.user,
+              },
+            },
           ],
         }))
+    setFilterDataObject({
+      andFilterOption: values.andFilterOption,
+      column: selectedColumn,
+      name: values.name,
+      orFilterOption: values.orFilterOption,
+      shared: values.visibility === 'private' ? false : true,
+    })
     setShowModal(false)
-    console.log('data---------------------', data)
   }
 
   const onDeleteFilter = async (values) => {
     await deleteMutation({
       variables: {
-        id: values.id
+        id: values.id,
       },
       optimisticResponse: {},
       refetchQueries: [
         {
           query: FilterOptionForActivityDocument,
           variables: {
-            userId: loggedUser.user
-          }
-        }
+            userId: loggedUser.user,
+          },
+        },
       ],
     })
-    console.log("activeFilterId----------", activeFilterId)
-    console.log("values.id----------", values.id)
+    console.log('activeFilterId----------', activeFilterId)
+    console.log('values.id----------', values.id)
     if (activeFilterId === values.id) {
       setSelectFilterUser([])
       await upsertActiveColumn({
         variables: {
-          userFilterId: 0,
           userId: loggedUser?.user,
           companyId: loggedUser?.company,
           update: {
             user_filter: { set: 0 },
             user_group_filter: { set: null },
-            custom_filter: { set: null }
+            custom_filter: { set: null },
+          },
+          create: {
+            User: {
+              connect: { id: loggedUser?.user },
+            },
+            Company: {
+              connect: { id: loggedUser?.company },
+            },
+            user_filter: 0,
           },
         },
       })
@@ -448,7 +517,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
           .required(t('create.filter.modal.filter.name.required'))
           .max(50, t('create.filter.modal.filter.name.max.validation.message')),
       })}
-      onSubmit={async (values, {resetForm}) => {
+      onSubmit={async (values, { resetForm }) => {
         await onSubmit(values)
         resetForm()
       }}
@@ -458,9 +527,13 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
           className={styles.filterModalWrapper}
           visible={showModal}
           centered
-          title={values.id ? t('edit.activity.filter.modal.title', {
-            name: values.name
-          }) : t('create.filter.modal.title')}
+          title={
+            values.id
+              ? t('edit.activity.filter.modal.title', {
+                  name: values.name,
+                })
+              : t('create.filter.modal.title')
+          }
           onCancel={() => {
             setShowModal(false)
             resetForm()
@@ -471,8 +544,8 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         >
           <Form layout="vertical">
             <div className={styles.filterContentWrap}>
-              <h5>{t('create.filter.modal.all.condition.title')}</h5>
               {console.log('values-----------', values)}
+              <h5>{t('create.filter.modal.all.condition.title')}</h5>
               <RenderFilterMenu
                 items={values.andFilterOption}
                 setFieldValue={setFieldValue}
@@ -485,7 +558,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 t={t}
               />
               <Button
-                className={classNames(styles.btnAdd, !values.isFilterOwner && styles.disable)}
+                className={classNames(
+                  styles.btnAdd,
+                  !values.isFilterOwner && styles.disable
+                )}
                 type="default"
                 icon={<PlusOutlined />}
                 disabled={!values.isFilterOwner}
@@ -510,7 +586,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 t={t}
               />
               <Button
-                className={classNames(styles.btnAdd, !values.isFilterOwner && styles.disable)}
+                className={classNames(
+                  styles.btnAdd,
+                  !values.isFilterOwner && styles.disable
+                )}
                 type="default"
                 icon={<PlusOutlined />}
                 disabled={!values.isFilterOwner}
@@ -535,68 +614,95 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               <Form.Item
                 label={t('create.filter.modal.visibility.label')}
                 name={'visibility'}
-              > 
-              <span className={classNames(!values.isFilterOwner && styles.btnProvider)}>
-                <Dropdown
-                  trigger={['click']}
-                  overlay={visibilityMenu(setFieldValue, values)}
-                  visible={visibilityVisible}
-                  disabled={!values.isFilterOwner}
-                  onVisibleChange={(value) => setVisibilityVisible(value)}
-                  getPopupContainer={(node) => node}
-                  overlayClassName={styles.visibilityMenu}
+              >
+                <span
+                  className={classNames(
+                    !values.isFilterOwner && styles.btnProvider
+                  )}
                 >
-                  <Button className={classNames(!values.isFilterOwner, styles.disable)}>
-                    <span className={styles.visibilityWrapper}>
-                      {values.visibility === 'private' ? (
-                        <div className={styles.iconText}>
-                          <LockOutlined />
-                          <span>
-                            {t('create.filter.modal.visibility.private')}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className={styles.iconText}>
-                          <UnlockOutlined />
-                          <span>
-                            {t('create.filter.modal.visibility.shared')}
-                          </span>
-                        </div>
+                  <Dropdown
+                    trigger={['click']}
+                    overlay={visibilityMenu(setFieldValue, values)}
+                    visible={visibilityVisible}
+                    disabled={!values.isFilterOwner}
+                    onVisibleChange={(value) => setVisibilityVisible(value)}
+                    getPopupContainer={(node) => node}
+                    overlayClassName={styles.visibilityMenu}
+                  >
+                    <Button
+                      className={classNames(
+                        !values.isFilterOwner,
+                        styles.disable
                       )}
-                      {visibilityVisible ? <UpOutlined /> : <DownOutlined />}
-                    </span>
-                  </Button>
-                </Dropdown>
+                    >
+                      <span className={styles.visibilityWrapper}>
+                        {values.visibility === 'private' ? (
+                          <div className={styles.iconText}>
+                            <LockOutlined />
+                            <span>
+                              {t('create.filter.modal.visibility.private')}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className={styles.iconText}>
+                            <UnlockOutlined />
+                            <span>
+                              {t('create.filter.modal.visibility.shared')}
+                            </span>
+                          </div>
+                        )}
+                        {visibilityVisible ? <UpOutlined /> : <DownOutlined />}
+                      </span>
+                    </Button>
+                  </Dropdown>
                 </span>
               </Form.Item>
             </div>
             <Checkbox name="saveFilter" disabled={!values.isFilterOwner}>
               {t('create.filter.modal.save.filter.checkbox.label')}
             </Checkbox>
-            {!values.isFilterOwner && <div className={styles.creatorWrapper}>
-              <span>
-               {t('create.filter.modal.creator.name', {
-                 name: values.creatorName
-               })}  
-              </span>
-              <div className={styles.circle}/>
-              <span>
-               {t('create.filter.modal.last.modified.label', {
-                 date: DisplayDate(values.lastUpdatedDate)
-               })}
-              </span>
-            </div>}
+            {!values.isFilterOwner && (
+              <div className={styles.creatorWrapper}>
+                <span>
+                  {t('create.filter.modal.creator.name', {
+                    name: values.creatorName,
+                  })}
+                </span>
+                <div className={styles.circle} />
+                <span>
+                  {t('create.filter.modal.last.modified.label', {
+                    date: DisplayDate(values.lastUpdatedDate),
+                  })}
+                </span>
+              </div>
+            )}
             <div className={styles.btnWrapper}>
-              {(values.isFilterOwner && values.id) && (
-                <Button className={styles.btnDanger} type="primary" danger onClick={() => onDeleteFilter(values)}>
+              {values.isFilterOwner && values.id && (
+                <Button
+                  className={styles.btnDanger}
+                  type="primary"
+                  danger
+                  onClick={() => onDeleteFilter(values)}
+                >
                   {t('create.filter.modal.delete.button.label')}
                 </Button>
               )}
               <span className={styles.previewWrapper}>
-                <Button type="default" disabled={!values.isFilterOwner} className={classNames(!values.isFilterOwner, styles.disable)}>
+                <Button
+                  type="default"
+                  disabled={!values.isFilterOwner}
+                  className={classNames(!values.isFilterOwner, styles.disable)}
+                >
                   {t('create.filter.modal.preview.button.label')}
                 </Button>
-                <SubmitButton type="primary" className={classNames(styles.submitBtn, !values.isFilterOwner && styles.disable)} disabled={!values.isFilterOwner}>
+                <SubmitButton
+                  type="primary"
+                  className={classNames(
+                    styles.submitBtn,
+                    !values.isFilterOwner && styles.disable
+                  )}
+                  disabled={!values.isFilterOwner}
+                >
                   {t('create.filter.modal.save.button.label')}
                 </SubmitButton>
               </span>

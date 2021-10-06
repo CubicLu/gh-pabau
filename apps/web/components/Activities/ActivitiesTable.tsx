@@ -1425,11 +1425,19 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         setColumns(columns1)
         await upsertActiveColumn({
           variables: {
-            columns: JSON.stringify({ columns: activeColumnName }),
             userId: loggedUser?.user,
             companyId: loggedUser?.company,
             update: {
               columns: { set: JSON.stringify({ columns: activeColumnName }) },
+            },
+            create: {
+              columns: JSON.stringify({ columns: activeColumnName }),
+              User: {
+                connect: { id: loggedUser?.user },
+              },
+              Company: {
+                connect: { id: loggedUser?.company },
+              },
             },
           },
         })

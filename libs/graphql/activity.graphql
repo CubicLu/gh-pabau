@@ -30,6 +30,7 @@ query findManyActivityData(
   $limit: Int
   $activeColumns: [String]
   $orderValue: OrderType
+  $filterOption: FilterOption
 ) {
   findManyActivityData(
     where: {
@@ -41,6 +42,7 @@ query findManyActivityData(
       search: $search
       activeColumns: $activeColumns
       orderValue: $orderValue
+      filterOption: $filterOption
     }
     skip: $skip
     take: $limit
@@ -144,17 +146,20 @@ query findFirstActivityUserState {
     user_filter
     user_group_filter
     custom_filter
+    ActivityUserFilters {
+      name
+      data
+      columns
+      shared
+    }
   }
 }
 
 mutation upsertOneActivityUserState(
  $userId: Int!
  $companyId: Int!
- $columns: String = null
- $userFilterId: Int = null
- $customFilterId: Int = null
- $userGroupFilterId: Int = null
  $update: ActivityUserStateUpdateInput! 
+ $create: ActivityUserStateCreateInput!
 ){
   upsertOneActivityUserState(
     where: {
@@ -164,18 +169,7 @@ mutation upsertOneActivityUserState(
      }
     }
     update: $update
-    create: {
-     columns: $columns
-     user_filter: $userFilterId
-     custom_filter: $customFilterId
-     user_group_filter: $userGroupFilterId
-     User: {
-      connect: { id: $userId }
-     }
-     Company: {
-      connect: { id: $companyId }
-     }
-   }
+    create: $create
   ) {
     id
   }

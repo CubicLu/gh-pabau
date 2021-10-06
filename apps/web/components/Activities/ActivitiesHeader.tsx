@@ -25,10 +25,21 @@ import { ActivitiesDataProps } from '../../pages/activities'
 import classNames from 'classnames'
 import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
-import { useUserGroupForActivityQuery, useUpsertOneActivityUserStateMutation, useFilterOptionForActivityQuery } from '@pabau/graphql'
+import {
+  useUserGroupForActivityQuery,
+  useUpsertOneActivityUserStateMutation,
+  useFilterOptionForActivityQuery,
+} from '@pabau/graphql'
 import { PersonList, OptionList } from './FilterMenu'
-import { CreateFilterModal, FilterOptionType, InitialValueTypes, FilterDataProps } from './CreateFilterModal'
+import {
+  CreateFilterModal,
+  FilterOptionType,
+  InitialValueTypes,
+  FilterDataProps,
+  FilterDataObjectType,
+} from './CreateFilterModal'
 import Highlighter from 'react-highlight-words'
+import { TFunction } from 'react-i18next'
 
 interface FilterOptionItemType {
   id: number
@@ -46,6 +57,7 @@ interface ClientsHeaderProps {
   totalActivity: number
   selectedColumn: string[]
   filterData: FilterDataProps
+  setFilterDataObject: (value: FilterDataObjectType) => void
   sourceData?: ActivitiesDataProps[]
   searchText?: string
   setSearchText?: (term: string) => void
@@ -65,7 +77,7 @@ interface UserWithIconProps {
   id: number
   filterValue: number
   setFilterValue: (value: number) => void
-  t
+  t: TFunction<'common'>
   isLoggedInUser?: boolean
   needHighlighter?: boolean
   searchValue?: string
@@ -129,7 +141,8 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     loggedUser,
     activityTypeOption,
     filterData,
-    selectedColumn
+    selectedColumn,
+    setFilterDataObject,
   }) => {
     const { t } = useTranslationI18()
     const [visible, setVisible] = useState(false)
@@ -170,6 +183,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
       } else if (filterData.type === 'filter') {
         setFilterValue(undefined)
         setActiveFilterId(filterData.id)
+        setFilterDataObject(filterData?.filter)
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterData, userGroup])
@@ -222,7 +236,6 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             }
           })
           .filter((item) => item)
-        console.log('isFilterOwner---------------', filterData)
         setFilterOption(filterData)
       }
     }, [userFilterData])
@@ -283,15 +296,25 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               setFilterGroupValue(id)
               setFilterValue(undefined)
               setActiveFilterId(undefined)
+              setFilterDataObject(undefined)
               setSelectFilterUser([...userId])
               await upsertActiveColumn({
                 variables: {
-                  userGroupFilterId: id,
                   userId: loggedUser?.user,
                   companyId: loggedUser?.company,
                   update: {
                     user_group_filter: { set: id },
                     user_filter: { set: null },
+                    ActivityUserFilters: { disconnect: true },
+                  },
+                  create: {
+                    User: {
+                      connect: { id: loggedUser?.user },
+                    },
+                    Company: {
+                      connect: { id: loggedUser?.company },
+                    },
+                    user_group_filter: id,
                   },
                 },
               })
@@ -343,16 +366,25 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                 setFilterValue(0)
                 setFilterGroupValue(undefined)
                 setActiveFilterId(undefined)
+                setFilterDataObject(undefined)
                 setSelectFilterUser([])
                 await upsertActiveColumn({
                   variables: {
-                    userFilterId: 0,
                     userId: loggedUser?.user,
                     companyId: loggedUser?.company,
                     update: {
                       user_filter: { set: 0 },
                       user_group_filter: { set: null },
-                      custom_filter: { set: null }
+                      ActivityUserFilters: { disconnect: true },
+                    },
+                    create: {
+                      User: {
+                        connect: { id: loggedUser?.user },
+                      },
+                      Company: {
+                        connect: { id: loggedUser?.company },
+                      },
+                      user_filter: 0,
                     },
                   },
                 })
@@ -370,16 +402,25 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                 setFilterValue(id)
                 setFilterGroupValue(undefined)
                 setActiveFilterId(undefined)
+                setFilterDataObject(undefined)
                 setSelectFilterUser([id])
                 await upsertActiveColumn({
                   variables: {
-                    userFilterId: id,
                     userId: loggedUser?.user,
                     companyId: loggedUser?.company,
                     update: {
                       user_filter: { set: id },
                       user_group_filter: { set: null },
-                      custom_filter: { set: null }
+                      ActivityUserFilters: { disconnect: true },
+                    },
+                    create: {
+                      User: {
+                        connect: { id: loggedUser?.user },
+                      },
+                      Company: {
+                        connect: { id: loggedUser?.company },
+                      },
+                      user_filter: id,
                     },
                   },
                 })
@@ -410,16 +451,25 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                     setFilterValue(id)
                     setFilterGroupValue(undefined)
                     setActiveFilterId(undefined)
+                    setFilterDataObject(undefined)
                     setSelectFilterUser([id])
                     await upsertActiveColumn({
                       variables: {
-                        userFilterId: id,
                         userId: loggedUser?.user,
                         companyId: loggedUser?.company,
                         update: {
                           user_filter: { set: id },
                           user_group_filter: { set: null },
-                          custom_filter: { set: null }
+                          ActivityUserFilters: { disconnect: true },
+                        },
+                        create: {
+                          User: {
+                            connect: { id: loggedUser?.user },
+                          },
+                          Company: {
+                            connect: { id: loggedUser?.company },
+                          },
+                          user_filter: id,
                         },
                       },
                     })
@@ -433,7 +483,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
       )
 
       const onEditIconClick = (item) => {
-        let modalData = {
+        const modalData = {
           name: item.name,
           isFilterOwner: item.isFilterOwner,
           andFilterOption: item.andFilterOption,
@@ -442,7 +492,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
           visibility: item.shared ? 'shared' : 'private',
           saveFilter: item.columns?.length > 0,
           creatorName: item.owner,
-          lastUpdatedDate: item.updated_at
+          lastUpdatedDate: item.updated_at,
         }
         setFilterModalData(modalData)
         setShowModal(true)
@@ -457,23 +507,43 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               activeFilterId === item.id && styles.active
             )}
           >
-            <div className={styles.filterCategory} onClick={async () => {
-              setActiveFilterId(item.id)
-              setFilterGroupValue(undefined)
-              setFilterValue(undefined)
-              await upsertActiveColumn({
-                variables: {
-                  customFilterId: item.id,
-                  userId: loggedUser?.user,
-                  companyId: loggedUser?.company,
-                  update: {
-                    user_filter: { set: null },
-                    user_group_filter: { set: null },
-                    custom_filter: { set: item.id },
+            <div
+              className={styles.filterCategory}
+              onClick={async () => {
+                setActiveFilterId(item.id)
+                setFilterGroupValue(undefined)
+                setFilterValue(undefined)
+                setFilterDataObject({
+                  andFilterOption: item.andFilterOption,
+                  orFilterOption: item.orFilterOption,
+                  name: item.name,
+                  shared: item.shared,
+                  column: item.columns,
+                })
+                await upsertActiveColumn({
+                  variables: {
+                    userId: loggedUser?.user,
+                    companyId: loggedUser?.company,
+                    update: {
+                      user_filter: { set: null },
+                      user_group_filter: { set: null },
+                      ActivityUserFilters: { connect: { id: item.id } },
+                    },
+                    create: {
+                      User: {
+                        connect: { id: loggedUser?.user },
+                      },
+                      Company: {
+                        connect: { id: loggedUser?.company },
+                      },
+                      ActivityUserFilters: {
+                        connect: { id: item.id },
+                      },
+                    },
                   },
-                },
-              })
-            }}>
+                })
+              }}
+            >
               <div>{item.shared ? <UnlockOutlined /> : <LockOutlined />}</div>
               <span className={styles.itemName}>
                 {needHighlighter ? (
@@ -578,15 +648,26 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                           setFilterValue={async (id) => {
                             setFilterValue(id)
                             setSelectFilterUser([id])
+                            setFilterGroupValue(undefined)
+                            setActiveFilterId(undefined)
+                            setFilterDataObject(undefined)
                             await upsertActiveColumn({
                               variables: {
-                                userFilterId: id,
                                 userId: loggedUser?.user,
                                 companyId: loggedUser?.company,
                                 update: {
                                   user_filter: { set: id },
                                   user_group_filter: { set: null },
-                                  custom_filter: { set: null },
+                                  ActivityUserFilters: { disconnect: true },
+                                },
+                                create: {
+                                  User: {
+                                    connect: { id: loggedUser?.user },
+                                  },
+                                  Company: {
+                                    connect: { id: loggedUser?.company },
+                                  },
+                                  user_filter: id,
                                 },
                               },
                             })
@@ -646,6 +727,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             setActiveFilterId={setActiveFilterId}
             activeFilterId={activeFilterId}
             filterData={filterData}
+            setFilterDataObject={setFilterDataObject}
           />
         </div>
       )

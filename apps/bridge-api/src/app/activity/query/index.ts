@@ -8,6 +8,7 @@ import {
   prepareSearchObject,
   prepareSortingObject,
   calculateLeadLostObject,
+  prepareFilterQuery,
 } from '../activity'
 
 export const RetrieveActivityCount = objectType({
@@ -111,6 +112,27 @@ export const OrderType = inputObjectType({
   },
 })
 
+export const FilterOptionItem = inputObjectType({
+  name: 'FilterOptionItem',
+  definition(t) {
+    t.nonNull.string('type')
+    t.nonNull.string('filterColumn')
+    t.nonNull.string('menuOption')
+    t.nonNull.string('operand')
+  },
+})
+
+export const FilterOption = inputObjectType({
+  name: 'FilterOption',
+  definition(t) {
+    t.string('name')
+    t.boolean('shared')
+    t.list.string('column')
+    t.list.field('andFilterOption', { type: 'FilterOptionItem' })
+    t.list.field('orFilterOption', { type: 'FilterOptionItem' })
+  },
+})
+
 export const ActivityWhereInputType = inputObjectType({
   name: 'ActivityWhereInputType',
   definition(t) {
@@ -122,6 +144,7 @@ export const ActivityWhereInputType = inputObjectType({
     t.string('search')
     t.list.string('activeColumns')
     t.field('orderValue', { type: 'OrderType' })
+    t.field('filterOption', { type: 'FilterOption' })
   },
 })
 
@@ -171,33 +194,61 @@ export const ActivityQuery = extendType({
           {}
         )
 
+        const where = input.where
+        console.log('where----------------', where)
+
         try {
           const prepareSearchQuery =
-            input.where?.search &&
-            prepareSearchObject(input.where?.search, input.where?.activeColumns)
+            where?.search &&
+            prepareSearchObject(where?.search, where?.activeColumns)
           const prepareOrderQuery = prepareSortingObject(
-            input.where?.orderValue?.order,
-            input.where?.orderValue?.field
+            where?.orderValue?.order,
+            where?.orderValue?.field
           )
+          const prepareAndFilterQuery =
+            where?.filterOption?.andFilterOption &&
+            (await prepareFilterQuery(
+              where?.filterOption?.andFilterOption,
+              ctx
+            ))
+          const prepareOrFilterQuery =
+            where?.filterOption?.orFilterOption &&
+            (await prepareFilterQuery(where?.filterOption?.orFilterOption, ctx))
+          const andQuery = []
+          const orQuery = []
+          if (prepareSearchQuery) {
+            orQuery.push(...prepareSearchQuery)
+          } else if (prepareAndFilterQuery) {
+            andQuery.push(...prepareAndFilterQuery)
+          }
+          if (prepareOrFilterQuery) {
+            orQuery.push(...prepareOrFilterQuery)
+          }
+          console.log('andQuery---------', andQuery)
+          console.log('orQuery---------', orQuery)
           const graphData = await retrieveActivityGraphData(
             ctx,
-            input,
-            prepareSearchQuery
+            where,
+            andQuery,
+            orQuery
           )
           const activityData = await ctx.prisma.activity.findMany({
             where: {
               due_start_date: {
-                gte: input.where?.startDate,
-                lte: input.where?.endDate,
+                gte: where?.startDate,
+                lte: where?.endDate,
               },
-              ActivityType: { name: { in: input.where?.activityType } },
-              status: { in: input.where?.status },
+              ActivityType: { name: { in: where?.activityType } },
+              status: { in: where?.status },
               AssignedUser: {
-                id: { in: input.where?.userId },
+                id: { in: where?.userId },
               },
-              AND: {
-                OR: prepareSearchQuery,
-              },
+              AND: [
+                ...andQuery,
+                {
+                  OR: orQuery,
+                },
+              ],
             },
             skip: input?.skip ?? 0,
             take: input?.take ?? 50,
@@ -311,17 +362,20 @@ export const ActivityQuery = extendType({
             count: ctx.prisma.activity.count({
               where: {
                 due_start_date: {
-                  gte: input.where?.startDate,
-                  lte: input.where?.endDate,
+                  gte: where?.startDate,
+                  lte: where?.endDate,
                 },
-                ActivityType: { name: { in: input.where?.activityType } },
-                status: { in: input.where?.status },
+                ActivityType: { name: { in: where?.activityType } },
+                status: { in: where?.status },
                 AssignedUser: {
-                  id: { in: input.where?.userId },
+                  id: { in: where?.userId },
                 },
-                AND: {
-                  OR: prepareSearchQuery,
-                },
+                AND: [
+                  ...andQuery,
+                  {
+                    OR: orQuery,
+                  },
+                ],
               },
             }),
             activityData: finalActivityRespons,

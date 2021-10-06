@@ -414,11 +414,19 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
       handleVisible()
       await upsertActiveColumnMutation({
         variables: {
-          columns: JSON.stringify({ columns: activeColumns }),
           userId: loggedUser?.user,
           companyId: loggedUser?.company,
           update: {
             columns: { set: JSON.stringify({ columns: activeColumns }) },
+          },
+          create: {
+            columns: JSON.stringify({ columns: activeColumns }),
+            User: {
+              connect: { id: loggedUser?.user },
+            },
+            Company: {
+              connect: { id: loggedUser?.company },
+            },
           },
         },
       })
@@ -604,7 +612,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
                     </Radio.Button>
                   </Radio.Group>
                   <div className={styles.checkboxRadioWrapper}>
-                    {console.log('filterOptions---------------', filterOptions)}
                     {selectedTab === 'client'
                       ? prepareClientOptions(filterOptions)
                       : filterOptions
@@ -612,10 +619,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
                           .filter(
                             (data) =>
                               !defaultColumnList.some(
-                                (item) => {
-                                  console.log('item' ,item)
-                                  return item.value === data.value
-                                }
+                                (item) => item.value === data.value
                               )
                           )
                           .map((data, i) => {

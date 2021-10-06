@@ -453,11 +453,11 @@ export const getData = (t) => {
 
   const freeBusyOption = [
     {
-      id: 'Free',
+      id: '1',
       name: t('create.filter.modal.free.label'),
     },
     {
-      id: 'Busy',
+      id: '0',
       name: t('create.filter.modal.busy.label'),
     },
   ]

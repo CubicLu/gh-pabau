@@ -2133,15 +2133,16 @@ model ActivityType {
 }
 
 model ActivityUserState {
-  id                Int     @id @default(autoincrement())
-  user_id           Int
-  columns           String?
-  company_id        Int
-  user_filter       Int?
-  user_group_filter Int?
-  custom_filter     Int?
-  Company           Company @relation(fields: [company_id], references: [id])
-  User              User?   @relation(fields: [user_id], references: [id])
+  id                  Int                  @id @default(autoincrement())
+  user_id             Int
+  columns             String?
+  company_id          Int
+  user_filter         Int?
+  user_group_filter   Int?
+  custom_filter       Int?
+  Company             Company              @relation(fields: [company_id], references: [id])
+  User                User?                @relation(fields: [user_id], references: [id])
+  ActivityUserFilters ActivityUserFilters? @relation(fields: [custom_filter], references: [id])
 
   @@unique([user_id, company_id], name: "company_id_user_id")
   @@index([company_id, user_id], name: "activity_user_columns_user_id_company_id__index")
@@ -2161,6 +2162,7 @@ model ActivityUserFilters {
   User       User      @relation(fields: [user_id], references: [id])
   Company    Company   @relation(fields: [company_id], references: [id])
 
+  ActivityUserState ActivityUserState[]
   @@index([company_id, user_id], name: "activity_user_filters_company_id_user_id__index")
   @@map("activity_user_filters")
 }
@@ -2175,9 +2177,9 @@ model Activity {
   note           String?
   available      Boolean      @default(true)
   status         String
-  due_start_date DateTime
-  due_end_date   DateTime
-  created_at     DateTime     @default(now())
+  due_start_date DateTime?
+  due_end_date   DateTime?
+  created_at     DateTime?    @default(now())
   updated_at     DateTime?    @updatedAt
   finished_at    DateTime?
   type           Int

@@ -28,5 +28,25 @@ export const ActivityUserFilters = objectType({
         return root.Company
       },
     })
+    t.list.field('ActivityUserState', {
+      type: 'ActivityUserState',
+      args: {
+        where: 'ActivityUserStateWhereInput',
+        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        cursor: 'ActivityUserStateWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserStateScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserState
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'ActivityUserFiltersCountOutputType',
+      resolve(root: any) {
+        return root._count
+      },
+    })
   },
 })

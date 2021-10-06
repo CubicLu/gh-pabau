@@ -46,3 +46,10 @@ export interface LeadResponse {
   lostReason?: string
   lostTime?: Date
 }
+
+export interface FilterOptionType {
+  type?: string
+  filterColumn?: string
+  operand?: string
+  menuOption?: string
+}

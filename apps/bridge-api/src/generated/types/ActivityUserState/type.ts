@@ -26,5 +26,11 @@ export const ActivityUserState = objectType({
         return root.User
       },
     })
+    t.nullable.field('ActivityUserFilters', {
+      type: 'ActivityUserFilters',
+      resolve(root: any) {
+        return root.ActivityUserFilters
+      },
+    })
   },
 })
