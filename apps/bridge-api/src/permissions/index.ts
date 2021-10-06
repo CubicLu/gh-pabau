@@ -74,7 +74,7 @@ export const permissions = shield(
       //MedicalFormContact
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
-      createOneCmContactNote: rules.authentication.isAuthenticated,
+      createOneContactNote: rules.authentication.isAuthenticated,
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -108,7 +108,7 @@ export const permissions = shield(
       updateManyInvBiller: rules.authentication.isAdmin,
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
-
+      updateOneCmLead: rules.authentication.isAuthenticated,
       //Activity
       upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
       // Default fallback
@@ -160,10 +160,10 @@ export const permissions = shield(
         rules.interceptors.interceptSharedCompanyData,
       findFirstInvPaymentType: rules.interceptors.interceptSharedCompanyData,
       findUniqueInvPaymentType: rules.interceptors.interceptSharedCompanyData,
-      // //CmContactNote
-      findFirstCmContactNote: rules.authentication.isAuthenticated,
-      findManyCmContactNote: rules.authentication.isAuthenticated,
-      findManyCmContactNoteCount: rules.authentication.isAuthenticated,
+      // //ContactNote
+      findFirstContactNote: rules.authentication.isAuthenticated,
+      findManyContactNote: rules.authentication.isAuthenticated,
+      findManyContactNoteCount: rules.authentication.isAuthenticated,
       // //UserMainPermission
       findFirstUserMainPermission: rules.authentication.isAuthenticated,
       findManyUserMainPermission: rules.authentication.isAuthenticated,

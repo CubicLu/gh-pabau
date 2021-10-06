@@ -12,6 +12,7 @@ import Highlighter from 'react-highlight-words'
 import Logo from '../../../assets/images/logo.svg'
 import userAvatar from '../../../assets/images/user-avatar.svg'
 import CommonHeader from '../../../components/CommonHeader'
+import useWindowSize from '../../../hooks/useWindowSize'
 import { CustomScrollbar } from '../../../components/CustomScrollbar/Index'
 import Layout from '../../../components/Layout/Layout'
 import styles from './index.module.less'
@@ -197,6 +198,7 @@ export interface FilerDataProps {
 }
 
 export const Index: FC = () => {
+  const size = useWindowSize()
   const [filterData, setFilterData] = useState<FilerDataProps>(filterRecords)
   const [isFilterVisible, setFilterVisible] = useState<boolean>(false)
   const [isDayFilterVisible, setDayFilterVisible] = useState<boolean>(false)
@@ -352,14 +354,21 @@ export const Index: FC = () => {
   )
 
   return (
-    <>
-      <CommonHeader />
-      <Layout>
-        <div className={styles.activityMainWrapper}>
+    <Layout>
+      <CommonHeader
+        isLeftOutlined
+        reversePath="/setup"
+        title={'Activity Logs'}
+        isShowSearch
+        handleSearch={handleSearch}
+        searchValue={searchValue}
+      />
+      <div className={styles.activityMainWrapper}>
+        {size.width > 767 && (
           <div className={styles.activityHead}>
             <div>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   { breadcrumbName: 'Setup', path: 'setup' },
                   {
                     breadcrumbName: 'Activity Logs',
@@ -370,114 +379,117 @@ export const Index: FC = () => {
               <Typography.Title>Activity Logs</Typography.Title>
             </div>
             <div className={styles.activitySerach}>
-              <SetupSearchInput />
-            </div>
-          </div>
-          <div className={styles.activityShowingInfo}>
-            <Row>
-              <div>
-                <span className={styles.text}>Showing</span>
-                <EmployeeListModel
-                  userList={userList}
-                  label={'All Employees'}
-                  ListTitle={'Select an Employee'}
-                />
-                <span className={styles.text}>By</span>
-                <Popover
-                  content={content}
-                  title="Select actions"
-                  placement="bottomRight"
-                  trigger="click"
-                  visible={isFilterVisible}
-                  onVisibleChange={(visible) => setFilterVisible(visible)}
-                  overlayClassName={styles.actionsPopover}
-                >
-                  <span
-                    className={styles.highlightText}
-                    onClick={() => setFilterVisible(true)}
-                  >
-                    {' '}
-                    All Actions
-                  </span>
-                </Popover>
-                <span className={styles.text}>For the</span>
-                <Popover
-                  content={model}
-                  title="Select days"
-                  placement="bottomRight"
-                  trigger="click"
-                  visible={isDayFilterVisible}
-                  onVisibleChange={(visible) => setDayFilterVisible(visible)}
-                  overlayClassName={styles.actionsPopover}
-                >
-                  <span
-                    className={styles.highlightText}
-                    onClick={() => setDayFilterVisible(true)}
-                  >
-                    {' '}
-                    {day === '' ? 'Last 30 days' : day}
-                  </span>
-                </Popover>
-              </div>
-            </Row>
-          </div>
-
-          <div className={styles.chartBlock}>
-            <div className={styles.chartCard}>
-              <ActivityChart />
-            </div>
-          </div>
-
-          <div className={styles.activityListBlock}>
-            <div className={styles.activityListCard}>
-              <List
-                itemLayout="horizontal"
-                className={styles.list}
-                dataSource={Data}
-                renderItem={(item) => (
-                  <List.Item>
-                    <div className={styles.box}>
-                      <List.Item.Meta
-                        className={styles.icon}
-                        avatar={
-                          typeof item.icon === 'object' ? (
-                            item.icon
-                          ) : (
-                            <img src={item.icon} alt="" />
-                          )
-                        }
-                      />
-                      <div className={styles.content}>
-                        <div className={styles.userTime}>
-                          {item.user} &middot; <span>{item.time}</span>&nbsp;
-                          <span>({item.updated_time})</span>
-                        </div>
-                        <div className={styles.userContent}>
-                          <span>{item.upload_file_title}</span>&nbsp;
-                          <span className={styles.label}>
-                            {item.file_name === '' ? null : (
-                              <q> {item.file_name}</q>
-                            )}
-                          </span>
-                        </div>
-                        {item.file_attachment === true && (
-                          <div className={styles.userFile}>
-                            <FileFilled />
-                            <span className={styles.fileSize}>
-                              {item.file_size}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </List.Item>
-                )}
+              <SetupSearchInput
+                onChange={handleSearch}
+                searchValue={searchValue}
               />
             </div>
           </div>
+        )}
+        <div className={styles.activityShowingInfo}>
+          <Row>
+            <div>
+              <span className={styles.text}>Showing</span>
+              <EmployeeListModel
+                userList={userList}
+                label={'All Employees'}
+                ListTitle={'Select an Employee'}
+              />
+              <span className={styles.text}>By</span>
+              <Popover
+                content={content}
+                title="Select actions"
+                placement="bottomRight"
+                trigger="click"
+                visible={isFilterVisible}
+                onVisibleChange={(visible) => setFilterVisible(visible)}
+                overlayClassName={styles.actionsPopover}
+              >
+                <span
+                  className={styles.highlightText}
+                  onClick={() => setFilterVisible(true)}
+                >
+                  {' '}
+                  All Actions
+                </span>
+              </Popover>
+              <span className={styles.text}>For the</span>
+              <Popover
+                content={model}
+                title="Select days"
+                placement="bottomRight"
+                trigger="click"
+                visible={isDayFilterVisible}
+                onVisibleChange={(visible) => setDayFilterVisible(visible)}
+                overlayClassName={styles.actionsPopover}
+              >
+                <span
+                  className={styles.highlightText}
+                  onClick={() => setDayFilterVisible(true)}
+                >
+                  {' '}
+                  {day === '' ? 'Last 30 days' : day}
+                </span>
+              </Popover>
+            </div>
+          </Row>
         </div>
-      </Layout>
-    </>
+
+        <div className={styles.chartBlock}>
+          <div className={styles.chartCard}>
+            <ActivityChart />
+          </div>
+        </div>
+
+        <div className={styles.activityListBlock}>
+          <div className={styles.activityListCard}>
+            <List
+              itemLayout="horizontal"
+              className={styles.list}
+              dataSource={Data}
+              renderItem={(item) => (
+                <List.Item>
+                  <div className={styles.box}>
+                    <List.Item.Meta
+                      className={styles.icon}
+                      avatar={
+                        typeof item.icon === 'object' ? (
+                          item.icon
+                        ) : (
+                          <img src={item.icon} alt="" />
+                        )
+                      }
+                    />
+                    <div className={styles.content}>
+                      <div className={styles.userTime}>
+                        {item.user} &middot; <span>{item.time}</span>&nbsp;
+                        <span>({item.updated_time})</span>
+                      </div>
+                      <div className={styles.userContent}>
+                        <span>{item.upload_file_title}</span>&nbsp;
+                        <span className={styles.label}>
+                          {item.file_name === '' ? null : (
+                            <q> {item.file_name}</q>
+                          )}
+                        </span>
+                      </div>
+                      {item.file_attachment === true && (
+                        <div className={styles.userFile}>
+                          <FileFilled />
+                          <span className={styles.fileSize}>
+                            {item.file_size}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </List.Item>
+              )}
+            />
+          </div>
+        </div>
+      </div>
+    </Layout>
   )
 }
 

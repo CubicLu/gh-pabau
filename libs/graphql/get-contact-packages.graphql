@@ -10,7 +10,7 @@ query GetContactPackages(
       expiration_date
       voided
       code
-      session_package {
+      Package {
         name
         session_count
         price

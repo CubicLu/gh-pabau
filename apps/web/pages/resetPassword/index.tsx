@@ -123,49 +123,15 @@ const Index: FC = () => {
               setIsLoading(true)
               updateUserPassword({
                 variables: {
+                  token: token,
                   newPassword1: value.password,
                   newPassword2: value.confirmPassword,
-                  userId: data?.findFirstPasswordResetAuth?.User?.id,
                 },
                 optimisticResponse: {},
               })
             }}
             render={({ isValid, values, setFieldValue }) => (
               <Form layout="vertical">
-                <Form.Item
-                  label={
-                    !loading ? (
-                      data?.findFirstPasswordResetAuth ? (
-                        t('reset.company.name.title', {
-                          fallbackLng: 'en',
-                        })
-                      ) : null
-                    ) : (
-                      <Skeleton.Input
-                        active
-                        style={{ width: '150px' }}
-                        size={'small'}
-                      />
-                    )
-                  }
-                  name={'companyName'}
-                  className={styles.Input}
-                >
-                  {!loading ? (
-                    data?.findFirstPasswordResetAuth ? (
-                      <Input
-                        name={'companyName'}
-                        value={
-                          data?.findFirstPasswordResetAuth?.User?.CompanyDetails
-                            ?.company_name
-                        }
-                        disabled
-                      />
-                    ) : null
-                  ) : (
-                    <Skeleton.Input active className={styles.Input} />
-                  )}
-                </Form.Item>
                 <Form.Item
                   label={
                     !loading ? (

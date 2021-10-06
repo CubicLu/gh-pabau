@@ -1,10 +1,9 @@
 import { Smstext } from '@pabau/ui'
 import { Button, Card } from 'antd'
 import React, { FC } from 'react'
-
+import { useTranslation } from 'react-i18next'
 import styles from './CommunicationTemplatePreview.module.less'
 
-/* eslint-disable-next-line */
 export interface CommunicationTemplatePreviewProps {
   sms: string
 }
@@ -12,7 +11,13 @@ export interface CommunicationTemplatePreviewProps {
 export const CommunicationTemplatePreview: FC<CommunicationTemplatePreviewProps> = ({
   sms,
 }) => {
-  const btn = <Button className={styles.sendButton}>{'Send Test SMS'}</Button>
+  const { t } = useTranslation('common')
+
+  const btn = (
+    <Button className={styles.sendButton}>
+      {t('notifications.commonNotificationHeader.sendTestSms')}
+    </Button>
+  )
   return (
     <div className={styles.previewContainer}>
       <Card title="Example Message" extra={btn}>

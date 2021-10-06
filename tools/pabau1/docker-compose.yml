@@ -5,11 +5,11 @@ services:
     restart: 'no'
     environment:
       MYSQL_DATABASE: pabau
-      MYSQL_PASSWORD: '1234'
+      MYSQL_PASSWORD: '123'
       MYSQL_ROOT_PASSWORD: '123'
       MYSQL_USER: web
     ports:
-      - "3307:3306"
+      - '3307:3306'
     volumes:
       - mysql-data:/var/lib/mysql/
       - ./db_init/:/docker-entrypoint-initdb.d/:ro

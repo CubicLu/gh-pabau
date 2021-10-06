@@ -7,6 +7,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { notificationIcons } from './mock'
 import styles from './NotificationDrawer.module.less'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
+import dayjs from 'dayjs'
 
 export interface NotificationDrawerItemType {
   id: string
@@ -94,6 +95,17 @@ export const NotificationItem: FC<P> = ({
 
   const getFormattedDate = (date: string) => date.replaceAll('-', '/')
 
+  const isValidTime = (time: string) => {
+    const formats = ['am', 'pm', 'AM', 'PM']
+    let isValid = false
+    for (const format of formats) {
+      if (time.includes(format)) {
+        isValid = true
+      }
+    }
+    return isValid
+  }
+
   const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
     const { variables, notificationType, sentBy, desc } = notification
 
@@ -116,6 +128,10 @@ export const NotificationItem: FC<P> = ({
 
         if (key === 'date' && variableValue?.includes('-')) {
           variableValue = getFormattedDate(variableValue)
+        }
+
+        if (key === 'time' && !isValidTime(variableValue)) {
+          variableValue = dayjs('1/1/1 ' + variableValue).format('hh:mma')
         }
 
         notification[returnType] = notification[returnType]?.replace(
