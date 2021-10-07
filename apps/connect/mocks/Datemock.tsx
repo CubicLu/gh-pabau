@@ -1,7 +1,7 @@
-import image1 from '../../web/assets/images/connect/alisa.png'
-import image2 from '../../web/assets/images/connect/alex.png'
-import image3 from '../../web/assets/images/connect/mike.png'
-import image4 from '../../web/assets/images/connect/victoria.png'
+import image1 from '../assets/images/alisa.png'
+import image2 from '../assets/images/alex.png'
+import image3 from '../assets/images/mike.png'
+import image4 from '../assets/images/victoria.png'
 import { DoctorType } from '../../../connect/components/DateTimeStep/DateTime'
 export const monthData = [
   {

@@ -1,6 +1,6 @@
-import img from '../../web/assets/images/connect/emp_moal.png'
-import blue from '../../web/assets/images/connect/blue.png'
-import purple from '../../web/assets/images/connect/purple.png'
+import img from '../assets/images/emp_moal.png'
+import blue from '../assets/images/blue.png'
+import purple from '../assets/images/purple.png'
 export const data = [
   {
     key: 1,

@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react'
 import { ClockCircleOutlined } from '@ant-design/icons'
 import verifyLogo from '../../../web/assets/lottie/connect-verify.json'
-import location from '../../../web/assets/images/connect/location.png'
+import location from '../../assets/images/location.png'
 import styles from './BookingConfirmation.module.less'
 import { MyLottie, Button } from '@pabau/ui'
 import { ReactComponent as Home } from '../../../web/assets/images/Home.svg'

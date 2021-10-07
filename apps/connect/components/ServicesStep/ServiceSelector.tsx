@@ -288,7 +288,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
     )
   }
   const renderServices = (category: Category | null) => {
-    if (category) {
+    if (!category) {
       category = servicesCategorised.Public_MasterCategories.find(
         (item) =>
           item.id === selectedData.masterCategoryID ||

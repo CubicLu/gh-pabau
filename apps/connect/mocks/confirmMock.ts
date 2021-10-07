@@ -1,8 +1,8 @@
-import img1 from '../../web/assets/images/connect/back.png'
-import img2 from '../../web/assets/images/connect/chin.png'
-import img3 from '../../web/assets/images/connect/Chest.png'
-import img4 from '../../web/assets/images/connect/Lip.png'
-import Mois from '../../web/assets/images/connect/product.png'
+import img1 from '../assets/images/back.png'
+import img2 from '../assets/images/chin.png'
+import img3 from '../assets/images/Chest.png'
+import img4 from '../assets/images/Lip.png'
+import Mois from '../assets/images/product.png'
 import Helico from '../../web/assets/images/Heliocare.jpg'
 import sup from '../../web/assets/images/super-c30.jpg'
 

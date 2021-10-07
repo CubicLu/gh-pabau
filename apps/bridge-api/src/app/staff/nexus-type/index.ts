@@ -1,6 +1,7 @@
 import { objectType } from 'nexus'
 import { Context } from '../../../context'
-import { PublicServiceUserTierResponse } from '../../service/nexus-type/Public_ServiceUserTier'
+import { PublicServiceUserTierResponse } from '../../service'
+import { PublicSocialSurveyFeedbackResponse } from '../../survey/nexus-type'
 
 export const PublicStaffResponse = objectType({
   name: 'Public_Staff',
@@ -31,11 +32,9 @@ export const PublicUserResponse = objectType({
     t.list.field('Public_ServiceUserTier', {
       type: PublicServiceUserTierResponse,
       resolve(parent, input, ctx: Context) {
-        return ctx.prisma.user
-          .findUnique({
-            where: { id: parent.id || undefined },
-          })
-          .ServiceUserTier()
+        return ctx.prisma.user.findUnique({
+          where: { id: parent.id || undefined },
+        })
       },
     })
   },
