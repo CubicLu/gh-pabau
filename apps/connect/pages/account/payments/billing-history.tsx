@@ -228,7 +228,7 @@ export const BillingHistory = () => {
       <div className={styles.billingHistory}>
         <div className={styles.billingHistoryHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
                 path: 'connect/account',

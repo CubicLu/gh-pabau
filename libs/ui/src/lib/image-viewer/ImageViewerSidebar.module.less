@@ -1,5 +1,3 @@
-
-
 .imageViewerSideBar {
   position: fixed;
   top: 80px;
@@ -307,6 +305,13 @@
     }
     &:hover {
       color: var(--primary-color);
+    }
+
+    &.selected {
+      background-color: #54b2d31f;
+      > div:first-child {
+        color: var(--primary-color);
+      }
     }
   }
 }

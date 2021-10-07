@@ -74,7 +74,7 @@ export const permissions = shield(
       //MedicalFormContact
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
-      createOneCmContactNote: rules.authentication.isAuthenticated,
+      createOneContactNote: rules.authentication.isAuthenticated,
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -107,7 +107,7 @@ export const permissions = shield(
       updateManyInvBiller: rules.authentication.isAdmin,
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
-
+      updateOneCmLead: rules.authentication.isAuthenticated,
       //Activity
       upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
       // Default fallback
@@ -119,7 +119,7 @@ export const permissions = shield(
     },
     Query: {
       findManyContactPackage: allow,
-      findFirstCmContact: allow,
+      findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
@@ -159,10 +159,10 @@ export const permissions = shield(
         rules.interceptors.interceptSharedCompanyData,
       findFirstInvPaymentType: rules.interceptors.interceptSharedCompanyData,
       findUniqueInvPaymentType: rules.interceptors.interceptSharedCompanyData,
-      // //CmContactNote
-      findFirstCmContactNote: rules.authentication.isAuthenticated,
-      findManyCmContactNote: rules.authentication.isAuthenticated,
-      findManyCmContactNoteCount: rules.authentication.isAuthenticated,
+      // //ContactNote
+      findFirstContactNote: rules.authentication.isAuthenticated,
+      findManyContactNote: rules.authentication.isAuthenticated,
+      findManyContactNoteCount: rules.authentication.isAuthenticated,
       // //UserMainPermission
       findFirstUserMainPermission: rules.authentication.isAuthenticated,
       findManyUserMainPermission: rules.authentication.isAuthenticated,
@@ -230,14 +230,6 @@ export const permissions = shield(
       getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
-      //createOneBooking: allow,
-      findFirstCompany: allow,
-      Public_MasterCategories: allow,
-      Public_ServiceCategories: allow,
-      Public_Locations: allow,
-      Public_Staff: allow,
-      Public_Shifts: allow,
-      Public_Bookings: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData

@@ -37,5 +37,19 @@ export const PublicUserResponse = objectType({
         })
       },
     })
+    t.list.field('Public_SocialSurveyFeedback', {
+      type: PublicSocialSurveyFeedbackResponse,
+      resolve(parent, input, ctx: Context) {
+        return ctx.prisma.user
+          .findUnique({
+            where: { id: parent.id || undefined },
+          })
+          .SocialSurveyFeedback({
+            where: {
+              public_use: 1,
+            },
+          })
+      },
+    })
   },
 })

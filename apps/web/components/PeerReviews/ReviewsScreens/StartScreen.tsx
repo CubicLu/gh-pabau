@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Avatar as UserAvatar, Button } from '@pabau/ui'
-import styles from '../../../pages/PeerReviews/index.module.less'
+import styles from '../../../pages/peer-reviews/index.module.less'
 
 interface User {
   userImagePath?: string

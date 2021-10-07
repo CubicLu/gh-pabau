@@ -1,0 +1,22 @@
+query getVouchers($contactID: Int!) {
+  vouchers: findManyVoucher(where: {Contact: {ID: {equals: $contactID}}}, orderBy: {purchase_date: desc}) {
+    code
+    amount
+    remaining_balance
+    date_from
+    date_to
+    description
+    expiry_date
+    purchase_date
+    status
+    Contact {
+      ID
+      Fname
+      Lname
+    }
+  }
+}
+
+query countVouchers($contactID: Int) {
+  total: findManyVoucherCount(where: {Contact: {ID: {equals: $contactID}}})
+}
