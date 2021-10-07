@@ -13,6 +13,7 @@ import {
   KeyOutlined,
   CloseCircleOutlined,
   QuestionCircleOutlined,
+  MailFilled,
 } from '@ant-design/icons'
 import {
   AddContact,
@@ -982,18 +983,29 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   styles.content,
                                   field.value ? '' : styles.emptyContent
                                 )}
+                                onClick={() => {
+                                  field.value && setShowAddressModal(true)
+                                }}
                               >
                                 {field.value}
                               </div>
                             </div>
                             <div
                               className={styles.addAddress}
-                              onClick={(e) => {
-                                e.preventDefault()
+                              onClick={() => {
                                 setShowAddressModal(true)
                               }}
                             >
-                              <PlusCircleOutlined /> <h5>Add Address</h5>
+                              {field.value ? (
+                                <div className={styles.edit}>
+                                  <EditOutlined />
+                                </div>
+                              ) : (
+                                <div className={styles.addAddressContent}>
+                                  <PlusCircleOutlined />{' '}
+                                  <h5>{t('ui.clientdetails.add.address')}</h5>{' '}
+                                </div>
+                              )}
                             </div>
                           </div>
                         ) : field.type === InlineEditDataTypes.basicPhone ? (
@@ -1017,18 +1029,18 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   fieldTitle={field.title}
                                   orderIndex={getFieldName(field.title)}
                                   type={field.type}
-                                  initialValue={
-                                    field.value || t('ui.clientdetails.empty')
-                                  }
+                                  initialValue={field.value}
                                   onUpdateValue={handleUpdatePhoneFieldValue}
                                   selectOptions={field.selectOptions}
                                 >
                                   {!field.value['mobile'] &&
                                   !field.value['home'] ? (
-                                    t('ui.clientdetails.empty')
+                                    <span className={styles.emptyValue}>
+                                      {t('ui.clientdetails.empty')}
+                                    </span>
                                   ) : (
-                                    <div className={styles.phoneLeftContent}>
-                                      <div className={styles.phoneContentTitle}>
+                                    <div className={styles.leftContent}>
+                                      <div className={styles.leftContentTitle}>
                                         {field.value['mobile'] && (
                                           <span>{`${field.value['mobile']} (Mobile)`}</span>
                                         )}
@@ -1036,7 +1048,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                           <span>{`${field.value['home']} (Home)`}</span>
                                         )}
                                       </div>
-                                      <div className={styles.phoneCallContent}>
+                                      <div className={styles.boxContent}>
                                         <Tooltip
                                           placement="top"
                                           title="Call with Caller"
@@ -1081,36 +1093,49 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                 <div
                                   className={cn(
                                     styles.content,
-                                    field.value ? '' : styles.emptyContent,
-                                    field.value &&
-                                      field.type === InlineEditDataTypes.email
-                                      ? styles.emailContent
-                                      : ''
+                                    field.value ? '' : styles.emptyContent
                                   )}
-                                  onClick={() =>
-                                    field.type === InlineEditDataTypes.email &&
-                                    field.value &&
-                                    onCreateEmail()
-                                  }
                                 >
                                   {field.type !== 'date' && (
                                     <InlineEdit
                                       fieldTitle={field.title}
                                       orderIndex={getFieldName(field.title)}
                                       type={field.type}
-                                      initialValue={
-                                        field.value ||
-                                        t('ui.clientdetails.empty')
-                                      }
+                                      initialValue={field.value}
                                       onUpdateValue={handleUpdateFieldValue}
                                       selectOptions={field.selectOptions}
                                     >
-                                      {field.value ? (
-                                        field.value
-                                      ) : (
-                                        <span>
-                                          {t('ui.clientdetails.empty')}
+                                      {!field.value ? (
+                                        <span className={styles.emptyValue}>
+                                          {' '}
+                                          {t('ui.clientdetails.empty')}{' '}
                                         </span>
+                                      ) : field.type === 'email' ? (
+                                        <div className={styles.leftContent}>
+                                          <div
+                                            className={cn(
+                                              styles.leftContentTitle,
+                                              styles.emailContent
+                                            )}
+                                          >
+                                            {field.value}
+                                          </div>
+                                          {field.value && (
+                                            <div className={styles.boxContent}>
+                                              <div
+                                                className={styles.iconContent}
+                                                onClick={(e) => {
+                                                  e.stopPropagation()
+                                                  onCreateEmail()
+                                                }}
+                                              >
+                                                <MailFilled />
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        field.value
                                       )}
                                     </InlineEdit>
                                   )}
@@ -1133,13 +1158,17 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                     >
                                       {field.value &&
                                       dateFormat &&
-                                      typeof field.value === 'string'
-                                        ? `${dayjs(field.value).format(
-                                            dateFormat
-                                          )} (${moment(field.value).fromNow(
-                                            true
-                                          )})`
-                                        : t('ui.clientdetails.empty')}
+                                      typeof field.value === 'string' ? (
+                                        `${dayjs(field.value).format(
+                                          dateFormat
+                                        )} (${moment(field.value).fromNow(
+                                          true
+                                        )})`
+                                      ) : (
+                                        <span className={styles.emptyValue}>
+                                          {t('ui.clientdetails.empty')}
+                                        </span>
+                                      )}
                                     </InlineEdit>
                                   )}
                                 </div>
@@ -1393,7 +1422,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
 
       <AddAddress
         visible={showAddressModal}
-        title={'Add Address'}
+        title={
+          client.address
+            ? t('ui.clientdetails.edit.address')
+            : t('ui.clientdetails.add.address')
+        }
         onClose={() => setShowAddressModal(false)}
         onAdd={handleAddAddress}
         values={{

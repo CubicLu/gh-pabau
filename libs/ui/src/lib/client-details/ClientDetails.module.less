@@ -450,6 +450,10 @@
       .addAddress {
         display: flex;
         align-items: center;
+        .addAddressContent {
+          display: flex;
+          align-items: center;
+        }
         :global {
           .anticon-plus-circle {
             color: #54B2D3;
@@ -499,19 +503,28 @@
               }
             }
           }
-          .phoneLeftContent {
+          .leftContent {
             display: flex;
             align-items: center;
-            .phoneContentTitle {
+            .leftContentTitle {
               display: flex;
               align-items: flex-start;
               justify-content: center;  
+              &.emailContent {
+                color: var(--primary-color);
+                cursor: pointer;
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
             }
-            .phoneCallContent {
+            
+            .boxContent {
               display: inline-flex;
               margin-left: 10px;
               border: 1px solid var(--light-grey-color);
               border-radius: 3px;
+              cursor: pointer;
               .iconContent {
                 padding: 3px 5px;
                 &:nth-child(2) {
@@ -521,14 +534,22 @@
             }
           }
           &:hover {
-            .phoneLeftContent {
+            .leftContent {
               display: flex;
-              .phoneContentTitle {
+              .leftContentTitle {
                 display: flex;
                 align-items: flex-start;
                 justify-content: center;  
+                &.emailContent {
+                  color: var(--primary-color);
+                  cursor: pointer;
+                  &:hover {
+                    text-decoration: underline;
+                  }
+                }
               }
-              .phoneCallContent {
+              
+              .boxContent {
                 display: inline-flex;
                 margin-left: 10px;
                 border: 1px solid var(--light-grey-color);
@@ -542,18 +563,11 @@
               }
             }
           }
-          &.emailContent {
-            color: var(--primary-color);
-            cursor: pointer;
-            &:hover {
-              text-decoration: underline;
-            }
-          }
           &.phoneContent {
             cursor: pointer;
-            .phoneLeftContent {
+            .leftContent {
               display: flex;
-              .phoneContentTitle {
+              .leftContentTitle {
                 display: flex;
                 flex-direction: column;
               }
@@ -562,7 +576,7 @@
           &.emptyContent {
             cursor: pointer;
           }
-          > .phoneCallContent {
+          > .boxContent {
             display: none;
           }
         }
@@ -581,6 +595,10 @@
         .addAddress{
           display: flex;
           color: #54B2D3;
+          .addAddressContent {
+            display: flex;
+            align-items: center;
+          }
           :global {
             .anticon {
               cursor: pointer;
@@ -604,7 +622,19 @@
     justify-content: space-between;
     border-bottom: 1px solid var(--border-color-base);
     &:hover {
-      .phoneCallContent {
+      > div {
+        &:nth-child(1) {
+      .content {
+        &.emptyContent {
+          .emptyValue {
+            display: block;
+          }
+        }
+      }    
+        }
+      }
+    
+      .boxContent {
         display: inline-flex;
         margin-left: 10px;
         border: 1px solid var(--light-grey-color);
@@ -620,6 +650,10 @@
     .addAddress {
       display: flex;
       align-items: center;
+      .addAddressContent {
+        display: flex;
+        align-items: center;
+      }
       :global {
         .anticon-plus-circle {
           color: #54B2D3;
@@ -651,20 +685,16 @@
           font-size: 14px;
           line-height: 22px;
           color: var(--grey-text-color);
-          &.emailContent {
-            color: var(--primary-color);
-            cursor: pointer;
-            &:hover {
-              text-decoration: underline;
-            }
-          }
           &.phoneContent {
             cursor: pointer;
           }
           &.emptyContent {
             cursor: pointer;
+            .emptyValue {
+              display: none;
+            }
           }
-          > .phoneCallContent {
+          > .boxContent {
             display: none;
           }
         }
@@ -689,9 +719,9 @@
         }
       }
     }
-    span {
-      display: none;
-    }
+    // span {
+    //   display: none;
+    // }
     &:hover {
       span {
         display: block;

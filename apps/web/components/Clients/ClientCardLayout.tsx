@@ -39,9 +39,11 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact) {
-      const customFields = customFieldData.custom.flatMap((thread) =>
-        thread.ManageCustomField.filter((thread) => thread.is_active)
-      )
+      const customFields = customFieldData.custom
+        .flatMap((thread) =>
+          thread?.ManageCustomField?.filter((thread) => thread.is_active)
+        )
+        .filter((thread) => thread)
 
       if (customFieldData.generalCustom.length > 0) {
         for (const general of customFieldData.generalCustom) {
@@ -50,7 +52,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
             general.field_type === 'multiple' ||
             general.field_type === 'list'
           ) {
-            if (general.ManageCustomFieldItem.length > 0) {
+            if (general?.ManageCustomFieldItem?.length > 0) {
               customFields.push(general)
             }
           } else {
