@@ -1,4 +1,4 @@
-query checkContactMedicalFrom($contactID: Int!) {
+query checkMedicalHistory($contactID: Int!) {
   form: findFirstMedicalFormContact(
     where: {
       Contact: { ID: { equals: $contactID } }
@@ -12,7 +12,6 @@ query checkContactMedicalFrom($contactID: Int!) {
     Form {
       id
       name
-      form_type
     }
   }
 }
