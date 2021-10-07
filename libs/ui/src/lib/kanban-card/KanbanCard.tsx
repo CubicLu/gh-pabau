@@ -5,8 +5,10 @@ import { Avatar } from '../avatar/Avatar'
 import * as Icons from '@ant-design/icons'
 import { Tag, Tooltip } from 'antd'
 import { CustomButton } from '../button/Button.stories'
+import KanbanCardSkeleton from './skeleton'
 
 export interface KanbanCardProps {
+  isLoading?: boolean
   leadTitle: string
   onLeadTitleClickHandler: () => void
   labels: string[]
@@ -20,6 +22,7 @@ export interface KanbanCardProps {
 }
 
 export const KanbanCard: FC<KanbanCardProps> = ({
+  isLoading,
   leadTitle,
   onLeadTitleClickHandler,
   labels,
@@ -95,6 +98,8 @@ export const KanbanCard: FC<KanbanCardProps> = ({
     )
   }
 
+  if (isLoading) return <KanbanCardSkeleton />
+
   return (
     <div
       className={styles.cardContent}
@@ -109,7 +114,7 @@ export const KanbanCard: FC<KanbanCardProps> = ({
 
       <div className={styles.labelAndBtn}>
         <div className={styles.labelsContent}>
-          {leadStatus !== `Open` && (
+          {leadStatus && ![`Open`, `Converted`].includes(leadStatus) && (
             <div className={styles.statusBtn}>
               <CustomButton
                 label={leadStatus}

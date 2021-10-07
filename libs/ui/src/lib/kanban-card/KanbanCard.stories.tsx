@@ -12,7 +12,7 @@ export default {
     onLeadTitleClickHandler: () => {
       return
     },
-    labels: ['#Label1', '#Label2'],
+    labels: ['#Label1', '#Label2', '#Label3'],
     leadOwnerName: 'Owner Name',
     leadOwnerImg: userImage,
     contactId: 'contact id',
