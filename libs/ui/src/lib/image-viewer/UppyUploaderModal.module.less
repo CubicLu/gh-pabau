@@ -122,14 +122,7 @@
         [data-uppy-acquirer-id~='Webcam'] {
           display: none;
         }
-        // .uppy-Webcam-buttonContainer {
-        //     display: flex;
-        //     justify-content: flex-end;
-        //     align-items: center;
-        //     > button:last-child {
-        //       display: none;
-        //     }
-        // }
+
         .uppy-Dashboard-innerWrap {
           border-radius: 0px !important;
           .uppy-DashboardContent-panel {
@@ -146,6 +139,10 @@
               }
             }
           }
+
+          .uppy-Informer {
+            bottom: 150px !important;
+          }
         }
         .uppy-DashboardContent-bar {
           display: none;
@@ -158,6 +155,10 @@
         .uppy-Dashboard-AddFiles-title {
           display: none;
         }
+      }
+
+      .addedImagesDiv {
+        z-index: 9999;
       }
     }
 
@@ -206,10 +207,9 @@
       background-repeat: no-repeat;
       background-size: cover;
       position: absolute;
-      z-index: 9999;
-      top: 0;
+      bottom: 0;
       width: 100%;
-      height: 100%;
+      height: fit-content;
 
       .addedImagesDivInner {
         position: relative;
@@ -258,7 +258,7 @@
               border-radius: 2px;
               width: 100%;
               height: 100%;
-              background-color: rgba(14, 9, 23, 0.4);
+              background-color: rgba(14, 9, 23, 0.25);
               display: flex;
               align-items: center;
               justify-content: center;
