@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://root:123@localhost:3307/pabau"
 }
 
 model TwoFactorHistory {
@@ -9814,7 +9814,7 @@ model PhotoAlbum {
 //
 model Pipeline {
   id              Int     @id @default(autoincrement())
-  company_id      Int
+  company_id      Int?
   name            String
   description     String
   status          Int     @default(0)
@@ -9822,22 +9822,29 @@ model Pipeline {
   note            String
   restrict_stages Boolean @default(false)
 
-  LeadStatus LeadStatus[]
+  LeadStatus    LeadStatus[]
+  PipelineStage PipelineStage[]
+  @@index([company_id], name: "company_id")
   @@map("pipeline")
 }
 
-//
-//model pipeline_stages {
-//  id               Int      @id @default(autoincrement())
-//  company_id       Int
-//  pipeline_id      Int
-//  name             String
-//  stage_order      Int      @default(0)
-//  custom_field_ids String
-//  note             String
-//  created_date     DateTime @default(now())
-//  updated_date     DateTime @default(now())
-//}
+model PipelineStage {
+  id               Int      @id @default(autoincrement())
+  company_id       Int?
+  pipeline_id      Int?
+  name             String
+  stage_order      Int      @default(0)
+  custom_field_ids String
+  note             String
+  created_date     DateTime @default(now())
+  updated_date     DateTime @default(now())
+
+  Pipeline Pipeline? @relation(fields: [pipeline_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@map("pipeline_stages")
+}
+
 //
 //model pipeline_stage_custom_fields {
 //  id                 Int      @id @default(autoincrement())

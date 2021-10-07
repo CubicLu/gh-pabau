@@ -8,7 +8,7 @@ export const Pipeline = objectType({
   name: 'Pipeline',
   definition(t) {
     t.int('id')
-    t.int('company_id')
+    t.nullable.int('company_id')
     t.string('name')
     t.string('description')
     t.int('status')
@@ -27,6 +27,20 @@ export const Pipeline = objectType({
       },
       resolve(root: any) {
         return root.LeadStatus
+      },
+    })
+    t.list.field('PipelineStage', {
+      type: 'PipelineStage',
+      args: {
+        where: 'PipelineStageWhereInput',
+        orderBy: 'PipelineStageOrderByWithRelationInput',
+        cursor: 'PipelineStageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PipelineStageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PipelineStage
       },
     })
     t.nullable.field('_count', {
