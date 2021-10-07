@@ -34,6 +34,20 @@ import {
   useCreateActivityFilterMutation,
   useUpdateActivityFilterMutation,
 } from '@pabau/graphql'
+import { v4 as uuidv4, validate as uuidValidate } from 'uuid'
+
+export interface FilterOptionItemType {
+  id: number
+  name: string
+  shared: boolean
+  userId: number
+  owner?: string
+  updated_at?: Date
+  isFilterOwner: boolean
+  columns: string[]
+  andFilterOption: FilterOptionType[]
+  orFilterOption: FilterOptionType[]
+}
 
 export interface FilterDataObjectType {
   name: string
@@ -55,6 +69,7 @@ export interface FilterOptionType {
   operand: string
   menuOption: string
 }
+
 export interface InitialValueTypes {
   id: number
   name: string
@@ -92,10 +107,16 @@ interface CreateFilterModalProps {
   upsertActiveColumn: MutationFunction
   setSelectFilterUser: (item: string[]) => void
   setFilterValue: (item: number) => void
+  setFilterGroupValue: (item: number) => void
   setActiveFilterId: (item: number) => void
   activeFilterId: number
   filterData: FilterDataProps
   setFilterDataObject: (value: FilterDataObjectType) => void
+  setFilterOption: (
+    value:
+      | FilterOptionItemType[]
+      | ((preValue: FilterOptionItemType[]) => FilterOptionItemType[])
+  ) => void
   data?: InitialValueTypes
 }
 const defaultValue: InitialValueTypes = {
@@ -240,6 +261,8 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   setActiveFilterId,
   activeFilterId,
   setFilterDataObject,
+  setFilterGroupValue,
+  setFilterOption,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
   const [initialValue, setInitialValue] = useState<InitialValueTypes>(
@@ -269,6 +292,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         const id = data?.createOneActivityUserFilters?.id
         setActiveFilterId(id)
         setFilterValue(undefined)
+        setFilterGroupValue(undefined)
         await upsertActiveColumn({
           variables: {
             userId: loggedUser?.user,
@@ -311,6 +335,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         const id = data?.updateOneActivityUserFilters?.id
         setActiveFilterId(id)
         setFilterValue(undefined)
+        setFilterGroupValue(undefined)
         await upsertActiveColumn({
           variables: {
             userId: loggedUser?.user,
@@ -426,7 +451,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         ? JSON.stringify({ columns: selectedColumn })
         : null,
     }
-    await (values.id
+    await (values.id && !uuidValidate(values.id)
       ? editMutation({
           variables: {
             id: values.id,
@@ -454,7 +479,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         }))
     setFilterDataObject({
       andFilterOption: values.andFilterOption,
-      column: selectedColumn,
+      column: values.saveFilter ? selectedColumn : null,
       name: values.name,
       orFilterOption: values.orFilterOption,
       shared: values.visibility === 'private' ? false : true,
@@ -463,45 +488,95 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   }
 
   const onDeleteFilter = async (values) => {
-    await deleteMutation({
-      variables: {
-        id: values.id,
-      },
-      optimisticResponse: {},
-      refetchQueries: [
-        {
-          query: FilterOptionForActivityDocument,
-          variables: {
-            userId: loggedUser.user,
-          },
-        },
-      ],
-    })
-    if (activeFilterId === values.id) {
-      setSelectFilterUser([])
-      await upsertActiveColumn({
-        variables: {
-          userId: loggedUser?.user,
-          companyId: loggedUser?.company,
-          update: {
-            user_filter: { set: 0 },
-            user_group_filter: { set: null },
-            custom_filter: { set: null },
-          },
-          create: {
-            User: {
-              connect: { id: loggedUser?.user },
-            },
-            Company: {
-              connect: { id: loggedUser?.company },
-            },
-            user_filter: 0,
-          },
-        },
+    if (uuidValidate(values.id)) {
+      setFilterOption((item) => {
+        const newItem = item.filter((record) => record.id !== values.id)
+        return newItem
       })
-      setFilterValue(0)
+      if (activeFilterId === values.id) {
+        setFilterValue(0)
+        setActiveFilterId(undefined)
+        setFilterDataObject(undefined)
+        setSelectFilterUser([])
+      }
+    } else {
+      await deleteMutation({
+        variables: {
+          id: values.id,
+        },
+        optimisticResponse: {},
+        refetchQueries: [
+          {
+            query: FilterOptionForActivityDocument,
+            variables: {
+              userId: loggedUser.user,
+            },
+          },
+        ],
+      })
+      if (activeFilterId === values.id) {
+        setSelectFilterUser([])
+        await upsertActiveColumn({
+          variables: {
+            userId: loggedUser?.user,
+            companyId: loggedUser?.company,
+            update: {
+              user_filter: { set: 0 },
+              user_group_filter: { set: null },
+              ActivityUserFilters: { disconnect: true },
+            },
+            create: {
+              User: {
+                connect: { id: loggedUser?.user },
+              },
+              Company: {
+                connect: { id: loggedUser?.company },
+              },
+              user_filter: 0,
+            },
+          },
+        })
+        setFilterDataObject(undefined)
+        setFilterValue(0)
+      }
     }
     setShowModal(false)
+  }
+
+  const onPreview = (values: InitialValueTypes, resetForm) => {
+    const shared = values.visibility === 'private' ? false : true
+    setFilterDataObject({
+      andFilterOption: values.andFilterOption,
+      column: values.saveFilter ? selectedColumn : null,
+      name: values.name,
+      orFilterOption: values.orFilterOption,
+      shared,
+    })
+    if (values.id) {
+      setActiveFilterId(values.id)
+    } else {
+      const id = uuidv4()
+      setActiveFilterId(id)
+      setFilterOption((item) => {
+        return [
+          ...item,
+          {
+            id: id,
+            name: values.name,
+            shared,
+            userId: loggedUser?.user,
+            isFilterOwner: true,
+            columns: values.saveFilter ? selectedColumn : null,
+            andFilterOption: values.andFilterOption,
+            orFilterOption: values.orFilterOption,
+          },
+        ]
+      })
+    }
+    setFilterValue(undefined)
+    setFilterGroupValue(undefined)
+    setShowModal(false)
+    resetForm()
   }
 
   return (
@@ -686,7 +761,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 <Button
                   type="default"
                   disabled={!values.isFilterOwner}
-                  className={classNames(!values.isFilterOwner, styles.disable)}
+                  className={classNames(
+                    !values.isFilterOwner && styles.disable
+                  )}
+                  onClick={() => onPreview(values, resetForm)}
                 >
                   {t('create.filter.modal.preview.button.label')}
                 </Button>

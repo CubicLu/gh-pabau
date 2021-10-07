@@ -33,25 +33,14 @@ import {
 import { PersonList, OptionList } from './FilterMenu'
 import {
   CreateFilterModal,
-  FilterOptionType,
   InitialValueTypes,
   FilterDataProps,
   FilterDataObjectType,
+  FilterOptionItemType,
 } from './CreateFilterModal'
 import Highlighter from 'react-highlight-words'
 import { TFunction } from 'react-i18next'
-
-interface FilterOptionItemType {
-  id: number
-  name: string
-  shared: boolean
-  owner: string
-  userId: number
-  updated_at: Date
-  columns: string[]
-  andFilterOption: FilterOptionType
-  orFilterOption: FilterOptionType
-}
+import { validate as uuidValidate } from 'uuid'
 
 interface ClientsHeaderProps {
   totalActivity: number
@@ -521,28 +510,30 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                   shared: item.shared,
                   column: item.columns,
                 })
-                await upsertActiveColumn({
-                  variables: {
-                    userId: loggedUser?.user,
-                    companyId: loggedUser?.company,
-                    update: {
-                      user_filter: { set: null },
-                      user_group_filter: { set: null },
-                      ActivityUserFilters: { connect: { id: item.id } },
+                if (!uuidValidate(item.id)) {
+                  await upsertActiveColumn({
+                    variables: {
+                      userId: loggedUser?.user,
+                      companyId: loggedUser?.company,
+                      update: {
+                        user_filter: { set: null },
+                        user_group_filter: { set: null },
+                        ActivityUserFilters: { connect: { id: item.id } },
+                      },
+                      create: {
+                        User: {
+                          connect: { id: loggedUser?.user },
+                        },
+                        Company: {
+                          connect: { id: loggedUser?.company },
+                        },
+                        ActivityUserFilters: {
+                          connect: { id: item.id },
+                        },
+                      },
                     },
-                    create: {
-                      User: {
-                        connect: { id: loggedUser?.user },
-                      },
-                      Company: {
-                        connect: { id: loggedUser?.company },
-                      },
-                      ActivityUserFilters: {
-                        connect: { id: item.id },
-                      },
-                    },
-                  },
-                })
+                  })
+                }
               }}
             >
               <div>{item.shared ? <UnlockOutlined /> : <LockOutlined />}</div>
@@ -725,10 +716,12 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             upsertActiveColumn={upsertActiveColumn}
             setSelectFilterUser={setSelectFilterUser}
             setFilterValue={setFilterValue}
+            setFilterGroupValue={setFilterGroupValue}
             setActiveFilterId={setActiveFilterId}
             activeFilterId={activeFilterId}
             filterData={filterData}
             setFilterDataObject={setFilterDataObject}
+            setFilterOption={setFilterOption}
           />
         </div>
       )

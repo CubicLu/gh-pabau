@@ -214,9 +214,7 @@ export const ActivityQuery = extendType({
             (await prepareFilterQuery(where?.filterOption?.orFilterOption, ctx))
           const andQuery = []
           const orQuery = []
-          if (prepareSearchQuery) {
-            orQuery.push(...prepareSearchQuery)
-          } else if (prepareAndFilterQuery) {
+          if (prepareAndFilterQuery) {
             andQuery.push(...prepareAndFilterQuery)
           }
           if (prepareOrFilterQuery) {
@@ -225,6 +223,7 @@ export const ActivityQuery = extendType({
           const graphData = await retrieveActivityGraphData(
             ctx,
             where,
+            prepareSearchQuery,
             andQuery,
             orQuery
           )
@@ -243,6 +242,9 @@ export const ActivityQuery = extendType({
                 ...andQuery,
                 {
                   OR: orQuery,
+                },
+                {
+                  OR: prepareSearchQuery,
                 },
               ],
             },
@@ -370,6 +372,9 @@ export const ActivityQuery = extendType({
                   ...andQuery,
                   {
                     OR: orQuery,
+                  },
+                  {
+                    OR: prepareSearchQuery,
                   },
                 ],
               },

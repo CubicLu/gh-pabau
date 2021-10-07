@@ -56,6 +56,7 @@ const manageOperandBasedOnColumn = {
 export const retrieveActivityGraphData = async (
   ctx: Context,
   where,
+  searchQuery,
   andQuery,
   orQuery
 ) => {
@@ -75,6 +76,9 @@ export const retrieveActivityGraphData = async (
         ...andQuery,
         {
           OR: orQuery,
+        },
+        {
+          OR: searchQuery,
         },
       ],
     },

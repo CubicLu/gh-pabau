@@ -14514,11 +14514,6 @@ enum company_details_tax_name {
   GST
 }
 
-enum filter_type {
-  Owner
-  Filter
-}
-
 enum company_services_deposit_type {
   amount
   percent
