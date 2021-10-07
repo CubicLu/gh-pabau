@@ -236,6 +236,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     filterDataObject,
     setFilterDataObject,
   ] = useState<FilterDataObjectType>()
+  const [userColumns, setUserColumns] = useState<string[]>([])
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
@@ -516,6 +517,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
       }
       setUserFilterData(temp)
       setUserActiveColumn(column)
+      setUserColumns(column)
     }
   }, [activityActiveResponse])
 
@@ -1131,7 +1133,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
             totalActivity={paginateData.total}
             searchText={searchText}
             setSearchText={setSearchText}
-            createActivityVisible={createActivityVisible}
             toggleCreateActivityModal={toggleCreateActivityModal}
             selectFilterUser={selectFilterUser}
             setSelectFilterUser={setSelectFilterUser}
@@ -1142,6 +1143,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
             filterData={userFilterData}
             selectedColumn={selectedColumn}
             setFilterDataObject={setFilterDataObject}
+            userColumns={userColumns}
+            setUserActiveColumn={setUserActiveColumn}
           />
         )}
         <div>
@@ -1191,6 +1194,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             totalActivity={paginateData.total}
             searchText={searchText}
             setSearchText={setSearchText}
+            toggleCreateActivityModal={toggleCreateActivityModal}
             selectFilterUser={selectFilterUser}
             setSelectFilterUser={setSelectFilterUser}
             personsList={personsList}
@@ -1200,6 +1204,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
             filterData={userFilterData}
             selectedColumn={selectedColumn}
             setFilterDataObject={setFilterDataObject}
+            userColumns={userColumns}
+            setUserActiveColumn={setUserActiveColumn}
           />
         )}
         {/* <div className={styles.subHeader}>
