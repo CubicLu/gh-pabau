@@ -1,0 +1,18 @@
+query checkContactMedicalFrom($contactID: Int!) {
+  form: findFirstMedicalFormContact(
+    where: {
+      Contact: { ID: { equals: $contactID } }
+      Form: { form_type: { equals: "questionnaire" } }
+    }
+  ) {
+    id
+    created_at
+    complete
+    priority
+    Form {
+      id
+      name
+      form_type
+    }
+  }
+}
