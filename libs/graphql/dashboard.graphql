@@ -1,11 +1,15 @@
 query getDashboardData(
     $start_date: Decimal
     $end_date: Decimal
+    $user_id: Int
+    $location_id: Int
   ) {
     dashboardData(
       data: {
         start_date: $start_date
         end_date: $end_date
+        user_id: $user_id
+        location_id: $location_id
       }
     ){
       bookingStatusCount{

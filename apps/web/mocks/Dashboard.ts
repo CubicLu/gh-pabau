@@ -1,6 +1,6 @@
 export const locationList = [
   {
-    key: 'All-location',
+    key: 0,
     label: 'All Locations',
     select: true,
   },

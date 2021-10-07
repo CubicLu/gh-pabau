@@ -19,6 +19,8 @@ import {
 export interface DateRangeInput {
   start_date?: number
   end_date?: number
+  location_id?: number
+  user_id?: number
 }
 
 export const dashboardData = extendType({

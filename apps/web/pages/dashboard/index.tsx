@@ -31,7 +31,7 @@ import {
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 interface ISetUser {
-  key: string
+  key: number
   label: string
   date?: string
   select: boolean
@@ -49,7 +49,7 @@ export function Index() {
   const [dashboardMode, setDashboardMode] = useState(0)
   const [userListData, setUserListData] = useState<ISetUser[]>(locationList)
   const [location, setLocation] = useState<ISetUser>({
-    key: '',
+    key: 0,
     label: '',
     date: '',
     select: false,
@@ -85,34 +85,33 @@ export function Index() {
   })
   const { data: locations } = useQuery(GetCompanyLocationListDocument, {
     variables: {
-      company_id: user?.me?.company,
       is_active: 1,
     },
   })
-
   const getAppointmentQueryVariables = useMemo(() => {
     const queryOptions = {
-      variables:
-        filterRange !== 'All records'
-          ? {
-              start_date: dayjs(new Date(`${filterDate[0]}`)).format(
-                'YYYYMMDDHHmmss'
-              ),
-              end_date: dayjs(new Date(`${filterDate[1]}`)).format(
-                'YYYYMMDDHHmmss'
-              ),
-            }
-          : null,
+      variables: {
+        start_date:
+          filterRange !== 'All records'
+            ? dayjs(new Date(`${filterDate[0]}`)).format('YYYYMMDDHHmmss')
+            : null,
+        end_date:
+          filterRange !== 'All records'
+            ? dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss')
+            : null,
+        location_id:
+          dashboardMode === 1 || location.key === 0 ? null : location?.key,
+        user_id: dashboardMode === 1 ? user?.me?.user : 0,
+      },
     }
     return queryOptions
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterDate])
+  }, [filterDate, location, dashboardMode])
 
   const { data: appointmentStatus, loading } = useQuery(
     GetDashboardDataDocument,
     getAppointmentQueryVariables
   )
-
   useEffect(() => {
     setAppointment(
       appointmentStatus?.dashboardData?.bookingStatusCount?.appointmentList ??
@@ -155,7 +154,7 @@ export function Index() {
     if (locations && userListData.length === 1) {
       locations.findManyCompanyBranch?.map((item) => {
         List.push({
-          key: item.name,
+          key: item.id,
           label: item.name,
           select: false,
         })
@@ -174,14 +173,14 @@ export function Index() {
   const handleSelectMenu = (selectedUser) => {
     const List = [...userListData]
     List.map((item) => {
-      if (item.key === selectedUser) {
+      if (item.label === selectedUser) {
         item.select = true
       } else {
         item.select = false
       }
       return item
     })
-    const record = List.find((item) => item.key === selectedUser)
+    const record = List.find((item) => item.label === selectedUser)
     setLocation(record)
     setUserListData(List)
     setOpenUserList(false)
@@ -194,7 +193,7 @@ export function Index() {
           return (
             <Menu.Item
               key={menu.key}
-              onClick={() => handleSelectMenu(menu.key)}
+              onClick={() => handleSelectMenu(menu.label)}
             >
               <div
                 className={menu.select === true ? styles.select : styles.menu}
@@ -515,7 +514,7 @@ export function Index() {
               return (
                 <Menu.Item
                   key={menu.key}
-                  onClick={() => handleSelectMenu(menu.key)}
+                  onClick={() => handleSelectMenu(menu.label)}
                 >
                   <div
                     className={

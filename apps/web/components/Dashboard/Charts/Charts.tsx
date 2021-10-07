@@ -8,7 +8,7 @@ import { columns } from '../../../mocks/Dashboard'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 interface ILocation {
-  key: string
+  key: number
   label: string
   date?: string
   select: boolean
@@ -67,7 +67,7 @@ export const Charts: FC<ICharts> = ({
         marker: {
           lineWidth: 2,
           fillColor: 'white',
-          lineColor: '#54B2D3',
+          lineColor: '',
           symbol: 'circle',
         },
       })
@@ -95,8 +95,8 @@ export const Charts: FC<ICharts> = ({
         data: [0, 0, 0, 0],
         type: 'line',
         marker: {
-          lineColor: '#54B2D3',
-          color: '#54B2D3',
+          lineColor: '',
+          color: '',
         },
       })
       return item
@@ -351,6 +351,7 @@ export const Charts: FC<ICharts> = ({
                     fallbackLng: 'en',
                   })
                 }
+                scroll={{ y: 580 }}
                 pagination={false}
               />
             ) : (
@@ -390,6 +391,7 @@ export const Charts: FC<ICharts> = ({
                     fallbackLng: 'en',
                   })
                 }
+                scroll={{ y: 580 }}
                 pagination={false}
               />
             ) : (

@@ -1417,20 +1417,19 @@ export const retrieveRetailSalesData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  let ratailData = []
-  if (data.start_date && data.end_date) {
-    ratailData = await ctx.prisma
-      .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
+  const ratailData = await ctx.prisma
+    .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
     INNER JOIN inv_sales b on a.sale_id=b.id
-    where b.date BETWEEN ${data.start_date} and ${data.end_date} and a.product_category_type="retail" and product_category_type not in ('') and a.product_id>0
+    where ${
+      data.start_date && data.end_date
+        ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date} and`
+        : Prisma.empty
+    } a.product_category_type="retail" and product_category_type not in ('') and a.product_id>0 ${
+    data.location_id
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}
     GROUP BY a.product_category_name`
-  } else {
-    ratailData = await ctx.prisma
-      .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
-    INNER JOIN inv_sales b on a.sale_id=b.id
-    where a.product_category_type="retail" and product_category_type not in ('') and a.product_id>0
-    GROUP BY a.product_category_name`
-  }
 
   const total = ratailData?.reduce((prev, cur) => {
     return prev + cur['SUM(b.total)'] ?? 0
@@ -1468,20 +1467,19 @@ export const retrieveServiceSalesData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  let serviceData = []
-  if (data.start_date && data.end_date) {
-    serviceData = await ctx.prisma
-      .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
+  const serviceData = await ctx.prisma
+    .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
     INNER JOIN inv_sales b on a.sale_id=b.id
-    where b.date BETWEEN ${data.start_date} and ${data.end_date} and a.product_category_type="service" and product_category_type not in ('') and a.product_id>0
+    where ${
+      data.start_date && data.end_date
+        ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date} and`
+        : Prisma.empty
+    } a.product_category_type="service" and product_category_type not in ('') and a.product_id>0 ${
+    data.location_id
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}
     GROUP BY a.product_category_name`
-  } else {
-    serviceData = await ctx.prisma
-      .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
-    INNER JOIN inv_sales b on a.sale_id=b.id
-    where a.product_category_type="service" and product_category_type not in ('') and a.product_id>0
-    GROUP BY a.product_category_name`
-  }
   const total = serviceData?.reduce((prev, cur) => {
     return prev + cur['SUM(b.total)'] ?? 0
   }, 0)

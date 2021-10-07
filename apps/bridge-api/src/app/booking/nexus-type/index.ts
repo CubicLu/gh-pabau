@@ -5,6 +5,8 @@ export const DashboardInputType = inputObjectType({
   definition(t) {
     t.decimal('start_date')
     t.decimal('end_date')
+    t.int('location_id')
+    t.int('user_id')
   },
 })
 const CountDetails = objectType({
