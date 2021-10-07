@@ -10,7 +10,6 @@ import BookingConfirmation from '../../components/BookingConfirmationStep/Bookin
 import EmployeeSelector from '../../components/EmployeeStep/EmployeeSelector'
 import DateTimeSelector from '../../components/DateTimeStep/DateTimeSelector'
 import styles from './index.module.less'
-import moment from 'moment'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useCreateAppointmentMutation } from '@pabau/graphql'
@@ -19,12 +18,6 @@ import { BookingData } from '../../types/booking'
 import { SettingsContext } from '../../context/settings-context'
 
 export function Index() {
-  // CRAP
-  const [back, Setback] = useState(false)
-  const [view, Setview] = useState(true)
-
-  // FIXED
-  const [language, setLanguage] = useState('en')
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [selectedData, setSelectedData] = useState<BookingData>()
   const { t } = useTranslationI18()
@@ -39,11 +32,6 @@ export function Index() {
       //I am not empty
     },
   })
-
-  const rech = () => {
-    setCurrentStep(currentStep + 1)
-    Setback(true)
-  }
 
   const goBackButton = () => {
     let buttonName = ''
@@ -87,7 +75,7 @@ export function Index() {
         back={() => {
           setCurrentStep(currentStep - 1)
         }}
-        visible={(back || !view) && currentStep <= 7}
+        visible={currentStep > 0 && currentStep <= 7}
       />
 
       <div className={styles.mainBody}>
@@ -192,11 +180,11 @@ export function Index() {
           {/*  </div>*/}
           {/*)}*/}
           {currentStep === 8 && <BookingConfirmation />}
-          {currentStep === 9 && <div></div>}
+          {currentStep === 9 && <div>&nbsp;</div>}
         </div>
       </div>
 
-      <Footer select={(value) => setLanguage(value)} />
+      <Footer />
     </div>
   )
 }

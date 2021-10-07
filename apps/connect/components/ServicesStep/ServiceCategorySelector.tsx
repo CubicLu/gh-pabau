@@ -57,6 +57,7 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
       (row) => row.id === selectedData.masterCategoryID
     )
   }
+
   return (
     <div className={styles.consultation}>
       {showMasterCategories ? (

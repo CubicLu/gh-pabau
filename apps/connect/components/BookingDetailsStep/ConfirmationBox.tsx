@@ -1,8 +1,7 @@
 import React, { FC } from 'react'
 import { Button } from '@pabau/ui'
 import styles from './ConfirmationBox.module.less'
-import { Verification, RenderProduct } from './Verification'
-import { tooltip } from '../../mocks/confirmMock'
+import { Verification } from './Verification'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 
@@ -85,28 +84,9 @@ const ConfirmationBox: FC<ConformationProps> = ({
     <div className={styles.confirmMainWrapper}>
       <div className={styles.contentWrap}>
         <h6>{t('connect.onlinebooking.conformation.conform.title')}</h6>
-        <Verification
-          clinic={clinic}
-          docname={docname}
-          date={date}
-          time={time}
-          charge={
-            type === 'Laser'
-              ? course()
-              : String(
-                  ((Number(charge) + products.Sprice + products.Pprice) *
-                    (100 - products.extra)) /
-                    100
-                )
-          }
-          address={address}
-          image={image}
-          type={type}
-          clickable={true}
-          backToStep={backToStep}
-        />
+        <Verification backToStep={backToStep} />
         {}
-        <RenderProduct products={products} type={type} tooltip={tooltip} />
+        {/*<RenderProduct products={products} type={type} tooltip={tooltip} />*/}
         {submitBtn && products.Scount > 0 && (
           <div className={styles.footerStick}>
             {services === 1 ? `1 service` : `${services} services`}

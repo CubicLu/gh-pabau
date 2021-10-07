@@ -5,7 +5,6 @@ import img4 from '../../web/assets/images/connect/Lip.png'
 import Mois from '../../web/assets/images/connect/product.png'
 import Helico from '../../web/assets/images/Heliocare.jpg'
 import sup from '../../web/assets/images/super-c30.jpg'
-import hydra from '../../web/assets/images/Hydra-b5.jpeg'
 
 export const tooltip =
   'This package will give you credits to book two appointments: a Baseline scan with face-to-face consultation and a follow-up Progress scan.\n' +
@@ -71,6 +70,6 @@ export const normaldata = [
     name: 'Hydra B5',
     active: false,
     price: 120,
-    image: hydra,
+    image: sup,
   },
 ]

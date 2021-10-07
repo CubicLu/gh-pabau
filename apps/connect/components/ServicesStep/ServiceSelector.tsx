@@ -62,6 +62,9 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
     },
   })
 
+  if (errorServices) return <div>Error!</div>
+  if (loadingServices) return <div>Loading...</div>
+
   // EVENT HANDLERS
 
   // RENDER HELPERS
@@ -100,23 +103,21 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
 
     const isSelected =
       selectedData.services.findIndex((service) => service.id === val.id) > -1
-        ? true
-        : false
     return (
       <div style={{ width: '100%', marginBottom: '16px' }}>
         <div
           className={styles.consultationCard}
           key={val.id}
-          onClick={(e) => {
-            let newSelectedServices = []
+          onClick={() => {
+            let newSelectedServices
             if (isSelected) {
               newSelectedServices = selectedData.services.filter(
                 (el) => el.id !== val.id
               )
-              setTotalEstimate(totalEstimate - Number.parseFloat(val.price))
+              setTotalEstimate(totalEstimate - val.price)
             } else {
               newSelectedServices = [...selectedData.services, val]
-              setTotalEstimate(totalEstimate + Number.parseFloat(val.price))
+              setTotalEstimate(totalEstimate + val.price)
             }
             setSelectedData(
               actionTypes.SET_SELECTED_SERVICES,
@@ -189,7 +190,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
 
                 <span
                   className={styles.consultationReview}
-                  onClick={(e) => {
+                  onClick={() => {
                     setPreviewService(val)
                     setShowReviewsModal(true)
                   }}
@@ -286,8 +287,8 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
       </div>
     )
   }
-  const renderServices = (category: Category | undefined) => {
-    if (typeof category === 'undefined') {
+  const renderServices = (category: Category | null) => {
+    if (category) {
       category = servicesCategorised.Public_MasterCategories.find(
         (item) =>
           item.id === selectedData.masterCategoryID ||
@@ -305,8 +306,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
       typeof category?.Public_Services.find(
         (s) => s.online_only_service === 1
       ) !== 'undefined'
-        ? true
-        : false
+
     return (
       <div>
         <div className={styles.custCard}>
@@ -359,6 +359,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
       </div>
     )
   }
+
   const renderCategoryItem = (category: Category) => {
     const isCurrentCategory = category.id === selectedData.categoryID
     return (
@@ -570,7 +571,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
               </div>
             </div>
           </div>
-          {!isMobile && renderServices()}
+          {!isMobile && renderServices(null)}
         </div>
       </div>
       {(selectedData.services.length > 0 || Vcount > 0) && (
@@ -601,7 +602,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
           closeModalHandler={() => {
             setShowServiceInfoModal(false)
           }}
-        ></ServiceInfoModal>
+        />
       )}
       {showReviewsModal && (
         <ServiceReviewsModal
@@ -609,7 +610,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
           closeModalHandler={() => {
             setShowReviewsModal(false)
           }}
-        ></ServiceReviewsModal>
+        />
       )}
     </>
   )

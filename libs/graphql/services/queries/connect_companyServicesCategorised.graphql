@@ -1,11 +1,9 @@
 query companyServicesCategorised($company_id: Int!) {
   Public_MasterCategories(where: {company_id: $company_id}) {
-    company_id
     id
     image
     name
     Public_ServiceCategories {
-      company_id
       id
       cat_order
       group_color
@@ -13,17 +11,17 @@ query companyServicesCategorised($company_id: Int!) {
       image
       name
       Public_Services {
-        price
-        online_only_service
-        online_book
-        name
-        max_clients
         id
+        name
         friendly_name
         duration
+        price
+        online_book
+        online_only_service
+        rating
+        max_clients
         disabled_locations
         disabled_users
-        rating
         Public_SocialSurveyFeedback {
           date
           feedback_comment

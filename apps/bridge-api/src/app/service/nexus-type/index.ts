@@ -7,7 +7,6 @@ export const PublicMasterCategoryResponse = objectType({
   name: 'PublicMasterCategoryResponse',
   definition(t) {
     t.int('id')
-    t.int('company_id')
     t.string('image')
     t.string('name')
     t.string('type')
@@ -33,7 +32,6 @@ export const PublicServiceCategoryResponse = objectType({
   name: 'PublicServiceCategoryResponse',
   definition(t) {
     t.int('id')
-    t.int('company_id')
     t.string('name')
     t.int('cat_order')
     t.string('image')
