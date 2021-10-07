@@ -11,7 +11,7 @@ import {
   UndoOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
-import { TabMenu, Avatar, Button } from '@pabau/ui'
+import { TabMenu, Avatar, Button, ClientData } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { Popover, Tooltip, Badge, Input, Skeleton } from 'antd'
 import { useMedia } from 'react-use'
@@ -34,8 +34,7 @@ export interface ClientHeaderDetailsProps {
   notesCount: ClientNotesCount
   notesCountLoading: boolean
   getContactDetails: () => void
-  handleEditClientNote: () => void
-  handleDeleteClientNote: (e: number) => void
+  client: ClientData
 }
 
 export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
@@ -43,8 +42,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   notesCount,
   notesCountLoading,
   getContactDetails,
-  handleEditClientNote,
-  handleDeleteClientNote,
+  client,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -68,6 +66,41 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     setAppointmentItems(notes?.appointments)
     if (notesCount) setCountDetails(notesCount)
   }, [notes, notesCount])
+
+  const handleAddNote = (e) => {
+    e.preventDefault()
+    if (note !== '') {
+      const items: ClientNoteDetails[] = [
+        {
+          content: note,
+          date: dayjs().format('YYYY-MM-DD hh:mm A'),
+          user: {
+            client: client?.fullName || '',
+            avatar: client?.avatar || '',
+          },
+        },
+        ...noteItems,
+      ]
+      setNoteItems(items)
+      setNote('')
+    }
+  }
+
+  const handleEditClientNote = () => {
+    const notes = [...noteItems]
+    if (currentNote) notes[currentClientNote].content = currentNote
+    setNoteItems(notes)
+    setCurrentNote('')
+    setCurrentClientNote(-1)
+  }
+
+  const handleDeleteClientNote = (index) => {
+    const notes = [...noteItems]
+    notes.splice(index, 1)
+    setNoteItems(notes)
+    setCurrentNote('')
+    setCurrentClientNote(-1)
+  }
 
   const medicalHistoryPopover = (
     <>
@@ -238,7 +271,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                     placeholder="Take a note, @name"
                     autoFocus
                     onChange={(e) => setNote(e.target.value)}
-                    // onPressEnter={(e) => handleAddNote(e)}
+                    onPressEnter={(e) => handleAddNote(e)}
                     style={{ marginBottom: '8px' }}
                   />
                 </div>
@@ -313,19 +346,18 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           content={clientNotesPopover}
           overlayClassName={styles.clientCardHeaderPopover}
         >
-          <Tooltip title="Notes">
-            <Badge
-              count={countDetails?.notes + countDetails?.appointments}
-              overflowCount={9}
-              size="small"
-              style={{ backgroundColor: 'var(--primary-color)' }}
-            >
-              <Note
-                className={styles.headerOpsIcon}
-                onClick={() => getContactDetails()}
-              />
-            </Badge>
-          </Tooltip>
+          <div onClick={() => getContactDetails()}>
+            <Tooltip title="Notes">
+              <Badge
+                count={countDetails?.notes + countDetails?.appointments}
+                overflowCount={9}
+                size="small"
+                style={{ backgroundColor: 'var(--primary-color)' }}
+              >
+                <Note className={styles.headerOpsIcon} />
+              </Badge>
+            </Tooltip>
+          </div>
         </Popover>
       </div>
       <div className={styles.clientCardHeaderOp}>

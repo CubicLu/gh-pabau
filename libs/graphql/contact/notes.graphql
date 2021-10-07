@@ -1,6 +1,6 @@
 query getContactHeader($id: Int!) {
   notes: findUniqueCmContact(where: { ID: $id }) {
-    contactNotes: ContactNote(
+    contact: ContactNote(
       where: { Note: { not: { equals: "" } } }
       orderBy: { CreatedDate: desc }
     ) {
@@ -24,7 +24,7 @@ query getContactHeader($id: Int!) {
 }
 
 query getClientNotesCount($id: Int!) {
-  count: findUniqueCmContact(where: { ID: $id }) {
+  count: findFirstCmContact(where: { ID: { equals: $id }}) {
     notes: ContactNote(
       where: { Note: { not: { equals: "" } } }
       orderBy: { CreatedDate: desc }

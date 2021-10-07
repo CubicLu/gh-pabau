@@ -136,13 +136,11 @@ export interface ClientAppointmentDetails {
 export interface ClientNotes {
   notes: ClientNoteDetails[]
   appointments: ClientAppointmentDetails[]
-  // staffAlerts: ClientNoteDetails[]
 }
 
 export interface ClientNotesCount {
   notes: number
   appointments: number
-  // staff: number
 }
 
 interface P {
@@ -905,8 +903,7 @@ const ClientCardModal: FC<P> = ({
                   notesCount={notesCount}
                   notesCountLoading={notesCountLoading}
                   getContactDetails={getContactDetails}
-                  handleEditClientNote={handleEditClientNote}
-                  handleDeleteClientNote={handleDeleteClientNote}
+                  client={client}
                 />
               )}
             </div>

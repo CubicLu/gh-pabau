@@ -22,25 +22,30 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const [notesCountData, setNotesCountData] = useState(null)
 
   const getQueryVariables = useMemo(() => {
-    const queryOptions = {
-      skip: !router.query['id'],
-      ssr: false,
+    return {
       variables: { id: clientId },
     }
-    return queryOptions
-  }, [clientId, router.query])
+  }, [clientId])
 
-  const { data } = useBasicContactDetailsQuery(getQueryVariables)
+  const { data } = useBasicContactDetailsQuery({
+    skip: !router.query['id'],
+    ssr: false,
+    ...getQueryVariables,
+  })
+
+  const { data: countData } = useGetClientNotesCountQuery({
+    skip: !router.query['id'],
+    ssr: false,
+    ...getQueryVariables,
+  })
 
   const [
     getContactDetails,
     { data: contactDetails, loading: notesCountLoading },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
-    variables: { id: clientId },
+    ...getQueryVariables,
   })
-
-  const { data: countData } = useGetClientNotesCountQuery(getQueryVariables)
 
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
@@ -113,9 +118,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     if (contactDetails?.notes) {
       setContactData(() => {
         return {
-          notes: getContactNotesWithUrl(contactDetails?.notes[0]?.contact),
+          notes: getContactNotesWithUrl(contactDetails?.notes?.contact),
           appointments: getContactNotesWithUrl(
-            contactDetails?.notes[0]?.appointment
+            contactDetails?.notes?.appointment
           ),
         }
       })
@@ -126,8 +131,8 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     if (countData?.count) {
       setNotesCountData(() => {
         return {
-          notes: countData?.count[0]?.notes?.length || 0,
-          appointments: countData?.count[0]?.appointments?.length || 0,
+          notes: countData?.count?.notes?.length || 0,
+          appointments: countData?.count?.appointments?.length || 0,
         }
       })
     }
