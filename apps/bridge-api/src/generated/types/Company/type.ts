@@ -1743,6 +1743,62 @@ export const Company = objectType({
         return root.Album
       },
     })
+    t.list.field('InsurerContract', {
+      type: 'InsurerContract',
+      args: {
+        where: 'InsurerContractWhereInput',
+        orderBy: 'InsurerContractOrderByWithRelationInput',
+        cursor: 'InsurerContractWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InsurerContractScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsurerContract
+      },
+    })
+    t.list.field('Voucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Voucher
+      },
+    })
+    t.list.field('Package', {
+      type: 'Package',
+      args: {
+        where: 'PackageWhereInput',
+        orderBy: 'PackageOrderByWithRelationInput',
+        cursor: 'PackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Package
+      },
+    })
+    t.list.field('InsuranceContractPrice', {
+      type: 'InsuranceContractPrice',
+      args: {
+        where: 'InsuranceContractPriceWhereInput',
+        orderBy: 'InsuranceContractPriceOrderByWithRelationInput',
+        cursor: 'InsuranceContractPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InsuranceContractPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsuranceContractPrice
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

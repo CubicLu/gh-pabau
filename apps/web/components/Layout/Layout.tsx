@@ -36,7 +36,6 @@ const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,
   requireAdminAccess = false,
-  handleSearch,
   ...props
 }) => {
   const { me, login, logout } = useUser()
@@ -148,18 +147,24 @@ const Layout: FC<LayoutProps> = ({
         onMessageIconClick={() => setShowChat((e) => !e)}
         legacyContent={!!legacyPage}
         taskManagerIFrameComponent={<TaskManagerIFrame />}
-        clientCreateRender={() => <ClientCreate />}
-        leadCreateRender={() => <LeadCreate />}
+        clientCreateRender={(handleClose) => (
+          <ClientCreate handleClose={handleClose} />
+        )}
+        leadCreateRender={(handleClose) => (
+          <LeadCreate handleClose={handleClose} />
+        )}
         {...props}
       >
         <CommonHeader
           showChat={showChat}
           title="Pabau"
           isShowSearch={true}
-          onChatClick={() => setShowChat((e) => !e)}
-          clientCreateRender={() => <ClientCreate />}
-          leadCreateRender={() => <LeadCreate />}
-          handleSearch={handleSearch}
+          clientCreateRender={(handleClose) => (
+            <ClientCreate handleClose={handleClose} />
+          )}
+          leadCreateRender={(handleClose) => (
+            <LeadCreate handleClose={handleClose} />
+          )}
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
         {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}

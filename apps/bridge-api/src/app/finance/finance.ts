@@ -52,18 +52,27 @@ export const findManyFinanceInvoice = async (
       location: item.location,
       invDate: item.invDate,
       customer:
-        item.contractId > 0 && item.customerId === 0 ? 'N/A' : item.debtor,
-      debtor: item.contractId !== 0 ? item.insurerName : item.debtor,
+        item.contractId > 0 && item.customerId === 0
+          ? 'N/A'
+          : item.customerName
+          ? item.customerName
+          : item.debtor,
+      debtor:
+        item.contractId !== 0
+          ? item.insurerName
+          : item.customerName
+          ? item.customerName
+          : item.debtor,
       payment: calculateStatus(
         item.paidAmount,
         item.total,
         item.discountAmount
       ),
-      net: totalNet.toFixed(2),
-      gst: totalVat.toFixed(2),
-      gross: item.total.toFixed(2),
-      paid: item.paidAmount.toFixed(2),
-      balance: item.outstanding.toFixed(2),
+      net: totalNet?.toFixed(2),
+      gst: totalVat?.toFixed(2),
+      gross: item.total?.toFixed(2),
+      paid: item.paidAmount?.toFixed(2),
+      balance: item.outstanding?.toFixed(2),
       tooltip: calculateTooltipMessage(
         item.xero_status,
         item.xero_response,
@@ -103,6 +112,7 @@ const retrieveInvoices = async (
   return await ctx.prisma.$queryRaw<InvoiceQueryResult[]>`SELECT sales.id,
     sales.custom_id AS invoiceNo,
     sales.customer_name AS debtor,
+    concat_ws(' ', cmContact.Fname, cmContact.Lname) AS customerName,
     sales.insurer_contract_id AS contractId,
     insurance.insurer_name as insurerName,
     sales.customer_id AS customerId,
@@ -123,6 +133,7 @@ const retrieveInvoices = async (
     }
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     LEFT JOIN insurance_details AS insurance ON insurance.id = sales.insurer_contract_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     ${
@@ -151,7 +162,7 @@ const retrieveInvoices = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     AND sales.guid!='' AND sales.guid IS NOT NULL
@@ -286,6 +297,7 @@ export const invoiceCount = async (
   return await ctx.prisma.$queryRaw<FinanceCountQueryResult[]>`SELECT sales.id
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
@@ -308,7 +320,7 @@ export const invoiceCount = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     AND sales.guid!='' AND sales.guid IS NOT NULL
@@ -335,6 +347,7 @@ export const findManyFinancePayment = async (
 
   return data.map((item) => ({
     ...item,
+    customer: item.customerName ? item.customerName : item.customer,
     amount: item.amount.toFixed(2),
   }))
 }
@@ -353,11 +366,13 @@ const retrievePayments = async (
     loc.name AS location,
     sales.date AS invDate,
     sales.customer_name AS customer,
+    concat_ws(' ', cmContact.Fname, cmContact.Lname) AS customerName,
     p.amount AS amount,
     p.pmethod AS payment,
     u.full_name AS user
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     INNER JOIN inv_payments p ON p.invoice=sales.id
     INNER JOIN users u ON u.id = p.uid
     WHERE sales.occupier = ${ctx.authenticated.company}
@@ -381,7 +396,7 @@ const retrievePayments = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm} OR p.id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm} OR p.id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     GROUP BY IFNULL(sales.guid, sales.id)
@@ -397,6 +412,7 @@ export const paymentCount = async (
   return await ctx.prisma.$queryRaw<FinanceCountQueryResult[]>`SELECT p.id
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     INNER JOIN inv_payments p ON p.invoice=sales.id
     INNER JOIN users u ON u.id = p.uid
     WHERE sales.occupier = ${ctx.authenticated.company}
@@ -420,7 +436,7 @@ export const paymentCount = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm} OR p.id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm} OR p.id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     GROUP BY IFNULL(sales.guid, sales.id)`
@@ -461,8 +477,17 @@ export const findManyFinanceDebt = async (
       location: item.location,
       invDate: item.invDate,
       customer:
-        item.contractId > 0 && item.customerId === 0 ? 'N/A' : item.debtor,
-      debtor: item.contractId !== 0 ? item.insurerName : item.debtor,
+        item.contractId > 0 && item.customerId === 0
+          ? 'N/A'
+          : item.customerName
+          ? item.customerName
+          : item.debtor,
+      debtor:
+        item.contractId !== 0
+          ? item.insurerName
+          : item.customerName
+          ? item.customerName
+          : item.debtor,
       payment: calculateStatus(
         item.paidAmount,
         item.total,
@@ -499,6 +524,7 @@ const retrieveDebts = async (
     sales.insurer_contract_id AS contractId,
     sales.customer_id AS customerId,
     sales.customer_name AS debtor,
+    concat_ws(' ', cmContact.Fname, cmContact.Lname) AS customerName,
     insurance.insurer_name as insurerName,
     SUM(sales.total) AS total,
     SUM(sales.credit_amount) AS creditAmount,
@@ -515,6 +541,7 @@ const retrieveDebts = async (
     }
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     LEFT JOIN insurance_details AS insurance ON insurance.id = sales.insurer_contract_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     ${
@@ -543,7 +570,7 @@ const retrieveDebts = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     AND sales.guid!='' AND sales.guid IS NOT NULL
@@ -561,6 +588,7 @@ export const debtCount = async (
   return await ctx.prisma.$queryRaw<FinanceCountQueryResult[]>`SELECT sales.id
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
@@ -583,7 +611,7 @@ export const debtCount = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     AND sales.guid!='' AND sales.guid IS NOT NULL
@@ -650,8 +678,17 @@ export const findManyFinanceCreditNote = async (
     location: item.location,
     creditDate: item.invDate,
     customer:
-      item.contractId > 0 && item.customerId === 0 ? 'N/A' : item.debtor,
-    debtor: item.contractId !== 0 ? item.insurerName : item.debtor,
+      item.contractId > 0 && item.customerId === 0
+        ? 'N/A'
+        : item.customerName
+        ? item.customerName
+        : item.debtor,
+    debtor:
+      item.contractId !== 0
+        ? item.insurerName
+        : item.customerName
+        ? item.customerName
+        : item.debtor,
     invoiceNo: item.invoiceNo,
     total: item.total.toFixed(2),
     type: item.creditNoteType,
@@ -677,6 +714,7 @@ const retrieveCreditNotes = async (
   return await ctx.prisma.$queryRaw<CreditNoteQueryResult[]>`SELECT sales.id,
     sales.custom_id AS creditNo,
     sales.customer_name AS debtor,
+    concat_ws(' ', cmContact.Fname, cmContact.Lname) AS customerName,
     sales.insurer_contract_id AS contractId,
     sales.customer_id AS customerId,
     cnt.name AS creditNoteType,
@@ -690,6 +728,7 @@ const retrieveCreditNotes = async (
     xjobs.modified_at AS xero_modifiedAt
     FROM inv_sales AS sales
     LEFT JOIN credit_note_type AS cnt ON cnt.id = sales.credit_type
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     LEFT JOIN insurance_details AS insurance ON insurance.id = sales.insurer_contract_id
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
@@ -714,7 +753,7 @@ const retrieveCreditNotes = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     ${
@@ -737,6 +776,7 @@ export const creditNoteCount = async (
   return await ctx.prisma.$queryRaw<FinanceCountQueryResult[]>`SELECT sales.id
     FROM inv_sales AS sales
     LEFT JOIN credit_note_type AS cnt ON cnt.id = sales.credit_type
+    LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     WHERE sales.occupier = ${ctx.authenticated.company}
@@ -760,7 +800,7 @@ export const creditNoteCount = async (
     }
     ${
       input.searchTerm
-        ? Prisma.sql`AND (sales.customer_name LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
+        ? Prisma.sql`AND (IF(sales.insurer_contract_id = 0 && sales.customer_id = 0, sales.customer_name, concat_ws(' ', cmContact.Fname, cmContact.Lname)) LIKE ${input.searchTerm} OR sales.custom_id LIKE ${input.searchTerm})`
         : Prisma.empty
     }
     ${

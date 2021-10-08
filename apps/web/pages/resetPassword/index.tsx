@@ -136,40 +136,6 @@ const Index: FC = () => {
                   label={
                     !loading ? (
                       data?.findFirstPasswordResetAuth ? (
-                        t('reset.company.name.title', {
-                          fallbackLng: 'en',
-                        })
-                      ) : null
-                    ) : (
-                      <Skeleton.Input
-                        active
-                        style={{ width: '150px' }}
-                        size={'small'}
-                      />
-                    )
-                  }
-                  name={'companyName'}
-                  className={styles.Input}
-                >
-                  {!loading ? (
-                    data?.findFirstPasswordResetAuth ? (
-                      <Input
-                        name={'companyName'}
-                        value={
-                          data?.findFirstPasswordResetAuth?.User?.CompanyDetails
-                            ?.company_name
-                        }
-                        disabled
-                      />
-                    ) : null
-                  ) : (
-                    <Skeleton.Input active className={styles.Input} />
-                  )}
-                </Form.Item>
-                <Form.Item
-                  label={
-                    !loading ? (
-                      data?.findFirstPasswordResetAuth ? (
                         t('reset.username.title', {
                           fallbackLng: 'en',
                         })

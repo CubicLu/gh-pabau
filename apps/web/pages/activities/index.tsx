@@ -31,6 +31,7 @@ import {
   useFindFirstActivityUserColumnsQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
+import { PlusSquareFilled } from '@ant-design/icons'
 dayjs.extend(utc)
 
 const { TabPane } = Tabs
@@ -1060,9 +1061,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
         <CommonHeader
           title={t('activityList.header')}
           isShowSearch={false}
-          displayCreateButton={true}
-          handleCreate={toggleCreateActivityModal}
-          displayActivity={true}
+          displayActivity={paginateData?.total > 0}
           renderActivity={
             <div className={styles.activitiesCircle}>
               {paginateData?.total > 0 && (
@@ -1074,7 +1073,14 @@ export const Index: FC<IndexProps> = ({ client }) => {
               )}
             </div>
           }
-        />
+        >
+          <div className={styles.createPlusIcon}>
+            <PlusSquareFilled
+              className={styles.plusIconStyle}
+              onClick={toggleCreateActivityModal}
+            />
+          </div>
+        </CommonHeader>
         {!isMobile && (
           <ActivitiesHeader
             totalActivity={paginateData.total}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   AvatarList,
   Button,
@@ -31,10 +31,10 @@ import Invoice from '../../components/Account/Invoice'
 import Payments from '../../components/Account/Payments'
 import Debt from '../../components/Account/Debt'
 import CreditNote from '../../components/Account/CreditNote'
+import CommonHeader from '../../components/CommonHeader'
 import { FilterValueType } from '../../components/Account/TableLayout'
 import styles from './accounts.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
 import { Formik } from 'formik'
 import { useUser } from '../../context/UserContext'
@@ -43,6 +43,7 @@ import {
   useIssuingCompaniesQuery,
   useCreditNoteTypesLazyQuery,
 } from '@pabau/graphql'
+import stringToCurrencySignConverter from '../../helper/stringToCurrencySignConverter'
 
 interface FilterList {
   id: number
@@ -54,6 +55,7 @@ const WAIT_INTERVAL = 400
 export function Account() {
   const [showModal, setShowModal] = useState(false)
   const user = useUser()
+  const accountRef = useRef(null)
 
   const { t } = useTranslationI18()
   const tabMenuItems = [
@@ -468,9 +470,36 @@ export function Account() {
   }
 
   return (
-    <React.Fragment>
-      <CommonHeader />
+    <div ref={accountRef}>
       <Layout active={'account'} {...user}>
+        <CommonHeader
+          isShowSearch
+          searchInputPlaceHolder={searchPlaceHoler[activeTab]}
+          handleSearch={(value) => setSearchValue(value)}
+          title={t('account.finance.title')}
+          searchValue={searchValue}
+        >
+          <Dropdown
+            overlay={dateRange}
+            placement="bottomRight"
+            trigger={['click']}
+            visible={showDateFilter}
+            onVisibleChange={(val) => setShowDateFilter(val)}
+          >
+            <CalendarOutlined className={styles.marketingIconStyle} />
+          </Dropdown>
+
+          <Popover
+            trigger="click"
+            content={renderFilter}
+            placement="bottomRight"
+            overlayClassName={styles.filterPopOver}
+            visible={isPopOverVisible}
+            onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+          >
+            <FilterOutlined className={styles.marketingIconStyle} />
+          </Popover>
+        </CommonHeader>
         <div
           className={classNames(styles.desktopHeader, styles.mobileViewNone)}
         >
@@ -489,6 +518,7 @@ export function Account() {
                 onChange={(item) => {
                   setSearchValue(item)
                 }}
+                searchValue={searchValue}
               />
             </div>
             <Dropdown
@@ -545,38 +575,49 @@ export function Account() {
             </Popover>
           </div>
         </div>
+
         <Divider style={{ margin: 0 }} />
-        <TabMenu
-          tabPosition="top"
-          menuItems={tabMenuItems}
-          tabBarStyle={{ backgroundColor: '#FFF' }}
-          onTabClick={(activeKey) => setActiveTab(activeKey)}
-        >
-          <Invoice
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <Payments
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <Debt
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <CreditNote
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-        </TabMenu>
+        <div className={styles.tabWrapper}>
+          <TabMenu
+            tabPosition="top"
+            menuItems={tabMenuItems}
+            tabBarStyle={{ backgroundColor: '#FFF' }}
+            onTabClick={(activeKey) => setActiveTab(activeKey)}
+          >
+            <Invoice
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+            <Payments
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+            <Debt
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+            <CreditNote
+              searchTerm={searchTerm}
+              selectedDates={filterDate}
+              filterValue={filterValues}
+              selectedRange={filterRange}
+              accountRef={accountRef}
+              companyCurrency={stringToCurrencySignConverter(user.me?.currency)}
+            />
+          </TabMenu>
+        </div>
         <Modal
           title={t('account.finance.send.reminder.modal.title')}
           visible={showModal}
@@ -595,7 +636,7 @@ export function Account() {
           />
         </Modal>
       </Layout>
-    </React.Fragment>
+    </div>
   )
 }
 

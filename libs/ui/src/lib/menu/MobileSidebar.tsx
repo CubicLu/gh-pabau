@@ -37,6 +37,7 @@ interface P {
   clientCreateRender?: () => JSX.Element
   leadCreateRender?: () => JSX.Element
   userData: Partial<AuthenticatedUser> & JwtUser
+  onLogout?: () => void
 }
 
 export const MobileSidebar: FC<P> = ({
@@ -46,6 +47,7 @@ export const MobileSidebar: FC<P> = ({
   onClickChatDrawer,
   clientCreateRender,
   leadCreateRender,
+  onLogout,
   userData,
 }) => {
   const { t } = useTranslation('common')
@@ -183,6 +185,7 @@ export const MobileSidebar: FC<P> = ({
             userData={userData}
             isOpen={openProfileDrawer}
             onCloseDrawer={() => setProfileDrawer((e) => !e)}
+            onLogOut={onLogout}
           />
         )}
         <div className={styles.buttonMenu}>
