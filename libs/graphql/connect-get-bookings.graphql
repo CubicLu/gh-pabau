@@ -21,11 +21,17 @@ query GetClientAppointments(
     service
     start_date
     end_date
+    feedback_survey_scheduled: sent_survey
+    sms_reminder_scheduled: sent_sms
+    email_reminder_scheduled: sent_email_reminder
+    email_confirmation_sent: sent_email
+    note: title
     CompanyBranch {
       address
       street
       postcode
       city
+      name
     }
     where
   }

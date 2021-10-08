@@ -16,7 +16,7 @@ const NextAppointments = () => {
   return (
     <div className={styles.nextAppointmentContainer}>
       <TickerTile
-        items={data?.findFirstCmContact.Booking.map(
+        items={data?.findFirstCmContact?.Booking.map(
           //TODO: add image, title, description to the query and re-run `yarn` then remove the ": any"
           ({ id, image, title, description }: any) => (
             <div

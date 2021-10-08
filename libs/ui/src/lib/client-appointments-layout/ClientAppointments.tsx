@@ -16,6 +16,7 @@ import {
   Divider,
   Drawer,
   Button,
+  Skeleton,
 } from 'antd'
 import {
   FilterOutlined,
@@ -34,6 +35,7 @@ import { CheckboxValueType } from 'antd/lib/checkbox/Group'
 import User1 from '../../assets/images/user1.png'
 import User5 from '../../assets/images/user5.png'
 import User9 from '../../assets/images/user9.png'
+import dayjs from 'dayjs'
 
 interface Employee {
   avatar: string
@@ -46,7 +48,7 @@ export interface ClientAppointmentItem {
   serviceName: string
   employee: Employee
   otherEmployees?: Employee[]
-  status: AppointmentStatus
+  status: AppointmentStatus | string
   locationName: string
   createdDate: string
   apptDate: string
@@ -60,6 +62,7 @@ export interface ClientAppointmentItem {
 
 interface P {
   appointments?: ClientAppointmentItem[]
+  loading: boolean
 }
 
 //TODO: remove these dummy funcctions
@@ -79,7 +82,7 @@ const editNote = (
   c: unknown = undefined
 ) => console.log('TODO')
 
-export const ClientAppointments = ({ appointments }: P) => {
+export const ClientAppointments = ({ appointments, loading }: P) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const personList = [
@@ -249,7 +252,7 @@ export const ClientAppointments = ({ appointments }: P) => {
               }
               checkList={tempPersonFilter}
               counter={
-                appointments?.filter((el) => item.name === el.employee.name)
+                appointments?.filter((el) => item.name === el?.employee?.name)
                   .length
               }
             />
@@ -470,6 +473,16 @@ export const ClientAppointments = ({ appointments }: P) => {
   //   }
   // }, [showFilterDrawer])
 
+  const renderAppointmentSkeleton = () => {
+    return [1, 2, 3, 4, 5].map((i) => {
+      return (
+        <div key={i} className={styles.appointmentSkeleton}>
+          <Skeleton avatar active paragraph={{ rows: 1 }} />
+        </div>
+      )
+    })
+  }
+
   return (
     <div className={styles.clientLayout} ref={ref}>
       {appointments && (
@@ -495,7 +508,9 @@ export const ClientAppointments = ({ appointments }: P) => {
             <div className={styles.appointmentTab}>
               {appointments.length > 0 && appointmentTabHeader}
               {isMobile && appointmentsFilterDrawer}
-              {appointments.length > 0 &&
+              {loading && renderAppointmentSkeleton()}
+              {!loading &&
+                appointments.length > 0 &&
                 serviceFilter.length === 0 &&
                 personFilter.length === 0 &&
                 statusFilter.length === 0 &&
@@ -506,7 +521,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                     {appointments.filter(
                       (el) =>
                         el.status !== AppointmentStatus.cancelled &&
-                        el.apptDate > moment(new Date()).format('YYYY-MM-DD')
+                        el.apptDate > dayjs().format()
                     ).length > 0 && (
                       <>
                         <Divider className={styles.nowDivider}>
@@ -515,34 +530,39 @@ export const ClientAppointments = ({ appointments }: P) => {
                             appointments.filter(
                               (el) =>
                                 el.status !== AppointmentStatus.cancelled &&
-                                el.apptDate >
-                                  moment(new Date()).format('YYYY-MM-DD')
+                                el.apptDate > dayjs().format()
                             ).length
                           })`}
                         </Divider>
-                        {appointments.map((item, index) => {
-                          if (
-                            item.status !== AppointmentStatus.cancelled &&
-                            item.apptDate >
-                              moment(new Date()).format('YYYY-MM-DD')
-                          ) {
+                        {appointments
+                          .sort((appt1, appt2) => {
                             return (
-                              <ClientAppointmentCard
-                                {...item}
-                                index={index}
-                                key={`all-bookings-${index}`}
-                                handleDelete={() => deleteAppointment(index)}
-                                handleEditNotes={(index, value) =>
-                                  editNote(index, value)
-                                }
-                                handleCancel={(index) =>
-                                  handleCancelAppointment(index)
-                                }
-                              />
+                              +new Date(appt2.apptDate) -
+                              +new Date(appt1.apptDate)
                             )
-                          }
-                          return null
-                        })}
+                          })
+                          .map((item, index) => {
+                            if (
+                              item.status !== AppointmentStatus.cancelled &&
+                              item.apptDate > dayjs().format()
+                            ) {
+                              return (
+                                <ClientAppointmentCard
+                                  {...item}
+                                  index={index}
+                                  key={`all-bookings-${index}`}
+                                  handleDelete={() => deleteAppointment(index)}
+                                  handleEditNotes={(index, value) =>
+                                    editNote(index, value)
+                                  }
+                                  handleCancel={(index) =>
+                                    handleCancelAppointment(index)
+                                  }
+                                />
+                              )
+                            }
+                            return null
+                          })}
                       </>
                     )}
                     <Divider className={styles.nowDivider}>
@@ -551,33 +571,38 @@ export const ClientAppointments = ({ appointments }: P) => {
                         appointments.filter(
                           (el) =>
                             el.status !== AppointmentStatus.cancelled &&
-                            el.apptDate <
-                              moment(new Date()).format('YYYY-MM-DD')
+                            el.apptDate < dayjs().format()
                         ).length
                       })`}
                     </Divider>
-                    {appointments.map((item, index) => {
-                      if (
-                        item.status !== AppointmentStatus.cancelled &&
-                        item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                      ) {
+                    {appointments
+                      .sort((appt1, appt2) => {
                         return (
-                          <ClientAppointmentCard
-                            {...item}
-                            index={index}
-                            key={`all-bookings-${index}`}
-                            handleDelete={() => deleteAppointment(index)}
-                            handleEditNotes={(index, value) =>
-                              editNote(index, value)
-                            }
-                            handleCancel={(index) =>
-                              handleCancelAppointment(index)
-                            }
-                          />
+                          +new Date(appt2.apptDate) - +new Date(appt1.apptDate)
                         )
-                      }
-                      return null
-                    })}
+                      })
+                      .map((item, index) => {
+                        if (
+                          item.status !== AppointmentStatus.cancelled &&
+                          item.apptDate < dayjs().format()
+                        ) {
+                          return (
+                            <ClientAppointmentCard
+                              {...item}
+                              index={index}
+                              key={`all-bookings-${index}`}
+                              handleDelete={() => deleteAppointment(index)}
+                              handleEditNotes={(index, value) =>
+                                editNote(index, value)
+                              }
+                              handleCancel={(index) =>
+                                handleCancelAppointment(index)
+                              }
+                            />
+                          )
+                        }
+                        return null
+                      })}
                   </div>
                 )}
               {appointments.length > 0 &&
@@ -900,7 +925,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                   }
                   return null
                 })}
-              {appointments.length === 0 && (
+              {!loading && appointments.length === 0 && (
                 <div className={styles.emptyContent}>
                   <div className={styles.iconWrapper}>
                     <CalendarOutlined style={{ fontSize: '40px' }} />
@@ -924,7 +949,9 @@ export const ClientAppointments = ({ appointments }: P) => {
             <div className={styles.appointmentTab}>
               {appointments.length > 0 && appointmentTabHeader}
               {isMobile && appointmentsFilterDrawer}
-              {appointments.length > 0 &&
+              {loading && renderAppointmentSkeleton()}
+              {!loading &&
+                appointments.length > 0 &&
                 serviceFilter.length === 0 &&
                 personFilter.length === 0 &&
                 statusFilter.length === 0 &&
@@ -932,25 +959,31 @@ export const ClientAppointments = ({ appointments }: P) => {
                 endDate === '' &&
                 nowFilter === FilterRadioValue.none && (
                   <div className={styles.appointmentTabBody}>
-                    {appointments.map((item, index) => {
-                      if (item.status === AppointmentStatus.cancelled) {
+                    {appointments
+                      .sort((appt1, appt2) => {
                         return (
-                          <ClientAppointmentCard
-                            {...item}
-                            index={index}
-                            key={`all-bookings-${index}`}
-                            handleDelete={() => deleteAppointment(index)}
-                            handleEditNotes={(index, value) =>
-                              editNote(index, value)
-                            }
-                            handleCancel={(index) =>
-                              handleCancelAppointment(index)
-                            }
-                          />
+                          +new Date(appt2.apptDate) - +new Date(appt1.apptDate)
                         )
-                      }
-                      return null
-                    })}
+                      })
+                      .map((item, index) => {
+                        if (item.status === AppointmentStatus.cancelled) {
+                          return (
+                            <ClientAppointmentCard
+                              {...item}
+                              index={index}
+                              key={`all-bookings-${index}`}
+                              handleDelete={() => deleteAppointment(index)}
+                              handleEditNotes={(index, value) =>
+                                editNote(index, value)
+                              }
+                              handleCancel={(index) =>
+                                handleCancelAppointment(index)
+                              }
+                            />
+                          )
+                        }
+                        return null
+                      })}
                   </div>
                 )}
               {appointments.length > 0 &&
@@ -1273,7 +1306,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                   }
                   return null
                 })}
-              {appointments.length === 0 && (
+              {!loading && appointments.length === 0 && (
                 <div className={styles.emptyContent}>
                   <div className={styles.iconWrapper}>
                     <CloseCircleOutlined style={{ fontSize: '40px' }} />
@@ -1287,7 +1320,9 @@ export const ClientAppointments = ({ appointments }: P) => {
             <div className={styles.appointmentTab}>
               {appointments.length > 0 && appointmentTabHeader}
               {isMobile && appointmentsFilterDrawer}
-              {appointments.length > 0 &&
+              {loading && renderAppointmentSkeleton()}
+              {!loading &&
+                appointments.length > 0 &&
                 serviceFilter.length === 0 &&
                 personFilter.length === 0 &&
                 statusFilter.length === 0 &&
@@ -1295,25 +1330,31 @@ export const ClientAppointments = ({ appointments }: P) => {
                 endDate === '' &&
                 nowFilter === FilterRadioValue.none && (
                   <div className={styles.appointmentTabBody}>
-                    {appointments.map((item, index) => {
-                      if (item.status === AppointmentStatus.noShow) {
+                    {appointments
+                      .sort((appt1, appt2) => {
                         return (
-                          <ClientAppointmentCard
-                            {...item}
-                            index={index}
-                            key={`all-bookings-${index}`}
-                            handleDelete={() => deleteAppointment(index)}
-                            handleEditNotes={(index, value) =>
-                              editNote(index, value)
-                            }
-                            handleCancel={(index) =>
-                              handleCancelAppointment(index)
-                            }
-                          />
+                          +new Date(appt2.apptDate) - +new Date(appt1.apptDate)
                         )
-                      }
-                      return null
-                    })}
+                      })
+                      .map((item, index) => {
+                        if (item.status === AppointmentStatus.noShow) {
+                          return (
+                            <ClientAppointmentCard
+                              {...item}
+                              index={index}
+                              key={`all-bookings-${index}`}
+                              handleDelete={() => deleteAppointment(index)}
+                              handleEditNotes={(index, value) =>
+                                editNote(index, value)
+                              }
+                              handleCancel={(index) =>
+                                handleCancelAppointment(index)
+                              }
+                            />
+                          )
+                        }
+                        return null
+                      })}
                   </div>
                 )}
               {appointments.length > 0 &&
@@ -1636,7 +1677,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                   }
                   return null
                 })}
-              {appointments.length === 0 && (
+              {!loading && appointments.length === 0 && (
                 <div className={styles.emptyContent}>
                   <div className={styles.iconWrapper}>
                     <UserDeleteImg />
