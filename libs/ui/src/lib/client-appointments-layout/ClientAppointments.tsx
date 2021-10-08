@@ -63,7 +63,7 @@ export interface ClientAppointmentItem {
 
 interface P {
   appointments?: ClientAppointmentItem[]
-  loading: boolean
+  loading?: boolean
 }
 
 //TODO: remove these dummy funcctions
