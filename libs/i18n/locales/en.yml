@@ -884,8 +884,9 @@ en:
   ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
   ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
   ui.gp-search.yourPractice: 'Your practice'
-  ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are
-          currently registered as a patient'
+  ui.gp-search.yourPracticeMessage:
+    'Supply a a postcode or the name of the practice where you are
+    currently registered as a patient'
   ui.gp-search.searchInput.placeholder: 'Enter a postcode or search by the name'
   ui.gp-search.searchInput.addPracticeManually: 'Add practice manually'
   ui.gp-search.searchInput.setAsPracticeButton: 'Set as a practice'
@@ -5065,6 +5066,7 @@ en:
   client.appointments.cancelled.empty.message: 'No cancelled appointments'
   client.appointments.no.show.empty.message: 'No show appointments are empty'
   client.appointment.card.pop.delete.appointment: 'Delete Appointment'
+  client.appointment.card.booked.by.message: 'Booked by {{bookedBy}}, on {{date}} at {{time}}'
   client.appointment.card.pop.join.with.pabau.video: 'Join with Pabau video'
   client.appointment.card.pop.resend.confirmation: 'Resend Confirmation'
   client.appointment.card.pop.cancel: 'Cancel'

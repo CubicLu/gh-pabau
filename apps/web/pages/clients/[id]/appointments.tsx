@@ -53,7 +53,7 @@ const Appointments = () => {
               appt.status &&
               getAppointmentStatus(appt?.status?.toLocaleLowerCase()),
             locationName: appt?.CompanyBranch?.name,
-            createdDate: '2021-06-30T20:15:01Z',
+            createdDate: '2021-06-25T20:15:01Z',
             apptDate: dayjs(appt?.start_date?.toString()).format(),
             isVirtual: true,
             smsReminder: appt?.sms_reminder_scheduled === 1 ? true : false,
@@ -61,6 +61,7 @@ const Appointments = () => {
             remindersSent: appt?.email_confirmation_sent === 1 ? true : false,
             notes: appt?.note,
             isVideoCall: 1,
+            bookedBy: 'William Brandham',
           }
         }
       )

@@ -58,6 +58,7 @@ export interface ClientAppointmentItem {
   remindersSent: boolean
   notes?: string
   isVideoCall: number
+  bookedBy: string
 }
 
 interface P {
