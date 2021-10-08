@@ -2609,6 +2609,7 @@ model CmLead {
   latest_interaction       DateTime?
   location_id              Int?                     @default(0)
   need_to_knows            Int?                     @default(1)
+  pipeline_stage_id        Int?
   Company                  Company                  @relation(fields: [company_id], references: [id])
   CmLeadCustomField        CmLeadCustomField[]
   CommunicationRecipient   CommunicationRecipient[]
@@ -2617,6 +2618,7 @@ model CmLead {
   Activity                 Activity[]
   MarketingSource          MarketingSource?         @relation(fields: [LeadSource], references: [id])
   LeadStatusData           LeadStatus?              @relation(fields: [LeadStatus], references: [id])
+  PipelineStage            PipelineStage?           @relation(fields: [pipeline_stage_id], references: [id])
 
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
@@ -9821,6 +9823,7 @@ model Pipeline {
   services_ids    String
   note            String
   restrict_stages Boolean @default(false)
+  reference       String?
 
   LeadStatus    LeadStatus[]
   PipelineStage PipelineStage[]
@@ -9840,7 +9843,7 @@ model PipelineStage {
   updated_date     DateTime @default(now())
 
   Pipeline Pipeline? @relation(fields: [pipeline_id], references: [id])
-
+  CmLead   CmLead[]
   @@index([company_id], name: "company_id")
   @@map("pipeline_stages")
 }

@@ -15,6 +15,7 @@ export const Pipeline = objectType({
     t.string('services_ids')
     t.string('note')
     t.boolean('restrict_stages')
+    t.nullable.string('reference')
     t.list.field('LeadStatus', {
       type: 'LeadStatus',
       args: {
