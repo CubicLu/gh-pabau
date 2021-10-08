@@ -320,7 +320,7 @@ model Company {
   Voucher                Voucher[]
   Package                Package[]
   InsuranceContractPrice InsuranceContractPrice[]
-  ContactAttachment ContactAttachment[]
+  ContactAttachment      ContactAttachment[]
   @@map("admin")
 }
 
