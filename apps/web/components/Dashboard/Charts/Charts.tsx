@@ -6,6 +6,8 @@ import { ICount } from '../TopBoard/TopBoard'
 import styles from './Charts.module.less'
 import { columns } from '../../../mocks/Dashboard'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { useUser } from '../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 interface ILocation {
   key: number
@@ -56,6 +58,7 @@ export const Charts: FC<ICharts> = ({
   loading,
 }) => {
   const { t } = useTranslationI18()
+  const user = useUser()
   const List = []
   if (salesData && salesData.length > 0) {
     salesData.map((item) => {
@@ -92,7 +95,7 @@ export const Charts: FC<ICharts> = ({
       List.push({
         name: item,
         allowPointSelect: true,
-        data: [0, 0, 0, 0],
+        data: [(0, 0, 0, 0)],
         type: 'line',
         marker: {
           lineColor: '',
@@ -118,6 +121,7 @@ export const Charts: FC<ICharts> = ({
         color: '#3D3D46',
         fontWeight: 'normal',
         fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+        textTransform: 'capitalize',
       },
     },
     yAxis: [
@@ -127,6 +131,9 @@ export const Charts: FC<ICharts> = ({
           text: '',
         },
         labels: {
+          format: `${stringToCurrencySignConverter(
+            user.me?.currency
+          )}${'{value}'}`,
           style: {
             fontSize: '14px',
             fontStyle: 'normal',
@@ -221,6 +228,7 @@ export const Charts: FC<ICharts> = ({
         color: '#3D3D46',
         fontWeight: 'normal',
         fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+        textTransform: 'capitalize',
       },
     },
     xAxis: {
@@ -270,6 +278,7 @@ export const Charts: FC<ICharts> = ({
             <div className={styles.chartsWrap}>
               <div className={styles.chartsHeader}>
                 {!loading ? (
+                  stringToCurrencySignConverter(user.me?.currency) +
                   totalSalesCount.count
                 ) : (
                   <Skeleton.Input active className={styles.titleSkeleton} />
@@ -345,7 +354,14 @@ export const Charts: FC<ICharts> = ({
             {!loading ? (
               <Table
                 columns={columns}
-                dataSource={productDetails}
+                dataSource={productDetails?.map((d) => {
+                  return {
+                    ...d,
+                    value:
+                      stringToCurrencySignConverter(user.me?.currency) +
+                      d.value,
+                  }
+                })}
                 title={() =>
                   t('dashboard.product.table.label', {
                     fallbackLng: 'en',
@@ -385,7 +401,14 @@ export const Charts: FC<ICharts> = ({
             {!loading ? (
               <Table
                 columns={columns}
-                dataSource={serviceDetails}
+                dataSource={serviceDetails?.map((d) => {
+                  return {
+                    ...d,
+                    value:
+                      stringToCurrencySignConverter(user.me?.currency) +
+                      d.value,
+                  }
+                })}
                 title={() =>
                   t('dashboard.service.table.label', {
                     fallbackLng: 'en',

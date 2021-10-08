@@ -7,6 +7,8 @@ export const DashboardInputType = inputObjectType({
     t.decimal('end_date')
     t.int('location_id')
     t.int('user_id')
+    t.decimal('prev_start_date')
+    t.decimal('prev_end_date')
   },
 })
 const CountDetails = objectType({
@@ -35,6 +37,7 @@ const SalesCount = objectType({
   definition(t) {
     t.string('totalAvailableCategoryTypePer')
     t.int('totalAvailableCategoryTypeCount')
+    t.float('totalAvailableCategoryTypeAmount')
     t.list.field('salesList', { type: CountDetails })
   },
 })

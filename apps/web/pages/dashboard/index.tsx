@@ -21,7 +21,6 @@ import { Menu, Dropdown, Drawer, Col, Row, Select, Skeleton } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
 import { locationList, dateRangeList } from '../../mocks/Dashboard'
-import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { ICount } from '../../components/Dashboard/TopBoard/TopBoard'
 import {
   defaultAppointmentList,
@@ -29,6 +28,7 @@ import {
   defaultSalesList,
 } from '../../mocks/Dashboard'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { cdnURL } from '../../../web/baseUrl'
 
 interface ISetUser {
   key: number
@@ -56,6 +56,7 @@ export function Index() {
   })
   const [selectedRange, setSelectedRange] = useState<string>('This month')
   const [filterRange, setFilterRange] = useState<string>('This Month')
+  const [previousRange, setPreviousRange] = useState<string>('Previous month')
   const [selectedDates, setSelectedDates] = useState<[Dayjs, Dayjs]>([
     dayjs().startOf('month'),
     dayjs(),
@@ -101,12 +102,12 @@ export function Index() {
             : null,
         location_id:
           dashboardMode === 1 || location.key === 0 ? null : location?.key,
-        user_id: dashboardMode === 1 ? user?.me?.user : 0,
+        user_id: dashboardMode === 1 ? user?.me?.user : null,
       },
     }
     return queryOptions
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterDate, location, dashboardMode])
+  }, [dashboardMode, filterDate, location])
 
   const { data: appointmentStatus, loading } = useQuery(
     GetDashboardDataDocument,
@@ -141,7 +142,7 @@ export function Index() {
     setTotalSalesCount({
       count:
         appointmentStatus?.dashboardData?.salesCount
-          ?.totalAvailableCategoryTypeCount,
+          ?.totalAvailableCategoryTypeAmount,
       per:
         appointmentStatus?.dashboardData?.salesCount
           ?.totalAvailableCategoryTypePer,
@@ -219,6 +220,7 @@ export function Index() {
     switch (value) {
       case 'Today': {
         setSelectedDates([dayjs().startOf('day'), dayjs().endOf('day')])
+        setPreviousRange('Previous day')
         break
       }
       case 'Yesterday': {
@@ -226,10 +228,12 @@ export function Index() {
           dayjs().subtract(1, 'day'),
           dayjs().subtract(1, 'day'),
         ])
+        setPreviousRange('Previous day')
         break
       }
       case 'This Week': {
         setSelectedDates([dayjs().day(1), dayjs()])
+        setPreviousRange('Previous week')
         break
       }
       case 'Last Week': {
@@ -237,10 +241,12 @@ export function Index() {
           dayjs().subtract(1, 'weeks').day(1),
           dayjs().subtract(1, 'weeks').day(6),
         ])
+        setPreviousRange('Previous week')
         break
       }
       case 'This Month': {
         setSelectedDates([dayjs().startOf('month'), dayjs()])
+        setPreviousRange('Previous month')
         break
       }
       case 'Last Month': {
@@ -248,10 +254,12 @@ export function Index() {
           dayjs().subtract(1, 'month').startOf('month'),
           dayjs().subtract(1, 'months').endOf('month'),
         ])
+        setPreviousRange('Previous month')
         break
       }
       case 'This Year': {
         setSelectedDates([dayjs().startOf('year'), dayjs()])
+        setPreviousRange('Previous year')
         break
       }
       case 'Last Year': {
@@ -259,6 +267,7 @@ export function Index() {
           dayjs().subtract(1, 'year').startOf('year'),
           dayjs().subtract(1, 'year').endOf('year'),
         ])
+        setPreviousRange('Previous year')
         break
       }
     }
@@ -297,6 +306,11 @@ export function Index() {
           disabledDate={(current) => {
             return current > dayjs().endOf('day')
           }}
+          format={
+            user?.me?.companyDateFormat === 'd/m/Y'
+              ? 'DD/MM/YYYY'
+              : 'MM/DD/YYYY'
+          }
           disabled={selectedRange.toString() !== 'custom'}
           onChange={(val) => {
             setSelectedDates(val)
@@ -329,8 +343,6 @@ export function Index() {
     </div>
   )
 
-  console.log('user?.me?.full_name', user)
-
   return (
     <div>
       <Layout active={'dashboard'}>
@@ -354,11 +366,17 @@ export function Index() {
         <div className={styles.dashboardWrapper}>
           <div className={styles.topWrapper}>
             <div className={styles.userBlock}>
-              {!loading ? (
-                <Avatar size="large" src={getImage(user?.me?.imageUrl)} />
-              ) : (
-                <Skeleton.Avatar size={'large'} shape={'circle'} />
-              )}
+              <Avatar
+                size="large"
+                src={
+                  dashboardMode === 0
+                    ? user?.me?.companies?.length > 0
+                      ? cdnURL + user?.me?.companies[0]?.logo
+                      : ''
+                    : cdnURL + user?.me?.imageUrl
+                }
+                isLoading={loading}
+              />
               <div className={styles.detailBlock}>
                 {!loading ? (
                   <>
@@ -454,7 +472,9 @@ export function Index() {
                     )} - ${Intl.DateTimeFormat('en').format(
                       new Date(`${filterDate[1]}`)
                     )}`
-                  : filterRange
+                  : filterRange === 'All records'
+                  ? 'All records'
+                  : previousRange
               }
               newClientCount={
                 appointmentStatus?.dashboardData?.otherSalesDetails

@@ -1,7 +1,9 @@
 import { Context } from '../../context'
+import { Prisma } from '@prisma/client'
 import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
 import { statusDataByDayMonth } from './statuses.service'
+import { getPreviousDateRange } from '../finance/dateRange.service'
 
 export const retrieveBookingStatuses = async (
   ctx: Context,
@@ -11,32 +13,58 @@ export const retrieveBookingStatuses = async (
   const appointment = []
   let BookingStatusCountOnline = []
   let BookingStatusCount = []
+  let prevBookingOnline = []
+  let prevBooking = []
+  const prev_data = getPreviousDateRange(data.start_date, data.end_date)
+  prevBookingOnline = await ctx.prisma.$queryRaw`SELECT count(id)
+    FROM salon_bookings a
+    where ${
+      prev_data.prevStartDate && prev_data.prevEndDate
+        ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
+        : Prisma.empty
+    } contact_id>0 and Online=1 and status not in ('') ${
+    data.location_id
+      ? Prisma.sql`and location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}`
 
-  if (data.start_date && data.end_date) {
-    BookingStatusCountOnline = await ctx.prisma
-      .$queryRaw`SELECT status, count(id)
+  prevBooking = await ctx.prisma.$queryRaw`SELECT count(id)
       FROM salon_bookings a
-      where start_date between ${data.start_date} and ${data.end_date} and contact_id>0 and Online=1 and status not in ('')
-      group by status`
-  } else {
-    BookingStatusCountOnline = await ctx.prisma
-      .$queryRaw`SELECT status, count(id)
-      FROM salon_bookings a
-      where contact_id>0 and Online=1 and status not in ('')
-      group by status`
-  }
+      where ${
+        prev_data.prevStartDate && prev_data.prevEndDate
+          ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
+          : Prisma.empty
+      } contact_id>0 and status not in ('') ${
+    data.location_id
+      ? Prisma.sql`and location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}`
 
-  if (data.start_date && data.end_date) {
-    BookingStatusCount = await ctx.prisma.$queryRaw`SELECT status, count(id)
+  BookingStatusCountOnline = await ctx.prisma.$queryRaw`SELECT status, count(id)
       FROM salon_bookings a
-      where start_date between ${data.start_date} and ${data.end_date} and contact_id>0 and status not in ('')
+      where ${
+        data.start_date && data.end_date
+          ? Prisma.sql`start_date between ${data.start_date} and ${data.end_date} and`
+          : Prisma.empty
+      } contact_id>0 and Online=1 and status not in ('') ${
+    data.location_id
+      ? Prisma.sql`and location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
       group by status`
-  } else {
-    BookingStatusCount = await ctx.prisma.$queryRaw`SELECT status, count(id)
+
+  BookingStatusCount = await ctx.prisma.$queryRaw`SELECT status, count(id)
       FROM salon_bookings a
-      where contact_id>0 and status not in ('')
+      where ${
+        data.start_date && data.end_date
+          ? Prisma.sql`start_date between ${data.start_date} and ${data.end_date} and`
+          : Prisma.empty
+      } contact_id>0 and status not in ('') ${
+    data.location_id
+      ? Prisma.sql`and location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
       group by status`
-  }
 
   BookingStatusCount?.map((item) => {
     appointment.push({
@@ -66,34 +94,33 @@ export const retrieveBookingStatuses = async (
     })
     return item
   })
-
   return {
     totalBooking: BookingStatusCount?.reduce((prev, cur) => {
       return prev + cur['count(id)'] ?? 0
     }, 0), // total bookings for only required status
     totalBookingPer: `${
-      BookingStatusCount?.length > 0
+      BookingStatusCount?.length > 0 &&
+      prev_data.prevStartDate &&
+      prev_data.prevStartDate
         ? (BookingStatusCount?.reduce((prev, cur) => {
             return prev + cur['count(id)'] ?? 0
           }, 0) *
             100) /
-          BookingStatusCount?.reduce((prev, cur) => {
-            return prev + cur['count(id)'] ?? 0
-          }, 0)
+          prevBooking[0]['count(id)']
         : 0
     }%`,
     totalOnlineBooking: BookingStatusCountOnline?.reduce((prev, cur) => {
       return prev + cur['count(id)'] ?? 0
     }, 0), // total online bookings for only required status
     totalOnlineBookingPer: `${
-      BookingStatusCountOnline?.length > 0
+      BookingStatusCountOnline?.length > 0 &&
+      prev_data.prevStartDate &&
+      prev_data.prevStartDate
         ? (BookingStatusCountOnline?.reduce((prev, cur) => {
             return prev + cur['count(id)'] ?? 0
           }, 0) *
             100) /
-          BookingStatusCountOnline?.reduce((prev, cur) => {
-            return prev + cur['count(id)'] ?? 0
-          }, 0)
+          prevBookingOnline[0]['count(id)']
         : 0
     }%`,
     appointmentList: appointment.length > 0 ? appointment : null,
@@ -147,7 +174,13 @@ export const retrieveAllBookingChartData = async (
       booking = await ctx.prisma
         .$queryRaw`SELECT status, YEAR(DATE_FORMAT(SUBSTRING(a.start_date,1,8),'%Y-%m-%d')) as grouping, count(id)
       FROM salon_bookings a
-      where start_date between ${data.start_date} and ${data.end_date} and contact_id>0 and status not in ('')
+      where start_date between ${data.start_date} and ${
+        data.end_date
+      } and contact_id>0 and status not in ('') ${
+        data.location_id
+          ? Prisma.sql`and location_id=${data.location_id}`
+          : Prisma.empty
+      }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
       group by status, grouping
       order by status`
       bookingDataSet = await getBookingDataSet(booking)
@@ -157,7 +190,13 @@ export const retrieveAllBookingChartData = async (
       booking = await ctx.prisma
         .$queryRaw`SELECT status, MONTHNAME(DATE_FORMAT(SUBSTRING(a.start_date,1,8),'%Y-%m-%d')) as grouping, count(id)
       FROM salon_bookings a
-      where start_date between ${data.start_date} and ${data.end_date} and contact_id>0 and status not in ('')
+      where start_date between ${data.start_date} and ${
+        data.end_date
+      } and contact_id>0 and status not in ('') ${
+        data.location_id
+          ? Prisma.sql`and location_id=${data.location_id}`
+          : Prisma.empty
+      }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
       group by status, grouping
       order by status`
       bookingDataSet = await getBookingDataSet(booking)
@@ -167,7 +206,13 @@ export const retrieveAllBookingChartData = async (
       booking = await ctx.prisma
         .$queryRaw`SELECT status, DATE(DATE_FORMAT(SUBSTRING(a.start_date,1,8),'%Y-%m-%d')) as grouping, count(id)
       FROM salon_bookings a
-      where start_date between ${data.start_date} and ${data.end_date} and contact_id>0 and status not in ('')
+      where start_date between ${data.start_date} and ${
+        data.end_date
+      } and contact_id>0 and status not in ('') ${
+        data.location_id
+          ? Prisma.sql`and location_id=${data.location_id}`
+          : Prisma.empty
+      }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
       group by status, grouping
       order by status`
       bookingDataSet = await getBookingDataSet(booking)
@@ -177,7 +222,13 @@ export const retrieveAllBookingChartData = async (
       booking = await ctx.prisma
         .$queryRaw`SELECT status, DAYNAME(DATE_FORMAT(SUBSTRING(a.start_date,1,8),'%Y-%m-%d')) as grouping, count(id)
       FROM salon_bookings a
-      where start_date between ${data.start_date} and ${data.end_date} and contact_id>0 and status not in ('')
+      where start_date between ${data.start_date} and ${
+        data.end_date
+      } and contact_id>0 and status not in ('') ${
+        data.location_id
+          ? Prisma.sql`and location_id=${data.location_id}`
+          : Prisma.empty
+      }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
       group by status, grouping
       order by status`
       bookingDataSet = await getBookingDataSet(booking)
@@ -187,7 +238,11 @@ export const retrieveAllBookingChartData = async (
       booking = await ctx.prisma
         .$queryRaw`SELECT status, YEAR(DATE_FORMAT(SUBSTRING(a.start_date,1,8),'%Y-%m-%d')) as grouping, count(id)
       FROM salon_bookings a
-      where contact_id>0 and status not in ('')
+      where contact_id>0 and status not in ('') ${
+        data.location_id
+          ? Prisma.sql`and location_id=${data.location_id}`
+          : Prisma.empty
+      }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
       group by status, grouping
       order by status`
       bookingDataSet = await getBookingDataSet(booking)

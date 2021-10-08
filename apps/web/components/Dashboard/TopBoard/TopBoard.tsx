@@ -2,12 +2,14 @@ import React, { FC } from 'react'
 import { Row, Col, Skeleton } from 'antd'
 import { Avatar } from '@pabau/ui'
 import styles from './TopBoard.module.less'
+import { useUser } from '../../../context/UserContext'
 import {
   UsergroupDeleteOutlined,
   FolderOutlined,
   FileTextOutlined,
 } from '@ant-design/icons'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 export interface ICount {
   label?: string
@@ -43,6 +45,7 @@ export const TopBoard: FC<ITopBoard> = ({
   loading,
 }) => {
   const { t } = useTranslationI18()
+  const user = useUser()
   return (
     <div>
       <div className={styles.mainCard}>
@@ -94,7 +97,10 @@ export const TopBoard: FC<ITopBoard> = ({
                 </div>
                 <div className={styles.cardContent}>
                   {!loading ? (
-                    <div className={styles.title}>£{avgBill}</div>
+                    <div className={styles.title}>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {avgBill}
+                    </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
                   )}
@@ -128,7 +134,10 @@ export const TopBoard: FC<ITopBoard> = ({
                 </div>
                 <div className={styles.cardContent}>
                   {!loading ? (
-                    <div className={styles.title}>£{revPerHour}</div>
+                    <div className={styles.title}>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {revPerHour}
+                    </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
                   )}
@@ -254,7 +263,8 @@ export const TopBoard: FC<ITopBoard> = ({
                   <div className={styles.topheader}>
                     <div className={styles.title}>
                       {!loading ? (
-                        totalSalesCount.count
+                        stringToCurrencySignConverter(user.me?.currency) +
+                        (totalSalesCount.count ?? 0).toFixed(2)
                       ) : (
                         <Skeleton.Input
                           active
