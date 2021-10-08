@@ -1,3 +1,11 @@
+query basicContactDetails($id: Int!) {
+  findFirstCmContact(where: { ID: { equals: $id } }) {
+    id: ID
+    Fname
+    Lname
+    gender
+  }
+}
 query findContacts($searchTerm1: String, $searchTerm2: String) {
   findManyCmContact(
     where: {
@@ -33,7 +41,6 @@ query findContacts($searchTerm1: String, $searchTerm2: String) {
     custom_id
   }
 }
-
 
 query findContactByInvoiceNum($invoice_number: String) {
   findFirstInvSale(where: { custom_id: { equals: $invoice_number } }) {
@@ -72,7 +79,7 @@ query findManyLimitContactLocation {
   }
 }
 
-query getContactCustomFields{
+query getContactCustomFields {
   custom: findManyManageCustomFieldCategory {
     id
     name
@@ -137,7 +144,7 @@ query getSalutations {
   }
 }
 
-query getCmLabels{
+query getCmLabels {
   findManyCmLabel {
     id
     name
@@ -173,7 +180,7 @@ mutation createOneContact(
   $contactPreferences: ContactPreferenceDataInput
 ) {
   createOneContact(
-    data:{
+    data: {
       Fname: $firstName
       Lname: $lastName
       Email: $email

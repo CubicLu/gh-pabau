@@ -30,11 +30,12 @@ export default class SubscriptionStripe extends SubscriptionService {
     }
 
     if (input.status === 'PAID') {
-      input.status = ''
-      params['status'] = 'paid'
+      input.status = 'succeeded'
     }
 
-    let response = await this.client.invoices.list(params)
+    // let response = await this.client.invoices.list(params)
+    let response = await this.client.charges.list(params)
+
     let invoices = []
     let has_more = true
 
@@ -47,32 +48,40 @@ export default class SubscriptionStripe extends SubscriptionService {
               (input.searchTerm &&
                 `${
                   item.description +
-                  item.total +
-                  item.number +
+                  item.amount +
+                  (item.invoice ?? item.id) +
                   item.created +
-                  item.status
+                  (item.status === 'succeeded' ? 'paid' : item.status)
                 }`
                   .toLowerCase()
                   .includes(input.searchTerm.toLowerCase())) ||
               !input.searchTerm
           )
           ?.filter(
-            (item) => (input.status && item.status !== 'paid') || !input.status
+            (item) =>
+              (input.status === 'succeeded' && item.status === 'succeeded') ||
+              (input.status !== '' &&
+                input.status !== 'succeeded' &&
+                item.status !== 'succeeded') ||
+              input.status === ''
           )
           .map((item) => ({
             ...item,
-            id: item.number,
-            amount: (item.total / 100).toFixed(2),
+            id: item.invoice ?? item.id,
+            amount: (item.amount / 100).toFixed(2),
+            currency: item.currency?.toUpperCase(),
             date: new Date(item.created * 1000).toLocaleDateString('en-US'),
-            description: item.description ?? 'Pabau Subscription',
-            invoice_link: item.hosted_invoice_url,
+            description: item.description ?? 'Pabau Invoice',
+            invoice_link: item.receipt_url,
             status:
-              item.status?.replace('_', ' ')[0].toUpperCase() +
-              item.status?.replace('_', ' ').slice(1),
+              item.status === 'succeeded'
+                ? 'Paid'
+                : item.status?.replace('_', ' ')[0].toUpperCase() +
+                  item.status?.replace('_', ' ').slice(1),
           })),
       ]
 
-      response = await this.client.invoices.list({
+      response = await this.client.charges.list({
         ...params,
         starting_after: response.data[response.data.length - 1]?.id,
       })
@@ -94,11 +103,10 @@ export default class SubscriptionStripe extends SubscriptionService {
       limit: 100,
     }
     if (input.status === 'PAID') {
-      input.status = ''
-      params['status'] = 'paid'
+      input.status = 'succeeded'
     }
 
-    let response = await this.client.invoices.list(params)
+    let response = await this.client.charges.list(params)
     let has_more = true
     while (has_more && response?.data) {
       count += response.data
@@ -107,20 +115,25 @@ export default class SubscriptionStripe extends SubscriptionService {
             (input.searchTerm &&
               `${
                 item.description +
-                item.total +
-                item.number +
+                item.amount +
+                (item.invoice ?? item.id) +
                 item.created +
-                item.status
+                (item.status === 'succeeded' ? 'paid' : item.status)
               }`
                 .toLowerCase()
                 .includes(input.searchTerm.toLowerCase())) ||
             !input.searchTerm
         )
         ?.filter(
-          (item) => (input.status && item.status !== 'paid') || !input.status
+          (item) =>
+            (input.status === 'succeeded' && item.status === 'succeeded') ||
+            (input.status !== '' &&
+              input.status !== 'succeeded' &&
+              item.status !== 'succeeded') ||
+            input.status === ''
         ).length
 
-      response = await this.client.invoices.list({
+      response = await this.client.charges.list({
         ...params,
         starting_after: response.data[response.data.length - 1]?.id,
       })
@@ -137,9 +150,26 @@ export default class SubscriptionStripe extends SubscriptionService {
     })
     const subscription = res.data[res.data.length - 1]
 
+    const currentDate = new Date()
+    const billingDay = new Date(
+      subscription?.billing_cycle_anchor * 1000
+    ).getDate()
+
+    const nextChargeDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      billingDay
+    )
+
+    if (currentDate > nextChargeDate) {
+      nextChargeDate.setMonth(nextChargeDate.getMonth() + 1)
+    }
+
     return {
       id: subscription?.id ?? '',
-      currency: subscription['plan']?.currency ?? '',
+      currency: subscription['plan']?.currency
+        ? subscription['plan']?.currency?.toUpperCase()
+        : '',
       app_fee: subscription?.application_fee_percent ?? 0,
       interval_unit: subscription['plan']?.interval || '',
       amount: subscription['plan']?.amount
@@ -148,9 +178,7 @@ export default class SubscriptionStripe extends SubscriptionService {
       name: subscription['plan']?.nickname || 'Subscription Plan',
       status: subscription?.status || '',
       created_at: new Date(subscription['plan']?.created ?? ''),
-      next_charge_date: new Date(
-        subscription?.billing_cycle_anchor * 1000 ?? ''
-      ),
+      next_charge_date: nextChargeDate.toLocaleDateString('en-US'),
       next_charge_amount: subscription['plan']?.amount
         ? subscription['plan']?.amount / 100
         : 0,

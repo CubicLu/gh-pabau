@@ -8,7 +8,7 @@ export const MedicalFormContact = objectType({
   name: 'MedicalFormContact',
   definition(t) {
     t.int('id')
-    t.nullable.int('form_id')
+    t.int('form_id')
     t.nullable.int('contact_id')
     t.nullable.field('created_at', { type: 'DateTime' })
     t.nullable.field('updated_at', { type: 'DateTime' })
@@ -32,10 +32,16 @@ export const MedicalFormContact = objectType({
     t.nullable.int('actioned_by')
     t.int('form_contact_number')
     t.string('diagnosis_code')
-    t.nullable.field('CmContact', {
+    t.nullable.field('Contact', {
       type: 'CmContact',
       resolve(root: any) {
-        return root.CmContact
+        return root.Contact
+      },
+    })
+    t.field('Form', {
+      type: 'MedicalForm',
+      resolve(root: any) {
+        return root.Form
       },
     })
     t.list.field('CmContactTravel', {

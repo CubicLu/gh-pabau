@@ -37,6 +37,7 @@ const InvoiceActivity: FC<P> = (p) => {
   })
   const [showPreview, setShowPreview] = useState(false)
   const [urlPreview, setUrlPreview] = useState('')
+
   const invoiceColumns = [
     {
       title: t('setup.table.column.invoicedate'),
@@ -64,11 +65,11 @@ const InvoiceActivity: FC<P> = (p) => {
       dataIndex: 'amount',
       key: 'amount',
       visible: true,
-      render: (data) => {
+      render: (_, { amount, currency }: SubscriptionInvoice) => {
         return (
           <div>
-            {stringToCurrencySignConverter(user?.me?.currency)}{' '}
-            {(data as number).toFixed(2)}
+            {stringToCurrencySignConverter(currency)}{' '}
+            {(amount as number).toFixed(2)}
           </div>
         )
       },
@@ -85,15 +86,20 @@ const InvoiceActivity: FC<P> = (p) => {
       key: 'invoice_link',
       visible: true,
       // eslint-disable-next-line react/display-name
-      render: (_, { invoice_link, id }: SubscriptionInvoice) => {
+      render: (_, { invoice_link, id, status }: SubscriptionInvoice) => {
         return (
           <div>
             <EmailSendButton
               style={{ marginRight: 16 }}
-              disabled={sendEmails.includes(id) ? true : false}
+              disabled={
+                sendEmails.includes(id) || invoice_link === null ? true : false
+              }
               onClick={() => sendEmail(id, invoice_link)}
             />
-            <Button onClick={() => onPreviewInvoice(invoice_link)}>
+            <Button
+              onClick={() => onPreviewInvoice(invoice_link)}
+              disabled={invoice_link === null ? true : false}
+            >
               <EyeOutlined /> {t('setup.table.btn.preview')}
             </Button>
           </div>
@@ -119,16 +125,6 @@ const InvoiceActivity: FC<P> = (p) => {
   })
 
   useEffect(() => {
-    if (
-      paginateData.currentPage !== 1 &&
-      p.searchTerm + p.filterValue !== 'ALL'
-    ) {
-      setPaginateData((d) => ({
-        ...d,
-        offset: 0,
-        currentPage: 1,
-      }))
-    }
     setStatus(p.filterValue as FilterStatus)
     setSearchTerm(p.searchTerm)
   }, [p, paginateData])

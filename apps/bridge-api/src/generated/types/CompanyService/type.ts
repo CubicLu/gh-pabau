@@ -56,6 +56,12 @@ export const CompanyService = objectType({
         return root.Company
       },
     })
+    t.nullable.field('Product', {
+      type: 'InvProduct',
+      resolve(root: any) {
+        return root.Product
+      },
+    })
     t.list.field('CompanyRoomService', {
       type: 'CompanyRoomService',
       args: {
@@ -74,6 +80,34 @@ export const CompanyService = objectType({
       type: 'ServiceCategory',
       resolve(root: any) {
         return root.ServiceCategory
+      },
+    })
+    t.list.field('ServiceUserPrice', {
+      type: 'ServiceUserPrice',
+      args: {
+        where: 'ServiceUserPriceWhereInput',
+        orderBy: 'ServiceUserPriceOrderByWithRelationInput',
+        cursor: 'ServiceUserPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserPrice
+      },
+    })
+    t.list.field('ServiceLocationPrice', {
+      type: 'ServiceLocationPrice',
+      args: {
+        where: 'ServiceLocationPriceWhereInput',
+        orderBy: 'ServiceLocationPriceOrderByWithRelationInput',
+        cursor: 'ServiceLocationPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceLocationPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceLocationPrice
       },
     })
     t.nullable.field('_count', {

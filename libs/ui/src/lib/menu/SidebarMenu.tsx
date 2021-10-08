@@ -35,12 +35,12 @@ export const sidebarTranslations = {
   purchaseorder: 'sidebar.stock.purchaseorder',
   suppliers: 'sidebar.stock.suppliers',
   marketing: 'sidebar.marketing',
-  campaigns: 'sidebar.marketing.campaigns',
+  broadcasts: 'sidebar.marketing.broadcasts',
   reviews: 'sidebar.marketing.reivews',
   giftvouchers: 'sidebar.marketing.giftvouchers',
   referraltracker: 'sidebar.marketing.referraltracker',
   loyalty: 'sidebar.marketing.loyalty',
-  financials: 'sidebar.marketing.fanancials',
+  money: 'sidebar.marketing.money',
   accounts: 'sidebar.financials.accounts',
   cashup: 'sidebar.financials.cashup',
   contacts: 'sidebar.contacts',
@@ -120,7 +120,7 @@ export const sidebarMenu: SidebarMenuItem[] = [
     icon: <NotificationOutlined />,
     children: [
       {
-        menuName: 'Campaigns',
+        menuName: 'Broadcasts',
         path: '/marketing/campaigns',
       },
       {
@@ -142,14 +142,9 @@ export const sidebarMenu: SidebarMenuItem[] = [
     ],
   },
   {
-    menuName: 'Financials',
+    menuName: 'Money',
     icon: <DollarOutlined />,
-    children: [
-      {
-        menuName: 'Accounts',
-        path: '/finance/accounts',
-      },
-    ],
+    path: '/finance/accounts',
   },
   {
     menuName: 'Activities',

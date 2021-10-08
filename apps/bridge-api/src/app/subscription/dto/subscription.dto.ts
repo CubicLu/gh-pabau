@@ -12,7 +12,7 @@ export interface SubscriptionDetailsOutput {
   name: string
   interval_unit: string
   status: string
-  next_charge_date: Date
+  next_charge_date: string | Date
   next_charge_amount: number
   app_fee: number | string
   amount: number

@@ -1,11 +1,5 @@
+import { BellOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
 import {
-  BellOutlined,
-  LeftOutlined,
-  LockOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
-import {
-  MobileHeader,
   Notification as ResNotification,
   NotificationType,
   TabMenu,
@@ -16,10 +10,10 @@ import Notification from '../../../components/Account/Settings/Notifications'
 import Profile from '../../../components/Account/Settings/Profile'
 import Security from '../../../components/Account/Settings/Security'
 import Layout from '../../../components/Layout/Layout'
+import CommonHeader from '../../../components/CommonHeader'
 import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
-import Link from 'next/link'
 import {
   GetProfileTabDocument,
   GetSecurityTabDocument,
@@ -426,19 +420,8 @@ const Index: FC = () => {
 
   return (
     <div className={styles.mainPageWrapper}>
-      {size.width <= 767 && (
-        <MobileHeader className={styles.accountSettingsMobile}>
-          <div className={styles.allContentMobile}>
-            <div className={styles.textStyle}>
-              <Link href="/">
-                <LeftOutlined />
-              </Link>
-              <p>{t('account.settings.header')}</p>
-            </div>
-          </div>
-        </MobileHeader>
-      )}
       <Layout {...user}>
+        <CommonHeader title={t('account.settings.header')} />
         <Row className={styles.container}>
           {size.width > 767 && <Col span={size.width < 1024 ? 1 : 5} />}
           <Col

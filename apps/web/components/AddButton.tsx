@@ -4,17 +4,15 @@ import {
   PlusSquareFilled,
   SearchOutlined,
 } from '@ant-design/icons'
-import { Button, MobileHeader } from '@pabau/ui'
-import { Drawer, Input, Popover, Radio } from 'antd'
+import { Button } from '@pabau/ui'
+import { Drawer, Input, Popover, Radio, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
 import { useMedia } from 'react-use'
 import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './AddButton.module.less'
-
-// import { isMobile, isTablet } from 'react-device-detect'
-// import { useKeyPressEvent } from 'react-use'
+const { Header: AntHeader } = AntLayout
 
 const WAIT_INTERVAL = 400
 
@@ -31,13 +29,13 @@ interface P {
   onResetFilter?: () => void
   setMobileSearch?: () => void
   mobileSearch?: boolean
+  searchTerm?: string
   isCreateButtonVisible?: boolean
 }
 
 const AddButton: FC<P> = ({
   schema,
   onClick,
-  children,
   onFilterSource,
   onSearch,
   tableSearch = true,
@@ -48,6 +46,7 @@ const AddButton: FC<P> = ({
   setMobileSearch,
   mobileSearch,
   needTranslation,
+  searchTerm,
   isCreateButtonVisible = true,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
@@ -74,7 +73,10 @@ const AddButton: FC<P> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketingSourceSearch])
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  useEffect(() => {
+    setMarketingSourceSearch(searchTerm)
+  }, [searchTerm])
+
   const onReset = () => {
     if (!isActive) {
       setIsActive(!isActive)
@@ -164,7 +166,7 @@ const AddButton: FC<P> = ({
         className={styles.mobFilterDrawer}
         closable={false}
       >
-        <MobileHeader className={styles.marketingSourceFilterHeader}>
+        <AntHeader className={styles.marketingSourceFilterHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.marketingTextStyle}>
               <span onClick={isCustomFilter ? onResetFilter : onReset}>
@@ -180,7 +182,7 @@ const AddButton: FC<P> = ({
               </span>
             </div>
           </div>
-        </MobileHeader>
+        </AntHeader>
         <div style={{ marginTop: '91px', paddingLeft: '24px' }}>
           {isCustomFilter === false ? filterContent(true) : customFilter()}
         </div>
