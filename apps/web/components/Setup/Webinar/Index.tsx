@@ -117,6 +117,7 @@ const WebinarCard: FC = () => {
                 ?.map((value) => (
                   <Webinar
                     key={value?.id}
+                    name={value?.name}
                     title={value?.title}
                     course_id={value?.course_id}
                     webinar_id={value?.webinar_id}
