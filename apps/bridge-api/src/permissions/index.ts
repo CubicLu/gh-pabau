@@ -107,7 +107,7 @@ export const permissions = shield(
       updateManyInvBiller: rules.authentication.isAdmin,
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
-
+      updateOneCmLead: rules.authentication.isAuthenticated,
       //Activity
       upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
       // Default fallback
