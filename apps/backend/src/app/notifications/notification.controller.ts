@@ -23,7 +23,7 @@ interface BodyData {
   sent_by_name?: string
   current_date?: string | Date
   current_time?: string | Date
-  appointment_with: number
+  appointment_with: number[]
 }
 
 @Controller()
@@ -72,21 +72,23 @@ export class NotificationController {
       return { success: false, message: errors }
     }
 
-    let enableUsers = []
-    enableUsers = await this.notificationService.findUserEnabledNotifications(
+    const enableUsers = await this.notificationService.findUserEnabledNotifications(
       company_id,
       type === notificationType.rescheduled_appointment_via_calendar.type
         ? notificationType.new_appointment_via_calendar.name
         : notificationType[type].name
     )
-    enableUsers = enableUsers.filter(
-      (user) => user === appointment_with && user !== sent_by
-    )
 
-    if (enableUsers?.length > 0) {
+    if (enableUsers?.length > 0 && appointment_with?.length > 0) {
+      const sent_to = []
+      for (const user of appointment_with) {
+        if (enableUsers?.includes(user)) {
+          sent_to.push(user)
+        }
+      }
       const response = await this.notificationService.sendNotification({
         type,
-        sent_to: enableUsers,
+        sent_to,
         sent_by,
         destination,
         user_name: sent_by_name,
