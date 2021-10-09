@@ -30,17 +30,17 @@ import styles from './ClientHeaderDetails.module.less'
 const { TextArea } = Input
 
 export interface ClientHeaderDetailsProps {
-  notes: ClientNotes
-  notesCount: ClientNotesCount
-  notesCountLoading: boolean
-  getContactDetails: () => void
-  client: ClientData
+  notes?: ClientNotes
+  notesCount?: ClientNotesCount
+  notesCountLoading?: boolean
+  getContactDetails?: () => void
+  client?: ClientData
 }
 
 export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
-  notes,
-  notesCount,
-  notesCountLoading,
+  notes = { notes: [], appointments: [] },
+  notesCount = { notes: 0, appointments: 0 },
+  notesCountLoading = false,
   getContactDetails,
   client,
 }) => {
@@ -49,7 +49,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [noteItems, setNoteItems] = useState<ClientNoteDetails[]>([])
   const [appointmentItems, setAppointmentItems] = useState<
-    ClientAppointmentDetails[]
+    ClientAppointmentDetails[] | undefined
   >([])
   const [currentClientNote, setCurrentClientNote] = useState(-1)
   const [alertItems, setAlertItems] = useState<string[]>([])
@@ -346,7 +346,11 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           content={clientNotesPopover}
           overlayClassName={styles.clientCardHeaderPopover}
         >
-          <div onClick={() => getContactDetails()}>
+          <div
+            onClick={() => {
+              if (typeof getContactDetails != 'undefined') getContactDetails()
+            }}
+          >
             <Tooltip title="Notes">
               <Badge
                 count={countDetails?.notes + countDetails?.appointments}

@@ -145,10 +145,10 @@ export interface ClientNotesCount {
 
 interface P {
   client: ClientData
-  notes: ClientNotes
-  notesCount: ClientNotesCount
-  notesCountLoading: boolean
-  getContactDetails: () => void
+  notes?: ClientNotes
+  notesCount?: ClientNotesCount
+  notesCountLoading?: boolean
+  getContactDetails?: () => void
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
