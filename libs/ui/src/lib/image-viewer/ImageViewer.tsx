@@ -28,9 +28,10 @@ import {
   ProgressGallery,
   PresentModal,
   CreateLabels,
+  CamUploaderModal as CamUploader,
+  UploadingImageProps,
 } from '@pabau/ui'
 import { Modal as AntModal, Input, Popover, Drawer, Tooltip } from 'antd'
-import UppyModal, { UploadingImageProps } from './UppyUploaderModal'
 import singlePhotoMode from '../../assets//images/image-viewer/comparing/single-photo.svg'
 import singlePhotoActiveMode from '../../assets//images/image-viewer/comparing/single-photo-active.svg'
 import comparingSliderMode from '../../assets//images/image-viewer/comparing/comparing-slider.svg'
@@ -197,11 +198,11 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
-  const [showUppyModal, setShowUppyModal] = useState(false)
+  const [showCamera, setShowCamera] = useState(false)
+  const [showCamUploader, setShowCamUploader] = useState(false)
   const [uploadingImages, setUploadingImages] = useState<
     UploadingImageProps[]
   >()
-  const [cameraClick, setCameraClick] = useState(true)
   const [editTitle, setEditTitle] = useState(false)
   const [isDefaultPhoto, setIsDefaultPhoto] = useState(false)
   const [comparingMode, setComparingMode] = useState<ComparingMode>(
@@ -797,34 +798,27 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   </div>
                 </div>
               )}
-
-              {!isMobile && (
-                <div className={styles.uppyButtons}>
-                  <div>
-                    <PhotoCircleFilled
-                      onClick={() => {
-                        setCameraClick(false)
-                        setShowUppyModal(true)
-                      }}
-                    />
-                    <CameraCircleFilled
-                      onClick={() => {
-                        setCameraClick(true)
-                        setShowUppyModal(() => true)
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
             </div>
           </div>
-          <UppyModal
-            isCamera={cameraClick}
-            visible={showUppyModal}
-            onClose={() => setShowUppyModal(() => false)}
-            uploadingImages={uploadingImages}
-            setUploadingImages={setUploadingImages}
-          />
+          {!isMobile && (
+            <div className={styles.uppyButtons}>
+              <div>
+                <PhotoCircleFilled
+                  onClick={() => {
+                    setShowCamera(false)
+                    setShowCamUploader(() => true)
+                  }}
+                />
+                <CameraCircleFilled
+                  onClick={() => {
+                    setShowCamera(true)
+                    setShowCamUploader(() => true)
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
           <ImageViewerSidebar
             comparingMode={comparingMode}
             selectedIndex={
@@ -857,14 +851,14 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                   <div>
                     <PhotoCircleFilled
                       onClick={() => {
-                        setCameraClick(false)
-                        setShowUppyModal(true)
+                        setShowCamera(false)
+                        setShowCamUploader(() => true)
                       }}
                     />
                     <CameraCircleFilled
                       onClick={() => {
-                        setCameraClick(true)
-                        setShowUppyModal(() => true)
+                        setShowCamera(true)
+                        setShowCamUploader(() => true)
                       }}
                     />
                   </div>
@@ -894,6 +888,18 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             comparingMode={comparingMode}
           />
         </div>
+        {showCamUploader && (
+          <CamUploader
+            visible={showCamUploader}
+            onClose={() => {
+              setShowCamera(false)
+              setShowCamUploader(() => false)
+            }}
+            uploadingImages={uploadingImages as UploadingImageProps[]}
+            setUploadingImages={setUploadingImages}
+            showCamera={showCamera}
+          />
+        )}
       </AntModal>
 
       {isMobile && (

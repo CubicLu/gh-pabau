@@ -6797,7 +6797,7 @@
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-2.0.0.tgz#c446a89d07a6df7f980a15eeb880d169baa14d7f"
   integrity sha512-5HXTR2Qn20rpPUCUFBuNBfYDIa20oyUV14+FAnklgv2P32/zIyk79eFYloDRg8H7mOosVpovlysfDkI4iJh8Ag==
 
-"@uppy/thumbnail-generator@2.0.3", "@uppy/thumbnail-generator@^2.0.3":
+"@uppy/thumbnail-generator@^2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@uppy/thumbnail-generator/-/thumbnail-generator-2.0.3.tgz#4614f30d738084be017de21711acb4236fee0b4b"
   integrity sha512-I8CmVGVxAMPSprE52PanfujW4L7ouiR6rSiDf2dQc5ziUQI97Wz0ndBg49j1+vGTHoNzUZS4nhyG1l3FGgYMmg==
@@ -6811,14 +6811,6 @@
   integrity sha512-blgQkWkc6yrxGcNXehf9gFTT/f1MNonuxkpBNOwI51DT/yv/QFLLdRPMFM6CpcuA0TNhVwSUuFLeNTkerRrXeQ==
   dependencies:
     lodash.throttle "^4.1.1"
-
-"@uppy/webcam@2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@uppy/webcam/-/webcam-2.0.2.tgz#3297179dd05bb5c43e434cabef098d21f06e48c3"
-  integrity sha512-uwebvRJNuUa6SxDYKuihPHJscoCQxnl52hEDY8nsUbfExkSDIFKTyi6vN6H5rOCNFlIJAz/ALI5zcVD3qpks+Q==
-  dependencies:
-    "@uppy/utils" "^4.0.1"
-    preact "^10.5.13"
 
 "@use-it/event-listener@^0.1.2":
   version "0.1.6"
@@ -16892,6 +16884,11 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
 
+jslib-html5-camera-photo@3.1.8:
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/jslib-html5-camera-photo/-/jslib-html5-camera-photo-3.1.8.tgz#25598735e1cd7dd82634b2c31a537bef6f3ebff1"
+  integrity sha512-7vBcVyLUnnP37vKzOxzIFtpaS8I8z+XMtyOlNFm+BGW089/Yw1hROsH2MdbIjCDRWfD+DnMC/WCNmW3LO2chrQ==
+
 json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
@@ -21976,6 +21973,13 @@ react-html-parser@2.0.2:
   integrity sha512-XeerLwCVjTs3njZcgCOeDUqLgNIt/t+6Jgi5/qPsO/krUWl76kWKXMeVs2LhY2gwM6X378DkhLjur0zUQdpz0g==
   dependencies:
     htmlparser2 "^3.9.0"
+
+react-html5-camera-photo@1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/react-html5-camera-photo/-/react-html5-camera-photo-1.5.5.tgz#dbc81c40fd3d037ac223ed177edea519264895e4"
+  integrity sha512-e6vw0FJjyoxR1nJgV2hXfLKJYBmpg8+GG5KgwPQEsr8IJFgFKUM2xHMEQYorTPchsKvwxzUXJEoOiroxWw9bwA==
+  dependencies:
+    jslib-html5-camera-photo "3.1.8"
 
 react-i18next@11.8.13:
   version "11.8.13"

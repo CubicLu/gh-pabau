@@ -9,6 +9,10 @@
     }
   }
 
+  .fileInput {
+    display: none;
+  }
+
   @media screen and (max-width: 767px) {
     padding: 0;
     margin: 0;
@@ -97,7 +101,7 @@
   }
 
   .uppyModalBody {
-    background-color: lightgray;
+    background-color: #eeeeee;
     min-height: 550px;
     position: relative;
 
@@ -106,98 +110,79 @@
     }
 
     :global {
-      .uppy-Dashboard-inner {
-        width: 100% !important;
-        // border: 2px solid red;
-        border-radius: 0px !important;
-        background-color: lightgray !important;
-        border: none !important;
+      .dropzone {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        padding: 15px;
 
-        .uppy-Dashboard-AddFiles-info {
-          display: none;
-        }
-        [data-uppy-acquirer-id~='MyDevice'] {
-          display: none;
-        }
-        [data-uppy-acquirer-id~='Webcam'] {
-          display: none;
-        }
+        .dropzoneOverlay {
+          border: 2px dashed transparent;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-content: center;
 
-        .uppy-Dashboard-innerWrap {
-          border-radius: 0px !important;
-          .uppy-DashboardContent-panel {
-            border-radius: 0px !important;
+          > div {
+            font-size: 24px;
+            color: var(--grey-text-color);
 
-            .uppy-Webcam-footer {
-              display: none;
-            }
-
-            .uppy-Webcam-videoContainer {
-              background-color: silver;
-              > video {
-                width: 100%;
-              }
+            > span {
+              color: var(--primary-color);
+              margin-left: 10px;
+              line-height: 0px;
             }
           }
 
-          .uppy-Informer {
-            bottom: 150px !important;
+          > div:nth-child(2) {
+            margin-bottom: 50px;
+            display: block;
+            font-size: 16px;
+            transform: translateX(-10px);
+            color: var(--light-grey-text-color);
           }
         }
-        .uppy-DashboardContent-bar {
-          display: none;
-        }
-      }
-    }
+        &.dragOver {
+          .dropzoneOverlay {
+            border-color: var(--primary-color);
+            background-color: #54b2d31c;
 
-    &.allowCamera {
-      :global {
-        .uppy-Dashboard-AddFiles-title {
-          display: none;
-        }
-      }
-
-      .addedImagesDiv {
-        z-index: 9999;
-      }
-    }
-
-    &.cameraDiv,
-    &.uploadDiv {
-      @media screen and (max-width: 767px) {
-        > div {
-          height: calc(100vh - 172px);
-
-          :global {
-            .uppy-Root {
-              height: 100%;
-
-              .uppy-Dashboard {
-                height: 100%;
-
-                .uppy-Dashboard-inner {
-                  height: calc(100vh - 172px) !important;
-
-                  .uppy-Dashboard-innerWrap {
-                    align-items: center;
-                  }
-
-                  //   .uppy-Webcam-footer {
-                  //     width: 100%;
-                  //     justify-content: flex-end;
-
-                  //     .uppy-Webcam-buttonContainer button:first-child {
-                  //       margin-right: 0px !important;
-                  //       svg {
-                  //         width: 22.5px;
-                  //         height: 22.5px;
-                  //       }
-                  //     }
-                  //   }
-                }
-              }
+            > div:first-child {
+              color: var(--primary-color);
             }
           }
+        }
+        &.invalid {
+          .dropzoneOverlay {
+            background-color: #f5222d42;
+            border-color: var(--error-color);
+            .hasError {
+              font-size: 24px;
+              color: var(--error-color);
+            }
+          }
+        }
+      }
+
+      .react-html5-camera-photo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+
+        video {
+          min-width: 100% !important;
+          min-height: 100% !important;
+          height: auto;
+        }
+        img {
+          min-width: 100% !important;
+        }
+        #container-circles {
+          display: none;
         }
       }
     }
@@ -217,6 +202,7 @@
         width: 100%;
 
         .addedImagesFixer {
+          background-color: transparent;
           position: absolute;
           display: flex;
           flex-wrap: nowrap;
@@ -224,8 +210,7 @@
           bottom: 0;
           width: 100%;
           min-height: 125px;
-          padding-top: 5px;
-          background-color: rgba(0, 0, 0, 0.25);
+          padding: 5px 7px;
 
           &::-webkit-scrollbar {
             height: 6px;
@@ -244,9 +229,9 @@
             display: inline-block;
             min-width: 100px;
             min-height: 100px;
-            margin: 8px 8px 8px 8px;
+            margin: 8px 10px;
             border: 1px solid #9292a3;
-            border-radius: 2px;
+            border-radius: 4px;
             filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.15));
             background-position: center;
             background-repeat: no-repeat;
@@ -301,7 +286,9 @@
     }
 
     > div {
-      width: fit-content;
+      display: flex;
+      align-items: center;
+      width: 100%/3%;
     }
 
     > div:first-child {
@@ -309,12 +296,12 @@
       font-weight: normal;
       font-size: 16px;
       line-height: 24px;
-      display: flex;
-      align-items: center;
+      justify-content: flex-start;
       color: #ffffff;
     }
 
     > div:nth-child(2) {
+      justify-content: center;
       svg.camIcon,
       svg.photoIcon {
         width: 60px;
@@ -356,6 +343,7 @@
     }
 
     > div:last-child {
+      justify-content: flex-end;
       button {
         width: 66px;
         height: 40px;
