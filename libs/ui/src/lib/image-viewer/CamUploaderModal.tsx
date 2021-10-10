@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons'
 import { Progress, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
-import { browserName, isMobile, osName } from 'react-device-detect'
+import { isMobile as mobileDevice } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import { ReactComponent as ImagesIcon } from '../../assets//images/image-viewer/image-gallery.svg'
 import { ReactComponent as CameraCircleFilled } from '../../assets//images/image-viewer/camera-circle-filled.svg'
@@ -394,7 +394,9 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             isImageMirror
             isMaxResolution
             idealFacingMode={
-              isMobile ? FACING_MODES.ENVIRONMENT : FACING_MODES.USER
+              mobileDevice || isMobile
+                ? FACING_MODES.ENVIRONMENT
+                : FACING_MODES.USER
             }
             imageType={IMAGE_TYPES.JPG}
             sizeFactor={1}
