@@ -53,7 +53,7 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
                   <p className={Styles.userName}>{val.Public_User.full_name}</p>
                   {/*{false && <QuestionCircleOutlined />}*/}
                 </div>
-                <p>&nbsp;</p>
+                <p>{val.Position}</p>
               </div>
 
               <p className={Styles.userCharge}>

@@ -4,6 +4,7 @@ query onlineBookableStaff($company_id: Int!) {
     ID
     Location
     DefaultLocation
+    Position
     Public_User {
       id
       full_name

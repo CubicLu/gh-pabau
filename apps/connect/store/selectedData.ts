@@ -56,7 +56,7 @@ const actions = {
   SET_MEMBERS: (curState, members) => {
     return { members: members }
   },
-}
+} as const
 
 export const useSelectedDataStore = (shouldListen = true) => {
   const setState = useState(selectedData)[1]

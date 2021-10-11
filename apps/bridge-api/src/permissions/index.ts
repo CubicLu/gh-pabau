@@ -218,12 +218,19 @@ export const permissions = shield(
       findManyCustomReportWithPermissions: rules.authentication.isAdmin,
       //user: rules.authentication.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
       staffList: rules.authentication.isAuthenticated,
+      findFirstCompany: allow,
       //Subscriptions
       subscriptionInvoices: rules.authentication.isAuthenticated,
       subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
       subscriptionDetails: rules.authentication.isAuthenticated,
       subscriptionCardDetails: rules.authentication.isAuthenticated,
-
+      // Connect Public
+      Public_MasterCategories: allow,
+      Public_Bookings: allow,
+      Public_Locations: allow,
+      Public_ServiceCategories: allow,
+      Public_Shifts: allow,
+      Public_Staff: allow,
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //statement template

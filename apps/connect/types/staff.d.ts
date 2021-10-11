@@ -18,5 +18,6 @@ export interface Staff {
   Avatar: string
   Location?: string
   DefaultLocation?: int
+  Position?: string
   Public_User: User
 }
