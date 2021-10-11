@@ -499,7 +499,10 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                 ).length
               })`,
               `${t('client.appointments.layout.tab.classes')} (${
-                appointments.filter((item) => item.isCourse).length
+                appointments.filter(
+                  (item) =>
+                    item.isCourse && item.status !== AppointmentStatus.cancelled
+                ).length
               })`,
               `${t('client.appointments.layout.tab.cancelled')} (${
                 appointments.filter(
@@ -960,7 +963,10 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         )
                       })
                       .map((item, index) => {
-                        if (item.isCourse) {
+                        if (
+                          item.isCourse &&
+                          item.status !== AppointmentStatus.cancelled
+                        ) {
                           return (
                             <ClientAppointmentCard
                               {...item}
@@ -996,7 +1002,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
+                    item.status !== AppointmentStatus.cancelled &&
                     startDate === '' &&
                     endDate === '' &&
                     nowFilter === FilterRadioValue.upcoming &&
