@@ -28,8 +28,11 @@ fragment MedicalFormContactFields on MedicalFormContact {
 
 fragment MedicalFormContact on MedicalFormContact {
   ...MedicalFormContactFields
-  CmContact {
+  Contact {
     ...CmContactFields
+  }
+  Form {
+    ...MedicalFormFields
   }
 }
 
