@@ -349,31 +349,18 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             onChange={handleAddFiles}
           />
         )}
-        {showCamera &&
-          (isMobile ? (
-            <input
-              type="file"
-              name="File"
-              accept="image/*"
-              multiple
-              capture={facingMode}
-              onChange={(e) => {
-                const cFiles = (e.target.files as unknown) as File[]
-                handleAddFiles([...cFiles])
-              }}
-            />
-          ) : (
-            <Camera
-              isImageMirror={facingMode === facingModes[0] ? false : true}
-              isMaxResolution
-              idealFacingMode={facingMode}
-              imageType={IMAGE_TYPES.JPG}
-              sizeFactor={1}
-              onTakePhoto={(dataUri) => {
-                handleTakePhoto(dataUri)
-              }}
-            />
-          ))}
+        {showCamera && (
+          <Camera
+            isImageMirror={facingMode === facingModes[0] ? false : true}
+            isMaxResolution
+            idealFacingMode={facingMode}
+            imageType={IMAGE_TYPES.JPG}
+            sizeFactor={1}
+            onTakePhoto={(dataUri) => {
+              handleTakePhoto(dataUri)
+            }}
+          />
+        )}
         {isMobile && (
           <div className={styles.cameraFlip}>
             <CameraFlip
