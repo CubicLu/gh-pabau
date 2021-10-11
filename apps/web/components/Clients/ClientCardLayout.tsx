@@ -163,10 +163,10 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
           data
             ? ({
                 fullName:
-                  data?.findFirstCmContact.Fname +
+                  data?.findFirstCmContact?.Fname +
                   ' ' +
-                  data?.findFirstCmContact.Lname,
-                gender: data?.findFirstCmContact.gender,
+                  data?.findFirstCmContact?.Lname,
+                gender: data?.findFirstCmContact?.gender,
                 phone: '',
                 relationships: [],
                 labels: [],
