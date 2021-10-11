@@ -98,31 +98,29 @@ export const retrieveBookingStatuses = async (
     totalBooking: BookingStatusCount?.reduce((prev, cur) => {
       return prev + cur['count(id)'] ?? 0
     }, 0), // total bookings for only required status
-    totalBookingPer: `${
-      BookingStatusCount?.length > 0 &&
-      prev_data.prevStartDate &&
-      prev_data.prevStartDate
-        ? (BookingStatusCount?.reduce((prev, cur) => {
-            return prev + cur['count(id)'] ?? 0
-          }, 0) *
-            100) /
-          prevBooking[0]['count(id)']
-        : 0
-    }%`,
+    totalBookingPer: `${(BookingStatusCount?.length > 0 &&
+    prev_data.prevStartDate &&
+    prev_data.prevStartDate
+      ? (BookingStatusCount?.reduce((prev, cur) => {
+          return prev + cur['count(id)'] ?? 0
+        }, 0) *
+          100) /
+        prevBooking[0]['count(id)']
+      : 0
+    ).toFixed(2)}%`,
     totalOnlineBooking: BookingStatusCountOnline?.reduce((prev, cur) => {
       return prev + cur['count(id)'] ?? 0
     }, 0), // total online bookings for only required status
-    totalOnlineBookingPer: `${
-      BookingStatusCountOnline?.length > 0 &&
-      prev_data.prevStartDate &&
-      prev_data.prevStartDate
-        ? (BookingStatusCountOnline?.reduce((prev, cur) => {
-            return prev + cur['count(id)'] ?? 0
-          }, 0) *
-            100) /
-          prevBookingOnline[0]['count(id)']
-        : 0
-    }%`,
+    totalOnlineBookingPer: `${(BookingStatusCountOnline?.length > 0 &&
+    prev_data.prevStartDate &&
+    prev_data.prevStartDate
+      ? (BookingStatusCountOnline?.reduce((prev, cur) => {
+          return prev + cur['count(id)'] ?? 0
+        }, 0) *
+          100) /
+        prevBookingOnline[0]['count(id)']
+      : 0
+    ).toFixed(2)}%`,
     appointmentList: appointment.length > 0 ? appointment : null,
     onlineAppointmentList:
       onlineAppointment.length > 0 ? onlineAppointment : null,
