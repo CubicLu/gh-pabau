@@ -296,6 +296,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
     }
     cAddedFiles.push(newFile)
     setUploadingImages(cAddedFiles)
+    scrollToEnd()
   }
 
   const handleAddFiles = (files: File[]) => {
@@ -310,7 +311,15 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       })
       const cAddedFiles = [...uploadingImages, ...cFiles]
       setUploadingImages(cAddedFiles)
+      scrollToEnd()
     }
+  }
+
+  const scrollToEnd = () => {
+    setTimeout(() => {
+      const elem = document.querySelector('#addedImagesFixer') as HTMLElement
+      elem.scrollLeft = elem?.scrollWidth || 0
+    }, 100)
   }
 
   return (
@@ -374,7 +383,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         <div className={styles.addedImagesDiv}>
           <div className={styles.addedImagesDivInner}>
             {uploadingImages?.length > 0 && (
-              <div className={styles.addedImagesFixer}>
+              <div className={styles.addedImagesFixer} id="addedImagesFixer">
                 {uploadingImages?.map((el, index) => (
                   <ImageThumbnail
                     data={el}
