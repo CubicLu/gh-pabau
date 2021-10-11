@@ -2446,9 +2446,9 @@
     tslib "~2.3.0"
 
 "@graphql-tools/import@^6.2.6", "@graphql-tools/import@^6.5.0":
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/import/-/import-6.5.2.tgz#0f1a88d415c74add711eeda78154ad3b30795fa1"
-  integrity sha512-Hi3aEWHK6B83d+mjO7CdX1xhaBwEon3ZLc9Ch1ivrU7vay84k6UQkoY/B4NdOZuLKrKlt920UtoDbGoZFFYlHA==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/import/-/import-6.5.3.tgz#5cc85b9e66447e91d1641a2c2216ff0f59c59a6c"
+  integrity sha512-6+XorJifwJyXHUSYZl53U/V7HVGrSRzrWIAC3Oo//Ei75PkM4pFfYb78ptyK4pBgyy3M1Ff61mjsEoQi7fQVCw==
   dependencies:
     "@graphql-tools/utils" "8.2.5"
     resolve-from "5.0.0"
@@ -3935,10 +3935,10 @@
     is-plain-object "^5.0.0"
     universal-user-agent "^6.0.0"
 
-"@octokit/openapi-types@^11.0.0":
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-11.0.0.tgz#e9e9e39681c0565d9e79d689b045b74a893e620b"
-  integrity sha512-QeMW4h18cEm53ojYufACSRgq3rrQg4BibVcsHytXmbJ+otmXSelr1BCBCEi8q7nqGkYJyGQX30DoULENIgJ8BA==
+"@octokit/openapi-types@^11.2.0":
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-11.2.0.tgz#b38d7fc3736d52a1e96b230c1ccd4a58a2f400a6"
+  integrity sha512-PBsVO+15KSlGmiI8QAzaqvsNlZlrDlyAJYcrXBCvVUxCp7VnXjkwPoFHgjEJXx3WF9BAwkA6nfCUA7i9sODzKA==
 
 "@octokit/plugin-paginate-rest@^1.1.1":
   version "1.1.2"
@@ -4020,11 +4020,11 @@
     "@types/node" ">= 8"
 
 "@octokit/types@^6.0.3", "@octokit/types@^6.16.1":
-  version "6.32.0"
-  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.32.0.tgz#2333567560dd9b338c45de424c8d37ef0250db5c"
-  integrity sha512-7CFlMfpX78PbvGnQZfQ3pD246RGTLITDnLCyYgTOtwNPIdTKMGs/8dJiZA3Fh5vXuZYqu/YHH32GboK7xnZ0ag==
+  version "6.34.0"
+  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.34.0.tgz#c6021333334d1ecfb5d370a8798162ddf1ae8218"
+  integrity sha512-s1zLBjWhdEI2zwaoSgyOFoKSl109CUcVBCc7biPJ3aAf6LGLU6szDvi31JPU7bxfla2lqfhjbbg/5DdFNxOwHw==
   dependencies:
-    "@octokit/openapi-types" "^11.0.0"
+    "@octokit/openapi-types" "^11.2.0"
 
 "@opentelemetry/api@0.14.0":
   version "0.14.0"
@@ -5929,9 +5929,9 @@
     "@types/estree" "*"
 
 "@types/eslint@*":
-  version "7.28.0"
-  resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.28.0.tgz#7e41f2481d301c68e14f483fe10b017753ce8d5a"
-  integrity sha512-07XlgzX0YJUn4iG1ocY4IX9DzKSmMGUs6ESKlxWhZRaa0fatIWaHWUVapcuGa8r5HFnTqzj+4OCjd5f7EZ/i/A==
+  version "7.28.1"
+  resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.28.1.tgz#50b07747f1f84c2ba8cd394cf0fe0ba07afce320"
+  integrity sha512-XhZKznR3i/W5dXqUhgU9fFdJekufbeBd5DALmkuXoeFcjbQcPk+2cL+WLHf6Q81HWAnM2vrslIHpGVyCAviRwg==
   dependencies:
     "@types/estree" "*"
     "@types/json-schema" "*"
@@ -8077,6 +8077,13 @@ axios@0.21.1:
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
+
+axios@0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.22.0.tgz#bf702c41fb50fbca4539589d839a077117b79b25"
+  integrity sha512-Z0U3uhqQeg1oNcihswf4ZD57O3NrR1+ZXhxaROaWpDmsDTx7T2HNBV2ulBtie2hwJptu8UvgnJoK+BIqdzh/1w==
+  dependencies:
+    follow-redirects "^1.14.4"
 
 axios@^0.21.1, axios@^0.21.4:
   version "0.21.4"
@@ -10345,9 +10352,9 @@ css-vendor@^2.0.8:
     is-in-browser "^1.0.2"
 
 css-what@>=5.0.1, css-what@^3.2.1, css-what@^5.0.0:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/css-what/-/css-what-5.0.1.tgz#3efa820131f4669a8ac2408f9c32e7c7de9f4cad"
-  integrity sha512-FYDTSHb/7KXsWICVsxdmiExPjCfRC4qRFBdVwv7Ax9hMnvMmEjP9RfxTEZ3qPZGmADDn2vAKSo9UcN1jKVYscg==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/css-what/-/css-what-5.1.0.tgz#3f7b707aadf633baf62c2ceb8579b545bb40f7fe"
+  integrity sha512-arSMRWIIFY0hV8pIxZMEfmMI47Wj3R/aWpZDDxWYCPEiOMv6tfOrnpDtgxBYPEQD4V0Y/958+1TdC3iWTFcUPw==
 
 css.escape@1.5.1:
   version "1.5.1"
@@ -11369,9 +11376,9 @@ ejs@^3.1.5:
     jake "^10.6.1"
 
 electron-to-chromium@^1.3.564, electron-to-chromium@^1.3.634, electron-to-chromium@^1.3.857:
-  version "1.3.862"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.862.tgz#c1c5d4382449e2c9b0e67fe1652f4fc451d6d8c0"
-  integrity sha512-o+FMbCD+hAUJ9S8bfz/FaqA0gE8OpCCm58KhhGogOEqiA1BLFSoVYLi+tW+S/ZavnqBn++n0XZm7HQiBVPs8Jg==
+  version "1.3.864"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.864.tgz#6a993bcc196a2b8b3df84d28d5d4dd912393885f"
+  integrity sha512-v4rbad8GO6/yVI92WOeU9Wgxc4NA0n4f6P1FvZTY+jyY7JHEhw3bduYu60v3Q1h81Cg6eo4ApZrFPuycwd5hGw==
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -11920,9 +11927,9 @@ eslint-plugin-import@^2.22.1:
     tsconfig-paths "^3.11.0"
 
 eslint-plugin-jest@^24.3.5:
-  version "24.5.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-24.5.2.tgz#f71f98f27fd18b50f55246ca090f36d1730e36a6"
-  integrity sha512-lrI3sGAyZi513RRmP08sIW241Ti/zMnn/6wbE4ZBhb3M2pJ9ztaZMnSKSKKBUfotVdwqU8W1KtD8ao2/FR8DIg==
+  version "24.7.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-24.7.0.tgz#206ac0833841e59e375170b15f8d0955219c4889"
+  integrity sha512-wUxdF2bAZiYSKBclsUMrYHH6WxiBreNjyDxbRv345TIvPeoCEgPNEn3Sa+ZrSqsf1Dl9SqqSREXMHExlMMu1DA==
   dependencies:
     "@typescript-eslint/experimental-utils" "^4.0.1"
 
@@ -13028,7 +13035,7 @@ focus-lock@^0.9.1:
   dependencies:
     tslib "^2.0.3"
 
-follow-redirects@^1.0.0, follow-redirects@^1.10.0, follow-redirects@^1.14.0:
+follow-redirects@^1.0.0, follow-redirects@^1.10.0, follow-redirects@^1.14.0, follow-redirects@^1.14.4:
   version "1.14.4"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.4.tgz#838fdf48a8bbdd79e52ee51fb1c94e3ed98b9379"
   integrity sha512-zwGkiSXC1MUJG/qmeIFH2HBJx9u0V46QGUe3YR1fXG8bXQxq7fLj0RjLZQ5nubr9qNJUZrH+xUcwXEoXNpfS+g==
@@ -16821,6 +16828,11 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
+
+jslib-html5-camera-photo@3.1.8:
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/jslib-html5-camera-photo/-/jslib-html5-camera-photo-3.1.8.tgz#25598735e1cd7dd82634b2c31a537bef6f3ebff1"
+  integrity sha512-7vBcVyLUnnP37vKzOxzIFtpaS8I8z+XMtyOlNFm+BGW089/Yw1hROsH2MdbIjCDRWfD+DnMC/WCNmW3LO2chrQ==
 
 json-buffer@3.0.0:
   version "3.0.0"
@@ -21331,9 +21343,9 @@ rc-pagination@~3.1.2:
     classnames "^2.2.1"
 
 rc-picker@~2.5.1:
-  version "2.5.18"
-  resolved "https://registry.yarnpkg.com/rc-picker/-/rc-picker-2.5.18.tgz#f84859815ef3f874ade689714a41151e709292c3"
-  integrity sha512-XyieTl8GOC5TeQFEvYbjx/Mtc0/CjruS7mKFT6Fy65FbGXmoFsWoWvIi+ylFx/BQHPGQi7a7vCNoZJ2TTqcZoA==
+  version "2.5.19"
+  resolved "https://registry.yarnpkg.com/rc-picker/-/rc-picker-2.5.19.tgz#73d07546fac3992f0bfabf2789654acada39e46f"
+  integrity sha512-u6myoCu/qiQ0vLbNzSzNrzTQhs7mldArCpPHrEI6OUiifs+IPXmbesqSm0zilJjfzrZJLgYeyyOMSznSlh0GKA==
   dependencies:
     "@babel/runtime" "^7.10.1"
     classnames "^2.2.1"
@@ -21393,9 +21405,9 @@ rc-select@^12.0.0, rc-select@~12.1.0:
     rc-virtual-list "^3.2.0"
 
 rc-slider@~9.7.1:
-  version "9.7.2"
-  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-9.7.2.tgz#282f571f7582752ebaa33964e441184f4e79ad74"
-  integrity sha512-mVaLRpDo6otasBs6yVnG02ykI3K6hIrLTNfT5eyaqduFv95UODI9PDS6fWuVVehVpdS4ENgOSwsTjrPVun+k9g==
+  version "9.7.4"
+  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-9.7.4.tgz#430c860723bf6445ebf53517b550417a2f25eed1"
+  integrity sha512-pjLKLiDKiaL7/pNywfIBD+lDo5TtVo05KuIBSWEIoqu6FHh6IMWvthCiaODuYaVs3RLeF2nXOP5AjkD2Lt2Rwg==
   dependencies:
     "@babel/runtime" "^7.10.1"
     classnames "^2.2.5"
@@ -21692,9 +21704,9 @@ react-docgen-typescript@1.22.0:
   integrity sha512-MPLbF8vzRwAG3GcjdL+OHQlhgtWsLTXs+7uJiHfEeT3Ur7IsZaNYqRTLQ9sj2nB6M6jylcPCeCmH7qbszJmecg==
 
 react-docgen-typescript@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-docgen-typescript/-/react-docgen-typescript-2.1.0.tgz#20db64a7fd62e63a8a9469fb4abd90600878cbb2"
-  integrity sha512-7kpzLsYzVxff//HUVz1sPWLCdoSNvHD3M8b/iQLdF8fgf7zp26eVysRrAUSxiAT4yQv2zl09zHjJEYSYNxQ8Jw==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-docgen-typescript/-/react-docgen-typescript-2.1.1.tgz#c9f9ccb1fa67e0f4caf3b12f2a07512a201c2dcf"
+  integrity sha512-XWe8bsYqVjxciKdpNoufaHiB7FgUHIOnVQgxUolRL3Zlof2zkdTzuQH6SU2n3Ek9kfy3O1c63ojMtNfpiuNeZQ==
 
 react-docgen@^5.0.0:
   version "5.4.0"
@@ -21898,6 +21910,13 @@ react-html-parser@2.0.2:
   integrity sha512-XeerLwCVjTs3njZcgCOeDUqLgNIt/t+6Jgi5/qPsO/krUWl76kWKXMeVs2LhY2gwM6X378DkhLjur0zUQdpz0g==
   dependencies:
     htmlparser2 "^3.9.0"
+
+react-html5-camera-photo@1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/react-html5-camera-photo/-/react-html5-camera-photo-1.5.5.tgz#dbc81c40fd3d037ac223ed177edea519264895e4"
+  integrity sha512-e6vw0FJjyoxR1nJgV2hXfLKJYBmpg8+GG5KgwPQEsr8IJFgFKUM2xHMEQYorTPchsKvwxzUXJEoOiroxWw9bwA==
+  dependencies:
+    jslib-html5-camera-photo "3.1.8"
 
 react-i18next@11.8.13:
   version "11.8.13"
@@ -22307,6 +22326,11 @@ react-vertical-timeline-component@3.3.3:
     classnames "^2.2.6"
     prop-types "^15.7.2"
     react-intersection-observer "^8.26.2"
+
+react-webcam@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/react-webcam/-/react-webcam-6.0.0.tgz#46dd9ba44cebe6bf3cc4ea2ff09d12243900abfa"
+  integrity sha512-pw7067WYnDHRjAXYXrsLeig9/AAxCFDnnaEJzZ5ep6UZoYMqF4UNRtVkeTk0LotpwqT/c8vHisn/+QodNbUsQA==
 
 react-zoom-pan-pinch@2.1.3:
   version "2.1.3"
