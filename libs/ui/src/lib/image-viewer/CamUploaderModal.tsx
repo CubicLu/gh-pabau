@@ -313,14 +313,6 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
     }
   }
 
-  useEffect(() => {
-    if (isMobile) {
-      setFacingMode(facingModes[0])
-    } else {
-      setFacingMode(facingModes[1])
-    }
-  }, [facingModes, isMobile])
-
   return (
     <Modal
       visible={visible}
