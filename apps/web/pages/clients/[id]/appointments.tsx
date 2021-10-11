@@ -62,11 +62,13 @@ const Appointments = () => {
             notes: appt?.note,
             isVideoCall: 1,
             bookedBy: 'William Brandham',
+            isCourse: appt?.where === 'course',
           }
         }
       )
       setClientAppointments(appointments)
     }
+    console.log('clientAppointmentData', clientAppointmentData)
   }, [clientAppointmentData])
 
   // DONT DO THIS! Move to libs/graphql

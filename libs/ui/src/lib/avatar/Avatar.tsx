@@ -24,6 +24,7 @@ export interface AvatarProps extends NativeAvatarProps {
   active?: AvatarStatus
   edit?: boolean
   isTooltip?: boolean
+  tooltipText?: string
   handleCheck?: (name, checkable) => void
   checkList?: string[]
   counter?: string | number
@@ -38,6 +39,7 @@ export const Avatar: FC<AvatarProps> = ({
   active = 'default',
   edit,
   isTooltip = true,
+  tooltipText = name,
   handleCheck,
   checkList,
   counter,
@@ -93,7 +95,7 @@ export const Avatar: FC<AvatarProps> = ({
         </div>
       ) : active !== AvatarStatus.select ? (
         <Tooltip
-          title={isTooltip ? name : ''}
+          title={isTooltip && tooltipText ? tooltipText : ''}
           placement="bottom"
           overlayClassName={styles.overlay}
         >

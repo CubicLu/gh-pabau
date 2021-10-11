@@ -38,6 +38,7 @@ import {
   ClientAppointmentItem,
   Notification,
   NotificationType,
+  UserProps,
 } from '@pabau/ui'
 import SetNotification from './SetNotification'
 import styles from './ClientAppointmentCard.module.less'
@@ -364,12 +365,14 @@ export const ClientAppointmentCard: FC<
           )}
           {otherEmployees && otherEmployees.length > 0 && (
             <AvatarList
+              tooltipField={'role'}
               users={[
                 { id: 0, name: employee.name, avatarUrl: employee.avatar },
                 ...otherEmployees.map((item, index) => ({
                   id: index + 1,
                   name: item.name,
                   avatarUrl: item.avatar,
+                  role: item.relationship,
                 })),
               ]}
             />
