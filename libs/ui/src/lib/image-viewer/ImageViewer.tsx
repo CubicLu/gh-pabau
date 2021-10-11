@@ -185,6 +185,9 @@ export interface ImageViewerProps {
   selectedPhotoId?: number
   onAlbumSelect?: (album) => void
   onClose: () => void
+  uploadingImages?: UploadingImageProps[]
+  setUploadingImages?: (images: UploadingImageProps[]) => void
+  uploadImage?: (image: UploadingImageProps) => void
 }
 
 const ImageViewerModal: FC<ImageViewerProps> = ({
@@ -195,14 +198,15 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   selectedPhotoId,
   onAlbumSelect,
   onClose,
+  uploadingImages,
+  setUploadingImages,
+  uploadImage,
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
   const [showCamera, setShowCamera] = useState(false)
   const [showCamUploader, setShowCamUploader] = useState(false)
-  const [uploadingImages, setUploadingImages] = useState<
-    UploadingImageProps[]
-  >()
+
   const [editTitle, setEditTitle] = useState(false)
   const [isDefaultPhoto, setIsDefaultPhoto] = useState(false)
   const [comparingMode, setComparingMode] = useState<ComparingMode>(
@@ -896,8 +900,9 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
               setShowCamUploader(() => false)
             }}
             uploadingImages={uploadingImages as UploadingImageProps[]}
-            setUploadingImages={setUploadingImages}
+            setUploadingImages={(images) => setUploadingImages?.(images)}
             showCamera={showCamera}
+            uploadImage={uploadImage}
           />
         )}
       </AntModal>

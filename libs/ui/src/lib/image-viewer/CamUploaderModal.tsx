@@ -8,11 +8,11 @@ import {
 } from '@ant-design/icons'
 import { Progress, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
-import { isMobile as mobileDevice } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import { ReactComponent as ImagesIcon } from '../../assets//images/image-viewer/image-gallery.svg'
-import { ReactComponent as CameraCircleFilled } from '../../assets//images/image-viewer/camera-circle-filled.svg'
-import { ReactComponent as PhotoCircleFilled } from '../../assets//images/image-viewer/photo-circle-filled.svg'
+import { ReactComponent as CameraCircleFilled } from '../../assets/images/image-viewer/camera-circle-filled.svg'
+import { ReactComponent as PhotoCircleFilled } from '../../assets/images/image-viewer/photo-circle-filled.svg'
+import { ReactComponent as CameraFlip } from '../../assets/images/camra-flip.svg'
 import styles from './CamUploaderModal.module.less'
 import 'react-html5-camera-photo/build/css/index.css'
 import classNames from 'classnames'
@@ -58,9 +58,8 @@ interface ImageThumbnailProps {
   isUploadStarted?: boolean
   setUploadStarted?: (id) => void
   isUploadCompleted?: boolean
-  setUploadCompleted?: (id) => void
   uploadPercentage?: number
-  setUploadPercentage?: (id, percent) => void
+  uploadImage?: (image: UploadingImageProps) => void
   removeFile?: (id) => void
 }
 
@@ -69,9 +68,8 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
   isUploadStarted,
   setUploadStarted,
   isUploadCompleted,
-  setUploadCompleted,
   uploadPercentage = 0,
-  setUploadPercentage,
+  uploadImage,
   removeFile,
 }) => {
   const api = axios.create({
@@ -84,39 +82,11 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
 
   useEffect(() => {
     if (!isUploadStarted) {
-      const upload = async (fileData) => {
-        setUploadStarted?.(fileData?.id)
-        const config = {
-          onUploadProgress: function (progressEvent) {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            )
-            setUploadPercentage?.(fileData?.id, percentCompleted)
-          },
-        }
-        const data = new FormData()
-        data.append('File', fileData?.file)
-        data.append('id', fileData?.id)
-
-        await api
-          .post('upload', data, config)
-          .then((res) => {
-            setUploadCompleted?.(fileData?.id)
-            console.log('RES:', res)
-          })
-          .catch((error) => console.log(error?.message))
-      }
+      setUploadStarted?.(data?.id)
       setThumbnail(data)
-      upload?.(data)
+      uploadImage?.(data)
     }
-  }, [
-    api,
-    data,
-    isUploadStarted,
-    setUploadCompleted,
-    setUploadPercentage,
-    setUploadStarted,
-  ])
+  }, [api, data, isUploadStarted, setUploadStarted, uploadImage])
 
   return (
     <div
@@ -292,6 +262,7 @@ export interface CamUploaderProps {
   showCamera?: boolean
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (images: UploadingImageProps[]) => void
+  uploadImage?: (image: UploadingImageProps) => void
 }
 
 export const CamUploaderModal: FC<CamUploaderProps> = ({
@@ -300,28 +271,22 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   showCamera = false,
   uploadingImages = [],
   setUploadingImages,
+  uploadImage,
 }) => {
+  const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
   const inputFileRef = useRef<HTMLInputElement>(null)
   const isMobile = useMedia('(max-width: 767px)', false)
-  const [addedFiles, setAddedFiles] = useState<UploadingImageProps[]>([])
+  const [facingMode, setFacingMode] = useState(
+    isMobile ? facingModes[0] : facingModes[1]
+  )
 
   const captureImage = () => {
     const elem = document.querySelector('#outer-circle') as HTMLElement
     elem?.click()
   }
 
-  const chooseFile = () => {
-    if (inputFileRef?.current) inputFileRef?.current?.click()
-  }
-
-  useEffect(() => {
-    if (uploadingImages?.length > 0 && addedFiles?.length <= 0) {
-      setAddedFiles(uploadingImages)
-    }
-  }, [addedFiles, uploadingImages])
-
   const handleTakePhoto = (dataUri) => {
-    const cAddedFiles = [...addedFiles]
+    const cAddedFiles = [...uploadingImages]
     const file = dataURLtoFile(dataUri, `${makeId(12)}.jpg`)
     const newFile: UploadingImageProps = {
       id: makeId(20),
@@ -330,7 +295,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       size: file?.size,
     }
     cAddedFiles.push(newFile)
-    setAddedFiles(cAddedFiles)
+    setUploadingImages(cAddedFiles)
   }
 
   const handleAddFiles = (files: File[]) => {
@@ -343,20 +308,23 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           size: file?.size,
         }
       })
-      const cAddedFiles = [...addedFiles, ...cFiles]
-      setAddedFiles(cAddedFiles)
+      const cAddedFiles = [...uploadingImages, ...cFiles]
+      setUploadingImages(cAddedFiles)
     }
   }
 
-  const onModalClose = () => {
-    onClose?.()
-    setUploadingImages(addedFiles)
-  }
+  useEffect(() => {
+    if (isMobile) {
+      setFacingMode(facingModes[0])
+    } else {
+      setFacingMode(facingModes[1])
+    }
+  }, [facingModes, isMobile])
 
   return (
     <Modal
       visible={visible}
-      onCancel={onModalClose}
+      onCancel={onClose}
       width="980px"
       className={styles.uppyModal}
       closable={false}
@@ -365,7 +333,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       <div className={styles.uppyModalHeader}>
         {isMobile && (
           <span>
-            <LeftOutlined onClick={onModalClose} />
+            <LeftOutlined onClick={onClose} />
           </span>
         )}
         <div className={styles.title}>
@@ -376,7 +344,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         </div>
         {!isMobile && (
           <div>
-            <CloseOutlined onClick={onModalClose} />{' '}
+            <CloseOutlined onClick={onClose} />{' '}
           </div>
         )}
       </div>
@@ -389,78 +357,77 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             onChange={handleAddFiles}
           />
         )}
-        {showCamera && (
-          <Camera
-            isImageMirror
-            isMaxResolution
-            idealFacingMode={
-              mobileDevice || isMobile
-                ? FACING_MODES.ENVIRONMENT
-                : FACING_MODES.USER
-            }
-            imageType={IMAGE_TYPES.JPG}
-            sizeFactor={1}
-            onTakePhoto={(dataUri) => {
-              handleTakePhoto(dataUri)
-            }}
-          />
+        {showCamera &&
+          (isMobile ? (
+            <input
+              type="file"
+              name="File"
+              accept="image/*"
+              multiple
+              capture={facingMode}
+              onChange={(e) => {
+                const cFiles = (e.target.files as unknown) as File[]
+                handleAddFiles([...cFiles])
+              }}
+            />
+          ) : (
+            <Camera
+              isImageMirror={facingMode === facingModes[0] ? false : true}
+              isMaxResolution
+              idealFacingMode={facingMode}
+              imageType={IMAGE_TYPES.JPG}
+              sizeFactor={1}
+              onTakePhoto={(dataUri) => {
+                handleTakePhoto(dataUri)
+              }}
+            />
+          ))}
+        {isMobile && (
+          <div className={styles.cameraFlip}>
+            <CameraFlip
+              onClick={() => {
+                if (facingMode === facingModes[0]) setFacingMode(facingModes[1])
+                if (facingMode === facingModes[1]) setFacingMode(facingModes[0])
+              }}
+            />
+          </div>
         )}
         <div className={styles.addedImagesDiv}>
           <div className={styles.addedImagesDivInner}>
-            {addedFiles?.length > 0 && (
+            {uploadingImages?.length > 0 && (
               <div className={styles.addedImagesFixer}>
-                {addedFiles?.map((el, index) => (
+                {uploadingImages?.map((el, index) => (
                   <ImageThumbnail
                     data={el}
                     key={el?.id}
+                    uploadImage={uploadImage}
                     isUploadStarted={
-                      addedFiles?.find((e) => e?.id === el?.id)
+                      uploadingImages?.find((e) => e?.id === el?.id)
                         ?.isUploadStarted || false
                     }
                     isUploadCompleted={
-                      addedFiles?.find((e) => e?.id === el?.id)
+                      uploadingImages?.find((e) => e?.id === el?.id)
                         ?.isUploadCompleted || false
                     }
                     uploadPercentage={
-                      addedFiles?.find((e) => e?.id === el?.id)
+                      uploadingImages?.find((e) => e?.id === el?.id)
                         ?.uploadPercentage || 0
                     }
                     setUploadStarted={(id: string) => {
-                      const cAddedFiles = [...addedFiles]
+                      const cAddedFiles = [...uploadingImages]
                       const idx = cAddedFiles?.findIndex((el) => el?.id === id)
                       if (idx !== -1) {
                         const cFile = cAddedFiles[idx]
                         cFile.isUploadStarted = true
                         cAddedFiles.splice(idx, 1, cFile)
-                        setAddedFiles(cAddedFiles)
-                      }
-                    }}
-                    setUploadCompleted={(id: string) => {
-                      const cAddedFiles = [...addedFiles]
-                      const idx = cAddedFiles?.findIndex((el) => el?.id === id)
-                      if (idx !== -1) {
-                        const cFile = cAddedFiles[idx]
-                        cFile.isUploadCompleted = true
-                        cAddedFiles.splice(idx, 1, cFile)
-                        setAddedFiles(cAddedFiles)
-                      }
-                    }}
-                    setUploadPercentage={(id: string, percent: number) => {
-                      const cAddedFiles = [...addedFiles]
-                      const idx = cAddedFiles?.findIndex((el) => el?.id === id)
-                      if (idx !== -1) {
-                        const cFile = cAddedFiles[idx]
-                        cFile.uploadPercentage = percent
-                        cAddedFiles.splice(idx, 1, cFile)
-                        setAddedFiles(cAddedFiles)
+                        setUploadingImages(cAddedFiles)
                       }
                     }}
                     removeFile={(id) => {
-                      const cAddedFiles = [...addedFiles]
+                      const cAddedFiles = [...uploadingImages]
                       const idx = cAddedFiles?.findIndex((el) => el?.id === id)
                       if (idx !== -1) {
                         cAddedFiles.splice(idx, 1)
-                        setAddedFiles(cAddedFiles)
                         setUploadingImages(cAddedFiles)
                       }
                     }}
@@ -473,7 +440,8 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       </div>
       <div className={styles.uppyModalFooter}>
         <div>
-          {addedFiles?.length || 0} photo{addedFiles?.length > 0 && 's'}
+          {uploadingImages?.length || 0} photo
+          {uploadingImages?.length > 0 && 's'}
         </div>
         <div>
           {showCamera && (
@@ -485,7 +453,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           {!showCamera && (
             <PhotoCircleFilled
               className={styles.photoIcon}
-              onClick={chooseFile}
+              onClick={() => inputFileRef?.current?.click()}
             />
           )}
         </div>

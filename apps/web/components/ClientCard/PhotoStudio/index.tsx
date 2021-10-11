@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
-import { ImageViewer, ImageViewerAlbum } from '@pabau/ui'
+import { ImageViewer, ImageViewerAlbum, UploadingImageProps } from '@pabau/ui'
+import axios from 'axios'
 import dayjs from 'dayjs'
 import {
   useGetPhotoAlbumsQuery,
@@ -24,9 +25,17 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   albumId,
   contactId,
 }) => {
+  const api = axios.create({
+    baseURL: 'http://localhost:5000/',
+    headers: {},
+  })
+
   const [totalAlbums, setTotalAlbums] = useState<ImageViewerAlbum[]>()
   const [currentAlbumData, setCurrentAlbumData] = useState<ImageViewerAlbum>()
   const [nonAlbumPhotos, setNonAlbumPhotos] = useState(null)
+  const [uploadingImages, setUploadingImages] = useState<
+    UploadingImageProps[]
+  >()
 
   const { data: dUnCatPhotos } = useGetUncatPhotosQuery({
     fetchPolicy: 'network-only',
@@ -164,6 +173,37 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     }
   }
 
+  const uploadImage = async (fileData) => {
+    const cAddedFiles = [...uploadingImages]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
+    const config = {
+      onUploadProgress: function (progressEvent) {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        )
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.uploadPercentage = percentCompleted
+          if (percentCompleted === 100) {
+            cFile.isUploadCompleted = true
+          }
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingImages(cAddedFiles)
+        }
+      },
+    }
+    const data = new FormData()
+    data.append('File', fileData?.file)
+    data.append('id', fileData?.id)
+
+    await api
+      .post('upload', data, config)
+      .then((res) => {
+        console.log('RES:', res)
+      })
+      .catch((error) => console.log(error?.message))
+  }
+
   return (
     <ImageViewer
       visible={visible}
@@ -173,6 +213,9 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
       onAlbumSelect={onAlbumSelect}
       onClose={setVisible}
       title={title || 'Title'}
+      uploadingImages={uploadingImages}
+      setUploadingImages={setUploadingImages}
+      uploadImage={uploadImage}
     />
   )
 }
