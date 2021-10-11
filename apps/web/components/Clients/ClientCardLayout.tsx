@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router'
 import { useBasicContactDetailsQuery } from '@pabau/graphql'
 import { ClientCard, TabItem } from '@pabau/ui'
-import React, { ComponentPropsWithoutRef, FC } from 'react'
+import React, { ComponentPropsWithoutRef, FC, useState } from 'react'
 import Layout from '../Layout/Layout'
+import ClientCreate from '../Clients/ClientCreate'
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -12,7 +13,10 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
-  const { data } = useBasicContactDetailsQuery({
+
+  const [openEditModal, setOpenEditModal] = useState(false)
+
+  const { data, refetch } = useBasicContactDetailsQuery({
     skip: !router.query['id'],
     ssr: false,
     variables: { id: clientId },
@@ -84,6 +88,15 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     // },
   ] as const
 
+  const handleEditAll = () => {
+    setOpenEditModal(true)
+  }
+
+  const handleEditSubmit = () => {
+    setOpenEditModal(false)
+    refetch()
+  }
+
   return (
     <Layout>
       <ClientCard
@@ -93,6 +106,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         onTabChanged={(key) =>
           router.push(key === 'dashboard' ? baseUrl : `${baseUrl}/${key}`)
         }
+        handleEditAll={handleEditAll}
         client={
           data
             ? ({
@@ -110,6 +124,17 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       >
         {children}
       </ClientCard>
+      {openEditModal && (
+        <ClientCreate
+          modalVisible={openEditModal}
+          handleClose={() => {
+            setOpenEditModal(false)
+          }}
+          isEdit={openEditModal}
+          handleSubmit={handleEditSubmit}
+          contactId={clientId}
+        />
+      )}
     </Layout>
   )
 }

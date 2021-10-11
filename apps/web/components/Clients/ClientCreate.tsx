@@ -20,7 +20,6 @@ import {
   GetTblModuleFieldsSettingsQuery,
   useFindEditContactDetailLazyQuery,
   useUpdateOneContactMutation,
-  Status,
 } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
 import dayjs from 'dayjs'
@@ -471,9 +470,9 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         })
         setLabels(labelData)
       }
-      if (data.active === 'Enable') {
+      if (data.active) {
         setActive(true)
-      } else if (data.active === 'Disable') {
+      } else {
         setActive(false)
       }
       setInitialValues({ ...values })
@@ -636,7 +635,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       response = await updateMutation({
         variables: {
           ...variables,
-          status: active ? Status.Enable : Status.Disable,
+          isActive: active ? 1 : 0,
           contactId,
         },
         optimisticResponse: {},

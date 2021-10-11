@@ -120,6 +120,7 @@ interface P {
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
   activeTab?: string
+  handleEditAll?: () => void
 }
 
 const ClientCardModal: FC<P> = ({
@@ -129,6 +130,7 @@ const ClientCardModal: FC<P> = ({
   activeTab,
   children,
   onTabChanged,
+  handleEditAll,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -934,6 +936,7 @@ const ClientCardModal: FC<P> = ({
                   onCreateCall={() => handleCreatePopout('call')}
                   searchResults={thirdPartySearchResults}
                   appointments={appointments}
+                  handleEditAll={handleEditAll}
                 />
               )}
             </div>

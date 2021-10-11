@@ -83,7 +83,7 @@ query getContactCustomFields {
   custom: findManyManageCustomFieldCategory {
     id
     name
-    ManageCustomField {
+    ManageCustomField(where:{field_for: { in: [CONTACT, CONTACTLEAD] }}) {
       id
       field_label
       field_type
@@ -234,7 +234,7 @@ query findEditContactDetail($id: Int) {
     MarketingOptInPhone
     needToKnows: need_to_knows
     privacyPolicy: privacy_policy
-    active: Status
+    active: is_active
     contactPreference: ContactPreference {
       family
       emergencyContact: emergency_contact
@@ -300,7 +300,7 @@ mutation updateOneContact
   $customFields: [UpdateContactCustomFieldType]
   $labels: UpdateContactLabelType
   $contactPreferences: ContactPreferenceDataInput
-  $status: Status
+  $isActive: Int
 )
 {
   updateOneContact(
@@ -327,7 +327,7 @@ mutation updateOneContact
       preferred_language: $preferredLanguage
       privacy_policy: $privacyPolicy
       need_to_knows: $needToKnows
-      Status: $status
+      is_active: $isActive
     }
     customFields: $customFields
     contactPreferences:$contactPreferences

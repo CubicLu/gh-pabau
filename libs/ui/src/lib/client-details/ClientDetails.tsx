@@ -112,6 +112,7 @@ export interface ClientDetailsProps {
   onCreateCall: () => void
   searchResults: SearchItem[]
   appointments: Appointment[]
+  handleEditAll?: () => void
 }
 
 enum FieldType {
@@ -141,6 +142,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   onCreateCall,
   searchResults,
   appointments,
+  handleEditAll,
 }) => {
   const { t } = useTranslation('common')
   const [initFields, setInitFields] = useState(false)
@@ -777,18 +779,17 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                     <div className={styles.title}>
                       {t('ui.clientdetails.details')}
                     </div>
-                    <div
-                      className={styles.customizeFields}
-                      onClick={() => setCustomizingFields(true)}
-                    >
-                      {t('ui.clientdetails.customise')}
+                    <div className={styles.customizeFields}>
+                      <div onClick={() => setCustomizingFields(true)}>
+                        {t('ui.clientdetails.customise')}
+                      </div>
                       <Tooltip
                         title={t('ui.clientdetails.customise.edit')}
                         overlayStyle={{ width: '100px' }}
                       >
                         <div
                           className={styles.editCustomizeFields}
-                          onClick={() => setCustomizingFields(true)}
+                          onClick={() => handleEditAll?.()}
                         >
                           <EditOutlined />
                         </div>

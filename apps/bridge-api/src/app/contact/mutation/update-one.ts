@@ -1,11 +1,4 @@
-import {
-  mutationField,
-  list,
-  nonNull,
-  intArg,
-  inputObjectType,
-  enumType,
-} from 'nexus'
+import { mutationField, list, nonNull, intArg, inputObjectType } from 'nexus'
 import { Context } from '../../../context'
 import { createLabel } from '../label'
 
@@ -24,11 +17,6 @@ export const UpdateContactLabelType = inputObjectType({
     t.list.field('createLabels', { type: 'labelFieldType' })
     t.list.int('deleteLabels')
   },
-})
-
-const Status = enumType({
-  name: 'Status',
-  members: ['Enable', 'Disable', 'Delete'],
 })
 
 export const UpdateContactDataInput = inputObjectType({
@@ -55,7 +43,7 @@ export const UpdateContactDataInput = inputObjectType({
     t.nonNull.string('preferred_language')
     t.string('privacy_policy')
     t.boolean('need_to_knows')
-    t.field('Status', { type: Status })
+    t.int('is_active')
     t.string('Avatar')
     t.string('custom_id')
     t.string('RefferalSource')
