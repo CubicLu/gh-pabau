@@ -1,7 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import { Staff } from '../../types/staff'
 import Styles from './EmployeeSelector.module.less'
-import { ReactComponent as SkinHealth } from '../../assets/images/skin-health-logo.svg'
 import { ReactComponent as Hair } from '../../../../libs/ui/src/assets/images/Hair.svg'
 import { ReactComponent as Face } from '../../../../libs/ui/src/assets/images/face.svg'
 import { ReactComponent as Massage } from '../../../../libs/ui/src/assets/images/massage.svg'
@@ -9,10 +8,13 @@ import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo
 import { Badge, Carousel, Modal } from 'antd'
 import { useMedia } from 'react-use'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import styles from '../Header.module.less'
+import { SettingsContext } from '../../context/settings-context'
 
 interface P {
   employeeData: Staff
-  visible: boolean
+  estimatedCost: number
 }
 export interface ArrowProps {
   type: string
@@ -27,7 +29,7 @@ const Arrow = (prop: ArrowProps) => {
     </span>
   )
 }
-const renderdesk = () => {
+const renderdesk = (employeeData) => {
   return (
     <div>
       <Carousel
@@ -36,27 +38,31 @@ const renderdesk = () => {
         dots={false}
         arrows={true}
       >
-        {data.map((item) => (
-          <div className={Styles.deskmainbox} key={item.key}>
+        {employeeData.Public_User.Public_SocialSurveyFeedback.map((item) => (
+          <div className={Styles.deskmainbox} key={item.id}>
             <div className={Styles.deskbox}>
-              <img src={item.source} alt={'noyhing'} />
+              {/*<img src={item.source} alt={'noyhing'} />*/}
               <div className={Styles.deskupperbox}>
-                <span className={Styles.deskHeadding}>{item.name}</span>
+                <span className={Styles.deskHeadding}>
+                  {item.feedback_name}
+                </span>
                 <Badge dot color={'gray'} />
                 <span className={Styles.deskRatting}>{item.rating}/5</span>
                 <Badge dot color={'gray'} />
                 <span className={Styles.deskMonth}>
-                  {item.month}
+                  {item.date}
                   month ago
                 </span>
               </div>
             </div>
 
-            <div className={Styles.deskDescription}>{item.description}</div>
+            <div className={Styles.deskDescription}>
+              {item.feedback_comment}
+            </div>
             <div className={Styles.deskFootertext}>
-              <p>Treatment by Threading/Waxing</p>
+              {/*<p>Treatment by Threading/Waxing</p>*/}
               <Badge dot color={'gray'} />
-              <span className={Styles.textEvrybrow}>Eyebrow Waxing</span>
+              <span className={Styles.textEvrybrow}>{item.service}</span>
             </div>
           </div>
         ))}
@@ -65,27 +71,31 @@ const renderdesk = () => {
     </div>
   )
 }
-const rendermobile = () => {
+const rendermobile = (employeeData) => {
   return (
     <div>
-      {data.map((item) => (
-        <div key={item.key}>
+      {employeeData.Public_User.Public_SocialSurveyFeedback.map((item) => (
+        <div key={item.id}>
           <div className={Styles.deskmainbox}>
             <div className={Styles.deskbox}>
-              <img src={item.source} alt={'nothing'} />
+              {/*<img src={item.source} alt={'nothing'} />*/}
               <div className={Styles.deskupperbox}>
-                <span className={Styles.deskHeadding}>{item.name}</span>
+                <span className={Styles.deskHeadding}>
+                  {item.feedback_name}
+                </span>
                 <Badge dot color={'gray'} />
                 <span className={Styles.deskRatting}>{item.rating}/5</span>
                 <Badge dot color={'gray'} />
                 <span className={Styles.deskMonth}>
-                  {item.month}
+                  {item.date}
                   month ago
                 </span>
               </div>
             </div>
 
-            <div className={Styles.deskDescription}>{item.description}</div>
+            <div className={Styles.deskDescription}>
+              {item.feedback_comment}
+            </div>
           </div>
           <p className={Styles.dectTextShow}>Show venue reply...</p>
         </div>
@@ -94,16 +104,26 @@ const rendermobile = () => {
   )
 }
 
-const EmployeeModal: FC<P> = ({ employeeData, visible }) => {
-  const [isVisible, setIsVisible] = useState(visible)
+const EmployeeModal: FC<P> = ({ employeeData, estimatedCost }) => {
+  const [isVisible, setIsVisible] = useState(true)
   const isMobile = useMedia('(max-width: 768px)', false)
+  const settings = useContext(SettingsContext)
+  const { t } = useTranslationI18()
   return (
     <Modal
-      visible={visible}
+      visible={isVisible}
       onCancel={() => setIsVisible(false)}
       footer={false}
     >
-      <div className={Styles.mbLogo}> {isMobile && <SkinHealth />}</div>
+      <div className={Styles.mbLogo}>
+        {isMobile && (
+          <img
+            src={settings.pod_url + settings.details.logo}
+            alt={settings.details.name}
+            className={styles.headerLogo}
+          />
+        )}
+      </div>
       <div>
         {isMobile && (
           <div className={Styles.mbHeding}>
@@ -116,27 +136,27 @@ const EmployeeModal: FC<P> = ({ employeeData, visible }) => {
         <div className={Styles.modifuContex}>
           <div className={Styles.contentBox}>
             <img
-              src={employeeData.image}
+              src={settings.pod_url + employeeData.Avatar}
               className={Styles.userImage}
               alt={'nothing'}
             />
             <div className={Styles.userDetailWrapper}>
               <div className={Styles.userDetail}>
-                <p className={Styles.userName}>{employeeData.name}</p>
-                <p>{employeeData.description}</p>
+                <p className={Styles.userName}>
+                  {employeeData.Public_User.full_name}
+                </p>
+                <p>{employeeData.Position}</p>
               </div>
 
-              <p className={Styles.userCharge}>
-                {employeeData.charges ? `£${employeeData.charges}` : ''}
-              </p>
+              <p className={Styles.userCharge}>{'£' + estimatedCost}</p>
             </div>
           </div>
         </div>
         <div className={Styles.modifAbout}>
           <span className={Styles.aboutHeader}>About</span>
           <p className={Styles.aboutText}>
-            {employeeData.name} has been in the industry for over 30 years and
-            is the very best in he field!
+            {employeeData.Public_User.full_name} has been in the industry for
+            over 30 years and is the very best in he field!
           </p>
         </div>
         <div className={Styles.mainServices}>
@@ -149,14 +169,18 @@ const EmployeeModal: FC<P> = ({ employeeData, visible }) => {
         </div>
         <div className={Styles.sliderDiv}>
           <span className={Styles.sliderheader}>
-            What our customers say about {employeeData.name}
+            What our customers say about {employeeData.Public_User.full_name}
           </span>
-          {isMobile ? <div>{rendermobile()}</div> : <div>{renderdesk()}</div>}
+          {isMobile ? (
+            <div>{rendermobile(employeeData)}</div>
+          ) : (
+            <div>{renderdesk(employeeData)}</div>
+          )}
         </div>
       </div>
       {isMobile && (
         <div className={Styles.mdFooterLogo}>
-          <p>{translation('connect.onlinebooking.footer.data')}</p>
+          <p>{t('connect.onlinebooking.footer.data')}</p>
           <LogoSvg style={{ height: '15px', width: '60px' }} />
         </div>
       )}

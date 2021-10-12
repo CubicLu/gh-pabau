@@ -14,6 +14,15 @@ query onlineBookableStaff($company_id: Int!) {
         price
         service_id
       }
+      Public_SocialSurveyFeedback {
+        rating
+        feedback_status
+        feedback_name
+        feedback_comment
+        date
+        service
+        id
+      }
     }
   }
 }

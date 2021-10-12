@@ -9,5 +9,6 @@ export const PublicSocialSurveyFeedbackResponse = objectType({
     t.string('feedback_comment')
     t.string('feedback_name')
     t.string('feedback_status')
+    t.string('service')
   },
 })

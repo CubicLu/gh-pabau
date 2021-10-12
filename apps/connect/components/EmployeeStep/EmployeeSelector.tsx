@@ -1,10 +1,12 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import Styles from './EmployeeSelector.module.less'
 import { useOnlineBookableStaffQuery } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
 import useServices from '../../hooks/useServices'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import EmployeeModal from './EmployeeModal'
 export interface P {
   onSelected: () => void
 }
@@ -13,6 +15,7 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
   const { t } = useTranslationI18()
   const { setSelectedData, actionTypes } = useSelectedDataStore()
   const [getTotalServiceCost] = useServices()
+  const [activeStaffModalID, setActiveStaffModalID] = useState(0)
   const settings = useContext(SettingsContext)
 
   const {
@@ -43,7 +46,7 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
         >
           <div className={Styles.contentBox}>
             <img
-              src={'https://crm.pabau.com/' + val.Avatar}
+              src={settings.pod_url + val.Avatar}
               alt="User Avatar"
               className={Styles.userImage}
             />
@@ -51,7 +54,15 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.userDetail}>
                 <div className={Styles.userdetailInner}>
                   <p className={Styles.userName}>{val.Public_User.full_name}</p>
-                  {/*{false && <QuestionCircleOutlined />}*/}
+                  {settings.BookitProGeneral.allow_rating && (
+                    <QuestionCircleOutlined
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setActiveStaffModalID(val.ID)
+                        e.stopPropagation()
+                      }}
+                    />
+                  )}
                 </div>
                 <p>{val.Position}</p>
               </div>
@@ -62,6 +73,9 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
                 )}`}
               </p>
             </div>
+            {activeStaffModalID === val.ID && (
+              <EmployeeModal employeeData={val} estimatedCost={0} />
+            )}
           </div>
         </div>
       ))}

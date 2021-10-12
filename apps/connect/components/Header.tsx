@@ -37,7 +37,7 @@ export const Header: FC<P> = ({ currentStep, back, visible }) => {
   return (
     <div className={styles.header}>
       <img
-        src={'https://crm.pabau.com' + settings.details.logo}
+        src={settings.pod_url + settings.details.logo}
         alt={settings.details.name}
         className={styles.headerLogo}
       />

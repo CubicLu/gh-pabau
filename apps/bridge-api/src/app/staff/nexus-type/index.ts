@@ -3,13 +3,6 @@ import { Context } from '../../../context'
 import { PublicServiceUserTierResponse } from '../../service'
 import { PublicSocialSurveyFeedbackResponse } from '../../survey/nexus-type'
 
-export const CompanyPositionResponse = objectType({
-  name: 'Company_Position',
-  definition(t) {
-    t.string('position')
-  },
-})
-
 export const PublicStaffResponse = objectType({
   name: 'Public_Staff',
   definition(t) {
@@ -34,8 +27,7 @@ export const PublicStaffResponse = objectType({
             where: { ID: parent.ID || undefined },
           })
           .CompanyPosition()
-
-        return res.position
+        return res ? res.position : ''
       },
     })
   },
