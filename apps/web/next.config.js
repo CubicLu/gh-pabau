@@ -37,7 +37,8 @@ module.exports = {
       },
       {
         source: '/test-form/:form_id/:client_id',
-        destination: '/test-form/[form_id]/[client_id]',
+        destination:
+          '/test-form/[form_id]/[client_id]?form_id=:form_id&client_id=:client_id',
       },
     ]
   },
