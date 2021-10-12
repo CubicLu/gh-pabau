@@ -490,37 +490,37 @@ export const Index: FC = () => {
               : medicalItem.formType,
         },
         updated_at: { set: dayjs() },
-        MedicalFormAdvancedSetting:
-          Number(medicalItem.advSetting.id) === 0
-            ? {
-                create: [
-                  {
-                    share_to_client:
-                      medicalItem.advSetting.shareToClient === 1 ? true : false,
-                    reminder: medicalItem.advSetting.reminder,
-                    data: JSON.stringify(medicalItem.advSetting.data),
-                  },
-                ],
-              }
-            : {
-                update: [
-                  {
-                    data: {
-                      share_to_client: {
-                        set:
-                          medicalItem.advSetting.shareToClient === 1
-                            ? true
-                            : false,
-                      },
-                      reminder: { set: medicalItem.advSetting.reminder },
-                      data: JSON.stringify(medicalItem.advSetting.data),
-                    },
-                    where: {
-                      id: Number(medicalItem.advSetting.id),
-                    },
-                  },
-                ],
-              },
+        MedicalFormAdvancedSetting: {},
+        // Number(medicalItem.advSetting.id) === 0
+        //   ? {
+        //       create: [
+        //         {
+        //           share_to_client:
+        //             medicalItem.advSetting.shareToClient === 1 ? true : false,
+        //           reminder: medicalItem.advSetting.reminder,
+        //           data: JSON.stringify(medicalItem.advSetting.data),
+        //         },
+        //       ],
+        //     }
+        //   : {
+        //       update: [
+        //         {
+        //           data: {
+        //             share_to_client: {
+        //               set:
+        //                 medicalItem.advSetting.shareToClient === 1
+        //                   ? true
+        //                   : false,
+        //             },
+        //             reminder: { set: medicalItem.advSetting.reminder },
+        //             data: JSON.stringify(medicalItem.advSetting.data),
+        //           },
+        //           where: {
+        //             id: Number(medicalItem.advSetting.id),
+        //           },
+        //         },
+        //       ],
+        //     },
       },
     }
 

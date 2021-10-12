@@ -27,6 +27,7 @@ const medicalForms = [
   { id: 12, formType: 'basic', formName: 'form_travel' },
   { id: 13, formType: 'basic', formName: 'form_labtests' },
   { id: 14, formType: 'basic', formName: 'form_snomed' },
+  { id: 15, formType: 'basic', formName: 'form_slider' },
 ]
 
 const previewMapping = [
@@ -45,6 +46,7 @@ const previewMapping = [
   { cl_drugs: 'form_drugs' },
   { labs_tests: 'form_labtests' },
   { snomed: 'form_snomed' },
+  { slider: 'form_slider' },
   { vaccine_scheduler: 'empty' },
   { vaccine_history: 'empty' },
   { travel_destination: 'form_travel' },
@@ -60,6 +62,7 @@ const previewMapping = [
 ]
 
 const getFormInfo = (form) => {
+  console.log('getFormInfo', form)
   // let name = ''
   let label = ''
   if (form.title) {
@@ -138,6 +141,7 @@ const getFormInfo = (form) => {
   if (
     (form.cssClass === 'checkbox' ||
       form.cssClass === 'radio' ||
+      form.cssClass === 'slider' ||
       form.cssClass === 'select' ||
       form.cssClass === 'staticImage' ||
       form.cssClass === 'diagram_mini' ||
@@ -230,6 +234,7 @@ export const FormComponentBuilder: FC<P> = ({
     setDraggedForms([])
     if (typeof previewData != 'undefined' && previewData !== '') {
       const previewDataArray = JSON.parse(atob(previewData))
+      console.log('previewDataArray', previewDataArray)
       const previewForms = []
       if (previewDataArray['form_structure']) {
         for (const form of previewDataArray['form_structure']) {

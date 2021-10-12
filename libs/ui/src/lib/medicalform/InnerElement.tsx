@@ -21,6 +21,7 @@ import multipleChoiceIcon from '../../assets/images/medicalform_multiplechoice.s
 import shortAnswerIcon from '../../assets/images/medicalform_shortanswer.svg'
 import signatureIcon from '../../assets/images/medicalform_signature.svg'
 import singleChoiceIcon from '../../assets/images/medicalform_singlechoice.svg'
+import sliderIcon from '../../assets/images/medicalform_singlechoice.svg'
 import textBlockIcon from '../../assets/images/medicalform_textblock.svg'
 import travelDesctinationIcon from '../../assets/images/medicalform_traveldestination.svg'
 import vaccineHistoryIcon from '../../assets/images/medicalform_vaccinehistory.svg'
@@ -35,6 +36,7 @@ import InnerMedicalFormRequired from './InnerMedicalFormRequired'
 import InnerMedicalFormSign from './InnerMedicalFormSign'
 import InnerMedicalFormTitle from './InnerMedicalFormTitle'
 import InnerMedicalFormMultiSelect from './InnerMedicalFormMultiSelect'
+import InnerMedicalFormSlider from './InnerMedicalFormSlider'
 
 interface P {
   required: boolean
@@ -183,6 +185,13 @@ export const InnerElement: FC<P> = ({
       iconUrl: snomedIcon,
       bgcolor: '#FAAD14',
       title: 'Code Lookup',
+    },
+    {
+      component: 'basic_slider',
+      type: { type },
+      iconUrl: sliderIcon,
+      bgcolor: '#65CD98',
+      title: 'Slider',
     },
     {
       component: 'custom_emailmarketing',
@@ -405,6 +414,7 @@ export const InnerElement: FC<P> = ({
                         formData.formName === 'basic_shortanswer' ||
                         formData.formName === 'basic_longanswer' ||
                         formData.formName === 'basic_singlechoice' ||
+                        formData.formName === 'basic_slider' ||
                         formData.formName === 'basic_multiplechoice'
                           ? findAndReplaceTag(formData.txtQuestion)
                           : formData.txtQuestion
@@ -417,6 +427,7 @@ export const InnerElement: FC<P> = ({
                 {formData.txtBlock !== '' &&
                   formData.formName !== 'basic_textblock' &&
                   formData.formName !== 'basic_singlechoice' &&
+                  formData.formName !== 'basic_slider' &&
                   formData.formName !== 'basic_multiplechoice' &&
                   formData.formName !== 'basic_dropdown' && (
                     <div>
@@ -435,6 +446,11 @@ export const InnerElement: FC<P> = ({
                   (formData.formName === 'basic_singlechoice' ||
                     formData.formName === 'basic_dropdown') && (
                     <InnerMedicalFormRadio options={formData.arrItems} />
+                  )}
+                {((formData.arrItems && formData.arrItems?.length > 0) ||
+                  formData.txtQuestion !== '') &&
+                  formData.formName === 'basic_slider' && (
+                    <InnerMedicalFormSlider options={formData.arrItems} />
                   )}
                 {((formData.arrItems && formData.arrItems.length > 0) ||
                   formData.txtQuestion !== '') &&

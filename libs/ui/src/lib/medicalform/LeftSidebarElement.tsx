@@ -18,6 +18,7 @@ import multipleChoiceIcon from '../../assets/images/medicalform_multiplechoice.s
 import shortAnswerIcon from '../../assets/images/medicalform_shortanswer.svg'
 import signatureIcon from '../../assets/images/medicalform_signature.svg'
 import singleChoiceIcon from '../../assets/images/medicalform_singlechoice.svg'
+import sliderIcon from '../../assets/images/medicalform_singlechoice.svg'
 import textBlockIcon from '../../assets/images/medicalform_textblock.svg'
 import travelDesctinationIcon from '../../assets/images/medicalform_traveldestination.svg'
 import vaccineHistoryIcon from '../../assets/images/medicalform_vaccinehistory.svg'
@@ -182,6 +183,14 @@ export const LeftSidebarElement: FC<P> = ({
       bgcolor: '#FAAD14',
       title: t('ui.medicalform.setting.component.snomed.title'),
       desc: t('ui.medicalform.setting.component.snomed.description'),
+    },
+    {
+      component: 'basic_slider',
+      type: { type },
+      iconUrl: sliderIcon,
+      bgcolor: '#65CD98',
+      title: t('ui.medicalform.setting.component.slider.title'),
+      desc: t('ui.medicalform.setting.component.slider.description'),
     },
     {
       component: 'custom_emailmarketing',

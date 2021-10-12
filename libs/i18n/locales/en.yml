@@ -884,8 +884,9 @@ en:
   ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
   ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
   ui.gp-search.yourPractice: 'Your practice'
-  ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are
-          currently registered as a patient'
+  ui.gp-search.yourPracticeMessage:
+    'Supply a a postcode or the name of the practice where you are
+    currently registered as a patient'
   ui.gp-search.searchInput.placeholder: 'Enter a postcode or search by the name'
   ui.gp-search.searchInput.addPracticeManually: 'Add practice manually'
   ui.gp-search.searchInput.setAsPracticeButton: 'Set as a practice'
@@ -2483,6 +2484,8 @@ en:
   ui.medicalform.setting.component.textblock.description: 'Add a paragraph without a question'
   ui.medicalform.setting.component.singlechoice.title: 'Single Choice'
   ui.medicalform.setting.component.singlechoice.description: 'Ask for a single choice'
+  ui.medicalform.setting.component.slider.title: 'Slider'
+  ui.medicalform.setting.component.slider.description: 'Ask for a slider'
   ui.medicalform.setting.component.multiplechoice.title: 'Multiple Choices'
   ui.medicalform.setting.component.multiplechoice.description: 'Ask for a several choices'
   ui.medicalform.setting.component.dropdown.title: 'Dropdown'

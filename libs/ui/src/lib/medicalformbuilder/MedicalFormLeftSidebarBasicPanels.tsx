@@ -105,7 +105,8 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                 (form) =>
                   form.formName === 'basic_singlechoice' ||
                   form.formName === 'basic_multiplechoice' ||
-                  form.formName === 'basic_dropdown'
+                  form.formName === 'basic_dropdown' ||
+                  form.formName === 'basic_slider'
               )
               .map((form) => {
                 return snapshot.draggingFromThisWith === form.formName ? (

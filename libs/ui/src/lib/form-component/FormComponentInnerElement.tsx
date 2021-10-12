@@ -17,6 +17,7 @@ import FormMedicalConditions from './FormMedicalConditions'
 import FormPhotoUpload from './FormPhotoUpload'
 import FormSignature from './FormSignature'
 import FormSingleChoice from './FormSingleChoice'
+import FormSlider from './FormSlider'
 import FormStaticText from './FormStaticText'
 import FormTextArea from './FormTextArea'
 import FormTextField from './FormTextField'
@@ -80,6 +81,9 @@ const FormComponentInnerElement: FC<P> = ({
     },
     {
       component: 'form_snomed',
+    },
+    {
+      component: 'form_slider',
     },
     {
       component: 'form_textfield',
@@ -240,6 +244,15 @@ const FormComponentInnerElement: FC<P> = ({
             <FormSnomed
               title={formData.txtQuestion}
               placeHolder={''}
+              required={formData.required}
+              onChangeTextValue={onChangeTextValue}
+            />
+          )}
+          {formData && formData.formName === 'form_slider' && (
+            <FormSlider
+              title={formData.txtQuestion}
+              desc={''}
+              paramItems={formData.arrItems}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
             />

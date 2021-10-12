@@ -40,18 +40,19 @@ const medicalForms = [
   // { id: 15, formType: 'basic', formName: 'basic_vaccinescheduler' },
   // { id: 16, formType: 'basic', formName: 'basic_vaccinehistory' },
   { id: 14, formType: 'basic', formName: 'basic_snomed' },
-  { id: 15, formType: 'custom', formName: 'custom_emailmarketing' },
-  { id: 16, formType: 'custom', formName: 'custom_smsmarketing' },
-  { id: 17, formType: 'custom', formName: 'custom_phonecall' },
-  { id: 18, formType: 'custom', formName: 'custom_lettermarketing' },
-  { id: 19, formType: 'custom', formName: 'custom_membershipnumber' },
-  { id: 20, formType: 'custom', formName: 'custom_authorizationcode' },
-  { id: 21, formType: 'custom', formName: 'custom_company' },
-  { id: 22, formType: 'custom', formName: 'custom_dob' },
-  { id: 23, formType: 'custom', formName: 'custom_gender' },
-  { id: 24, formType: 'custom', formName: 'custom_physicaladdress' },
-  { id: 25, formType: 'custom', formName: 'custom_referredby' },
-  { id: 26, formType: 'custom', formName: 'custom_telephonenumber' },
+  { id: 15, formType: 'basic', formName: 'basic_slider' },
+  { id: 16, formType: 'custom', formName: 'custom_emailmarketing' },
+  { id: 17, formType: 'custom', formName: 'custom_smsmarketing' },
+  { id: 18, formType: 'custom', formName: 'custom_phonecall' },
+  { id: 19, formType: 'custom', formName: 'custom_lettermarketing' },
+  { id: 20, formType: 'custom', formName: 'custom_membershipnumber' },
+  { id: 21, formType: 'custom', formName: 'custom_authorizationcode' },
+  { id: 22, formType: 'custom', formName: 'custom_company' },
+  { id: 23, formType: 'custom', formName: 'custom_dob' },
+  { id: 24, formType: 'custom', formName: 'custom_gender' },
+  { id: 25, formType: 'custom', formName: 'custom_physicaladdress' },
+  { id: 26, formType: 'custom', formName: 'custom_referredby' },
+  { id: 27, formType: 'custom', formName: 'custom_telephonenumber' },
 ]
 const previewMapping = [
   { heading: 'basic_heading' },
@@ -71,6 +72,7 @@ const previewMapping = [
   // { vaccine_scheduler: 'basic_vaccinescheduler' },
   // { vaccine_history: 'basic_vaccinehistory' },
   { snomed: 'basic_snomed' },
+  { slider: 'basic_slider' },
   // { travel_destination: 'basic_traveldestination' },
   { btn_medical_condition: 'basic_conditions' },
   { diagram: 'empty' },
@@ -112,6 +114,7 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
 }
 
 const reverseForm = (form) => {
+  console.log('reverseForm', form)
   const mappingInfo = previewMapping.filter(
     (item) => Object.values(item)[0] === form.formName
   )
@@ -192,6 +195,7 @@ const reverseForm = (form) => {
       }
     }
   }
+  console.log('reverseObj', reverseObj)
   return reverseObj
 }
 
@@ -273,6 +277,7 @@ const getFormInfo = (form) => {
   if (
     (form.cssClass === 'checkbox' ||
       form.cssClass === 'radio' ||
+      form.cssClass === 'slider' ||
       form.cssClass === 'select' ||
       form.cssClass === 'staticImage' ||
       form.cssClass === 'diagram_mini' ||
@@ -405,6 +410,7 @@ const MedicalFormEdit: FC<P> = ({
     ) {
       const previewDataArray = JSON.parse(atob(previewData))
       const previewForms = []
+      console.log('previewDataArray', previewDataArray)
       if (previewDataArray['form_structure']) {
         for (const form of previewDataArray['form_structure']) {
           let formName = ''

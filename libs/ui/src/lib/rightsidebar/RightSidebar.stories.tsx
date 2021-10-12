@@ -28,6 +28,7 @@ export default {
           // 'basic_vaccinescheduler',
           // 'basic_vaccinehistory',
           'basic_snomed',
+          'basic_slider',
           'custom_emailmarketing',
           'custom_smsmarketing',
           'custom_phonecall',

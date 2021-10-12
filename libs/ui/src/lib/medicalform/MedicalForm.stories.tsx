@@ -194,6 +194,15 @@ LeftSidebarBasicSnomed.args = {
   component: 'basic_snomed',
 }
 
+const LeftSidebarBasicSliderStory = ({ type, component, ...rest }) => (
+  <LeftSidebarElement type={type} component={component} {...rest} />
+)
+export const LeftSidebarBasicSlider = LeftSidebarBasicSliderStory.bind({})
+LeftSidebarBasicSnomed.args = {
+  type: 'basic',
+  component: 'basic_slider',
+}
+
 const LeftSidebarCustomEmailMarketingStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
@@ -782,6 +791,31 @@ export const InnerBasicSnomed = InnerBasicSnomedStory.bind({})
 InnerBasicSnomed.args = {
   type: 'basic',
   component: 'basic_snomed',
+}
+
+const InnerBasicSliderStory = ({
+  required,
+  activate,
+  type,
+  component,
+  handleId,
+  formData,
+  ...rest
+}) => (
+  <InnerElement
+    required={required}
+    activate={activate}
+    type={type}
+    component={component}
+    handleId={handleId}
+    formData={formData}
+    {...rest}
+  />
+)
+export const InnerBasicSlider = InnerBasicSliderStory.bind({})
+InnerBasicSlider.args = {
+  type: 'basic',
+  component: 'basic_slider',
 }
 
 const InnerCustomEmailMarketingStory = ({
@@ -1432,6 +1466,25 @@ export const SettingBasicSnomed = SettingBasicSnomedStory.bind({})
 SettingBasicSnomed.args = {
   type: 'basic',
   component: 'basic_snomed',
+}
+
+const SettingBasicSliderStory = ({
+  type,
+  component,
+  selectedForm,
+  ...rest
+}) => (
+  <SettingElement
+    type={type}
+    component={component}
+    selectedForm={selectedForm}
+    {...rest}
+  />
+)
+export const SettingBasicSlider = SettingBasicSliderStory.bind({})
+SettingBasicSlider.args = {
+  type: 'basic',
+  component: 'basic_slider',
 }
 
 const SettingCustomEmailMarketingStory = ({

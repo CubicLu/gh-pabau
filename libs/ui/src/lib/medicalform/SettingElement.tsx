@@ -21,6 +21,7 @@ import multipleChoiceIcon from '../../assets/images/medicalform_multiplechoice.s
 import shortAnswerIcon from '../../assets/images/medicalform_shortanswer.svg'
 import signatureIcon from '../../assets/images/medicalform_signature.svg'
 import singleChoiceIcon from '../../assets/images/medicalform_singlechoice.svg'
+import sliderIcon from '../../assets/images/medicalform_singlechoice.svg'
 import textBlockIcon from '../../assets/images/medicalform_textblock.svg'
 import travelDesctinationIcon from '../../assets/images/medicalform_traveldestination.svg'
 import vaccineHistoryIcon from '../../assets/images/medicalform_vaccinehistory.svg'
@@ -209,6 +210,14 @@ const SettingElement: FC<P> = ({
       desc: t('ui.medicalform.setting.component.snomed.description'),
     },
     {
+      component: 'basic_slider',
+      type: { type },
+      iconUrl: sliderIcon,
+      bgcolor: '#65CD98',
+      title: t('ui.medicalform.setting.component.slider.title'),
+      desc: t('ui.medicalform.setting.component.slider.description'),
+    },
+    {
       component: 'custom_emailmarketing',
       type: { type },
       iconUrl: dobIcon,
@@ -343,6 +352,7 @@ const SettingElement: FC<P> = ({
   const saveFunc = () => {
     if (
       component === 'basic_singlechoice' ||
+      component === 'basic_slider' ||
       component === 'basic_multiplechoice' ||
       component === 'basic_dropdown'
     ) {
@@ -429,6 +439,7 @@ const SettingElement: FC<P> = ({
               // filteredComponent[0].component === 'basic_vaccinescheduler' ||
               // filteredComponent[0].component === 'basic_vaccinehistory' ||
               filteredComponent[0].component === 'basic_snomed' ||
+              filteredComponent[0].component === 'basic_slider' ||
               filteredComponent[0].component === 'custom_emailmarketing' ||
               filteredComponent[0].component === 'custom_smsmarketing' ||
               filteredComponent[0].component === 'custom_phonecall' ||
@@ -491,6 +502,7 @@ const SettingElement: FC<P> = ({
               />
             )}
             {(filteredComponent[0].component === 'basic_singlechoice' ||
+              filteredComponent[0].component === 'basic_slider' ||
               filteredComponent[0].component === 'basic_dropdown') && (
               <SettingElementOption
                 onChange={eventhandler}
@@ -504,6 +516,7 @@ const SettingElement: FC<P> = ({
               />
             )}
             {(filteredComponent[0].component === 'basic_singlechoice' ||
+              filteredComponent[0].component === 'basic_slider' ||
               filteredComponent[0].component === 'basic_multiplechoice' ||
               filteredComponent[0].component === 'basic_dropdown') &&
               errMsg !== '' && <SettingMedicalFormError errMsg={errMsg} />}
