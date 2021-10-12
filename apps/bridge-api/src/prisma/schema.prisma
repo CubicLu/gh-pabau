@@ -1926,6 +1926,7 @@ model CmContact {
   MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
   Voucher                   Voucher[]                   @relation("Voucher")
   PurchasedVoucher          Voucher[]                   @relation("PurchasedVoucher")
+  CmLead                    CmLead[]
 
   @@unique([ID, company_id], name: "primary")
   @@index([CreatedDate], name: "CreatedDate")
@@ -2620,7 +2621,7 @@ model CmLead {
   MarketingSource          MarketingSource?         @relation(fields: [LeadSource], references: [id])
   LeadStatusData           LeadStatus?              @relation(fields: [LeadStatus], references: [id])
   PipelineStage            PipelineStage?           @relation(fields: [pipeline_stage_id], references: [id])
-
+  Contact                  CmContact?               @relation(fields: [ContactID], references: [ID])
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
   @@index([LeadStatus], name: "LeadStatus")

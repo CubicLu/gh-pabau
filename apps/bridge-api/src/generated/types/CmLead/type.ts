@@ -150,6 +150,12 @@ export const CmLead = objectType({
         return root.PipelineStage
       },
     })
+    t.nullable.field('Contact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.Contact
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmLeadCountOutputType',
       resolve(root: any) {

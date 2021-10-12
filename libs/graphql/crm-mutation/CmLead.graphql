@@ -75,6 +75,9 @@ fragment CmLead on CmLead {
   PipelineStage {
     ...PipelineStageFields
   }
+  Contact {
+    ...CmContactFields
+  }
 }
 
 mutation updateOneCmLead($where: CmLeadWhereUniqueInput!, $data: CmLeadUpdateInput!) {

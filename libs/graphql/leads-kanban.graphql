@@ -6,6 +6,11 @@ query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
     lastName: Lname
     OwnerID
     ContactID
+    Contact {
+      Fname
+      Lname
+      Avatar
+    }
     Title
     status: EnumStatus
     LastUpdated
