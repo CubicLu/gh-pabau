@@ -1,0 +1,39 @@
+fragment SmsSenderFields on SmsSender {
+  smsd_id
+  smsd_name
+  company_id
+  smsd_delete
+  is_default
+  merge_tags
+}
+
+fragment SmsSender on SmsSender {
+  ...SmsSenderFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneSmsSender($data: SmsSenderCreateInput!) {
+  createOneSmsSender(data: $data) {
+    ...SmsSender
+  }
+}
+
+mutation updateOneSmsSender($where: SmsSenderWhereUniqueInput!, $data: SmsSenderUpdateInput!) {
+  updateOneSmsSender(where: $where, data: $data) {
+    ...SmsSender
+  }
+}
+
+mutation deleteOneSmsSender($where: SmsSenderWhereUniqueInput!) {
+  deleteOneSmsSender(where: $where) {
+    ...SmsSender
+  }
+}
+
+mutation updateManySmsSender($where: SmsSenderWhereInput, $data: SmsSenderUpdateManyMutationInput!) {
+  updateManySmsSender(where: $where, data: $data) {
+    count
+  }
+}
