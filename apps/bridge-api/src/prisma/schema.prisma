@@ -8430,6 +8430,7 @@ model MedicalForm {
 
   MedicalFormAdvancedSetting MedicalFormAdvancedSetting[]
 
+  MedicalFormContact MedicalFormContact[]
   @@unique([id, company_id], name: "primary")
   @@index([deleted_at], name: "deleted_at")
   @@index([form_type], name: "form_type")
@@ -8474,10 +8475,10 @@ model MedicalForm {
 //  generated_code Int
 //  expiry_date    DateTime
 //}
-//
+
 model MedicalFormContact {
-  id                  Int        @id @default(autoincrement())
-  form_id             Int?
+  id                  Int               @id @default(autoincrement())
+  form_id             Int
   contact_id          Int?
   created_at          DateTime?
   updated_at          DateTime?
@@ -8499,13 +8500,12 @@ model MedicalFormContact {
   custom_contact_id   Int
   approved_triggers   String?
   actioned_by         Int?
-  form_contact_number Int        @default(0)
+  form_contact_number Int               @default(0)
   diagnosis_code      String
-  CmContact           CmContact? @relation(fields: [contact_id], references: [ID])
+  Contact             CmContact?        @relation(fields: [contact_id], references: [ID])
+  Form                MedicalForm       @relation(fields: [form_id], references: [id])
+  CmContactTravel     CmContactTravel[]
 
-
-
-  CmContactTravel CmContactTravel[]
   @@index([contact_id], name: "contact_id")
   @@index([created_at], name: "created_at")
   @@index([form_id], name: "form_id")
