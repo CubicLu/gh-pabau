@@ -20,7 +20,6 @@ import Styles from './SubscriptionComponents.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { DisplayDate } from '../../../hooks/displayDate'
 import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
-import { useUser } from '../../../context/UserContext'
 
 const BillingInformation: FC = () => {
   const { Title, Paragraph, Link } = Typography
@@ -31,7 +30,6 @@ const BillingInformation: FC = () => {
   const [isGoCardless, setGoCardless] = useState(false)
   const [info, setInfo] = useState<BillingInformationsQuery>()
   const { data, loading } = useBillingInformationsQuery()
-  const user = useUser()
 
   useEffect(() => {
     if (data !== undefined) {
@@ -86,22 +84,28 @@ const BillingInformation: FC = () => {
             ) : (
               <div>
                 <Paragraph className={Styles.blackText}>
-                  {stringToCurrencySignConverter(user?.me?.currency)}{' '}
-                  {info?.subscription?.amount?.toFixed(2)} (
-                  {info?.subscription?.interval_unit})
+                  {info?.subscription
+                    ? `${stringToCurrencySignConverter(
+                        info?.subscription?.currency
+                      )}
+                      ${info?.subscription?.amount?.toFixed(2)} (
+                      ${info?.subscription?.interval_unit})`
+                    : ''}
                 </Paragraph>
                 {loading ? (
                   <Skeleton.Input
                     active={loading}
                     className={Styles.skeletonBillingInformation}
                   />
-                ) : (
+                ) : info?.subscription?.next_charge_date ? (
                   <Paragraph type="secondary" className={Styles.font12p}>
                     *{t('setup.subscription.next-charge')}:{' '}
                     {DisplayDate(
                       new Date(info?.subscription?.next_charge_date)
                     )}
                   </Paragraph>
+                ) : (
+                  ''
                 )}
               </div>
             )}
@@ -126,7 +130,9 @@ const BillingInformation: FC = () => {
             />
           ) : (
             <Paragraph className={Styles.blackText}>
-              {info?.subscription?.app_fee ?? '0.00'}%
+              {info?.subscription
+                ? `${info?.subscription?.app_fee?.toFixed(2)}%`
+                : ''}
             </Paragraph>
           )}
           <Paragraph
@@ -183,11 +189,13 @@ const BillingInformation: FC = () => {
             />
           ) : (
             <Paragraph className={Styles.blackText}>
-              {info?.address?.street +
-                ' ' +
-                info?.address?.city +
-                ' ' +
-                info?.address?.post_code}
+              {info?.address
+                ? info?.address?.street +
+                  ' ' +
+                  info?.address?.city +
+                  ' ' +
+                  info?.address?.post_code
+                : ''}
             </Paragraph>
           )}
           <Paragraph
@@ -260,7 +268,9 @@ const BillingInformation: FC = () => {
                     {t('setup.subscription.bill-estimate')}
                   </Paragraph>
                   <Paragraph className={Styles.blackText}>
-                    {stringToCurrencySignConverter(user?.me?.currency)}{' '}
+                    {stringToCurrencySignConverter(
+                      info?.subscription?.currency
+                    )}{' '}
                     {info?.subscription?.amount?.toFixed(2)} (
                     {info?.subscription?.interval_unit})
                   </Paragraph>

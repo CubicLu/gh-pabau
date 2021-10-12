@@ -44,8 +44,34 @@
   .phone-email-wrapper {
     display: flex;
   }
-}
+  div.form-div {
+    padding: 5px 20px 0px 20px;
+  }
 
+  .footer {
+    width: 100%;
+    padding: 15px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0px -5px 5px #eee;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+
+    button {
+      width: 100%;
+
+      &:first-child {
+        margin-right: 7.5px;
+      }
+      &:last-child {
+        margin-left: 7.5px;
+      }
+    }
+  }
+}
 .basic-info {
   padding: 0 24px;
   margin-top: 12px;
@@ -115,40 +141,6 @@
       .listing {
         margin-right: 0;
       }
-    }
-  }
-}
-
-.create-lab-mobile-header {
-  background-color: #fff;
-  position: unset !important;
-  .all-content-align-mobile {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .lab-text-style {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    p {
-      margin-bottom: 0px;
-      font-family: Circular-Std-Medium;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 17px;
-      line-height: 22px;
-      text-transform: capitalize;
-      color: var(--grey-text-color);
-      padding-right: 5px;
-    }
-    .cancel-btn {
-      padding: 0 8px;
-    }
-    .create-btn {
-      padding: 0 8px;
-      font-size: 12px;
     }
   }
 }

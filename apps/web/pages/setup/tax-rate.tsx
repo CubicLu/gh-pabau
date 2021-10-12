@@ -1,7 +1,5 @@
-import { LeftOutlined } from '@ant-design/icons'
 import {
   Breadcrumb,
-  MobileHeader,
   Notification,
   NotificationType,
   TabMenu,
@@ -16,10 +14,9 @@ import {
 } from '@pabau/graphql'
 import AddButton from '../../components/AddButton'
 import { Card, Col, Divider, Row, Typography } from 'antd'
-import classNames from 'classnames'
-import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import Layout from '../../components/Layout/Layout'
+import CommonHeader from '../../components/CommonHeader'
 import CreateTaxRateModal from '../../components/Setup/TaxRate/CreateTaxRateModal'
 import DefaultTax from '../../components/Setup/TaxRate/DefaultTax'
 import TaxRateList from '../../components/Setup/TaxRate/TaxRateList'
@@ -35,7 +32,6 @@ export function TaxRate() {
   const { t } = useTranslationI18()
   const [isLoading, setIsLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [mobileSearch, setMobileSearch] = useState(false)
   const [taxesData, setTaxesData] = useState(null)
   const [showCreateTax, setShowCreateTax] = useState(false)
   const [paginateData, setPaginateData] = useState({
@@ -119,123 +115,107 @@ export function TaxRate() {
     })
   }
 
-  const onMobileSearch = () => {
-    setMobileSearch((e) => !e)
-  }
-
   return (
-    <div>
-      <div
-        className={classNames(
-          styles.marketingSourcePage,
-          styles.desktopViewNone
-        )}
+    <Layout {...user}>
+      <CommonHeader
+        isLeftOutlined
+        reversePath="/setup"
+        title={t('setup.taxrate.heading')}
+        isShowSearch
+        handleSearch={(searchTerm) => setSearchTerm(searchTerm)}
+        searchValue={searchTerm}
       >
-        <MobileHeader className={styles.marketingSourceHeader}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.marketingTextStyle}>
-              <Link href="/setup">
-                <LeftOutlined />
-              </Link>
-              {!mobileSearch && <p>{t('setup.taxrate.heading')}</p>}
-            </div>
-            <AddButton
-              onClick={() => setShowCreateTax(true)}
-              onFilterSource={() => false}
-              onSearch={(searchTerm) => setSearchTerm(searchTerm)}
-              addFilter={false}
-              schema={{ createButtonLabel: t('setup.taxrate.newbtn') }}
-              tableSearch={true}
-              needTranslation={true}
-              mobileSearch={mobileSearch}
-              setMobileSearch={onMobileSearch}
-            />
-          </div>
-        </MobileHeader>
-      </div>
-      <Layout active={'setup/tax-rate'} {...user}>
-        <Card
-          bodyStyle={{ padding: 0 }}
-          className={styles.taxRateMainCard}
-          style={{ borderBottomWidth: 0 }}
-        >
-          <Row className={styles.headerContainer}>
-            {size.width > 767 && (
-              <>
-                <Col>
-                  <Breadcrumb
-                    breadcrumbItems={[
-                      {
-                        breadcrumbName: t('navigation-breadcrumb-setup'),
-                        path: 'setup',
-                      },
-                      { breadcrumbName: t('setup.taxrate.heading'), path: '' },
-                    ]}
-                  />
-                  <Title>{t('setup.taxrate.heading')}</Title>
-                </Col>
-                <Col>
-                  <AddButton
-                    onClick={() => setShowCreateTax(true)}
-                    onFilterSource={() => false}
-                    onSearch={(searchTerm) => setSearchTerm(searchTerm)}
-                    addFilter={false}
-                    schema={{ createButtonLabel: t('setup.taxrate.newbtn') }}
-                    tableSearch={true}
-                    needTranslation={true}
-                  />
-                </Col>
-              </>
-            )}
-          </Row>
-          <Divider style={{ margin: 0 }} />
-          <TabMenu
-            tabPosition={'top'}
-            menuItems={[
-              t('setup.taxrate.tabs.tab1'),
-              t('setup.taxrate.tabs.tab2'),
-            ]}
-            minHeight={'0vh'}
-          >
-            <TaxRateList
-              searchTerm={searchTerm}
-              isLoading={isLoading}
-              dataSource={taxesData}
-              onCreateTaxRate={() => setShowCreateTax(true)}
-              paginateData={paginateData}
-            />
-            <div className={styles.defaultWrap}>
-              <DefaultTax />
-            </div>
-          </TabMenu>
-          {showCreateTax && (
-            <CreateTaxRateModal
-              visible={showCreateTax}
-              onCancel={() => setShowCreateTax(false)}
-              onSave={onCreate}
-            />
-          )}
-        </Card>
-        <Pagination
-          total={paginateData.total}
-          defaultPageSize={50}
-          showSizeChanger={false}
-          onChange={onPaginationChange}
-          pageSizeOptions={['10', '25', '50', '100']}
-          onPageSizeChange={(pageSize) => {
-            setPaginateData({
-              ...paginateData,
-              limit: pageSize,
-              offset: 0,
-              currentPage: 1,
-            })
-          }}
-          pageSize={paginateData.limit}
-          current={paginateData.currentPage}
-          showingRecords={paginateData.showingRecords}
+        <AddButton
+          onClick={() => setShowCreateTax(true)}
+          onFilterSource={() => false}
+          addFilter={false}
+          schema={{ createButtonLabel: t('setup.taxrate.newbtn') }}
+          tableSearch={false}
+          needTranslation={true}
         />
-      </Layout>
-    </div>
+      </CommonHeader>
+      <Card
+        bodyStyle={{ padding: 0 }}
+        className={styles.taxRateMainCard}
+        style={{ borderBottomWidth: 0 }}
+      >
+        <Row className={styles.headerContainer}>
+          {size.width > 767 && (
+            <>
+              <Col>
+                <Breadcrumb
+                  items={[
+                    {
+                      breadcrumbName: t('navigation-breadcrumb-setup'),
+                      path: 'setup',
+                    },
+                    { breadcrumbName: t('setup.taxrate.heading'), path: '' },
+                  ]}
+                />
+                <Title>{t('setup.taxrate.heading')}</Title>
+              </Col>
+              <Col>
+                <AddButton
+                  onClick={() => setShowCreateTax(true)}
+                  onFilterSource={() => false}
+                  onSearch={(searchTerm) => setSearchTerm(searchTerm)}
+                  addFilter={false}
+                  schema={{ createButtonLabel: t('setup.taxrate.newbtn') }}
+                  tableSearch={true}
+                  needTranslation={true}
+                  searchTerm={searchTerm}
+                />
+              </Col>
+            </>
+          )}
+        </Row>
+        <Divider style={{ margin: 0 }} />
+        <TabMenu
+          tabPosition={'top'}
+          menuItems={[
+            t('setup.taxrate.tabs.tab1'),
+            t('setup.taxrate.tabs.tab2'),
+          ]}
+          minHeight={'0vh'}
+        >
+          <TaxRateList
+            searchTerm={searchTerm}
+            isLoading={isLoading}
+            dataSource={taxesData}
+            onCreateTaxRate={() => setShowCreateTax(true)}
+            paginateData={paginateData}
+          />
+          <div className={styles.defaultWrap}>
+            <DefaultTax />
+          </div>
+        </TabMenu>
+        {showCreateTax && (
+          <CreateTaxRateModal
+            visible={showCreateTax}
+            onCancel={() => setShowCreateTax(false)}
+            onSave={onCreate}
+          />
+        )}
+      </Card>
+      <Pagination
+        total={paginateData.total}
+        defaultPageSize={50}
+        showSizeChanger={false}
+        onChange={onPaginationChange}
+        pageSizeOptions={['10', '25', '50', '100']}
+        onPageSizeChange={(pageSize) => {
+          setPaginateData({
+            ...paginateData,
+            limit: pageSize,
+            offset: 0,
+            currentPage: 1,
+          })
+        }}
+        pageSize={paginateData.limit}
+        current={paginateData.currentPage}
+        showingRecords={paginateData.showingRecords}
+      />
+    </Layout>
   )
 }
 

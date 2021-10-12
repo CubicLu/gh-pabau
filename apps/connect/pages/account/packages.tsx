@@ -274,7 +274,7 @@ export const MyPackages = () => {
           ) : (
             <>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   {
                     breadcrumbName: t('connect.account.title'),
                     path: 'account',
