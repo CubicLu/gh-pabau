@@ -494,9 +494,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
             minHeight="1px"
             menuItems={[
               `${t('client.appointments.layout.tab.all.bookings')} (${
-                appointments.filter(
-                  (item) => item.status !== AppointmentStatus.cancelled
-                ).length
+                appointments?.length
               })`,
               `${t('client.appointments.layout.tab.classes')} (${
                 appointments.filter(
@@ -525,19 +523,14 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                 endDate === '' &&
                 nowFilter === FilterRadioValue.none && (
                   <div className={styles.appointmentTabBody}>
-                    {appointments.filter(
-                      (el) =>
-                        el.status !== AppointmentStatus.cancelled &&
-                        el.apptDate > dayjs().format()
-                    ).length > 0 && (
+                    {appointments.filter((el) => el.apptDate > dayjs().format())
+                      .length > 0 && (
                       <>
                         <Divider className={styles.nowDivider}>
                           {t('client.appointments.layout.filter.upcoming')}{' '}
                           {`(${
                             appointments.filter(
-                              (el) =>
-                                el.status !== AppointmentStatus.cancelled &&
-                                el.apptDate > dayjs().format()
+                              (el) => el.apptDate > dayjs().format()
                             ).length
                           })`}
                         </Divider>
@@ -549,10 +542,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                             )
                           })
                           .map((item, index) => {
-                            if (
-                              item.status !== AppointmentStatus.cancelled &&
-                              item.apptDate > dayjs().format()
-                            ) {
+                            if (item.apptDate > dayjs().format()) {
                               return (
                                 <ClientAppointmentCard
                                   {...item}
@@ -576,9 +566,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                       {t('client.appointments.layout.filter.past')}{' '}
                       {`(${
                         appointments.filter(
-                          (el) =>
-                            el.status !== AppointmentStatus.cancelled &&
-                            el.apptDate < dayjs().format()
+                          (el) => el.apptDate < dayjs().format()
                         ).length
                       })`}
                     </Divider>
@@ -589,10 +577,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         )
                       })
                       .map((item, index) => {
-                        if (
-                          item.status !== AppointmentStatus.cancelled &&
-                          item.apptDate < dayjs().format()
-                        ) {
+                        if (item.apptDate < dayjs().format()) {
                           return (
                             <ClientAppointmentCard
                               {...item}
