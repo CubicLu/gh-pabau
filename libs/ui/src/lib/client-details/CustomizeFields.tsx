@@ -12,7 +12,7 @@ import {
   FieldNumberOutlined,
 } from '@ant-design/icons'
 import { Tooltip, Popover } from 'antd'
-import { Button, InlineEditDataTypes } from '@pabau/ui'
+import { Button, InlineEditDataTypes, FieldOrderItem } from '@pabau/ui'
 import { ReactComponent as CustomDateOutlined } from '../../assets/images/custom-date.svg'
 import { ReactComponent as DragAreaOutlined } from '../../assets/images/drag-area.svg'
 import styles from './CustomizeFields.module.less'
@@ -30,15 +30,6 @@ enum FieldType {
   email,
   priceList,
   membershipNumber,
-}
-
-interface FieldOrderItem {
-  title: string
-  fieldName: string
-  type: string
-  field: FieldType
-  value: string
-  selectOptions?: string[]
 }
 
 export interface CustomizeFieldsProps {
@@ -170,7 +161,15 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                             </div>
                             <div>
                               <div className={styles.deleteField}>
-                                <DeleteOutlined />
+                                <Tooltip
+                                  title={t(
+                                    'ui.clientdetails.customise.delete.message'
+                                  )}
+                                  placement="bottom"
+                                  overlayStyle={{ maxWidth: '200px' }}
+                                >
+                                  <DeleteOutlined />
+                                </Tooltip>
                               </div>
                               <div className={styles.editField}>
                                 <EditOutlined />
@@ -187,11 +186,6 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                               </div>
                             </div>
                           </div>
-                          {(item.type === 'phone' || item.type === 'email') && (
-                            <div className={styles.draggingItemDescription}>
-                              {t('ui.clientdetails.customise.appearsin')}
-                            </div>
-                          )}
                         </div>
                       )
                     }
