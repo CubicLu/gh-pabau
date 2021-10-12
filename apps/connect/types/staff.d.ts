@@ -16,6 +16,11 @@ export interface ServiceUserTier {
   service_id?: number
 }
 
+export interface StaffNote {
+  id: number
+  Dependents: string
+}
+
 export interface Staff {
   ID?: number
   Avatar?: string
@@ -23,4 +28,5 @@ export interface Staff {
   DefaultLocation?: int
   Position?: string
   Public_User?: User
+  Public_StaffNotes?: StaffNote
 }

@@ -155,8 +155,10 @@ const EmployeeModal: FC<P> = ({ employeeData, estimatedCost }) => {
         <div className={Styles.modifAbout}>
           <span className={Styles.aboutHeader}>About</span>
           <p className={Styles.aboutText}>
-            {employeeData.Public_User.full_name} has been in the industry for
-            over 30 years and is the very best in he field!
+            {employeeData.Public_StaffNotes.Dependents.replace(
+              /<\/?[^>]+(>|$)/g,
+              ''
+            )}
           </p>
         </div>
         <div className={Styles.mainServices}>
