@@ -1,0 +1,27 @@
+query getClientAppointments($contactId: Int!) {
+  findManyBooking(where: { contact_id: { equals: $contactId } }) {
+    id
+    company_id
+    is_online: Online
+    start_date
+    end_date
+    service
+    status
+    note: title
+    feedbackSurveyScheduled: sent_survey
+    smsReminderScheduled: sent_sms
+    emailReminderScheduled: sent_email_reminder
+    emailConfirmationSent: sent_email
+    Staff: CmStaffGeneral {
+      ID: ID
+      Salutation
+      Avatar
+      FirstName: Fname
+      LastName: Lname
+    }
+    Location: CompanyBranch {
+      id
+      name
+    }
+  }
+}
