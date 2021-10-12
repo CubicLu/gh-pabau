@@ -48,7 +48,7 @@ en:
   activityList.search.placeholder: 'Search'
   activityList.createActivity: 'Create Activity'
   activityList.empty.activity.label: 'No Activities'
-  activityList.empty.activity.label.description: 'Try resetting you filters or create new activity'
+  activityList.empty.activity.label.description: 'Try resetting your filters or create new activity'
   activityList.column.dueDate: 'Due Date'
   activityList.column.subject: 'Subject'
   activityList.column.client: 'Client'
