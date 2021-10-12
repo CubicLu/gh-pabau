@@ -13,6 +13,7 @@ interface P {
   disableSaveButton: boolean
   formSaveLabel: string
   userGroupListItems?: UserGroupListItem[]
+  hidePadlock?: boolean
 }
 
 export const FormSaveButton: FC<P> = ({
@@ -20,6 +21,7 @@ export const FormSaveButton: FC<P> = ({
   disableSaveButton,
   formSaveLabel,
   userGroupListItems = [],
+  hidePadlock = false,
 }) => {
   const [lockVisible, setLockVisible] = useState(false)
   const [lockUser, setLockUser] = useState(EMPTY_USER)
@@ -85,18 +87,20 @@ export const FormSaveButton: FC<P> = ({
       >
         {formSaveLabel === '' ? 'Save Form' : formSaveLabel}
       </Button>
-      <Popover
-        placement="topRight"
-        content={<LockPanel />}
-        visible={lockVisible}
-      >
-        <Button
-          className={styles.btnCircle}
-          shape="circle"
-          icon={<LockOutlined />}
-          onClick={() => setLockVisible(!lockVisible)}
-        />
-      </Popover>
+      {!hidePadlock && (
+        <Popover
+          placement="topRight"
+          content={<LockPanel />}
+          visible={lockVisible}
+        >
+          <Button
+            className={styles.btnCircle}
+            shape="circle"
+            icon={<LockOutlined />}
+            onClick={() => setLockVisible(!lockVisible)}
+          />
+        </Popover>
+      )}
     </div>
   )
 }

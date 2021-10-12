@@ -22,6 +22,7 @@ interface P {
   onHandleMacro?: (action: string, macro: MacroItem) => void
   macroItems?: MacroItem[]
   isTextArea?: boolean
+  hideMacro?: boolean
 }
 
 const HANDLE_REGEX = /\[.+?]/g
@@ -36,6 +37,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
   onHandleMacro,
   macroItems = [],
   isTextArea = false,
+  hideMacro = false,
 }) => {
   const [showMacroDlg, setShowMacroDlg] = useState(false)
   const editor = React.useRef<Editor | null>(null)
@@ -131,7 +133,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
   const autocompletes = [hashtag]
 
   const onShowMacroDlg = () => {
-    setShowMacroDlg(true)
+    if (!hideMacro) setShowMacroDlg(true)
   }
 
   const onHideMacroDlg = () => {
@@ -209,23 +211,36 @@ export const FormTextFieldWithMacro: FC<P> = ({
       <div
         className={cn(
           styles.textFieldWithMacroValue,
-          isTextArea === true ? styles.textFieldArea : ''
+          isTextArea === true ? styles.textFieldArea : '',
+          hideMacro === true ? styles.hideMicro : ''
         )}
       >
-        <AutocompleteCustom
-          placeholder={t('ui.macro.modal.placeholder')}
-          editorState={editorState}
-          ref={editor}
-          onChange={onEditorStateChange}
-          autocompletes={autocompletes}
-        >
-          <Editor />
-        </AutocompleteCustom>
-        <Tooltip arrowPointAtCenter title={t('ui.macro.modal.add.title')}>
-          <div className={styles.macroBtn} onClick={onShowMacroDlg}>
-            <BookOutlined />
-          </div>
-        </Tooltip>
+        {!hideMacro && (
+          <>
+            <AutocompleteCustom
+              placeholder={t('ui.macro.modal.placeholder')}
+              editorState={editorState}
+              ref={editor}
+              onChange={onEditorStateChange}
+              autocompletes={!hideMacro ? autocompletes : null}
+            >
+              <Editor />
+            </AutocompleteCustom>
+            <Tooltip arrowPointAtCenter title={t('ui.macro.modal.add.title')}>
+              <div className={styles.macroBtn} onClick={onShowMacroDlg}>
+                <BookOutlined />
+              </div>
+            </Tooltip>
+          </>
+        )}
+        {hideMacro && (
+          <Editor
+            placeholder={''}
+            editorState={editorState}
+            ref={editor}
+            onChange={onEditorStateChange}
+          />
+        )}
       </div>
       <MacroModal
         title={t('ui.macro.modal.title')}

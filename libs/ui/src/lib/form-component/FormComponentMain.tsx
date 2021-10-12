@@ -19,6 +19,8 @@ interface P {
   invProductsListItems?: InvProductsListItem[]
   medicalConditionsListItems?: MedicalConditionsListItem[]
   userGroupListItems?: UserGroupListItem[]
+  hideMacro?: boolean
+  hidePadlock?: boolean
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
@@ -31,6 +33,8 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
     invProductsListItems = [],
     medicalConditionsListItems = [],
     userGroupListItems = [],
+    hideMacro = false,
+    hidePadlock = false,
   } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   const [macroItems, setMacroItems] = useState<MacroItem[]>([])
@@ -95,6 +99,7 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
               macroItems={macroItems}
               invProductsListItems={invProductsListItems}
               medicalConditionsListItems={medicalConditionsListItems}
+              hideMacro={hideMacro}
             />
           </div>
         )
@@ -105,6 +110,7 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
           disableSaveButton={disableSaveButton}
           formSaveLabel={formSaveLabel}
           userGroupListItems={userGroupListItems}
+          hidePadlock={hidePadlock}
         />
       )}
     </div>

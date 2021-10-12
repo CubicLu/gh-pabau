@@ -208,6 +208,8 @@ interface P {
   invProductsListItems?: InvProductsListItem[]
   medicalConditionsListItems?: MedicalConditionsListItem[]
   userGroupListItems?: UserGroupListItem[]
+  hideMacro?: boolean
+  hidePadlock?: boolean
 }
 
 export const FormComponentBuilder: FC<P> = ({
@@ -219,6 +221,8 @@ export const FormComponentBuilder: FC<P> = ({
   userGroupListItems = [],
   invProductsListItems = [],
   medicalConditionsListItems = [],
+  hideMacro = false,
+  hidePadlock = false,
 }) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
@@ -269,6 +273,8 @@ export const FormComponentBuilder: FC<P> = ({
         userGroupListItems={userGroupListItems}
         invProductsListItems={invProductsListItems}
         medicalConditionsListItems={medicalConditionsListItems}
+        hideMacro={hideMacro}
+        hidePadlock={hidePadlock}
       />
     </div>
   )

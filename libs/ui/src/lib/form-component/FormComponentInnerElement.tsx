@@ -35,6 +35,7 @@ interface P {
   macroItems?: MacroItem[]
   invProductsListItems?: InvProductsListItem[]
   medicalConditionsListItems?: MedicalConditionsListItem[]
+  hideMacro?: boolean
 }
 
 const FormComponentInnerElement: FC<P> = ({
@@ -48,6 +49,7 @@ const FormComponentInnerElement: FC<P> = ({
   invProductsListItems = [],
   medicalConditionsListItems = [],
   onHandleMacro,
+  hideMacro = false,
 }) => {
   const [form, setForm] = useState(cloneDeep(formData))
 
@@ -204,6 +206,7 @@ const FormComponentInnerElement: FC<P> = ({
                 onHandleMacro={onHandleMacro}
                 macroItems={macroItems}
                 isTextArea={false}
+                hideMacro={hideMacro}
               />
             )}
           {formData &&
