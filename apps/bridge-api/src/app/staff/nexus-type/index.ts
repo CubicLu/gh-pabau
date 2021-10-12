@@ -2,6 +2,7 @@ import { objectType } from 'nexus'
 import { Context } from '../../../context'
 import { PublicServiceUserTierResponse } from '../../service'
 import { PublicSocialSurveyFeedbackResponse } from '../../survey/nexus-type'
+import { PublicStaffNotesResponse } from './staff-notes'
 
 export const PublicStaffResponse = objectType({
   name: 'Public_Staff',
@@ -18,6 +19,16 @@ export const PublicStaffResponse = objectType({
             where: { ID: parent.ID || undefined },
           })
           .User()
+      },
+    })
+    t.field('Public_StaffNotes', {
+      type: PublicStaffNotesResponse,
+      resolve(parent, input, ctx: Context) {
+        return ctx.prisma.cmStaffGeneral
+          .findUnique({
+            where: { ID: parent.ID || undefined },
+          })
+          .StaffNote()
       },
     })
     t.string('Position', {

@@ -22,7 +22,11 @@ query onlineBookableStaff($company_id: Int!) {
         date
         service
         id
+        owner_response
       }
+    }
+    Public_StaffNotes {
+      Dependents
     }
   }
 }

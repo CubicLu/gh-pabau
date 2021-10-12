@@ -152,7 +152,7 @@ query purchaseOrdersList(
 
 query findLastInvCategoryOrderId {
   aggregateInvCategory {
-    max {
+    _max {
       order
     }
   }
