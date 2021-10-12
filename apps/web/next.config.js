@@ -35,6 +35,10 @@ module.exports = {
         source: '/clients/finance/statement/:id',
         destination: '/clients/finance/statement/[id]?id=:id',
       },
+      {
+        source: '/test-form/:form_id/:client_id',
+        destination: '/test-form/[form_id]/[client_id]',
+      },
     ]
   },
   typescript: {
