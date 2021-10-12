@@ -1,0 +1,11 @@
+query getStages {
+  stages: findManyLeadStatus {
+    id
+    name: status_name
+    order: status_order
+    Pipeline {
+      id
+      name
+    }
+  }
+}

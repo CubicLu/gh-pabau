@@ -1,13 +1,11 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
 import { Typography } from 'antd'
 import {
-  LeftOutlined,
   ToolOutlined,
   QuestionOutlined,
   ShareAltOutlined,
   LinkOutlined,
 } from '@ant-design/icons'
-import { useRouter } from 'next/router'
 import { Breadcrumb, NotificationBanner, Switch, Stepper } from '@pabau/ui'
 import confetti from 'canvas-confetti'
 import {
@@ -75,6 +73,7 @@ export const Index: FC<ReviewsConfigProps> = ({
   const [setting, setSetting] = useState<FeedbackSurveyBuilder>(
     defaultBuilderSetting
   )
+
   const [step, setStep] = useState(0)
 
   const randomInRange = (min, max) => {
@@ -97,43 +96,34 @@ export const Index: FC<ReviewsConfigProps> = ({
     }
   }, [step])
 
-  const router = useRouter()
-
-  const handleBack = () => {
-    router.back()
-  }
-
   return (
     <div ref={reviewsConfigRef}>
-      <CommonHeader />
       <Layout>
-        <div className={styles.reviewsConfigBanner}>
-          <NotificationBanner
-            title="Reviews"
-            desc="Increase the number of reviews your clients complete by by 72% by enabling feedback requests via SMS"
-            imgPath={reviewsConfigBanner}
-            allowClose={true}
-            setHide={[showBanner, setShowBanner]}
-          />
-        </div>
+        <CommonHeader
+          isLeftOutlined
+          reversePath="/setup"
+          title="Feedback Survey"
+        />
+        <NotificationBanner
+          title="Reviews"
+          desc="Increase the number of reviews your clients complete by by 72% by enabling feedback requests via SMS"
+          imgPath={reviewsConfigBanner}
+          allowClose={true}
+          setHide={[showBanner, setShowBanner]}
+        />
         <div className={styles.reviewsConfigContainer}>
           <div className={styles.reviewsConfigHeader}>
             <div className={styles.reviewsConfigBreadcrumb}>
               <Breadcrumb
-                breadcrumbItems={[
-                  { breadcrumbName: 'Setup', path: '/setup' },
+                items={[
+                  { breadcrumbName: 'Setup', path: 'setup' },
                   {
                     breadcrumbName: 'Feedback Survey',
-                    path: '/setup/reviews-config',
+                    path: 'setup/reviews-config',
                   },
                 ]}
               />
               <Typography.Title>Feedback Survey</Typography.Title>
-            </div>
-            <div className={styles.reviewsConfigBreadcrumbMobile}>
-              <Typography.Title>
-                <LeftOutlined onClick={handleBack} /> Feedback Survey
-              </Typography.Title>
             </div>
             <div className={styles.reviewsConfigOps}>
               <div className={styles.reviewLink}>

@@ -19,7 +19,7 @@ async function postData(url = '', data, file) {
     cache: 'no-cache',
     credentials: 'same-origin',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token.substring(1, token.length - 1)}`,
     },
     redirect: 'follow',
     body: postData,

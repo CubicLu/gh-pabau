@@ -5,7 +5,7 @@ import Menu from './Menu'
 
 describe('Sidebar', () => {
   test.skip('should render successfully', () => {
-    const { baseElement } = render(<Menu />)
+    const { baseElement } = render(<Menu collapsedProp={true} />)
     expect(baseElement).toBeTruthy()
   })
 })

@@ -1,5 +1,7 @@
 import React, { FC, ReactNode } from 'react'
+import { useMedia } from 'react-use'
 import { Radio } from 'antd'
+import styles from './GridVsList.module.less'
 
 export interface displayTypes {
   title: string
@@ -17,6 +19,7 @@ export const GridVsList: FC<P> = ({
   onChange,
   selectedValue,
 }) => {
+  const isMobile = useMedia('(max-width: 767px)', false)
   const selectedType = (e) => {
     onChange?.(e.target.value)
   }
@@ -26,12 +29,13 @@ export const GridVsList: FC<P> = ({
       defaultValue={displayTypes?.[0].title}
       value={selectedValue}
       onChange={selectedType}
+      className={isMobile ? styles.mobileGridVsList : ''}
     >
       {displayTypes?.map((display) => (
         <Radio.Button
           value={display.title}
           key={display.title}
-          style={{ marginRight: 16 }}
+          style={{ marginRight: isMobile ? 25 : 16 }}
         >
           {display.icon}
         </Radio.Button>

@@ -65,7 +65,7 @@ export const Document = () => {
       <div className={styles.documents}>
         <div className={styles.documentsHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
                 path: 'connect/account',

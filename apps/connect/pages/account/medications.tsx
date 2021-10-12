@@ -52,7 +52,7 @@ export const Medications = () => {
       <div className={styles.allergies}>
         <div className={styles.allergiesHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
                 path: 'connect/account',

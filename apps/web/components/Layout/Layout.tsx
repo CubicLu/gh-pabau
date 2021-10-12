@@ -36,7 +36,6 @@ const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,
   requireAdminAccess = false,
-  handleSearch,
   ...props
 }) => {
   const { me, login, logout } = useUser()
@@ -160,14 +159,12 @@ const Layout: FC<LayoutProps> = ({
           showChat={showChat}
           title="Pabau"
           isShowSearch={true}
-          onChatClick={() => setShowChat((e) => !e)}
           clientCreateRender={(handleClose) => (
             <ClientCreate handleClose={handleClose} />
           )}
           leadCreateRender={(handleClose) => (
             <LeadCreate handleClose={handleClose} />
           )}
-          handleSearch={handleSearch}
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
         {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}

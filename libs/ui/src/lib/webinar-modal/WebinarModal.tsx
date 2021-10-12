@@ -62,9 +62,15 @@ export const WebinarModal: FC<WebinarModalProps> = ({
     buttonType === 'join' ? true : false
   )
   const [finished, setFinished] = useState<boolean>(isFinished)
+  const [cancel, setCancel] = useState<boolean>(false)
 
   const renderButtonState = () => {
     if (finished) return t('setup.page.live.upcoming.webinar.closed.label')
+    if (
+      (cancel && registered && !isYourSchedule) ||
+      (cancel && registered_id && !isYourSchedule)
+    )
+      return t('setup.page.live.upcoming.webinar.cancel-registration.label')
     if (registered || registered_id) {
       if (isYourSchedule) {
         return t('setup.page.live.upcoming.webinar.join.class.label')
@@ -132,9 +138,16 @@ export const WebinarModal: FC<WebinarModalProps> = ({
         </div>
       </div>
       <div className={styles.desc}>{description}</div>
+      {console.log('cancel', cancel, registered)}
       <Button
         className={styles.btnRegister}
         loading={loading}
+        onMouseOver={() => {
+          setCancel(true)
+        }}
+        onMouseLeave={() => {
+          setCancel(false)
+        }}
         onClick={async () => {
           if (buttonType === 'join' || buttonType === 'register') {
             changeLoadingState(true)
@@ -152,6 +165,11 @@ export const WebinarModal: FC<WebinarModalProps> = ({
       >
         {renderButtonState()}
       </Button>
+      <p style={{ display: 'inline', color: '#9292A3', marginTop: '8px' }}>
+        {
+          '*You will be able to join the session here 5 minutes before the start time'
+        }
+      </p>
     </Modal>
   )
 }

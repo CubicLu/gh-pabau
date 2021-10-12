@@ -32,10 +32,10 @@ import {
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import {
-  ClientAppointmentItem,
   Avatar,
   AvatarList,
   Button,
+  ClientAppointmentItem,
   Notification,
   NotificationType,
 } from '@pabau/ui'
