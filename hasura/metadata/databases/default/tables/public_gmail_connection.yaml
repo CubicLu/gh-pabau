@@ -29,7 +29,8 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - api_key
+    - access_token
+    - refresh_token
     - company_id
     - email
     - user_id
@@ -38,7 +39,8 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - api_key
+    - access_token
+    - refresh_token
     - company_id
     - email
     - user_id
@@ -50,7 +52,8 @@ select_permissions:
     - email
     - company_id
     - user_id
-    - api_key
+    - access_token
+    - refresh_token
     - created_at
     - updated_at
     filter: {}
@@ -61,7 +64,8 @@ select_permissions:
     - email
     - company_id
     - user_id
-    - api_key
+    - access_token
+    - refresh_token
     - created_at
     - updated_at
     filter: {}
@@ -70,7 +74,8 @@ update_permissions:
 - permission:
     check: null
     columns:
-    - api_key
+    - access_token
+    - refresh_token
     - company_id
     - email
     - user_id
@@ -79,7 +84,8 @@ update_permissions:
 - permission:
     check: null
     columns:
-    - api_key
+    - access_token
+    - refresh_token
     - company_id
     - email
     - user_id

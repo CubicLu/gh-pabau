@@ -2,22 +2,31 @@ query findGmailConnection($companyId: Int, $userId: Int) {
   gmail_connection(where: {company_id: {_eq: $companyId}, user_id: {_eq: $userId}}){
     id
     email
-    api_key
+    access_token
+    refresh_token
+    user_id
+    company_id
+    created_at
+    updated_at
   }
 }
 
 
 mutation InsertGmailConnection (
-     $apiKey: String!
+     $accessToken: String!
+     $refreshToken: String!
      $email: String!
      $companyId: Int
      $userId: Int
  ){
-  insert_gmail_connection_one(object: {api_key: $apiKey, email: $email, company_id: $companyId, user_id: $userId}) {
-   id
+  insert_gmail_connection_one(object: {access_token: $accessToken, refresh_token: $refreshToken,email: $email, company_id: $companyId, user_id: $userId}) {
+    id
+    access_token
+    refresh_token
     user_id
-    updated_at
+    company_id
     created_at
+    updated_at
   }
 }
 

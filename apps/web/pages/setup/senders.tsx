@@ -8,10 +8,12 @@ import {
   PhoneOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
-import { Breadcrumb, Button } from '@pabau/ui'
+import { Breadcrumb, Button, Notification, NotificationType } from '@pabau/ui'
 import {
   InsertGmailConnectionDocument,
   FindGmailConnectionDocument,
+  GoogleTokenDocument,
+  DeleteGmailConnectionDocument,
 } from '@pabau/graphql'
 import { Col, Modal, Popover, Row, Tag, Typography } from 'antd'
 import { useRouter } from 'next/router'
@@ -25,8 +27,6 @@ import { ReactComponent as Google } from '../../assets/images/google.svg'
 import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
 import { ReactComponent as Office } from '../../assets/images/office365.svg'
 import Login from '../../components/Email/login'
-import Revoke from '../../components/Email/revoke'
-// import { useQuery } from '@apollo/client'
 import { useUser } from '../../context/UserContext'
 
 import React, { useEffect, useState } from 'react'
@@ -94,16 +94,82 @@ export const Communications: React.FC = () => {
   const { t } = useTranslationI18()
 
   const [showLogin, setShowLogin] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
-  const [checkStatus, setCheckStatus] = useState(true)
-  const [revoke, setRevoke] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const [userData, setUserData] = useState('')
+
+  const { me } = useUser()
+  const url = new URL(window.location.href)
+
+  const [loadConnection, { data: gmailConnection }] = useLazyQuery(
+    FindGmailConnectionDocument,
+    {
+      variables: {
+        companyId: me.company,
+        userId: me.user,
+      },
+    }
+  )
+
+  const [refreshToken, { data }] = useLazyQuery(GoogleTokenDocument, {
+    variables: {
+      token: url.searchParams.get('code'),
+    },
+  })
 
   useEffect(() => {
     loadConnection()
+    if (url.searchParams.get('code')) {
+      refreshToken()
+    }
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      setIsLoggedIn(true)
+      setUserData(gmailConnection.gmail_connection[0].email)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, revoke, checkStatus])
+  }, [])
 
-  const { me } = useUser()
+  useEffect(() => {
+    if (data?.getRefreshToken) {
+      insertGmailConnection(data.getRefreshToken).then(async () => {
+        await loadConnection()
+        setIsLoggedIn(true)
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  useEffect(() => {
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      setIsLoggedIn(true)
+      setUserData(gmailConnection.gmail_connection[0].email)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gmailConnection])
+  // data, gmailConnection, isLoggedIn
+
+  const insertGmailConnection = async (refreshToken) => {
+    await insertConnection({
+      variables: {
+        accessToken: refreshToken.access_token,
+        refreshToken: refreshToken.refresh_token,
+        email: refreshToken.email,
+        companyId: me.company,
+        userId: me.user,
+      },
+      optimisticResponse: {},
+      refetchQueries: [
+        {
+          query: FindGmailConnectionDocument,
+          variables: {
+            companyId: me.company,
+            userId: me.user,
+          },
+        },
+      ],
+    })
+  }
+
   const [insertConnection] = useMutation(InsertGmailConnectionDocument, {
     onCompleted() {
       console.log()
@@ -113,60 +179,66 @@ export const Communications: React.FC = () => {
     },
   })
 
-  const handleRemoveLink = async () => {
-    await showConfirm()
-    loadConnection()
-    // setIsLoggedIn(true)
-  }
-
-  const handleGoogleLogin = async (email, token) => {
-    !checkStatus &&
-      (await insertConnection({
-        variables: {
-          apiKey: token,
-          email: email,
-          companyId: me.company,
-          userId: me.user,
-        },
-        optimisticResponse: {},
-        refetchQueries: [
-          {
-            query: FindGmailConnectionDocument,
-            variables: {
-              companyId: me.company,
-              userId: me.user,
-            },
-          },
-        ],
-      }))
-  }
-
-  // const { data } = useQuery(FindGmailConnectionDocument, {
-  //   variables: {
-  //     companyId: me.company,
-  //     userId: me.user,
-  //   },
-  // })
-
-  const [loadConnection, { data }] = useLazyQuery(FindGmailConnectionDocument, {
-    variables: {
-      companyId: me.company,
-      userId: me.user,
+  const [removeConnection] = useMutation(DeleteGmailConnectionDocument, {
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        'Google connection removed successfully'
+      )
+    },
+    onError(e) {
+      console.log(e)
     },
   })
 
-  const handleShowLogin = async () => {
-    // ?.gmail_connection.length
-    await loadConnection()
+  const handleRemoveLink = async () => {
+    await showConfirm()
+  }
 
-    if (data?.gmail_connection.length > 0) {
-      setIsLoggedIn(true)
-      return 1
-    } else {
-      setCheckStatus(false)
+  const handleGoogleLogin = () => {
+    console.log()
+  }
+
+  const handleShowLogin = async () => {
+    if (!isLoggedIn) {
       setShowLogin(true)
-      setIsLoggedIn(true)
     }
+  }
+
+  const removeGmailConnection = async () => {
+    await removeConnection({
+      variables: {
+        email: userData,
+        companyId: me.company,
+        userId: me.user,
+      },
+      optimisticResponse: {},
+      refetchQueries: [
+        {
+          query: FindGmailConnectionDocument,
+          variables: {
+            companyId: me.company,
+            userId: me.user,
+          },
+        },
+      ],
+    })
+  }
+  const showConfirm = () => {
+    confirm({
+      title: 'Unlink your Google account',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you wish to unlink your Google account?',
+      onOk() {
+        console.log('Remove link', userData)
+        removeGmailConnection().then(() => {
+          setIsLoggedIn(false)
+        })
+      },
+      onCancel() {
+        console.log('Close popup')
+      },
+    })
   }
 
   const content = () => {
@@ -177,6 +249,7 @@ export const Communications: React.FC = () => {
         </div>
         <div
           className={styles.mailOptionItem}
+          style={userData ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
           onClick={() => handleShowLogin()}
         >
           <GoogleOutlined /> <p>Connect Google</p>
@@ -196,38 +269,11 @@ export const Communications: React.FC = () => {
       </div>
     )
   }
-
-  const showConfirm = () => {
-    confirm({
-      title: 'Unlink your Google account',
-      icon: <ExclamationCircleOutlined />,
-      content: 'Are you sure you wish to unlink your Google account?',
-      onOk() {
-        setRevoke(true)
-        setIsLoggedIn(false)
-      },
-      onCancel() {
-        console.log('Close popup')
-      },
-    })
-  }
-  // console.log('data value:::', data?.gmail_connection.length, isLoggedIn)
+  console.log('data::', data, userData, gmailConnection)
   return (
     <Layout {...user} active={'setup'}>
-      {showLogin && (
-        <Login
-          handleGoogleLogin={handleGoogleLogin}
-          checkStatus={checkStatus}
-        />
-      )}
+      {showLogin && <Login handleGoogleLogin={handleGoogleLogin} />}
 
-      {revoke && (
-        <Revoke
-          email={data?.gmail_connection[0].email}
-          companyId={me.company}
-          userId={me.user}
-        />
-      )}
       <CommonHeader
         isLeftOutlined
         reversePath="/setup"
@@ -295,7 +341,7 @@ export const Communications: React.FC = () => {
                 </Button>
               </Col>
             ))}
-            {data?.gmail_connection.length > 0 && isLoggedIn && (
+            {isLoggedIn && (
               <Col span={4} xs={12} sm={8} md={6}>
                 <Button className={styles.senderItem}>
                   <div className={styles.itemHeader}>
@@ -311,9 +357,7 @@ export const Communications: React.FC = () => {
                   </div>
                   <div className={styles.itemBody}>
                     <div>Clinic Bookings</div>
-                    <div className={styles.email}>
-                      {data?.gmail_connection[0].email}
-                    </div>
+                    <div className={styles.email}>{userData}</div>
                   </div>
                 </Button>
               </Col>
