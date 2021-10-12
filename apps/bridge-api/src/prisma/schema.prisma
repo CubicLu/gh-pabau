@@ -2107,6 +2107,7 @@ model CmContactCustom {
   CmContact          CmContact         @relation(fields: [contact_id], references: [ID])
   ManageCustomField  ManageCustomField @relation(fields: [custom_field_id], references: [id])
 
+  @@unique([company_id, contact_id, custom_field_id], name: "unique_company_id_contact_id_custom_field_id")
   @@index([contact_id], name: "contact_id")
   @@index([custom_field_id], name: "custom_field_id")
   @@index([company_id], name: "occupier")
@@ -4634,7 +4635,7 @@ model ContactMeta {
   meta_value String
   Contact    CmContact @relation(fields: [contact_id], references: [ID])
 
-  @@unique([contact_id, meta_name], name: "contact_id")
+  @@unique([contact_id, meta_name], name: "unique_contact_id_meta_name")
   @@map("contact_meta")
 }
 
