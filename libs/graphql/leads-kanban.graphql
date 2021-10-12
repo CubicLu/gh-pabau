@@ -12,6 +12,7 @@ query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
     User {
       id
       username
+      image
     }
     Activity {
       id
@@ -21,6 +22,19 @@ query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
       due_end_date
       created_by
       status
+    }
+    LeadStatus
+    PipelineStage {
+      id
+      name
+      stage_order
+      note
+      Pipeline {
+        id
+        name
+        status
+        description
+      }
     }
   }
 }
