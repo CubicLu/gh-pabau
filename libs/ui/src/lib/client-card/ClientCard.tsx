@@ -25,6 +25,8 @@ import {
   CommunicationTimelineProps,
   ActivitiesProps,
   AvatarUploader,
+  ReferredByOption,
+  FieldOrderItem,
   ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
@@ -153,6 +155,10 @@ interface P {
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
   activeTab?: string
+  referredByOptions?: ReferredByOption[]
+  loading?: boolean
+  customFields?: FieldOrderItem[]
+  dateFormat?: string
 }
 
 const ClientCardModal: FC<P> = ({
@@ -166,6 +172,10 @@ const ClientCardModal: FC<P> = ({
   activeTab,
   children,
   onTabChanged,
+  referredByOptions,
+  loading,
+  customFields,
+  dateFormat,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -916,6 +926,10 @@ const ClientCardModal: FC<P> = ({
                 onCreateCall={() => handleCreatePopout('call')}
                 searchResults={thirdPartySearchResults}
                 appointments={appointments}
+                referredByOptions={referredByOptions}
+                loading={loading}
+                customFields={customFields}
+                dateFormat={dateFormat}
               />
             </div>
             <div className={styles.clientCardContent}>
