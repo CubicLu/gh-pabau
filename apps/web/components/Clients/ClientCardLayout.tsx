@@ -101,7 +101,10 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   ' ' +
                   data?.findFirstCmContact.Lname,
                 gender: data?.findFirstCmContact.gender,
-                phone: '',
+                phone: {
+                  mobile: '',
+                  home: '',
+                },
                 relationships: [],
                 labels: [],
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
