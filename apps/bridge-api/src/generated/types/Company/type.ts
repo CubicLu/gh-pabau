@@ -1771,6 +1771,34 @@ export const Company = objectType({
         return root.Voucher
       },
     })
+    t.list.field('Package', {
+      type: 'Package',
+      args: {
+        where: 'PackageWhereInput',
+        orderBy: 'PackageOrderByWithRelationInput',
+        cursor: 'PackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Package
+      },
+    })
+    t.list.field('InsuranceContractPrice', {
+      type: 'InsuranceContractPrice',
+      args: {
+        where: 'InsuranceContractPriceWhereInput',
+        orderBy: 'InsuranceContractPriceOrderByWithRelationInput',
+        cursor: 'InsuranceContractPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InsuranceContractPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsuranceContractPrice
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

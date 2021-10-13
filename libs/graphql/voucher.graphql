@@ -1,5 +1,5 @@
 query getVoucherTemplate {
-  findManyMessageTemplate(where: {template_type: {equals: "voucher"}, template_name: {not: {equals: ""}}}, orderBy: {template_name: asc}) {
+  templates: findManyMessageTemplate(where: {template_type: {equals: "voucher"}, template_name: {not: {equals: ""}}}, orderBy: {template_name: asc}) {
     template_id
     template_name
     template_group

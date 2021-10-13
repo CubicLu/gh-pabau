@@ -67,7 +67,10 @@ export function Account() {
   const { Title } = Typography
   const { Option } = Select
   const [activeTab, setActiveTab] = useState('0')
-  const [showDateFilter, setShowDateFilter] = useState(false)
+  const [showDateFilter, setShowDateFilter] = useState({
+    desktop: false,
+    mobile: false,
+  })
   const [selectedRange, setSelectedRange] = useState<string>(
     t('account.finance.date.range.option.month')
   )
@@ -152,7 +155,7 @@ export function Account() {
   const onDateFilterApply = () => {
     setFilterDate([...selectedDates])
     setFilterRange(selectedRange)
-    setShowDateFilter(false)
+    setShowDateFilter({ desktop: false, mobile: false })
   }
 
   const onDataRangeSelect = (value) => {
@@ -263,7 +266,10 @@ export function Account() {
         />
       )}
       <div className={styles.footer}>
-        <Button type="ghost" onClick={() => setShowDateFilter(false)}>
+        <Button
+          type="ghost"
+          onClick={() => setShowDateFilter({ desktop: false, mobile: false })}
+        >
           {t('account.finance.date.range.btn.cancel')}
         </Button>
         <Button
@@ -483,8 +489,10 @@ export function Account() {
             overlay={dateRange}
             placement="bottomRight"
             trigger={['click']}
-            visible={showDateFilter}
-            onVisibleChange={(val) => setShowDateFilter(val)}
+            visible={showDateFilter.mobile}
+            onVisibleChange={(val) =>
+              setShowDateFilter({ desktop: false, mobile: val })
+            }
           >
             <CalendarOutlined className={styles.marketingIconStyle} />
           </Dropdown>
@@ -522,11 +530,14 @@ export function Account() {
               />
             </div>
             <Dropdown
+              key="desktop-dropdown"
               overlay={dateRange}
               placement="bottomRight"
               trigger={['click']}
-              visible={showDateFilter}
-              onVisibleChange={(val) => setShowDateFilter(val)}
+              visible={showDateFilter.desktop}
+              onVisibleChange={(val) =>
+                setShowDateFilter({ desktop: val, mobile: false })
+              }
             >
               <Button type="ghost">
                 <CalendarOutlined />{' '}
