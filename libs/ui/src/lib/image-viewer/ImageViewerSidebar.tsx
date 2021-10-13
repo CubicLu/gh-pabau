@@ -94,6 +94,14 @@ const ImageViewerSidebarItem = ({
   }
   useEffect(() => {
     if (source === '' && origin !== '') {
+      console.log('ORIGIN:', origin)
+      let path = origin
+      const pathArr = path.split('photos/')
+      if (pathArr?.length) {
+        pathArr[1] = `thumb_${pathArr[1]}`
+        path = pathArr.join('photos/')
+      }
+
       const img = new Image()
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
@@ -118,7 +126,7 @@ const ImageViewerSidebarItem = ({
       img.addEventListener('error', () => {
         setSource('load-error')
       })
-      img.src = origin
+      img.src = path
     }
   }, [source, origin])
 

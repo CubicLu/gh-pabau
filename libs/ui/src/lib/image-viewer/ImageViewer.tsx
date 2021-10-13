@@ -188,6 +188,7 @@ export interface ImageViewerProps {
   uploadingImages?: UploadingImageProps[]
   setUploadingImages?: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
+  removeImage?: (imagePath: string) => void
 }
 
 const ImageViewerModal: FC<ImageViewerProps> = ({
@@ -201,6 +202,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   uploadingImages,
   setUploadingImages,
   uploadImage,
+  removeImage,
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
@@ -903,6 +905,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             setUploadingImages={(images) => setUploadingImages?.(images)}
             showCamera={showCamera}
             uploadImage={uploadImage}
+            removeImage={removeImage}
           />
         )}
       </AntModal>
