@@ -90,6 +90,7 @@ export const permissions = shield(
       upsertUserReportByReportCode: rules.authentication.isAdmin,
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
+      createOneContactAttachment: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
