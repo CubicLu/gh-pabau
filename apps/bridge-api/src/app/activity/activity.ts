@@ -103,14 +103,17 @@ export const prepareSearchObject = (
     'Lead stage': {
       CmLead: { LeadStatusData: { status_name: { contains: search } } },
     },
-    'Client street': {
+    Address: {
       CmContact: { MailingStreet: { contains: search } },
     },
-    'Client city': {
+    'City/Town': {
       CmContact: { MailingCity: { contains: search } },
     },
-    'Client postcode': {
+    'Post Code': {
       CmContact: { MailingPostal: { contains: search } },
+    },
+    Country: {
+      CmContact: { MailingCountry: { contains: search } },
     },
     'Lead lost reason': {
       CmLead: {
@@ -196,14 +199,17 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
     'Lead email': {
       CmLead: { Email: sortOrder },
     },
-    'Client street': {
+    Address: {
       CmContact: { MailingStreet: sortOrder },
     },
-    'Client city': {
+    'City/Town': {
       CmContact: { MailingCity: sortOrder },
     },
-    'Client postcode': {
+    'Post Code': {
       CmContact: { MailingPostal: sortOrder },
+    },
+    Country: {
+      CmContact: { MailingCountry: sortOrder },
     },
     'Free/busy': {
       available: sortOrder === 'asc' ? 'desc' : 'asc',

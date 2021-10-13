@@ -1,3 +1,4 @@
+export * from '../../app/activity/mutations'
 export * from '../../app/activity/query'
 export * from '../../app/contact/mutation'
 export * from '../../app/contact/query'
