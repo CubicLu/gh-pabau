@@ -1,5 +1,8 @@
 import { Button } from '@pabau/ui'
-import { Pathway } from '../../pages/pathway/[pathway-id]/execute/[client-id]'
+import {
+  Pathway,
+  PathwayStep,
+} from '../../pages/pathway/[pathway-id]/execute/[client-id]'
 import { DemoStep } from './Steps/DemoStep'
 
 interface P {
@@ -7,11 +10,15 @@ interface P {
   pathway: Pathway
 }
 
+const hydratables = {
+  demo: () => <DemoStep />,
+}
+
 export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
-  const hydrate = (step: PathwayStep) => ({
-    ...step,
-    render: () => hydratable(step),
-  })
+  const hydrate = (step: PathwayStep) => {
+    if (!(step.name in hydratables)) return <h2>step type not found</h2>
+    return hydratables[step.name]
+  }
   return (
     <div
       style={{
