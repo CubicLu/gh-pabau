@@ -89,6 +89,7 @@ export const permissions = shield(
 
       upsertUserReportByReportCode: rules.authentication.isAdmin,
       createOneContact: rules.authentication.isAuthenticated,
+      updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
@@ -111,6 +112,7 @@ export const permissions = shield(
       updateOneCmLead: rules.authentication.isAuthenticated,
       //Activity
       upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
+      deleteManyActivity: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
