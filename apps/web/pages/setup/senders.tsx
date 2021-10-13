@@ -233,6 +233,7 @@ export const Communications: React.FC = () => {
         console.log('Remove link', userData)
         removeGmailConnection().then(() => {
           setIsLoggedIn(false)
+          setUserData('')
         })
       },
       onCancel() {
@@ -269,7 +270,7 @@ export const Communications: React.FC = () => {
       </div>
     )
   }
-  console.log('data::', data, userData, gmailConnection)
+
   return (
     <Layout {...user} active={'setup'}>
       {showLogin && <Login handleGoogleLogin={handleGoogleLogin} />}

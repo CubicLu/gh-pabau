@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import styles from './readEmail.module.less'
-import { gapi } from 'gapi-script'
+// import { gapi } from 'gapi-script'
 import {
   CaretDownOutlined,
   DownOutlined,
@@ -24,24 +24,19 @@ export interface P {
   privateMenu?: React.ReactElement
   messageId: string
   threadsId: string
-  hadleSingleDelete: (m) => void
+  access_token: string
+  user: string
+  handleSingleDelete: (m) => void
 }
 
 export const ReadEmail: FC<P> = ({
   privateMenu,
   messageId,
   threadsId,
-  hadleSingleDelete,
+  handleSingleDelete,
+  access_token,
+  user,
 }) => {
-  // const elRef = useRef()
-
-  // React.useLayoutEffect(() => {
-  //   if (elRef.current) {
-  //     //elRef.current.style.display = 'unset !important'
-  //     console.log('/ref:::::;', elRef?.current.style)
-  //   }
-  // })
-
   const [responseEmail, setresponseEmail] = useState({
     subject: '',
     name: '',
@@ -98,7 +93,6 @@ export const ReadEmail: FC<P> = ({
     let part = ''
 
     if (x.payload.mimeType === 'text/html') {
-      console.log('x data:::', x)
       part = x.payload.body.data ? x.payload.body.data : ''
     } else {
       x.payload.parts.map((x) => {
@@ -111,7 +105,7 @@ export const ReadEmail: FC<P> = ({
 
     rowData.snippet = decode(part).replace('"\r\n', '')
     // .replace('div { display:block !important;}', '')
-    console.log('part', rowData.snippet)
+
     const bodyContent = rowData.snippet.split('<body')
     // const styleContent = bodyContent[0].split('<style')
     // customStyle = `<style ${styleContent[1]}`
@@ -125,30 +119,37 @@ export const ReadEmail: FC<P> = ({
     return rowData
   }
 
-  const listSentEmail = async (msg) => {
-    dayjs.extend(relativeTime)
-
-    const threads = await gapi.client.gmail.users.threads.get({
-      userId: 'me',
-      id: threadsId,
-    })
-
+  const getThreadList = async (threads, msg) => {
     const threadList = []
-    if (threads.result.messages.length === 1) {
-      const finalEmails = await gapi.client.gmail.users.messages.get({
-        userId: 'me',
-        id: msg,
-      })
-
-      const emailData = await extractData(finalEmails?.result)
-
-      setresponseEmail({
-        ...responseEmail,
-        ...emailData,
-      })
-      setIsLoading(false)
+    if (threads?.messages?.length === 1) {
+      fetch(
+        `https://www.googleapis.com/gmail/v1/users/${user}/messages/${msg}?access_token=${access_token}`,
+        {
+          // mode: 'no-cors',
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          if (response.ok) {
+            response.json().then(async (json) => {
+              const emailData = extractData(json)
+              setresponseEmail({
+                ...responseEmail,
+                ...emailData,
+              })
+              setIsLoading(false)
+              // return json
+            })
+          }
+        })
+        .catch((error) => {
+          console.log('Google Connection refuse', error)
+        })
     } else {
-      threads.result.messages.map((threadsMsg) => {
+      threads.messages.map((threadsMsg) => {
         const emailData = extractData(threadsMsg)
         threadList.push({
           ...emailData,
@@ -159,8 +160,38 @@ export const ReadEmail: FC<P> = ({
       setIsLoading(false)
     }
   }
+
+  const listSentEmail = async (msg) => {
+    dayjs.extend(relativeTime)
+
+    let threads = { messages: [] }
+
+    await fetch(
+      `https://www.googleapis.com/gmail/v1/users/${user}/threads/${threadsId}?access_token=${access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            threads = json
+
+            await getThreadList(json, msg)
+            return threads
+          })
+        }
+      })
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
+      })
+  }
   const handleEmailDelete = () => {
-    hadleSingleDelete(deleteEmailId)
+    handleSingleDelete(deleteEmailId)
   }
 
   const handlePrint = () => {

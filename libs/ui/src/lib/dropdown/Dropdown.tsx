@@ -107,7 +107,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       >
         <div className={styles.dropdownHeader}>
           <MailOutlined style={{ color: '#9292A3' }} />
-          <Link href="/setup/gmail/connect">
+          <Link href="/setup/gmail/inbox">
             <span className={styles.headerText}>
               {t('avatar.account.mail')}
             </span>

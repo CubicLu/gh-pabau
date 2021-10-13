@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import styles from './index.module.less'
-import { gapi } from 'gapi-script'
+// import { gapi } from 'gapi-script'
 import {
   Button,
   Checkbox,
@@ -36,8 +36,11 @@ import {
 import dayjs from 'dayjs'
 import { ReactComponent as Attched } from '../../assets/images/attched.svg'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-
+import { useUser } from '../../context/UserContext'
 import dynamic from 'next/dynamic'
+import { FindGmailConnectionDocument } from '@pabau/graphql'
+import { useLazyQuery } from '@apollo/client'
+import { useRouter } from 'next/router'
 const { Search } = Input
 export interface P {
   tableName?: string
@@ -65,13 +68,13 @@ export const Inbox: FC<P> = ({ ...props }) => {
   const [showSearch, setShowSearch] = useState(false)
 
   const userSignIn = true
-  useEffect(
-    () => {
-      handleClick()
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [userSignIn]
-  )
+  // useEffect(
+  //   () => {
+  //     handleClick()
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [userSignIn]
+  // )
 
   useEffect(
     () => {
@@ -82,62 +85,54 @@ export const Inbox: FC<P> = ({ ...props }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isLoading]
   )
+  const { me } = useUser()
+  const [loadConnection, { data: gmailConnection }] = useLazyQuery(
+    FindGmailConnectionDocument,
+    {
+      variables: {
+        companyId: me.company,
+        userId: me.user,
+      },
+    }
+  )
+  useEffect(
+    () => {
+      loadConnection()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+  const router = useRouter()
 
-  const handleClick = () => {
-    gapi.load('client:auth2', initClient)
-  }
-  const initClient = () => {
-    const scopes =
-      'https://mail.google.com/ https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.labels'
-    gapi.client
-      .init({
-        apiKey: 'AIzaSyDD3dtSDaMm6-UiUKDENugyceobzsd41wI',
-        clientId:
-          '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com',
-        discoveryDocs: [
-          'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest',
-        ],
-        scope: scopes,
-      })
-      .then(
-        function () {
-          const authToken = gapi.auth2
-            .getAuthInstance()
-            .currentUser.get()
-            .getAuthResponse().access_token
-          gapi.client.setToken({ access_token: authToken })
+  useEffect(() => {
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      updateSigninStatus(true).then()
+    }
+    if (gmailConnection && gmailConnection.gmail_connection.length === 0) {
+      router.push('/setup/senders').then()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gmailConnection])
 
-          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus)
-          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())
-        },
-        function (error) {
-          console.log(error)
-        }
-      )
-  }
-  const handleAuthClick = () => {
-    gapi.auth2.getAuthInstance().signIn()
-  }
-
-  const updateSigninStatus = (isSignedIn) => {
+  const updateSigninStatus = async (isSignedIn) => {
     if (isSignedIn) {
       // totalConverstions()
-      listInbox()
-      listDraft()
-      listSent()
-      listArchive()
+      await listInbox()
+      await listDraft()
+      await listSent()
+      await listArchive()
     } else {
-      handleAuthClick()
+      router.push('/setup/senders')
     }
   }
 
   const extractData = (finalEmails) => {
     const val = finalEmails.map((itm: any, i) => {
       const rowData = { name: '', time: '', subject: '', isAttched: false }
-      if (itm.result.payload.mimeType === 'multipart/mixed') {
+      if (itm.payload.mimeType === 'multipart/mixed') {
         rowData.isAttched = true
       }
-      itm.result.payload.headers.map((x) => {
+      itm.payload.headers.map((x) => {
         if (x.name === 'From') {
           rowData.name = x.value.split('<')
         }
@@ -165,14 +160,14 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
       const item = {
         ...rowData,
-        id: itm.result.id,
-        key: itm.result.threadId,
+        id: itm.id,
+        key: itm.threadId,
         name: {
           name: rowData.name[0],
-          status: itm.result.labelIds.includes('UNREAD'),
+          status: itm.labelIds.includes('UNREAD'),
         },
         isAttched: rowData.isAttched,
-        subject: { name: rowData.subject, subject: itm.result.snippet },
+        subject: { name: rowData.subject, subject: itm.snippet },
       }
       return item
     })
@@ -182,79 +177,112 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const listInboxEmail = async (msg) => {
     let unreadEmail = 0
+    const emailBox = []
     setIsLoading(true)
-    const finalEmails = await Promise.all(
+    await Promise.all(
       msg.map(async (msg) => {
-        return await gapi.client.gmail.users.messages.get({
-          userId: 'me',
-          id: msg.id,
-        })
+        return fetch(
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          {
+            // mode: 'no-cors',
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              response.json().then(async (json) => {
+                emailBox.push(json)
+                // return json
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Google Connection refuse', error)
+          })
       })
     )
-
-    setTotalInbox(finalEmails.length)
-    finalEmails.map((itm: any, i) => {
-      if (itm.result.labelIds.includes('UNREAD')) {
+    setTotalInbox(emailBox.length)
+    emailBox.map((itm: any, i) => {
+      if (itm.labelIds.includes('UNREAD')) {
         unreadEmail += 1
       }
       return 1
     })
-    const val = extractData(finalEmails)
+    const val = extractData(emailBox)
     setInboxEmail(val)
     setInboxCount(unreadEmail)
     setIsLoading(false)
   }
 
-  const listDraftEmail = async (msg) => {
+  const listDraftEmail = async (draft) => {
     setIsLoading(true)
-    const finalEmails = await Promise.all(
-      msg.map(async (msg) => {
-        return await gapi.client.gmail.users.messages.get({
-          userId: 'me',
-          id: msg.id,
-        })
+    const emailBox = []
+    await Promise.all(
+      draft.map(async (msg) => {
+        return fetch(
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.message.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          {
+            // mode: 'no-cors',
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              response.json().then(async (json) => {
+                emailBox.push(json)
+                // return json
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Google Connection refuse', error)
+          })
       })
     )
-    const val = extractData(finalEmails)
+    const val = extractData(emailBox)
     setDraftEmail(val)
     setIsLoading(false)
   }
 
   const listSentEmail = async (msg) => {
     setIsLoading(true)
-    const finalEmails = await Promise.all(
+    const emailBox = []
+    await Promise.all(
       msg.map(async (msg) => {
-        return await gapi.client.gmail.users.messages.get({
-          userId: 'me',
-          id: msg.id,
-        })
+        return fetch(
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          {
+            // mode: 'no-cors',
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              response.json().then(async (json) => {
+                emailBox.push(json)
+                // return json
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Google Connection refuse', error)
+          })
       })
     )
-    const val = extractData(finalEmails)
-    setSentEmail(val)
-    setIsLoading(false)
-  }
 
-  const listArchiveEmail = async (msg) => {
-    setIsLoading(true)
-    const finalEmails = await Promise.all(
-      msg.map(async (msg) => {
-        return await gapi.client.gmail.users.messages.get({
-          userId: 'me',
-          id: msg.id,
-        })
-      })
-    )
-    const ddd = finalEmails.map((itm: any) => {
+    const ddd = emailBox.map((itm: any) => {
       const rowData = { name: '', time: '', subject: '' }
-      if (
-        //TODO::Archive MAIL
-        (!itm.result.labelIds.includes('INBOX') &&
-          !itm.result.labelIds.includes('SENT') &&
-          !itm.result.labelIds.includes('DRAFT')) ||
-        itm.result.labelIds.includes('ARCHIVE')
-      ) {
-        itm.result.payload.headers.map((x) => {
+      if (itm.labelIds.includes('SENT')) {
+        itm.payload.headers.map((x) => {
           if (x.name === 'From') {
             rowData.name = x.value.split('<')
           }
@@ -270,13 +298,90 @@ export const Inbox: FC<P> = ({ ...props }) => {
       if (rowData.name !== '') {
         const item = {
           ...rowData,
-          id: itm.result.id,
-          key: itm.result.threadId,
+          id: itm.id,
+          key: itm.threadId,
           name: {
             name: rowData.name[0],
-            status: itm.result.labelIds.includes('UNREAD'),
+            status: itm.labelIds.includes('UNREAD'),
           },
-          subject: { name: rowData.subject, subject: itm.result.snippet },
+          subject: { name: rowData.subject, subject: itm.snippet },
+        }
+        return item
+      }
+      return 1
+    })
+    const row = []
+
+    ddd.map((x) => {
+      if (x !== 1) {
+        row.push(x)
+      }
+      return 1
+    })
+    setSentEmail(row)
+    setIsLoading(false)
+  }
+
+  const listArchiveEmail = async (msg) => {
+    setIsLoading(true)
+    const emailBox = []
+    await Promise.all(
+      msg.map(async (msg) => {
+        return fetch(
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          {
+            // mode: 'no-cors',
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              response.json().then(async (json) => {
+                emailBox.push(json)
+                // return json
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Google Connection refuse', error)
+          })
+      })
+    )
+    const ddd = emailBox.map((itm: any) => {
+      const rowData = { name: '', time: '', subject: '' }
+      if (
+        //TODO::Archive MAIL
+        (!itm.labelIds.includes('INBOX') &&
+          !itm.labelIds.includes('SENT') &&
+          !itm.labelIds.includes('DRAFT')) ||
+        itm.labelIds.includes('ARCHIVE')
+      ) {
+        itm.payload.headers.map((x) => {
+          if (x.name === 'From') {
+            rowData.name = x.value.split('<')
+          }
+          if (x.name === 'Date') {
+            rowData.time = `${dayjs(x.value).format('HH:mm')}`
+          }
+          if (x.name === 'Subject') {
+            rowData.subject = x.value
+          }
+          return rowData
+        })
+      }
+      if (rowData.name !== '') {
+        const item = {
+          ...rowData,
+          id: itm.id,
+          key: itm.threadId,
+          name: {
+            name: rowData.name[0],
+            status: itm.labelIds.includes('UNREAD'),
+          },
+          subject: { name: rowData.subject, subject: itm.snippet },
         }
         return item
       }
@@ -295,46 +400,94 @@ export const Inbox: FC<P> = ({ ...props }) => {
   }
 
   const listInbox = () => {
-    gapi.client.gmail.users.messages
-      .list({
-        userId: 'me',
-        labelIds: 'INBOX',
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=INBOX&access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            await listInboxEmail(json.messages)
+          })
+        }
       })
-      .then(async (res) => {
-        await listInboxEmail(res.result.messages)
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
-      .catch((error) => console.log('ERRRR::::', error))
   }
 
   const listDraft = () => {
-    gapi.client.gmail.users.messages
-      .list({
-        userId: 'me',
-        labelIds: 'DRAFT',
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/drafts?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            await listDraftEmail(json.drafts)
+          })
+        }
       })
-      .then(async (res) => {
-        await listDraftEmail(res.result.messages)
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
   }
 
   const listSent = () => {
-    gapi.client.gmail.users.messages
-      .list({
-        userId: 'me',
-        labelIds: 'SENT',
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=SENT&access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            await listSentEmail(json.messages)
+          })
+        }
       })
-      .then(async (res) => {
-        await listSentEmail(res.result.messages)
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
   }
 
   const listArchive = () => {
-    gapi.client.gmail.users.messages
-      .list({
-        userId: 'me',
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            await listArchiveEmail(json.messages)
+          })
+        }
       })
-      .then(async (res) => {
-        await listArchiveEmail(res.result.messages)
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
   }
 
@@ -513,15 +666,40 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const handelEmailRead = async (msg) => {
     setIsLoading(true)
-    gapi.client.gmail.users.messages
-      .modify({
-        userId: 'me',
-        id: msg,
-        removeLabelIds: ['UNREAD'],
+    console.log('email id::', msg, gmailConnection)
+
+    // gapi.client.gmail.users.messages
+    //   .modify({
+    //     userId: 'me',
+    //     id: msg,
+    //     removeLabelIds: ['UNREAD'],
+    //   })
+    //   .then(async (res) => {
+    //     await updateSigninStatus(userSignIn)
+    //   })
+
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}/modify?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ removeLabelIds: ['UNREAD'] }),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            await updateSigninStatus(true)
+          })
+        }
       })
-      .then(async (res) => {
-        await updateSigninStatus(userSignIn)
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
+
     setIsLoading(false)
   }
 
@@ -536,66 +714,98 @@ export const Inbox: FC<P> = ({ ...props }) => {
     setReadEmail(false)
   }
   const handleMailDelete = async () => {
-    let isThread = false
     setIsLoading(true)
-    const threads = await gapi.client.gmail.users.threads.get({
-      userId: 'me',
-      id: threadsId,
-    })
-    if (threads.result.messages.length !== 1) {
-      isThread = true
-    }
 
-    if (!isThread) {
-      gapi.client.gmail.users.messages
-        .delete({
-          userId: 'me',
-          id: emailId,
-        })
-        .then(async (res) => {
-          // await updateSigninStatus(userSignIn)
-          // setIsLoading(true)
-          await setReadEmail(false)
-          Notification(
-            NotificationType.success,
-            t('setup.email.inbox.notification.delete.mail')
-          )
-        })
-    } else {
-      gapi.client.gmail.users.threads
-        .delete({
-          userId: 'me',
-          id: threadsId,
-        })
-        .then(async (res) => {
-          // await updateSigninStatus(userSignIn)
-          // setIsLoading(true)
-          await setReadEmail(false)
-          Notification(
-            NotificationType.success,
-            t('setup.email.inbox.notification.delete.mail')
-          )
-        })
-    }
+    await fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            if (json.messages.length !== 1) {
+              // isThread = true
+              await handleThreadDelete(false)
+            } else {
+              await handleThreadDelete(true)
+            }
+          })
+        }
+      })
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
+      })
+
+    // const threads = await gapi.client.gmail.users.threads.get({
+    //   userId: 'me',
+    //   id: threadsId,
+    // })
+    // if (threads.result.messages.length !== 1) {
+    //   isThread = true
+    // }
+
     setIsLoading(true)
     await updateSigninStatus(userSignIn)
     setIsLoading(false)
   }
 
-  const hadleSingleDelete = async (msg) => {
-    gapi.client.gmail.users.messages
-      .delete({
-        userId: 'me',
-        id: msg,
+  const handleThreadDelete = async (isThread) => {
+    if (!isThread) {
+      await handleSingleDelete(emailId)
+    } else {
+      fetch(
+        `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+        {
+          // mode: 'no-cors',
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then(async (response) => {
+          if (response.ok) {
+            await setReadEmail(false)
+            Notification(
+              NotificationType.success,
+              t('setup.email.inbox.notification.delete.mail')
+            )
+          }
+        })
+        .catch((error) => {
+          console.log('Google Connection refuse', error)
+        })
+    }
+  }
+
+  const handleSingleDelete = async (msg) => {
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    )
+      .then(async (response) => {
+        if (response.ok) {
+          await setReadEmail(false)
+          Notification(
+            NotificationType.success,
+            t('setup.email.inbox.notification.delete.mail')
+          )
+        }
       })
-      .then(async (res) => {
-        // await updateSigninStatus(userSignIn)
-        // setIsLoading(true)
-        await setReadEmail(false)
-        Notification(
-          NotificationType.success,
-          t('setup.email.inbox.notification.delete.mail')
-        )
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
     setIsLoading(true)
     await updateSigninStatus(userSignIn)
@@ -604,36 +814,63 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const handleMarkRead = async () => {
     setIsLoading(true)
-    gapi.client.gmail.users.messages
-      .modify({
-        userId: 'me',
-        id: emailId,
-        addLabelIds: ['UNREAD'],
+
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ addLabelIds: ['UNREAD'] }),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            await updateSigninStatus(userSignIn)
+            Notification(
+              NotificationType.success,
+              t('setup.email.inbox.notification.mark.as.read')
+            )
+          })
+        }
       })
-      .then(async (res) => {
-        await updateSigninStatus(userSignIn)
-        Notification(
-          NotificationType.success,
-          t('setup.email.inbox.notification.mark.as.read')
-        )
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
+
     setIsLoading(false)
   }
 
   const handleEmailArchive = async () => {
     setIsLoading(true)
-    gapi.client.gmail.users.messages
-      .modify({
-        userId: 'me',
-        id: emailId,
-        removeLabelIds: ['INBOX'],
+
+    fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      {
+        // mode: 'no-cors',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ removeLabelIds: ['INBOX'] }),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            await updateSigninStatus(userSignIn)
+            Notification(
+              NotificationType.success,
+              t('setup.email.inbox.notification.move.archive')
+            )
+          })
+        }
       })
-      .then(async (res) => {
-        await updateSigninStatus(userSignIn)
-        Notification(
-          NotificationType.success,
-          t('setup.email.inbox.notification.move.archive')
-        )
+      .catch((error) => {
+        console.log('Google Connection refuse', error)
       })
     setIsLoading(false)
   }
@@ -644,7 +881,9 @@ export const Inbox: FC<P> = ({ ...props }) => {
         privateMenu={privatemenu}
         messageId={emailId}
         threadsId={threadsId}
-        hadleSingleDelete={hadleSingleDelete}
+        handleSingleDelete={handleSingleDelete}
+        access_token={gmailConnection.gmail_connection[0].access_token}
+        user={gmailConnection.gmail_connection[0].email}
       />
     )
   }
@@ -715,20 +954,32 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const handleSearch = (e) => {
     if (e.length > 0) {
-      gapi.client.gmail.users.messages
-        .list({
-          userId: 'me',
-          q: e,
-        })
-        .then(async (res) => {
-          setShowSearch(true)
-          if (res.result.messages) {
-            await handleShowResult(res.result.messages)
-          } else {
-            setSearchResult([])
+      fetch(
+        `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?q=${e}&access_token=${gmailConnection.gmail_connection[0].access_token}`,
+        {
+          // mode: 'no-cors',
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          if (response.ok) {
+            response.json().then(async (json) => {
+              setShowSearch(true)
+              if (json.messages) {
+                await handleShowResult(json.messages)
+              } else {
+                setSearchResult([])
+              }
+              console.log(json)
+            })
           }
         })
-        .catch((error) => setShowSearch(false))
+        .catch((error) => {
+          setShowSearch(false)
+        })
     } else {
       setShowSearch(false)
     }
@@ -736,16 +987,33 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const handleShowResult = async (msg) => {
     setIsLoading(true)
-
-    const finalEmails = await Promise.all(
+    const emailBox = []
+    await Promise.all(
       msg.map(async (msg) => {
-        return await gapi.client.gmail.users.messages.get({
-          userId: 'me',
-          id: msg.id,
-        })
+        return fetch(
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          {
+            // mode: 'no-cors',
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              response.json().then(async (json) => {
+                emailBox.push(json)
+                // return json
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Google Connection refuse', error)
+          })
       })
     )
-    const val = extractData(finalEmails)
+    const val = extractData(emailBox)
     setSearchResult(val)
     setIsLoading(false)
   }

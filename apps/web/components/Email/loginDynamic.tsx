@@ -27,7 +27,7 @@ export const Login: FC<P> = ({ handleGoogleLogin }) => {
     const params = {
       client_id:
         '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com',
-      redirect_uri: 'http://localhost:4200/setup/senders',
+      redirect_uri: `${window.location.origin}/setup/senders`,
       access_type: 'offline',
       response_type: 'code',
       scope: 'https://mail.google.com/',
