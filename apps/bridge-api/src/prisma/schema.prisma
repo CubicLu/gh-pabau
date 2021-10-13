@@ -2096,17 +2096,17 @@ model ContactPreference {
 //
 
 model CmContactCustom {
-  id                 Int               @id @default(autoincrement())
+  id                 Int                @id @default(autoincrement())
   contact_id         Int
-  company_id         Int               @map("occupier")
+  company_id         Int                @map("occupier")
   custom_field_id    Int
   custom_field_label String
   custom_field_value String
-  imported           Int?              @default(0)
-  old_value          String?           @default("")
-  Company            Company           @relation(fields: [company_id], references: [id])
-  CmContact          CmContact         @relation(fields: [contact_id], references: [ID])
-  ManageCustomField  ManageCustomField @relation(fields: [custom_field_id], references: [id])
+  imported           Int?               @default(0)
+  old_value          String?            @default("")
+  Company            Company            @relation(fields: [company_id], references: [id])
+  CmContact          CmContact          @relation(fields: [contact_id], references: [ID])
+  ManageCustomField  ManageCustomField? @relation(fields: [custom_field_id], references: [id])
 
   @@unique([company_id, contact_id, custom_field_id], name: "unique_company_id_contact_id_custom_field_id")
   @@index([contact_id], name: "contact_id")
