@@ -69,10 +69,10 @@ export const columnNames = {
   label: { label: 'Label', id: 'client.label' },
   clientEmail: { label: 'Client email', id: 'client.email' },
   clientPhone: { label: 'Client phone', id: 'client.phone' },
-  clientStreet: { label: 'Client street', id: 'client.street' },
-  clientCity: { label: 'Client city', id: 'client.city' },
-  clientPostCode: { label: 'Client postcode', id: 'client.postcode' },
-  clientCountry: { label: 'Client country', id: 'client.country' },
+  clientStreet: { label: 'Address', id: 'client.street' },
+  clientCity: { label: 'City/Town', id: 'client.city' },
+  clientPostCode: { label: 'Post Code', id: 'client.postcode' },
+  clientCountry: { label: 'Country', id: 'client.country' },
   clientTotalActivities: {
     label: 'Client total activities',
     id: 'client.totalActivities',
@@ -480,10 +480,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           (data) => !defaultColumnList.some((item) => item.value === data.value)
         )
       const groupColumn = new Set([
-        'Client street',
-        'Client city',
-        'Client postcode',
-        'Client country',
+        'Address',
+        'City/Town',
+        'Post Code',
+        'Country',
       ])
       const collapseColumn = []
       const clientColumn = []
