@@ -1,3 +1,4 @@
+export * from './lib/add-address/AddAddress'
 export * from './lib/dropdown-options-tree/DropdownOptionsTree'
 // export * from './lib/all-template-modal/AllTemplateModal'
 export * from './lib/statement-template/StatementTemplate'

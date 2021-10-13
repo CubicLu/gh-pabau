@@ -910,15 +910,13 @@ const ClientCardModal: FC<P> = ({
           </div>
           <div className={styles.clientCardBody}>
             <div className={styles.clientDetails}>
-              {client && (
-                <ClientDetails
-                  clientData={client}
-                  onCreateEmail={() => handleCreatePopout('email')}
-                  onCreateCall={() => handleCreatePopout('call')}
-                  searchResults={thirdPartySearchResults}
-                  appointments={appointments}
-                />
-              )}
+              <ClientDetails
+                clientData={client}
+                onCreateEmail={() => handleCreatePopout('email')}
+                onCreateCall={() => handleCreatePopout('call')}
+                searchResults={thirdPartySearchResults}
+                appointments={appointments}
+              />
             </div>
             <div className={styles.clientCardContent}>
               <CustomTabMenu

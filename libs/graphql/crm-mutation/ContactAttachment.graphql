@@ -39,6 +39,9 @@ fragment ContactAttachment on ContactAttachment {
   Album {
     ...PhotoAlbumFields
   }
+  Company {
+    ...CompanyFields
+  }
 }
 
 mutation createOneContactAttachment($data: ContactAttachmentCreateInput!) {
