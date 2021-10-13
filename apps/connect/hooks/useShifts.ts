@@ -38,45 +38,52 @@ export default function useShifts(shiftsResult, bookingsResult) {
 
   const dateHasShift = (date) => {
     const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
-    if (shiftsByDate[shiftsIndex]) {
-      return false
-    }
-    return true
+    return !shiftsByDate[shiftsIndex]
   }
 
-  const getDateTimeslots = (date) => {
+  const getDateTimeslots = (date, duration = 60) => {
     const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
     if (!shiftsByDate[shiftsIndex]) {
       return []
     }
+    const durationSec = duration * 60
     const shift = shiftsByDate[shiftsIndex][0]
     const shiftStart = moment(decimalToISO8601(shift.start))
     const shiftEnd = moment(decimalToISO8601(shift.end))
+    const shiftMinusDuration = moment(shiftEnd).subtract(duration, 'minutes')
+    console.log('SHIFT', shift)
 
     const timeslots = []
     for (
       let date = moment(shiftStart);
-      date.isBefore(shiftEnd);
+      date.isSameOrBefore(shiftMinusDuration);
       date.add(settings.BookitProGeneral.interval, 'minutes')
     ) {
-      timeslots.push(date.format('HH:mm'))
-    }
+      const startDateASDecimal = Number.parseInt(
+        moment(date).format('YYYYMMDDHHmmss')
+      )
+      const endDateASDecimal = Number.parseInt(
+        moment(date).add(duration, 'minutes').format('YYYYMMDDHHmmss')
+      )
 
-    const takenTimeslots = []
-    for (const b of bookingsResult.Public_Bookings?.filter(
-      (b) =>
-        b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
-    )) {
-      for (
-        let apptDate = moment(decimalToISO8601(b.start_date));
-        apptDate.isBefore(moment(decimalToISO8601(b.end_date)));
-        apptDate.add(settings.BookitProGeneral.interval, 'minutes')
-      ) {
-        takenTimeslots.push(apptDate.format('HH:mm'))
+      let allGood = true
+      for (const b of bookingsResult.Public_Bookings?.filter(
+        (b) =>
+          b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
+      )) {
+        if (
+          endDateASDecimal > b.start_date &&
+          startDateASDecimal < b.end_date
+        ) {
+          allGood = false
+        }
+      }
+      if (allGood) {
+        timeslots.push(date.format('HH:mm'))
       }
     }
 
-    return timeslots.filter((t) => !takenTimeslots.includes(t))
+    return timeslots
   }
 
   return [getShiftsOnDate, dateHasShift, getDateTimeslots]
