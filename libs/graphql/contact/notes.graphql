@@ -7,16 +7,19 @@ query getContactHeader($id: Int!) {
       ID
       content: Note
       date: CreatedDate
-      user: User {
-        client: full_name
+      User {
+        contact: full_name
         avatar: image
       }
     }
-    appointment: Booking(orderBy: { create_date: desc }) {
+    appointment: Booking(
+      where: { title: { not: { equals: "" } } }
+      orderBy: { create_date: desc }
+    ) {
       title
       date: create_date
-      user: User {
-        client: full_name
+      User {
+        contact: full_name
         avatar: image
       }
     }
@@ -25,13 +28,13 @@ query getContactHeader($id: Int!) {
 
 query getClientNotesCount($id: Int!) {
   count: findFirstCmContact(where: { ID: { equals: $id }}) {
-    notes: ContactNote(
+    contactNotes: ContactNote(
       where: { Note: { not: { equals: "" } } }
       orderBy: { CreatedDate: desc }
     ) {
       ID
     }
-    appointments: Booking(orderBy: { create_date: desc }) {
+    bookingNotes: Booking(orderBy: { create_date: desc }) {
       id
     }
   }

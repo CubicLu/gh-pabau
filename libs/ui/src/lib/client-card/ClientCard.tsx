@@ -117,8 +117,8 @@ export interface ClientNote {
   date: string
 }
 
-interface UserDetails {
-  client?: string
+interface StaffDetails {
+  contact?: string
   avatar?: string
 }
 
@@ -126,30 +126,25 @@ export interface ClientNoteDetails {
   ID?: string
   content: string
   date: string
-  user: UserDetails
+  User: StaffDetails
 }
 
 export interface ClientAppointmentDetails {
   title: string
   date?: number
-  user?: UserDetails
+  User?: StaffDetails
 }
 
 export interface ClientNotes {
   notes: ClientNoteDetails[]
+  count: number
+  loading: boolean
   appointments: ClientAppointmentDetails[]
-}
-
-export interface ClientNotesCount {
-  notes: number
-  appointments: number
 }
 
 interface P {
   client: ClientData
   notes?: ClientNotes
-  notesCount?: ClientNotesCount
-  notesCountLoading?: boolean
   getContactDetails?: () => void
   onClose?: () => void
   tabs?: readonly TabItem[]
@@ -164,8 +159,6 @@ interface P {
 const ClientCardModal: FC<P> = ({
   client,
   notes,
-  notesCount,
-  notesCountLoading,
   getContactDetails,
   onClose,
   tabs,
@@ -910,8 +903,6 @@ const ClientCardModal: FC<P> = ({
               {!isMobile && (
                 <ClientHeaderDetails
                   notes={notes}
-                  notesCount={notesCount}
-                  notesCountLoading={notesCountLoading}
                   getContactDetails={getContactDetails}
                   client={client}
                 />

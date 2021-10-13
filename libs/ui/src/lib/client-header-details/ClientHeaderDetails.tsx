@@ -22,25 +22,26 @@ import {
   ClientNotes,
   ClientNoteDetails,
   ClientAppointmentDetails,
-  ClientNotesCount,
 } from '../client-card/ClientCard'
 import dayjs from 'dayjs'
+import { getImage } from '../../helper/uploaders/UploadHelpers'
 import styles from './ClientHeaderDetails.module.less'
 
 const { TextArea } = Input
 
 export interface ClientHeaderDetailsProps {
   notes?: ClientNotes
-  notesCount?: ClientNotesCount
-  notesCountLoading?: boolean
   getContactDetails?: () => void
   client?: ClientData
 }
 
+interface ClientCountDetails {
+  notes: number
+  staff: number
+}
+
 export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
-  notes = { notes: [], appointments: [] },
-  notesCount = { notes: 0, appointments: 0 },
-  notesCountLoading = false,
+  notes = { notes: [], count: 0, notesCountLoading: false, appointments: [] },
   getContactDetails,
   client,
 }) => {
@@ -56,16 +57,19 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   const [currentNote, setCurrentNote] = useState('')
   const [note, setNote] = useState('')
   const [addingAlert, setAddingAlert] = useState(false)
-  const [countDetails, setCountDetails] = useState<ClientNotesCount>({
+  const [countDetails, setCountDetails] = useState<ClientCountDetails>({
     notes: 0,
-    appointments: 0,
+    staff: 0,
   })
 
   useEffect(() => {
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
-    if (notesCount) setCountDetails(notesCount)
-  }, [notes, notesCount])
+    if (notes?.count)
+      setCountDetails((item) => {
+        return { ...item, notes: notes?.count }
+      })
+  }, [notes])
 
   const handleAddNote = (e) => {
     e.preventDefault()
@@ -74,8 +78,8 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
         {
           content: note,
           date: dayjs().format('YYYY-MM-DD hh:mm A'),
-          user: {
-            client: client?.fullName || '',
+          User: {
+            contact: client?.fullName || '',
             avatar: client?.avatar || '',
           },
         },
@@ -190,7 +194,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           menuItems={["Client's", "Appointment's"]}
         >
           <div className={styles.clientNotesTab}>
-            {notesCountLoading ? (
+            {notes?.loading ? (
               skeletonContent()
             ) : (
               <>
@@ -204,8 +208,11 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                         <div className={styles.clientNoteItem}>
                           <div>
                             <Avatar
-                              src={item?.user?.avatar}
-                              name={item?.user?.client}
+                              src={
+                                item?.User?.avatar &&
+                                getImage(item?.User?.avatar)
+                              }
+                              name={item?.User?.contact}
                               size={32}
                             />
                           </div>
@@ -214,8 +221,8 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               {item?.content}
                             </div>
                             <div
-                              className={styles.client}
-                            >{`By ${item?.user?.client}`}</div>
+                              className={styles.contact}
+                            >{`By ${item?.User?.contact}`}</div>
                             <div className={styles.date}>{`On ${dayjs(
                               item?.date
                             ).format('D MMM YYYY hh:mm A')}`}</div>
@@ -279,7 +286,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
             )}
           </div>
           <div className={styles.clientNotesTab}>
-            {notesCountLoading ? (
+            {notes?.loading ? (
               skeletonContent()
             ) : (
               <div className={styles.clientNotesContainer}>
@@ -292,16 +299,18 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                     <div className={styles.clientNoteItem}>
                       <div>
                         <Avatar
-                          src={note?.user?.avatar}
-                          name={note?.user?.client}
+                          src={note?.User?.avatar}
+                          name={
+                            note?.User?.contact && getImage(note?.User?.contact)
+                          }
                           size={32}
                         />
                       </div>
                       <div>
                         <div className={styles.content}>{note.title}</div>
                         <div
-                          className={styles.client}
-                        >{`By ${note?.user?.client}`}</div>
+                          className={styles.contact}
+                        >{`By ${note?.User?.contact}`}</div>
                         <div className={styles.date}>{`On ${dayjs(
                           note.date
                         ).format('D MMM YYYY hh:mm A')}`}</div>
@@ -348,12 +357,12 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
         >
           <div
             onClick={() => {
-              if (typeof getContactDetails != 'undefined') getContactDetails()
+              getContactDetails?.()
             }}
           >
             <Tooltip title="Notes">
               <Badge
-                count={countDetails?.notes + countDetails?.appointments}
+                count={countDetails?.notes}
                 overflowCount={9}
                 size="small"
                 style={{ backgroundColor: 'var(--primary-color)' }}
@@ -374,7 +383,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
         >
           <Tooltip title="Staff alerts" placement="bottomRight">
             <Badge
-              count={alertItems?.length}
+              count={countDetails?.staff}
               overflowCount={9}
               size="small"
               style={{ backgroundColor: 'var(--primary-color)' }}

@@ -28,7 +28,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const router = useRouter()
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState(null)
-  const [notesCountData, setNotesCountData] = useState(null)
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -180,39 +179,41 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
 
   useEffect(() => {
     if (contactDetails?.notes) {
-      setContactData(() => {
+      setContactData((item) => {
         return {
-          notes: getContactNotesWithUrl(contactDetails?.notes?.contact),
-          appointments: getContactNotesWithUrl(
-            contactDetails?.notes?.appointment
-          ),
+          ...item,
+          loading: notesCountLoading,
+          notes: contactDetails?.notes?.contact,
+          appointments: contactDetails?.notes?.appointment,
+        }
+      })
+    } else {
+      setContactData((item) => {
+        return {
+          ...item,
+          notes: [],
+          loading: notesCountLoading,
+          appointments: [],
         }
       })
     }
-  }, [contactDetails])
+  }, [contactDetails, notesCountLoading])
 
   useEffect(() => {
     if (countData?.count) {
-      setNotesCountData(() => {
+      setContactData((item) => {
         return {
-          notes: countData?.count?.notes?.length || 0,
-          appointments: countData?.count?.appointments?.length || 0,
+          ...item,
+          notes: [],
+          count:
+            countData?.count?.contactNotes?.length +
+              countData?.count?.bookingNotes?.length || 0,
+          loading: false,
+          appointments: [],
         }
       })
     }
   }, [countData])
-
-  const getContactNotesWithUrl = (notes) => {
-    return notes?.map((item) => {
-      return {
-        ...item,
-        user: {
-          ...item?.user,
-          avatar: item?.user?.avatar && getImage(item?.user?.avatar),
-        },
-      }
-    })
-  }
 
   return (
     <Layout>
@@ -261,8 +262,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
             : undefined
         }
         notes={contactData}
-        notesCount={notesCountData}
-        notesCountLoading={notesCountLoading}
         getContactDetails={getContactDetails}
       >
         {children}
