@@ -320,6 +320,7 @@ model Company {
   Voucher                Voucher[]
   Package                Package[]
   InsuranceContractPrice InsuranceContractPrice[]
+  ContactAttachment      ContactAttachment[]
   @@map("admin")
 }
 
@@ -4459,31 +4460,32 @@ model ContactAttachment {
   contact_id        Int
   company_id        Int
   date              Int
-  attach_name       String
-  user_id           Int
+  attach_name       String?
+  user_id           Int?
   attachment_type   String
-  connect_public    Boolean
-  website_public    Boolean
-  attachment_title  String
-  cloud             Boolean     @default(false)
-  custom_id         Int
-  original_path     String
-  imported          Int
-  booking_id        Int
-  photo_type        String
-  attachment_size   String
-  broken            Int
-  broken_check      Int
-  old_linkref       String
-  in_folder         Int
-  custom_contact_id Int
-  album_id          Int
-  medical_form_id   Int
-  tags              String
-  medical_uniqid    String
+  connect_public    Boolean?
+  website_public    Boolean?
+  attachment_title  String?
+  cloud             Boolean?    @default(false)
+  custom_id         Int?
+  original_path     String?
+  imported          Int?
+  booking_id        Int?
+  photo_type        String?
+  attachment_size   String?
+  broken            Int?
+  broken_check      Int?
+  old_linkref       String?
+  in_folder         Int?
+  custom_contact_id Int?
+  album_id          Int?
+  medical_form_id   Int?
+  tags              String?
+  medical_uniqid    String?
   Contact           CmContact   @relation(fields: [contact_id], references: [ID])
   Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
   Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
+  Company           Company     @relation(fields: [company_id], references: [id])
 
   @@index([booking_id], name: "booking_id")
   @@index([cloud], name: "cloud")
