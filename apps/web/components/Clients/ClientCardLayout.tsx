@@ -7,7 +7,13 @@ import {
   useGetClientNotesCountQuery,
 } from '@pabau/graphql'
 import { ClientCard, TabItem } from '@pabau/ui'
-import React, { ComponentPropsWithoutRef, FC, useEffect, useState, useMemo } from 'react'
+import React, {
+  ComponentPropsWithoutRef,
+  FC,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react'
 import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
