@@ -27,6 +27,8 @@ import {
   Button,
   CreateLabels,
   InlineEdit,
+  AddAddress,
+  AddressValueProp,
 } from '@pabau/ui'
 import {
   Carousel,
@@ -62,7 +64,12 @@ interface Labels {
   color?: string
 }
 
-export interface ClientData {
+export interface PhoneProp {
+  mobile: string
+  home: string
+}
+
+export interface ClientData extends AddressValueProp {
   avatar: string
   isActive: boolean
   cardOption: string
@@ -77,7 +84,8 @@ export interface ClientData {
   dob: string
   gender: string
   address: string
-  phone: string
+  phone: PhoneProp
+  mobile: string
   email: string
   regDate: string
   relationships: Relationship[]
@@ -126,12 +134,12 @@ enum FieldType {
   membershipNumber,
 }
 
-interface FieldOrderItem {
+export interface FieldOrderItem {
   title: string
   fieldName: string
   type: string
   field: FieldType
-  value: string
+  value: string | PhoneProp
   selectOptions?: string[]
 }
 
@@ -153,7 +161,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       value: '',
     },
     {
-      type: 'text',
+      type: 'list',
       field: FieldType.referredBy,
       fieldName: 'referredBy',
       title: t('ui.clientdetails.referredby'),
@@ -168,7 +176,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       value: '',
     },
     {
-      type: 'text',
+      type: 'list',
       field: FieldType.gender,
       fieldName: 'gender',
       title: t('ui.clientdetails.gender'),
@@ -176,7 +184,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       selectOptions: ['Male', 'Female'],
     },
     {
-      type: 'text',
+      type: 'address',
       field: FieldType.address,
       fieldName: 'address',
       title: t('ui.clientdetails.address'),
@@ -187,7 +195,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       field: FieldType.mobile,
       fieldName: 'phone',
       title: t('ui.clientdetails.mobilephone'),
-      value: '',
+      value: {
+        mobile: '',
+        home: '',
+      },
+      selectOptions: ['Mobile', 'Home'],
     },
     {
       type: 'email',
@@ -260,7 +272,16 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     dob: '1969-11-28',
     gender: '',
     address: '',
-    phone: '',
+    street: '',
+    city: '',
+    county: '',
+    postCode: '',
+    country: '',
+    phone: {
+      mobile: '',
+      home: '',
+    },
+    mobile: '',
     email: '',
     regDate: '2021-1-1',
     relationships: [],
@@ -293,16 +314,20 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     ConnectionBadgeUpdateType.check
   )
   const [showDeleteClientModal, setShowDeleteClientModal] = useState(false)
+  const [showAddressModal, setShowAddressModal] = useState(false)
 
   useEffect(() => {
-    if (!initFields) {
+    if (!initFields && clientData) {
       const fields = [...fieldsOrder]
       fields[0].value = clientData.patientID
       fields[1].value = clientData.referredBy
       fields[2].value = clientData.dob
       fields[3].value = clientData.gender
       fields[4].value = clientData.address
-      fields[5].value = clientData.phone
+      fields[5].value = {
+        mobile: clientData.phone.mobile,
+        home: clientData.phone.home,
+      }
       fields[6].value = clientData.email
       setInitFields(true)
     }
@@ -425,10 +450,50 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setClientLabels([...val])
   }
 
-  const handleUpdateFieldValue = (index: number, value: string) => {
+  const handleUpdateFieldValue = (index: number, value: string | PhoneProp) => {
     const result = fieldsOrder.map((item, id) => {
       if (id === index) {
         item.value = value
+      }
+      return item
+    })
+
+    setFieldsOrder(result)
+  }
+
+  const handleUpdatePhoneFieldValue = (
+    index: number,
+    value: string,
+    type: string
+  ) => {
+    const phone = {
+      ...client.phone,
+      [type]: value,
+    }
+    setClient({
+      ...client,
+      phone,
+    })
+    handleUpdateFieldValue(index, phone)
+  }
+
+  const handleAddAddress = (value: AddressValueProp) => {
+    const { street, city, county, postCode, country } = value
+    const addressJoin = [street, city, county, postCode, country]
+      .filter((val) => val?.trim())
+      .join(', ')
+    setClient({
+      ...client,
+      street,
+      city,
+      county,
+      postCode,
+      country,
+      address: addressJoin,
+    })
+    const result = fieldsOrder.map((item) => {
+      if (item.fieldName === 'address') {
+        item.value = addressJoin
       }
       return item
     })
@@ -799,9 +864,46 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                 {!customizingFields &&
                   fieldsOrder.map((field, index) => (
                     <React.Fragment key={`client-details-item-${index}`}>
-                      {field.type === InlineEditDataTypes.phone && (
-                        <div className={styles.clientDetailsItem}>
+                      {field.type === InlineEditDataTypes.address ? (
+                        <div
+                          className={
+                            field.value
+                              ? styles.clientDetailsItem
+                              : styles.emptyClientDetailsItem
+                          }
+                        >
                           <div>
+                            <div className={styles.title}>{field.title}</div>
+                            <div
+                              className={cn(
+                                styles.content,
+                                client[field.fieldName]
+                                  ? ''
+                                  : styles.emptyContent
+                              )}
+                            >
+                              {field.value}
+                            </div>
+                          </div>
+                          <div
+                            className={styles.addAddress}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              setShowAddressModal(true)
+                            }}
+                          >
+                            <PlusCircleOutlined /> <h5>Add Address</h5>
+                          </div>
+                        </div>
+                      ) : field.type === InlineEditDataTypes.phone ? (
+                        <div
+                          className={
+                            field.value['mobile'] || field.value['home']
+                              ? styles.clientDetailsItem
+                              : styles.emptyClientDetailsItem
+                          }
+                        >
+                          <div className={styles.emptyHoverTag}>
                             <div className={styles.title}>{field.title}</div>
                             <div
                               className={cn(
@@ -812,52 +914,68 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   : styles.emptyContent
                               )}
                             >
-                              {field.value || t('ui.clientdetails.empty')}
-                              <div className={styles.phoneCallContent}>
-                                <Tooltip
-                                  placement="top"
-                                  title="Call with Caller"
-                                >
-                                  <div
-                                    className={styles.iconContent}
-                                    onClick={() =>
-                                      client[field.fieldName] && onCreateCall()
-                                    }
-                                  >
-                                    <PhoneFilled />
+                              <InlineEdit
+                                fieldTitle={field.title}
+                                orderIndex={getFieldName(field.title)}
+                                type={field.type}
+                                initialValue={
+                                  client[field.fieldName] ||
+                                  t('ui.clientdetails.empty')
+                                }
+                                onUpdateValue={handleUpdatePhoneFieldValue}
+                                selectOptions={field.selectOptions}
+                              >
+                                {!field.value['mobile'] &&
+                                !field.value['home'] ? (
+                                  t('ui.clientdetails.empty')
+                                ) : (
+                                  <div className={styles.phoneLeftContent}>
+                                    <div className={styles.phoneContentTitle}>
+                                      {field.value['mobile'] && (
+                                        <span>{`${field.value['mobile']} (Mobile)`}</span>
+                                      )}
+                                      {field.value['home'] && (
+                                        <span>{`${field.value['home']} (Home)`}</span>
+                                      )}
+                                    </div>
+                                    <div className={styles.phoneCallContent}>
+                                      <Tooltip
+                                        placement="top"
+                                        title="Call with Caller"
+                                      >
+                                        <div
+                                          className={styles.iconContent}
+                                          onClick={(e) => {
+                                            e.stopPropagation()
+                                            if (client[field.fieldName])
+                                              onCreateCall()
+                                          }}
+                                        >
+                                          <PhoneFilled />
+                                        </div>
+                                      </Tooltip>
+                                      <div className={styles.iconContent}>
+                                        <DownOutlined />
+                                      </div>
+                                    </div>
                                   </div>
-                                </Tooltip>
-                                <div className={styles.iconContent}>
-                                  <DownOutlined />
-                                </div>
-                              </div>
+                                )}
+                              </InlineEdit>
                             </div>
                           </div>
-                        </div>
-                      )}
-                      {field.type === InlineEditDataTypes.email && (
-                        <div className={styles.clientDetailsItem}>
-                          <div>
-                            <div className={styles.title}>{field.title}</div>
-                            <div
-                              className={cn(
-                                styles.content,
-                                styles.emailContent,
-                                client[field.fieldName]
-                                  ? ''
-                                  : styles.emptyContent
-                              )}
-                              onClick={() =>
-                                client[field.fieldName] && onCreateEmail()
-                              }
-                            >
-                              {field.value || t('ui.clientdetails.empty')}
-                            </div>
+                          <div className={styles.edit}>
+                            <EditOutlined />
                           </div>
                         </div>
-                      )}
-                      {field.type === InlineEditDataTypes.list && !isMobile && (
-                        <div className={styles.clientDetailsItem}>
+                      ) : field.type === InlineEditDataTypes.list &&
+                        !isMobile ? (
+                        <div
+                          className={
+                            field.value
+                              ? styles.clientDetailsItem
+                              : styles.emptyClientDetailsItem
+                          }
+                        >
                           <div>
                             <div className={styles.title}>{field.title}</div>
                             <div
@@ -887,10 +1005,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                             <EditOutlined />
                           </div>
                         </div>
-                      )}
-                      {field.type !== InlineEditDataTypes.phone &&
-                        field.type !== InlineEditDataTypes.email &&
-                        field.type !== InlineEditDataTypes.list &&
+                      ) : (
                         !isMobile && (
                           <div
                             className={
@@ -906,8 +1021,14 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   styles.content,
                                   client[field.fieldName]
                                     ? ''
-                                    : styles.emptyContent
+                                    : styles.emptyContent,
+                                  field.value ? styles.emailContent : ''
                                 )}
+                                onClick={() =>
+                                  field.type === InlineEditDataTypes.email &&
+                                  client[field.fieldName] &&
+                                  onCreateEmail()
+                                }
                               >
                                 {field.type !== 'date' && (
                                   <InlineEdit
@@ -938,7 +1059,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                     dateFormat="DD/MM/YYYY"
                                     onUpdateValue={handleUpdateFieldValue}
                                   >
-                                    {field.value
+                                    {field.value &&
+                                    typeof field.value === 'string'
                                       ? `${moment(field.value).format(
                                           'YYYY-MM-DD'
                                         )} (${moment(field.value).fromNow(
@@ -953,7 +1075,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                               <EditOutlined />
                             </div>
                           </div>
-                        )}
+                        )
+                      )}
                     </React.Fragment>
                   ))}
                 {customizingFields && (
@@ -1192,6 +1315,20 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         onCreate={handleChangeImage}
         imageURL={client.avatar}
         onCancel={() => setShowAvatarUploader(false)}
+      />
+
+      <AddAddress
+        visible={showAddressModal}
+        title={'Add Address'}
+        onClose={() => setShowAddressModal(false)}
+        onAdd={handleAddAddress}
+        values={{
+          street: client.street,
+          city: client.city,
+          county: client.county,
+          postCode: client.postCode,
+          country: client.country,
+        }}
       />
 
       {addRelationship && (
