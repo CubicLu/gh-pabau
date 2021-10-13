@@ -1,5 +1,4 @@
-import { extendType, list, nonNull, intArg } from 'nexus'
-import { Booking, User } from '../../generated/types'
+import { extendType, list, nonNull } from 'nexus'
 import { Context } from '../../context'
 
 export const BookingExtended = extendType({
@@ -16,25 +15,23 @@ export const BookingExtended = extendType({
         for (const item of usersIds?.split(',')) {
           ids.push(Number.parseInt(item))
         }
-        const users = await ctx.prisma.user.findMany({
+        return await ctx.prisma.user.findMany({
           where: {
             id: { in: ids },
           },
         })
-        return users
       },
     })
     t.field('BookedBy', {
       type: nonNull(list('User')),
       async resolve(parent: any, args, ctx: Context) {
-        const userCreated = await ctx.prisma.user.findMany({
+        return await ctx.prisma.user.findMany({
           where: {
             id: {
               equals: parent.created_by_uid,
             },
           },
         })
-        return userCreated
       },
     })
   },
