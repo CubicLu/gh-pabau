@@ -405,9 +405,29 @@
   .clientDetailsItem {
     width: 100%;
     padding: 8px 0;
-    display: grid;
-    grid-template-columns: 1fr 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid var(--border-color-base);
+    &:hover {
+      .addAddress {
+        display: flex;
+        align-items: center;
+        :global {
+          .anticon-plus-circle {
+            color: #54B2D3;
+          }
+        }
+        h5 {
+          margin-bottom: 0;
+          margin-left: 5px;
+          font-size: 12px;
+          line-height: 15px;
+          color: #54B2D3;
+          cursor: pointer;
+        }
+      }
+    }
     &:last-child {
       border-bottom: none;
     }
@@ -424,16 +444,45 @@
           font-size: 14px;
           line-height: 22px;
           color: var(--grey-text-color);
-          &:hover {
+          .phoneLeftContent {
+            display: flex;
+            align-items: center;
+            .phoneContentTitle {
+              display: flex;
+              align-items: flex-start;
+              justify-content: center;  
+            }
             .phoneCallContent {
               display: inline-flex;
               margin-left: 10px;
               border: 1px solid var(--light-grey-color);
               border-radius: 3px;
               .iconContent {
-                padding: 0 5px;
+                padding: 3px 5px;
                 &:nth-child(2) {
                   border-left: 1px solid var(--light-grey-color);
+                }
+              }
+            }
+          }
+          &:hover {
+            .phoneLeftContent {
+              display: flex;
+              .phoneContentTitle {
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;  
+              }
+              .phoneCallContent {
+                display: inline-flex;
+                margin-left: 10px;
+                border: 1px solid var(--light-grey-color);
+                border-radius: 3px;
+                .iconContent {
+                  padding: 3px 5px;
+                  &:nth-child(2) {
+                    border-left: 1px solid var(--light-grey-color);
+                  }
                 }
               }
             }
@@ -447,6 +496,13 @@
           }
           &.phoneContent {
             cursor: pointer;
+            .phoneLeftContent {
+              display: flex;
+              .phoneContentTitle {
+                display: flex;
+                flex-direction: column;
+              }
+            }
           }
           &.emptyContent {
             cursor: pointer;
@@ -467,6 +523,15 @@
             cursor: pointer;
           }
         }
+        .addAddress{
+          display: flex;
+          color: #54B2D3;
+          :global {
+            .anticon {
+              cursor: pointer;
+            }
+          }
+        }
       }
     }
     &:hover {
@@ -480,9 +545,41 @@
   .emptyClientDetailsItem {
     width: 100%;
     padding: 8px 0;
-    display: grid;
-    grid-template-columns: 1fr 20px;
+    display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid var(--border-color-base);
+    &:hover {
+      .phoneCallContent {
+        display: inline-flex;
+        margin-left: 10px;
+        border: 1px solid var(--light-grey-color);
+        border-radius: 3px;
+        .iconContent {
+          padding: 3px 5px;
+          &:nth-child(2) {
+            border-left: 1px solid var(--light-grey-color);
+          }
+        }
+      }
+    }
+    .addAddress {
+      display: flex;
+      align-items: center;
+      :global {
+        .anticon-plus-circle {
+          color: #54B2D3;
+        }
+      }
+      h5 {
+        margin-bottom: 0;
+        margin-left: 5px;
+        font-size: 12px;
+        line-height: 15px;
+        color: #54B2D3;
+        cursor: pointer;
+      }
+    }
+    
     &:last-child {
       border-bottom: none;
     }
@@ -499,20 +596,6 @@
           font-size: 14px;
           line-height: 22px;
           color: var(--grey-text-color);
-          &:hover {
-            .phoneCallContent {
-              display: inline-flex;
-              margin-left: 10px;
-              border: 1px solid var(--light-grey-color);
-              border-radius: 3px;
-              .iconContent {
-                padding: 0 5px;
-                &:nth-child(2) {
-                  border-left: 1px solid var(--light-grey-color);
-                }
-              }
-            }
-          }
           &.emailContent {
             color: var(--primary-color);
             cursor: pointer;

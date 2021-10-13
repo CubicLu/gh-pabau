@@ -113,6 +113,7 @@ export const permissions = shield(
       updateOneCmLead: rules.authentication.isAuthenticated,
       //Activity
       upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
+      deleteManyActivity: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
