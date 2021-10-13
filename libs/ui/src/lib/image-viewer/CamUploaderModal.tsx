@@ -45,6 +45,7 @@ const makeId = (length) => {
 }
 export interface UploadingImageProps {
   id: number
+  albumId: number
   preview: string
   file?: File
   size?: number
@@ -74,7 +75,7 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
 
   return (
     <div key={data?.id} style={{ backgroundImage: `url(${data?.preview})` }}>
-      {data?.isUploadStarted && !data?.loading && (
+      {data?.isUploadStarted && (
         <div className={styles.imgLoading}>
           <Tooltip
             placement="top"
@@ -86,18 +87,20 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
           >
             <Progress
               type="circle"
-              percent={data?.uploadPercentage}
-              showInfo={data?.isUploadCompleted ? true : false}
+              percent={!data?.loading ? data?.uploadPercentage || 0 : 0}
+              showInfo={data?.isUploadCompleted && !data.loading ? true : false}
               strokeColor="#65CD98"
               trailColor="#9292A3"
               strokeWidth={10}
               width={25}
-              status={data?.isUploadCompleted ? 'success' : 'normal'}
+              status={
+                data?.isUploadCompleted && !data.loading ? 'success' : 'normal'
+              }
             />
           </Tooltip>
         </div>
       )}
-      {data?.isUploadCompleted && (
+      {data?.isUploadCompleted && !data?.loading && (
         <Tooltip placement="top" title="Delete">
           <Button
             type="default"
@@ -112,7 +115,7 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
           </Button>
         </Tooltip>
       )}
-      {!data?.isUploadCompleted && data?.loading && (
+      {data?.loading && (
         <div className={styles.imgLoading}>
           <Spin spinning indicator={<LoadingOutlined />} />
         </div>
@@ -252,6 +255,7 @@ export interface CamUploaderProps {
   setUploadingImages: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
   removeImage?: (imagePath: string) => void
+  albumId?: number
 }
 
 export const CamUploaderModal: FC<CamUploaderProps> = ({
@@ -262,6 +266,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   setUploadingImages,
   uploadImage,
   removeImage,
+  albumId = 0,
 }) => {
   const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
   const inputFileRef = useRef<HTMLInputElement>(null)
@@ -283,6 +288,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       preview: URL.createObjectURL(file),
       file: file,
       size: file?.size,
+      albumId: albumId,
     }
     cAddedFiles.push(newFile)
     setUploadingImages(cAddedFiles)
@@ -297,6 +303,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           preview: URL.createObjectURL(file),
           file,
           size: file?.size,
+          albumId: albumId,
         }
       })
       const cAddedFiles = [...uploadingImages, ...cFiles]
@@ -387,9 +394,9 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           )}
           <div className={styles.addedImagesDiv}>
             <div className={styles.addedImagesDivInner}>
-              {uploadingImages?.length > 0 && (
+              {uploadingImages && uploadingImages?.length > 0 && (
                 <div className={styles.addedImagesFixer} id="addedImagesFixer">
-                  {uploadingImages?.map((el, index) => (
+                  {uploadingImages?.map((el) => (
                     <ImageThumbnail
                       data={el}
                       key={el?.id}
@@ -422,7 +429,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             )}
           </div>
           <div>
-            <Button type="default" ghost>
+            <Button type="default" ghost onClick={onClose}>
               Done
             </Button>
           </div>

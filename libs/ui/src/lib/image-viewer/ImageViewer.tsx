@@ -835,7 +835,12 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             setSelectedIndex={() => setSelectedIndex(defaultIndex)}
             albums={albums}
             selectedAlbum={currentAlbum}
-            onAlbumSelect={(album) => onAlbumSelect?.(album)}
+            onAlbumSelect={(album) => {
+              if (album !== currentAlbum?.id) {
+                setUploadingImages?.([])
+              }
+              onAlbumSelect?.(album)
+            }}
             sidebarOpen={sidebarOpen}
             setIsDragging={setIsDragging}
             setSidebarOpen={setSidebarOpen}
@@ -906,6 +911,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             showCamera={showCamera}
             uploadImage={uploadImage}
             removeImage={removeImage}
+            albumId={currentAlbum?.id || 0}
           />
         )}
       </AntModal>

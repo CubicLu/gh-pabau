@@ -181,12 +181,24 @@
 
         video {
           width: 100%;
+          height: 100%;
         }
         img {
           min-width: 100% !important;
         }
         #container-circles {
           display: none;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .react-html5-camera-photo {
+          max-width: 100vw !important;
+          max-height: calc(100vh - 172px) !important;
+          video {
+            max-width: 100vw !important;
+            max-height: calc(100vh - 172px) !important;
+          }
         }
       }
     }
@@ -271,6 +283,8 @@
               :global {
                 span.anticon-spin {
                   color: #65cd98;
+                  font-size: 25px;
+                  margin-top: 5px;
                 }
               }
             }

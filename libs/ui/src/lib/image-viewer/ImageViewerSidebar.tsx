@@ -94,7 +94,6 @@ const ImageViewerSidebarItem = ({
   }
   useEffect(() => {
     if (source === '' && origin !== '') {
-      console.log('ORIGIN:', origin)
       let path = origin
       const pathArr = path.split('photos/')
       if (pathArr?.length) {

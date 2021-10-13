@@ -8,8 +8,9 @@ import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
   useGetPhotoAlbumLazyQuery,
-  useGetUncatPhotosQuery,
+  useGetUncatPhotosLazyQuery,
   useCreateContactPhotoMutation,
+  useCreateContactPhotoWithoutAlbumMutation,
   useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
@@ -71,6 +72,29 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     },
   })
 
+  const [
+    createAttachmentOutOfAlbum,
+  ] = useCreateContactPhotoWithoutAlbumMutation({
+    onCompleted(data) {
+      const path = data?.createOneContactAttachment?.linkref
+      const cAddedFiles = [...uploadingImages]
+      const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
+      if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
+        cFile.id = data?.createOneContactAttachment?.id
+        cFile.loading = false
+        cFile.isUploadCompleted = true
+        cAddedFiles.splice(idx, 1, cFile)
+        setUploadingImages(cAddedFiles)
+        getUncatAlbumPhotos({
+          variables: {
+            contactId: contactId,
+          },
+        })
+      }
+    },
+  })
+
   const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
     onCompleted(data) {
       const id = data?.deleteOneContactAttachment?.id
@@ -79,21 +103,29 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
       if (idx !== -1) {
         cAddedFiles.splice(idx, 1)
         setUploadingImages(cAddedFiles)
-        getCurrentAlbumData({
-          variables: {
-            albumId: currentAlbumData?.id,
-            contactId: contactId,
-          },
-        })
+        if (currentAlbumData?.id) {
+          getCurrentAlbumData({
+            variables: {
+              albumId: currentAlbumData?.id,
+              contactId: contactId,
+            },
+          })
+        } else {
+          getUncatAlbumPhotos({
+            variables: {
+              contactId: contactId,
+            },
+          })
+        }
       }
     },
   })
 
-  const { data: dUnCatPhotos } = useGetUncatPhotosQuery({
+  const [
+    getUncatAlbumPhotos,
+    { data: dUnCatPhotos },
+  ] = useGetUncatPhotosLazyQuery({
     fetchPolicy: 'network-only',
-    variables: {
-      contactId: contactId,
-    },
   })
 
   const { data: dAlbums, loading: dAlbumsLoading } = useGetPhotoAlbumsQuery({
@@ -111,7 +143,15 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   })
 
   useEffect(() => {
-    if (dUnCatPhotos?.findManyContactAttachment?.length > 0) {
+    getUncatAlbumPhotos({
+      variables: {
+        contactId: contactId,
+      },
+    })
+  }, [contactId, getUncatAlbumPhotos])
+
+  useEffect(() => {
+    if (dUnCatPhotos && dUnCatPhotos?.findManyContactAttachment?.length > 0) {
       setNonAlbumPhotos(dUnCatPhotos?.findManyContactAttachment)
     }
   }, [dUnCatPhotos])
@@ -228,53 +268,81 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const uploadImage = async (fileData) => {
     const cAddedFiles = [...uploadingImages]
     const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
-    const config = {
-      onUploadProgress: function (progressEvent) {
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        )
-        if (idx !== -1) {
-          const cFile = cAddedFiles[idx]
-          cFile.uploadPercentage = percentCompleted
-          cAddedFiles.splice(idx, 1, cFile)
-          setUploadingImages(cAddedFiles)
-        }
-      },
-    }
-    const data = new FormData()
-    data.append('File', fileData?.file)
-
     if (idx !== -1) {
-      const cFile = cAddedFiles[idx]
-      cFile.isUploadStarted = true
-      cAddedFiles.splice(idx, 1, cFile)
-      setUploadingImages(cAddedFiles)
-    }
+      const config = {
+        onUploadProgress: function (progressEvent) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+          const percAddedFiles = [...uploadingImages]
+          const percIdx = percAddedFiles?.findIndex(
+            (el) => el?.id === fileData?.id
+          )
+          if (percIdx !== -1) {
+            const percFile = percAddedFiles[percIdx]
+            percFile.uploadPercentage = percentCompleted
+            percAddedFiles.splice(percIdx, 1, percFile)
+            setUploadingImages(percAddedFiles)
+          }
+        },
+      }
+      const data = new FormData()
+      data.append('File', fileData?.file)
 
-    await api
-      .post('upload-photo', data, config)
-      .then((res) => {
-        const data = JSON.parse(JSON.stringify(res.data))
-        if (idx !== -1) {
-          const cFile = cAddedFiles[idx]
-          cFile.uploadedPath = data?.path
-          cFile.loading = true
-          cAddedFiles.splice(idx, 1, cFile)
-          setUploadingImages(cAddedFiles)
-        }
-        createAttachmentInAlbum({
-          variables: {
-            album_id: currentAlbumData?.id,
-            attachment_type: 'contact',
-            contact_id: contactId,
-            date: dayjs().unix(),
-            image_url: data?.path,
-            uploaded_by: user?.me?.user,
-            company_id: user?.me?.company,
-          },
+      const upStartFiles = [...uploadingImages]
+      const upStartIdx = upStartFiles?.findIndex(
+        (el) => el?.id === fileData?.id
+      )
+      if (upStartIdx !== -1) {
+        const uppFile = upStartFiles[upStartIdx]
+        uppFile.isUploadStarted = true
+        upStartFiles.splice(upStartIdx, 1, uppFile)
+        setUploadingImages(upStartFiles)
+      }
+
+      await api
+        .post('upload-photo', data, config)
+        .then((res) => {
+          const data = JSON.parse(JSON.stringify(res.data))
+          const upCompFiles = [...uploadingImages]
+          const upCompIdx = upCompFiles?.findIndex(
+            (el) => el?.id === fileData?.id
+          )
+          if (upCompIdx !== -1) {
+            const uppCompFile = upCompFiles[upCompIdx]
+            uppCompFile.uploadedPath = data?.path
+            uppCompFile.loading = true
+            upCompFiles.splice(upCompIdx, 1, uppCompFile)
+            setUploadingImages(upCompFiles)
+            if (fileData?.albumId > 0) {
+              createAttachmentInAlbum({
+                variables: {
+                  album_id: currentAlbumData?.id,
+                  attachment_type: 'contact',
+                  contact_id: contactId,
+                  date: dayjs().unix(),
+                  image_url: data?.path,
+                  uploaded_by: user?.me?.user,
+                  company_id: user?.me?.company,
+                },
+              })
+            }
+            if (fileData?.fileData === 0) {
+              createAttachmentOutOfAlbum({
+                variables: {
+                  attachment_type: 'contact',
+                  contact_id: contactId,
+                  date: dayjs().unix(),
+                  image_url: data?.path,
+                  uploaded_by: user?.me?.user,
+                  company_id: user?.me?.company,
+                },
+              })
+            }
+          }
         })
-      })
-      .catch((error) => console.log(error?.message))
+        .catch((error) => console.log(error?.message))
+    }
   }
 
   const removeImage = async (imagePath) => {
@@ -283,6 +351,11 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     if (idx !== -1) {
       const data = new FormData()
       data.append('file_path', imagePath)
+      const cFile = cAddedFiles[idx]
+      cFile.loading = true
+      cAddedFiles.splice(idx, 1, cFile)
+      setUploadingImages(cAddedFiles)
+
       const res = await postData(
         `${baseURL}delete-photo`,
         { file_path: imagePath },
