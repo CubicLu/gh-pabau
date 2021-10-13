@@ -24,7 +24,7 @@ export const FormSaveButton: FC<P> = ({
   hidePadlock = false,
 }) => {
   const [lockVisible, setLockVisible] = useState(false)
-  const [lockUser, setLockUser] = useState(EMPTY_USER)
+  const [lockUser, setLockUser] = useState(ALL_USER)
   const { t } = useTranslation('common')
 
   const onChangeLockUser = (e) => {

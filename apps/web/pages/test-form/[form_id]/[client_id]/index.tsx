@@ -95,8 +95,8 @@ export const TestForm = () => {
   const [postcode, setPostcode] = useState('')
   const [homePhone, setHomePhone] = useState('')
   const [mobilePhone, setMobilePhone] = useState('')
-  const [hideMacro, setHideMacro] = useState(false)
-  const [hidePadlock, setHidePadlock] = useState(false)
+  const [hideMacro, setHideMacro] = useState(true)
+  const [hidePadlock, setHidePadlock] = useState(true)
 
   const [companyDateFormat, setCompanyDateFormat] = useState('d/m/Y')
   const [medicalFormMacros, setMedicalFormMacros] = useState<MacroItem[]>([])
@@ -110,14 +110,6 @@ export const TestForm = () => {
     MedicalConditionsListItem[]
   >([])
   const router = useRouter()
-
-  // const params = new URLSearchParams(window.location.search)
-  // const paramUrls = params.toString()
-
-  // const paramUrls = useMemo(() => {
-  //   const params = new URLSearchParams(window.location.search)
-  //   return params.toString()
-  // }, [window.location.search])
 
   const [getMedicalFormDetails] = useGetMedicalFormDetailsLazyQuery({
     onCompleted(response) {
@@ -211,12 +203,10 @@ export const TestForm = () => {
       params.get('mode') === 'employee' &&
       params.get('uid')
     ) {
-      setHideMacro(true)
-      setHidePadlock(true)
+      setHideMacro(false)
+      setHidePadlock(false)
     }
   }, [])
-
-  // useEffect(() => {}, [window.location.search])
 
   useEffect(() => {
     getContactDetails({

@@ -176,6 +176,7 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               signData={formData.signData}
               required={formData.required}
+              txtInputType={formData.txtInputType}
               onChangeTextValue={onChangeTextValue}
             />
           )}

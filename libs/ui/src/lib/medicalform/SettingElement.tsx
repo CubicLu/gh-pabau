@@ -468,8 +468,16 @@ const SettingElement: FC<P> = ({
               filteredComponent[0].component === 'basic_staticimage' ||
               filteredComponent[0].component === 'basic_photo') && (
               <SettingElementQuestion
-                desc={t('ui.medicalform.setting.question.description')}
-                title={t('ui.medicalform.setting.question.title')}
+                desc={
+                  filteredComponent[0].component === 'basic_signature'
+                    ? t('ui.medicalform.setting.signature.description')
+                    : t('ui.medicalform.setting.question.description')
+                }
+                title={
+                  filteredComponent[0].component === 'basic_signature'
+                    ? t('ui.medicalform.setting.signature.title')
+                    : t('ui.medicalform.setting.question.title')
+                }
                 value={form.txtQuestion}
                 valueWithTag={form.txtQuestionWithTag}
                 componentName={filteredComponent[0].component}
@@ -522,6 +530,7 @@ const SettingElement: FC<P> = ({
               errMsg !== '' && <SettingMedicalFormError errMsg={errMsg} />}
             {(filteredComponent[0].component === 'basic_shortanswer' ||
               filteredComponent[0].component === 'basic_longanswer' ||
+              filteredComponent[0].component === 'basic_signature' ||
               filteredComponent[0].component === 'basic_singlechoice' ||
               filteredComponent[0].component === 'basic_multiplechoice' ||
               filteredComponent[0].component === 'basic_dropdown') && (

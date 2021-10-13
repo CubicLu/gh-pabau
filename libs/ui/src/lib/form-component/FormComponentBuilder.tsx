@@ -135,6 +135,7 @@ const getFormInfo = (form) => {
   let signData = ''
   if (form.cssClass === 'signature' && typeof form.values === 'string') {
     signData = form.values
+    txtInputTypeValue = form.fldtype
   }
 
   let arrItemsValue: OptionType[] = []
