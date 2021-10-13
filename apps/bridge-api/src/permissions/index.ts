@@ -112,6 +112,7 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
+      createDuplicateActivity: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
