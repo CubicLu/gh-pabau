@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   ClientAppointments,
   ClientAppointmentItem,
   AppointmentStatus,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
-import { useGetClientAppointmentsQuery, SortOrder } from '@pabau/graphql'
+import {
+  GetClientAppointmentsDocument,
+  useGetClientAppointmentsQuery,
+  SortOrder,
+  useUpdateApptNoteMutation,
+} from '@pabau/graphql'
 import dayjs from 'dayjs'
 
 const Appointments = () => {
   const router = useRouter()
+  const { t } = useTranslationI18()
   const [clientAppointments, setClientAppointments] = useState<
     ClientAppointmentItem[]
   >([])
+
   const {
     data: clientAppointmentData,
     loading,
@@ -23,6 +33,30 @@ const Appointments = () => {
       orderBy: SortOrder.Asc,
       contactId: Number(router.query['id']),
     },
+  })
+
+  const [updateApptNoteMutation] = useUpdateApptNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('client.appointment.card.update.note.success.msg')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('client.appointment.card.update.note.error.msg')
+      )
+    },
+    refetchQueries: [
+      {
+        query: GetClientAppointmentsDocument,
+        variables: {
+          orderBy: SortOrder.Asc,
+          contactId: Number(router.query['id']),
+        },
+      },
+    ],
   })
 
   const getAppointmentStatus = (status: string) => {
@@ -46,7 +80,7 @@ const Appointments = () => {
             name: `${appt?.CmStaffGeneral?.Fname} ${appt?.CmStaffGeneral?.Lname}`,
           }
           return {
-            id: appt.id,
+            id: appt?.id,
             serviceName: appt.service,
             employee,
             status:
@@ -92,7 +126,11 @@ const Appointments = () => {
       clientId={Number(router.query['id'])}
       activeTab="appointments"
     >
-      <ClientAppointments appointments={clientAppointments} loading={loading} />
+      <ClientAppointments
+        appointments={clientAppointments}
+        loading={loading}
+        updateApptNoteMutation={updateApptNoteMutation}
+      />
     </ClientCardLayout>
   )
 }

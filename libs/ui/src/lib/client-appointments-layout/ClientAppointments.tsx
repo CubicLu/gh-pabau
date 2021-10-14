@@ -36,6 +36,7 @@ import User1 from '../../assets/images/user1.png'
 import User5 from '../../assets/images/user5.png'
 import User9 from '../../assets/images/user9.png'
 import dayjs from 'dayjs'
+import { MutationFunction } from '@apollo/client'
 
 interface Employee {
   avatar: string
@@ -65,6 +66,7 @@ export interface ClientAppointmentItem {
 interface P {
   appointments?: ClientAppointmentItem[]
   loading?: boolean
+  updateApptNoteMutation?: MutationFunction
 }
 
 //TODO: remove these dummy funcctions
@@ -78,14 +80,22 @@ const handleCancelAppointment = (
   b: unknown = undefined,
   c: unknown = undefined
 ) => console.log('TODO')
-const editNote = (
-  a: unknown = undefined,
-  b: unknown = undefined,
-  c: unknown = undefined
-) => console.log('TODO')
 
-export const ClientAppointments = ({ appointments, loading }: P) => {
+export const ClientAppointments = ({
+  appointments,
+  loading,
+  updateApptNoteMutation,
+}: P) => {
   const ref = useRef<HTMLDivElement>(null)
+
+  const editNote = (id: number, note?: string) => {
+    updateApptNoteMutation?.({
+      variables: {
+        bookingId: id,
+        note,
+      },
+    })
+  }
 
   const personList = [
     { name: 'Hugo Miller', avatar: User9 },
@@ -549,9 +559,9 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                                   index={index}
                                   key={`all-bookings-${index}`}
                                   handleDelete={() => deleteAppointment(index)}
-                                  handleEditNotes={(index, value) =>
-                                    editNote(index, value)
-                                  }
+                                  handleEditNotes={(id, value) => {
+                                    editNote(id, value)
+                                  }}
                                   handleCancel={(index) =>
                                     handleCancelAppointment(index)
                                   }
@@ -584,9 +594,9 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                               index={index}
                               key={`all-bookings-${index}`}
                               handleDelete={() => deleteAppointment(index)}
-                              handleEditNotes={(index, value) =>
-                                editNote(index, value)
-                              }
+                              handleEditNotes={(id, value) => {
+                                editNote(id, value)
+                              }}
                               handleCancel={(index) =>
                                 handleCancelAppointment(index)
                               }
@@ -625,9 +635,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -650,9 +658,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -674,9 +680,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -700,9 +704,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -726,9 +728,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -751,9 +751,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -777,9 +775,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -803,9 +799,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -828,9 +822,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -855,9 +847,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )
@@ -882,9 +872,7 @@ export const ClientAppointments = ({ appointments, loading }: P) => {
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
+                        handleEditNotes={(id, value) => editNote(id, value)}
                         handleCancel={(index) => handleCancelAppointment(index)}
                       />
                     )

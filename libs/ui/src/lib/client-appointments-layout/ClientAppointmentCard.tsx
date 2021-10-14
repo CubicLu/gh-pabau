@@ -64,7 +64,7 @@ export enum AppointmentStatus {
 interface AppointmentHandler {
   index: number
   handleDelete: () => void
-  handleEditNotes: (index, value) => void
+  handleEditNotes: (id: number, value?: string) => void
   handleCancel: (index) => void
 }
 
@@ -72,6 +72,7 @@ export const ClientAppointmentCard: FC<
   ClientAppointmentItem & AppointmentHandler
 > = (props) => {
   const {
+    id,
     serviceName,
     employee,
     otherEmployees,
@@ -436,14 +437,17 @@ export const ClientAppointmentCard: FC<
                       size="small"
                       onClick={() => {
                         setShowNoteEditor(false)
-                        handleEditNotes(index, editNote)
+                        handleEditNotes(id, editNote)
                       }}
                     >
                       {t('client.appointment.card.description.save')}
                     </Button>
                     <Button
                       size="small"
-                      onClick={() => setShowNoteEditor(false)}
+                      onClick={() => {
+                        setEditNote(notes)
+                        setShowNoteEditor(false)
+                      }}
                     >
                       {t('client.appointment.card.description.cancel')}
                     </Button>
@@ -482,14 +486,17 @@ export const ClientAppointmentCard: FC<
                       size="small"
                       onClick={() => {
                         setShowNoteEditor(false)
-                        handleEditNotes(index, editNote)
+                        handleEditNotes(id, editNote)
                       }}
                     >
                       {t('client.appointment.card.description.save')}
                     </Button>
                     <Button
                       size="small"
-                      onClick={() => setShowNoteEditor(false)}
+                      onClick={() => {
+                        setEditNote(notes)
+                        setShowNoteEditor(false)
+                      }}
                     >
                       {t('client.appointment.card.description.cancel')}
                     </Button>

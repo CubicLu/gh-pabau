@@ -5081,6 +5081,8 @@ en:
   client.appointment.card.pop.delete: 'Delete'
   client.appointment.card.pop.cancel.mark.as.cancelled: 'Mark as cancelled'
   client.appointment.card.pop.cancel.cancel.reson: 'Cancel Reason'
+  client.appointment.card.update.note.success.msg: 'The appointment note has been updated and the confirmation email delivered to the recipient'
+  client.appointment.card.update.note.error.msg: 'The changes couldn’t be saved. Please try again'
   client.appointment.card.pop.cancel.select.reason: 'Select a reason'
   client.appointment.card.pop.cancel.reason.work: 'Work'
   client.appointment.card.pop.cancel.reason.booking.error: 'Booking Error'
