@@ -9,16 +9,16 @@ import KanbanCardSkeleton from './skeleton'
 
 export interface KanbanCardProps {
   isLoading?: boolean
-  leadTitle: string
-  onLeadTitleClickHandler: () => void
-  labels: string[]
-  leadOwnerName: string
-  leadOwnerImg: string
+  leadTitle?: string
+  onLeadTitleClickHandler?: () => void
+  labels?: string[]
+  leadOwnerName?: string
+  leadOwnerImg?: string
   contactId?: string
-  contactName: string
-  contactImg: string
-  activityStatus: string
-  leadStatus: string
+  contactName?: string
+  contactImg?: string
+  activityStatus?: string
+  leadStatus?: string
 }
 
 export const KanbanCard: FC<KanbanCardProps> = ({
@@ -89,7 +89,7 @@ export const KanbanCard: FC<KanbanCardProps> = ({
 
     return (
       <Tooltip
-        title="Activity Schedule"
+        title={activityStatus}
         trigger={['click']}
         overlayStyle={{ width: '150px' }}
       >
@@ -130,17 +130,30 @@ export const KanbanCard: FC<KanbanCardProps> = ({
         <div className={styles.statusContent}>{activeStatusComponent()}</div>
       </div>
       <div className={styles.ownerClientContent}>
-        <div>
-          <Avatar name={leadOwnerName} src={leadOwnerImg} size={`small`} />
+        <div className={styles.ownerImg}>
+          <Avatar
+            className={styles.avatarImg}
+            name={leadOwnerName}
+            src={leadOwnerImg}
+            size={`small`}
+          />
         </div>
-        {contactId && (
-          <div className={styles.contactContent}>
+        <div className={styles.contactContent}>
+          {contactImg && (
             <div>
-              <Avatar src={contactImg} size={`small`} />
+              <Avatar
+                className={styles.avatarImg}
+                src={contactImg}
+                size={`small`}
+              />
             </div>
-            <div className={styles.contactContentName}>{contactName}</div>
-          </div>
-        )}
+          )}
+          {contactName && (
+            <div className={styles.contactContentName}>
+              <span className={styles.nameSection}>{contactName}</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
