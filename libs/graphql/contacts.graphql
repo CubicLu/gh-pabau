@@ -1,9 +1,42 @@
 query basicContactDetails($id: Int!) {
   findFirstCmContact(where: { ID: { equals: $id } }) {
     id: ID
-    Fname
-    Lname
+    firstName:Fname
+    lastName:Lname
+    isActive: is_active
     gender
+    patientID:custom_id
+    dob:DOB
+    email:Email
+    avatar: Avatar
+    street: MailingStreet
+    city: MailingCity
+    county: MailingProvince
+    postCode: MailingPostal
+    country: MailingCountry
+    mobile: Mobile
+    home: Phone
+    labelData: CmContactLabel {
+      labelDetail: CmLabel {
+        label: name
+        color
+      }
+    }
+    marketingSource:MarketingSourceData{
+      name
+    }
+    customField: CmContactCustom{
+      title: custom_field_label
+      id: custom_field_id
+      value: custom_field_value
+      detail: ManageCustomField{
+        type: field_type
+        id
+        item: ManageCustomFieldItem{
+          item_label
+        }
+      }
+    }
   }
 }
 query findContacts($searchTerm1: String, $searchTerm2: String) {
