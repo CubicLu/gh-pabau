@@ -37,6 +37,15 @@ query basicContactDetails($id: Int!) {
         }
       }
     }
+    contactNotes: ContactNote(
+      where: { Note: { not: { equals: "" } } }
+      orderBy: { CreatedDate: desc }
+    ) {
+      ID
+    }
+    bookingNotes: Booking(orderBy: { create_date: desc }) {
+      id
+    }
   }
 }
 query findContacts($searchTerm1: String, $searchTerm2: String) {

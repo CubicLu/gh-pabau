@@ -123,7 +123,7 @@ interface StaffDetails {
 }
 
 export interface ClientNoteDetails {
-  ID?: string
+  ID?: number | string
   content: string
   date: string
   User: StaffDetails

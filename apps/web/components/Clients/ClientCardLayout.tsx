@@ -4,9 +4,8 @@ import {
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
-  useGetClientNotesCountQuery,
 } from '@pabau/graphql'
-import { ClientCard, TabItem } from '@pabau/ui'
+import { ClientCard, TabItem, ClientNotes } from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
   FC,
@@ -27,7 +26,13 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
   const [customField, setCustomField] = useState([])
-  const [contactData, setContactData] = useState(null)
+  const [contactData, setContactData] = useState<ClientNotes>({
+    notes: [],
+    count: 0,
+    loading: true,
+    appointments: [],
+  })
+  const [basicContactData, setBasicContactData] = useState(null)
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -36,12 +41,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   }, [clientId])
 
   const { data, loading } = useBasicContactDetailsQuery({
-    skip: !router.query['id'],
-    ssr: false,
-    ...getQueryVariables,
-  })
-
-  const { data: countData } = useGetClientNotesCountQuery({
     skip: !router.query['id'],
     ssr: false,
     ...getQueryVariables,
@@ -107,6 +106,23 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         })
         setCustomField(final)
       }
+    }
+    if (data?.findFirstCmContact) {
+      setContactData((item) => {
+        return {
+          ...item,
+          notes: [],
+          count:
+            data?.findFirstCmContact?.contactNotes?.length +
+              data?.findFirstCmContact?.bookingNotes?.length || 0,
+          loading: true,
+          appointments: [],
+        }
+      })
+      const contactDetails = { ...data?.findFirstCmContact }
+      delete contactDetails?.contactNotes
+      delete contactDetails?.bookingNotes
+      setBasicContactData(contactDetails)
     }
   }, [customFieldData, data])
 
@@ -187,33 +203,8 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
           appointments: contactDetails?.notes?.appointment,
         }
       })
-    } else {
-      setContactData((item) => {
-        return {
-          ...item,
-          notes: [],
-          loading: notesCountLoading,
-          appointments: [],
-        }
-      })
     }
   }, [contactDetails, notesCountLoading])
-
-  useEffect(() => {
-    if (countData?.count) {
-      setContactData((item) => {
-        return {
-          ...item,
-          notes: [],
-          count:
-            countData?.count?.contactNotes?.length +
-              countData?.count?.bookingNotes?.length || 0,
-          loading: false,
-          appointments: [],
-        }
-      })
-    }
-  }, [countData])
 
   return (
     <Layout>
@@ -229,30 +220,30 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         customFields={customField}
         dateFormat={GetFormat()}
         client={
-          data?.findFirstCmContact
+          basicContactData
             ? ({
-                ...data.findFirstCmContact,
-                fullName: `${data.findFirstCmContact.firstName}
-                  ${data.findFirstCmContact.lastName}`,
-                referredBy: data.findFirstCmContact.marketingSource?.name,
-                avatar: data.findFirstCmContact.avatar
-                  ? getImage(data.findFirstCmContact.avatar)
+                ...basicContactData,
+                fullName: `${basicContactData?.firstName}
+                  ${basicContactData?.lastName}`,
+                referredBy: basicContactData?.marketingSource?.name,
+                avatar: basicContactData?.avatar
+                  ? getImage(basicContactData?.avatar)
                   : '',
                 phone: {
-                  mobile: data.findFirstCmContact.mobile,
-                  home: data.findFirstCmContact.home,
+                  mobile: basicContactData?.mobile,
+                  home: basicContactData?.home,
                 },
                 address: [
-                  data.findFirstCmContact.street,
-                  data.findFirstCmContact.city,
-                  data.findFirstCmContact.county,
-                  data.findFirstCmContact.postCode,
-                  data.findFirstCmContact.country,
+                  basicContactData?.street,
+                  basicContactData?.city,
+                  basicContactData?.county,
+                  basicContactData?.postCode,
+                  basicContactData?.country,
                 ]
                   .filter((val) => val?.trim())
                   .join(', '),
                 relationships: [],
-                labels: data.findFirstCmContact.labelData.map((data) => {
+                labels: basicContactData?.labelData.map((data) => {
                   return {
                     label: data.labelDetail.label,
                     color: data.labelDetail.color,
