@@ -2,56 +2,11 @@ import { Context } from '../../context'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear'
-import { LeadNoteType, LeadResponse, FilterOptionType } from './types'
+import { getColumnData } from './filterColumn'
+import { cm_leads_EnumStatus } from '@prisma/client'
+import { LeadNoteType, LeadResponse, ActivityFilterOptionType } from './types'
 dayjs.extend(utc)
 dayjs.extend(quarterOfYear)
-
-const manageOperandBasedOnColumn = {
-  'Add time': {
-    key: 'Date',
-    type: 'string',
-  },
-  'Assigned to user': {
-    key: 'User',
-    type: 'string',
-  },
-  'Client name': {
-    key: 'Basic',
-    type: 'number',
-  },
-  Creator: {
-    key: 'User',
-    type: 'string',
-  },
-  'Lead name': {
-    key: 'Basic',
-    type: 'number',
-  },
-  Done: {
-    key: 'Done',
-    type: 'string',
-  },
-  Type: {
-    key: 'Basic',
-    type: 'number',
-  },
-  Subject: {
-    key: 'Name',
-    type: 'string',
-  },
-  'Due date': {
-    key: 'Date',
-    type: 'string',
-  },
-  'Free/busy': {
-    key: 'Basic',
-    type: 'boolean',
-  },
-  Status: {
-    key: 'Basic',
-    type: 'string',
-  },
-}
 
 export const retrieveActivityGraphData = async (
   ctx: Context,
@@ -97,6 +52,20 @@ export const retrieveActivityGraphData = async (
     working: graphQuery?.find((item) => item.status === 'Working on')?._count
       ?.id,
   }
+}
+
+const leadStatusMapper = (search: string) => {
+  const value = search?.split('%')?.[1]
+  const statusMap = {
+    open: cm_leads_EnumStatus.Open,
+    won: cm_leads_EnumStatus.Converted,
+    lost: cm_leads_EnumStatus.Junk,
+  }
+  return (
+    statusMap[value?.toLowerCase()] && {
+      equals: statusMap[value?.toLowerCase()],
+    }
+  )
 }
 
 export const prepareSearchObject = (
@@ -163,6 +132,9 @@ export const prepareSearchObject = (
     'Lead stage': {
       CmLead: { LeadStatusData: { status_name: { contains: search } } },
     },
+    'Lead status': {
+      CmLead: { EnumStatus: leadStatusMapper(search) },
+    },
     'Client street': {
       CmContact: { MailingStreet: { contains: search } },
     },
@@ -228,6 +200,9 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
     },
     'Lead stage': {
       CmLead: { LeadStatusData: { status_name: sortOrder } },
+    },
+    'Lead status': {
+      CmLead: { EnumStatus: sortOrder },
     },
     'Assigned to user': {
       AssignedUser: { full_name: sortOrder },
@@ -663,7 +638,7 @@ const prepareOperandQuery = async (
   operand: string,
   ctx: Context
 ) => {
-  const data = manageOperandBasedOnColumn[column]
+  const data = getColumnData(column)
   let operandQuery
   switch (data.key) {
     case 'Date':
@@ -686,49 +661,11 @@ const prepareOperandQuery = async (
 }
 
 const bindQueryIntoModelVariable = (column: string, data) => {
-  const filterMapper = {
-    'Add time': {
-      created_at: data,
-    },
-    'Assigned to user': {
-      AssignedUser: { id: data },
-    },
-    'Client name': {
-      CmContact: {
-        ID: data,
-      },
-    },
-    Creator: {
-      User: { id: data },
-    },
-    'Lead name': {
-      CmLead: {
-        ID: data,
-      },
-    },
-    Done: {
-      status: data,
-    },
-    Type: {
-      type: data,
-    },
-    Subject: {
-      subject: data,
-    },
-    'Due date': {
-      due_start_date: data,
-    },
-    'Free/busy': {
-      available: data,
-    },
-    Status: {
-      status: data,
-    },
-  }
-  return filterMapper[column]
+  return getColumnData(column, data)?.filter
 }
+
 export const prepareFilterQuery = async (
-  items: FilterOptionType[],
+  items: ActivityFilterOptionType[],
   ctx: Context
 ) => {
   const queryObject = []

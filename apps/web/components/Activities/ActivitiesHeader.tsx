@@ -153,6 +153,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     >([])
     const [searchItemCount, setSearchItemCount] = useState<number>(0)
     const [filterModalData, setFilterModalData] = useState<InitialValueTypes>()
+    const [isFilterSet, setIsFilterSet] = useState<boolean>(false)
 
     const { data: userGroupData } = useUserGroupForActivityQuery()
     const { data: userFilterData } = useFilterOptionForActivityQuery({
@@ -168,20 +169,32 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
         setSelectFilterUser([filterData.id])
       } else if (filterData.type === 'userGroup') {
         setFilterGroupValue(filterData.id)
-        setFilterValue(undefined)
+        setFilterValue(null)
         const item =
           userGroup.find((group) => group.id === filterData.id)?.userId ?? []
         setSelectFilterUser([...item])
       } else if (filterData.type === 'filter') {
-        setFilterValue(undefined)
+        setFilterValue(null)
         setActiveFilterId(filterData.id)
         setFilterDataObject(filterData?.filter)
         if (filterData?.filter?.column?.length > 0) {
           setUserActiveColumn(filterData?.filter?.column)
         }
+        setIsFilterSet(true)
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterData, userGroup])
+
+    useEffect(() => {
+      if (filterOption && isFilterSet) {
+        const item = filterOption?.find((item) => item.id === activeFilterId)
+        if (!item) {
+          setFilterValue(0)
+          setIsFilterSet(false)
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filterOption, isFilterSet])
 
     useEffect(() => {
       if (personsList.length > 0) {
@@ -290,9 +303,9 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             )}
             onClick={async () => {
               setFilterGroupValue(id)
-              setFilterValue(undefined)
-              setActiveFilterId(undefined)
-              setFilterDataObject(undefined)
+              setFilterValue(null)
+              setActiveFilterId(null)
+              setFilterDataObject(null)
               setUserActiveColumn(userColumns)
               setSelectFilterUser([...userId])
               await upsertActiveColumn({
@@ -302,7 +315,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                   update: {
                     user_group_filter: { set: id },
                     user_filter: { set: null },
-                    ActivityUserFilters: { disconnect: true },
+                    ActivityUserFilter: { disconnect: true },
                   },
                   create: {
                     User: {
@@ -350,9 +363,9 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
 
       const onUserClick = async (id: number) => {
         setFilterValue(id)
-        setFilterGroupValue(undefined)
-        setActiveFilterId(undefined)
-        setFilterDataObject(undefined)
+        setFilterGroupValue(null)
+        setActiveFilterId(null)
+        setFilterDataObject(null)
         setUserActiveColumn(userColumns)
         await upsertActiveColumn({
           variables: {
@@ -361,7 +374,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             update: {
               user_filter: { set: id },
               user_group_filter: { set: null },
-              ActivityUserFilters: { disconnect: true },
+              ActivityUserFilter: { disconnect: true },
             },
             create: {
               User: {
@@ -467,8 +480,8 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               className={styles.filterCategory}
               onClick={async () => {
                 setActiveFilterId(item.id)
-                setFilterGroupValue(undefined)
-                setFilterValue(undefined)
+                setFilterGroupValue(null)
+                setFilterValue(null)
                 setFilterDataObject({
                   andFilterOption: item.andFilterOption,
                   orFilterOption: item.orFilterOption,
@@ -489,7 +502,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                       update: {
                         user_filter: { set: null },
                         user_group_filter: { set: null },
-                        ActivityUserFilters: { connect: { id: item.id } },
+                        ActivityUserFilter: { connect: { id: item.id } },
                       },
                       create: {
                         User: {
@@ -498,7 +511,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                         Company: {
                           connect: { id: loggedUser?.company },
                         },
-                        ActivityUserFilters: {
+                        ActivityUserFilter: {
                           connect: { id: item.id },
                         },
                       },
@@ -646,7 +659,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               type="default"
               icon={<PlusOutlined />}
               onClick={() => {
-                setFilterModalData(undefined)
+                setFilterModalData(null)
                 setShowModal(true)
               }}
             >

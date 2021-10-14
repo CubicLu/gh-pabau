@@ -47,7 +47,7 @@ export interface LeadResponse {
   lostTime?: Date
 }
 
-export interface FilterOptionType {
+export interface ActivityFilterOptionType {
   type?: string
   filterColumn?: string
   operand?: string

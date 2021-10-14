@@ -26,10 +26,10 @@ export const ActivityUserState = objectType({
         return root.User
       },
     })
-    t.nullable.field('ActivityUserFilters', {
-      type: 'ActivityUserFilters',
+    t.nullable.field('ActivityUserFilter', {
+      type: 'ActivityUserFilter',
       resolve(root: any) {
-        return root.ActivityUserFilters
+        return root.ActivityUserFilter
       },
     })
   },

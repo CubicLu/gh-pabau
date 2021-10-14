@@ -119,6 +119,7 @@ query findManyActivityData(
         owner: User {
           full_name
         }
+        leadStatus: EnumStatus
         leadSource: MarketingSource {
           name
         }
@@ -146,7 +147,7 @@ query findFirstActivityUserState {
     user_filter
     user_group_filter
     custom_filter
-    ActivityUserFilters {
+    ActivityUserFilter {
       name
       data
       columns
@@ -192,7 +193,7 @@ query userGroupForActivity {
 }
 
 query filterOptionForActivity($userId: Int!) {
-  filterOption: findManyActivityUserFilters(where: {
+  filterOption: findManyActivityUserFilter(where: {
     OR: [
       {user_id: {equals: $userId}},
       {shared: {equals: true}}
@@ -212,7 +213,7 @@ query filterOptionForActivity($userId: Int!) {
 }
 
 mutation deleteActivityUserFilter($id: Int) {
-  deleteOneActivityUserFilters(where: {
+  deleteOneActivityUserFilter(where: {
     id: $id
   }) {
     id
@@ -257,7 +258,7 @@ mutation createActivityFilter(
   $name: String!,
   $shared: Boolean!
 ) {
-  createOneActivityUserFilters(data: {
+  createOneActivityUserFilter(data: {
     data: $data
     columns: $columns
     name: $name
@@ -277,7 +278,7 @@ mutation updateActivityFilter(
   $name: String!,
   $shared: Boolean!
 ) {
-  updateOneActivityUserFilters(
+  updateOneActivityUserFilter(
     where: {
       id: $id
     }

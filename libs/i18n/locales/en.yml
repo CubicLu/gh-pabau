@@ -82,6 +82,7 @@ en:
   activityList.column.leadSource: 'Lead source'
   activityList.column.wonBy: 'Won by'
   activityList.column.leadStage: 'Lead stage'
+  activityList.column.leadStatus: 'Lead status'
   activityList.column.leadDescription: 'Lead description'
   activityList.column.done: 'Done'
   activityList.column.date.editName: 'date'

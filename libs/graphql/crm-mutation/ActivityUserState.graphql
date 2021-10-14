@@ -16,8 +16,8 @@ fragment ActivityUserState on ActivityUserState {
   User {
     ...UserFields
   }
-  ActivityUserFilters {
-    ...ActivityUserFiltersFields
+  ActivityUserFilter {
+    ...ActivityUserFilterFields
   }
 }
 

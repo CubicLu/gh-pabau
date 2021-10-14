@@ -260,6 +260,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
       delete queryOptions.variables.search
       delete queryOptions.variables.activeColumns
     }
+    if (!filterDataObject) {
+      delete queryOptions.variables.filterOption
+    }
     if (selectFilterUser.length === 0) {
       delete queryOptions.variables.userId
     }
@@ -497,7 +500,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
         temp.type = 'user'
         temp.id = response?.user_filter
       } else if (response?.custom_filter) {
-        const activityFilterResponse = response?.ActivityUserFilters
+        const activityFilterResponse = response?.ActivityUserFilter
         temp.type = 'filter'
         temp.id = response?.custom_filter
         if (activityFilterResponse) {

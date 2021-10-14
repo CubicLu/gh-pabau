@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `activity` (
 CREATE INDEX `activity_company_id__index` ON `activity` (`company_id`);
 CREATE INDEX `activity_company_id_due_start_date_status__index` ON `activity` (`company_id`, `due_start_date`, `status`);
 
-CREATE TABLE IF NOT EXISTS `activity_user_filters` (
+CREATE TABLE IF NOT EXISTS `activity_user_filter` (
   `id` int(11) AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `name` varchar(55) NOT NULL,
@@ -68,10 +68,12 @@ CREATE TABLE IF NOT EXISTS `activity_user_filters` (
   `created_at` timestamp DEFAULT current_timestamp(),
   `updated_at` timestamp DEFAULT current_timestamp() ON update current_timestamp,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_activity_user_filters_company_id` FOREIGN KEY (`company_id`) REFERENCES `admin`(`id`),
-  CONSTRAINT `fk_activity_user_filters_user_id` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
+  CONSTRAINT `fk_activity_user_filter_company_id` FOREIGN KEY (`company_id`) REFERENCES `admin`(`id`),
+  CONSTRAINT `fk_activity_user_filter_user_id` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
 );
 
-CREATE INDEX `activity_user_filters_company_id_user_id__index` on `activity_user_filters` (`company_id`, `user_id`);
+CREATE INDEX `activity_user_filter_company_id_user_id__index` on `activity_user_filter` (`company_id`, `user_id`);
+
+ALTER TABLE `cm_leads` MODIFY `EnumStatus` ENUM('Junk', 'Open', 'Converted') default 'Open';
 
 COMMIT;

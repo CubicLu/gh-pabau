@@ -211,7 +211,7 @@ export const permissions = shield(
       findFirstActivityUserState: and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData,
-        rules.interceptors.injectUser
+        rules.interceptors.interceptAccessToUserData
       ),
       // Debug
       ping: allow,

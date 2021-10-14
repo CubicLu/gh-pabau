@@ -68,6 +68,7 @@ export const CmLeadCustomType = objectType({
     t.string('wonBy')
     t.field('MarketingSource', { type: 'MarketingSource' })
     t.string('leadStage')
+    t.string('EnumStatus')
   },
 })
 

@@ -288,11 +288,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
 
   const [addMutation] = useCreateActivityFilterMutation({
     async onCompleted(data) {
-      if (data?.createOneActivityUserFilters) {
-        const id = data?.createOneActivityUserFilters?.id
+      if (data?.createOneActivityUserFilter) {
+        const id = data?.createOneActivityUserFilter?.id
         setActiveFilterId(id)
-        setFilterValue(undefined)
-        setFilterGroupValue(undefined)
+        setFilterValue(null)
+        setFilterGroupValue(null)
         await upsertActiveColumn({
           variables: {
             userId: loggedUser?.user,
@@ -300,7 +300,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
             update: {
               user_filter: { set: null },
               user_group_filter: { set: null },
-              ActivityUserFilters: { connect: { id: id } },
+              ActivityUserFilter: { connect: { id: id } },
             },
             create: {
               User: {
@@ -309,7 +309,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               Company: {
                 connect: { id: loggedUser?.company },
               },
-              ActivityUserFilters: {
+              ActivityUserFilter: {
                 connect: { id: id },
               },
             },
@@ -331,11 +331,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
 
   const [editMutation] = useUpdateActivityFilterMutation({
     async onCompleted(data) {
-      if (data?.updateOneActivityUserFilters) {
-        const id = data?.updateOneActivityUserFilters?.id
+      if (data?.updateOneActivityUserFilter) {
+        const id = data?.updateOneActivityUserFilter?.id
         setActiveFilterId(id)
-        setFilterValue(undefined)
-        setFilterGroupValue(undefined)
+        setFilterValue(null)
+        setFilterGroupValue(null)
         await upsertActiveColumn({
           variables: {
             userId: loggedUser?.user,
@@ -343,7 +343,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
             update: {
               user_filter: { set: null },
               user_group_filter: { set: null },
-              ActivityUserFilters: { connect: { id: id } },
+              ActivityUserFilter: { connect: { id: id } },
             },
             create: {
               User: {
@@ -352,7 +352,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               Company: {
                 connect: { id: loggedUser?.company },
               },
-              ActivityUserFilters: {
+              ActivityUserFilter: {
                 connect: { id: id },
               },
             },
@@ -495,8 +495,8 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
       })
       if (activeFilterId === values.id) {
         setFilterValue(0)
-        setActiveFilterId(undefined)
-        setFilterDataObject(undefined)
+        setActiveFilterId(null)
+        setFilterDataObject(null)
         setSelectFilterUser([])
       }
     } else {
@@ -523,7 +523,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
             update: {
               user_filter: { set: 0 },
               user_group_filter: { set: null },
-              ActivityUserFilters: { disconnect: true },
+              ActivityUserFilter: { disconnect: true },
             },
             create: {
               User: {
@@ -536,7 +536,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
             },
           },
         })
-        setFilterDataObject(undefined)
+        setFilterDataObject(null)
         setFilterValue(0)
       }
     }
@@ -573,8 +573,8 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         ]
       })
     }
-    setFilterValue(undefined)
-    setFilterGroupValue(undefined)
+    setFilterValue(null)
+    setFilterGroupValue(null)
     setShowModal(false)
     resetForm()
   }

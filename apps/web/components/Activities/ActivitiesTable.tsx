@@ -62,6 +62,12 @@ interface DataSourceType {
   [key: string]: string | number
 }
 
+const leadStatusMapper = {
+  Open: 'Open',
+  Converted: 'Won',
+  Junk: 'Lost',
+}
+
 export interface ActivityTableProps {
   tabValue: string
   searchText?: string
@@ -759,6 +765,27 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         width: 100,
         visible: visibleColumn(columnNames.leadStage.label),
         columnName: columnNames.leadStage.label,
+      },
+      {
+        id: columnNames.leadStatus.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadStatus')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ leadStatus }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {leadStatusMapper[leadStatus]}
+            </span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.leadStatus.id),
+        columnName: columnNames.leadStatus.label,
       },
       {
         id: columnNames.assignedToUser.id,

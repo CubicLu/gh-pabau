@@ -53,6 +53,25 @@ export const getData = (t) => {
     },
   ]
 
+  const basicOperands = [
+    {
+      key: 'is',
+      label: t('create.filter.modal.date.is.operand'),
+    },
+    {
+      key: 'is not',
+      label: t('create.filter.modal.date.is.not.operand'),
+    },
+    {
+      key: 'is empty',
+      label: t('create.filter.modal.date.is.empty.operand'),
+    },
+    {
+      key: 'is not empty',
+      label: t('create.filter.modal.date.is.not.empty.operand'),
+    },
+  ]
+
   const dateOperands = [
     {
       key: 'is',
@@ -89,64 +108,15 @@ export const getData = (t) => {
   ]
 
   const userOperands = [
-    {
-      key: 'is',
-      label: t('create.filter.modal.date.is.operand'),
-    },
-    {
-      key: 'is not',
-      label: t('create.filter.modal.date.is.not.operand'),
-    },
-    {
-      key: 'is empty',
-      label: t('create.filter.modal.date.is.empty.operand'),
-    },
-    {
-      key: 'is not empty',
-      label: t('create.filter.modal.date.is.not.empty.operand'),
-    },
+    ...basicOperands,
     {
       key: 'belongs to team',
       label: t('create.filter.modal.date.belongs.to.team.operand'),
     },
   ]
 
-  const basicOperands = [
-    {
-      key: 'is',
-      label: t('create.filter.modal.date.is.operand'),
-    },
-    {
-      key: 'is not',
-      label: t('create.filter.modal.date.is.not.operand'),
-    },
-    {
-      key: 'is empty',
-      label: t('create.filter.modal.date.is.empty.operand'),
-    },
-    {
-      key: 'is not empty',
-      label: t('create.filter.modal.date.is.not.empty.operand'),
-    },
-  ]
-
   const stringOperands = [
-    {
-      key: 'is',
-      label: t('create.filter.modal.date.is.operand'),
-    },
-    {
-      key: 'is not',
-      label: t('create.filter.modal.date.is.not.operand'),
-    },
-    {
-      key: 'is empty',
-      label: t('create.filter.modal.date.is.empty.operand'),
-    },
-    {
-      key: 'is not empty',
-      label: t('create.filter.modal.date.is.not.empty.operand'),
-    },
+    ...basicOperands,
     {
       key: 'contains',
       label: t('create.filter.modal.date.contains.operand'),

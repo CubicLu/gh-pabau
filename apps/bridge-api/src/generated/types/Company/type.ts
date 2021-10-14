@@ -1715,18 +1715,18 @@ export const Company = objectType({
         return root.ActivityUserState
       },
     })
-    t.list.field('ActivityUserFilters', {
-      type: 'ActivityUserFilters',
+    t.list.field('ActivityUserFilter', {
+      type: 'ActivityUserFilter',
       args: {
-        where: 'ActivityUserFiltersWhereInput',
-        orderBy: 'ActivityUserFiltersOrderByWithRelationInput',
-        cursor: 'ActivityUserFiltersWhereUniqueInput',
+        where: 'ActivityUserFilterWhereInput',
+        orderBy: 'ActivityUserFilterOrderByWithRelationInput',
+        cursor: 'ActivityUserFilterWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ActivityUserFiltersScalarFieldEnum',
+        distinct: 'ActivityUserFilterScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ActivityUserFilters
+        return root.ActivityUserFilter
       },
     })
     t.list.field('ActivityType', {

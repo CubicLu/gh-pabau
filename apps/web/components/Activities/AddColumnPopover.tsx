@@ -66,6 +66,7 @@ export const columnNames = {
   leadSource: { label: 'Lead source', id: 'lead.leadSource' },
   wonBy: { label: 'Won by', id: 'lead.wonBy' },
   leadStage: { label: 'Lead stage', id: 'lead.leadStage' },
+  leadStatus: { label: 'Lead status', id: 'lead.leadStatus' },
   clientName: { label: 'Client name', id: 'client.firstName' },
   label: { label: 'Label', id: 'client.label' },
   clientEmail: { label: 'Client email', id: 'client.email' },
@@ -249,6 +250,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
         {
           label: t('activityList.column.leadStage'),
           value: columnNames.leadStage.label,
+        },
+        {
+          label: t('activityList.column.leadStatus'),
+          value: columnNames.leadStatus.label,
         },
         {
           label: t('activityList.column.leadDescription'),

@@ -311,11 +311,11 @@ model Company {
   Activity                         Activity[]
   ContactPreference                ContactPreference[]
 
-  ActivityUserState   ActivityUserState[]
-  ActivityUserFilters ActivityUserFilters[]
-  ActivityType        ActivityType[]
-  Album               PhotoAlbum[]
-  InsurerContract     InsurerContract[]
+  ActivityUserState  ActivityUserState[]
+  ActivityUserFilter ActivityUserFilter[]
+  ActivityType       ActivityType[]
+  Album              PhotoAlbum[]
+  InsurerContract    InsurerContract[]
 
 
   Voucher                Voucher[]
@@ -2142,23 +2142,23 @@ model ActivityType {
 }
 
 model ActivityUserState {
-  id                  Int                  @id @default(autoincrement())
-  user_id             Int
-  columns             String?
-  company_id          Int
-  user_filter         Int?
-  user_group_filter   Int?
-  custom_filter       Int?
-  Company             Company              @relation(fields: [company_id], references: [id])
-  User                User?                @relation(fields: [user_id], references: [id])
-  ActivityUserFilters ActivityUserFilters? @relation(fields: [custom_filter], references: [id])
+  id                 Int                 @id @default(autoincrement())
+  user_id            Int
+  columns            String?
+  company_id         Int
+  user_filter        Int?
+  user_group_filter  Int?
+  custom_filter      Int?
+  Company            Company             @relation(fields: [company_id], references: [id])
+  User               User?               @relation(fields: [user_id], references: [id])
+  ActivityUserFilter ActivityUserFilter? @relation(fields: [custom_filter], references: [id])
 
   @@unique([user_id, company_id], name: "company_id_user_id")
   @@index([company_id, user_id], name: "activity_user_columns_user_id_company_id__index")
   @@map("activity_user_state")
 }
 
-model ActivityUserFilters {
+model ActivityUserFilter {
   id         Int       @id @default(autoincrement())
   user_id    Int
   company_id Int
@@ -2172,8 +2172,8 @@ model ActivityUserFilters {
   Company    Company   @relation(fields: [company_id], references: [id])
 
   ActivityUserState ActivityUserState[]
-  @@index([company_id, user_id], name: "activity_user_filters_company_id_user_id__index")
-  @@map("activity_user_filters")
+  @@index([company_id, user_id], name: "activity_user_filter_company_id_user_id__index")
+  @@map("activity_user_filter")
 }
 
 model Activity {
@@ -12745,10 +12745,10 @@ model User {
   CmLead                       CmLead[]
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
 
-  PasswordResetAuth   PasswordResetAuth[]
-  ActivityUserState   ActivityUserState[]
-  ActivityUserFilters ActivityUserFilters[]
-  ServiceUserPrice    ServiceUserPrice[]
+  PasswordResetAuth  PasswordResetAuth[]
+  ActivityUserState  ActivityUserState[]
+  ActivityUserFilter ActivityUserFilter[]
+  ServiceUserPrice   ServiceUserPrice[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
