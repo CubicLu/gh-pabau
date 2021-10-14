@@ -146,6 +146,7 @@ const Appointments = () => {
             },
           ],
         })
+        return invoices
       })
       data.invoices = invoices
       setData({
