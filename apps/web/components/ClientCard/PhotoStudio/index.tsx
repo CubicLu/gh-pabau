@@ -36,9 +36,9 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const api = axios.create({
     baseURL: baseURL,
     headers: {
-      Authorization: `Bearer ${localStorage
-        ?.getItem?.('token')
-        ?.replaceAll('"', '')}`,
+      Authorization:
+        localStorage?.getItem('token') &&
+        `Bearer ${localStorage?.getItem('token')?.replaceAll('"', '')}`,
     },
   })
 
@@ -151,9 +151,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   }, [contactId, getUncatAlbumPhotos])
 
   useEffect(() => {
-    if (dUnCatPhotos && dUnCatPhotos?.findManyContactAttachment?.length > 0) {
-      setNonAlbumPhotos(dUnCatPhotos?.findManyContactAttachment)
-    }
+    setNonAlbumPhotos(dUnCatPhotos?.findManyContactAttachment)
   }, [dUnCatPhotos])
 
   useEffect(() => {
@@ -217,7 +215,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   }, [albumId, cdn, dCurrentAlbum, dCurrentAlbumloading, nonAlbumPhotos])
 
   useEffect(() => {
-    if (!albumId && nonAlbumPhotos?.length > 0) {
+    if (!albumId && nonAlbumPhotos) {
       const imageList = nonAlbumPhotos?.map((el) => {
         return {
           ...el,
@@ -327,7 +325,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
                 },
               })
             }
-            if (fileData?.fileData === 0) {
+            if (fileData?.albumId === 0) {
               createAttachmentOutOfAlbum({
                 variables: {
                   attachment_type: 'contact',

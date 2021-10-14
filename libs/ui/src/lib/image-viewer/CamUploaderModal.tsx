@@ -287,7 +287,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       preview: URL.createObjectURL(file),
       file: file,
       size: file?.size,
-      albumId: albumId,
+      albumId: albumId || 0,
     }
     cAddedFiles.push(newFile)
     setUploadingImages(cAddedFiles)
@@ -302,7 +302,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           preview: URL.createObjectURL(file),
           file,
           size: file?.size,
-          albumId: albumId,
+          albumId: albumId || 0,
         }
       })
       const cAddedFiles = [...uploadingImages, ...cFiles]
@@ -336,7 +336,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         visible={visible}
         onCancel={onClose}
         width={isMobile ? '100%' : '980px'}
-        className={styles.uppyModal}
+        className={classNames(styles.uppyModal, mobile && styles.fullScreen)}
         closable={false}
         footer={false}
       >
