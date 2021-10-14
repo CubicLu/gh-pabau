@@ -27,7 +27,7 @@ export const CmContactCustom = objectType({
         return root.CmContact
       },
     })
-    t.field('ManageCustomField', {
+    t.nullable.field('ManageCustomField', {
       type: 'ManageCustomField',
       resolve(root: any) {
         return root.ManageCustomField

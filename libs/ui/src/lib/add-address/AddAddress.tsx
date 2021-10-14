@@ -66,7 +66,7 @@ export const AddAddress: FC<AddAddressProps> = ({
         </Form.Item>
         <div className={styles.addButton}>
           <Button type={'primary'} size={'large'} htmlType={'submit'}>
-            Add Address
+            {title}
           </Button>
         </div>
       </Form>
