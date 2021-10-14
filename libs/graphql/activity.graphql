@@ -309,3 +309,9 @@ query findLeadName($leadID: Int!) {
     Lname
   }
 }
+
+mutation deleteManyActivity($ids: [Int]!) {
+  deleteManyActivity(where: {ids: $ids}) {
+    affected_rows
+  }
+}

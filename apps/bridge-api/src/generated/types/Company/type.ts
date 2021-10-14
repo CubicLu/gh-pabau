@@ -1813,6 +1813,20 @@ export const Company = objectType({
         return root.InsuranceContractPrice
       },
     })
+    t.list.field('ContactAttachment', {
+      type: 'ContactAttachment',
+      args: {
+        where: 'ContactAttachmentWhereInput',
+        orderBy: 'ContactAttachmentOrderByWithRelationInput',
+        cursor: 'ContactAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactAttachment
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {
