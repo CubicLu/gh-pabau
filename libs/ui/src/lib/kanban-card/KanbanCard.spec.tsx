@@ -15,7 +15,6 @@ describe('KanbanCard', () => {
         labels={['#Label1', '#Label2']}
         leadOwnerName={'Owner Name'}
         leadOwnerImg={userImage}
-        contactId={'contact id'}
         contactName={'Contact Name'}
         contactImg={noUser}
         activityStatus={'future activity scheduled'}

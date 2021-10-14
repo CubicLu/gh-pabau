@@ -15,7 +15,6 @@ export default {
     labels: ['#Label1', '#Label2', '#Label3'],
     leadOwnerName: 'Owner Name',
     leadOwnerImg: userImage,
-    contactId: 'contact id',
     contactName: 'Contact Name',
     contactImg: noUser,
     activityStatus: 'future activity scheduled',
@@ -29,7 +28,6 @@ const KanbanCardComponent: FC<KanbanCardProps> = ({
   labels,
   leadOwnerName,
   leadOwnerImg,
-  contactId,
   contactName,
   contactImg,
   activityStatus,
@@ -42,7 +40,6 @@ const KanbanCardComponent: FC<KanbanCardProps> = ({
       labels={labels}
       leadOwnerName={leadOwnerName}
       leadOwnerImg={leadOwnerImg}
-      contactId={contactId}
       contactName={contactName}
       contactImg={contactImg}
       activityStatus={activityStatus}

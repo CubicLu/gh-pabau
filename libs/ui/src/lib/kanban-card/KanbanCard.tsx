@@ -14,7 +14,6 @@ export interface KanbanCardProps {
   labels?: string[]
   leadOwnerName?: string
   leadOwnerImg?: string
-  contactId?: string
   contactName?: string
   contactImg?: string
   activityStatus?: string
@@ -28,7 +27,6 @@ export const KanbanCard: FC<KanbanCardProps> = ({
   labels,
   leadOwnerName,
   leadOwnerImg,
-  contactId,
   contactName,
   contactImg,
   activityStatus,
