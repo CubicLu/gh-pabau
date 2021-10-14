@@ -38,6 +38,7 @@ module.exports = {
         CompanyMeta: ['upsertOne'],
         CmContact: ['createOne'],
         CmLead: ['createOne'],
+        InvDetail: ['updateOne', 'deleteOne', 'updateMany', 'upsertOne'],
       },
     },
   },
@@ -78,6 +79,7 @@ module.exports = {
       CompanyMeta: ['upsertOne'],
       CmContact: ['createOne'],
       CmLead: ['createOne'],
+      InvDetail: ['updateOne', 'deleteOne', 'updateMany', 'upsertOne'],
     },
   },
 }

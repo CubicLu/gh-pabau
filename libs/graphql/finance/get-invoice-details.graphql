@@ -34,3 +34,15 @@ query getInvoice($id: Int!) {
     guid
   }
 }
+
+query getFinanceInvoices($id: Int!){
+  findManyInvDetail(where:{customer_id:{equals:$id}}){
+    id
+    amount
+    billers
+    date
+    issue_to
+    location_name
+    status
+  }
+}

@@ -86,11 +86,8 @@ export const financialInvoices = {
       date: '10/12/2020',
       location: 'The London Skin and Hair Clinic',
       employee: 'Anika Kadir',
-
       issuedTo: 'Bruno Ballardin',
-
       paid: false,
-
       items: [
         {
           employee: 'Anika Kadir',
@@ -128,53 +125,33 @@ export const financialInvoices = {
           totalPrice: 56,
         },
       ],
-
       totalVat: 0,
-
       amountPaid: 0,
-
       subtotal: 2250,
-
       tips: 0,
-
       grandTotal: 2250,
-
       paymentStatus: 2,
-
       paymentStatusTooltip:
         'Full payment received on Sunday, 16 May 2021 at CHISSY BEAUTY STUDIO by Chissy Stylist',
-
       tip: {
         amount: '10',
-
         type: '%',
-
         staff: 'John Doe',
       },
-
       history: [
         {
           title: 'Issued to: Vedran Taneski',
-
           date: 'Last Friday at 3:00 PM',
-
           notif_by: 'Ben Gough',
-
           type: 'issue',
         },
-
         {
           title: 'Invoice issue',
-
           date: '12 Mar at 3:00 PM',
-
           description:
             'Dear John, I have gone ahead and looked to book an appointment in with Dr Smith Brandham for next Thursday if that time works ok with you?',
-
           notif_by: 'Martin Wade',
-
           views: 2,
-
           type: 'email',
         },
 

@@ -6451,6 +6451,20 @@ model InvCategory {
   @@map("inv_categories")
 }
 
+model InvDetail {
+  id            Int      @id
+  customer_id   Int
+  guid          String?
+  date          DateTime
+  amount        Float?
+  status        String?
+  location_name String?
+  billers       String?
+  issue_to      String?
+
+  @@map("invoices")
+}
+
 //
 //model inv_container {
 //  id             Int       @id @default(autoincrement())
