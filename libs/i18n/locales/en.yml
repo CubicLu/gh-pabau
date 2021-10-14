@@ -3601,6 +3601,8 @@ en:
   ui.clientdetails.membershipnumber: 'Membership number'
   ui.clientdetails.allocated: 'Allocated authorisations'
   ui.clientdetails.details: 'Details'
+  ui.clientdetails.add.address: 'Add Address'
+  ui.clientdetails.edit.address: 'Edit Address'
   ui.clientdetails.customise: 'Customise fields'
   ui.clientdetails.customise.edit: 'Edit all fields'
   ui.clientdetails.customise.dragto: 'Drag to rearrange'
