@@ -4481,7 +4481,7 @@ model ContactAttachment {
   medical_form_id   Int?
   tags              String?
   medical_uniqid    String?
-  Contact           CmContact   @relation(fields: [contact_id], references: [ID])
+  Contact           CmContact?  @relation(fields: [contact_id], references: [ID])
   Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
   Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
   Company           Company     @relation(fields: [company_id], references: [id])
