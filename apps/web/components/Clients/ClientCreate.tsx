@@ -155,8 +155,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     variables: {
       id: contactId,
     },
-    ssr: false,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
   })
 
   const [addMutation] = useCreateOneContactMutation({

@@ -26,6 +26,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     skip: !router.query['id'],
     ssr: false,
     variables: { id: clientId },
+    notifyOnNetworkStatusChange: true,
   })
 
   const { data: referredByOptions } = useGetMarketingSourcesQuery({
@@ -40,7 +41,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   })
 
   useEffect(() => {
-    if (customFieldData && data?.findFirstCmContact) {
+    if (customFieldData && data?.findFirstCmContact?.customField) {
       const customFields = customFieldData.custom
         .flatMap((thread) =>
           thread?.ManageCustomField?.filter((thread) => thread.is_active)
@@ -187,6 +188,8 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   mobile: data.findFirstCmContact.mobile,
                   home: data.findFirstCmContact.home,
                 },
+                isActive:
+                  data.findFirstCmContact?.isActive === 1 ? true : false,
                 address: [
                   data.findFirstCmContact.street,
                   data.findFirstCmContact.city,
@@ -197,12 +200,13 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   .filter((val) => val?.trim())
                   .join(', '),
                 relationships: [],
-                labels: data.findFirstCmContact.labelData.map((data) => {
-                  return {
-                    label: data.labelDetail.label,
-                    color: data.labelDetail.color,
-                  }
-                }),
+                labels:
+                  data.findFirstCmContact?.labelData?.map((data) => {
+                    return {
+                      label: data?.labelDetail?.label,
+                      color: data?.labelDetail?.color,
+                    }
+                  }) || [],
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }
