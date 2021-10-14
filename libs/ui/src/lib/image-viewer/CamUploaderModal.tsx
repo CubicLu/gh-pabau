@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons'
 import { Progress, Spin, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
-import { isMobile as mobile, osName } from 'react-device-detect'
+import { isMobile as mobile } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import { ReactComponent as ImagesIcon } from '../../assets//images/image-viewer/image-gallery.svg'
 import { ReactComponent as CameraCircleFilled } from '../../assets/images/image-viewer/camera-circle-filled.svg'
@@ -273,9 +273,6 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   const inputFileRef = useRef<HTMLInputElement>(null)
   const isMobile = useMedia('(max-width: 768px)', false)
   const [facingMode, setFacingMode] = useState(facingModes[1])
-
-  console.log('MOBILE:', mobile)
-  console.log('OS:', osName)
 
   const captureImage = () => {
     const elem = document.querySelector('#outer-circle') as HTMLElement
