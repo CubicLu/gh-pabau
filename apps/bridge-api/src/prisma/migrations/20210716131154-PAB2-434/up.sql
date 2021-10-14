@@ -1,9 +1,12 @@
 START TRANSACTION;
 
-CREATE TABLE IF NOT EXISTS `activity_user_columns` (
+CREATE TABLE IF NOT EXISTS `activity_user_state` (
     `id` int AUTO_INCREMENT,
     `user_id` int(11) NOT NULL,
     `columns` text DEFAULT NULL,
+    `user_filter` int(11) DEFAULT NULL,
+    `user_group_filter` int(11) DEFAULT NULL,
+    `custom_filter` int(11) DEFAULT NULL,
     `company_id` int(11) NOT NULL,
     UNIQUE (`user_id`, `company_id`),
     PRIMARY KEY (`id`),
@@ -11,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `activity_user_columns` (
     CONSTRAINT `fk_active_columns_user_id` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
 );
 
-CREATE INDEX `activity_user_columns_user_id_company_id__index` ON `activity_user_columns` (`company_id`, `user_id`);
+CREATE INDEX `activity_user_state_user_id_company_id__index` ON `activity_user_state` (`company_id`, `user_id`);
 
 CREATE TABLE IF NOT EXISTS `activity_types` (
     `id` int(11) AUTO_INCREMENT,
@@ -53,5 +56,24 @@ CREATE TABLE IF NOT EXISTS `activity` (
 
 CREATE INDEX `activity_company_id__index` ON `activity` (`company_id`);
 CREATE INDEX `activity_company_id_due_start_date_status__index` ON `activity` (`company_id`, `due_start_date`, `status`);
+
+CREATE TABLE IF NOT EXISTS `activity_user_filter` (
+  `id` int(11) AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(55) NOT NULL,
+  `columns` text DEFAULT NULL,
+  `data` text DEFAULT NULL,
+  `shared` tinyint(1) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `created_at` timestamp DEFAULT current_timestamp(),
+  `updated_at` timestamp DEFAULT current_timestamp() ON update current_timestamp,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_activity_user_filter_company_id` FOREIGN KEY (`company_id`) REFERENCES `admin`(`id`),
+  CONSTRAINT `fk_activity_user_filter_user_id` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
+);
+
+CREATE INDEX `activity_user_filter_company_id_user_id__index` on `activity_user_filter` (`company_id`, `user_id`);
+
+ALTER TABLE `cm_leads` MODIFY `EnumStatus` ENUM('Junk', 'Open', 'Converted') default 'Open';
 
 COMMIT;

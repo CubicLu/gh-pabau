@@ -1,12 +1,20 @@
 import React, { FC, useState } from 'react'
-import { Input, Form, Popover, Select } from 'antd'
-import { DatePicker, Button, Notification, NotificationType } from '@pabau/ui'
+import { Input, Form, Popover, Select, Checkbox, Radio } from 'antd'
+import {
+  DatePicker,
+  Button,
+  Notification,
+  NotificationType,
+  PhoneProp,
+  PhoneNumberInput,
+} from '@pabau/ui'
 import dayjs from 'dayjs'
 import { useMedia } from 'react-use'
 import { useTranslation } from 'react-i18next'
 import styles from './InlineEdit.module.less'
 
 const { Option } = Select
+const { TextArea } = Input
 
 export interface InlineEditProps {
   children?: React.ReactNode
@@ -14,10 +22,10 @@ export interface InlineEditProps {
   hideFooter?: boolean
   fieldTitle: string
   orderIndex?: number
-  initialValue: string
+  initialValue: string | PhoneProp
   type: string
   dateFormat?: string
-  onUpdateValue: (orderIndex: number, value: string) => void
+  onUpdateValue: (orderIndex: number, value: string, type?: string) => void
 }
 
 export const InlineEditDataTypes = {
@@ -26,14 +34,14 @@ export const InlineEditDataTypes = {
   number: 'number',
   email: 'email',
   text: 'text',
+  string: 'string',
   url: 'url',
-  dropdown: 'dropdown',
-  singleLineText: 'single line',
-  paragraphText: 'paragraph text',
-  multipleChoice: 'multiple choice',
-  singleChoice: 'single choice',
+  multiple: 'multiple',
+  bool: 'bool',
+  basicPhone: 'basicPhone',
   localizedMessage: 'localized message',
   list: 'list',
+  address: 'address',
 }
 
 export const InlineEdit: FC<InlineEditProps> = ({
@@ -51,6 +59,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
   const isMobile = useMedia('(max-width: 768px)', false)
 
   const [visible, setVisible] = useState(false)
+  const [phoneType, setPhoneType] = useState('Mobile')
   const [form] = Form.useForm()
   const { t } = useTranslation('common')
 
@@ -60,6 +69,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
 
   const handleClose = (val) => {
     setVisible(val)
+    form.resetFields()
   }
 
   const renderItem = () => {
@@ -69,14 +79,28 @@ export const InlineEdit: FC<InlineEditProps> = ({
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item
-              initialValue={dayjs(initialValue, dateFormat)}
+              initialValue={
+                initialValue &&
+                typeof initialValue === 'string' &&
+                dayjs(initialValue, dateFormat)
+              }
               name={fieldTitle}
             >
               <DatePicker
                 format={dateFormat}
-                defaultValue={dayjs(initialValue, dateFormat) || null}
+                defaultValue={
+                  typeof initialValue === 'string'
+                    ? dayjs(initialValue, dateFormat)
+                    : undefined
+                }
                 allowClear={false}
                 showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
+                getPopupContainer={(node) => {
+                  if (node) {
+                    return node as HTMLElement
+                  }
+                  return document.body as HTMLElement
+                }}
               />
             </Form.Item>
           </div>
@@ -90,30 +114,43 @@ export const InlineEdit: FC<InlineEditProps> = ({
             </Form.Item>
           </div>
         )
-      case InlineEditDataTypes.dropdown:
+      case InlineEditDataTypes.text:
         return (
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item name={fieldTitle} initialValue={initialValue}>
-              <Input />
+              <TextArea rows={4} />
             </Form.Item>
           </div>
         )
-      case InlineEditDataTypes.multipleChoice:
+      case InlineEditDataTypes.multiple:
         return (
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item name={fieldTitle} initialValue={initialValue}>
-              <Input />
+              <Checkbox.Group
+                name={fieldTitle}
+                options={
+                  selectOptions && selectOptions?.length > 0
+                    ? selectOptions
+                    : []
+                }
+              />
             </Form.Item>
           </div>
         )
-      case InlineEditDataTypes.singleChoice:
+      case InlineEditDataTypes.bool:
         return (
           <div className={styles.editPopup}>
             <h5>{`Edit ${fieldTitle}`}</h5>
             <Form.Item name={fieldTitle} initialValue={initialValue}>
-              <Input />
+              <Radio.Group>
+                {selectOptions?.map((option, index) => (
+                  <Radio key={index} value={option}>
+                    {option}
+                  </Radio>
+                ))}
+              </Radio.Group>
             </Form.Item>
           </div>
         )
@@ -152,6 +189,60 @@ export const InlineEdit: FC<InlineEditProps> = ({
             </div>
           </div>
         )
+      case InlineEditDataTypes.basicPhone:
+        return (
+          <div className={styles.editPopup}>
+            <h5>{`Edit ${fieldTitle}`}</h5>
+            <div>
+              <Form.Item
+                name={fieldTitle}
+                initialValue={initialValue['mobile']}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name={'phoneType'}
+                initialValue={selectOptions?.[0]}
+                className={styles.phoneTypeContent}
+              >
+                <Select
+                  allowClear
+                  placeholder={t('activityList.select.placeholder')}
+                  onChange={(val) => {
+                    setPhoneType(val.toString().toLowerCase())
+                    form.setFieldsValue({
+                      [fieldTitle]:
+                        val.toString().toLowerCase() === 'mobile'
+                          ? initialValue['mobile']
+                          : val.toString().toLowerCase() === 'home'
+                          ? initialValue['home']
+                          : '',
+                    })
+                  }}
+                >
+                  {selectOptions?.map((item, index) => (
+                    <Option key={index} value={item}>
+                      {item}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
+          </div>
+        )
+      case InlineEditDataTypes.phone:
+        return (
+          <div className={styles.editPopup}>
+            <h5>{`Edit ${fieldTitle}`}</h5>
+            <Form.Item name={fieldTitle} initialValue={initialValue}>
+              <PhoneNumberInput
+                label={''}
+                onChange={(value) => form.setFieldsValue({ fieldTitle, value })}
+                showValidErrorMessage={false}
+              />
+            </Form.Item>
+          </div>
+        )
       default:
         return (
           <div className={styles.editPopup}>
@@ -171,10 +262,13 @@ export const InlineEdit: FC<InlineEditProps> = ({
       value = dayjs(values?.[key]).format('YYYY-MM-DD')
     } else {
       const updatedValue = { ...values }
-      value = updatedValue?.[key]
+      value =
+        typeof updatedValue?.[key] === 'object'
+          ? updatedValue?.[key].join(', ')
+          : updatedValue?.[key]
     }
     if (orderIndex) {
-      onUpdateValue(orderIndex, value)
+      onUpdateValue(orderIndex, value, phoneType.toLowerCase())
     }
     toggleVisible()
     Notification(NotificationType.success, `${fieldTitle} updated to ${value}`)
@@ -220,7 +314,15 @@ export const InlineEdit: FC<InlineEditProps> = ({
       trigger="click"
       overlayClassName={styles.profileWrapper}
       visible={visible && !isMobile}
-      onVisibleChange={(val) => handleClose(val)}
+      onVisibleChange={(val) => {
+        handleClose(val)
+      }}
+      getPopupContainer={(node) => {
+        if (node) {
+          return node.parentNode as HTMLElement
+        }
+        return document.body as HTMLElement
+      }}
     >
       {children}
     </Popover>
