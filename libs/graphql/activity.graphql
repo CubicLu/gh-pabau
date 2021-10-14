@@ -163,3 +163,9 @@ mutation upsertOneActivityUserColumns(
     id
   }
 }
+
+mutation deleteManyActivity($ids: [Int]!) {
+  deleteManyActivity(where: {ids: $ids}) {
+    affected_rows
+  }
+}
