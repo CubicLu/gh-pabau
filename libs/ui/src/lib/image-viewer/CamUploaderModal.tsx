@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons'
 import { Progress, Spin, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
+import { isMobile as mobile, osName } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import { ReactComponent as ImagesIcon } from '../../assets//images/image-viewer/image-gallery.svg'
 import { ReactComponent as CameraCircleFilled } from '../../assets/images/image-viewer/camera-circle-filled.svg'
@@ -271,9 +272,10 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
   const inputFileRef = useRef<HTMLInputElement>(null)
   const isMobile = useMedia('(max-width: 768px)', false)
-  const [facingMode, setFacingMode] = useState(
-    isMobile ? facingModes[0] : facingModes[1]
-  )
+  const [facingMode, setFacingMode] = useState(facingModes[1])
+
+  console.log('MOBILE:', mobile)
+  console.log('OS:', osName)
 
   const captureImage = () => {
     const elem = document.querySelector('#outer-circle') as HTMLElement
@@ -358,8 +360,25 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
               <CloseOutlined onClick={onClose} />{' '}
             </div>
           )}
+          {mobile && showCamera && (
+            <div className={styles.cameraFlip}>
+              <CameraFlip
+                onClick={() => {
+                  if (facingMode === facingModes[0])
+                    setFacingMode(facingModes[1])
+                  if (facingMode === facingModes[1])
+                    setFacingMode(facingModes[0])
+                }}
+              />
+            </div>
+          )}
         </div>
-        <div className={classNames(styles.uppyModalBody)}>
+        <div
+          className={classNames(
+            styles.uppyModalBody,
+            showCamera && styles.blackbg
+          )}
+        >
           {!showCamera && (
             <Dropzone
               multiple
@@ -371,26 +390,14 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           {showCamera && (
             <Camera
               isImageMirror={facingMode === facingModes[0] ? false : true}
-              isMaxResolution
               idealFacingMode={facingMode}
               imageType={IMAGE_TYPES.JPG}
               sizeFactor={1}
+              isMaxResolution
               onTakePhoto={(dataUri) => {
                 handleTakePhoto(dataUri)
               }}
             />
-          )}
-          {isMobile && showCamera && (
-            <div className={styles.cameraFlip}>
-              <CameraFlip
-                onClick={() => {
-                  if (facingMode === facingModes[0])
-                    setFacingMode(facingModes[1])
-                  if (facingMode === facingModes[1])
-                    setFacingMode(facingModes[0])
-                }}
-              />
-            </div>
           )}
           <div className={styles.addedImagesDiv}>
             <div className={styles.addedImagesDivInner}>
