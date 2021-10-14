@@ -47,7 +47,7 @@ export const ReadEmail: FC<P> = ({
   const [isLoading, setIsLoading] = useState(true)
   const [emailList, setEmailList] = useState([])
   const [showAllEmail, setShowAllEmail] = useState(false)
-  const [deleteEmailId, setDeletEmailId] = useState('')
+  const [deleteEmailId, setDeleteEmailId] = useState('')
   const [printSnippet, setPrintSnippet] = useState('')
 
   useEffect(
@@ -107,9 +107,13 @@ export const ReadEmail: FC<P> = ({
     // .replace('div { display:block !important;}', '')
 
     const bodyContent = rowData.snippet.split('<body')
+
     // const styleContent = bodyContent[0].split('<style')
     // customStyle = `<style ${styleContent[1]}`
-    rowData.snippet = `<body ${bodyContent[1]}`
+    bodyContent.length === 1
+      ? (rowData.snippet = `<body ${bodyContent[0]}`)
+      : (rowData.snippet = `<body ${bodyContent[1]}`)
+    // rowData.snippet = `<body ${bodyContent[1]}`
 
     // console.log(` Body ::: ${rowData.snippet}`)
     // rowData.snippet = atob(
@@ -125,7 +129,6 @@ export const ReadEmail: FC<P> = ({
       fetch(
         `https://www.googleapis.com/gmail/v1/users/${user}/messages/${msg}?access_token=${access_token}`,
         {
-          // mode: 'no-cors',
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -169,7 +172,6 @@ export const ReadEmail: FC<P> = ({
     await fetch(
       `https://www.googleapis.com/gmail/v1/users/${user}/threads/${threadsId}?access_token=${access_token}`,
       {
-        // mode: 'no-cors',
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -361,7 +363,7 @@ export const ReadEmail: FC<P> = ({
                       icon={<CaretDownOutlined style={{ color: '#9292A3' }} />}
                       onClick={() => {
                         setPrintSnippet(responseEmail.snippet)
-                        setDeletEmailId(messageId)
+                        setDeleteEmailId(messageId)
                       }}
                     />
                   </Popover>
@@ -519,7 +521,7 @@ export const ReadEmail: FC<P> = ({
                                       }
                                       onClick={() => {
                                         setPrintSnippet(email.snippet)
-                                        setDeletEmailId(email.id)
+                                        setDeleteEmailId(email.id)
                                       }}
                                     />
                                   </Popover>
@@ -660,7 +662,7 @@ export const ReadEmail: FC<P> = ({
                                         style={{ color: '#9292A3' }}
                                       />
                                     }
-                                    onClick={() => setDeletEmailId(email.id)}
+                                    onClick={() => setDeleteEmailId(email.id)}
                                   />
                                 </Popover>
                               </>

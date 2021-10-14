@@ -36,3 +36,19 @@ mutation deleteGmailConnection($email: String!, $companyId: Int, $userId: Int) {
   }
 }
 
+
+mutation UpdateGmailConnection($accessToken: String!, $email: String!, $companyId: Int, $userId: Int) {
+  update_gmail_connection(where: {company_id: {_eq: $companyId}, email: {_eq: $email}, user_id: {_eq: $userId}}, _set: {access_token: $accessToken}) {
+    returning {
+      access_token
+      company_id
+      created_at
+      email
+      id
+      refresh_token
+      updated_at
+      user_id
+    }
+  }
+}
+

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import styles from './index.module.less'
 // import { gapi } from 'gapi-script'
@@ -38,20 +38,19 @@ import { ReactComponent as Attched } from '../../assets/images/attched.svg'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useUser } from '../../context/UserContext'
 import dynamic from 'next/dynamic'
-import { FindGmailConnectionDocument } from '@pabau/graphql'
-import { useLazyQuery } from '@apollo/client'
+import {
+  FindGmailConnectionDocument,
+  UpdateGmailConnectionDocument,
+} from '@pabau/graphql'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 const { Search } = Input
-export interface P {
-  tableName?: string
-}
 
 const ReadEmail = dynamic(() => import('./readEmail'), {
   ssr: false,
 })
-export const Inbox: FC<P> = ({ ...props }) => {
+export const Inbox = () => {
   const { t } = useTranslationI18()
-  //const [userSignIn, setUserSignIn] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [inboxEmail, setInboxEmail] = useState([])
   const [draftEmail, setDraftEmail] = useState([])
@@ -66,6 +65,16 @@ export const Inbox: FC<P> = ({ ...props }) => {
   const [threadsId, setThreadsId] = useState('')
   const [searchResult, setSearchResult] = useState([])
   const [showSearch, setShowSearch] = useState(false)
+  const [authToken, setAuthToken] = useState('')
+
+  const [updateConnection] = useMutation(UpdateGmailConnectionDocument, {
+    onCompleted() {
+      console.log()
+    },
+    onError(e) {
+      console.log(e)
+    },
+  })
 
   const userSignIn = true
   // useEffect(
@@ -98,6 +107,10 @@ export const Inbox: FC<P> = ({ ...props }) => {
   useEffect(
     () => {
       loadConnection()
+      if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+        setAuthToken(gmailConnection.gmail_connection[0].access_token)
+        updateSigninStatus(true).then()
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -106,21 +119,85 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   useEffect(() => {
     if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      setAuthToken(gmailConnection.gmail_connection[0].access_token)
+      fetch(
+        `https://gmail.googleapis.com/gmail/v1/users/${gmailConnection?.gmail_connection[0].email}/profile?access_token=${authToken}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          return response
+        })
+        .then(function (data) {
+          if (!data.ok) {
+            getNewAuthToken().then()
+          }
+        })
+        .catch((error) => {
+          console.log('error::', error)
+        })
       updateSigninStatus(true).then()
     }
     if (gmailConnection && gmailConnection.gmail_connection.length === 0) {
       router.push('/setup/senders').then()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gmailConnection])
+  }, [gmailConnection, authToken])
+
+  const clientId =
+    '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com'
+  const clientScreat = 'IfyIxOV4e-OW_CU3KTgUFk4n'
+
+  const getNewAuthToken = async () => {
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      fetch(
+        `https://oauth2.googleapis.com/token?client_id=${clientId}&client_secret=${clientScreat}&grant_type=refresh_token&refresh_token=${gmailConnection.gmail_connection[0].refresh_token}`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          return response.json()
+        })
+        .then(async (data) => {
+          await updateConnection({
+            variables: {
+              email: gmailConnection.gmail_connection[0].email,
+              companyId: me.company,
+              userId: me.user,
+              accessToken: data.access_token,
+            },
+            optimisticResponse: {},
+            refetchQueries: [
+              {
+                query: FindGmailConnectionDocument,
+                variables: {
+                  companyId: me.company,
+                  userId: me.user,
+                },
+              },
+            ],
+          })
+        })
+    }
+  }
 
   const updateSigninStatus = async (isSignedIn) => {
     if (isSignedIn) {
+      if (authToken.length > 0) {
+        await listInbox()
+        await listDraft()
+        await listSent()
+        await listArchive()
+      }
       // totalConverstions()
-      await listInbox()
-      await listDraft()
-      await listSent()
-      await listArchive()
     } else {
       router.push('/setup/senders')
     }
@@ -182,9 +259,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     await Promise.all(
       msg.map(async (msg) => {
         return fetch(
-          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${authToken}`,
           {
-            // mode: 'no-cors',
             method: 'GET',
             headers: {
               Accept: 'application/json',
@@ -223,9 +299,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     await Promise.all(
       draft.map(async (msg) => {
         return fetch(
-          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.message.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.message.id}?access_token=${authToken}`,
           {
-            // mode: 'no-cors',
             method: 'GET',
             headers: {
               Accept: 'application/json',
@@ -256,9 +331,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     await Promise.all(
       msg.map(async (msg) => {
         return fetch(
-          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${authToken}`,
           {
-            // mode: 'no-cors',
             method: 'GET',
             headers: {
               Accept: 'application/json',
@@ -328,9 +402,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     await Promise.all(
       msg.map(async (msg) => {
         return fetch(
-          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${authToken}`,
           {
-            // mode: 'no-cors',
             method: 'GET',
             headers: {
               Accept: 'application/json',
@@ -401,9 +474,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const listInbox = () => {
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=INBOX&access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=INBOX&access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -424,9 +496,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const listDraft = () => {
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/drafts?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/drafts?access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -447,9 +518,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const listSent = () => {
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=SENT&access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=SENT&access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -470,9 +540,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const listArchive = () => {
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -569,7 +638,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
       title: 'Button',
       dataIndex: 'button',
       visible: true,
-      render: (text: string) => (
+      render: () => (
         <div className={styles.privateDropDown}>
           <Dropdown
             overlay={privatemenu}
@@ -625,13 +694,13 @@ export const Inbox: FC<P> = ({ ...props }) => {
     </Menu>
   )
 
-  const handelChange = (e) => {
+  const handleChange = (e) => {
     setValue(e.target.value)
   }
   const privatemenu = (
     <Menu>
-      <Radio.Group value={value} onChange={(e) => handelChange(e)}>
-        <Radio value={1} onClick={(e) => handelChange(e)}>
+      <Radio.Group value={value} onChange={(e) => handleChange(e)}>
+        <Radio value={1} onClick={(e) => handleChange(e)}>
           <div>
             <div>
               <div>
@@ -666,22 +735,10 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const handelEmailRead = async (msg) => {
     setIsLoading(true)
-    console.log('email id::', msg, gmailConnection)
-
-    // gapi.client.gmail.users.messages
-    //   .modify({
-    //     userId: 'me',
-    //     id: msg,
-    //     removeLabelIds: ['UNREAD'],
-    //   })
-    //   .then(async (res) => {
-    //     await updateSigninStatus(userSignIn)
-    //   })
 
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}/modify?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}/modify?access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -691,7 +748,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
     )
       .then((response) => {
         if (response.ok) {
-          response.json().then(async (json) => {
+          response.json().then(async () => {
             await updateSigninStatus(true)
           })
         }
@@ -717,9 +774,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     setIsLoading(true)
 
     await fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -760,9 +816,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
       await handleSingleDelete(emailId)
     } else {
       fetch(
-        `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+        `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${authToken}`,
         {
-          // mode: 'no-cors',
           method: 'DELETE',
           headers: {
             Accept: 'application/json',
@@ -786,9 +841,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
 
   const handleSingleDelete = async (msg) => {
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}?access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
@@ -816,9 +870,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     setIsLoading(true)
 
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -828,7 +881,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
     )
       .then((response) => {
         if (response.ok) {
-          response.json().then(async (json) => {
+          response.json().then(async () => {
             await updateSigninStatus(userSignIn)
             Notification(
               NotificationType.success,
@@ -848,9 +901,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     setIsLoading(true)
 
     fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${authToken}`,
       {
-        // mode: 'no-cors',
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -860,7 +912,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
     )
       .then((response) => {
         if (response.ok) {
-          response.json().then(async (json) => {
+          response.json().then(async () => {
             await updateSigninStatus(userSignIn)
             Notification(
               NotificationType.success,
@@ -882,8 +934,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
         messageId={emailId}
         threadsId={threadsId}
         handleSingleDelete={handleSingleDelete}
-        access_token={gmailConnection.gmail_connection[0].access_token}
-        user={gmailConnection.gmail_connection[0].email}
+        access_token={authToken}
+        user={gmailConnection?.gmail_connection[0].email}
       />
     )
   }
@@ -955,9 +1007,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
   const handleSearch = (e) => {
     if (e.length > 0) {
       fetch(
-        `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?q=${e}&access_token=${gmailConnection.gmail_connection[0].access_token}`,
+        `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?q=${e}&access_token=${authToken}`,
         {
-          // mode: 'no-cors',
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -977,7 +1028,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
             })
           }
         })
-        .catch((error) => {
+        .catch(() => {
           setShowSearch(false)
         })
     } else {
@@ -991,9 +1042,8 @@ export const Inbox: FC<P> = ({ ...props }) => {
     await Promise.all(
       msg.map(async (msg) => {
         return fetch(
-          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${gmailConnection.gmail_connection[0].access_token}`,
+          `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${authToken}`,
           {
-            // mode: 'no-cors',
             method: 'GET',
             headers: {
               Accept: 'application/json',
@@ -1017,6 +1067,7 @@ export const Inbox: FC<P> = ({ ...props }) => {
     setSearchResult(val)
     setIsLoading(false)
   }
+
   return (
     <div className={styles.emailContainer}>
       <Layout>
@@ -1162,24 +1213,10 @@ export const Inbox: FC<P> = ({ ...props }) => {
               tabBarStyle={{ backgroundColor: '#FFF' }}
               minHeight="1px"
               onChange={(e) => {
-                handleTabChange(e)
+                handleTabChange(e).then()
               }}
             >
               <div className={styles.inboxContainers}>
-                {/* {!readEmail && (
-                <Table
-                  columns={columns}
-                  dataSource={inboxEmail}
-                  rowSelection={rowSelection}
-                  loading={isLoading}
-                  showSizeChanger={inboxEmail.length > 10}
-                  onRowClick={(e) => handleRowClick(e)}
-                />
-              )}
-
-              {readEmail && (
-                <ReadEmail privateMenu={privatemenu} messageId={emailId} />
-              )} */}
                 {readEmail
                   ? renderReadEmail()
                   : renderList(columns, inboxEmail, rowSelection)}
