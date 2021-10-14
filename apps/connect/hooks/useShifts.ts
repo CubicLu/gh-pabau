@@ -21,15 +21,16 @@ export default function useShifts(shiftsResult, bookingsResult) {
     }
   }
 
-  const getShiftsOnDate = (date) => {
+  const getShiftsOnDate = (date, duration = 60) => {
     const shiftsIndex = date.format('YYYYMMDD')
     if (shiftsByDate[shiftsIndex]?.length > 0) {
+      const timeslots = getDateTimeslots(date, duration)
+      const availability = timeOfDayTimeslotsAvailability(timeslots)
+
       return {
         key: shiftsIndex,
         shifts: shiftsByDate[shiftsIndex],
-        morning: true,
-        afternoon: true,
-        evening: false,
+        ...availability,
       }
     } else {
       return false
@@ -41,12 +42,35 @@ export default function useShifts(shiftsResult, bookingsResult) {
     return !shiftsByDate[shiftsIndex]
   }
 
+  const timeOfDayTimeslotsAvailability = (timeslots) => {
+    const availability = {
+      morning: false,
+      afternoon: false,
+      evening: false,
+    }
+
+    for (const t of timeslots) {
+      const start_num = t.substr(0, 2)
+      if (start_num < 12) {
+        availability.morning = true
+      }
+      if (start_num >= 12 && start_num < 17) {
+        availability.afternoon = true
+      }
+      if (start_num >= 17) {
+        availability.evening = true
+      }
+    }
+
+    return availability
+  }
+
   const getDateTimeslots = (date, duration = 60) => {
     const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
     if (!shiftsByDate[shiftsIndex]) {
       return []
     }
-    const durationSec = duration * 60
+
     const shift = shiftsByDate[shiftsIndex][0]
     const shiftStart = moment(decimalToISO8601(shift.start))
     const shiftEnd = moment(decimalToISO8601(shift.end))

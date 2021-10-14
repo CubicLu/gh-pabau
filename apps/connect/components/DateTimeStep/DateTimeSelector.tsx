@@ -104,7 +104,6 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
 
   const renderTimeslots = () => {
     const timeslots = getDateTimeslots(selectedDate)
-    const usedTimeslots = []
     return (
       <div className={Styles.scheduleWrap}>
         <div className={Styles.btnDate}>
@@ -288,13 +287,13 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
             onSelect={dateSelectedHandler}
             disabledDate={dateHasShift}
           />
-          <h4>{moment(selectedDate).add(1, 'M').format('MMMM YYYY')}</h4>
-          <Calendar
-            value={moment(selectedDate).add(1, 'M')}
-            dateCellRender={dateCellRender}
-            onSelect={dateSelectedHandler}
-            disabledDate={dateHasShift}
-          />
+          {/*<h4>{moment(selectedDate).add(1, 'M').format('MMMM YYYY')}</h4>*/}
+          {/*<Calendar*/}
+          {/*  value={moment(selectedDate).add(1, 'M')}*/}
+          {/*  dateCellRender={dateCellRender}*/}
+          {/*  onSelect={dateSelectedHandler}*/}
+          {/*  disabledDate={dateHasShift}*/}
+          {/*/>*/}
           {/*<h4>{moment(selectedDate).add(2, 'M').format('MMMM YYYY')}</h4>*/}
           {/*<Calendar*/}
           {/*  value={moment().add(2, 'M')}*/}

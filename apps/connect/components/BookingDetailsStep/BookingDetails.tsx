@@ -84,7 +84,8 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
       {/*<RenderProduct products={products} type={type} tooltip={tooltip} />*/}
       <div className={styles.accountLoginWrapper}>
         <p>
-          {t('connect.onlinebooking.bookdetail.alreadyaccount')} <a>Log in</a>
+          {t('connect.onlinebooking.bookdetail.alreadyaccount')}
+          <a>Log in</a>
         </p>
         <div className={styles.btnSocial} onClick={() => setconfirm(true)}>
           <span>
@@ -286,7 +287,7 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
               <SubmitButton
                 className={styles.btnSubmit}
                 type="primary"
-                disabled={valid && verify ? false : true}
+                disabled={!(valid && verify)}
               >
                 {t('connect.onlinebooking.bookdetail.submit')}
               </SubmitButton>

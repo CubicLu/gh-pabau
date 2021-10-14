@@ -8,14 +8,14 @@ import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
 import { useOnlineBookableLocationsQuery } from '@pabau/graphql'
 import { getDistanceFromLatLonInKm } from '../../helpers/DistanceHelper'
-import { canIBookLocation } from '../../helpers/LocationPermissionsHelper'
+import useLocationPermissions from '../../hooks/useLocationPermissions'
 export interface P {
   onSelected: () => void
 }
 
 const LocationSelector: FC<P> = ({ onSelected }) => {
   const [auto, setauto] = useState(true)
-  const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
+  const { setSelectedData, actionTypes } = useSelectedDataStore()
   const { t } = useTranslationI18()
   const settings = useContext(SettingsContext)
 
@@ -24,6 +24,7 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
     lng: 0,
     lat: 0,
   })
+  const { canLocationPerformService } = useLocationPermissions()
 
   const getLatLng = () => {
     navigator.geolocation.getCurrentPosition((item) => {
@@ -109,7 +110,7 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
           <div className={Styles.chooseWrapper}>
             <p className={Styles.chooseHeading}>{formattedAddress}</p>
             {locationsResult.Public_Locations.map((val) => {
-              if (!canIBookLocation(val.id, selectedData.services)) return false
+              if (!canLocationPerformService(val.id)) return false
               return (
                 <div
                   key={val.id}

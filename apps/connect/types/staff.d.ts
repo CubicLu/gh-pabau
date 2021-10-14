@@ -17,8 +17,8 @@ export interface ServiceUserTier {
 }
 
 export interface StaffNote {
-  id: number
-  Dependents: string
+  ID?: number
+  Dependents?: string
 }
 
 export interface Staff {

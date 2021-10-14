@@ -7,6 +7,7 @@ import { SettingsContext } from '../../context/settings-context'
 import useServices from '../../hooks/useServices'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import EmployeeModal from './EmployeeModal'
+import useStaffPermissions from '../../hooks/useStaffPermissions'
 export interface P {
   onSelected: () => void
 }
@@ -17,6 +18,10 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
   const [getTotalServiceCost] = useServices()
   const [activeStaffModalID, setActiveStaffModalID] = useState(0)
   const settings = useContext(SettingsContext)
+  const {
+    canStaffPerformInLocation,
+    canStaffPerformService,
+  } = useStaffPermissions()
 
   const {
     loading: loadingStaff,
@@ -35,50 +40,60 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
   return (
     <div className={Styles.mainBox}>
       <h4>{t('connect.onlinebooking.employes.title')}</h4>
-      {staffResult.Public_Staff.map((val) => (
-        <div
-          key={val.Public_User.id}
-          onClick={() => {
-            setSelectedData(actionTypes.SET_EMPLOYEE, val)
-            onSelected()
-          }}
-          className={Styles.oldBox}
-        >
-          <div className={Styles.contentBox}>
-            <img
-              src={settings.pod_url + val.Avatar}
-              alt="User Avatar"
-              className={Styles.userImage}
-            />
-            <div className={Styles.userDetailWrapper}>
-              <div className={Styles.userDetail}>
-                <div className={Styles.userdetailInner}>
-                  <p className={Styles.userName}>{val.Public_User.full_name}</p>
-                  {settings.BookitProGeneral.allow_rating && (
-                    <QuestionCircleOutlined
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setActiveStaffModalID(val.ID)
-                        e.stopPropagation()
-                      }}
-                    />
-                  )}
-                </div>
-                <p>{val.Position}</p>
-              </div>
+      {staffResult.Public_Staff.map((val) => {
+        if (
+          !canStaffPerformInLocation(val) ||
+          !canStaffPerformService(val.Public_User.id)
+        )
+          return false
 
-              <p className={Styles.userCharge}>
-                {`£${getTotalServiceCost(
-                  val.Public_User.Public_ServiceUserTier
-                )}`}
-              </p>
+        return (
+          <div
+            key={val.Public_User.id}
+            onClick={() => {
+              setSelectedData(actionTypes.SET_EMPLOYEE, val)
+              onSelected()
+            }}
+            className={Styles.oldBox}
+          >
+            <div className={Styles.contentBox}>
+              <img
+                src={settings.pod_url + val.Avatar}
+                alt="User Avatar"
+                className={Styles.userImage}
+              />
+              <div className={Styles.userDetailWrapper}>
+                <div className={Styles.userDetail}>
+                  <div className={Styles.userdetailInner}>
+                    <p className={Styles.userName}>
+                      {val.Public_User.full_name}
+                    </p>
+                    {settings.BookitProGeneral.allow_rating && (
+                      <QuestionCircleOutlined
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setActiveStaffModalID(val.ID)
+                          e.stopPropagation()
+                        }}
+                      />
+                    )}
+                  </div>
+                  <p>{val.Position}</p>
+                </div>
+
+                <p className={Styles.userCharge}>
+                  {`£${getTotalServiceCost(
+                    val.Public_User.Public_ServiceUserTier
+                  )}`}
+                </p>
+              </div>
+              {activeStaffModalID === val.ID && (
+                <EmployeeModal employeeData={val} estimatedCost={0} />
+              )}
             </div>
-            {activeStaffModalID === val.ID && (
-              <EmployeeModal employeeData={val} estimatedCost={0} />
-            )}
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
