@@ -8,8 +8,8 @@ import { CustomScrollbar } from '../CustomScrollbar/Index'
 import styles from '../../pages/activities/index.module.less'
 import { defaultColumns } from './ActivitiesTable'
 import { useMedia } from 'react-use'
-import { useUser } from '../../context/UserContext'
 import { CaretRightOutlined } from '@ant-design/icons'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 interface AddColumnsProps {
   upsertActiveColumnMutation: MutationFunction
@@ -18,6 +18,7 @@ interface AddColumnsProps {
   setSelectedColumn?: (val: string[]) => void
   visibleAddColumnPopover?: boolean
   setVisibleAddColumnPopover?: (val) => void
+  loggedUser?: Partial<AuthenticatedUser> & JwtUser
 }
 export const columnNames = {
   done: { label: 'Done', id: '' },
@@ -65,6 +66,7 @@ export const columnNames = {
   leadSource: { label: 'Lead source', id: 'lead.leadSource' },
   wonBy: { label: 'Won by', id: 'lead.wonBy' },
   leadStage: { label: 'Lead stage', id: 'lead.leadStage' },
+  leadStatus: { label: 'Lead status', id: 'lead.leadStatus' },
   clientName: { label: 'Client name', id: 'client.firstName' },
   label: { label: 'Label', id: 'client.label' },
   clientEmail: { label: 'Client email', id: 'client.email' },
@@ -119,6 +121,7 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     visibleAddColumnPopover,
     setVisibleAddColumnPopover,
     upsertActiveColumnMutation,
+    loggedUser,
   }) => {
     const { t } = useTranslationI18()
     const isMobile = useMedia('(max-width: 768px)', false)
@@ -131,7 +134,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
     const [visibleOptions, setVisibleOptions] = useState([])
     const [visibleOptionsSelect, setVisibleOptionsSelect] = useState([])
     const [defaultColumnList, setDefaultColumnList] = useState([])
-    const loggedUser = useUser()
 
     const activityOptions = useMemo(
       () => [
@@ -248,6 +250,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
         {
           label: t('activityList.column.leadStage'),
           value: columnNames.leadStage.label,
+        },
+        {
+          label: t('activityList.column.leadStatus'),
+          value: columnNames.leadStatus.label,
         },
         {
           label: t('activityList.column.leadDescription'),
@@ -413,9 +419,20 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
       handleVisible()
       await upsertActiveColumnMutation({
         variables: {
-          columns: JSON.stringify({ columns: activeColumns }),
-          userId: loggedUser?.me?.user,
-          companyId: loggedUser?.me?.company,
+          userId: loggedUser?.user,
+          companyId: loggedUser?.company,
+          update: {
+            columns: { set: JSON.stringify({ columns: activeColumns }) },
+          },
+          create: {
+            columns: JSON.stringify({ columns: activeColumns }),
+            User: {
+              connect: { id: loggedUser?.user },
+            },
+            Company: {
+              connect: { id: loggedUser?.company },
+            },
+          },
         },
       })
     }
