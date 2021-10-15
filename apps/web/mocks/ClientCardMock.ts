@@ -154,83 +154,51 @@ export const financialInvoices = {
           views: 2,
           type: 'email',
         },
-
         {
           title: 'Refund #38128',
-
           date: '12 Mar at 3:00 PM',
-
           notif_by: 'Martin Wade',
-
           amount: 32,
-
           type: 'refund',
         },
-
         {
           title: 'Payment deleted #38128',
-
           date: '12 Mar at 3:00 PM',
-
           notif_by: 'Martin Wade',
-
           amount: 41,
-
           type: 'delete',
         },
-
         {
           title: 'Payment added #38128',
-
           date: '12 Mar at 3:00 PM',
-
           notif_by: 'Martin Wade',
-
           amount: 41,
-
           type: 'add',
         },
       ],
-
       payments: [
         {
           id: 1,
-
           employee: 'Anika Kadir',
-
           method: 'Electronic Transfer',
-
           amount: 28,
-
           date: '18/12/2020',
-
           note: '',
-
           showNote: false,
-
           noteSaved: false,
         },
-
         {
           id: 2,
-
           employee: 'John Doe',
-
           method: 'Electronic Transfer',
-
           amount: 400,
-
           date: '02/12/2020',
-
           note: 'edited prices',
-
           showNote: true,
-
           noteSaved: true,
         },
       ],
     },
-
     {
       id: '923346',
 
@@ -294,7 +262,6 @@ export const financialInvoices = {
 
       paymentStatus: 2,
     },
-
     {
       id: '9233432',
 

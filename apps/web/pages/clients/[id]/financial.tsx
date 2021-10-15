@@ -8,7 +8,6 @@ import { Payments } from '../../../components/ClientCard/client-financial-layout
 import { Items } from '../../../components/ClientCard/client-financial-layout/items/Items'
 import { Voided } from '../../../components/ClientCard/client-financial-layout/voided/Voided'
 import { Statements } from '../../../components/ClientCard/client-financial-layout/statements/Statements'
-import { ClientFinancialsLayoutProps } from '../../../components/ClientCard/client-financial-layout/ClientFinancialsLayout'
 import { useQuery } from '@apollo/client'
 import { GetFinanceInvoicesDocument } from '@pabau/graphql'
 import {
@@ -30,9 +29,10 @@ const Appointments = () => {
     voidedPayments: financialVoidedPayments,
     statements: financialStatements,
   }
-  const [data, setData] = useState<ClientFinancialsLayoutProps>(props)
+  const [data, setData] = useState(props)
 
   const { data: invoice } = useQuery(GetFinanceInvoicesDocument, {
+    skip: !router.query.id,
     variables: {
       id: Number.parseInt(`${router.query.id}`),
     },
@@ -160,13 +160,6 @@ const Appointments = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoice])
 
-  const tabsProps = {
-    ...financialInvoices,
-    payments: financialPayments,
-    items: financialItems,
-    voidedPayments: financialVoidedPayments,
-    statements: financialStatements,
-  }
   return (
     <ClientCardLayout
       clientId={Number(router.query['id'])}
@@ -178,17 +171,21 @@ const Appointments = () => {
         menuItems={[`Invoices`, `Payments`, `Items`, `Voided`, `Statements`]}
       >
         <Invoices
-          dataProps={tabsProps}
+          dataProps={data}
           invoiceEmployeeOptions={invoiceEmployeeOptions}
           locationOptions={locationOptions}
         />
-        <Payments {...tabsProps} />
+
+        <Payments {...data} />
+
         <Items
-          dataProps={tabsProps}
+          dataProps={data}
           invoiceEmployeeOptions={invoiceEmployeeOptions}
         />
-        <Voided {...tabsProps} />
-        <Statements dataProps={tabsProps} locationOptions={locationOptions} />
+
+        <Voided {...data} />
+
+        <Statements dataProps={data} locationOptions={locationOptions} />
       </TabMenu>
     </ClientCardLayout>
   )

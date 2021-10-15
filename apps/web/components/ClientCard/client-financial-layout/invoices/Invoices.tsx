@@ -48,10 +48,16 @@ interface P {
   dataProps: ClientFinancialsLayoutProps
   invoiceEmployeeOptions: InvoiceEmployeeOptionProp[]
   locationOptions: LocationOptionProp[]
+  onChangePagination?(take: number, skip: number): void
 }
 
 export const Invoices: FC<P> = (props) => {
-  const { dataProps, invoiceEmployeeOptions, locationOptions } = props
+  const {
+    dataProps,
+    invoiceEmployeeOptions,
+    locationOptions,
+    onChangePagination,
+  } = props
   const { totalInvoiced, totalOutstanding } = dataProps
   const [invoices, setInvoices] = useState(dataProps.invoices)
   const { Text, Title } = Typography
@@ -100,6 +106,10 @@ export const Invoices: FC<P> = (props) => {
   }
 
   useEffect(() => {
+    setInvoices(dataProps.invoices)
+  }, [dataProps])
+
+  useEffect(() => {
     if (invoices) {
       setPaginateData((d) => ({
         ...d,
@@ -112,6 +122,7 @@ export const Invoices: FC<P> = (props) => {
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
     setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+    onChangePagination?.(paginateData.limit, offset)
   }
 
   const onPressEditInvoice = (invoice) => {
@@ -429,7 +440,6 @@ export const Invoices: FC<P> = (props) => {
             showingRecords={paginateData.showingRecords}
           />
         </div>
-
         <InvoiceFooter
           buttons={[
             {
