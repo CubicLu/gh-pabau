@@ -1,4 +1,4 @@
-import React, { useState, FC, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { KanbanCard } from '@pabau/ui'
 import {
