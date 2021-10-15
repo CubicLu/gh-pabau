@@ -66,6 +66,11 @@ interface AppointmentHandler {
   handleDelete: () => void
   handleEditNotes: (id: number, value?: string) => void
   handleCancel: (index) => void
+  handleAdjustApptNotification?: (
+    id: number,
+    reminder: boolean,
+    requestFeedback: number
+  ) => void
 }
 
 export const ClientAppointmentCard: FC<
@@ -86,9 +91,12 @@ export const ClientAppointmentCard: FC<
     isVideoCall,
     index,
     bookedBy,
+    smsReminder,
+    feedbackSurvey,
     handleDelete,
     handleEditNotes,
     handleCancel,
+    handleAdjustApptNotification,
   } = props
   const { t } = useTranslation('common')
   const [form] = Form.useForm()
@@ -96,8 +104,10 @@ export const ClientAppointmentCard: FC<
   const [openPopover, setOpenPopover] = useState(false)
   const [openCancelPopover, setOpenCancelPopover] = useState(false)
   const [openNotificationModal, setOpenNotificationModal] = useState(false)
-  const [reminder, setReminder] = useState(false)
-  const [requestFeedback, setRequestFeedBack] = useState(false)
+  const [reminder, setReminder] = useState(smsReminder)
+  const [requestFeedback, setRequestFeedBack] = useState(
+    feedbackSurvey === 0 ? false : true
+  )
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [showNoteEditor, setShowNoteEditor] = useState(false)
   const [editNote, setEditNote] = useState(notes)
@@ -559,6 +569,15 @@ export const ClientAppointmentCard: FC<
         requestFeedback={requestFeedback}
         handleReminder={(reminder) => handleReminder(reminder)}
         handleRequestFeedback={(reminder) => handleRequestFeedback(reminder)}
+        onSave={(reminder, requestFeedback) => {
+          let feedback = 0
+          if (feedbackSurvey === 0 && requestFeedback) {
+            feedback = 1
+          } else {
+            feedback = feedbackSurvey
+          }
+          handleAdjustApptNotification?.(id, reminder, feedback)
+        }}
       />
       <Modal
         visible={deleteModalVisible}

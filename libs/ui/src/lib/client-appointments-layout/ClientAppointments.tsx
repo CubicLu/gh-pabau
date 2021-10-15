@@ -57,6 +57,7 @@ export interface ClientAppointmentItem {
   smsReminder: boolean
   emailReminder: boolean
   remindersSent: boolean
+  feedbackSurvey: number
   notes?: string
   isVideoCall: number
   bookedBy: string
@@ -67,6 +68,7 @@ interface P {
   appointments?: ClientAppointmentItem[]
   loading?: boolean
   updateApptNoteMutation?: MutationFunction
+  adjustApptNotificationsMutation?: MutationFunction
 }
 
 //TODO: remove these dummy funcctions
@@ -85,6 +87,7 @@ export const ClientAppointments = ({
   appointments,
   loading,
   updateApptNoteMutation,
+  adjustApptNotificationsMutation,
 }: P) => {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -93,6 +96,20 @@ export const ClientAppointments = ({
       variables: {
         bookingId: id,
         note,
+      },
+    })
+  }
+
+  const adjustApptNotification = (
+    id: number,
+    reminder: boolean,
+    requestFeedback: number
+  ) => {
+    adjustApptNotificationsMutation?.({
+      variables: {
+        booking_id: id,
+        sent_sms: reminder ? 1 : 0,
+        sent_survey: requestFeedback,
       },
     })
   }
@@ -562,6 +579,17 @@ export const ClientAppointments = ({
                                   handleEditNotes={(id, value) => {
                                     editNote(id, value)
                                   }}
+                                  handleAdjustApptNotification={(
+                                    id,
+                                    reminder,
+                                    requestFeedback
+                                  ) => {
+                                    adjustApptNotification(
+                                      id,
+                                      reminder,
+                                      requestFeedback
+                                    )
+                                  }}
                                   handleCancel={(index) =>
                                     handleCancelAppointment(index)
                                   }
@@ -596,6 +624,17 @@ export const ClientAppointments = ({
                               handleDelete={() => deleteAppointment(index)}
                               handleEditNotes={(id, value) => {
                                 editNote(id, value)
+                              }}
+                              handleAdjustApptNotification={(
+                                id,
+                                reminder,
+                                requestFeedback
+                              ) => {
+                                adjustApptNotification(
+                                  id,
+                                  reminder,
+                                  requestFeedback
+                                )
                               }}
                               handleCancel={(index) =>
                                 handleCancelAppointment(index)
@@ -949,6 +988,17 @@ export const ClientAppointments = ({
                               handleEditNotes={(index, value) =>
                                 editNote(index, value)
                               }
+                              handleAdjustApptNotification={(
+                                id,
+                                reminder,
+                                requestFeedback
+                              ) => {
+                                adjustApptNotification(
+                                  id,
+                                  reminder,
+                                  requestFeedback
+                                )
+                              }}
                               handleCancel={(index) =>
                                 handleCancelAppointment(index)
                               }
@@ -1320,6 +1370,17 @@ export const ClientAppointments = ({
                               handleEditNotes={(index, value) =>
                                 editNote(index, value)
                               }
+                              handleAdjustApptNotification={(
+                                id,
+                                reminder,
+                                requestFeedback
+                              ) => {
+                                adjustApptNotification(
+                                  id,
+                                  reminder,
+                                  requestFeedback
+                                )
+                              }}
                               handleCancel={(index) =>
                                 handleCancelAppointment(index)
                               }
@@ -1691,6 +1752,17 @@ export const ClientAppointments = ({
                               handleEditNotes={(index, value) =>
                                 editNote(index, value)
                               }
+                              handleAdjustApptNotification={(
+                                id,
+                                reminder,
+                                requestFeedback
+                              ) => {
+                                adjustApptNotification(
+                                  id,
+                                  reminder,
+                                  requestFeedback
+                                )
+                              }}
                               handleCancel={(index) =>
                                 handleCancelAppointment(index)
                               }
