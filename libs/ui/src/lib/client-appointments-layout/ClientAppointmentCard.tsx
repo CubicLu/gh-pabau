@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react'
-import Link from 'next/link'
 import moment from 'moment'
 import cn from 'classnames'
 import {
@@ -39,7 +38,6 @@ import {
   ClientAppointmentItem,
   Notification,
   NotificationType,
-  CancelReason,
 } from '@pabau/ui'
 import SetNotification from './SetNotification'
 import styles from './ClientAppointmentCard.module.less'
@@ -61,22 +59,6 @@ export enum AppointmentStatus {
   inRoom = 'in room',
 }
 
-interface EditableNoteP {
-  value?: string
-  name: string
-  placeholder?: string
-  view?: string
-  tooltip?: string
-  onSave: (value?: string, selectedValue?: number) => void
-  type?: string
-  options?: CancelReason[]
-  selectedValue?: number
-}
-
-interface CancelReasons {
-  cancelReasons?: CancelReason[]
-}
-
 interface AppointmentHandler {
   index: number
   handleDelete: () => void
@@ -85,7 +67,7 @@ interface AppointmentHandler {
 }
 
 export const ClientAppointmentCard: FC<
-  ClientAppointmentItem & AppointmentHandler & CancelReasons
+  ClientAppointmentItem & AppointmentHandler
 > = (props) => {
   const {
     serviceName,
@@ -100,9 +82,6 @@ export const ClientAppointmentCard: FC<
     notes,
     isVideoCall,
     index,
-    cancelReasons,
-    cancellationReason,
-    reasonComment,
     handleDelete,
     handleEditNotes,
     handleCancel,
@@ -116,9 +95,8 @@ export const ClientAppointmentCard: FC<
   const [reminder, setReminder] = useState(false)
   const [requestFeedback, setRequestFeedBack] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [showNoteEditor, setShowNoteEditor] = useState(false)
   const [editNote, setEditNote] = useState(notes)
-  const [editReason, setEditReason] = useState(cancellationReason)
-  const [editReasonComment, setEditReasonComment] = useState(reasonComment)
   const joinVideoUrl = 'meet.pabau.com/12r8d'
 
   const handleReminder = (reminder) => {
@@ -311,18 +289,15 @@ export const ClientAppointmentCard: FC<
               value={cancelFormik.values.reason}
               onSelect={(value) => handleChange('reason', value)}
             >
-              <Option value={''}>
-                {t('client.appointment.card.pop.cancel.reason.placeholder')}
+              <Option value="work">
+                {t('client.appointment.card.pop.cancel.reason.work')}
               </Option>
-              {cancelReasons &&
-                cancelReasons?.length > 0 &&
-                cancelReasons.map(({ text, value }) => {
-                  return (
-                    <Option key={value} value={value}>
-                      {text}
-                    </Option>
-                  )
-                })}
+              <Option value="booking-error">
+                {t('client.appointment.card.pop.cancel.reason.booking.error')}
+              </Option>
+              <Option value="changed-mind">
+                {t('client.appointment.card.pop.cancel.reason.changed.mind')}
+              </Option>
             </Select>
             {cancelFormik.errors.reason && (
               <div className={styles.error}>{cancelFormik.errors.reason}</div>
@@ -339,9 +314,9 @@ export const ClientAppointmentCard: FC<
             {t(
               'client.appointment.card.pop.cancel.reason.manage.cancel.reasons'
             )}
-            <Link href="/setup/cancellation-reasons">
+            <a href="/">
               {t('client.appointment.card.pop.cancel.reason.company.settings')}
-            </Link>
+            </a>
           </div>
           <div className={styles.submitButton}>
             <Button
@@ -429,26 +404,85 @@ export const ClientAppointmentCard: FC<
               )}) @ ${moment(apptDate).format('hh:mm')} | ${locationName}`}</p>
             </div>
           </div>
-          <EditableNote
-            type="text"
-            value={editNote}
-            name={'notes'}
-            placeholder={t('client.appointment.card.add.description')}
-            onSave={(value) => setEditNote(value)}
-          />
-          {cancellationReason && (
-            <EditableNote
-              type="select"
-              value={editReasonComment}
-              selectedValue={editReason}
-              options={cancelReasons}
-              name={'cancellationReason'}
-              tooltip={t('client.appointment.card.edit.cancel.reason')}
-              onSave={(value, selectedValue) => {
-                setEditReasonComment(value)
-                setEditReason(selectedValue)
-              }}
-            />
+          {notes && (
+            <div className={styles.notesWrapper}>
+              {!showNoteEditor && (
+                <div className={styles.notes}>
+                  <div>{notes}</div>
+                </div>
+              )}
+              {showNoteEditor ? (
+                <div className={styles.noteEditor}>
+                  <textarea
+                    value={editNote}
+                    onChange={(e) => setEditNote(e.target.value)}
+                  />
+                  <div className={styles.noteEditorButtonWrapper}>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setShowNoteEditor(false)
+                        handleEditNotes(index, editNote)
+                      }}
+                    >
+                      {t('client.appointment.card.description.save')}
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => setShowNoteEditor(false)}
+                    >
+                      {t('client.appointment.card.description.cancel')}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={styles.addDescriptionNotice}
+                  onClick={() => setShowNoteEditor(true)}
+                >
+                  <span>{notes}</span>
+                  <EditFilled />
+                </div>
+              )}
+            </div>
+          )}
+          {!notes && (
+            <div className={styles.newNotesWrapper}>
+              {!showNoteEditor && (
+                <div
+                  className={styles.addDescriptionNotice}
+                  onClick={() => setShowNoteEditor(true)}
+                >
+                  <span>Add description</span>
+                  <EditFilled />
+                </div>
+              )}
+              {showNoteEditor && (
+                <div className={styles.noteEditor}>
+                  <textarea
+                    value={editNote}
+                    onChange={(e) => setEditNote(e.target.value)}
+                  />
+                  <div className={styles.noteEditorButtonWrapper}>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setShowNoteEditor(false)
+                        handleEditNotes(index, editNote)
+                      }}
+                    >
+                      {t('client.appointment.card.description.save')}
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => setShowNoteEditor(false)}
+                    >
+                      {t('client.appointment.card.description.cancel')}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
         <div className={styles.statusContainer}>
@@ -649,188 +683,6 @@ export const displayStatusLabel = (
     )
   }
   return null
-}
-
-const EditableNote: FC<EditableNoteP> = ({
-  value,
-  name,
-  placeholder,
-  tooltip,
-  onSave,
-  type = 'text',
-  options,
-  selectedValue,
-}) => {
-  const [editable, setEditable] = useState<boolean>(false)
-  const [editValue, setEditValue] = useState(value)
-  const [selectedOption, setSelectedOption] = useState(selectedValue)
-  const { t } = useTranslation('common')
-  const [form] = Form.useForm()
-
-  const handleCancel = () => {
-    setEditValue(value)
-    setSelectedOption(selectedValue)
-    setEditable(false)
-  }
-
-  const renderEditValue = () => {
-    return name === 'cancellationReason'
-      ? `${t('client.appointment.card.cancel.reasons')}: ${
-          options?.find(({ value }) => value === selectedValue)?.text
-        } ${value && `(${value})`}`
-      : value
-  }
-
-  if (value || selectedValue) {
-    return (
-      <div className={styles.notesWrapper}>
-        {editable ? (
-          type === 'text' ? (
-            <div className={styles.noteEditor}>
-              <textarea
-                className={styles.noteTextArea}
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-              />
-              <div className={styles.noteEditorButtonWrapper}>
-                <Button
-                  size="small"
-                  onClick={() => {
-                    setEditable(false)
-                    onSave(editValue)
-                    // handleEditNotes(index, editValue)
-                  }}
-                >
-                  {t('client.appointment.card.description.save')}
-                </Button>
-                <Button size="small" onClick={handleCancel}>
-                  {t('client.appointment.card.description.cancel')}
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className={cn(styles.noteEditor, styles.cancelNoteEditor)}>
-              <Form form={form} layout="horizontal">
-                <Form.Item
-                  label={t('client.appointment.card.pop.cancel.cancel.reson')}
-                >
-                  <Select
-                    placeholder={t(
-                      'client.appointment.card.pop.cancel.select.reason'
-                    )}
-                    value={selectedOption}
-                    onSelect={(value) => setSelectedOption(value)}
-                  >
-                    <Option value={''}>
-                      {t(
-                        'client.appointment.card.pop.cancel.reason.placeholder'
-                      )}
-                    </Option>
-                    {options &&
-                      options?.length > 0 &&
-                      options.map(({ value, text }) => {
-                        return (
-                          <Option key={value} value={value}>
-                            {text}
-                          </Option>
-                        )
-                      })}
-                  </Select>
-                  <div>
-                    <textarea
-                      className={styles.cancelTextArea}
-                      value={editValue}
-                      rows={1}
-                      onChange={(e) => setEditValue(e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.cancelReasonFooter}>
-                    <div className={styles.noteEditorButtonWrapper}>
-                      <Button
-                        size="small"
-                        onClick={() => {
-                          setEditable(false)
-                          onSave(editValue, selectedOption)
-                          // handleEditNotes(index, editValue)
-                        }}
-                      >
-                        {t('client.appointment.card.description.save')}
-                      </Button>
-                      <Button size="small" onClick={handleCancel}>
-                        {t('client.appointment.card.description.cancel')}
-                      </Button>
-                    </div>
-                    <span className={styles.deleteCircle}>
-                      <DeleteOutlined />
-                    </span>
-                  </div>
-                </Form.Item>
-              </Form>
-            </div>
-          )
-        ) : (
-          <>
-            <div className={styles.notes}>
-              <div>{renderEditValue()}</div>
-            </div>
-            <div
-              className={
-                type === 'select' ? styles.lineWrapper : styles.boxWrapper
-              }
-              onClick={() => setEditable(true)}
-            >
-              <span>{renderEditValue()}</span>
-              {tooltip ? (
-                <Tooltip placement="top" title={tooltip}>
-                  <EditFilled />
-                </Tooltip>
-              ) : (
-                <EditFilled />
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    )
-  } else {
-    return (
-      <div className={styles.newNotesWrapper}>
-        {!editable && (
-          <div
-            className={styles.addDescriptionNotice}
-            onClick={() => setEditable(true)}
-          >
-            <span>{placeholder}</span>
-            <EditFilled />
-          </div>
-        )}
-        {editable && (
-          <div className={styles.noteEditor}>
-            <textarea
-              value={editValue}
-              className={styles.noteTextArea}
-              onChange={(e) => setEditValue(e.target.value)}
-            />
-            <div className={styles.noteEditorButtonWrapper}>
-              <Button
-                size="small"
-                onClick={() => {
-                  setEditable(false)
-                  onSave(editValue)
-                  // handleEditNotes(index, editNote)
-                }}
-              >
-                {t('client.appointment.card.description.save')}
-              </Button>
-              <Button size="small" onClick={handleCancel}>
-                {t('client.appointment.card.description.cancel')}
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  }
 }
 
 export default ClientAppointmentCard
