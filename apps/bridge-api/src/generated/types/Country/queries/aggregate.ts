@@ -4,7 +4,7 @@ export const CountryAggregateQuery = queryField('aggregateCountry', {
   type: 'AggregateCountry',
   args: {
     where: 'CountryWhereInput',
-    orderBy: list('CountryOrderByWithRelationInput'),
+    orderBy: list('CountryOrderByInput'),
     cursor: 'CountryWhereUniqueInput',
     distinct: 'CountryScalarFieldEnum',
     skip: 'Int',

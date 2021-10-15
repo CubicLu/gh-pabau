@@ -6,7 +6,7 @@ export const ManageCustomFieldFindManyQuery = queryField(
     type: nonNull(list(nonNull('ManageCustomField'))),
     args: {
       where: 'ManageCustomFieldWhereInput',
-      orderBy: list('ManageCustomFieldOrderByWithRelationInput'),
+      orderBy: list('ManageCustomFieldOrderByInput'),
       cursor: 'ManageCustomFieldWhereUniqueInput',
       distinct: 'ManageCustomFieldScalarFieldEnum',
       skip: 'Int',

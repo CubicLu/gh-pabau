@@ -6,7 +6,7 @@ export const CommunicationHashFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CommunicationHashWhereInput',
-      orderBy: list('CommunicationHashOrderByWithRelationInput'),
+      orderBy: list('CommunicationHashOrderByInput'),
       cursor: 'CommunicationHashWhereUniqueInput',
       distinct: 'CommunicationHashScalarFieldEnum',
       skip: 'Int',

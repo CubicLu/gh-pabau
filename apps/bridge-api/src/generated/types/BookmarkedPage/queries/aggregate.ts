@@ -6,7 +6,7 @@ export const BookmarkedPageAggregateQuery = queryField(
     type: 'AggregateBookmarkedPage',
     args: {
       where: 'BookmarkedPageWhereInput',
-      orderBy: list('BookmarkedPageOrderByWithRelationInput'),
+      orderBy: list('BookmarkedPageOrderByInput'),
       cursor: 'BookmarkedPageWhereUniqueInput',
       distinct: 'BookmarkedPageScalarFieldEnum',
       skip: 'Int',

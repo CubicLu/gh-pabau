@@ -6,7 +6,7 @@ export const MedicalConditionFindManyQuery = queryField(
     type: nonNull(list(nonNull('MedicalCondition'))),
     args: {
       where: 'MedicalConditionWhereInput',
-      orderBy: list('MedicalConditionOrderByWithRelationInput'),
+      orderBy: list('MedicalConditionOrderByInput'),
       cursor: 'MedicalConditionWhereUniqueInput',
       distinct: 'MedicalConditionScalarFieldEnum',
       skip: 'Int',

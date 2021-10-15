@@ -4,7 +4,7 @@ export const InvTaxRateFindManyQuery = queryField('findManyInvTaxRate', {
   type: nonNull(list(nonNull('InvTaxRate'))),
   args: {
     where: 'InvTaxRateWhereInput',
-    orderBy: list('InvTaxRateOrderByWithRelationInput'),
+    orderBy: list('InvTaxRateOrderByInput'),
     cursor: 'InvTaxRateWhereUniqueInput',
     distinct: 'InvTaxRateScalarFieldEnum',
     skip: 'Int',

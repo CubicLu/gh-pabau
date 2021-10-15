@@ -6,7 +6,7 @@ export const CmPurchaseOrderFindFirstQuery = queryField(
     type: 'CmPurchaseOrder',
     args: {
       where: 'CmPurchaseOrderWhereInput',
-      orderBy: list('CmPurchaseOrderOrderByWithRelationInput'),
+      orderBy: list('CmPurchaseOrderOrderByInput'),
       cursor: 'CmPurchaseOrderWhereUniqueInput',
       distinct: 'CmPurchaseOrderScalarFieldEnum',
       skip: 'Int',

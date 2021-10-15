@@ -16,7 +16,7 @@ export const CommunicationContent = objectType({
       type: 'Communication',
       args: {
         where: 'CommunicationWhereInput',
-        orderBy: 'CommunicationOrderByWithRelationInput',
+        orderBy: 'CommunicationOrderByInput',
         cursor: 'CommunicationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -24,12 +24,6 @@ export const CommunicationContent = objectType({
       },
       resolve(root: any) {
         return root.Communications
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CommunicationContentCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

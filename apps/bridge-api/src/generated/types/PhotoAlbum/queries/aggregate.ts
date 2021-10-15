@@ -4,7 +4,7 @@ export const PhotoAlbumAggregateQuery = queryField('aggregatePhotoAlbum', {
   type: 'AggregatePhotoAlbum',
   args: {
     where: 'PhotoAlbumWhereInput',
-    orderBy: list('PhotoAlbumOrderByWithRelationInput'),
+    orderBy: list('PhotoAlbumOrderByInput'),
     cursor: 'PhotoAlbumWhereUniqueInput',
     distinct: 'PhotoAlbumScalarFieldEnum',
     skip: 'Int',

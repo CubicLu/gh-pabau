@@ -4,7 +4,7 @@ export const AtConcernFindFirstQuery = queryField('findFirstAtConcern', {
   type: 'AtConcern',
   args: {
     where: 'AtConcernWhereInput',
-    orderBy: list('AtConcernOrderByWithRelationInput'),
+    orderBy: list('AtConcernOrderByInput'),
     cursor: 'AtConcernWhereUniqueInput',
     distinct: 'AtConcernScalarFieldEnum',
     skip: 'Int',

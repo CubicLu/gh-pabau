@@ -4,7 +4,7 @@ export const ContactAlertAggregateQuery = queryField('aggregateContactAlert', {
   type: 'AggregateContactAlert',
   args: {
     where: 'ContactAlertWhereInput',
-    orderBy: list('ContactAlertOrderByWithRelationInput'),
+    orderBy: list('ContactAlertOrderByInput'),
     cursor: 'ContactAlertWhereUniqueInput',
     distinct: 'ContactAlertScalarFieldEnum',
     skip: 'Int',

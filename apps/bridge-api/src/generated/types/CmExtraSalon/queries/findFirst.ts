@@ -4,7 +4,7 @@ export const CmExtraSalonFindFirstQuery = queryField('findFirstCmExtraSalon', {
   type: 'CmExtraSalon',
   args: {
     where: 'CmExtraSalonWhereInput',
-    orderBy: list('CmExtraSalonOrderByWithRelationInput'),
+    orderBy: list('CmExtraSalonOrderByInput'),
     cursor: 'CmExtraSalonWhereUniqueInput',
     distinct: 'CmExtraSalonScalarFieldEnum',
     skip: 'Int',

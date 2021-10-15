@@ -6,7 +6,7 @@ export const SupplierCategoryFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'SupplierCategoryWhereInput',
-      orderBy: list('SupplierCategoryOrderByWithRelationInput'),
+      orderBy: list('SupplierCategoryOrderByInput'),
       cursor: 'SupplierCategoryWhereUniqueInput',
       distinct: 'SupplierCategoryScalarFieldEnum',
       skip: 'Int',

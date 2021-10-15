@@ -77,7 +77,7 @@ export const InvProduct = objectType({
       type: 'CmDrug',
       args: {
         where: 'CmDrugWhereInput',
-        orderBy: 'CmDrugOrderByWithRelationInput',
+        orderBy: 'CmDrugOrderByInput',
         cursor: 'CmDrugWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -91,7 +91,7 @@ export const InvProduct = objectType({
       type: 'CmPurchaseItem',
       args: {
         where: 'CmPurchaseItemWhereInput',
-        orderBy: 'CmPurchaseItemOrderByWithRelationInput',
+        orderBy: 'CmPurchaseItemOrderByInput',
         cursor: 'CmPurchaseItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -105,7 +105,7 @@ export const InvProduct = objectType({
       type: 'InventoryDiscrepancy',
       args: {
         where: 'InventoryDiscrepancyWhereInput',
-        orderBy: 'InventoryDiscrepancyOrderByWithRelationInput',
+        orderBy: 'InventoryDiscrepancyOrderByInput',
         cursor: 'InventoryDiscrepancyWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -119,7 +119,7 @@ export const InvProduct = objectType({
       type: 'InvWarehouseProduct',
       args: {
         where: 'InvWarehouseProductWhereInput',
-        orderBy: 'InvWarehouseProductOrderByWithRelationInput',
+        orderBy: 'InvWarehouseProductOrderByInput',
         cursor: 'InvWarehouseProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -133,7 +133,7 @@ export const InvProduct = objectType({
       type: 'CmProductCustomField',
       args: {
         where: 'CmProductCustomFieldWhereInput',
-        orderBy: 'CmProductCustomFieldOrderByWithRelationInput',
+        orderBy: 'CmProductCustomFieldOrderByInput',
         cursor: 'CmProductCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -147,7 +147,7 @@ export const InvProduct = objectType({
       type: 'InventoryMovement',
       args: {
         where: 'InventoryMovementWhereInput',
-        orderBy: 'InventoryMovementOrderByWithRelationInput',
+        orderBy: 'InventoryMovementOrderByInput',
         cursor: 'InventoryMovementWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -161,7 +161,7 @@ export const InvProduct = objectType({
       type: 'Package',
       args: {
         where: 'PackageWhereInput',
-        orderBy: 'PackageOrderByWithRelationInput',
+        orderBy: 'PackageOrderByInput',
         cursor: 'PackageWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -175,7 +175,7 @@ export const InvProduct = objectType({
       type: 'Package',
       args: {
         where: 'PackageWhereInput',
-        orderBy: 'PackageOrderByWithRelationInput',
+        orderBy: 'PackageOrderByInput',
         cursor: 'PackageWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -189,7 +189,7 @@ export const InvProduct = objectType({
       type: 'SaleItem',
       args: {
         where: 'SaleItemWhereInput',
-        orderBy: 'SaleItemOrderByWithRelationInput',
+        orderBy: 'SaleItemOrderByInput',
         cursor: 'SaleItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -203,7 +203,7 @@ export const InvProduct = objectType({
       type: 'CompanyService',
       args: {
         where: 'CompanyServiceWhereInput',
-        orderBy: 'CompanyServiceOrderByWithRelationInput',
+        orderBy: 'CompanyServiceOrderByInput',
         cursor: 'CompanyServiceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -217,7 +217,7 @@ export const InvProduct = objectType({
       type: 'InsuranceContractPrice',
       args: {
         where: 'InsuranceContractPriceWhereInput',
-        orderBy: 'InsuranceContractPriceOrderByWithRelationInput',
+        orderBy: 'InsuranceContractPriceOrderByInput',
         cursor: 'InsuranceContractPriceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -225,12 +225,6 @@ export const InvProduct = objectType({
       },
       resolve(root: any) {
         return root.InsuranceContractPrice
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'InvProductCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

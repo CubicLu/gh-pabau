@@ -4,7 +4,7 @@ export const BatchItemFindManyQuery = queryField('findManyBatchItem', {
   type: nonNull(list(nonNull('BatchItem'))),
   args: {
     where: 'BatchItemWhereInput',
-    orderBy: list('BatchItemOrderByWithRelationInput'),
+    orderBy: list('BatchItemOrderByInput'),
     cursor: 'BatchItemWhereUniqueInput',
     distinct: 'BatchItemScalarFieldEnum',
     skip: 'Int',

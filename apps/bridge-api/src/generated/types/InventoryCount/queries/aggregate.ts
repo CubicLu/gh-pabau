@@ -6,7 +6,7 @@ export const InventoryCountAggregateQuery = queryField(
     type: 'AggregateInventoryCount',
     args: {
       where: 'InventoryCountWhereInput',
-      orderBy: list('InventoryCountOrderByWithRelationInput'),
+      orderBy: list('InventoryCountOrderByInput'),
       cursor: 'InventoryCountWhereUniqueInput',
       distinct: 'InventoryCountScalarFieldEnum',
       skip: 'Int',

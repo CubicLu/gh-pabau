@@ -6,7 +6,7 @@ export const CmExtraPatientAggregateQuery = queryField(
     type: 'AggregateCmExtraPatient',
     args: {
       where: 'CmExtraPatientWhereInput',
-      orderBy: list('CmExtraPatientOrderByWithRelationInput'),
+      orderBy: list('CmExtraPatientOrderByInput'),
       cursor: 'CmExtraPatientWhereUniqueInput',
       distinct: 'CmExtraPatientScalarFieldEnum',
       skip: 'Int',

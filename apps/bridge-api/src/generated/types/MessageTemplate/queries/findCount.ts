@@ -6,7 +6,7 @@ export const MessageTemplateFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'MessageTemplateWhereInput',
-      orderBy: list('MessageTemplateOrderByWithRelationInput'),
+      orderBy: list('MessageTemplateOrderByInput'),
       cursor: 'MessageTemplateWhereUniqueInput',
       distinct: 'MessageTemplateScalarFieldEnum',
       skip: 'Int',

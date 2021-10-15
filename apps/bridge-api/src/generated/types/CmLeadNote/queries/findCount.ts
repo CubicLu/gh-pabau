@@ -4,7 +4,7 @@ export const CmLeadNoteFindCountQuery = queryField('findManyCmLeadNoteCount', {
   type: nonNull('Int'),
   args: {
     where: 'CmLeadNoteWhereInput',
-    orderBy: list('CmLeadNoteOrderByWithRelationInput'),
+    orderBy: list('CmLeadNoteOrderByInput'),
     cursor: 'CmLeadNoteWhereUniqueInput',
     distinct: 'CmLeadNoteScalarFieldEnum',
     skip: 'Int',

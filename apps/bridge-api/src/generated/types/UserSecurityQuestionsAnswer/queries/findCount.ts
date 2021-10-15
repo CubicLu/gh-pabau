@@ -6,7 +6,7 @@ export const UserSecurityQuestionsAnswerFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'UserSecurityQuestionsAnswerWhereInput',
-      orderBy: list('UserSecurityQuestionsAnswerOrderByWithRelationInput'),
+      orderBy: list('UserSecurityQuestionsAnswerOrderByInput'),
       cursor: 'UserSecurityQuestionsAnswerWhereUniqueInput',
       distinct: 'UserSecurityQuestionsAnswerScalarFieldEnum',
       skip: 'Int',

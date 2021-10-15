@@ -6,7 +6,7 @@ export const CmAccountNoteAggregateQuery = queryField(
     type: 'AggregateCmAccountNote',
     args: {
       where: 'CmAccountNoteWhereInput',
-      orderBy: list('CmAccountNoteOrderByWithRelationInput'),
+      orderBy: list('CmAccountNoteOrderByInput'),
       cursor: 'CmAccountNoteWhereUniqueInput',
       distinct: 'CmAccountNoteScalarFieldEnum',
       skip: 'Int',

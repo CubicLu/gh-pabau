@@ -6,7 +6,7 @@ export const AutomationFolderAggregateQuery = queryField(
     type: 'AggregateAutomationFolder',
     args: {
       where: 'AutomationFolderWhereInput',
-      orderBy: list('AutomationFolderOrderByWithRelationInput'),
+      orderBy: list('AutomationFolderOrderByInput'),
       cursor: 'AutomationFolderWhereUniqueInput',
       distinct: 'AutomationFolderScalarFieldEnum',
       skip: 'Int',

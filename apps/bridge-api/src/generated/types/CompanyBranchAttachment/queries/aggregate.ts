@@ -6,7 +6,7 @@ export const CompanyBranchAttachmentAggregateQuery = queryField(
     type: 'AggregateCompanyBranchAttachment',
     args: {
       where: 'CompanyBranchAttachmentWhereInput',
-      orderBy: list('CompanyBranchAttachmentOrderByWithRelationInput'),
+      orderBy: list('CompanyBranchAttachmentOrderByInput'),
       cursor: 'CompanyBranchAttachmentWhereUniqueInput',
       distinct: 'CompanyBranchAttachmentScalarFieldEnum',
       skip: 'Int',

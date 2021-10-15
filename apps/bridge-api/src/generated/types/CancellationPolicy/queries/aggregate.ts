@@ -6,7 +6,7 @@ export const CancellationPolicyAggregateQuery = queryField(
     type: 'AggregateCancellationPolicy',
     args: {
       where: 'CancellationPolicyWhereInput',
-      orderBy: list('CancellationPolicyOrderByWithRelationInput'),
+      orderBy: list('CancellationPolicyOrderByInput'),
       cursor: 'CancellationPolicyWhereUniqueInput',
       distinct: 'CancellationPolicyScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CompanyDetailsAggregateQuery = queryField(
     type: 'AggregateCompanyDetails',
     args: {
       where: 'CompanyDetailsWhereInput',
-      orderBy: list('CompanyDetailsOrderByWithRelationInput'),
+      orderBy: list('CompanyDetailsOrderByInput'),
       cursor: 'CompanyDetailsWhereUniqueInput',
       distinct: 'CompanyDetailsScalarFieldEnum',
       skip: 'Int',

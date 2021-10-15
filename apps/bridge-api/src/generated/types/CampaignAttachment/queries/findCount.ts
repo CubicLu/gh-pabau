@@ -6,7 +6,7 @@ export const CampaignAttachmentFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CampaignAttachmentWhereInput',
-      orderBy: list('CampaignAttachmentOrderByWithRelationInput'),
+      orderBy: list('CampaignAttachmentOrderByInput'),
       cursor: 'CampaignAttachmentWhereUniqueInput',
       distinct: 'CampaignAttachmentScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const TemplateFolderFindManyQuery = queryField(
     type: nonNull(list(nonNull('TemplateFolder'))),
     args: {
       where: 'TemplateFolderWhereInput',
-      orderBy: list('TemplateFolderOrderByWithRelationInput'),
+      orderBy: list('TemplateFolderOrderByInput'),
       cursor: 'TemplateFolderWhereUniqueInput',
       distinct: 'TemplateFolderScalarFieldEnum',
       skip: 'Int',

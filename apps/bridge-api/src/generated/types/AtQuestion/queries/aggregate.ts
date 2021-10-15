@@ -4,7 +4,7 @@ export const AtQuestionAggregateQuery = queryField('aggregateAtQuestion', {
   type: 'AggregateAtQuestion',
   args: {
     where: 'AtQuestionWhereInput',
-    orderBy: list('AtQuestionOrderByWithRelationInput'),
+    orderBy: list('AtQuestionOrderByInput'),
     cursor: 'AtQuestionWhereUniqueInput',
     distinct: 'AtQuestionScalarFieldEnum',
     skip: 'Int',

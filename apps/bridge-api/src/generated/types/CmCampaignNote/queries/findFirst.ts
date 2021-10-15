@@ -6,7 +6,7 @@ export const CmCampaignNoteFindFirstQuery = queryField(
     type: 'CmCampaignNote',
     args: {
       where: 'CmCampaignNoteWhereInput',
-      orderBy: list('CmCampaignNoteOrderByWithRelationInput'),
+      orderBy: list('CmCampaignNoteOrderByInput'),
       cursor: 'CmCampaignNoteWhereUniqueInput',
       distinct: 'CmCampaignNoteScalarFieldEnum',
       skip: 'Int',

@@ -29,7 +29,7 @@ export const PhotoAlbum = objectType({
       type: 'ContactAttachment',
       args: {
         where: 'ContactAttachmentWhereInput',
-        orderBy: 'ContactAttachmentOrderByWithRelationInput',
+        orderBy: 'ContactAttachmentOrderByInput',
         cursor: 'ContactAttachmentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -37,12 +37,6 @@ export const PhotoAlbum = objectType({
       },
       resolve(root: any) {
         return root.Photos
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'PhotoAlbumCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

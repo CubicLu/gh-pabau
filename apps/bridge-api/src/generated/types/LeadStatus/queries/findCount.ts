@@ -4,7 +4,7 @@ export const LeadStatusFindCountQuery = queryField('findManyLeadStatusCount', {
   type: nonNull('Int'),
   args: {
     where: 'LeadStatusWhereInput',
-    orderBy: list('LeadStatusOrderByWithRelationInput'),
+    orderBy: list('LeadStatusOrderByInput'),
     cursor: 'LeadStatusWhereUniqueInput',
     distinct: 'LeadStatusScalarFieldEnum',
     skip: 'Int',

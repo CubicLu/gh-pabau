@@ -6,7 +6,7 @@ export const CmPurchaseItemAggregateQuery = queryField(
     type: 'AggregateCmPurchaseItem',
     args: {
       where: 'CmPurchaseItemWhereInput',
-      orderBy: list('CmPurchaseItemOrderByWithRelationInput'),
+      orderBy: list('CmPurchaseItemOrderByInput'),
       cursor: 'CmPurchaseItemWhereUniqueInput',
       distinct: 'CmPurchaseItemScalarFieldEnum',
       skip: 'Int',

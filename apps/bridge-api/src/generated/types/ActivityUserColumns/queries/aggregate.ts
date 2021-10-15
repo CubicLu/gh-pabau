@@ -6,7 +6,7 @@ export const ActivityUserColumnsAggregateQuery = queryField(
     type: 'AggregateActivityUserColumns',
     args: {
       where: 'ActivityUserColumnsWhereInput',
-      orderBy: list('ActivityUserColumnsOrderByWithRelationInput'),
+      orderBy: list('ActivityUserColumnsOrderByInput'),
       cursor: 'ActivityUserColumnsWhereUniqueInput',
       distinct: 'ActivityUserColumnsScalarFieldEnum',
       skip: 'Int',

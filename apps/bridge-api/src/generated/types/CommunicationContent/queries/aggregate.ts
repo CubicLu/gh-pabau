@@ -6,7 +6,7 @@ export const CommunicationContentAggregateQuery = queryField(
     type: 'AggregateCommunicationContent',
     args: {
       where: 'CommunicationContentWhereInput',
-      orderBy: list('CommunicationContentOrderByWithRelationInput'),
+      orderBy: list('CommunicationContentOrderByInput'),
       cursor: 'CommunicationContentWhereUniqueInput',
       distinct: 'CommunicationContentScalarFieldEnum',
       skip: 'Int',

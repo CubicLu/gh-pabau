@@ -4,7 +4,7 @@ export const ApiDebugAggregateQuery = queryField('aggregateApiDebug', {
   type: 'AggregateApiDebug',
   args: {
     where: 'ApiDebugWhereInput',
-    orderBy: list('ApiDebugOrderByWithRelationInput'),
+    orderBy: list('ApiDebugOrderByInput'),
     cursor: 'ApiDebugWhereUniqueInput',
     distinct: 'ApiDebugScalarFieldEnum',
     skip: 'Int',

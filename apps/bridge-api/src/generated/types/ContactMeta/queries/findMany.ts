@@ -4,7 +4,7 @@ export const ContactMetaFindManyQuery = queryField('findManyContactMeta', {
   type: nonNull(list(nonNull('ContactMeta'))),
   args: {
     where: 'ContactMetaWhereInput',
-    orderBy: list('ContactMetaOrderByWithRelationInput'),
+    orderBy: list('ContactMetaOrderByInput'),
     cursor: 'ContactMetaWhereUniqueInput',
     distinct: 'ContactMetaScalarFieldEnum',
     skip: 'Int',

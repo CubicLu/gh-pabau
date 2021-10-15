@@ -51,7 +51,7 @@ export const InsuranceDetail = objectType({
       type: 'InvSale',
       args: {
         where: 'InvSaleWhereInput',
-        orderBy: 'InvSaleOrderByWithRelationInput',
+        orderBy: 'InvSaleOrderByInput',
         cursor: 'InvSaleWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -59,12 +59,6 @@ export const InsuranceDetail = objectType({
       },
       resolve(root: any) {
         return root.InvSale
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'InsuranceDetailCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

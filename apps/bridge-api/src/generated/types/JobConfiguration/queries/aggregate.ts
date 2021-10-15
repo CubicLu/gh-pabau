@@ -6,7 +6,7 @@ export const JobConfigurationAggregateQuery = queryField(
     type: 'AggregateJobConfiguration',
     args: {
       where: 'JobConfigurationWhereInput',
-      orderBy: list('JobConfigurationOrderByWithRelationInput'),
+      orderBy: list('JobConfigurationOrderByInput'),
       cursor: 'JobConfigurationWhereUniqueInput',
       distinct: 'JobConfigurationScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const AutomationTriggerAggregateQuery = queryField(
     type: 'AggregateAutomationTrigger',
     args: {
       where: 'AutomationTriggerWhereInput',
-      orderBy: list('AutomationTriggerOrderByWithRelationInput'),
+      orderBy: list('AutomationTriggerOrderByInput'),
       cursor: 'AutomationTriggerWhereUniqueInput',
       distinct: 'AutomationTriggerScalarFieldEnum',
       skip: 'Int',

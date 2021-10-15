@@ -4,7 +4,7 @@ export const ApiDebugFindManyQuery = queryField('findManyApiDebug', {
   type: nonNull(list(nonNull('ApiDebug'))),
   args: {
     where: 'ApiDebugWhereInput',
-    orderBy: list('ApiDebugOrderByWithRelationInput'),
+    orderBy: list('ApiDebugOrderByInput'),
     cursor: 'ApiDebugWhereUniqueInput',
     distinct: 'ApiDebugScalarFieldEnum',
     skip: 'Int',

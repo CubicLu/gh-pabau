@@ -4,7 +4,7 @@ export const BookingFindManyQuery = queryField('findManyBooking', {
   type: nonNull(list(nonNull('Booking'))),
   args: {
     where: 'BookingWhereInput',
-    orderBy: list('BookingOrderByWithRelationInput'),
+    orderBy: list('BookingOrderByInput'),
     cursor: 'BookingWhereUniqueInput',
     distinct: 'BookingScalarFieldEnum',
     skip: 'Int',

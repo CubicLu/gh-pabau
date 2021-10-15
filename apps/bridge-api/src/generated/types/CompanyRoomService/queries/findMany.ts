@@ -6,7 +6,7 @@ export const CompanyRoomServiceFindManyQuery = queryField(
     type: nonNull(list(nonNull('CompanyRoomService'))),
     args: {
       where: 'CompanyRoomServiceWhereInput',
-      orderBy: list('CompanyRoomServiceOrderByWithRelationInput'),
+      orderBy: list('CompanyRoomServiceOrderByInput'),
       cursor: 'CompanyRoomServiceWhereUniqueInput',
       distinct: 'CompanyRoomServiceScalarFieldEnum',
       skip: 'Int',

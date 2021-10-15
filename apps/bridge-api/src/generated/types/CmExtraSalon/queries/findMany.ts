@@ -4,7 +4,7 @@ export const CmExtraSalonFindManyQuery = queryField('findManyCmExtraSalon', {
   type: nonNull(list(nonNull('CmExtraSalon'))),
   args: {
     where: 'CmExtraSalonWhereInput',
-    orderBy: list('CmExtraSalonOrderByWithRelationInput'),
+    orderBy: list('CmExtraSalonOrderByInput'),
     cursor: 'CmExtraSalonWhereUniqueInput',
     distinct: 'CmExtraSalonScalarFieldEnum',
     skip: 'Int',

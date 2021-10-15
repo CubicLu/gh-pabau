@@ -81,7 +81,7 @@ export const CmStaffGeneral = objectType({
       type: 'HolidayRequest',
       args: {
         where: 'HolidayRequestWhereInput',
-        orderBy: 'HolidayRequestOrderByWithRelationInput',
+        orderBy: 'HolidayRequestOrderByInput',
         cursor: 'HolidayRequestWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -95,7 +95,7 @@ export const CmStaffGeneral = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByWithRelationInput',
+        orderBy: 'BookingOrderByInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -109,7 +109,7 @@ export const CmStaffGeneral = objectType({
       type: 'RotaShift',
       args: {
         where: 'RotaShiftWhereInput',
-        orderBy: 'RotaShiftOrderByWithRelationInput',
+        orderBy: 'RotaShiftOrderByInput',
         cursor: 'RotaShiftWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -129,7 +129,7 @@ export const CmStaffGeneral = objectType({
       type: 'InventoryDiscrepancy',
       args: {
         where: 'InventoryDiscrepancyWhereInput',
-        orderBy: 'InventoryDiscrepancyOrderByWithRelationInput',
+        orderBy: 'InventoryDiscrepancyOrderByInput',
         cursor: 'InventoryDiscrepancyWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -137,12 +137,6 @@ export const CmStaffGeneral = objectType({
       },
       resolve(root: any) {
         return root.InventoryDiscrepancy
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CmStaffGeneralCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

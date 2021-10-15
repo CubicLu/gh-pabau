@@ -4,7 +4,7 @@ export const BugLogFindFirstQuery = queryField('findFirstBugLog', {
   type: 'BugLog',
   args: {
     where: 'BugLogWhereInput',
-    orderBy: list('BugLogOrderByWithRelationInput'),
+    orderBy: list('BugLogOrderByInput'),
     cursor: 'BugLogWhereUniqueInput',
     distinct: 'BugLogScalarFieldEnum',
     skip: 'Int',

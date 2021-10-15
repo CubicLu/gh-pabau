@@ -6,7 +6,7 @@ export const AcceptEmailTokenFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AcceptEmailTokenWhereInput',
-      orderBy: list('AcceptEmailTokenOrderByWithRelationInput'),
+      orderBy: list('AcceptEmailTokenOrderByInput'),
       cursor: 'AcceptEmailTokenWhereUniqueInput',
       distinct: 'AcceptEmailTokenScalarFieldEnum',
       skip: 'Int',

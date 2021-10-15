@@ -17,7 +17,7 @@ export const ReportCategory = objectType({
       type: 'Report',
       args: {
         where: 'ReportWhereInput',
-        orderBy: 'ReportOrderByWithRelationInput',
+        orderBy: 'ReportOrderByInput',
         cursor: 'ReportWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -25,12 +25,6 @@ export const ReportCategory = objectType({
       },
       resolve(root: any) {
         return root.Report
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ReportCategoryCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

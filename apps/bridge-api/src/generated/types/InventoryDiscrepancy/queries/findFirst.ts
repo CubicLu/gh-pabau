@@ -6,7 +6,7 @@ export const InventoryDiscrepancyFindFirstQuery = queryField(
     type: 'InventoryDiscrepancy',
     args: {
       where: 'InventoryDiscrepancyWhereInput',
-      orderBy: list('InventoryDiscrepancyOrderByWithRelationInput'),
+      orderBy: list('InventoryDiscrepancyOrderByInput'),
       cursor: 'InventoryDiscrepancyWhereUniqueInput',
       distinct: 'InventoryDiscrepancyScalarFieldEnum',
       skip: 'Int',

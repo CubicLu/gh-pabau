@@ -6,7 +6,7 @@ export const AppBeforeAfterAggregateQuery = queryField(
     type: 'AggregateAppBeforeAfter',
     args: {
       where: 'AppBeforeAfterWhereInput',
-      orderBy: list('AppBeforeAfterOrderByWithRelationInput'),
+      orderBy: list('AppBeforeAfterOrderByInput'),
       cursor: 'AppBeforeAfterWhereUniqueInput',
       distinct: 'AppBeforeAfterScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const PasswordResetAuthFindManyQuery = queryField(
     type: nonNull(list(nonNull('PasswordResetAuth'))),
     args: {
       where: 'PasswordResetAuthWhereInput',
-      orderBy: list('PasswordResetAuthOrderByWithRelationInput'),
+      orderBy: list('PasswordResetAuthOrderByInput'),
       cursor: 'PasswordResetAuthWhereUniqueInput',
       distinct: 'PasswordResetAuthScalarFieldEnum',
       skip: 'Int',

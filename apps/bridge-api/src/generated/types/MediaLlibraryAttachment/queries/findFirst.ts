@@ -6,7 +6,7 @@ export const MediaLlibraryAttachmentFindFirstQuery = queryField(
     type: 'MediaLlibraryAttachment',
     args: {
       where: 'MediaLlibraryAttachmentWhereInput',
-      orderBy: list('MediaLlibraryAttachmentOrderByWithRelationInput'),
+      orderBy: list('MediaLlibraryAttachmentOrderByInput'),
       cursor: 'MediaLlibraryAttachmentWhereUniqueInput',
       distinct: 'MediaLlibraryAttachmentScalarFieldEnum',
       skip: 'Int',

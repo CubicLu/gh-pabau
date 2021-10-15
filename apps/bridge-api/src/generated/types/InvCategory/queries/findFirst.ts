@@ -4,7 +4,7 @@ export const InvCategoryFindFirstQuery = queryField('findFirstInvCategory', {
   type: 'InvCategory',
   args: {
     where: 'InvCategoryWhereInput',
-    orderBy: list('InvCategoryOrderByWithRelationInput'),
+    orderBy: list('InvCategoryOrderByInput'),
     cursor: 'InvCategoryWhereUniqueInput',
     distinct: 'InvCategoryScalarFieldEnum',
     skip: 'Int',

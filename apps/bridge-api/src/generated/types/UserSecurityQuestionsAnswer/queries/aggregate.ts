@@ -6,7 +6,7 @@ export const UserSecurityQuestionsAnswerAggregateQuery = queryField(
     type: 'AggregateUserSecurityQuestionsAnswer',
     args: {
       where: 'UserSecurityQuestionsAnswerWhereInput',
-      orderBy: list('UserSecurityQuestionsAnswerOrderByWithRelationInput'),
+      orderBy: list('UserSecurityQuestionsAnswerOrderByInput'),
       cursor: 'UserSecurityQuestionsAnswerWhereUniqueInput',
       distinct: 'UserSecurityQuestionsAnswerScalarFieldEnum',
       skip: 'Int',

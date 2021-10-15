@@ -6,7 +6,7 @@ export const BookmarkedPageFindManyQuery = queryField(
     type: nonNull(list(nonNull('BookmarkedPage'))),
     args: {
       where: 'BookmarkedPageWhereInput',
-      orderBy: list('BookmarkedPageOrderByWithRelationInput'),
+      orderBy: list('BookmarkedPageOrderByInput'),
       cursor: 'BookmarkedPageWhereUniqueInput',
       distinct: 'BookmarkedPageScalarFieldEnum',
       skip: 'Int',

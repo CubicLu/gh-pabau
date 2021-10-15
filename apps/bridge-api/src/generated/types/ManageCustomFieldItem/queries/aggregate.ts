@@ -6,7 +6,7 @@ export const ManageCustomFieldItemAggregateQuery = queryField(
     type: 'AggregateManageCustomFieldItem',
     args: {
       where: 'ManageCustomFieldItemWhereInput',
-      orderBy: list('ManageCustomFieldItemOrderByWithRelationInput'),
+      orderBy: list('ManageCustomFieldItemOrderByInput'),
       cursor: 'ManageCustomFieldItemWhereUniqueInput',
       distinct: 'ManageCustomFieldItemScalarFieldEnum',
       skip: 'Int',

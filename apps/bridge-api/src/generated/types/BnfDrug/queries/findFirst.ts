@@ -4,7 +4,7 @@ export const BnfDrugFindFirstQuery = queryField('findFirstBnfDrug', {
   type: 'BnfDrug',
   args: {
     where: 'BnfDrugWhereInput',
-    orderBy: list('BnfDrugOrderByWithRelationInput'),
+    orderBy: list('BnfDrugOrderByInput'),
     cursor: 'BnfDrugWhereUniqueInput',
     distinct: 'BnfDrugScalarFieldEnum',
     skip: 'Int',

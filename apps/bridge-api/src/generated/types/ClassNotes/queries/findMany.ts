@@ -4,7 +4,7 @@ export const ClassNotesFindManyQuery = queryField('findManyClassNotes', {
   type: nonNull(list(nonNull('ClassNotes'))),
   args: {
     where: 'ClassNotesWhereInput',
-    orderBy: list('ClassNotesOrderByWithRelationInput'),
+    orderBy: list('ClassNotesOrderByInput'),
     cursor: 'ClassNotesWhereUniqueInput',
     distinct: 'ClassNotesScalarFieldEnum',
     skip: 'Int',

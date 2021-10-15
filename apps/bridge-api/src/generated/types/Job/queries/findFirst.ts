@@ -4,7 +4,7 @@ export const JobFindFirstQuery = queryField('findFirstJob', {
   type: 'Job',
   args: {
     where: 'JobWhereInput',
-    orderBy: list('JobOrderByWithRelationInput'),
+    orderBy: list('JobOrderByInput'),
     cursor: 'JobWhereUniqueInput',
     distinct: 'JobScalarFieldEnum',
     skip: 'Int',

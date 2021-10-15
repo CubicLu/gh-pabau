@@ -4,7 +4,7 @@ export const AtSettingAggregateQuery = queryField('aggregateAtSetting', {
   type: 'AggregateAtSetting',
   args: {
     where: 'AtSettingWhereInput',
-    orderBy: list('AtSettingOrderByWithRelationInput'),
+    orderBy: list('AtSettingOrderByInput'),
     cursor: 'AtSettingWhereUniqueInput',
     distinct: 'AtSettingScalarFieldEnum',
     skip: 'Int',

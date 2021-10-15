@@ -4,7 +4,7 @@ export const CmCaseNoteFindFirstQuery = queryField('findFirstCmCaseNote', {
   type: 'CmCaseNote',
   args: {
     where: 'CmCaseNoteWhereInput',
-    orderBy: list('CmCaseNoteOrderByWithRelationInput'),
+    orderBy: list('CmCaseNoteOrderByInput'),
     cursor: 'CmCaseNoteWhereUniqueInput',
     distinct: 'CmCaseNoteScalarFieldEnum',
     skip: 'Int',

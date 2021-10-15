@@ -4,7 +4,7 @@ export const BacsAccountAggregateQuery = queryField('aggregateBacsAccount', {
   type: 'AggregateBacsAccount',
   args: {
     where: 'BacsAccountWhereInput',
-    orderBy: list('BacsAccountOrderByWithRelationInput'),
+    orderBy: list('BacsAccountOrderByInput'),
     cursor: 'BacsAccountWhereUniqueInput',
     distinct: 'BacsAccountScalarFieldEnum',
     skip: 'Int',

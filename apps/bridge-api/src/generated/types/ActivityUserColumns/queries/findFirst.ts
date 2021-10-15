@@ -6,7 +6,7 @@ export const ActivityUserColumnsFindFirstQuery = queryField(
     type: 'ActivityUserColumns',
     args: {
       where: 'ActivityUserColumnsWhereInput',
-      orderBy: list('ActivityUserColumnsOrderByWithRelationInput'),
+      orderBy: list('ActivityUserColumnsOrderByInput'),
       cursor: 'ActivityUserColumnsWhereUniqueInput',
       distinct: 'ActivityUserColumnsScalarFieldEnum',
       skip: 'Int',

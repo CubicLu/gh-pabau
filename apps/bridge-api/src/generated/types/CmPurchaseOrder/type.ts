@@ -61,7 +61,7 @@ export const CmPurchaseOrder = objectType({
       type: 'CmPurchaseItem',
       args: {
         where: 'CmPurchaseItemWhereInput',
-        orderBy: 'CmPurchaseItemOrderByWithRelationInput',
+        orderBy: 'CmPurchaseItemOrderByInput',
         cursor: 'CmPurchaseItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -69,12 +69,6 @@ export const CmPurchaseOrder = objectType({
       },
       resolve(root: any) {
         return root.CmPurchaseItem
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CmPurchaseOrderCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

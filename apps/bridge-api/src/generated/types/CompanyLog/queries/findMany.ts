@@ -4,7 +4,7 @@ export const CompanyLogFindManyQuery = queryField('findManyCompanyLog', {
   type: nonNull(list(nonNull('CompanyLog'))),
   args: {
     where: 'CompanyLogWhereInput',
-    orderBy: list('CompanyLogOrderByWithRelationInput'),
+    orderBy: list('CompanyLogOrderByInput'),
     cursor: 'CompanyLogWhereUniqueInput',
     distinct: 'CompanyLogScalarFieldEnum',
     skip: 'Int',

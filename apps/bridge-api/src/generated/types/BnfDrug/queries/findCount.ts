@@ -4,7 +4,7 @@ export const BnfDrugFindCountQuery = queryField('findManyBnfDrugCount', {
   type: nonNull('Int'),
   args: {
     where: 'BnfDrugWhereInput',
-    orderBy: list('BnfDrugOrderByWithRelationInput'),
+    orderBy: list('BnfDrugOrderByInput'),
     cursor: 'BnfDrugWhereUniqueInput',
     distinct: 'BnfDrugScalarFieldEnum',
     skip: 'Int',

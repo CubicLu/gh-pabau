@@ -4,7 +4,7 @@ export const CancelReasonAggregateQuery = queryField('aggregateCancelReason', {
   type: 'AggregateCancelReason',
   args: {
     where: 'CancelReasonWhereInput',
-    orderBy: list('CancelReasonOrderByWithRelationInput'),
+    orderBy: list('CancelReasonOrderByInput'),
     cursor: 'CancelReasonWhereUniqueInput',
     distinct: 'CancelReasonScalarFieldEnum',
     skip: 'Int',

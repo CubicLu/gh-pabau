@@ -6,7 +6,7 @@ export const CmAuthorizationFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmAuthorization'))),
     args: {
       where: 'CmAuthorizationWhereInput',
-      orderBy: list('CmAuthorizationOrderByWithRelationInput'),
+      orderBy: list('CmAuthorizationOrderByInput'),
       cursor: 'CmAuthorizationWhereUniqueInput',
       distinct: 'CmAuthorizationScalarFieldEnum',
       skip: 'Int',

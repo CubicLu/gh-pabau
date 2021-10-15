@@ -4,7 +4,7 @@ export const ClockinBreakFindFirstQuery = queryField('findFirstClockinBreak', {
   type: 'ClockinBreak',
   args: {
     where: 'ClockinBreakWhereInput',
-    orderBy: list('ClockinBreakOrderByWithRelationInput'),
+    orderBy: list('ClockinBreakOrderByInput'),
     cursor: 'ClockinBreakWhereUniqueInput',
     distinct: 'ClockinBreakScalarFieldEnum',
     skip: 'Int',

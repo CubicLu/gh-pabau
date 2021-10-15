@@ -4,7 +4,7 @@ export const CmLabelFindFirstQuery = queryField('findFirstCmLabel', {
   type: 'CmLabel',
   args: {
     where: 'CmLabelWhereInput',
-    orderBy: list('CmLabelOrderByWithRelationInput'),
+    orderBy: list('CmLabelOrderByInput'),
     cursor: 'CmLabelWhereUniqueInput',
     distinct: 'CmLabelScalarFieldEnum',
     skip: 'Int',

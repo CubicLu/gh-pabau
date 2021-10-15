@@ -41,7 +41,7 @@ export const InventoryCount = objectType({
       type: 'InventoryDiscrepancy',
       args: {
         where: 'InventoryDiscrepancyWhereInput',
-        orderBy: 'InventoryDiscrepancyOrderByWithRelationInput',
+        orderBy: 'InventoryDiscrepancyOrderByInput',
         cursor: 'InventoryDiscrepancyWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -49,12 +49,6 @@ export const InventoryCount = objectType({
       },
       resolve(root: any) {
         return root.InventoryDiscrepancy
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'InventoryCountCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

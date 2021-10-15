@@ -6,7 +6,7 @@ export const MessageTemplateAggregateQuery = queryField(
     type: 'AggregateMessageTemplate',
     args: {
       where: 'MessageTemplateWhereInput',
-      orderBy: list('MessageTemplateOrderByWithRelationInput'),
+      orderBy: list('MessageTemplateOrderByInput'),
       cursor: 'MessageTemplateWhereUniqueInput',
       distinct: 'MessageTemplateScalarFieldEnum',
       skip: 'Int',

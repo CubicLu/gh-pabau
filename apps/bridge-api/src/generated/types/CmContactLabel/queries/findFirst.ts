@@ -6,7 +6,7 @@ export const CmContactLabelFindFirstQuery = queryField(
     type: 'CmContactLabel',
     args: {
       where: 'CmContactLabelWhereInput',
-      orderBy: list('CmContactLabelOrderByWithRelationInput'),
+      orderBy: list('CmContactLabelOrderByInput'),
       cursor: 'CmContactLabelWhereUniqueInput',
       distinct: 'CmContactLabelScalarFieldEnum',
       skip: 'Int',

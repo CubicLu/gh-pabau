@@ -6,7 +6,7 @@ export const CmPurchaseOrderFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmPurchaseOrderWhereInput',
-      orderBy: list('CmPurchaseOrderOrderByWithRelationInput'),
+      orderBy: list('CmPurchaseOrderOrderByInput'),
       cursor: 'CmPurchaseOrderWhereUniqueInput',
       distinct: 'CmPurchaseOrderScalarFieldEnum',
       skip: 'Int',

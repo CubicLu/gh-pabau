@@ -4,7 +4,7 @@ export const AcLogFindCountQuery = queryField('findManyAcLogCount', {
   type: nonNull('Int'),
   args: {
     where: 'AcLogWhereInput',
-    orderBy: list('AcLogOrderByWithRelationInput'),
+    orderBy: list('AcLogOrderByInput'),
     cursor: 'AcLogWhereUniqueInput',
     distinct: 'AcLogScalarFieldEnum',
     skip: 'Int',

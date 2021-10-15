@@ -6,7 +6,7 @@ export const CmProductCustomFieldFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmProductCustomField'))),
     args: {
       where: 'CmProductCustomFieldWhereInput',
-      orderBy: list('CmProductCustomFieldOrderByWithRelationInput'),
+      orderBy: list('CmProductCustomFieldOrderByInput'),
       cursor: 'CmProductCustomFieldWhereUniqueInput',
       distinct: 'CmProductCustomFieldScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CmAccountNoteFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmAccountNoteWhereInput',
-      orderBy: list('CmAccountNoteOrderByWithRelationInput'),
+      orderBy: list('CmAccountNoteOrderByInput'),
       cursor: 'CmAccountNoteWhereUniqueInput',
       distinct: 'CmAccountNoteScalarFieldEnum',
       skip: 'Int',

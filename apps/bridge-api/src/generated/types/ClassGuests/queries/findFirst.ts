@@ -4,7 +4,7 @@ export const ClassGuestsFindFirstQuery = queryField('findFirstClassGuests', {
   type: 'ClassGuests',
   args: {
     where: 'ClassGuestsWhereInput',
-    orderBy: list('ClassGuestsOrderByWithRelationInput'),
+    orderBy: list('ClassGuestsOrderByInput'),
     cursor: 'ClassGuestsWhereUniqueInput',
     distinct: 'ClassGuestsScalarFieldEnum',
     skip: 'Int',

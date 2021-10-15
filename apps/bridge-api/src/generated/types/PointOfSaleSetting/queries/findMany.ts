@@ -6,7 +6,7 @@ export const PointOfSaleSettingFindManyQuery = queryField(
     type: nonNull(list(nonNull('PointOfSaleSetting'))),
     args: {
       where: 'PointOfSaleSettingWhereInput',
-      orderBy: list('PointOfSaleSettingOrderByWithRelationInput'),
+      orderBy: list('PointOfSaleSettingOrderByInput'),
       cursor: 'PointOfSaleSettingWhereUniqueInput',
       distinct: 'PointOfSaleSettingScalarFieldEnum',
       skip: 'Int',

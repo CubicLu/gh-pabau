@@ -6,7 +6,7 @@ export const AppSubscriptionFindFirstQuery = queryField(
     type: 'AppSubscription',
     args: {
       where: 'AppSubscriptionWhereInput',
-      orderBy: list('AppSubscriptionOrderByWithRelationInput'),
+      orderBy: list('AppSubscriptionOrderByInput'),
       cursor: 'AppSubscriptionWhereUniqueInput',
       distinct: 'AppSubscriptionScalarFieldEnum',
       skip: 'Int',

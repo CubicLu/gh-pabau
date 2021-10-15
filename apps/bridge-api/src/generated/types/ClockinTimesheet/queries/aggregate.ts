@@ -6,7 +6,7 @@ export const ClockinTimesheetAggregateQuery = queryField(
     type: 'AggregateClockinTimesheet',
     args: {
       where: 'ClockinTimesheetWhereInput',
-      orderBy: list('ClockinTimesheetOrderByWithRelationInput'),
+      orderBy: list('ClockinTimesheetOrderByInput'),
       cursor: 'ClockinTimesheetWhereUniqueInput',
       distinct: 'ClockinTimesheetScalarFieldEnum',
       skip: 'Int',

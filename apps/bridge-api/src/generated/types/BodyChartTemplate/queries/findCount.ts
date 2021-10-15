@@ -6,7 +6,7 @@ export const BodyChartTemplateFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'BodyChartTemplateWhereInput',
-      orderBy: list('BodyChartTemplateOrderByWithRelationInput'),
+      orderBy: list('BodyChartTemplateOrderByInput'),
       cursor: 'BodyChartTemplateWhereUniqueInput',
       distinct: 'BodyChartTemplateScalarFieldEnum',
       skip: 'Int',

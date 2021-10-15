@@ -6,7 +6,7 @@ export const ClassTemplateSettingAggregateQuery = queryField(
     type: 'AggregateClassTemplateSetting',
     args: {
       where: 'ClassTemplateSettingWhereInput',
-      orderBy: list('ClassTemplateSettingOrderByWithRelationInput'),
+      orderBy: list('ClassTemplateSettingOrderByInput'),
       cursor: 'ClassTemplateSettingWhereUniqueInput',
       distinct: 'ClassTemplateSettingScalarFieldEnum',
       skip: 'Int',

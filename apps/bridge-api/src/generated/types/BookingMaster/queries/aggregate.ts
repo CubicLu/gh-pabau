@@ -6,7 +6,7 @@ export const BookingMasterAggregateQuery = queryField(
     type: 'AggregateBookingMaster',
     args: {
       where: 'BookingMasterWhereInput',
-      orderBy: list('BookingMasterOrderByWithRelationInput'),
+      orderBy: list('BookingMasterOrderByInput'),
       cursor: 'BookingMasterWhereUniqueInput',
       distinct: 'BookingMasterScalarFieldEnum',
       skip: 'Int',

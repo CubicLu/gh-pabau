@@ -4,7 +4,7 @@ export const CmAccountNoteFindManyQuery = queryField('findManyCmAccountNote', {
   type: nonNull(list(nonNull('CmAccountNote'))),
   args: {
     where: 'CmAccountNoteWhereInput',
-    orderBy: list('CmAccountNoteOrderByWithRelationInput'),
+    orderBy: list('CmAccountNoteOrderByInput'),
     cursor: 'CmAccountNoteWhereUniqueInput',
     distinct: 'CmAccountNoteScalarFieldEnum',
     skip: 'Int',

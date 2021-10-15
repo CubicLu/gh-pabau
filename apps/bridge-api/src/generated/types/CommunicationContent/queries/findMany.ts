@@ -6,7 +6,7 @@ export const CommunicationContentFindManyQuery = queryField(
     type: nonNull(list(nonNull('CommunicationContent'))),
     args: {
       where: 'CommunicationContentWhereInput',
-      orderBy: list('CommunicationContentOrderByWithRelationInput'),
+      orderBy: list('CommunicationContentOrderByInput'),
       cursor: 'CommunicationContentWhereUniqueInput',
       distinct: 'CommunicationContentScalarFieldEnum',
       skip: 'Int',

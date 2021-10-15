@@ -25,7 +25,7 @@ export const CommunicationRecipient = objectType({
       type: 'Communication',
       args: {
         where: 'CommunicationWhereInput',
-        orderBy: 'CommunicationOrderByWithRelationInput',
+        orderBy: 'CommunicationOrderByInput',
         cursor: 'CommunicationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -45,7 +45,7 @@ export const CommunicationRecipient = objectType({
       type: 'CommunicationHash',
       args: {
         where: 'CommunicationHashWhereInput',
-        orderBy: 'CommunicationHashOrderByWithRelationInput',
+        orderBy: 'CommunicationHashOrderByInput',
         cursor: 'CommunicationHashWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -65,12 +65,6 @@ export const CommunicationRecipient = objectType({
       type: 'CmLead',
       resolve(root: any) {
         return root.Lead
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CommunicationRecipientCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

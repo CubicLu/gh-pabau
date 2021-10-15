@@ -6,7 +6,7 @@ export const ClassTemplateSettingFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ClassTemplateSettingWhereInput',
-      orderBy: list('ClassTemplateSettingOrderByWithRelationInput'),
+      orderBy: list('ClassTemplateSettingOrderByInput'),
       cursor: 'ClassTemplateSettingWhereUniqueInput',
       distinct: 'ClassTemplateSettingScalarFieldEnum',
       skip: 'Int',

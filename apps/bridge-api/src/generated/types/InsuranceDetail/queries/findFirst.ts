@@ -6,7 +6,7 @@ export const InsuranceDetailFindFirstQuery = queryField(
     type: 'InsuranceDetail',
     args: {
       where: 'InsuranceDetailWhereInput',
-      orderBy: list('InsuranceDetailOrderByWithRelationInput'),
+      orderBy: list('InsuranceDetailOrderByInput'),
       cursor: 'InsuranceDetailWhereUniqueInput',
       distinct: 'InsuranceDetailScalarFieldEnum',
       skip: 'Int',

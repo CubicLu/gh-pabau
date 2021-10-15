@@ -6,7 +6,7 @@ export const UserSalutationFindManyQuery = queryField(
     type: nonNull(list(nonNull('UserSalutation'))),
     args: {
       where: 'UserSalutationWhereInput',
-      orderBy: list('UserSalutationOrderByWithRelationInput'),
+      orderBy: list('UserSalutationOrderByInput'),
       cursor: 'UserSalutationWhereUniqueInput',
       distinct: 'UserSalutationScalarFieldEnum',
       skip: 'Int',

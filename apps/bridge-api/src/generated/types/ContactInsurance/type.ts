@@ -25,7 +25,7 @@ export const ContactInsurance = objectType({
       type: 'InsuranceContractPrice',
       args: {
         where: 'InsuranceContractPriceWhereInput',
-        orderBy: 'InsuranceContractPriceOrderByWithRelationInput',
+        orderBy: 'InsuranceContractPriceOrderByInput',
         cursor: 'InsuranceContractPriceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -33,12 +33,6 @@ export const ContactInsurance = objectType({
       },
       resolve(root: any) {
         return root.InsuranceContractPrice
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ContactInsuranceCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

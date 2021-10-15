@@ -4,7 +4,7 @@ export const TaxFindFirstQuery = queryField('findFirstTax', {
   type: 'Tax',
   args: {
     where: 'TaxWhereInput',
-    orderBy: list('TaxOrderByWithRelationInput'),
+    orderBy: list('TaxOrderByInput'),
     cursor: 'TaxWhereUniqueInput',
     distinct: 'TaxScalarFieldEnum',
     skip: 'Int',

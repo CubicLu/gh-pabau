@@ -4,7 +4,7 @@ export const PageFindManyQuery = queryField('findManyPage', {
   type: nonNull(list(nonNull('Page'))),
   args: {
     where: 'PageWhereInput',
-    orderBy: list('PageOrderByWithRelationInput'),
+    orderBy: list('PageOrderByInput'),
     cursor: 'PageWhereUniqueInput',
     distinct: 'PageScalarFieldEnum',
     skip: 'Int',

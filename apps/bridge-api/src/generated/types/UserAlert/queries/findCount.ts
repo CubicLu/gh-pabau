@@ -4,7 +4,7 @@ export const UserAlertFindCountQuery = queryField('findManyUserAlertCount', {
   type: nonNull('Int'),
   args: {
     where: 'UserAlertWhereInput',
-    orderBy: list('UserAlertOrderByWithRelationInput'),
+    orderBy: list('UserAlertOrderByInput'),
     cursor: 'UserAlertWhereUniqueInput',
     distinct: 'UserAlertScalarFieldEnum',
     skip: 'Int',

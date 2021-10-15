@@ -4,7 +4,7 @@ export const ClockinBreakFindManyQuery = queryField('findManyClockinBreak', {
   type: nonNull(list(nonNull('ClockinBreak'))),
   args: {
     where: 'ClockinBreakWhereInput',
-    orderBy: list('ClockinBreakOrderByWithRelationInput'),
+    orderBy: list('ClockinBreakOrderByInput'),
     cursor: 'ClockinBreakWhereUniqueInput',
     distinct: 'ClockinBreakScalarFieldEnum',
     skip: 'Int',

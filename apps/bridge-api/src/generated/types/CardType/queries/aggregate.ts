@@ -4,7 +4,7 @@ export const CardTypeAggregateQuery = queryField('aggregateCardType', {
   type: 'AggregateCardType',
   args: {
     where: 'CardTypeWhereInput',
-    orderBy: list('CardTypeOrderByWithRelationInput'),
+    orderBy: list('CardTypeOrderByInput'),
     cursor: 'CardTypeWhereUniqueInput',
     distinct: 'CardTypeScalarFieldEnum',
     skip: 'Int',

@@ -4,7 +4,7 @@ export const PackageFindCountQuery = queryField('findManyPackageCount', {
   type: nonNull('Int'),
   args: {
     where: 'PackageWhereInput',
-    orderBy: list('PackageOrderByWithRelationInput'),
+    orderBy: list('PackageOrderByInput'),
     cursor: 'PackageWhereUniqueInput',
     distinct: 'PackageScalarFieldEnum',
     skip: 'Int',

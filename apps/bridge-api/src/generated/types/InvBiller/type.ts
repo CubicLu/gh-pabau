@@ -49,7 +49,7 @@ export const InvBiller = objectType({
       type: 'InvSale',
       args: {
         where: 'InvSaleWhereInput',
-        orderBy: 'InvSaleOrderByWithRelationInput',
+        orderBy: 'InvSaleOrderByInput',
         cursor: 'InvSaleWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -57,12 +57,6 @@ export const InvBiller = objectType({
       },
       resolve(root: any) {
         return root.InvSale
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'InvBillerCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

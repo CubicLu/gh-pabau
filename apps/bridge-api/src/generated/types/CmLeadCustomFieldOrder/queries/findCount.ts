@@ -6,7 +6,7 @@ export const CmLeadCustomFieldOrderFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmLeadCustomFieldOrderWhereInput',
-      orderBy: list('CmLeadCustomFieldOrderOrderByWithRelationInput'),
+      orderBy: list('CmLeadCustomFieldOrderOrderByInput'),
       cursor: 'CmLeadCustomFieldOrderWhereUniqueInput',
       distinct: 'CmLeadCustomFieldOrderScalarFieldEnum',
       skip: 'Int',

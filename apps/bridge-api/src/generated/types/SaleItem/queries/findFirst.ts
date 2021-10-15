@@ -4,7 +4,7 @@ export const SaleItemFindFirstQuery = queryField('findFirstSaleItem', {
   type: 'SaleItem',
   args: {
     where: 'SaleItemWhereInput',
-    orderBy: list('SaleItemOrderByWithRelationInput'),
+    orderBy: list('SaleItemOrderByInput'),
     cursor: 'SaleItemWhereUniqueInput',
     distinct: 'SaleItemScalarFieldEnum',
     skip: 'Int',

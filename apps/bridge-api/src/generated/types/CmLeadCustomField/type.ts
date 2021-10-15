@@ -37,7 +37,7 @@ export const CmLeadCustomField = objectType({
       type: 'CmLeadCustomFieldOrder',
       args: {
         where: 'CmLeadCustomFieldOrderWhereInput',
-        orderBy: 'CmLeadCustomFieldOrderOrderByWithRelationInput',
+        orderBy: 'CmLeadCustomFieldOrderOrderByInput',
         cursor: 'CmLeadCustomFieldOrderWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -45,12 +45,6 @@ export const CmLeadCustomField = objectType({
       },
       resolve(root: any) {
         return root.CmLeadCustomFieldOrder
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CmLeadCustomFieldCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

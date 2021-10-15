@@ -6,7 +6,7 @@ export const CompanyRoomServiceAggregateQuery = queryField(
     type: 'AggregateCompanyRoomService',
     args: {
       where: 'CompanyRoomServiceWhereInput',
-      orderBy: list('CompanyRoomServiceOrderByWithRelationInput'),
+      orderBy: list('CompanyRoomServiceOrderByInput'),
       cursor: 'CompanyRoomServiceWhereUniqueInput',
       distinct: 'CompanyRoomServiceScalarFieldEnum',
       skip: 'Int',

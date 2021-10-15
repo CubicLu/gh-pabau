@@ -6,7 +6,7 @@ export const CmContactCustomAggregateQuery = queryField(
     type: 'AggregateCmContactCustom',
     args: {
       where: 'CmContactCustomWhereInput',
-      orderBy: list('CmContactCustomOrderByWithRelationInput'),
+      orderBy: list('CmContactCustomOrderByInput'),
       cursor: 'CmContactCustomWhereUniqueInput',
       distinct: 'CmContactCustomScalarFieldEnum',
       skip: 'Int',

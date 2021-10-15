@@ -6,7 +6,7 @@ export const CompanyBranchAttachmentFindManyQuery = queryField(
     type: nonNull(list(nonNull('CompanyBranchAttachment'))),
     args: {
       where: 'CompanyBranchAttachmentWhereInput',
-      orderBy: list('CompanyBranchAttachmentOrderByWithRelationInput'),
+      orderBy: list('CompanyBranchAttachmentOrderByInput'),
       cursor: 'CompanyBranchAttachmentWhereUniqueInput',
       distinct: 'CompanyBranchAttachmentScalarFieldEnum',
       skip: 'Int',

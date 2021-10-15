@@ -6,7 +6,7 @@ export const BacsAccountFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'BacsAccountWhereInput',
-      orderBy: list('BacsAccountOrderByWithRelationInput'),
+      orderBy: list('BacsAccountOrderByInput'),
       cursor: 'BacsAccountWhereUniqueInput',
       distinct: 'BacsAccountScalarFieldEnum',
       skip: 'Int',

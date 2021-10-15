@@ -6,7 +6,7 @@ export const AdvertCampaignAggregateQuery = queryField(
     type: 'AggregateAdvertCampaign',
     args: {
       where: 'AdvertCampaignWhereInput',
-      orderBy: list('AdvertCampaignOrderByWithRelationInput'),
+      orderBy: list('AdvertCampaignOrderByInput'),
       cursor: 'AdvertCampaignWhereUniqueInput',
       distinct: 'AdvertCampaignScalarFieldEnum',
       skip: 'Int',

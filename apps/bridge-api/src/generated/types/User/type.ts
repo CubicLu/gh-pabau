@@ -101,7 +101,7 @@ export const User = objectType({
       type: 'UserSecurityQuestionsAnswer',
       args: {
         where: 'UserSecurityQuestionsAnswerWhereInput',
-        orderBy: 'UserSecurityQuestionsAnswerOrderByWithRelationInput',
+        orderBy: 'UserSecurityQuestionsAnswerOrderByInput',
         cursor: 'UserSecurityQuestionsAnswerWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -133,7 +133,7 @@ export const User = objectType({
       type: 'UserMainPermission',
       args: {
         where: 'UserMainPermissionWhereInput',
-        orderBy: 'UserMainPermissionOrderByWithRelationInput',
+        orderBy: 'UserMainPermissionOrderByInput',
         cursor: 'UserMainPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -147,7 +147,7 @@ export const User = objectType({
       type: 'UserMobilePermission',
       args: {
         where: 'UserMobilePermissionWhereInput',
-        orderBy: 'UserMobilePermissionOrderByWithRelationInput',
+        orderBy: 'UserMobilePermissionOrderByInput',
         cursor: 'UserMobilePermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -161,7 +161,7 @@ export const User = objectType({
       type: 'UserPermission',
       args: {
         where: 'UserPermissionWhereInput',
-        orderBy: 'UserPermissionOrderByWithRelationInput',
+        orderBy: 'UserPermissionOrderByInput',
         cursor: 'UserPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -175,7 +175,7 @@ export const User = objectType({
       type: 'UserReport',
       args: {
         where: 'UserReportWhereInput',
-        orderBy: 'UserReportOrderByWithRelationInput',
+        orderBy: 'UserReportOrderByInput',
         cursor: 'UserReportWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -189,7 +189,7 @@ export const User = objectType({
       type: 'InvBiller',
       args: {
         where: 'InvBillerWhereInput',
-        orderBy: 'InvBillerOrderByWithRelationInput',
+        orderBy: 'InvBillerOrderByInput',
         cursor: 'InvBillerWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -209,7 +209,7 @@ export const User = objectType({
       type: 'UserAlertPermission',
       args: {
         where: 'UserAlertPermissionWhereInput',
-        orderBy: 'UserAlertPermissionOrderByWithRelationInput',
+        orderBy: 'UserAlertPermissionOrderByInput',
         cursor: 'UserAlertPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -223,7 +223,7 @@ export const User = objectType({
       type: 'ContactAlert',
       args: {
         where: 'ContactAlertWhereInput',
-        orderBy: 'ContactAlertOrderByWithRelationInput',
+        orderBy: 'ContactAlertOrderByInput',
         cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -243,7 +243,7 @@ export const User = objectType({
       type: 'CompanyNote',
       args: {
         where: 'CompanyNoteWhereInput',
-        orderBy: 'CompanyNoteOrderByWithRelationInput',
+        orderBy: 'CompanyNoteOrderByInput',
         cursor: 'CompanyNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -257,7 +257,7 @@ export const User = objectType({
       type: 'TrainCourseDate',
       args: {
         where: 'TrainCourseDateWhereInput',
-        orderBy: 'TrainCourseDateOrderByWithRelationInput',
+        orderBy: 'TrainCourseDateOrderByInput',
         cursor: 'TrainCourseDateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -271,7 +271,7 @@ export const User = objectType({
       type: 'SocialSurveyFeedbackResponse',
       args: {
         where: 'SocialSurveyFeedbackResponseWhereInput',
-        orderBy: 'SocialSurveyFeedbackResponseOrderByWithRelationInput',
+        orderBy: 'SocialSurveyFeedbackResponseOrderByInput',
         cursor: 'SocialSurveyFeedbackResponseWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -285,7 +285,7 @@ export const User = objectType({
       type: 'CmContactTravel',
       args: {
         where: 'CmContactTravelWhereInput',
-        orderBy: 'CmContactTravelOrderByWithRelationInput',
+        orderBy: 'CmContactTravelOrderByInput',
         cursor: 'CmContactTravelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -299,7 +299,7 @@ export const User = objectType({
       type: 'CmContactViewed',
       args: {
         where: 'CmContactViewedWhereInput',
-        orderBy: 'CmContactViewedOrderByWithRelationInput',
+        orderBy: 'CmContactViewedOrderByInput',
         cursor: 'CmContactViewedWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -313,7 +313,7 @@ export const User = objectType({
       type: 'ContactNote',
       args: {
         where: 'ContactNoteWhereInput',
-        orderBy: 'ContactNoteOrderByWithRelationInput',
+        orderBy: 'ContactNoteOrderByInput',
         cursor: 'ContactNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -327,7 +327,7 @@ export const User = objectType({
       type: 'InvProduct',
       args: {
         where: 'InvProductWhereInput',
-        orderBy: 'InvProductOrderByWithRelationInput',
+        orderBy: 'InvProductOrderByInput',
         cursor: 'InvProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -341,7 +341,7 @@ export const User = objectType({
       type: 'InvPayment',
       args: {
         where: 'InvPaymentWhereInput',
-        orderBy: 'InvPaymentOrderByWithRelationInput',
+        orderBy: 'InvPaymentOrderByInput',
         cursor: 'InvPaymentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -355,7 +355,7 @@ export const User = objectType({
       type: 'MessageTemplate',
       args: {
         where: 'MessageTemplateWhereInput',
-        orderBy: 'MessageTemplateOrderByWithRelationInput',
+        orderBy: 'MessageTemplateOrderByInput',
         cursor: 'MessageTemplateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -369,7 +369,7 @@ export const User = objectType({
       type: 'UserActivityLog',
       args: {
         where: 'UserActivityLogWhereInput',
-        orderBy: 'UserActivityLogOrderByWithRelationInput',
+        orderBy: 'UserActivityLogOrderByInput',
         cursor: 'UserActivityLogWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -383,7 +383,7 @@ export const User = objectType({
       type: 'SmsPurchase',
       args: {
         where: 'SmsPurchaseWhereInput',
-        orderBy: 'SmsPurchaseOrderByWithRelationInput',
+        orderBy: 'SmsPurchaseOrderByInput',
         cursor: 'SmsPurchaseWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -397,7 +397,7 @@ export const User = objectType({
       type: 'ContactAttachment',
       args: {
         where: 'ContactAttachmentWhereInput',
-        orderBy: 'ContactAttachmentOrderByWithRelationInput',
+        orderBy: 'ContactAttachmentOrderByInput',
         cursor: 'ContactAttachmentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -411,7 +411,7 @@ export const User = objectType({
       type: 'StaffMeta',
       args: {
         where: 'StaffMetaWhereInput',
-        orderBy: 'StaffMetaOrderByWithRelationInput',
+        orderBy: 'StaffMetaOrderByInput',
         cursor: 'StaffMetaWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -425,7 +425,7 @@ export const User = objectType({
       type: 'CmPurchaseOrder',
       args: {
         where: 'CmPurchaseOrderWhereInput',
-        orderBy: 'CmPurchaseOrderOrderByWithRelationInput',
+        orderBy: 'CmPurchaseOrderOrderByInput',
         cursor: 'CmPurchaseOrderWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -439,7 +439,7 @@ export const User = objectType({
       type: 'InventoryCount',
       args: {
         where: 'InventoryCountWhereInput',
-        orderBy: 'InventoryCountOrderByWithRelationInput',
+        orderBy: 'InventoryCountOrderByInput',
         cursor: 'InventoryCountWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -453,7 +453,7 @@ export const User = objectType({
       type: 'SocialSurveyFeedback',
       args: {
         where: 'SocialSurveyFeedbackWhereInput',
-        orderBy: 'SocialSurveyFeedbackOrderByWithRelationInput',
+        orderBy: 'SocialSurveyFeedbackOrderByInput',
         cursor: 'SocialSurveyFeedbackWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -467,7 +467,7 @@ export const User = objectType({
       type: 'InvTaxRate',
       args: {
         where: 'InvTaxRateWhereInput',
-        orderBy: 'InvTaxRateOrderByWithRelationInput',
+        orderBy: 'InvTaxRateOrderByInput',
         cursor: 'InvTaxRateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -481,7 +481,7 @@ export const User = objectType({
       type: 'InvCategory',
       args: {
         where: 'InvCategoryWhereInput',
-        orderBy: 'InvCategoryOrderByWithRelationInput',
+        orderBy: 'InvCategoryOrderByInput',
         cursor: 'InvCategoryWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -495,7 +495,7 @@ export const User = objectType({
       type: 'ManageCustomField',
       args: {
         where: 'ManageCustomFieldWhereInput',
-        orderBy: 'ManageCustomFieldOrderByWithRelationInput',
+        orderBy: 'ManageCustomFieldOrderByInput',
         cursor: 'ManageCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -509,7 +509,7 @@ export const User = objectType({
       type: 'InvWarehouseProduct',
       args: {
         where: 'InvWarehouseProductWhereInput',
-        orderBy: 'InvWarehouseProductOrderByWithRelationInput',
+        orderBy: 'InvWarehouseProductOrderByInput',
         cursor: 'InvWarehouseProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -523,7 +523,7 @@ export const User = objectType({
       type: 'InventoryMovement',
       args: {
         where: 'InventoryMovementWhereInput',
-        orderBy: 'InventoryMovementOrderByWithRelationInput',
+        orderBy: 'InventoryMovementOrderByInput',
         cursor: 'InventoryMovementWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -537,7 +537,7 @@ export const User = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByWithRelationInput',
+        orderBy: 'BookingOrderByInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -551,7 +551,7 @@ export const User = objectType({
       type: 'InvSale',
       args: {
         where: 'InvSaleWhereInput',
-        orderBy: 'InvSaleOrderByWithRelationInput',
+        orderBy: 'InvSaleOrderByInput',
         cursor: 'InvSaleWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -571,7 +571,7 @@ export const User = objectType({
       type: 'Activity',
       args: {
         where: 'ActivityWhereInput',
-        orderBy: 'ActivityOrderByWithRelationInput',
+        orderBy: 'ActivityOrderByInput',
         cursor: 'ActivityWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -585,7 +585,7 @@ export const User = objectType({
       type: 'CmLead',
       args: {
         where: 'CmLeadWhereInput',
-        orderBy: 'CmLeadOrderByWithRelationInput',
+        orderBy: 'CmLeadOrderByInput',
         cursor: 'CmLeadWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -599,7 +599,7 @@ export const User = objectType({
       type: 'Activity',
       args: {
         where: 'ActivityWhereInput',
-        orderBy: 'ActivityOrderByWithRelationInput',
+        orderBy: 'ActivityOrderByInput',
         cursor: 'ActivityWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -613,7 +613,7 @@ export const User = objectType({
       type: 'PasswordResetAuth',
       args: {
         where: 'PasswordResetAuthWhereInput',
-        orderBy: 'PasswordResetAuthOrderByWithRelationInput',
+        orderBy: 'PasswordResetAuthOrderByInput',
         cursor: 'PasswordResetAuthWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -627,7 +627,7 @@ export const User = objectType({
       type: 'ActivityUserColumns',
       args: {
         where: 'ActivityUserColumnsWhereInput',
-        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
+        orderBy: 'ActivityUserColumnsOrderByInput',
         cursor: 'ActivityUserColumnsWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -641,7 +641,7 @@ export const User = objectType({
       type: 'ServiceUserTier',
       args: {
         where: 'ServiceUserTierWhereInput',
-        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        orderBy: 'ServiceUserTierOrderByInput',
         cursor: 'ServiceUserTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -649,12 +649,6 @@ export const User = objectType({
       },
       resolve(root: any) {
         return root.ServiceUserTier
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'UserCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

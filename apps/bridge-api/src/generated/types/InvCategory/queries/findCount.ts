@@ -6,7 +6,7 @@ export const InvCategoryFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'InvCategoryWhereInput',
-      orderBy: list('InvCategoryOrderByWithRelationInput'),
+      orderBy: list('InvCategoryOrderByInput'),
       cursor: 'InvCategoryWhereUniqueInput',
       distinct: 'InvCategoryScalarFieldEnum',
       skip: 'Int',

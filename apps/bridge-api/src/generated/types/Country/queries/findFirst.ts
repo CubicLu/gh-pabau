@@ -4,7 +4,7 @@ export const CountryFindFirstQuery = queryField('findFirstCountry', {
   type: 'Country',
   args: {
     where: 'CountryWhereInput',
-    orderBy: list('CountryOrderByWithRelationInput'),
+    orderBy: list('CountryOrderByInput'),
     cursor: 'CountryWhereUniqueInput',
     distinct: 'CountryScalarFieldEnum',
     skip: 'Int',

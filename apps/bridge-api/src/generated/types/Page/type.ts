@@ -32,7 +32,7 @@ export const Page = objectType({
       type: 'UserPermission',
       args: {
         where: 'UserPermissionWhereInput',
-        orderBy: 'UserPermissionOrderByWithRelationInput',
+        orderBy: 'UserPermissionOrderByInput',
         cursor: 'UserPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -46,7 +46,7 @@ export const Page = objectType({
       type: 'CompanyPermission',
       args: {
         where: 'CompanyPermissionWhereInput',
-        orderBy: 'CompanyPermissionOrderByWithRelationInput',
+        orderBy: 'CompanyPermissionOrderByInput',
         cursor: 'CompanyPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -66,7 +66,7 @@ export const Page = objectType({
       type: 'Page',
       args: {
         where: 'PageWhereInput',
-        orderBy: 'PageOrderByWithRelationInput',
+        orderBy: 'PageOrderByInput',
         cursor: 'PageWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -74,12 +74,6 @@ export const Page = objectType({
       },
       resolve(root: any) {
         return root.Page
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'PageCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

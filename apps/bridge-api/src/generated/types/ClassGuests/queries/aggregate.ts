@@ -4,7 +4,7 @@ export const ClassGuestsAggregateQuery = queryField('aggregateClassGuests', {
   type: 'AggregateClassGuests',
   args: {
     where: 'ClassGuestsWhereInput',
-    orderBy: list('ClassGuestsOrderByWithRelationInput'),
+    orderBy: list('ClassGuestsOrderByInput'),
     cursor: 'ClassGuestsWhereUniqueInput',
     distinct: 'ClassGuestsScalarFieldEnum',
     skip: 'Int',

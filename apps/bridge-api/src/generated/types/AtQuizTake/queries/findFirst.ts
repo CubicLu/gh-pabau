@@ -4,7 +4,7 @@ export const AtQuizTakeFindFirstQuery = queryField('findFirstAtQuizTake', {
   type: 'AtQuizTake',
   args: {
     where: 'AtQuizTakeWhereInput',
-    orderBy: list('AtQuizTakeOrderByWithRelationInput'),
+    orderBy: list('AtQuizTakeOrderByInput'),
     cursor: 'AtQuizTakeWhereUniqueInput',
     distinct: 'AtQuizTakeScalarFieldEnum',
     skip: 'Int',

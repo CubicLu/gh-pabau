@@ -4,7 +4,7 @@ export const CandidateFindCountQuery = queryField('findManyCandidateCount', {
   type: nonNull('Int'),
   args: {
     where: 'CandidateWhereInput',
-    orderBy: list('CandidateOrderByWithRelationInput'),
+    orderBy: list('CandidateOrderByInput'),
     cursor: 'CandidateWhereUniqueInput',
     distinct: 'CandidateScalarFieldEnum',
     skip: 'Int',

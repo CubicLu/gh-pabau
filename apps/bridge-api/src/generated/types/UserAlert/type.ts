@@ -19,7 +19,7 @@ export const UserAlert = objectType({
       type: 'UserAlertPermission',
       args: {
         where: 'UserAlertPermissionWhereInput',
-        orderBy: 'UserAlertPermissionOrderByWithRelationInput',
+        orderBy: 'UserAlertPermissionOrderByInput',
         cursor: 'UserAlertPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -27,12 +27,6 @@ export const UserAlert = objectType({
       },
       resolve(root: any) {
         return root.UserAlertPermission
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'UserAlertCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

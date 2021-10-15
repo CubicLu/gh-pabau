@@ -4,7 +4,7 @@ export const CmDrugFindManyQuery = queryField('findManyCmDrug', {
   type: nonNull(list(nonNull('CmDrug'))),
   args: {
     where: 'CmDrugWhereInput',
-    orderBy: list('CmDrugOrderByWithRelationInput'),
+    orderBy: list('CmDrugOrderByInput'),
     cursor: 'CmDrugWhereUniqueInput',
     distinct: 'CmDrugScalarFieldEnum',
     skip: 'Int',

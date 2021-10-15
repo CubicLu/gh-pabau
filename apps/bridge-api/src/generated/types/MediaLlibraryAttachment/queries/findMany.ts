@@ -6,7 +6,7 @@ export const MediaLlibraryAttachmentFindManyQuery = queryField(
     type: nonNull(list(nonNull('MediaLlibraryAttachment'))),
     args: {
       where: 'MediaLlibraryAttachmentWhereInput',
-      orderBy: list('MediaLlibraryAttachmentOrderByWithRelationInput'),
+      orderBy: list('MediaLlibraryAttachmentOrderByInput'),
       cursor: 'MediaLlibraryAttachmentWhereUniqueInput',
       distinct: 'MediaLlibraryAttachmentScalarFieldEnum',
       skip: 'Int',

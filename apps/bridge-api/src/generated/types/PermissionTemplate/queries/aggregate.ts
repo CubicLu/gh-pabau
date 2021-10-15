@@ -6,7 +6,7 @@ export const PermissionTemplateAggregateQuery = queryField(
     type: 'AggregatePermissionTemplate',
     args: {
       where: 'PermissionTemplateWhereInput',
-      orderBy: list('PermissionTemplateOrderByWithRelationInput'),
+      orderBy: list('PermissionTemplateOrderByInput'),
       cursor: 'PermissionTemplateWhereUniqueInput',
       distinct: 'PermissionTemplateScalarFieldEnum',
       skip: 'Int',

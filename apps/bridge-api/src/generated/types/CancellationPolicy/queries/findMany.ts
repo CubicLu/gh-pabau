@@ -6,7 +6,7 @@ export const CancellationPolicyFindManyQuery = queryField(
     type: nonNull(list(nonNull('CancellationPolicy'))),
     args: {
       where: 'CancellationPolicyWhereInput',
-      orderBy: list('CancellationPolicyOrderByWithRelationInput'),
+      orderBy: list('CancellationPolicyOrderByInput'),
       cursor: 'CancellationPolicyWhereUniqueInput',
       distinct: 'CancellationPolicyScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const TimezoneFindCountQuery = queryField('findManyTimezoneCount', {
   type: nonNull('Int'),
   args: {
     where: 'TimezoneWhereInput',
-    orderBy: list('TimezoneOrderByWithRelationInput'),
+    orderBy: list('TimezoneOrderByInput'),
     cursor: 'TimezoneWhereUniqueInput',
     distinct: 'TimezoneScalarFieldEnum',
     skip: 'Int',

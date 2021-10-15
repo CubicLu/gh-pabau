@@ -6,7 +6,7 @@ export const ClientFormSettingFindManyQuery = queryField(
     type: nonNull(list(nonNull('ClientFormSetting'))),
     args: {
       where: 'ClientFormSettingWhereInput',
-      orderBy: list('ClientFormSettingOrderByWithRelationInput'),
+      orderBy: list('ClientFormSettingOrderByInput'),
       cursor: 'ClientFormSettingWhereUniqueInput',
       distinct: 'ClientFormSettingScalarFieldEnum',
       skip: 'Int',

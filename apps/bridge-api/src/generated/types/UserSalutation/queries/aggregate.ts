@@ -6,7 +6,7 @@ export const UserSalutationAggregateQuery = queryField(
     type: 'AggregateUserSalutation',
     args: {
       where: 'UserSalutationWhereInput',
-      orderBy: list('UserSalutationOrderByWithRelationInput'),
+      orderBy: list('UserSalutationOrderByInput'),
       cursor: 'UserSalutationWhereUniqueInput',
       distinct: 'UserSalutationScalarFieldEnum',
       skip: 'Int',

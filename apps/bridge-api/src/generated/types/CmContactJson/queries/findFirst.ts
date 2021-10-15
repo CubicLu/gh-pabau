@@ -6,7 +6,7 @@ export const CmContactJsonFindFirstQuery = queryField(
     type: 'CmContactJson',
     args: {
       where: 'CmContactJsonWhereInput',
-      orderBy: list('CmContactJsonOrderByWithRelationInput'),
+      orderBy: list('CmContactJsonOrderByInput'),
       cursor: 'CmContactJsonWhereUniqueInput',
       distinct: 'CmContactJsonScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CreditNoteTypeAggregateQuery = queryField(
     type: 'AggregateCreditNoteType',
     args: {
       where: 'CreditNoteTypeWhereInput',
-      orderBy: list('CreditNoteTypeOrderByWithRelationInput'),
+      orderBy: list('CreditNoteTypeOrderByInput'),
       cursor: 'CreditNoteTypeWhereUniqueInput',
       distinct: 'CreditNoteTypeScalarFieldEnum',
       skip: 'Int',

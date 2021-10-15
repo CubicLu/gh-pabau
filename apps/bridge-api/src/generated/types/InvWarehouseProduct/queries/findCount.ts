@@ -6,7 +6,7 @@ export const InvWarehouseProductFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'InvWarehouseProductWhereInput',
-      orderBy: list('InvWarehouseProductOrderByWithRelationInput'),
+      orderBy: list('InvWarehouseProductOrderByInput'),
       cursor: 'InvWarehouseProductWhereUniqueInput',
       distinct: 'InvWarehouseProductScalarFieldEnum',
       skip: 'Int',

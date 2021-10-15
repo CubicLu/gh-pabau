@@ -4,7 +4,7 @@ export const BugLogFindCountQuery = queryField('findManyBugLogCount', {
   type: nonNull('Int'),
   args: {
     where: 'BugLogWhereInput',
-    orderBy: list('BugLogOrderByWithRelationInput'),
+    orderBy: list('BugLogOrderByInput'),
     cursor: 'BugLogWhereUniqueInput',
     distinct: 'BugLogScalarFieldEnum',
     skip: 'Int',

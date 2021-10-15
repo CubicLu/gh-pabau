@@ -6,7 +6,7 @@ export const UserGroupMemberFindFirstQuery = queryField(
     type: 'UserGroupMember',
     args: {
       where: 'UserGroupMemberWhereInput',
-      orderBy: list('UserGroupMemberOrderByWithRelationInput'),
+      orderBy: list('UserGroupMemberOrderByInput'),
       cursor: 'UserGroupMemberWhereUniqueInput',
       distinct: 'UserGroupMemberScalarFieldEnum',
       skip: 'Int',

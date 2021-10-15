@@ -6,7 +6,7 @@ export const PermissionTemplateFindManyQuery = queryField(
     type: nonNull(list(nonNull('PermissionTemplate'))),
     args: {
       where: 'PermissionTemplateWhereInput',
-      orderBy: list('PermissionTemplateOrderByWithRelationInput'),
+      orderBy: list('PermissionTemplateOrderByInput'),
       cursor: 'PermissionTemplateWhereUniqueInput',
       distinct: 'PermissionTemplateScalarFieldEnum',
       skip: 'Int',

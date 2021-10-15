@@ -6,7 +6,7 @@ export const MessageTemplateFindManyQuery = queryField(
     type: nonNull(list(nonNull('MessageTemplate'))),
     args: {
       where: 'MessageTemplateWhereInput',
-      orderBy: list('MessageTemplateOrderByWithRelationInput'),
+      orderBy: list('MessageTemplateOrderByInput'),
       cursor: 'MessageTemplateWhereUniqueInput',
       distinct: 'MessageTemplateScalarFieldEnum',
       skip: 'Int',

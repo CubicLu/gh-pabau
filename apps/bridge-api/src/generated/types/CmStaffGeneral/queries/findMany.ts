@@ -6,7 +6,7 @@ export const CmStaffGeneralFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmStaffGeneral'))),
     args: {
       where: 'CmStaffGeneralWhereInput',
-      orderBy: list('CmStaffGeneralOrderByWithRelationInput'),
+      orderBy: list('CmStaffGeneralOrderByInput'),
       cursor: 'CmStaffGeneralWhereUniqueInput',
       distinct: 'CmStaffGeneralScalarFieldEnum',
       skip: 'Int',

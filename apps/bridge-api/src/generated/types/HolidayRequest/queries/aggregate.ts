@@ -6,7 +6,7 @@ export const HolidayRequestAggregateQuery = queryField(
     type: 'AggregateHolidayRequest',
     args: {
       where: 'HolidayRequestWhereInput',
-      orderBy: list('HolidayRequestOrderByWithRelationInput'),
+      orderBy: list('HolidayRequestOrderByInput'),
       cursor: 'HolidayRequestWhereUniqueInput',
       distinct: 'HolidayRequestScalarFieldEnum',
       skip: 'Int',

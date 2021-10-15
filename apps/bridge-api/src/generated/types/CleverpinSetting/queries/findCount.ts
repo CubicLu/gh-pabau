@@ -6,7 +6,7 @@ export const CleverpinSettingFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CleverpinSettingWhereInput',
-      orderBy: list('CleverpinSettingOrderByWithRelationInput'),
+      orderBy: list('CleverpinSettingOrderByInput'),
       cursor: 'CleverpinSettingWhereUniqueInput',
       distinct: 'CleverpinSettingScalarFieldEnum',
       skip: 'Int',

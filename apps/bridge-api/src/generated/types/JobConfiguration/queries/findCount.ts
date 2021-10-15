@@ -6,7 +6,7 @@ export const JobConfigurationFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'JobConfigurationWhereInput',
-      orderBy: list('JobConfigurationOrderByWithRelationInput'),
+      orderBy: list('JobConfigurationOrderByInput'),
       cursor: 'JobConfigurationWhereUniqueInput',
       distinct: 'JobConfigurationScalarFieldEnum',
       skip: 'Int',

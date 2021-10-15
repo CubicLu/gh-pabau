@@ -4,7 +4,7 @@ export const LoyaltyPointsFindManyQuery = queryField('findManyLoyaltyPoints', {
   type: nonNull(list(nonNull('LoyaltyPoints'))),
   args: {
     where: 'LoyaltyPointsWhereInput',
-    orderBy: list('LoyaltyPointsOrderByWithRelationInput'),
+    orderBy: list('LoyaltyPointsOrderByInput'),
     cursor: 'LoyaltyPointsWhereUniqueInput',
     distinct: 'LoyaltyPointsScalarFieldEnum',
     skip: 'Int',

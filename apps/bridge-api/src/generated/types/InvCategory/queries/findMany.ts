@@ -4,7 +4,7 @@ export const InvCategoryFindManyQuery = queryField('findManyInvCategory', {
   type: nonNull(list(nonNull('InvCategory'))),
   args: {
     where: 'InvCategoryWhereInput',
-    orderBy: list('InvCategoryOrderByWithRelationInput'),
+    orderBy: list('InvCategoryOrderByInput'),
     cursor: 'InvCategoryWhereUniqueInput',
     distinct: 'InvCategoryScalarFieldEnum',
     skip: 'Int',

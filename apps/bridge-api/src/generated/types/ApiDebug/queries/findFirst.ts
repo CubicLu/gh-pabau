@@ -4,7 +4,7 @@ export const ApiDebugFindFirstQuery = queryField('findFirstApiDebug', {
   type: 'ApiDebug',
   args: {
     where: 'ApiDebugWhereInput',
-    orderBy: list('ApiDebugOrderByWithRelationInput'),
+    orderBy: list('ApiDebugOrderByInput'),
     cursor: 'ApiDebugWhereUniqueInput',
     distinct: 'ApiDebugScalarFieldEnum',
     skip: 'Int',

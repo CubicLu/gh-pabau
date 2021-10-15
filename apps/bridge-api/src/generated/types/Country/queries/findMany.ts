@@ -4,7 +4,7 @@ export const CountryFindManyQuery = queryField('findManyCountry', {
   type: nonNull(list(nonNull('Country'))),
   args: {
     where: 'CountryWhereInput',
-    orderBy: list('CountryOrderByWithRelationInput'),
+    orderBy: list('CountryOrderByInput'),
     cursor: 'CountryWhereUniqueInput',
     distinct: 'CountryScalarFieldEnum',
     skip: 'Int',

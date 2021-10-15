@@ -4,7 +4,7 @@ export const CmCampaignAggregateQuery = queryField('aggregateCmCampaign', {
   type: 'AggregateCmCampaign',
   args: {
     where: 'CmCampaignWhereInput',
-    orderBy: list('CmCampaignOrderByWithRelationInput'),
+    orderBy: list('CmCampaignOrderByInput'),
     cursor: 'CmCampaignWhereUniqueInput',
     distinct: 'CmCampaignScalarFieldEnum',
     skip: 'Int',

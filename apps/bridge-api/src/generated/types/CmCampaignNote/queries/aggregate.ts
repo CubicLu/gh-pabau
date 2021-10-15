@@ -6,7 +6,7 @@ export const CmCampaignNoteAggregateQuery = queryField(
     type: 'AggregateCmCampaignNote',
     args: {
       where: 'CmCampaignNoteWhereInput',
-      orderBy: list('CmCampaignNoteOrderByWithRelationInput'),
+      orderBy: list('CmCampaignNoteOrderByInput'),
       cursor: 'CmCampaignNoteWhereUniqueInput',
       distinct: 'CmCampaignNoteScalarFieldEnum',
       skip: 'Int',

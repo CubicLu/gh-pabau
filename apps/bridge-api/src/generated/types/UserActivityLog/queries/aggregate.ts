@@ -6,7 +6,7 @@ export const UserActivityLogAggregateQuery = queryField(
     type: 'AggregateUserActivityLog',
     args: {
       where: 'UserActivityLogWhereInput',
-      orderBy: list('UserActivityLogOrderByWithRelationInput'),
+      orderBy: list('UserActivityLogOrderByInput'),
       cursor: 'UserActivityLogWhereUniqueInput',
       distinct: 'UserActivityLogScalarFieldEnum',
       skip: 'Int',

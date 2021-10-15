@@ -14,7 +14,7 @@ export const CompanyPosition = objectType({
       type: 'CmStaffGeneral',
       args: {
         where: 'CmStaffGeneralWhereInput',
-        orderBy: 'CmStaffGeneralOrderByWithRelationInput',
+        orderBy: 'CmStaffGeneralOrderByInput',
         cursor: 'CmStaffGeneralWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -28,12 +28,6 @@ export const CompanyPosition = objectType({
       type: 'Company',
       resolve(root: any) {
         return root.Company
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CompanyPositionCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

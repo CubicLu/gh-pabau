@@ -6,7 +6,7 @@ export const AutomationLogFindFirstQuery = queryField(
     type: 'AutomationLog',
     args: {
       where: 'AutomationLogWhereInput',
-      orderBy: list('AutomationLogOrderByWithRelationInput'),
+      orderBy: list('AutomationLogOrderByInput'),
       cursor: 'AutomationLogWhereUniqueInput',
       distinct: 'AutomationLogScalarFieldEnum',
       skip: 'Int',

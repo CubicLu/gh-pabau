@@ -4,7 +4,7 @@ export const ActivityFindCountQuery = queryField('findManyActivityCount', {
   type: nonNull('Int'),
   args: {
     where: 'ActivityWhereInput',
-    orderBy: list('ActivityOrderByWithRelationInput'),
+    orderBy: list('ActivityOrderByInput'),
     cursor: 'ActivityWhereUniqueInput',
     distinct: 'ActivityScalarFieldEnum',
     skip: 'Int',

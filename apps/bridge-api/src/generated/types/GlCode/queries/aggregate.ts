@@ -4,7 +4,7 @@ export const GlCodeAggregateQuery = queryField('aggregateGlCode', {
   type: 'AggregateGlCode',
   args: {
     where: 'GlCodeWhereInput',
-    orderBy: list('GlCodeOrderByWithRelationInput'),
+    orderBy: list('GlCodeOrderByInput'),
     cursor: 'GlCodeWhereUniqueInput',
     distinct: 'GlCodeScalarFieldEnum',
     skip: 'Int',

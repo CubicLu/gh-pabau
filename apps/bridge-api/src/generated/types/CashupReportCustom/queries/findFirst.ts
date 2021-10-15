@@ -6,7 +6,7 @@ export const CashupReportCustomFindFirstQuery = queryField(
     type: 'CashupReportCustom',
     args: {
       where: 'CashupReportCustomWhereInput',
-      orderBy: list('CashupReportCustomOrderByWithRelationInput'),
+      orderBy: list('CashupReportCustomOrderByInput'),
       cursor: 'CashupReportCustomWhereUniqueInput',
       distinct: 'CashupReportCustomScalarFieldEnum',
       skip: 'Int',

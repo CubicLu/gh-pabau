@@ -124,7 +124,7 @@ export const InvSale = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByWithRelationInput',
+        orderBy: 'BookingOrderByInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -138,7 +138,7 @@ export const InvSale = objectType({
       type: 'InvPayment',
       args: {
         where: 'InvPaymentWhereInput',
-        orderBy: 'InvPaymentOrderByWithRelationInput',
+        orderBy: 'InvPaymentOrderByInput',
         cursor: 'InvPaymentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -152,7 +152,7 @@ export const InvSale = objectType({
       type: 'SaleItem',
       args: {
         where: 'SaleItemWhereInput',
-        orderBy: 'SaleItemOrderByWithRelationInput',
+        orderBy: 'SaleItemOrderByInput',
         cursor: 'SaleItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -166,7 +166,7 @@ export const InvSale = objectType({
       type: 'Voucher',
       args: {
         where: 'VoucherWhereInput',
-        orderBy: 'VoucherOrderByWithRelationInput',
+        orderBy: 'VoucherOrderByInput',
         cursor: 'VoucherWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -174,12 +174,6 @@ export const InvSale = objectType({
       },
       resolve(root: any) {
         return root.Voucher
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'InvSaleCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

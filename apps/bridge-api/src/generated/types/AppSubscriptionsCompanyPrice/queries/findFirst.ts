@@ -6,7 +6,7 @@ export const AppSubscriptionsCompanyPriceFindFirstQuery = queryField(
     type: 'AppSubscriptionsCompanyPrice',
     args: {
       where: 'AppSubscriptionsCompanyPriceWhereInput',
-      orderBy: list('AppSubscriptionsCompanyPriceOrderByWithRelationInput'),
+      orderBy: list('AppSubscriptionsCompanyPriceOrderByInput'),
       cursor: 'AppSubscriptionsCompanyPriceWhereUniqueInput',
       distinct: 'AppSubscriptionsCompanyPriceScalarFieldEnum',
       skip: 'Int',

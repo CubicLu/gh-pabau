@@ -21,7 +21,7 @@ export const TemplateFolder = objectType({
       type: 'MessageTemplate',
       args: {
         where: 'MessageTemplateWhereInput',
-        orderBy: 'MessageTemplateOrderByWithRelationInput',
+        orderBy: 'MessageTemplateOrderByInput',
         cursor: 'MessageTemplateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -29,12 +29,6 @@ export const TemplateFolder = objectType({
       },
       resolve(root: any) {
         return root.MessageTemplate
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'TemplateFolderCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

@@ -6,7 +6,7 @@ export const MarketingSourceFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'MarketingSourceWhereInput',
-      orderBy: list('MarketingSourceOrderByWithRelationInput'),
+      orderBy: list('MarketingSourceOrderByInput'),
       cursor: 'MarketingSourceWhereUniqueInput',
       distinct: 'MarketingSourceScalarFieldEnum',
       skip: 'Int',

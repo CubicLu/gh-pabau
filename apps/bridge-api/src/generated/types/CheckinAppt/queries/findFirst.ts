@@ -4,7 +4,7 @@ export const CheckinApptFindFirstQuery = queryField('findFirstCheckinAppt', {
   type: 'CheckinAppt',
   args: {
     where: 'CheckinApptWhereInput',
-    orderBy: list('CheckinApptOrderByWithRelationInput'),
+    orderBy: list('CheckinApptOrderByInput'),
     cursor: 'CheckinApptWhereUniqueInput',
     distinct: 'CheckinApptScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const ClinicalSoftwareFindFirstQuery = queryField(
     type: 'ClinicalSoftware',
     args: {
       where: 'ClinicalSoftwareWhereInput',
-      orderBy: list('ClinicalSoftwareOrderByWithRelationInput'),
+      orderBy: list('ClinicalSoftwareOrderByInput'),
       cursor: 'ClinicalSoftwareWhereUniqueInput',
       distinct: 'ClinicalSoftwareScalarFieldEnum',
       skip: 'Int',

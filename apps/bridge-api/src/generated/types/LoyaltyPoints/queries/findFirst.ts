@@ -6,7 +6,7 @@ export const LoyaltyPointsFindFirstQuery = queryField(
     type: 'LoyaltyPoints',
     args: {
       where: 'LoyaltyPointsWhereInput',
-      orderBy: list('LoyaltyPointsOrderByWithRelationInput'),
+      orderBy: list('LoyaltyPointsOrderByInput'),
       cursor: 'LoyaltyPointsWhereUniqueInput',
       distinct: 'LoyaltyPointsScalarFieldEnum',
       skip: 'Int',

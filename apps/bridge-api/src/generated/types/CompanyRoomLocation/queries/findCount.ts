@@ -6,7 +6,7 @@ export const CompanyRoomLocationFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanyRoomLocationWhereInput',
-      orderBy: list('CompanyRoomLocationOrderByWithRelationInput'),
+      orderBy: list('CompanyRoomLocationOrderByInput'),
       cursor: 'CompanyRoomLocationWhereUniqueInput',
       distinct: 'CompanyRoomLocationScalarFieldEnum',
       skip: 'Int',

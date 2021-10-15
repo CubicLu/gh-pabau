@@ -4,7 +4,7 @@ export const InvProductAggregateQuery = queryField('aggregateInvProduct', {
   type: 'AggregateInvProduct',
   args: {
     where: 'InvProductWhereInput',
-    orderBy: list('InvProductOrderByWithRelationInput'),
+    orderBy: list('InvProductOrderByInput'),
     cursor: 'InvProductWhereUniqueInput',
     distinct: 'InvProductScalarFieldEnum',
     skip: 'Int',

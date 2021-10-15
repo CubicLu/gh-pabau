@@ -6,7 +6,7 @@ export const UserAlertPermissionFindFirstQuery = queryField(
     type: 'UserAlertPermission',
     args: {
       where: 'UserAlertPermissionWhereInput',
-      orderBy: list('UserAlertPermissionOrderByWithRelationInput'),
+      orderBy: list('UserAlertPermissionOrderByInput'),
       cursor: 'UserAlertPermissionWhereUniqueInput',
       distinct: 'UserAlertPermissionScalarFieldEnum',
       skip: 'Int',

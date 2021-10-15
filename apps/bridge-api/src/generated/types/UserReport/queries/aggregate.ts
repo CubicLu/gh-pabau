@@ -4,7 +4,7 @@ export const UserReportAggregateQuery = queryField('aggregateUserReport', {
   type: 'AggregateUserReport',
   args: {
     where: 'UserReportWhereInput',
-    orderBy: list('UserReportOrderByWithRelationInput'),
+    orderBy: list('UserReportOrderByInput'),
     cursor: 'UserReportWhereUniqueInput',
     distinct: 'UserReportScalarFieldEnum',
     skip: 'Int',

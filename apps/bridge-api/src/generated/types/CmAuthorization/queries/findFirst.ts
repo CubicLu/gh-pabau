@@ -6,7 +6,7 @@ export const CmAuthorizationFindFirstQuery = queryField(
     type: 'CmAuthorization',
     args: {
       where: 'CmAuthorizationWhereInput',
-      orderBy: list('CmAuthorizationOrderByWithRelationInput'),
+      orderBy: list('CmAuthorizationOrderByInput'),
       cursor: 'CmAuthorizationWhereUniqueInput',
       distinct: 'CmAuthorizationScalarFieldEnum',
       skip: 'Int',

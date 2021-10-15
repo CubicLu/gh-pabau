@@ -6,7 +6,7 @@ export const UserActivityLogFindFirstQuery = queryField(
     type: 'UserActivityLog',
     args: {
       where: 'UserActivityLogWhereInput',
-      orderBy: list('UserActivityLogOrderByWithRelationInput'),
+      orderBy: list('UserActivityLogOrderByInput'),
       cursor: 'UserActivityLogWhereUniqueInput',
       distinct: 'UserActivityLogScalarFieldEnum',
       skip: 'Int',

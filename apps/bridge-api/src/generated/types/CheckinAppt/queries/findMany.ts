@@ -4,7 +4,7 @@ export const CheckinApptFindManyQuery = queryField('findManyCheckinAppt', {
   type: nonNull(list(nonNull('CheckinAppt'))),
   args: {
     where: 'CheckinApptWhereInput',
-    orderBy: list('CheckinApptOrderByWithRelationInput'),
+    orderBy: list('CheckinApptOrderByInput'),
     cursor: 'CheckinApptWhereUniqueInput',
     distinct: 'CheckinApptScalarFieldEnum',
     skip: 'Int',

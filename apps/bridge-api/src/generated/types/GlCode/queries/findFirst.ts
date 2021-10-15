@@ -4,7 +4,7 @@ export const GlCodeFindFirstQuery = queryField('findFirstGlCode', {
   type: 'GlCode',
   args: {
     where: 'GlCodeWhereInput',
-    orderBy: list('GlCodeOrderByWithRelationInput'),
+    orderBy: list('GlCodeOrderByInput'),
     cursor: 'GlCodeWhereUniqueInput',
     distinct: 'GlCodeScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const AdvertCampaignFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AdvertCampaignWhereInput',
-      orderBy: list('AdvertCampaignOrderByWithRelationInput'),
+      orderBy: list('AdvertCampaignOrderByInput'),
       cursor: 'AdvertCampaignWhereUniqueInput',
       distinct: 'AdvertCampaignScalarFieldEnum',
       skip: 'Int',

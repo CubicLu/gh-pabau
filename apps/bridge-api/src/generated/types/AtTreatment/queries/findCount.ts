@@ -6,7 +6,7 @@ export const AtTreatmentFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AtTreatmentWhereInput',
-      orderBy: list('AtTreatmentOrderByWithRelationInput'),
+      orderBy: list('AtTreatmentOrderByInput'),
       cursor: 'AtTreatmentWhereUniqueInput',
       distinct: 'AtTreatmentScalarFieldEnum',
       skip: 'Int',

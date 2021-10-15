@@ -4,7 +4,7 @@ export const PageFindCountQuery = queryField('findManyPageCount', {
   type: nonNull('Int'),
   args: {
     where: 'PageWhereInput',
-    orderBy: list('PageOrderByWithRelationInput'),
+    orderBy: list('PageOrderByInput'),
     cursor: 'PageWhereUniqueInput',
     distinct: 'PageScalarFieldEnum',
     skip: 'Int',

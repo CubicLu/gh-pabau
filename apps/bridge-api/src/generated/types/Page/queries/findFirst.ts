@@ -4,7 +4,7 @@ export const PageFindFirstQuery = queryField('findFirstPage', {
   type: 'Page',
   args: {
     where: 'PageWhereInput',
-    orderBy: list('PageOrderByWithRelationInput'),
+    orderBy: list('PageOrderByInput'),
     cursor: 'PageWhereUniqueInput',
     distinct: 'PageScalarFieldEnum',
     skip: 'Int',

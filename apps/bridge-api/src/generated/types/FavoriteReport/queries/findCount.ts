@@ -6,7 +6,7 @@ export const FavoriteReportFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'FavoriteReportWhereInput',
-      orderBy: list('FavoriteReportOrderByWithRelationInput'),
+      orderBy: list('FavoriteReportOrderByInput'),
       cursor: 'FavoriteReportWhereUniqueInput',
       distinct: 'FavoriteReportScalarFieldEnum',
       skip: 'Int',

@@ -16,7 +16,7 @@ export const MedicalCondition = objectType({
       type: 'ContactAlert',
       args: {
         where: 'ContactAlertWhereInput',
-        orderBy: 'ContactAlertOrderByWithRelationInput',
+        orderBy: 'ContactAlertOrderByInput',
         cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -30,7 +30,7 @@ export const MedicalCondition = objectType({
       type: 'CmContactMedicalCondition',
       args: {
         where: 'CmContactMedicalConditionWhereInput',
-        orderBy: 'CmContactMedicalConditionOrderByWithRelationInput',
+        orderBy: 'CmContactMedicalConditionOrderByInput',
         cursor: 'CmContactMedicalConditionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -38,12 +38,6 @@ export const MedicalCondition = objectType({
       },
       resolve(root: any) {
         return root.CmContactMedicalCondition
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'MedicalConditionCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

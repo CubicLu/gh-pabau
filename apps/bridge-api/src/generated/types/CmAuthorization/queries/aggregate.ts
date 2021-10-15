@@ -6,7 +6,7 @@ export const CmAuthorizationAggregateQuery = queryField(
     type: 'AggregateCmAuthorization',
     args: {
       where: 'CmAuthorizationWhereInput',
-      orderBy: list('CmAuthorizationOrderByWithRelationInput'),
+      orderBy: list('CmAuthorizationOrderByInput'),
       cursor: 'CmAuthorizationWhereUniqueInput',
       distinct: 'CmAuthorizationScalarFieldEnum',
       skip: 'Int',

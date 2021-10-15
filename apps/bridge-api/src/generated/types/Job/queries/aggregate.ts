@@ -4,7 +4,7 @@ export const JobAggregateQuery = queryField('aggregateJob', {
   type: 'AggregateJob',
   args: {
     where: 'JobWhereInput',
-    orderBy: list('JobOrderByWithRelationInput'),
+    orderBy: list('JobOrderByInput'),
     cursor: 'JobWhereUniqueInput',
     distinct: 'JobScalarFieldEnum',
     skip: 'Int',

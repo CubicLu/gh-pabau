@@ -4,7 +4,7 @@ export const AcLogFindFirstQuery = queryField('findFirstAcLog', {
   type: 'AcLog',
   args: {
     where: 'AcLogWhereInput',
-    orderBy: list('AcLogOrderByWithRelationInput'),
+    orderBy: list('AcLogOrderByInput'),
     cursor: 'AcLogWhereUniqueInput',
     distinct: 'AcLogScalarFieldEnum',
     skip: 'Int',

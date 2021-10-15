@@ -4,7 +4,7 @@ export const ClassNotesFindFirstQuery = queryField('findFirstClassNotes', {
   type: 'ClassNotes',
   args: {
     where: 'ClassNotesWhereInput',
-    orderBy: list('ClassNotesOrderByWithRelationInput'),
+    orderBy: list('ClassNotesOrderByInput'),
     cursor: 'ClassNotesWhereUniqueInput',
     distinct: 'ClassNotesScalarFieldEnum',
     skip: 'Int',

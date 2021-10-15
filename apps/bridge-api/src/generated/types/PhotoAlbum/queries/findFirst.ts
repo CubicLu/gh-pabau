@@ -4,7 +4,7 @@ export const PhotoAlbumFindFirstQuery = queryField('findFirstPhotoAlbum', {
   type: 'PhotoAlbum',
   args: {
     where: 'PhotoAlbumWhereInput',
-    orderBy: list('PhotoAlbumOrderByWithRelationInput'),
+    orderBy: list('PhotoAlbumOrderByInput'),
     cursor: 'PhotoAlbumWhereUniqueInput',
     distinct: 'PhotoAlbumScalarFieldEnum',
     skip: 'Int',

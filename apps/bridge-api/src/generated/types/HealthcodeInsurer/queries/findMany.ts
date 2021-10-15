@@ -6,7 +6,7 @@ export const HealthcodeInsurerFindManyQuery = queryField(
     type: nonNull(list(nonNull('HealthcodeInsurer'))),
     args: {
       where: 'HealthcodeInsurerWhereInput',
-      orderBy: list('HealthcodeInsurerOrderByWithRelationInput'),
+      orderBy: list('HealthcodeInsurerOrderByInput'),
       cursor: 'HealthcodeInsurerWhereUniqueInput',
       distinct: 'HealthcodeInsurerScalarFieldEnum',
       skip: 'Int',

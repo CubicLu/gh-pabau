@@ -4,7 +4,7 @@ export const CompanyEmailAggregateQuery = queryField('aggregateCompanyEmail', {
   type: 'AggregateCompanyEmail',
   args: {
     where: 'CompanyEmailWhereInput',
-    orderBy: list('CompanyEmailOrderByWithRelationInput'),
+    orderBy: list('CompanyEmailOrderByInput'),
     cursor: 'CompanyEmailWhereUniqueInput',
     distinct: 'CompanyEmailScalarFieldEnum',
     skip: 'Int',

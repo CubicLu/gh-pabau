@@ -4,7 +4,7 @@ export const CmDrugFindFirstQuery = queryField('findFirstCmDrug', {
   type: 'CmDrug',
   args: {
     where: 'CmDrugWhereInput',
-    orderBy: list('CmDrugOrderByWithRelationInput'),
+    orderBy: list('CmDrugOrderByInput'),
     cursor: 'CmDrugWhereUniqueInput',
     distinct: 'CmDrugScalarFieldEnum',
     skip: 'Int',

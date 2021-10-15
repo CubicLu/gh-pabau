@@ -51,7 +51,7 @@ export const SocialSurveyFeedback = objectType({
       type: 'SocialSurveyFeedbackResponse',
       args: {
         where: 'SocialSurveyFeedbackResponseWhereInput',
-        orderBy: 'SocialSurveyFeedbackResponseOrderByWithRelationInput',
+        orderBy: 'SocialSurveyFeedbackResponseOrderByInput',
         cursor: 'SocialSurveyFeedbackResponseWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -65,7 +65,7 @@ export const SocialSurveyFeedback = objectType({
       type: 'SocialSurveyAnswer',
       args: {
         where: 'SocialSurveyAnswerWhereInput',
-        orderBy: 'SocialSurveyAnswerOrderByWithRelationInput',
+        orderBy: 'SocialSurveyAnswerOrderByInput',
         cursor: 'SocialSurveyAnswerWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -73,12 +73,6 @@ export const SocialSurveyFeedback = objectType({
       },
       resolve(root: any) {
         return root.SocialSurveyAnswer
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'SocialSurveyFeedbackCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

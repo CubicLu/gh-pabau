@@ -4,7 +4,7 @@ export const BacsAccountFindFirstQuery = queryField('findFirstBacsAccount', {
   type: 'BacsAccount',
   args: {
     where: 'BacsAccountWhereInput',
-    orderBy: list('BacsAccountOrderByWithRelationInput'),
+    orderBy: list('BacsAccountOrderByInput'),
     cursor: 'BacsAccountWhereUniqueInput',
     distinct: 'BacsAccountScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const ClassSmsHistoryFindFirstQuery = queryField(
     type: 'ClassSmsHistory',
     args: {
       where: 'ClassSmsHistoryWhereInput',
-      orderBy: list('ClassSmsHistoryOrderByWithRelationInput'),
+      orderBy: list('ClassSmsHistoryOrderByInput'),
       cursor: 'ClassSmsHistoryWhereUniqueInput',
       distinct: 'ClassSmsHistoryScalarFieldEnum',
       skip: 'Int',

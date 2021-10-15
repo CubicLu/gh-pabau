@@ -6,7 +6,7 @@ export const BookingSettingFindManyQuery = queryField(
     type: nonNull(list(nonNull('BookingSetting'))),
     args: {
       where: 'BookingSettingWhereInput',
-      orderBy: list('BookingSettingOrderByWithRelationInput'),
+      orderBy: list('BookingSettingOrderByInput'),
       cursor: 'BookingSettingWhereUniqueInput',
       distinct: 'BookingSettingScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CmExtraPatientFindFirstQuery = queryField(
     type: 'CmExtraPatient',
     args: {
       where: 'CmExtraPatientWhereInput',
-      orderBy: list('CmExtraPatientOrderByWithRelationInput'),
+      orderBy: list('CmExtraPatientOrderByInput'),
       cursor: 'CmExtraPatientWhereUniqueInput',
       distinct: 'CmExtraPatientScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const AtQuizTakeAggregateQuery = queryField('aggregateAtQuizTake', {
   type: 'AggregateAtQuizTake',
   args: {
     where: 'AtQuizTakeWhereInput',
-    orderBy: list('AtQuizTakeOrderByWithRelationInput'),
+    orderBy: list('AtQuizTakeOrderByInput'),
     cursor: 'AtQuizTakeWhereUniqueInput',
     distinct: 'AtQuizTakeScalarFieldEnum',
     skip: 'Int',

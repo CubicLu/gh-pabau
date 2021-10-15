@@ -4,7 +4,7 @@ export const UserMasterFindCountQuery = queryField('findManyUserMasterCount', {
   type: nonNull('Int'),
   args: {
     where: 'UserMasterWhereInput',
-    orderBy: list('UserMasterOrderByWithRelationInput'),
+    orderBy: list('UserMasterOrderByInput'),
     cursor: 'UserMasterWhereUniqueInput',
     distinct: 'UserMasterScalarFieldEnum',
     skip: 'Int',

@@ -4,7 +4,7 @@ export const CheckinQueueFindFirstQuery = queryField('findFirstCheckinQueue', {
   type: 'CheckinQueue',
   args: {
     where: 'CheckinQueueWhereInput',
-    orderBy: list('CheckinQueueOrderByWithRelationInput'),
+    orderBy: list('CheckinQueueOrderByInput'),
     cursor: 'CheckinQueueWhereUniqueInput',
     distinct: 'CheckinQueueScalarFieldEnum',
     skip: 'Int',

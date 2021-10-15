@@ -6,7 +6,7 @@ export const CompanyMetaFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanyMetaWhereInput',
-      orderBy: list('CompanyMetaOrderByWithRelationInput'),
+      orderBy: list('CompanyMetaOrderByInput'),
       cursor: 'CompanyMetaWhereUniqueInput',
       distinct: 'CompanyMetaScalarFieldEnum',
       skip: 'Int',

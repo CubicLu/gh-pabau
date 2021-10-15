@@ -4,7 +4,7 @@ export const PipelineFindManyQuery = queryField('findManyPipeline', {
   type: nonNull(list(nonNull('Pipeline'))),
   args: {
     where: 'PipelineWhereInput',
-    orderBy: list('PipelineOrderByWithRelationInput'),
+    orderBy: list('PipelineOrderByInput'),
     cursor: 'PipelineWhereUniqueInput',
     distinct: 'PipelineScalarFieldEnum',
     skip: 'Int',

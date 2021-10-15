@@ -4,7 +4,7 @@ export const AcLogUrlFindFirstQuery = queryField('findFirstAcLogUrl', {
   type: 'AcLogUrl',
   args: {
     where: 'AcLogUrlWhereInput',
-    orderBy: list('AcLogUrlOrderByWithRelationInput'),
+    orderBy: list('AcLogUrlOrderByInput'),
     cursor: 'AcLogUrlWhereUniqueInput',
     distinct: 'AcLogUrlScalarFieldEnum',
     skip: 'Int',

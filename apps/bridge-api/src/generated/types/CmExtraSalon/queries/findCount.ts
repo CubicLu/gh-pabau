@@ -6,7 +6,7 @@ export const CmExtraSalonFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmExtraSalonWhereInput',
-      orderBy: list('CmExtraSalonOrderByWithRelationInput'),
+      orderBy: list('CmExtraSalonOrderByInput'),
       cursor: 'CmExtraSalonWhereUniqueInput',
       distinct: 'CmExtraSalonScalarFieldEnum',
       skip: 'Int',

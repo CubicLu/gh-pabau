@@ -52,7 +52,7 @@ export const CompanyBranch = objectType({
       type: 'CompanyRoomLocation',
       args: {
         where: 'CompanyRoomLocationWhereInput',
-        orderBy: 'CompanyRoomLocationOrderByWithRelationInput',
+        orderBy: 'CompanyRoomLocationOrderByInput',
         cursor: 'CompanyRoomLocationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -66,7 +66,7 @@ export const CompanyBranch = objectType({
       type: 'RotaShift',
       args: {
         where: 'RotaShiftWhereInput',
-        orderBy: 'RotaShiftOrderByWithRelationInput',
+        orderBy: 'RotaShiftOrderByInput',
         cursor: 'RotaShiftWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -80,7 +80,7 @@ export const CompanyBranch = objectType({
       type: 'CmStaffGeneral',
       args: {
         where: 'CmStaffGeneralWhereInput',
-        orderBy: 'CmStaffGeneralOrderByWithRelationInput',
+        orderBy: 'CmStaffGeneralOrderByInput',
         cursor: 'CmStaffGeneralWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -94,7 +94,7 @@ export const CompanyBranch = objectType({
       type: 'CmContactLocation',
       args: {
         where: 'CmContactLocationWhereInput',
-        orderBy: 'CmContactLocationOrderByWithRelationInput',
+        orderBy: 'CmContactLocationOrderByInput',
         cursor: 'CmContactLocationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -108,7 +108,7 @@ export const CompanyBranch = objectType({
       type: 'CmPurchaseOrder',
       args: {
         where: 'CmPurchaseOrderWhereInput',
-        orderBy: 'CmPurchaseOrderOrderByWithRelationInput',
+        orderBy: 'CmPurchaseOrderOrderByInput',
         cursor: 'CmPurchaseOrderWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -122,7 +122,7 @@ export const CompanyBranch = objectType({
       type: 'InventoryCount',
       args: {
         where: 'InventoryCountWhereInput',
-        orderBy: 'InventoryCountOrderByWithRelationInput',
+        orderBy: 'InventoryCountOrderByInput',
         cursor: 'InventoryCountWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -136,7 +136,7 @@ export const CompanyBranch = objectType({
       type: 'InvWarehouseProduct',
       args: {
         where: 'InvWarehouseProductWhereInput',
-        orderBy: 'InvWarehouseProductOrderByWithRelationInput',
+        orderBy: 'InvWarehouseProductOrderByInput',
         cursor: 'InvWarehouseProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -150,7 +150,7 @@ export const CompanyBranch = objectType({
       type: 'ManageCustomField',
       args: {
         where: 'ManageCustomFieldWhereInput',
-        orderBy: 'ManageCustomFieldOrderByWithRelationInput',
+        orderBy: 'ManageCustomFieldOrderByInput',
         cursor: 'ManageCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -164,7 +164,7 @@ export const CompanyBranch = objectType({
       type: 'CompanyBranchAttachment',
       args: {
         where: 'CompanyBranchAttachmentWhereInput',
-        orderBy: 'CompanyBranchAttachmentOrderByWithRelationInput',
+        orderBy: 'CompanyBranchAttachmentOrderByInput',
         cursor: 'CompanyBranchAttachmentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -178,7 +178,7 @@ export const CompanyBranch = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByWithRelationInput',
+        orderBy: 'BookingOrderByInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -192,7 +192,7 @@ export const CompanyBranch = objectType({
       type: 'InventoryMovement',
       args: {
         where: 'InventoryMovementWhereInput',
-        orderBy: 'InventoryMovementOrderByWithRelationInput',
+        orderBy: 'InventoryMovementOrderByInput',
         cursor: 'InventoryMovementWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -206,7 +206,7 @@ export const CompanyBranch = objectType({
       type: 'InvSale',
       args: {
         where: 'InvSaleWhereInput',
-        orderBy: 'InvSaleOrderByWithRelationInput',
+        orderBy: 'InvSaleOrderByInput',
         cursor: 'InvSaleWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -220,7 +220,7 @@ export const CompanyBranch = objectType({
       type: 'ServiceLocationTier',
       args: {
         where: 'ServiceLocationTierWhereInput',
-        orderBy: 'ServiceLocationTierOrderByWithRelationInput',
+        orderBy: 'ServiceLocationTierOrderByInput',
         cursor: 'ServiceLocationTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -228,12 +228,6 @@ export const CompanyBranch = objectType({
       },
       resolve(root: any) {
         return root.ServiceLocationTier
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CompanyBranchCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

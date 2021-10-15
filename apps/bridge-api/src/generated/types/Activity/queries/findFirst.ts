@@ -4,7 +4,7 @@ export const ActivityFindFirstQuery = queryField('findFirstActivity', {
   type: 'Activity',
   args: {
     where: 'ActivityWhereInput',
-    orderBy: list('ActivityOrderByWithRelationInput'),
+    orderBy: list('ActivityOrderByInput'),
     cursor: 'ActivityWhereUniqueInput',
     distinct: 'ActivityScalarFieldEnum',
     skip: 'Int',

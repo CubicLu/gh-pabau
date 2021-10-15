@@ -4,7 +4,7 @@ export const UserFindFirstQuery = queryField('findFirstUser', {
   type: 'User',
   args: {
     where: 'UserWhereInput',
-    orderBy: list('UserOrderByWithRelationInput'),
+    orderBy: list('UserOrderByInput'),
     cursor: 'UserWhereUniqueInput',
     distinct: 'UserScalarFieldEnum',
     skip: 'Int',

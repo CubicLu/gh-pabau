@@ -6,7 +6,7 @@ export const AppSubscriptionsCompanyPriceFindManyQuery = queryField(
     type: nonNull(list(nonNull('AppSubscriptionsCompanyPrice'))),
     args: {
       where: 'AppSubscriptionsCompanyPriceWhereInput',
-      orderBy: list('AppSubscriptionsCompanyPriceOrderByWithRelationInput'),
+      orderBy: list('AppSubscriptionsCompanyPriceOrderByInput'),
       cursor: 'AppSubscriptionsCompanyPriceWhereUniqueInput',
       distinct: 'AppSubscriptionsCompanyPriceScalarFieldEnum',
       skip: 'Int',

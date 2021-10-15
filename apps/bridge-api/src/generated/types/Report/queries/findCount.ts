@@ -4,7 +4,7 @@ export const ReportFindCountQuery = queryField('findManyReportCount', {
   type: nonNull('Int'),
   args: {
     where: 'ReportWhereInput',
-    orderBy: list('ReportOrderByWithRelationInput'),
+    orderBy: list('ReportOrderByInput'),
     cursor: 'ReportWhereUniqueInput',
     distinct: 'ReportScalarFieldEnum',
     skip: 'Int',

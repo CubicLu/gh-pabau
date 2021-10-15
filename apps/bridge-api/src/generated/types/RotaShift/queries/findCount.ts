@@ -4,7 +4,7 @@ export const RotaShiftFindCountQuery = queryField('findManyRotaShiftCount', {
   type: nonNull('Int'),
   args: {
     where: 'RotaShiftWhereInput',
-    orderBy: list('RotaShiftOrderByWithRelationInput'),
+    orderBy: list('RotaShiftOrderByInput'),
     cursor: 'RotaShiftWhereUniqueInput',
     distinct: 'RotaShiftScalarFieldEnum',
     skip: 'Int',

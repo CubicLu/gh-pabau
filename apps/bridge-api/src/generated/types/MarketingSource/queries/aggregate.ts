@@ -6,7 +6,7 @@ export const MarketingSourceAggregateQuery = queryField(
     type: 'AggregateMarketingSource',
     args: {
       where: 'MarketingSourceWhereInput',
-      orderBy: list('MarketingSourceOrderByWithRelationInput'),
+      orderBy: list('MarketingSourceOrderByInput'),
       cursor: 'MarketingSourceWhereUniqueInput',
       distinct: 'MarketingSourceScalarFieldEnum',
       skip: 'Int',

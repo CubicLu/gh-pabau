@@ -6,7 +6,7 @@ export const CleverpinSettingAggregateQuery = queryField(
     type: 'AggregateCleverpinSetting',
     args: {
       where: 'CleverpinSettingWhereInput',
-      orderBy: list('CleverpinSettingOrderByWithRelationInput'),
+      orderBy: list('CleverpinSettingOrderByInput'),
       cursor: 'CleverpinSettingWhereUniqueInput',
       distinct: 'CleverpinSettingScalarFieldEnum',
       skip: 'Int',

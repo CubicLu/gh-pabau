@@ -23,7 +23,7 @@ export const ServicesMasterCategory = objectType({
       type: 'ServiceCategory',
       args: {
         where: 'ServiceCategoryWhereInput',
-        orderBy: 'ServiceCategoryOrderByWithRelationInput',
+        orderBy: 'ServiceCategoryOrderByInput',
         cursor: 'ServiceCategoryWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -37,7 +37,7 @@ export const ServicesMasterCategory = objectType({
       type: 'InvCategory',
       args: {
         where: 'InvCategoryWhereInput',
-        orderBy: 'InvCategoryOrderByWithRelationInput',
+        orderBy: 'InvCategoryOrderByInput',
         cursor: 'InvCategoryWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -45,12 +45,6 @@ export const ServicesMasterCategory = objectType({
       },
       resolve(root: any) {
         return root.InvCategory
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ServicesMasterCategoryCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

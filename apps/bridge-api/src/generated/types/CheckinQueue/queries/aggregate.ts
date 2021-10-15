@@ -4,7 +4,7 @@ export const CheckinQueueAggregateQuery = queryField('aggregateCheckinQueue', {
   type: 'AggregateCheckinQueue',
   args: {
     where: 'CheckinQueueWhereInput',
-    orderBy: list('CheckinQueueOrderByWithRelationInput'),
+    orderBy: list('CheckinQueueOrderByInput'),
     cursor: 'CheckinQueueWhereUniqueInput',
     distinct: 'CheckinQueueScalarFieldEnum',
     skip: 'Int',

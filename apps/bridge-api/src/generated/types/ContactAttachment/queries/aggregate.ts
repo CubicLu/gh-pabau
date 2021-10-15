@@ -6,7 +6,7 @@ export const ContactAttachmentAggregateQuery = queryField(
     type: 'AggregateContactAttachment',
     args: {
       where: 'ContactAttachmentWhereInput',
-      orderBy: list('ContactAttachmentOrderByWithRelationInput'),
+      orderBy: list('ContactAttachmentOrderByInput'),
       cursor: 'ContactAttachmentWhereUniqueInput',
       distinct: 'ContactAttachmentScalarFieldEnum',
       skip: 'Int',

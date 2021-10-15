@@ -4,7 +4,7 @@ export const CmCaseNoteFindCountQuery = queryField('findManyCmCaseNoteCount', {
   type: nonNull('Int'),
   args: {
     where: 'CmCaseNoteWhereInput',
-    orderBy: list('CmCaseNoteOrderByWithRelationInput'),
+    orderBy: list('CmCaseNoteOrderByInput'),
     cursor: 'CmCaseNoteWhereUniqueInput',
     distinct: 'CmCaseNoteScalarFieldEnum',
     skip: 'Int',

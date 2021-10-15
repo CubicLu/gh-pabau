@@ -6,7 +6,7 @@ export const CompanyPolicyAggregateQuery = queryField(
     type: 'AggregateCompanyPolicy',
     args: {
       where: 'CompanyPolicyWhereInput',
-      orderBy: list('CompanyPolicyOrderByWithRelationInput'),
+      orderBy: list('CompanyPolicyOrderByInput'),
       cursor: 'CompanyPolicyWhereUniqueInput',
       distinct: 'CompanyPolicyScalarFieldEnum',
       skip: 'Int',

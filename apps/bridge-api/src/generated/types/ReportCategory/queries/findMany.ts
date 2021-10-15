@@ -6,7 +6,7 @@ export const ReportCategoryFindManyQuery = queryField(
     type: nonNull(list(nonNull('ReportCategory'))),
     args: {
       where: 'ReportCategoryWhereInput',
-      orderBy: list('ReportCategoryOrderByWithRelationInput'),
+      orderBy: list('ReportCategoryOrderByInput'),
       cursor: 'ReportCategoryWhereUniqueInput',
       distinct: 'ReportCategoryScalarFieldEnum',
       skip: 'Int',

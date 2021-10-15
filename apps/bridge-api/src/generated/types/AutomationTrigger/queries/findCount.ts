@@ -6,7 +6,7 @@ export const AutomationTriggerFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AutomationTriggerWhereInput',
-      orderBy: list('AutomationTriggerOrderByWithRelationInput'),
+      orderBy: list('AutomationTriggerOrderByInput'),
       cursor: 'AutomationTriggerWhereUniqueInput',
       distinct: 'AutomationTriggerScalarFieldEnum',
       skip: 'Int',

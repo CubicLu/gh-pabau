@@ -4,7 +4,7 @@ export const AutomationLogFindManyQuery = queryField('findManyAutomationLog', {
   type: nonNull(list(nonNull('AutomationLog'))),
   args: {
     where: 'AutomationLogWhereInput',
-    orderBy: list('AutomationLogOrderByWithRelationInput'),
+    orderBy: list('AutomationLogOrderByInput'),
     cursor: 'AutomationLogWhereUniqueInput',
     distinct: 'AutomationLogScalarFieldEnum',
     skip: 'Int',

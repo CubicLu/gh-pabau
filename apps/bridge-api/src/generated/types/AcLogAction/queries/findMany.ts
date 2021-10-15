@@ -4,7 +4,7 @@ export const AcLogActionFindManyQuery = queryField('findManyAcLogAction', {
   type: nonNull(list(nonNull('AcLogAction'))),
   args: {
     where: 'AcLogActionWhereInput',
-    orderBy: list('AcLogActionOrderByWithRelationInput'),
+    orderBy: list('AcLogActionOrderByInput'),
     cursor: 'AcLogActionWhereUniqueInput',
     distinct: 'AcLogActionScalarFieldEnum',
     skip: 'Int',

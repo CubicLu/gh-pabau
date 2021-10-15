@@ -81,7 +81,7 @@ export const Report = objectType({
       type: 'UserReport',
       args: {
         where: 'UserReportWhereInput',
-        orderBy: 'UserReportOrderByWithRelationInput',
+        orderBy: 'UserReportOrderByInput',
         cursor: 'UserReportWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -95,7 +95,7 @@ export const Report = objectType({
       type: 'FavoriteReport',
       args: {
         where: 'FavoriteReportWhereInput',
-        orderBy: 'FavoriteReportOrderByWithRelationInput',
+        orderBy: 'FavoriteReportOrderByInput',
         cursor: 'FavoriteReportWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -103,12 +103,6 @@ export const Report = objectType({
       },
       resolve(root: any) {
         return root.FavoriteReport
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ReportCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

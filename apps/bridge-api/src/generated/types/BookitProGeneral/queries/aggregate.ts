@@ -6,7 +6,7 @@ export const BookitProGeneralAggregateQuery = queryField(
     type: 'AggregateBookitProGeneral',
     args: {
       where: 'BookitProGeneralWhereInput',
-      orderBy: list('BookitProGeneralOrderByWithRelationInput'),
+      orderBy: list('BookitProGeneralOrderByInput'),
       cursor: 'BookitProGeneralWhereUniqueInput',
       distinct: 'BookitProGeneralScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const CompanyLogAggregateQuery = queryField('aggregateCompanyLog', {
   type: 'AggregateCompanyLog',
   args: {
     where: 'CompanyLogWhereInput',
-    orderBy: list('CompanyLogOrderByWithRelationInput'),
+    orderBy: list('CompanyLogOrderByInput'),
     cursor: 'CompanyLogWhereUniqueInput',
     distinct: 'CompanyLogScalarFieldEnum',
     skip: 'Int',

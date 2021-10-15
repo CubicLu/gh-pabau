@@ -6,7 +6,7 @@ export const AppPermissionAggregateQuery = queryField(
     type: 'AggregateAppPermission',
     args: {
       where: 'AppPermissionWhereInput',
-      orderBy: list('AppPermissionOrderByWithRelationInput'),
+      orderBy: list('AppPermissionOrderByInput'),
       cursor: 'AppPermissionWhereUniqueInput',
       distinct: 'AppPermissionScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CmContactViewedAggregateQuery = queryField(
     type: 'AggregateCmContactViewed',
     args: {
       where: 'CmContactViewedWhereInput',
-      orderBy: list('CmContactViewedOrderByWithRelationInput'),
+      orderBy: list('CmContactViewedOrderByInput'),
       cursor: 'CmContactViewedWhereUniqueInput',
       distinct: 'CmContactViewedScalarFieldEnum',
       skip: 'Int',

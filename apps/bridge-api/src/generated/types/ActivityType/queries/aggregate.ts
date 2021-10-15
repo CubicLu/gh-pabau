@@ -4,7 +4,7 @@ export const ActivityTypeAggregateQuery = queryField('aggregateActivityType', {
   type: 'AggregateActivityType',
   args: {
     where: 'ActivityTypeWhereInput',
-    orderBy: list('ActivityTypeOrderByWithRelationInput'),
+    orderBy: list('ActivityTypeOrderByInput'),
     cursor: 'ActivityTypeWhereUniqueInput',
     distinct: 'ActivityTypeScalarFieldEnum',
     skip: 'Int',

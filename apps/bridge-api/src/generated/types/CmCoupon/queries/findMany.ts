@@ -4,7 +4,7 @@ export const CmCouponFindManyQuery = queryField('findManyCmCoupon', {
   type: nonNull(list(nonNull('CmCoupon'))),
   args: {
     where: 'CmCouponWhereInput',
-    orderBy: list('CmCouponOrderByWithRelationInput'),
+    orderBy: list('CmCouponOrderByInput'),
     cursor: 'CmCouponWhereUniqueInput',
     distinct: 'CmCouponScalarFieldEnum',
     skip: 'Int',

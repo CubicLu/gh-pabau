@@ -6,7 +6,7 @@ export const ClinicalSoftwareFindManyQuery = queryField(
     type: nonNull(list(nonNull('ClinicalSoftware'))),
     args: {
       where: 'ClinicalSoftwareWhereInput',
-      orderBy: list('ClinicalSoftwareOrderByWithRelationInput'),
+      orderBy: list('ClinicalSoftwareOrderByInput'),
       cursor: 'ClinicalSoftwareWhereUniqueInput',
       distinct: 'ClinicalSoftwareScalarFieldEnum',
       skip: 'Int',

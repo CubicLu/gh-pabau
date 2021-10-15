@@ -6,7 +6,7 @@ export const CheckinAveragesIdleFindManyQuery = queryField(
     type: nonNull(list(nonNull('CheckinAveragesIdle'))),
     args: {
       where: 'CheckinAveragesIdleWhereInput',
-      orderBy: list('CheckinAveragesIdleOrderByWithRelationInput'),
+      orderBy: list('CheckinAveragesIdleOrderByInput'),
       cursor: 'CheckinAveragesIdleWhereUniqueInput',
       distinct: 'CheckinAveragesIdleScalarFieldEnum',
       skip: 'Int',

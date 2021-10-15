@@ -6,7 +6,7 @@ export const CompanyPermissionFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanyPermissionWhereInput',
-      orderBy: list('CompanyPermissionOrderByWithRelationInput'),
+      orderBy: list('CompanyPermissionOrderByInput'),
       cursor: 'CompanyPermissionWhereUniqueInput',
       distinct: 'CompanyPermissionScalarFieldEnum',
       skip: 'Int',

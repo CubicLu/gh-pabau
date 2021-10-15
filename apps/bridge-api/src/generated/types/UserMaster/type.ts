@@ -39,7 +39,7 @@ export const UserMaster = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByWithRelationInput',
+        orderBy: 'BookingOrderByInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -47,12 +47,6 @@ export const UserMaster = objectType({
       },
       resolve(root: any) {
         return root.SalonBookings
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'UserMasterCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

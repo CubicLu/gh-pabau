@@ -4,7 +4,7 @@ export const CmLeadNoteAggregateQuery = queryField('aggregateCmLeadNote', {
   type: 'AggregateCmLeadNote',
   args: {
     where: 'CmLeadNoteWhereInput',
-    orderBy: list('CmLeadNoteOrderByWithRelationInput'),
+    orderBy: list('CmLeadNoteOrderByInput'),
     cursor: 'CmLeadNoteWhereUniqueInput',
     distinct: 'CmLeadNoteScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const MediaLlibraryAttachmentFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'MediaLlibraryAttachmentWhereInput',
-      orderBy: list('MediaLlibraryAttachmentOrderByWithRelationInput'),
+      orderBy: list('MediaLlibraryAttachmentOrderByInput'),
       cursor: 'MediaLlibraryAttachmentWhereUniqueInput',
       distinct: 'MediaLlibraryAttachmentScalarFieldEnum',
       skip: 'Int',

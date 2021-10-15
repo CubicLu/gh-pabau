@@ -4,7 +4,7 @@ export const CmCaseNoteAggregateQuery = queryField('aggregateCmCaseNote', {
   type: 'AggregateCmCaseNote',
   args: {
     where: 'CmCaseNoteWhereInput',
-    orderBy: list('CmCaseNoteOrderByWithRelationInput'),
+    orderBy: list('CmCaseNoteOrderByInput'),
     cursor: 'CmCaseNoteWhereUniqueInput',
     distinct: 'CmCaseNoteScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const AccountManagerAggregateQuery = queryField(
     type: 'AggregateAccountManager',
     args: {
       where: 'AccountManagerWhereInput',
-      orderBy: list('AccountManagerOrderByWithRelationInput'),
+      orderBy: list('AccountManagerOrderByInput'),
       cursor: 'AccountManagerWhereUniqueInput',
       distinct: 'AccountManagerScalarFieldEnum',
       skip: 'Int',

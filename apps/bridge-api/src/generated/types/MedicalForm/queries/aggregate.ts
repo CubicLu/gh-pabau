@@ -4,7 +4,7 @@ export const MedicalFormAggregateQuery = queryField('aggregateMedicalForm', {
   type: 'AggregateMedicalForm',
   args: {
     where: 'MedicalFormWhereInput',
-    orderBy: list('MedicalFormOrderByWithRelationInput'),
+    orderBy: list('MedicalFormOrderByInput'),
     cursor: 'MedicalFormWhereUniqueInput',
     distinct: 'MedicalFormScalarFieldEnum',
     skip: 'Int',

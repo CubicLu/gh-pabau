@@ -6,7 +6,7 @@ export const ServiceUserTierFindFirstQuery = queryField(
     type: 'ServiceUserTier',
     args: {
       where: 'ServiceUserTierWhereInput',
-      orderBy: list('ServiceUserTierOrderByWithRelationInput'),
+      orderBy: list('ServiceUserTierOrderByInput'),
       cursor: 'ServiceUserTierWhereUniqueInput',
       distinct: 'ServiceUserTierScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CompanyVariableFindFirstQuery = queryField(
     type: 'CompanyVariable',
     args: {
       where: 'CompanyVariableWhereInput',
-      orderBy: list('CompanyVariableOrderByWithRelationInput'),
+      orderBy: list('CompanyVariableOrderByInput'),
       cursor: 'CompanyVariableWhereUniqueInput',
       distinct: 'CompanyVariableScalarFieldEnum',
       skip: 'Int',

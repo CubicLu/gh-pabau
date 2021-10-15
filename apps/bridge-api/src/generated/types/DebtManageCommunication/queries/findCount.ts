@@ -6,7 +6,7 @@ export const DebtManageCommunicationFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'DebtManageCommunicationWhereInput',
-      orderBy: list('DebtManageCommunicationOrderByWithRelationInput'),
+      orderBy: list('DebtManageCommunicationOrderByInput'),
       cursor: 'DebtManageCommunicationWhereUniqueInput',
       distinct: 'DebtManageCommunicationScalarFieldEnum',
       skip: 'Int',

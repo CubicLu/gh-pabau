@@ -4,7 +4,7 @@ export const ContactNoteAggregateQuery = queryField('aggregateContactNote', {
   type: 'AggregateContactNote',
   args: {
     where: 'ContactNoteWhereInput',
-    orderBy: list('ContactNoteOrderByWithRelationInput'),
+    orderBy: list('ContactNoteOrderByInput'),
     cursor: 'ContactNoteWhereUniqueInput',
     distinct: 'ContactNoteScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const XeroIntegrationFindManyQuery = queryField(
     type: nonNull(list(nonNull('XeroIntegration'))),
     args: {
       where: 'XeroIntegrationWhereInput',
-      orderBy: list('XeroIntegrationOrderByWithRelationInput'),
+      orderBy: list('XeroIntegrationOrderByInput'),
       cursor: 'XeroIntegrationWhereUniqueInput',
       distinct: 'XeroIntegrationScalarFieldEnum',
       skip: 'Int',

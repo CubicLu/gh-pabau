@@ -4,7 +4,7 @@ export const CompanyRoomFindFirstQuery = queryField('findFirstCompanyRoom', {
   type: 'CompanyRoom',
   args: {
     where: 'CompanyRoomWhereInput',
-    orderBy: list('CompanyRoomOrderByWithRelationInput'),
+    orderBy: list('CompanyRoomOrderByInput'),
     cursor: 'CompanyRoomWhereUniqueInput',
     distinct: 'CompanyRoomScalarFieldEnum',
     skip: 'Int',

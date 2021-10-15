@@ -4,7 +4,7 @@ export const UserGroupFindCountQuery = queryField('findManyUserGroupCount', {
   type: nonNull('Int'),
   args: {
     where: 'UserGroupWhereInput',
-    orderBy: list('UserGroupOrderByWithRelationInput'),
+    orderBy: list('UserGroupOrderByInput'),
     cursor: 'UserGroupWhereUniqueInput',
     distinct: 'UserGroupScalarFieldEnum',
     skip: 'Int',

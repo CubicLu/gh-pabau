@@ -6,7 +6,7 @@ export const ServicesMasterCategoryAggregateQuery = queryField(
     type: 'AggregateServicesMasterCategory',
     args: {
       where: 'ServicesMasterCategoryWhereInput',
-      orderBy: list('ServicesMasterCategoryOrderByWithRelationInput'),
+      orderBy: list('ServicesMasterCategoryOrderByInput'),
       cursor: 'ServicesMasterCategoryWhereUniqueInput',
       distinct: 'ServicesMasterCategoryScalarFieldEnum',
       skip: 'Int',

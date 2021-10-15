@@ -6,7 +6,7 @@ export const CompanyRoomLocationAggregateQuery = queryField(
     type: 'AggregateCompanyRoomLocation',
     args: {
       where: 'CompanyRoomLocationWhereInput',
-      orderBy: list('CompanyRoomLocationOrderByWithRelationInput'),
+      orderBy: list('CompanyRoomLocationOrderByInput'),
       cursor: 'CompanyRoomLocationWhereUniqueInput',
       distinct: 'CompanyRoomLocationScalarFieldEnum',
       skip: 'Int',

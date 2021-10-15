@@ -23,7 +23,7 @@ export const ActivityType = objectType({
       type: 'Activity',
       args: {
         where: 'ActivityWhereInput',
-        orderBy: 'ActivityOrderByWithRelationInput',
+        orderBy: 'ActivityOrderByInput',
         cursor: 'ActivityWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -31,12 +31,6 @@ export const ActivityType = objectType({
       },
       resolve(root: any) {
         return root.Activity
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ActivityTypeCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

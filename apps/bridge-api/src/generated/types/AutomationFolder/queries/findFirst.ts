@@ -6,7 +6,7 @@ export const AutomationFolderFindFirstQuery = queryField(
     type: 'AutomationFolder',
     args: {
       where: 'AutomationFolderWhereInput',
-      orderBy: list('AutomationFolderOrderByWithRelationInput'),
+      orderBy: list('AutomationFolderOrderByInput'),
       cursor: 'AutomationFolderWhereUniqueInput',
       distinct: 'AutomationFolderScalarFieldEnum',
       skip: 'Int',

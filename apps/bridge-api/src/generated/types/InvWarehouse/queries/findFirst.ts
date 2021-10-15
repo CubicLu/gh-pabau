@@ -4,7 +4,7 @@ export const InvWarehouseFindFirstQuery = queryField('findFirstInvWarehouse', {
   type: 'InvWarehouse',
   args: {
     where: 'InvWarehouseWhereInput',
-    orderBy: list('InvWarehouseOrderByWithRelationInput'),
+    orderBy: list('InvWarehouseOrderByInput'),
     cursor: 'InvWarehouseWhereUniqueInput',
     distinct: 'InvWarehouseScalarFieldEnum',
     skip: 'Int',

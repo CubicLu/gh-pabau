@@ -6,7 +6,7 @@ export const AppBeforeAfterFindManyQuery = queryField(
     type: nonNull(list(nonNull('AppBeforeAfter'))),
     args: {
       where: 'AppBeforeAfterWhereInput',
-      orderBy: list('AppBeforeAfterOrderByWithRelationInput'),
+      orderBy: list('AppBeforeAfterOrderByInput'),
       cursor: 'AppBeforeAfterWhereUniqueInput',
       distinct: 'AppBeforeAfterScalarFieldEnum',
       skip: 'Int',

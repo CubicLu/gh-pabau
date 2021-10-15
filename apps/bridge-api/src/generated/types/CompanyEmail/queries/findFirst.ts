@@ -4,7 +4,7 @@ export const CompanyEmailFindFirstQuery = queryField('findFirstCompanyEmail', {
   type: 'CompanyEmail',
   args: {
     where: 'CompanyEmailWhereInput',
-    orderBy: list('CompanyEmailOrderByWithRelationInput'),
+    orderBy: list('CompanyEmailOrderByInput'),
     cursor: 'CompanyEmailWhereUniqueInput',
     distinct: 'CompanyEmailScalarFieldEnum',
     skip: 'Int',

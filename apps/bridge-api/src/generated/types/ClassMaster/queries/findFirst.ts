@@ -4,7 +4,7 @@ export const ClassMasterFindFirstQuery = queryField('findFirstClassMaster', {
   type: 'ClassMaster',
   args: {
     where: 'ClassMasterWhereInput',
-    orderBy: list('ClassMasterOrderByWithRelationInput'),
+    orderBy: list('ClassMasterOrderByInput'),
     cursor: 'ClassMasterWhereUniqueInput',
     distinct: 'ClassMasterScalarFieldEnum',
     skip: 'Int',

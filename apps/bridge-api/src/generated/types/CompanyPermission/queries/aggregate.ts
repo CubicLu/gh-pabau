@@ -6,7 +6,7 @@ export const CompanyPermissionAggregateQuery = queryField(
     type: 'AggregateCompanyPermission',
     args: {
       where: 'CompanyPermissionWhereInput',
-      orderBy: list('CompanyPermissionOrderByWithRelationInput'),
+      orderBy: list('CompanyPermissionOrderByInput'),
       cursor: 'CompanyPermissionWhereUniqueInput',
       distinct: 'CompanyPermissionScalarFieldEnum',
       skip: 'Int',

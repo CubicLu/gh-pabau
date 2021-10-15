@@ -4,7 +4,7 @@ export const CmLeadFindManyQuery = queryField('findManyCmLead', {
   type: nonNull(list(nonNull('CmLead'))),
   args: {
     where: 'CmLeadWhereInput',
-    orderBy: list('CmLeadOrderByWithRelationInput'),
+    orderBy: list('CmLeadOrderByInput'),
     cursor: 'CmLeadWhereUniqueInput',
     distinct: 'CmLeadScalarFieldEnum',
     skip: 'Int',

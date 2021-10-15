@@ -6,7 +6,7 @@ export const ThirdPartyAccessFindFirstQuery = queryField(
     type: 'ThirdPartyAccess',
     args: {
       where: 'ThirdPartyAccessWhereInput',
-      orderBy: list('ThirdPartyAccessOrderByWithRelationInput'),
+      orderBy: list('ThirdPartyAccessOrderByInput'),
       cursor: 'ThirdPartyAccessWhereUniqueInput',
       distinct: 'ThirdPartyAccessScalarFieldEnum',
       skip: 'Int',

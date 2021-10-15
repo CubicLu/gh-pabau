@@ -6,7 +6,7 @@ export const CleverpinSettingFindManyQuery = queryField(
     type: nonNull(list(nonNull('CleverpinSetting'))),
     args: {
       where: 'CleverpinSettingWhereInput',
-      orderBy: list('CleverpinSettingOrderByWithRelationInput'),
+      orderBy: list('CleverpinSettingOrderByInput'),
       cursor: 'CleverpinSettingWhereUniqueInput',
       distinct: 'CleverpinSettingScalarFieldEnum',
       skip: 'Int',

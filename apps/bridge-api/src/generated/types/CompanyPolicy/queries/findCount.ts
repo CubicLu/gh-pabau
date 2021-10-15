@@ -6,7 +6,7 @@ export const CompanyPolicyFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanyPolicyWhereInput',
-      orderBy: list('CompanyPolicyOrderByWithRelationInput'),
+      orderBy: list('CompanyPolicyOrderByInput'),
       cursor: 'CompanyPolicyWhereUniqueInput',
       distinct: 'CompanyPolicyScalarFieldEnum',
       skip: 'Int',

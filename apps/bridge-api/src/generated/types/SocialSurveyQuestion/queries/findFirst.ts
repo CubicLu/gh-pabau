@@ -6,7 +6,7 @@ export const SocialSurveyQuestionFindFirstQuery = queryField(
     type: 'SocialSurveyQuestion',
     args: {
       where: 'SocialSurveyQuestionWhereInput',
-      orderBy: list('SocialSurveyQuestionOrderByWithRelationInput'),
+      orderBy: list('SocialSurveyQuestionOrderByInput'),
       cursor: 'SocialSurveyQuestionWhereUniqueInput',
       distinct: 'SocialSurveyQuestionScalarFieldEnum',
       skip: 'Int',

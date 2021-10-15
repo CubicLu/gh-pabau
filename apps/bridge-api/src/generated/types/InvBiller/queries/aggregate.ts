@@ -4,7 +4,7 @@ export const InvBillerAggregateQuery = queryField('aggregateInvBiller', {
   type: 'AggregateInvBiller',
   args: {
     where: 'InvBillerWhereInput',
-    orderBy: list('InvBillerOrderByWithRelationInput'),
+    orderBy: list('InvBillerOrderByInput'),
     cursor: 'InvBillerWhereUniqueInput',
     distinct: 'InvBillerScalarFieldEnum',
     skip: 'Int',

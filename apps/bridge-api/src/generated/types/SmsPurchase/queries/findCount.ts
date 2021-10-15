@@ -6,7 +6,7 @@ export const SmsPurchaseFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'SmsPurchaseWhereInput',
-      orderBy: list('SmsPurchaseOrderByWithRelationInput'),
+      orderBy: list('SmsPurchaseOrderByInput'),
       cursor: 'SmsPurchaseWhereUniqueInput',
       distinct: 'SmsPurchaseScalarFieldEnum',
       skip: 'Int',

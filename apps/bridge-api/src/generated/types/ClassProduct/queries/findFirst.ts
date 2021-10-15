@@ -4,7 +4,7 @@ export const ClassProductFindFirstQuery = queryField('findFirstClassProduct', {
   type: 'ClassProduct',
   args: {
     where: 'ClassProductWhereInput',
-    orderBy: list('ClassProductOrderByWithRelationInput'),
+    orderBy: list('ClassProductOrderByInput'),
     cursor: 'ClassProductWhereUniqueInput',
     distinct: 'ClassProductScalarFieldEnum',
     skip: 'Int',

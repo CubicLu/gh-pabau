@@ -6,7 +6,7 @@ export const ClassCategoryFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ClassCategoryWhereInput',
-      orderBy: list('ClassCategoryOrderByWithRelationInput'),
+      orderBy: list('ClassCategoryOrderByInput'),
       cursor: 'ClassCategoryWhereUniqueInput',
       distinct: 'ClassCategoryScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CompanyEmailFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanyEmailWhereInput',
-      orderBy: list('CompanyEmailOrderByWithRelationInput'),
+      orderBy: list('CompanyEmailOrderByInput'),
       cursor: 'CompanyEmailWhereUniqueInput',
       distinct: 'CompanyEmailScalarFieldEnum',
       skip: 'Int',

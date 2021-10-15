@@ -57,7 +57,7 @@ export const ManageCustomField = objectType({
       type: 'ManageCustomFieldItem',
       args: {
         where: 'ManageCustomFieldItemWhereInput',
-        orderBy: 'ManageCustomFieldItemOrderByWithRelationInput',
+        orderBy: 'ManageCustomFieldItemOrderByInput',
         cursor: 'ManageCustomFieldItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -71,7 +71,7 @@ export const ManageCustomField = objectType({
       type: 'CmProductCustomField',
       args: {
         where: 'CmProductCustomFieldWhereInput',
-        orderBy: 'CmProductCustomFieldOrderByWithRelationInput',
+        orderBy: 'CmProductCustomFieldOrderByInput',
         cursor: 'CmProductCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -85,7 +85,7 @@ export const ManageCustomField = objectType({
       type: 'CmContactCustom',
       args: {
         where: 'CmContactCustomWhereInput',
-        orderBy: 'CmContactCustomOrderByWithRelationInput',
+        orderBy: 'CmContactCustomOrderByInput',
         cursor: 'CmContactCustomWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -99,7 +99,7 @@ export const ManageCustomField = objectType({
       type: 'CmLeadCustomField',
       args: {
         where: 'CmLeadCustomFieldWhereInput',
-        orderBy: 'CmLeadCustomFieldOrderByWithRelationInput',
+        orderBy: 'CmLeadCustomFieldOrderByInput',
         cursor: 'CmLeadCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -107,12 +107,6 @@ export const ManageCustomField = objectType({
       },
       resolve(root: any) {
         return root.CmLeadCustomField
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ManageCustomFieldCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

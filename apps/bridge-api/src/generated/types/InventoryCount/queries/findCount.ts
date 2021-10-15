@@ -6,7 +6,7 @@ export const InventoryCountFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'InventoryCountWhereInput',
-      orderBy: list('InventoryCountOrderByWithRelationInput'),
+      orderBy: list('InventoryCountOrderByInput'),
       cursor: 'InventoryCountWhereUniqueInput',
       distinct: 'InventoryCountScalarFieldEnum',
       skip: 'Int',

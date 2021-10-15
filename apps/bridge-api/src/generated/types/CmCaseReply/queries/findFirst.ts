@@ -4,7 +4,7 @@ export const CmCaseReplyFindFirstQuery = queryField('findFirstCmCaseReply', {
   type: 'CmCaseReply',
   args: {
     where: 'CmCaseReplyWhereInput',
-    orderBy: list('CmCaseReplyOrderByWithRelationInput'),
+    orderBy: list('CmCaseReplyOrderByInput'),
     cursor: 'CmCaseReplyWhereUniqueInput',
     distinct: 'CmCaseReplyScalarFieldEnum',
     skip: 'Int',

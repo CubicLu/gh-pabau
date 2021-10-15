@@ -6,7 +6,7 @@ export const CheckinApptFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CheckinApptWhereInput',
-      orderBy: list('CheckinApptOrderByWithRelationInput'),
+      orderBy: list('CheckinApptOrderByInput'),
       cursor: 'CheckinApptWhereUniqueInput',
       distinct: 'CheckinApptScalarFieldEnum',
       skip: 'Int',

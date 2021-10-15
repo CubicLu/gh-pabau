@@ -6,7 +6,7 @@ export const JobConfigurationFindManyQuery = queryField(
     type: nonNull(list(nonNull('JobConfiguration'))),
     args: {
       where: 'JobConfigurationWhereInput',
-      orderBy: list('JobConfigurationOrderByWithRelationInput'),
+      orderBy: list('JobConfigurationOrderByInput'),
       cursor: 'JobConfigurationWhereUniqueInput',
       distinct: 'JobConfigurationScalarFieldEnum',
       skip: 'Int',

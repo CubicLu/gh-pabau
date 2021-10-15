@@ -4,7 +4,7 @@ export const InvBillerFindCountQuery = queryField('findManyInvBillerCount', {
   type: nonNull('Int'),
   args: {
     where: 'InvBillerWhereInput',
-    orderBy: list('InvBillerOrderByWithRelationInput'),
+    orderBy: list('InvBillerOrderByInput'),
     cursor: 'InvBillerWhereUniqueInput',
     distinct: 'InvBillerScalarFieldEnum',
     skip: 'Int',

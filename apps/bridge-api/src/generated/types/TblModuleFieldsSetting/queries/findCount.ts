@@ -6,7 +6,7 @@ export const TblModuleFieldsSettingFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'TblModuleFieldsSettingWhereInput',
-      orderBy: list('TblModuleFieldsSettingOrderByWithRelationInput'),
+      orderBy: list('TblModuleFieldsSettingOrderByInput'),
       cursor: 'TblModuleFieldsSettingWhereUniqueInput',
       distinct: 'TblModuleFieldsSettingScalarFieldEnum',
       skip: 'Int',

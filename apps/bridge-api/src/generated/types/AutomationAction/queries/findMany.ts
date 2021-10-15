@@ -6,7 +6,7 @@ export const AutomationActionFindManyQuery = queryField(
     type: nonNull(list(nonNull('AutomationAction'))),
     args: {
       where: 'AutomationActionWhereInput',
-      orderBy: list('AutomationActionOrderByWithRelationInput'),
+      orderBy: list('AutomationActionOrderByInput'),
       cursor: 'AutomationActionWhereUniqueInput',
       distinct: 'AutomationActionScalarFieldEnum',
       skip: 'Int',

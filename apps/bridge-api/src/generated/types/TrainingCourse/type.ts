@@ -24,7 +24,7 @@ export const TrainingCourse = objectType({
       type: 'TrainingCourseBooking',
       args: {
         where: 'TrainingCourseBookingWhereInput',
-        orderBy: 'TrainingCourseBookingOrderByWithRelationInput',
+        orderBy: 'TrainingCourseBookingOrderByInput',
         cursor: 'TrainingCourseBookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -38,7 +38,7 @@ export const TrainingCourse = objectType({
       type: 'TrainCourseDate',
       args: {
         where: 'TrainCourseDateWhereInput',
-        orderBy: 'TrainCourseDateOrderByWithRelationInput',
+        orderBy: 'TrainCourseDateOrderByInput',
         cursor: 'TrainCourseDateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -46,12 +46,6 @@ export const TrainingCourse = objectType({
       },
       resolve(root: any) {
         return root.TrainCourseDate
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'TrainingCourseCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

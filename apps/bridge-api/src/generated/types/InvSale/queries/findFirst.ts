@@ -4,7 +4,7 @@ export const InvSaleFindFirstQuery = queryField('findFirstInvSale', {
   type: 'InvSale',
   args: {
     where: 'InvSaleWhereInput',
-    orderBy: list('InvSaleOrderByWithRelationInput'),
+    orderBy: list('InvSaleOrderByInput'),
     cursor: 'InvSaleWhereUniqueInput',
     distinct: 'InvSaleScalarFieldEnum',
     skip: 'Int',

@@ -48,7 +48,7 @@ export const MedicalFormContact = objectType({
       type: 'CmContactTravel',
       args: {
         where: 'CmContactTravelWhereInput',
-        orderBy: 'CmContactTravelOrderByWithRelationInput',
+        orderBy: 'CmContactTravelOrderByInput',
         cursor: 'CmContactTravelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -56,12 +56,6 @@ export const MedicalFormContact = objectType({
       },
       resolve(root: any) {
         return root.CmContactTravel
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'MedicalFormContactCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

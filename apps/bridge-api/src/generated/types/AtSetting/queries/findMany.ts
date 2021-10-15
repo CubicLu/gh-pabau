@@ -4,7 +4,7 @@ export const AtSettingFindManyQuery = queryField('findManyAtSetting', {
   type: nonNull(list(nonNull('AtSetting'))),
   args: {
     where: 'AtSettingWhereInput',
-    orderBy: list('AtSettingOrderByWithRelationInput'),
+    orderBy: list('AtSettingOrderByInput'),
     cursor: 'AtSettingWhereUniqueInput',
     distinct: 'AtSettingScalarFieldEnum',
     skip: 'Int',

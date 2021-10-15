@@ -6,7 +6,7 @@ export const CheckinProductFindFirstQuery = queryField(
     type: 'CheckinProduct',
     args: {
       where: 'CheckinProductWhereInput',
-      orderBy: list('CheckinProductOrderByWithRelationInput'),
+      orderBy: list('CheckinProductOrderByInput'),
       cursor: 'CheckinProductWhereUniqueInput',
       distinct: 'CheckinProductScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const ActivityTypeFindManyQuery = queryField('findManyActivityType', {
   type: nonNull(list(nonNull('ActivityType'))),
   args: {
     where: 'ActivityTypeWhereInput',
-    orderBy: list('ActivityTypeOrderByWithRelationInput'),
+    orderBy: list('ActivityTypeOrderByInput'),
     cursor: 'ActivityTypeWhereUniqueInput',
     distinct: 'ActivityTypeScalarFieldEnum',
     skip: 'Int',

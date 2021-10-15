@@ -4,7 +4,7 @@ export const BlockReasonAggregateQuery = queryField('aggregateBlockReason', {
   type: 'AggregateBlockReason',
   args: {
     where: 'BlockReasonWhereInput',
-    orderBy: list('BlockReasonOrderByWithRelationInput'),
+    orderBy: list('BlockReasonOrderByInput'),
     cursor: 'BlockReasonWhereUniqueInput',
     distinct: 'BlockReasonScalarFieldEnum',
     skip: 'Int',

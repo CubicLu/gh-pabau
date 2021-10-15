@@ -4,7 +4,7 @@ export const RotaShiftAggregateQuery = queryField('aggregateRotaShift', {
   type: 'AggregateRotaShift',
   args: {
     where: 'RotaShiftWhereInput',
-    orderBy: list('RotaShiftOrderByWithRelationInput'),
+    orderBy: list('RotaShiftOrderByInput'),
     cursor: 'RotaShiftWhereUniqueInput',
     distinct: 'RotaShiftScalarFieldEnum',
     skip: 'Int',

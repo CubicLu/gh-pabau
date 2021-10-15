@@ -6,7 +6,7 @@ export const SupplierCategoryAggregateQuery = queryField(
     type: 'AggregateSupplierCategory',
     args: {
       where: 'SupplierCategoryWhereInput',
-      orderBy: list('SupplierCategoryOrderByWithRelationInput'),
+      orderBy: list('SupplierCategoryOrderByInput'),
       cursor: 'SupplierCategoryWhereUniqueInput',
       distinct: 'SupplierCategoryScalarFieldEnum',
       skip: 'Int',

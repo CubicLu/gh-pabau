@@ -4,7 +4,7 @@ export const CashupReportAggregateQuery = queryField('aggregateCashupReport', {
   type: 'AggregateCashupReport',
   args: {
     where: 'CashupReportWhereInput',
-    orderBy: list('CashupReportOrderByWithRelationInput'),
+    orderBy: list('CashupReportOrderByInput'),
     cursor: 'CashupReportWhereUniqueInput',
     distinct: 'CashupReportScalarFieldEnum',
     skip: 'Int',

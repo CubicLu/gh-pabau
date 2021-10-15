@@ -6,7 +6,7 @@ export const BookitProGeneralFindFirstQuery = queryField(
     type: 'BookitProGeneral',
     args: {
       where: 'BookitProGeneralWhereInput',
-      orderBy: list('BookitProGeneralOrderByWithRelationInput'),
+      orderBy: list('BookitProGeneralOrderByInput'),
       cursor: 'BookitProGeneralWhereUniqueInput',
       distinct: 'BookitProGeneralScalarFieldEnum',
       skip: 'Int',

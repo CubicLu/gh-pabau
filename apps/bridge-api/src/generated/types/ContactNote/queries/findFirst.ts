@@ -4,7 +4,7 @@ export const ContactNoteFindFirstQuery = queryField('findFirstContactNote', {
   type: 'ContactNote',
   args: {
     where: 'ContactNoteWhereInput',
-    orderBy: list('ContactNoteOrderByWithRelationInput'),
+    orderBy: list('ContactNoteOrderByInput'),
     cursor: 'ContactNoteWhereUniqueInput',
     distinct: 'ContactNoteScalarFieldEnum',
     skip: 'Int',

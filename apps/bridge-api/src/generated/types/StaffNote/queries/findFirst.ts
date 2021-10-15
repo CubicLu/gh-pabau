@@ -4,7 +4,7 @@ export const StaffNoteFindFirstQuery = queryField('findFirstStaffNote', {
   type: 'StaffNote',
   args: {
     where: 'StaffNoteWhereInput',
-    orderBy: list('StaffNoteOrderByWithRelationInput'),
+    orderBy: list('StaffNoteOrderByInput'),
     cursor: 'StaffNoteWhereUniqueInput',
     distinct: 'StaffNoteScalarFieldEnum',
     skip: 'Int',

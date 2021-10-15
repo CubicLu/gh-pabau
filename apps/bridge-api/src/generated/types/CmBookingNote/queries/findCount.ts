@@ -6,7 +6,7 @@ export const CmBookingNoteFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmBookingNoteWhereInput',
-      orderBy: list('CmBookingNoteOrderByWithRelationInput'),
+      orderBy: list('CmBookingNoteOrderByInput'),
       cursor: 'CmBookingNoteWhereUniqueInput',
       distinct: 'CmBookingNoteScalarFieldEnum',
       skip: 'Int',

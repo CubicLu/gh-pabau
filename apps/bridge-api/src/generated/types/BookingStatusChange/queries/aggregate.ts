@@ -6,7 +6,7 @@ export const BookingStatusChangeAggregateQuery = queryField(
     type: 'AggregateBookingStatusChange',
     args: {
       where: 'BookingStatusChangeWhereInput',
-      orderBy: list('BookingStatusChangeOrderByWithRelationInput'),
+      orderBy: list('BookingStatusChangeOrderByInput'),
       cursor: 'BookingStatusChangeWhereUniqueInput',
       distinct: 'BookingStatusChangeScalarFieldEnum',
       skip: 'Int',

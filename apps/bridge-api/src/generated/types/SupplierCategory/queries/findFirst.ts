@@ -6,7 +6,7 @@ export const SupplierCategoryFindFirstQuery = queryField(
     type: 'SupplierCategory',
     args: {
       where: 'SupplierCategoryWhereInput',
-      orderBy: list('SupplierCategoryOrderByWithRelationInput'),
+      orderBy: list('SupplierCategoryOrderByInput'),
       cursor: 'SupplierCategoryWhereUniqueInput',
       distinct: 'SupplierCategoryScalarFieldEnum',
       skip: 'Int',

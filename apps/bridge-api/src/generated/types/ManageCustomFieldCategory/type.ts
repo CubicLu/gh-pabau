@@ -20,7 +20,7 @@ export const ManageCustomFieldCategory = objectType({
       type: 'ManageCustomField',
       args: {
         where: 'ManageCustomFieldWhereInput',
-        orderBy: 'ManageCustomFieldOrderByWithRelationInput',
+        orderBy: 'ManageCustomFieldOrderByInput',
         cursor: 'ManageCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -28,12 +28,6 @@ export const ManageCustomFieldCategory = objectType({
       },
       resolve(root: any) {
         return root.ManageCustomField
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ManageCustomFieldCategoryCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

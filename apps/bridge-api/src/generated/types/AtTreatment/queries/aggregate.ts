@@ -4,7 +4,7 @@ export const AtTreatmentAggregateQuery = queryField('aggregateAtTreatment', {
   type: 'AggregateAtTreatment',
   args: {
     where: 'AtTreatmentWhereInput',
-    orderBy: list('AtTreatmentOrderByWithRelationInput'),
+    orderBy: list('AtTreatmentOrderByInput'),
     cursor: 'AtTreatmentWhereUniqueInput',
     distinct: 'AtTreatmentScalarFieldEnum',
     skip: 'Int',

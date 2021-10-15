@@ -6,7 +6,7 @@ export const AppBeforeAfterFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AppBeforeAfterWhereInput',
-      orderBy: list('AppBeforeAfterOrderByWithRelationInput'),
+      orderBy: list('AppBeforeAfterOrderByInput'),
       cursor: 'AppBeforeAfterWhereUniqueInput',
       distinct: 'AppBeforeAfterScalarFieldEnum',
       skip: 'Int',

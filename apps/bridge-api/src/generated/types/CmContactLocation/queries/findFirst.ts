@@ -6,7 +6,7 @@ export const CmContactLocationFindFirstQuery = queryField(
     type: 'CmContactLocation',
     args: {
       where: 'CmContactLocationWhereInput',
-      orderBy: list('CmContactLocationOrderByWithRelationInput'),
+      orderBy: list('CmContactLocationOrderByInput'),
       cursor: 'CmContactLocationWhereUniqueInput',
       distinct: 'CmContactLocationScalarFieldEnum',
       skip: 'Int',

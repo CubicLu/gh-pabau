@@ -4,7 +4,7 @@ export const LeadStatusAggregateQuery = queryField('aggregateLeadStatus', {
   type: 'AggregateLeadStatus',
   args: {
     where: 'LeadStatusWhereInput',
-    orderBy: list('LeadStatusOrderByWithRelationInput'),
+    orderBy: list('LeadStatusOrderByInput'),
     cursor: 'LeadStatusWhereUniqueInput',
     distinct: 'LeadStatusScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const ContactAttachmentFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ContactAttachmentWhereInput',
-      orderBy: list('ContactAttachmentOrderByWithRelationInput'),
+      orderBy: list('ContactAttachmentOrderByInput'),
       cursor: 'ContactAttachmentWhereUniqueInput',
       distinct: 'ContactAttachmentScalarFieldEnum',
       skip: 'Int',

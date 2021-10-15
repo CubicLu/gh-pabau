@@ -6,7 +6,7 @@ export const CmAppointmentsCustomImportHelperFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmAppointmentsCustomImportHelper'))),
     args: {
       where: 'CmAppointmentsCustomImportHelperWhereInput',
-      orderBy: list('CmAppointmentsCustomImportHelperOrderByWithRelationInput'),
+      orderBy: list('CmAppointmentsCustomImportHelperOrderByInput'),
       cursor: 'CmAppointmentsCustomImportHelperWhereUniqueInput',
       distinct: 'CmAppointmentsCustomImportHelperScalarFieldEnum',
       skip: 'Int',

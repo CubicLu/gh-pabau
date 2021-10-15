@@ -4,7 +4,7 @@ export const CalendarViewAggregateQuery = queryField('aggregateCalendarView', {
   type: 'AggregateCalendarView',
   args: {
     where: 'CalendarViewWhereInput',
-    orderBy: list('CalendarViewOrderByWithRelationInput'),
+    orderBy: list('CalendarViewOrderByInput'),
     cursor: 'CalendarViewWhereUniqueInput',
     distinct: 'CalendarViewScalarFieldEnum',
     skip: 'Int',

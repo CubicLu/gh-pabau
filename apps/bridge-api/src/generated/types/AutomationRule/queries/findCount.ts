@@ -6,7 +6,7 @@ export const AutomationRuleFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AutomationRuleWhereInput',
-      orderBy: list('AutomationRuleOrderByWithRelationInput'),
+      orderBy: list('AutomationRuleOrderByInput'),
       cursor: 'AutomationRuleWhereUniqueInput',
       distinct: 'AutomationRuleScalarFieldEnum',
       skip: 'Int',

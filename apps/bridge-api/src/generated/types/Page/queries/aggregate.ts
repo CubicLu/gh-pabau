@@ -4,7 +4,7 @@ export const PageAggregateQuery = queryField('aggregatePage', {
   type: 'AggregatePage',
   args: {
     where: 'PageWhereInput',
-    orderBy: list('PageOrderByWithRelationInput'),
+    orderBy: list('PageOrderByInput'),
     cursor: 'PageWhereUniqueInput',
     distinct: 'PageScalarFieldEnum',
     skip: 'Int',

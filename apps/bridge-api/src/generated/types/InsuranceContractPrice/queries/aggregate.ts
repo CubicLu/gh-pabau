@@ -6,7 +6,7 @@ export const InsuranceContractPriceAggregateQuery = queryField(
     type: 'AggregateInsuranceContractPrice',
     args: {
       where: 'InsuranceContractPriceWhereInput',
-      orderBy: list('InsuranceContractPriceOrderByWithRelationInput'),
+      orderBy: list('InsuranceContractPriceOrderByInput'),
       cursor: 'InsuranceContractPriceWhereUniqueInput',
       distinct: 'InsuranceContractPriceScalarFieldEnum',
       skip: 'Int',

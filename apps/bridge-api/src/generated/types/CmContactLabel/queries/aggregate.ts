@@ -6,7 +6,7 @@ export const CmContactLabelAggregateQuery = queryField(
     type: 'AggregateCmContactLabel',
     args: {
       where: 'CmContactLabelWhereInput',
-      orderBy: list('CmContactLabelOrderByWithRelationInput'),
+      orderBy: list('CmContactLabelOrderByInput'),
       cursor: 'CmContactLabelWhereUniqueInput',
       distinct: 'CmContactLabelScalarFieldEnum',
       skip: 'Int',

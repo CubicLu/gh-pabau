@@ -6,7 +6,7 @@ export const ContactPreferenceFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ContactPreferenceWhereInput',
-      orderBy: list('ContactPreferenceOrderByWithRelationInput'),
+      orderBy: list('ContactPreferenceOrderByInput'),
       cursor: 'ContactPreferenceWhereUniqueInput',
       distinct: 'ContactPreferenceScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CompanyVariableFindManyQuery = queryField(
     type: nonNull(list(nonNull('CompanyVariable'))),
     args: {
       where: 'CompanyVariableWhereInput',
-      orderBy: list('CompanyVariableOrderByWithRelationInput'),
+      orderBy: list('CompanyVariableOrderByInput'),
       cursor: 'CompanyVariableWhereUniqueInput',
       distinct: 'CompanyVariableScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const SecondAtAnswerFindFirstQuery = queryField(
     type: 'SecondAtAnswer',
     args: {
       where: 'SecondAtAnswerWhereInput',
-      orderBy: list('SecondAtAnswerOrderByWithRelationInput'),
+      orderBy: list('SecondAtAnswerOrderByInput'),
       cursor: 'SecondAtAnswerWhereUniqueInput',
       distinct: 'SecondAtAnswerScalarFieldEnum',
       skip: 'Int',

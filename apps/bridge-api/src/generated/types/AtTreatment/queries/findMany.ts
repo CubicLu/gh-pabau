@@ -4,7 +4,7 @@ export const AtTreatmentFindManyQuery = queryField('findManyAtTreatment', {
   type: nonNull(list(nonNull('AtTreatment'))),
   args: {
     where: 'AtTreatmentWhereInput',
-    orderBy: list('AtTreatmentOrderByWithRelationInput'),
+    orderBy: list('AtTreatmentOrderByInput'),
     cursor: 'AtTreatmentWhereUniqueInput',
     distinct: 'AtTreatmentScalarFieldEnum',
     skip: 'Int',

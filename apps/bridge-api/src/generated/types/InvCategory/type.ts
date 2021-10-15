@@ -34,7 +34,7 @@ export const InvCategory = objectType({
       type: 'InvProduct',
       args: {
         where: 'InvProductWhereInput',
-        orderBy: 'InvProductOrderByWithRelationInput',
+        orderBy: 'InvProductOrderByInput',
         cursor: 'InvProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -72,7 +72,7 @@ export const InvCategory = objectType({
       type: 'CmPurchaseOrder',
       args: {
         where: 'CmPurchaseOrderWhereInput',
-        orderBy: 'CmPurchaseOrderOrderByWithRelationInput',
+        orderBy: 'CmPurchaseOrderOrderByInput',
         cursor: 'CmPurchaseOrderWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -80,12 +80,6 @@ export const InvCategory = objectType({
       },
       resolve(root: any) {
         return root.CmPurchaseOrder
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'InvCategoryCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

@@ -4,7 +4,7 @@ export const CmLeadFindFirstQuery = queryField('findFirstCmLead', {
   type: 'CmLead',
   args: {
     where: 'CmLeadWhereInput',
-    orderBy: list('CmLeadOrderByWithRelationInput'),
+    orderBy: list('CmLeadOrderByInput'),
     cursor: 'CmLeadWhereUniqueInput',
     distinct: 'CmLeadScalarFieldEnum',
     skip: 'Int',

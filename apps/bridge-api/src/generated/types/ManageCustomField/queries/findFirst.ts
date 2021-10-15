@@ -6,7 +6,7 @@ export const ManageCustomFieldFindFirstQuery = queryField(
     type: 'ManageCustomField',
     args: {
       where: 'ManageCustomFieldWhereInput',
-      orderBy: list('ManageCustomFieldOrderByWithRelationInput'),
+      orderBy: list('ManageCustomFieldOrderByInput'),
       cursor: 'ManageCustomFieldWhereUniqueInput',
       distinct: 'ManageCustomFieldScalarFieldEnum',
       skip: 'Int',

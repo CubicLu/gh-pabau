@@ -4,7 +4,7 @@ export const CompanyEmailFindManyQuery = queryField('findManyCompanyEmail', {
   type: nonNull(list(nonNull('CompanyEmail'))),
   args: {
     where: 'CompanyEmailWhereInput',
-    orderBy: list('CompanyEmailOrderByWithRelationInput'),
+    orderBy: list('CompanyEmailOrderByInput'),
     cursor: 'CompanyEmailWhereUniqueInput',
     distinct: 'CompanyEmailScalarFieldEnum',
     skip: 'Int',

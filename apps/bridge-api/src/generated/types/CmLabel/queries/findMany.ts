@@ -4,7 +4,7 @@ export const CmLabelFindManyQuery = queryField('findManyCmLabel', {
   type: nonNull(list(nonNull('CmLabel'))),
   args: {
     where: 'CmLabelWhereInput',
-    orderBy: list('CmLabelOrderByWithRelationInput'),
+    orderBy: list('CmLabelOrderByInput'),
     cursor: 'CmLabelWhereUniqueInput',
     distinct: 'CmLabelScalarFieldEnum',
     skip: 'Int',

@@ -4,7 +4,7 @@ export const ContactAlertFindFirstQuery = queryField('findFirstContactAlert', {
   type: 'ContactAlert',
   args: {
     where: 'ContactAlertWhereInput',
-    orderBy: list('ContactAlertOrderByWithRelationInput'),
+    orderBy: list('ContactAlertOrderByInput'),
     cursor: 'ContactAlertWhereUniqueInput',
     distinct: 'ContactAlertScalarFieldEnum',
     skip: 'Int',

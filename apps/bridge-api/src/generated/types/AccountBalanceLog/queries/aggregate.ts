@@ -6,7 +6,7 @@ export const AccountBalanceLogAggregateQuery = queryField(
     type: 'AggregateAccountBalanceLog',
     args: {
       where: 'AccountBalanceLogWhereInput',
-      orderBy: list('AccountBalanceLogOrderByWithRelationInput'),
+      orderBy: list('AccountBalanceLogOrderByInput'),
       cursor: 'AccountBalanceLogWhereUniqueInput',
       distinct: 'AccountBalanceLogScalarFieldEnum',
       skip: 'Int',

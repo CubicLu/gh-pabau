@@ -6,7 +6,7 @@ export const ServiceCategoryFindFirstQuery = queryField(
     type: 'ServiceCategory',
     args: {
       where: 'ServiceCategoryWhereInput',
-      orderBy: list('ServiceCategoryOrderByWithRelationInput'),
+      orderBy: list('ServiceCategoryOrderByInput'),
       cursor: 'ServiceCategoryWhereUniqueInput',
       distinct: 'ServiceCategoryScalarFieldEnum',
       skip: 'Int',

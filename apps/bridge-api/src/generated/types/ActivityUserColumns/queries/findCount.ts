@@ -6,7 +6,7 @@ export const ActivityUserColumnsFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ActivityUserColumnsWhereInput',
-      orderBy: list('ActivityUserColumnsOrderByWithRelationInput'),
+      orderBy: list('ActivityUserColumnsOrderByInput'),
       cursor: 'ActivityUserColumnsWhereUniqueInput',
       distinct: 'ActivityUserColumnsScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const AutomationTriggerFindFirstQuery = queryField(
     type: 'AutomationTrigger',
     args: {
       where: 'AutomationTriggerWhereInput',
-      orderBy: list('AutomationTriggerOrderByWithRelationInput'),
+      orderBy: list('AutomationTriggerOrderByInput'),
       cursor: 'AutomationTriggerWhereUniqueInput',
       distinct: 'AutomationTriggerScalarFieldEnum',
       skip: 'Int',

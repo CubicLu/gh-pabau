@@ -46,7 +46,7 @@ export const AccountManager = objectType({
       type: 'CmPurchaseOrder',
       args: {
         where: 'CmPurchaseOrderWhereInput',
-        orderBy: 'CmPurchaseOrderOrderByWithRelationInput',
+        orderBy: 'CmPurchaseOrderOrderByInput',
         cursor: 'CmPurchaseOrderWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -60,7 +60,7 @@ export const AccountManager = objectType({
       type: 'InvProduct',
       args: {
         where: 'InvProductWhereInput',
-        orderBy: 'InvProductOrderByWithRelationInput',
+        orderBy: 'InvProductOrderByInput',
         cursor: 'InvProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -68,12 +68,6 @@ export const AccountManager = objectType({
       },
       resolve(root: any) {
         return root.InvProduct
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'AccountManagerCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

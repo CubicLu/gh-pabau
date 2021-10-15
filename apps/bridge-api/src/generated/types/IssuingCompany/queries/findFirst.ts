@@ -6,7 +6,7 @@ export const IssuingCompanyFindFirstQuery = queryField(
     type: 'IssuingCompany',
     args: {
       where: 'IssuingCompanyWhereInput',
-      orderBy: list('IssuingCompanyOrderByWithRelationInput'),
+      orderBy: list('IssuingCompanyOrderByInput'),
       cursor: 'IssuingCompanyWhereUniqueInput',
       distinct: 'IssuingCompanyScalarFieldEnum',
       skip: 'Int',

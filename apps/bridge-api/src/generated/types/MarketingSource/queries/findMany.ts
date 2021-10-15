@@ -6,7 +6,7 @@ export const MarketingSourceFindManyQuery = queryField(
     type: nonNull(list(nonNull('MarketingSource'))),
     args: {
       where: 'MarketingSourceWhereInput',
-      orderBy: list('MarketingSourceOrderByWithRelationInput'),
+      orderBy: list('MarketingSourceOrderByInput'),
       cursor: 'MarketingSourceWhereUniqueInput',
       distinct: 'MarketingSourceScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const InvoiceTemplateAggregateQuery = queryField(
     type: 'AggregateInvoiceTemplate',
     args: {
       where: 'InvoiceTemplateWhereInput',
-      orderBy: list('InvoiceTemplateOrderByWithRelationInput'),
+      orderBy: list('InvoiceTemplateOrderByInput'),
       cursor: 'InvoiceTemplateWhereUniqueInput',
       distinct: 'InvoiceTemplateScalarFieldEnum',
       skip: 'Int',

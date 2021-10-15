@@ -6,7 +6,7 @@ export const XeroIntegrationAggregateQuery = queryField(
     type: 'AggregateXeroIntegration',
     args: {
       where: 'XeroIntegrationWhereInput',
-      orderBy: list('XeroIntegrationOrderByWithRelationInput'),
+      orderBy: list('XeroIntegrationOrderByInput'),
       cursor: 'XeroIntegrationWhereUniqueInput',
       distinct: 'XeroIntegrationScalarFieldEnum',
       skip: 'Int',

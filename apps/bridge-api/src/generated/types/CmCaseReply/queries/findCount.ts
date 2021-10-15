@@ -6,7 +6,7 @@ export const CmCaseReplyFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmCaseReplyWhereInput',
-      orderBy: list('CmCaseReplyOrderByWithRelationInput'),
+      orderBy: list('CmCaseReplyOrderByInput'),
       cursor: 'CmCaseReplyWhereUniqueInput',
       distinct: 'CmCaseReplyScalarFieldEnum',
       skip: 'Int',

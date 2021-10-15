@@ -6,7 +6,7 @@ export const AutomationLogAggregateQuery = queryField(
     type: 'AggregateAutomationLog',
     args: {
       where: 'AutomationLogWhereInput',
-      orderBy: list('AutomationLogOrderByWithRelationInput'),
+      orderBy: list('AutomationLogOrderByInput'),
       cursor: 'AutomationLogWhereUniqueInput',
       distinct: 'AutomationLogScalarFieldEnum',
       skip: 'Int',

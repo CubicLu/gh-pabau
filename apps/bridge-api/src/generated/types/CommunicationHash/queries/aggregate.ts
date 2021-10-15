@@ -6,7 +6,7 @@ export const CommunicationHashAggregateQuery = queryField(
     type: 'AggregateCommunicationHash',
     args: {
       where: 'CommunicationHashWhereInput',
-      orderBy: list('CommunicationHashOrderByWithRelationInput'),
+      orderBy: list('CommunicationHashOrderByInput'),
       cursor: 'CommunicationHashWhereUniqueInput',
       distinct: 'CommunicationHashScalarFieldEnum',
       skip: 'Int',

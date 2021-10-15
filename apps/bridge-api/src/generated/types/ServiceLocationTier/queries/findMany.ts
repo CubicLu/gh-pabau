@@ -6,7 +6,7 @@ export const ServiceLocationTierFindManyQuery = queryField(
     type: nonNull(list(nonNull('ServiceLocationTier'))),
     args: {
       where: 'ServiceLocationTierWhereInput',
-      orderBy: list('ServiceLocationTierOrderByWithRelationInput'),
+      orderBy: list('ServiceLocationTierOrderByInput'),
       cursor: 'ServiceLocationTierWhereUniqueInput',
       distinct: 'ServiceLocationTierScalarFieldEnum',
       skip: 'Int',

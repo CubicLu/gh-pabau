@@ -6,7 +6,7 @@ export const AdvertCampaignFindManyQuery = queryField(
     type: nonNull(list(nonNull('AdvertCampaign'))),
     args: {
       where: 'AdvertCampaignWhereInput',
-      orderBy: list('AdvertCampaignOrderByWithRelationInput'),
+      orderBy: list('AdvertCampaignOrderByInput'),
       cursor: 'AdvertCampaignWhereUniqueInput',
       distinct: 'AdvertCampaignScalarFieldEnum',
       skip: 'Int',

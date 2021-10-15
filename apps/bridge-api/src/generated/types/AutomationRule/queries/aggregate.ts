@@ -6,7 +6,7 @@ export const AutomationRuleAggregateQuery = queryField(
     type: 'AggregateAutomationRule',
     args: {
       where: 'AutomationRuleWhereInput',
-      orderBy: list('AutomationRuleOrderByWithRelationInput'),
+      orderBy: list('AutomationRuleOrderByInput'),
       cursor: 'AutomationRuleWhereUniqueInput',
       distinct: 'AutomationRuleScalarFieldEnum',
       skip: 'Int',
