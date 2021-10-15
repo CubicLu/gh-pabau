@@ -1,0 +1,26 @@
+query getStaffDetails($userID: Int!) {
+  findUniqueUser(where: { id: $userID }) {
+    Staff: CmStaffGeneral {
+      Fname
+      Lname
+      Email
+      Mobile: CellPhone
+      Location
+      OtherLocations: Locations {
+        id
+        name
+      }
+      PrimaryLocation: CompanyBranch {
+        id
+        name
+      }
+      Birthdate
+      CreatedDate
+      StaffNote {
+        note: Dependents
+      }
+    }
+    image
+    job_title
+  }
+}
