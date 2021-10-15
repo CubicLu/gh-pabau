@@ -1701,18 +1701,32 @@ export const Company = objectType({
         return root.ContactPreference
       },
     })
-    t.list.field('ActivityUserColumns', {
-      type: 'ActivityUserColumns',
+    t.list.field('ActivityUserState', {
+      type: 'ActivityUserState',
       args: {
-        where: 'ActivityUserColumnsWhereInput',
-        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
-        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        where: 'ActivityUserStateWhereInput',
+        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        cursor: 'ActivityUserStateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ActivityUserColumnsScalarFieldEnum',
+        distinct: 'ActivityUserStateScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ActivityUserColumns
+        return root.ActivityUserState
+      },
+    })
+    t.list.field('ActivityUserFilter', {
+      type: 'ActivityUserFilter',
+      args: {
+        where: 'ActivityUserFilterWhereInput',
+        orderBy: 'ActivityUserFilterOrderByWithRelationInput',
+        cursor: 'ActivityUserFilterWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserFilterScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserFilter
       },
     })
     t.list.field('ActivityType', {
@@ -1797,6 +1811,20 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.InsuranceContractPrice
+      },
+    })
+    t.list.field('ContactAttachment', {
+      type: 'ContactAttachment',
+      args: {
+        where: 'ContactAttachmentWhereInput',
+        orderBy: 'ContactAttachmentOrderByWithRelationInput',
+        cursor: 'ContactAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactAttachment
       },
     })
     t.nullable.field('_count', {

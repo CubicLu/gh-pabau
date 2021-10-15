@@ -128,9 +128,9 @@ export interface ClientCreateProps {
 }
 
 export interface Label {
+  id?: number
   label?: string
   color?: string
-  count?: number
 }
 
 export interface LabelDataProps {
@@ -143,7 +143,7 @@ export const ClientCreate: FC<ClientCreateProps> = ({
   modalVisible = true,
   handleClose,
   handleSubmit,
-  isEdit = false,
+  isEdit,
   activated,
   onActivated,
   defaultLabels,

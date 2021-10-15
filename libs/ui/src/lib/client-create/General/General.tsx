@@ -48,9 +48,9 @@ interface GeneralProps {
 }
 
 interface Label {
+  id?: number
   label?: string
   color?: string
-  count?: number
 }
 
 const customColorData = [
@@ -350,6 +350,7 @@ export const General: FC<GeneralProps> = ({
       </div>
     )
   }
+
   return (
     <div className={styles.generalDiv}>
       <div className={styles.generalHeaderTitle}>
@@ -375,80 +376,90 @@ export const General: FC<GeneralProps> = ({
         </Popover>
       </div>
       <AntForm layout={'vertical'} requiredMark={false}>
-        <div className={styles.salutationFirstDiv}>
-          {fieldsSettings?.find(
-            (thread) => thread.field_name === 'salutation'
-          ) && (
-            <div className={styles.salutation}>
-              <AntForm.Item
-                label={`${t('quickCreate.client.modal.general.salutation')}${
-                  salutationData && salutationData?.length > 0
-                    ? requiredLabel('salutation')
-                    : ''
-                }`}
-                name={'salutation'}
-              >
-                {!isSalutationLoading ? (
-                  <Select
+        <div>
+          {isLoading ? (
+            <div className={styles.skeletonLoaderContent}>
+              <SkeletonContent />
+              <SkeletonContent />
+            </div>
+          ) : (
+            <div className={styles.salutationFirstDiv}>
+              {fieldsSettings?.find(
+                (thread) => thread.field_name === 'salutation'
+              ) && (
+                <div className={styles.salutation}>
+                  <AntForm.Item
+                    label={`${t(
+                      'quickCreate.client.modal.general.salutation'
+                    )}${
+                      salutationData && salutationData?.length > 0
+                        ? requiredLabel('salutation')
+                        : ''
+                    }`}
                     name={'salutation'}
-                    placeholder={t(
-                      'quickCreate.client.modal.general.salutation.placeholder'
-                    )}
                   >
-                    {salutationData?.map((item) => (
-                      <Select.Option key={item.id} value={item.name}>
-                        {item.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                ) : (
-                  <div className={styles.skeletonWrapper}>
-                    <Skeleton
-                      className={className(
-                        styles.salutationSkeleton,
-                        styles.skeletonInput
-                      )}
-                      paragraph={false}
-                      active
-                    />
-                  </div>
-                )}
-              </AntForm.Item>
+                    {!isSalutationLoading ? (
+                      <Select
+                        name={'salutation'}
+                        placeholder={t(
+                          'quickCreate.client.modal.general.salutation.placeholder'
+                        )}
+                      >
+                        {salutationData?.map((item) => (
+                          <Select.Option key={item.id} value={item.name}>
+                            {item.name}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    ) : (
+                      <div className={styles.skeletonWrapper}>
+                        <Skeleton
+                          className={className(
+                            styles.salutationSkeleton,
+                            styles.skeletonInput
+                          )}
+                          paragraph={false}
+                          active
+                        />
+                      </div>
+                    )}
+                  </AntForm.Item>
+                </div>
+              )}
+              <div className={styles.firstName}>
+                <AntForm.Item
+                  label={`${t(
+                    'quickCreate.client.modal.general.firstName'
+                  )} (${t('quickcreate.required.label')})`}
+                  name={'Fname'}
+                >
+                  <Input
+                    size="middle"
+                    name={'Fname'}
+                    placeholder={t(
+                      'quickCreate.client.modal.general.firstName.placeHolder'
+                    )}
+                  />
+                </AntForm.Item>
+              </div>
+              <div className={styles.lastName}>
+                <AntForm.Item
+                  label={`${t(
+                    'quickCreate.client.modal.general.lastName'
+                  )} (${t('quickcreate.required.label')})`}
+                  name={'Lname'}
+                >
+                  <Input
+                    size="middle"
+                    name={'Lname'}
+                    placeholder={t(
+                      'quickCreate.client.modal.general.lastName.placeHolder'
+                    )}
+                  />
+                </AntForm.Item>
+              </div>
             </div>
           )}
-
-          <div className={styles.firstName}>
-            <AntForm.Item
-              label={`${t('quickCreate.client.modal.general.firstName')} (${t(
-                'quickcreate.required.label'
-              )})`}
-              name={'Fname'}
-            >
-              <Input
-                size="middle"
-                name={'Fname'}
-                placeholder={t(
-                  'quickCreate.client.modal.general.firstName.placeHolder'
-                )}
-              />
-            </AntForm.Item>
-          </div>
-          <div className={styles.lastName}>
-            <AntForm.Item
-              label={`${t('quickCreate.client.modal.general.lastName')} (${t(
-                'quickcreate.required.label'
-              )})`}
-              name={'Lname'}
-            >
-              <Input
-                size="middle"
-                name={'Lname'}
-                placeholder={t(
-                  'quickCreate.client.modal.general.lastName.placeHolder'
-                )}
-              />
-            </AntForm.Item>
-          </div>
         </div>
 
         {isLoading ? (
@@ -499,6 +510,15 @@ export const General: FC<GeneralProps> = ({
                   placeholder={t(
                     'quickCreate.client.modal.general.hearOption.selectOption'
                   )}
+                  value={
+                    values?.['MarketingSource']
+                      ? marketingSources?.find(
+                          (source) =>
+                            source.id ===
+                            Number.parseInt(values?.['MarketingSource'])
+                        )?.name
+                      : undefined
+                  }
                 >
                   {marketingSources?.map((item) => (
                     <Select.Option key={item.id} value={item.id}>
@@ -560,6 +580,15 @@ export const General: FC<GeneralProps> = ({
               placeholder={t(
                 'quickCreate.client.modal.general.preferredLanguage.default'
               )}
+              value={
+                values?.['preferredLanguage']
+                  ? languageMenu.find(
+                      (menu) =>
+                        menu.shortLabel ===
+                        values?.['preferredLanguage']?.toUpperCase()
+                    )?.label
+                  : undefined
+              }
             >
               {languageMenu.map((item, index) => (
                 <Select.Option key={index} value={item.shortLabel}>
