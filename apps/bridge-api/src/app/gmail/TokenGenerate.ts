@@ -14,9 +14,10 @@ const TokenType = objectType({
 })
 const content = {
   installed: {
-    client_id:
-      '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com',
-    client_secret: 'IfyIxOV4e-OW_CU3KTgUFk4n',
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SCERATE,
+    //The redirect uris can't be affected bcz it only for pass in token request
+    // Once setup google cloud project for pabau we can add www.pabau.com as rediract uris and also add in GCP
     redirect_uris: ['http://localhost:4200/setup/senders'],
   },
 }

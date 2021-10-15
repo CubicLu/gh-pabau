@@ -126,7 +126,6 @@ export const permissions = shield(
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
-      getRefreshToken: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
@@ -216,6 +215,8 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.interceptAccessToUserData
       ),
+      // getToken
+      getRefreshToken: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,

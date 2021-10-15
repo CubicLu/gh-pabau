@@ -1,6 +1,5 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import styles from './readEmail.module.less'
-// import { gapi } from 'gapi-script'
 import {
   CaretDownOutlined,
   DownOutlined,
@@ -50,17 +49,7 @@ export const ReadEmail: FC<P> = ({
   const [deleteEmailId, setDeleteEmailId] = useState('')
   const [printSnippet, setPrintSnippet] = useState('')
 
-  useEffect(
-    () => {
-      listSentEmail(messageId)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [messageId]
-  )
-
-  // const customStyle = ''
-
-  const extractData = (x) => {
+  const extractData = (content) => {
     const rowData = {
       name: '',
       date: '',
@@ -69,65 +58,107 @@ export const ReadEmail: FC<P> = ({
       snippet: '',
       id: '',
     }
-    rowData.id = x.id
-    x.payload.headers.map((x) => {
-      if (x.name === 'From') {
-        rowData.name = x.value.split('<')
+    rowData.id = content.id
+    content.payload.headers.map((payload) => {
+      if (payload.name === 'From') {
+        rowData.name = payload.value.split('<')
       }
-      if (x.name === 'From') {
-        rowData.name = x.value.split('<')
+      if (payload.name === 'From') {
+        rowData.name = payload.value.split('<')
       }
-      if (x.name === 'Subject') {
-        rowData.subject = x.value
+      if (payload.name === 'Subject') {
+        rowData.subject = payload.value
       }
-      if (x.name === 'To') {
-        rowData.to = x.value
+      if (payload.name === 'To') {
+        rowData.to = payload.value
       }
-      if (x.name === 'Date') {
-        rowData.date = `${dayjs(x.value).format('D MMM')} ( ${dayjs(
-          x.value
+      if (payload.name === 'Date') {
+        rowData.date = `${dayjs(payload.value).format('D MMM')} ( ${dayjs(
+          payload.value
         ).fromNow(true)} ago ) `
       }
       return 1
     })
     let part = ''
 
-    if (x.payload.mimeType === 'text/html') {
-      part = x.payload.body.data ? x.payload.body.data : ''
+    if (content.payload.mimeType === 'text/html') {
+      part = content.payload.body.data ? content.payload.body.data : ''
     } else {
-      x.payload.parts.map((x) => {
-        if (x.mimeType === 'text/html') {
-          part = x.body.data ? x.body.data : ''
+      content.payload.parts.map((parts) => {
+        if (parts.mimeType === 'text/html') {
+          part = parts.body.data ? parts.body.data : ''
         }
         return 1
       })
     }
 
     rowData.snippet = decode(part).replace('"\r\n', '')
-    // .replace('div { display:block !important;}', '')
-
     const bodyContent = rowData.snippet.split('<body')
 
-    // const styleContent = bodyContent[0].split('<style')
-    // customStyle = `<style ${styleContent[1]}`
     bodyContent.length === 1
       ? (rowData.snippet = `<body ${bodyContent[0]}`)
       : (rowData.snippet = `<body ${bodyContent[1]}`)
-    // rowData.snippet = `<body ${bodyContent[1]}`
-
-    // console.log(` Body ::: ${rowData.snippet}`)
-    // rowData.snippet = atob(
-    //   part.replace(/_/g, '/').toString().replace(/-/g, '+')
-    // ).replace('"\r\n', '')
 
     return rowData
   }
 
-  const getThreadList = async (threads, msg) => {
-    const threadList = []
-    if (threads?.messages?.length === 1) {
-      fetch(
-        `https://www.googleapis.com/gmail/v1/users/${user}/messages/${msg}?access_token=${access_token}`,
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getThreadList = useCallback(
+    async (threads, msg) => {
+      const threadList = []
+      if (threads?.messages?.length === 1) {
+        fetch(
+          `https://www.googleapis.com/gmail/v1/users/${user}/messages/${msg}?access_token=${access_token}`,
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              response.json().then(async (json) => {
+                const emailData = extractData(json)
+                if (
+                  JSON.stringify(responseEmail) !==
+                  JSON.stringify({ ...responseEmail, ...emailData })
+                ) {
+                  setresponseEmail({
+                    ...responseEmail,
+                    ...emailData,
+                  })
+                  setIsLoading(false)
+                }
+              })
+            }
+          })
+          .catch((error) => {
+            console.log('Google Connection refuse', error)
+          })
+      } else {
+        threads.messages.map((threadsMsg) => {
+          const emailData = extractData(threadsMsg)
+          threadList.push({
+            ...emailData,
+          })
+          return 1
+        })
+        setEmailList(threadList)
+        setIsLoading(false)
+      }
+    },
+    [access_token, responseEmail, user]
+  )
+
+  const listSentEmail = useCallback(
+    async (msg) => {
+      dayjs.extend(relativeTime)
+
+      let threads = { messages: [] }
+
+      await fetch(
+        `https://www.googleapis.com/gmail/v1/users/${user}/threads/${threadsId}?access_token=${access_token}`,
         {
           method: 'GET',
           headers: {
@@ -138,60 +169,24 @@ export const ReadEmail: FC<P> = ({
         .then((response) => {
           if (response.ok) {
             response.json().then(async (json) => {
-              const emailData = extractData(json)
-              setresponseEmail({
-                ...responseEmail,
-                ...emailData,
-              })
-              setIsLoading(false)
-              // return json
+              threads = json
+
+              await getThreadList(json, msg)
+              return threads
             })
           }
         })
         .catch((error) => {
           console.log('Google Connection refuse', error)
         })
-    } else {
-      threads.messages.map((threadsMsg) => {
-        const emailData = extractData(threadsMsg)
-        threadList.push({
-          ...emailData,
-        })
-        return 1
-      })
-      setEmailList(threadList)
-      setIsLoading(false)
-    }
-  }
+    },
+    [access_token, getThreadList, threadsId, user]
+  )
 
-  const listSentEmail = async (msg) => {
-    dayjs.extend(relativeTime)
+  useEffect(() => {
+    listSentEmail(messageId).then()
+  }, [listSentEmail, messageId])
 
-    let threads = { messages: [] }
-
-    await fetch(
-      `https://www.googleapis.com/gmail/v1/users/${user}/threads/${threadsId}?access_token=${access_token}`,
-      {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async (json) => {
-            threads = json
-
-            await getThreadList(json, msg)
-            return threads
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
-  }
   const handleEmailDelete = () => {
     handleSingleDelete(deleteEmailId)
   }
@@ -400,16 +395,8 @@ export const ReadEmail: FC<P> = ({
               <Skeleton />
             </>
           ) : (
-            <div
-              className={styles.mailWrapper}
-              // style={{ display: 'flex !important' }}
-            >
-              <div
-                // className={styles.mailTest}
-                // ref={elRef}
-                dangerouslySetInnerHTML={{ __html: value.snippet }}
-              />
-              {/* <iframe srcDoc={value.snippet} title="w"></iframe> */}
+            <div className={styles.mailWrapper}>
+              <div dangerouslySetInnerHTML={{ __html: value.snippet }} />
             </div>
           )}
           {!isLoading && (

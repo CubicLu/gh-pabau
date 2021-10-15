@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import styles from './index.module.less'
-// import { gapi } from 'gapi-script'
 import {
   Button,
   Checkbox,
@@ -67,6 +66,10 @@ export const Inbox = () => {
   const [showSearch, setShowSearch] = useState(false)
   const [authToken, setAuthToken] = useState('')
 
+  const clientId =
+    '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com'
+  const clientScerate = 'IfyIxOV4e-OW_CU3KTgUFk4n'
+
   const [updateConnection] = useMutation(UpdateGmailConnectionDocument, {
     onCompleted() {
       console.log()
@@ -77,23 +80,12 @@ export const Inbox = () => {
   })
 
   const userSignIn = true
-  // useEffect(
-  //   () => {
-  //     handleClick()
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [userSignIn]
-  // )
 
-  useEffect(
-    () => {
-      if (inboxEmail.length <= 0) {
-        setIsLoading(true)
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isLoading]
-  )
+  useEffect(() => {
+    if (inboxEmail.length <= 0) {
+      setIsLoading(true)
+    }
+  }, [isLoading, inboxEmail.length])
   const { me } = useUser()
   const [loadConnection, { data: gmailConnection }] = useLazyQuery(
     FindGmailConnectionDocument,
@@ -104,58 +96,13 @@ export const Inbox = () => {
       },
     }
   )
-  useEffect(
-    () => {
-      loadConnection()
-      if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
-        setAuthToken(gmailConnection.gmail_connection[0].access_token)
-        updateSigninStatus(true).then()
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+
   const router = useRouter()
-
-  useEffect(() => {
-    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
-      setAuthToken(gmailConnection.gmail_connection[0].access_token)
-      fetch(
-        `https://gmail.googleapis.com/gmail/v1/users/${gmailConnection?.gmail_connection[0].email}/profile?access_token=${authToken}`,
-        {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-          },
-        }
-      )
-        .then((response) => {
-          return response
-        })
-        .then(function (data) {
-          if (!data.ok) {
-            getNewAuthToken().then()
-          }
-        })
-        .catch((error) => {
-          console.log('error::', error)
-        })
-      updateSigninStatus(true).then()
-    }
-    if (gmailConnection && gmailConnection.gmail_connection.length === 0) {
-      router.push('/setup/senders').then()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gmailConnection, authToken])
-
-  const clientId =
-    '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com'
-  const clientScreat = 'IfyIxOV4e-OW_CU3KTgUFk4n'
 
   const getNewAuthToken = async () => {
     if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
       fetch(
-        `https://oauth2.googleapis.com/token?client_id=${clientId}&client_secret=${clientScreat}&grant_type=refresh_token&refresh_token=${gmailConnection.gmail_connection[0].refresh_token}`,
+        `https://oauth2.googleapis.com/token?client_id=${clientId}&client_secret=${clientScerate}&grant_type=refresh_token&refresh_token=${gmailConnection.gmail_connection[0].refresh_token}`,
         {
           method: 'POST',
           headers: {
@@ -189,36 +136,21 @@ export const Inbox = () => {
     }
   }
 
-  const updateSigninStatus = async (isSignedIn) => {
-    if (isSignedIn) {
-      if (authToken.length > 0) {
-        await listInbox()
-        await listDraft()
-        await listSent()
-        await listArchive()
-      }
-      // totalConverstions()
-    } else {
-      router.push('/setup/senders')
-    }
-  }
-
   const extractData = (finalEmails) => {
-    const val = finalEmails.map((itm: any, i) => {
+    const val = finalEmails.map((itm: any) => {
       const rowData = { name: '', time: '', subject: '', isAttched: false }
       if (itm.payload.mimeType === 'multipart/mixed') {
         rowData.isAttched = true
       }
-      itm.payload.headers.map((x) => {
-        if (x.name === 'From') {
-          rowData.name = x.value.split('<')
+      itm.payload.headers.map((header) => {
+        if (header.name === 'From') {
+          rowData.name = header.value.split('<')
         }
-        if (x.name === 'Date') {
-          rowData.time = x.value
-          // `${dayjs(x.value).format('HH:mm')}`
+        if (header.name === 'Date') {
+          rowData.time = header.value
         }
-        if (x.name === 'Subject') {
-          rowData.subject = x.value
+        if (header.name === 'Subject') {
+          rowData.subject = header.value
         }
         return 1
       })
@@ -271,7 +203,6 @@ export const Inbox = () => {
             if (response.ok) {
               response.json().then(async (json) => {
                 emailBox.push(json)
-                // return json
               })
             }
           })
@@ -311,7 +242,6 @@ export const Inbox = () => {
             if (response.ok) {
               response.json().then(async (json) => {
                 emailBox.push(json)
-                // return json
               })
             }
           })
@@ -343,7 +273,6 @@ export const Inbox = () => {
             if (response.ok) {
               response.json().then(async (json) => {
                 emailBox.push(json)
-                // return json
               })
             }
           })
@@ -414,7 +343,6 @@ export const Inbox = () => {
             if (response.ok) {
               response.json().then(async (json) => {
                 emailBox.push(json)
-                // return json
               })
             }
           })
@@ -426,7 +354,6 @@ export const Inbox = () => {
     const ddd = emailBox.map((itm: any) => {
       const rowData = { name: '', time: '', subject: '' }
       if (
-        //TODO::Archive MAIL
         (!itm.labelIds.includes('INBOX') &&
           !itm.labelIds.includes('SENT') &&
           !itm.labelIds.includes('DRAFT')) ||
@@ -560,6 +487,57 @@ export const Inbox = () => {
       })
   }
 
+  const updateSigninStatus = async (isSignedIn) => {
+    if (isSignedIn) {
+      if (authToken.length > 0) {
+        await listInbox()
+        await listDraft()
+        await listSent()
+        await listArchive()
+      }
+    } else {
+      router.push('/setup/senders')
+    }
+  }
+
+  useEffect(() => {
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      setAuthToken(gmailConnection.gmail_connection[0].access_token)
+      fetch(
+        `https://gmail.googleapis.com/gmail/v1/users/${gmailConnection?.gmail_connection[0].email}/profile?access_token=${authToken}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          return response
+        })
+        .then(function (data) {
+          if (!data.ok) {
+            getNewAuthToken().then()
+          }
+        })
+        .catch((error) => {
+          console.log('error::', error)
+        })
+      updateSigninStatus(true).then()
+    }
+    if (gmailConnection && gmailConnection.gmail_connection.length === 0) {
+      router.push('/setup/senders').then()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gmailConnection])
+
+  useEffect(() => {
+    loadConnection()
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      setAuthToken(gmailConnection.gmail_connection[0].access_token)
+    }
+  }, [loadConnection, gmailConnection])
+
   const tabItemText = [
     <div key="0">
       <InboxOutlined />
@@ -617,7 +595,6 @@ export const Inbox = () => {
       dataIndex: 'label',
       visible: true,
       render: (text, record, row) => {
-        // ::TODO ADD CLIENT AND LEAD
         return (
           <div>
             {row === 0 && (
@@ -644,7 +621,6 @@ export const Inbox = () => {
             overlay={privatemenu}
             placement="bottomRight"
             arrow
-            // trigger={['click']}
             className={styles.privateDropDown}
           >
             <Button type="default" icon={<LockOutlined />}>
@@ -797,15 +773,6 @@ export const Inbox = () => {
       .catch((error) => {
         console.log('Google Connection refuse', error)
       })
-
-    // const threads = await gapi.client.gmail.users.threads.get({
-    //   userId: 'me',
-    //   id: threadsId,
-    // })
-    // if (threads.result.messages.length !== 1) {
-    //   isThread = true
-    // }
-
     setIsLoading(true)
     await updateSigninStatus(userSignIn)
     setIsLoading(false)
@@ -1184,9 +1151,6 @@ export const Inbox = () => {
                   )}
                   <Search
                     placeholder="Search"
-                    // suffix={
-                    //   <SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
-                    // }
                     style={{ borderRadius: '4px', marginRight: '10px' }}
                     onSearch={(e) => handleSearch(e)}
                   />
