@@ -3,13 +3,35 @@ import {
   useBasicContactDetailsQuery,
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
+  useGetContactHeaderLazyQuery,
+  useCreateOneContactNoteMutation,
+  GetContactHeaderDocument,
 } from '@pabau/graphql'
-import { ClientCard, TabItem } from '@pabau/ui'
-import React, { ComponentPropsWithoutRef, FC, useEffect, useState } from 'react'
+import {
+  ClientCard,
+  TabItem,
+  ClientNotes,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
+import React, {
+  ComponentPropsWithoutRef,
+  FC,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react'
 import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
+import { getRealIp } from '../../helper/getRealIp'
+import { useUser } from '../../context/UserContext'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -19,14 +41,45 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { me } = useUser()
   const [customField, setCustomField] = useState([])
   const [openEditModal, setOpenEditModal] = useState(false)
+  const [contactData, setContactData] = useState<ClientNotes>({
+    notes: [],
+    count: 0,
+    loading: true,
+    appointments: [],
+  })
+  const [basicContactData, setBasicContactData] = useState(null)
+
+  const [addMutation] = useCreateOneContactNoteMutation({
+    onCompleted() {
+      Notification(NotificationType.success, 'Successfully created the note')
+    },
+    onError() {
+      Notification(NotificationType.error, 'Error occured while creating note')
+    },
+  })
+
+  const getQueryVariables = useMemo(() => {
+    return {
+      variables: { id: clientId },
+    }
+  }, [clientId])
 
   const { data, loading, refetch } = useBasicContactDetailsQuery({
     skip: !router.query['id'],
     ssr: false,
-    variables: { id: clientId },
+    ...getQueryVariables,
+  })
+
+  const [
+    getContactDetails,
+    { data: contactDetails, loading: notesCountLoading },
+  ] = useGetContactHeaderLazyQuery({
+    ssr: false,
     notifyOnNetworkStatusChange: true,
+    ...getQueryVariables,
   })
 
   const { data: referredByOptions } = useGetMarketingSourcesQuery({
@@ -82,7 +135,50 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         setCustomField(final)
       }
     }
+    if (data?.findFirstCmContact) {
+      setContactData((item) => {
+        return {
+          ...item,
+          notes: [],
+          count:
+            data?.findFirstCmContact?.contactNotes?.length +
+              data?.findFirstCmContact?.bookingNotes?.length || 0,
+          loading: true,
+          appointments: [],
+        }
+      })
+      const contactDetails = { ...data?.findFirstCmContact }
+      delete contactDetails?.contactNotes
+      delete contactDetails?.bookingNotes
+      setBasicContactData(contactDetails)
+    }
   }, [customFieldData, data])
+
+  const handleAddNewClientNote = async (note) => {
+    const ipAddress = await getRealIp()
+    if (ipAddress) {
+      const noteBody = {
+        Note: note,
+        IpAddress: ipAddress + '',
+        // CreatedDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        CreatedDate: dayjs
+          .tz(dayjs(), me?.companyTimezone)
+          .format('YYYY-MM-DD HH:mm:ss'),
+        // CreatedDate: dayjs.tz(dayjs(), 'Europe/Kaliningrad').format(''),
+        User: { connect: { id: me?.user } },
+        CmContact: { connect: { ID: clientId } },
+      }
+      await addMutation({
+        variables: { data: noteBody },
+        refetchQueries: [
+          {
+            query: GetContactHeaderDocument,
+            ...getQueryVariables,
+          },
+        ],
+      })
+    }
+  }
 
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
@@ -151,6 +247,19 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     // },
   ] as const
 
+  useEffect(() => {
+    if (contactDetails?.notes) {
+      setContactData((item) => {
+        return {
+          ...item,
+          loading: notesCountLoading,
+          notes: contactDetails?.notes?.contact,
+          appointments: contactDetails?.notes?.appointment,
+        }
+      })
+    }
+  }, [contactDetails, notesCountLoading])
+
   const handleEditAll = () => {
     setOpenEditModal(true)
   }
@@ -175,27 +284,27 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         dateFormat={GetFormat()}
         handleEditAll={handleEditAll}
         client={
-          data?.findFirstCmContact
+          basicContactData
             ? ({
-                ...data.findFirstCmContact,
-                fullName: `${data.findFirstCmContact.firstName}
-                  ${data.findFirstCmContact.lastName}`,
-                referredBy: data.findFirstCmContact.marketingSource?.name,
-                avatar: data.findFirstCmContact.avatar
-                  ? getImage(data.findFirstCmContact.avatar)
+                ...basicContactData,
+                fullName: `${basicContactData?.firstName}
+                  ${basicContactData?.lastName}`,
+                referredBy: basicContactData?.marketingSource?.name,
+                avatar: basicContactData?.avatar
+                  ? getImage(basicContactData?.avatar)
                   : '',
                 phone: {
-                  mobile: data.findFirstCmContact.mobile,
-                  home: data.findFirstCmContact.home,
+                  mobile: basicContactData?.mobile,
+                  home: basicContactData?.home,
                 },
                 isActive:
                   data.findFirstCmContact?.isActive === 1 ? true : false,
                 address: [
-                  data.findFirstCmContact.street,
-                  data.findFirstCmContact.city,
-                  data.findFirstCmContact.county,
-                  data.findFirstCmContact.postCode,
-                  data.findFirstCmContact.country,
+                  basicContactData?.street,
+                  basicContactData?.city,
+                  basicContactData?.county,
+                  basicContactData?.postCode,
+                  basicContactData?.country,
                 ]
                   .filter((val) => val?.trim())
                   .join(', '),
@@ -210,6 +319,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }
+        notes={contactData}
+        getContactDetails={getContactDetails}
+        handleAddNewClientNote={handleAddNewClientNote}
       >
         {children}
       </ClientCard>
