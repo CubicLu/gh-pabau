@@ -54,12 +54,38 @@
         }
       }
     }
+    .deleteCircle {
+      height: 20px;
+      width: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: red;
+      margin-left: 10px;
+    }
     .notesWrapper {
       &:hover {
         .notes {
           display: none;
         }
-        .addDescriptionNotice {
+        .lineWrapper {
+          display: block;
+          font-family: var(--font-family);
+          font-size: 10px;
+          font-style: italic;
+          cursor: pointer;
+          margin-top: 2px;
+          span:first-child {
+            color: var(--light-grey-color);
+          }
+          span:last-child {
+            margin-left: 5px;
+            color: var(--primary-color);
+          }
+        }
+        .boxWrapper {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -96,7 +122,10 @@
           }
         }
       }
-      .addDescriptionNotice {
+      .boxWrapper {
+        display: none;
+      }
+      .lineWrapper {
         display: none;
       }
     }
@@ -123,19 +152,49 @@
         }
       }
     }
+    .cancelTextArea {
+      width: 75%;
+      height: 32px;
+      border-radius: 3px;
+      margin: 5px 0;
+      border-color: var(--border-color-base);
+      outline: none;
+      padding-left: 11px;
+      align-items: center;
+    }
+    .cancelNoteEditor {
+      :global {
+        .ant-select {
+          width: 75%;
+          margin: 5px 0;
+        }
+        .ant-form-item-label > label {
+          margin-top: 5px;
+          font-size: 12px;
+          font-style: italic;
+          color: var(--light-grey-color);
+        }
+      }
+    }
+
+    .cancelReasonFooter {
+      display: flex;
+      align-items: center;
+    }
+
+    .noteTextArea {
+      width: 75%;
+      height: 200px;
+      border: 2px solid var(--primary-color);
+      border-radius: 3px;
+      margin: 5px 0;
+      outline: none;
+    }
+
     .noteEditor {
       display: flex;
       justify-content: flex-start;
       flex-direction: column;
-
-      textarea {
-        width: 75%;
-        height: 200px;
-        border: 2px solid var(--primary-color);
-        border-radius: 3px;
-        margin: 5px 0;
-        outline: none;
-      }
 
       .noteEditorButtonWrapper {
         float: left;
@@ -187,13 +246,13 @@
         border-radius: 4px;
         white-space: nowrap;
         &.new {
-          background-color: #4DC6FA;
+          background-color: #4dc6fa;
         }
         &.cancelled {
-          background-color: #FF7C56;
+          background-color: #ff7c56;
         }
         &.noShow {
-          background-color: #FF5B64;
+          background-color: #ff5b64;
         }
         margin-right: 8px;
         &:last-child {
@@ -262,7 +321,7 @@
     cursor: pointer;
     margin: 0 16px;
     &Red {
-      color: #FF5B64;
+      color: #ff5b64;
       width: 200px;
       height: 2rem;
       margin-bottom: 4px;
@@ -463,22 +522,22 @@
 }
 
 .cancelledLabel {
-  background-color: #FF7C56;
+  background-color: #ff7c56;
 }
 .newLabel {
-  background-color: #4DC6FA;
+  background-color: #4dc6fa;
 }
 .noShowLabel {
-  background-color: #FF5B64;
+  background-color: #ff5b64;
 }
 .waitingLabel {
-  background-color: #FAAD14;
+  background-color: #faad14;
 }
 .arrivedLabel {
-  background-color: #65CD98;
+  background-color: #65cd98;
 }
 .inRoomLabel {
-  background-color: #7B61E2;
+  background-color: #7b61e2;
 }
 .selectedStatusLabel {
   border: 1px solid var(--primary-color);
