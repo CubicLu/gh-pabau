@@ -22,7 +22,6 @@ const PCBData = inputObjectType({
     t.nonNull.float('start_date')
     t.nonNull.float('end_date')
     t.nonNull.int('user_id')
-    t.nonNull.int('service_id')
     t.nonNull.list.nonNull.field('service_ids', {
       type: 'Int',
     })
@@ -39,6 +38,7 @@ export const public_createBooking = extendType({
         data: nullable(PCBData),
       },
       async resolve(_, input, ctx: Context) {
+        console.log(input)
         // const service = ctx.prisma.companyService.findFirst({
         //   where: { id: input.data.service_id },
         // })
