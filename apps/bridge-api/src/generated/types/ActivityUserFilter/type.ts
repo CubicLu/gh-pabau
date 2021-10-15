@@ -32,7 +32,7 @@ export const ActivityUserFilter = objectType({
       type: 'ActivityUserState',
       args: {
         where: 'ActivityUserStateWhereInput',
-        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        orderBy: 'ActivityUserStateOrderByInput',
         cursor: 'ActivityUserStateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -40,12 +40,6 @@ export const ActivityUserFilter = objectType({
       },
       resolve(root: any) {
         return root.ActivityUserState
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'ActivityUserFilterCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

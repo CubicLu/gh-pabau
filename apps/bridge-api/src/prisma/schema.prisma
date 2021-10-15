@@ -4665,6 +4665,7 @@ model ContactMeta {
   meta_name  String
   meta_value String
   Contact    CmContact @relation(fields: [contact_id], references: [ID])
+
   @@unique([contact_id, meta_name], name: "contact_id_meta_name")
   @@map("contact_meta")
 }
@@ -12756,11 +12757,10 @@ model User {
   Activity                     Activity[]                     @relation("activityCreatedUser")
   CmLead                       CmLead[]
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
-  PasswordResetAuth   PasswordResetAuth[]
-  ActivityUserColumns ActivityUserColumns[]
-  ServiceUserTier     ServiceUserTier[]
-  ActivityUserState  ActivityUserState[]
-  ActivityUserFilter ActivityUserFilter[]
+  PasswordResetAuth            PasswordResetAuth[]
+  ServiceUserTier              ServiceUserTier[]
+  ActivityUserState            ActivityUserState[]
+  ActivityUserFilter           ActivityUserFilter[]
 
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")

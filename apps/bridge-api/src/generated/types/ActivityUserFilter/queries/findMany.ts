@@ -6,7 +6,7 @@ export const ActivityUserFilterFindManyQuery = queryField(
     type: nonNull(list(nonNull('ActivityUserFilter'))),
     args: {
       where: 'ActivityUserFilterWhereInput',
-      orderBy: list('ActivityUserFilterOrderByWithRelationInput'),
+      orderBy: list('ActivityUserFilterOrderByInput'),
       cursor: 'ActivityUserFilterWhereUniqueInput',
       distinct: 'ActivityUserFilterScalarFieldEnum',
       skip: 'Int',
