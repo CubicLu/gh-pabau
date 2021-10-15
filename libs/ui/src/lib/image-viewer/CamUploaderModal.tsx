@@ -7,7 +7,6 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons'
 import { Progress, Spin, Tooltip } from 'antd'
-import { useMedia } from 'react-use'
 import { isMobile as mobile } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import { ReactComponent as ImagesIcon } from '../../assets//images/image-viewer/image-gallery.svg'
@@ -231,19 +230,21 @@ const Dropzone: FC<DropzoneProps> = ({
     >
       <div className="dropzoneOverlay">
         <div>
-          {descTitle || 'Drag & drop files here'}
-          {afterIcon &&
-            dropzoneRef?.current?.classList?.contains('dragOver') &&
-            afterIcon}
-          {beforeIcon &&
-            !dropzoneRef?.current?.classList?.contains('dragOver') &&
-            beforeIcon}
-          {!afterIcon && !beforeIcon && <CloudUploadOutlined />}
+          <div>
+            {descTitle || 'Drag & drop files here'}
+            {afterIcon &&
+              dropzoneRef?.current?.classList?.contains('dragOver') &&
+              afterIcon}
+            {beforeIcon &&
+              !dropzoneRef?.current?.classList?.contains('dragOver') &&
+              beforeIcon}
+            {!afterIcon && !beforeIcon && <CloudUploadOutlined />}
+          </div>
+          {descSubtitle && <div>{descSubtitle}</div>}
+          {dropzoneRef?.current?.classList?.contains('invalid') && (
+            <div className="hasError">{errMsg}</div>
+          )}
         </div>
-        {descSubtitle && <div>{descSubtitle}</div>}
-        {dropzoneRef?.current?.classList?.contains('invalid') && (
-          <div className="hasError">{errMsg}</div>
-        )}
       </div>
     </div>
   )
@@ -271,7 +272,6 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
 }) => {
   const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
   const inputFileRef = useRef<HTMLInputElement>(null)
-  const isMobile = useMedia('(max-width: 768px)', false)
   const [facingMode, setFacingMode] = useState(facingModes[1])
 
   const captureImage = () => {
@@ -335,13 +335,13 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       <Modal
         visible={visible}
         onCancel={onClose}
-        width={isMobile ? '100%' : '980px'}
+        width={mobile ? '100vw' : '980px'}
         className={classNames(styles.uppyModal, mobile && styles.fullScreen)}
         closable={false}
         footer={false}
       >
         <div className={styles.uppyModalHeader}>
-          {isMobile && (
+          {mobile && (
             <span>
               <LeftOutlined onClick={onClose} />
             </span>
@@ -352,7 +352,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             </span>
             <span>Take a photo</span>
           </div>
-          {!isMobile && (
+          {!mobile && (
             <div>
               <CloseOutlined onClick={onClose} />{' '}
             </div>
@@ -396,27 +396,26 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
               }}
             />
           )}
-          <div className={styles.addedImagesDiv}>
-            <div className={styles.addedImagesDivInner}>
-              {uploadingImages && uploadingImages?.length > 0 && (
-                <div className={styles.addedImagesFixer} id="addedImagesFixer">
-                  {uploadingImages?.map((el) => (
-                    <ImageThumbnail
-                      data={el}
-                      key={el?.id}
-                      uploadImage={uploadImage}
-                      removeFile={removeImage}
-                    />
-                  ))}
-                </div>
-              )}
+          {uploadingImages && uploadingImages?.length > 0 && (
+            <div className={styles.addedImagesDiv} id="addedImagesFixer">
+              {uploadingImages?.map((el) => (
+                <ImageThumbnail
+                  data={el}
+                  key={el?.id}
+                  uploadImage={uploadImage}
+                  removeFile={removeImage}
+                />
+              ))}
             </div>
-          </div>
+          )}
         </div>
         <div className={styles.uppyModalFooter}>
           <div>
-            {uploadingImages?.length || 0} photo
-            {uploadingImages?.length > 0 && 's'}
+            <span>
+              {uploadingImages?.length || 0} photo
+              {uploadingImages?.length === 0 ||
+                (uploadingImages?.length > 1 && 's')}
+            </span>
           </div>
           <div>
             {showCamera && (
