@@ -323,6 +323,7 @@ model Company {
   Package                Package[]
   InsuranceContractPrice InsuranceContractPrice[]
   ContactAttachment      ContactAttachment[]
+  SmsSender              SmsSender[]
   @@map("admin")
 }
 
@@ -11444,18 +11445,21 @@ model SmsPurchase {
   @@map("sms_purchases")
 }
 
-//model sms_senders {
-//  smsd_id     Int     @id @default(autoincrement())
-//  smsd_name   String
-//  smsd_cid    Int
-//  smsd_delete Int     @default(0)
-//  is_default  Boolean @default(false)
-//  merge_tags  String
-//
-//  @@index([smsd_cid], name: "smsd_cid")
-//  @@index([smsd_delete], name: "smsd_delete")
-//}
-//
+model SmsSender {
+  smsd_id     Int     @id @default(autoincrement())
+  smsd_name   String
+  company_id  Int     @map("smsd_cid")
+  smsd_delete Int     @default(0)
+  is_default  Boolean @default(false)
+  merge_tags  String
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([smsd_delete], name: "smsd_delete")
+  @@map("sms_senders")
+}
+
 //model sms_stats {
 //  smss_id    Int    @id @default(autoincrement())
 //  smss_uid   Int
