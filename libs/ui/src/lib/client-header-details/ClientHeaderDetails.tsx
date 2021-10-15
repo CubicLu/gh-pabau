@@ -33,6 +33,7 @@ export interface ClientHeaderDetailsProps {
   notes?: ClientNotes
   getContactDetails?: () => void
   client?: ClientData
+  handleAddNewClientNote?: (e: string) => void
 }
 
 interface ClientCountDetails {
@@ -44,6 +45,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   notes = { notes: [], count: 0, notesCountLoading: false, appointments: [] },
   getContactDetails,
   client,
+  handleAddNewClientNote,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -74,19 +76,20 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
-      const items: ClientNoteDetails[] = [
-        {
-          content: note,
-          date: dayjs().format('YYYY-MM-DD hh:mm A'),
-          User: {
-            contact: client?.fullName || '',
-            avatar: client?.avatar || '',
-          },
-        },
-        ...noteItems,
-      ]
-      setNoteItems(items)
-      setNote('')
+      // const items: ClientNoteDetails[] = [
+      //   {
+      //     content: note,
+      //     date: dayjs().format('YYYY-MM-DD hh:mm A'),
+      //     User: {
+      //       contact: client?.fullName || '',
+      //       avatar: client?.avatar || '',
+      //     },
+      //   },
+      //   ...noteItems,
+      // ]
+      // setNoteItems(items)
+      // setNote('')
+      handleAddNewClientNote?.(note)
     }
   }
 

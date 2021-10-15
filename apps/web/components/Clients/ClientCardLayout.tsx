@@ -4,8 +4,16 @@ import {
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
+  useCreateOneContactNoteMutation,
+  GetContactHeaderDocument,
 } from '@pabau/graphql'
-import { ClientCard, TabItem, ClientNotes } from '@pabau/ui'
+import {
+  ClientCard,
+  TabItem,
+  ClientNotes,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
   FC,
@@ -17,6 +25,13 @@ import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
+import { getRealIp } from '../../helper/getRealIp'
+import { useUser } from '../../context/UserContext'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -26,6 +41,7 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { me } = useUser()
   const [customField, setCustomField] = useState([])
   const [openEditModal, setOpenEditModal] = useState(false)
   const [contactData, setContactData] = useState<ClientNotes>({
@@ -35,6 +51,15 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     appointments: [],
   })
   const [basicContactData, setBasicContactData] = useState(null)
+
+  const [addMutation] = useCreateOneContactNoteMutation({
+    onCompleted() {
+      Notification(NotificationType.success, 'Successfully created the note')
+    },
+    onError() {
+      Notification(NotificationType.error, 'Error occured while creating note')
+    },
+  })
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -128,6 +153,32 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       setBasicContactData(contactDetails)
     }
   }, [customFieldData, data])
+
+  const handleAddNewClientNote = async (note) => {
+    const ipAddress = await getRealIp()
+    if (ipAddress) {
+      const noteBody = {
+        Note: note,
+        IpAddress: ipAddress + '',
+        // CreatedDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        CreatedDate: dayjs
+          .tz(dayjs(), me?.companyTimezone)
+          .format('YYYY-MM-DD HH:mm:ss'),
+        // CreatedDate: dayjs.tz(dayjs(), 'Europe/Kaliningrad').format(''),
+        User: { connect: { id: me?.user } },
+        CmContact: { connect: { ID: clientId } },
+      }
+      await addMutation({
+        variables: { data: noteBody },
+        refetchQueries: [
+          {
+            query: GetContactHeaderDocument,
+            ...getQueryVariables,
+          },
+        ],
+      })
+    }
+  }
 
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
@@ -270,6 +321,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         }
         notes={contactData}
         getContactDetails={getContactDetails}
+        handleAddNewClientNote={handleAddNewClientNote}
       >
         {children}
       </ClientCard>
