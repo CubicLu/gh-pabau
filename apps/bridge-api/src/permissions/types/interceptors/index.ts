@@ -51,6 +51,22 @@ export const interceptors = {
       return true
     }
   ),
+  interceptAccessToUserData: rule('interceptAccessToUserData')(
+    (_root, args, ctx: Context, { fieldName }) => {
+      fieldName.includes('findUnique')
+        ? (args.where = {
+            primary: {
+              ...args.where,
+              user_id: ctx.authenticated.user,
+            },
+          })
+        : (args.where = {
+            ...args.where,
+            user_id: ctx.authenticated.user,
+          })
+      return true
+    }
+  ),
   interceptResetPasswordToken: rule('injectResetPasswordToken')(
     (_root, args, ctx: Context) => {
       if (!args?.where?.key_code) return new Error('Token not found')

@@ -311,15 +311,18 @@ model Company {
   Activity                         Activity[]
   ContactPreference                ContactPreference[]
 
-  ActivityUserColumns ActivityUserColumns[]
-  ActivityType        ActivityType[]
-  Album               PhotoAlbum[]
-  InsurerContract     InsurerContract[]
+  ActivityUserState  ActivityUserState[]
+  ActivityUserFilter ActivityUserFilter[]
+  ActivityType       ActivityType[]
+  Album              PhotoAlbum[]
+  InsurerContract    InsurerContract[]
 
 
   Voucher                Voucher[]
   Package                Package[]
   InsuranceContractPrice InsuranceContractPrice[]
+  ContactAttachment      ContactAttachment[]
+  SmsSender              SmsSender[]
   @@map("admin")
 }
 
@@ -2095,18 +2098,19 @@ model ContactPreference {
 //
 
 model CmContactCustom {
-  id                 Int               @id @default(autoincrement())
+  id                 Int                @id @default(autoincrement())
   contact_id         Int
-  company_id         Int               @map("occupier")
+  company_id         Int                @map("occupier")
   custom_field_id    Int
   custom_field_label String
   custom_field_value String
-  imported           Int?              @default(0)
-  old_value          String?           @default("")
-  Company            Company           @relation(fields: [company_id], references: [id])
-  CmContact          CmContact         @relation(fields: [contact_id], references: [ID])
-  ManageCustomField  ManageCustomField @relation(fields: [custom_field_id], references: [id])
+  imported           Int?               @default(0)
+  old_value          String?            @default("")
+  Company            Company            @relation(fields: [company_id], references: [id])
+  CmContact          CmContact          @relation(fields: [contact_id], references: [ID])
+  ManageCustomField  ManageCustomField? @relation(fields: [custom_field_id], references: [id])
 
+  @@unique([company_id, contact_id, custom_field_id], name: "unique_company_id_contact_id_custom_field_id")
   @@index([contact_id], name: "contact_id")
   @@index([custom_field_id], name: "custom_field_id")
   @@index([company_id], name: "occupier")
@@ -2139,17 +2143,39 @@ model ActivityType {
   @@map("activity_types")
 }
 
-model ActivityUserColumns {
-  id         Int     @id @default(autoincrement())
-  user_id    Int
-  columns    String
-  company_id Int
-  Company    Company @relation(fields: [company_id], references: [id])
-  User       User?   @relation(fields: [user_id], references: [id])
+model ActivityUserState {
+  id                 Int                 @id @default(autoincrement())
+  user_id            Int
+  columns            String?
+  company_id         Int
+  user_filter        Int?
+  user_group_filter  Int?
+  custom_filter      Int?
+  Company            Company             @relation(fields: [company_id], references: [id])
+  User               User?               @relation(fields: [user_id], references: [id])
+  ActivityUserFilter ActivityUserFilter? @relation(fields: [custom_filter], references: [id])
 
   @@unique([user_id, company_id], name: "company_id_user_id")
   @@index([company_id, user_id], name: "activity_user_columns_user_id_company_id__index")
-  @@map("activity_user_columns")
+  @@map("activity_user_state")
+}
+
+model ActivityUserFilter {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  company_id Int
+  name       String
+  columns    String?
+  data       String?
+  shared     Boolean   @default(true)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  User       User      @relation(fields: [user_id], references: [id])
+  Company    Company   @relation(fields: [company_id], references: [id])
+
+  ActivityUserState ActivityUserState[]
+  @@index([company_id, user_id], name: "activity_user_filter_company_id_user_id__index")
+  @@map("activity_user_filter")
 }
 
 model Activity {
@@ -2162,9 +2188,9 @@ model Activity {
   note           String?
   available      Boolean      @default(true)
   status         String
-  due_start_date DateTime
-  due_end_date   DateTime
-  created_at     DateTime     @default(now())
+  due_start_date DateTime?
+  due_end_date   DateTime?
+  created_at     DateTime?    @default(now())
   updated_at     DateTime?    @updatedAt
   finished_at    DateTime?
   type           Int
@@ -4463,31 +4489,32 @@ model ContactAttachment {
   contact_id        Int
   company_id        Int
   date              Int
-  attach_name       String
-  user_id           Int
+  attach_name       String?
+  user_id           Int?
   attachment_type   String
-  connect_public    Boolean
-  website_public    Boolean
-  attachment_title  String
-  cloud             Boolean     @default(false)
-  custom_id         Int
-  original_path     String
-  imported          Int
-  booking_id        Int
-  photo_type        String
-  attachment_size   String
-  broken            Int
-  broken_check      Int
-  old_linkref       String
-  in_folder         Int
-  custom_contact_id Int
-  album_id          Int
-  medical_form_id   Int
-  tags              String
-  medical_uniqid    String
+  connect_public    Boolean?
+  website_public    Boolean?
+  attachment_title  String?
+  cloud             Boolean?    @default(false)
+  custom_id         Int?
+  original_path     String?
+  imported          Int?
+  booking_id        Int?
+  photo_type        String?
+  attachment_size   String?
+  broken            Int?
+  broken_check      Int?
+  old_linkref       String?
+  in_folder         Int?
+  custom_contact_id Int?
+  album_id          Int?
+  medical_form_id   Int?
+  tags              String?
+  medical_uniqid    String?
   Contact           CmContact   @relation(fields: [contact_id], references: [ID])
   Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
   Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
+  Company           Company     @relation(fields: [company_id], references: [id])
 
   @@index([booking_id], name: "booking_id")
   @@index([cloud], name: "cloud")
@@ -4638,7 +4665,6 @@ model ContactMeta {
   meta_name  String
   meta_value String
   Contact    CmContact @relation(fields: [contact_id], references: [ID])
-
   @@unique([contact_id, meta_name], name: "contact_id_meta_name")
   @@map("contact_meta")
 }
@@ -11419,18 +11445,21 @@ model SmsPurchase {
   @@map("sms_purchases")
 }
 
-//model sms_senders {
-//  smsd_id     Int     @id @default(autoincrement())
-//  smsd_name   String
-//  smsd_cid    Int
-//  smsd_delete Int     @default(0)
-//  is_default  Boolean @default(false)
-//  merge_tags  String
-//
-//  @@index([smsd_cid], name: "smsd_cid")
-//  @@index([smsd_delete], name: "smsd_delete")
-//}
-//
+model SmsSender {
+  smsd_id     Int     @id @default(autoincrement())
+  smsd_name   String
+  company_id  Int     @map("smsd_cid")
+  smsd_delete Int     @default(0)
+  is_default  Boolean @default(false)
+  merge_tags  String
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([smsd_delete], name: "smsd_delete")
+  @@map("sms_senders")
+}
+
 //model sms_stats {
 //  smss_id    Int    @id @default(autoincrement())
 //  smss_uid   Int
@@ -12727,10 +12756,12 @@ model User {
   Activity                     Activity[]                     @relation("activityCreatedUser")
   CmLead                       CmLead[]
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
-
   PasswordResetAuth   PasswordResetAuth[]
   ActivityUserColumns ActivityUserColumns[]
   ServiceUserTier     ServiceUserTier[]
+  ActivityUserState  ActivityUserState[]
+  ActivityUserFilter ActivityUserFilter[]
+
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
