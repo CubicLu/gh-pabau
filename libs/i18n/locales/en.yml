@@ -886,9 +886,8 @@ en:
   ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
   ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
   ui.gp-search.yourPractice: 'Your practice'
-  ui.gp-search.yourPracticeMessage:
-    'Supply a a postcode or the name of the practice where you are
-    currently registered as a patient'
+  ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are
+          currently registered as a patient'
   ui.gp-search.searchInput.placeholder: 'Enter a postcode or search by the name'
   ui.gp-search.searchInput.addPracticeManually: 'Add practice manually'
   ui.gp-search.searchInput.setAsPracticeButton: 'Set as a practice'
@@ -5088,15 +5087,12 @@ en:
   client.appointment.card.pop.cancel.reason.work: 'Work'
   client.appointment.card.pop.cancel.reason.booking.error: 'Booking Error'
   client.appointment.card.pop.cancel.reason.changed.mind: 'Changed Mind'
-  client.appointment.card.pop.cancel.reason.placeholder: 'Please select'
-  client.appointment.card.pop.cancel.reason.manage.cancel.reasons: 'Manage cancel reasons in '
+  client.appointment.card.pop.cancel.reason.manage.cancel.reasons: 'Manage cancel reasons on '
   client.appointment.card.pop.cancel.reason.company.settings: 'Company settings'
   client.appointment.card.pop.cancel.appointment: 'Cancel Appointment'
   client.appointment.card.description.save: 'Save'
   client.appointment.card.description.cancel: 'Cancel'
   client.appointment.card.add.description: 'Add description'
-  client.appointment.card.edit.cancel.reason: 'Edit cancel reason'
-  client.appointment.card.cancel.reasons: 'Cancel reasons'
   client.appointment.card.delete.yes.button: 'Yes'
   client.appointment.card.delete.no.button: 'No'
   client.appointment.card.reinstate.button: 'Reinstate'

@@ -3160,6 +3160,7 @@ model CmStaffGeneral {
   HolidayRequest      HolidayRequest[]
   SalonBookings       Booking[]
   RotaShift           RotaShift[]
+  StaffNote           StaffNote[]
 
   InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
@@ -3179,17 +3180,21 @@ model CmStaffGeneral {
 //  Notes   String
 //}
 //
-//model cm_staff_notes {
-//  ID           Int    @id @default(autoincrement())
-//  StaffID      Int    @unique
-//  Dependents   String
-//  Education    String
-//  Hobbies      String
-//  Training     String
-//  Volunteer    String
-//  Prescription String
-//}
-//
+model StaffNote {
+  ID           Int    @id @default(autoincrement())
+  StaffID      Int    @unique
+  Dependents   String
+  Education    String
+  Hobbies      String
+  Training     String
+  Volunteer    String
+  Prescription String
+
+  CmStaffGeneral CmStaffGeneral @relation(fields: [StaffID], references: [ID])
+
+  @@map("cm_staff_notes")
+}
+
 //model cm_staff_payrolls {
 //  ID                 Int                           @id @default(autoincrement())
 //  StaffID            Int
