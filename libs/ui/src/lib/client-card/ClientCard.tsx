@@ -25,6 +25,8 @@ import {
   CommunicationTimelineProps,
   ActivitiesProps,
   AvatarUploader,
+  ReferredByOption,
+  FieldOrderItem,
   // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -120,6 +122,11 @@ interface P {
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
   activeTab?: string
+  referredByOptions?: ReferredByOption[]
+  loading?: boolean
+  customFields?: FieldOrderItem[]
+  dateFormat?: string
+  handleEditAll?: () => void
 }
 
 const ClientCardModal: FC<P> = ({
@@ -129,6 +136,11 @@ const ClientCardModal: FC<P> = ({
   activeTab,
   children,
   onTabChanged,
+  referredByOptions,
+  loading,
+  customFields,
+  dateFormat,
+  handleEditAll,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -927,15 +939,18 @@ const ClientCardModal: FC<P> = ({
           </div>
           <div className={styles.clientCardBody}>
             <div className={styles.clientDetails}>
-              {client && (
-                <ClientDetails
-                  clientData={client}
-                  onCreateEmail={() => handleCreatePopout('email')}
-                  onCreateCall={() => handleCreatePopout('call')}
-                  searchResults={thirdPartySearchResults}
-                  appointments={appointments}
-                />
-              )}
+              <ClientDetails
+                clientData={client}
+                onCreateEmail={() => handleCreatePopout('email')}
+                onCreateCall={() => handleCreatePopout('call')}
+                searchResults={thirdPartySearchResults}
+                appointments={appointments}
+                referredByOptions={referredByOptions}
+                loading={loading}
+                customFields={customFields}
+                dateFormat={dateFormat}
+                handleEditAll={handleEditAll}
+              />
             </div>
             <div className={styles.clientCardContent}>
               <CustomTabMenu
@@ -946,7 +961,7 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px' }}>
+                <div>
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}
