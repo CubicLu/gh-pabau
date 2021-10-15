@@ -9,6 +9,7 @@ import React, { ComponentPropsWithoutRef, FC, useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
+import ClientCreate from '../Clients/ClientCreate'
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -19,11 +20,13 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
   const [customField, setCustomField] = useState([])
+  const [openEditModal, setOpenEditModal] = useState(false)
 
-  const { data, loading } = useBasicContactDetailsQuery({
+  const { data, loading, refetch } = useBasicContactDetailsQuery({
     skip: !router.query['id'],
     ssr: false,
     variables: { id: clientId },
+    notifyOnNetworkStatusChange: true,
   })
 
   const { data: referredByOptions } = useGetMarketingSourcesQuery({
@@ -38,7 +41,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   })
 
   useEffect(() => {
-    if (customFieldData && data?.findFirstCmContact) {
+    if (customFieldData && data?.findFirstCmContact?.customField) {
       const customFields = customFieldData.custom
         .flatMap((thread) =>
           thread?.ManageCustomField?.filter((thread) => thread.is_active)
@@ -148,6 +151,15 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     // },
   ] as const
 
+  const handleEditAll = () => {
+    setOpenEditModal(true)
+  }
+
+  const handleEditSubmit = () => {
+    setOpenEditModal(false)
+    refetch()
+  }
+
   return (
     <Layout>
       <ClientCard
@@ -161,6 +173,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         loading={loading || customFieldLoading || !router.query['id']}
         customFields={customField}
         dateFormat={GetFormat()}
+        handleEditAll={handleEditAll}
         client={
           data?.findFirstCmContact
             ? ({
@@ -175,6 +188,8 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   mobile: data.findFirstCmContact.mobile,
                   home: data.findFirstCmContact.home,
                 },
+                isActive:
+                  data.findFirstCmContact?.isActive === 1 ? true : false,
                 address: [
                   data.findFirstCmContact.street,
                   data.findFirstCmContact.city,
@@ -185,18 +200,30 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   .filter((val) => val?.trim())
                   .join(', '),
                 relationships: [],
-                labels: data.findFirstCmContact.labelData.map((data) => {
-                  return {
-                    label: data.labelDetail.label,
-                    color: data.labelDetail.color,
-                  }
-                }),
+                labels:
+                  data.findFirstCmContact?.labelData?.map((data) => {
+                    return {
+                      label: data?.labelDetail?.label,
+                      color: data?.labelDetail?.color,
+                    }
+                  }) || [],
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }
       >
         {children}
       </ClientCard>
+      {openEditModal && (
+        <ClientCreate
+          modalVisible={openEditModal}
+          handleClose={() => {
+            setOpenEditModal(false)
+          }}
+          isEdit={openEditModal}
+          handleSubmit={handleEditSubmit}
+          contactId={clientId}
+        />
+      )}
     </Layout>
   )
 }

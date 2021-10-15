@@ -2999,6 +2999,8 @@ en:
   create.client.modal.privacy.sharing.history.date.tomorrow.label: 'Tomorrow at {{date}}'
   create.client.modal.privacy.sharing.history.date.label: '{{date}} at {{time}}'
   quickCreate.client.modal.create.success: 'Success! Contact successfully created'
+  quickCreate.client.modal.update.success: 'Success! Contact successfully updated'
+  quickCreate.client.modal.update.detail.error: 'Error! Contact detail not found'
   quickCreate.client.modal.create.contact.exits.error: 'A contact already exists!'
   quickCreate.number.validation.message: '{{field}} must be a number'
   quickCreate.validation.is.required: '{{field}} is required'
