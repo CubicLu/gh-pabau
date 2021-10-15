@@ -41,12 +41,17 @@ interface Employee {
   relationship?: string
 }
 
+export interface CancelReason {
+  value: number
+  text: string
+}
+
 export interface ClientAppointmentItem {
   id: number
   serviceName: string
   employee: Employee
   otherEmployees?: Employee[]
-  status: AppointmentStatus
+  status: AppointmentStatus | string
   locationName: string
   createdDate: string
   apptDate: string
@@ -56,10 +61,13 @@ export interface ClientAppointmentItem {
   remindersSent: boolean
   notes?: string
   isVideoCall: number
+  cancellationReason?: number
+  reasonComment?: string
 }
 
 interface P {
   appointments?: ClientAppointmentItem[]
+  cancelReasons?: CancelReason[]
 }
 
 //TODO: remove these dummy funcctions
@@ -79,7 +87,7 @@ const editNote = (
   c: unknown = undefined
 ) => console.log('TODO')
 
-export const ClientAppointments = ({ appointments }: P) => {
+export const ClientAppointments = ({ appointments, cancelReasons }: P) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const personList = [
@@ -476,12 +484,10 @@ export const ClientAppointments = ({ appointments }: P) => {
         <div className={styles.appointmentTabs}>
           <TabMenu
             tabPosition="top"
-            minHeight="1px"
+            minHeight="730px"
             menuItems={[
               `${t('client.appointments.layout.tab.all.bookings')} (${
-                appointments.filter(
-                  (item) => item.status !== AppointmentStatus.cancelled
-                ).length
+                appointments.length
               })`,
               `${t('client.appointments.layout.tab.classes')} (0)`,
               `${t('client.appointments.layout.tab.cancelled')} (${
@@ -505,7 +511,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                   <div className={styles.appointmentTabBody}>
                     {appointments.filter(
                       (el) =>
-                        el.status !== AppointmentStatus.cancelled &&
                         el.apptDate > moment(new Date()).format('YYYY-MM-DD')
                     ).length > 0 && (
                       <>
@@ -514,22 +519,21 @@ export const ClientAppointments = ({ appointments }: P) => {
                           {`(${
                             appointments.filter(
                               (el) =>
-                                el.status !== AppointmentStatus.cancelled &&
                                 el.apptDate >
-                                  moment(new Date()).format('YYYY-MM-DD')
+                                moment(new Date()).format('YYYY-MM-DD')
                             ).length
                           })`}
                         </Divider>
                         {appointments.map((item, index) => {
                           if (
-                            item.status !== AppointmentStatus.cancelled &&
                             item.apptDate >
-                              moment(new Date()).format('YYYY-MM-DD')
+                            moment(new Date()).format('YYYY-MM-DD')
                           ) {
                             return (
                               <ClientAppointmentCard
                                 {...item}
                                 index={index}
+                                cancelReasons={cancelReasons}
                                 key={`all-bookings-${index}`}
                                 handleDelete={() => deleteAppointment(index)}
                                 handleEditNotes={(index, value) =>
@@ -550,21 +554,20 @@ export const ClientAppointments = ({ appointments }: P) => {
                       {`(${
                         appointments.filter(
                           (el) =>
-                            el.status !== AppointmentStatus.cancelled &&
                             el.apptDate <
-                              moment(new Date()).format('YYYY-MM-DD')
+                            moment(new Date()).format('YYYY-MM-DD')
                         ).length
                       })`}
                     </Divider>
                     {appointments.map((item, index) => {
                       if (
-                        item.status !== AppointmentStatus.cancelled &&
                         item.apptDate < moment(new Date()).format('YYYY-MM-DD')
                       ) {
                         return (
                           <ClientAppointmentCard
                             {...item}
                             index={index}
+                            cancelReasons={cancelReasons}
                             key={`all-bookings-${index}`}
                             handleDelete={() => deleteAppointment(index)}
                             handleEditNotes={(index, value) =>
@@ -596,7 +599,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate === '' &&
                     endDate === '' &&
                     nowFilter === FilterRadioValue.upcoming &&
@@ -606,6 +608,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -621,7 +624,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate === '' &&
                     endDate === '' &&
                     nowFilter === FilterRadioValue.past &&
@@ -631,6 +633,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -646,7 +649,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate === '' &&
                     endDate === '' &&
                     nowFilter === FilterRadioValue.none
@@ -655,6 +657,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -670,7 +673,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate !== '' &&
                     endDate === '' &&
                     item.apptDate >= startDate &&
@@ -681,6 +683,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -696,7 +699,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate !== '' &&
                     endDate === '' &&
                     item.apptDate >= startDate &&
@@ -707,6 +709,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -722,7 +725,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate !== '' &&
                     endDate === '' &&
                     item.apptDate >= startDate &&
@@ -732,6 +734,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -747,7 +750,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate === '' &&
                     endDate !== '' &&
                     item.apptDate <= endDate &&
@@ -758,6 +760,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -773,7 +776,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate === '' &&
                     endDate !== '' &&
                     item.apptDate <= endDate &&
@@ -784,6 +786,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -799,7 +802,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate === '' &&
                     endDate !== '' &&
                     item.apptDate <= endDate &&
@@ -809,6 +811,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -824,7 +827,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate !== '' &&
                     endDate !== '' &&
                     item.apptDate >= startDate &&
@@ -836,6 +838,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -851,7 +854,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate !== '' &&
                     endDate !== '' &&
                     item.apptDate >= startDate &&
@@ -863,6 +865,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -878,7 +881,6 @@ export const ClientAppointments = ({ appointments }: P) => {
                       personFilter.length === 0) &&
                     ([...statusFilter].includes(item.status) ||
                       statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
                     startDate !== '' &&
                     endDate !== '' &&
                     item.apptDate >= startDate &&
@@ -889,6 +891,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -938,6 +941,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                           <ClientAppointmentCard
                             {...item}
                             index={index}
+                            cancelReasons={cancelReasons}
                             key={`all-bookings-${index}`}
                             handleDelete={() => deleteAppointment(index)}
                             handleEditNotes={(index, value) =>
@@ -979,6 +983,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1004,6 +1009,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1028,6 +1034,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1054,6 +1061,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1080,6 +1088,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1105,6 +1114,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1131,6 +1141,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1157,6 +1168,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1182,6 +1194,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1209,6 +1222,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1236,6 +1250,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
@@ -1262,6 +1277,7 @@ export const ClientAppointments = ({ appointments }: P) => {
                       <ClientAppointmentCard
                         {...item}
                         index={index}
+                        cancelReasons={cancelReasons}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
                         handleEditNotes={(index, value) =>
