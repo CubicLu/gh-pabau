@@ -10586,8 +10586,8 @@ model Booking {
   UID                           Int
   company_id                    Int             @map("occupier")
   backgroudcolor                String?
-  create_date                   Int?
-  update_date                   Int?
+  create_date                   Decimal?
+  update_date                   Decimal?
   status                        String
   estimated_cost                Float?
   tips                          Float?
