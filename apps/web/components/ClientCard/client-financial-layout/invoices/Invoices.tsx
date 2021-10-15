@@ -49,10 +49,12 @@ interface P {
   invoiceEmployeeOptions: InvoiceEmployeeOptionProp[]
   locationOptions: LocationOptionProp[]
   onChangePagination?(take: number, skip: number): void
+  totalInoviceCount: number
 }
 
 export const Invoices: FC<P> = (props) => {
   const {
+    totalInoviceCount,
     dataProps,
     invoiceEmployeeOptions,
     locationOptions,
@@ -113,10 +115,11 @@ export const Invoices: FC<P> = (props) => {
     if (invoices) {
       setPaginateData((d) => ({
         ...d,
-        total: invoices?.length,
+        total: totalInoviceCount,
         showingRecords: invoices?.length,
       }))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoices])
 
   const onPaginationChange = (currentPage) => {

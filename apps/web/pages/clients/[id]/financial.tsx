@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { TabMenu } from '@pabau/ui'
 import dayjs from 'dayjs'
@@ -9,7 +9,10 @@ import { Items } from '../../../components/ClientCard/client-financial-layout/it
 import { Voided } from '../../../components/ClientCard/client-financial-layout/voided/Voided'
 import { Statements } from '../../../components/ClientCard/client-financial-layout/statements/Statements'
 import { useQuery } from '@apollo/client'
-import { GetFinanceInvoicesDocument } from '@pabau/graphql'
+import {
+  GetFinanceInvoicesDocument,
+  TotalFinanceInvoiceCountDocument,
+} from '@pabau/graphql'
 import {
   financialInvoices,
   financialPayments,
@@ -30,13 +33,33 @@ const Appointments = () => {
     statements: financialStatements,
   }
   const [data, setData] = useState(props)
+  const [pagination, setPagination] = useState({
+    take: 10,
+    skip: 0,
+  })
 
-  const { data: invoice } = useQuery(GetFinanceInvoicesDocument, {
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      skip: !router.query.id,
+      variables: {
+        take: pagination.take,
+        skip: pagination.skip,
+        id: Number.parseInt(`${router.query.id}`),
+      },
+    }
+    return queryOptions
+  }, [pagination.take, pagination.skip, router.query.id])
+
+  const { data: totalInvoices } = useQuery(TotalFinanceInvoiceCountDocument, {
     skip: !router.query.id,
     variables: {
       id: Number.parseInt(`${router.query.id}`),
     },
   })
+  const { data: invoice } = useQuery(
+    GetFinanceInvoicesDocument,
+    getQueryVariables
+  )
 
   useEffect(() => {
     const invoices = []
@@ -76,7 +99,7 @@ const Appointments = () => {
           amountPaid: 0,
           subtotal: 2250,
           tips: 0,
-          grandTotal: 2250,
+          grandTotal: item.amount,
           paymentStatus: 2,
           paymentStatusTooltip:
             'Full payment received on Sunday, 16 May 2021 at CHISSY BEAUTY STUDIO by Chissy Stylist',
@@ -159,6 +182,12 @@ const Appointments = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoice])
+  const handlePagination = (take, skip) => {
+    setPagination({
+      take: take,
+      skip: skip,
+    })
+  }
 
   return (
     <ClientCardLayout
@@ -168,23 +197,27 @@ const Appointments = () => {
       <TabMenu
         minHeight={'0vh'}
         tabPosition="top"
-        menuItems={[`Invoices`, `Payments`, `Items`, `Voided`, `Statements`]}
+        menuItems={[
+          `Invoices (${totalInvoices?.aggregateInvDetail?.count?.id ?? 0})`,
+          `Payments`,
+          `Items`,
+          `Voided`,
+          `Statements`,
+        ]}
       >
         <Invoices
           dataProps={data}
           invoiceEmployeeOptions={invoiceEmployeeOptions}
           locationOptions={locationOptions}
+          onChangePagination={handlePagination}
+          totalInoviceCount={totalInvoices?.aggregateInvDetail?.count?.id}
         />
-
         <Payments {...data} />
-
         <Items
           dataProps={data}
           invoiceEmployeeOptions={invoiceEmployeeOptions}
         />
-
         <Voided {...data} />
-
         <Statements dataProps={data} locationOptions={locationOptions} />
       </TabMenu>
     </ClientCardLayout>
