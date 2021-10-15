@@ -1,4 +1,11 @@
-import { extendType, inputObjectType, nullable, objectType } from 'nexus'
+import {
+  extendType,
+  inputObjectType,
+  nullable,
+  objectType,
+  list,
+  intArg,
+} from 'nexus'
 import { Context } from '../../../context'
 
 const PublicCreateBookingResponse = objectType({
@@ -11,10 +18,14 @@ const PublicCreateBookingResponse = objectType({
 const PCBData = inputObjectType({
   name: 'PCBData',
   definition(t) {
-    t.nonNull.int('company_id')
+    t.nonNull.int('contact_id')
     t.nonNull.float('start_date')
     t.nonNull.float('end_date')
-    t.nonNull.int('uid')
+    t.nonNull.int('user_id')
+    t.nonNull.int('service_id')
+    t.nonNull.list.nonNull.field('service_ids', {
+      type: 'Int',
+    })
   },
 })
 
@@ -27,7 +38,24 @@ export const public_createBooking = extendType({
       args: {
         data: nullable(PCBData),
       },
-      resolve(_, input, ctx: Context) {
+      async resolve(_, input, ctx: Context) {
+        // const service = ctx.prisma.companyService.findFirst({
+        //   where: { id: input.data.service_id },
+        // })
+
+        // await ctx.prisma.booking.create({
+        //   data: {
+        //     title: 'Missing Title',
+        //     start_date: input.data.start_date,
+        //     end_date: input.data.end_date,
+        //     service: 'Missing Service',
+        //     contact_id: input.data.contact_id,
+        //     UID: input.data.user_id,
+        //     company_id: 8021,
+        //     backgroundcolor: 'magenta-v1',
+        //   },
+        // })
+
         return {
           id: 100,
         }
