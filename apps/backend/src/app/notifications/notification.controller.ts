@@ -12,29 +12,19 @@ interface ResponseType {
 
 interface BodyData {
   type: string
-  sent_to: number[]
   sent_by: number
   destination?: string
-  user_name: string
   service_name: string
   client_name: string
   date: string
   time: string
   company_id: number
   cancellation_reason?: string
-  client_id?: number
   sent_by_name?: string
+  current_date?: string | Date
+  current_time?: string | Date
+  appointment_with: number[]
 }
-
-const requiredFields = [
-  'type',
-  'sent_by',
-  'user_name',
-  'service_name',
-  'client_id',
-  'date',
-  'time',
-]
 
 @Controller()
 export class NotificationController {
@@ -52,40 +42,53 @@ export class NotificationController {
       sent_by_name,
       date,
       time,
+      current_date,
+      current_time,
+      appointment_with,
       cancellation_reason,
     } = data
+
+    const requiredFields = [
+      'type',
+      'sent_by',
+      'service_name',
+      'date',
+      'time',
+      'appointment_with',
+    ]
+
     if (type === notificationType.cancelled_appointment_via_calendar.type) {
       requiredFields.push('cancellation_reason')
     }
 
     const errors: string[] = []
-    Object.keys(data).map((key) => {
-      if (!data[key] && requiredFields.includes(key)) {
-        errors.push(`${key} is required`)
+    for (const field of requiredFields) {
+      if (!data[field]) {
+        errors.push(`${field} is required`)
       }
-    })
+    }
 
     if (errors.length > 0) {
       return { success: false, message: errors }
     }
 
-    let enableUsers = []
-    if (type === notificationType.rescheduled_appointment_via_calendar.type) {
-      enableUsers = await this.notificationService.findUserEnabledNotifications(
-        company_id,
-        notificationType.new_appointment_via_calendar.name
-      )
-    } else {
-      enableUsers = await this.notificationService.findUserEnabledNotifications(
-        company_id,
-        notificationType[type].name
-      )
-    }
+    const enableUsers = await this.notificationService.findUserEnabledNotifications(
+      company_id,
+      type === notificationType.rescheduled_appointment_via_calendar.type
+        ? notificationType.new_appointment_via_calendar.name
+        : notificationType[type].name
+    )
 
-    if (enableUsers.length > 0) {
+    if (enableUsers?.length > 0 && appointment_with?.length > 0) {
+      const sent_to = []
+      for (const user of appointment_with) {
+        if (enableUsers?.includes(user)) {
+          sent_to.push(user)
+        }
+      }
       const response = await this.notificationService.sendNotification({
         type,
-        sent_to: enableUsers,
+        sent_to,
         sent_by,
         destination,
         user_name: sent_by_name,
@@ -94,6 +97,8 @@ export class NotificationController {
         date,
         time,
         cancellation_reason,
+        current_date,
+        current_time,
         company_id,
       })
       return {
