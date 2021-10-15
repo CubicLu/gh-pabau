@@ -154,6 +154,7 @@ interface P {
   loading?: boolean
   customFields?: FieldOrderItem[]
   dateFormat?: string
+  handleEditAll?: () => void
 }
 
 const ClientCardModal: FC<P> = ({
@@ -169,6 +170,7 @@ const ClientCardModal: FC<P> = ({
   loading,
   customFields,
   dateFormat,
+  handleEditAll,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -921,6 +923,7 @@ const ClientCardModal: FC<P> = ({
                 loading={loading}
                 customFields={customFields}
                 dateFormat={dateFormat}
+                handleEditAll={handleEditAll}
               />
             </div>
             <div className={styles.clientCardContent}>
