@@ -1,0 +1,1 @@
+UPDATE public.notification_types SET description = '[who] rescheduled the [service_name] for [client_name] from [current_date] at [current_time], to [date] at [time]' WHERE id = 'ca39422d-8ed9-4e0f-ae31-5a4ae453d4b8';
