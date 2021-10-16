@@ -71,6 +71,7 @@ interface AppointmentHandler {
     reminder: boolean,
     requestFeedback: number
   ) => void
+  handleAppointmentStatus?: (id: number, status: string) => void
 }
 
 export const ClientAppointmentCard: FC<
@@ -97,6 +98,7 @@ export const ClientAppointmentCard: FC<
     handleEditNotes,
     handleCancel,
     handleAdjustApptNotification,
+    handleAppointmentStatus,
   } = props
   const { t } = useTranslation('common')
   const [form] = Form.useForm()
@@ -531,7 +533,12 @@ export const ClientAppointmentCard: FC<
           {(isHover || openPopover) && (
             <>
               {status === AppointmentStatus.cancelled && (
-                <div className={styles.reinstateButton}>
+                <div
+                  className={styles.reinstateButton}
+                  onClick={() => {
+                    handleAppointmentStatus?.(id, 'Waiting')
+                  }}
+                >
                   <ReinstateIcon />
                   <span>{t('client.appointment.card.reinstate.button')}</span>
                 </div>

@@ -5087,6 +5087,7 @@ en:
   client.appointment.card.pop.cancel.cancel.reson: 'Cancel Reason'
   client.appointment.card.update.note.success.msg: 'The appointment note has been updated and the confirmation email delivered to the recipient'
   client.appointment.card.update.note.error.msg: 'The changes couldn’t be saved. Please try again'
+  client.appointment.card.reinstate.success.msg: 'Appointment has been reinstated successfully'
   client.appointment.card.update.notification.success.msg: 'The changes are saved successfully'
   client.appointment.card.pop.cancel.select.reason: 'Select a reason'
   client.appointment.card.pop.cancel.reason.work: 'Work'
@@ -5254,7 +5255,7 @@ en:
   create.filter.modal.search.result.match.label: '{{count}} MATCHES'
   create.filter.modal.no.search.label: 'No match found'
   create.filter.modal.no.search.desc: 'Please check your spelling'
-  create.filter.modal.shared.filter.tooltip: "You're viewer of this filter. Only the owner {{name}} can make changes here." 
+  create.filter.modal.shared.filter.tooltip: "You're viewer of this filter. Only the owner {{name}} can make changes here."
   create.filter.modal.creator.name: 'Creator: {{name}}'
   create.filter.modal.last.modified.label: 'Last modified: {{date}}'
   create.filter.modal.deleted.filter.message: 'You have successfully deleted a filter'

@@ -15,6 +15,7 @@ import {
   SortOrder,
   useUpdateApptNoteMutation,
   useAdjustApptNotificationsMutation,
+  useUpdateAppointmentStatusMutation,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 
@@ -34,6 +35,24 @@ const Appointments = () => {
       orderBy: SortOrder.Asc,
       contactId: Number(router.query['id']),
     },
+  })
+
+  const [updateAppointmentStatusMutation] = useUpdateAppointmentStatusMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('client.appointment.card.reinstate.success.msg')
+      )
+    },
+    refetchQueries: [
+      {
+        query: GetClientAppointmentsDocument,
+        variables: {
+          orderBy: SortOrder.Asc,
+          contactId: Number(router.query['id']),
+        },
+      },
+    ],
   })
 
   const [adjustApptNotificationsMutation] = useAdjustApptNotificationsMutation({
@@ -151,6 +170,7 @@ const Appointments = () => {
         loading={loading}
         updateApptNoteMutation={updateApptNoteMutation}
         adjustApptNotificationsMutation={adjustApptNotificationsMutation}
+        updateAppointmentStatusMutation={updateAppointmentStatusMutation}
       />
     </ClientCardLayout>
   )

@@ -69,6 +69,7 @@ interface P {
   loading?: boolean
   updateApptNoteMutation?: MutationFunction
   adjustApptNotificationsMutation?: MutationFunction
+  updateAppointmentStatusMutation?: MutationFunction
 }
 
 //TODO: remove these dummy funcctions
@@ -88,6 +89,7 @@ export const ClientAppointments = ({
   loading,
   updateApptNoteMutation,
   adjustApptNotificationsMutation,
+  updateAppointmentStatusMutation,
 }: P) => {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -96,6 +98,17 @@ export const ClientAppointments = ({
       variables: {
         bookingId: id,
         note,
+      },
+    })
+  }
+
+  const updateAppointmentStatus = (id: number, status: string) => {
+    console.log('id', id)
+    console.log('status', status)
+    updateAppointmentStatusMutation?.({
+      variables: {
+        booking_id: id,
+        status,
       },
     })
   }
@@ -579,6 +592,9 @@ export const ClientAppointments = ({
                                   handleEditNotes={(id, value) => {
                                     editNote(id, value)
                                   }}
+                                  handleAppointmentStatus={(id, status) => {
+                                    updateAppointmentStatus(id, status)
+                                  }}
                                   handleAdjustApptNotification={(
                                     id,
                                     reminder,
@@ -624,6 +640,9 @@ export const ClientAppointments = ({
                               handleDelete={() => deleteAppointment(index)}
                               handleEditNotes={(id, value) => {
                                 editNote(id, value)
+                              }}
+                              handleAppointmentStatus={(id, status) => {
+                                updateAppointmentStatus(id, status)
                               }}
                               handleAdjustApptNotification={(
                                 id,
@@ -1370,6 +1389,9 @@ export const ClientAppointments = ({
                               handleEditNotes={(index, value) =>
                                 editNote(index, value)
                               }
+                              handleAppointmentStatus={(id, status) => {
+                                updateAppointmentStatus(id, status)
+                              }}
                               handleAdjustApptNotification={(
                                 id,
                                 reminder,

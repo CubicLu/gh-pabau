@@ -16,3 +16,12 @@ mutation adjustApptNotifications(
     id
   }
 }
+
+mutation updateAppointmentStatus($booking_id: Int, $status: String) {
+  updateOneBooking(
+    where: { id: $booking_id }
+    data: { status: { set: $status } }
+  ) {
+    id
+  }
+}
