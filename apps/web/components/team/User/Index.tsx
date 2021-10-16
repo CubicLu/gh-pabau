@@ -36,7 +36,12 @@ export interface customFieldsProps {
   helpTooltip?: string
 }
 
-const Index: FC = () => {
+interface customUserProps {
+  id?: string
+  name?: string
+}
+
+const Index: FC<customUserProps> = ({ id, name }) => {
   const [tabKey, setTabKey] = useState<string>('1')
   const isMobile = useMedia('(max-width: 768px)')
   const [userImage, setUserImage] = useState<string>(AvatarImage)
@@ -89,7 +94,8 @@ const Index: FC = () => {
                     <Avatar src={userImage} size={'large'} edit={true} />
                   </div>
                   <div className={styles.userHeadTitle}>
-                    <h2>{userDetail.name}</h2>
+                    <h2>{id}</h2>
+                    <h2>{name}</h2>
                     <p>{userDetail.post}</p>
                   </div>
                 </div>
