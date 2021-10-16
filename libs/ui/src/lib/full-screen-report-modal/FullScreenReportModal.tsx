@@ -141,6 +141,20 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
           {center && <div className={styles.centeredItem}>{center}</div>}
           {(operations?.length || customOptionBtn) && (
             <div className={styles.fullScreenModalOps}>
+              {!isMobile &&
+                operations.includes(OperationType.active) &&
+                !props.footer &&
+                !forceDesktopOperations && (
+                  <div className={styles.operationSwitch}>
+                    {activeBtnText || 'Active'}
+                    <Switch
+                      size="small"
+                      checked={active}
+                      onChange={(checked) => handleChangeActive(checked)}
+                      style={{ marginLeft: '12px' }}
+                    />
+                  </div>
+                )}
               {customOptionBtn && customOptionBtn}
               {operations.map((operation) => (
                 <React.Fragment key={operation}>
@@ -220,20 +234,6 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                   )}
                 </React.Fragment>
               ))}
-              {!isMobile &&
-                operations.includes(OperationType.active) &&
-                !props.footer &&
-                !forceDesktopOperations && (
-                  <div className={styles.operationSwitch}>
-                    {activeBtnText || 'Active'}
-                    <Switch
-                      size="small"
-                      checked={active}
-                      onChange={(checked) => handleChangeActive(checked)}
-                      style={{ marginLeft: '12px' }}
-                    />
-                  </div>
-                )}
             </div>
           )}
         </div>

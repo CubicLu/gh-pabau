@@ -59,9 +59,7 @@ const DateMenu: FC<DateMenuProps> = ({ value, onChange, t, disabled }) => {
   return (
     <Select
       showSearch
-      filterOption={(input, option) =>
-        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={true}
       menuItemSelectedIcon={<CheckOutlined />}
       dropdownClassName={styles.customDropdown}
       value={value}

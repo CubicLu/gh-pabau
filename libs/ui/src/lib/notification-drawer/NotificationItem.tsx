@@ -126,11 +126,11 @@ export const NotificationItem: FC<P> = ({
         const replaceVariable = `[${key}]`
         let variableValue = variables[key]
 
-        if (key === 'date' && variableValue?.includes('-')) {
+        if (key.includes('date') && variableValue?.includes('-')) {
           variableValue = getFormattedDate(variableValue)
         }
 
-        if (key === 'time' && !isValidTime(variableValue)) {
+        if (key.includes('time') && !isValidTime(variableValue)) {
           variableValue = dayjs('1/1/1 ' + variableValue).format('hh:mma')
         }
 
