@@ -371,7 +371,7 @@ export function Index() {
                 src={
                   dashboardMode === 0
                     ? user?.me?.companies?.length > 0
-                      ? cdnURL + user?.me?.companies[0]?.logo
+                      ? cdnURL + user?.me?.companies[0]?.logoUrl
                       : ''
                     : cdnURL + user?.me?.imageUrl
                 }
