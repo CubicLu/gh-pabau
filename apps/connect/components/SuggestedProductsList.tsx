@@ -1,18 +1,118 @@
 import React, { FC } from 'react'
-import styles from './BookingDetailsStep/Verification.module.less'
+import {
+  CheckCircleFilled,
+  EditOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons'
+import styles from './verification.module.less'
 import ClassNames from 'classnames'
 import { Input, Rate, Tooltip } from 'antd'
-import { CheckCircleFilled, InfoCircleOutlined } from '@ant-design/icons'
-import { Button } from '../../../libs/ui/src/lib/button/Button'
-import { renderProductProps } from './BookingDetailsStep/Verification'
-import { productType } from './BookingDetailsStep/ConfirmationBox'
+//import { tooltip } from '../../../mocks/connect/confirmMock'
+import { productType } from './conformation'
+import { Button } from '@pabau/ui'
 
+/* eslint-disable-next-line */
+export interface VerificationProps {
+  clinic: string
+  docname: string
+  date: string
+  time: string
+  charge: string
+  address: string
+  type: string
+  image: any
+  translation: (val: string) => string
+  clickable?: boolean
+  gotofirst?: () => void
+  gotoclinic?: () => void
+  gotoemploy?: () => void
+  gotodate?: () => void
+  gotoedit?: () => void
+}
 export interface renderProductProps {
   products: productType
   type: string
   tooltip: string
 }
+export const Verification: FC<VerificationProps> = ({
+  clinic,
+  docname,
+  date,
+  time,
+  charge,
+  type,
+  address,
+  image,
+  translation,
+  gotofirst,
+  gotoclinic,
+  gotoemploy,
+  gotodate,
+  gotoedit,
+  clickable = false,
+}) => {
+  //const { t } = useTranslationI18()
+  return (
+    <div className={styles.appWrapper}>
+      <div className={styles.applicationWrap}>
+        <div className={styles.confirmBox}>
+          <h5>
+            {translation('connect.onlinebooking.verification.appoitmenttype')}{' '}
+            {clickable && <EditOutlined onClick={gotofirst} />}
+          </h5>
 
+          <p>{type}</p>
+          {console.log(docname)}
+        </div>
+        <div className={styles.confirmBox}>
+          <h5>
+            {translation('connect.onlinebooking.verification.clinic')}{' '}
+            {clickable && <EditOutlined onClick={gotoclinic} />}
+          </h5>
+
+          <p>{clinic}</p>
+        </div>
+        <div className={styles.confirmBox}>
+          <h5> {translation('connect.onlinebooking.verification.address')} </h5>
+          <p>{address}</p>
+        </div>
+      </div>
+      <div className={styles.applicationWrap}>
+        <div className={styles.confirmBox}>
+          <h5>
+            {translation('connect.onlinebooking.verification.seeing')}{' '}
+            {clickable && <EditOutlined onClick={gotoemploy} />}
+          </h5>
+          <div className={styles.imgTag}>
+            <img src={image} alt={'nothing'} />
+            <p>{docname}</p>
+          </div>
+        </div>
+        <div className={styles.confirmBox}>
+          <h5>
+            {translation('connect.onlinebooking.verification.date')}{' '}
+            {clickable && <EditOutlined onClick={gotodate} />}
+          </h5>
+          <p>{date}</p>
+        </div>
+        <div className={styles.confirmBox}>
+          <h5>
+            {translation('connect.onlinebooking.verification.time')}{' '}
+            {clickable && <EditOutlined onClick={gotoedit} />}
+          </h5>
+
+          <p>{time}</p>
+        </div>
+        <div className={styles.confirmBox}>
+          <h5>
+            {translation('connect.onlinebooking.verification.appoitmentprice')}
+          </h5>
+          <p>£ {charge}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
 export const RenderProduct: FC<renderProductProps> = ({
   products,
   type,
@@ -24,6 +124,7 @@ export const RenderProduct: FC<renderProductProps> = ({
         <div
           className={styles.treatBox}
           onClick={() => {
+            console.log(dataObj.key)
             if (dataObj.active) {
               products.data.map((item) =>
                 item.key === dataObj.key ? (item.active = false) : item
@@ -64,6 +165,8 @@ export const RenderProduct: FC<renderProductProps> = ({
   const rendernormal = (dataobj) => {
     return (
       <>
+        {/*{fixed normal eslint issue}*/}
+
         <div
           className={styles.imgBox}
           onClick={() => {

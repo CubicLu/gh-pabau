@@ -31,18 +31,62 @@ export const FormSingleChoice: FC<P> = ({
   }
 
   return (
-    <div className={`${styles.formSingleChoice} ${styles.formComponet}`}>
+    <div
+      className={
+        items.length === 2 &&
+        (items[0].name.toUpperCase() === 'NO' ||
+          items[0].name.toUpperCase() === 'YES') &&
+        (items[1].name.toUpperCase() === 'YES' ||
+          items[1].name.toUpperCase() === 'NO')
+          ? `${styles.formSingleChoice} ${styles.formComponet}`
+          : `${styles.formSingleChoiceYesNo} ${styles.formComponet}`
+      }
+    >
       {title.length > 0 && (
-        <div className={styles.formComponentTitle}>
+        <div
+          className={
+            items.length === 2 &&
+            (items[0].name.toUpperCase() === 'NO' ||
+              items[0].name.toUpperCase() === 'YES') &&
+            (items[1].name.toUpperCase() === 'YES' ||
+              items[1].name.toUpperCase() === 'NO')
+              ? styles.formSingleChoiceTitle
+              : styles.formComponentTitle
+          }
+        >
           {title}
-          {required && <span className={styles.formRequiredMark}>*</span>}
+          {required && (
+            <span
+              className={
+                items.length === 2 &&
+                (items[0].name.toUpperCase() === 'NO' ||
+                  items[0].name.toUpperCase() === 'YES') &&
+                (items[1].name.toUpperCase() === 'YES' ||
+                  items[1].name.toUpperCase() === 'NO')
+                  ? styles.formSingleChoiceRequiredMark
+                  : styles.formRequiredMark
+              }
+            >
+              *
+            </span>
+          )}
         </div>
       )}
       {desc.length > 0 && (
         <div className={styles.formComponentChoiceDescription}>{desc}</div>
       )}
       {items.length > 0 && (
-        <div className={styles.formSingleOptions}>
+        <div
+          className={
+            items.length === 2 &&
+            (items[0].name.toUpperCase() === 'NO' ||
+              items[0].name.toUpperCase() === 'YES') &&
+            (items[1].name.toUpperCase() === 'YES' ||
+              items[1].name.toUpperCase() === 'NO')
+              ? styles.formSingleOptionsYesNo
+              : styles.formSingleOptions
+          }
+        >
           <Radio.Group size="small" onChange={onChange} value={optionVal}>
             {items.map((item, index) => (
               <div key={index} className={styles.radioDiv}>

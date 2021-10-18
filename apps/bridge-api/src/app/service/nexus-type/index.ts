@@ -3,6 +3,13 @@ import { Context } from '../../../context'
 import { PublicSocialSurveyFeedbackResponse } from '../../survey/nexus-type'
 import { PublicServiceUserTierResponse } from './Public_ServiceUserTier'
 
+export const StaffServices = objectType({
+  name: 'StaffServices',
+  definition(t) {
+    t.int('id')
+  },
+})
+
 export const PublicMasterCategoryResponse = objectType({
   name: 'PublicMasterCategoryResponse',
   definition(t) {
