@@ -55,7 +55,7 @@ export const MessageTemplate = objectType({
       type: 'MessageTemplate',
       args: {
         where: 'MessageTemplateWhereInput',
-        orderBy: 'MessageTemplateOrderByInput',
+        orderBy: 'MessageTemplateOrderByWithRelationInput',
         cursor: 'MessageTemplateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -63,6 +63,12 @@ export const MessageTemplate = objectType({
       },
       resolve(root: any) {
         return root.MessageTemplate
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'MessageTemplateCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

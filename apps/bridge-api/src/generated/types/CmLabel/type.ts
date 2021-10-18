@@ -23,7 +23,7 @@ export const CmLabel = objectType({
       type: 'CmContactLabel',
       args: {
         where: 'CmContactLabelWhereInput',
-        orderBy: 'CmContactLabelOrderByInput',
+        orderBy: 'CmContactLabelOrderByWithRelationInput',
         cursor: 'CmContactLabelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -31,6 +31,12 @@ export const CmLabel = objectType({
       },
       resolve(root: any) {
         return root.CmContactLabel
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CmLabelCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

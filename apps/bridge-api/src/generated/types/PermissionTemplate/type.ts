@@ -29,7 +29,7 @@ export const PermissionTemplate = objectType({
       type: 'UserGroup',
       args: {
         where: 'UserGroupWhereInput',
-        orderBy: 'UserGroupOrderByInput',
+        orderBy: 'UserGroupOrderByWithRelationInput',
         cursor: 'UserGroupWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -37,6 +37,12 @@ export const PermissionTemplate = objectType({
       },
       resolve(root: any) {
         return root.UserGroup
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'PermissionTemplateCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

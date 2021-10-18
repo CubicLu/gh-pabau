@@ -73,7 +73,7 @@ export const CmLead = objectType({
       type: 'CmLeadCustomField',
       args: {
         where: 'CmLeadCustomFieldWhereInput',
-        orderBy: 'CmLeadCustomFieldOrderByInput',
+        orderBy: 'CmLeadCustomFieldOrderByWithRelationInput',
         cursor: 'CmLeadCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -87,7 +87,7 @@ export const CmLead = objectType({
       type: 'CommunicationRecipient',
       args: {
         where: 'CommunicationRecipientWhereInput',
-        orderBy: 'CommunicationRecipientOrderByInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
         cursor: 'CommunicationRecipientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -101,7 +101,7 @@ export const CmLead = objectType({
       type: 'CmLeadNote',
       args: {
         where: 'CmLeadNoteWhereInput',
-        orderBy: 'CmLeadNoteOrderByInput',
+        orderBy: 'CmLeadNoteOrderByWithRelationInput',
         cursor: 'CmLeadNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -121,7 +121,7 @@ export const CmLead = objectType({
       type: 'Activity',
       args: {
         where: 'ActivityWhereInput',
-        orderBy: 'ActivityOrderByInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
         cursor: 'ActivityWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -141,6 +141,12 @@ export const CmLead = objectType({
       type: 'LeadStatus',
       resolve(root: any) {
         return root.LeadStatusData
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CmLeadCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

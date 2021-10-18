@@ -32,7 +32,7 @@ export const LeadStatus = objectType({
       type: 'CmLead',
       args: {
         where: 'CmLeadWhereInput',
-        orderBy: 'CmLeadOrderByInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
         cursor: 'CmLeadWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -40,6 +40,12 @@ export const LeadStatus = objectType({
       },
       resolve(root: any) {
         return root.CmLead
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'LeadStatusCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

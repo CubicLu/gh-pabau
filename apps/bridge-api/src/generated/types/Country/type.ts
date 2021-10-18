@@ -30,7 +30,7 @@ export const Country = objectType({
       type: 'CmContactTravel',
       args: {
         where: 'CmContactTravelWhereInput',
-        orderBy: 'CmContactTravelOrderByInput',
+        orderBy: 'CmContactTravelOrderByWithRelationInput',
         cursor: 'CmContactTravelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -38,6 +38,12 @@ export const Country = objectType({
       },
       resolve(root: any) {
         return root.CmContactTravel
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CountryCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

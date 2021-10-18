@@ -37,7 +37,7 @@ export const HolidayRequest = objectType({
       type: 'RotaShift',
       args: {
         where: 'RotaShiftWhereInput',
-        orderBy: 'RotaShiftOrderByInput',
+        orderBy: 'RotaShiftOrderByWithRelationInput',
         cursor: 'RotaShiftWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -45,6 +45,12 @@ export const HolidayRequest = objectType({
       },
       resolve(root: any) {
         return root.RotaShift
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'HolidayRequestCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

@@ -21,7 +21,7 @@ export const CompanyBranchGroup = objectType({
       type: 'CompanyBranch',
       args: {
         where: 'CompanyBranchWhereInput',
-        orderBy: 'CompanyBranchOrderByInput',
+        orderBy: 'CompanyBranchOrderByWithRelationInput',
         cursor: 'CompanyBranchWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -29,6 +29,12 @@ export const CompanyBranchGroup = objectType({
       },
       resolve(root: any) {
         return root.CompanyBranch
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CompanyBranchGroupCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

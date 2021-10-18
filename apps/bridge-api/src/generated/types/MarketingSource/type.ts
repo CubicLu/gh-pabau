@@ -23,7 +23,7 @@ export const MarketingSource = objectType({
       type: 'CmExtraPatient',
       args: {
         where: 'CmExtraPatientWhereInput',
-        orderBy: 'CmExtraPatientOrderByInput',
+        orderBy: 'CmExtraPatientOrderByWithRelationInput',
         cursor: 'CmExtraPatientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -37,7 +37,7 @@ export const MarketingSource = objectType({
       type: 'CmLead',
       args: {
         where: 'CmLeadWhereInput',
-        orderBy: 'CmLeadOrderByInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
         cursor: 'CmLeadWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -51,7 +51,7 @@ export const MarketingSource = objectType({
       type: 'CmContact',
       args: {
         where: 'CmContactWhereInput',
-        orderBy: 'CmContactOrderByInput',
+        orderBy: 'CmContactOrderByWithRelationInput',
         cursor: 'CmContactWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -59,6 +59,12 @@ export const MarketingSource = objectType({
       },
       resolve(root: any) {
         return root.CmContact
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'MarketingSourceCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

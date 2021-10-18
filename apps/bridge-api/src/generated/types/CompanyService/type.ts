@@ -66,7 +66,7 @@ export const CompanyService = objectType({
       type: 'CompanyRoomService',
       args: {
         where: 'CompanyRoomServiceWhereInput',
-        orderBy: 'CompanyRoomServiceOrderByInput',
+        orderBy: 'CompanyRoomServiceOrderByWithRelationInput',
         cursor: 'CompanyRoomServiceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -86,7 +86,7 @@ export const CompanyService = objectType({
       type: 'SocialSurveyFeedback',
       args: {
         where: 'SocialSurveyFeedbackWhereInput',
-        orderBy: 'SocialSurveyFeedbackOrderByInput',
+        orderBy: 'SocialSurveyFeedbackOrderByWithRelationInput',
         cursor: 'SocialSurveyFeedbackWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -100,7 +100,7 @@ export const CompanyService = objectType({
       type: 'ServiceUserTier',
       args: {
         where: 'ServiceUserTierWhereInput',
-        orderBy: 'ServiceUserTierOrderByInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
         cursor: 'ServiceUserTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -114,7 +114,7 @@ export const CompanyService = objectType({
       type: 'ServiceLocationTier',
       args: {
         where: 'ServiceLocationTierWhereInput',
-        orderBy: 'ServiceLocationTierOrderByInput',
+        orderBy: 'ServiceLocationTierOrderByWithRelationInput',
         cursor: 'ServiceLocationTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -122,6 +122,12 @@ export const CompanyService = objectType({
       },
       resolve(root: any) {
         return root.ServiceLocationTier
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CompanyServiceCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

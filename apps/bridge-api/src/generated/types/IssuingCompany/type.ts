@@ -34,7 +34,7 @@ export const IssuingCompany = objectType({
       type: 'InvSale',
       args: {
         where: 'InvSaleWhereInput',
-        orderBy: 'InvSaleOrderByInput',
+        orderBy: 'InvSaleOrderByWithRelationInput',
         cursor: 'InvSaleWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -42,6 +42,12 @@ export const IssuingCompany = objectType({
       },
       resolve(root: any) {
         return root.InvSale
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'IssuingCompanyCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

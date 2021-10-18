@@ -23,7 +23,7 @@ export const HealthcodeInsurer = objectType({
       type: 'InsuranceDetail',
       args: {
         where: 'InsuranceDetailWhereInput',
-        orderBy: 'InsuranceDetailOrderByInput',
+        orderBy: 'InsuranceDetailOrderByWithRelationInput',
         cursor: 'InsuranceDetailWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -31,6 +31,12 @@ export const HealthcodeInsurer = objectType({
       },
       resolve(root: any) {
         return root.InsuranceDetail
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'HealthcodeInsurerCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

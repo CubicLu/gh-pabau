@@ -17,7 +17,7 @@ export const Timezone = objectType({
       type: 'CompanyDetails',
       args: {
         where: 'CompanyDetailsWhereInput',
-        orderBy: 'CompanyDetailsOrderByInput',
+        orderBy: 'CompanyDetailsOrderByWithRelationInput',
         cursor: 'CompanyDetailsWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -25,6 +25,12 @@ export const Timezone = objectType({
       },
       resolve(root: any) {
         return root.CompanyDetails
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'TimezoneCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

@@ -46,7 +46,7 @@ export const ContactPackage = objectType({
       type: 'PackageUsed',
       args: {
         where: 'PackageUsedWhereInput',
-        orderBy: 'PackageUsedOrderByInput',
+        orderBy: 'PackageUsedOrderByWithRelationInput',
         cursor: 'PackageUsedWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -54,6 +54,12 @@ export const ContactPackage = objectType({
       },
       resolve(root: any) {
         return root.contact_package_used
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'ContactPackageCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

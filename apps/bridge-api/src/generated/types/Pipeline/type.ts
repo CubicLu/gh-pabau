@@ -19,7 +19,7 @@ export const Pipeline = objectType({
       type: 'LeadStatus',
       args: {
         where: 'LeadStatusWhereInput',
-        orderBy: 'LeadStatusOrderByInput',
+        orderBy: 'LeadStatusOrderByWithRelationInput',
         cursor: 'LeadStatusWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -27,6 +27,12 @@ export const Pipeline = objectType({
       },
       resolve(root: any) {
         return root.LeadStatus
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'PipelineCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

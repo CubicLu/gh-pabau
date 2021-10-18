@@ -37,7 +37,7 @@ export const ServiceCategory = objectType({
       type: 'CompanyService',
       args: {
         where: 'CompanyServiceWhereInput',
-        orderBy: 'CompanyServiceOrderByInput',
+        orderBy: 'CompanyServiceOrderByWithRelationInput',
         cursor: 'CompanyServiceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -45,6 +45,12 @@ export const ServiceCategory = objectType({
       },
       resolve(root: any) {
         return root.CompanyService
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'ServiceCategoryCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

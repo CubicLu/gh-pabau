@@ -25,7 +25,7 @@ export const Tax = objectType({
       type: 'InvProduct',
       args: {
         where: 'InvProductWhereInput',
-        orderBy: 'InvProductOrderByInput',
+        orderBy: 'InvProductOrderByWithRelationInput',
         cursor: 'InvProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -39,7 +39,7 @@ export const Tax = objectType({
       type: 'InvCategory',
       args: {
         where: 'InvCategoryWhereInput',
-        orderBy: 'InvCategoryOrderByInput',
+        orderBy: 'InvCategoryOrderByWithRelationInput',
         cursor: 'InvCategoryWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -53,7 +53,7 @@ export const Tax = objectType({
       type: 'SaleItem',
       args: {
         where: 'SaleItemWhereInput',
-        orderBy: 'SaleItemOrderByInput',
+        orderBy: 'SaleItemOrderByWithRelationInput',
         cursor: 'SaleItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -61,6 +61,12 @@ export const Tax = objectType({
       },
       resolve(root: any) {
         return root.SaleItem
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'TaxCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

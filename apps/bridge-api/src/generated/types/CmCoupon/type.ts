@@ -26,7 +26,7 @@ export const CmCoupon = objectType({
       type: 'CmCouponClaimed',
       args: {
         where: 'CmCouponClaimedWhereInput',
-        orderBy: 'CmCouponClaimedOrderByInput',
+        orderBy: 'CmCouponClaimedOrderByWithRelationInput',
         cursor: 'CmCouponClaimedWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -40,7 +40,7 @@ export const CmCoupon = objectType({
       type: 'CmCouponClick',
       args: {
         where: 'CmCouponClickWhereInput',
-        orderBy: 'CmCouponClickOrderByInput',
+        orderBy: 'CmCouponClickOrderByWithRelationInput',
         cursor: 'CmCouponClickWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -48,6 +48,12 @@ export const CmCoupon = objectType({
       },
       resolve(root: any) {
         return root.CmCouponClick
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CmCouponCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

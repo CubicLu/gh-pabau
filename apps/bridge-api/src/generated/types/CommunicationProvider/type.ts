@@ -14,7 +14,7 @@ export const CommunicationProvider = objectType({
       type: 'CommunicationRecipient',
       args: {
         where: 'CommunicationRecipientWhereInput',
-        orderBy: 'CommunicationRecipientOrderByInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
         cursor: 'CommunicationRecipientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -22,6 +22,12 @@ export const CommunicationProvider = objectType({
       },
       resolve(root: any) {
         return root.Recipient
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CommunicationProviderCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

@@ -96,7 +96,7 @@ export const CmContact = objectType({
       type: 'ContactAlert',
       args: {
         where: 'ContactAlertWhereInput',
-        orderBy: 'ContactAlertOrderByInput',
+        orderBy: 'ContactAlertOrderByWithRelationInput',
         cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -110,7 +110,7 @@ export const CmContact = objectType({
       type: 'AccountBalance',
       args: {
         where: 'AccountBalanceWhereInput',
-        orderBy: 'AccountBalanceOrderByInput',
+        orderBy: 'AccountBalanceOrderByWithRelationInput',
         cursor: 'AccountBalanceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -124,7 +124,7 @@ export const CmContact = objectType({
       type: 'AccountBalanceLog',
       args: {
         where: 'AccountBalanceLogWhereInput',
-        orderBy: 'AccountBalanceLogOrderByInput',
+        orderBy: 'AccountBalanceLogOrderByWithRelationInput',
         cursor: 'AccountBalanceLogWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -138,7 +138,7 @@ export const CmContact = objectType({
       type: 'CmContactLocation',
       args: {
         where: 'CmContactLocationWhereInput',
-        orderBy: 'CmContactLocationOrderByInput',
+        orderBy: 'CmContactLocationOrderByWithRelationInput',
         cursor: 'CmContactLocationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -152,7 +152,7 @@ export const CmContact = objectType({
       type: 'CmContactTravel',
       args: {
         where: 'CmContactTravelWhereInput',
-        orderBy: 'CmContactTravelOrderByInput',
+        orderBy: 'CmContactTravelOrderByWithRelationInput',
         cursor: 'CmContactTravelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -166,7 +166,7 @@ export const CmContact = objectType({
       type: 'CmContactViewed',
       args: {
         where: 'CmContactViewedWhereInput',
-        orderBy: 'CmContactViewedOrderByInput',
+        orderBy: 'CmContactViewedOrderByWithRelationInput',
         cursor: 'CmContactViewedWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -180,7 +180,7 @@ export const CmContact = objectType({
       type: 'CmContactMedicalCondition',
       args: {
         where: 'CmContactMedicalConditionWhereInput',
-        orderBy: 'CmContactMedicalConditionOrderByInput',
+        orderBy: 'CmContactMedicalConditionOrderByWithRelationInput',
         cursor: 'CmContactMedicalConditionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -194,7 +194,7 @@ export const CmContact = objectType({
       type: 'ContactNote',
       args: {
         where: 'ContactNoteWhereInput',
-        orderBy: 'ContactNoteOrderByInput',
+        orderBy: 'ContactNoteOrderByWithRelationInput',
         cursor: 'ContactNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -208,7 +208,7 @@ export const CmContact = objectType({
       type: 'MedicalFormContact',
       args: {
         where: 'MedicalFormContactWhereInput',
-        orderBy: 'MedicalFormContactOrderByInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
         cursor: 'MedicalFormContactWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -222,7 +222,7 @@ export const CmContact = objectType({
       type: 'CmExtraGym',
       args: {
         where: 'CmExtraGymWhereInput',
-        orderBy: 'CmExtraGymOrderByInput',
+        orderBy: 'CmExtraGymOrderByWithRelationInput',
         cursor: 'CmExtraGymWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -236,7 +236,7 @@ export const CmContact = objectType({
       type: 'CmExtraPatient',
       args: {
         where: 'CmExtraPatientWhereInput',
-        orderBy: 'CmExtraPatientOrderByInput',
+        orderBy: 'CmExtraPatientOrderByWithRelationInput',
         cursor: 'CmExtraPatientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -250,7 +250,7 @@ export const CmContact = objectType({
       type: 'CmExtraSalon',
       args: {
         where: 'CmExtraSalonWhereInput',
-        orderBy: 'CmExtraSalonOrderByInput',
+        orderBy: 'CmExtraSalonOrderByWithRelationInput',
         cursor: 'CmExtraSalonWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -264,7 +264,7 @@ export const CmContact = objectType({
       type: 'InvPayment',
       args: {
         where: 'InvPaymentWhereInput',
-        orderBy: 'InvPaymentOrderByInput',
+        orderBy: 'InvPaymentOrderByWithRelationInput',
         cursor: 'InvPaymentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -278,7 +278,7 @@ export const CmContact = objectType({
       type: 'LoyaltyLog',
       args: {
         where: 'LoyaltyLogWhereInput',
-        orderBy: 'LoyaltyLogOrderByInput',
+        orderBy: 'LoyaltyLogOrderByWithRelationInput',
         cursor: 'LoyaltyLogWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -298,7 +298,7 @@ export const CmContact = objectType({
       type: 'ContactAttachment',
       args: {
         where: 'ContactAttachmentWhereInput',
-        orderBy: 'ContactAttachmentOrderByInput',
+        orderBy: 'ContactAttachmentOrderByWithRelationInput',
         cursor: 'ContactAttachmentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -312,7 +312,7 @@ export const CmContact = objectType({
       type: 'ContactPackage',
       args: {
         where: 'ContactPackageWhereInput',
-        orderBy: 'ContactPackageOrderByInput',
+        orderBy: 'ContactPackageOrderByWithRelationInput',
         cursor: 'ContactPackageWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -332,7 +332,7 @@ export const CmContact = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByInput',
+        orderBy: 'BookingOrderByWithRelationInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -346,7 +346,7 @@ export const CmContact = objectType({
       type: 'InvSale',
       args: {
         where: 'InvSaleWhereInput',
-        orderBy: 'InvSaleOrderByInput',
+        orderBy: 'InvSaleOrderByWithRelationInput',
         cursor: 'InvSaleWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -360,7 +360,7 @@ export const CmContact = objectType({
       type: 'InventoryMovement',
       args: {
         where: 'InventoryMovementWhereInput',
-        orderBy: 'InventoryMovementOrderByInput',
+        orderBy: 'InventoryMovementOrderByWithRelationInput',
         cursor: 'InventoryMovementWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -374,7 +374,7 @@ export const CmContact = objectType({
       type: 'ContactInsurance',
       args: {
         where: 'ContactInsuranceWhereInput',
-        orderBy: 'ContactInsuranceOrderByInput',
+        orderBy: 'ContactInsuranceOrderByWithRelationInput',
         cursor: 'ContactInsuranceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -388,7 +388,7 @@ export const CmContact = objectType({
       type: 'ContactMeta',
       args: {
         where: 'ContactMetaWhereInput',
-        orderBy: 'ContactMetaOrderByInput',
+        orderBy: 'ContactMetaOrderByWithRelationInput',
         cursor: 'ContactMetaWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -402,7 +402,7 @@ export const CmContact = objectType({
       type: 'CommunicationRecipient',
       args: {
         where: 'CommunicationRecipientWhereInput',
-        orderBy: 'CommunicationRecipientOrderByInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
         cursor: 'CommunicationRecipientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -416,7 +416,7 @@ export const CmContact = objectType({
       type: 'CmContactCustom',
       args: {
         where: 'CmContactCustomWhereInput',
-        orderBy: 'CmContactCustomOrderByInput',
+        orderBy: 'CmContactCustomOrderByWithRelationInput',
         cursor: 'CmContactCustomWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -430,7 +430,7 @@ export const CmContact = objectType({
       type: 'CmContactLabel',
       args: {
         where: 'CmContactLabelWhereInput',
-        orderBy: 'CmContactLabelOrderByInput',
+        orderBy: 'CmContactLabelOrderByWithRelationInput',
         cursor: 'CmContactLabelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -444,7 +444,7 @@ export const CmContact = objectType({
       type: 'Activity',
       args: {
         where: 'ActivityWhereInput',
-        orderBy: 'ActivityOrderByInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
         cursor: 'ActivityWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -458,7 +458,7 @@ export const CmContact = objectType({
       type: 'PhotoAlbum',
       args: {
         where: 'PhotoAlbumWhereInput',
-        orderBy: 'PhotoAlbumOrderByInput',
+        orderBy: 'PhotoAlbumOrderByWithRelationInput',
         cursor: 'PhotoAlbumWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -484,7 +484,7 @@ export const CmContact = objectType({
       type: 'Voucher',
       args: {
         where: 'VoucherWhereInput',
-        orderBy: 'VoucherOrderByInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
         cursor: 'VoucherWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -498,7 +498,7 @@ export const CmContact = objectType({
       type: 'Voucher',
       args: {
         where: 'VoucherWhereInput',
-        orderBy: 'VoucherOrderByInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
         cursor: 'VoucherWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -506,6 +506,12 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.PurchasedVoucher
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CmContactCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

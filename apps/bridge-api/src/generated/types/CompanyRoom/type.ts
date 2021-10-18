@@ -30,7 +30,7 @@ export const CompanyRoom = objectType({
       type: 'CompanyRoomLocation',
       args: {
         where: 'CompanyRoomLocationWhereInput',
-        orderBy: 'CompanyRoomLocationOrderByInput',
+        orderBy: 'CompanyRoomLocationOrderByWithRelationInput',
         cursor: 'CompanyRoomLocationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -44,7 +44,7 @@ export const CompanyRoom = objectType({
       type: 'CompanyRoomService',
       args: {
         where: 'CompanyRoomServiceWhereInput',
-        orderBy: 'CompanyRoomServiceOrderByInput',
+        orderBy: 'CompanyRoomServiceOrderByWithRelationInput',
         cursor: 'CompanyRoomServiceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -58,7 +58,7 @@ export const CompanyRoom = objectType({
       type: 'RotaShift',
       args: {
         where: 'RotaShiftWhereInput',
-        orderBy: 'RotaShiftOrderByInput',
+        orderBy: 'RotaShiftOrderByWithRelationInput',
         cursor: 'RotaShiftWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -66,6 +66,12 @@ export const CompanyRoom = objectType({
       },
       resolve(root: any) {
         return root.RotaShift
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CompanyRoomCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },
