@@ -1316,7 +1316,7 @@ export const retrieveSalesCount = async (
           return prev + cur['SUM(b.total)'] ?? 0
         }, 0) *
           100) /
-        prevSales[0]['SUM(b.total)']
+          prevSales[0]['SUM(b.total)'] ?? 0
       : 0
     ).toFixed(2)}%`,
     salesList: SalesList.length > 0 ? SalesList : null,

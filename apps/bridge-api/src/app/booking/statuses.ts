@@ -105,7 +105,7 @@ export const retrieveBookingStatuses = async (
           return prev + cur['count(id)'] ?? 0
         }, 0) *
           100) /
-        prevBooking[0]['count(id)']
+          prevBooking[0]['count(id)'] ?? 0
       : 0
     ).toFixed(2)}%`,
     totalOnlineBooking: BookingStatusCountOnline?.reduce((prev, cur) => {
@@ -118,7 +118,7 @@ export const retrieveBookingStatuses = async (
           return prev + cur['count(id)'] ?? 0
         }, 0) *
           100) /
-        prevBookingOnline[0]['count(id)']
+          prevBookingOnline[0]['count(id)'] ?? 0
       : 0
     ).toFixed(2)}%`,
     appointmentList: appointment.length > 0 ? appointment : null,
