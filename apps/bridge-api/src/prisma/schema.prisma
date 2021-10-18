@@ -4875,7 +4875,7 @@ model Country {
 //  video_id      Int
 //}
 
-model Pathways {
+model Pathway {
   id           Int             @id @default(autoincrement())
   pathway_name String
   company_id   Int
@@ -4883,7 +4883,7 @@ model Pathways {
   is_active    Boolean
   order        Int?            @default(0)
   PathwayTaken PathwaysTaken[]
-  PathwaySteps PathwaySteps[]
+  PathwayStep  PathwayStep[]
 
   @@map("cp_pathways")
 }
@@ -4896,7 +4896,7 @@ model PathwaysTaken {
   started_on        DateTime                 @default(now())
   status            cp_pathways_taken_status @default(ACTIVE)
   comment           String
-  Pathways          Pathways                 @relation(fields: [pathway_id], references: [id])
+  Pathway           Pathway                  @relation(fields: [pathway_id], references: [id])
   PathwayStepsTaken PathwayStepsTaken[]
 
 
@@ -4904,7 +4904,7 @@ model PathwaysTaken {
   @@map("cp_pathways_taken")
 }
 
-model PathwaySteps {
+model PathwayStep {
   id            Int           @id @default(autoincrement())
   company_id    Int
   name          String
@@ -4919,7 +4919,7 @@ model PathwaySteps {
   description   String
   who_does_this String?
 
-  Pathways          Pathways            @relation(fields: [pathway_id], references: [id])
+  Pathway           Pathway             @relation(fields: [pathway_id], references: [id])
   PathwayStepsTaken PathwayStepsTaken[]
 
   @@index([pathway_id], name: "pathway_id")
@@ -4936,7 +4936,7 @@ model PathwayStepsTaken {
   status        cp_steps_taken_status
   record_id     Int
   PathwaysTaken PathwaysTaken         @relation(fields: [path_taken_id], references: [id])
-  PathwaySteps  PathwaySteps          @relation(fields: [step_id], references: [id])
+  PathwayStep   PathwayStep           @relation(fields: [step_id], references: [id])
 
 
   @@unique([step_id, path_taken_id], name: "step_id_3")

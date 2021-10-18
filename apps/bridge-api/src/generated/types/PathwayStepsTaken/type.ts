@@ -21,10 +21,10 @@ export const PathwayStepsTaken = objectType({
         return root.PathwaysTaken
       },
     })
-    t.field('PathwaySteps', {
-      type: 'PathwaySteps',
+    t.field('PathwayStep', {
+      type: 'PathwayStep',
       resolve(root: any) {
-        return root.PathwaySteps
+        return root.PathwayStep
       },
     })
   },

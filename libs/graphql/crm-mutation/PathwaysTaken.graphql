@@ -10,8 +10,8 @@ fragment PathwaysTakenFields on PathwaysTaken {
 
 fragment PathwaysTaken on PathwaysTaken {
   ...PathwaysTakenFields
-  Pathways {
-    ...PathwaysFields
+  Pathway {
+    ...PathwayFields
   }
 }
 

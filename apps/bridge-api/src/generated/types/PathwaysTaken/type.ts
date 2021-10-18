@@ -14,10 +14,10 @@ export const PathwaysTaken = objectType({
     t.field('started_on', { type: 'DateTime' })
     t.field('status', { type: 'cp_pathways_taken_status' })
     t.string('comment')
-    t.field('Pathways', {
-      type: 'Pathways',
+    t.field('Pathway', {
+      type: 'Pathway',
       resolve(root: any) {
-        return root.Pathways
+        return root.Pathway
       },
     })
     t.list.field('PathwayStepsTaken', {

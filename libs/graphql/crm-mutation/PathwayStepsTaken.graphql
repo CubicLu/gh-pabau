@@ -14,8 +14,8 @@ fragment PathwayStepsTaken on PathwayStepsTaken {
   PathwaysTaken {
     ...PathwaysTakenFields
   }
-  PathwaySteps {
-    ...PathwayStepsFields
+  PathwayStep {
+    ...PathwayStepFields
   }
 }
 
