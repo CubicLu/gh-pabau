@@ -16,8 +16,8 @@ import {
   CheckOutlined,
   TagOutlined,
   DollarCircleFilled,
-  TeamOutlined,
-  RiseOutlined,
+  UserOutlined,
+  AimOutlined,
 } from '@ant-design/icons'
 import { ActivitiesDataProps, statuses, Labels } from '../../pages/activities'
 import AddColumnPopover from './AddColumnPopover'
@@ -41,10 +41,10 @@ import {
 import dayjs from 'dayjs'
 import * as Icon from '@ant-design/icons'
 import searchEmpty from '../../assets/images/empty.png'
-import { useUpsertOneActivityUserColumnsMutation } from '@pabau/graphql'
-import { useUser } from '../../context/UserContext'
+import { useUpsertOneActivityUserStateMutation } from '@pabau/graphql'
 import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
 import { DisplayDateTime, DisplayDate } from '../../hooks/displayDate'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 export type ActivitiesType = {
   width?: number
@@ -60,6 +60,12 @@ export type PaginateType = {
 
 interface DataSourceType {
   [key: string]: string | number
+}
+
+const leadStatusMapper = {
+  Open: 'Open',
+  Converted: 'Won',
+  Junk: 'Lost',
 }
 
 export interface ActivityTableProps {
@@ -87,6 +93,7 @@ export interface ActivityTableProps {
   setSelectedColumn?: (value: string[]) => void
   userActiveColumn?: string[]
   setCreateActivityVisible?: (value: boolean) => void
+  loggedUser?: Partial<AuthenticatedUser> & JwtUser
 }
 
 interface ColumnProps {
@@ -158,10 +165,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     userActiveColumn,
     setCreateActivityVisible,
     tabValue,
+    loggedUser,
   }) => {
     const isMobile = useMedia('(max-width: 768px)', false)
     const { t } = useTranslationI18()
-    const loggedUser = useUser()
     // const [sourceData, setSourceData] = useState<ActivitiesDataProps[]>([])
 
     const [visibleAddColumnPopover, setVisibleAddColumnPopover] = useState(
@@ -186,7 +193,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     )
 
     const [columns, setColumns] = useState([])
-    const [upsertActiveColumn] = useUpsertOneActivityUserColumnsMutation({
+    const [upsertActiveColumn] = useUpsertOneActivityUserStateMutation({
       onCompleted() {
         Notification(
           NotificationType.success,
@@ -321,6 +328,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientName.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientName')}
           </span>
         ),
@@ -330,7 +338,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              <TeamOutlined className={styles.clientIcon} />
               <a href="/" className={styles.link}>
                 {`${firstName} ${lastName}` || ''}
               </a>
@@ -350,6 +357,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadDescription.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadDescription')}
           </span>
         ),
@@ -379,6 +387,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadName.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadName')}
           </span>
         ),
@@ -388,7 +397,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              <RiseOutlined className={styles.leadIcon} />
               <a href="/" className={styles.link}>
                 {`${firstName} ${lastName}` || ''}
               </a>
@@ -406,6 +414,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadEmail.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadEmail')}
           </span>
         ),
@@ -426,6 +435,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadPhone.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadPhone')}
           </span>
         ),
@@ -448,6 +458,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadCreatedDate.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadCreatedDate')}
           </span>
         ),
@@ -468,6 +479,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.wonTime.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadWonTime')}
           </span>
         ),
@@ -487,7 +499,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
       {
         id: columnNames.leadOwner.id,
         title: (
-          <span className="dragHandler">{t('activityList.column.owner')}</span>
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.owner')}
+          </span>
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
@@ -515,6 +530,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadDoneActivities.id,
         title: (
           <span className="dragHandler activityText">
+            <AimOutlined />
             {t('activityList.column.leadDoneActivities')}
           </span>
         ),
@@ -535,6 +551,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadClosedOn.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadClosedOn')}
           </span>
         ),
@@ -555,6 +572,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.firstActivityTime.id,
         title: (
           <span className="dragHandler activityText">
+            <AimOutlined />
             {t('activityList.column.firstActivityTime')}
           </span>
         ),
@@ -576,6 +594,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadLastActivityDate.id,
         title: (
           <span className="dragHandler activityText">
+            <AimOutlined />
             {t('activityList.column.leadLastActivityDate')}
           </span>
         ),
@@ -597,6 +616,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadLastActivity.id,
         title: (
           <span className="dragHandler activityText">
+            <AimOutlined />
             {t('activityList.column.leadLastActivity')}
           </span>
         ),
@@ -616,6 +636,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadLostReason.id,
         title: (
           <span className="dragHandler activityText">
+            <AimOutlined />
             {t('activityList.column.leadLostReason')}
           </span>
         ),
@@ -638,6 +659,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadTotalActivities.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadTotalActivities')}
           </span>
         ),
@@ -657,6 +679,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadLostTime.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadLostTime')}
           </span>
         ),
@@ -677,6 +700,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadSource.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadSource')}
           </span>
         ),
@@ -697,6 +721,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.wonBy.id,
         title: (
           <span className="dragHandler activityText">
+            <AimOutlined />
             {t('activityList.column.wonBy')}
           </span>
         ),
@@ -728,6 +753,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.leadStage.id,
         title: (
           <span className="dragHandler">
+            <AimOutlined />
             {t('activityList.column.leadStage')}
           </span>
         ),
@@ -739,6 +765,27 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         width: 100,
         visible: visibleColumn(columnNames.leadStage.label),
         columnName: columnNames.leadStage.label,
+      },
+      {
+        id: columnNames.leadStatus.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadStatus')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ leadStatus }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {leadStatusMapper[leadStatus]}
+            </span>
+          )
+        },
+        width: 100,
+        visible: visibleColumn(columnNames.leadStatus.id),
+        columnName: columnNames.leadStatus.label,
       },
       {
         id: columnNames.assignedToUser.id,
@@ -907,6 +954,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.label.id,
         title: (
           <span className="dragHandler activityText">
+            <UserOutlined />
             {t('activityList.column.label')}
           </span>
         ),
@@ -948,6 +996,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientEmail.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientEmail')}
           </span>
         ),
@@ -968,6 +1017,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientPhone.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientPhone')}
           </span>
         ),
@@ -990,6 +1040,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientStreet.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientStreet')}
           </span>
         ),
@@ -1010,6 +1061,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientCity.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientCity')}
           </span>
         ),
@@ -1030,6 +1082,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientPostCode.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientPostcode')}
           </span>
         ),
@@ -1049,7 +1102,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientCountry.id,
         title: (
           <span className="dragHandler">
-            {t('activityList.column.clientCountry')}
+            <UserOutlined /> {t('activityList.column.clientCountry')}
           </span>
         ),
         dataIndex: 'client',
@@ -1068,6 +1121,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientTotalActivities.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientTotalActivities')}
           </span>
         ),
@@ -1086,6 +1140,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientMobile.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientMobile')}
           </span>
         ),
@@ -1102,6 +1157,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientCreatedAt.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientCreatedAt')}
           </span>
         ),
@@ -1122,6 +1178,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientSource.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientSource')}
           </span>
         ),
@@ -1138,6 +1195,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientSalutation.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientSalutation')}
           </span>
         ),
@@ -1154,6 +1212,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientGender.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientGender')}
           </span>
         ),
@@ -1170,6 +1229,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientID.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientID')}
           </span>
         ),
@@ -1186,6 +1246,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientDOB.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientDOB')}
           </span>
         ),
@@ -1206,6 +1267,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         id: columnNames.clientStatus.id,
         title: (
           <span className="dragHandler">
+            <UserOutlined />
             {t('activityList.column.clientStatus')}
           </span>
         ),
@@ -1390,9 +1452,20 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         setColumns(columns1)
         await upsertActiveColumn({
           variables: {
-            columns: JSON.stringify({ columns: activeColumnName }),
-            userId: loggedUser?.me?.user,
-            companyId: loggedUser?.me?.company,
+            userId: loggedUser?.user,
+            companyId: loggedUser?.company,
+            update: {
+              columns: { set: JSON.stringify({ columns: activeColumnName }) },
+            },
+            create: {
+              columns: JSON.stringify({ columns: activeColumnName }),
+              User: {
+                connect: { id: loggedUser?.user },
+              },
+              Company: {
+                connect: { id: loggedUser?.company },
+              },
+            },
           },
         })
       },
@@ -1444,6 +1517,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
                     visibleAddColumnPopover={visibleAddColumnPopover}
                     setVisibleAddColumnPopover={setVisibleAddColumnPopover}
                     upsertActiveColumnMutation={upsertActiveColumn}
+                    loggedUser={loggedUser}
                   >
                     <Tooltip
                       title={t('activityList.column.addColumns')}
@@ -1620,6 +1694,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               visibleAddColumnPopover={visibleAddColumnPopover}
               setVisibleAddColumnPopover={setVisibleAddColumnPopover}
               upsertActiveColumnMutation={upsertActiveColumn}
+              loggedUser={loggedUser}
             >
               <Tooltip
                 title={t('activityList.column.addColumns')}

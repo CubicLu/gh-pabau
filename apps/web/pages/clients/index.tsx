@@ -52,7 +52,6 @@ export const Clients = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [isEdit, setIsEdit] = useState(false)
-  const [active, setActive] = useState(true)
   const { t } = useTranslationI18()
   const size = useWindowSize()
   const user = useUser()
@@ -81,7 +80,6 @@ export const Clients = () => {
 
   const closeEditModal = () => {
     setIsEdit(false)
-    setActive(false)
   }
 
   const handleRowClick = ({ id }) => {
@@ -217,24 +215,7 @@ export const Clients = () => {
           handleClose={isEdit ? closeEditModal : toggleCreateClientModal}
           handleSubmit={() => console.log('TODO')}
           isEdit={isEdit}
-          activated={active}
-          onActivated={(val) => setActive(val)}
-          // editedValues={
-          //   isEdit && {
-          //     Fname: editedValues?.firstName,
-          //     Lname: editedValues?.lastName,
-          //     gender: t('quickCreate.client.modal.general.gender.other'),
-          //     MarketingSource: t(
-          //       'quickCreate.client.modal.general.hearOption.selectOption'
-          //     ),
-          //     DOB: dayjs(editedValues?.dob, 'DD-MM-YYYY'),
-          //     Email: editedValues?.email,
-          //     Mobile: editedValues?.mobileNumber,
-          //     Phone: '',
-          //     MailingCity: editedValues?.city,
-          //     MailingPostal: editedValues?.postal,
-          //   }
-          // }
+          contactId={0} //TODO send edit contact id
           handleDelete={handleDeleteToggle}
           deleteModalVisible={deleteModal}
           onDelete={() => console.log('TODO')}
