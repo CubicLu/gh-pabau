@@ -8,6 +8,7 @@ import { Button, Avatar, AvatarStatus as AvatarStatusProps } from '@pabau/ui'
 import Airplane from '../../assets/images/airplane.svg'
 import Sickness from '../../assets/images/sickness.svg'
 import styles from './UserTile.module.less'
+import { useRouter } from 'next/router'
 
 interface Vacation {
   startDate?: string
@@ -62,6 +63,7 @@ const UserIsAdmin: VoidFunctionComponent = (): JSX.Element => {
 }
 
 export const UserTile: FC<UserProps> = ({
+  id,
   name,
   title,
   vacation,
@@ -76,6 +78,7 @@ export const UserTile: FC<UserProps> = ({
 }: UserProps): JSX.Element => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
+  const router = useRouter()
 
   const online: AvatarStatusProps = active
     ? AvatarStatusProps.active
@@ -90,7 +93,12 @@ export const UserTile: FC<UserProps> = ({
   }
 
   return (
-    <div className={styles.tile}>
+    <div
+      className={styles.tile}
+      onClick={() => {
+        router.push(`user/${id}`)
+      }}
+    >
       {isLoading ? (
         <div className={styles.wrapper}>
           <div className={styles.mobDevUser}>
@@ -127,13 +135,22 @@ export const UserTile: FC<UserProps> = ({
               src={img}
               active={online}
               name={name}
+              isTooltip={false}
             />
             {!isMobile && <OwnerButtonJsx />}
             <div className={styles.userInfo}>
               <p className={styles.name}>{name}</p>
               <div className={styles.titleWrapper}>
                 {admin && <UserIsAdmin />}
-                <p className={styles.title}>{title}</p>
+                {title !== '' ? (
+                  <p className={styles.title}>{title}</p>
+                ) : (
+                  <span>
+                    <p className={styles.title} style={{ color: '#54B2D3' }}>
+                      + Add job title
+                    </p>
+                  </span>
+                )}
               </div>
             </div>
           </div>

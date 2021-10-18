@@ -1827,6 +1827,20 @@ export const Company = objectType({
         return root.ContactAttachment
       },
     })
+    t.list.field('SmsSender', {
+      type: 'SmsSender',
+      args: {
+        where: 'SmsSenderWhereInput',
+        orderBy: 'SmsSenderOrderByWithRelationInput',
+        cursor: 'SmsSenderWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SmsSenderScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SmsSender
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {
