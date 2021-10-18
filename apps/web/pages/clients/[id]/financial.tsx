@@ -3,7 +3,10 @@ import { useRouter } from 'next/router'
 import { TabMenu } from '@pabau/ui'
 import dayjs from 'dayjs'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
-import { Invoices } from '../../../components/ClientCard/client-financial-layout/invoices/Invoices'
+import {
+  Invoices,
+  ISalesItemProps,
+} from '../../../components/ClientCard/client-financial-layout/invoices/Invoices'
 import { Payments } from '../../../components/ClientCard/client-financial-layout/payments/Payments'
 import { Items } from '../../../components/ClientCard/client-financial-layout/items/Items'
 import { Voided } from '../../../components/ClientCard/client-financial-layout/voided/Voided'
@@ -12,6 +15,7 @@ import { useQuery } from '@apollo/client'
 import {
   GetFinanceInvoicesDocument,
   TotalFinanceInvoiceCountDocument,
+  GetInvoiceDocument,
 } from '@pabau/graphql'
 import {
   financialInvoices,
@@ -37,6 +41,9 @@ const Appointments = () => {
     take: 10,
     skip: 0,
   })
+  const [saleId, setSaleId] = useState(0)
+  const [saleItems, setSaleItem] = useState<ISalesItemProps[]>()
+  const [totalVat, setTotalVat] = useState(0)
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -50,6 +57,16 @@ const Appointments = () => {
     return queryOptions
   }, [pagination.take, pagination.skip, router.query.id])
 
+  const getsalesDetailsQueryVariables = useMemo(() => {
+    const queryOptions = {
+      skip: saleId === 0,
+      variables: {
+        id: Number.parseInt(`${saleId}`),
+      },
+    }
+    return queryOptions
+  }, [saleId])
+
   const { data: totalInvoices } = useQuery(TotalFinanceInvoiceCountDocument, {
     skip: !router.query.id,
     variables: {
@@ -61,10 +78,48 @@ const Appointments = () => {
     getQueryVariables
   )
 
+  const { data: salesDetails } = useQuery(
+    GetInvoiceDocument,
+    getsalesDetailsQueryVariables
+  )
+
+  console.log('salesDetails', salesDetails)
+
+  useEffect(() => {
+    const items: ISalesItemProps[] = []
+    let total_vat = 0
+    salesDetails?.invoice?.SaleItem?.map((item, index) => {
+      items.push({
+        employee: '',
+        id: index,
+        name: item.product_name,
+        quantity: item.quantity,
+        price: item.unit_price + item.val_tax,
+        tax: item.tax_total,
+        discount: item.UnitDiscount,
+        totalPrice:
+          item.quantity *
+          (item.unit_price - item.UnitDiscount + item.tax_total),
+      })
+      const unit_price = item.quantity * item.unit_price - item.val_tax
+      const vat_multiplier = item.Tax?.rate / 100 + 1
+      const vat_value =
+        item.quantity > 1
+          ? unit_price - unit_price / vat_multiplier
+          : item.tax_total
+      total_vat += vat_value
+      return items
+    })
+    setTotalVat(total_vat)
+    setSaleItem(items)
+  }, [salesDetails])
+
   useEffect(() => {
     const invoices = []
     if (invoice) {
       invoice.findManyInvDetail.map((item) => {
+        const discount = salesDetails?.invoice?.discount_amount
+        const inv_total = salesDetails?.invoice?.inv_total
         invoices.push({
           id: `${item.id}`,
           type: 'package',
@@ -73,32 +128,11 @@ const Appointments = () => {
           employee: item.billers,
           issuedTo: item.issue_to,
           paid: item.status === 'paid' ? true : false,
-          items: [
-            {
-              employee: 'Anika Kadir',
-              id: 1,
-              name: 'Dispensary - prescription medications',
-              price: 28,
-              quantity: 1,
-              discount: 20,
-              tax: 0,
-              totalPrice: 28,
-            },
-            {
-              employee: 'Anika Kadir',
-              id: 2,
-              name: 'Viviscal Professional - one pack (60 tablets)',
-              price: 28,
-              quantity: 2,
-              discount: 30,
-              tax: 0,
-              totalPrice: 56,
-            },
-          ],
-          totalVat: 0,
-          amountPaid: 0,
-          subtotal: 2250,
-          tips: 0,
+          items: saleItems,
+          totalVat: totalVat,
+          amountPaid: salesDetails?.invoice?.paid_amount,
+          subtotal: discount !== 0 ? inv_total + discount : inv_total,
+          tips: salesDetails?.invoice?.tip,
           grandTotal: item.amount,
           paymentStatus: 2,
           paymentStatusTooltip:
@@ -181,12 +215,16 @@ const Appointments = () => {
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invoice])
+  }, [invoice, saleItems, totalVat])
+  console.log('invoices', data)
   const handlePagination = (take, skip) => {
     setPagination({
       take: take,
       skip: skip,
     })
+  }
+  const handleExpandsionClick = (key) => {
+    setSaleId(key)
   }
 
   return (
@@ -211,6 +249,7 @@ const Appointments = () => {
           locationOptions={locationOptions}
           onChangePagination={handlePagination}
           totalInoviceCount={totalInvoices?.aggregateInvDetail?.count?.id}
+          onExpand={handleExpandsionClick}
         />
         <Payments {...data} />
         <Items

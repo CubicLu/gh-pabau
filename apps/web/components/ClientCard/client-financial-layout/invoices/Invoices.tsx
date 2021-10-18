@@ -39,9 +39,20 @@ interface InvoiceEmployeeOptionProp {
   icon: ReactNode
 }
 
-interface LocationOptionProp {
+export interface LocationOptionProp {
   key: number
   value: string
+}
+
+export interface ISalesItemProps {
+  employee: string
+  id: number
+  name: string
+  quantity: number
+  price: number
+  tax: number
+  discount: number
+  totalPrice: number
 }
 
 interface P {
@@ -49,6 +60,7 @@ interface P {
   invoiceEmployeeOptions: InvoiceEmployeeOptionProp[]
   locationOptions: LocationOptionProp[]
   onChangePagination?(take: number, skip: number): void
+  onExpand?(id: number): void
   totalInoviceCount: number
 }
 
@@ -59,6 +71,7 @@ export const Invoices: FC<P> = (props) => {
     invoiceEmployeeOptions,
     locationOptions,
     onChangePagination,
+    onExpand,
   } = props
   const { totalInvoiced, totalOutstanding } = dataProps
   const [invoices, setInvoices] = useState(dataProps.invoices)
@@ -110,6 +123,14 @@ export const Invoices: FC<P> = (props) => {
   useEffect(() => {
     setInvoices(dataProps.invoices)
   }, [dataProps])
+
+  useEffect(() => {
+    setPaginateData({
+      ...paginateData,
+      total: totalInoviceCount,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalInoviceCount])
 
   useEffect(() => {
     if (invoices) {
@@ -221,6 +242,7 @@ export const Invoices: FC<P> = (props) => {
             <span>£{value.toFixed(2)}</span>
             <span
               onClick={() => {
+                onExpand?.(row['key'])
                 if (expandedRow === row['key']) return setExpandedRow(0)
 
                 setExpandedRow(row['key'])
@@ -245,7 +267,7 @@ export const Invoices: FC<P> = (props) => {
     return (
       <div className={styles.rowExpand}>
         <div className={styles.items}>
-          {record.items.map((item, i) => (
+          {record?.items?.map((item, i) => (
             <div className={styles.item} key={i}>
               <div>
                 <Text>{item.name}</Text>
@@ -266,13 +288,13 @@ export const Invoices: FC<P> = (props) => {
                 <Title level={5}>
                   {t('ui.client-card-financial.total-vat')}
                 </Title>
-                <Text>£{record.totalVat.toFixed(2)}</Text>
+                <Text>£{(record?.totalVat ?? 0).toFixed(2)}</Text>
               </div>
               <div>
                 <Title level={5}>
                   {t('ui.client-card-financial.sub-total-amount')}
                 </Title>
-                <Text>£{record.grandTotal.toFixed(2)}</Text>
+                <Text>£{(record?.grandTotal ?? 0).toFixed(2)}</Text>
               </div>
             </div>
             <div className={styles.right}>
@@ -280,17 +302,17 @@ export const Invoices: FC<P> = (props) => {
                 <Title level={5}>
                   {t('ui.client-card-financial.amount-paid')}
                 </Title>
-                <Text>£{record.amountPaid.toFixed(2)}</Text>
+                <Text>£{(record?.amountPaid ?? 0).toFixed(2)}</Text>
               </div>
               <div>
                 <Title level={5}>{t('ui.client-card-financial.tips')}</Title>
-                <Text>£{record.tips.toFixed(2)}</Text>
+                <Text>£{(record?.tips ?? 0).toFixed(2)}</Text>
               </div>
             </div>
           </div>
           <div className={styles.right}>
             <Title level={5}>{t('ui.client-card-financial.grand-total')}</Title>
-            <Title level={4}>£{record.grandTotal.toFixed(2)}</Title>
+            <Title level={4}>£{record?.grandTotal.toFixed(2)}</Title>
             {!record.paid && (
               <Button onClick={() => console.log('Pay')} type="primary">{`${t(
                 'ui.client-card-financial.pay'
