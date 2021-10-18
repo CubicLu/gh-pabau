@@ -1,0 +1,46 @@
+fragment PathwayStepsFields on PathwaySteps {
+  id
+  company_id
+  name
+  created_date
+  step
+  order
+  item_id
+  pathway_id
+  can_skip
+  display_time
+  other_value
+  description
+  who_does_this
+}
+
+fragment PathwaySteps on PathwaySteps {
+  ...PathwayStepsFields
+  Pathways {
+    ...PathwaysFields
+  }
+}
+
+mutation createOnePathwaySteps($data: PathwayStepsCreateInput!) {
+  createOnePathwaySteps(data: $data) {
+    ...PathwaySteps
+  }
+}
+
+mutation updateOnePathwaySteps($where: PathwayStepsWhereUniqueInput!, $data: PathwayStepsUpdateInput!) {
+  updateOnePathwaySteps(where: $where, data: $data) {
+    ...PathwaySteps
+  }
+}
+
+mutation deleteOnePathwaySteps($where: PathwayStepsWhereUniqueInput!) {
+  deleteOnePathwaySteps(where: $where) {
+    ...PathwaySteps
+  }
+}
+
+mutation updateManyPathwaySteps($where: PathwayStepsWhereInput, $data: PathwayStepsUpdateManyMutationInput!) {
+  updateManyPathwaySteps(where: $where, data: $data) {
+    count
+  }
+}
