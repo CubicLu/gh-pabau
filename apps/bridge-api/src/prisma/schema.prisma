@@ -3159,6 +3159,7 @@ model CmStaffGeneral {
   HolidayRequest      HolidayRequest[]
   SalonBookings       Booking[]
   RotaShift           RotaShift[]
+  StaffNote           StaffNote[]
 
   InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
@@ -3178,17 +3179,21 @@ model CmStaffGeneral {
 //  Notes   String
 //}
 //
-//model cm_staff_notes {
-//  ID           Int    @id @default(autoincrement())
-//  StaffID      Int    @unique
-//  Dependents   String
-//  Education    String
-//  Hobbies      String
-//  Training     String
-//  Volunteer    String
-//  Prescription String
-//}
-//
+model StaffNote {
+  ID           Int    @id @default(autoincrement())
+  StaffID      Int    @unique
+  Dependents   String
+  Education    String
+  Hobbies      String
+  Training     String
+  Volunteer    String
+  Prescription String
+
+  CmStaffGeneral CmStaffGeneral @relation(fields: [StaffID], references: [ID])
+
+  @@map("cm_staff_notes")
+}
+
 //model cm_staff_payrolls {
 //  ID                 Int                           @id @default(autoincrement())
 //  StaffID            Int
@@ -3876,6 +3881,7 @@ model CompanyEmail {
   default_email    Int
   enterprise_email Int
   merge_tags       String
+  visibility       Int    @default(0)
 
   Company Company? @relation(fields: [company_id], references: [id])
   @@index([email_id], name: "email_id")
@@ -4505,7 +4511,7 @@ model ContactAttachment {
   medical_form_id   Int?
   tags              String?
   medical_uniqid    String?
-  Contact           CmContact   @relation(fields: [contact_id], references: [ID])
+  Contact           CmContact?  @relation(fields: [contact_id], references: [ID])
   Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
   Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
   Company           Company     @relation(fields: [company_id], references: [id])
@@ -11441,12 +11447,13 @@ model SmsPurchase {
 }
 
 model SmsSender {
-  smsd_id     Int     @id @default(autoincrement())
-  smsd_name   String
-  company_id  Int     @map("smsd_cid")
-  smsd_delete Int     @default(0)
-  is_default  Boolean @default(false)
-  merge_tags  String
+  smsd_id        Int     @id @default(autoincrement())
+  smsd_name      String
+  company_id     Int     @map("smsd_cid")
+  smsd_delete    Int     @default(0)
+  is_default     Boolean @default(false)
+  merge_tags     String
+  enable_replies Int     @default(0)
 
   Company Company @relation(fields: [company_id], references: [id])
 
