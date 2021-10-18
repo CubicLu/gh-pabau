@@ -886,8 +886,9 @@ en:
   ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
   ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
   ui.gp-search.yourPractice: 'Your practice'
-  ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are
-          currently registered as a patient'
+  ui.gp-search.yourPracticeMessage:
+    'Supply a a postcode or the name of the practice where you are
+    currently registered as a patient'
   ui.gp-search.searchInput.placeholder: 'Enter a postcode or search by the name'
   ui.gp-search.searchInput.addPracticeManually: 'Add practice manually'
   ui.gp-search.searchInput.setAsPracticeButton: 'Set as a practice'
@@ -3919,13 +3920,13 @@ en:
   team.user.filter.admin.label: 'Admin'
   team.user.filter.active.label: 'Active'
   team.user.filter.inactive.label: 'Inactive'
-  team.user.header.search.placeholder: 'Search in Custom'
+  team.user.header.search.placeholder: 'Search by name'
   team.user.header.search.no.results: 'No results found'
   team.user.header.search.try.adjust: 'Try adjusting your search to find what you’re looking for'
   team.user.header.new.group.button: 'New Group'
   team.user.header.new.staff.member.button: 'New Staff Member'
   team.user.tab.staff.member: 'Staff Members'
-  team.user.tab.group.permission: 'Group Permissions'
+  team.user.tab.group.permission: 'Permission Groups'
   team.user.grid.pending.button: 'Pending'
   team.user.grid.owner.button: 'Owner'
   team.user.grid.on.vacation.tooltip: 'On Vacation'
@@ -3935,7 +3936,7 @@ en:
   team.user.listview.mobile.label: 'Mobile'
   team.user.listview.email.label: 'Email'
   team.user.listview.location.label: 'Location'
-  team.user.listview.user.group.label: 'User group'
+  team.user.listview.user.group.label: 'Permission group'
   team.user.listview.edit.label: 'Edit'
   team.user.group.permission.tab.modules: 'Modules'
   team.user.group.permission.tab.features: 'Features'
@@ -5158,6 +5159,13 @@ en:
   galley.list.image.show: 'Show'
   galley.list.menu.new.album: 'New Album'
   galley.list.menu.Owner.album: 'Owner'
+  contact.document.viewer.title: 'Document Viewer'
+  contact.document.viewer.input.documentid: 'Document Id'
+  contact.document.viewer.show.document: 'Show Document'
+  ui.epaper.page: 'Page'
+  ui.epaper.prevpage: 'Prev Page'
+  ui.epaper.nextpage: 'Next Page'
+  ui.epaper.null.errormessage: 'This document id does not exist, Please use other document id'
   activity.filter.popover.label: 'Select a person'
   activity.filter.popover.title: 'Filter'
   activity.filter.popover.search.input.placeholder: 'Search owner or filter'
@@ -5249,7 +5257,7 @@ en:
   create.filter.modal.search.result.match.label: '{{count}} MATCHES'
   create.filter.modal.no.search.label: 'No match found'
   create.filter.modal.no.search.desc: 'Please check your spelling'
-  create.filter.modal.shared.filter.tooltip: "You're viewer of this filter. Only the owner {{name}} can make changes here." 
+  create.filter.modal.shared.filter.tooltip: "You're viewer of this filter. Only the owner {{name}} can make changes here."
   create.filter.modal.creator.name: 'Creator: {{name}}'
   create.filter.modal.last.modified.label: 'Last modified: {{date}}'
   create.filter.modal.deleted.filter.message: 'You have successfully deleted a filter'

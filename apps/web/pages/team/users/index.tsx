@@ -5,14 +5,7 @@ import {
   MenuOutlined,
 } from '@ant-design/icons'
 import { useFindManyCompanyStaffUsersQuery } from '@pabau/graphql'
-import {
-  Breadcrumb,
-  Pagination,
-  TabMenu,
-  UserProps,
-  UserTile,
-  GridVsList,
-} from '@pabau/ui'
+import { Pagination, TabMenu, UserProps, UserTile, GridVsList } from '@pabau/ui'
 import { Image } from 'antd'
 import classNames from 'classnames'
 import moment from 'moment'
@@ -286,8 +279,8 @@ const Index: FunctionComponent = () => {
         <div className={styles.header}>
           <div className={styles.headerTitle}>
             {!isMobile && (
-              <>
-                <Breadcrumb
+              <div style={{ display: 'flex' }}>
+                {/* <Breadcrumb
                   items={[
                     {
                       path: 'team',
@@ -298,9 +291,20 @@ const Index: FunctionComponent = () => {
                       breadcrumbName: t('team.user.breadcrumb.users'),
                     },
                   ]}
-                />
+                /> */}
                 <h4>{t('team.user.title')}</h4>
-              </>
+                <h3
+                  style={{
+                    marginLeft: '10px',
+                    color: '#54b2d3',
+                    borderRadius: '50%',
+                    backgroundColor: '#f0f2f5',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {paginateData.total}
+                </h3>
+              </div>
             )}
           </div>
           <div className={styles.headerFilter}>
@@ -351,6 +355,7 @@ const Index: FunctionComponent = () => {
                         return (
                           <UserTile
                             key={user.id}
+                            id={user.id}
                             name={user.full_name}
                             title={user.job_title}
                             vacation={
