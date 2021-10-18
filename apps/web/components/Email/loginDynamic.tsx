@@ -20,6 +20,7 @@ export const Login: FC<P> = ({ handleGoogleLogin }) => {
       access_type: 'offline',
       response_type: 'code',
       scope: 'https://mail.google.com/',
+
       include_granted_scopes: 'true',
       state: 'state_parameter_passthrough_value',
     }

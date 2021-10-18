@@ -23,7 +23,6 @@ import CommonHeader from '../../components/CommonHeader'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
 import { ReactComponent as Google } from '../../assets/images/google.svg'
-// import { ReactComponent as OutLook } from '../../assets/images/outlook.svg'
 import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
 import { ReactComponent as Office } from '../../assets/images/office365.svg'
 import Login from '../../components/Email/login'
@@ -122,10 +121,6 @@ export const Communications: React.FC = () => {
     if (url.searchParams.get('code')) {
       refreshToken()
     }
-    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
-      setIsLoggedIn(true)
-      setUserData(gmailConnection.gmail_connection[0].email)
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -144,9 +139,7 @@ export const Communications: React.FC = () => {
       setIsLoggedIn(true)
       setUserData(gmailConnection.gmail_connection[0].email)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gmailConnection])
-  // data, gmailConnection, isLoggedIn
 
   const insertGmailConnection = async (refreshToken) => {
     await insertConnection({
