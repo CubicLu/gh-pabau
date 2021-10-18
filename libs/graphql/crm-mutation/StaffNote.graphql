@@ -1,0 +1,41 @@
+fragment StaffNoteFields on StaffNote {
+  ID
+  StaffID
+  Dependents
+  Education
+  Hobbies
+  Training
+  Volunteer
+  Prescription
+}
+
+fragment StaffNote on StaffNote {
+  ...StaffNoteFields
+  CmStaffGeneral {
+    ...CmStaffGeneralFields
+  }
+}
+
+mutation createOneStaffNote($data: StaffNoteCreateInput!) {
+  createOneStaffNote(data: $data) {
+    ...StaffNote
+  }
+}
+
+mutation updateOneStaffNote($where: StaffNoteWhereUniqueInput!, $data: StaffNoteUpdateInput!) {
+  updateOneStaffNote(where: $where, data: $data) {
+    ...StaffNote
+  }
+}
+
+mutation deleteOneStaffNote($where: StaffNoteWhereUniqueInput!) {
+  deleteOneStaffNote(where: $where) {
+    ...StaffNote
+  }
+}
+
+mutation updateManyStaffNote($where: StaffNoteWhereInput, $data: StaffNoteUpdateManyMutationInput!) {
+  updateManyStaffNote(where: $where, data: $data) {
+    count
+  }
+}
