@@ -119,6 +119,20 @@ export const CmStaffGeneral = objectType({
         return root.RotaShift
       },
     })
+    t.list.field('StaffNote', {
+      type: 'StaffNote',
+      args: {
+        where: 'StaffNoteWhereInput',
+        orderBy: 'StaffNoteOrderByWithRelationInput',
+        cursor: 'StaffNoteWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'StaffNoteScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.StaffNote
+      },
+    })
     t.list.field('InventoryDiscrepancy', {
       type: 'InventoryDiscrepancy',
       args: {

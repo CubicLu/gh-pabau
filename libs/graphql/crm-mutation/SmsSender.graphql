@@ -5,6 +5,7 @@ fragment SmsSenderFields on SmsSender {
   smsd_delete
   is_default
   merge_tags
+  enable_replies
 }
 
 fragment SmsSender on SmsSender {
@@ -20,7 +21,10 @@ mutation createOneSmsSender($data: SmsSenderCreateInput!) {
   }
 }
 
-mutation updateOneSmsSender($where: SmsSenderWhereUniqueInput!, $data: SmsSenderUpdateInput!) {
+mutation updateOneSmsSender(
+  $where: SmsSenderWhereUniqueInput!
+  $data: SmsSenderUpdateInput!
+) {
   updateOneSmsSender(where: $where, data: $data) {
     ...SmsSender
   }
@@ -32,7 +36,10 @@ mutation deleteOneSmsSender($where: SmsSenderWhereUniqueInput!) {
   }
 }
 
-mutation updateManySmsSender($where: SmsSenderWhereInput, $data: SmsSenderUpdateManyMutationInput!) {
+mutation updateManySmsSender(
+  $where: SmsSenderWhereInput
+  $data: SmsSenderUpdateManyMutationInput!
+) {
   updateManySmsSender(where: $where, data: $data) {
     count
   }
