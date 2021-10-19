@@ -1,0 +1,47 @@
+.nave-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    
+
+    .leads-count {
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+        font-weight: 700;
+        font-size: 20px;
+        
+        h4 {
+            margin-bottom: 0;
+        }
+
+        .ticker-count {
+            bottom: 12px;
+            right: 18px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #EEF7FB;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-family);
+            font-size: 14px;
+            color: #54B2D3;
+            margin-left: 10px;
+        }
+        
+    }
+}
+.leadStatusRoot {
+    :global {
+        .ant-card-body {
+            & div {
+                &:focus {
+                    outline: none;
+                    border: none;
+                }
+            }
+        }
+    }
+}
