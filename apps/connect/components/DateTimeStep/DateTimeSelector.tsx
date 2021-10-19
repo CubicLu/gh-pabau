@@ -58,7 +58,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
     },
   })
 
-  const [getShiftsOnDate, dateHasShift, getDateTimeslots] = useShifts(
+  const { getShiftsOnDate, dateHasShift, getDateTimeslots } = useShifts(
     shiftsResult,
     bookingsResult
   )
@@ -68,6 +68,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
 
   const dateCellRender = (value) => {
     const shifts = getShiftsOnDate(value)
+
     if (!shifts) {
       return []
     }
@@ -184,6 +185,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       </div>
     )
   }
+
   const defaultrender = () => {
     return (
       <div className={Styles.emptyData}>

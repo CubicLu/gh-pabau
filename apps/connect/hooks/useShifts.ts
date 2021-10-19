@@ -33,7 +33,13 @@ export default function useShifts(shiftsResult, bookingsResult) {
         ...availability,
       }
     } else {
-      return false
+      return {
+        key: shiftsIndex,
+        shifts: [],
+        morning: false,
+        afternoon: false,
+        evening: false,
+      }
     }
   }
 
@@ -110,5 +116,5 @@ export default function useShifts(shiftsResult, bookingsResult) {
     return timeslots
   }
 
-  return [getShiftsOnDate, dateHasShift, getDateTimeslots]
+  return { getShiftsOnDate, dateHasShift, getDateTimeslots }
 }
