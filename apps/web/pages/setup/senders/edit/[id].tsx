@@ -23,7 +23,6 @@ import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import {
   SenderItem,
-  senderItems,
   subCriteriaOptions,
   masterCriteriaOptions,
   mergeTagTypeOptions,
@@ -31,6 +30,32 @@ import {
 import { Form } from 'formik-antd'
 
 const { Panel } = Collapse
+
+const senderItems: SenderItem[] = [
+  {
+    id: '19837',
+    type: 'email',
+    fromName: 'Clinic Bookings',
+    fromEmail: 'william@pabau.com',
+    isDefaultSender: false,
+    mergeTags: [],
+  },
+  {
+    id: '002',
+    type: 'sms',
+    fromName: 'The Health Clinic',
+    fromEmail: 'william@pabau.com',
+    isDefaultSender: true,
+    mergeTags: [],
+  },
+  {
+    id: '003',
+    type: 'sms',
+    fromName: 'Surgical Clinic',
+    isDefaultSender: false,
+    mergeTags: [],
+  },
+]
 
 export const EditSender: React.FC = () => {
   const { t } = useTranslationI18()
