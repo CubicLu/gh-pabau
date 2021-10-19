@@ -1,6 +1,6 @@
 import { extendType, intArg, inputObjectType, nullable } from 'nexus'
 import { Context } from '../../../context'
-import { PublicMasterCategoryResponse } from '../nexus-type/index'
+import { PublicMasterCategoryResponse } from '../nexus-type'
 
 export const PBCInput = inputObjectType({
   name: 'PBCInput',
@@ -23,7 +23,10 @@ export const Public_MasterCategories = extendType({
       },
       resolve(_, input, ctx: Context) {
         return ctx.prisma.servicesMasterCategory.findMany({
-          where: input.where,
+          where: {
+            type: 'SERVICE',
+            company_id: input.where.company_id,
+          },
           orderBy: {
             ord: 'asc',
           },

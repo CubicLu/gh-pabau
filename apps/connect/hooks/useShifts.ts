@@ -9,7 +9,7 @@ export default function useShifts(shiftsResult, bookingsResult) {
   const settings = useContext(SettingsContext)
   const shiftsByDate = []
   if (shiftsResult) {
-    for (const shift of shiftsResult.Public_Shifts) {
+    for (const shift of shiftsResult.Public_StaffShifts) {
       if (!selectedData.employee || selectedData.employee.ID === shift.uid) {
         const index = shift.start.toString().substring(0, 8)
         if (!shiftsByDate[index]) {

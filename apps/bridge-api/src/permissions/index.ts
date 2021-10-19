@@ -235,9 +235,8 @@ export const permissions = shield(
       Public_Bookings: allow,
       Public_Locations: allow,
       Public_ServiceCategories: allow,
-      Public_Shifts: allow,
+      Public_StaffShifts: allow,
       Public_Staff: allow,
-
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //statement template

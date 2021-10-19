@@ -3,7 +3,7 @@ query bookingAvailableShifts(
   $shift_start: Float!,
   $shift_end: Float!
 ) {
-  Public_Shifts(
+  Public_StaffShifts(
     where: {
       company_id: $company_id,
       start: $shift_start,

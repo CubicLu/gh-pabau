@@ -11,8 +11,8 @@ const PublicCreateBookingResponse = objectType({
   },
 })
 
-const PCBData = inputObjectType({
-  name: 'PCBData',
+const PCBData2 = inputObjectType({
+  name: 'PCBData2',
   definition(t) {
     t.nonNull.float('start_date')
     t.nonNull.float('end_date')
@@ -32,14 +32,14 @@ const PCBContact = inputObjectType({
   },
 })
 
-export const public_createBooking = extendType({
+export const public_createOnlineBooking = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('public_createBooking', {
+    t.field('public_createOnlineBooking', {
       type: PublicCreateBookingResponse,
       description: 'Create booking from public',
       args: {
-        data: nullable(PCBData),
+        data: nullable(PCBData2),
         contact: nullable(PCBContact),
       },
       async resolve(_, input, ctx: Context) {

@@ -15,7 +15,7 @@ export const PSInput = inputObjectType({
 export const Public_Shifts = extendType({
   type: 'Query',
   definition(t) {
-    t.list.field('Public_Shifts', {
+    t.list.field('Public_StaffShifts', {
       type: PublicShiftResponse,
       description: 'Get staff shifts public data',
       args: {
