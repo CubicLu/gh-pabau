@@ -10,7 +10,7 @@ export interface PatientInfoProps {
   firstname: string
   lastname: string
   changescreen: () => void
-  image: any
+  image: string
   translation: (val: string) => string
 }
 

@@ -21,7 +21,6 @@ import useShifts from '../../hooks/useShifts'
 export interface P {
   onSelected: () => void
 }
-
 const DateTimeSelector: FC<P> = ({ onSelected }) => {
   // CRAP
   const [mdisplay, setmdisplay] = useState(true)

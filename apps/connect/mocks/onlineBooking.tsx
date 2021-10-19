@@ -1,13 +1,10 @@
-import { ReactComponent as Injection } from '../../web/assets/images/injection.svg'
-import { ReactComponent as Facial } from '../../web/assets/images/facial-treatment.svg'
-import { ReactComponent as Spa } from '../../web/assets/images/spa.svg'
-import { ReactComponent as SkinnProblem } from '../../web/assets/images/skin-problem.svg'
-import { ReactComponent as Acne } from '../../web/assets/images/acne 1.svg'
-import { ReactComponent as Moistuire } from '../../web/assets/images/moisturizing 1.svg'
-// import { ReactComponent as FaceMask } from '../../assets/images/face-mask 1.svg'
-// import { ReactComponent as Lifting } from '../../assets/images/lifting 1.svg'
-import { SelectItem } from '../components/ServicesStep/ServiceCategorySelector'
-export const defaultItems: SelectItem[] = [
+import { ReactComponent as Injection } from '../../../libs/ui/src/assets/images/injection.svg'
+import { ReactComponent as Facial } from '../../../libs/ui/src/assets/images/facial-treatment.svg'
+import { ReactComponent as Spa } from '../../../libs/ui/src/assets/images/spa.svg'
+import { ReactComponent as SkinnProblem } from '../../../libs/ui/src/assets/images/skin-problem.svg'
+import { ReactComponent as Acne } from '../../../libs/ui/src/assets/images/acne 1.svg'
+import { ReactComponent as Moistuire } from '../../../libs/ui/src/assets/images/moisturizing 1.svg'
+export const defaultItems = [
   {
     name: 'Injectables',
     icon: <Injection />,

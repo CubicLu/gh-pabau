@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { PhoneNumberInput, PasswordWithHelper } from '@pabau/ui'
 import { Form, Input, SubmitButton } from 'formik-antd'
 import { Select, Checkbox } from 'antd'
@@ -10,7 +10,6 @@ import img1 from '../../assets/images/Google.png'
 import { UserOutlined } from '@ant-design/icons'
 import { Verification } from './Verification'
 import { countrylist } from '../../mocks/mock'
-import { SettingsContext } from '../../context/settings-context'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Contact } from '../../types/contact'
@@ -23,7 +22,6 @@ export interface P {
 }
 
 const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
-  const settings = useContext(SettingsContext)
   const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const { t } = useTranslationI18()
   const [valid, setvalid] = useState(false)
@@ -85,7 +83,7 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
       <div className={styles.accountLoginWrapper}>
         <p>
           {t('connect.onlinebooking.bookdetail.alreadyaccount')}
-          <a>Log in</a>
+          <p>Log in</p>
         </p>
         <div className={styles.btnSocial} onClick={() => setconfirm(true)}>
           <span>

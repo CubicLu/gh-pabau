@@ -20,7 +20,7 @@ export interface VerificationProps {
   charge: string
   address: string
   type: string
-  image: any
+  image: string
   translation: (val: string) => string
   clickable?: boolean
   gotofirst?: () => void
@@ -62,7 +62,6 @@ export const Verification: FC<VerificationProps> = ({
           </h5>
 
           <p>{type}</p>
-          {console.log(docname)}
         </div>
         <div className={styles.confirmBox}>
           <h5>

@@ -105,7 +105,7 @@ export const public_createBooking = extendType({
         //
         // console.log('REsult Log', res)
 
-        const res = await ctx.prisma.cmContact.update({
+        await ctx.prisma.cmContact.update({
           where: { ID: input.contact.id },
           data: {
             Booking: {

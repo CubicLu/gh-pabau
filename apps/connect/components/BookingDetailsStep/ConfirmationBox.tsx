@@ -10,14 +10,14 @@ export interface datatype {
   name: string
   oldprice: string
   newprice: number
-  image: any
+  image: string
   active: boolean
 }
 export interface normaltype {
   key: number
   name: string
   price: number
-  image: any
+  image: string
   active: boolean
 }
 export interface productType {
@@ -47,7 +47,7 @@ export interface ConformationProps {
   charge: string
   address: string
   type: string
-  image: any
+  image: string
   services: number
   submitBtn?: boolean
   backToStep?: (val: number) => void

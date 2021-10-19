@@ -12,7 +12,7 @@ import master from '../../assets/images/master.png'
 import * as Yup from 'yup'
 import { DatePicker, Input as input } from 'antd'
 import { Button } from '@pabau/ui'
-import { useNotification } from '../../../web/hooks/useNotification'
+//import { useNotification } from '../../../web/hooks/useNotification'
 
 /* eslint-disable-next-line */
 export interface PaymentProps {
@@ -31,7 +31,7 @@ const Payment: FC<PaymentProps> = ({
   const [promoInput, setpromoInput] = useState('')
   const [pr, setpr] = useState(price)
   // const [apply, setapply] = useState(false)
-  const { notificationTypes, pushNotification } = useNotification()
+  //const { notificationTypes, pushNotification } = useNotification()
   const intial = {
     cardnumber: '',
     expDate: '',
@@ -65,22 +65,22 @@ const Payment: FC<PaymentProps> = ({
   //   .min(moment().set({ hour: 0, minutes: 0 }), 'Please enter valid date')
   //   .typeError('Invalid date')
   const notifyAppointmentBooked = () => {
-    const notification = {
-      type: notificationTypes.NEW_APPOINTMENT_VIA_CALENDAR,
-      sentTo: [83247],
-      destination: '',
-      variable: {
-        who: 'Olivia Sanders',
-        service_name: 'Chemical Peel',
-        client_name: 'John Smith',
-        date: Intl.DateTimeFormat('en-US').format(new Date()),
-        time: Intl.DateTimeFormat('en-US', {
-          hour: 'numeric',
-          minute: 'numeric',
-        }).format(new Date()),
-      },
-    }
-    pushNotification(notification)
+    // const notification = {
+    //   type: notificationTypes.NEW_APPOINTMENT_VIA_CALENDAR,
+    //   sentTo: [83247],
+    //   destination: '',
+    //   variable: {
+    //     who: 'Olivia Sanders',
+    //     service_name: 'Chemical Peel',
+    //     client_name: 'John Smith',
+    //     date: Intl.DateTimeFormat('en-US').format(new Date()),
+    //     time: Intl.DateTimeFormat('en-US', {
+    //       hour: 'numeric',
+    //       minute: 'numeric',
+    //     }).format(new Date()),
+    //   },
+    // }
+    // pushNotification(notification)
   }
 
   return (
