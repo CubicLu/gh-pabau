@@ -1,0 +1,118 @@
+.JourneyCalendar {
+  margin-bottom: 33px;
+  @media only screen and (min-width: 992px) {
+    box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+    border: 1px solid #f4f5f7;
+    border-radius: 4px;
+  }
+  .jc_container {
+    padding: 0 20px;
+    @media only screen and (max-width: 991px) {
+      padding: 0;
+    }
+  }
+  .JourneyCalendarWrapper {
+    padding: 15px 0;
+    @media only screen and (max-width: 991px) {
+      padding: 0;
+    }
+  }
+  .jcLeftCol {
+    max-width: calc(100% - 82px);
+    width: 100%;
+    @media only screen and (max-width: 991px) {
+      max-width: 100%;
+    }
+  }
+  .journyCalenderDate {
+    padding: 0 3px;
+    text-align: center;
+  }
+  .journyCalenderDateWrap {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: normal;
+    color: #3d3d46;
+    text-transform: capitalize;
+    padding: 6px 10px;
+    border-radius: 29px;
+    text-align: center;
+    cursor: pointer;
+    @media only screen and (max-width: 991px) {
+      font-size: 17px;
+      line-height: 22px;
+    }
+  }
+  .journyCalenderColWrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .JourneyCalendarSlider {
+    max-width: calc(100% - 80px);
+    @media only screen and (max-width: 991px) {
+      max-width: 100%;
+    }
+  }
+  .prevArrow {
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #ecedf0;
+    box-sizing: border-box;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .nextArrow {
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #ecedf0;
+    box-sizing: border-box;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: rotate(180deg);
+  }
+  .activeDate {
+    .journyCalenderDateWrap {
+      background: #40a0c1;
+      color: #fff;
+    }
+  }
+  .todayButton {
+    height: 40px;
+  }
+}
+.monthYear {
+  margin-bottom: 20px;
+  .monthYearWrap {
+    display: flex;
+    align-items: center;
+    .monthYearWrapText {
+      font-size: 17px;
+      line-height: 22px;
+      text-align: center;
+      letter-spacing: -0.408px;
+      color: #333333;
+      flex: 1;
+    }
+    .todayText {
+      font-size: 17px;
+      line-height: 22px;
+      text-align: center;
+      letter-spacing: -0.408px;
+      color: #54b2d3;
+      text-align: right;
+      flex: 1;
+    }
+  }
+}
