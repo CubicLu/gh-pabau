@@ -26,7 +26,7 @@ const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons }) => {
                   color: b.valueColor ? b.valueColor : '#fff',
                 }}
               >
-                £{b.value.toFixed(2)}
+                £{(b.value ?? 0).toFixed(2)}
               </Text>
             </div>
           )

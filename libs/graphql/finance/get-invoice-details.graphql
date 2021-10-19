@@ -49,8 +49,8 @@ query getInvoice($id: Int!) {
   }
 }
 
-query getFinanceInvoices($take: Int!, $skip: Int!, $id: Int!){
-  findManyInvDetail(take: $take, skip: $skip, where:{customer_id:{equals:$id}}){
+query getFinanceInvoices($take: Int!, $skip: Int!, $where: InvDetailWhereInput){
+  findManyInvDetail(take: $take, skip: $skip, where: $where){
     id
     amount
     billers
@@ -61,8 +61,20 @@ query getFinanceInvoices($take: Int!, $skip: Int!, $id: Int!){
   }
 }
 
-query totalFinanceInvoiceCount($id: Int!){
-  aggregateInvDetail(where:{customer_id:{equals:$id}}){
+query getFullInvoices($id: Int!){
+  findManyInvDetail(where:{customer_id:{equals:$id}}){
+    id
+    amount
+    billers
+    date
+    issue_to
+    location_name
+    status
+  }
+}
+
+query totalFinanceInvoiceCount($where: InvDetailWhereInput){
+  aggregateInvDetail(where: $where){
     count{
       id
     }

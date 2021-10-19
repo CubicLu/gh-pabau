@@ -4755,6 +4755,7 @@ en:
   ui.client-card-financial.invoices.sent-invoices: 'Sent Invoices'
   ui.client-card-financial.invoices.date: 'Date'
   ui.client-card-financial.invoices.clear-all: 'Clear All'
+  ui.client-card-financial.invoices.apply: 'Apply'
   ui.client-card-financial.invoices.filter-by: 'Filter by'
   ui.client-card-financial.payments: 'Payments'
   ui.client-card-financial.items: 'Items'

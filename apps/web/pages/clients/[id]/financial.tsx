@@ -6,6 +6,7 @@ import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import {
   Invoices,
   ISalesItemProps,
+  InitialFilterValue,
 } from '../../../components/ClientCard/client-financial-layout/invoices/Invoices'
 import { Payments } from '../../../components/ClientCard/client-financial-layout/payments/Payments'
 import { Items } from '../../../components/ClientCard/client-financial-layout/items/Items'
@@ -16,6 +17,7 @@ import {
   GetFinanceInvoicesDocument,
   TotalFinanceInvoiceCountDocument,
   GetInvoiceDocument,
+  GetFullInvoicesDocument,
 } from '@pabau/graphql'
 import {
   financialInvoices,
@@ -44,6 +46,13 @@ const Appointments = () => {
   const [saleId, setSaleId] = useState(0)
   const [saleItems, setSaleItem] = useState<ISalesItemProps[]>()
   const [totalVat, setTotalVat] = useState(0)
+  const [invoiceFilter, setInvoiceFilter] = useState<InitialFilterValue>({
+    type: 'all',
+    employee: 'all',
+    location: 'all',
+    dateStart: '',
+    dateEnd: '',
+  })
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -51,11 +60,31 @@ const Appointments = () => {
       variables: {
         take: pagination.take,
         skip: pagination.skip,
-        id: Number.parseInt(`${router.query.id}`),
+        where: {
+          customer_id: { equals: Number.parseInt(`${router.query.id}`) },
+          billers:
+            invoiceFilter.employee === 'all'
+              ? { contains: '%%' }
+              : { equals: invoiceFilter.employee },
+          location_name:
+            invoiceFilter.location === 'all'
+              ? { contains: '%%' }
+              : { equals: invoiceFilter.location },
+          date:
+            invoiceFilter.dateStart && invoiceFilter.dateEnd
+              ? { gte: invoiceFilter.dateStart, lte: invoiceFilter.dateEnd }
+              : {},
+          amount:
+            invoiceFilter.type === 'outstanding_invoices' ? { gt: 0 } : {},
+          status:
+            invoiceFilter.type === 'paid_invoice'
+              ? { equals: 'paid' }
+              : { contains: '%%' },
+        },
       },
     }
     return queryOptions
-  }, [pagination.take, pagination.skip, router.query.id])
+  }, [pagination.take, pagination.skip, router.query.id, invoiceFilter])
 
   const getsalesDetailsQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -70,6 +99,31 @@ const Appointments = () => {
   const { data: totalInvoices } = useQuery(TotalFinanceInvoiceCountDocument, {
     skip: !router.query.id,
     variables: {
+      where: {
+        customer_id: { equals: Number.parseInt(`${router.query.id}`) },
+        billers:
+          invoiceFilter.employee === 'all'
+            ? { contains: '%%' }
+            : { equals: invoiceFilter.employee },
+        location_name:
+          invoiceFilter.location === 'all'
+            ? { contains: '%%' }
+            : { equals: invoiceFilter.location },
+        date:
+          invoiceFilter.dateStart && invoiceFilter.dateEnd
+            ? { gte: invoiceFilter.dateStart, lte: invoiceFilter.dateEnd }
+            : {},
+        amount: invoiceFilter.type === 'outstanding_invoices' ? { gt: 0 } : {},
+        status:
+          invoiceFilter.type === 'paid_invoice'
+            ? { equals: 'paid' }
+            : { contains: '%%' },
+      },
+    },
+  })
+  const { data: allInvoice } = useQuery(GetFullInvoicesDocument, {
+    skip: !router.query.id,
+    variables: {
       id: Number.parseInt(`${router.query.id}`),
     },
   })
@@ -82,8 +136,6 @@ const Appointments = () => {
     GetInvoiceDocument,
     getsalesDetailsQueryVariables
   )
-
-  console.log('salesDetails', salesDetails)
 
   useEffect(() => {
     const items: ISalesItemProps[] = []
@@ -208,6 +260,12 @@ const Appointments = () => {
       data.invoices = invoices
       setData({
         ...data,
+        totalOutstanding: salesDetails
+          ? salesDetails?.invoice?.paid_amount
+          : invoice?.findManyInvDetail[0]?.amount ?? 0,
+        totalInvoiced: salesDetails
+          ? salesDetails?.invoice?.inv_total
+          : invoice?.findManyInvDetail[0]?.amount ?? 0,
         payments: financialPayments,
         items: financialItems,
         voidedPayments: financialVoidedPayments,
@@ -216,7 +274,6 @@ const Appointments = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoice, saleItems, totalVat])
-  console.log('invoices', data)
   const handlePagination = (take, skip) => {
     setPagination({
       take: take,
@@ -225,6 +282,15 @@ const Appointments = () => {
   }
   const handleExpandsionClick = (key) => {
     setSaleId(key)
+  }
+  const handleFilter = (type, employee, location, dateStart, dateEnd) => {
+    setInvoiceFilter({
+      type: type,
+      employee: employee,
+      location: location,
+      dateEnd: dateEnd,
+      dateStart: dateStart,
+    })
   }
 
   return (
@@ -245,11 +311,24 @@ const Appointments = () => {
       >
         <Invoices
           dataProps={data}
-          invoiceEmployeeOptions={invoiceEmployeeOptions}
-          locationOptions={locationOptions}
+          invoiceEmployeeOptions={
+            ([
+              ...new Set(
+                allInvoice?.findManyInvDetail?.map((item) => item.billers)
+              ),
+            ].filter((item) => !!item) as string[]) ?? []
+          }
+          locationOptions={
+            ([
+              ...new Set(
+                allInvoice?.findManyInvDetail?.map((item) => item.location_name)
+              ),
+            ].filter((item) => !!item) as string[]) ?? []
+          }
           onChangePagination={handlePagination}
           totalInoviceCount={totalInvoices?.aggregateInvDetail?.count?.id}
           onExpand={handleExpandsionClick}
+          onFilterSubmit={handleFilter}
         />
         <Payments {...data} />
         <Items

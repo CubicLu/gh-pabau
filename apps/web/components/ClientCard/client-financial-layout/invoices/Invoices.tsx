@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, ReactNode } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, Pagination, Avatar } from '@pabau/ui'
 import classNames from 'classnames'
@@ -7,6 +7,7 @@ import {
   ClientFinancialsLayoutProps,
   InvoiceProp,
 } from './../ClientFinancialsLayout'
+import { Formik } from 'formik'
 import { ReactComponent as CollapseIcon } from '../../../../assets/images/collapse-icon.svg'
 import styles from './Invoices.module.less'
 import {
@@ -24,24 +25,12 @@ import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
 import EditInvoice from './EditInvoice'
 import InvoiceFooter from './invoice-footer/InvoiceFooter'
 
-const getInvoiceFilterValues = () => {
-  return {
-    type: 'all',
-    employee: 'all',
-    location: 'all',
-    dateStart: '',
-    dateEnd: '',
-  }
-}
-
-interface InvoiceEmployeeOptionProp {
-  label: string
-  icon: ReactNode
-}
-
-export interface LocationOptionProp {
-  key: number
-  value: string
+export interface InitialFilterValue {
+  type: string
+  employee: string
+  location: string
+  dateStart: string
+  dateEnd: string
 }
 
 export interface ISalesItemProps {
@@ -57,10 +46,17 @@ export interface ISalesItemProps {
 
 interface P {
   dataProps: ClientFinancialsLayoutProps
-  invoiceEmployeeOptions: InvoiceEmployeeOptionProp[]
-  locationOptions: LocationOptionProp[]
+  invoiceEmployeeOptions: string[]
+  locationOptions: string[]
   onChangePagination?(take: number, skip: number): void
   onExpand?(id: number): void
+  onFilterSubmit?(
+    type: string,
+    employee: string,
+    location: string,
+    dateStart: string,
+    dateEnd: string
+  ): void
   totalInoviceCount: number
 }
 
@@ -71,6 +67,7 @@ export const Invoices: FC<P> = (props) => {
     invoiceEmployeeOptions,
     locationOptions,
     onChangePagination,
+    onFilterSubmit,
     onExpand,
   } = props
   const { totalInvoiced, totalOutstanding } = dataProps
@@ -90,35 +87,8 @@ export const Invoices: FC<P> = (props) => {
     currentPage: 1,
     showingRecords: 0,
   })
-  const [invoiceFilter, setInvoiceFilter] = useState(getInvoiceFilterValues())
-
-  const updateInvoiceFilter = (e) => {
-    let tempInvoices = dataProps.invoices
-
-    if (e.type !== 'all' && e.type !== '') {
-      tempInvoices = tempInvoices.filter((i) => i.status === e.type)
-    }
-
-    if (e.employee !== 'all' && e.employee !== '') {
-      tempInvoices = tempInvoices.filter((i) => i.employee === e.employee)
-    }
-
-    if (e.location !== 'all' && e.location !== '') {
-      tempInvoices = tempInvoices.filter((i) => i.location === e.location)
-    }
-
-    if (e.dateStart) {
-      tempInvoices = tempInvoices.filter((i) => {
-        const invDate = moment(i.date, 'DD/MM/YYYY')
-        const startDate = e.dateStart
-        const endDate = e.dateEnd
-        return invDate.isBetween(startDate, endDate)
-      })
-    }
-
-    setInvoices(tempInvoices)
-    setInvoiceFilter(e)
-  }
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [isClear, setIsClear] = useState(true)
 
   useEffect(() => {
     setInvoices(dataProps.invoices)
@@ -152,6 +122,10 @@ export const Invoices: FC<P> = (props) => {
   const onPressEditInvoice = (invoice) => {
     setShowEditInvoice(true)
     setSelectedInvoice(invoice)
+  }
+
+  const handleFilterMenu = () => {
+    setFilterOpen(!filterOpen)
   }
 
   const columns = [
@@ -314,7 +288,7 @@ export const Invoices: FC<P> = (props) => {
             <Title level={5}>{t('ui.client-card-financial.grand-total')}</Title>
             <Title level={4}>£{record?.grandTotal.toFixed(2)}</Title>
             {!record.paid && (
-              <Button onClick={() => console.log('Pay')} type="primary">{`${t(
+              <Button type="primary">{`${t(
                 'ui.client-card-financial.pay'
               )} £${record.grandTotal.toFixed(2)}`}</Button>
             )}
@@ -326,96 +300,135 @@ export const Invoices: FC<P> = (props) => {
 
   const filterContent = () => {
     return (
-      <div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.invoices')}</Text>
-          <div>
-            <Radio.Group
-              onChange={(e) =>
-                updateInvoiceFilter({ ...invoiceFilter, type: e.target.value })
-              }
-              value={invoiceFilter.type}
-            >
-              <Space direction="vertical">
-                <Radio value={'all'}>
-                  {t('ui.client-card-financial.invoices.all')}
-                </Radio>
-                <Radio value={'outstanding_invoices'}>
-                  {t('ui.client-card-financial.invoices.outstanding-invoices')}
-                </Radio>
-                <Radio value={'paid_invoice'}>
-                  {t('ui.client-card-financial.invoices.paid-invoice')}
-                </Radio>
-                <Radio value={'unsent_invoices'}>
-                  {t('ui.client-card-financial.invoices.unsent-invoices')}
-                </Radio>
-                <Radio value={'sent_invoices'}>
-                  {t('ui.client-card-financial.invoices.sent-invoices')}
-                </Radio>
-              </Space>
-            </Radio.Group>
-          </div>
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.employee')}</Text>
-          <Select
-            style={{ width: '100%' }}
-            onChange={(e) =>
-              updateInvoiceFilter({ ...invoiceFilter, employee: e })
-            }
-            defaultValue={invoiceFilter.employee}
-          >
-            <Option value="all">
-              {t('ui.client-card-financial.invoices.all')}
-            </Option>
-            {invoiceEmployeeOptions.map((e, i) => {
-              return (
-                <Option value={e.label} key={i}>
-                  {e.label}
-                </Option>
-              )
-            })}
-          </Select>
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.location')}</Text>
-          <Select
-            style={{ width: '100%' }}
-            onChange={(e) =>
-              updateInvoiceFilter({ ...invoiceFilter, location: e })
-            }
-            defaultValue={invoiceFilter.location}
-          >
-            <Option value="all">
-              {t('ui.client-card-financial.invoices.all')}
-            </Option>
-            {locationOptions.map((e, i) => {
-              return (
-                <Option value={e.value} key={i}>
-                  {e.value}
-                </Option>
-              )
-            })}
-          </Select>
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.invoices.date')}</Text>
-          <RangePicker
-            onChange={(e) =>
-              updateInvoiceFilter({
-                ...invoiceFilter,
-                dateStart: e[0],
-                dateEnd: e[1],
-              })
-            }
-          />
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Button onClick={() => updateInvoiceFilter(getInvoiceFilterValues())}>
-            {t('ui.client-card-financial.invoices.clear-all')}
-          </Button>
-        </div>
-      </div>
+      <Formik
+        initialValues={{
+          type: 'all',
+          employee: 'all',
+          location: 'all',
+          dateStart: '',
+          dateEnd: '',
+        }}
+        enableReinitialize={true}
+        onSubmit={(values) => {
+          setFilterOpen(false)
+          onFilterSubmit?.(
+            values.type,
+            values.employee,
+            values.location,
+            values.dateStart,
+            values.dateEnd
+          )
+        }}
+      >
+        {({ setFieldValue, values, resetForm, submitForm }) => {
+          return (
+            <div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.invoices')}</Text>
+                <div>
+                  <Radio.Group
+                    value={values.type}
+                    onChange={(e) => setFieldValue('type', e.target.value)}
+                  >
+                    <Space direction="vertical">
+                      <Radio value={'all'}>
+                        {t('ui.client-card-financial.invoices.all')}
+                      </Radio>
+                      <Radio value={'outstanding_invoices'}>
+                        {t(
+                          'ui.client-card-financial.invoices.outstanding-invoices'
+                        )}
+                      </Radio>
+                      <Radio value={'paid_invoice'}>
+                        {t('ui.client-card-financial.invoices.paid-invoice')}
+                      </Radio>
+                      <Radio value={'unsent_invoices'}>
+                        {t('ui.client-card-financial.invoices.unsent-invoices')}
+                      </Radio>
+                      <Radio value={'sent_invoices'}>
+                        {t('ui.client-card-financial.invoices.sent-invoices')}
+                      </Radio>
+                    </Space>
+                  </Radio.Group>
+                </div>
+              </div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.employee')}</Text>
+                <Select
+                  style={{ width: '100%' }}
+                  onChange={(e) => setFieldValue('employee', e)}
+                  value={values.employee}
+                >
+                  <Option value="all">
+                    {t('ui.client-card-financial.invoices.all')}
+                  </Option>
+                  {invoiceEmployeeOptions.map((e, i) => {
+                    return (
+                      <Option value={e} key={i}>
+                        {e}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.location')}</Text>
+                <Select
+                  style={{ width: '100%' }}
+                  onChange={(e) => setFieldValue('location', e)}
+                  value={values.location}
+                >
+                  <Option value="all">
+                    {t('ui.client-card-financial.invoices.all')}
+                  </Option>
+                  {locationOptions.map((e, i) => {
+                    return (
+                      <Option value={e} key={i}>
+                        {e}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.invoices.date')}</Text>
+                <RangePicker
+                  onChange={(e) => {
+                    setIsClear(false)
+                    setFieldValue('dateStart', e[0] ?? null)
+                    setFieldValue('dateEnd', e[1] ?? null)
+                  }}
+                  allowClear
+                  value={
+                    isClear
+                      ? null
+                      : [moment(values.dateStart), moment(values.dateEnd)]
+                  }
+                />
+              </div>
+              <div className={styles.buttons}>
+                <Button
+                  onClick={() => {
+                    setIsClear(true)
+                    resetForm()
+                    setFilterOpen(false)
+                  }}
+                >
+                  {t('ui.client-card-financial.invoices.clear-all')}
+                </Button>
+                <Button
+                  htmlType="submit"
+                  className={styles.applyButton}
+                  type={'primary'}
+                  onClick={() => submitForm()}
+                >
+                  {t('ui.client-card-financial.invoices.apply')}
+                </Button>
+              </div>
+            </div>
+          )
+        }}
+      </Formik>
     )
   }
 
@@ -434,8 +447,9 @@ export const Invoices: FC<P> = (props) => {
             title={t('ui.client-card-financial.invoices.filter-by')}
             placement="bottomRight"
             overlayClassName={styles.invoicesFilter}
+            visible={filterOpen}
           >
-            <div className={styles.filter}>
+            <div className={styles.filter} onClick={handleFilterMenu}>
               <FilterOutlined />
             </div>
           </Popover>
