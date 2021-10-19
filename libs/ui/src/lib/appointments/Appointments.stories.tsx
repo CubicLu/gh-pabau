@@ -1,11 +1,13 @@
 import React from 'react'
 import Appointments from './Appointments'
 import clientImg from '../../assets/images/appointment-client.png'
+import { appointmentData } from './mock'
 
 export default {
   component: Appointments,
   title: 'Appointments',
   args: {
+    date: '2021-10-22T12:10:28+05:30',
     appointments: [
       {
         time: '10:30',
@@ -19,53 +21,20 @@ export default {
       },
     ],
   },
-  argTypes: {},
+  argTypes: {
+    date: { control: { type: 'text' } },
+    appointments: {
+      control: { type: 'array' },
+    },
+  },
 }
 
-const AppointmentListStory = ({ ...args }) => <Appointments {...args} />
+const AppointmentListStory = ({ appointments, date }) => (
+  <Appointments date={date} appointments={appointments} />
+)
 
 export const AppointmentList = AppointmentListStory.bind({})
 AppointmentList.args = {
-  appointments: [
-    {
-      time: '10:30',
-      avatar: clientImg,
-      clientName: 'Sylvia Cole',
-      serviceName: 'Facial Reconstruction',
-      checkingStatus: 'Not Checked-in',
-      staffMember: 'Dr. Emilly Connor',
-      paymentStatus: 'Paid',
-      status: 'waiting',
-    },
-    {
-      time: '10:30',
-      avatar: clientImg,
-      clientName: 'Sylvia Cole',
-      serviceName: 'Facial Reconstruction',
-      checkingStatus: 'Not Checed-in',
-      staffMember: 'Dr. Emilly Connor',
-      paymentStatus: 'Paid',
-      status: 'In Progress',
-    },
-    {
-      time: '10:30',
-      avatar: clientImg,
-      clientName: 'Sylvia Cole',
-      serviceName: 'Facial Reconstruction',
-      checkingStatus: 'Not Checed-in',
-      staffMember: 'Dr. Emilly Connor',
-      paymentStatus: 'Paid',
-      status: 'Arrived',
-    },
-    {
-      time: '10:30',
-      avatar: clientImg,
-      clientName: 'Sylvia Cole',
-      serviceName: 'Facial Reconstruction',
-      checkingStatus: 'Not Checed-in',
-      staffMember: 'Dr. Emilly Connor',
-      paymentStatus: 'Paid',
-      status: 'Completed',
-    },
-  ],
+  date: '2021-10-22T12:10:28+05:30',
+  appointments: appointmentData,
 }

@@ -8,7 +8,6 @@ import { Avatar } from '@pabau/ui'
 import { UserOutlined } from '@ant-design/icons'
 import { ButtonLabel } from '@pabau/ui'
 import styles from './AppointmentItem.module.less'
-import classNames from 'classnames'
 
 export interface AppointmentItemP {
   time?: string
@@ -19,6 +18,8 @@ export interface AppointmentItemP {
   staffMember?: string
   paymentStatus: string
   status?: string
+  date?: string | Date
+  serviceColor?: string
 }
 
 export const AppointmentItem: FC<AppointmentItemP> = ({
@@ -30,26 +31,16 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
   staffMember,
   paymentStatus,
   status,
+  serviceColor,
 }) => {
-  const getDividerColor = () => {
-    if (status === 'waiting') {
-      return classNames(styles.divider, styles.waiting)
-    } else if (status === 'In Progress') {
-      return classNames(styles.divider, styles.inProgress)
-    } else if (status === 'Arrived') {
-      return classNames(styles.divider, styles.arrived)
-    } else if (status === 'Completed') {
-      return classNames(styles.divider, styles.completed)
-    } else {
-      return classNames(styles.divider)
-    }
-  }
-
   return (
     <div className={styles.appointmentItem}>
       <Row className={styles.content}>
         <Col lg={1} md={1}>
-          <div className={getDividerColor()}></div>
+          <div
+            style={{ background: serviceColor ? serviceColor : '' }}
+            className={styles.divider}
+          ></div>
         </Col>
         <Col lg={2} md={2}>
           <div className={styles.timeTextStyle}>
@@ -57,11 +48,9 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
           </div>
         </Col>
         <Col lg={7} md={7}>
-          <div className={styles.profileGrid}>
-            <div className={styles.profileGridItems}>
-              <Avatar size={52} src={avatar} />
-            </div>
-            <div className={styles.profileGridItems}>
+          <div className={styles.clientContainer}>
+            <Avatar size={52} src={avatar} />
+            <div className={styles.clientInfo}>
               <p>{clientName}</p>
               <span>{serviceName}</span>
               <div>{checkingStatus}</div>
@@ -76,7 +65,10 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
         </Col>
         <Col lg={4} md={4}>
           <div className={styles.statusLabel}>
-            <ButtonLabel type={'success'} text={paymentStatus} />
+            <ButtonLabel
+              type={paymentStatus === 'paid' ? 'success' : 'danger'}
+              text={paymentStatus}
+            />
           </div>
         </Col>
         <Col lg={4} md={4}>
