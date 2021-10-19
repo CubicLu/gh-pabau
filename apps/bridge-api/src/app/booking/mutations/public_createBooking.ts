@@ -57,7 +57,7 @@ export const public_createBooking = extendType({
         const insertData = []
         for (const s of input.data.service_ids) {
           const service = services.find((serv) => serv.id === s)
-          insertData.push({
+          const bookingData = {
             title: 'Online Booking',
             start_date: input.data.start_date,
             end_date: input.data.end_date,
@@ -76,8 +76,34 @@ export const public_createBooking = extendType({
             location_id: input.data.location_id,
             tips: 0,
             where: '',
-          })
+          }
+
+          insertData.push(bookingData)
         }
+        //   const res = await ctx.prisma.booking.create({
+        //     data: {
+        //       ...bookingData,
+        //       contact: {
+        //         connectOrCreate: {
+        //           where: {
+        //             email: 'nenad@pabau.com',
+        //             company_id: input.data.company_id,
+        //           },
+        //           create: {
+        //             email: 'nenadtest@pabau.com',
+        //             Fname: 'Nenad 2',
+        //             Lname: 'Autocreate',
+        //           },
+        //         },
+        //       },
+        //     },
+        //     include: {
+        //       Contact: true,
+        //     },
+        //   })
+        // }
+        //
+        // console.log('REsult Log', res)
 
         const res = await ctx.prisma.cmContact.update({
           where: { ID: input.contact.id },
@@ -88,7 +114,7 @@ export const public_createBooking = extendType({
           },
         })
 
-        console.log('REsult Log', res)
+        // console.log('REsult Log', res)
 
         return {
           success: true,
