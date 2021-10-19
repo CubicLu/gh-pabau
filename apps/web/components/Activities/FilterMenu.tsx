@@ -229,6 +229,9 @@ interface FilterMenuProps {
   userId: number
   disabled: boolean
   isEdit: boolean
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  pipelineData: OptionList[]
 }
 
 export const FilterMenu: FC<FilterMenuProps> = ({
@@ -240,6 +243,9 @@ export const FilterMenu: FC<FilterMenuProps> = ({
   userId,
   disabled,
   isEdit,
+  leadSourceData,
+  leadStageData,
+  pipelineData,
 }) => {
   const { t } = useTranslationI18()
   const [userList, setUserList] = useState<PersonList[]>([])
@@ -248,7 +254,9 @@ export const FilterMenu: FC<FilterMenuProps> = ({
   const [clientOption, setClientOption] = useState([])
   const [clientLoading, setClientLoading] = useState(false)
 
-  const { statusMenu, freeBusyOption, doneOption } = getData(t)
+  const { statusMenu, freeBusyOption, doneOption, leadStatusOption } = getData(
+    t
+  )
   const [fetchLead, { data, loading }] = useFindManyLeadsLazyQuery()
   const [
     fetchContact,
@@ -316,7 +324,15 @@ export const FilterMenu: FC<FilterMenuProps> = ({
 
   const renderMenu = () => {
     switch (columnName) {
-      case 'Add time': {
+      case 'Add time':
+      case 'Lead created date':
+      case 'Won time':
+      case 'Lead closed on':
+      case 'First activity time':
+      case 'Lead last activity date':
+      case 'Lead lost time':
+      case 'Date of entering stage':
+      case 'Update time': {
         return (
           <DateMenu
             value={value}
@@ -327,7 +343,11 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         )
         break
       }
-      case 'Assigned to user': {
+      case 'Assigned to user':
+      case 'Creator':
+      case 'Lead owner':
+      case 'Won by':
+      case 'Lead creator': {
         return (
           <SelectMenu
             optionList={userList}
@@ -354,18 +374,8 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         )
         break
       }
-      case 'Creator': {
-        return (
-          <SelectMenu
-            optionList={userList}
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-          />
-        )
-        break
-      }
-      case 'Lead name': {
+      case 'Lead name':
+      case 'Title': {
         return (
           <ClientLeadMenu
             name="lead"
@@ -403,7 +413,15 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         )
         break
       }
-      case 'Subject': {
+      case 'Subject':
+      case 'Lead email':
+      case 'Lead phone':
+      case 'Lead done activities':
+      case 'Lead last activity (days)':
+      case 'Lead lost reason':
+      case 'Lead total activities':
+      case 'Lead descriptions':
+      case 'Activities to do': {
         return (
           <SubjectMenu value={value} onChange={onChange} disabled={disabled} />
         )
@@ -437,6 +455,53 @@ export const FilterMenu: FC<FilterMenuProps> = ({
             optionList={statusMenu}
             defaultValue={'Pending'}
             value={value === '' ? undefined : value}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )
+        break
+      }
+      case 'Lead source': {
+        return (
+          <SelectMenu
+            optionList={leadSourceData}
+            defaultValue={'Pending'}
+            value={value === '' ? undefined : value}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )
+        break
+      }
+      case 'Lead stage': {
+        return (
+          <SelectMenu
+            optionList={leadStageData}
+            defaultValue={'Pending'}
+            value={value === '' ? undefined : value}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )
+        break
+      }
+      case 'Pipeline': {
+        return (
+          <SelectMenu
+            optionList={pipelineData}
+            defaultValue={'Pending'}
+            value={value === '' ? undefined : value}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )
+        break
+      }
+      case 'Lead status': {
+        return (
+          <ToggleMenu
+            options={leadStatusOption}
+            value={value}
             onChange={onChange}
             disabled={disabled}
           />

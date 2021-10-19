@@ -34,6 +34,9 @@ import {
   useActivityUserListQuery,
   useFindManyActivityDataQuery,
   useFindFirstActivityUserStateQuery,
+  useGetMarketingSourcesQuery,
+  useGetLeadStatusQuery,
+  useRetrievePipelineQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
@@ -237,6 +240,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
     setFilterDataObject,
   ] = useState<FilterDataObjectType>()
   const [userColumns, setUserColumns] = useState<string[]>([])
+  const [leadSourceData, setLeadSourceData] = useState<OptionList[]>([])
+  const [leadStageData, setLeadStageData] = useState<OptionList[]>([])
+  const [pipelineData, setPipelineData] = useState<OptionList[]>([])
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
@@ -314,6 +320,50 @@ export const Index: FC<IndexProps> = ({ client }) => {
     data: activityResponse,
     loading: activityDataLoading,
   } = useFindManyActivityDataQuery(getQueryVariables)
+
+  const { data: leadSourceResponse } = useGetMarketingSourcesQuery()
+  const { data: leadStatusResponse } = useGetLeadStatusQuery()
+  const { data: pipelineResponse } = useRetrievePipelineQuery()
+
+  useEffect(() => {
+    if (leadSourceResponse?.findManyMarketingSource) {
+      const records = [...leadSourceResponse.findManyMarketingSource]?.map(
+        (item) => {
+          return {
+            id: item.id,
+            name: item.name,
+          }
+        }
+      )
+      setLeadSourceData(records)
+    }
+  }, [leadSourceResponse])
+
+  useEffect(() => {
+    if (leadStatusResponse?.findManyLeadStatus) {
+      const records = [...leadStatusResponse.findManyLeadStatus]?.map(
+        (item) => {
+          return {
+            id: item.id,
+            name: item.status_name,
+          }
+        }
+      )
+      setLeadStageData(records)
+    }
+  }, [leadStatusResponse])
+
+  useEffect(() => {
+    if (pipelineResponse?.findManyPipeline) {
+      const records = [...pipelineResponse.findManyPipeline]?.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setPipelineData(records)
+    }
+  }, [pipelineResponse])
 
   useEffect(() => {
     const response = activityResponse?.findManyActivityData
@@ -1148,6 +1198,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setFilterDataObject={setFilterDataObject}
             userColumns={userColumns}
             setUserActiveColumn={setUserActiveColumn}
+            leadSourceData={leadSourceData}
+            leadStageData={leadStageData}
+            pipelineData={pipelineData}
           />
         )}
         <div>
@@ -1209,6 +1262,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setFilterDataObject={setFilterDataObject}
             userColumns={userColumns}
             setUserActiveColumn={setUserActiveColumn}
+            leadSourceData={leadSourceData}
+            leadStageData={leadStageData}
+            pipelineData={pipelineData}
           />
         )}
         {/* <div className={styles.subHeader}>

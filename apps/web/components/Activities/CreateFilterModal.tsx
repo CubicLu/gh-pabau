@@ -95,6 +95,9 @@ interface FilterMenuProps {
   loggedUser: Partial<AuthenticatedUser> & JwtUser
   isEdit: boolean
   t: TFunction<'common'>
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  pipelineData: OptionList[]
 }
 
 interface CreateFilterModalProps {
@@ -118,6 +121,9 @@ interface CreateFilterModalProps {
       | ((preValue: FilterOptionItemType[]) => FilterOptionItemType[])
   ) => void
   data?: InitialValueTypes
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  pipelineData: OptionList[]
 }
 const defaultValue: InitialValueTypes = {
   name: '',
@@ -141,8 +147,13 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
   isFilterOwner,
   isEdit,
   t,
+  leadSourceData,
+  leadStageData,
+  pipelineData,
 }) => {
-  const { activityItemNames, manageOperandBasedOnColumn, activity } = getData(t)
+  const { manageOperandBasedOnColumn, activity, activityTypeMapper } = getData(
+    t
+  )
   const activityItemChange = (
     value: string | number | LabeledValue,
     index: number,
@@ -153,23 +164,65 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
     if (key === 'filterColumn') {
       data[index].operand = 'is'
       data[index].menuOption = ''
-      if (value === 'Assigned to user' || value === 'Creator') {
-        data[index].menuOption = loggedUser?.user?.toString()
+      switch (value) {
+        case 'Assigned to user':
+        case 'Creator':
+        case 'Lead owner':
+        case 'Won by':
+        case 'Lead creator': {
+          data[index].menuOption = loggedUser?.user?.toString()
+          break
+        }
+        case 'Done': {
+          data[index].menuOption = 'To do'
+          break
+        }
+        case 'Free/busy':
+        case 'Type': {
+          data[index].menuOption = '1'
+          break
+        }
+        case 'Status': {
+          data[index].menuOption = 'Pending'
+          break
+        }
+        case 'Lead source': {
+          data[index].menuOption = leadSourceData?.[0]?.id?.toString()
+          break
+        }
+        case 'Lead stage': {
+          data[index].menuOption = leadStageData?.[0]?.id?.toString()
+          break
+        }
+        case 'Lead status': {
+          data[index].menuOption = 'Open'
+          break
+        }
+        case 'Add time':
+        case 'Due date':
+        case 'Lead created date':
+        case 'Won time':
+        case 'Lead closed on':
+        case 'First activity time':
+        case 'Lead last activity date':
+        case 'Lead lost time':
+        case 'Date of entering stage':
+        case 'Update time': {
+          data[index].menuOption = 'last quarter'
+          break
+        }
+        case 'Pipeline': {
+          data[index].menuOption = pipelineData?.[0]?.id?.toString()
+          break
+        }
       }
-      if (value === 'Done') {
-        data[index].menuOption = 'To do'
+    } else if (key === 'type') {
+      if (value === 'Activity') {
+        data[index]['filterColumn'] = 'Add time'
       }
-      if (value === 'Free/busy') {
-        data[index].menuOption = '1'
-      }
-      if (value === 'Status') {
-        data[index].menuOption = 'Pending'
-      }
-      if (value === 'Type') {
-        data[index].menuOption = '1'
-      }
-      if (value === 'Add time' || value === 'Due date') {
-        data[index].menuOption = 'last quarter'
+      if (value === 'Lead') {
+        data[index]['filterColumn'] = 'Lead name'
+        data[index].menuOption = ''
       }
     }
     setFieldValue(fieldName, data)
@@ -187,19 +240,21 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             defaultValue={'Activity'}
             dropdownItems={activity}
             value={item.type}
+            onSelect={(value) => activityItemChange(value, index, 'type')}
             disabled={!isFilterOwner}
           />
           <DropdownWithCheck
             dropdownClassName={styles.filterColumnWrap}
             defaultValue={'Add time'}
             value={item.filterColumn}
+            defaultActiveFirstOption
             onSelect={(value) =>
               activityItemChange(value, index, 'filterColumn')
             }
             showSearch
             filterOption={true}
             disabled={!isFilterOwner}
-            dropdownItems={activityItemNames}
+            dropdownItems={activityTypeMapper[item.type]}
           />
           <DropdownWithCheck
             defaultValue={'is'}
@@ -228,6 +283,9 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
                 userId={loggedUser.user}
                 disabled={!isFilterOwner}
                 isEdit={isEdit}
+                leadSourceData={leadSourceData}
+                leadStageData={leadStageData}
+                pipelineData={pipelineData}
               />
             )}
           </div>
@@ -263,6 +321,9 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   setFilterDataObject,
   setFilterGroupValue,
   setFilterOption,
+  leadSourceData,
+  leadStageData,
+  pipelineData,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
   const [initialValue, setInitialValue] = useState<InitialValueTypes>(
@@ -626,6 +687,9 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 isFilterOwner={values.isFilterOwner}
                 isEdit={!!values.id}
                 t={t}
+                leadSourceData={leadSourceData}
+                leadStageData={leadStageData}
+                pipelineData={pipelineData}
               />
               <Button
                 className={classNames(
@@ -654,6 +718,9 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 isFilterOwner={values.isFilterOwner}
                 isEdit={!!values.id}
                 t={t}
+                leadSourceData={leadSourceData}
+                leadStageData={leadStageData}
+                pipelineData={pipelineData}
               />
               <Button
                 className={classNames(

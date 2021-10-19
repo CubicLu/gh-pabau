@@ -115,7 +115,7 @@ query findManyActivityData(
         phone: Phone
         description: Description
         createdDate: CreatedDate
-        wonTime: ConvertDate
+        wonTime
         owner: User {
           full_name
         }
@@ -313,5 +313,17 @@ query findLeadName($leadID: Int!) {
 mutation deleteManyActivity($ids: [Int]!) {
   deleteManyActivity(where: {ids: $ids}) {
     affected_rows
+  }
+}
+
+query retrievePipeline {
+  findManyPipeline(where: {
+    status: {equals: 1}
+  },
+  orderBy: {
+    name: asc
+  }) {
+    id
+    name
   }
 }
