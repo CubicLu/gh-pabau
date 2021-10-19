@@ -73,7 +73,7 @@ const ConnectHeader = (): JSX.Element => {
 
   const handleLogOut = () => {
     localStorage.removeItem('token')
-    setLoggedInUser(null)
+    //setLoggedInUser(null)
     router.push('/')
   }
 

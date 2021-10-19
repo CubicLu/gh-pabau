@@ -12,10 +12,10 @@ export const PBInput = inputObjectType({
   },
 })
 
-export const Public_Bookings = extendType({
+export const Public_BookedAppointments = extendType({
   type: 'Query',
   definition(t) {
-    t.list.field('Public_Bookings', {
+    t.list.field('Public_BookedAppointments', {
       type: PublicBookingResponse,
       description: 'Get bookings with public data',
       args: {

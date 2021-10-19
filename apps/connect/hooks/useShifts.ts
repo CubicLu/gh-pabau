@@ -91,7 +91,7 @@ export default function useShifts(shiftsResult, bookingsResult) {
       )
 
       let allGood = true
-      for (const b of bookingsResult.Public_Bookings?.filter(
+      for (const b of bookingsResult.Public_BookedAppointments?.filter(
         (b) =>
           b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
       )) {

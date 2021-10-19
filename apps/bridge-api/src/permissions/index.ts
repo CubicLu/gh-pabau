@@ -115,7 +115,7 @@ export const permissions = shield(
       deleteManyActivity: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
-      public_createBooking: allow,
+      public_createOnlineBooking: allow,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -232,7 +232,7 @@ export const permissions = shield(
       // Connect Public
       findFirstCompany: allow,
       Public_MasterCategories: allow,
-      Public_Bookings: allow,
+      Public_BookedAppointments: allow,
       Public_Locations: allow,
       Public_ServiceCategories: allow,
       Public_StaffShifts: allow,

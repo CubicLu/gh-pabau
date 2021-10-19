@@ -4,7 +4,7 @@ query getBookingsBetweenDatesByUID(
   $company_id: Int!
   $user_id: Int
 ) {
-  Public_Bookings(
+  Public_BookedAppointments(
     where: {
       start_date: $start_date
       end_date: $end_date
