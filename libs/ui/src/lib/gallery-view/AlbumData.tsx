@@ -18,6 +18,7 @@ import {
   MoreOutlined,
 } from '@ant-design/icons'
 import { Pagination } from '@pabau/ui'
+import { ColumnsType } from 'antd/es/table'
 import { Table, Drawer, Popover, Skeleton, Button, Card, Modal } from 'antd'
 import { Checkbox } from '../checkbox/Checkbox'
 import classNames from 'classnames'
@@ -30,8 +31,19 @@ import dayjs from 'dayjs'
 
 const ImageItem = ({ origin, ...props }) => {
   const [source, setSource] = useState('')
+  const [src, setSrc] = useState('')
+
   useEffect(() => {
+    if (src !== origin) {
+      setSource('')
+    }
     if (source === '' && origin !== '') {
+      let path = origin
+      if (origin.includes('photos/')) {
+        const pathArr = origin.split('photos/')
+        pathArr[1] = `thumb_${pathArr[1]}`
+        path = pathArr.join('photos/')
+      }
       const img = new Image()
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
@@ -51,14 +63,16 @@ const ImageItem = ({ origin, ...props }) => {
           img.width,
           img.height
         )
+        setSrc(origin)
         setSource(canvas.toDataURL())
       })
       img.addEventListener('error', () => {
         setSource('load-error')
       })
-      img.src = origin
+      img.src = path
     }
-  }, [origin, source])
+  }, [origin, source, src])
+
   return source ? (
     <img src={source} alt="content" {...props} />
   ) : (
@@ -79,9 +93,14 @@ export interface ImageProps {
 export interface AlbumProps {
   album: AlbumProps[]
   id: number
+  modifiedDate: string
   albumTitle: string
   imageCount: number
   albumImage: Array<ImageProps>
+}
+
+interface DataSourceType {
+  [key: string]: string | number
 }
 
 export interface AlbumDataProps {
@@ -101,18 +120,16 @@ export interface AlbumDataProps {
   dragAlbum: (e) => void
   handleDownload: () => void
   imgDownload: (img) => void
-  handleAlbumDelete: (album) => void
   listView: boolean
   setCurrentData: (e) => void
-  loadMorePhotos?: (albumId: number, page?: number) => void
-  gridLoading?: boolean
-  gridImagesLimit: number
-  tableLoading?: boolean
-  currentTablePage?: number
-  tablePageSize?: number
-  onPageChange?: (page: number) => void
-  tableImages?: ImageProps[]
-  pageSizeChange?: (size: number) => void
+  paginateData: {
+    pageSize: number
+    onPageChange: (page: number) => void
+    onPageSizeChange: (size: number) => void
+    currentPage: number
+  }
+  onAlbumRename?: (id: number) => void
+  onAlbumDelete: (id: number) => void
 }
 
 export const AlbumData: FC<AlbumDataProps> = ({
@@ -120,7 +137,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
   onFolderClick,
   selectedImage,
   handleOnChange,
-  loading,
+  loading = true,
   setSelectedImage,
   showMenu,
   openDeleteModal,
@@ -132,23 +149,14 @@ export const AlbumData: FC<AlbumDataProps> = ({
   handleDownload,
   imgDownload,
   dragAlbum,
-  handleAlbumDelete,
+  onAlbumDelete,
   listView,
   setCurrentData,
-  loadMorePhotos,
-  gridLoading = false,
-  tableLoading = false,
-  gridImagesLimit,
-  currentTablePage = 1,
-  tablePageSize = 20,
-  onPageChange,
-  tableImages = [],
-  pageSizeChange,
+  paginateData,
+  onAlbumRename,
 }) => {
-  const imagesDivRef = useRef<HTMLDivElement>(null)
-
-  const isMobile = useMedia('(max-width: 767px)', false)
   const { t } = useTranslation('common')
+  const isMobile = useMedia('(max-width: 767px)', false)
   const [dotMenuDrawer, setDotMenuDrawer] = useState(false)
   const [menuDrawer, setMenuDrawer] = useState(false)
   const [moveAlbum, setMoveAlbum] = useState(false)
@@ -166,7 +174,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
         temp.push({
           name: [albumData, index],
           files: [calculateAlbumLength(albumData), index],
-          lastModified: [dayjs().format('DD.MM.YYYY') as string, index],
+          lastModified: dayjs(albumData.modifiedDate).format(
+            'DD.MM.YYYY'
+          ) as string,
         } as never)
       )
       setListAlbumData(temp)
@@ -176,23 +186,62 @@ export const AlbumData: FC<AlbumDataProps> = ({
   useEffect(() => {
     const temp = []
     if (listView) {
-      console.log('T:', tableImages)
-      tableImages?.map((x, index) =>
+      data.albumImage?.map((x, index) =>
         temp.push({
           name: [x, index],
           owner: 'me',
-          lastModified: [dayjs().format('DD.MM.YYYY') as string, index],
+          lastModified: dayjs(new Date((x?.date || 0) * 1000 || '')).format(
+            'DD.MM.YYYY'
+          ) as string,
         } as never)
       )
       setAlbumImageList(temp)
     }
-  }, [tableImages, listView, selectedImage])
+  }, [data.albumImage, listView, selectedImage])
 
-  useEffect(() => {
-    if (imagesDivRef?.current) {
-      imagesDivRef.current.scrollTop = 0
-    }
-  }, [listView])
+  const handleAlbumDownload = (albumImage) => {
+    albumImage.map((img) => {
+      return imgDownload(img)
+    })
+  }
+
+  const AlbumDotMenu = ({ album }) => (
+    <div className={styles.menuContentMobileBody}>
+      <div className={styles.menuContentList}>
+        <div
+          className={styles.menuItem}
+          onClick={() => {
+            handleAlbumDownload(album.albumImage)
+          }}
+        >
+          <DownloadOutlined />
+          &nbsp;&nbsp;&nbsp;{t('galley.list.album.download.button')}
+        </div>
+        <div
+          className={styles.menuItem}
+          onClick={() => onAlbumRename?.(album?.id)}
+        >
+          <EditOutlined />
+          &nbsp;&nbsp;&nbsp;
+          {t('galley.list.album.rename.button')}
+        </div>
+        <div className={styles.menuItem}>
+          <ShareAltOutlined />
+          &nbsp;&nbsp;&nbsp;
+          {t('galley.list.album.share.button')}
+        </div>
+        <div
+          className={styles.menuItem}
+          onClick={() => {
+            onAlbumDelete(album?.id)
+          }}
+        >
+          <DeleteOutlined />
+          &nbsp;&nbsp;&nbsp;{t('galley.list.album.delete.button')}
+        </div>
+      </div>
+    </div>
+  )
 
   const listAlbumColumns = [
     {
@@ -227,7 +276,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
       title: t('galley.list.view.photo.last.modified'),
       dataIndex: 'lastModified',
       render: function renderTableSource(value) {
-        return value[0]
+        return value
       },
     },
     {
@@ -239,7 +288,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
         return !isMobile ? (
           <Popover
             placement="left"
-            content={albumDotMenu(record.name[0])}
+            content={<AlbumDotMenu album={record.name[0]} />}
             trigger="click"
           >
             <Button
@@ -265,7 +314,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             >
               <div className={styles.mobileHeader}>
                 <div className={styles.handler} />
-                {albumDotMenu(record.name[0])}
+                <AlbumDotMenu album={record.name[0]} />
               </div>
             </Drawer>
           </>
@@ -279,17 +328,18 @@ export const AlbumData: FC<AlbumDataProps> = ({
       dataIndex: 'name',
       visible: true,
       width: '50%',
+      skeletonWidth: '50%',
       render: function renderTableSource(value) {
-        const filename = value[0] ? value[0].img.split('/') : []
+        const filename = value?.[0] ? value?.[0]?.img.split('/') : []
         return (
           <div className={styles.folderContentFirst}>
             <Checkbox
-              checked={selectedImage.includes(value[0] as never)}
-              onChange={(e) => handleOnChange(e.target.checked, value[0])}
+              checked={selectedImage.includes(value?.[0] as never)}
+              onChange={(e) => handleOnChange(e.target.checked, value?.[0])}
             >
               <Card bordered={false}>
                 <ImageItem
-                  origin={value[0].img}
+                  origin={value?.[0]?.img || ''}
                   alt={'none'}
                   className={styles.tableImage}
                 />
@@ -304,12 +354,14 @@ export const AlbumData: FC<AlbumDataProps> = ({
     },
     {
       width: '15%',
+      skeletonWidth: '15%',
       visible: true,
       title: t('galley.list.menu.Owner.album'),
       dataIndex: 'owner',
     },
     {
       width: '25%',
+      skeletonWidth: '25%',
       visible: true,
       title: t('galley.list.view.photo.last.modified'),
       dataIndex: 'lastModified',
@@ -319,14 +371,14 @@ export const AlbumData: FC<AlbumDataProps> = ({
       title: '',
       key: 'action',
       width: '10%',
+      skeletonWidth: '10%',
       render: function renderTableSource(text, record) {
         return !isMobile ? (
           <Popover
             placement="left"
-            content={() => dotButtonMenu(record.name[0].img)}
+            content={() => <DotButtonMenu img={record?.name?.[0]?.img} />}
             trigger="click"
             className={styles.imageDotButton}
-            style={{ backgroundColor: 'red' }}
           >
             <Button
               className={styles.btnCircle}
@@ -351,7 +403,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             >
               <div className={styles.mobileHeader}>
                 <div className={styles.handler} />
-                {dotButtonMenu(record.name[0])}
+                <DotButtonMenu img={record.name[0]} />
               </div>
             </Drawer>
           </>
@@ -360,12 +412,11 @@ export const AlbumData: FC<AlbumDataProps> = ({
     },
   ]
 
-  const dotButtonMenu = (img) => (
+  const DotButtonMenu = ({ img }) => (
     <div className={styles.menuContentMobileBody}>
       <div className={styles.menuContentList}>
         <div
           className={styles.menuItem}
-          style={{ borderBottom: '1px solid #ECEDF0' }}
           onClick={() => {
             selectedImage.push(img as never)
             setSelectedImage([...selectedImage])
@@ -376,7 +427,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
           &nbsp;&nbsp;&nbsp;{t('galley.list.album.download.button')}
         </div>
         <div className={styles.menuItem}>
-          <PictureOutlined style={{ color: '#9292A3' }} />
+          <PictureOutlined />
           &nbsp;&nbsp;&nbsp;
           {t('galley.list.album.add.album.button')}
           <div className={styles.leftItem}>
@@ -384,17 +435,17 @@ export const AlbumData: FC<AlbumDataProps> = ({
           </div>
         </div>
         <div className={styles.menuItem}>
-          <CalendarOutlined style={{ color: '#9292A3' }} />
+          <CalendarOutlined />
           &nbsp;&nbsp;&nbsp;
           {t('galley.list.album.change.date.button')}
         </div>
         <div className={styles.menuItem}>
-          <EditOutlined style={{ color: '#9292A3' }} />
+          <EditOutlined />
           &nbsp;&nbsp;&nbsp;
           {t('galley.list.album.rename.button')}
         </div>
         <div className={styles.menuItem}>
-          <ShareAltOutlined style={{ color: '#9292A3' }} />
+          <ShareAltOutlined />
           &nbsp;&nbsp;&nbsp;
           {t('galley.list.album.share.button')}
         </div>
@@ -408,7 +459,6 @@ export const AlbumData: FC<AlbumDataProps> = ({
             setPhotoDeleteModal((e) => !e)
             setAlbumImage(img)
           }}
-          style={{ color: 'red' }}
         >
           <DeleteOutlined />
           &nbsp;&nbsp;&nbsp;{t('galley.list.album.delete.button')}
@@ -417,47 +467,6 @@ export const AlbumData: FC<AlbumDataProps> = ({
     </div>
   )
 
-  const handleAlbumDownload = (albumImage) => {
-    albumImage.map((img) => {
-      return imgDownload(img)
-    })
-  }
-  const albumDotMenu = (albums) => (
-    <div className={styles.menuContentMobileBody}>
-      <div className={styles.menuContentList}>
-        <div
-          className={styles.menuItem}
-          style={{ borderBottom: '1px solid #ECEDF0' }}
-          onClick={() => {
-            handleAlbumDownload(albums.albumImage)
-          }}
-        >
-          <DownloadOutlined />
-          &nbsp;&nbsp;&nbsp;{t('galley.list.album.download.button')}
-        </div>
-        <div className={styles.menuItem}>
-          <EditOutlined style={{ color: '#9292A3' }} />
-          &nbsp;&nbsp;&nbsp;
-          {t('galley.list.album.rename.button')}
-        </div>
-        <div className={styles.menuItem}>
-          <ShareAltOutlined style={{ color: '#9292A3' }} />
-          &nbsp;&nbsp;&nbsp;
-          {t('galley.list.album.share.button')}
-        </div>
-        <div
-          className={styles.menuItem}
-          onClick={() => {
-            handleAlbumDelete(albums)
-          }}
-          style={{ color: 'red' }}
-        >
-          <DeleteOutlined />
-          &nbsp;&nbsp;&nbsp;{t('galley.list.album.delete.button')}
-        </div>
-      </div>
-    </div>
-  )
   const handleDrawerContent = () => {
     setMoveAlbum((e) => !e)
   }
@@ -511,6 +520,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
     currentAlbum.album?.length > 0 && checkLength(currentAlbum.album)
     return albumImageLen
   }
+
   const handleDelete = () => {
     const temp = { ...data }
     temp.albumImage.map((x, i) => {
@@ -524,17 +534,13 @@ export const AlbumData: FC<AlbumDataProps> = ({
     setPhotoDeleteModal(false)
   }
 
-  const imageMenuDrawer = () => (
+  const ImageMenuDrawer = () => (
     <div className={styles.menuContentMobileHeader}>
       <div className={styles.handler} />
       {!moveAlbum ? (
         <div className={styles.menuContentMobileBody}>
           <div className={styles.menuContentList}>
-            <div
-              className={styles.menuItem}
-              style={{ borderBottom: '1px solid #ECEDF0' }}
-              onClick={() => handleDownload()}
-            >
+            <div className={styles.menuItem} onClick={() => handleDownload()}>
               <DownloadOutlined />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.download.button')}
               {`(${selectedImage.length})`}
@@ -570,7 +576,6 @@ export const AlbumData: FC<AlbumDataProps> = ({
               onClick={() => {
                 setOpenDeleteModal(!openDeleteModal)
               }}
-              style={{ color: 'red' }}
             >
               <DeleteOutlined />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.delete.button')}{' '}
@@ -581,7 +586,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
       ) : (
         <>
           <div className={styles.title}>
-            <span style={{ color: '#9292A3' }}>
+            <span>
               <LeftOutlined onClick={() => handleDrawerContent()} />
             </span>
             <h3>
@@ -615,7 +620,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
     </div>
   )
 
-  const albumMenuDrawer = (x) => (
+  const AlbumMenuDrawer = ({ data }) => (
     <Drawer
       placement={'bottom'}
       closable={false}
@@ -625,283 +630,206 @@ export const AlbumData: FC<AlbumDataProps> = ({
     >
       <div className={styles.menuContentMobileHeader}>
         <div className={styles.handler} />
-        {albumDotMenu(x)}
+        <AlbumDotMenu album={data} />
       </div>
     </Drawer>
   )
 
-  const handleScroll = (e) => {
-    const bottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight
-    if (bottom && !listView && data?.albumImage?.length < data?.imageCount) {
-      loadMorePhotos?.(data?.id)
+  const LoadingTable = ({ columns }) => {
+    const cColumns: ColumnsType = []
+    const dataSource: DataSourceType[] = []
+    for (const key of columns) {
+      const { visible = true } = key
+      if (visible) {
+        cColumns.push({
+          ...key,
+          render: function render() {
+            const width = key.skeletonWidth ?? '200px'
+            return (
+              <div className={styles.columnLoader} style={{ width: width }}>
+                <Skeleton.Input active={true} size="small" />
+              </div>
+            )
+          },
+        })
+      }
     }
+    for (let i = 0; i < (paginateData?.pageSize || 10); i = i + 1) {
+      let data
+      for (const key of columns) {
+        data = { ...data, id: i, key: i, [key.dataIndex]: '' }
+      }
+      dataSource.push(data)
+    }
+    return (
+      <Table
+        dataSource={dataSource}
+        columns={cColumns}
+        rowKey="key"
+        pagination={false}
+        className={styles.dragTable}
+      />
+    )
   }
 
   return (
-    <div>
-      {!listView && (
-        <div className={styles.galleryImgBox}>
-          <div className={styles.galleryWrap}>
-            <div
-              className={classNames(styles.albumImagesDiv, styles.scrollDiv)}
-              onScroll={handleScroll}
-              ref={imagesDivRef}
-            >
-              {data.album?.map((x, i) => (
-                <>
-                  <div style={{ minWidth: '170px', marginTop: '24px' }} key={i}>
-                    <div
-                      className={styles.albumContainer}
-                      id={x.albumTitle}
-                      onDrop={(ev) => drop(ev)}
-                      onDragOver={(ev) => allowDrop(ev)}
-                    >
-                      <div className={styles.checkWrapper}>
-                        {!isMobile ? (
-                          <Popover
-                            placement="bottomRight"
-                            content={() => albumDotMenu(x)}
-                            trigger="click"
-                            className={styles.imageDotButton}
-                            style={{ backgroundColor: 'red' }}
-                          >
-                            <div className={styles.dotBtn}>
-                              <Dot />
-                            </div>
-                          </Popover>
-                        ) : (
-                          <div
-                            className={styles.dotBtn}
-                            onClick={() => setAlbumDotMenuDrawer(true)}
-                          >
-                            <Dot />
-                          </div>
-                        )}
-                      </div>
-                      <div
-                        className={styles.gridContainer}
-                        onClick={() => onFolderClick(i)}
-                        onDragStart={(event) => dragAlbum(event)}
-                        draggable={true}
-                        id={x.albumTitle}
+    <>
+      <div
+        className={classNames(
+          styles.galleryImgBox,
+          listView && styles.displayNone
+        )}
+      >
+        <div className={styles.galleryWrap}>
+          <div className={styles.albumImagesDiv}>
+            {data.album?.map((x, i) => (
+              <div key={i}>
+                <div
+                  className={styles.albumContainer}
+                  id={x.albumTitle}
+                  onDrop={(ev) => drop(ev)}
+                  onDragOver={(ev) => allowDrop(ev)}
+                >
+                  <div className={styles.checkWrapper}>
+                    {!isMobile ? (
+                      <Popover
+                        placement="bottomRight"
+                        content={() => <AlbumDotMenu album={x} />}
+                        trigger="click"
+                        className={styles.imageDotButton}
                       >
-                        {showAlbumImages(x)}
+                        <div className={styles.dotBtn}>
+                          <Dot />
+                        </div>
+                      </Popover>
+                    ) : (
+                      <div
+                        className={styles.dotBtn}
+                        onClick={() => setAlbumDotMenuDrawer(true)}
+                      >
+                        <Dot />
                       </div>
-                    </div>
-                    <div className={styles.albumInfo}>
-                      <h2 className={styles.albumTitle}>{x.albumTitle}</h2>
-                      <span className={styles.albumCount}>
-                        {calculateAlbumLength(x) as number}
-                      </span>
-                    </div>
+                    )}
                   </div>
-                  {albumMenuDrawer(x)}
-                  {/*<Drawer*/}
-                  {/*  placement={'bottom'}*/}
-                  {/*  closable={false}*/}
-                  {/*  onClose={() => setAlbumDotMenuDrawer((e) => !e)}*/}
-                  {/*  visible={albumDotMenuDrawer}*/}
-                  {/*  className={styles.menuContentMobile}*/}
-                  {/*>*/}
-                  {/*  <div className={styles.menuContentMobileHeader}>*/}
-                  {/*    <div className={styles.handler} />*/}
-                  {/*    {albumDotMenu(x)}*/}
-                  {/*  </div>*/}
-                  {/*</Drawer>*/}
-                </>
-              ))}
+                  <div
+                    className={styles.gridContainer}
+                    onClick={() => onFolderClick(i)}
+                    onDragStart={(event) => dragAlbum(event)}
+                    draggable={true}
+                    id={x.albumTitle}
+                  >
+                    {showAlbumImages(x)}
+                  </div>
+                </div>
+                <div className={styles.albumInfo}>
+                  <h2 className={styles.albumTitle}>{x.albumTitle}</h2>
+                  <span className={styles.albumCount}>
+                    {calculateAlbumLength(x) as number}
+                  </span>
+                </div>
+                <AlbumMenuDrawer data={x} />
+              </div>
+            ))}
 
-              <div
-                style={{
-                  marginTop: data.album?.length ? '50px' : '0px',
-                  borderTop: data.album?.length ? '1px solid #ecedf0' : '',
-                }}
-                className={styles.albumImagesDiv}
-              >
-                <div className={styles.galleryAlbumImage}>
-                  {data.albumImage?.length > 0 &&
-                    data.albumImage.map((x: ImageProps, i) => {
-                      return (
-                        <Checkbox
-                          checked={selectedImage.includes(x as never)}
-                          key={i}
-                          onChange={(value) =>
-                            handleOnChange(value.target.checked, x)
-                          }
-                          className={
-                            selectedImage.includes(x as never)
-                              ? classNames(styles.checked, styles.showCheck)
-                              : ''
-                          }
-                        >
-                          <div className={styles.imagePreview}>
-                            <div className={styles.checkWrappers}>
-                              {!isMobile ? (
-                                <Popover
-                                  placement="bottomRight"
-                                  content={() => dotButtonMenu(x.img)}
-                                  trigger="click"
-                                  className={styles.imageDotButton}
-                                  style={{ backgroundColor: 'red' }}
-                                >
-                                  <div className={styles.dotBtn}>
-                                    <Dot />
-                                  </div>
-                                </Popover>
-                              ) : (
-                                <div
-                                  className={styles.dotBtn}
-                                  onClick={() => setDotMenuDrawer(true)}
-                                >
+            <div
+              style={{
+                marginTop: data.album?.length ? '50px' : '0px',
+                borderTop:
+                  data.album?.length && data.imageCount
+                    ? '1px solid #ecedf0'
+                    : '',
+              }}
+              className={styles.albumImagesDiv}
+            >
+              <div className={styles.galleryAlbumImage}>
+                {data.imageCount > 0 &&
+                  !loading &&
+                  data.albumImage?.length > 0 &&
+                  data.albumImage.map((x: ImageProps, i) => {
+                    return (
+                      <Checkbox
+                        checked={selectedImage.includes(x as never)}
+                        key={i}
+                        onChange={(value) =>
+                          handleOnChange(value.target.checked, x)
+                        }
+                        className={
+                          selectedImage.includes(x as never)
+                            ? classNames(styles.checked, styles.showCheck)
+                            : ''
+                        }
+                      >
+                        <div className={styles.imagePreview}>
+                          <div className={styles.checkWrappers}>
+                            {!isMobile ? (
+                              <Popover
+                                placement="bottomRight"
+                                content={() => <DotButtonMenu img={x.img} />}
+                                trigger="click"
+                                className={styles.imageDotButton}
+                              >
+                                <div className={styles.dotBtn}>
                                   <Dot />
                                 </div>
-                              )}
-                            </div>
-                            <div className={styles.imageAlbum} key={i}>
-                              <ImageItem
-                                origin={x.img}
-                                className={`img${i}`}
-                                alt={x.img}
-                                id={x.img}
-                                key={i}
-                                draggable={true}
-                                onDragStart={(event) => drag(event)}
-                              />
-                              {x.isSensitive ? (
-                                <div className={styles.sensitiveClass}>
-                                  <EyeInvisibleOutlined />
-                                  {!isMobile && <p>Sensitive Content</p>}
-                                  <span onClick={() => (x.isSensitive = false)}>
-                                    {t('galley.list.image.show')}
-                                  </span>
-                                </div>
-                              ) : null}
-                            </div>
+                              </Popover>
+                            ) : (
+                              <div
+                                className={styles.dotBtn}
+                                onClick={() => setDotMenuDrawer(true)}
+                              >
+                                <Dot />
+                              </div>
+                            )}
                           </div>
-                        </Checkbox>
-                      )
-                    })}
-                </div>
-                {gridLoading && (
+                          <div className={styles.imageAlbum} key={i}>
+                            <ImageItem
+                              origin={x.img}
+                              className={`img${i}`}
+                              alt={x.img}
+                              id={x.img}
+                              key={i}
+                              draggable={true}
+                              onDragStart={(event) => drag(event)}
+                            />
+                            {x.isSensitive ? (
+                              <div className={styles.sensitiveClass}>
+                                <EyeInvisibleOutlined />
+                                {!isMobile && <p>Sensitive Content</p>}
+                                <span onClick={() => (x.isSensitive = false)}>
+                                  {t('galley.list.image.show')}
+                                </span>
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Checkbox>
+                    )
+                  })}
+                {loading && (
                   <div className={styles.gridViewItemSkeleton}>
                     <div className={styles.boxItemImage}>
-                      {Array.from({ length: gridImagesLimit })
+                      {Array.from({
+                        length:
+                          data?.imageCount < paginateData?.pageSize
+                            ? data?.imageCount
+                            : paginateData?.pageSize || 10,
+                      })
                         .fill(null)
                         .map((_, i) => i)
                         .map((img) => {
                           return (
-                            <div className={styles.imagePreview} key={img}>
-                              <Skeleton.Image />
-                            </div>
+                            <ImageItem
+                              origin=""
+                              className={styles.imagePreview}
+                              key={img}
+                            />
                           )
                         })}
                     </div>
                   </div>
                 )}
               </div>
-              {isMobile && showMenu && (
-                <div className={styles.bottomBar}>
-                  <ToTopOutlined onClick={() => setMenuDrawer(true)} />
-                  <h3>{selectedImage.length} photos selected</h3>
-                  <Drawer
-                    placement={'bottom'}
-                    closable={false}
-                    onClose={() => setMenuDrawer((e) => !e)}
-                    visible={menuDrawer}
-                    className={styles.menuContentMobile}
-                  >
-                    {imageMenuDrawer()}
-                  </Drawer>
-                  <Drawer
-                    placement={'bottom'}
-                    closable={false}
-                    onClose={() => setDotMenuDrawer((e) => !e)}
-                    visible={dotMenuDrawer}
-                    className={styles.menuContentMobile}
-                  >
-                    <div className={styles.menuContentMobileHeader}>
-                      <div className={styles.handler} />
-                      <div className={styles.menuContentMobileBody}>
-                        <div className={styles.menuContentList}>
-                          <div
-                            className={styles.menuItem}
-                            style={{ borderBottom: '1px solid #ECEDF0' }}
-                          >
-                            <DownloadOutlined />
-                            &nbsp;&nbsp;&nbsp;
-                            {t('galley.list.album.download.button')}
-                          </div>
-                          <div className={styles.menuItem}>
-                            <PictureOutlined style={{ color: '#9292A3' }} />
-                            &nbsp;&nbsp;&nbsp;
-                            {t('galley.list.album.add.album.button')}
-                            <div className={styles.leftItem}>
-                              <RightOutlined />
-                            </div>
-                          </div>
-                          <div className={styles.menuItem}>
-                            <CalendarOutlined style={{ color: '#9292A3' }} />
-                            &nbsp;&nbsp;&nbsp;
-                            {t('galley.list.album.change.date.button')}
-                          </div>
-                          <div className={styles.menuItem}>
-                            <EditOutlined style={{ color: '#9292A3' }} />
-                            &nbsp;&nbsp;&nbsp;
-                            {t('galley.list.album.rename.button')}
-                          </div>
-                          <div className={styles.menuItem}>
-                            <ShareAltOutlined style={{ color: '#9292A3' }} />
-                            &nbsp;&nbsp;&nbsp;
-                            {t('galley.list.album.share.button')}
-                          </div>
-                          <div className={styles.menuItem}>
-                            <TagOutlined />
-                            &nbsp;&nbsp;&nbsp;
-                            {t('galley.list.album.set.profile.button')}
-                          </div>
-                          <div
-                            className={styles.menuItem}
-                            onClick={() => {
-                              setOpenDeleteModal(!openDeleteModal)
-                            }}
-                            style={{ color: 'red' }}
-                          >
-                            <DeleteOutlined />
-                            &nbsp;&nbsp;&nbsp;
-                            {t('galley.list.album.delete.button')}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Drawer>
-                </div>
-              )}
             </div>
-          </div>
-        </div>
-      )}
-      {listView && (
-        <>
-          <div className={styles.albumListView}>
-            {data.album.length > 0 && (
-              <Table
-                columns={listAlbumColumns}
-                dataSource={listAlbumData}
-                pagination={false}
-              />
-            )}
-          </div>
-          <div className={styles.albumListView}>
-            {albumImageList.length > 0 && (
-              <Table
-                loading={tableLoading}
-                columns={albumImageColumn}
-                dataSource={albumImageList}
-                pagination={false}
-                scroll={{ x: 'max-content' }}
-              />
-            )}
             {isMobile && showMenu && (
               <div className={styles.bottomBar}>
                 <ToTopOutlined onClick={() => setMenuDrawer(true)} />
@@ -913,26 +841,131 @@ export const AlbumData: FC<AlbumDataProps> = ({
                   visible={menuDrawer}
                   className={styles.menuContentMobile}
                 >
-                  {imageMenuDrawer()}
+                  <ImageMenuDrawer />
+                </Drawer>
+                <Drawer
+                  placement={'bottom'}
+                  closable={false}
+                  onClose={() => setDotMenuDrawer((e) => !e)}
+                  visible={dotMenuDrawer}
+                  className={styles.menuContentMobile}
+                >
+                  <div className={styles.menuContentMobileHeader}>
+                    <div className={styles.handler} />
+                    <div className={styles.menuContentMobileBody}>
+                      <div className={styles.menuContentList}>
+                        <div className={styles.menuItem}>
+                          <DownloadOutlined />
+                          &nbsp;&nbsp;&nbsp;
+                          {t('galley.list.album.download.button')}
+                        </div>
+                        <div className={styles.menuItem}>
+                          <PictureOutlined />
+                          &nbsp;&nbsp;&nbsp;
+                          {t('galley.list.album.add.album.button')}
+                          <div className={styles.leftItem}>
+                            <RightOutlined />
+                          </div>
+                        </div>
+                        <div className={styles.menuItem}>
+                          <CalendarOutlined />
+                          &nbsp;&nbsp;&nbsp;
+                          {t('galley.list.album.change.date.button')}
+                        </div>
+                        <div className={styles.menuItem}>
+                          <EditOutlined />
+                          &nbsp;&nbsp;&nbsp;
+                          {t('galley.list.album.rename.button')}
+                        </div>
+                        <div className={styles.menuItem}>
+                          <ShareAltOutlined />
+                          &nbsp;&nbsp;&nbsp;
+                          {t('galley.list.album.share.button')}
+                        </div>
+                        <div className={styles.menuItem}>
+                          <TagOutlined />
+                          &nbsp;&nbsp;&nbsp;
+                          {t('galley.list.album.set.profile.button')}
+                        </div>
+                        <div
+                          className={styles.menuItem}
+                          onClick={() => {
+                            setOpenDeleteModal(!openDeleteModal)
+                          }}
+                        >
+                          <DeleteOutlined />
+                          &nbsp;&nbsp;&nbsp;
+                          {t('galley.list.album.delete.button')}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </Drawer>
               </div>
             )}
-            <Pagination
-              total={data?.imageCount}
-              defaultPageSize={50}
-              showSizeChanger={false}
-              onChange={onPageChange}
-              pageSizeOptions={['10', '25', '50', '100']}
-              onPageSizeChange={pageSizeChange}
-              pageSize={tablePageSize}
-              current={currentTablePage}
-              showingRecords={
-                (currentTablePage - 1) * tablePageSize +
-                  albumImageList?.length || 0
-              }
-            />
           </div>
-        </>
+        </div>
+      </div>
+
+      <div
+        className={classNames(
+          styles.albumListView,
+          !listView && styles.displayNone
+        )}
+      >
+        {data.album.length > 0 && (
+          <Table
+            columns={listAlbumColumns}
+            dataSource={listAlbumData}
+            pagination={false}
+          />
+        )}
+        {data?.albumImage?.length > 0 &&
+          albumImageList.length > 0 &&
+          (loading ? (
+            <LoadingTable columns={albumImageColumn} />
+          ) : (
+            <Table
+              columns={albumImageColumn}
+              dataSource={albumImageList}
+              pagination={false}
+              scroll={{ x: 'max-content' }}
+            />
+          ))}
+        {isMobile && showMenu && (
+          <div className={styles.bottomBar}>
+            <ToTopOutlined onClick={() => setMenuDrawer(true)} />
+            <h3>{selectedImage.length} photos selected</h3>
+            <Drawer
+              placement={'bottom'}
+              closable={false}
+              onClose={() => setMenuDrawer((e) => !e)}
+              visible={menuDrawer}
+              className={styles.menuContentMobile}
+            >
+              <ImageMenuDrawer />
+            </Drawer>
+          </div>
+        )}
+      </div>
+
+      {data?.imageCount > 0 && (
+        <div className={styles.pagination}>
+          <Pagination
+            total={data?.imageCount}
+            defaultPageSize={50}
+            showSizeChanger={false}
+            onChange={paginateData?.onPageChange}
+            pageSizeOptions={['10', '25', '50', '100']}
+            onPageSizeChange={paginateData?.onPageSizeChange}
+            pageSize={paginateData?.pageSize}
+            current={paginateData?.currentPage}
+            showingRecords={
+              (paginateData?.currentPage - 1) * paginateData?.pageSize +
+                data?.albumImage?.length || 0
+            }
+          />
+        </div>
       )}
       <Modal
         centered={true}
@@ -947,7 +980,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <p>{t('galley.list.view.delete.modal.photo.description')}</p>
         </div>
       </Modal>
-    </div>
+    </>
   )
 }
 
