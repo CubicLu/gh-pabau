@@ -936,9 +936,15 @@ const ClientCardModal: FC<P> = ({
                 minHeight={isMobile ? '1px' : '750px'}
               >
                 <div
-                  style={activeTab === 'financial' ? {} : { padding: '12px' }}
+                  style={
+                    activeTab && activeTab === 'financial'
+                      ? {}
+                      : { padding: '12px' }
+                  }
                   className={
-                    activeTab === 'financial' ? styles.customTabs : null
+                    activeTab && activeTab === 'financial'
+                      ? styles.customTabs
+                      : null
                   }
                 >
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
