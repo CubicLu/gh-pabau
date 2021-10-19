@@ -29,6 +29,41 @@
   }
   .services-content {
     padding: 27px 32px;
+    .titleCountWrapper{
+      display: flex;
+      .count-wrapper {
+        .count-container {
+          &:before {
+            content: "";
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-right: 5px solid #eef7fb;
+            border-bottom: 5px solid transparent;
+            transform: translateY(-50%);
+          }
+          width: auto;
+          min-width: 23px;
+          height: 20px;
+          border-radius: 2px;
+          background-position: center;
+          background-repeat: no-repeat;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 8px;
+          font-family: var(--font-family);
+          font-size: 12px;
+          color: var(--primary-color);
+          background: #eef7fb;
+          position: relative;
+        }
+      }
+    }
+    
     .servicesTitleHead {
       h5 {
         font-weight: normal;
