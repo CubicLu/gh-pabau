@@ -114,6 +114,8 @@ export const permissions = shield(
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
+      //Connect Public
+      public_createBooking: allow,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -227,6 +229,14 @@ export const permissions = shield(
       subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
       subscriptionDetails: rules.authentication.isAuthenticated,
       subscriptionCardDetails: rules.authentication.isAuthenticated,
+      // Connect Public
+      findFirstCompany: allow,
+      Public_MasterCategories: allow,
+      Public_Bookings: allow,
+      Public_Locations: allow,
+      Public_ServiceCategories: allow,
+      Public_Shifts: allow,
+      Public_Staff: allow,
 
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,

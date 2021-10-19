@@ -7,7 +7,7 @@ import moment from 'moment'
 const PublicCreateBookingResponse = objectType({
   name: 'public_createBookingResponse',
   definition(t) {
-    t.int('id')
+    t.boolean('success')
   },
 })
 
@@ -17,6 +17,8 @@ const PCBData = inputObjectType({
     t.nonNull.float('start_date')
     t.nonNull.float('end_date')
     t.nonNull.int('user_id')
+    t.nonNull.int('location_id')
+    t.nonNull.int('company_id')
     t.nonNull.list.nonNull.field('service_ids', {
       type: 'Int',
     })
@@ -47,7 +49,6 @@ export const public_createBooking = extendType({
           input.data.location_id,
           ctx
         )
-        console.log('STiers', serviceTiers)
 
         const services = await ctx.prisma.companyService.findMany({
           where: { id: { in: input.data.service_ids } },
@@ -55,16 +56,15 @@ export const public_createBooking = extendType({
 
         const insertData = []
         for (const s of input.data.service_ids) {
-          const service = services.filter((s) => s.id === s)
+          const service = services.find((serv) => serv.id === s)
           insertData.push({
             title: 'Online Booking',
             start_date: input.data.start_date,
             end_date: input.data.end_date,
             service: service.name,
-            contact_id: input.contact.id || undefined,
             UID: input.data.user_id,
-            occupier: input.data.company_id,
-            create_date: moment().format('YYYYMMDDHHmmss'),
+            company_id: input.data.company_id,
+            create_date: Number.parseInt(moment().format('YYYYMMDDHHmmss')),
             status: 'Waiting',
             estimated_cost: serviceTiers[s].cost,
             room_id: 0,
@@ -74,17 +74,24 @@ export const public_createBooking = extendType({
             sent_sms: 1,
             sent_email: 1,
             location_id: input.data.location_id,
+            tips: 0,
+            where: '',
           })
         }
 
-        const res = await ctx.prisma.booking.create({
-          data: insertData,
+        const res = await ctx.prisma.cmContact.update({
+          where: { ID: input.contact.id },
+          data: {
+            Booking: {
+              create: insertData,
+            },
+          },
         })
 
-        console.log('Create Result', res)
+        console.log('REsult Log', res)
 
         return {
-          id: 100,
+          success: true,
         }
       },
     })
