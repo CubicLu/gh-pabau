@@ -1,6 +1,6 @@
 .formComponet {
   padding: 36px 40px;
-  min-width: 616px;
+  // min-width: 616px;
   .formComponentTitle {
     font-style: normal;
     font-weight: normal;
@@ -90,7 +90,7 @@
   }
 }
 
-.formSingleChoice {
+.formSingleChoiceYesNo {
   .formSingleOptions {
     width: 100%;
     :global {
@@ -107,6 +107,73 @@
           width: 100%;
           padding: 16px;
           margin-top: 16px;
+          font-size: 14px;
+        }
+        .ant-radio-wrapper.ant-radio-wrapper-checked {
+          background: #eef7fb;
+          border: 1px solid #54b2d3;
+          box-sizing: border-box;
+          border-radius: 4px;
+          color: #54b2d3;
+        }
+      }
+    }
+  }
+}
+
+.formSingleChoice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+  .formSingleChoiceTitle {
+    display: flex;
+    width: 49%;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #3d3d46;
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .formSingleChoiceRequiredMark {
+      color: red;
+      margin-left: 3px;
+      display: contents;
+    }
+  }
+  .formSingleOptionsYesNo {
+    display: flex;
+    width: 49%;
+    align-items: center;
+    justify-content: space-between;
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+    }
+    :global {
+      .ant-radio-group {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .radioDiv {
+      width: 49%;
+      :global {
+        .ant-radio-wrapper {
+          border: 1px solid #ecedf0;
+          box-sizing: border-box;
+          border-radius: 4px;
+          width: 100%;
+          padding: 16px;
           font-size: 14px;
         }
         .ant-radio-wrapper.ant-radio-wrapper-checked {

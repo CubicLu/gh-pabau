@@ -30,6 +30,15 @@ query basicContactDetails($id: Int!) {
       id: custom_field_id
       value: custom_field_value
     }
+    contactNotes: ContactNote(
+      where: { Note: { not: { equals: "" } } }
+      orderBy: { CreatedDate: desc }
+    ) {
+      ID
+    }
+    bookingNotes: Booking(orderBy: { create_date: desc }) {
+      id
+    }
   }
 }
 query findContacts($searchTerm1: String, $searchTerm2: String) {
