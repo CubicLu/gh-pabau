@@ -11,10 +11,17 @@ describe('GalleryView', () => {
           albumImage: [],
           albumTitle: '',
           album: [],
+          modifiedDate: '',
           imageCount: 0,
           id: 0,
         }}
         images={[]}
+        paginateData={{
+          pageSize: 10,
+          currentPage: 1,
+          onPageChange: () => false,
+          onPageSizeChange: () => false,
+        }}
       />
     )
     expect(baseElement).toBeTruthy()

@@ -9,6 +9,12 @@ describe('ClientPhotosLayout', () => {
       <ClientPhotosLayout
         images={[] as ImageProps[]}
         albumList={{} as AlbumProps}
+        paginateData={{
+          pageSize: 10,
+          currentPage: 1,
+          onPageChange: () => false,
+          onPageSizeChange: () => false,
+        }}
       />
     )
     expect(baseElement).toBeTruthy()
