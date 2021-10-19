@@ -97,9 +97,6 @@ export const permissions = shield(
         rules.authentication.isAdmin
       ),
 
-      // Contact photo album
-      createOnePhotoAlbum: rules.authentication.isAuthenticated,
-
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
       updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
