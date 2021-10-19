@@ -961,7 +961,7 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px' }}>
+                <div style={{ padding: '12px', height: '100%' }}>
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}
