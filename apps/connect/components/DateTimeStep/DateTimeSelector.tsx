@@ -131,7 +131,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               }
               return (
                 <div
-                  className={false ? Styles.gray : Styles.green}
+                  className={Styles.green}
                   key={val}
                   onClick={() => {
                     const hour = Number.parseInt(val.substring(0, 2))
@@ -158,11 +158,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
                 return null
               }
               return (
-                <div
-                  className={false ? Styles.gray : Styles.green}
-                  key={val}
-                  onClick={() => {}}
-                >
+                <div className={Styles.green} key={val}>
                   <p>{val}</p>
                 </div>
               )
@@ -178,11 +174,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
                 return null
               }
               return (
-                <div
-                  className={false ? Styles.gray : Styles.green}
-                  key={val}
-                  onClick={() => {}}
-                >
+                <div className={Styles.green} key={val}>
                   <p>{val}</p>
                 </div>
               )

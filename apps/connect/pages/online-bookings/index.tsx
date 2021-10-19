@@ -19,11 +19,7 @@ import { defaultItems } from '../../mocks/onlineBooking'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { employes } from '../../mocks/employMock'
-import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
-/* eslint-disable-next-line */
-export interface OnlineBookingProps {
-
-}
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 interface userData {
   firstname: string
@@ -36,7 +32,7 @@ interface userData {
   time: string
   charge: string
   address: string
-  image: any
+  image: string
   online: boolean
   duration: number
   member: number
@@ -61,7 +57,7 @@ const userData: userData = {
   services: 0,
   vouchers: 0,
 }
-export function Index(props: OnlineBookingProps) {
+export function Index() {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
   const [proD, setproD] = useState<SelectItem[]>()
