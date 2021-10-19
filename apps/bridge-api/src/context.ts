@@ -31,11 +31,6 @@ export interface Context {
   version: string
 
   /**
-   * requested JWT to forward via Third Party services (eg. CDN)
-   */
-  authJwt: string
-
-  /**
    * Required for PrismaSelect plugin to operate
    */
   select: any
@@ -60,7 +55,6 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
       console.log('invalid jwt found')
     }
   }
-  ret.authJwt = authorizationRaw
   ret.prisma = prisma(ret.authenticated?.remote_url || undefined)
   ret.prismaArray = (remote_url) => prisma(remote_url)
 
