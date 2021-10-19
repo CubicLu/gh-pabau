@@ -10,6 +10,7 @@ import { ButtonLabel } from '@pabau/ui'
 import styles from './AppointmentItem.module.less'
 
 export interface AppointmentItemP {
+  key?: string
   time?: string
   avatar?: string
   clientName?: string
