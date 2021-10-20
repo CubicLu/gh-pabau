@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import {
   useGetPhotoAlbumsQuery,
   useGetPhotoAlbumLazyQuery,
-  useGetUncatPhotosQuery,
+  useGetAlbumPhotosQuery,
 } from '@pabau/graphql'
 
 export interface PhotoStudioProps {
@@ -28,10 +28,11 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const [currentAlbumData, setCurrentAlbumData] = useState<ImageViewerAlbum>()
   const [nonAlbumPhotos, setNonAlbumPhotos] = useState(null)
 
-  const { data: dUnCatPhotos } = useGetUncatPhotosQuery({
+  const { data: dUnCatPhotos } = useGetAlbumPhotosQuery({
     fetchPolicy: 'network-only',
     variables: {
       contactId: contactId,
+      albumId: 0,
     },
   })
 
