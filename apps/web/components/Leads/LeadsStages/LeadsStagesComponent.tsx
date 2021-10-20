@@ -305,7 +305,7 @@ const LeadsStagesComponent = () => {
                                               'onLeadTitleClickHandler'
                                             )
                                           }
-                                          labels={['#Label1', '#Label2']}
+                                          labels={['#Label1', '#Label']}
                                           leadOwnerName={username}
                                           leadOwnerImg={getImage(image)}
                                           contactName={contactName}
