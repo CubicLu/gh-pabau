@@ -4874,70 +4874,78 @@ model Country {
 //  complete_date Int
 //  video_id      Int
 //}
-//
-//model cp_pathways {
-//  id                Int                 @id @default(autoincrement())
-//  pathway_name      String
-//  company_id        Int
-//  description       String
-//  is_active         Boolean
-//  order             Int?                @default(0)
-//  cp_pathways_taken cp_pathways_taken[]
-//  cp_steps          cp_steps[]
-//}
-//
-//model cp_pathways_taken {
-//  id             Int                      @id @default(autoincrement())
-//  pathway_id     Int
-//  contact_id     Int
-//  booking_id     Int
-//  started_on     DateTime                 @default(now())
-//  status         cp_pathways_taken_status @default(ACTIVE)
-//  comment        String
-//  cp_pathways    cp_pathways              @relation(fields: [pathway_id], references: [id])
-//  cp_steps_taken cp_steps_taken[]
-//
-//  @@index([pathway_id, contact_id], name: "pathway_id")
-//}
-//
-//model cp_steps {
-//  id             Int              @id @default(autoincrement())
-//  company_id     Int
-//  name           String
-//  created_date   DateTime
-//  step           cp_steps_step
-//  order          Int
-//  item_id        Int
-//  pathway_id     Int
-//  can_skip       Int
-//  display_time   Int              @default(0)
-//  other_value    String
-//  description    String
-//  who_does_this  String?
-//  cp_pathways    cp_pathways      @relation(fields: [pathway_id], references: [id])
-//  cp_steps_taken cp_steps_taken[]
-//
-//  @@index([pathway_id], name: "pathway_id")
-//}
-//
-//model cp_steps_taken {
-//  id                Int                   @id @default(autoincrement())
-//  step_id           Int
-//  path_taken_id     Int
-//  contact_id        Int
-//  date              DateTime              @default(now())
-//  time              String?
-//  status            cp_steps_taken_status
-//  record_id         Int
-//  cp_pathways_taken cp_pathways_taken     @relation(fields: [path_taken_id], references: [id])
-//  cp_steps          cp_steps              @relation(fields: [step_id], references: [id])
-//
-//  @@unique([step_id, path_taken_id], name: "step_id_3")
-//  @@index([path_taken_id], name: "path_taken_id")
-//  @@index([step_id, contact_id], name: "step_id")
-//  @@index([step_id], name: "step_id_2")
-//}
-//
+
+model Pathway {
+  id           Int             @id @default(autoincrement())
+  pathway_name String
+  company_id   Int
+  description  String
+  is_active    Boolean
+  order        Int?            @default(0)
+  PathwayTaken PathwaysTaken[]
+  PathwayStep  PathwayStep[]
+
+  @@map("cp_pathways")
+}
+
+model PathwaysTaken {
+  id                Int                      @id @default(autoincrement())
+  pathway_id        Int
+  contact_id        Int
+  booking_id        Int
+  started_on        DateTime                 @default(now())
+  status            cp_pathways_taken_status @default(ACTIVE)
+  comment           String
+  Pathway           Pathway                  @relation(fields: [pathway_id], references: [id])
+  PathwayStepsTaken PathwayStepsTaken[]
+
+
+  @@index([pathway_id, contact_id], name: "pathway_id")
+  @@map("cp_pathways_taken")
+}
+
+model PathwayStep {
+  id            Int           @id @default(autoincrement())
+  company_id    Int
+  name          String
+  created_date  DateTime
+  step          cp_steps_step
+  order         Int
+  item_id       Int
+  pathway_id    Int
+  can_skip      Int
+  display_time  Int           @default(0)
+  other_value   String
+  description   String
+  who_does_this String?
+
+  Pathway           Pathway             @relation(fields: [pathway_id], references: [id])
+  PathwayStepsTaken PathwayStepsTaken[]
+
+  @@index([pathway_id], name: "pathway_id")
+  @@map("cp_steps")
+}
+
+model PathwayStepsTaken {
+  id            Int                   @id @default(autoincrement())
+  step_id       Int
+  path_taken_id Int
+  contact_id    Int
+  date          DateTime              @default(now())
+  time          String?
+  status        cp_steps_taken_status
+  record_id     Int
+  PathwaysTaken PathwaysTaken         @relation(fields: [path_taken_id], references: [id])
+  PathwayStep   PathwayStep           @relation(fields: [step_id], references: [id])
+
+
+  @@unique([step_id, path_taken_id], name: "step_id_3")
+  @@index([path_taken_id], name: "path_taken_id")
+  @@index([step_id, contact_id], name: "step_id")
+  @@index([step_id], name: "step_id_2")
+  @@map("cp_steps_taken")
+}
+
 //model credit_balance {
 //  credit_balance_id Int    @id @default(autoincrement())
 //  company           String
