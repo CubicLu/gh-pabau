@@ -4,7 +4,7 @@
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
-    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543\" nx",
+    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=7168\" nx",
     "serve": "yarn nx serve",
     "build:bridge-api": "yarn nx export bridge-api",
     "hasura:cli": "ts-node tools/cli/hasura.ts",
