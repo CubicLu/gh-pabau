@@ -1,10 +1,10 @@
 query getStaffDetails($userID: Int!) {
   findUniqueUser(where: { id: $userID }) {
-    Staff: CmStaffGeneral {
+     Staff: CmStaffGeneral {
       Fname
       Lname
       Email
-      Mobile: CellPhone
+      CellPhone
       Location
       OtherLocations: Locations {
         id
@@ -16,11 +16,25 @@ query getStaffDetails($userID: Int!) {
       }
       Birthdate
       CreatedDate
-      StaffNote {
+   StaffNote {
         note: Dependents
       }
-    }
+  }
     image
     job_title
+  }
+}
+
+query getCompanyPositions {
+  positions: findManyCompanyPosition(
+  where:{
+    position: {not: {equals:""}}
+  }
+   orderBy:{
+     position: asc
+   }
+  ) {
+    id
+    position
   }
 }
