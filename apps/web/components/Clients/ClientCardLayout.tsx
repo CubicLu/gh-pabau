@@ -43,7 +43,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const router = useRouter()
   const { me } = useUser()
   const [customField, setCustomField] = useState([])
-  const [openEditModal, setOpenEditModal] = useState(false)
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
     count: 0,
@@ -51,6 +50,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     appointments: [],
   })
   const [basicContactData, setBasicContactData] = useState(null)
+  const [openEditModal, setOpenEditModal] = useState(false)
 
   const [addMutation] = useCreateOneContactNoteMutation({
     onCompleted() {
@@ -70,6 +70,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const { data, loading, refetch } = useBasicContactDetailsQuery({
     skip: !router.query['id'],
     ssr: false,
+    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 
@@ -78,7 +79,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     { data: contactDetails, loading: notesCountLoading },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
-    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 
@@ -259,7 +259,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       })
     }
   }, [contactDetails, notesCountLoading])
-
   const handleEditAll = () => {
     setOpenEditModal(true)
   }
