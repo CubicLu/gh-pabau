@@ -18,7 +18,7 @@ const content = {
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     //The redirect uris can't be affected bcz it only for pass in token request
     // Once setup google cloud project for pabau we can add www.pabau.com as rediract uris and also add in GCP
-    redirect_uris: ['http://localhost:4200/setup/senders'],
+    redirect_uris: ['/setup/senders'],
   },
 }
 
@@ -34,6 +34,7 @@ export const AuthConnectionStore = extendType({
       async resolve(_, input) {
         const getProfile = async (auth, refreshToken) => {
           const gmail = google.gmail({ version: 'v1', auth })
+          if (!gmail) return
           const userData = await gmail.users.getProfile({
             userId: 'me',
           })
@@ -50,10 +51,10 @@ export const AuthConnectionStore = extendType({
           redirect_uris[0]
         )
 
-        const b = await oAuth2Client.getToken(input.token)
-        oAuth2Client.setCredentials(b.tokens)
+        const tokenData = await oAuth2Client.getToken(input.token)
+        oAuth2Client.setCredentials(tokenData.tokens)
 
-        return getProfile(oAuth2Client, b.tokens)
+        return getProfile(oAuth2Client, tokenData.tokens)
       },
     })
   },
