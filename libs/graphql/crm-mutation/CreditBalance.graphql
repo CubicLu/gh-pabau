@@ -1,9 +1,10 @@
 fragment CreditBalanceFields on CreditBalance {
   credit_balance_id
-  company_id
+  company
   balance
   balance_currency
   auto
+  companyId
 }
 
 fragment CreditBalance on CreditBalance {

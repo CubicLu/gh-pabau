@@ -8,15 +8,16 @@ export const CreditBalance = objectType({
   name: 'CreditBalance',
   definition(t) {
     t.int('credit_balance_id')
-    t.int('company_id')
+    t.string('company')
     t.float('balance')
     t.float('balance_currency')
     t.int('auto')
-    t.field('Company', {
+    t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company
       },
     })
+    t.nullable.int('companyId')
   },
 })

@@ -18,8 +18,8 @@ export const Booking = objectType({
     t.int('UID')
     t.int('company_id')
     t.nullable.string('backgroudcolor')
-    t.nullable.int('create_date')
-    t.nullable.int('update_date')
+    t.nullable.decimal('create_date')
+    t.nullable.decimal('update_date')
     t.string('status')
     t.nullable.float('estimated_cost')
     t.nullable.float('tips')
@@ -109,6 +109,12 @@ export const Booking = objectType({
       type: 'CompanyBranch',
       resolve(root: any) {
         return root.CompanyBranch
+      },
+    })
+    t.nullable.field('CompanyService', {
+      type: 'CompanyService',
+      resolve(root: any) {
+        return root.CompanyService
       },
     })
   },
