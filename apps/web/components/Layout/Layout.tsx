@@ -21,6 +21,7 @@ import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
 import Login from '../../pages/login'
 import LegacyPage from '../LegacyPage'
+import Journey from '../Journey/Journey'
 
 interface ProductNews {
   id: string
@@ -147,6 +148,7 @@ const Layout: FC<LayoutProps> = ({
         onMessageIconClick={() => setShowChat((e) => !e)}
         legacyContent={!!legacyPage}
         taskManagerIFrameComponent={<TaskManagerIFrame />}
+        journeyRender={(handleClose) => <Journey handleClose={handleClose} />}
         clientCreateRender={(handleClose) => (
           <ClientCreate handleClose={handleClose} />
         )}

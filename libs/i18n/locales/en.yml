@@ -5283,3 +5283,7 @@ en:
   team.user.personal.details.employee.end.date.label: 'Employment end date'
   team.user.personal.details.primary.location.label: 'Primary Location'
   team.user.personal.details.other.location.label: 'Other Locations'
+  journey.modal.appointements.status.waiting: Waiting
+  journey.modal.appointements.status.arrived: Arrived
+  journey.modal.appointements.status.in.progress: In Progress
+  journey.modal.appointements.status.complete: Complete
