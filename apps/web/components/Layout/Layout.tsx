@@ -43,7 +43,7 @@ const Layout: FC<LayoutProps> = ({
   const [productNews, setProductNews] = useState<ProductNews[]>()
   const [showChat, setShowChat] = useState(false)
   const router = useRouter()
-  const { data, error } = useDisabledFeaturesQuery()
+  // const { data, error } = useDisabledFeaturesQuery()
 
   const { data: notificationData } = useNotificationsSubscription()
   const { data: productNewsData } = useProduct_NewsSubscription()
@@ -104,17 +104,17 @@ const Layout: FC<LayoutProps> = ({
     }
   }, [notificationData?.notifications])
 
-  if (error) {
-    return <Login />
-  }
+  // if (error) {
+  //   return <Login />
+  // }
 
-  let legacyPage: false | string = false
-  if (data)
-    for (const [, row] of data.feature_flags.entries()) {
-      if (router.asPath.substring(1) === row.page_slug) {
-        legacyPage = '/' + row.fallback_slug
-      }
-    }
+  const legacyPage: false | string = false
+  // if (data)
+  //   for (const [, row] of data.feature_flags.entries()) {
+  //     if (router.asPath.substring(1) === row.page_slug) {
+  //       legacyPage = '/' + row.fallback_slug
+  //     }
+  //   }
 
   const userData = me
     ? {

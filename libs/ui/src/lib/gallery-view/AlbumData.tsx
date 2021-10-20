@@ -471,24 +471,24 @@ export const AlbumData: FC<AlbumDataProps> = ({
     setMoveAlbum((e) => !e)
   }
 
-  const showAlbumImages = (x) => {
-    if (x.albumImage && x.albumImage.length > 0) {
-      if (x.albumImage.length > 0 && x.albumImage.slice(0, 4)) {
+  const showAlbumImages = (album) => {
+    if (album.albumImage && album.albumImage.length > 0) {
+      if (album.albumImage.length > 0 && album.albumImage.slice(0, 4)) {
         return (
           <>
-            {x.albumImage.slice(0, 4).map((item, key) => {
+            {album.albumImage.slice(0, 4).map((item, key) => {
               return (
                 <ImageItem
                   origin={item?.img}
-                  alt={x.albumTitle}
+                  alt={album.albumTitle}
                   key={key}
                   className={styles.gridItem}
-                  id={x.albumTitle}
+                  id={album.albumTitle}
                   draggable={false}
                 />
               )
             })}
-            {Array.from({ length: 4 - x.albumImage.length })
+            {Array.from({ length: 4 - album.albumImage.length })
               .fill(null)
               .map((_, i) => i)
               .map((i) => (
@@ -742,8 +742,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
               className={styles.albumImagesDiv}
             >
               <div className={styles.galleryAlbumImage}>
-                {data.imageCount > 0 &&
-                  !loading &&
+                {!loading &&
                   data.albumImage?.length > 0 &&
                   data.albumImage.map((x: ImageProps, i) => {
                     return (

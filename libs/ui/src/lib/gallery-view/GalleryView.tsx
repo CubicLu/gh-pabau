@@ -23,6 +23,8 @@ import {
   Notification,
   NotificationType,
   FormikInput,
+  CamUploaderModal,
+  UploadingImageProps,
 } from '@pabau/ui'
 import AlbumData, { ImageProps, AlbumProps } from './AlbumData'
 import {
@@ -56,6 +58,10 @@ export interface GalleryProps {
   onAlbumCreate?: (name: string) => void
   onAlbumUpdate?: (data: AlbumProps) => void
   onAlbumDelete?: (data: AlbumProps) => void
+
+  uploadingImages: UploadingImageProps[]
+  setUploadingImages: (data: UploadingImageProps[]) => void
+  onImageUpload?: (data: UploadingImageProps) => void
 }
 
 export const GalleryView: FC<GalleryProps> = ({
@@ -67,6 +73,9 @@ export const GalleryView: FC<GalleryProps> = ({
   onAlbumCreate,
   onAlbumUpdate,
   onAlbumDelete,
+  uploadingImages,
+  setUploadingImages,
+  onImageUpload,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -102,6 +111,8 @@ export const GalleryView: FC<GalleryProps> = ({
   const [deleteAlbumModal, setDeleteAlbumModal] = useState(false)
   const [listView, setListView] = useState(false)
 
+  const [uploadModal, setUploadModal] = useState(false)
+
   useEffect(() => {
     setImagesList(images)
   }, [images])
@@ -115,8 +126,12 @@ export const GalleryView: FC<GalleryProps> = ({
     setDeleteAlbumModal(false)
     setEditAlbumLoading(false)
     setDeleteAlbumLoading(false)
-    setCurrentData(albumList)
-  }, [albumList])
+    if (!currentData || currentData?.id === 0) {
+      setCurrentData(albumList)
+    } else {
+      // This block will be used when nested album will be considered
+    }
+  }, [albumList, currentData])
 
   const employee = ['will lawsons', 'jessica Winter', 'Jeff Hackley']
   const services = ['abc', 'xyz', 'ert', 'botox']
@@ -229,7 +244,10 @@ export const GalleryView: FC<GalleryProps> = ({
       >
         <FolderOutlined /> {t('galley.view.album.create.new.album')}
       </div>
-      <div className={styles.contentItem}>
+      <div
+        className={styles.contentItem}
+        onClick={() => setUploadModal((e) => !e)}
+      >
         <UploadOutlined /> {t('galley.view.album.create.photo.upload')}
       </div>
     </div>
@@ -558,10 +576,6 @@ export const GalleryView: FC<GalleryProps> = ({
     ev.dataTransfer.setData('albumData', ev.target.id)
   }
 
-  const changeContentView = (view: boolean) => {
-    setListView(view)
-  }
-
   return (
     <div className={styles.mainLayout}>
       <div>
@@ -614,6 +628,7 @@ export const GalleryView: FC<GalleryProps> = ({
                       type="primary"
                       className={styles.btnCreate}
                       onClick={() => setCreatePopover((e) => !e)}
+                      onBlur={() => setCreatePopover(() => false)}
                     >
                       <PlusOutlined />
                       {t('galley.view.album.create')}
@@ -670,12 +685,15 @@ export const GalleryView: FC<GalleryProps> = ({
                   <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
                     {t('galley.view.album.view.album')} <DownOutlined />
                   </Button>
-                  <button
+                  <Button
+                    type="primary"
                     className={styles.btnCreate}
                     onClick={() => setCreateAlbumDrawer((e) => !e)}
+                    onBlur={() => setCreateAlbumDrawer(() => false)}
                   >
-                    <PlusOutlined /> Create
-                  </button>
+                    <PlusOutlined />
+                    {t('galley.view.album.create')}
+                  </Button>
                   <Drawer
                     placement={'bottom'}
                     closable={false}
@@ -762,7 +780,7 @@ export const GalleryView: FC<GalleryProps> = ({
               <div className={styles.viewContainer}>
                 <div
                   className={styles.viewItem}
-                  onClick={() => changeContentView(false)}
+                  onClick={() => setListView(false)}
                 >
                   {!listView ? (
                     <GridIcon style={{ fill: '#54B2D3' }} />
@@ -772,7 +790,7 @@ export const GalleryView: FC<GalleryProps> = ({
                 </div>
                 <div
                   className={styles.viewItem}
-                  onClick={() => changeContentView(true)}
+                  onClick={() => setListView(true)}
                 >
                   {listView ? (
                     <ListIcon style={{ fill: '#54B2D3' }} />
@@ -900,25 +918,31 @@ export const GalleryView: FC<GalleryProps> = ({
                     trigger="click"
                     visible={createPopover}
                   >
-                    <button
+                    <Button
+                      type="primary"
                       className={styles.btnCreate}
                       onClick={() => setCreatePopover((e) => !e)}
+                      onBlur={() => setCreatePopover(() => false)}
                     >
-                      <PlusOutlined /> {t('galley.view.album.create')}
-                    </button>
+                      <PlusOutlined />
+                      {t('galley.view.album.create')}
+                    </Button>
                   </Popover>
                 ) : (
-                  <button
+                  <Button
+                    type="primary"
                     className={styles.btnCreate}
                     onClick={() => setCreateAlbumDrawer((e) => !e)}
+                    onBlur={() => setCreateAlbumDrawer(() => false)}
                   >
-                    <PlusOutlined /> {t('galley.view.album.create')}
-                  </button>
+                    <PlusOutlined />
+                    {t('galley.view.album.create')}
+                  </Button>
                 )}
                 <div className={styles.viewContainer}>
                   <div
                     className={styles.viewItem}
-                    onClick={() => changeContentView(false)}
+                    onClick={() => setListView(false)}
                   >
                     {!listView ? (
                       <GridIcon style={{ fill: '#54B2D3' }} />
@@ -928,7 +952,7 @@ export const GalleryView: FC<GalleryProps> = ({
                   </div>
                   <div
                     className={styles.viewItem}
-                    onClick={() => changeContentView(true)}
+                    onClick={() => setListView(true)}
                   >
                     {listView ? (
                       <ListIcon style={{ fill: '#54B2D3' }} />
@@ -978,6 +1002,16 @@ export const GalleryView: FC<GalleryProps> = ({
           }}
         />
       </div>
+
+      <CamUploaderModal
+        albumId={currentData?.id || 0}
+        uploadingImages={uploadingImages}
+        visible={uploadModal}
+        setUploadingImages={setUploadingImages}
+        onClose={() => setUploadModal((e) => !e)}
+        uploadImage={onImageUpload}
+        removeImage={(img) => console.log('RE:', img)}
+      />
 
       <Modal
         centered

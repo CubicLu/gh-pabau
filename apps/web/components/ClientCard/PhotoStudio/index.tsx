@@ -8,7 +8,7 @@ import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
   useGetPhotoAlbumLazyQuery,
-  useGetUncatPhotosLazyQuery,
+  useGetAlbumPhotosLazyQuery,
   useCreateContactPhotoMutation,
   useCreateContactPhotoWithoutAlbumMutation,
   useDeleteContactPhotoMutation,
@@ -88,6 +88,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
         setUploadingImages(cAddedFiles)
         getUncatAlbumPhotos({
           variables: {
+            albumId: 0,
             contactId: contactId,
           },
         })
@@ -113,6 +114,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
         } else {
           getUncatAlbumPhotos({
             variables: {
+              albumId: 0,
               contactId: contactId,
             },
           })
@@ -124,7 +126,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const [
     getUncatAlbumPhotos,
     { data: dUnCatPhotos },
-  ] = useGetUncatPhotosLazyQuery({
+  ] = useGetAlbumPhotosLazyQuery({
     fetchPolicy: 'network-only',
   })
 
@@ -145,6 +147,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   useEffect(() => {
     getUncatAlbumPhotos({
       variables: {
+        albumId: 0,
         contactId: contactId,
       },
     })
