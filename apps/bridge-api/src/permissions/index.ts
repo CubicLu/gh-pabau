@@ -219,6 +219,7 @@ export const permissions = shield(
       ),
       // getToken
       getRefreshToken: rules.authentication.isAuthenticated,
+      dashboardData: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,
