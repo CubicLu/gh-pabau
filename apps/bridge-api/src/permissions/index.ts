@@ -91,6 +91,7 @@ export const permissions = shield(
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
+      deleteOneContactAttachment: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -127,8 +128,8 @@ export const permissions = shield(
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
-      findManyInvDetail: rules.authentication.isAuthenticated,
-      aggregateInvDetail: rules.authentication.isAuthenticated,
+      findManyInvoice: rules.authentication.isAuthenticated,
+      aggregateInvoice: rules.authentication.isAuthenticated,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
@@ -218,6 +219,7 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.interceptAccessToUserData
       ),
+      dashboardData: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,

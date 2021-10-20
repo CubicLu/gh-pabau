@@ -1,28 +1,8 @@
 export const locationList = [
   {
-    key: 'All-location',
+    key: 0,
     label: 'All Locations',
-    date: '10/10/20',
     select: true,
-  },
-  {
-    key: 'bristol',
-    label: 'Pabaucare - Bristol',
-    date: '10/10/20',
-    select: false,
-  },
-  {
-    key: 'london',
-    label: 'Pabaucare - London',
-    date: '10/10/20',
-    select: false,
-  },
-  { key: 'leeds', label: 'Pabaucare - Leeds', date: '10/10/20', select: false },
-  {
-    key: 'manchester',
-    label: 'Pabaucare - Manchester',
-    date: '10/10/20',
-    select: false,
   },
 ]
 export const columns = [
@@ -40,8 +20,30 @@ export const columns = [
   },
   {
     title: 'Percentage',
-    dataIndex: 'percentage',
+    dataIndex: 'per',
   },
+]
+
+export const defaultAppointmentList = [
+  { label: 'Completed', count: 0, per: '0.00%' },
+  { label: 'Waiting', count: 0, per: '0.00%' },
+  { label: 'Canceled', count: 0, per: '0.00%' },
+  { label: 'No show', count: 0, per: '0.00%' },
+]
+
+export const defaultOnlineAppointmentList = [
+  { label: 'Completed', count: 0, per: '0.00%' },
+  { label: 'Waiting', count: 0, per: '0.00%' },
+  { label: 'Canceled', count: 0, per: '0.00%' },
+  { label: 'No show', count: 0, per: '0.00%' },
+  { label: 'Deposits', count: 0, per: '0.00%' },
+]
+
+export const defaultSalesList = [
+  { label: 'Services', count: 0, per: '0.00%' },
+  { label: 'Products', count: 0, per: '0.00%' },
+  { label: 'Packages', count: 0, per: '0.00%' },
+  { label: 'Gift Vouchers', count: 0, per: '0.00%' },
 ]
 
 export const data = [
@@ -108,4 +110,17 @@ export const data = [
     value: '£1,792.00',
     percentage: '-',
   },
+]
+
+export const dateRangeList = [
+  { value: 'All records', label: 'All records' },
+  { value: 'Today', label: 'Today' },
+  { value: 'Yesterday', label: 'Yesterday' },
+  { value: 'This Week', label: 'This week' },
+  { value: 'Last Week', label: 'Last week' },
+  { value: 'This Month', label: 'This month' },
+  { value: 'Last Month', label: 'Last month' },
+  { value: 'This Year', label: 'This year' },
+  { value: 'Last Year', label: 'Last year' },
+  { value: 'custom', label: 'Custom' },
 ]

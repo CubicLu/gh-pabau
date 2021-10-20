@@ -1,11 +1,11 @@
 import { objectType } from 'nexus'
 
-export const InvDetail = objectType({
+export const Invoice = objectType({
   nonNullDefaults: {
     output: true,
     input: false,
   },
-  name: 'InvDetail',
+  name: 'Invoice',
   definition(t) {
     t.int('id')
     t.int('customer_id')

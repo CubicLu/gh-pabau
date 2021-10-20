@@ -1,0 +1,21 @@
+fragment InvoiceFields on Invoice {
+  id
+  customer_id
+  guid
+  date
+  amount
+  status
+  location_name
+  billers
+  issue_to
+}
+
+fragment Invoice on Invoice {
+  ...InvoiceFields
+}
+
+mutation createOneInvoice($data: InvoiceCreateInput!) {
+  createOneInvoice(data: $data) {
+    ...Invoice
+  }
+}

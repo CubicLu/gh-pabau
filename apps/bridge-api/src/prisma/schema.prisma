@@ -4154,6 +4154,7 @@ model CompanyService {
 
   ServiceUserPrice     ServiceUserPrice[]
   ServiceLocationPrice ServiceLocationPrice[]
+  Booking              Booking[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -6489,7 +6490,7 @@ model InvCategory {
   @@map("inv_categories")
 }
 
-model InvDetail {
+model Invoice {
   id            Int      @id
   customer_id   Int
   guid          String?
@@ -10677,6 +10678,7 @@ model Booking {
   UserMaster                    UserMaster?     @relation(fields: [contact_id], references: [contact_id])
   CmStaffGeneral                CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
   CompanyBranch                 CompanyBranch?  @relation(fields: [location_id], references: [id])
+  CompanyService                CompanyService? @relation(fields: [service_id], references: [id])
 
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")

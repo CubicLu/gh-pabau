@@ -1,6 +1,8 @@
 import React, { FC } from 'react'
 import { Typography, Affix, Skeleton } from 'antd'
 import styles from './InvoiceFooter.module.less'
+import { useUser } from '../../../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../../../helper/stringToCurrencySignConverter'
 
 interface InvoiceButtonProp {
   text: string
@@ -15,6 +17,7 @@ interface InvoiceFooterProp {
 
 const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons, loading }) => {
   const { Text } = Typography
+  const user = useUser()
   return (
     <Affix offsetBottom={0}>
       <div className={styles.invoiceFooter}>
@@ -28,7 +31,8 @@ const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons, loading }) => {
                     color: b.valueColor ? b.valueColor : '#fff',
                   }}
                 >
-                  £{(b.value ?? 0).toFixed(2)}
+                  {stringToCurrencySignConverter(user.me?.currency)}
+                  {(b.value ?? 0).toFixed(2)}
                 </Text>
               ) : (
                 <Skeleton.Input

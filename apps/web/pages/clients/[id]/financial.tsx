@@ -159,7 +159,7 @@ const Financial = () => {
         minHeight={'0vh'}
         tabPosition="top"
         menuItems={[
-          `Invoices (${totalInvoices?.aggregateInvDetail?.count?.id ?? 0})`,
+          `Invoices (${totalInvoices?.aggregateInvoice?.count?.id ?? 0})`,
           `Payments`,
           `Items`,
           `Voided`,
@@ -174,19 +174,19 @@ const Financial = () => {
           invoiceEmployeeOptions={
             ([
               ...new Set(
-                allInvoice?.findManyInvDetail?.map((item) => item.billers)
+                allInvoice?.findManyInvoice?.map((item) => item.billers)
               ),
             ].filter((item) => !!item) as string[]) ?? []
           }
           locationOptions={
             ([
               ...new Set(
-                allInvoice?.findManyInvDetail?.map((item) => item.location_name)
+                allInvoice?.findManyInvoice?.map((item) => item.location_name)
               ),
             ].filter((item) => !!item) as string[]) ?? []
           }
           onChangePagination={handlePagination}
-          totalInoviceCount={totalInvoices?.aggregateInvDetail?.count?.id}
+          totalInoviceCount={totalInvoices?.aggregateInvoice?.count?.id}
           onExpand={handleExpandsionClick}
           onFilterSubmit={handleFilter}
         />

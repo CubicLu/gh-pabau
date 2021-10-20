@@ -24,6 +24,8 @@ import { GetFinanceInvoicesQuery, GetInvoiceQuery } from '@pabau/graphql'
 import EditInvoice from './EditInvoice'
 import InvoiceFooter from './invoice-footer/InvoiceFooter'
 import dayjs from 'dayjs'
+import { useUser } from '../../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../../helper/stringToCurrencySignConverter'
 
 export interface InitialFilterValue {
   type: string
@@ -76,9 +78,10 @@ export const Invoices: FC<P> = (props) => {
     onFilterSubmit,
     onExpand,
   } = props
-  const [invoices, setInvoices] = useState(invoice?.findManyInvDetail)
+  const [invoices, setInvoices] = useState(invoice?.findManyInvoice)
   const { Text, Title } = Typography
   const { Option } = Select
+  const user = useUser()
   const { RangePicker } = DatePicker
   const { t } = useTranslation('common')
   const [expandedRow, setExpandedRow] = useState(0)
@@ -100,7 +103,7 @@ export const Invoices: FC<P> = (props) => {
 
   useEffect(() => {
     const invoicesDetails = []
-    invoice?.findManyInvDetail?.map((item) => {
+    invoice?.findManyInvoice?.map((item) => {
       const discount = salesDetails?.invoice?.discount_amount
       const inv_total = salesDetails?.invoice?.inv_total
       invoicesDetails.push({
@@ -156,12 +159,12 @@ export const Invoices: FC<P> = (props) => {
     setTotalOutstanding(
       salesDetails
         ? salesDetails?.invoice?.paid_amount
-        : invoice?.findManyInvDetail[0]?.amount ?? 0
+        : invoice?.findManyInvoice[0]?.amount ?? 0
     )
     setTotalInvoiced(
       salesDetails
         ? salesDetails?.invoice?.inv_total
-        : invoice?.findManyInvDetail[0]?.amount ?? 0
+        : invoice?.findManyInvoice[0]?.amount ?? 0
     )
   }, [salesDetails, invoice])
 
@@ -255,7 +258,7 @@ export const Invoices: FC<P> = (props) => {
                   arrowPointAtCenter
                   title={
                     <div>
-                      <p style={{ margin: 5 }}>
+                      <p className={styles.shareTootip}>
                         {t('ui.client-card-financial.shared-with')}
                       </p>
                       {[row.employee].map((x, index) => {
@@ -284,7 +287,10 @@ export const Invoices: FC<P> = (props) => {
       render: function renderItem(value, row) {
         return (
           <div className={styles.collapseIconContainer}>
-            <span>£{(value ?? 0).toFixed(2)}</span>
+            <span>
+              {stringToCurrencySignConverter(user.me?.currency)}
+              {(value ?? 0).toFixed(2)}
+            </span>
             <span
               onClick={() => {
                 onExpand?.(row['key'])
@@ -322,7 +328,10 @@ export const Invoices: FC<P> = (props) => {
                   <Text>{item.quantity}</Text>
                 </div>
                 <div>
-                  <Text>£{(item.quantity * item.price).toFixed(2)}</Text>
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(item.quantity * item.price).toFixed(2)}
+                  </Text>
                 </div>
               </div>
             ))}
@@ -370,7 +379,10 @@ export const Invoices: FC<P> = (props) => {
                   />
                 )}
                 {!salesDetaillLoading ? (
-                  <Text>£{(record?.totalVat ?? 0).toFixed(2)}</Text>
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.totalVat ?? 0).toFixed(2)}
+                  </Text>
                 ) : (
                   <Skeleton.Input
                     active={true}
@@ -392,7 +404,10 @@ export const Invoices: FC<P> = (props) => {
                   />
                 )}
                 {!salesDetaillLoading ? (
-                  <Text>£{(record?.grandTotal ?? 0).toFixed(2)}</Text>
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.grandTotal ?? 0).toFixed(2)}
+                  </Text>
                 ) : (
                   <Skeleton.Input
                     active={true}
@@ -416,7 +431,10 @@ export const Invoices: FC<P> = (props) => {
                   />
                 )}
                 {!salesDetaillLoading ? (
-                  <Text>£{(record?.amountPaid ?? 0).toFixed(2)}</Text>
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.amountPaid ?? 0).toFixed(2)}
+                  </Text>
                 ) : (
                   <Skeleton.Input
                     active={true}
@@ -436,7 +454,10 @@ export const Invoices: FC<P> = (props) => {
                   />
                 )}
                 {!salesDetaillLoading ? (
-                  <Text>£{(record?.tips ?? 0).toFixed(2)}</Text>
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.tips ?? 0).toFixed(2)}
+                  </Text>
                 ) : (
                   <Skeleton.Input
                     active={true}
@@ -460,7 +481,10 @@ export const Invoices: FC<P> = (props) => {
               />
             )}
             {!salesDetaillLoading ? (
-              <Title level={4}>£{record?.grandTotal.toFixed(2)}</Title>
+              <Title level={4}>
+                {stringToCurrencySignConverter(user.me?.currency)}
+                {record?.grandTotal.toFixed(2)}
+              </Title>
             ) : (
               <Skeleton.Input
                 active={true}
@@ -471,7 +495,9 @@ export const Invoices: FC<P> = (props) => {
             {!record.paid && (
               <Button type="primary">{`${t(
                 'ui.client-card-financial.pay'
-              )} £${record.grandTotal.toFixed(2)}`}</Button>
+              )} ${stringToCurrencySignConverter(
+                user.me?.currency
+              )}${record.grandTotal.toFixed(2)}`}</Button>
             )}
           </div>
         </div>
@@ -536,7 +562,7 @@ export const Invoices: FC<P> = (props) => {
               <div className={styles.invoicesFilCont}>
                 <Text>{t('ui.client-card-financial.employee')}</Text>
                 <Select
-                  style={{ width: '100%' }}
+                  className={styles.invoiceFilter}
                   onChange={(e) => setFieldValue('employee', e)}
                   value={values.employee}
                 >
@@ -555,7 +581,7 @@ export const Invoices: FC<P> = (props) => {
               <div className={styles.invoicesFilCont}>
                 <Text>{t('ui.client-card-financial.location')}</Text>
                 <Select
-                  style={{ width: '100%' }}
+                  className={styles.invoiceFilter}
                   onChange={(e) => setFieldValue('location', e)}
                   value={values.location}
                 >
