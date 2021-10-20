@@ -3,14 +3,14 @@ import { Form, Input } from 'formik-antd'
 import { Formik } from 'formik'
 import classNames from 'classnames'
 import { useMedia } from 'react-use'
-
+import { useTranslation } from 'react-i18next'
 import {
   Button,
   Notification,
   NotificationType,
   PhoneNumberInput,
 } from '@pabau/ui'
-import { emergencyData } from '../../../../mocks/UserDetail'
+import { userDetail } from '../../../../mocks/UserDetail'
 import styles from './Emergency.module.less'
 
 interface DoctorProps {
@@ -18,6 +18,8 @@ interface DoctorProps {
 }
 
 const Emergency = () => {
+  const { t } = useTranslation('common')
+  const { emergencyData } = userDetail(t)
   const { primaryDetail, doctorDetail, secondaryDetail } = emergencyData
   const isMobile = useMedia('(max-width: 991px)', false)
 

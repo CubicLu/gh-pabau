@@ -2,9 +2,12 @@ import React, { FC, useState } from 'react'
 
 import { Button, CheckboxTree, Notification, NotificationType } from '@pabau/ui'
 import styles from './Service.module.less'
-import { serviceData } from '../../../../mocks/UserDetail'
+import { userDetail } from '../../../../mocks/UserDetail'
+import { useTranslation } from 'react-i18next'
 
 const Service: FC = () => {
+  const { t } = useTranslation('common')
+  const { serviceData } = userDetail(t)
   const [expandedKeys, setExpandedKeys] = useState(['Accent prime'])
   const [checkedKeys, setCheckedKeys] = useState([
     'Accent prime - Subcategory 1',

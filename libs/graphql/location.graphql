@@ -208,14 +208,14 @@ query locationLimit {
 query activeLocationCount {
   findManyCompanyBranchCount(where: { is_active: { equals: 1 } })
 }
-
-query getCompanyLocationList($is_active: Int = 1) {
-    findManyCompanyBranch(
-      where: {
-        is_active: { equals: $is_active }
-      }
-    ) {
-      id
-      name
+query getActiveLocation {
+  locations: findManyCompanyBranch(
+    where: { is_active: { equals: 1 }, AND: { name: { not: { equals: "" } } } }
+    orderBy: {
+      name: asc
     }
+  ) {
+    id
+    name
   }
+}

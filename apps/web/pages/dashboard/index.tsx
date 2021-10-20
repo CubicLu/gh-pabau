@@ -6,7 +6,7 @@ import { useUser } from '../../context/UserContext'
 import { useQuery } from '@apollo/client'
 import { useMedia } from 'react-use'
 import {
-  GetCompanyLocationListDocument,
+  GetActiveLocationDocument,
   GetDashboardDataDocument,
 } from '@pabau/graphql'
 import {
@@ -84,11 +84,7 @@ export function Index() {
     count: 0,
     per: '0%',
   })
-  const { data: locations } = useQuery(GetCompanyLocationListDocument, {
-    variables: {
-      is_active: 1,
-    },
-  })
+  const { data: locations } = useQuery(GetActiveLocationDocument)
   const getAppointmentQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
@@ -153,7 +149,7 @@ export function Index() {
   useEffect(() => {
     const List = [...userListData]
     if (locations && userListData.length === 1) {
-      locations.findManyCompanyBranch?.map((item) => {
+      locations.locations?.map((item) => {
         List.push({
           key: item.id,
           label: item.name,
@@ -371,7 +367,7 @@ export function Index() {
                 src={
                   dashboardMode === 0
                     ? user?.me?.companies?.length > 0
-                      ? cdnURL + user?.me?.companies[0]?.logoUrl
+                      ? cdnURL + user?.me?.companies[0]?.logo
                       : ''
                     : cdnURL + user?.me?.imageUrl
                 }
