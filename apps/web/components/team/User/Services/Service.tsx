@@ -77,7 +77,7 @@ const Service: FC = () => {
     ) {
       setIsLoading(false)
     }
-  }, [serviceCategoryLoading, staffServiceLoading, checkedKeys])
+  }, [serviceCategoryLoading, staffServiceLoading, checkedKeys, userId])
   const [autoExpandParent, setAutoExpandParent] = useState(true)
 
   const onExpand = (expandedKeysValue: string[]) => {
