@@ -111,6 +111,12 @@ export const Booking = objectType({
         return root.CompanyBranch
       },
     })
+    t.nullable.field('CompanyService', {
+      type: 'CompanyService',
+      resolve(root: any) {
+        return root.CompanyService
+      },
+    })
     t.list.field('PathwaysTaken', {
       type: 'PathwaysTaken',
       args: {
