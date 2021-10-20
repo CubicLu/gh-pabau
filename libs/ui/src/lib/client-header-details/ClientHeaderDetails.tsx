@@ -65,11 +65,8 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   useEffect(() => {
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
-    if (notes?.count)
-      setCountDetails((item) => {
-        return { ...item, notes: notes?.count }
-      })
-  }, [notes])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleAddNote = (e) => {
     e.preventDefault()
