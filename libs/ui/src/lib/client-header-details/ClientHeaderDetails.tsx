@@ -65,8 +65,11 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   useEffect(() => {
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (notes?.count)
+      setCountDetails((item) => {
+        return { ...item, notes: notes?.count }
+      })
+  }, [notes])
 
   const handleAddNote = (e) => {
     e.preventDefault()
@@ -296,10 +299,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                     <div className={styles.clientNoteItem}>
                       <div>
                         <Avatar
-                          src={note?.User?.avatar}
-                          name={
-                            note?.User?.contact && getImage(note?.User?.contact)
+                          src={
+                            note?.User?.avatar && getImage(note?.User?.avatar)
                           }
+                          name={note?.User?.contact}
                           size={32}
                         />
                       </div>
