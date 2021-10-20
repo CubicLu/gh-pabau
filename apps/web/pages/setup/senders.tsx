@@ -35,6 +35,7 @@ export interface SenderItem {
   isEnterpriseEmail?: string
   masterCriteria?: string
   subCriteria?: string
+  visibility?: string
   mergeTags: MergeTagItem[]
 }
 
