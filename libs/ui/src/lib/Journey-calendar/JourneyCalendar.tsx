@@ -6,9 +6,9 @@ import arrow from '../journey-calendar/arrow.svg'
 // import Button from '../../../../libs/ui/src/lib/button/Button'
 import { Button } from '@pabau/ui'
 
-const JourneyCalendar: FC = () => {
+export const JourneyCalendar: FC = () => {
   // const { t } = useTranslation('common')
-  const carousel = React.createRef()
+  const carousel: any = React.createRef()
   const width = window.innerWidth
   const [date, setDate] = useState(2)
   console.log(date)
