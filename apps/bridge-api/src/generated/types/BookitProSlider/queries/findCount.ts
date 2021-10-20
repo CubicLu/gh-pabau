@@ -6,7 +6,7 @@ export const BookitProSliderFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'BookitProSliderWhereInput',
-      orderBy: list('BookitProSliderOrderByInput'),
+      orderBy: list('BookitProSliderOrderByWithRelationInput'),
       cursor: 'BookitProSliderWhereUniqueInput',
       distinct: 'BookitProSliderScalarFieldEnum',
       skip: 'Int',

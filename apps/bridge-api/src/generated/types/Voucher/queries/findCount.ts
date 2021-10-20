@@ -4,7 +4,7 @@ export const VoucherFindCountQuery = queryField('findManyVoucherCount', {
   type: nonNull('Int'),
   args: {
     where: 'VoucherWhereInput',
-    orderBy: list('VoucherOrderByInput'),
+    orderBy: list('VoucherOrderByWithRelationInput'),
     cursor: 'VoucherWhereUniqueInput',
     distinct: 'VoucherScalarFieldEnum',
     skip: 'Int',

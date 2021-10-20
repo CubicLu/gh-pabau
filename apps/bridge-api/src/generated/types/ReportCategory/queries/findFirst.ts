@@ -6,7 +6,7 @@ export const ReportCategoryFindFirstQuery = queryField(
     type: 'ReportCategory',
     args: {
       where: 'ReportCategoryWhereInput',
-      orderBy: list('ReportCategoryOrderByInput'),
+      orderBy: list('ReportCategoryOrderByWithRelationInput'),
       cursor: 'ReportCategoryWhereUniqueInput',
       distinct: 'ReportCategoryScalarFieldEnum',
       skip: 'Int',

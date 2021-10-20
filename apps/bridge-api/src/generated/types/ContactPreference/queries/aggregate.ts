@@ -6,7 +6,7 @@ export const ContactPreferenceAggregateQuery = queryField(
     type: 'AggregateContactPreference',
     args: {
       where: 'ContactPreferenceWhereInput',
-      orderBy: list('ContactPreferenceOrderByInput'),
+      orderBy: list('ContactPreferenceOrderByWithRelationInput'),
       cursor: 'ContactPreferenceWhereUniqueInput',
       distinct: 'ContactPreferenceScalarFieldEnum',
       skip: 'Int',

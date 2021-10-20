@@ -6,7 +6,7 @@ export const CmCouponClickFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmCouponClickWhereInput',
-      orderBy: list('CmCouponClickOrderByInput'),
+      orderBy: list('CmCouponClickOrderByWithRelationInput'),
       cursor: 'CmCouponClickWhereUniqueInput',
       distinct: 'CmCouponClickScalarFieldEnum',
       skip: 'Int',

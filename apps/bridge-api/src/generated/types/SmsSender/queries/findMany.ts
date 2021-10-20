@@ -4,7 +4,7 @@ export const SmsSenderFindManyQuery = queryField('findManySmsSender', {
   type: nonNull(list(nonNull('SmsSender'))),
   args: {
     where: 'SmsSenderWhereInput',
-    orderBy: list('SmsSenderOrderByInput'),
+    orderBy: list('SmsSenderOrderByWithRelationInput'),
     cursor: 'SmsSenderWhereUniqueInput',
     distinct: 'SmsSenderScalarFieldEnum',
     skip: 'Int',

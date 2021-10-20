@@ -6,7 +6,7 @@ export const ClassTemplateSettingFindFirstQuery = queryField(
     type: 'ClassTemplateSetting',
     args: {
       where: 'ClassTemplateSettingWhereInput',
-      orderBy: list('ClassTemplateSettingOrderByInput'),
+      orderBy: list('ClassTemplateSettingOrderByWithRelationInput'),
       cursor: 'ClassTemplateSettingWhereUniqueInput',
       distinct: 'ClassTemplateSettingScalarFieldEnum',
       skip: 'Int',

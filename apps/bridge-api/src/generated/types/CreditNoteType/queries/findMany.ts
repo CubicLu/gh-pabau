@@ -6,7 +6,7 @@ export const CreditNoteTypeFindManyQuery = queryField(
     type: nonNull(list(nonNull('CreditNoteType'))),
     args: {
       where: 'CreditNoteTypeWhereInput',
-      orderBy: list('CreditNoteTypeOrderByInput'),
+      orderBy: list('CreditNoteTypeOrderByWithRelationInput'),
       cursor: 'CreditNoteTypeWhereUniqueInput',
       distinct: 'CreditNoteTypeScalarFieldEnum',
       skip: 'Int',

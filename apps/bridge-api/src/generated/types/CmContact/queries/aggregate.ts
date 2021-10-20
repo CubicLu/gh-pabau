@@ -4,7 +4,7 @@ export const CmContactAggregateQuery = queryField('aggregateCmContact', {
   type: 'AggregateCmContact',
   args: {
     where: 'CmContactWhereInput',
-    orderBy: list('CmContactOrderByInput'),
+    orderBy: list('CmContactOrderByWithRelationInput'),
     cursor: 'CmContactWhereUniqueInput',
     distinct: 'CmContactScalarFieldEnum',
     skip: 'Int',

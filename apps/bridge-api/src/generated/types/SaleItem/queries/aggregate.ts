@@ -4,7 +4,7 @@ export const SaleItemAggregateQuery = queryField('aggregateSaleItem', {
   type: 'AggregateSaleItem',
   args: {
     where: 'SaleItemWhereInput',
-    orderBy: list('SaleItemOrderByInput'),
+    orderBy: list('SaleItemOrderByWithRelationInput'),
     cursor: 'SaleItemWhereUniqueInput',
     distinct: 'SaleItemScalarFieldEnum',
     skip: 'Int',

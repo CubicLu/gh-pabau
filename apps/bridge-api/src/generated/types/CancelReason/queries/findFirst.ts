@@ -4,7 +4,7 @@ export const CancelReasonFindFirstQuery = queryField('findFirstCancelReason', {
   type: 'CancelReason',
   args: {
     where: 'CancelReasonWhereInput',
-    orderBy: list('CancelReasonOrderByInput'),
+    orderBy: list('CancelReasonOrderByWithRelationInput'),
     cursor: 'CancelReasonWhereUniqueInput',
     distinct: 'CancelReasonScalarFieldEnum',
     skip: 'Int',

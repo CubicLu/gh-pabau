@@ -6,7 +6,7 @@ export const PointOfSaleSettingFindFirstQuery = queryField(
     type: 'PointOfSaleSetting',
     args: {
       where: 'PointOfSaleSettingWhereInput',
-      orderBy: list('PointOfSaleSettingOrderByInput'),
+      orderBy: list('PointOfSaleSettingOrderByWithRelationInput'),
       cursor: 'PointOfSaleSettingWhereUniqueInput',
       distinct: 'PointOfSaleSettingScalarFieldEnum',
       skip: 'Int',

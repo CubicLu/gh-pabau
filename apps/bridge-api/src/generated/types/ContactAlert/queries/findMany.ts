@@ -4,7 +4,7 @@ export const ContactAlertFindManyQuery = queryField('findManyContactAlert', {
   type: nonNull(list(nonNull('ContactAlert'))),
   args: {
     where: 'ContactAlertWhereInput',
-    orderBy: list('ContactAlertOrderByInput'),
+    orderBy: list('ContactAlertOrderByWithRelationInput'),
     cursor: 'ContactAlertWhereUniqueInput',
     distinct: 'ContactAlertScalarFieldEnum',
     skip: 'Int',

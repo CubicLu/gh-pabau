@@ -4,7 +4,7 @@ export const UserAlertTypeFindManyQuery = queryField('findManyUserAlertType', {
   type: nonNull(list(nonNull('UserAlertType'))),
   args: {
     where: 'UserAlertTypeWhereInput',
-    orderBy: list('UserAlertTypeOrderByInput'),
+    orderBy: list('UserAlertTypeOrderByWithRelationInput'),
     cursor: 'UserAlertTypeWhereUniqueInput',
     distinct: 'UserAlertTypeScalarFieldEnum',
     skip: 'Int',

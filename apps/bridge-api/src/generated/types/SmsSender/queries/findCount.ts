@@ -4,7 +4,7 @@ export const SmsSenderFindCountQuery = queryField('findManySmsSenderCount', {
   type: nonNull('Int'),
   args: {
     where: 'SmsSenderWhereInput',
-    orderBy: list('SmsSenderOrderByInput'),
+    orderBy: list('SmsSenderOrderByWithRelationInput'),
     cursor: 'SmsSenderWhereUniqueInput',
     distinct: 'SmsSenderScalarFieldEnum',
     skip: 'Int',

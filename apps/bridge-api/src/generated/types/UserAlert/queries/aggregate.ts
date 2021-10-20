@@ -4,7 +4,7 @@ export const UserAlertAggregateQuery = queryField('aggregateUserAlert', {
   type: 'AggregateUserAlert',
   args: {
     where: 'UserAlertWhereInput',
-    orderBy: list('UserAlertOrderByInput'),
+    orderBy: list('UserAlertOrderByWithRelationInput'),
     cursor: 'UserAlertWhereUniqueInput',
     distinct: 'UserAlertScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const ContactPackageFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ContactPackageWhereInput',
-      orderBy: list('ContactPackageOrderByInput'),
+      orderBy: list('ContactPackageOrderByWithRelationInput'),
       cursor: 'ContactPackageWhereUniqueInput',
       distinct: 'ContactPackageScalarFieldEnum',
       skip: 'Int',

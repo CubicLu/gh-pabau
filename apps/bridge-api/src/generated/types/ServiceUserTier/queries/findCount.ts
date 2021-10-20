@@ -6,7 +6,7 @@ export const ServiceUserTierFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ServiceUserTierWhereInput',
-      orderBy: list('ServiceUserTierOrderByInput'),
+      orderBy: list('ServiceUserTierOrderByWithRelationInput'),
       cursor: 'ServiceUserTierWhereUniqueInput',
       distinct: 'ServiceUserTierScalarFieldEnum',
       skip: 'Int',

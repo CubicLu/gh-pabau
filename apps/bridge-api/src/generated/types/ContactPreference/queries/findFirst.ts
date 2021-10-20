@@ -6,7 +6,7 @@ export const ContactPreferenceFindFirstQuery = queryField(
     type: 'ContactPreference',
     args: {
       where: 'ContactPreferenceWhereInput',
-      orderBy: list('ContactPreferenceOrderByInput'),
+      orderBy: list('ContactPreferenceOrderByWithRelationInput'),
       cursor: 'ContactPreferenceWhereUniqueInput',
       distinct: 'ContactPreferenceScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const ServiceUserTierAggregateQuery = queryField(
     type: 'AggregateServiceUserTier',
     args: {
       where: 'ServiceUserTierWhereInput',
-      orderBy: list('ServiceUserTierOrderByInput'),
+      orderBy: list('ServiceUserTierOrderByWithRelationInput'),
       cursor: 'ServiceUserTierWhereUniqueInput',
       distinct: 'ServiceUserTierScalarFieldEnum',
       skip: 'Int',

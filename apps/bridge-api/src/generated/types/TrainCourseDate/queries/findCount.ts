@@ -6,7 +6,7 @@ export const TrainCourseDateFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'TrainCourseDateWhereInput',
-      orderBy: list('TrainCourseDateOrderByInput'),
+      orderBy: list('TrainCourseDateOrderByWithRelationInput'),
       cursor: 'TrainCourseDateWhereUniqueInput',
       distinct: 'TrainCourseDateScalarFieldEnum',
       skip: 'Int',

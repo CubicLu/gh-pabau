@@ -4,7 +4,7 @@ export const UserAggregateQuery = queryField('aggregateUser', {
   type: 'AggregateUser',
   args: {
     where: 'UserWhereInput',
-    orderBy: list('UserOrderByInput'),
+    orderBy: list('UserOrderByWithRelationInput'),
     cursor: 'UserWhereUniqueInput',
     distinct: 'UserScalarFieldEnum',
     skip: 'Int',

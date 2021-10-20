@@ -6,7 +6,7 @@ export const ContactAlertFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ContactAlertWhereInput',
-      orderBy: list('ContactAlertOrderByInput'),
+      orderBy: list('ContactAlertOrderByWithRelationInput'),
       cursor: 'ContactAlertWhereUniqueInput',
       distinct: 'ContactAlertScalarFieldEnum',
       skip: 'Int',

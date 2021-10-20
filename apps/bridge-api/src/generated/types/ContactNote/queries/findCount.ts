@@ -6,7 +6,7 @@ export const ContactNoteFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ContactNoteWhereInput',
-      orderBy: list('ContactNoteOrderByInput'),
+      orderBy: list('ContactNoteOrderByWithRelationInput'),
       cursor: 'ContactNoteWhereUniqueInput',
       distinct: 'ContactNoteScalarFieldEnum',
       skip: 'Int',

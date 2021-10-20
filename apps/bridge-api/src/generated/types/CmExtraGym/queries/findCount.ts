@@ -4,7 +4,7 @@ export const CmExtraGymFindCountQuery = queryField('findManyCmExtraGymCount', {
   type: nonNull('Int'),
   args: {
     where: 'CmExtraGymWhereInput',
-    orderBy: list('CmExtraGymOrderByInput'),
+    orderBy: list('CmExtraGymOrderByWithRelationInput'),
     cursor: 'CmExtraGymWhereUniqueInput',
     distinct: 'CmExtraGymScalarFieldEnum',
     skip: 'Int',

@@ -4,7 +4,7 @@ export const BlockReasonFindFirstQuery = queryField('findFirstBlockReason', {
   type: 'BlockReason',
   args: {
     where: 'BlockReasonWhereInput',
-    orderBy: list('BlockReasonOrderByInput'),
+    orderBy: list('BlockReasonOrderByWithRelationInput'),
     cursor: 'BlockReasonWhereUniqueInput',
     distinct: 'BlockReasonScalarFieldEnum',
     skip: 'Int',

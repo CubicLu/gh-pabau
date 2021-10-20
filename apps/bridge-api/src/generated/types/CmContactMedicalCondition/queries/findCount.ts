@@ -6,7 +6,7 @@ export const CmContactMedicalConditionFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmContactMedicalConditionWhereInput',
-      orderBy: list('CmContactMedicalConditionOrderByInput'),
+      orderBy: list('CmContactMedicalConditionOrderByWithRelationInput'),
       cursor: 'CmContactMedicalConditionWhereUniqueInput',
       distinct: 'CmContactMedicalConditionScalarFieldEnum',
       skip: 'Int',

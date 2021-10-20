@@ -4,7 +4,7 @@ export const CmDrugAggregateQuery = queryField('aggregateCmDrug', {
   type: 'AggregateCmDrug',
   args: {
     where: 'CmDrugWhereInput',
-    orderBy: list('CmDrugOrderByInput'),
+    orderBy: list('CmDrugOrderByWithRelationInput'),
     cursor: 'CmDrugWhereUniqueInput',
     distinct: 'CmDrugScalarFieldEnum',
     skip: 'Int',

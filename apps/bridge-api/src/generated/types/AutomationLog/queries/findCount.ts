@@ -6,7 +6,7 @@ export const AutomationLogFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AutomationLogWhereInput',
-      orderBy: list('AutomationLogOrderByInput'),
+      orderBy: list('AutomationLogOrderByWithRelationInput'),
       cursor: 'AutomationLogWhereUniqueInput',
       distinct: 'AutomationLogScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const PhotoAlbumFindManyQuery = queryField('findManyPhotoAlbum', {
   type: nonNull(list(nonNull('PhotoAlbum'))),
   args: {
     where: 'PhotoAlbumWhereInput',
-    orderBy: list('PhotoAlbumOrderByInput'),
+    orderBy: list('PhotoAlbumOrderByWithRelationInput'),
     cursor: 'PhotoAlbumWhereUniqueInput',
     distinct: 'PhotoAlbumScalarFieldEnum',
     skip: 'Int',

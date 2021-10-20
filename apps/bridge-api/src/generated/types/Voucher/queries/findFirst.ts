@@ -4,7 +4,7 @@ export const VoucherFindFirstQuery = queryField('findFirstVoucher', {
   type: 'Voucher',
   args: {
     where: 'VoucherWhereInput',
-    orderBy: list('VoucherOrderByInput'),
+    orderBy: list('VoucherOrderByWithRelationInput'),
     cursor: 'VoucherWhereUniqueInput',
     distinct: 'VoucherScalarFieldEnum',
     skip: 'Int',

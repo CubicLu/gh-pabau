@@ -4,7 +4,7 @@ export const ClassProductFindManyQuery = queryField('findManyClassProduct', {
   type: nonNull(list(nonNull('ClassProduct'))),
   args: {
     where: 'ClassProductWhereInput',
-    orderBy: list('ClassProductOrderByInput'),
+    orderBy: list('ClassProductOrderByWithRelationInput'),
     cursor: 'ClassProductWhereUniqueInput',
     distinct: 'ClassProductScalarFieldEnum',
     skip: 'Int',

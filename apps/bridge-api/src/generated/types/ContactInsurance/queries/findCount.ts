@@ -6,7 +6,7 @@ export const ContactInsuranceFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ContactInsuranceWhereInput',
-      orderBy: list('ContactInsuranceOrderByInput'),
+      orderBy: list('ContactInsuranceOrderByWithRelationInput'),
       cursor: 'ContactInsuranceWhereUniqueInput',
       distinct: 'ContactInsuranceScalarFieldEnum',
       skip: 'Int',

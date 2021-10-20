@@ -6,7 +6,7 @@ export const CmAuthorizationFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmAuthorizationWhereInput',
-      orderBy: list('CmAuthorizationOrderByInput'),
+      orderBy: list('CmAuthorizationOrderByWithRelationInput'),
       cursor: 'CmAuthorizationWhereUniqueInput',
       distinct: 'CmAuthorizationScalarFieldEnum',
       skip: 'Int',

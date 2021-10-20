@@ -6,7 +6,7 @@ export const UserMobilePermissionAggregateQuery = queryField(
     type: 'AggregateUserMobilePermission',
     args: {
       where: 'UserMobilePermissionWhereInput',
-      orderBy: list('UserMobilePermissionOrderByInput'),
+      orderBy: list('UserMobilePermissionOrderByWithRelationInput'),
       cursor: 'UserMobilePermissionWhereUniqueInput',
       distinct: 'UserMobilePermissionScalarFieldEnum',
       skip: 'Int',

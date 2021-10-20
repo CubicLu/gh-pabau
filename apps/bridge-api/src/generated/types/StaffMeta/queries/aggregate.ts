@@ -4,7 +4,7 @@ export const StaffMetaAggregateQuery = queryField('aggregateStaffMeta', {
   type: 'AggregateStaffMeta',
   args: {
     where: 'StaffMetaWhereInput',
-    orderBy: list('StaffMetaOrderByInput'),
+    orderBy: list('StaffMetaOrderByWithRelationInput'),
     cursor: 'StaffMetaWhereUniqueInput',
     distinct: 'StaffMetaScalarFieldEnum',
     skip: 'Int',

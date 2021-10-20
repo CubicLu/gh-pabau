@@ -4,7 +4,7 @@ export const SmsSenderAggregateQuery = queryField('aggregateSmsSender', {
   type: 'AggregateSmsSender',
   args: {
     where: 'SmsSenderWhereInput',
-    orderBy: list('SmsSenderOrderByInput'),
+    orderBy: list('SmsSenderOrderByWithRelationInput'),
     cursor: 'SmsSenderWhereUniqueInput',
     distinct: 'SmsSenderScalarFieldEnum',
     skip: 'Int',

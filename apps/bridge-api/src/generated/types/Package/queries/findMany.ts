@@ -4,7 +4,7 @@ export const PackageFindManyQuery = queryField('findManyPackage', {
   type: nonNull(list(nonNull('Package'))),
   args: {
     where: 'PackageWhereInput',
-    orderBy: list('PackageOrderByInput'),
+    orderBy: list('PackageOrderByWithRelationInput'),
     cursor: 'PackageWhereUniqueInput',
     distinct: 'PackageScalarFieldEnum',
     skip: 'Int',

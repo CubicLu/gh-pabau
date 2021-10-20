@@ -6,7 +6,7 @@ export const SupplierCategoryFindManyQuery = queryField(
     type: nonNull(list(nonNull('SupplierCategory'))),
     args: {
       where: 'SupplierCategoryWhereInput',
-      orderBy: list('SupplierCategoryOrderByInput'),
+      orderBy: list('SupplierCategoryOrderByWithRelationInput'),
       cursor: 'SupplierCategoryWhereUniqueInput',
       distinct: 'SupplierCategoryScalarFieldEnum',
       skip: 'Int',

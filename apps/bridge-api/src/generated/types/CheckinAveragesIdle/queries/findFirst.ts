@@ -6,7 +6,7 @@ export const CheckinAveragesIdleFindFirstQuery = queryField(
     type: 'CheckinAveragesIdle',
     args: {
       where: 'CheckinAveragesIdleWhereInput',
-      orderBy: list('CheckinAveragesIdleOrderByInput'),
+      orderBy: list('CheckinAveragesIdleOrderByWithRelationInput'),
       cursor: 'CheckinAveragesIdleWhereUniqueInput',
       distinct: 'CheckinAveragesIdleScalarFieldEnum',
       skip: 'Int',

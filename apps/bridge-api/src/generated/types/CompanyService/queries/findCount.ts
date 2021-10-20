@@ -6,7 +6,7 @@ export const CompanyServiceFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanyServiceWhereInput',
-      orderBy: list('CompanyServiceOrderByInput'),
+      orderBy: list('CompanyServiceOrderByWithRelationInput'),
       cursor: 'CompanyServiceWhereUniqueInput',
       distinct: 'CompanyServiceScalarFieldEnum',
       skip: 'Int',

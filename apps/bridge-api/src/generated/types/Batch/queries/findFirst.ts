@@ -4,7 +4,7 @@ export const BatchFindFirstQuery = queryField('findFirstBatch', {
   type: 'Batch',
   args: {
     where: 'BatchWhereInput',
-    orderBy: list('BatchOrderByInput'),
+    orderBy: list('BatchOrderByWithRelationInput'),
     cursor: 'BatchWhereUniqueInput',
     distinct: 'BatchScalarFieldEnum',
     skip: 'Int',

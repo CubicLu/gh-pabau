@@ -4,7 +4,7 @@ export const PipelineFindFirstQuery = queryField('findFirstPipeline', {
   type: 'Pipeline',
   args: {
     where: 'PipelineWhereInput',
-    orderBy: list('PipelineOrderByInput'),
+    orderBy: list('PipelineOrderByWithRelationInput'),
     cursor: 'PipelineWhereUniqueInput',
     distinct: 'PipelineScalarFieldEnum',
     skip: 'Int',

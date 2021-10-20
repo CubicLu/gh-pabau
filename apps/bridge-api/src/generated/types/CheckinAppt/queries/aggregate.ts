@@ -4,7 +4,7 @@ export const CheckinApptAggregateQuery = queryField('aggregateCheckinAppt', {
   type: 'AggregateCheckinAppt',
   args: {
     where: 'CheckinApptWhereInput',
-    orderBy: list('CheckinApptOrderByInput'),
+    orderBy: list('CheckinApptOrderByWithRelationInput'),
     cursor: 'CheckinApptWhereUniqueInput',
     distinct: 'CheckinApptScalarFieldEnum',
     skip: 'Int',

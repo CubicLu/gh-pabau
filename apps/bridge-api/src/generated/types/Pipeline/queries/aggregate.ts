@@ -4,7 +4,7 @@ export const PipelineAggregateQuery = queryField('aggregatePipeline', {
   type: 'AggregatePipeline',
   args: {
     where: 'PipelineWhereInput',
-    orderBy: list('PipelineOrderByInput'),
+    orderBy: list('PipelineOrderByWithRelationInput'),
     cursor: 'PipelineWhereUniqueInput',
     distinct: 'PipelineScalarFieldEnum',
     skip: 'Int',

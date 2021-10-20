@@ -6,7 +6,7 @@ export const ClassSmsHistoryFindManyQuery = queryField(
     type: nonNull(list(nonNull('ClassSmsHistory'))),
     args: {
       where: 'ClassSmsHistoryWhereInput',
-      orderBy: list('ClassSmsHistoryOrderByInput'),
+      orderBy: list('ClassSmsHistoryOrderByWithRelationInput'),
       cursor: 'ClassSmsHistoryWhereUniqueInput',
       distinct: 'ClassSmsHistoryScalarFieldEnum',
       skip: 'Int',

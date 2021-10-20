@@ -4,7 +4,7 @@ export const StaffNoteFindCountQuery = queryField('findManyStaffNoteCount', {
   type: nonNull('Int'),
   args: {
     where: 'StaffNoteWhereInput',
-    orderBy: list('StaffNoteOrderByInput'),
+    orderBy: list('StaffNoteOrderByWithRelationInput'),
     cursor: 'StaffNoteWhereUniqueInput',
     distinct: 'StaffNoteScalarFieldEnum',
     skip: 'Int',

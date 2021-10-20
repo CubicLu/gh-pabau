@@ -4,7 +4,7 @@ export const ApiKeyFindFirstQuery = queryField('findFirstApiKey', {
   type: 'ApiKey',
   args: {
     where: 'ApiKeyWhereInput',
-    orderBy: list('ApiKeyOrderByInput'),
+    orderBy: list('ApiKeyOrderByWithRelationInput'),
     cursor: 'ApiKeyWhereUniqueInput',
     distinct: 'ApiKeyScalarFieldEnum',
     skip: 'Int',

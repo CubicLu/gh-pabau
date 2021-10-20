@@ -6,7 +6,7 @@ export const ServiceLocationTierAggregateQuery = queryField(
     type: 'AggregateServiceLocationTier',
     args: {
       where: 'ServiceLocationTierWhereInput',
-      orderBy: list('ServiceLocationTierOrderByInput'),
+      orderBy: list('ServiceLocationTierOrderByWithRelationInput'),
       cursor: 'ServiceLocationTierWhereUniqueInput',
       distinct: 'ServiceLocationTierScalarFieldEnum',
       skip: 'Int',

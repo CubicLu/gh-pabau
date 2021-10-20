@@ -4,7 +4,7 @@ export const VoucherAggregateQuery = queryField('aggregateVoucher', {
   type: 'AggregateVoucher',
   args: {
     where: 'VoucherWhereInput',
-    orderBy: list('VoucherOrderByInput'),
+    orderBy: list('VoucherOrderByWithRelationInput'),
     cursor: 'VoucherWhereUniqueInput',
     distinct: 'VoucherScalarFieldEnum',
     skip: 'Int',
