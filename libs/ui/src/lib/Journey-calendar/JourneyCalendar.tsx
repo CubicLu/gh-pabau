@@ -1,17 +1,135 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect, useRef } from 'react'
 import { Carousel, Row, Col } from 'antd'
 // import { useTranslation } from 'react-i18next'
 import styles from './JourneyCalendar.module.less'
 import arrow from '../journey-calendar/arrow.svg'
-// import Button from '../../../../libs/ui/src/lib/button/Button'
+import moment from 'moment'
 import { Button } from '@pabau/ui'
+import { CarouselRef } from 'antd/lib/carousel'
+
+interface CalendarState {
+  activeDate: string
+  array: string[]
+}
+
+const dateFormat = 'MMM D'
 
 export const JourneyCalendar: FC = () => {
   // const { t } = useTranslation('common')
-  const carousel: any = React.createRef()
+  const carousel: React.MutableRefObject<CarouselRef | null> = React.createRef()
   const width = window.innerWidth
   const [date, setDate] = useState(2)
-  console.log(date)
+  const slidesOnLeftRight = 4
+
+  const [dateArray, setDataArray] = useState<CalendarState>({
+    activeDate: moment().format(dateFormat),
+    array: [],
+  })
+
+  const getDaysArray = (start: Date, end: Date) => {
+    const arr: Array<string> = []
+    const dt = new Date(start)
+    for (arr; dt <= end; dt.setDate(dt.getDate() + 1)) {
+      arr.push(moment(dt).format(dateFormat))
+    }
+    return arr
+  }
+
+  const setInitialDates = () => {
+    const start = moment().subtract(slidesOnLeftRight, 'days').toDate()
+    const end = moment().add(slidesOnLeftRight, 'days').toDate()
+    const newArray = getDaysArray(start, end)
+
+    setDataArray({
+      ...dateArray,
+      array: newArray,
+    })
+  }
+
+  const appendNewDates = (direction: 'next' | 'prev') => {
+    // const previousDate1 = moment(currentDate)
+    //   .subtract(1, 'days')
+    //   .format(dateFormat)
+    // const previousDate2 = moment(currentDate)
+    //   .subtract(2, 'days')
+    //   .format(dateFormat)
+    // const previousDate3 = moment(currentDate)
+    //   .subtract(3, 'days')
+    //   .format(dateFormat)
+    // const previousDate4 = moment(currentDate)
+    //   .subtract(4, 'days')
+    //   .format(dateFormat)
+    // const nextDate1 = moment(currentDate).add(1, 'days').format(dateFormat)
+    // const nextDate2 = moment(currentDate).add(2, 'days').format(dateFormat)
+    // const nextDate3 = moment(currentDate).add(3, 'days').format(dateFormat)
+    // const nextDate4 = moment(currentDate).add(4, 'days').format(dateFormat)
+    // const newArray: any = [
+    //   previousDate4,
+    //   previousDate3,
+    //   previousDate2,
+    //   previousDate1,
+    //   currentDate,
+    //   nextDate1,
+    //   nextDate2,
+    //   nextDate3,
+    //   nextDate4,
+    // ]
+    // if direction is of next add next 13 days from last date of array
+    // else add previous 13 days from first date of array
+    // in order to keep building new dates
+    const start =
+      direction === 'prev'
+        ? moment(dateArray.array[0], dateFormat).subtract(9, 'days').toDate()
+        : moment(dateArray.array[dateArray.array.length - 1], dateFormat)
+            .add(1, 'day')
+            .toDate()
+    const end =
+      direction === 'prev'
+        ? moment(dateArray.array[0], dateFormat).subtract(1, 'day').toDate()
+        : moment(dateArray.array[dateArray.array.length - 1], dateFormat)
+            .add(9, 'days')
+            .toDate()
+    const newArray = getDaysArray(start, end)
+    const finalArray =
+      direction === 'prev'
+        ? [...newArray, ...dateArray.array]
+        : [...dateArray.array, ...newArray]
+    setDataArray({
+      ...dateArray,
+      array: newArray,
+    })
+  }
+
+  useEffect(() => {
+    setInitialDates()
+  }, [])
+
+  const selectDateHandler = (date) => {
+    setDataArray({
+      ...dateArray,
+      activeDate: date,
+    })
+  }
+
+  const handleNext = () => {
+    appendNewDates('next')
+  }
+
+  const handlePrev = () => {
+    appendNewDates('prev')
+  }
+
+  const handleSwipe = (swipeDirection: 'left' | 'right') => {
+    console.log('swipeDirection', swipeDirection)
+    if (swipeDirection === 'left') {
+      handleNext()
+    } else {
+      handlePrev()
+    }
+  }
+
+  const slidesToShow = 9
+
   return (
     <>
       {width < 992 ? (
@@ -31,179 +149,71 @@ export const JourneyCalendar: FC = () => {
               <Col className={styles.jcLeftCol}>
                 <div className={styles.journyCalenderColWrap}>
                   {width > 991 ? (
-                    <div
-                      className={styles.prevArrow}
-                      onClick={() => carousel.current?.prev()}
-                    >
+                    <div className={styles.prevArrow} onClick={handlePrev}>
                       <img src={arrow} alt="arrow" />
                     </div>
                   ) : null}
                   <div className={styles.JourneyCalendarSlider}>
-                    <Carousel
+                    {/* <Carousel
                       ref={carousel}
                       dots={false}
                       arrows={true}
-                      infinite={true}
+                      infinite={false}
                       speed={500}
-                      slidesToShow={
-                        width > 991 ? 9 : width > 767 ? 7 : width > 650 ? 3 : 2
-                      }
-                      slidesToScroll={1}
-                      swipeToSlide={true}
-                      // focusOnSelect={true}
-                      // draggable={true}
-                    >
+                      // initialSlide={13}
+                      slidesToShow={slidesToShow}
+                      // slidesToScroll={slidesToShow}
+                      swipeToSlide={false}
+                      // centerMode={true}
+                      onSwipe={handleSwipe}
+                      responsive={[
+                        {
+                          breakpoint: 769,
+                          settings: {
+                            slidesToShow: 7,
+                            // slidesToScroll: 7,
+                          },
+                        },
+                        {
+                          breakpoint: 650,
+                          settings: {
+                            slidesToShow: 3,
+                            // slidesToScroll: 3,
+                          },
+                        },
+                        {
+                          breakpoint: 480,
+                          settings: {
+                            slidesToShow: 2,
+                            // slidesToScroll: 2,
+                          },
+                        },
+                      ]}
+                    > */}
+
+                    {dateArray?.array?.map((item, index) => (
                       <div
+                        key={item}
                         className={`${styles.journyCalenderDate} ${
-                          date === 29 ? styles.activeDate : null
+                          styles.animation
+                        } ${
+                          dateArray.activeDate === item
+                            ? styles.activeDate
+                            : null
                         }`}
                       >
                         <span
                           className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(29)}
+                          onClick={() => selectDateHandler(item)}
                         >
-                          Sun 29
+                          {item}
                         </span>
                       </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 30 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(30)}
-                        >
-                          Mon 30
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 1 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(1)}
-                        >
-                          Tue 1
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 2 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(2)}
-                        >
-                          Wed 2
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 3 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(3)}
-                        >
-                          Thu 3
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 4 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(4)}
-                        >
-                          Fri 4
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 5 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(5)}
-                        >
-                          Sat 5
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 6 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(6)}
-                        >
-                          Sun 6
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 7 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(7)}
-                        >
-                          Sun 7
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 8 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(8)}
-                        >
-                          Sun 8
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 12 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(12)}
-                        >
-                          Sun 12
-                        </span>
-                      </div>
-                      <div
-                        className={`${styles.journyCalenderDate} ${
-                          date === 15 ? styles.activeDate : null
-                        }`}
-                      >
-                        <span
-                          className={styles.journyCalenderDateWrap}
-                          onClick={() => setDate(15)}
-                        >
-                          Sun 15
-                        </span>
-                      </div>
-                    </Carousel>
+                    ))}
+                    {/* </Carousel> */}
                   </div>
                   {width > 991 ? (
-                    <div
-                      className={styles.nextArrow}
-                      onClick={() => carousel.current?.next()}
-                    >
+                    <div className={styles.nextArrow} onClick={handleNext}>
                       <img src={arrow} alt="arrow" />
                     </div>
                   ) : null}

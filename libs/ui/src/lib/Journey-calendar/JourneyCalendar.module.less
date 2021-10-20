@@ -51,9 +51,16 @@
   }
   .JourneyCalendarSlider {
     max-width: calc(100% - 80px);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
     @media only screen and (max-width: 991px) {
       max-width: 100%;
     }
+  }
+  .animation {
+    animation-name: example;
+    animation-duration: 1s;
   }
   .prevArrow {
     display: block;
@@ -90,6 +97,7 @@
   }
   .todayButton {
     height: 40px;
+    color: #9292a3;
   }
 }
 .monthYear {
@@ -114,5 +122,14 @@
       text-align: right;
       flex: 1;
     }
+  }
+}
+
+@keyframes example {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
