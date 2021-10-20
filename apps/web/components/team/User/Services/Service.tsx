@@ -1,16 +1,19 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Button, CheckboxTree, Notification, NotificationType } from '@pabau/ui'
+import { Skeleton } from 'antd'
+import { useTranslation } from 'react-i18next'
 import styles from './Service.module.less'
 import {
   useGetServiceCategoriesQuery,
   useGetStaffServicesQuery,
 } from '@pabau/graphql'
-import { serviceData } from '../../../../mocks/UserDetail'
 
 const Service: FC = () => {
-  const [expandedKeys, setExpandedKeys] = useState(['Accent prime'])
-  const [checkedKeys, setCheckedKeys] = useState([98532])
+  const { t } = useTranslation('common')
+  const [expandedKeys, setExpandedKeys] = useState([])
+  const [checkedKeys, setCheckedKeys] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
   const userId = Number(router.query['id'])
   const [serviceCategoriesData, setServiceCategoriesData] = useState([])
@@ -33,21 +36,21 @@ const Service: FC = () => {
         children: [],
       },
     ]
+    setExpandedKeys(['all'])
     if (serviceCategoryData?.ServiceCategories) {
-      // setServiceCategoriesData()
       const response = serviceCategoryData?.ServiceCategories
       for (const d of response) {
         const subObj = {
           title: d.name,
-          key: d.id,
+          key: d.id.toString(),
           count: d._count?.CompanyService ?? 0,
         }
-        if (d.Servicies.length > 0) {
+        if (d.Services.length > 0) {
           subObj['children'] = []
-          for (const val of d.Servicies) {
+          for (const val of d.Services) {
             subObj['children'].push({
               title: val.name,
-              key: val.id,
+              key: val.id.toString(),
             })
           }
         }
@@ -60,11 +63,21 @@ const Service: FC = () => {
     const staffServiceIds = []
     if (staffServiceData?.getStaffServices) {
       for (const d of staffServiceData?.getStaffServices) {
-        staffServiceIds.push(d.id)
+        staffServiceIds.push(d.id.toString())
       }
     }
     setCheckedKeys(staffServiceIds)
   }, [staffServiceData, staffServiceLoading])
+  useEffect(() => {
+    if (
+      !serviceCategoryLoading &&
+      !staffServiceLoading &&
+      ((userId && checkedKeys.length > 0) ||
+        (!userId && checkedKeys.length === 0))
+    ) {
+      setIsLoading(false)
+    }
+  }, [serviceCategoryLoading, staffServiceLoading, checkedKeys])
   const [autoExpandParent, setAutoExpandParent] = useState(true)
 
   const onExpand = (expandedKeysValue: string[]) => {
@@ -72,7 +85,7 @@ const Service: FC = () => {
     setAutoExpandParent(false)
   }
 
-  const onCheck = (checkedKeysValue: number[]) => {
+  const onCheck = (checkedKeysValue: string[]) => {
     setCheckedKeys(checkedKeysValue)
   }
 
@@ -82,51 +95,64 @@ const Service: FC = () => {
   const handleTitle = (d) => {
     if (d.count > 0) {
       return (
-        <div className={styles.titleCountWrapper}>
-          <div>{d.title}</div>
+        <div key={d.key} className={styles.titleCountWrapper}>
+          {d.title}
           <div className={styles.countWrapper}>
             <div className={styles.countContainer}>{d.count}</div>
           </div>
         </div>
       )
     } else {
-      return (
-        <div className={styles.titleCountWrapper}>
-          <div>{d.title}</div>
-        </div>
-      )
+      return <div className={styles.titleCountWrapper}>{d.title}</div>
     }
   }
+  const setCheckboxSkeleton = (padding, i) => (
+    <div key={i} className={`${styles.skeletonCheckboxWrapper} ${padding}`}>
+      <Skeleton.Input active={true} className={styles.skeletonCheckbox} />
+
+      <Skeleton.Input active={true} className={styles.skeletonText} />
+    </div>
+  )
   return (
     <div className={styles.serviceMainWrapper}>
       <div className={styles.servicesDetailHead}>
-        <h4>Services</h4>
+        <h4>{t('team.user.services.title')}</h4>
         <div className={styles.servicesDetailHeadBtn}>
           <Button
             className={styles.saveBtn}
             size={'large'}
             onClick={handleSaveChanges}
           >
-            Save changes
+            {t('team.user.services.save.changes.button')}
           </Button>
         </div>
       </div>
       <div className={styles.servicesContent}>
         <div className={styles.servicesTitleHead}>
-          <h5>Services</h5>
+          <h5>{t('team.user.services.title')}</h5>
           <div className={styles.desc}>
-            Choose the services this employee can perform
+            {t('team.user.services.choose.services.title')}
           </div>
         </div>
-        <CheckboxTree
-          titleRender={handleTitle}
-          onExpand={onExpand}
-          expandedKeys={expandedKeys}
-          autoExpandParent={autoExpandParent}
-          onCheck={onCheck}
-          checkedKeys={checkedKeys}
-          treeData={serviceCategoriesData ?? serviceData}
-        />
+        {isLoading ? (
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d, i) => {
+            if (i === 0) {
+              return setCheckboxSkeleton('', i)
+            } else {
+              return setCheckboxSkeleton(styles.paddingLeft, i)
+            }
+          })
+        ) : (
+          <CheckboxTree
+            titleRender={handleTitle}
+            onExpand={onExpand}
+            expandedKeys={expandedKeys}
+            autoExpandParent={autoExpandParent}
+            onCheck={onCheck}
+            checkedKeys={checkedKeys}
+            treeData={serviceCategoriesData}
+          />
+        )}
       </div>
       <div className={styles.servicesDetailHeadMobileBtn}>
         <Button
@@ -134,7 +160,7 @@ const Service: FC = () => {
           size={'large'}
           onClick={handleSaveChanges}
         >
-          Save changes
+          {t('team.user.services.save.changes.button')}
         </Button>
       </div>
     </div>

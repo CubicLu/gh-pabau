@@ -3,7 +3,7 @@ query getServiceCategories{
     id
     name
     _count {CompanyService}
-    Servicies :CompanyService{
+    Services :CompanyService{
       id
       name
     }
