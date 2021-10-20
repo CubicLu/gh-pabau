@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Typography, Affix } from 'antd'
+import { Typography, Affix, Skeleton } from 'antd'
 import styles from './InvoiceFooter.module.less'
 
 interface InvoiceButtonProp {
@@ -10,9 +10,10 @@ interface InvoiceButtonProp {
 
 interface InvoiceFooterProp {
   buttons: InvoiceButtonProp[]
+  loading: boolean
 }
 
-const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons }) => {
+const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons, loading }) => {
   const { Text } = Typography
   return (
     <Affix offsetBottom={0}>
@@ -21,13 +22,21 @@ const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons }) => {
           return (
             <div key={i}>
               <Text>{b.text}</Text>
-              <Text
-                style={{
-                  color: b.valueColor ? b.valueColor : '#fff',
-                }}
-              >
-                £{(b.value ?? 0).toFixed(2)}
-              </Text>
+              {!loading ? (
+                <Text
+                  style={{
+                    color: b.valueColor ? b.valueColor : '#fff',
+                  }}
+                >
+                  £{(b.value ?? 0).toFixed(2)}
+                </Text>
+              ) : (
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.footerSkeleton}
+                />
+              )}
             </div>
           )
         })}

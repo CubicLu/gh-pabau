@@ -3,10 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Table, Pagination, Avatar } from '@pabau/ui'
 import classNames from 'classnames'
 import moment from 'moment'
-import {
-  ClientFinancialsLayoutProps,
-  InvoiceProp,
-} from './../ClientFinancialsLayout'
+import { InvoiceProp } from './../ClientFinancialsLayout'
 import { Formik } from 'formik'
 import { ReactComponent as CollapseIcon } from '../../../../assets/images/collapse-icon.svg'
 import styles from './Invoices.module.less'
@@ -20,10 +17,13 @@ import {
   DatePicker,
   Tag,
   Tooltip,
+  Skeleton,
 } from 'antd'
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
+import { GetFinanceInvoicesQuery, GetInvoiceQuery } from '@pabau/graphql'
 import EditInvoice from './EditInvoice'
 import InvoiceFooter from './invoice-footer/InvoiceFooter'
+import dayjs from 'dayjs'
 
 export interface InitialFilterValue {
   type: string
@@ -45,7 +45,10 @@ export interface ISalesItemProps {
 }
 
 interface P {
-  dataProps: ClientFinancialsLayoutProps
+  invoice: GetFinanceInvoicesQuery
+  salesDetails: GetInvoiceQuery
+  salesDetaillLoading: boolean
+  loading: boolean
   invoiceEmployeeOptions: string[]
   locationOptions: string[]
   onChangePagination?(take: number, skip: number): void
@@ -62,20 +65,21 @@ interface P {
 
 export const Invoices: FC<P> = (props) => {
   const {
+    invoice,
+    salesDetails,
+    salesDetaillLoading,
+    loading,
     totalInoviceCount,
-    dataProps,
     invoiceEmployeeOptions,
     locationOptions,
     onChangePagination,
     onFilterSubmit,
     onExpand,
   } = props
-  const { totalInvoiced, totalOutstanding } = dataProps
-  const [invoices, setInvoices] = useState(dataProps.invoices)
+  const [invoices, setInvoices] = useState(invoice?.findManyInvDetail)
   const { Text, Title } = Typography
   const { Option } = Select
   const { RangePicker } = DatePicker
-  const [isLoading] = useState(false)
   const { t } = useTranslation('common')
   const [expandedRow, setExpandedRow] = useState(0)
   const [showEditInvoice, setShowEditInvoice] = useState(false)
@@ -87,12 +91,79 @@ export const Invoices: FC<P> = (props) => {
     currentPage: 1,
     showingRecords: 0,
   })
+  const [totalOutstanding, setTotalOutstanding] = useState(0)
+  const [totalInvoiced, setTotalInvoiced] = useState(0)
   const [filterOpen, setFilterOpen] = useState(false)
   const [isClear, setIsClear] = useState(true)
+  const [saleItems, setSaleItem] = useState<ISalesItemProps[]>()
+  const [totalVat, setTotalVat] = useState(0)
 
   useEffect(() => {
-    setInvoices(dataProps.invoices)
-  }, [dataProps])
+    const invoicesDetails = []
+    invoice?.findManyInvDetail?.map((item) => {
+      const discount = salesDetails?.invoice?.discount_amount
+      const inv_total = salesDetails?.invoice?.inv_total
+      invoicesDetails.push({
+        id: `${item.id}`,
+        date: dayjs(`${item.date}`).format('DD/MM/YYYY'),
+        location: item.location_name,
+        employee: item.billers,
+        issuedTo: item.issue_to,
+        paid: item.status === 'paid' ? true : false,
+        items: saleItems,
+        totalVat: totalVat,
+        amountPaid: salesDetails?.invoice?.paid_amount,
+        subtotal: discount !== 0 ? inv_total + discount : inv_total,
+        tips: salesDetails?.invoice?.tip,
+        grandTotal: item.amount,
+      })
+      return invoicesDetails
+    })
+    setInvoices(invoicesDetails)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoice, saleItems, totalVat])
+
+  useEffect(() => {
+    const items: ISalesItemProps[] = []
+    let total_vat = 0
+    salesDetails?.invoice?.SaleItem?.map((item, index) => {
+      items.push({
+        employee: '',
+        id: index,
+        name: item.product_name,
+        quantity: item.quantity,
+        price: item.unit_price + item.val_tax,
+        tax: item.tax_total,
+        discount: item.UnitDiscount,
+        totalPrice:
+          item.quantity *
+          (item.unit_price - item.UnitDiscount + item.tax_total),
+      })
+      const unit_price = item.quantity * item.unit_price - item.val_tax
+      const vat_multiplier = item.Tax?.rate / 100 + 1
+      const vat_value =
+        item.quantity > 1
+          ? unit_price - unit_price / vat_multiplier
+          : item.tax_total
+      total_vat += vat_value
+      return items
+    })
+    setTotalVat(total_vat)
+    setSaleItem(items)
+  }, [salesDetails])
+
+  useEffect(() => {
+    setTotalOutstanding(
+      salesDetails
+        ? salesDetails?.invoice?.paid_amount
+        : invoice?.findManyInvDetail[0]?.amount ?? 0
+    )
+    setTotalInvoiced(
+      salesDetails
+        ? salesDetails?.invoice?.inv_total
+        : invoice?.findManyInvDetail[0]?.amount ?? 0
+    )
+  }, [salesDetails, invoice])
 
   useEffect(() => {
     setPaginateData({
@@ -177,7 +248,7 @@ export const Invoices: FC<P> = (props) => {
             ) : (
               <Tag color="red">{t('ui.client-card-financial.unpaid')}</Tag>
             )}
-            {invoices[0].id === row.id && (
+            {invoices[0]?.id === row.id && (
               <div className={styles.shareIcon}>
                 <Tooltip
                   trigger={'click'}
@@ -213,7 +284,7 @@ export const Invoices: FC<P> = (props) => {
       render: function renderItem(value, row) {
         return (
           <div className={styles.collapseIconContainer}>
-            <span>£{value.toFixed(2)}</span>
+            <span>£{(value ?? 0).toFixed(2)}</span>
             <span
               onClick={() => {
                 onExpand?.(row['key'])
@@ -240,53 +311,163 @@ export const Invoices: FC<P> = (props) => {
   const expandedRowRender = (record) => {
     return (
       <div className={styles.rowExpand}>
-        <div className={styles.items}>
-          {record?.items?.map((item, i) => (
-            <div className={styles.item} key={i}>
+        {!salesDetaillLoading ? (
+          <div className={styles.items}>
+            {record?.items?.map((item, i) => (
+              <div className={styles.item} key={i}>
+                <div>
+                  <Text>{item.name}</Text>
+                </div>
+                <div>
+                  <Text>{item.quantity}</Text>
+                </div>
+                <div>
+                  <Text>£{(item.quantity * item.price).toFixed(2)}</Text>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.items}>
+            <div className={styles.item}>
               <div>
-                <Text>{item.name}</Text>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.columnSkeleton}
+                />
               </div>
               <div>
-                <Text>{item.quantity}</Text>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.valueSkeleton}
+                />
               </div>
               <div>
-                <Text>£{(item.quantity * item.price).toFixed(2)}</Text>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.columnSkeleton}
+                />
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
         <div className={styles.content}>
           <div className={styles.left}>
             <div className={styles.left}>
               <div>
-                <Title level={5}>
-                  {t('ui.client-card-financial.total-vat')}
-                </Title>
-                <Text>£{(record?.totalVat ?? 0).toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.total-vat')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>£{(record?.totalVat ?? 0).toFixed(2)}</Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
               <div>
-                <Title level={5}>
-                  {t('ui.client-card-financial.sub-total-amount')}
-                </Title>
-                <Text>£{(record?.grandTotal ?? 0).toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.sub-total-amount')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>£{(record?.grandTotal ?? 0).toFixed(2)}</Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
             </div>
             <div className={styles.right}>
               <div>
-                <Title level={5}>
-                  {t('ui.client-card-financial.amount-paid')}
-                </Title>
-                <Text>£{(record?.amountPaid ?? 0).toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.amount-paid')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>£{(record?.amountPaid ?? 0).toFixed(2)}</Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
               <div>
-                <Title level={5}>{t('ui.client-card-financial.tips')}</Title>
-                <Text>£{(record?.tips ?? 0).toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>{t('ui.client-card-financial.tips')}</Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>£{(record?.tips ?? 0).toFixed(2)}</Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
             </div>
           </div>
           <div className={styles.right}>
-            <Title level={5}>{t('ui.client-card-financial.grand-total')}</Title>
-            <Title level={4}>£{record?.grandTotal.toFixed(2)}</Title>
+            {!salesDetaillLoading ? (
+              <Title level={5}>
+                {t('ui.client-card-financial.grand-total')}
+              </Title>
+            ) : (
+              <Skeleton.Input
+                active={true}
+                size="default"
+                className={styles.grandTotalSkeleton}
+              />
+            )}
+            {!salesDetaillLoading ? (
+              <Title level={4}>£{record?.grandTotal.toFixed(2)}</Title>
+            ) : (
+              <Skeleton.Input
+                active={true}
+                size="small"
+                className={styles.totalValueSkeleton}
+              />
+            )}
             {!record.paid && (
               <Button type="primary">{`${t(
                 'ui.client-card-financial.pay'
@@ -339,7 +520,7 @@ export const Invoices: FC<P> = (props) => {
                           'ui.client-card-financial.invoices.outstanding-invoices'
                         )}
                       </Radio>
-                      <Radio value={'paid_invoice'}>
+                      <Radio value={'paid'}>
                         {t('ui.client-card-financial.invoices.paid-invoice')}
                       </Radio>
                       <Radio value={'unsent_invoices'}>
@@ -411,7 +592,6 @@ export const Invoices: FC<P> = (props) => {
                   onClick={() => {
                     setIsClear(true)
                     resetForm()
-                    setFilterOpen(false)
                   }}
                 >
                   {t('ui.client-card-financial.invoices.clear-all')}
@@ -442,56 +622,152 @@ export const Invoices: FC<P> = (props) => {
       )}
       <div className={styles.invoices}>
         <div className={styles.filterRow}>
-          <Popover
-            content={filterContent}
-            title={t('ui.client-card-financial.invoices.filter-by')}
-            placement="bottomRight"
-            overlayClassName={styles.invoicesFilter}
-            visible={filterOpen}
-          >
-            <div className={styles.filter} onClick={handleFilterMenu}>
-              <FilterOutlined />
-            </div>
-          </Popover>
+          {!loading && invoice ? (
+            <Popover
+              content={filterContent}
+              title={t('ui.client-card-financial.invoices.filter-by')}
+              placement="bottomRight"
+              overlayClassName={styles.invoicesFilter}
+              visible={filterOpen}
+            >
+              <div className={styles.filter} onClick={handleFilterMenu}>
+                <FilterOutlined />
+              </div>
+            </Popover>
+          ) : (
+            <Skeleton.Input
+              active={true}
+              size="default"
+              className={styles.filterSkeleton}
+            />
+          )}
         </div>
-        <Table
-          loading={isLoading}
-          draggable={false}
-          scroll={{ x: true }}
-          dataSource={invoices?.map((e: { id }) => ({
-            key: e.id,
-            ...e,
-          }))}
-          columns={columns}
-          noDataText={t('ui.client-card-financial.invoices')}
-          expandedRowRender={expandedRowRender}
-          expandedRowKeys={[expandedRow]}
-          expandIcon={() => <span></span>}
-        />
-        <div className={styles.pagination}>
-          <Pagination
-            total={paginateData.total}
-            defaultPageSize={10}
-            showSizeChanger={false}
-            onChange={onPaginationChange}
-            pageSize={paginateData.limit}
-            current={paginateData.currentPage}
-            showingRecords={paginateData.showingRecords}
+        {!loading && invoice ? (
+          <Table
+            draggable={false}
+            scroll={{ x: true }}
+            dataSource={invoices?.map((e: { id }) => ({
+              key: e.id,
+              ...e,
+            }))}
+            columns={columns}
+            noDataText={t('ui.client-card-financial.invoices')}
+            expandedRowRender={expandedRowRender}
+            expandedRowKeys={[expandedRow]}
+            expandIcon={() => <span></span>}
           />
-        </div>
-        <InvoiceFooter
-          buttons={[
-            {
-              text: t('ui.client-card-financial.outstanding'),
-              value: totalOutstanding,
-              valueColor: '#FF5B64',
-            },
-            {
-              text: t('ui.client-card-financial.total-invoiced'),
-              value: totalInvoiced,
-            },
-          ]}
-        />
+        ) : (
+          <Table
+            rowKey="key"
+            pagination={false}
+            dataSource={[...Array.from({ length: 6 })].map((_, index) => (
+              <div key={index}>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.columnSkeleton}
+                />
+              </div>
+            ))}
+            columns={columns.map((column) => {
+              return {
+                ...column,
+                render: function renderPlaceholder() {
+                  switch (column.dataIndex) {
+                    case 'id':
+                      return (
+                        <span className={styles.invoiceNo}>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idSkeleton}
+                            />
+                          </span>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idValueSkeleton}
+                            />
+                          </span>
+                        </span>
+                      )
+                    case 'location':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.locationSkeleton}
+                        />
+                      )
+                    case 'employee':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'issuedTo':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'paid':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'grandTotal':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                  }
+                },
+              }
+            })}
+          />
+        )}
+        {!loading && invoice && (
+          <>
+            <div className={styles.pagination}>
+              <Pagination
+                total={paginateData.total}
+                defaultPageSize={10}
+                showSizeChanger={false}
+                onChange={onPaginationChange}
+                pageSize={paginateData.limit}
+                current={paginateData.currentPage}
+                showingRecords={paginateData.showingRecords}
+              />
+            </div>
+            <InvoiceFooter
+              buttons={[
+                {
+                  text: t('ui.client-card-financial.outstanding'),
+                  value: totalOutstanding,
+                  valueColor: '#FF5B64',
+                },
+                {
+                  text: t('ui.client-card-financial.total-invoiced'),
+                  value: totalInvoiced,
+                },
+              ]}
+              loading={salesDetaillLoading}
+            />
+          </>
+        )}
       </div>
     </>
   )
