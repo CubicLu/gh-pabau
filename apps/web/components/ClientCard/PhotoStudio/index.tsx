@@ -1,10 +1,17 @@
 import React, { FC, useEffect, useState } from 'react'
-import { ImageViewer, ImageViewerAlbum } from '@pabau/ui'
+import { ImageViewer, ImageViewerAlbum, UploadingImageProps } from '@pabau/ui'
+import { useUser } from '../../../context/UserContext'
+import axios from 'axios'
 import dayjs from 'dayjs'
+import postData from '../../Uploaders/UploadHelpers/UploadHelpers'
+import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
   useGetPhotoAlbumLazyQuery,
-  useGetAlbumPhotosQuery,
+  useGetUncatPhotosLazyQuery,
+  useCreateContactPhotoMutation,
+  useCreateContactPhotoWithoutAlbumMutation,
+  useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
 export interface PhotoStudioProps {
@@ -24,16 +31,101 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   albumId,
   contactId,
 }) => {
+  const cdn = `${cdnURL}/cdn/attachments/`
+  const baseURL = `${cdnURL}/v2/api/contact/`
+  const api = axios.create({
+    baseURL: baseURL,
+    headers: {
+      Authorization:
+        localStorage?.getItem('token') &&
+        `Bearer ${localStorage?.getItem('token')?.replaceAll('"', '')}`,
+    },
+  })
+
+  const user = useUser()
   const [totalAlbums, setTotalAlbums] = useState<ImageViewerAlbum[]>()
   const [currentAlbumData, setCurrentAlbumData] = useState<ImageViewerAlbum>()
   const [nonAlbumPhotos, setNonAlbumPhotos] = useState(null)
+  const [uploadingImages, setUploadingImages] = useState<
+    UploadingImageProps[]
+  >()
 
-  const { data: dUnCatPhotos } = useGetAlbumPhotosQuery({
-    fetchPolicy: 'network-only',
-    variables: {
-      contactId: contactId,
-      albumId: 0,
+  const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
+    onCompleted(data) {
+      const path = data?.createOneContactAttachment?.linkref
+      const cAddedFiles = [...uploadingImages]
+      const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
+      if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
+        cFile.id = data?.createOneContactAttachment?.id
+        cFile.loading = false
+        cFile.isUploadCompleted = true
+        cAddedFiles.splice(idx, 1, cFile)
+        setUploadingImages(cAddedFiles)
+        getCurrentAlbumData({
+          variables: {
+            albumId: currentAlbumData?.id,
+            contactId: contactId,
+          },
+        })
+      }
     },
+  })
+
+  const [
+    createAttachmentOutOfAlbum,
+  ] = useCreateContactPhotoWithoutAlbumMutation({
+    onCompleted(data) {
+      const path = data?.createOneContactAttachment?.linkref
+      const cAddedFiles = [...uploadingImages]
+      const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
+      if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
+        cFile.id = data?.createOneContactAttachment?.id
+        cFile.loading = false
+        cFile.isUploadCompleted = true
+        cAddedFiles.splice(idx, 1, cFile)
+        setUploadingImages(cAddedFiles)
+        getUncatAlbumPhotos({
+          variables: {
+            contactId: contactId,
+          },
+        })
+      }
+    },
+  })
+
+  const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
+    onCompleted(data) {
+      const id = data?.deleteOneContactAttachment?.id
+      const cAddedFiles = [...uploadingImages]
+      const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+      if (idx !== -1) {
+        cAddedFiles.splice(idx, 1)
+        setUploadingImages(cAddedFiles)
+        if (currentAlbumData?.id) {
+          getCurrentAlbumData({
+            variables: {
+              albumId: currentAlbumData?.id,
+              contactId: contactId,
+            },
+          })
+        } else {
+          getUncatAlbumPhotos({
+            variables: {
+              contactId: contactId,
+            },
+          })
+        }
+      }
+    },
+  })
+
+  const [
+    getUncatAlbumPhotos,
+    { data: dUnCatPhotos },
+  ] = useGetUncatPhotosLazyQuery({
+    fetchPolicy: 'network-only',
   })
 
   const { data: dAlbums, loading: dAlbumsLoading } = useGetPhotoAlbumsQuery({
@@ -51,9 +143,15 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   })
 
   useEffect(() => {
-    if (dUnCatPhotos?.findManyContactAttachment?.length > 0) {
-      setNonAlbumPhotos(dUnCatPhotos?.findManyContactAttachment)
-    }
+    getUncatAlbumPhotos({
+      variables: {
+        contactId: contactId,
+      },
+    })
+  }, [contactId, getUncatAlbumPhotos])
+
+  useEffect(() => {
+    setNonAlbumPhotos(dUnCatPhotos?.findManyContactAttachment)
   }, [dUnCatPhotos])
 
   useEffect(() => {
@@ -100,9 +198,9 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
           return {
             ...el,
             date: dayjs(new Date(el?.date * 1000)).format('YYYY-MM-DD'),
-            origin: el?.origin?.includes('https')
+            origin: el?.origin?.includes('http')
               ? el?.origin
-              : `https://cdn.pabau.com/cdn/attachments/${el?.origin}`,
+              : `${cdn}${el?.origin}`,
           }
         }
       )
@@ -114,17 +212,17 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
       }
       setCurrentAlbumData(currentAlbum)
     }
-  }, [albumId, dCurrentAlbum, dCurrentAlbumloading, nonAlbumPhotos])
+  }, [albumId, cdn, dCurrentAlbum, dCurrentAlbumloading, nonAlbumPhotos])
 
   useEffect(() => {
-    if (!albumId && nonAlbumPhotos?.length > 0) {
+    if (!albumId && nonAlbumPhotos) {
       const imageList = nonAlbumPhotos?.map((el) => {
         return {
           ...el,
           date: dayjs(new Date(el?.date * 1000)).format('YYYY-MM-DD'),
-          origin: el?.origin?.includes('https')
+          origin: el?.origin?.includes('http')
             ? el?.origin
-            : `https://cdn.pabau.com/cdn/attachments/${el?.origin}`,
+            : `${cdn}${el?.origin}`,
         }
       })
       const currentAlbum: ImageViewerAlbum = {
@@ -135,7 +233,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
       }
       setCurrentAlbumData(currentAlbum)
     }
-  }, [albumId, nonAlbumPhotos])
+  }, [albumId, cdn, nonAlbumPhotos])
 
   const onAlbumSelect = (data) => {
     if (data?.id !== null) {
@@ -150,9 +248,9 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
         return {
           ...el,
           date: dayjs(new Date(el?.date * 1000)).format('YYYY-MM-DD'),
-          origin: el?.origin?.includes('https')
+          origin: el?.origin?.includes('http')
             ? el?.origin
-            : `https://cdn.pabau.com/cdn/attachments/${el?.origin}`,
+            : `${cdn}${el?.origin}`,
         }
       })
       const currentAlbum: ImageViewerAlbum = {
@@ -165,6 +263,113 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     }
   }
 
+  const uploadImage = async (fileData) => {
+    const cAddedFiles = [...uploadingImages]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
+    if (idx !== -1) {
+      const config = {
+        onUploadProgress: function (progressEvent) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+          const percAddedFiles = [...uploadingImages]
+          const percIdx = percAddedFiles?.findIndex(
+            (el) => el?.id === fileData?.id
+          )
+          if (percIdx !== -1) {
+            const percFile = percAddedFiles[percIdx]
+            percFile.uploadPercentage = percentCompleted
+            percAddedFiles.splice(percIdx, 1, percFile)
+            setUploadingImages(percAddedFiles)
+          }
+        },
+      }
+      const data = new FormData()
+      data.append('File', fileData?.file)
+
+      const upStartFiles = [...uploadingImages]
+      const upStartIdx = upStartFiles?.findIndex(
+        (el) => el?.id === fileData?.id
+      )
+      if (upStartIdx !== -1) {
+        const uppFile = upStartFiles[upStartIdx]
+        uppFile.isUploadStarted = true
+        upStartFiles.splice(upStartIdx, 1, uppFile)
+        setUploadingImages(upStartFiles)
+      }
+
+      await api
+        .post('upload-photo', data, config)
+        .then((res) => {
+          const data = JSON.parse(JSON.stringify(res.data))
+          const upCompFiles = [...uploadingImages]
+          const upCompIdx = upCompFiles?.findIndex(
+            (el) => el?.id === fileData?.id
+          )
+          if (upCompIdx !== -1) {
+            const uppCompFile = upCompFiles[upCompIdx]
+            uppCompFile.uploadedPath = data?.path
+            uppCompFile.loading = true
+            upCompFiles.splice(upCompIdx, 1, uppCompFile)
+            setUploadingImages(upCompFiles)
+            if (fileData?.albumId > 0) {
+              createAttachmentInAlbum({
+                variables: {
+                  album_id: currentAlbumData?.id,
+                  attachment_type: 'contact',
+                  contact_id: contactId,
+                  date: dayjs().unix(),
+                  image_url: data?.path,
+                  uploaded_by: user?.me?.user,
+                  company_id: user?.me?.company,
+                },
+              })
+            }
+            if (fileData?.albumId === 0) {
+              createAttachmentOutOfAlbum({
+                variables: {
+                  attachment_type: 'contact',
+                  contact_id: contactId,
+                  date: dayjs().unix(),
+                  image_url: data?.path,
+                  uploaded_by: user?.me?.user,
+                  company_id: user?.me?.company,
+                },
+              })
+            }
+          }
+        })
+        .catch((error) => console.log(error?.message))
+    }
+  }
+
+  const removeImage = async (imagePath) => {
+    const cAddedFiles = [...uploadingImages]
+    const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === imagePath)
+    if (idx !== -1) {
+      const data = new FormData()
+      data.append('file_path', imagePath)
+      const cFile = cAddedFiles[idx]
+      cFile.loading = true
+      cAddedFiles.splice(idx, 1, cFile)
+      setUploadingImages(cAddedFiles)
+
+      const res = await postData(
+        `${baseURL}delete-photo`,
+        { file_path: imagePath },
+        null
+      )
+      if (res.success) {
+        const cFile = cAddedFiles[idx]
+        deleteAttachmentInAlbum({
+          variables: {
+            id: cFile?.id,
+          },
+        })
+      }
+    }
+  }
+
   return (
     <ImageViewer
       visible={visible}
@@ -174,6 +379,10 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
       onAlbumSelect={onAlbumSelect}
       onClose={setVisible}
       title={title || 'Title'}
+      uploadingImages={uploadingImages}
+      setUploadingImages={setUploadingImages}
+      uploadImage={uploadImage}
+      removeImage={removeImage}
     />
   )
 }
