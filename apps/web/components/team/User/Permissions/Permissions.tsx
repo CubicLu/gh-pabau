@@ -13,14 +13,13 @@ import Modules from './Modules'
 import Feature from './Feature'
 import Reports from './Reports'
 import styles from '../UserDetail.module.less'
-import {
-  PermissionFields,
-  feature,
-  reportPermissionsKeys,
-} from '../../../../mocks/UserDetail'
+import { userDetail } from '../../../../mocks/UserDetail'
+import { useTranslation } from 'react-i18next'
 
 const Permissions: FC = () => {
   const isMobile = useMedia('(max-width: 767px)', false)
+  const { t } = useTranslation('common')
+  const { PermissionFields, feature, reportPermissionsKeys } = userDetail(t)
   const [moduleData, setModuleData] = useState<PermissionFieldType[]>(
     PermissionFields
   )
