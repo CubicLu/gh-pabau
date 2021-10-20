@@ -39,22 +39,24 @@ const Service: FC = () => {
     setExpandedKeys(['all'])
     if (serviceCategoryData?.ServiceCategories) {
       const response = serviceCategoryData?.ServiceCategories
-      for (const d of response) {
-        const subObj = {
-          title: d.name,
-          key: d.id.toString(),
-          count: d._count?.CompanyService ?? 0,
-        }
-        if (d.Services.length > 0) {
-          subObj['children'] = []
-          for (const val of d.Services) {
-            subObj['children'].push({
-              title: val.name,
-              key: val.id.toString(),
-            })
+      if (response.length > 0) {
+        for (const d of response) {
+          const subObj = {
+            title: d.name,
+            key: d.id.toString(),
+            count: d._count?.CompanyService ?? 0,
           }
+          if (d.Services.length > 0) {
+            subObj['children'] = []
+            for (const val of d.Services) {
+              subObj['children'].push({
+                title: val.name,
+                key: val.id.toString(),
+              })
+            }
+          }
+          obj[0].children.push(subObj)
         }
-        obj[0].children.push(subObj)
       }
       setServiceCategoriesData(obj)
     }
