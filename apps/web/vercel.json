@@ -53,6 +53,7 @@
     {"source": "/clients/:id", "destination": "/clients/[id]?id=:id"},
     {"source": "/clients/finance/invoice/:id", "destination": "/clients/finance/invoice/[id]?id=:id"},
     {"source": "/clients/finance/receipt/:id", "destination": "/clients/finance/receipt/[id]?id=:id"},
-    {"source": "/clients/finance/statement/:id", "destination": "/clients/finance/statement/[id]?id=:id"}
+    {"source": "/clients/finance/statement/:id", "destination": "/clients/finance/statement/[id]?id=:id"},
+    {"source": "/team/user/:id", "destination": "/team/user/[id]?id=:id"}
   ]
 }
