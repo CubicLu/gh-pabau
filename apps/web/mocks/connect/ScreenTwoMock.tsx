@@ -14,7 +14,7 @@ export const data = [
 
 export const voucherData = [
   {
-    id: 1,
+    key: 1,
     value: '100',
     valueDescription: 'Voucher value',
     type: 'Family',
@@ -26,7 +26,7 @@ export const voucherData = [
     active: false,
   },
   {
-    id: 2,
+    key: 2,
     value: '100',
     valueDescription: 'Voucher value',
     type: 'Family',
