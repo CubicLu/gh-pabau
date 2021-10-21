@@ -19,11 +19,13 @@ import {
   Button,
   FullScreenReportModal,
   OperationType,
+  Pagination,
 } from '@pabau/ui'
 import { Avatar, Col, Row, Typography } from 'antd'
 import classNames from 'classnames'
 import Highcharts from 'highcharts'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useMemo } from 'react'
+import dayjs from 'dayjs'
 import {
   Chart,
   HighchartsChart,
@@ -43,7 +45,8 @@ import {
 } from '../../../components/Setup/OnlineBooking'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
-
+import { useGetClientsAllAppointmentsQuery, SortOrder } from '@pabau/graphql'
+import getImage from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 const { Title } = Typography
 export interface OnlineBookingProps {
   builderSetting: OnlineBookingBuilder
@@ -59,6 +62,57 @@ export const Index: FC<OnlineBookingProps> = ({
     defaultBuilderData
   )
 
+  const [bookingActivities, setBookingActivities] = useState([])
+  const [paginateData, setPaginateData] = useState({
+    total: 0,
+    offset: 0,
+    limit: 10,
+    currentPage: 1,
+    showingRecords: 0,
+  })
+
+  const onPaginationChange = (currentPage) => {
+    const offset = paginateData.limit * (currentPage - 1)
+    setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+  }
+
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        skip: paginateData.offset,
+        take: paginateData.limit,
+      },
+    }
+    return queryOptions
+  }, [paginateData.offset, paginateData.limit])
+
+  const { data, loading, error } = useGetClientsAllAppointmentsQuery(
+    getQueryVariables
+  )
+
+  useEffect(() => {
+    if (data?.findManyBooking) {
+      const bookingData = data?.findManyBooking.map((booking) => {
+        console.log(booking.start_date)
+        return {
+          id: booking.id,
+          status: booking.status,
+          time: dayjs(booking.create_date.toString()).format('hh:mm A'),
+          details: `${dayjs(booking.start_date.toString()).format(
+            'ddd D MMM hh:mm A'
+          )} for 2 services for john by ${booking?.BookedBy?.full_name}`,
+          userImage: booking?.CmStaffGeneral?.Avatar,
+        }
+      })
+      setBookingActivities(bookingData)
+      setPaginateData({
+        ...paginateData,
+        total: data?.totalCount,
+        showingRecords: data?.findManyBooking?.length,
+      })
+    }
+  }, [data])
+
   useEffect(() => {
     setBuilder(builderSetting)
   }, [builderSetting])
@@ -66,74 +120,6 @@ export const Index: FC<OnlineBookingProps> = ({
   const onPressPromote = () => {
     console.log('onPressPromote')
   }
-
-  const bookingActivities = [
-    {
-      id: 1,
-      status: 'Appointment Booked',
-      time: '3:00 PM',
-      details:
-        'Sat 1st May 11:30 for 2 services for john by <a href="/">Jim Smith</a>',
-      userImage: '',
-    },
-    {
-      id: 2,
-      status: 'Appointment Recheduled',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was recheduled',
-      userImage: '',
-    },
-    {
-      id: 3,
-      status: 'Cancelled Appointment',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was cancelled',
-    },
-    {
-      id: 4,
-      status: 'Appointment Booked',
-      time: '3:00 PM',
-      details:
-        'Sat 1st May 11:30 for 2 services for john by <a href="/">Jim Smith</a>',
-      userImage: '',
-    },
-    {
-      id: 5,
-      status: 'Appointment Recheduled',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was recheduled',
-      userImage: '',
-    },
-    {
-      id: 6,
-      status: 'Cancelled Appointment',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was cancelled',
-      userImage: '',
-    },
-    {
-      id: 4,
-      status: 'Appointment Booked',
-      time: '3:00 PM',
-      details:
-        'Sat 1st May 11:30 for 2 services for john by <a href="/">Jim Smith</a>',
-      userImage: '',
-    },
-    {
-      id: 5,
-      status: 'Appointment Recheduled',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was recheduled',
-      userImage: '',
-    },
-    {
-      id: 6,
-      status: 'Cancelled Appointment',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was cancelled',
-      userImage: '',
-    },
-  ]
 
   const trends = [
     {
@@ -294,6 +280,26 @@ export const Index: FC<OnlineBookingProps> = ({
                   </div>
                 )
               })}
+            </div>
+            <div className={styles.pagination}>
+              <Pagination
+                total={paginateData.total}
+                defaultPageSize={10}
+                showSizeChanger={false}
+                onChange={onPaginationChange}
+                pageSizeOptions={['10', '25', '50', '100']}
+                onPageSizeChange={(pageSize) => {
+                  setPaginateData({
+                    ...paginateData,
+                    limit: pageSize,
+                    offset: 0,
+                    currentPage: 1,
+                  })
+                }}
+                pageSize={paginateData.limit}
+                current={paginateData.currentPage}
+                showingRecords={paginateData.showingRecords}
+              />
             </div>
           </Col>
           <Col span={8} className={styles.screenColumn}>
