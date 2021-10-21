@@ -35,6 +35,10 @@ module.exports = {
         source: '/clients/finance/statement/:id',
         destination: '/clients/finance/statement/[id]?id=:id',
       },
+      {
+        source: '/team/user/:id',
+        destination: '/team/user/[id]?id=:id',
+      },
     ]
   },
   typescript: {
