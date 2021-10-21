@@ -279,7 +279,7 @@ export const Charts: FC<ICharts> = ({
               <div className={styles.chartsHeader}>
                 {!loading ? (
                   stringToCurrencySignConverter(user.me?.currency) +
-                  totalSalesCount.count
+                  (totalSalesCount.count ?? 0)
                 ) : (
                   <Skeleton.Input active className={styles.titleSkeleton} />
                 )}
@@ -313,12 +313,11 @@ export const Charts: FC<ICharts> = ({
             <div className={styles.chartsWrap}>
               <div className={styles.chartsHeader}>
                 {!loading ? (
-                  `${totalBooking.count + totalOnlineBooking.count} ${t(
-                    'dashboard.booked.label',
-                    {
-                      fallbackLng: 'en',
-                    }
-                  )}`
+                  `${
+                    (totalBooking.count ?? 0) + (totalOnlineBooking.count ?? 0)
+                  } ${t('dashboard.booked.label', {
+                    fallbackLng: 'en',
+                  })}`
                 ) : (
                   <Skeleton.Input active className={styles.titleSkeleton} />
                 )}
