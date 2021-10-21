@@ -322,6 +322,7 @@ model Company {
   Package                Package[]
   InsuranceContractPrice InsuranceContractPrice[]
   ContactAttachment      ContactAttachment[]
+  SmsSender              SmsSender[]
   @@map("admin")
 }
 
@@ -869,7 +870,7 @@ model BookingStatus {
   track_time  Int                         @default(1)
   Company     Company?                    @relation(fields: [company_id], references: [id])
 
-  @@unique([value, company_id], name: "value")
+  @@unique([value, company_id], name: "value_company_id")
   @@map("booking_statuses")
 }
 
@@ -3158,6 +3159,7 @@ model CmStaffGeneral {
   HolidayRequest      HolidayRequest[]
   SalonBookings       Booking[]
   RotaShift           RotaShift[]
+  StaffNote           StaffNote[]
 
   InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
@@ -3177,17 +3179,21 @@ model CmStaffGeneral {
 //  Notes   String
 //}
 //
-//model cm_staff_notes {
-//  ID           Int    @id @default(autoincrement())
-//  StaffID      Int    @unique
-//  Dependents   String
-//  Education    String
-//  Hobbies      String
-//  Training     String
-//  Volunteer    String
-//  Prescription String
-//}
-//
+model StaffNote {
+  ID           Int    @id @default(autoincrement())
+  StaffID      Int    @unique
+  Dependents   String
+  Education    String
+  Hobbies      String
+  Training     String
+  Volunteer    String
+  Prescription String
+
+  CmStaffGeneral CmStaffGeneral @relation(fields: [StaffID], references: [ID])
+
+  @@map("cm_staff_notes")
+}
+
 //model cm_staff_payrolls {
 //  ID                 Int                           @id @default(autoincrement())
 //  StaffID            Int
@@ -3560,7 +3566,7 @@ model CommunicationContent {
   body           String
   Communications Communication[]
 
-  @@unique([company_id, hash], name: "company_id")
+  @@unique([company_id, hash], name: "company_id_hash")
   @@map("communications_content")
 }
 
@@ -3875,6 +3881,7 @@ model CompanyEmail {
   default_email    Int
   enterprise_email Int
   merge_tags       String
+  visibility       Int    @default(0)
 
   Company Company? @relation(fields: [company_id], references: [id])
   @@index([email_id], name: "email_id")
@@ -4147,6 +4154,7 @@ model CompanyService {
 
   ServiceUserPrice     ServiceUserPrice[]
   ServiceLocationPrice ServiceLocationPrice[]
+  Booking              Booking[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -4504,7 +4512,7 @@ model ContactAttachment {
   medical_form_id   Int?
   tags              String?
   medical_uniqid    String?
-  Contact           CmContact   @relation(fields: [contact_id], references: [ID])
+  Contact           CmContact?  @relation(fields: [contact_id], references: [ID])
   Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
   Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
   Company           Company     @relation(fields: [company_id], references: [id])
@@ -4867,70 +4875,78 @@ model Country {
 //  complete_date Int
 //  video_id      Int
 //}
-//
-//model cp_pathways {
-//  id                Int                 @id @default(autoincrement())
-//  pathway_name      String
-//  company_id        Int
-//  description       String
-//  is_active         Boolean
-//  order             Int?                @default(0)
-//  cp_pathways_taken cp_pathways_taken[]
-//  cp_steps          cp_steps[]
-//}
-//
-//model cp_pathways_taken {
-//  id             Int                      @id @default(autoincrement())
-//  pathway_id     Int
-//  contact_id     Int
-//  booking_id     Int
-//  started_on     DateTime                 @default(now())
-//  status         cp_pathways_taken_status @default(ACTIVE)
-//  comment        String
-//  cp_pathways    cp_pathways              @relation(fields: [pathway_id], references: [id])
-//  cp_steps_taken cp_steps_taken[]
-//
-//  @@index([pathway_id, contact_id], name: "pathway_id")
-//}
-//
-//model cp_steps {
-//  id             Int              @id @default(autoincrement())
-//  company_id     Int
-//  name           String
-//  created_date   DateTime
-//  step           cp_steps_step
-//  order          Int
-//  item_id        Int
-//  pathway_id     Int
-//  can_skip       Int
-//  display_time   Int              @default(0)
-//  other_value    String
-//  description    String
-//  who_does_this  String?
-//  cp_pathways    cp_pathways      @relation(fields: [pathway_id], references: [id])
-//  cp_steps_taken cp_steps_taken[]
-//
-//  @@index([pathway_id], name: "pathway_id")
-//}
-//
-//model cp_steps_taken {
-//  id                Int                   @id @default(autoincrement())
-//  step_id           Int
-//  path_taken_id     Int
-//  contact_id        Int
-//  date              DateTime              @default(now())
-//  time              String?
-//  status            cp_steps_taken_status
-//  record_id         Int
-//  cp_pathways_taken cp_pathways_taken     @relation(fields: [path_taken_id], references: [id])
-//  cp_steps          cp_steps              @relation(fields: [step_id], references: [id])
-//
-//  @@unique([step_id, path_taken_id], name: "step_id_3")
-//  @@index([path_taken_id], name: "path_taken_id")
-//  @@index([step_id, contact_id], name: "step_id")
-//  @@index([step_id], name: "step_id_2")
-//}
-//
+
+model Pathway {
+  id           Int             @id @default(autoincrement())
+  pathway_name String
+  company_id   Int
+  description  String
+  is_active    Boolean
+  order        Int?            @default(0)
+  PathwayTaken PathwaysTaken[]
+  PathwayStep  PathwayStep[]
+
+  @@map("cp_pathways")
+}
+
+model PathwaysTaken {
+  id                Int                      @id @default(autoincrement())
+  pathway_id        Int
+  contact_id        Int
+  booking_id        Int
+  started_on        DateTime                 @default(now())
+  status            cp_pathways_taken_status @default(ACTIVE)
+  comment           String
+  Pathway           Pathway                  @relation(fields: [pathway_id], references: [id])
+  PathwayStepsTaken PathwayStepsTaken[]
+
+
+  @@index([pathway_id, contact_id], name: "pathway_id")
+  @@map("cp_pathways_taken")
+}
+
+model PathwayStep {
+  id            Int           @id @default(autoincrement())
+  company_id    Int
+  name          String
+  created_date  DateTime
+  step          cp_steps_step
+  order         Int
+  item_id       Int
+  pathway_id    Int
+  can_skip      Int
+  display_time  Int           @default(0)
+  other_value   String
+  description   String
+  who_does_this String?
+
+  Pathway           Pathway             @relation(fields: [pathway_id], references: [id])
+  PathwayStepsTaken PathwayStepsTaken[]
+
+  @@index([pathway_id], name: "pathway_id")
+  @@map("cp_steps")
+}
+
+model PathwayStepsTaken {
+  id            Int                   @id @default(autoincrement())
+  step_id       Int
+  path_taken_id Int
+  contact_id    Int
+  date          DateTime              @default(now())
+  time          String?
+  status        cp_steps_taken_status
+  record_id     Int
+  PathwaysTaken PathwaysTaken         @relation(fields: [path_taken_id], references: [id])
+  PathwayStep   PathwayStep           @relation(fields: [step_id], references: [id])
+
+
+  @@unique([step_id, path_taken_id], name: "step_id_3")
+  @@index([path_taken_id], name: "path_taken_id")
+  @@index([step_id, contact_id], name: "step_id")
+  @@index([step_id], name: "step_id_2")
+  @@map("cp_steps_taken")
+}
+
 //model credit_balance {
 //  credit_balance_id Int    @id @default(autoincrement())
 //  company           String
@@ -6675,7 +6691,7 @@ model InvProduct {
   name                      String
   sku                       String?
   unit                      String?
-  size                      String
+  size                      String?
   product_order             Int?
   um                        String
   cost                      Float?
@@ -10585,8 +10601,8 @@ model Booking {
   UID                           Int
   company_id                    Int             @map("occupier")
   backgroudcolor                String?
-  create_date                   Int?
-  update_date                   Int?
+  create_date                   Decimal?
+  update_date                   Decimal?
   status                        String
   estimated_cost                Float?
   tips                          Float?
@@ -10648,6 +10664,7 @@ model Booking {
   UserMaster                    UserMaster?     @relation(fields: [contact_id], references: [contact_id])
   CmStaffGeneral                CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
   CompanyBranch                 CompanyBranch?  @relation(fields: [location_id], references: [id])
+  CompanyService                CompanyService? @relation(fields: [service_id], references: [id])
 
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
@@ -11439,18 +11456,22 @@ model SmsPurchase {
   @@map("sms_purchases")
 }
 
-//model sms_senders {
-//  smsd_id     Int     @id @default(autoincrement())
-//  smsd_name   String
-//  smsd_cid    Int
-//  smsd_delete Int     @default(0)
-//  is_default  Boolean @default(false)
-//  merge_tags  String
-//
-//  @@index([smsd_cid], name: "smsd_cid")
-//  @@index([smsd_delete], name: "smsd_delete")
-//}
-//
+model SmsSender {
+  smsd_id        Int     @id @default(autoincrement())
+  smsd_name      String
+  company_id     Int     @map("smsd_cid")
+  smsd_delete    Int     @default(0)
+  is_default     Boolean @default(false)
+  merge_tags     String
+  enable_replies Int     @default(0)
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([smsd_delete], name: "smsd_delete")
+  @@map("sms_senders")
+}
+
 //model sms_stats {
 //  smss_id    Int    @id @default(autoincrement())
 //  smss_uid   Int
@@ -11683,7 +11704,7 @@ model StaffMeta {
   meta_value String?
   User       User?   @relation(fields: [staff_id], references: [id])
 
-  @@unique([staff_id, meta_name], name: "staff_id")
+  @@unique([staff_id, meta_name], name: "staff_id_meta_name")
   @@map("staff_meta")
 }
 

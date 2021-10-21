@@ -543,7 +543,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               className={styles.iconWrapper}
               onClick={() => onEditIconClick(item)}
             >
-              {item.userId === loggedUser.user ? (
+              {item.userId === loggedUser.user || loggedUser.admin ? (
                 <EditOutlined />
               ) : (
                 <div className={styles.strikeWrapper}>

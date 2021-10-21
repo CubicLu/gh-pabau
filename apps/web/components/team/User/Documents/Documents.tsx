@@ -3,18 +3,18 @@ import { UploadProps } from 'antd/es/upload'
 import moment from 'moment'
 
 import { Documents, Files, Folders, DocumentUploadModal } from '@pabau/ui'
-import {
-  documentsFolder,
-  userDetailDocuments,
-} from '../../../../mocks/UserDetail'
+import { userDetail } from '../../../../mocks/UserDetail'
 import userImage from '../../../../assets/images/avatar.png'
 import styles from '../UserDetail.module.less'
+import { useTranslation } from 'react-i18next'
 
 interface UploadCustomProps extends UploadProps {
   size: number
 }
 
 const Document: FC = () => {
+  const { t } = useTranslation('common')
+  const { documentsFolder, userDetailDocuments } = userDetail(t)
   const [folderData, setFolderData] = useState<Folders[]>(documentsFolder)
   const [isUpload, setIsUpload] = useState<boolean>(false)
   const [folderOption, setFolderOption] = useState([])

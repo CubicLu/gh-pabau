@@ -13,6 +13,8 @@ interface Notification {
   time: string | Date
   cancellation_reason?: string
   company_id: number
+  current_date?: string | Date
+  current_time?: string | Date
 }
 
 @Injectable()
@@ -43,6 +45,11 @@ export class NotificationServices {
 
     if (type === notificationType.cancelled_appointment_via_calendar.type) {
       variables['cancellation_reason'] = notification.cancellation_reason
+    }
+
+    if (type === notificationType.rescheduled_appointment_via_calendar.type) {
+      variables['current_date'] = notification?.current_date
+      variables['current_time'] = notification?.current_time
     }
 
     const data = {
