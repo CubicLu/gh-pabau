@@ -82,12 +82,15 @@ export const CreateSender: React.FC = () => {
     onCompleted(data) {
       Notification(
         NotificationType.success,
-        `Success! You have successfully created a senders`
+        t('setup.senders.create.senders.notification.success')
       )
       router.push('/setup/senders').then()
     },
     onError(err) {
-      Notification(NotificationType.error, `Error! While creating a senders`)
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
     },
   })
 
@@ -95,14 +98,14 @@ export const CreateSender: React.FC = () => {
     onCompleted(data) {
       Notification(
         NotificationType.success,
-        `Success! You have successfully created a SMS senders`
+        t('setup.senders.create.senders.notification.success')
       )
       router.push('/setup/senders').then()
     },
     onError(err) {
       Notification(
         NotificationType.error,
-        `Error! While creating a SMS senders`
+        t('setup.senders.create.senders.notification.error')
       )
     },
   })
