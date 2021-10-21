@@ -187,7 +187,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             defaultValue={'Activity'}
             dropdownItems={activity}
             value={item.type}
-            disabled={!isFilterOwner}
+            disabled={!(isFilterOwner || loggedUser.admin)}
           />
           <DropdownWithCheck
             dropdownClassName={styles.filterColumnWrap}
@@ -198,7 +198,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             }
             showSearch
             filterOption={true}
-            disabled={!isFilterOwner}
+            disabled={!(isFilterOwner || loggedUser.admin)}
             dropdownItems={activityItemNames}
           />
           <DropdownWithCheck
@@ -210,7 +210,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             }
             dropdownItems={manageOperandBasedOnColumn?.[item.filterColumn]}
             showSearch
-            disabled={!isFilterOwner}
+            disabled={!(isFilterOwner || loggedUser.admin)}
             filterOption={true}
           />
           <div className={styles.filterMenuWrapper}>
@@ -226,16 +226,18 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
                   activityItemChange(value, index, 'menuOption')
                 }
                 userId={loggedUser.user}
-                disabled={!isFilterOwner}
+                disabled={!(isFilterOwner || loggedUser.admin)}
                 isEdit={isEdit}
               />
             )}
           </div>
           <div
-            onClick={() => isFilterOwner && removeFilterMenu(index)}
+            onClick={() =>
+              (isFilterOwner || loggedUser.admin) && removeFilterMenu(index)
+            }
             className={classNames(
               styles.minusBlock,
-              !isFilterOwner && styles.disable
+              !(isFilterOwner || loggedUser.admin) && styles.disable
             )}
           >
             <MinusOutlined />
@@ -630,11 +632,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               <Button
                 className={classNames(
                   styles.btnAdd,
-                  !values.isFilterOwner && styles.disable
+                  !(values.isFilterOwner || loggedUser.admin) && styles.disable
                 )}
                 type="default"
                 icon={<PlusOutlined />}
-                disabled={!values.isFilterOwner}
+                disabled={!(values.isFilterOwner || loggedUser.admin)}
                 onClick={() =>
                   AddConditionClick(values, setFieldValue, 'andFilterOption')
                 }
@@ -658,11 +660,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               <Button
                 className={classNames(
                   styles.btnAdd,
-                  !values.isFilterOwner && styles.disable
+                  !(values.isFilterOwner || loggedUser.admin) && styles.disable
                 )}
                 type="default"
                 icon={<PlusOutlined />}
-                disabled={!values.isFilterOwner}
+                disabled={!(values.isFilterOwner || loggedUser.admin)}
                 onClick={() =>
                   AddConditionClick(values, setFieldValue, 'orFilterOption')
                 }
@@ -677,7 +679,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               >
                 <FormikInput
                   name={'name'}
-                  disabled={!values.isFilterOwner}
+                  disabled={!(values.isFilterOwner || loggedUser.admin)}
                   placeholder={t('create.filter.modal.filter.name.placeholder')}
                 />
               </Form.Item>
@@ -687,21 +689,22 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               >
                 <span
                   className={classNames(
-                    !values.isFilterOwner && styles.btnProvider
+                    !(values.isFilterOwner || loggedUser.admin) &&
+                      styles.btnProvider
                   )}
                 >
                   <Dropdown
                     trigger={['click']}
                     overlay={visibilityMenu(setFieldValue, values)}
                     visible={visibilityVisible}
-                    disabled={!values.isFilterOwner}
+                    disabled={!(values.isFilterOwner || loggedUser.admin)}
                     onVisibleChange={(value) => setVisibilityVisible(value)}
                     getPopupContainer={(node) => node}
                     overlayClassName={styles.visibilityMenu}
                   >
                     <Button
                       className={classNames(
-                        !values.isFilterOwner,
+                        !(values.isFilterOwner || loggedUser.admin),
                         styles.disable
                       )}
                     >
@@ -728,10 +731,13 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 </span>
               </Form.Item>
             </div>
-            <Checkbox name="saveFilter" disabled={!values.isFilterOwner}>
+            <Checkbox
+              name="saveFilter"
+              disabled={!(values.isFilterOwner || loggedUser.admin)}
+            >
               {t('create.filter.modal.save.filter.checkbox.label')}
             </Checkbox>
-            {!values.isFilterOwner && (
+            {values.id && (
               <div className={styles.creatorWrapper}>
                 <span>
                   {t('create.filter.modal.creator.name', {
@@ -747,7 +753,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               </div>
             )}
             <div className={styles.btnWrapper}>
-              {values.isFilterOwner && values.id && (
+              {(values.isFilterOwner || loggedUser.admin) && values.id && (
                 <Button
                   className={styles.btnDanger}
                   type="primary"
@@ -760,9 +766,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               <span className={styles.previewWrapper}>
                 <Button
                   type="default"
-                  disabled={!values.isFilterOwner}
+                  disabled={!(values.isFilterOwner || loggedUser.admin)}
                   className={classNames(
-                    !values.isFilterOwner && styles.disable
+                    !(values.isFilterOwner || loggedUser.admin) &&
+                      styles.disable
                   )}
                   onClick={() => onPreview(values, resetForm)}
                 >
@@ -772,9 +779,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                   type="primary"
                   className={classNames(
                     styles.submitBtn,
-                    !values.isFilterOwner && styles.disable
+                    !(values.isFilterOwner || loggedUser.admin) &&
+                      styles.disable
                   )}
-                  disabled={!values.isFilterOwner}
+                  disabled={!(values.isFilterOwner || loggedUser.admin)}
                 >
                   {t('create.filter.modal.save.button.label')}
                 </SubmitButton>
