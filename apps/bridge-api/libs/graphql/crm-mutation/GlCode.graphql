@@ -1,0 +1,38 @@
+fragment GlCodeFields on GlCode {
+  id
+  company_id
+  code
+  description
+  related_to
+}
+
+fragment GlCode on GlCode {
+  ...GlCodeFields
+  InvPaymentType {
+    ...InvPaymentTypeFields
+  }
+}
+
+mutation createOneGlCode($data: GlCodeCreateInput!) {
+  createOneGlCode(data: $data) {
+    ...GlCode
+  }
+}
+
+mutation updateOneGlCode($where: GlCodeWhereUniqueInput!, $data: GlCodeUpdateInput!) {
+  updateOneGlCode(where: $where, data: $data) {
+    ...GlCode
+  }
+}
+
+mutation deleteOneGlCode($where: GlCodeWhereUniqueInput!) {
+  deleteOneGlCode(where: $where) {
+    ...GlCode
+  }
+}
+
+mutation updateManyGlCode($where: GlCodeWhereInput, $data: GlCodeUpdateManyMutationInput!) {
+  updateManyGlCode(where: $where, data: $data) {
+    count
+  }
+}
