@@ -43,7 +43,7 @@ pipelines:
                 - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace
-                - yarn lint:graphql-inspector
+                # - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
@@ -254,7 +254,7 @@ pipelines:
                 - yarn lint:tsc --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace
-                - yarn lint:graphql-inspector
+                # - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
