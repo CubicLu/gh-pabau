@@ -45,8 +45,8 @@ import {
 } from '../../../components/Setup/OnlineBooking'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
-import { useGetClientsAllAppointmentsQuery, SortOrder } from '@pabau/graphql'
-import getImage from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { useGetClientsAllAppointmentsQuery } from '@pabau/graphql'
+// import getImage from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 const { Title } = Typography
 export interface OnlineBookingProps {
   builderSetting: OnlineBookingBuilder
@@ -86,9 +86,7 @@ export const Index: FC<OnlineBookingProps> = ({
     return queryOptions
   }, [paginateData.offset, paginateData.limit])
 
-  const { data, loading, error } = useGetClientsAllAppointmentsQuery(
-    getQueryVariables
-  )
+  const { data } = useGetClientsAllAppointmentsQuery(getQueryVariables)
 
   useEffect(() => {
     if (data?.findManyBooking) {
