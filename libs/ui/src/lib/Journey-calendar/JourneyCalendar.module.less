@@ -38,6 +38,7 @@
     padding: 6px 10px;
     border-radius: 29px;
     text-align: center;
+    white-space: nowrap;
     cursor: pointer;
     @media only screen and (max-width: 991px) {
       font-size: 17px;
@@ -52,15 +53,27 @@
   .JourneyCalendarSlider {
     max-width: calc(100% - 80px);
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 100% 100% 100%;
+    justify-content: center;
+    overflow: hidden;
     @media only screen and (max-width: 991px) {
       max-width: 100%;
     }
+    .JourneyCalendarSliderWrapper {
+      display: flex;
+      justify-content: space-between;
+    }
   }
-  .animation {
-    animation-name: example;
-    animation-duration: 1s;
+  .rightAnimation {
+    animation-name: sliderRightAnimation;
+    animation-duration: 0.3s;
+    animation-direction: alternate;
+  }
+  .leftAnimation {
+    animation-name: sliderLeftAnimation;
+    animation-duration: 0.5s;
+    animation-direction: alternate;
   }
   .prevArrow {
     display: block;
@@ -125,11 +138,20 @@
   }
 }
 
-@keyframes example {
+@keyframes sliderLeftAnimation {
   from {
-    opacity: 0;
+    transform: translateX(0);
   }
   to {
-    opacity: 1;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sliderRightAnimation {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
   }
 }
