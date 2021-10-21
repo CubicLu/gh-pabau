@@ -67,11 +67,12 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
   uploadImage,
   removeFile,
 }) => {
-  useEffect(() => {
-    if (!data?.isUploadStarted && !data?.isUploadCompleted) {
-      uploadImage?.(data)
-    }
-  }, [data, uploadImage])
+  console.log(uploadImage)
+  // useEffect(() => {
+  //   if (!data?.isUploadStarted && !data?.isUploadCompleted) {
+  //     uploadImage?.(data)
+  //   }
+  // }, [data, uploadImage])
 
   return (
     <div key={data?.id} style={{ backgroundImage: `url(${data?.preview})` }}>
