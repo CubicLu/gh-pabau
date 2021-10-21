@@ -5309,3 +5309,8 @@ en:
   team.user.personal.details.employee.end.date.label: 'Employment end date'
   team.user.personal.details.primary.location.label: 'Primary Location'
   team.user.personal.details.other.location.label: 'Other Locations'
+  team.user.personal.details.avtar.modal.title: 'Edit Photo'
+  team.user.personal.details.avtar.cancel.button: 'Cancel'
+  team.user.personal.details.avtar.create.button: 'Create'
+  team.user.personal.details.avtar.Preview.title: 'Preview'
+  team.user.personal.details.avtar.upload.button: 'Upload file'
