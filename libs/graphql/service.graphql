@@ -20,11 +20,11 @@ query getServices($userID: Int = 0, $locationID: Int = 0, $contractID: Int = 0, 
       id
       name
     }
-    ServiceUserPrice(where: {User: {id: {equals: $userID}}}) {
+    ServiceUserTier(where: {User: {id: {equals: $userID}}}) {
       id
       price
     }
-    ServiceLocationPrice(where: {Location: {id: {equals: $locationID}}}) {
+    ServiceLocationTier(where: {Location: {id: {equals: $locationID}}}) {
       id
       price
     }
