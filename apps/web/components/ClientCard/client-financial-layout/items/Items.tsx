@@ -202,6 +202,7 @@ export const Items: FC<P> = (props) => {
             value: totalSales,
           },
         ]}
+        loading={false}
       />
     </div>
   )

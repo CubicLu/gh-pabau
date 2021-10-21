@@ -202,6 +202,7 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
               value: totalPayments,
             },
           ]}
+          loading={false}
         />
       </div>
     </>
