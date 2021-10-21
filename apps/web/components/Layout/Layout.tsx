@@ -108,7 +108,7 @@ const Layout: FC<LayoutProps> = ({
     return <Login />
   }
 
-  const legacyPage: false | string = false
+  let legacyPage: false | string = false
   if (data)
     for (const [, row] of data.feature_flags.entries()) {
       if (router.asPath.substring(1) === row.page_slug) {
