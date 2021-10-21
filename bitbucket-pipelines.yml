@@ -48,7 +48,7 @@ pipelines:
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
                 - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
+                # - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
           - step:
               name: lint
@@ -258,7 +258,7 @@ pipelines:
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
+                # - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
           - step:
               name: lint
