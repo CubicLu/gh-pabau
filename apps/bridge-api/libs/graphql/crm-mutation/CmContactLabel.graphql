@@ -1,0 +1,37 @@
+fragment CmContactLabelFields on CmContactLabel {
+  id
+  company_id
+  contact_id
+  label_id
+}
+
+fragment CmContactLabel on CmContactLabel {
+  ...CmContactLabelFields
+  Company {
+    ...CompanyFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+  CmLabel {
+    ...CmLabelFields
+  }
+}
+
+mutation createOneCmContactLabel($data: CmContactLabelCreateInput!) {
+  createOneCmContactLabel(data: $data) {
+    ...CmContactLabel
+  }
+}
+
+mutation updateOneCmContactLabel($where: CmContactLabelWhereUniqueInput!, $data: CmContactLabelUpdateInput!) {
+  updateOneCmContactLabel(where: $where, data: $data) {
+    ...CmContactLabel
+  }
+}
+
+mutation deleteOneCmContactLabel($where: CmContactLabelWhereUniqueInput!) {
+  deleteOneCmContactLabel(where: $where) {
+    ...CmContactLabel
+  }
+}

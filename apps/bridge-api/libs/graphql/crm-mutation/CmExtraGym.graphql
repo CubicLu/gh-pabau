@@ -1,0 +1,41 @@
+fragment CmExtraGymFields on CmExtraGym {
+  id
+  contact_id
+  primary_goal
+  intro_class
+  age_group
+  occupier
+  skill_level
+  membership
+}
+
+fragment CmExtraGym on CmExtraGym {
+  ...CmExtraGymFields
+  CmContact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneCmExtraGym($data: CmExtraGymCreateInput!) {
+  createOneCmExtraGym(data: $data) {
+    ...CmExtraGym
+  }
+}
+
+mutation updateOneCmExtraGym($where: CmExtraGymWhereUniqueInput!, $data: CmExtraGymUpdateInput!) {
+  updateOneCmExtraGym(where: $where, data: $data) {
+    ...CmExtraGym
+  }
+}
+
+mutation deleteOneCmExtraGym($where: CmExtraGymWhereUniqueInput!) {
+  deleteOneCmExtraGym(where: $where) {
+    ...CmExtraGym
+  }
+}
+
+mutation updateManyCmExtraGym($where: CmExtraGymWhereInput, $data: CmExtraGymUpdateManyMutationInput!) {
+  updateManyCmExtraGym(where: $where, data: $data) {
+    count
+  }
+}
