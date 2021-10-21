@@ -27,7 +27,6 @@ export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
   const carouselContainerRef2 = React.useRef<HTMLDivElement>(null)
   const carouselContainerRef3 = React.useRef<HTMLDivElement>(null)
   const resizeEvent = useWindowSize()
-  console.log('activeDate', activeDate)
   const [currentMonth, setCurrentMonth] = useState(
     moment(new Date()).format('MMMM YYYY')
   )
