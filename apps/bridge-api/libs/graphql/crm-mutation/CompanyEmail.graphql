@@ -1,0 +1,43 @@
+fragment CompanyEmailFields on CompanyEmail {
+  company_id
+  company_email
+  added_by
+  email_id
+  senders_name
+  confirmed
+  hash
+  default_email
+  enterprise_email
+  merge_tags
+}
+
+fragment CompanyEmail on CompanyEmail {
+  ...CompanyEmailFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCompanyEmail($data: CompanyEmailCreateInput!) {
+  createOneCompanyEmail(data: $data) {
+    ...CompanyEmail
+  }
+}
+
+mutation updateOneCompanyEmail($where: CompanyEmailWhereUniqueInput!, $data: CompanyEmailUpdateInput!) {
+  updateOneCompanyEmail(where: $where, data: $data) {
+    ...CompanyEmail
+  }
+}
+
+mutation deleteOneCompanyEmail($where: CompanyEmailWhereUniqueInput!) {
+  deleteOneCompanyEmail(where: $where) {
+    ...CompanyEmail
+  }
+}
+
+mutation updateManyCompanyEmail($where: CompanyEmailWhereInput, $data: CompanyEmailUpdateManyMutationInput!) {
+  updateManyCompanyEmail(where: $where, data: $data) {
+    count
+  }
+}

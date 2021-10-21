@@ -1,0 +1,49 @@
+fragment CheckinQueueFields on CheckinQueue {
+  id
+  uid
+  been_before
+  date_start
+  accepted
+  is_lunch
+  name
+  date_accepted
+  date_end
+  was_anyone
+  finalise
+  sms_number
+  sms_sent
+  sms_wanted
+  skips
+  connect_id
+  order
+  spotify_uri
+  date_binned
+}
+
+fragment CheckinQueue on CheckinQueue {
+  ...CheckinQueueFields
+}
+
+mutation createOneCheckinQueue($data: CheckinQueueCreateInput!) {
+  createOneCheckinQueue(data: $data) {
+    ...CheckinQueue
+  }
+}
+
+mutation updateOneCheckinQueue($where: CheckinQueueWhereUniqueInput!, $data: CheckinQueueUpdateInput!) {
+  updateOneCheckinQueue(where: $where, data: $data) {
+    ...CheckinQueue
+  }
+}
+
+mutation deleteOneCheckinQueue($where: CheckinQueueWhereUniqueInput!) {
+  deleteOneCheckinQueue(where: $where) {
+    ...CheckinQueue
+  }
+}
+
+mutation updateManyCheckinQueue($where: CheckinQueueWhereInput, $data: CheckinQueueUpdateManyMutationInput!) {
+  updateManyCheckinQueue(where: $where, data: $data) {
+    count
+  }
+}
