@@ -31,12 +31,8 @@ import dayjs from 'dayjs'
 
 const ImageItem = ({ origin, ...props }) => {
   const [source, setSource] = useState('')
-  const [src, setSrc] = useState('')
 
   useEffect(() => {
-    if (src !== origin) {
-      setSource('')
-    }
     if (source === '' && origin !== '') {
       let path = origin
       if (origin.includes('photos/')) {
@@ -63,15 +59,14 @@ const ImageItem = ({ origin, ...props }) => {
           img.width,
           img.height
         )
-        setSrc(origin)
         setSource(canvas.toDataURL())
       })
       img.addEventListener('error', () => {
-        setSource('load-error')
+        setSource('')
       })
       img.src = path
     }
-  }, [origin, source, src])
+  }, [origin, source])
 
   return source ? (
     <img src={source} alt="content" {...props} />

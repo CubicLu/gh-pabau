@@ -372,16 +372,15 @@ const Photos = () => {
             }
           }
         })
-        .catch((error) => {
-          console.log('ERROR:', error?.message)
-          // const files = [...uploadingFiles]
-          // const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
-          // if (fileIdx !== -1) {
-          //   const file = files[fileIdx]
-          //   file.isFailed = true
-          //   files.splice(fileIdx, 1, file)
-          //   setUploadingFiles(files)
-          // }
+        .catch(() => {
+          const files = [...uploadingFiles]
+          const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
+          if (fileIdx !== -1) {
+            const file = files[fileIdx]
+            file.isFailed = true
+            files.splice(fileIdx, 1, file)
+            setUploadingFiles(files)
+          }
         })
     }
   }
