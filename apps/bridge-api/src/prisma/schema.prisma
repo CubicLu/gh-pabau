@@ -4949,15 +4949,15 @@ model PathwayStepsTaken {
 }
 
 model CreditBalance {
-  credit_balance_id Int    @id @default(autoincrement())
-  company           String
-  balance           Float  @default(5.00)
+  credit_balance_id Int   @id @default(autoincrement())
+  company_id        Int?  @map("company")
+  balance           Float @default(5.00)
   balance_currency  Float
   auto              Int
 
-  Company   Company? @relation(fields: [companyId], references: [id])
-  companyId Int?
-  @@index([company], name: "company")
+  Company Company? @relation(fields: [company_id], references: [id])
+  @@index([company_id], name: "company_id")
+  @@map("credit_balance")
 }
 
 model CreditNoteType {
