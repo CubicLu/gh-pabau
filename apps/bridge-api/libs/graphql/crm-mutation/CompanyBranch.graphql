@@ -1,0 +1,65 @@
+fragment CompanyBranchFields on CompanyBranch {
+  id
+  group_id
+  company_id
+  address
+  street
+  city
+  county
+  name
+  postcode
+  online_bookings
+  phone
+  website
+  is_active
+  bookable_online
+  calendar_bookable
+  is_default
+  lat
+  lng
+  custom_id
+  email
+  send_conf_email
+  show_online
+  loc_order
+  region
+  invoice_template_id
+  color
+  notify_on_lead
+  notice
+  image
+}
+
+fragment CompanyBranch on CompanyBranch {
+  ...CompanyBranchFields
+  Company {
+    ...CompanyFields
+  }
+  CompanyBranchGroup {
+    ...CompanyBranchGroupFields
+  }
+}
+
+mutation createOneCompanyBranch($data: CompanyBranchCreateInput!) {
+  createOneCompanyBranch(data: $data) {
+    ...CompanyBranch
+  }
+}
+
+mutation updateOneCompanyBranch($where: CompanyBranchWhereUniqueInput!, $data: CompanyBranchUpdateInput!) {
+  updateOneCompanyBranch(where: $where, data: $data) {
+    ...CompanyBranch
+  }
+}
+
+mutation deleteOneCompanyBranch($where: CompanyBranchWhereUniqueInput!) {
+  deleteOneCompanyBranch(where: $where) {
+    ...CompanyBranch
+  }
+}
+
+mutation updateManyCompanyBranch($where: CompanyBranchWhereInput, $data: CompanyBranchUpdateManyMutationInput!) {
+  updateManyCompanyBranch(where: $where, data: $data) {
+    count
+  }
+}

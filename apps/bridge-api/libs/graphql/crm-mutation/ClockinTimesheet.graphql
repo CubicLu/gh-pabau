@@ -1,0 +1,44 @@
+fragment ClockinTimesheetFields on ClockinTimesheet {
+  clock_id
+  staff_uid
+  company_id
+  clockin
+  clockout
+  total_break_time
+  total_working_time
+  notes
+  approved
+  staff_name
+  ip_address
+}
+
+fragment ClockinTimesheet on ClockinTimesheet {
+  ...ClockinTimesheetFields
+}
+
+mutation createOneClockinTimesheet($data: ClockinTimesheetCreateInput!) {
+  createOneClockinTimesheet(data: $data) {
+    ...ClockinTimesheet
+  }
+}
+
+mutation updateOneClockinTimesheet($where: ClockinTimesheetWhereUniqueInput!, $data: ClockinTimesheetUpdateInput!) {
+  updateOneClockinTimesheet(where: $where, data: $data) {
+    ...ClockinTimesheet
+  }
+}
+
+mutation deleteOneClockinTimesheet($where: ClockinTimesheetWhereUniqueInput!) {
+  deleteOneClockinTimesheet(where: $where) {
+    ...ClockinTimesheet
+  }
+}
+
+mutation updateManyClockinTimesheet(
+  $where: ClockinTimesheetWhereInput
+  $data: ClockinTimesheetUpdateManyMutationInput!
+) {
+  updateManyClockinTimesheet(where: $where, data: $data) {
+    count
+  }
+}
