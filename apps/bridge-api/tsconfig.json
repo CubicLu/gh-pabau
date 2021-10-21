@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "files": [],
   "include": [],
+  "memoryLimit": 5120,
   "compilerOptions": {
     "resolveJsonModule": true
   },

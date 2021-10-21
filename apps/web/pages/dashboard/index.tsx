@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Avatar, Button, RangePicker } from '@pabau/ui'
+import { Avatar, Button, RangePicker, JourneyCalendar } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
 import styles from './dashboard.module.less'
 import { useUser } from '../../context/UserContext'
@@ -29,6 +29,7 @@ import {
 } from '../../mocks/Dashboard'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { cdnURL } from '../../../web/baseUrl'
+import moment from 'moment'
 
 interface ISetUser {
   key: number
@@ -44,6 +45,9 @@ export function Index() {
   const user = useUser()
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
+  const [activeDate, setActiveDate] = useState(
+    moment(new Date()).format('MMM D YYYY')
+  )
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
   const [dashboardMode, setDashboardMode] = useState(0)
@@ -483,6 +487,10 @@ export function Index() {
                 appointmentStatus?.dashboardData?.otherSalesDetails?.RevPerhour
               }
               loading={loading}
+            />
+            <JourneyCalendar
+              activeDate={activeDate}
+              setActiveDate={setActiveDate}
             />
             <Charts
               location={location}

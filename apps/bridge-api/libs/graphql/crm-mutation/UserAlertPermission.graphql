@@ -1,0 +1,53 @@
+fragment UserAlertPermissionFields on UserAlertPermission {
+  id
+  uid
+  alert_id
+  company_id
+  ios_notification
+  email_notification
+  sms_notification
+  pabau_notification
+}
+
+fragment UserAlertPermission on UserAlertPermission {
+  ...UserAlertPermissionFields
+  User {
+    ...UserFields
+  }
+  Company {
+    ...CompanyFields
+  }
+  UserAlert {
+    ...UserAlertFields
+  }
+}
+
+mutation createOneUserAlertPermission($data: UserAlertPermissionCreateInput!) {
+  createOneUserAlertPermission(data: $data) {
+    ...UserAlertPermission
+  }
+}
+
+mutation updateOneUserAlertPermission(
+  $where: UserAlertPermissionWhereUniqueInput!
+  $data: UserAlertPermissionUpdateInput!
+) {
+  updateOneUserAlertPermission(where: $where, data: $data) {
+    ...UserAlertPermission
+  }
+}
+
+mutation deleteOneUserAlertPermission($where: UserAlertPermissionWhereUniqueInput!) {
+  deleteOneUserAlertPermission(where: $where) {
+    ...UserAlertPermission
+  }
+}
+
+mutation updateManyUserAlertPermission(
+  $where: UserAlertPermissionWhereInput
+  $data: UserAlertPermissionUpdateManyMutationInput!
+) {
+  updateManyUserAlertPermission(where: $where, data: $data) {
+    count
+  }
+}

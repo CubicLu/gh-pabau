@@ -1,0 +1,37 @@
+fragment CmContactJsonFields on CmContactJson {
+  id
+  company_id
+  clients_json
+  date_updated
+}
+
+fragment CmContactJson on CmContactJson {
+  ...CmContactJsonFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCmContactJson($data: CmContactJsonCreateInput!) {
+  createOneCmContactJson(data: $data) {
+    ...CmContactJson
+  }
+}
+
+mutation updateOneCmContactJson($where: CmContactJsonWhereUniqueInput!, $data: CmContactJsonUpdateInput!) {
+  updateOneCmContactJson(where: $where, data: $data) {
+    ...CmContactJson
+  }
+}
+
+mutation deleteOneCmContactJson($where: CmContactJsonWhereUniqueInput!) {
+  deleteOneCmContactJson(where: $where) {
+    ...CmContactJson
+  }
+}
+
+mutation updateManyCmContactJson($where: CmContactJsonWhereInput, $data: CmContactJsonUpdateManyMutationInput!) {
+  updateManyCmContactJson(where: $where, data: $data) {
+    count
+  }
+}

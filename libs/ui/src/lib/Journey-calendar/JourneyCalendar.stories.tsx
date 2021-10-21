@@ -5,8 +5,18 @@ import JourneyCalendar from './JourneyCalendar'
 export default {
   component: JourneyCalendar,
   title: 'UI/JourneyCalendar',
+  args: {},
+  argTypes: {},
 }
 
-export const primary = () => {
-  return <JourneyCalendar />
+const CalendarStory = ({ args }) => {
+  return <JourneyCalendar {...args}/>
+}
+
+export const Basic = CalendarStory.bind({})
+Basic.args = {
+  setActiveDate: (val) => {
+    console.log(val)
+  },
+  activeDate: 'Oct 21 2021'
 }

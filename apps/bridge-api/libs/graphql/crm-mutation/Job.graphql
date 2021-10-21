@@ -1,0 +1,48 @@
+fragment JobFields on Job {
+  job_id
+  create_date
+  created_by_id
+  start_date
+  closing_date
+  opening_title
+  job_location
+  what_you_do
+  is_closed
+  department
+  job_country
+  opening_job_blurb
+  employment_type
+  company_id
+  experience
+}
+
+fragment Job on Job {
+  ...JobFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneJob($data: JobCreateInput!) {
+  createOneJob(data: $data) {
+    ...Job
+  }
+}
+
+mutation updateOneJob($where: JobWhereUniqueInput!, $data: JobUpdateInput!) {
+  updateOneJob(where: $where, data: $data) {
+    ...Job
+  }
+}
+
+mutation deleteOneJob($where: JobWhereUniqueInput!) {
+  deleteOneJob(where: $where) {
+    ...Job
+  }
+}
+
+mutation updateManyJob($where: JobWhereInput, $data: JobUpdateManyMutationInput!) {
+  updateManyJob(where: $where, data: $data) {
+    count
+  }
+}

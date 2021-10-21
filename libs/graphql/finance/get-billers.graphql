@@ -9,7 +9,7 @@ query getBillers($service_id: Int = 0) {
       id
       full_name
       image
-      ServiceUserPrice(where: {service_id: {equals: $service_id}}) {
+      ServiceUserTier(where: {service_id: {equals: $service_id}}) {
         price
       }
     }

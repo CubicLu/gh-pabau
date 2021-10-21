@@ -1,37 +1,43 @@
-import React, { FC, useState, useEffect, useRef } from 'react'
-import { Carousel, Row, Col } from 'antd'
+import React, { FC, useState, useEffect } from 'react'
+import { Row, Col } from 'antd'
 import { useTranslation } from 'react-i18next'
 import styles from './JourneyCalendar.module.less'
 import arrow from '../journey-calendar/arrow.svg'
 import moment from 'moment'
 import { Button } from '@pabau/ui'
 import { useSwipeable } from 'react-swipeable'
-import { CarouselRef } from 'antd/lib/carousel'
+import { useWindowSize } from 'react-use'
 
 interface CalendarState {
-  activeDate: string
   array: string[]
   previousArray: string[]
   nextArray: string[]
 }
 
-const dateFormat = 'MMM D'
+export interface Props {
+  activeDate: string
+  setActiveDate: (date: string | undefined) => void
+}
 
-export const JourneyCalendar: FC = () => {
+const dateFormat = 'MMM D YYYY'
+
+export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
   const { t } = useTranslation('common')
   const carouselContainerRef1 = React.useRef<HTMLDivElement>(null)
   const carouselContainerRef2 = React.useRef<HTMLDivElement>(null)
   const carouselContainerRef3 = React.useRef<HTMLDivElement>(null)
-  const width = window.innerWidth
-  const [date, setDate] = useState(2)
-  const slidesOnLeftRight = 4
-
+  const resizeEvent = useWindowSize()
+  console.log('activeDate', activeDate)
+  const [currentMonth, setCurrentMonth] = useState(
+    moment(new Date()).format('MMMM YYYY')
+  )
   const [dateArray, setDataArray] = useState<CalendarState>({
-    activeDate: moment().format(dateFormat),
     array: [],
     previousArray: [],
     nextArray: [],
   })
+
+  const [daysToAppend, setDaysToAppend] = useState(9)
 
   const getDaysArray = (start: Date, end: Date) => {
     const arr: Array<string> = []
@@ -42,14 +48,18 @@ export const JourneyCalendar: FC = () => {
     return arr
   }
 
-  const setInitialDates = () => {
-    const start = moment().subtract(slidesOnLeftRight, 'days').toDate()
-    const end = moment().add(slidesOnLeftRight, 'days').toDate()
+  const setInitialDates = (startDate = null, endDate = null) => {
+    const slidesOnLeftRight = Math.floor(daysToAppend / 2)
+    const start =
+      startDate || moment().subtract(slidesOnLeftRight, 'days').toDate()
+    const end = endDate || moment().add(slidesOnLeftRight, 'days').toDate()
     const newArray = getDaysArray(start, end)
     const nextAndPreviousArray = setNextAndPreviousArray(start, end)
+    setActiveDate(moment(new Date()).format('MMM D YYYY'))
+    setCurrentMonth(moment(new Date()).format('MMMM YYYY'))
     setDataArray({
       ...dateArray,
-      array: newArray,
+      array: [...newArray],
       previousArray: nextAndPreviousArray.previousArray,
       nextArray: nextAndPreviousArray.nextArray,
     })
@@ -57,7 +67,7 @@ export const JourneyCalendar: FC = () => {
 
   const setNextAndPreviousArray = (start, end) => {
     const previousArrayStartDate = moment(start, dateFormat)
-      .subtract(width > 991 ? 9 : width > 767 ? 7 : width > 479 ? 5 : 3, 'days')
+      .subtract(daysToAppend, 'days')
       .toDate()
     const previousArrayEndDate = moment(start, dateFormat)
       .subtract(1, 'days')
@@ -68,7 +78,7 @@ export const JourneyCalendar: FC = () => {
     )
     const nextArrayStartDate = moment(end, dateFormat).add(1, 'days').toDate()
     const nextArrayEndDate = moment(end, dateFormat)
-      .add(width > 991 ? 9 : width > 767 ? 7 : width > 479 ? 5 : 3, 'days')
+      .add(daysToAppend, 'days')
       .toDate()
     const nextArray = getDaysArray(nextArrayStartDate, nextArrayEndDate)
     return { previousArray, nextArray }
@@ -82,48 +92,14 @@ export const JourneyCalendar: FC = () => {
   })
 
   const handleTodays = () => {
-    selectDateHandler(moment().format(dateFormat))
     setInitialDates()
   }
 
   const appendNewDates = (direction: 'next' | 'prev') => {
-    // const previousDate1 = moment(currentDate)
-    //   .subtract(1, 'days')
-    //   .format(dateFormat)
-    // const previousDate2 = moment(currentDate)
-    //   .subtract(2, 'days')
-    //   .format(dateFormat)
-    // const previousDate3 = moment(currentDate)
-    //   .subtract(3, 'days')
-    //   .format(dateFormat)
-    // const previousDate4 = moment(currentDate)
-    //   .subtract(4, 'days')
-    //   .format(dateFormat)
-    // const nextDate1 = moment(currentDate).add(1, 'days').format(dateFormat)
-    // const nextDate2 = moment(currentDate).add(2, 'days').format(dateFormat)
-    // const nextDate3 = moment(currentDate).add(3, 'days').format(dateFormat)
-    // const nextDate4 = moment(currentDate).add(4, 'days').format(dateFormat)
-    // const newArray: any = [
-    //   previousDate4,
-    //   previousDate3,
-    //   previousDate2,
-    //   previousDate1,
-    //   currentDate,
-    //   nextDate1,
-    //   nextDate2,
-    //   nextDate3,
-    //   nextDate4,
-    // ]
-    // if direction is of next add next 13 days from last date of array
-    // else add previous 13 days from first date of array
-    // in order to keep building new dates
     const start =
       direction === 'prev'
         ? moment(dateArray.array[0], dateFormat)
-            .subtract(
-              width > 991 ? 9 : width > 767 ? 7 : width > 479 ? 5 : 3,
-              'days'
-            )
+            .subtract(daysToAppend, 'days')
             .toDate()
         : moment(dateArray.array[dateArray.array.length - 1], dateFormat)
             .add(1, 'day')
@@ -132,10 +108,7 @@ export const JourneyCalendar: FC = () => {
       direction === 'prev'
         ? moment(dateArray.array[0], dateFormat).subtract(1, 'day').toDate()
         : moment(dateArray.array[dateArray.array.length - 1], dateFormat)
-            .add(
-              width > 991 ? 9 : width > 767 ? 7 : width > 479 ? 5 : 3,
-              'days'
-            )
+            .add(daysToAppend, 'days')
             .toDate()
     const newArray = getDaysArray(start, end)
     const nextAndPreviousArray = setNextAndPreviousArray(start, end)
@@ -151,18 +124,11 @@ export const JourneyCalendar: FC = () => {
     })
   }
 
-  useEffect(() => {
-    setInitialDates()
-  }, [])
-
   const selectDateHandler = (date) => {
-    setDataArray({
-      ...dateArray,
-      activeDate: date,
-    })
+    setActiveDate(date)
+    setDataArray({ ...dateArray })
+    setCurrentMonth(moment(date).format('MMMM YYYY'))
   }
-
-  console.log('dateArray', dateArray)
 
   const handleNext = () => {
     carouselContainerRef1.current?.classList.remove(styles.rightAnimation)
@@ -194,25 +160,39 @@ export const JourneyCalendar: FC = () => {
     })
   }
 
-  const handleSwipe = (swipeDirection: 'left' | 'right') => {
-    console.log('swipeDirection', swipeDirection)
-    if (swipeDirection === 'left') {
-      handleNext()
-    } else {
-      handlePrev()
-    }
-  }
+  useEffect(() => {
+    setInitialDates()
+  }, [])
 
-  const slidesToShow = 9
+  useEffect(() => {
+    setInitialDates()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [daysToAppend])
+
+  useEffect(() => {
+    const { width } = resizeEvent
+    let result = 3
+    if (width > 991) {
+      result = 9
+    } else if (width < 992 && width > 767) {
+      result = 7
+    } else if (width < 768 && width > 479) {
+      result = 5
+    }
+
+    setDaysToAppend(result)
+  }, [resizeEvent])
 
   return (
     <>
-      {width < 992 ? (
+      {resizeEvent.width < 992 ? (
         <div className={styles.monthYear}>
           <div className={styles.monthYearWrap}>
             <div className={styles.todayText}></div>
-            <div className={styles.monthYearWrapText}>October 2021</div>
-            <div className={styles.todayText}>Today</div>
+            <div className={styles.monthYearWrapText}>{currentMonth}</div>
+            <div className={styles.todayText} onClick={handleTodays}>
+              {t('account.finance.date.range.option.today')}
+            </div>
           </div>
         </div>
       ) : null}
@@ -223,7 +203,7 @@ export const JourneyCalendar: FC = () => {
             <Row justify="space-between" gutter={16}>
               <Col className={styles.jcLeftCol}>
                 <div className={styles.journyCalenderColWrap}>
-                  {width > 991 ? (
+                  {resizeEvent.width > 991 ? (
                     <div className={styles.prevArrow} onClick={handlePrev}>
                       <img src={arrow} alt="arrow" />
                     </div>
@@ -232,42 +212,6 @@ export const JourneyCalendar: FC = () => {
                     className={`${styles.JourneyCalendarSlider}`}
                     {...handlers}
                   >
-                    {/* <Carousel
-                      ref={carousel}
-                      dots={false}
-                      arrows={true}
-                      infinite={false}
-                      speed={500}
-                      // initialSlide={13}
-                      slidesToShow={slidesToShow}
-                      // slidesToScroll={slidesToShow}
-                      swipeToSlide={false}
-                      // centerMode={true}
-                      onSwipe={handleSwipe}
-                      responsive={[
-                        {
-                          breakpoint: 769,
-                          settings: {
-                            slidesToShow: 7,
-                            // slidesToScroll: 7,
-                          },
-                        },
-                        {
-                          breakpoint: 650,
-                          settings: {
-                            slidesToShow: 3,
-                            // slidesToScroll: 3,
-                          },
-                        },
-                        {
-                          breakpoint: 480,
-                          settings: {
-                            slidesToShow: 2,
-                            // slidesToScroll: 2,
-                          },
-                        },
-                      ]}
-                    > */}
                     <div
                       className={`${styles.JourneyCalendarSliderWrapper}`}
                       ref={carouselContainerRef1}
@@ -277,17 +221,13 @@ export const JourneyCalendar: FC = () => {
                           key={item}
                           className={`${styles.journyCalenderDate} ${
                             styles.animation
-                          } ${
-                            dateArray.activeDate === item
-                              ? styles.activeDate
-                              : null
-                          }`}
+                          } ${activeDate === item ? styles.activeDate : null}`}
                         >
                           <span
                             className={styles.journyCalenderDateWrap}
                             onClick={() => selectDateHandler(item)}
                           >
-                            {item}
+                            {moment(item).format('ddd D')}
                           </span>
                         </div>
                       ))}
@@ -298,20 +238,16 @@ export const JourneyCalendar: FC = () => {
                     >
                       {dateArray?.array?.map((item, index) => (
                         <div
-                          key={item}
+                          key={index}
                           className={`${styles.journyCalenderDate} ${
                             styles.animation
-                          } ${
-                            dateArray.activeDate === item
-                              ? styles.activeDate
-                              : null
-                          }`}
+                          } ${activeDate === item ? styles.activeDate : null}`}
                         >
                           <span
                             className={styles.journyCalenderDateWrap}
                             onClick={() => selectDateHandler(item)}
                           >
-                            {item}
+                            {moment(item).format('ddd D')}
                           </span>
                         </div>
                       ))}
@@ -324,30 +260,27 @@ export const JourneyCalendar: FC = () => {
                         <div
                           key={item}
                           className={`${styles.journyCalenderDate}  ${
-                            dateArray.activeDate === item
-                              ? styles.activeDate
-                              : null
+                            activeDate === item ? styles.activeDate : null
                           }`}
                         >
                           <span
                             className={styles.journyCalenderDateWrap}
                             onClick={() => selectDateHandler(item)}
                           >
-                            {item}
+                            {moment(item).format('ddd D')}
                           </span>
                         </div>
                       ))}
                     </div>
-                    {/* </Carousel> */}
                   </div>
-                  {width > 991 ? (
+                  {resizeEvent.width > 991 ? (
                     <div className={styles.nextArrow} onClick={handleNext}>
                       <img src={arrow} alt="arrow" />
                     </div>
                   ) : null}
                 </div>
               </Col>
-              {width > 991 ? (
+              {resizeEvent.width > 991 ? (
                 <Col className={styles.jcRightCol}>
                   <Button className={styles.todayButton} onClick={handleTodays}>
                     {t('account.finance.date.range.option.today')}
