@@ -21,6 +21,7 @@ const SettingsContextWrapper: FC = ({ children }) => {
     variables: {
       slug: companySlug,
     },
+    skip: !companySlug,
   })
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
@@ -46,8 +47,8 @@ const SettingsContextWrapper: FC = ({ children }) => {
     )
   }
 
-  if (!csr === null) {
-    return <div>Invalid Company</div>
+  if (!companySlug || !csr || !csr.findFirstCompany || errorSettings) {
+    return <p>Invalid online bookings URL</p>
   }
 
   const meta = []

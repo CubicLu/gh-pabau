@@ -5,10 +5,10 @@ import img4 from '../assets/images/Lip.png'
 import Mois from '../assets/images/product.png'
 import Helico from '../../../libs/ui/src/assets/images/Heliocare.jpg'
 import sup from '../../../libs/ui/src/assets/images/super-c30.jpg'
-
 export const tooltip =
   'This package will give you credits to book two appointments: a Baseline scan with face-to-face consultation and a follow-up Progress scan.\n' +
   'IMPORTANT: The credits will expire one year from the date of purchase and the two scans must be a minimum of eight weeks apart.'
+
 export const data = [
   {
     key: 1,

@@ -15,6 +15,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { OperationDefinitionNode } from 'graphql'
 require('../../../libs/ui/src/styles/antd.less')
+require('react-phone-input-2/lib/style.css')
 
 const GRAPHQL_WS_ENDPOINT =
   process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
