@@ -5,7 +5,10 @@ import {
   LeftOutlined,
   CloudUploadOutlined,
   LoadingOutlined,
+  CloseCircleFilled,
+  PlayCircleFilled,
 } from '@ant-design/icons'
+import { CancelTokenSource } from 'axios'
 import { Progress, Spin, Tooltip } from 'antd'
 import { isMobile as mobile } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
@@ -53,52 +56,82 @@ export interface UploadingImageProps {
   isUploadStarted?: boolean
   isUploadCompleted?: boolean
   uploadPercentage?: number
+  cancelToken?: CancelTokenSource
   loading?: boolean
+  isFailed?: boolean
+  isCancelled?: boolean
 }
 
 interface ImageThumbnailProps {
   data: UploadingImageProps
   uploadImage?: (image: UploadingImageProps) => void
+  cancelUpload?: (image: UploadingImageProps) => void
   removeFile?: (path: string) => void
 }
 
 const ImageThumbnail: FC<ImageThumbnailProps> = ({
   data,
   uploadImage,
+  cancelUpload,
   removeFile,
 }) => {
-  console.log(uploadImage)
-  // useEffect(() => {
-  //   if (!data?.isUploadStarted && !data?.isUploadCompleted) {
-  //     uploadImage?.(data)
-  //   }
-  // }, [data, uploadImage])
+  const [showCancelIcon, setShowCancelIcon] = useState(false)
+
+  useEffect(() => {
+    if (!data?.isUploadStarted && !data?.isUploadCompleted) {
+      uploadImage?.(data)
+    }
+  }, [data, uploadImage])
+
+  useEffect(() => {
+    setShowCancelIcon(() => false)
+  }, [data?.isFailed])
 
   return (
     <div key={data?.id} style={{ backgroundImage: `url(${data?.preview})` }}>
-      {data?.isUploadStarted && (
+      {data?.isUploadStarted && !data?.loading && !showCancelIcon && (
         <div className={styles.imgLoading}>
-          <Tooltip
-            placement="top"
-            title={
-              (data?.uploadPercentage || 0) < 100
-                ? `${data?.uploadPercentage}% completed`
-                : 'Uploaded!'
-            }
+          <span
+            className={styles.progressIndicator}
+            onMouseEnter={() => {
+              if (!data?.isUploadCompleted) setShowCancelIcon(() => true)
+            }}
           >
-            <Progress
-              type="circle"
-              percent={!data?.loading ? data?.uploadPercentage || 0 : 0}
-              showInfo={data?.isUploadCompleted && !data.loading ? true : false}
-              strokeColor="#65CD98"
-              trailColor="#9292A3"
-              strokeWidth={10}
-              width={25}
-              status={
-                data?.isUploadCompleted && !data.loading ? 'success' : 'normal'
+            <Tooltip
+              placement="top"
+              className="tooltip-custom"
+              title={
+                data?.isFailed
+                  ? 'Failed!'
+                  : (data?.uploadPercentage || 0) < 100
+                  ? `${data?.uploadPercentage}% completed`
+                  : 'Uploaded!'
               }
-            />
-          </Tooltip>
+            >
+              <Progress
+                type="circle"
+                percent={!data?.loading ? data?.uploadPercentage || 0 : 0}
+                showInfo={
+                  data?.isFailed
+                    ? true
+                    : data?.isUploadCompleted && !data.loading
+                    ? true
+                    : false
+                }
+                strokeColor={data?.isFailed ? '#f5222d' : '#65CD98'}
+                trailColor="#9292A3"
+                strokeWidth={10}
+                width={25}
+                status={
+                  data?.isFailed
+                    ? 'exception'
+                    : data?.isUploadCompleted && !data.loading
+                    ? 'success'
+                    : 'normal'
+                }
+              />
+            </Tooltip>
+          </span>
         </div>
       )}
       {data?.isUploadCompleted && !data?.loading && (
@@ -118,14 +151,35 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
       )}
       {data?.loading && (
         <div className={styles.imgLoading}>
-          <Spin spinning indicator={<LoadingOutlined />} />
+          <Tooltip placement="top" title="Uploading...">
+            <Spin
+              spinning
+              className={styles.spinner}
+              indicator={<LoadingOutlined />}
+            />
+          </Tooltip>
+        </div>
+      )}
+      {showCancelIcon && data?.isUploadStarted && !data?.isUploadCompleted && (
+        <div className={styles.imgLoading}>
+          <span
+            className={styles.cancelIcon}
+            onMouseLeave={() => setShowCancelIcon(() => false)}
+            onClick={() => {
+              if (!data?.isFailed) cancelUpload?.(data)
+              if (data?.isFailed) uploadImage?.(data)
+            }}
+          >
+            {!data?.isFailed && <CloseCircleFilled />}
+            {data?.isFailed && <PlayCircleFilled />}
+          </span>
         </div>
       )}
     </div>
   )
 }
 
-interface DropzoneProps {
+export interface DropzoneProps {
   multiple?: boolean
   descTitle?: string
   descSubtitle?: string
@@ -138,7 +192,7 @@ interface DropzoneProps {
   onChange: (files: File[]) => void
 }
 
-const Dropzone: FC<DropzoneProps> = ({
+export const Dropzone: FC<DropzoneProps> = ({
   multiple = false,
   descTitle,
   descSubtitle,
@@ -258,6 +312,7 @@ export interface CamUploaderProps {
   setUploadingImages: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
   removeImage?: (imagePath: string) => void
+  onCancelUpload?: (image: UploadingImageProps) => void
   albumId?: number
 }
 
@@ -269,6 +324,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   setUploadingImages,
   uploadImage,
   removeImage,
+  onCancelUpload,
   albumId = 0,
 }) => {
   const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
@@ -315,7 +371,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   const scrollToEnd = () => {
     setTimeout(() => {
       const elem = document.querySelector('#addedImagesFixer') as HTMLElement
-      elem.scrollLeft = elem?.scrollWidth || 0
+      if (elem) elem.scrollLeft = elem?.scrollWidth || 0
     }, 100)
   }
 
@@ -405,6 +461,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
                   key={el?.id}
                   uploadImage={uploadImage}
                   removeFile={removeImage}
+                  cancelUpload={onCancelUpload}
                 />
               ))}
             </div>
