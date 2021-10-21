@@ -1,5 +1,6 @@
 .JourneyCalendar {
   margin-bottom: 33px;
+  // max-width: 1000px;
   @media only screen and (min-width: 992px) {
     box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
     border: 1px solid #f4f5f7;
@@ -12,13 +13,13 @@
     }
   }
   .JourneyCalendarWrapper {
-    padding: 15px 0;
+    padding: 16px 0;
     @media only screen and (max-width: 991px) {
       padding: 0;
     }
   }
   .jcLeftCol {
-    max-width: calc(100% - 82px);
+    max-width: calc(100% - 87px);
     width: 100%;
     @media only screen and (max-width: 991px) {
       max-width: 100%;
@@ -27,6 +28,9 @@
   .journyCalenderDate {
     padding: 0 3px;
     text-align: center;
+    @media only screen and (max-width: 991px) {
+      padding: 0 10px;
+    }
   }
   .journyCalenderDateWrap {
     display: inline-block;
@@ -43,6 +47,7 @@
     @media only screen and (max-width: 991px) {
       font-size: 17px;
       line-height: 22px;
+      letter-spacing: -0.408px;
     }
   }
   .journyCalenderColWrap {
@@ -51,7 +56,7 @@
     justify-content: space-between;
   }
   .JourneyCalendarSlider {
-    max-width: calc(100% - 80px);
+    max-width: calc(100% - 110px);
     width: 100%;
     display: grid;
     grid-template-columns: 100% 100% 100%;
@@ -63,6 +68,10 @@
     .JourneyCalendarSliderWrapper {
       display: flex;
       justify-content: space-between;
+      overflow: hidden;
+      @media only screen and (max-width: 991px) {
+        justify-content: space-evenly;
+      }
     }
   }
   .rightAnimation {
@@ -110,19 +119,21 @@
   }
   .todayButton {
     height: 40px;
+    width: 71px;
     color: #9292a3;
   }
 }
 .monthYear {
   margin-bottom: 20px;
+  padding: 0 20px;
   .monthYearWrap {
     display: flex;
     align-items: center;
     .monthYearWrapText {
       font-size: 17px;
       line-height: 22px;
-      text-align: center;
       letter-spacing: -0.408px;
+      text-align: center;
       color: #333333;
       flex: 1;
     }
