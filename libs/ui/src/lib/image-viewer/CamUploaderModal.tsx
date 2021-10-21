@@ -6,6 +6,7 @@ import {
   CloudUploadOutlined,
   LoadingOutlined,
   CloseCircleFilled,
+  PlayCircleFilled,
 } from '@ant-design/icons'
 import { CancelTokenSource } from 'axios'
 import { Progress, Spin, Tooltip } from 'antd'
@@ -55,10 +56,10 @@ export interface UploadingImageProps {
   isUploadStarted?: boolean
   isUploadCompleted?: boolean
   uploadPercentage?: number
+  cancelToken?: CancelTokenSource
   loading?: boolean
   isFailed?: boolean
-  isPaused?: boolean
-  cancelToken?: CancelTokenSource
+  isCancelled?: boolean
 }
 
 interface ImageThumbnailProps {
@@ -82,41 +83,57 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
     }
   }, [data, uploadImage])
 
+  useEffect(() => {
+    setShowCancelIcon(() => false)
+  }, [data?.isFailed])
+
   return (
     <div key={data?.id} style={{ backgroundImage: `url(${data?.preview})` }}>
-      {data?.isUploadStarted &&
-        (data?.uploadPercentage || 0) < 100 &&
-        !showCancelIcon && (
-          <div className={styles.imgLoading}>
-            <span onMouseEnter={() => setShowCancelIcon(() => true)}>
-              <Tooltip
-                placement="top"
-                title={
-                  (data?.uploadPercentage || 0) < 100
-                    ? `${data?.uploadPercentage}% completed`
-                    : 'Uploaded!'
+      {data?.isUploadStarted && !data?.loading && !showCancelIcon && (
+        <div className={styles.imgLoading}>
+          <span
+            className={styles.progressIndicator}
+            onMouseEnter={() => {
+              if (!data?.isUploadCompleted) setShowCancelIcon(() => true)
+            }}
+          >
+            <Tooltip
+              placement="top"
+              className="tooltip-custom"
+              title={
+                data?.isFailed
+                  ? 'Failed!'
+                  : (data?.uploadPercentage || 0) < 100
+                  ? `${data?.uploadPercentage}% completed`
+                  : 'Uploaded!'
+              }
+            >
+              <Progress
+                type="circle"
+                percent={!data?.loading ? data?.uploadPercentage || 0 : 0}
+                showInfo={
+                  data?.isFailed
+                    ? true
+                    : data?.isUploadCompleted && !data.loading
+                    ? true
+                    : false
                 }
-              >
-                <Progress
-                  type="circle"
-                  percent={!data?.loading ? data?.uploadPercentage || 0 : 0}
-                  showInfo={
-                    data?.isUploadCompleted && !data.loading ? true : false
-                  }
-                  strokeColor="#65CD98"
-                  trailColor="#9292A3"
-                  strokeWidth={10}
-                  width={25}
-                  status={
-                    data?.isUploadCompleted && !data.loading
-                      ? 'success'
-                      : 'normal'
-                  }
-                />
-              </Tooltip>
-            </span>
-          </div>
-        )}
+                strokeColor={data?.isFailed ? '#f5222d' : '#65CD98'}
+                trailColor="#9292A3"
+                strokeWidth={10}
+                width={25}
+                status={
+                  data?.isFailed
+                    ? 'exception'
+                    : data?.isUploadCompleted && !data.loading
+                    ? 'success'
+                    : 'normal'
+                }
+              />
+            </Tooltip>
+          </span>
+        </div>
+      )}
       {data?.isUploadCompleted && !data?.loading && (
         <Tooltip placement="top" title="Delete">
           <Button
@@ -143,20 +160,21 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
           </Tooltip>
         </div>
       )}
-      {showCancelIcon &&
-        data?.isUploadStarted &&
-        data?.loading &&
-        !data?.isUploadCompleted &&
-        !data?.isFailed && (
-          <div className={styles.imgLoading}>
-            <span
-              className={styles.cancelIcon}
-              onMouseLeave={() => setShowCancelIcon(() => false)}
-            >
-              <CloseCircleFilled />
-            </span>
-          </div>
-        )}
+      {showCancelIcon && data?.isUploadStarted && !data?.isUploadCompleted && (
+        <div className={styles.imgLoading}>
+          <span
+            className={styles.cancelIcon}
+            onMouseLeave={() => setShowCancelIcon(() => false)}
+            onClick={() => {
+              if (!data?.isFailed) cancelUpload?.(data)
+              if (data?.isFailed) uploadImage?.(data)
+            }}
+          >
+            {!data?.isFailed && <CloseCircleFilled />}
+            {data?.isFailed && <PlayCircleFilled />}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

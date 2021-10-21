@@ -256,10 +256,13 @@ const Photos = () => {
     }
   }
 
-  const onImageUpload = async (fileData) => {
+  const onImageUpload = async (fileData: UploadingImageProps) => {
     const cAddedFiles = [...uploadingFiles]
     const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
     if (idx !== -1) {
+      const CancelToken = axios.CancelToken
+      const source = CancelToken.source()
+
       const config = {
         onUploadProgress: function (progressEvent) {
           const percentCompleted = Math.round(
@@ -276,6 +279,7 @@ const Photos = () => {
             setUploadingFiles(percAddedFiles)
           }
         },
+        cancelToken: source.token,
       }
       const data = new FormData()
       data.append('File', fileData?.file)
@@ -287,6 +291,9 @@ const Photos = () => {
       if (upStartIdx !== -1) {
         const uppFile = upStartFiles[upStartIdx]
         uppFile.isUploadStarted = true
+        uppFile.uploadPercentage = 0
+        uppFile.cancelToken = source
+        uppFile.isFailed = false
         upStartFiles.splice(upStartIdx, 1, uppFile)
         setUploadingFiles(upStartFiles)
       }
@@ -295,68 +302,99 @@ const Photos = () => {
         .post('upload-photo', data, config)
         .then((res) => {
           const data = JSON.parse(JSON.stringify(res.data))
-          const upCompFiles = [...uploadingFiles]
-          const upCompIdx = upCompFiles?.findIndex(
-            (el) => el?.id === fileData?.id
-          )
-          if (upCompIdx !== -1) {
-            const uppCompFile = upCompFiles[upCompIdx]
-            uppCompFile.uploadedPath = data?.path
-            uppCompFile.loading = true
-            upCompFiles.splice(upCompIdx, 1, uppCompFile)
-            setUploadingFiles(upCompFiles)
-            if (fileData?.albumId > 0) {
-              createAttachmentInAlbum({
-                variables: {
-                  album_id: albumId,
-                  attachment_type: 'contact',
-                  contact_id: contactId,
-                  date: dayjs().unix(),
-                  image_url: data?.path,
-                  uploaded_by: me?.user,
-                  company_id: me?.company,
-                },
-                refetchQueries: [
-                  {
-                    query: GetPhotoAlbumsDocument,
-                    variables: {
-                      contactId: contactId,
+          if (data?.success) {
+            const upCompFiles = [...uploadingFiles]
+            const upCompIdx = upCompFiles?.findIndex(
+              (el) => el?.id === fileData?.id
+            )
+            if (upCompIdx !== -1) {
+              const uppCompFile = upCompFiles[upCompIdx]
+              uppCompFile.uploadedPath = data?.path
+              uppCompFile.loading = true
+              upCompFiles.splice(upCompIdx, 1, uppCompFile)
+              setUploadingFiles(upCompFiles)
+              if (fileData?.albumId > 0) {
+                createAttachmentInAlbum({
+                  variables: {
+                    album_id: albumId,
+                    attachment_type: 'contact',
+                    contact_id: contactId,
+                    date: dayjs().unix(),
+                    image_url: data?.path,
+                    uploaded_by: me?.user,
+                    company_id: me?.company,
+                  },
+                  refetchQueries: [
+                    {
+                      query: GetPhotoAlbumsDocument,
+                      variables: {
+                        contactId: contactId,
+                      },
                     },
+                    {
+                      query: GetAlbumPhotosDocument,
+                      variables: variables,
+                    },
+                  ],
+                })
+              }
+              if (fileData?.albumId === 0) {
+                createAttachmentOutOfAlbum({
+                  variables: {
+                    attachment_type: 'contact',
+                    contact_id: contactId,
+                    date: dayjs().unix(),
+                    image_url: data?.path,
+                    uploaded_by: me?.user,
+                    company_id: me?.company,
                   },
-                  {
-                    query: GetAlbumPhotosDocument,
-                    variables: variables,
-                  },
-                ],
-              })
+                  refetchQueries: [
+                    {
+                      query: GetPhotoAlbumsDocument,
+                      variables: {
+                        contactId: contactId,
+                      },
+                    },
+                    {
+                      query: GetAlbumPhotosDocument,
+                      variables: variables,
+                    },
+                  ],
+                })
+              }
             }
-            if (fileData?.albumId === 0) {
-              createAttachmentOutOfAlbum({
-                variables: {
-                  attachment_type: 'contact',
-                  contact_id: contactId,
-                  date: dayjs().unix(),
-                  image_url: data?.path,
-                  uploaded_by: me?.user,
-                  company_id: me?.company,
-                },
-                refetchQueries: [
-                  {
-                    query: GetPhotoAlbumsDocument,
-                    variables: {
-                      contactId: contactId,
-                    },
-                  },
-                  {
-                    query: GetAlbumPhotosDocument,
-                    variables: variables,
-                  },
-                ],
-              })
+          } else {
+            const files = [...uploadingFiles]
+            const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
+            if (fileIdx !== -1) {
+              const file = files[fileIdx]
+              file.isFailed = true
+              files.splice(fileIdx, 1, file)
+              setUploadingFiles(files)
             }
           }
         })
-        .catch((error) => console.log(error?.message))
+        .catch((error) => {
+          console.log('ERROR:', error?.message)
+          // const files = [...uploadingFiles]
+          // const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
+          // if (fileIdx !== -1) {
+          //   const file = files[fileIdx]
+          //   file.isFailed = true
+          //   files.splice(fileIdx, 1, file)
+          //   setUploadingFiles(files)
+          // }
+        })
+    }
+  }
+
+  const onUploadCancel = async (fileData: UploadingImageProps) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
+    if (idx !== -1) {
+      await fileData?.cancelToken?.cancel()
+      cAddedFiles.splice(idx, 1)
+      setUploadingFiles(cAddedFiles)
     }
   }
 
@@ -392,6 +430,7 @@ const Photos = () => {
         onAlbumUpdate={onAlbumUpdate}
         onAlbumDelete={onAlbumDelete}
         onImageUpload={onImageUpload}
+        onUploadCancel={onUploadCancel}
         uploadingImages={uploadingFiles}
         setUploadingImages={setUploadingFiles}
       />

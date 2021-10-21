@@ -62,6 +62,7 @@ export interface GalleryProps {
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (data: UploadingImageProps[]) => void
   onImageUpload?: (data: UploadingImageProps) => void
+  onUploadCancel?: (data: UploadingImageProps) => void
 }
 
 export const GalleryView: FC<GalleryProps> = ({
@@ -76,6 +77,7 @@ export const GalleryView: FC<GalleryProps> = ({
   uploadingImages,
   setUploadingImages,
   onImageUpload,
+  onUploadCancel,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -1011,6 +1013,7 @@ export const GalleryView: FC<GalleryProps> = ({
         onClose={() => setUploadModal((e) => !e)}
         uploadImage={onImageUpload}
         removeImage={(img) => console.log('RE:', img)}
+        onCancelUpload={onUploadCancel}
       />
 
       <Modal
