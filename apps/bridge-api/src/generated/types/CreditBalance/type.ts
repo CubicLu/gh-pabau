@@ -8,7 +8,7 @@ export const CreditBalance = objectType({
   name: 'CreditBalance',
   definition(t) {
     t.int('credit_balance_id')
-    t.string('company')
+    t.nullable.int('company_id')
     t.float('balance')
     t.float('balance_currency')
     t.int('auto')
@@ -18,6 +18,5 @@ export const CreditBalance = objectType({
         return root.Company
       },
     })
-    t.nullable.int('companyId')
   },
 })
