@@ -111,9 +111,9 @@ pipelines:
                   yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
                   yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
                   yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || (docker-compose -f tools/pabau1/docker-compose.ci.yml logs; exit 1)
-                - |
-                  echo "Performing load testing..."
-                  yarn load-testing
+
+                #  echo "Performing load testing..."
+                #  yarn load-testing
           - step:
               name: e2e
               size: 2x
@@ -331,9 +331,9 @@ pipelines:
                   yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
                   yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
                   yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || (docker-compose -f tools/pabau1/docker-compose.ci.yml logs; exit 1)
-                - |
-                  echo "Performing load testing..."
-                  yarn load-testing
+                #- |
+                #  echo "Performing load testing..."
+                # yarn load-testing
       - step:
           name: bump version
           max-time: 5
