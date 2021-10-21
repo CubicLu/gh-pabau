@@ -109,6 +109,7 @@ export const Index: FC<OnlineBookingProps> = ({
         showingRecords: data?.findManyBooking?.length,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   useEffect(() => {
