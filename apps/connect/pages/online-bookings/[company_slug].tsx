@@ -12,7 +12,7 @@ import DateTimeSelector from '../../components/DateTimeStep/DateTimeSelector'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { useCreateAppointmentMutation } from '@pabau/graphql'
+//import { useCreateAppointmentMutation } from '@pabau/graphql'
 
 import { BookingData } from '../../types/booking'
 import { SettingsContext } from '../../context/settings-context'
@@ -24,14 +24,14 @@ export function Index() {
 
   const settings = useContext(SettingsContext)
 
-  const [createBooking] = useCreateAppointmentMutation({
-    onCompleted(data) {
-      //I am not empty
-    },
-    onError(err) {
-      //I am not empty
-    },
-  })
+  // const [createBooking] = useCreateAppointmentMutation({
+  //   onCompleted(data) {
+  //     //I am not empty
+  //   },
+  //   onError(err) {
+  //     //I am not empty
+  //   },
+  // })
 
   const goBackButton = () => {
     let buttonName = ''
