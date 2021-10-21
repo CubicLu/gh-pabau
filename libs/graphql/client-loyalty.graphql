@@ -1,13 +1,13 @@
-query ClientLoyalty($contact_id: IntFilter){
-    findManyCmContact(where: {ID: $contact_id}){
-        LoyaltyPoints{
-            points
-        }
-        LoyaltyLog{
-            amount
-            promotion_type
-            date
-            description
-        }
+query ClientLoyalty($contact_id: IntFilter) {
+  findManyCmContact(where: { ID: $contact_id }) {
+    LoyaltyPoints {
+      points
     }
+    LoyaltyLog {
+      amount
+      promotion_type
+      date
+      description
+    }
+  }
 }
