@@ -341,15 +341,17 @@
       }
       .dropable {
         position: absolute;
+        background-color: transparent;
         height: 100%;
         width: 100%;
         top: 0;
         left: 0;
-        opacity: 0.29;
-        // background: rgba(135, 206, 235);
         z-index: 1;
         border-radius: 6px;
         cursor: pointer;
+      }
+      :global .dropEffect {
+        background-color: rgba(135, 206, 235, 0.29);
       }
     }
     .albumInfo {

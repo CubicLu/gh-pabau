@@ -111,7 +111,7 @@ export interface AlbumDataProps {
   handleImageMove: (album, images) => void
   drop: (e) => void
   allowDrop: (e) => void
-  drag: (e) => void
+  dragImage: (e) => void
   dragAlbum: (e) => void
   handleDownload: () => void
   imgDownload: (img) => void
@@ -140,10 +140,10 @@ export const AlbumData: FC<AlbumDataProps> = ({
   handleImageMove,
   drop,
   allowDrop,
-  drag,
+  dragImage,
+  dragAlbum,
   handleDownload,
   imgDownload,
-  dragAlbum,
   onAlbumDelete,
   listView,
   setCurrentData,
@@ -679,7 +679,12 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <div className={styles.albumImagesDiv}>
             {data.album?.map((x, i) => (
               <div key={i}>
-                <div className={styles.albumContainer}>
+                <div
+                  id={x.id?.toString()}
+                  className={styles.albumContainer}
+                  onDragStart={(event) => dragAlbum(event)}
+                  draggable={true}
+                >
                   <div
                     id={`tar${x.id}`}
                     className={styles.dropable}
@@ -687,10 +692,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
                     onDrop={(ev) => drop(ev)}
                     onDragOver={(ev) => allowDrop(ev)}
                     onDragLeave={() => {
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      document.querySelector(`#tar${x.id}`).style.background =
-                        'transparent'
+                      document
+                        ?.querySelector(`#tar${x.id}`)
+                        ?.classList?.remove('dropEffect')
                     }}
                   ></div>
                   <div className={styles.checkWrapper}>
@@ -714,12 +718,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                       </div>
                     )}
                   </div>
-                  <div
-                    className={styles.gridContainer}
-                    onDragStart={(event) => dragAlbum(event)}
-                    draggable={true}
-                    id={x.id?.toString()}
-                  >
+                  <div className={styles.gridContainer}>
                     {showAlbumImages(x)}
                   </div>
                 </div>
@@ -769,7 +768,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                               id={x.id}
                               key={i}
                               draggable={true}
-                              onDragStart={(event) => drag(event)}
+                              onDragStart={(event) => dragImage(event)}
                             />
                             {x.isSensitive ? (
                               <div className={styles.sensitiveClass}>

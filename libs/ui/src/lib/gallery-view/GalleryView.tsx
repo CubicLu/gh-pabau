@@ -115,7 +115,6 @@ export const GalleryView: FC<GalleryProps> = ({
   const [selectedImages, setSelectedImages] = useState<ImageProps[]>([])
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [status, setStatus] = useState(true)
-  const [dragAlbumTitle, setDragAlbumTitle] = useState('')
   const [imagesList, setImagesList] = useState(images)
   const [sensitiveImg, setSensitiveImg] = useState([])
   const [deleteAlbumModal, setDeleteAlbumModal] = useState(false)
@@ -125,6 +124,8 @@ export const GalleryView: FC<GalleryProps> = ({
 
   useEffect(() => {
     setImagesList(images)
+    setShowMenu(false)
+    setSelectedImages([])
   }, [images])
 
   useEffect(() => {
@@ -294,10 +295,10 @@ export const GalleryView: FC<GalleryProps> = ({
             <div>{album.name}</div>
           </Menu.Item>
         ))}
-        <Menu.Item key="New" onClick={() => setCreateAlbumModal((e) => !e)}>
+        {/* <Menu.Item key="New" onClick={() => setCreateAlbumModal((e) => !e)}>
           <PlusOutlined />
           <div>{t('galley.view.album.create.album.modal.title')}</div>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
     )
   }
@@ -468,151 +469,34 @@ export const GalleryView: FC<GalleryProps> = ({
   //   }
   // }
 
-  const drag = (ev) => {
-    ev.dataTransfer.setData('id', ev.target.id)
-  }
-
   const drop = (ev) => {
     ev.preventDefault()
-    const data = ev.dataTransfer.getData('id')
-    const albumId = Number(ev.target.id.replace('tar', ''))
-    const imageId = Number(data)
-    onImagesMove?.(albumId, [imageId])
-    const cCurrData = { ...currentData }
-    const cImagesList = [...imagesList]
-    const targetAlbmIndex = cCurrData?.album?.findIndex(
-      (el) => el?.id === albumId
-    )
-    if (targetAlbmIndex !== -1) {
-      const targetImgIndex = cImagesList?.findIndex((el) => el?.id === imageId)
-      if (targetImgIndex !== -1) {
-        const imageData = cImagesList[targetImgIndex]
-        cCurrData?.album?.[targetAlbmIndex]?.albumImage?.push({
-          ...imageData,
-        })
-        cCurrData.album[targetAlbmIndex].imageCount =
-          cCurrData?.album?.[targetAlbmIndex]?.albumImage?.length
-        imagesList.splice(targetImgIndex, 1)
-        // setImagesList(cImagesList)
-        setCurrentData(cCurrData)
-      }
+    if (ev.dataTransfer.getData('imageId')) {
+      const tarAlbumId = Number(ev.target.id.replace('tar', ''))
+      const draggedImageId = Number(ev.dataTransfer.getData('imageId'))
+      onImagesMove?.(tarAlbumId, [draggedImageId])
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    document.querySelector(`#${ev.target.id}`).style.background = 'transparent'
-    return 'HELLO'
-    const albumDataTitle = ev.dataTransfer.getData('albumData')
-    if (data !== '') {
-      const dropData = { ...currentData }
-      const fileData = data.split('/')
-      const imagesDrop = imagesList
-      if (dropData.albumTitle === 'Album') {
-        dropData.album.map((albumData) => {
-          if (albumData.albumTitle === dragAlbumTitle) {
-            albumData.albumImage.push(data)
-            const idx = imagesDrop.indexOf(data)
-            imagesDrop.splice(idx, 1)
-            Notification(
-              NotificationType.success,
-              `${
-                fileData[fileData.length - 1]
-              } has been moved to ${dragAlbumTitle}`
-            )
-          }
-          return 1
-        })
-        setImagesList(imagesDrop)
-        setData(dropData)
-        setCurrentData(dropData)
-      } else {
-        dropData.album.map((albumData) => {
-          if (albumData.albumTitle === dragAlbumTitle) {
-            albumData.albumImage.push(data)
-            dropData.albumImage.map((dropAlbum, i) => {
-              if (dropAlbum.img === data) {
-                dropData.albumImage.splice(i, 1)
-                return Notification(
-                  NotificationType.success,
-                  `${fileData[fileData.length - 1]} has been moved ${
-                    dropData.albumTitle
-                  } to ${dragAlbumTitle}`
-                )
-              }
-              return 1
-            })
-            setCurrentData(dropData)
-            // setData(dropData)
-            // setChanges((e) => !e)
-          }
-          return 1
-        })
-      }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      document.querySelector(`#${ev.target.id}`).style.backgroundColor = 'white'
+    if (ev.dataTransfer.getData('albumId')) {
+      // This block will be used when album can be dragged and dropped in other albums
+      const tarAlbumId = Number(ev.target.id.replace('tar', ''))
+      const draggedAlbumId = Number(ev.dataTransfer.getData('albumId'))
+      document
+        ?.querySelector(`#${ev.target.id}`)
+        ?.classList.remove('dropEffect')
     }
-    if (albumDataTitle !== '') {
-      const dropData = { ...currentData }
-      let transferAlbum = {}
-      dropData.album.map((albums) => {
-        if (albums.albumTitle === albumDataTitle) {
-          transferAlbum = albums
-        }
-        return 1
-      })
-      dropData.album.map((albumData) => {
-        if (
-          albumData.albumTitle === dragAlbumTitle &&
-          albumData.albumTitle !== albumDataTitle
-        ) {
-          albumData.album.push(transferAlbum as AlbumProps)
-          dropData.album.map((dropAlbum, i) => {
-            if (dropAlbum.albumTitle === albumDataTitle) {
-              dropData.album.splice(i, 1)
-            }
-            return 1
-          })
-        }
-        return 1
-      })
-      if (dropData.albumTitle === 'Album') {
-        setData(dropData)
-        if (albumDataTitle !== dragAlbumTitle) {
-          Notification(
-            NotificationType.success,
-            `${albumDataTitle} has been moved into ${dragAlbumTitle}`
-          )
-        }
-      } else {
-        if (albumDataTitle !== dragAlbumTitle) {
-          Notification(
-            NotificationType.success,
-            `${dragAlbumTitle} has been moved ${dropData.albumTitle} to ${dragAlbumTitle}`
-          )
-        }
-      }
-      setCurrentData(dropData)
-      // setChanges((e) => !e)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      document.querySelector(`#${albumDataTitle}`).style.backgroundColor =
-        'white'
-    }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    document.querySelector(`#${ev.target.id}`).style.backgroundColor = 'white'
   }
 
   const allowDrop = (ev) => {
     ev.preventDefault()
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    document.querySelector(`#${ev.target.id}`).style.background =
-      'rgb(135, 206, 235)'
+    document?.querySelector(`#${ev.target.id}`)?.classList.add('dropEffect')
+  }
+
+  const dragImage = (ev) => {
+    ev.dataTransfer.setData('imageId', ev.target.id)
   }
 
   const dragAlbum = (ev) => {
-    ev.dataTransfer.setData('albumData', ev.target.id)
+    ev.dataTransfer.setData('albumId', ev.target.id)
   }
 
   return (
@@ -1021,10 +905,10 @@ export const GalleryView: FC<GalleryProps> = ({
           handleImageMove={(album, images) => onImagesMove?.(album, images)}
           drop={drop}
           allowDrop={allowDrop}
-          drag={drag}
+          dragImage={dragImage}
+          dragAlbum={dragAlbum}
           handleDownload={handleDownload}
           imgDownload={imgDownload}
-          dragAlbum={dragAlbum}
           listView={listView}
           setCurrentData={setCurrentData}
           paginateData={paginateData}

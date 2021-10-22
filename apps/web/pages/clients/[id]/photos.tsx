@@ -14,15 +14,16 @@ import {
 } from '@pabau/ui'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import {
+  useGetAlbumPhotosQuery,
   GetAlbumPhotosDocument,
   useGetPhotoAlbumsQuery,
   GetPhotoAlbumsDocument,
-  useGetAlbumPhotosQuery,
   useCountAlbumPhotosQuery,
+  useCreateContactPhotoMutation,
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
   useDeleteOnePhotoAlbumMutation,
-  useCreateContactPhotoMutation,
+  useUpdateOneContactAttachmentMutation,
   useCreateContactPhotoWithoutAlbumMutation,
 } from '@pabau/graphql'
 
@@ -71,6 +72,7 @@ const Photos = () => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingImageProps[]>(
     []
   )
+  const [movingImages, setMovingImages] = useState({})
   const [paginatedData, setPaginatedData] = useState({
     perPage: 50,
     currentPage: 1,
@@ -216,6 +218,36 @@ const Photos = () => {
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingFiles(cAddedFiles)
       }
+    },
+  })
+
+  const [moveImageToAlbum] = useUpdateOneContactAttachmentMutation({
+    onCompleted({ updateOneContactAttachment: data }) {
+      const cMovings = { ...movingImages }
+      const albMovImages = cMovings[data?.album_id]
+      albMovImages?.splice(
+        albMovImages?.findIndex((el) => el?.id === data?.id),
+        1
+      )
+      cMovings[data?.album_id] = albMovImages
+      if (albMovImages?.length <= 0) {
+        delete cMovings[data?.album_id]
+
+        if (data?.album_id !== 0) {
+          document
+            ?.querySelector(`#tar${data?.album_id}`)
+            ?.classList.remove('dropEffect')
+        }
+
+        Notification(
+          NotificationType?.success,
+          `Files moved into ${data?.Album?.album_name} succesfully!`
+        )
+      }
+      setMovingImages(cMovings)
+    },
+    onError(error) {
+      Notification(NotificationType?.error, error?.message)
     },
   })
 
@@ -449,8 +481,65 @@ const Photos = () => {
   }
 
   const onImagesMove = (albumId: number, imageIds: number[]) => {
-    console.log('ALBUMID:', albumId)
-    console.log('IMAGES:', imageIds)
+    const cMovingImages = { ...movingImages }
+    cMovingImages[albumId] = imageIds
+    setMovingImages(cMovingImages)
+
+    for (const image of imageIds) {
+      if (albumId === 0) {
+        moveImageToAlbum({
+          variables: {
+            where: {
+              id: image,
+            },
+            data: {
+              Album: {
+                disconnect: true,
+              },
+            },
+          },
+          refetchQueries: [
+            {
+              query: GetPhotoAlbumsDocument,
+              variables: {
+                contactId: contactId,
+              },
+            },
+            {
+              query: GetAlbumPhotosDocument,
+              variables: variables,
+            },
+          ],
+        })
+      } else {
+        moveImageToAlbum({
+          variables: {
+            where: {
+              id: image,
+            },
+            data: {
+              Album: {
+                connect: {
+                  id: albumId,
+                },
+              },
+            },
+          },
+          refetchQueries: [
+            {
+              query: GetPhotoAlbumsDocument,
+              variables: {
+                contactId: contactId,
+              },
+            },
+            {
+              query: GetAlbumPhotosDocument,
+              variables: variables,
+            },
+          ],
+        })
+      }
+    }
   }
 
   return (
