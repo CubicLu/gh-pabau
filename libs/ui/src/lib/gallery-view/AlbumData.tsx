@@ -59,7 +59,7 @@ const ImageItem = ({ origin, ...props }) => {
           img.width,
           img.height
         )
-        setSource(canvas.toDataURL())
+        setSource(path)
       })
       img.addEventListener('error', () => {
         setSource('')

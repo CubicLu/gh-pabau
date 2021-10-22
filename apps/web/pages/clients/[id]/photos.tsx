@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { FC, useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { cdnURL } from '../../../baseUrl'
 import dayjs from 'dayjs'
@@ -23,7 +23,7 @@ import {
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
   useDeleteOnePhotoAlbumMutation,
-  useUpdateOneContactAttachmentMutation,
+  useMoveContactAttachmentsMutation,
   useCreateContactPhotoWithoutAlbumMutation,
 } from '@pabau/graphql'
 
@@ -54,7 +54,17 @@ const iterateTo = (dataArr) => {
   })
 }
 
-const Photos = () => {
+const albumFinder = (albums, albumId) => {
+  const album = albums?.find((el) => {
+    if (el?.id === albumId) {
+      return el
+    } else if (el?.album) albumFinder?.(el?.album, albumId)
+    return null
+  })
+  return album
+}
+
+const Photos: FC = () => {
   const api = axios.create({
     baseURL: baseURL,
     headers: {
@@ -72,7 +82,6 @@ const Photos = () => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingImageProps[]>(
     []
   )
-  const [movingImages, setMovingImages] = useState({})
   const [paginatedData, setPaginatedData] = useState({
     perPage: 50,
     currentPage: 1,
@@ -221,30 +230,28 @@ const Photos = () => {
     },
   })
 
-  const [moveImageToAlbum] = useUpdateOneContactAttachmentMutation({
-    onCompleted({ updateOneContactAttachment: data }) {
-      const cMovings = { ...movingImages }
-      const albMovImages = cMovings[data?.album_id]
-      albMovImages?.splice(
-        albMovImages?.findIndex((el) => el?.id === data?.id),
-        1
-      )
-      cMovings[data?.album_id] = albMovImages
-      if (albMovImages?.length <= 0) {
-        delete cMovings[data?.album_id]
-
-        if (data?.album_id !== 0) {
+  const [moveImageToAlbum] = useMoveContactAttachmentsMutation({
+    onCompleted({ moveAttachments: data }) {
+      if (data?.success && data?.album !== 0) {
+        if (document.querySelector(`#tar${data?.album}`)) {
           document
-            ?.querySelector(`#tar${data?.album_id}`)
-            ?.classList.remove('dropEffect')
+            ?.querySelector(`#tar${data?.album}`)
+            ?.classList?.remove('dropEffect')
         }
 
+        const tarAlbum = albumFinder?.(albums?.album, data?.album)
         Notification(
           NotificationType?.success,
-          `Files moved into ${data?.Album?.album_name} succesfully!`
+          `Image moved and ${
+            tarAlbum?.albumTitle || 'album'
+          } updated succesfully!`
+        )
+      } else {
+        Notification(
+          NotificationType?.success,
+          `Image moved and uncategorized album updated succesfully!`
         )
       }
-      setMovingImages(cMovings)
     },
     onError(error) {
       Notification(NotificationType?.error, error?.message)
@@ -481,65 +488,25 @@ const Photos = () => {
   }
 
   const onImagesMove = (albumId: number, imageIds: number[]) => {
-    const cMovingImages = { ...movingImages }
-    cMovingImages[albumId] = imageIds
-    setMovingImages(cMovingImages)
-
-    for (const image of imageIds) {
-      if (albumId === 0) {
-        moveImageToAlbum({
-          variables: {
-            where: {
-              id: image,
-            },
-            data: {
-              Album: {
-                disconnect: true,
-              },
+    if ((albumId === 0 || albumId) && imageIds?.length > 0)
+      moveImageToAlbum({
+        variables: {
+          album: albumId,
+          images: imageIds,
+        },
+        refetchQueries: [
+          {
+            query: GetPhotoAlbumsDocument,
+            variables: {
+              contactId: contactId,
             },
           },
-          refetchQueries: [
-            {
-              query: GetPhotoAlbumsDocument,
-              variables: {
-                contactId: contactId,
-              },
-            },
-            {
-              query: GetAlbumPhotosDocument,
-              variables: variables,
-            },
-          ],
-        })
-      } else {
-        moveImageToAlbum({
-          variables: {
-            where: {
-              id: image,
-            },
-            data: {
-              Album: {
-                connect: {
-                  id: albumId,
-                },
-              },
-            },
+          {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
           },
-          refetchQueries: [
-            {
-              query: GetPhotoAlbumsDocument,
-              variables: {
-                contactId: contactId,
-              },
-            },
-            {
-              query: GetAlbumPhotosDocument,
-              variables: variables,
-            },
-          ],
-        })
-      }
-    }
+        ],
+      })
   }
 
   return (
