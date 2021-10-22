@@ -1,0 +1,34 @@
+fragment ClockinBreakFields on ClockinBreak {
+  break_time_id
+  clock_id
+  break_time_start
+  break_time_out
+}
+
+fragment ClockinBreak on ClockinBreak {
+  ...ClockinBreakFields
+}
+
+mutation createOneClockinBreak($data: ClockinBreakCreateInput!) {
+  createOneClockinBreak(data: $data) {
+    ...ClockinBreak
+  }
+}
+
+mutation updateOneClockinBreak($where: ClockinBreakWhereUniqueInput!, $data: ClockinBreakUpdateInput!) {
+  updateOneClockinBreak(where: $where, data: $data) {
+    ...ClockinBreak
+  }
+}
+
+mutation deleteOneClockinBreak($where: ClockinBreakWhereUniqueInput!) {
+  deleteOneClockinBreak(where: $where) {
+    ...ClockinBreak
+  }
+}
+
+mutation updateManyClockinBreak($where: ClockinBreakWhereInput, $data: ClockinBreakUpdateManyMutationInput!) {
+  updateManyClockinBreak(where: $where, data: $data) {
+    count
+  }
+}

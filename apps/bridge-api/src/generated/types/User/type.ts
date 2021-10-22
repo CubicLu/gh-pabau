@@ -623,6 +623,20 @@ export const User = objectType({
         return root.PasswordResetAuth
       },
     })
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
+      args: {
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserTier
+      },
+    })
     t.list.field('ActivityUserState', {
       type: 'ActivityUserState',
       args: {
@@ -649,20 +663,6 @@ export const User = objectType({
       },
       resolve(root: any) {
         return root.ActivityUserFilter
-      },
-    })
-    t.list.field('ServiceUserPrice', {
-      type: 'ServiceUserPrice',
-      args: {
-        where: 'ServiceUserPriceWhereInput',
-        orderBy: 'ServiceUserPriceOrderByWithRelationInput',
-        cursor: 'ServiceUserPriceWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'ServiceUserPriceScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.ServiceUserPrice
       },
     })
     t.nullable.field('_count', {

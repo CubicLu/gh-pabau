@@ -1,10 +1,10 @@
 {
   "name": "pabau",
-  "version": "2.0.682",
+  "version": "2.0.686",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
-    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543\" nx",
+    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" nx",
     "serve": "yarn nx serve",
     "build:bridge-api": "yarn nx export bridge-api",
     "hasura:cli": "ts-node tools/cli/hasura.ts",
@@ -324,7 +324,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 81,
+  "bump-rebuild-all": 93,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }

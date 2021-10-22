@@ -1,0 +1,92 @@
+fragment CmLeadFields on CmLead {
+  ID
+  Avatar
+  OwnerID
+  ContactID
+  Salutation
+  Fname
+  Lname
+  DOB
+  Title
+  LeadCompany
+  company_id
+  Email
+  Phone
+  Fax
+  Mobile
+  Website
+  LeadSource
+  LeadStatus
+  Industry
+  NoOfEmp
+  AnualRevenue
+  Rating
+  EmailOptOut
+  SkypeId
+  SecondaryEmail
+  Twitter
+  MailingStreet
+  MailingCity
+  MailingProvince
+  MailingPostal
+  MailingCountry
+  Description
+  EnumStatus
+  Status
+  CreatedDate
+  MarketingOptInAll
+  MarketingOptInEmail
+  MarketingOptInPhone
+  MarketingOptInPost
+  MarketingOptInText
+  MarketingOptInNewsletter
+  IpAddress
+  fbimg
+  LastUpdated
+  custom_tag1
+  online_capture
+  capture_id
+  old_LeadStatus
+  custom_id
+  imported
+  ConvertDate
+  group_id
+  first_interaction
+  latest_interaction
+  location_id
+  need_to_knows
+}
+
+fragment CmLead on CmLead {
+  ...CmLeadFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+  MarketingSource {
+    ...MarketingSourceFields
+  }
+  LeadStatusData {
+    ...LeadStatusFields
+  }
+}
+
+mutation updateOneCmLead($where: CmLeadWhereUniqueInput!, $data: CmLeadUpdateInput!) {
+  updateOneCmLead(where: $where, data: $data) {
+    ...CmLead
+  }
+}
+
+mutation deleteOneCmLead($where: CmLeadWhereUniqueInput!) {
+  deleteOneCmLead(where: $where) {
+    ...CmLead
+  }
+}
+
+mutation updateManyCmLead($where: CmLeadWhereInput, $data: CmLeadUpdateManyMutationInput!) {
+  updateManyCmLead(where: $where, data: $data) {
+    count
+  }
+}
