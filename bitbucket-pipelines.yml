@@ -11,7 +11,7 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 8096
+      memory: 6144
 
 pipelines:
   pull-requests:
