@@ -8,7 +8,6 @@ export const LeadsSkeleton = () => {
   return (
     <div
       style={{
-        userSelect: 'none',
         padding: `0 ${grid * 1} ${grid * 1}`,
         margin: `0 0 ${grid}px 0`,
         width: `100%`,

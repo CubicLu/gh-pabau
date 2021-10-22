@@ -9,6 +9,8 @@ import styles from './LeadsStages.module.less'
 import LeadsSkeleton from './LeadsSkeleton'
 import LeadsStagesSkeleton from './LeadsStagesSkeleton'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
+import noUser from '../../../assets/images/no-user-icon.svg'
+import austin from '../../../assets/images/users/austin.png'
 
 export interface leadsStagesComponentProps {
   isLoading: boolean
@@ -51,16 +53,38 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 })
 
+const groupByPipelineId = (arr, parentObj, childObj, property) => {
+  const shouldNotBeEmpty = (obj) => {
+    return obj && obj !== `null` && obj !== `undefined`
+  }
+
+  return arr.reduce(function (memo, x) {
+    if (
+      shouldNotBeEmpty(x[parentObj]) &&
+      shouldNotBeEmpty(x[parentObj][childObj]) &&
+      shouldNotBeEmpty(x[parentObj][childObj][property])
+    ) {
+      if (!memo[x[parentObj][childObj][property]]) {
+        memo[x[parentObj][childObj][property]] = []
+      }
+      memo[x[parentObj][childObj][property]].push(x)
+    }
+    return memo
+  }, {})
+}
+
 const LeadsStagesComponent = () => {
-  const leadsStagesRef = useRef<HTMLDivElement>(null)
-  const dragableWrapperRef = useRef<HTMLDivElement>(null)
   const [allStages, setAllStages] = useState([])
-  const [leadsDefaultParams] = useState({
+  const [leadsDefaultParams, setLeadsDefaultParams] = useState({
     limit: 10,
     skip: 0,
   })
   const [leadsState, setLeadsState] = useState({})
-  const [isLeadMove, setIsLeadMove] = useState(false)
+  const [queryIsCalled, setQueryIsCalled] = useState(false)
+  const leadsLenghtRef = useRef({ leadsLength: 0 })
+  const leadsArrayRef = useRef({ leadsArray: [] })
+  const leadsContainerRef = useRef(null)
+  const scrollRef = useRef({ position: 0 })
 
   const [
     getAllKanbanStages,
@@ -82,26 +106,6 @@ const LeadsStagesComponent = () => {
     },
   ] = useGetKanbanLeadsLazyQuery({ fetchPolicy: 'network-only' })
 
-  const groupByPipelineId = (arr, parentObj, childObj, property) => {
-    const shouldNotBeEmpty = (obj) => {
-      return obj && obj !== `null` && obj !== `undefined`
-    }
-
-    return arr.reduce(function (memo, x) {
-      if (
-        shouldNotBeEmpty(x[parentObj]) &&
-        shouldNotBeEmpty(x[parentObj][childObj]) &&
-        shouldNotBeEmpty(x[parentObj][childObj][property])
-      ) {
-        if (!memo[x[parentObj][childObj][property]]) {
-          memo[x[parentObj][childObj][property]] = []
-        }
-        memo[x[parentObj][childObj][property]].push(x)
-      }
-      return memo
-    }, {})
-  }
-
   const onDragEnd = (result) => {
     const { source, destination } = result
     let newState = {}
@@ -116,7 +120,6 @@ const LeadsStagesComponent = () => {
       newState = { ...leadsState }
       newState[sInd] = items as []
       setLeadsState(newState)
-      setIsLeadMove(true)
     } else {
       const result = move(
         leadsState[sInd],
@@ -130,21 +133,30 @@ const LeadsStagesComponent = () => {
       newState[dInd] = result[dInd]
 
       setLeadsState(newState)
-      setIsLeadMove(true)
     }
   }
 
-  const scrollAtBottomAndLoadMoreLeads = useCallback(() => {
-    const stagesElement = leadsStagesRef?.current
-    const dragableWrapperElement = dragableWrapperRef?.current
-    if (stagesElement && dragableWrapperElement) {
-      const scrollReachAtElement = stagesElement.getBoundingClientRect().top
-      const stageElementStartedAt = stagesElement.offsetHeight
-
-      if (stageElementStartedAt >= scrollReachAtElement)
-        dragableWrapperElement.style.position = `sticky`
-    }
-  }, [])
+  const scrollAtBottomAndLoadMoreLeads = useCallback(
+    (event) => {
+      const bottom =
+        event.target.scrollHeight - event.target.scrollTop <=
+        event.target.clientHeight
+      if (bottom) {
+        const { limit, skip } = leadsDefaultParams
+        if (
+          !queryIsCalled &&
+          limit + skip === leadsLenghtRef.current.leadsLength
+        ) {
+          scrollRef.current.position = event.target.scrollHeight
+          setLeadsDefaultParams({
+            ...leadsDefaultParams,
+            skip: leadsDefaultParams.limit + leadsDefaultParams.skip,
+          })
+        }
+      }
+    },
+    [leadsDefaultParams, queryIsCalled]
+  )
 
   const findStatusOfActivity = (activitys) => {
     if (activitys.length === 0) return 'no activity scheduled'
@@ -172,9 +184,15 @@ const LeadsStagesComponent = () => {
   }, [allStages, getAllKanbanStages])
 
   useEffect(() => {
-    getAllKanbanLeadsDetails({
-      variables: { ...leadsDefaultParams },
-    })
+    if (
+      leadsDefaultParams.skip + leadsDefaultParams.limit !==
+      leadsLenghtRef.current.leadsLength
+    ) {
+      setQueryIsCalled(true)
+      getAllKanbanLeadsDetails({
+        variables: { ...leadsDefaultParams },
+      })
+    }
   }, [leadsDefaultParams, getAllKanbanLeadsDetails])
 
   useEffect(() => {
@@ -192,39 +210,75 @@ const LeadsStagesComponent = () => {
     getAllStagesError,
   ])
 
-  if (
-    calledGetAllLeadsDetail &&
-    !isLoadingGetAllLeadsDetail &&
-    !getAllLeadsError &&
-    getAllLeadsDetailData
-  ) {
-    const mapLeadsPipelineWise = groupByPipelineId(
-      getAllLeadsDetailData?.findManyCmLead,
-      'PipelineStage',
-      'Pipeline',
-      'id'
-    )
-    if (
-      !isLeadMove &&
-      JSON.stringify(mapLeadsPipelineWise) !== JSON.stringify(leadsState)
-    )
-      setLeadsState(mapLeadsPipelineWise)
-  }
-
   useEffect(() => {
-    window.addEventListener('scroll', scrollAtBottomAndLoadMoreLeads, false)
+    if (
+      allStages?.length > 0 &&
+      queryIsCalled &&
+      calledGetAllLeadsDetail &&
+      !isLoadingGetAllLeadsDetail &&
+      !getAllLeadsError &&
+      getAllLeadsDetailData
+    ) {
+      const { limit, skip } = leadsDefaultParams
+      if (
+        limit + skip !== leadsLenghtRef.current.leadsLength &&
+        getAllLeadsDetailData?.findManyCmLead?.length > 0
+      ) {
+        leadsContainerRef.current.scrollTop = scrollRef.current.position
+        const mapLeadsPipelineWise = groupByPipelineId(
+          getAllLeadsDetailData?.findManyCmLead,
+          'PipelineStage',
+          'Pipeline',
+          'id'
+        )
 
-    return () =>
-      window.removeEventListener(
-        'scroll',
-        scrollAtBottomAndLoadMoreLeads,
-        false
-      )
-  }, [scrollAtBottomAndLoadMoreLeads])
+        if (
+          JSON.stringify(leadsArrayRef.current.leadsArray) !==
+          JSON.stringify(mapLeadsPipelineWise)
+        ) {
+          leadsArrayRef.current.leadsArray = mapLeadsPipelineWise
+          const localLeadState = { ...leadsState }
+          for (const stageObject of allStages) {
+            const {
+              Pipeline: { id },
+            } = stageObject
+            const existingLeads = localLeadState[id] ? localLeadState[id] : []
+            const newLeads = mapLeadsPipelineWise[id]
+              ? mapLeadsPipelineWise[id]
+              : []
+            if (JSON.stringify(existingLeads) !== JSON.stringify(newLeads)) {
+              localLeadState[id] = [...existingLeads, ...newLeads]
+            }
+          }
+          setLeadsState(localLeadState)
+          setQueryIsCalled(false)
+          leadsLenghtRef.current.leadsLength = limit + skip
+          leadsContainerRef.current.scrollTop = scrollRef.current.position
+        }
+      } else if (getAllLeadsDetailData?.findManyCmLead?.length === 0) {
+        leadsContainerRef.current.scrollTop = scrollRef.current.position
+      }
+    }
+  }, [
+    calledGetAllLeadsDetail,
+    isLoadingGetAllLeadsDetail,
+    getAllLeadsError,
+    getAllLeadsDetailData,
+    setLeadsState,
+    allStages,
+    leadsDefaultParams,
+    leadsLenghtRef,
+    leadsArrayRef,
+    queryIsCalled,
+  ])
 
   return (
     <div>
-      <div ref={dragableWrapperRef} className={styles.dragableWrapper}>
+      <div
+        ref={leadsContainerRef}
+        className={styles.dragableWrapper}
+        onScroll={scrollAtBottomAndLoadMoreLeads}
+      >
         {isLoadingGetAllStages ? (
           <LeadsStagesSkeleton />
         ) : (
@@ -239,7 +293,7 @@ const LeadsStagesComponent = () => {
                   <Droppable key={Math.random()} droppableId={`${id}`}>
                     {(provided, snapshot) => (
                       <div className={styles.leadStageWrapper}>
-                        <div className={styles.leadStage} ref={leadsStagesRef}>
+                        <div className={styles.leadStage}>
                           <div
                             key={`stage ${id}`}
                             className={styles.leadStageTitlemain}
@@ -257,12 +311,14 @@ const LeadsStagesComponent = () => {
                           ref={provided.innerRef}
                           {...provided.droppableProps}
                         >
-                          {isLoadingGetAllLeadsDetail ? (
+                          {Object.keys(leadsState).length === 0 &&
+                          isLoadingGetAllLeadsDetail ? (
                             <LeadsSkeleton />
                           ) : (
                             leadsState?.[id]?.map((item, index) => {
                               let contactName,
-                                contactImg = ''
+                                contactImg,
+                                userImage = ''
                               const {
                                 Name,
                                 lastName,
@@ -273,12 +329,15 @@ const LeadsStagesComponent = () => {
                                 User: { image, username },
                               } = item
 
+                              userImage = image ? getImage(image) : austin
                               if (
                                 typeof ContactID === 'number' &&
                                 ContactID !== 0
                               ) {
                                 contactName = `${Contact?.Fname} ${Contact?.Lname}`
                                 contactImg = Contact?.Avatar
+                                  ? getImage(Contact.Avatar)
+                                  : noUser
                               }
 
                               return (
@@ -299,17 +358,22 @@ const LeadsStagesComponent = () => {
                                     >
                                       <div className={styles.cardWrapper}>
                                         <KanbanCard
+                                          isLoading={false}
                                           leadTitle={`${Name} ${lastName}`}
                                           onLeadTitleClickHandler={() =>
                                             console.log(
                                               'onLeadTitleClickHandler'
                                             )
                                           }
-                                          labels={['#Label1', '#Label']}
+                                          labels={[
+                                            '#Label1',
+                                            '#Label',
+                                            '#Label',
+                                          ]}
                                           leadOwnerName={username}
-                                          leadOwnerImg={getImage(image)}
+                                          leadOwnerImg={userImage}
                                           contactName={contactName}
-                                          contactImg={getImage(contactImg)}
+                                          contactImg={contactImg}
                                           activityStatus={findStatusOfActivity(
                                             Activity
                                           )}
