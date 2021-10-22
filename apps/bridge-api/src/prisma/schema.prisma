@@ -3159,7 +3159,7 @@ model CmStaffGeneral {
   HolidayRequest      HolidayRequest[]
   SalonBookings       Booking[]
   RotaShift           RotaShift[]
-  StaffNote           StaffNote[]
+  StaffNote           StaffNote?                  @relation(fields: [ID], references: [StaffID])
 
   InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
@@ -3180,17 +3180,17 @@ model CmStaffGeneral {
 //}
 //
 model StaffNote {
-  ID           Int    @id @default(autoincrement())
-  StaffID      Int    @unique
-  Dependents   String
-  Education    String
-  Hobbies      String
-  Training     String
-  Volunteer    String
-  Prescription String
+  ID             Int             @id @default(autoincrement())
+  StaffID        Int             @unique
+  Dependents     String
+  Education      String
+  Hobbies        String
+  Training       String
+  Volunteer      String
+  Prescription   String
+  CmStaffGeneral CmStaffGeneral?
 
-  CmStaffGeneral CmStaffGeneral @relation(fields: [StaffID], references: [ID])
-
+  @@index([StaffID], name: "StaffID")
   @@map("cm_staff_notes")
 }
 
@@ -3793,7 +3793,7 @@ model CompanyBranch {
   InventoryMovement       InventoryMovement[]
   InvSale                 InvSale[]
 
-  ServiceLocationPrice ServiceLocationPrice[]
+  ServiceLocationTier ServiceLocationTier[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -4151,10 +4151,11 @@ model CompanyService {
   Product                InvProduct?                       @relation(fields: [product_id], references: [id])
   CompanyRoomService     CompanyRoomService[]
   ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
+  SocialSurveyFeedback   SocialSurveyFeedback[]
+  ServiceUserTier        ServiceUserTier[]
+  ServiceLocationTier    ServiceLocationTier[]
+  Booking                Booking[]
 
-  ServiceUserPrice     ServiceUserPrice[]
-  ServiceLocationPrice ServiceLocationPrice[]
-  Booking              Booking[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -4302,7 +4303,7 @@ model CompanyService {
 //  @@index([service_id], name: "service_id")
 //}
 //
-model ServiceUserPrice {
+model ServiceUserTier {
   id                     Int            @id @default(autoincrement())
   service_id             Int
   user_id                Int
@@ -4667,7 +4668,7 @@ model ContactMeta {
   meta_value String
   Contact    CmContact @relation(fields: [contact_id], references: [ID])
 
-  @@unique([contact_id, meta_name], name: "unique_contact_id_meta_name")
+  @@unique([contact_id, meta_name], name: "contact_id_meta_name")
   @@map("contact_meta")
 }
 
@@ -8044,7 +8045,7 @@ model LeadStatus {
 //  loc_date    String?
 //}
 
-model ServiceLocationPrice {
+model ServiceLocationTier {
   id          Int   @id @default(autoincrement())
   location_id Int   @default(0)
   service_id  Int   @default(0)
@@ -10509,8 +10510,8 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  start          Decimal
-  end            Decimal
+  start          Float
+  end            Float
   company_id     Int            @map("occupier")
   notes          String?
   last_seen      DateTime?
@@ -10592,8 +10593,8 @@ model RotaShift {
 model Booking {
   id                            Int             @id @default(autoincrement())
   title                         String
-  start_date                    Decimal
-  end_date                      Decimal
+  start_date                    Float
+  end_date                      Float
   start_time                    Int?
   end_time                      Int?
   service                       String?
@@ -10601,8 +10602,8 @@ model Booking {
   UID                           Int
   company_id                    Int             @map("occupier")
   backgroudcolor                String?
-  create_date                   Decimal?
-  update_date                   Decimal?
+  create_date                   Float?
+  update_date                   Float?
   status                        String
   estimated_cost                Float?
   tips                          Float?
@@ -11457,13 +11458,12 @@ model SmsPurchase {
 }
 
 model SmsSender {
-  smsd_id        Int     @id @default(autoincrement())
-  smsd_name      String
-  company_id     Int     @map("smsd_cid")
-  smsd_delete    Int     @default(0)
-  is_default     Boolean @default(false)
-  merge_tags     String
-  enable_replies Int     @default(0)
+  smsd_id     Int     @id @default(autoincrement())
+  smsd_name   String
+  company_id  Int     @map("smsd_cid")
+  smsd_delete Int     @default(0)
+  is_default  Boolean @default(false)
+  merge_tags  String
 
   Company Company @relation(fields: [company_id], references: [id])
 
@@ -11575,6 +11575,7 @@ model SocialSurveyFeedback {
   CmContact          CmContact?                     @relation(fields: [contact_id], references: [ID])
   Company            Company                        @relation(fields: [company_id], references: [id])
   User               User?                          @relation(fields: [feedback_for], references: [id])
+  CompanyService     CompanyService                 @relation(fields: [service_id], references: [id])
   Response           SocialSurveyFeedbackResponse[]
   SocialSurveyAnswer SocialSurveyAnswer[]
 
@@ -12767,11 +12768,11 @@ model User {
   Activity                     Activity[]                     @relation("activityCreatedUser")
   CmLead                       CmLead[]
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
+  PasswordResetAuth            PasswordResetAuth[]
+  ServiceUserTier              ServiceUserTier[]
+  ActivityUserState            ActivityUserState[]
+  ActivityUserFilter           ActivityUserFilter[]
 
-  PasswordResetAuth  PasswordResetAuth[]
-  ActivityUserState  ActivityUserState[]
-  ActivityUserFilter ActivityUserFilter[]
-  ServiceUserPrice   ServiceUserPrice[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

@@ -1,0 +1,46 @@
+fragment CompanyRoomFields on CompanyRoom {
+  id
+  company_id
+  description
+  slots
+  all_services
+  is_active
+  all_locations
+  field_order
+  room_fee_type
+  room_fee
+  prod_id
+  imported
+  custom_id
+}
+
+fragment CompanyRoom on CompanyRoom {
+  ...CompanyRoomFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCompanyRoom($data: CompanyRoomCreateInput!) {
+  createOneCompanyRoom(data: $data) {
+    ...CompanyRoom
+  }
+}
+
+mutation updateOneCompanyRoom($where: CompanyRoomWhereUniqueInput!, $data: CompanyRoomUpdateInput!) {
+  updateOneCompanyRoom(where: $where, data: $data) {
+    ...CompanyRoom
+  }
+}
+
+mutation deleteOneCompanyRoom($where: CompanyRoomWhereUniqueInput!) {
+  deleteOneCompanyRoom(where: $where) {
+    ...CompanyRoom
+  }
+}
+
+mutation updateManyCompanyRoom($where: CompanyRoomWhereInput, $data: CompanyRoomUpdateManyMutationInput!) {
+  updateManyCompanyRoom(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,52 +1,41 @@
 import React from 'react'
 import { AppProps } from 'next/app'
-import 'react-phone-input-2/lib/style.css'
-import 'react-quill/dist/quill.snow.css'
-import 'react-image-crop/dist/ReactCrop.css'
-import i18next from 'i18next'
-import { initReactI18next } from 'react-i18next'
-import { languages } from '@pabau/i18n'
+import TranslationWrapper from '../components/TranslationWrapper'
+import SettingsContextWrapper from '../components/SettingsContextWrapper'
 import {
-  ApolloClient,
-  ApolloLink,
   ApolloProvider,
-  HttpLink,
+  ApolloClient,
   InMemoryCache,
+  HttpLink,
   split,
+  ApolloLink,
 } from '@apollo/client'
-import { getMainDefinition } from '@apollo/client/utilities'
-import { OperationDefinitionNode } from 'graphql'
 import { setContext } from '@apollo/client/link/context'
 import { WebSocketLink } from '@apollo/client/link/ws'
-import { UserProvider } from '../components/UserContext/UserContext'
-
+import { getMainDefinition } from '@apollo/client/utilities'
+import { OperationDefinitionNode } from 'graphql'
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
-const cache = new InMemoryCache({ resultCaching: true })
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if (typeof window !== 'undefined') window.debug = { cache }
-
 const GRAPHQL_WS_ENDPOINT =
-  process.env.NEXT_PUBLIC_WSS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
+  process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('connect_token')
+  let token2 = null
+  if (token) token2 = JSON.parse(token)
   return {
-    headers: token
+    headers: token2
       ? {
           ...headers,
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token2}`,
         }
       : headers,
   }
 })
-
 const wsLink = process.browser
   ? new WebSocketLink({
       uri: GRAPHQL_WS_ENDPOINT,
@@ -58,12 +47,11 @@ const wsLink = process.browser
       },
     })
   : null
-
 const httpLink = new HttpLink({
+  fetch,
   uri: GRAPHQL_HTTP_ENDPOINT,
 })
 
-// Let Apollo figure out if the request is over ws or http
 const terminatingLink = wsLink
   ? split(
       ({ query }) => {
@@ -81,31 +69,24 @@ const terminatingLink = wsLink
     )
   : httpLink
 
-export const getApolloClient = () => {
-  return new ApolloClient({
-    ssrMode: false,
-    link: ApolloLink.from([authLink, terminatingLink]),
-    cache,
-  })
-}
+const client = new ApolloClient({
+  ssrMode: false,
+  link: ApolloLink.from([authLink, terminatingLink]),
+  cache: new InMemoryCache({
+    addTypename: false,
+  }),
+})
 
-function CustomApp({ Component, pageProps }: AppProps) {
-  //init translate
-  i18next.use(initReactI18next).init({
-    interpolation: { escapeValue: false },
-    lng: pageProps.lang ? pageProps.lang : null,
-    fallbackLng: 'en',
-    keySeparator: false,
-    resources: languages,
-  })
-
+function Connect({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider client={getApolloClient()}>
-      <UserProvider>
-        <Component {...pageProps} />
-      </UserProvider>
+    <ApolloProvider client={client}>
+      <SettingsContextWrapper>
+        <TranslationWrapper>
+          <Component {...pageProps} />
+        </TranslationWrapper>
+      </SettingsContextWrapper>
     </ApolloProvider>
   )
 }
 
-export default CustomApp
+export default Connect
