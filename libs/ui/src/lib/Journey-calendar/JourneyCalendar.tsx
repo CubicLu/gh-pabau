@@ -161,6 +161,7 @@ export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
 
   useEffect(() => {
     setInitialDates()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

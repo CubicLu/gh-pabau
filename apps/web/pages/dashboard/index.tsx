@@ -29,7 +29,6 @@ import {
 } from '../../mocks/Dashboard'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { cdnURL } from '../../../web/baseUrl'
-import moment from 'moment'
 
 interface ISetUser {
   key: number
