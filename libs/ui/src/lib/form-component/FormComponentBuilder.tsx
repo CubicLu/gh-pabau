@@ -6,6 +6,7 @@ import {
   UserGroupListItem,
   InvProductsListItem,
   MedicalConditionsListItem,
+  previewMapping,
 } from '@pabau/ui'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -28,37 +29,6 @@ const medicalForms = [
   { id: 13, formType: 'basic', formName: 'form_labtests' },
   { id: 14, formType: 'basic', formName: 'form_snomed' },
   { id: 15, formType: 'basic', formName: 'form_slider' },
-]
-
-const previewMapping = [
-  { heading: 'form_statictext' },
-  { staticText: 'form_statictext' },
-  { input_text: 'form_textfield' },
-  { team: 'empty' },
-  { textarea: 'form_textarea' },
-  { checkbox: 'form_checkbox' },
-  { radio: 'form_singlechoice' },
-  { select: 'form_dropdown' },
-  { image: 'form_drawing' },
-  { staticImage: 'form_image' },
-  { diagram_mini: 'form_drawing' },
-  { signature: 'form_signature' },
-  { cl_drugs: 'form_drugs' },
-  { labs_tests: 'form_labtests' },
-  { snomed: 'form_snomed' },
-  { slider: 'form_slider' },
-  { vaccine_scheduler: 'empty' },
-  { vaccine_history: 'empty' },
-  { travel_destination: 'form_travel' },
-  { btn_medical_condition: 'form_medicalcondition' },
-  { diagram: 'empty' },
-  { facediagram: 'empty' },
-  { diagram_mini: 'empty' },
-  { photo_and_drawer: 'form_photoupload' },
-  { epaper: 'empty' },
-  { custom_photo_and_drawer: 'empty' },
-  { cl_services: 'empty' },
-  { history_data: 'empty' },
 ]
 
 const getFormInfo = (form) => {

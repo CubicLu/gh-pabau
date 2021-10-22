@@ -1533,6 +1533,34 @@ export const Company = objectType({
         return root.MedicalFormAdvancedSetting
       },
     })
+    t.list.field('MedicalFormContactHistory', {
+      type: 'MedicalFormContactHistory',
+      args: {
+        where: 'MedicalFormContactHistoryWhereInput',
+        orderBy: 'MedicalFormContactHistoryOrderByWithRelationInput',
+        cursor: 'MedicalFormContactHistoryWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactHistoryScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContactHistory
+      },
+    })
+    t.list.field('MedicalAttr', {
+      type: 'MedicalAttr',
+      args: {
+        where: 'MedicalAttrWhereInput',
+        orderBy: 'MedicalAttrOrderByWithRelationInput',
+        cursor: 'MedicalAttrWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalAttrScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalAttr
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {

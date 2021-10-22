@@ -5,6 +5,8 @@ import {
   useFindManyUserGroupsQuery,
   useFindInvProductsQuery,
   useFindManyMedicalCondtionsQuery,
+  useCreateOneMedicalFormContactMutation,
+  useCreateOneMedicalAttrMutation,
 } from '@pabau/graphql'
 import {
   FormComponentBuilder,
@@ -16,6 +18,7 @@ import {
   InvProductsListItem,
   MedicalConditionsListItem,
   useLiveQuery,
+  previewMapping,
 } from '@pabau/ui'
 import { useUser } from '../../../../context/UserContext'
 import { Typography } from 'antd'
@@ -233,11 +236,142 @@ export const TestForm = () => {
       )
   }, [businessDetails])
 
+  const saveMedicalFormContact = async (draggedForms: MedicalFormTypes[]) => {
+    const complete = 0
+    const custom_contact_id = 0
+    const custom_contact_name = ''
+    const custom_user_name = ''
+    const diagnosis_code = ''
+    const form_status = 0
+    const imported = 0
+    const locked = 0
+    const pharmacy_id = 0
+    const prescriber = 0
+    const priority = 'pLow'
+    const related_to = 0
+    const user_created = loggedInUser?.me?.user
+    const user_updated = 0
+    const history_mode = 'insert'
+    const medical_attr_attachment_size = 0
+    const medical_attr_custom_contact_id = 0
+    const medical_attr_custom_contact_name = ''
+    let creatMedicalContactAttrVariables = []
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [index, item] of draggedForms.entries()) {
+      creatMedicalContactAttrVariables = [
+        ...creatMedicalContactAttrVariables,
+        {
+          attachment_size: medical_attr_attachment_size,
+          attr_id: typeof item.attrId === 'undefined' ? 0 : item.attrId,
+          contact_id: Number(router.query.client_id),
+          custom_contact_id: medical_attr_custom_contact_id,
+          custom_contact_name: medical_attr_custom_contact_name,
+          group_label: formName,
+          value: typeof item.attrValue === 'undefined' ? '' : item.attrValue,
+        },
+      ]
+    }
+
+    const creatMedicalFormContactVariables = {
+      Form: { connect: { id: Number(router.query.form_id) } },
+      contact_id: Number(router.query.client_id),
+      complete: complete,
+      custom_contact_id: custom_contact_id,
+      custom_contact_name: custom_contact_name,
+      custom_user_name: custom_user_name,
+      diagnosis_code: diagnosis_code,
+      form_status: form_status,
+      imported: imported,
+      locked: locked,
+      pharmacy_id: pharmacy_id,
+      prescriber: prescriber,
+      priority: priority,
+      related_to: related_to,
+      user_created: user_created,
+      user_updated: user_updated,
+      MedicalFormContactHistory: {
+        create: [
+          {
+            Company: {
+              connect: { id: Number(loggedInUser?.me?.company) },
+            },
+            mode: history_mode,
+            user_id: user_created,
+            contact_id: Number(router.query.client_id),
+          },
+        ],
+      },
+      MedicalContactAttr: {
+        create: creatMedicalContactAttrVariables,
+      },
+    }
+
+    await addMedicalFormContactMutation({
+      variables: { data: { ...creatMedicalFormContactVariables } },
+    })
+  }
+
+  const saveMedicalAttr = async (draggedForms: MedicalFormTypes[]) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [index, item] of draggedForms.entries()) {
+      const creatMedicalAttrVariables = {
+        name: item.attrName,
+        description: '',
+        Company: {},
+      }
+      await addMedicalAttrMutation({
+        variables: { data: { ...creatMedicalAttrVariables } },
+      }).then((e) => (item.attrId = e.data.createOneMedicalAttr.id))
+    }
+    saveMedicalFormContact(draggedForms)
+  }
+
   const saveMedicalFormHistory = (draggedForms: MedicalFormTypes[]) => {
-    Notification(
-      NotificationType.success,
-      `${formName} ${t('connect.account.medicalhistory.form.save.success')}`
-    )
+    for (const [index, item] of draggedForms.entries()) {
+      let attr_name = ''
+      const cssClassArr = previewMapping.filter(
+        (mappingItem) => Object.values(mappingItem)[0] === item.formName
+      )
+      let cssClass = ''
+      if (cssClassArr.length > 0) cssClass = Object.keys(cssClassArr[0])[0]
+
+      if (item.txtQuestion !== '') {
+        attr_name = index + item.txtQuestion.trim()
+      } else if (item.txtValue !== '') {
+        attr_name = index + item.txtValue.trim()
+      } else if (item.arrItems.length > 0) {
+        attr_name = index + item.arrItems[0].name.trim()
+      } else {
+        attr_name = index + 'nothing'
+      }
+      if (cssClass === 'labs_tests') {
+        attr_name = index + 'labs_tests[]'
+      }
+      item.attrName = attr_name.replace(' ', '_').toLowerCase()
+
+      if (cssClass === 'input_text' || cssClass === 'textarea')
+        item.attrValue = item.txtValue
+      else if (cssClass === 'checkbox') {
+        const vals = item.arrItems.filter((arrItem) =>
+          item.arrValue.indexOf(arrItem.id.toString())
+        )
+        if (vals.length > 0) {
+          const val = vals.map((val) => btoa(val.name))
+          item.attrValue = val.join(',')
+        } else {
+          item.attrValue = ''
+        }
+      } else if (cssClass === 'radio' || cssClass === 'select') {
+        const val = item.arrItems.filter(
+          (arrItem) => arrItem.id === Number(item.txtValue)
+        )
+        if (val.length > 0) item.attrValue = val[0].name
+        else item.attrValue = ''
+      } else if (cssClass === 'labs_tests') {
+        item.attrValue = item.arrValue.join(',')
+      }
+    }
+    saveMedicalAttr(draggedForms)
   }
 
   const loggedInUser = useUser()
@@ -246,7 +380,6 @@ export const TestForm = () => {
   const { data: medicalConditions } = useFindManyMedicalCondtionsQuery()
 
   useEffect(() => {
-    console.log('userGroups', userGroups)
     if (userGroups?.findManyUserGroup) {
       const userGroupList = userGroups?.findManyUserGroup.map((userGroup) => ({
         id: userGroup.id,
@@ -301,7 +434,6 @@ export const TestForm = () => {
   }, [invProducts])
 
   useEffect(() => {
-    console.log('medicalConditions', medicalConditions)
     if (medicalConditions?.findManyMedicalCondition) {
       const medicalConditionsList = medicalConditions?.findManyMedicalCondition.map(
         (medicalCondition) => ({
@@ -373,6 +505,31 @@ export const TestForm = () => {
       })
     }
   }
+
+  const [
+    addMedicalFormContactMutation,
+  ] = useCreateOneMedicalFormContactMutation({
+    onCompleted(data) {
+      console.log('Completed: useCreateOneMedicalFormContactMutation =', data)
+      Notification(NotificationType.success, t('setup.medical.forms.save.text'))
+    },
+    onError(err) {
+      console.log('Error: useCreateOneMedicalFormContactMutation =', err)
+      Notification(
+        NotificationType.error,
+        t('  setup.medical.forms.save.err.text')
+      )
+    },
+  })
+
+  const [addMedicalAttrMutation] = useCreateOneMedicalAttrMutation({
+    onCompleted(data) {
+      console.log('Completed: useCreateOneMedicalAttrMutation =', data)
+    },
+    onError(err) {
+      console.log('Error: useCreateOneMedicalAttrMutation =', err)
+    },
+  })
 
   return (
     <div className={styles.testForm}>
