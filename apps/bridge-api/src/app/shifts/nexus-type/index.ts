@@ -1,7 +1,7 @@
 import { objectType } from 'nexus'
 
 export const PublicShiftResponse = objectType({
-  name: 'Public_Shift',
+  name: 'PublicShiftResponse',
   definition(t) {
     t.int('id')
     t.int('uid')
