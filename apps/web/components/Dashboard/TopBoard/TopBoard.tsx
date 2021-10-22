@@ -65,7 +65,7 @@ export const TopBoard: FC<ITopBoard> = ({
                 </div>
                 <div className={styles.cardContent}>
                   {!loading ? (
-                    <div className={styles.title}>{newClientCount}</div>
+                    <div className={styles.title}>{newClientCount ?? 0}</div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
                   )}
@@ -99,7 +99,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   {!loading ? (
                     <div className={styles.title}>
                       {stringToCurrencySignConverter(user.me?.currency)}
-                      {avgBill}
+                      {avgBill ?? 0}
                     </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
@@ -136,7 +136,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   {!loading ? (
                     <div className={styles.title}>
                       {stringToCurrencySignConverter(user.me?.currency)}
-                      {revPerHour}
+                      {revPerHour ?? 0}
                     </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
@@ -197,7 +197,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   <div className={styles.topheader}>
                     <div className={styles.title}>
                       {!loading ? (
-                        totalBooking.count
+                        totalBooking.count ?? 0
                       ) : (
                         <Skeleton.Input
                           active
@@ -221,7 +221,7 @@ export const TopBoard: FC<ITopBoard> = ({
 
                     <div className={styles.description}>
                       {!loading ? (
-                        totalBooking.per + ' ' + filterRange
+                        (totalBooking.per ?? '0%') + ' ' + filterRange
                       ) : (
                         <Skeleton.Input
                           active
@@ -286,7 +286,7 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                     <div className={styles.description}>
                       {!loading ? (
-                        totalSalesCount.per + ' ' + filterRange
+                        (totalSalesCount.per ?? '0%') + ' ' + filterRange
                       ) : (
                         <Skeleton.Input
                           active
@@ -328,8 +328,8 @@ export const TopBoard: FC<ITopBoard> = ({
                   <div className={styles.topheader}>
                     <div className={styles.title}>
                       {!loading ? (
-                        totalOnlineBooking.count +
-                        ` (${totalOnlineBooking.per})`
+                        (totalOnlineBooking.count ?? 0) +
+                        ` (${totalOnlineBooking.per ?? '0%'})`
                       ) : (
                         <Skeleton.Input
                           active
@@ -351,7 +351,7 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                     <div className={styles.description}>
                       {!loading ? (
-                        totalOnlineBooking.per + ' ' + filterRange
+                        (totalOnlineBooking.per ?? '0%') + ' ' + filterRange
                       ) : (
                         <Skeleton.Input
                           active

@@ -1,0 +1,45 @@
+fragment CashupReportCustomFields on CashupReportCustom {
+  id
+  company_id
+  location_id
+  cashup_date
+  custom_type
+  custom_amount
+  custom_actual
+  custom_difference
+  card_type
+}
+
+fragment CashupReportCustom on CashupReportCustom {
+  ...CashupReportCustomFields
+}
+
+mutation createOneCashupReportCustom($data: CashupReportCustomCreateInput!) {
+  createOneCashupReportCustom(data: $data) {
+    ...CashupReportCustom
+  }
+}
+
+mutation updateOneCashupReportCustom(
+  $where: CashupReportCustomWhereUniqueInput!
+  $data: CashupReportCustomUpdateInput!
+) {
+  updateOneCashupReportCustom(where: $where, data: $data) {
+    ...CashupReportCustom
+  }
+}
+
+mutation deleteOneCashupReportCustom($where: CashupReportCustomWhereUniqueInput!) {
+  deleteOneCashupReportCustom(where: $where) {
+    ...CashupReportCustom
+  }
+}
+
+mutation updateManyCashupReportCustom(
+  $where: CashupReportCustomWhereInput
+  $data: CashupReportCustomUpdateManyMutationInput!
+) {
+  updateManyCashupReportCustom(where: $where, data: $data) {
+    count
+  }
+}

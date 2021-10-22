@@ -1,0 +1,46 @@
+fragment ActivityUserColumnsFields on ActivityUserColumns {
+  id
+  user_id
+  columns
+  company_id
+}
+
+fragment ActivityUserColumns on ActivityUserColumns {
+  ...ActivityUserColumnsFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneActivityUserColumns($data: ActivityUserColumnsCreateInput!) {
+  createOneActivityUserColumns(data: $data) {
+    ...ActivityUserColumns
+  }
+}
+
+mutation updateOneActivityUserColumns(
+  $where: ActivityUserColumnsWhereUniqueInput!
+  $data: ActivityUserColumnsUpdateInput!
+) {
+  updateOneActivityUserColumns(where: $where, data: $data) {
+    ...ActivityUserColumns
+  }
+}
+
+mutation deleteOneActivityUserColumns($where: ActivityUserColumnsWhereUniqueInput!) {
+  deleteOneActivityUserColumns(where: $where) {
+    ...ActivityUserColumns
+  }
+}
+
+mutation updateManyActivityUserColumns(
+  $where: ActivityUserColumnsWhereInput
+  $data: ActivityUserColumnsUpdateManyMutationInput!
+) {
+  updateManyActivityUserColumns(where: $where, data: $data) {
+    count
+  }
+}
