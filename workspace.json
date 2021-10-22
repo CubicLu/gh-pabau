@@ -662,16 +662,13 @@
                 "output": "/"
               }
             ],
-            "maxWorkers": 4,
-            "memoryLimit": 5120,
+            "maxWorkers": 1,
             "verbose": true,
             "progress": true,
             "generatePackageJson": true
           },
           "configurations": {
             "production": {
-              "maxWorkers": 8,
-              "memoryLimit": 5120,
               "verbose": true,
               "progress": true,
               "optimization": true,
