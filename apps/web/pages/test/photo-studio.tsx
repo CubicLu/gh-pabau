@@ -22,6 +22,7 @@ export const Index: FC = () => {
   const [contactId, setContactId] = useState(
     // 10552384
     23936780
+    // 22459581
   )
   const [albumId, setAlbumId] = useState(null)
   const [photoId, setPhotoId] = useState(null)
@@ -82,6 +83,18 @@ export const Index: FC = () => {
   useEffect(() => {
     setAlbumPhotos(photos?.findFirstPhotoAlbum?.imageList)
   }, [photos])
+
+  const setPath = (path) => {
+    path = path?.includes('http')
+      ? path
+      : `https://cdn.pabau.com/cdn/attachments/${path}`
+    const pathArr = path.split('photos/')
+    if (pathArr?.length) {
+      pathArr[1] = `thumb_${pathArr[1]}`
+    }
+    path = pathArr.join('photos/')
+    return path
+  }
 
   return (
     <Layout {...user}>
@@ -147,11 +160,7 @@ export const Index: FC = () => {
                         }}
                       >
                         <img
-                          src={
-                            el?.origin?.includes('http')
-                              ? el?.origin
-                              : `https://cdn.pabau.com/cdn/attachments/${el?.origin}`
-                          }
+                          src={setPath(el?.origin)}
                           alt="ph"
                           style={{
                             width: '100%',

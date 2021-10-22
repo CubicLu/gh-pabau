@@ -1,0 +1,56 @@
+fragment ContactPackageFields on ContactPackage {
+  id
+  contact_id
+  package_id
+  invoice_id
+  activation_date
+  expiration_date
+  company_id
+  CreatedDate
+  sold_by
+  code
+  voided
+  voided_by
+  custom_status
+  imported
+  package_code
+  old_invoice_id
+  custom_id
+}
+
+fragment ContactPackage on ContactPackage {
+  ...ContactPackageFields
+  contact {
+    ...CmContactFields
+  }
+  invoice {
+    ...InvSaleFields
+  }
+  Package {
+    ...PackageFields
+  }
+}
+
+mutation createOneContactPackage($data: ContactPackageCreateInput!) {
+  createOneContactPackage(data: $data) {
+    ...ContactPackage
+  }
+}
+
+mutation updateOneContactPackage($where: ContactPackageWhereUniqueInput!, $data: ContactPackageUpdateInput!) {
+  updateOneContactPackage(where: $where, data: $data) {
+    ...ContactPackage
+  }
+}
+
+mutation deleteOneContactPackage($where: ContactPackageWhereUniqueInput!) {
+  deleteOneContactPackage(where: $where) {
+    ...ContactPackage
+  }
+}
+
+mutation updateManyContactPackage($where: ContactPackageWhereInput, $data: ContactPackageUpdateManyMutationInput!) {
+  updateManyContactPackage(where: $where, data: $data) {
+    count
+  }
+}

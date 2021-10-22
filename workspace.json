@@ -28,7 +28,11 @@
           "builder": "@nrwl/next:build",
           "options": {
             "root": "apps/web",
-            "outputPath": "dist/apps/web"
+            "outputPath": "dist/apps/web",
+            "maxWorkers": 8,
+            "memoryLimit": 5120,
+            "verbose": true,
+            "progress": true
           },
           "configurations": {
             "production": {}
@@ -50,7 +54,10 @@
         "export": {
           "builder": "@nrwl/next:export",
           "options": {
-            "buildTarget": "web:build:production"
+            "buildTarget": "web:build:production",
+            "memoryLimit": 5120,
+            "verbose": true,
+            "progress": true
           }
         },
         "lint": {
@@ -521,7 +528,7 @@
       "sourceRoot": "apps/connect",
       "projectType": "application",
       "schematics": {},
-      "_architect": {
+      "architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {
@@ -655,12 +662,18 @@
                 "output": "/"
               }
             ],
-            "maxWorkers": 1,
+            "maxWorkers": 4,
+            "memoryLimit": 5120,
+            "verbose": true,
+            "progress": true,
             "generatePackageJson": true
           },
           "configurations": {
             "production": {
-              "maxWorkers": 4,
+              "maxWorkers": 8,
+              "memoryLimit": 5120,
+              "verbose": true,
+              "progress": true,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
