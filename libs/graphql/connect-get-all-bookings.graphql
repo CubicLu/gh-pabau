@@ -7,16 +7,25 @@ query GetClientsAllAppointments($locationId: Int, $take: Int, $skip: Int) {
       Online: { equals: 1 }
       status: { equals: "Waiting" }
       location_id: { equals: $locationId }
+      Contact: { ID: { not: { equals: 0 } } }
     }
   ) {
     id
     Online
     status
+    contact_id
     create_date
+    Contact {
+      Fname
+      Lname
+    }
     CmStaffGeneral {
       Fname
       Lname
       Avatar
+      User {
+        image
+      }
     }
     service
     start_date
@@ -49,6 +58,7 @@ query GetClientsAllAppointments($locationId: Int, $take: Int, $skip: Int) {
       Online: { equals: 1 }
       status: { equals: "Waiting" }
       location_id: { equals: $locationId }
+      Contact: { ID: { not: { equals: 0 } } }
     }
   )
 }

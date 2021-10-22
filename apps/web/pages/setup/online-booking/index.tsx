@@ -20,11 +20,12 @@ import {
   FullScreenReportModal,
   OperationType,
   Pagination,
+  Avatar,
 } from '@pabau/ui'
-import { Avatar, Col, Row, Typography } from 'antd'
+import { Col, Row, Typography, Skeleton } from 'antd'
 import classNames from 'classnames'
 import Highcharts from 'highcharts'
-import React, { FC, useEffect, useState, useMemo } from 'react'
+import React, { FC, useEffect, useState, useMemo, useRef } from 'react'
 import dayjs from 'dayjs'
 import {
   Chart,
@@ -46,7 +47,7 @@ import {
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 import { useGetClientsAllAppointmentsQuery } from '@pabau/graphql'
-// import getImage from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 const { Title } = Typography
 export interface OnlineBookingProps {
   builderSetting: OnlineBookingBuilder
@@ -86,20 +87,23 @@ export const Index: FC<OnlineBookingProps> = ({
     return queryOptions
   }, [paginateData.offset, paginateData.limit])
 
-  const { data } = useGetClientsAllAppointmentsQuery(getQueryVariables)
+  const { data, loading } = useGetClientsAllAppointmentsQuery(getQueryVariables)
 
   useEffect(() => {
     if (data?.findManyBooking) {
       const bookingData = data?.findManyBooking.map((booking) => {
-        console.log(booking.start_date)
         return {
           id: booking.id,
-          status: booking.status,
+          status: 'Appointment Booked',
           time: dayjs(booking.create_date.toString()).format('hh:mm A'),
           details: `${dayjs(booking.start_date.toString()).format(
             'ddd D MMM hh:mm A'
-          )} for 2 services for john by ${booking?.BookedBy?.full_name}`,
-          userImage: booking?.CmStaffGeneral?.Avatar,
+          )} for 1 service with ${booking?.CmStaffGeneral?.Fname} ${
+            booking?.CmStaffGeneral?.Lname
+          } by ${booking?.Contact?.Fname} ${booking?.Contact?.Lname}`,
+          userImage: booking?.CmStaffGeneral?.User?.image
+            ? getImage(booking?.CmStaffGeneral?.User?.image)
+            : '',
         }
       })
       setBookingActivities(bookingData)
@@ -116,10 +120,17 @@ export const Index: FC<OnlineBookingProps> = ({
     setBuilder(builderSetting)
   }, [builderSetting])
 
+  useEffect(() => {
+    if (bookingsLayoutRef.current) {
+      bookingsLayoutRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.currentPage, paginateData.limit])
   const onPressPromote = () => {
     console.log('onPressPromote')
   }
 
+  const bookingsLayoutRef = useRef(null)
   const trends = [
     {
       id: 1,
@@ -236,7 +247,12 @@ export const Index: FC<OnlineBookingProps> = ({
               </HighchartsProvider>
             </div>
           </Col>
-          <Col span={15} className={styles.screenColumn}>
+
+          <Col
+            span={15}
+            className={styles.screenColumn}
+            ref={bookingsLayoutRef}
+          >
             <div className={styles.campaignContainer}>
               <div>
                 <div className={styles.icon}>
@@ -258,33 +274,73 @@ export const Index: FC<OnlineBookingProps> = ({
               <Title level={5}>
                 {t('setup.online-booking.booking-activity')}
               </Title>
-              {bookingActivities.map((e, i) => {
-                return (
-                  <div className={styles.item} key={i}>
-                    <div className={styles.image}>
-                      <Avatar src={e.userImage} size="large" />
-                    </div>
-                    <div className={styles.content}>
-                      <div>
-                        <span className={styles.status}>{e.status}</span>
-                        <span className={styles.time}>{e.time}</span>
+              {!loading
+                ? bookingActivities.map((e, i) => {
+                    return (
+                      <div className={styles.item} key={i}>
+                        <div className={styles.image}>
+                          <Avatar
+                            src={e.userImage}
+                            name={`${e?.CmStaffGeneral?.Fname} ${e?.CmStaffGeneral?.Lname}`}
+                            size="large"
+                          />
+                        </div>
+                        <div className={styles.content}>
+                          <div>
+                            <span className={styles.status}>{e.status}</span>
+                            <span className={styles.time}>{e.time}</span>
+                          </div>
+                          <div>
+                            <span
+                              className={styles.description}
+                              dangerouslySetInnerHTML={{
+                                __html: e.details || '',
+                              }}
+                            ></span>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <span
-                          className={styles.description}
-                          dangerouslySetInnerHTML={{ __html: e.details || '' }}
-                        ></span>
+                    )
+                  })
+                : [...Array.from({ length: 10 })].map((e, i) => {
+                    return (
+                      <div className={styles.item} key={i}>
+                        <div className={styles.image}>
+                          <Skeleton.Avatar size="large" active />
+                        </div>
+                        <div className={styles.content}>
+                          <div className={styles.skeletonTitle}>
+                            <Skeleton
+                              className={styles.status}
+                              paragraph={false}
+                              active
+                            />
+
+                            <Skeleton
+                              className={styles.time}
+                              paragraph={false}
+                              active
+                            />
+                          </div>
+                          <div>
+                            <Skeleton
+                              className={styles.description}
+                              paragraph={false}
+                              active
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                )
-              })}
+                    )
+                  })}
             </div>
             <div className={styles.pagination}>
               <Pagination
                 total={paginateData.total}
                 defaultPageSize={10}
+                customClass={styles.paginationWrap}
                 showSizeChanger={false}
+                className={styles.paginationNav}
                 onChange={onPaginationChange}
                 pageSizeOptions={['10', '25', '50', '100']}
                 onPageSizeChange={(pageSize) => {
