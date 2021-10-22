@@ -1,0 +1,40 @@
+fragment FavoriteReportFields on FavoriteReport {
+  id
+  company_id
+  report_id
+  stars
+}
+
+fragment FavoriteReport on FavoriteReport {
+  ...FavoriteReportFields
+  Company {
+    ...CompanyFields
+  }
+  Report {
+    ...ReportFields
+  }
+}
+
+mutation createOneFavoriteReport($data: FavoriteReportCreateInput!) {
+  createOneFavoriteReport(data: $data) {
+    ...FavoriteReport
+  }
+}
+
+mutation updateOneFavoriteReport($where: FavoriteReportWhereUniqueInput!, $data: FavoriteReportUpdateInput!) {
+  updateOneFavoriteReport(where: $where, data: $data) {
+    ...FavoriteReport
+  }
+}
+
+mutation deleteOneFavoriteReport($where: FavoriteReportWhereUniqueInput!) {
+  deleteOneFavoriteReport(where: $where) {
+    ...FavoriteReport
+  }
+}
+
+mutation updateManyFavoriteReport($where: FavoriteReportWhereInput, $data: FavoriteReportUpdateManyMutationInput!) {
+  updateManyFavoriteReport(where: $where, data: $data) {
+    count
+  }
+}

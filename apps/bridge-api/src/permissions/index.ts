@@ -91,6 +91,7 @@ export const permissions = shield(
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
+      deleteOneContactAttachment: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -111,8 +112,11 @@ export const permissions = shield(
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
       updateOneCmLead: rules.authentication.isAuthenticated,
       //Activity
-      upsertOneActivityUserColumns: rules.authentication.isAuthenticated,
+      upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
+      createDuplicateActivity: rules.authentication.isAuthenticated,
+      //Connect Public
+      public_createOnlineBooking: allow,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -210,11 +214,12 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptSharedCompanyData
       ),
-      findFirstActivityUserColumns: and(
+      findFirstActivityUserState: and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData,
-        rules.interceptors.injectUser
+        rules.interceptors.interceptAccessToUserData
       ),
+      dashboardData: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,
@@ -226,7 +231,14 @@ export const permissions = shield(
       subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
       subscriptionDetails: rules.authentication.isAuthenticated,
       subscriptionCardDetails: rules.authentication.isAuthenticated,
-
+      // Connect Public
+      findFirstCompany: allow,
+      Public_MasterCategories: allow,
+      Public_BookedAppointments: allow,
+      Public_Locations: allow,
+      Public_ServiceCategories: allow,
+      Public_StaffShifts: allow,
+      Public_Staff: allow,
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //statement template

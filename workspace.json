@@ -521,7 +521,7 @@
       "sourceRoot": "apps/connect",
       "projectType": "application",
       "schematics": {},
-      "_architect": {
+      "architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {
@@ -660,7 +660,6 @@
           },
           "configurations": {
             "production": {
-              "maxWorkers": 4,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,

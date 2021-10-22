@@ -623,32 +623,46 @@ export const User = objectType({
         return root.PasswordResetAuth
       },
     })
-    t.list.field('ActivityUserColumns', {
-      type: 'ActivityUserColumns',
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
       args: {
-        where: 'ActivityUserColumnsWhereInput',
-        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
-        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ActivityUserColumnsScalarFieldEnum',
+        distinct: 'ServiceUserTierScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ActivityUserColumns
+        return root.ServiceUserTier
       },
     })
-    t.list.field('ServiceUserPrice', {
-      type: 'ServiceUserPrice',
+    t.list.field('ActivityUserState', {
+      type: 'ActivityUserState',
       args: {
-        where: 'ServiceUserPriceWhereInput',
-        orderBy: 'ServiceUserPriceOrderByWithRelationInput',
-        cursor: 'ServiceUserPriceWhereUniqueInput',
+        where: 'ActivityUserStateWhereInput',
+        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        cursor: 'ActivityUserStateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ServiceUserPriceScalarFieldEnum',
+        distinct: 'ActivityUserStateScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ServiceUserPrice
+        return root.ActivityUserState
+      },
+    })
+    t.list.field('ActivityUserFilter', {
+      type: 'ActivityUserFilter',
+      args: {
+        where: 'ActivityUserFilterWhereInput',
+        orderBy: 'ActivityUserFilterOrderByWithRelationInput',
+        cursor: 'ActivityUserFilterWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserFilterScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserFilter
       },
     })
     t.nullable.field('_count', {

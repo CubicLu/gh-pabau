@@ -17,6 +17,7 @@ import {
   Radio,
   Select,
   Skeleton,
+  Tooltip,
   Layout as AntLayout,
 } from 'antd'
 import classNames from 'classnames'
@@ -170,6 +171,9 @@ export const Filter: FunctionComponent<P> = ({
               value={locationValue}
               onSelect={(value) => setLocation(value)}
             >
+              <Select.Option key={'all'} value={''}>
+                ALL
+              </Select.Option>
               {locationData?.findManyCompanyBranch?.map((item) => (
                 <Select.Option key={item.id} value={item.id}>
                   {item.name}
@@ -274,25 +278,39 @@ export const Filter: FunctionComponent<P> = ({
               </Button>
             </Popover>
             <span className={styles.GridVsList}>
-              <GridVsList
-                onChange={onViewChange}
-                selectedValue={userView}
-                displayTypes={[
-                  {
-                    title: 'Grid',
-                    icon: <AppstoreOutlined className={styles.GridIcons} />,
-                  },
-                  {
-                    title: 'List',
-                    icon: (
-                      <MenuOutlined
-                        style={{ paddingBottom: 300 }}
-                        className={styles.GridIcons}
-                      />
-                    ),
-                  },
-                ]}
-              />
+              <Tooltip title="Grid View" placement="top">
+                <span className={styles.toolTip}>
+                  <GridVsList
+                    onChange={onViewChange}
+                    selectedValue={userView}
+                    displayTypes={[
+                      {
+                        title: 'Grid',
+                        icon: <AppstoreOutlined className={styles.GridIcons} />,
+                      },
+                    ]}
+                  />
+                </span>
+              </Tooltip>
+              <Tooltip placement="top" title="List View">
+                <span className={styles.toolTip}>
+                  <GridVsList
+                    onChange={onViewChange}
+                    selectedValue={userView}
+                    displayTypes={[
+                      {
+                        title: 'List',
+                        icon: (
+                          <MenuOutlined
+                            style={{ paddingBottom: 300 }}
+                            className={styles.GridIcons}
+                          />
+                        ),
+                      },
+                    ]}
+                  />
+                </span>
+              </Tooltip>
             </span>
             <Button
               className={addButtonStyles.createSourceBtn}

@@ -131,6 +131,7 @@ export interface ClientDetailsProps {
   onCreateCall: () => void
   searchResults: SearchItem[]
   appointments: Appointment[]
+  handleEditAll?: () => void
   dateFormat?: string
 }
 
@@ -165,10 +166,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   loading,
   customFields,
   dateFormat,
+  handleEditAll,
 }) => {
   const { t } = useTranslation('common')
-  const [initFields, setInitFields] = useState(false)
-  const defaultFieldOrder = [
+  const defaultFieldOrder: FieldOrderItem[] = [
     {
       type: 'string',
       field: FieldType.patientId,
@@ -333,8 +334,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const [showAddressModal, setShowAddressModal] = useState(false)
 
   useEffect(() => {
-    if (!initFields && clientData) {
-      const fields = [...fieldsOrder]
+    if (clientData) {
+      let fields = [...defaultFieldOrder]
       fields[0].value = clientData.patientID
       fields[1].value = clientData.referredBy
       fields[2].value = clientData.dob
@@ -345,9 +346,14 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         home: clientData.phone.home,
       }
       fields[6].value = clientData.email
-      setInitFields(true)
+      setActiveClient(clientData.isActive)
+      if (customFields?.length) {
+        fields = [...fields, ...customFields]
+      }
+      setFieldsOrder(fields)
     }
-  }, [clientData, fieldsOrder, initFields])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientData, customFields])
 
   useEffect(() => {
     const result = fieldsOrder.map((item) => {
@@ -361,13 +367,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setFieldsOrder([...result])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [referredByOptions])
-
-  useEffect(() => {
-    if (customFields) {
-      setFieldsOrder([...fieldsOrder, ...customFields])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customFields])
 
   const handleOpenAddModal = (type: RelationshipType) => {
     setType(type)
@@ -946,18 +945,17 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                       <div className={styles.title}>
                         {t('ui.clientdetails.details')}
                       </div>
-                      <div
-                        className={styles.customizeFields}
-                        onClick={() => setCustomizingFields(true)}
-                      >
-                        {t('ui.clientdetails.customise')}
+                      <div className={styles.customizeFields}>
+                        <div onClick={() => setCustomizingFields(true)}>
+                          {t('ui.clientdetails.customise')}
+                        </div>
                         <Tooltip
                           title={t('ui.clientdetails.customise.edit')}
                           overlayStyle={{ width: '100px' }}
                         >
                           <div
                             className={styles.editCustomizeFields}
-                            onClick={() => setCustomizingFields(true)}
+                            onClick={() => handleEditAll?.()}
                           >
                             <EditOutlined />
                           </div>

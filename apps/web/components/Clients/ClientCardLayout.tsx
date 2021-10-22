@@ -3,12 +3,20 @@ import {
   useBasicContactDetailsQuery,
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
+  useGetContactHeaderLazyQuery,
 } from '@pabau/graphql'
-import { ClientCard, TabItem } from '@pabau/ui'
-import React, { ComponentPropsWithoutRef, FC, useEffect, useState } from 'react'
+import { ClientCard, TabItem, ClientNotes } from '@pabau/ui'
+import React, {
+  ComponentPropsWithoutRef,
+  FC,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react'
 import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
+import ClientCreate from '../Clients/ClientCreate'
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -19,11 +27,34 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
   const [customField, setCustomField] = useState([])
+  const [contactData, setContactData] = useState<ClientNotes>({
+    notes: [],
+    count: 0,
+    loading: true,
+    appointments: [],
+  })
+  const [basicContactData, setBasicContactData] = useState(null)
+  const [openEditModal, setOpenEditModal] = useState(false)
 
-  const { data, loading } = useBasicContactDetailsQuery({
+  const getQueryVariables = useMemo(() => {
+    return {
+      variables: { id: clientId },
+    }
+  }, [clientId])
+
+  const { data, loading, refetch } = useBasicContactDetailsQuery({
     skip: !router.query['id'],
     ssr: false,
-    variables: { id: clientId },
+    notifyOnNetworkStatusChange: true,
+    ...getQueryVariables,
+  })
+
+  const [
+    getContactDetails,
+    { data: contactDetails, loading: notesCountLoading },
+  ] = useGetContactHeaderLazyQuery({
+    ssr: false,
+    ...getQueryVariables,
   })
 
   const { data: referredByOptions } = useGetMarketingSourcesQuery({
@@ -38,7 +69,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   })
 
   useEffect(() => {
-    if (customFieldData && data?.findFirstCmContact) {
+    if (customFieldData && data?.findFirstCmContact?.customField) {
       const customFields = customFieldData.custom
         .flatMap((thread) =>
           thread?.ManageCustomField?.filter((thread) => thread.is_active)
@@ -78,6 +109,23 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         })
         setCustomField(final)
       }
+    }
+    if (data?.findFirstCmContact) {
+      setContactData((item) => {
+        return {
+          ...item,
+          notes: [],
+          count:
+            data?.findFirstCmContact?.contactNotes?.length +
+              data?.findFirstCmContact?.bookingNotes?.length || 0,
+          loading: true,
+          appointments: [],
+        }
+      })
+      const contactDetails = { ...data?.findFirstCmContact }
+      delete contactDetails?.contactNotes
+      delete contactDetails?.bookingNotes
+      setBasicContactData(contactDetails)
     }
   }, [customFieldData, data])
 
@@ -148,6 +196,27 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     // },
   ] as const
 
+  useEffect(() => {
+    if (contactDetails?.notes) {
+      setContactData((item) => {
+        return {
+          ...item,
+          loading: notesCountLoading,
+          notes: contactDetails?.notes?.contact,
+          appointments: contactDetails?.notes?.appointment,
+        }
+      })
+    }
+  }, [contactDetails, notesCountLoading])
+  const handleEditAll = () => {
+    setOpenEditModal(true)
+  }
+
+  const handleEditSubmit = () => {
+    setOpenEditModal(false)
+    refetch()
+  }
+
   return (
     <Layout>
       <ClientCard
@@ -161,42 +230,59 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         loading={loading || customFieldLoading || !router.query['id']}
         customFields={customField}
         dateFormat={GetFormat()}
+        handleEditAll={handleEditAll}
         client={
-          data?.findFirstCmContact
+          basicContactData
             ? ({
-                ...data.findFirstCmContact,
-                fullName: `${data.findFirstCmContact.firstName}
-                  ${data.findFirstCmContact.lastName}`,
-                referredBy: data.findFirstCmContact.marketingSource?.name,
-                avatar: data.findFirstCmContact.avatar
-                  ? getImage(data.findFirstCmContact.avatar)
+                ...basicContactData,
+                fullName: `${basicContactData?.firstName}
+                  ${basicContactData?.lastName}`,
+                referredBy: basicContactData?.marketingSource?.name,
+                avatar: basicContactData?.avatar
+                  ? getImage(basicContactData?.avatar)
                   : '',
                 phone: {
-                  mobile: data.findFirstCmContact.mobile,
-                  home: data.findFirstCmContact.home,
+                  mobile: basicContactData?.mobile,
+                  home: basicContactData?.home,
                 },
+                isActive:
+                  data.findFirstCmContact?.isActive === 1 ? true : false,
                 address: [
-                  data.findFirstCmContact.street,
-                  data.findFirstCmContact.city,
-                  data.findFirstCmContact.county,
-                  data.findFirstCmContact.postCode,
-                  data.findFirstCmContact.country,
+                  basicContactData?.street,
+                  basicContactData?.city,
+                  basicContactData?.county,
+                  basicContactData?.postCode,
+                  basicContactData?.country,
                 ]
                   .filter((val) => val?.trim())
                   .join(', '),
                 relationships: [],
-                labels: data.findFirstCmContact.labelData.map((data) => {
-                  return {
-                    label: data.labelDetail.label,
-                    color: data.labelDetail.color,
-                  }
-                }),
+                labels:
+                  data.findFirstCmContact?.labelData?.map((data) => {
+                    return {
+                      label: data?.labelDetail?.label,
+                      color: data?.labelDetail?.color,
+                    }
+                  }) || [],
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }
+        notes={contactData}
+        getContactDetails={getContactDetails}
       >
         {children}
       </ClientCard>
+      {openEditModal && (
+        <ClientCreate
+          modalVisible={openEditModal}
+          handleClose={() => {
+            setOpenEditModal(false)
+          }}
+          isEdit={openEditModal}
+          handleSubmit={handleEditSubmit}
+          contactId={clientId}
+        />
+      )}
     </Layout>
   )
 }

@@ -311,16 +311,18 @@ model Company {
   Activity                         Activity[]
   ContactPreference                ContactPreference[]
 
-  ActivityUserColumns ActivityUserColumns[]
-  ActivityType        ActivityType[]
-  Album               PhotoAlbum[]
-  InsurerContract     InsurerContract[]
+  ActivityUserState  ActivityUserState[]
+  ActivityUserFilter ActivityUserFilter[]
+  ActivityType       ActivityType[]
+  Album              PhotoAlbum[]
+  InsurerContract    InsurerContract[]
 
 
   Voucher                Voucher[]
   Package                Package[]
   InsuranceContractPrice InsuranceContractPrice[]
   ContactAttachment      ContactAttachment[]
+  SmsSender              SmsSender[]
   @@map("admin")
 }
 
@@ -868,7 +870,7 @@ model BookingStatus {
   track_time  Int                         @default(1)
   Company     Company?                    @relation(fields: [company_id], references: [id])
 
-  @@unique([value, company_id], name: "value")
+  @@unique([value, company_id], name: "value_company_id")
   @@map("booking_statuses")
 }
 
@@ -2141,17 +2143,39 @@ model ActivityType {
   @@map("activity_types")
 }
 
-model ActivityUserColumns {
-  id         Int     @id @default(autoincrement())
-  user_id    Int
-  columns    String
-  company_id Int
-  Company    Company @relation(fields: [company_id], references: [id])
-  User       User?   @relation(fields: [user_id], references: [id])
+model ActivityUserState {
+  id                 Int                 @id @default(autoincrement())
+  user_id            Int
+  columns            String?
+  company_id         Int
+  user_filter        Int?
+  user_group_filter  Int?
+  custom_filter      Int?
+  Company            Company             @relation(fields: [company_id], references: [id])
+  User               User?               @relation(fields: [user_id], references: [id])
+  ActivityUserFilter ActivityUserFilter? @relation(fields: [custom_filter], references: [id])
 
   @@unique([user_id, company_id], name: "company_id_user_id")
   @@index([company_id, user_id], name: "activity_user_columns_user_id_company_id__index")
-  @@map("activity_user_columns")
+  @@map("activity_user_state")
+}
+
+model ActivityUserFilter {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  company_id Int
+  name       String
+  columns    String?
+  data       String?
+  shared     Boolean   @default(true)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  User       User      @relation(fields: [user_id], references: [id])
+  Company    Company   @relation(fields: [company_id], references: [id])
+
+  ActivityUserState ActivityUserState[]
+  @@index([company_id, user_id], name: "activity_user_filter_company_id_user_id__index")
+  @@map("activity_user_filter")
 }
 
 model Activity {
@@ -2164,9 +2188,9 @@ model Activity {
   note           String?
   available      Boolean      @default(true)
   status         String
-  due_start_date DateTime
-  due_end_date   DateTime
-  created_at     DateTime     @default(now())
+  due_start_date DateTime?
+  due_end_date   DateTime?
+  created_at     DateTime?    @default(now())
   updated_at     DateTime?    @updatedAt
   finished_at    DateTime?
   type           Int
@@ -3135,6 +3159,7 @@ model CmStaffGeneral {
   HolidayRequest      HolidayRequest[]
   SalonBookings       Booking[]
   RotaShift           RotaShift[]
+  StaffNote           StaffNote?                  @relation(fields: [ID], references: [StaffID])
 
   InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
@@ -3154,17 +3179,21 @@ model CmStaffGeneral {
 //  Notes   String
 //}
 //
-//model cm_staff_notes {
-//  ID           Int    @id @default(autoincrement())
-//  StaffID      Int    @unique
-//  Dependents   String
-//  Education    String
-//  Hobbies      String
-//  Training     String
-//  Volunteer    String
-//  Prescription String
-//}
-//
+model StaffNote {
+  ID             Int             @id @default(autoincrement())
+  StaffID        Int             @unique
+  Dependents     String
+  Education      String
+  Hobbies        String
+  Training       String
+  Volunteer      String
+  Prescription   String
+  CmStaffGeneral CmStaffGeneral?
+
+  @@index([StaffID], name: "StaffID")
+  @@map("cm_staff_notes")
+}
+
 //model cm_staff_payrolls {
 //  ID                 Int                           @id @default(autoincrement())
 //  StaffID            Int
@@ -3537,7 +3566,7 @@ model CommunicationContent {
   body           String
   Communications Communication[]
 
-  @@unique([company_id, hash], name: "company_id")
+  @@unique([company_id, hash], name: "company_id_hash")
   @@map("communications_content")
 }
 
@@ -3764,7 +3793,7 @@ model CompanyBranch {
   InventoryMovement       InventoryMovement[]
   InvSale                 InvSale[]
 
-  ServiceLocationPrice ServiceLocationPrice[]
+  ServiceLocationTier ServiceLocationTier[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -3852,6 +3881,7 @@ model CompanyEmail {
   default_email    Int
   enterprise_email Int
   merge_tags       String
+  visibility       Int    @default(0)
 
   Company Company? @relation(fields: [company_id], references: [id])
   @@index([email_id], name: "email_id")
@@ -4121,9 +4151,11 @@ model CompanyService {
   Product                InvProduct?                       @relation(fields: [product_id], references: [id])
   CompanyRoomService     CompanyRoomService[]
   ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
+  SocialSurveyFeedback   SocialSurveyFeedback[]
+  ServiceUserTier        ServiceUserTier[]
+  ServiceLocationTier    ServiceLocationTier[]
+  Booking                Booking[]
 
-  ServiceUserPrice     ServiceUserPrice[]
-  ServiceLocationPrice ServiceLocationPrice[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -4271,7 +4303,7 @@ model CompanyService {
 //  @@index([service_id], name: "service_id")
 //}
 //
-model ServiceUserPrice {
+model ServiceUserTier {
   id                     Int            @id @default(autoincrement())
   service_id             Int
   user_id                Int
@@ -4481,7 +4513,7 @@ model ContactAttachment {
   medical_form_id   Int?
   tags              String?
   medical_uniqid    String?
-  Contact           CmContact   @relation(fields: [contact_id], references: [ID])
+  Contact           CmContact?  @relation(fields: [contact_id], references: [ID])
   Practitioner      User?       @relation(fields: [attach_name], references: [full_name])
   Album             PhotoAlbum? @relation(fields: [album_id], references: [id])
   Company           Company     @relation(fields: [company_id], references: [id])
@@ -4636,7 +4668,7 @@ model ContactMeta {
   meta_value String
   Contact    CmContact @relation(fields: [contact_id], references: [ID])
 
-  @@unique([contact_id, meta_name], name: "unique_contact_id_meta_name")
+  @@unique([contact_id, meta_name], name: "contact_id_meta_name")
   @@map("contact_meta")
 }
 
@@ -4844,70 +4876,78 @@ model Country {
 //  complete_date Int
 //  video_id      Int
 //}
-//
-//model cp_pathways {
-//  id                Int                 @id @default(autoincrement())
-//  pathway_name      String
-//  company_id        Int
-//  description       String
-//  is_active         Boolean
-//  order             Int?                @default(0)
-//  cp_pathways_taken cp_pathways_taken[]
-//  cp_steps          cp_steps[]
-//}
-//
-//model cp_pathways_taken {
-//  id             Int                      @id @default(autoincrement())
-//  pathway_id     Int
-//  contact_id     Int
-//  booking_id     Int
-//  started_on     DateTime                 @default(now())
-//  status         cp_pathways_taken_status @default(ACTIVE)
-//  comment        String
-//  cp_pathways    cp_pathways              @relation(fields: [pathway_id], references: [id])
-//  cp_steps_taken cp_steps_taken[]
-//
-//  @@index([pathway_id, contact_id], name: "pathway_id")
-//}
-//
-//model cp_steps {
-//  id             Int              @id @default(autoincrement())
-//  company_id     Int
-//  name           String
-//  created_date   DateTime
-//  step           cp_steps_step
-//  order          Int
-//  item_id        Int
-//  pathway_id     Int
-//  can_skip       Int
-//  display_time   Int              @default(0)
-//  other_value    String
-//  description    String
-//  who_does_this  String?
-//  cp_pathways    cp_pathways      @relation(fields: [pathway_id], references: [id])
-//  cp_steps_taken cp_steps_taken[]
-//
-//  @@index([pathway_id], name: "pathway_id")
-//}
-//
-//model cp_steps_taken {
-//  id                Int                   @id @default(autoincrement())
-//  step_id           Int
-//  path_taken_id     Int
-//  contact_id        Int
-//  date              DateTime              @default(now())
-//  time              String?
-//  status            cp_steps_taken_status
-//  record_id         Int
-//  cp_pathways_taken cp_pathways_taken     @relation(fields: [path_taken_id], references: [id])
-//  cp_steps          cp_steps              @relation(fields: [step_id], references: [id])
-//
-//  @@unique([step_id, path_taken_id], name: "step_id_3")
-//  @@index([path_taken_id], name: "path_taken_id")
-//  @@index([step_id, contact_id], name: "step_id")
-//  @@index([step_id], name: "step_id_2")
-//}
-//
+
+model Pathway {
+  id           Int             @id @default(autoincrement())
+  pathway_name String
+  company_id   Int
+  description  String
+  is_active    Boolean
+  order        Int?            @default(0)
+  PathwayTaken PathwaysTaken[]
+  PathwayStep  PathwayStep[]
+
+  @@map("cp_pathways")
+}
+
+model PathwaysTaken {
+  id                Int                      @id @default(autoincrement())
+  pathway_id        Int
+  contact_id        Int
+  booking_id        Int
+  started_on        DateTime                 @default(now())
+  status            cp_pathways_taken_status @default(ACTIVE)
+  comment           String
+  Pathway           Pathway                  @relation(fields: [pathway_id], references: [id])
+  PathwayStepsTaken PathwayStepsTaken[]
+
+
+  @@index([pathway_id, contact_id], name: "pathway_id")
+  @@map("cp_pathways_taken")
+}
+
+model PathwayStep {
+  id            Int           @id @default(autoincrement())
+  company_id    Int
+  name          String
+  created_date  DateTime
+  step          cp_steps_step
+  order         Int
+  item_id       Int
+  pathway_id    Int
+  can_skip      Int
+  display_time  Int           @default(0)
+  other_value   String
+  description   String
+  who_does_this String?
+
+  Pathway           Pathway             @relation(fields: [pathway_id], references: [id])
+  PathwayStepsTaken PathwayStepsTaken[]
+
+  @@index([pathway_id], name: "pathway_id")
+  @@map("cp_steps")
+}
+
+model PathwayStepsTaken {
+  id            Int                   @id @default(autoincrement())
+  step_id       Int
+  path_taken_id Int
+  contact_id    Int
+  date          DateTime              @default(now())
+  time          String?
+  status        cp_steps_taken_status
+  record_id     Int
+  PathwaysTaken PathwaysTaken         @relation(fields: [path_taken_id], references: [id])
+  PathwayStep   PathwayStep           @relation(fields: [step_id], references: [id])
+
+
+  @@unique([step_id, path_taken_id], name: "step_id_3")
+  @@index([path_taken_id], name: "path_taken_id")
+  @@index([step_id, contact_id], name: "step_id")
+  @@index([step_id], name: "step_id_2")
+  @@map("cp_steps_taken")
+}
+
 //model credit_balance {
 //  credit_balance_id Int    @id @default(autoincrement())
 //  company           String
@@ -6652,7 +6692,7 @@ model InvProduct {
   name                      String
   sku                       String?
   unit                      String?
-  size                      String
+  size                      String?
   product_order             Int?
   um                        String
   cost                      Float?
@@ -8005,7 +8045,7 @@ model LeadStatus {
 //  loc_date    String?
 //}
 
-model ServiceLocationPrice {
+model ServiceLocationTier {
   id          Int   @id @default(autoincrement())
   location_id Int   @default(0)
   service_id  Int   @default(0)
@@ -10470,8 +10510,8 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  start          Decimal
-  end            Decimal
+  start          Float
+  end            Float
   company_id     Int            @map("occupier")
   notes          String?
   last_seen      DateTime?
@@ -10553,8 +10593,8 @@ model RotaShift {
 model Booking {
   id                            Int             @id @default(autoincrement())
   title                         String
-  start_date                    Decimal
-  end_date                      Decimal
+  start_date                    Float
+  end_date                      Float
   start_time                    Int?
   end_time                      Int?
   service                       String?
@@ -10562,8 +10602,8 @@ model Booking {
   UID                           Int
   company_id                    Int             @map("occupier")
   backgroudcolor                String?
-  create_date                   Int?
-  update_date                   Int?
+  create_date                   Float?
+  update_date                   Float?
   status                        String
   estimated_cost                Float?
   tips                          Float?
@@ -10625,6 +10665,7 @@ model Booking {
   UserMaster                    UserMaster?     @relation(fields: [contact_id], references: [contact_id])
   CmStaffGeneral                CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
   CompanyBranch                 CompanyBranch?  @relation(fields: [location_id], references: [id])
+  CompanyService                CompanyService? @relation(fields: [service_id], references: [id])
 
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
@@ -11416,18 +11457,21 @@ model SmsPurchase {
   @@map("sms_purchases")
 }
 
-//model sms_senders {
-//  smsd_id     Int     @id @default(autoincrement())
-//  smsd_name   String
-//  smsd_cid    Int
-//  smsd_delete Int     @default(0)
-//  is_default  Boolean @default(false)
-//  merge_tags  String
-//
-//  @@index([smsd_cid], name: "smsd_cid")
-//  @@index([smsd_delete], name: "smsd_delete")
-//}
-//
+model SmsSender {
+  smsd_id     Int     @id @default(autoincrement())
+  smsd_name   String
+  company_id  Int     @map("smsd_cid")
+  smsd_delete Int     @default(0)
+  is_default  Boolean @default(false)
+  merge_tags  String
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([smsd_delete], name: "smsd_delete")
+  @@map("sms_senders")
+}
+
 //model sms_stats {
 //  smss_id    Int    @id @default(autoincrement())
 //  smss_uid   Int
@@ -11531,6 +11575,7 @@ model SocialSurveyFeedback {
   CmContact          CmContact?                     @relation(fields: [contact_id], references: [ID])
   Company            Company                        @relation(fields: [company_id], references: [id])
   User               User?                          @relation(fields: [feedback_for], references: [id])
+  CompanyService     CompanyService                 @relation(fields: [service_id], references: [id])
   Response           SocialSurveyFeedbackResponse[]
   SocialSurveyAnswer SocialSurveyAnswer[]
 
@@ -11660,7 +11705,7 @@ model StaffMeta {
   meta_value String?
   User       User?   @relation(fields: [staff_id], references: [id])
 
-  @@unique([staff_id, meta_name], name: "staff_id")
+  @@unique([staff_id, meta_name], name: "staff_id_meta_name")
   @@map("staff_meta")
 }
 
@@ -12723,10 +12768,11 @@ model User {
   Activity                     Activity[]                     @relation("activityCreatedUser")
   CmLead                       CmLead[]
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
+  PasswordResetAuth            PasswordResetAuth[]
+  ServiceUserTier              ServiceUserTier[]
+  ActivityUserState            ActivityUserState[]
+  ActivityUserFilter           ActivityUserFilter[]
 
-  PasswordResetAuth   PasswordResetAuth[]
-  ActivityUserColumns ActivityUserColumns[]
-  ServiceUserPrice    ServiceUserPrice[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

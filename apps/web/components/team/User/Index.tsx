@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Modal, Tabs, Drawer } from 'antd'
+import { Modal, Tabs, Drawer, Skeleton } from 'antd'
 import { useMedia } from 'react-use'
 
 import Layout from '../../Layout/Layout'
@@ -10,8 +10,9 @@ import {
   PabauPlus,
   AvatarUploader,
 } from '@pabau/ui'
+import { useTranslation } from 'react-i18next'
 import styles from './UserDetail.module.less'
-import { userDetail, fields, graphData } from '../../../mocks/UserDetail'
+import { userDetail } from '../../../mocks/UserDetail'
 import PersonalDetail from './PersonalDetail/PersonalDetail'
 import Permission from './Permissions/Permissions'
 import Document from './Documents/Documents'
@@ -22,6 +23,7 @@ import CustomizeFields from './PersonalDetail/CustomizeFields'
 import CommonHeader from '../../../components/CommonHeader'
 import AvatarImage from '../../../assets/images/avatar.png'
 import { LeftOutlined } from '@ant-design/icons'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 const { TabPane } = Tabs
 
 export interface customFieldsProps {
@@ -35,14 +37,41 @@ export interface customFieldsProps {
   placeholder?: string
   helpTooltip?: string
 }
-
-const Index: FC = () => {
+export interface StaffDetails {
+  firstname: string
+  lastname: string
+  staffTitle: string
+  birthday?: Date
+  mobilePhone: string
+  email: string
+  employmentStartDate?: Date
+  otherLocations: number[]
+  primaryLocation: number
+  primaryLocationName: string
+  image: string
+  Location: string
+  notes: string
+}
+export interface LocationDetails {
+  id: number
+  name: string
+}
+interface UserDetailsProps {
+  personalData?: StaffDetails
+  staffDataLoading?: boolean
+}
+const Index: FC<UserDetailsProps> = ({ personalData, staffDataLoading }) => {
+  const { t } = useTranslation('common')
+  const { fields, graphData } = userDetail(t)
   const [tabKey, setTabKey] = useState<string>('1')
   const isMobile = useMedia('(max-width: 768px)')
   const [userImage, setUserImage] = useState<string>(AvatarImage)
   const [showModal, setShowModal] = useState<boolean>(false)
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [fieldsData, setFieldsData] = useState<customFieldsProps[]>(fields)
+  const fullName = `${personalData?.firstname ?? ''} ${
+    personalData?.lastname ?? ''
+  }`
 
   const handleSaveCustomFields = (field: customFieldsProps[]) => {
     setFieldsData(field)
@@ -69,28 +98,62 @@ const Index: FC = () => {
         <CommonHeader
           isLeftOutlined
           reversePath="/team/users"
-          title={userDetail.name}
+          title={fullName}
         />
         <div className={styles.userDetailMainWrapper}>
           <div className={styles.userDetailWrapper}>
             <div className={styles.mobileUserHeader}>
-              <LeftOutlined /> <h2>{userDetail.name}</h2>
+              <LeftOutlined /> <h2>{fullName}</h2>
             </div>
             <div className={styles.userDetailHeader}>
               <div>
                 <Breadcrumb
                   items={[
                     { breadcrumbName: 'Users', path: 'team/users' },
-                    { breadcrumbName: userDetail.name, path: '' },
+                    { breadcrumbName: fullName, path: '' },
                   ]}
                 />
                 <div className={styles.userHead}>
                   <div onClick={handleShowAvatarUploader}>
-                    <Avatar src={userImage} size={'large'} edit={true} />
+                    {staffDataLoading ? (
+                      <Skeleton.Avatar
+                        className={styles.skeletonIcon}
+                        active={true}
+                        size={'large'}
+                      />
+                    ) : (
+                      <Avatar
+                        src={
+                          personalData?.image
+                            ? getImage(personalData?.image)
+                            : userImage
+                        }
+                        size={'large'}
+                        edit={true}
+                      />
+                    )}
                   </div>
                   <div className={styles.userHeadTitle}>
-                    <h2>{userDetail.name}</h2>
-                    <p>{userDetail.post}</p>
+                    <h2>
+                      {staffDataLoading ? (
+                        <Skeleton.Input
+                          active={true}
+                          className={styles.skeletonName}
+                        />
+                      ) : (
+                        fullName
+                      )}
+                    </h2>
+                    <p>
+                      {staffDataLoading ? (
+                        <Skeleton.Input
+                          active={true}
+                          className={styles.skeletonJobTitle}
+                        />
+                      ) : (
+                        personalData?.staffTitle ?? ''
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -112,8 +175,17 @@ const Index: FC = () => {
               tabPosition={isMobile ? 'top' : 'left'}
               onChange={handleTabChange}
             >
-              <TabPane tab={<span>Personal Details</span>} key="1">
-                <PersonalDetail field={fieldsData} graphData={graphData} />
+              <TabPane
+                tab={<span>{t('team.user.personal.details.title')}</span>}
+                key="1"
+              >
+                <PersonalDetail
+                  t={t}
+                  personalData={personalData}
+                  field={fieldsData}
+                  graphData={graphData}
+                  staffDataLoading={staffDataLoading}
+                />
               </TabPane>
               <TabPane tab={<span>Services</span>} key="2">
                 <Service />
