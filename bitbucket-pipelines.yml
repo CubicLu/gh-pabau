@@ -245,7 +245,7 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              size: 1x
+              size: 2x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
@@ -268,7 +268,9 @@ pipelines:
 
           - step:
               name: unit tests
-              size: 2x
+              size: 8x
+              runs-on:
+                - 'self-hosted'
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=HEAD~1
@@ -285,7 +287,9 @@ pipelines:
                 - yarn affected:e2e --base=HEAD~1 || true
           - step:
               name: integration tests
-              size: 2x
+              size: 8x
+              runs-on:
+                - 'self-hosted'
               services:
                 - docker
               script:
@@ -349,7 +353,9 @@ pipelines:
       - step:
           name: build
           max-time: 80
-          size: 2x
+          size: 8x
+          runs-on:
+            - 'self-hosted'
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
