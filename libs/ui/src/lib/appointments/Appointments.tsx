@@ -8,7 +8,7 @@ import styles from './Appointments.module.less'
 import dayjs from 'dayjs'
 
 interface P {
-  date: Date | string
+  date?: Date | string
   appointments?: AppointmentItemP[]
 }
 
@@ -17,15 +17,9 @@ export const Appointments: FC<P> = ({ date, appointments }) => {
     <div className={styles.appointmentContainer}>
       {appointments &&
         appointments?.length > 0 &&
-        appointments
-          ?.filter(
-            (appt) =>
-              dayjs(appt.date).format('DD/MM/YYYY') ===
-              dayjs(date).format('DD/MM/YYYY')
-          )
-          .map((appt) => {
-            return <AppointmentItem key={appt.key} {...appt} />
-          })}
+        appointments.map((appt) => {
+          return <AppointmentItem key={appt.key} {...appt} />
+        })}
     </div>
   )
 }

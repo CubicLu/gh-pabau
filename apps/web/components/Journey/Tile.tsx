@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import styles from './Tile.module.less'
 
 interface TileP {
-  icon: React.ReactNode
+  icon?: React.ReactNode
   text: string
   count: number
 }

@@ -12,6 +12,7 @@
     }
   }
 }
+
 .appointmentItem {
   width: 100%;
   min-width: 768px;
@@ -95,6 +96,23 @@
       background: #54b2d3;
       border: 1px solid #54b2d3;
       color: #fff;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .appointmentItem:nth-child(1) {
+    .content {
+      .divider {
+        border-top-left-radius: 0px;
+      }
+    }
+  }
+  .appointmentItem:nth-last-child(1) {
+    .content {
+      .divider {
+        border-bottom-left-radius: 0px;
+      }
     }
   }
 }

@@ -21,6 +21,7 @@ export interface AppointmentItemP {
   status?: string
   date?: string | Date
   serviceColor?: string
+  service_id?: number
 }
 
 export const AppointmentItem: FC<AppointmentItemP> = ({
@@ -50,7 +51,7 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
         </Col>
         <Col lg={7} md={7}>
           <div className={styles.clientContainer}>
-            <Avatar size={52} src={avatar} />
+            <Avatar size={52} src={avatar} name={clientName} />
             <div className={styles.clientInfo}>
               <p>{clientName}</p>
               <span>{serviceName}</span>
