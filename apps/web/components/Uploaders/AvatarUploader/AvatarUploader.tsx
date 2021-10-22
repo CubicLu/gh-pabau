@@ -14,6 +14,7 @@ export interface AvatarUploaderProps {
   visible: boolean
   title: string
   onCancel?: () => void
+  onDelete?: () => void
   imageURL: string
   shape?: string
   width: number
@@ -31,6 +32,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
   visible,
   title,
   onCancel,
+  onDelete,
   imageURL,
   shape,
   width,
@@ -74,6 +76,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
   const handleDelete = () => {
     setImage('')
     setCroppedImage('')
+    onDelete?.()
   }
 
   const handleClose = () => {

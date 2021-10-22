@@ -131,7 +131,7 @@ const ChatHistory: FC = () => {
       <div className={styles.chatHistory}>
         <div className={styles.chatHistoryHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
                 path: 'connect/account',

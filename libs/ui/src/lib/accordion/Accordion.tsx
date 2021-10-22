@@ -11,7 +11,7 @@ import styles from './Accordion.module.less'
 const { Panel } = Collapse
 
 export interface AccordionProps {
-  headerLabel: ReactNode | number | string
+  headerLabel: string
   folderIconShow?: boolean
   folderIcon?: ReactNode | string | number
   dropDownIconShow?: boolean

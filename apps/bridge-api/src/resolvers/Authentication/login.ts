@@ -1,5 +1,6 @@
 import { extendType, intArg, nonNull, stringArg } from 'nexus'
 import { generateJWT } from '../../app/authentication/authentication-service'
+import UserService from '../../app/user/UserService'
 import { Context } from '../../context'
 import { createPabau1PasswordHash } from './password'
 
@@ -47,6 +48,9 @@ export const Login = extendType({
             username: {
               equals: username,
             },
+          },
+          orderBy: {
+            last_login: 'desc',
           },
           select: userSelect,
         })
@@ -104,6 +108,7 @@ export const Login = extendType({
           throw new Error('Legacy/pod mismatch 2')
         }
 
+        new UserService(prismaArray, user).updateLastLogin()
         // If user belongs to a pod, but we are legacy, then re-authenticate against the correct pod
         if (
           Boolean(authenticated?.remote_url) !==
@@ -123,6 +128,7 @@ export const Login = extendType({
             select: userSelect,
           })
           console.log(`[auth] pod login: legacy=${user.id} pod=${user2.id}`)
+          new UserService(prismaArray, user2).updateLastLogin(false)
           return generateJWT(user2)
         } else {
           console.log(`[auth] legacy login: legacy=${user.id}`)
@@ -149,19 +155,19 @@ export const Login = extendType({
           select: { username: true },
         })
         // Get remote_url user for new company from legacy db
-        const {
-          Company: { remote_url },
-        } = await prismaArray(undefined).user.findFirst({
+        const legacyUser = await prismaArray(undefined).user.findFirst({
           rejectOnNotFound: true,
           where: {
             company_id: { equals: companyId },
             username: { equals: username },
           },
-          select: { Company: { select: { remote_url: true } } },
+          select: { id: true, Company: { select: { remote_url: true } } },
         })
-
+        new UserService(prismaArray, legacyUser).updateLastLogin()
         // Get pod user for new company (if remote_url)
-        const newPodUser = await prismaArray(remote_url).user.findFirst({
+        const newPodUser = await prismaArray(
+          legacyUser.Company.remote_url
+        ).user.findFirst({
           rejectOnNotFound: true,
           where: {
             company_id: companyId,
@@ -169,6 +175,7 @@ export const Login = extendType({
           },
           select: userSelect,
         })
+        new UserService(prismaArray, newPodUser).updateLastLogin(false)
         return generateJWT(newPodUser)
       },
     })

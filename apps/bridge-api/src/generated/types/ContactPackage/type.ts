@@ -36,10 +36,10 @@ export const ContactPackage = objectType({
         return root.invoice
       },
     })
-    t.nullable.field('session_package', {
-      type: 'SessionPackage',
+    t.nullable.field('Package', {
+      type: 'Package',
       resolve(root: any) {
-        return root.session_package
+        return root.Package
       },
     })
     t.list.field('contact_package_used', {

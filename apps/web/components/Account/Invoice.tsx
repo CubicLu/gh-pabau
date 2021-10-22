@@ -1,13 +1,16 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { ButtonLabel } from '@pabau/ui'
 import { Avatar, Typography, Tooltip } from 'antd'
-import TableLayout, { FilterValueType } from './TableLayout'
+import TableLayout, { AccountTabProps } from './TableLayout'
 // import styles from '../../pages/setup/settings/loyalty.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
-import { Dayjs } from 'dayjs'
-import { useInvoicesQuery, useInvoiceCountQuery } from '@pabau/graphql'
+import {
+  useInvoicesQuery,
+  useInvoiceCountQuery,
+  useGetCompanyMetaQuery,
+} from '@pabau/graphql'
 import { DisplayDate } from '../../hooks/displayDate'
 
 export const tempType = {
@@ -16,21 +19,30 @@ export const tempType = {
   'Part Paid': 'warning',
 }
 
-interface InvoiceProps {
-  searchTerm: string
-  selectedDates: Dayjs[]
-  filterValue: FilterValueType
-  selectedRange: string
-}
-
-const Invoice: FC<InvoiceProps> = ({
+const Invoice: FC<AccountTabProps> = ({
   searchTerm,
   selectedDates,
   filterValue,
   selectedRange,
+  accountRef,
+  companyCurrency,
 }) => {
   const [isHealthcodeEnabled, setIsHealthcodeEnabled] = useState<boolean>(false)
   const { t } = useTranslationI18()
+  const [taxName, setTaxName] = useState('VAT')
+  const { data } = useGetCompanyMetaQuery({
+    variables: {
+      name: ['tax_singular'],
+    },
+  })
+
+  useEffect(() => {
+    if (data?.findManyCompanyMeta) {
+      const tax = data?.findManyCompanyMeta?.[0]?.meta_value ?? 'VAT'
+      setTaxName(tax)
+    }
+  }, [data])
+
   const InvoiceColumns = [
     {
       title: '',
@@ -51,8 +63,8 @@ const Invoice: FC<InvoiceProps> = ({
       title: t('account.finance.invoice.columns.invoice.no'),
       dataIndex: 'invoice_no',
       visible: true,
+      skeletonWidth: '80px',
       width: '150px',
-      skeletonWidth: '50px',
       render: function render(data) {
         return (
           <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
@@ -65,7 +77,15 @@ const Invoice: FC<InvoiceProps> = ({
       visible: true,
       skeletonWidth: '50px',
       render: function render(data) {
-        return <div style={{ minWidth: '50px' }}>{data}</div>
+        const item = data?.slice(0, 35)
+        const isLarge = data?.length > 35
+        return (
+          <Tooltip title={isLarge && data}>
+            <div style={{ minWidth: '50px' }}>
+              {isLarge ? item + '...' : data}
+            </div>
+          </Tooltip>
+        )
       },
     },
     {
@@ -83,10 +103,14 @@ const Invoice: FC<InvoiceProps> = ({
       skeletonWidth: '50px',
       visible: true,
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
-            {data}
-          </Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -97,10 +121,14 @@ const Invoice: FC<InvoiceProps> = ({
       skeletonWidth: '50px',
       visible: true,
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={{ color: '#54B2D3', minWidth: 88 }}>
-            {data}
-          </Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={{ color: '#54B2D3', minWidth: 88 }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -127,16 +155,16 @@ const Invoice: FC<InvoiceProps> = ({
       skeletonWidth: '50px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>£{data}</Typography.Text>
+        return <Typography.Text>{companyCurrency + data}</Typography.Text>
       },
     },
     {
-      title: t('account.finance.invoice.columns.gst'),
+      title: taxName,
       dataIndex: 'vat',
       skeletonWidth: '50px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>£{data}</Typography.Text>
+        return <Typography.Text>{companyCurrency + data}</Typography.Text>
       },
     },
     {
@@ -145,7 +173,7 @@ const Invoice: FC<InvoiceProps> = ({
       skeletonWidth: '50px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>£{data}</Typography.Text>
+        return <Typography.Text>{companyCurrency + data}</Typography.Text>
       },
     },
     {
@@ -154,7 +182,7 @@ const Invoice: FC<InvoiceProps> = ({
       skeletonWidth: '50px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>£{data}</Typography.Text>
+        return <Typography.Text>{companyCurrency + data}</Typography.Text>
       },
     },
     {
@@ -166,7 +194,7 @@ const Invoice: FC<InvoiceProps> = ({
       render: function render(data, { payment }) {
         return (
           <Typography.Text type={payment !== 'Paid' ? 'danger' : undefined}>
-            £{data}
+            {companyCurrency + data}
           </Typography.Text>
         )
       },
@@ -228,6 +256,7 @@ const Invoice: FC<InvoiceProps> = ({
       noDataText={t('account.finance.invoice.empty.data.text')}
       setIsHealthcodeEnabled={setIsHealthcodeEnabled}
       tabName="invoice"
+      accountRef={accountRef}
     />
   )
 }

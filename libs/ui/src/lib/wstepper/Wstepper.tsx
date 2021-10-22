@@ -9,8 +9,6 @@ interface WStepperProps {
   active: number
   data: StepperItem[]
   hideStep?: boolean
-  showNextBtn?: boolean
-  showPrevBtn?: boolean
   disableNextStep?: boolean
   disablePrevStep?: boolean
   nextButtonContent?: ReactNode | string
@@ -22,6 +20,8 @@ interface WStepperProps {
   extraBtnClick?: () => void
   onActiveStepChange?: (index) => void
   nextButtonDecorator?: ReactNode
+  hideNextStep?: boolean
+  hidePrevStep?: boolean
 }
 
 export const Wstepper: FC<WStepperProps> = ({
@@ -29,8 +29,10 @@ export const Wstepper: FC<WStepperProps> = ({
   children,
   data,
   disableNextStep = false,
-  disablePrevStep = true,
+  disablePrevStep = false,
   onActiveStepChange,
+  hideNextStep = false,
+  hidePrevStep = false,
   ...props
 }) => {
   const [index, setIndex] = React.useState(0)
@@ -53,10 +55,12 @@ export const Wstepper: FC<WStepperProps> = ({
         {...props}
         onPrev={() => onActiveStepChange?.(index - 1)}
         onNext={() => onActiveStepChange?.(index + 1)}
-        active={index}
+        active={active}
         allSteps={data.length}
         disableNextStep={disableNextStep}
         disablePrevStep={disablePrevStep}
+        hideNextStep={hideNextStep}
+        hidePrevStep={hidePrevStep}
       />
     </div>
   )

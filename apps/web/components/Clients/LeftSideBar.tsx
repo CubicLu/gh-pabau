@@ -1,4 +1,3 @@
-import React, { FC } from 'react'
 import { Menu } from 'antd'
 import {
   TagOutlined,
@@ -8,40 +7,38 @@ import {
 } from '@ant-design/icons'
 import { ReactComponent as ArchivedIcon } from '../../assets/images/archived-icon.svg'
 import styles from '../../pages/clients/clients.module.less'
-import { SourceDataProps } from './Content'
 import CreateLabel from './CreateLabel'
-import { Labels, tab } from '../../pages/clients/index'
+import { Labels, tab } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { useClientsDataAggregateQuery } from '@pabau/graphql'
+
 const { SubMenu } = Menu
 
-interface LeftSideBarProps {
+interface P {
   selectedTab?: string
   setSelectedTab?: (val) => void
-  labels?: Labels[]
-  sourceData?: SourceDataProps[]
   handleLabelClick?: (e, val) => void
   handleClientClick?: () => void
   handleArchivedClick?: () => void
   setLabels?: (val: Labels[]) => void
   selectedLabels?: Labels[]
   setSelectedLabels?: (val: Labels[]) => void
-  duplicateData?: SourceDataProps[][]
 }
 
-export const LeftSideBar: FC<LeftSideBarProps> = ({
+const labels = []
+
+export const LeftSideBar = ({
   selectedTab,
   setSelectedTab,
-  labels,
-  sourceData,
   handleLabelClick,
   handleClientClick,
   handleArchivedClick,
   setLabels,
   selectedLabels,
   setSelectedLabels,
-  duplicateData = [],
-}) => {
+}: P) => {
   const { t } = useTranslationI18()
+  const { data } = useClientsDataAggregateQuery()
 
   const handleSelectedTab = (e) => {
     setSelectedTab(e.key)
@@ -60,7 +57,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.clients} onClick={handleClientClick}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.clients')}</span>
-            <span>{sourceData.length}</span>
+            <span>{data?.findManyCmContactCount}</span>
           </div>
         </Menu.Item>
         <Menu.Item key={tab.contacts}>
@@ -71,12 +68,12 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.mergeFix}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.mergeFix')}</span>
-            <span>{duplicateData.length > 0 && duplicateData?.length}</span>
+            <span></span>
           </div>
         </Menu.Item>
         <Menu.Divider />
         <SubMenu key={tab.labels} title={t('clients.leftSidebar.labels')}>
-          {labels.map((label) => {
+          {labels?.map((label) => {
             return (
               label?.label && (
                 <Menu.Item

@@ -104,7 +104,7 @@ export const InvProductWithQuantitySum = extendType({
             LEFT JOIN inv_warehouses_products w on p.id = w.product_id
             WHERE p.occupier = ${ctx.authenticated.company}
             AND p.is_active = ${args.where.active}
-            AND c.category_type != 'service' AND c.name != 'PACKAGES'
+            AND c.category_type IN ('retail', 'injectable', 'consumable') AND c.name != 'PACKAGES'
             ${
               args.where.search
                 ? Prisma.sql`AND p.name LIKE ${'%' + args.where.search + '%'}`
@@ -145,7 +145,7 @@ export const InvProductWithQuantitySum = extendType({
             LEFT JOIN inv_warehouses_products w on p.id = w.product_id
             WHERE p.occupier = ${ctx.authenticated.company}
             AND p.is_active = ${args.where.active}
-            AND c.category_type != 'service' AND c.name != 'PACKAGES'
+            AND c.category_type IN ('retail', 'injectable', 'consumable') AND c.name != 'PACKAGES'
             ${
               args.where.search
                 ? Prisma.sql`AND p.name LIKE ${'%' + args.where.search + '%'}`

@@ -24,12 +24,13 @@ query findManyActivityData(
   $startDate: DateTime
   $activityType: [String]
   $status: [String]
-  $userId: Int
+  $userId: [Int]
   $search: String
   $skip: Int
   $limit: Int
   $activeColumns: [String]
   $orderValue: OrderType
+  $filterOption: FilterOption
 ) {
   findManyActivityData(
     where: {
@@ -41,6 +42,7 @@ query findManyActivityData(
       search: $search
       activeColumns: $activeColumns
       orderValue: $orderValue
+      filterOption: $filterOption
     }
     skip: $skip
     take: $limit
@@ -79,6 +81,7 @@ query findManyActivityData(
       note
       status
       client: CmContact {
+        id: ID
         firstName: Fname
         lastName: Lname
         email: Email
@@ -86,6 +89,16 @@ query findManyActivityData(
         street: MailingStreet
         city: MailingCity
         postal: MailingPostal
+        country: MailingCountry
+        mobile: Mobile
+        createdDate: CreatedDate
+        source: MarketingSourceData {
+          name
+        }
+        salutation: Salutation
+        gender
+        DOB
+        status: is_active
         label: CmContactLabel {
           CmLabel {
             id
@@ -106,6 +119,7 @@ query findManyActivityData(
         owner: User {
           full_name
         }
+        leadStatus: EnumStatus
         leadSource: MarketingSource {
           name
         }
@@ -118,36 +132,178 @@ query findManyActivityData(
         leadLostTime
         leadLostReason
         wonBy
+        leadStage
       }
     }
   }
 }
 
-query findFirstActivityUserColumns {
-  findFirstActivityUserColumns {
+query findFirstActivityUserState {
+  findFirstActivityUserState {
     id
     company_id
     user_id
     columns
+    user_filter
+    user_group_filter
+    custom_filter
+    ActivityUserFilter {
+      name
+      data
+      columns
+      shared
+    }
   }
 }
 
-mutation upsertOneActivityUserColumns(
-    $columns: String!
-    $userId: Int!
-    $companyId: Int!
+mutation upsertOneActivityUserState(
+  $userId: Int!
+  $companyId: Int!
+  $update: ActivityUserStateUpdateInput!
+  $create: ActivityUserStateCreateInput!
 ) {
-  upsertOneActivityUserColumns(
-    where: {
-      company_id_user_id: { user_id: $userId, company_id: $companyId }
+  upsertOneActivityUserState(
+    where: { company_id_user_id: { user_id: $userId, company_id: $companyId } }
+    update: $update
+    create: $create
+  ) {
+    id
+  }
+}
+
+query userGroupForActivity {
+  userGroup: findManyUserGroup {
+    id
+    group_name
+    _count {
+      UserGroupMember
     }
-    update: { columns: { set: $columns } }
-    create: {
-      columns: $columns
-      User: { connect: { id: $userId } }
-      Company: { connect: { id: $companyId } }
+    UserGroupMember {
+      User {
+        id
+        full_name
+      }
+    }
+  }
+}
+
+query filterOptionForActivity($userId: Int!) {
+  filterOption: findManyActivityUserFilter(
+    where: {
+      OR: [{ user_id: { equals: $userId } }, { shared: { equals: true } }]
     }
   ) {
     id
+    user_id
+    User {
+      full_name
+    }
+    name
+    data
+    columns
+    shared
+    updated_at
+  }
+}
+
+mutation deleteActivityUserFilter($id: Int) {
+  deleteOneActivityUserFilter(where: { id: $id }) {
+    id
+  }
+}
+
+query findManyLeads($searchTerm: String) {
+  findManyCmLead(
+    where: {
+      OR: [
+        { Fname: { contains: $searchTerm } }
+        { Lname: { contains: $searchTerm } }
+      ]
+    }
+    take: 10
+  ) {
+    id: ID
+    Fname
+    Lname
+  }
+}
+
+query findManyContacts($searchTerm: String) {
+  findManyCmContact(
+    where: {
+      OR: [
+        { Fname: { contains: $searchTerm } }
+        { Lname: { contains: $searchTerm } }
+      ]
+    }
+    take: 10
+  ) {
+    id: ID
+    Fname
+    Lname
+  }
+}
+
+mutation createActivityFilter(
+  $data: String
+  $columns: String
+  $name: String!
+  $shared: Boolean!
+) {
+  createOneActivityUserFilter(
+    data: {
+      data: $data
+      columns: $columns
+      name: $name
+      shared: $shared
+      User: {}
+      Company: {}
+    }
+  ) {
+    id
+    user_id
+  }
+}
+
+mutation updateActivityFilter(
+  $id: Int!
+  $data: String
+  $columns: String
+  $name: String!
+  $shared: Boolean!
+) {
+  updateOneActivityUserFilter(
+    where: { id: $id }
+    data: {
+      data: { set: $data }
+      columns: { set: $columns }
+      name: { set: $name }
+      shared: { set: $shared }
+    }
+  ) {
+    id
+    user_id
+  }
+}
+
+query findContactName($contactID: Int!) {
+  findFirstCmContact(where: { ID: { equals: $contactID } }) {
+    id: ID
+    Fname
+    Lname
+  }
+}
+
+query findLeadName($leadID: Int!) {
+  findFirstCmLead(where: { ID: { equals: $leadID } }) {
+    id: ID
+    Fname
+    Lname
+  }
+}
+
+mutation deleteManyActivity($ids: [Int]!) {
+  deleteManyActivity(where: { ids: $ids }) {
+    affected_rows
   }
 }

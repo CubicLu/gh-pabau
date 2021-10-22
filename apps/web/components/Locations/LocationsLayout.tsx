@@ -1,4 +1,4 @@
-import { EditFilled, LeftOutlined } from '@ant-design/icons'
+import { ContactsOutlined, EditFilled } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Company_Branches_Attachments_Type,
@@ -20,7 +20,6 @@ import {
   Button,
   Employees,
   FullScreenReportModal,
-  MobileHeader,
   Notification,
   NotificationType,
   OperationType,
@@ -28,13 +27,13 @@ import {
 import { Avatar, Col, Image, Row, Skeleton, Tooltip, Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik } from 'formik'
-import { useRouter } from 'next/router'
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import * as Yup from 'yup'
+import searchEmpty from '../../assets/images/empty.png'
 import LogoSvg from '../../assets/images/logo.svg'
 import { useUser } from '../../context/UserContext'
-import { useGridData } from '../../hooks/useGridData'
+import CommonHeader from '../../components/CommonHeader'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { getBadgesList } from '../../mocks/Locations'
 import AddButton from '../AddButton'
@@ -200,7 +199,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [createLocationModal, setCreateLocationModal] = useState(false)
   const [isActive, setIsActive] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
-  const [isMobileSearch, setMobileSearch] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [tags, setTags] = useState([])
   const [locationIds, setLocationIds] = useState([])
@@ -208,8 +206,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [activeLocation, setActiveLocation] = useState<number>()
   const [activeLocationLoading, setActiveLocationLoading] = useState(true)
 
-  const router = useRouter()
-  const { getParentSetupData } = useGridData(t)
   const user = useUser()
   const filterFormRef = useRef(null)
 
@@ -672,18 +668,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     <CustomFilter onFilter={onFilter} formRef={filterFormRef} />
   )
 
-  const handleBack = () => {
-    const parentMenu = getParentSetupData(router.pathname)
-    if (parentMenu.length > 0) {
-      router.push({
-        pathname: '/setup',
-        query: { menu: parentMenu[0]?.keyValue },
-      })
-    } else {
-      router.push('/setup')
-    }
-  }
-
   const bindLocation = (location) => {
     const prepareAddress = []
     const addressFields = ['street', 'location', 'city', 'country']
@@ -709,38 +693,32 @@ const LocationsLayout: FC<P> = ({ schema }) => {
 
   return (
     <Layout {...user} requireAdminAccess={true}>
-      <div className={classNames(styles.locationsPage, styles.desktopViewNone)}>
-        <MobileHeader className={styles.locationsHeader}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.locationsTextStyle}>
-              <LeftOutlined onClick={handleBack} />
-              <p> {schema.full || schema.short} </p>
-            </div>
-            <AddButton
-              onClick={createNew}
-              onFilterSource={onFilterLocations}
-              onSearch={onSearch}
-              schema={schema}
-              tableSearch={true}
-              isCustomFilter={true}
-              onResetFilter={onResetFilter}
-              customFilter={renderFilter}
-              mobileSearch={isMobileSearch}
-              isCreateButtonVisible={allowedLocationCount > activeLocation}
-              setMobileSearch={() => {
-                setSearchTerm('')
-                setMobileSearch((e) => !e)
-              }}
-            />
-          </div>
-        </MobileHeader>
-      </div>
+      <CommonHeader
+        isLeftOutlined
+        reversePath="/setup"
+        title={schema.full || schema.short}
+        isShowSearch
+        handleSearch={onSearch}
+        searchInputPlaceHolder={schema?.searchPlaceholder}
+        searchValue={searchTerm}
+      >
+        <AddButton
+          onClick={createNew}
+          onFilterSource={onFilterLocations}
+          schema={schema}
+          tableSearch={false}
+          isCustomFilter={true}
+          onResetFilter={onResetFilter}
+          customFilter={renderFilter}
+          isCreateButtonVisible={allowedLocationCount > activeLocation}
+        />
+      </CommonHeader>
       <div
         className={classNames(styles.tableMainHeading, styles.mobileViewNone)}
       >
         <div style={{ background: '#FFF' }}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('navigation-breadcrumb-setup'),
                 path: 'setup',
@@ -759,6 +737,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
           tableSearch={true}
           isCustomFilter={true}
           customFilter={renderFilter}
+          searchTerm={searchTerm}
           isCreateButtonVisible={allowedLocationCount > activeLocation}
         />
       </div>
@@ -795,137 +774,168 @@ const LocationsLayout: FC<P> = ({ schema }) => {
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {isLoading
-                  ? ['1', '2', '3'].map((item, index) => (
-                      <Row className={styles.locationRow} key={index}>
-                        <Col
-                          md={4}
-                          style={{ width: '100%' }}
-                          className={styles.locationImg}
-                        >
-                          <Skeleton.Input active={true} size={'large'} />
-                        </Col>
-                        <Col md={20} className={styles.locationText}>
-                          <div className={styles.locationDetailBox}>
-                            <div className={styles.avtarWrapper}>
-                              <Skeleton.Input active={true} size={'large'} />
-                            </div>
-                            <div className={styles.locationTextStyle}>
-                              <Skeleton.Input active={true} size={'small'} />
-                              <Skeleton.Input active={true} size={'small'} />
-                              <Skeleton.Button active={true} size={'small'} />
-                              <Skeleton.Button active={true} size={'small'} />
-                            </div>
+                {isLoading ? (
+                  ['1', '2', '3'].map((item, index) => (
+                    <Row className={styles.locationRow} key={index}>
+                      <Col
+                        md={4}
+                        style={{ width: '100%' }}
+                        className={styles.locationImg}
+                      >
+                        <Skeleton.Input active={true} size={'large'} />
+                      </Col>
+                      <Col md={20} className={styles.locationText}>
+                        <div className={styles.locationDetailBox}>
+                          <div className={styles.avtarWrapper}>
+                            <Skeleton.Input active={true} size={'large'} />
                           </div>
-                        </Col>
-                      </Row>
-                    ))
-                  : locationData?.map((location, index) => {
-                      return (
-                        <Draggable
-                          className={styles.locationRow}
-                          key={location.id}
-                          index={index}
-                          draggableId={location.id.toString()}
-                        >
-                          {(provided, snapshot) => (
-                            <Row
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              key={location.id}
-                              className={styles.locationRow}
+                          <div className={styles.locationTextStyle}>
+                            <Skeleton.Input active={true} size={'small'} />
+                            <Skeleton.Input active={true} size={'small'} />
+                            <Skeleton.Button active={true} size={'small'} />
+                            <Skeleton.Button active={true} size={'small'} />
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  ))
+                ) : !locationData?.length && !searchTerm ? (
+                  <div className={styles.noDataTableBox}>
+                    <Avatar
+                      icon={<ContactsOutlined />}
+                      size="large"
+                      className={styles.roundDesign}
+                    />
+                    <p>{t(schema.noDataText)}</p>
+                    <div className={styles.spaceBetweenText} />
+                    {allowedLocationCount > activeLocation && (
+                      <Button
+                        className={styles.createTemaplateBtn}
+                        type="primary"
+                        onClick={createNew}
+                      >
+                        {t(schema.createButtonLabel)}
+                      </Button>
+                    )}
+                  </div>
+                ) : !locationData?.length && searchTerm ? (
+                  <div className={styles.noSearchResult}>
+                    <Image src={searchEmpty} preview={false} />
+                    <p className={styles.noResultsText}>
+                      {t('crud-table-no-search-results')}
+                    </p>
+                    <p className={styles.tryAdjustText}>
+                      {t('crud-table-try-adjust')}
+                    </p>
+                  </div>
+                ) : (
+                  locationData?.map((location, index) => {
+                    return (
+                      <Draggable
+                        className={styles.locationRow}
+                        key={location.id}
+                        index={index}
+                        draggableId={location.id.toString()}
+                      >
+                        {(provided, snapshot) => (
+                          <Row
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            key={location.id}
+                            className={styles.locationRow}
+                          >
+                            <Col
+                              md={4}
+                              style={{ width: '100%' }}
+                              className={styles.locationImg}
                             >
-                              <Col
-                                md={4}
-                                style={{ width: '100%' }}
-                                className={styles.locationImg}
-                              >
-                                <Image
-                                  width="100%"
-                                  preview={false}
-                                  fallback={LogoSvg}
-                                  src={
-                                    location.imageUrl
-                                      ? getImage(location?.imageUrl)
-                                      : 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-                                  }
-                                />
-                              </Col>
-                              <Col md={20} className={styles.locationText}>
-                                <div className={styles.locationDetailBox}>
-                                  <div className={styles.avtarWrapper}>
-                                    <AvatarList
-                                      size={'small'}
-                                      users={location.AssignedUser}
-                                      isLoading={false}
-                                    />
-                                  </div>
-                                  <div className={styles.locationTextStyle}>
-                                    <h1>{location?.name}</h1>
-                                    <p>{bindLocation(location)}</p>
-                                    {location.isActive === 1 ? (
-                                      <div>
-                                        <Button className={styles.activeBtn}>
-                                          {t('common-label-active')}
-                                        </Button>
-                                      </div>
-                                    ) : (
-                                      <div>
-                                        <Button
-                                          className={styles.disableSourceBtn}
-                                          disabled={true}
-                                        >
-                                          {t('common-label-inactive')}
-                                        </Button>
-                                      </div>
-                                    )}
-                                    <div className={styles.locationIcon}>
-                                      {location?.AssignedBadge?.map(
-                                        (badge) =>
-                                          badge.type === 'antd_badge' && (
-                                            <Tooltip
-                                              title={badge.name}
-                                              key={badge.name}
-                                            >
-                                              <FontAwesomeIcon
-                                                color={'#9292A3'}
-                                                size="1x"
-                                                icon={badge.icon}
-                                              />
-                                            </Tooltip>
-                                          )
-                                      )}
+                              <Image
+                                width="100%"
+                                preview={false}
+                                fallback={LogoSvg}
+                                src={
+                                  location.imageUrl
+                                    ? getImage(location?.imageUrl)
+                                    : 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+                                }
+                              />
+                            </Col>
+                            <Col md={20} className={styles.locationText}>
+                              <div className={styles.locationDetailBox}>
+                                <div className={styles.avtarWrapper}>
+                                  <AvatarList
+                                    size={'small'}
+                                    users={location.AssignedUser}
+                                    isLoading={false}
+                                  />
+                                </div>
+                                <div className={styles.locationTextStyle}>
+                                  <h1>{location?.name}</h1>
+                                  <p>{bindLocation(location)}</p>
+                                  {location.isActive === 1 ? (
+                                    <div>
+                                      <Button className={styles.activeBtn}>
+                                        {t('common-label-active')}
+                                      </Button>
                                     </div>
-                                  </div>
-                                  <div
-                                    onClick={() => {
-                                      onEditLocation(location)
-                                    }}
-                                    className={styles.locationIconBox}
-                                  >
-                                    <Avatar
-                                      className={styles.locationEditIcon}
-                                      size="large"
-                                      style={{ display: 'flex' }}
-                                      icon={
-                                        <EditFilled
-                                          style={{
-                                            color: '#fff',
-                                            fontSize: 18,
-                                          }}
-                                        />
-                                      }
-                                    />
-                                    <span>{t('common-label-edit')}</span>
+                                  ) : (
+                                    <div>
+                                      <Button
+                                        className={styles.disableSourceBtn}
+                                        disabled={true}
+                                      >
+                                        {t('common-label-inactive')}
+                                      </Button>
+                                    </div>
+                                  )}
+                                  <div className={styles.locationIcon}>
+                                    {location?.AssignedBadge?.map(
+                                      (badge) =>
+                                        badge.type === 'antd_badge' && (
+                                          <Tooltip
+                                            title={badge.name}
+                                            key={badge.name}
+                                          >
+                                            <FontAwesomeIcon
+                                              color={'#9292A3'}
+                                              size="1x"
+                                              icon={badge.icon}
+                                            />
+                                          </Tooltip>
+                                        )
+                                    )}
                                   </div>
                                 </div>
-                              </Col>
-                            </Row>
-                          )}
-                        </Draggable>
-                      )
-                    })}
+                                <div
+                                  onClick={() => {
+                                    onEditLocation(location)
+                                  }}
+                                  className={styles.locationIconBox}
+                                >
+                                  <Avatar
+                                    className={styles.locationEditIcon}
+                                    size="large"
+                                    style={{ display: 'flex' }}
+                                    icon={
+                                      <EditFilled
+                                        style={{
+                                          color: '#fff',
+                                          fontSize: 18,
+                                        }}
+                                      />
+                                    }
+                                  />
+                                  <span>{t('common-label-edit')}</span>
+                                </div>
+                              </div>
+                            </Col>
+                          </Row>
+                        )}
+                      </Draggable>
+                    )
+                  })
+                )}
                 {provided.placeholder}
               </div>
             )}

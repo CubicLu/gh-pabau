@@ -131,7 +131,15 @@
       }
     }
 
+    .skeleton-loader-content {
+      display: flex;
+    }
+
     .skeleton-wrapper {
+      width: 100%;
+      &:first-child{
+        margin-right: 20px;
+      }
       .skeleton-input {
         h3 {
           margin-top: 0;
@@ -204,6 +212,24 @@
       margin-bottom: 23px;
     }
     .contact-form {
+      .skeleton-wrapper {
+        .skeleton-input {
+          h3 {
+            margin-top: 0;
+            height: 32px;
+          }
+        }
+        .salutationSkeleton {
+          h3 {
+            width: 140px;
+          }
+        }
+        .skeletonName{
+          h3 {
+            width: 100px;
+          }
+        }
+      }
       :global .ant-form-item {
         .ant-form-item-label {
           padding-bottom: 0;
@@ -335,20 +361,7 @@
   }
 }
 
-:global .ant-select-dropdown {
-  .ant-select-item {
-    .ant-select-item-option-content {
-      font-style: normal;
-      [class*='ClientCreate_language-left'] {
-        display: flex;
-        align-items: center;
-        span {
-          margin-left: 8px;
-        }
-      }
-    }
-  }
-}
+
 .tagWrap {
   display: flex;
   align-items: center;

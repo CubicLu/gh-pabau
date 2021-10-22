@@ -2,6 +2,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import { Button, Popover } from 'antd'
 import React, { FC, ReactNode } from 'react'
 import styles from './DotButton.module.less'
+import classNames from 'classnames'
 
 interface IOption {
   key: number
@@ -21,10 +22,17 @@ interface P {
   popoverVisible?: boolean
   setPopoverVisible?(x): void
   onMenuClick?: (data) => void
+  customClass?: string
 }
 
 export const DotButton: FC<P> = ({ ...props }) => {
-  const { menuList, ignoreOption, popoverVisible, setPopoverVisible } = props
+  const {
+    menuList,
+    ignoreOption,
+    popoverVisible,
+    setPopoverVisible,
+    customClass,
+  } = props
 
   const renderItem = (key, icon, label, onClick, ignoreOptionFlag) => {
     if (ignoreOptionFlag) {
@@ -57,7 +65,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
 
   const prepareContent = () => {
     return (
-      <div className={styles.dotWrapper}>
+      <div className={classNames(styles.dotWrapper, customClass)}>
         {menuList?.map(({ key, icon, label, onClick }) =>
           renderItem(key, icon, label, onClick, ignoreOption)
         )}
@@ -66,7 +74,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
   }
 
   return (
-    <div className={styles.popOverContainer}>
+    <div className={classNames(styles.popOverContainer, customClass)}>
       {menuList ? (
         ignoreOption ? (
           <Popover

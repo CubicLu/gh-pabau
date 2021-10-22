@@ -18,6 +18,8 @@ import {
 import React, { FC, useEffect, useState } from 'react'
 import Styles from './SubscriptionComponents.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { DisplayDate } from '../../../hooks/displayDate'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 const BillingInformation: FC = () => {
   const { Title, Paragraph, Link } = Typography
@@ -25,12 +27,15 @@ const BillingInformation: FC = () => {
   const [form] = Form.useForm()
   const { t } = useTranslationI18()
   const [editPayment, setEditPayment] = useState(false)
+  const [isGoCardless, setGoCardless] = useState(false)
   const [info, setInfo] = useState<BillingInformationsQuery>()
   const { data, loading } = useBillingInformationsQuery()
 
   useEffect(() => {
     if (data !== undefined) {
       setInfo(data)
+      if (data.bank.exp_month === null && data.bank.exp_year === null)
+        setGoCardless(true)
     }
   }, [data])
 
@@ -79,21 +84,28 @@ const BillingInformation: FC = () => {
             ) : (
               <div>
                 <Paragraph className={Styles.blackText}>
-                  £ {info?.subscription?.amount?.toFixed(2)} (
-                  {info?.subscription?.interval_unit})
+                  {info?.subscription
+                    ? `${stringToCurrencySignConverter(
+                        info?.subscription?.currency
+                      )}
+                      ${info?.subscription?.amount?.toFixed(2)} (
+                      ${info?.subscription?.interval_unit})`
+                    : ''}
                 </Paragraph>
                 {loading ? (
                   <Skeleton.Input
                     active={loading}
                     className={Styles.skeletonBillingInformation}
                   />
-                ) : (
+                ) : info?.subscription?.next_charge_date ? (
                   <Paragraph type="secondary" className={Styles.font12p}>
                     *{t('setup.subscription.next-charge')}:{' '}
-                    {new Date(
-                      info?.subscription?.next_charge_date
-                    ).toLocaleDateString('en-GB')}
+                    {DisplayDate(
+                      new Date(info?.subscription?.next_charge_date)
+                    )}
                   </Paragraph>
+                ) : (
+                  ''
                 )}
               </div>
             )}
@@ -118,7 +130,9 @@ const BillingInformation: FC = () => {
             />
           ) : (
             <Paragraph className={Styles.blackText}>
-              {info?.subscription?.app_fee ?? '0.00'}%
+              {info?.subscription
+                ? `${info?.subscription?.app_fee?.toFixed(2)}%`
+                : ''}
             </Paragraph>
           )}
           <Paragraph
@@ -175,11 +189,13 @@ const BillingInformation: FC = () => {
             />
           ) : (
             <Paragraph className={Styles.blackText}>
-              {info?.address?.street +
-                ' ' +
-                info?.address?.city +
-                ' ' +
-                info?.address?.post_code}
+              {info?.address
+                ? info?.address?.street +
+                  ' ' +
+                  info?.address?.city +
+                  ' ' +
+                  info?.address?.post_code
+                : ''}
             </Paragraph>
           )}
           <Paragraph
@@ -252,14 +268,17 @@ const BillingInformation: FC = () => {
                     {t('setup.subscription.bill-estimate')}
                   </Paragraph>
                   <Paragraph className={Styles.blackText}>
-                    £ {info?.subscription?.amount?.toFixed(2)} (
+                    {stringToCurrencySignConverter(
+                      info?.subscription?.currency
+                    )}{' '}
+                    {info?.subscription?.amount?.toFixed(2)} (
                     {info?.subscription?.interval_unit})
                   </Paragraph>
                   <Paragraph type="secondary" className={Styles.font12p}>
                     *{t('setup.subscription.next-charge')}:{' '}
-                    {new Date(
-                      info?.subscription?.next_charge_date
-                    ).toLocaleDateString('en-GB')}
+                    {DisplayDate(
+                      new Date(info?.subscription?.next_charge_date)
+                    )}
                   </Paragraph>
                 </div>
               </div>
@@ -273,199 +292,19 @@ const BillingInformation: FC = () => {
         )}
         <Divider />
         <div style={{ padding: '0 24px' }}>
-          <Paragraph className={Styles.subTitle}>
-            {t('setup.subscription.card-details')}
-          </Paragraph>
-          <Form
-            layout="vertical"
-            form={form}
-            initialValues={{
-              cardOwner: info?.bank?.account_holder_name,
-              cardNumber: info?.bank?.last4,
-              csc: '',
-              expireDate: undefined,
-            }}
-          >
-            <Paragraph
-              type="secondary"
-              style={{ marginTop: 20 }}
-              className={Styles.font12p}
-            >
-              {t('setup.subscription.card-owner')}
-            </Paragraph>
-            {editPayment ? (
-              <Form.Item
-                name="cardOwner"
-                rules={[
-                  {
-                    required: true,
-                    message: t('setup.subscription.please-enter-card'),
-                  },
-                ]}
-              >
-                <Input
-                  placeholder={t('setup.subscription.card-number')}
-                  value={info?.bank?.account_holder_name}
-                  style={{ maxWidth: 450, marginTop: 2 }}
-                />
-              </Form.Item>
-            ) : loading ? (
-              <Skeleton.Input
-                active={loading}
-                className={Styles.skeletonBillingInformation}
-              />
-            ) : (
-              <Paragraph className={Styles.blackText} style={{ marginTop: 2 }}>
-                {info?.bank?.account_holder_name ?? '-'}
-              </Paragraph>
-            )}
-            {editPayment ? (
-              <>
-                <Paragraph
-                  type="secondary"
-                  style={{ marginTop: 16 }}
-                  className={Styles.font12p}
-                >
-                  {t('setup.subscription.card-number')}
-                </Paragraph>
-                <Form.Item
-                  name="cardNumber"
-                  rules={[
-                    {
-                      required: true,
-                      message: t('setup.subscription.enter-card'),
-                    },
-                    {
-                      max: 16,
-                      message: t('setup.subscription.enter-valid-card'),
-                    },
-                  ]}
-                >
-                  <Password
-                    pattern="\d{4}-\d{4}-\d{4}-\d{4}"
-                    type="number"
-                    placeholder="**** **** **** ****"
-                    style={{ maxWidth: 450, marginTop: 2 }}
-                  />
-                </Form.Item>
-                <Row gutter={16} style={{ maxWidth: 460, flex: 1 }}>
-                  <Col span={12} style={{ flex: 1 }}>
-                    <Paragraph type="secondary" className={Styles.font12p}>
-                      CSC
-                    </Paragraph>
-                    <Form.Item
-                      name="csc"
-                      rules={[
-                        {
-                          required: true,
-                          message: t('setup.subscription.enter-csv'),
-                        },
-                        {
-                          max: 3,
-                          message: t('setup.subscription.enter-valid-csv'),
-                        },
-                      ]}
-                    >
-                      <Input
-                        enterKeyHint="next"
-                        placeholder="123"
-                        pattern="\d*"
-                        type="number"
-                        maxLength={3}
-                        min="1"
-                        max="999"
-                        style={{ marginTop: 2 }}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12} style={{ flex: 1 }}>
-                    <Paragraph type="secondary" className={Styles.font12p}>
-                      {t('setup.subscription.expiration-date')}
-                    </Paragraph>
-                    <Form.Item
-                      name="expireDate"
-                      rules={[
-                        {
-                          required: true,
-                          message: t('setup.subscription.enter-exp-date'),
-                        },
-                      ]}
-                    >
-                      <DatePicker
-                        format="YYYY/MM"
-                        picker="month"
-                        placeholder="mm/yy"
-                        style={{ width: '100%', marginTop: 2 }}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </>
-            ) : (
-              <div style={{ display: 'flex' }}>
-                <div>
-                  <Paragraph
-                    type="secondary"
-                    style={{ marginTop: 16 }}
-                    className={Styles.font12p}
-                  >
-                    {t('setup.subscription.card-number')}
-                  </Paragraph>
-                  {loading ? (
-                    <Skeleton.Input
-                      active={loading}
-                      className={Styles.skeletonBillingInformation}
-                    />
-                  ) : (
-                    <Paragraph
-                      className={Styles.blackText}
-                      style={{ marginTop: 2 }}
-                    >
-                      {info?.bank?.last4
-                        ? '**** **** ****' + info?.bank?.last4
-                        : '-'}
-                    </Paragraph>
-                  )}
-                </div>
-                <div style={{ marginLeft: 40 }}>
-                  <Paragraph
-                    type="secondary"
-                    style={{ marginTop: 16 }}
-                    className={Styles.font12p}
-                  >
-                    {t('setup.subscription.valid-thru')}
-                  </Paragraph>
-                  {loading ? (
-                    <Skeleton.Input
-                      active={loading}
-                      className={Styles.skeletonBillingInformation}
-                    />
-                  ) : (
-                    <Paragraph
-                      className={Styles.blackText}
-                      style={{ marginTop: 2 }}
-                    >
-                      {info?.bank?.exp_year
-                        ? info?.bank?.exp_month + '/' + info?.bank?.exp_year
-                        : '-'}
-                    </Paragraph>
-                  )}
-                </div>
-              </div>
-            )}
-          </Form>
-          {(editPayment && (
-            <div style={{ marginTop: 20, maxWidth: 450 }}>
+          {!isGoCardless && (
+            <div>
               <Paragraph className={Styles.subTitle}>
-                {t('setup.subscription.bank-details')}
+                {t('setup.subscription.card-details')}
               </Paragraph>
               <Form
                 layout="vertical"
                 form={form}
                 initialValues={{
-                  bankName: info?.bank?.bank_name,
-                  accountNumber: info?.bank?.last4,
-                  sortCode: '',
+                  cardOwner: info?.bank?.account_holder_name,
+                  cardNumber: info?.bank?.last4,
+                  csc: '',
+                  expireDate: undefined,
                 }}
               >
                 <Paragraph
@@ -473,134 +312,345 @@ const BillingInformation: FC = () => {
                   style={{ marginTop: 20 }}
                   className={Styles.font12p}
                 >
-                  {t('setup.subscription.name')}
+                  {t('setup.subscription.card-owner')}
                 </Paragraph>
-                <Form.Item
-                  name="bankName"
-                  rules={[
-                    {
-                      required: true,
-                      message: t('setup.subscription.enter-bank-name'),
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder={t('setup.subscription.bank-name')}
-                    style={{ marginTop: 2 }}
+                {editPayment ? (
+                  <Form.Item
+                    name="cardOwner"
+                    rules={[
+                      {
+                        required: true,
+                        message: t('setup.subscription.please-enter-card'),
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder={t('setup.subscription.card-number')}
+                      value={info?.bank?.account_holder_name}
+                      style={{ maxWidth: 450, marginTop: 2 }}
+                    />
+                  </Form.Item>
+                ) : loading ? (
+                  <Skeleton.Input
+                    active={loading}
+                    className={Styles.skeletonBillingInformation}
                   />
-                </Form.Item>
-                <Row gutter={16} style={{ maxWidth: 460, flex: 1 }}>
-                  <Col span={12} style={{ flex: 1 }}>
-                    <Paragraph type="secondary" className={Styles.font12p}>
-                      {t('setup.subscription.account-number')}
+                ) : (
+                  <Paragraph
+                    className={Styles.blackText}
+                    style={{ marginTop: 2 }}
+                  >
+                    {info?.bank?.account_holder_name ?? '-'}
+                  </Paragraph>
+                )}
+                {editPayment ? (
+                  <>
+                    <Paragraph
+                      type="secondary"
+                      style={{ marginTop: 16 }}
+                      className={Styles.font12p}
+                    >
+                      {t('setup.subscription.card-number')}
                     </Paragraph>
                     <Form.Item
-                      name="accountNumber"
+                      name="cardNumber"
                       rules={[
                         {
                           required: true,
-                          message: t('setup.subscription.enter-acc-no'),
+                          message: t('setup.subscription.enter-card'),
+                        },
+                        {
+                          max: 16,
+                          message: t('setup.subscription.enter-valid-card'),
                         },
                       ]}
                     >
                       <Password
-                        enterKeyHint="next"
-                        pattern="\d*"
+                        pattern="\d{4}-\d{4}-\d{4}-\d{4}"
                         type="number"
-                        style={{ marginTop: 2 }}
+                        placeholder="**** **** **** ****"
+                        style={{ maxWidth: 450, marginTop: 2 }}
                       />
                     </Form.Item>
-                  </Col>
-                  <Col span={12} style={{ flex: 1 }}>
-                    <Paragraph type="secondary" className={Styles.font12p}>
-                      {t('setup.subscription.sort-code')}
+                    <Row gutter={16} style={{ maxWidth: 460, flex: 1 }}>
+                      <Col span={12} style={{ flex: 1 }}>
+                        <Paragraph type="secondary" className={Styles.font12p}>
+                          CSC
+                        </Paragraph>
+                        <Form.Item
+                          name="csc"
+                          rules={[
+                            {
+                              required: true,
+                              message: t('setup.subscription.enter-csv'),
+                            },
+                            {
+                              max: 3,
+                              message: t('setup.subscription.enter-valid-csv'),
+                            },
+                          ]}
+                        >
+                          <Input
+                            enterKeyHint="next"
+                            placeholder="123"
+                            pattern="\d*"
+                            type="number"
+                            maxLength={3}
+                            min="1"
+                            max="999"
+                            style={{ marginTop: 2 }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12} style={{ flex: 1 }}>
+                        <Paragraph type="secondary" className={Styles.font12p}>
+                          {t('setup.subscription.expiration-date')}
+                        </Paragraph>
+                        <Form.Item
+                          name="expireDate"
+                          rules={[
+                            {
+                              required: true,
+                              message: t('setup.subscription.enter-exp-date'),
+                            },
+                          ]}
+                        >
+                          <DatePicker
+                            format="YYYY/MM"
+                            picker="month"
+                            placeholder="mm/yy"
+                            style={{ width: '100%', marginTop: 2 }}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </>
+                ) : (
+                  <div style={{ display: 'flex' }}>
+                    <div>
+                      <Paragraph
+                        type="secondary"
+                        style={{ marginTop: 16 }}
+                        className={Styles.font12p}
+                      >
+                        {t('setup.subscription.card-number')}
+                      </Paragraph>
+                      {loading ? (
+                        <Skeleton.Input
+                          active={loading}
+                          className={Styles.skeletonBillingInformation}
+                        />
+                      ) : (
+                        <Paragraph
+                          className={Styles.blackText}
+                          style={{ marginTop: 2 }}
+                        >
+                          {info?.bank?.last4
+                            ? '**** **** ****' + info?.bank?.last4
+                            : '-'}
+                        </Paragraph>
+                      )}
+                    </div>
+                    <div style={{ marginLeft: 40 }}>
+                      <Paragraph
+                        type="secondary"
+                        style={{ marginTop: 16 }}
+                        className={Styles.font12p}
+                      >
+                        {t('setup.subscription.valid-thru')}
+                      </Paragraph>
+                      {loading ? (
+                        <Skeleton.Input
+                          active={loading}
+                          className={Styles.skeletonBillingInformation}
+                        />
+                      ) : (
+                        <Paragraph
+                          className={Styles.blackText}
+                          style={{ marginTop: 2 }}
+                        >
+                          {info?.bank?.exp_year
+                            ? info?.bank?.exp_month + '/' + info?.bank?.exp_year
+                            : '-'}
+                        </Paragraph>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </Form>
+            </div>
+          )}
+          {isGoCardless && (
+            <div style={{ marginTop: 20, maxWidth: 450 }}>
+              {editPayment ? (
+                <div>
+                  <Paragraph className={Styles.subTitle}>
+                    {t('setup.subscription.bank-details')}
+                  </Paragraph>
+                  <Form
+                    layout="vertical"
+                    form={form}
+                    initialValues={{
+                      bankName: info?.bank?.bank_name,
+                      accountNumber: info?.bank?.last4,
+                      sortCode: '',
+                    }}
+                  >
+                    <Paragraph
+                      type="secondary"
+                      style={{ marginTop: 20 }}
+                      className={Styles.font12p}
+                    >
+                      {t('setup.subscription.name')}
                     </Paragraph>
                     <Form.Item
-                      name="sortCode"
+                      name="bankName"
                       rules={[
                         {
                           required: true,
-                          message: t('setup.subscription.enter-sort-code'),
+                          message: t('setup.subscription.enter-bank-name'),
                         },
                       ]}
                     >
-                      <Input style={{ width: '100%', marginTop: 2 }} />
+                      <Input
+                        placeholder={t('setup.subscription.bank-name')}
+                        style={{ marginTop: 2 }}
+                      />
                     </Form.Item>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
-          )) || (
-            <div style={{ marginTop: 20 }}>
-              <Paragraph className={Styles.subTitle}>
-                {t('setup.subscription.bank-details')}
-              </Paragraph>
-              <Paragraph
-                type="secondary"
-                style={{ marginTop: 20 }}
-                className={Styles.font12p}
-              >
-                {t('setup.subscription.bank-name')}
-              </Paragraph>
-              {loading ? (
-                <Skeleton.Input
-                  active={loading}
-                  className={Styles.skeletonBillingInformation}
-                />
+                    <Row gutter={16} style={{ maxWidth: 460, flex: 1 }}>
+                      <Col span={12} style={{ flex: 1 }}>
+                        <Paragraph type="secondary" className={Styles.font12p}>
+                          {t('setup.subscription.account-number')}
+                        </Paragraph>
+                        <Form.Item
+                          name="accountNumber"
+                          rules={[
+                            {
+                              required: true,
+                              message: t('setup.subscription.enter-acc-no'),
+                            },
+                          ]}
+                        >
+                          <Password
+                            enterKeyHint="next"
+                            pattern="\d*"
+                            type="number"
+                            style={{ marginTop: 2 }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12} style={{ flex: 1 }}>
+                        <Paragraph type="secondary" className={Styles.font12p}>
+                          {t('setup.subscription.sort-code')}
+                        </Paragraph>
+                        <Form.Item
+                          name="sortCode"
+                          rules={[
+                            {
+                              required: true,
+                              message: t('setup.subscription.enter-sort-code'),
+                            },
+                          ]}
+                        >
+                          <Input style={{ width: '100%', marginTop: 2 }} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
               ) : (
-                <Paragraph
-                  className={Styles.blackText}
-                  style={{ marginTop: 2 }}
-                >
-                  {info?.bank?.bank_name}
-                </Paragraph>
+                <div style={{ marginTop: 20 }}>
+                  <Paragraph className={Styles.subTitle}>
+                    {t('setup.subscription.bank-details')}
+                  </Paragraph>
+                  <Paragraph
+                    type="secondary"
+                    style={{ marginTop: 20 }}
+                    className={Styles.font12p}
+                  >
+                    {t('setup.subscription.bank-name')}
+                  </Paragraph>
+                  {loading ? (
+                    <Skeleton.Input
+                      active={loading}
+                      className={Styles.skeletonBillingInformation}
+                    />
+                  ) : (
+                    <Paragraph //123456
+                      className={Styles.blackText}
+                      style={{ marginTop: 2 }}
+                    >
+                      {info?.bank?.bank_name}
+                    </Paragraph>
+                  )}
+                  <Paragraph
+                    type="secondary"
+                    style={{ marginTop: 20 }}
+                    className={Styles.font12p}
+                  >
+                    {t('setup.subscription.account-holder-name')}
+                  </Paragraph>
+                  {loading ? (
+                    <Skeleton.Input
+                      active={loading}
+                      className={Styles.skeletonBillingInformation}
+                    />
+                  ) : (
+                    <Paragraph
+                      className={Styles.blackText}
+                      style={{ marginTop: 2 }}
+                    >
+                      {info?.bank?.account_holder_name ?? '-'}
+                    </Paragraph>
+                  )}
+                  <div style={{ display: 'flex' }}>
+                    <div>
+                      <Paragraph
+                        type="secondary"
+                        style={{ marginTop: 16 }}
+                        className={Styles.font12p}
+                      >
+                        {t('setup.subscription.account-number')}
+                      </Paragraph>
+                      {loading ? (
+                        <Skeleton.Input
+                          active={loading}
+                          className={Styles.skeletonBillingInformation}
+                        />
+                      ) : (
+                        <Paragraph
+                          className={Styles.blackText}
+                          style={{ marginTop: 2 }}
+                        >
+                          ************{info?.bank?.account_number_ending}
+                        </Paragraph>
+                      )}
+                    </div>
+                    <div style={{ marginLeft: 40 }}>
+                      <Paragraph
+                        type="secondary"
+                        style={{ marginTop: 16 }}
+                        className={Styles.font12p}
+                      >
+                        {t('setup.subscription.sort-code')}
+                      </Paragraph>
+                      {loading ? (
+                        <Skeleton.Input
+                          active={loading}
+                          className={Styles.skeletonBillingInformation}
+                        />
+                      ) : (
+                        <Paragraph
+                          className={Styles.blackText}
+                          style={{ marginTop: 2 }}
+                        >
+                          {info?.bank?.branch_code ?? '-'}
+                        </Paragraph>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
-              <div style={{ display: 'flex' }}>
-                <div>
-                  <Paragraph
-                    type="secondary"
-                    style={{ marginTop: 16 }}
-                    className={Styles.font12p}
-                  >
-                    {t('setup.subscription.account-number')}
-                  </Paragraph>
-                  {loading ? (
-                    <Skeleton.Input
-                      active={loading}
-                      className={Styles.skeletonBillingInformation}
-                    />
-                  ) : (
-                    <Paragraph
-                      className={Styles.blackText}
-                      style={{ marginTop: 2 }}
-                    >
-                      ************{info?.bank?.account_number_ending}
-                    </Paragraph>
-                  )}
-                </div>
-                <div style={{ marginLeft: 40 }}>
-                  <Paragraph
-                    type="secondary"
-                    style={{ marginTop: 16 }}
-                    className={Styles.font12p}
-                  >
-                    {t('setup.subscription.sort-code')}
-                  </Paragraph>
-                  {loading ? (
-                    <Skeleton.Input
-                      active={loading}
-                      className={Styles.skeletonBillingInformation}
-                    />
-                  ) : (
-                    <Paragraph
-                      className={Styles.blackText}
-                      style={{ marginTop: 2 }}
-                    >
-                      {info?.bank?.branch_code ?? '-'}
-                    </Paragraph>
-                  )}
-                </div>
-              </div>
             </div>
           )}
         </div>

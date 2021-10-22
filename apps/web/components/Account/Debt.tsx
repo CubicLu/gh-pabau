@@ -2,33 +2,28 @@ import React, { FC, useState } from 'react'
 import { Avatar, Typography, Tooltip } from 'antd'
 import { ButtonLabel, Stepper } from '@pabau/ui'
 import { MailOutlined, BellOutlined } from '@ant-design/icons'
-import TableLayout, { FilterValueType } from './TableLayout'
+import TableLayout, { AccountTabProps } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
 import { tempType } from './Invoice'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { useDebtsQuery, useDebtCountQuery } from '@pabau/graphql'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { DisplayDate } from '../../hooks/displayDate'
-
-interface DebtProps {
-  searchTerm: string
-  selectedDates: Dayjs[]
-  filterValue: FilterValueType
-  selectedRange: string
-}
 
 interface ActionType {
   communication_id: number
   time: Date
 }
 
-const Debt: FC<DebtProps> = ({
+const Debt: FC<AccountTabProps> = ({
   searchTerm,
   selectedDates,
   filterValue,
   selectedRange,
+  accountRef,
+  companyCurrency,
 }) => {
   const [isHealthcodeEnabled, setIsHealthcodeEnabled] = useState<boolean>(false)
   const { t } = useTranslationI18()
@@ -172,8 +167,8 @@ const Debt: FC<DebtProps> = ({
       title: t('account.finance.debt.columns.invoice.no'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '150px',
-      skeletonWidth: '70px',
+      skeletonWidth: '80px',
+      width: '140px',
       render: function render(data) {
         return (
           <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
@@ -186,7 +181,15 @@ const Debt: FC<DebtProps> = ({
       visible: true,
       skeletonWidth: '70px',
       render: function render(data) {
-        return <div style={{ minWidth: '50px' }}>{data}</div>
+        const item = data?.slice(0, 35)
+        const isLarge = data?.length > 35
+        return (
+          <Tooltip title={isLarge && data}>
+            <div style={{ minWidth: '50px' }}>
+              {isLarge ? item + '...' : data}
+            </div>
+          </Tooltip>
+        )
       },
     },
     {
@@ -204,10 +207,14 @@ const Debt: FC<DebtProps> = ({
       skeletonWidth: '70px',
       visible: true,
       render: function render(data) {
+        const item = data?.slice(0, 30)
+        const isLarge = data?.length > 30
         return (
-          <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
-            {data}
-          </Typography.Text>
+          <Tooltip title={isLarge && data}>
+            <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
+              {isLarge ? item + '...' : data}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -218,10 +225,14 @@ const Debt: FC<DebtProps> = ({
       skeletonWidth: '70px',
       visible: true,
       render: function render(debtor) {
+        const item = debtor?.slice(0, 30)
+        const isLarge = debtor?.length > 30
         return (
-          <Typography.Text style={{ color: '#54B2D3' }}>
-            {debtor}
-          </Typography.Text>
+          <Tooltip title={isLarge && debtor}>
+            <Typography.Text style={{ color: '#54B2D3' }}>
+              {isLarge ? item + '...' : debtor}
+            </Typography.Text>
+          </Tooltip>
         )
       },
       ellipsis: true,
@@ -260,7 +271,7 @@ const Debt: FC<DebtProps> = ({
       render: function render(_, { balance, status }) {
         return (
           <Typography.Text type={!status ? 'danger' : undefined}>
-            £{balance}
+            {companyCurrency + balance}
           </Typography.Text>
         )
       },
@@ -355,6 +366,7 @@ const Debt: FC<DebtProps> = ({
       noDataText={t('account.finance.debt.empty.data.text')}
       setIsHealthcodeEnabled={setIsHealthcodeEnabled}
       tabName="debt"
+      accountRef={accountRef}
     />
   )
 }

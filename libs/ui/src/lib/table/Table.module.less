@@ -202,15 +202,28 @@
   }
 }
 
+.column-loader {
+  > div {
+    width: 100%;
+
+    > span {
+      width: 100%;
+    }
+  }
+}
+
 @media screen and (max-width: 767px) {
+  .column-loader {
+    width: 100% !important;
+  }
   :global .ant-table-sticky-scroll {
-    display: none;
+    display: none !important;
   }
 }
 
 .lock-icon {
   text-align: center;
-  color: #B8B8C0;
+  color: #b8b8c0;
 }
 .no-search-result {
   display: flex;

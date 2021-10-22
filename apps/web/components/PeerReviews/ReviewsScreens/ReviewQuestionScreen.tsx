@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Button } from '@pabau/ui'
 import { Input, Rate } from 'antd'
-import styles from '../../../pages/PeerReviews/index.module.less'
+import styles from '../../../pages/peer-reviews/index.module.less'
 import classNames from 'classnames'
 
 const { TextArea } = Input

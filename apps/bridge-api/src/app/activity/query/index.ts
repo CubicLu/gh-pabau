@@ -8,6 +8,7 @@ import {
   prepareSearchObject,
   prepareSortingObject,
   calculateLeadLostObject,
+  prepareFilterQuery,
 } from '../activity'
 
 export const RetrieveActivityCount = objectType({
@@ -32,7 +33,17 @@ export const CmContactCustomType = objectType({
     t.string('MailingStreet')
     t.string('MailingCity')
     t.string('MailingPostal')
+    t.string('MailingCountry')
     t.int('clientTotalActivities')
+    t.string('Mobile')
+    t.field('CreatedDate', { type: 'DateTime' })
+    t.string('LeadSource')
+    t.string('Salutation')
+    t.string('gender')
+    t.int('ID')
+    t.field('DOB', { type: 'DateTime' })
+    t.int('is_active')
+    t.field('MarketingSourceData', { type: 'MarketingSource' })
   },
 })
 
@@ -56,7 +67,8 @@ export const CmLeadCustomType = objectType({
     t.field('leadLostTime', { type: 'DateTime' })
     t.string('wonBy')
     t.field('MarketingSource', { type: 'MarketingSource' })
-    t.field('LeadStatusData', { type: 'LeadStatus' })
+    t.string('leadStage')
+    t.string('EnumStatus')
   },
 })
 
@@ -101,6 +113,27 @@ export const OrderType = inputObjectType({
   },
 })
 
+export const FilterOptionItem = inputObjectType({
+  name: 'FilterOptionItem',
+  definition(t) {
+    t.nonNull.string('type')
+    t.nonNull.string('filterColumn')
+    t.nonNull.string('menuOption')
+    t.nonNull.string('operand')
+  },
+})
+
+export const FilterOption = inputObjectType({
+  name: 'FilterOption',
+  definition(t) {
+    t.string('name')
+    t.boolean('shared')
+    t.list.string('column')
+    t.list.field('andFilterOption', { type: 'FilterOptionItem' })
+    t.list.field('orFilterOption', { type: 'FilterOptionItem' })
+  },
+})
+
 export const ActivityWhereInputType = inputObjectType({
   name: 'ActivityWhereInputType',
   definition(t) {
@@ -108,10 +141,11 @@ export const ActivityWhereInputType = inputObjectType({
     t.field('endDate', { type: 'DateTime' })
     t.list.field('activityType', { type: 'String' })
     t.list.field('status', { type: 'String' })
-    t.int('userId')
+    t.list.field('userId', { type: 'Int' })
     t.string('search')
     t.list.string('activeColumns')
     t.field('orderValue', { type: 'OrderType' })
+    t.field('filterOption', { type: 'FilterOption' })
   },
 })
 
@@ -124,6 +158,7 @@ const customFields = [
   'leadLostTime',
   'wonBy',
   'leadLostReason',
+  'leadStage',
 ]
 
 export const ActivityQuery = extendType({
@@ -160,33 +195,59 @@ export const ActivityQuery = extendType({
           {}
         )
 
+        const where = input.where
         try {
           const prepareSearchQuery =
-            input.where?.search &&
-            prepareSearchObject(input.where?.search, input.where?.activeColumns)
+            where?.search &&
+            prepareSearchObject(where?.search, where?.activeColumns)
           const prepareOrderQuery = prepareSortingObject(
-            input.where?.orderValue?.order,
-            input.where?.orderValue?.field
+            where?.orderValue?.order,
+            where?.orderValue?.field
           )
+          const prepareAndFilterQuery =
+            where?.filterOption?.andFilterOption &&
+            (await prepareFilterQuery(
+              where?.filterOption?.andFilterOption,
+              ctx
+            ))
+          const prepareOrFilterQuery =
+            where?.filterOption?.orFilterOption &&
+            (await prepareFilterQuery(where?.filterOption?.orFilterOption, ctx))
+          const andQuery = []
+          const orQuery = []
+          if (prepareAndFilterQuery) {
+            andQuery.push(...prepareAndFilterQuery)
+          }
+          if (prepareOrFilterQuery) {
+            orQuery.push(...prepareOrFilterQuery)
+          }
           const graphData = await retrieveActivityGraphData(
             ctx,
-            input,
-            prepareSearchQuery
+            where,
+            prepareSearchQuery,
+            andQuery,
+            orQuery
           )
           const activityData = await ctx.prisma.activity.findMany({
             where: {
               due_start_date: {
-                gte: input.where?.startDate,
-                lte: input.where?.endDate,
+                gte: where?.startDate,
+                lte: where?.endDate,
               },
-              ActivityType: { name: { in: input.where?.activityType } },
-              status: { in: input.where?.status },
+              ActivityType: { name: { in: where?.activityType } },
+              status: { in: where?.status },
               AssignedUser: {
-                id: { equals: input.where?.userId },
+                id: { in: where?.userId },
               },
-              AND: {
-                OR: prepareSearchQuery,
-              },
+              AND: [
+                ...andQuery,
+                {
+                  OR: orQuery,
+                },
+                {
+                  OR: prepareSearchQuery,
+                },
+              ],
             },
             skip: input?.skip ?? 0,
             take: input?.take ?? 50,
@@ -285,6 +346,7 @@ export const ActivityQuery = extendType({
                       ? item.CmLead?.User?.full_name
                       : '',
                   leadLostReason: leadLost?.lostReason,
+                  leadStage: item.CmLead?.LeadStatusData?.status_name,
                 },
                 CmContact: {
                   ...item.CmContact,
@@ -299,17 +361,23 @@ export const ActivityQuery = extendType({
             count: ctx.prisma.activity.count({
               where: {
                 due_start_date: {
-                  gte: input.where?.startDate,
-                  lte: input.where?.endDate,
+                  gte: where?.startDate,
+                  lte: where?.endDate,
                 },
-                ActivityType: { name: { in: input.where?.activityType } },
-                status: { in: input.where?.status },
+                ActivityType: { name: { in: where?.activityType } },
+                status: { in: where?.status },
                 AssignedUser: {
-                  id: { equals: input.where?.userId },
+                  id: { in: where?.userId },
                 },
-                AND: {
-                  OR: prepareSearchQuery,
-                },
+                AND: [
+                  ...andQuery,
+                  {
+                    OR: orQuery,
+                  },
+                  {
+                    OR: prepareSearchQuery,
+                  },
+                ],
               },
             }),
             activityData: finalActivityRespons,

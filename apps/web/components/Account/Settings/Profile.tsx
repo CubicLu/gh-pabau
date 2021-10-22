@@ -387,11 +387,12 @@ export const Profile: FC<ProfileProps> = ({
                   onChange={(val) => handleInputChange({ timezone: val })}
                 >
                   {timezones.map(
-                    (item: { timezone: string; text: string }, index) => (
-                      <Option key={index} value={item.text}>
-                        {item.text}
-                      </Option>
-                    )
+                    ({ text }, index) =>
+                      text && (
+                        <Option key={index} value={text}>
+                          {text}
+                        </Option>
+                      )
                   )}
                 </Select>
               </Form.Item>

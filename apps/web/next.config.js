@@ -4,6 +4,9 @@ const withImages = require('next-images')
 const withNx = require('@nrwl/next/plugins/with-nx')
 
 module.exports = {
+  experimential: {
+    cpus: 1,
+  },
   env: {
     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
     api_key: 'AIzaSyB220K3PhuJAa14W5YmpJwzXBYgPyT0BGk',
@@ -32,6 +35,10 @@ module.exports = {
         source: '/clients/finance/statement/:id',
         destination: '/clients/finance/statement/[id]?id=:id',
       },
+      {
+        source: '/team/user/:id',
+        destination: '/team/user/[id]?id=:id',
+      },
     ]
   },
   typescript: {
@@ -45,7 +52,7 @@ module.exports = {
     // period (in ms) where the server will keep pages in the buffer
     maxInactiveAge: 25 * 60 * 60 * 1000,
     // number of pages that should be kept simultaneously without being disposed
-    pagesBufferLength: 3,
+    pagesBufferLength: 6,
   },
   eslint: {
     // !! WARN !!

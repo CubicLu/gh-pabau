@@ -68,7 +68,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
       step: 2,
     },
   ]
-  const [activeStep, setActiveStep] = useState(1)
+  const [activeStep, setActiveStep] = useState(0)
   const [bookBtn, setBookBtn] = useState(false)
   const [voucherRelation] = useState(
     t('giftvouchers.create.label.voucherrelation').toString()
@@ -167,7 +167,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
         <div className={styles.leftCardHeading}>
           <div className={styles.breadcrumbDiv}>
             <Breadcrumb
-              breadcrumbItems={[
+              items={[
                 {
                   breadcrumbName: t('giftvouchers.create.breadcrumb.vouchers'),
                   path: 'marketing/vouchers',
@@ -566,10 +566,10 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             <Card title={<CardHeader />}>
               <div className={styles.voucherBuilderBody}>
                 <Wstepper
-                  disablePrevStep={false}
-                  showNextBtn={showNextBtn}
-                  active={activeStep}
                   data={steps}
+                  active={activeStep}
+                  disablePrevStep={false}
+                  hideNextStep={!showNextBtn}
                   nextButtonContent={
                     <span className={styles.dFlex}>
                       {t('giftvouchers.create.label.nextstep')}{' '}

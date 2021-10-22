@@ -1,0 +1,36 @@
+query getInvoice($id: Int!) {
+  invoice: findFirstInvSale(where: {id: { equals: $id }}) {
+    id
+    number: custom_id
+    date
+    note
+    total
+    paid_amount
+    Customer: CmContact {
+      ID
+      Fname
+      Lname
+    }
+    Biller: InvBiller {
+      id
+      name
+    }
+    Location {
+      id
+      name
+    }
+    IssuingCompany {
+      id
+      name
+    }
+    InsuranceDetail {
+      id
+      name: insurer_name
+    }
+    Booking {
+      id
+      service
+    }
+    guid
+  }
+}

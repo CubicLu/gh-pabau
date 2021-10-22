@@ -4,15 +4,23 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { createPortal } from 'react-dom'
 import {
   PlusOutlined,
-  EditOutlined,
-  FontColorsOutlined,
   MailOutlined,
   PhoneOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  FieldNumberOutlined,
+  CheckOutlined,
+  DownOutlined,
+  AlignLeftOutlined,
+  GlobalOutlined,
+  MessageOutlined,
 } from '@ant-design/icons'
-import { Tooltip } from 'antd'
-import { Button } from '@pabau/ui'
+import { Tooltip, Popover } from 'antd'
+import { Button, InlineEditDataTypes, FieldOrderItem } from '@pabau/ui'
 import { ReactComponent as CustomDateOutlined } from '../../assets/images/custom-date.svg'
 import { ReactComponent as DragAreaOutlined } from '../../assets/images/drag-area.svg'
+import { ReactComponent as SingleLine } from '../../assets/images/single-line.svg'
+import { ReactComponent as RadioIcon } from '../../assets/images/radio-button.svg'
 import styles from './CustomizeFields.module.less'
 
 const dragEl =
@@ -26,17 +34,13 @@ enum FieldType {
   address,
   mobile,
   email,
-}
-interface FieldOrderItem {
-  title: string
-  fieldName: string
-  type: string
-  field: FieldType
+  priceList,
+  membershipNumber,
 }
 
 export interface CustomizeFieldsProps {
   defaultOrder: FieldOrderItem[]
-  onChange: (order: FieldOrderItem[]) => void
+  onChange: (order) => void
   onCancel: () => void
 }
 
@@ -79,12 +83,27 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
     setFieldOrder(items)
   }
 
+  const addFieldPop = (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Button>Single Line Text</Button>
+      <Button>Paragraph Text</Button>
+      <Button>Number</Button>
+      <Button>Multiple Choice</Button>
+      <Button>Single Choice</Button>
+      <Button>Dropdown</Button>
+      <Button>Date</Button>
+      <Button>Email</Button>
+      <Button>Phone</Button>
+      <Button>URL</Button>
+      <Button>Localized Message</Button>
+    </div>
+  )
+
   return (
     <div className={styles.customizeFieldsContainer}>
       <div className={styles.header}>
         <div className={styles.title}>{t('ui.clientdetails.details')}</div>
-        <div className={styles.customize} onClick={() => onCancel()}>
-          <EditOutlined />
+        <div className={styles.customize}>
           {t('ui.clientdetails.customise')}
         </div>
       </div>
@@ -115,29 +134,76 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                           <div className={styles.draggingItemBody}>
                             <div>
                               <div className={styles.fieldType}>
-                                {item.type === 'text' && <FontColorsOutlined />}
-                                {item.type === 'date' && <CustomDateOutlined />}
-                                {item.type === 'phone' && <PhoneOutlined />}
-                                {item.type === 'email' && <MailOutlined />}
+                                {item.type === InlineEditDataTypes.string && (
+                                  <SingleLine />
+                                )}
+                                {(item.type === InlineEditDataTypes.text ||
+                                  item.type ===
+                                    InlineEditDataTypes.address) && (
+                                  <AlignLeftOutlined />
+                                )}
+                                {item.type === InlineEditDataTypes.date && (
+                                  <CustomDateOutlined />
+                                )}
+                                {(item.type === InlineEditDataTypes.phone ||
+                                  item.type ===
+                                    InlineEditDataTypes.basicPhone) && (
+                                  <PhoneOutlined />
+                                )}
+                                {item.type === InlineEditDataTypes.email && (
+                                  <MailOutlined />
+                                )}
+                                {item.type === InlineEditDataTypes.list && (
+                                  <DownOutlined />
+                                )}
+                                {item.type === InlineEditDataTypes.multiple && (
+                                  <CheckOutlined />
+                                )}
+                                {item.type === InlineEditDataTypes.bool && (
+                                  <RadioIcon />
+                                )}
+                                {item.type === InlineEditDataTypes.number && (
+                                  <FieldNumberOutlined />
+                                )}
+                                {item.type === InlineEditDataTypes.url && (
+                                  <GlobalOutlined />
+                                )}
+                                {item.type ===
+                                  InlineEditDataTypes.localizedMessage && (
+                                  <MessageOutlined />
+                                )}
                               </div>
                               <div className={styles.fieldTitle}>
                                 {item.title}
                               </div>
                             </div>
-                            <div
-                              className={styles.dragAreaContainer}
-                              {...provided.dragHandleProps}
-                            >
-                              <Tooltip title="Drag to rearrange">
-                                <DragAreaOutlined />
-                              </Tooltip>
+                            <div>
+                              <div className={styles.deleteField}>
+                                <Tooltip
+                                  title={t(
+                                    'ui.clientdetails.customise.delete.message'
+                                  )}
+                                  placement="bottom"
+                                  overlayStyle={{ maxWidth: '200px' }}
+                                >
+                                  <DeleteOutlined />
+                                </Tooltip>
+                              </div>
+                              <div className={styles.editField}>
+                                <EditOutlined />
+                              </div>
+                              <div
+                                className={styles.dragAreaContainer}
+                                {...provided.dragHandleProps}
+                              >
+                                <Tooltip
+                                  title={t('ui.clientdetails.customise.dragto')}
+                                >
+                                  <DragAreaOutlined />
+                                </Tooltip>
+                              </div>
                             </div>
                           </div>
-                          {(item.type === 'phone' || item.type === 'email') && (
-                            <div className={styles.draggingItemDescription}>
-                              Appears in create client screen
-                            </div>
-                          )}
                         </div>
                       )
                     }
@@ -151,11 +217,18 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
       </div>
       <div className={styles.footer}>
         <div className={styles.addNewField}>
-          <PlusOutlined /> Add a new field
+          <Popover
+            placement="right"
+            title=""
+            content={addFieldPop}
+            trigger="click"
+          >
+            <PlusOutlined /> {t('ui.clientdetails.customise.addnew')}
+          </Popover>
         </div>
         <div className={styles.saveButtonContainer}>
           <Button type="primary" onClick={() => onChange(fieldOrder)}>
-            Done
+            {t('ui.clientdetails.customise.done')}
           </Button>
         </div>
       </div>

@@ -216,6 +216,20 @@ export const CompanyBranch = objectType({
         return root.InvSale
       },
     })
+    t.list.field('ServiceLocationTier', {
+      type: 'ServiceLocationTier',
+      args: {
+        where: 'ServiceLocationTierWhereInput',
+        orderBy: 'ServiceLocationTierOrderByWithRelationInput',
+        cursor: 'ServiceLocationTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceLocationTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceLocationTier
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyBranchCountOutputType',
       resolve(root: any) {

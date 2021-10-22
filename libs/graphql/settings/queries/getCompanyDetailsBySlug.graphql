@@ -1,0 +1,67 @@
+query getCompanyBySlug($slug: String = "") {
+  findFirstCompany(where: {slug: {equals: $slug}}) {
+    id
+    image
+    remote_connect
+    remote_url
+    slug
+    BookitProGeneral {
+      advance_time
+      enable_payments
+      receive_email
+      create_invoice
+      deposit
+      show_prices
+      show_duration
+      show_description
+      warning_message
+      allow_cancel
+      disable_facebook
+      interval
+      disable_extra_information
+      coupon_active
+      account_deposit
+      replace_job_titles
+      enable_bookings
+      default_payment
+      registration_optional
+      consultations_only
+      only_existing
+      offline_message
+      disable_locations
+      terms_conditions
+      ga_analytics
+      gt_manager
+      fb_code
+      fb_event
+      enable_title
+      group_by_region
+      disable_reviews
+      allow_rating
+      show_cat_photos
+      no_vat_prices
+      force_new_existing_patient
+      redirect_url
+    }
+    BookingSetting {
+      email_confirm_id
+      sms_id
+      slot_interval
+    }
+    details {
+      company_name
+      website
+      street
+      info_email
+      phone
+      logo
+      currency
+      date_format
+      week_start_day
+    }
+    CompanyMeta(where: {meta_name: {startsWith: "connect"}}) {
+      meta_name
+      meta_value
+    }
+  }
+}

@@ -398,6 +398,7 @@
   padding: 24px 24px 24px 0;
   @media screen and (max-width: 767px) {
     overflow: auto;
+    padding: 0px 0px 24px 0px;
   }
 }
 
@@ -786,11 +787,11 @@
     }
   }
 }
-@media screen and (max-width: 767px) {
-  .notification-banner {
-    display: none;
-  }
-}
+// @media screen and (max-width: 767px) {
+//   .notification-banner {
+//     display: none;
+//   }
+// }
 
 .review-share-wrapper {
   padding: 40px;
@@ -891,6 +892,11 @@
 .filter-menu {
   .filter-menu-item {
     margin-bottom: 15px;
+    .simple-dropdown{
+      :global .ant-select-selection-item{
+        color: var(--light-grey-text-color);
+      }
+    }
   }
 
   .filter-apply-btn {
@@ -940,6 +946,6 @@
   margin: 18px 0;
   display: flex;
 }
-:global .ant-tooltip{
+:global .ant-tooltip {
   max-width: 1000px;
 }

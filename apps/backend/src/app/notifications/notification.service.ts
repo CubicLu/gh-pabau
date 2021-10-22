@@ -12,6 +12,9 @@ interface Notification {
   date: string | Date
   time: string | Date
   cancellation_reason?: string
+  company_id: number
+  current_date?: string | Date
+  current_time?: string | Date
 }
 
 @Injectable()
@@ -30,6 +33,7 @@ export class NotificationServices {
       sent_to,
       destination,
       sent_by,
+      company_id,
     } = notification
     const variables = {
       who: user_name,
@@ -43,12 +47,16 @@ export class NotificationServices {
       variables['cancellation_reason'] = notification.cancellation_reason
     }
 
+    if (type === notificationType.rescheduled_appointment_via_calendar.type) {
+      variables['current_date'] = notification?.current_date
+      variables['current_time'] = notification?.current_time
+    }
+
     const data = {
       query:
-        ' mutation insert_notifications_one(\n    $type: String!\n    $sent_to: jsonb\n    $variables: jsonb\n    $destination: String!\n    $sent_by: Int # $loop: Int\n  ) {\n    insert_notifications_one(\n      object: {\n        type: $type\n        destination: $destination\n        sent_to: $sent_to\n        variables: $variables\n        sent_by: $sent_by\n        # loop: $loop\n      }\n    ) {\n      id\n    }\n  }',
+        ' mutation insert_notifications_one(\n    $template: String!\n    $variables: jsonb\n    $destination: String!\n    $sent_by: Int # $loop: Int\n  ) {\n    insert_notifications_one(\n      object: {\n        template: $template\n        destination: $destination\n               variables: $variables\n        sent_by: $sent_by\n        # loop: $loop\n      }\n    ) {\n      id\n    }\n  }',
       variables: {
-        type,
-        sent_to,
+        template: type,
         variables,
         destination,
         sent_by,
@@ -63,7 +71,31 @@ export class NotificationServices {
       .toPromise()
 
     const notificationId = response.data?.data?.insert_notifications_one?.id
+    for (const user of sent_to) {
+      await this.generateNotificationData(notificationId, user, company_id)
+    }
     return { id: notificationId }
+  }
+
+  async generateNotificationData(id: string, sent_to: number, company: number) {
+    const data = {
+      query:
+        'mutation insert_notification_state_one( $company:numeric, $notification_id:uuid,$user:numeric){\n  insert_notification_state_one(object:{\n    company:$company,\n    notification_id:$notification_id,\n    user:$user\n  }){\n   id \n  }\n} ',
+
+      variables: {
+        company: company,
+        notification_id: id,
+        user: sent_to,
+      },
+      operationName: 'insert_notification_state_one',
+    }
+    const headers = {
+      'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+    }
+
+    await this.httpService
+      .post(this.GRAPHQL_ENDPOINT, data, { headers })
+      .toPromise()
   }
 
   async findUserEnabledNotifications(

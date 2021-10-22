@@ -6,7 +6,6 @@ import {
 import confetti from 'canvas-confetti'
 import {
   PrinterOutlined,
-  MailOutlined,
   SearchOutlined,
   FilterOutlined,
   ClockCircleOutlined,
@@ -54,13 +53,18 @@ import { ReactComponent as LostMailIcon } from '../../assets/images/timeline/los
 import { ReactComponent as RadioUnchecked } from '../../assets/images/timeline/radio-button-unchecked.svg'
 import { ReactComponent as RadioChecked } from '../../assets/images/circle-check.svg'
 import { ReactComponent as UserIcon } from '../../assets/images/timeline/filled-user.svg'
-
+import { ReactComponent as DropDown } from '../../assets/images/timeline/dropdown.svg'
+import { ReactComponent as ShareIcon } from '../../assets/images/timeline/share-icon.svg'
+import { ReactComponent as DeleteIcon } from '../../assets/images/timeline/delete-icon.svg'
+import { ReactComponent as MedicalTreatment } from '../../assets/images/timeline/medical-treatment.svg'
 import TimeLineFilterPopover from './TimeLineFilterPopover'
 import { DotButton } from '@pabau/ui'
 import TimelineSkeleton from './TimelineSkeleton'
 import classNames from 'classnames'
 import calendar from 'dayjs/plugin/calendar'
 dayjs.extend(calendar)
+
+const { TextArea } = Input
 
 export interface TimelineProps {
   eventsData: EventsProps[]
@@ -84,6 +88,11 @@ interface MovedProps {
   to?: ClientDetailProps
 }
 
+interface callDetailProps {
+  from?: ClientDetailProps
+  to?: ClientDetailProps
+}
+
 export interface EventsProps {
   id: number
   type: string
@@ -101,8 +110,13 @@ export interface EventsProps {
   sharedWith?: OpenByProps[]
   moved?: MovedProps
   displayCollapse?: boolean
-  taskChecked?: boolean
-  taskUserName?: string
+  activityChecked?: boolean
+  activityUserName?: string
+  callConnected?: boolean
+  audioFile?: string
+  callDetail?: callDetailProps
+  callDescription?: string
+  audioTime?: string
 }
 
 export const statuses = {
@@ -133,23 +147,29 @@ export const types = {
   sms: 'sms',
   letter: 'letter',
   call: 'call',
-  taskEmail: 'taskEmail',
-  taskSms: 'taskSMS',
-  taskCall: 'taskCall',
-  taskLetter: 'taskLetter',
-  taskLostEmail: 'taskLostEmail',
+  activityEmail: 'activityEmail',
+  activitySms: 'activitySMS',
+  activityCall: 'activityCall',
+  activityLetter: 'activityLetter',
+  activityLostEmail: 'activityLostEmail',
   medicalHistory: 'medicalHistory',
   lab: 'lab',
   medicalForm: 'medicalForm',
   recall: 'recall',
   medicalCondition: 'medicalCondition',
+  treatment: 'treatment',
+  consent: 'Consent',
   pabauConnect: 'pabauConnect',
-  task: 'task',
+  activity: 'activity',
 }
 
 const DocumentPdf = dynamic(() => import('./DocumentPdf'), {
   ssr: false,
 })
+
+// const Waveform = dynamic(() => import('./WaveForm'), {
+//   ssr: false,
+// })
 
 export const Timeline: FC<TimelineProps> = ({
   eventsData = [],
@@ -166,6 +186,9 @@ export const Timeline: FC<TimelineProps> = ({
   const [searchText, setSearchText] = useState('')
   const [selectedFilterKey, setSelectedFilterKey] = useState<string[]>([])
   const [dateRange, setDateRange] = useState<Dayjs[]>([])
+  const [editNote, setEditNote] = useState({})
+  const [displayAudio, setDisplayAudio] = useState(true)
+  const [descriptionNote, setDescriptionNote] = useState({})
 
   const { days = [], eventsByDay } = groupByDay(
     filteredEvents,
@@ -192,7 +215,8 @@ export const Timeline: FC<TimelineProps> = ({
           selectedFilterKey.includes(data.type) ||
           (data.type === types.appointment &&
             selectedFilterKey.includes(data.status || '')) ||
-          (data.type.includes('task') && selectedFilterKey.includes('task'))
+          (data.type.includes(types.activity) &&
+            selectedFilterKey.includes(types.activity))
         ) {
           filterData.push(data)
         }
@@ -219,7 +243,12 @@ export const Timeline: FC<TimelineProps> = ({
       }
       filteredData = filterObject
     }
-    setFilteredEvents(filteredData)
+    const data = filteredData.map((item) => {
+      const temp = { ...item }
+      temp.displayCollapse = (temp?.description || '').length > 250
+      return temp
+    })
+    setFilteredEvents(data)
   }, [searchText, selectedFilterKey, dateRange, events, eventDateFormat])
 
   const randomInRange = (min, max) => {
@@ -232,15 +261,16 @@ export const Timeline: FC<TimelineProps> = ({
         angle: randomInRange(55, 125),
         spread: randomInRange(50, 70),
         particleCount: randomInRange(50, 100),
-        origin: { y: 0.6 },
+        origin: { y: 0.5 },
+        zIndex: 2000,
       })
     }
   }
-  const handleTaskChecked = (event) => {
+  const handleActivityChecked = (event) => {
     const newEvents = events?.map((data) => {
       const temp = { ...data }
       if (data.id === event.id) {
-        temp.taskChecked = !temp.taskChecked
+        temp.activityChecked = !temp.activityChecked
       }
       return temp
     })
@@ -391,10 +421,10 @@ export const Timeline: FC<TimelineProps> = ({
       icon: <PushpinOutlined />,
       label: t('timeline.dotMenu.pinThisNote'),
     },
-    shareUnShare: {
+    UnShare: {
       key: 8,
       icon: <ShareAltOutlined />,
-      label: t('timeline.dotMenu.shareUnshare'),
+      label: t('timeline.dotMenu.Unshare'),
     },
     view: {
       key: 9,
@@ -431,11 +461,11 @@ export const Timeline: FC<TimelineProps> = ({
   }
 
   const renderMenu = (event) => {
-    if (event.type.includes('task')) {
+    if (event.type.includes(types.activity)) {
       return {
         menuList: contentMenuItems([
           'edit',
-          event.taskChecked ? 'markedAsToDo' : 'markedAsDone',
+          event.activityChecked ? 'markedAsToDo' : 'markedAsDone',
           'delete',
         ]),
       }
@@ -446,15 +476,22 @@ export const Timeline: FC<TimelineProps> = ({
           menuList: contentMenuItems(['clone', 'share', 'delete']),
         }
       case types.clientNote:
-      case types.staffAlert:
         return {
           menuList: contentMenuItems(['edit', 'pinThisNote', 'delete']),
+        }
+      case types.staffAlert:
+        return {
+          menuList: contentMenuItems(['edit', 'delete']),
         }
       case types.payment:
       case types.invoice:
       case types.credit:
         return {
-          menuList: contentMenuItems(['edit', 'shareUnShare', 'view']),
+          menuList: contentMenuItems([
+            'edit',
+            event?.sharedWith?.length > 0 ? 'UnShare' : 'share',
+            'view',
+          ]),
         }
       case types.letter:
         return {
@@ -470,13 +507,23 @@ export const Timeline: FC<TimelineProps> = ({
         }
       case types.medicalForm:
         return {
-          menuList: contentMenuItems(['view', 'edit', 'shareUnShare', 'print']),
+          menuList: contentMenuItems([
+            'view',
+            'edit',
+            event?.sharedWith?.length > 0 ? 'UnShare' : 'share',
+            'print',
+          ]),
         }
       case types.lab:
         return {
           menuList:
             event.status === statuses.sent || event.status === statuses.received
-              ? contentMenuItems(['view', 'edit', 'shareUnShare', 'print'])
+              ? contentMenuItems([
+                  'view',
+                  'edit',
+                  event?.sharedWith?.length > 0 ? 'UnShare' : 'share',
+                  'print',
+                ])
               : contentMenuItems(['view', 'edit', 'print']),
         }
       default:
@@ -487,7 +534,7 @@ export const Timeline: FC<TimelineProps> = ({
   }
 
   const renderEvent = (event) => {
-    const isTaskEvent = event.type.includes('task')
+    const isActivityEvent = event.type.includes(types.activity)
     const content = (items) => {
       return (
         <div className={styles.eyeWrap}>
@@ -510,18 +557,23 @@ export const Timeline: FC<TimelineProps> = ({
       <div className={styles.followContent}>
         <div className={styles.boxText}>
           <div className={styles.taskContent}>
-            {isTaskEvent && (
+            {isActivityEvent && event.type !== 'activityCall' && (
               <span
                 style={{ cursor: 'pointer' }}
-                onClick={() => handleTaskChecked(event)}
+                onClick={() => handleActivityChecked(event)}
               >
-                {event.taskChecked ? <RadioChecked /> : <RadioUnchecked />}
+                {event.activityChecked ? <RadioChecked /> : <RadioUnchecked />}
               </span>
             )}
             <h4>{event.eventName}</h4>
           </div>
           <div className={styles.timeWrap}>
-            {menuList.length > 0 && <DotButton menuList={menuList} />}
+            {menuList.length > 0 && (
+              <DotButton
+                customClass={styles.wrapDotButton}
+                menuList={menuList}
+              />
+            )}
             {event?.displayCollapse && (
               <span
                 className={classNames(styles.statusClass, {
@@ -569,8 +621,8 @@ export const Timeline: FC<TimelineProps> = ({
         </div>
         <div
           style={
-            isTaskEvent
-              ? event.type === types.taskLostEmail
+            isActivityEvent
+              ? event.type === types.activityLostEmail
                 ? { color: '#FF5B64' }
                 : { color: '#65CD98' }
               : {}
@@ -606,7 +658,7 @@ export const Timeline: FC<TimelineProps> = ({
         )}
         {event.moved && (
           <div className={styles.clientNameText}>
-            <span>Moved: </span>
+            <span>{t('timeline.moved')} </span>
             <span>{event.moved.from.name}</span>
             <span>{` ${String.fromCodePoint(
               Number.parseInt('2192', 16)
@@ -614,28 +666,99 @@ export const Timeline: FC<TimelineProps> = ({
             <span>{event.moved.to.name}</span>
           </div>
         )}
+        {event.type === 'activityCall' && (
+          <div>
+            <div className={styles.clientNameText}>
+              <span>{t('timeline.callTab.from')} </span>
+              <span>{event.callDetail.from.name}</span>
+              <span>{` ${String.fromCodePoint(
+                Number.parseInt('2192', 16)
+              )} `}</span>
+              <span>{t('timeline.callTab.to')} </span>
+              <span>{event.callDetail.to.name}</span>
+            </div>
+            <span
+              className={`${styles.bottomText} ${
+                event?.displayCollapse && collapseEvent?.[`event_${event.id}`]
+                  ? styles.expandClass
+                  : styles.collapseClass
+              }`}
+            >
+              <h5>{event.description}</h5>
+            </span>
+            <h6 className={styles.tagText}>{t('timeline.callTab.outcome')}</h6>
+            <div className={styles.outcome}>
+              <h5>{t('timeline.callTab.connected')}</h5>
+              <span>
+                <DropDown onClick={() => setDisplayAudio(!displayAudio)} />
+              </span>
+            </div>
+            {displayAudio && event.audioFile && event.type === 'activityCall' && (
+              <div className={styles.audioWrapper}>
+                {/* <Waveform audioFile={event.audioFile} /> */}
+                <ShareIcon className={styles.icon} />
+                <DeleteIcon className={styles.icon} />
+              </div>
+            )}
+          </div>
+        )}
         <div>
           {event.payment && (
             <div className={styles.payment}>{event.payment}</div>
           )}
         </div>
-        {event.description && (
-          <span
-            className={`${styles.bottomText} ${
-              event?.displayCollapse && collapseEvent?.[`event_${event.id}`]
-                ? styles.expandClass
-                : styles.collapseClass
-            }`}
+        {editNote?.[event.id] ? (
+          <div className={styles.addNote}>
+            <TextArea
+              placeholder={t('timeline.editNote.addDescription')}
+              defaultValue={event.description}
+              value={descriptionNote[event.id]}
+              onChange={(e) => handleNoteChange(e.target.value, event)}
+            ></TextArea>
+            <div className={styles.addNoteBtn}>
+              <Button type={'primary'} onClick={() => handleNoteSave(event)}>
+                {t('timeline.editNote.save')}
+              </Button>
+              <Button onClick={() => handleEditNoteCancel(event)}>
+                {t('timeline.editNote.cancel')}
+              </Button>
+            </div>
+          </div>
+        ) : event.type !== 'activityCall' && event.description ? (
+          <div
+            className={
+              event.type === types.appointment ? styles.editNoteWidth : ''
+            }
           >
-            <h5>{event.description}</h5>
-          </span>
+            <span
+              className={`${styles.bottomText} ${
+                event?.displayCollapse && collapseEvent?.[`event_${event.id}`]
+                  ? styles.expandClass
+                  : styles.collapseClass
+              }`}
+            >
+              <h5>{event.description}</h5>
+              {event.type === types.appointment && (
+                <div className={styles.editIcon}>
+                  <EditOutlined onClick={() => handleEditNoteClick(event)} />
+                </div>
+              )}
+            </span>
+          </div>
+        ) : (
+          event.type === types.appointment && (
+            <div className={styles.editNote}>
+              {t('timeline.editNote.addDescription')}
+              <EditOutlined onClick={() => handleEditNoteClick(event)} />
+            </div>
+          )
         )}
         <div className={styles.clientNameWrap}>
           <div className={styles.clientNameText}>{event.clientName}</div>
-          {isTaskEvent && (
+          {isActivityEvent && event.type !== 'activityCall' && (
             <div className={styles.clientNameText}>
               <UserIcon /> &nbsp;
-              {event.taskUserName}
+              {event.activityUserName}
             </div>
           )}
         </div>
@@ -673,7 +796,7 @@ export const Timeline: FC<TimelineProps> = ({
       case types.photos:
         return { icon: <PhotosIcon />, color: '#ED72AA' }
       case types.document:
-        return { icon: <DocumentIcon />, color: '#4DBAD4' }
+        return { icon: <DocumentIcon />, color: '#5F37B6' }
       case types.mail:
         return { icon: <MailIcon />, color: '#5F37B6' }
       case types.sms:
@@ -682,15 +805,15 @@ export const Timeline: FC<TimelineProps> = ({
         return { icon: <LetterIcon />, color: '#5F37B6' }
       case types.call:
         return { icon: <CallIcon />, color: '#5F37B6' }
-      case types.taskEmail:
+      case types.activityEmail:
         return { icon: <MailIcon />, color: '#40A0C1' }
-      case types.taskSms:
+      case types.activitySms:
         return { icon: <SmsIcon />, color: '#40A0C1' }
-      case types.taskCall:
+      case types.activityCall:
         return { icon: <CallIcon />, color: '#40A0C1' }
-      case types.taskLetter:
+      case types.activityLetter:
         return { icon: <LetterIcon />, color: '#40A0C1' }
-      case types.taskLostEmail:
+      case types.activityLostEmail:
         return { icon: <LostMailIcon />, color: '#40A0C1' }
       case types.medicalHistory:
         return { icon: <DocumentIcon />, color: '#3D9588' }
@@ -700,6 +823,8 @@ export const Timeline: FC<TimelineProps> = ({
         return { icon: <MedicalFormIcon />, color: '#3D9588' }
       case types.medicalCondition:
         return { icon: <MedicalConditionIcon />, color: '#3D9588' }
+      case types.treatment:
+        return { icon: <MedicalTreatment />, color: '#3D9588' }
       case types.pabauConnect:
         return { icon: <PabauLogo />, color: '#EEF7FB' }
       case types.recall:
@@ -714,17 +839,39 @@ export const Timeline: FC<TimelineProps> = ({
     setSearchText('')
   }
 
+  const handleEditNoteClick = (event) => {
+    Object.keys(editNote).includes(event.id.toString())
+      ? setEditNote((e) => ({ ...e, [event.id]: !editNote[event.id] }))
+      : setEditNote((e) => ({ ...e, [event.id]: true }))
+  }
+  const handleEditNoteCancel = (event) => {
+    handleEditNoteClick(event)
+    setDescriptionNote((e) => ({ ...e, [event.id]: event.description }))
+  }
+
+  const handleNoteSave = (event) => {
+    const newEvents = events?.map((data) => {
+      const temp = { ...data }
+      if (data.id === event.id) {
+        temp.description = descriptionNote[event.id]
+      }
+      return temp
+    })
+    setEvents(newEvents)
+    setEditNote((e) => ({ ...e, [event.id]: false }))
+  }
+
+  const handleNoteChange = (value, event) => {
+    Object.keys(descriptionNote).includes(event.id.toString())
+      ? setDescriptionNote((e) => ({ ...e, [event.id]: value }))
+      : setDescriptionNote((e) => ({ ...e, [event.id]: '' }))
+  }
+
   return (
     <div className={styles.followWrapper}>
       <div className={styles.header}>
         <h5>{t('timeline.photos.activity')}</h5>
         <div className={styles.iconGroup}>
-          <div className={styles.headerIconWrap}>
-            <PrinterOutlined />
-          </div>
-          <div className={styles.headerIconWrap}>
-            <MailOutlined />
-          </div>
           <div
             className={`${styles.headerIconWrap} ${
               displaySearch && styles.active
@@ -786,7 +933,9 @@ export const Timeline: FC<TimelineProps> = ({
                                 ? 'pointer'
                                 : 'default',
                           }}
-                          onClick={() => displayConfetti(day)}
+                          onClick={() => {
+                            displayConfetti(day)
+                          }}
                         >
                           {day}
                         </p>

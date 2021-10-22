@@ -1,0 +1,500 @@
+.clientAppointmentCard {
+  width: 100%;
+  padding: 12px 1rem;
+  border: 1px solid var(--border-color-base);
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: min-content 1fr max-content;
+  grid-column-gap: 12px;
+  margin-bottom: 16px;
+  .avatarContainer {
+    height: 40px;
+  }
+
+  .appointmentContent {
+    .content {
+      display: grid;
+      grid-template-columns: min-content 1fr;
+      grid-column-gap: 12px;
+      .apptDate {
+        > p {
+          font-family: var(--font-family);
+          font-size: 14px;
+          line-height: 20px;
+          margin: 0;
+          color: var(--grey-text-color);
+          text-align: right;
+        }
+      }
+      .serviceContent {
+        .locationTime {
+          margin: 0;
+          font-family: var(--font-family-roboto-medium);
+          font-size: 12px;
+          line-height: 20px;
+          color: var(--light-grey-color);
+        }
+        .serviceLine {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          flex-direction: row;
+          .service {
+            margin: 0;
+            font-family: var(--font-family-roboto-medium);
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--grey-text-color);
+          }
+          .historyIcon {
+            width: 12px;
+            height: 12px;
+            margin-left: 8px;
+          }
+        }
+      }
+    }
+    .notesWrapper {
+      &:hover {
+        .notes {
+          display: none;
+        }
+        .addDescriptionNotice {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-family: var(--font-family);
+          font-size: 12px;
+          padding: 0 8px;
+          margin-top: 5px;
+          width: 75%;
+          height: 35px;
+          border: 1px solid var(--primary-color);
+          border-radius: 3px;
+          background-color: #e7f5f8;
+          cursor: pointer;
+          span:first-child {
+            color: #7f98be;
+          }
+          span:last-child {
+            color: var(--primary-color);
+          }
+        }
+      }
+      .notes {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: 4px;
+        div {
+          font-family: var(--font-family);
+          font-size: 10px;
+          font-style: italic;
+          line-height: 14px;
+          color: var(--light-grey-color);
+          &:hover {
+            font-size: 10px;
+          }
+        }
+      }
+      .addDescriptionNotice {
+        display: none;
+      }
+    }
+    .newNotesWrapper {
+      .addDescriptionNotice {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-family);
+        font-size: 12px;
+        padding: 0 8px;
+        margin-top: 5px;
+        width: 75%;
+        height: 35px;
+        border: 1px solid var(--primary-color);
+        border-radius: 3px;
+        background-color: #e7f5f8;
+        cursor: pointer;
+        span:first-child {
+          color: #7f98be;
+        }
+        span:last-child {
+          color: var(--primary-color);
+        }
+      }
+    }
+    .noteEditor {
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+
+      textarea {
+        width: 75%;
+        height: 200px;
+        border: 2px solid var(--primary-color);
+        border-radius: 3px;
+        margin: 5px 0;
+        outline: none;
+      }
+
+      .noteEditorButtonWrapper {
+        float: left;
+        font-size: 10px !important;
+        button {
+          border-radius: 5px;
+          padding: 5px 10px;
+          width: auto;
+          height: auto;
+          font-family: var(--font-family-roboto);
+          &:first-child {
+            color: white;
+            background-color: var(--primary-color);
+            margin-right: 15px;
+          }
+          &:last-child {
+            color: #546e93;
+            background-color: #ebf0f6;
+            border: 1px solid #ccd6e3;
+          }
+        }
+        :global {
+          .ant-btn-sm {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+  .statusContainer {
+    max-width: 180px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    .status {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      > span {
+        font-family: var(--font-family);
+        font-size: 12px;
+        line-height: 22px;
+        text-transform: uppercase;
+        color: white;
+        padding: 0 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        &.new {
+          background-color: #4DC6FA;
+        }
+        &.cancelled {
+          background-color: #FF7C56;
+        }
+        &.noShow {
+          background-color: #FF5B64;
+        }
+        margin-right: 8px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    .reinstateButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 110px;
+      height: 32px;
+      background-color: var(--primary-color);
+      border-radius: 4px;
+      margin-right: 16px;
+      color: white;
+      cursor: pointer;
+      svg {
+        margin-bottom: 2px;
+      }
+      span {
+        margin-left: 4px;
+      }
+    }
+    .ops {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: 1px solid var(--border-color-base);
+      color: var(--light-grey-color);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      &:hover {
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+      }
+    }
+  }
+
+  &.hoverCard {
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.opsPopover {
+  width: auto;
+  :global {
+    .ant-popover-inner-content {
+      padding: 0;
+    }
+  }
+}
+
+.opsPopoverContainer {
+  width: 225px;
+  padding: 8px 0;
+  .opsItem {
+    height: 2rem;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0 16px;
+    &Red {
+      color: #FF5B64;
+      width: 200px;
+      height: 2rem;
+      margin-bottom: 4px;
+      margin-left: 16px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      .icon {
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+        font-size: 1rem;
+      }
+      > span {
+        font-family: var(--font-family);
+        font-size: 14px;
+        line-height: 22px;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    &JoinVideo {
+      color: white;
+      background-color: var(--primary-color);
+      border-radius: 4px;
+      height: 2rem;
+      margin-bottom: 4px;
+      margin-left: 16px;
+      margin-right: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      .icon {
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+        font-size: 1rem;
+      }
+      > span {
+        font-family: var(--font-family);
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+    &JoinVideoUrl {
+      display: flex;
+      align-items: center;
+      height: 2rem;
+      margin-bottom: 4px;
+      margin-left: 16px;
+      margin-right: 16px;
+      color: var(--light-grey-color);
+      .icon {
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 9px;
+        font-size: 1rem;
+        color: var(--light-grey-color);
+      }
+      > span {
+        font-family: var(--font-family);
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+      font-size: 1rem;
+      color: var(--light-grey-color);
+    }
+    > span {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--light-grey-color);
+    }
+    &:hover {
+      .icon {
+        color: var(--primary-color);
+      }
+      > span {
+        color: var(--primary-color);
+      }
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.cancelPopover {
+  width: 242px;
+  .header {
+    width: 1fr;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--border-color-base);
+    .close {
+      width: 1rem;
+      height: 1rem;
+      font-size: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--light-grey-color);
+      cursor: pointer;
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+    > span {
+      font-family: var(--font-family);
+      font-size: 1rem;
+      color: var(--grey-text-color);
+    }
+  }
+  .body {
+    padding: 1rem;
+    :global {
+      .ant-form-item {
+        margin-bottom: 1rem;
+        &-label {
+          line-height: 1;
+          label {
+            color: var(--light-grey-color);
+            font-family: var(--font-family);
+            font-size: 12px;
+            line-height: 15.18px;
+          }
+        }
+      }
+    }
+    .manageCancelReason {
+      color: var(--light-grey-color);
+      font-family: var(--font-family);
+      font-size: 12px;
+      line-height: 15.18px;
+      margin-bottom: 1rem;
+    }
+    .submitButton {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .error {
+      padding-top: 4px;
+      color: var(--error-color);
+      font-family: var(--font-family);
+      font-size: 12px;
+    }
+  }
+}
+
+.modalTitle {
+  font-family: var(--font-family);
+  font-size: 22px;
+  color: var(--grey-text-color);
+  text-transform: none;
+}
+
+.confirmButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  button:first-child {
+    margin-right: 30px;
+  }
+}
+
+.commonStatusLabel {
+  font-family: var(--font-family);
+  font-size: 12px;
+  line-height: 22px;
+  text-transform: uppercase;
+  color: white;
+  padding: 5px 8px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.cancelledLabel {
+  background-color: #FF7C56;
+}
+.newLabel {
+  background-color: #4DC6FA;
+}
+.noShowLabel {
+  background-color: #FF5B64;
+}
+.waitingLabel {
+  background-color: #FAAD14;
+}
+.arrivedLabel {
+  background-color: #65CD98;
+}
+.inRoomLabel {
+  background-color: #7B61E2;
+}
+.selectedStatusLabel {
+  border: 1px solid var(--primary-color);
+}
+
+.appointmentPopoverDivider {
+  margin: 0;
+}
+
+.nowDivider {
+  color: var(--light-grey-color);
+  border: 1px solid var(--light-grey-color);
+  border-radius: 50%;
+}
+
+.textTooltip {
+  width: 250px;
+  height: 50px;
+}

@@ -1,10 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Badge, Layout, Menu as AntMenu, Tooltip } from 'antd'
-import {
-  SettingOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons'
+import { SettingOutlined } from '@ant-design/icons'
 import { Button } from '../../index'
 import styles from './Menu.module.less'
 import classNames from 'classnames'
@@ -15,28 +11,24 @@ const { SubMenu } = AntMenu
 const { Sider } = Layout
 
 interface P {
-  onSideBarCollapsed?: (collapsed: boolean) => void
   active?: string
   badgeCountList?: BadgeCountList
+  collapsedProp: boolean
 }
 
 interface BadgeCountList {
   [key: string]: number
 }
 
-export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
+export const Menu: FC<P> = ({ badgeCountList, collapsedProp }) => {
   const { t } = useTranslation('common')
   const [collapsed, setCollapsed] = useState(true)
   const [openKeys, setOpenKeys] = useState<string[]>([])
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
-  const [activeMenu, setActive] = useState<string>(active ? active : '')
+  const [activeMenu, setActive] = useState<string>(window.location.pathname)
 
-  const handleSidebarCollapse = () => {
-    setCollapsed((e) => {
-      onSideBarCollapsed?.(!e)
-      return !e
-    })
-  }
+  useEffect(() => {
+    setCollapsed(!collapsedProp)
+  }, [collapsedProp])
 
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1)
@@ -50,19 +42,17 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
         icon={icon}
         className={classNames(
           styles.sidebarMenu,
-          activeMenu && styles.removeSelected
+          activeMenu !== path && styles.removeSelected,
+          activeMenu === path && styles.menuSelected,
+          activeMenu === path && 'ant-menu-item-selected'
         )}
-        onClick={() => setActive('')}
+        onClick={() => setActive(path)}
       >
         <Link href={path}>
           {t(sidebarTranslations[menuName.toLowerCase().replace(' ', '')])}
         </Link>
       </AntMenu.Item>
     )
-  }
-
-  const onClickMenu = (e) => {
-    setSelectedKeys([e.key])
   }
 
   const sidebarBadge = {
@@ -82,27 +72,12 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
         overflowX: 'hidden',
       }}
     >
-      <div>
-        {React.createElement(
-          collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-          {
-            className: classNames(
-              styles.sidebarCollapseIcon,
-              styles.sidebarMenu,
-              collapsed && styles.sidebarCollapsed
-            ),
-            onClick: handleSidebarCollapse,
-          }
-        )}
-      </div>
       <AntMenu
         mode="inline"
         className={styles.sidebar}
         openKeys={openKeys}
         onOpenChange={onOpenChange}
         multiple={false}
-        selectedKeys={selectedKeys}
-        onClick={onClickMenu}
       >
         {sidebarMenu.map((menuData, index) => {
           const icon = menuData?.displayBadge ? (
@@ -135,12 +110,9 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
                   menuData.menuName.toLowerCase().replace(' ', '')
                 ]
               )}
-              onTitleClick={onClickMenu}
               className={classNames(
-                styles.sidebarMenu,
-                selectedKeys.includes(menuData.menuName + index) &&
-                  !activeMenu &&
-                  styles.subMenuActive
+                menuData.children.map((e) => e.path).indexOf(activeMenu) !==
+                  -1 && styles.subMenuActive
               )}
             >
               {menuData.children.map((subMenu, subIndex) => {
@@ -163,13 +135,13 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
           <Tooltip title={collapsed ? t('sidebar.setup') : ''} placement="left">
             <div
               className={styles.sidebarBtnAlign}
-              onClick={() => setActive('setup')}
+              onClick={() => setActive('/setup')}
             >
               <Link href="/setup">
                 {collapsed ? (
                   <SettingOutlined
                     className={`${
-                      activeMenu === 'setup'
+                      activeMenu === '/setup'
                         ? styles.activeSidebarMenu
                         : styles.sidebarMenu
                     }`}
@@ -179,13 +151,15 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active, badgeCountList }) => {
                     icon={
                       <SettingOutlined
                         className={`${
-                          activeMenu === 'setup'
+                          activeMenu === '/setup'
                             ? styles.activeSidebarMenu
                             : styles.sidebarMenu
                         }`}
                       />
                     }
-                    className={styles.setupBtn}
+                    className={`${styles.setupBtn} ${
+                      activeMenu === '/setup' ? styles.setupBtnActive : null
+                    }`}
                   >
                     {t('sidebar.setup')}
                   </Button>

@@ -1701,18 +1701,32 @@ export const Company = objectType({
         return root.ContactPreference
       },
     })
-    t.list.field('ActivityUserColumns', {
-      type: 'ActivityUserColumns',
+    t.list.field('ActivityUserState', {
+      type: 'ActivityUserState',
       args: {
-        where: 'ActivityUserColumnsWhereInput',
-        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
-        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        where: 'ActivityUserStateWhereInput',
+        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        cursor: 'ActivityUserStateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ActivityUserColumnsScalarFieldEnum',
+        distinct: 'ActivityUserStateScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ActivityUserColumns
+        return root.ActivityUserState
+      },
+    })
+    t.list.field('ActivityUserFilter', {
+      type: 'ActivityUserFilter',
+      args: {
+        where: 'ActivityUserFilterWhereInput',
+        orderBy: 'ActivityUserFilterOrderByWithRelationInput',
+        cursor: 'ActivityUserFilterWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserFilterScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserFilter
       },
     })
     t.list.field('ActivityType', {
@@ -1727,6 +1741,104 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.ActivityType
+      },
+    })
+    t.list.field('Album', {
+      type: 'PhotoAlbum',
+      args: {
+        where: 'PhotoAlbumWhereInput',
+        orderBy: 'PhotoAlbumOrderByWithRelationInput',
+        cursor: 'PhotoAlbumWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PhotoAlbumScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Album
+      },
+    })
+    t.list.field('InsurerContract', {
+      type: 'InsurerContract',
+      args: {
+        where: 'InsurerContractWhereInput',
+        orderBy: 'InsurerContractOrderByWithRelationInput',
+        cursor: 'InsurerContractWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InsurerContractScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsurerContract
+      },
+    })
+    t.list.field('Voucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Voucher
+      },
+    })
+    t.list.field('Package', {
+      type: 'Package',
+      args: {
+        where: 'PackageWhereInput',
+        orderBy: 'PackageOrderByWithRelationInput',
+        cursor: 'PackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Package
+      },
+    })
+    t.list.field('InsuranceContractPrice', {
+      type: 'InsuranceContractPrice',
+      args: {
+        where: 'InsuranceContractPriceWhereInput',
+        orderBy: 'InsuranceContractPriceOrderByWithRelationInput',
+        cursor: 'InsuranceContractPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InsuranceContractPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsuranceContractPrice
+      },
+    })
+    t.list.field('ContactAttachment', {
+      type: 'ContactAttachment',
+      args: {
+        where: 'ContactAttachmentWhereInput',
+        orderBy: 'ContactAttachmentOrderByWithRelationInput',
+        cursor: 'ContactAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactAttachment
+      },
+    })
+    t.list.field('SmsSender', {
+      type: 'SmsSender',
+      args: {
+        where: 'SmsSenderWhereInput',
+        orderBy: 'SmsSenderOrderByWithRelationInput',
+        cursor: 'SmsSenderWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SmsSenderScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SmsSender
       },
     })
     t.nullable.field('_count', {

@@ -1,9 +1,7 @@
 import {
   useDisabledFeaturesQuery,
   useNotificationsSubscription,
-  useUpdate_Notifications_By_PkMutation,
-  useDelete_Notifications_By_PkMutation,
-  useInsert_Read_Notification_OneMutation,
+  useUpdate_Notification_StateMutation,
   useProduct_NewsSubscription,
   useInsert_Product_News_Read_OneMutation,
   useSwitchCompanyMutation,
@@ -21,8 +19,8 @@ import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
 import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
-import LegacyPage from '../LegacyPage'
 import Login from '../../pages/login'
+import LegacyPage from '../LegacyPage'
 
 interface ProductNews {
   id: string
@@ -38,7 +36,6 @@ const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,
   requireAdminAccess = false,
-  handleSearch,
   ...props
 }) => {
   const { me, login, logout } = useUser()
@@ -54,14 +51,8 @@ const Layout: FC<LayoutProps> = ({
   const [switchCompany] = useSwitchCompanyMutation()
 
   const [
-    insertReadNotificationOneMutation,
-  ] = useInsert_Read_Notification_OneMutation()
-  const [
-    updateNotificationsByPkMutation,
-  ] = useUpdate_Notifications_By_PkMutation()
-  const [
-    deleteNotificationsByPkMutation,
-  ] = useDelete_Notifications_By_PkMutation()
+    updateNotificationStateMutation,
+  ] = useUpdate_Notification_StateMutation()
 
   const [
     insertProductNewsReadOneMutation,
@@ -89,7 +80,7 @@ const Layout: FC<LayoutProps> = ({
     if (notificationData?.notifications?.length > 0) {
       const todayNotification = notificationData.notifications.map(
         (notification) => {
-          const readUsers = notification?.read_by?.map((users) => users.user)
+          const state = notification?.notification_state
           return {
             id: notification.id,
             type_id: notification?.notification_type?.id,
@@ -97,12 +88,11 @@ const Layout: FC<LayoutProps> = ({
             notificationType: notification?.notification_type?.name.trim(),
             title: notification?.notification_type?.title,
             desc: notification?.notification_type?.description,
-            read: readUsers,
-            users: notification?.sent_to,
+            is_read: state?.is_read,
+            is_deleted: state?.is_deleted,
             link: notification?.destination,
             variables: notification?.variables,
             sentBy: notification?.sent_by,
-            loop: notification?.loop,
           }
         }
       )
@@ -150,30 +140,33 @@ const Layout: FC<LayoutProps> = ({
         relativeTime={relativeTime}
         notifications={notifications}
         productNews={productNews}
-        deleteNotification={deleteNotificationsByPkMutation}
-        updateNotification={updateNotificationsByPkMutation}
-        readAddMutation={insertReadNotificationOneMutation}
+        updateNotificationState={updateNotificationStateMutation}
         readNewsMutation={insertProductNewsReadOneMutation}
         user={userData}
         searchRender={() => <Search />}
         onMessageIconClick={() => setShowChat((e) => !e)}
         legacyContent={!!legacyPage}
         taskManagerIFrameComponent={<TaskManagerIFrame />}
-        clientCreateRender={() => <ClientCreate />}
-        leadCreateRender={() => <LeadCreate />}
+        clientCreateRender={(handleClose) => (
+          <ClientCreate handleClose={handleClose} />
+        )}
+        leadCreateRender={(handleClose) => (
+          <LeadCreate handleClose={handleClose} />
+        )}
         {...props}
       >
         <CommonHeader
           showChat={showChat}
           title="Pabau"
           isShowSearch={true}
-          onChatClick={() => setShowChat((e) => !e)}
-          clientCreateRender={() => <ClientCreate />}
-          leadCreateRender={() => <LeadCreate />}
-          handleSearch={handleSearch}
+          clientCreateRender={(handleClose) => (
+            <ClientCreate handleClose={handleClose} />
+          )}
+          leadCreateRender={(handleClose) => (
+            <LeadCreate handleClose={handleClose} />
+          )}
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
-
         {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
       </PabauLayout>
       <div className={styles.stickyPopoutContainer}>

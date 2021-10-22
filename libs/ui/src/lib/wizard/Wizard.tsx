@@ -8,8 +8,6 @@ interface WizardProps {
   extraBtnClick?: () => void
   active: number
   allSteps: number
-  showNextBtn?: boolean
-  showPrevBtn?: boolean
   nextBtnLabel?: string | number | React.ReactNode
   disableNextStep?: boolean
   disablePrevStep?: boolean
@@ -18,6 +16,8 @@ interface WizardProps {
   prevButtonContent?: React.ReactNode | string
   background?: string
   finishDisablesNextStep?: boolean
+  hideNextStep?: boolean
+  hidePrevStep?: boolean
   hideStep?: boolean
 }
 
@@ -35,8 +35,8 @@ export const Wizard: React.FC<WizardProps> = ({
   prevButtonContent,
   finishDisablesNextStep = true,
   hideStep = false,
-  showNextBtn = true,
-  showPrevBtn = true,
+  hideNextStep = false,
+  hidePrevStep = false,
 }) => {
   return (
     <div
@@ -46,8 +46,8 @@ export const Wizard: React.FC<WizardProps> = ({
         gridTemplateColumns: `1fr `.repeat(hideStep ? 2 : 3),
       }}
     >
-      <div>
-        {showPrevBtn && (
+      {!hidePrevStep && (
+        <div>
           <Button
             onClick={() => onPrev?.()}
             disabled={
@@ -56,8 +56,9 @@ export const Wizard: React.FC<WizardProps> = ({
           >
             {prevButtonContent || 'Previous Step'}
           </Button>
-        )}
-      </div>
+        </div>
+      )}
+
       {!hideStep && (
         <span
           className={classnames(styles.breadcrumbgraytxt, styles.centeredtext)}
@@ -65,10 +66,11 @@ export const Wizard: React.FC<WizardProps> = ({
           Step {active + 1}/{allSteps}
         </span>
       )}
+
       {nextButtonDecorator ? (
         <div className={styles.nextButtonDecorator}>
           {nextButtonDecorator}
-          {showNextBtn && (
+          {!hideNextStep && (
             <Button
               type="primary"
               onClick={() => onNext?.()}
@@ -82,7 +84,7 @@ export const Wizard: React.FC<WizardProps> = ({
           )}
         </div>
       ) : (
-        showNextBtn && (
+        !hideNextStep && (
           <Button
             type="primary"
             onClick={() => onNext?.()}

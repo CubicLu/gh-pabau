@@ -1,8 +1,6 @@
-import { LeftOutlined } from '@ant-design/icons'
 import { DocumentNode, useMutation } from '@apollo/client'
 import {
   Breadcrumb,
-  MobileHeader,
   Notification,
   NotificationType,
   Pagination,
@@ -16,8 +14,8 @@ import { Formik, FormikErrors } from 'formik'
 import load from 'lodash'
 import { useRouter } from 'next/router'
 import React, { FC, RefObject, useEffect, useMemo, useState } from 'react'
-import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
+import CommonHeader from '../components/CommonHeader'
 import AddButton from './AddButton'
 import CrudModal from './CrudModal'
 import styles from './CrudTable.module.less'
@@ -104,7 +102,6 @@ const CrudTable: FC<P> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [formSubmitAllowed, setFormSubmitAllowedStatus] = useState(true)
   const { t } = useTranslationI18()
-  const { getParentSetupData } = useGridData(t)
   const router = useRouter()
 
   const [editMutation] = useMutation(editQuery, {
@@ -498,18 +495,6 @@ const CrudTable: FC<P> = ({
     }
   }
 
-  const handleBack = () => {
-    const parentMenu = getParentSetupData(router.pathname)
-    if (parentMenu.length > 0) {
-      router.push({
-        pathname: '/setup',
-        query: { menu: parentMenu[0]?.keyValue },
-      })
-    } else {
-      router.back()
-    }
-  }
-
   const recursiveCallToFlatten = (value, main) => {
     for (const key in value) {
       if (typeof value[key] === 'object') {
@@ -601,47 +586,39 @@ const CrudTable: FC<P> = ({
             styles.desktopViewNone
           )}
         >
-          <MobileHeader className={styles.marketingSourceHeader}>
-            <div className={styles.allContentAlignMobile}>
-              <div className={styles.marketingTextStyle}>
-                <LeftOutlined onClick={handleBack} />
-                {!isMobileSearch && <p>{schema.full || schema.short} </p>}
-              </div>
-              {addQuery && !createPage ? (
-                <AddButton
-                  onClick={createNew}
-                  onFilterSource={onFilterMarketingSource}
-                  onSearch={onSearch}
-                  schema={schema}
-                  tableSearch={tableSearch}
-                  needTranslation={needTranslation}
-                  addFilter={addFilter}
-                  isCustomFilter={isCustomFilter}
-                  customFilter={customFilter}
-                  mobileSearch={isMobileSearch}
-                  setMobileSearch={() => {
-                    setMobileSearch((e) => !e)
-                  }}
-                />
-              ) : (
-                <AddButton
-                  onClick={createPageOnClick}
-                  onFilterSource={onFilterMarketingSource}
-                  onSearch={onSearch}
-                  schema={schema}
-                  tableSearch={tableSearch}
-                  addFilter={addFilter}
-                  needTranslation={needTranslation}
-                  isCustomFilter={isCustomFilter}
-                  customFilter={customFilter}
-                  mobileSearch={isMobileSearch}
-                  setMobileSearch={() => {
-                    setMobileSearch((e) => !e)
-                  }}
-                />
-              )}
-            </div>
-          </MobileHeader>
+          <CommonHeader
+            isLeftOutlined
+            reversePath="/setup"
+            title={schema.full || schema.short}
+            isShowSearch={tableSearch}
+            searchInputPlaceHolder={schema?.searchPlaceholder}
+            handleSearch={onSearch}
+            searchValue={searchTerm}
+          >
+            {addQuery && !createPage ? (
+              <AddButton
+                onClick={createNew}
+                onFilterSource={onFilterMarketingSource}
+                schema={schema}
+                tableSearch={false}
+                needTranslation={needTranslation}
+                addFilter={addFilter}
+                isCustomFilter={isCustomFilter}
+                customFilter={customFilter}
+              />
+            ) : (
+              <AddButton
+                onClick={createPageOnClick}
+                onFilterSource={onFilterMarketingSource}
+                schema={schema}
+                tableSearch={false}
+                needTranslation={needTranslation}
+                addFilter={addFilter}
+                isCustomFilter={isCustomFilter}
+                customFilter={customFilter}
+              />
+            )}
+          </CommonHeader>
         </div>
 
         {modalShowing && (
@@ -671,7 +648,7 @@ const CrudTable: FC<P> = ({
         >
           <div style={{ background: '#FFF' }}>
             <Breadcrumb
-              breadcrumbItems={[
+              items={[
                 {
                   breadcrumbName: t('navigation-breadcrumb-setup'),
                   path: 'setup',
@@ -692,6 +669,7 @@ const CrudTable: FC<P> = ({
               addFilter={addFilter}
               isCustomFilter={isCustomFilter}
               customFilter={customFilter}
+              searchTerm={searchTerm}
             />
           ) : (
             <AddButton
@@ -704,6 +682,7 @@ const CrudTable: FC<P> = ({
               needTranslation={needTranslation}
               isCustomFilter={isCustomFilter}
               customFilter={customFilter}
+              searchTerm={searchTerm}
             />
           )}
         </div>

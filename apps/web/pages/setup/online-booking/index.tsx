@@ -7,7 +7,6 @@ import {
   FacebookOutlined,
   GlobalOutlined,
   InstagramOutlined,
-  LeftOutlined,
   LineChartOutlined,
   MedicineBoxOutlined,
   NotificationOutlined,
@@ -31,7 +30,7 @@ import {
   HighchartsProvider,
 } from 'react-jsx-highcharts'
 import { useMedia } from 'react-use'
-import SkinHealth from '../../../assets/images/brands/SkinHealth.png'
+// import SkinHealth from '../../../assets/images/brands/SkinHealth.png'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import {
@@ -256,7 +255,7 @@ export const Index: FC<OnlineBookingProps> = ({
             <div className={styles.campaignContainer}>
               <div>
                 <div className={styles.icon}>
-                  <img src={SkinHealth} alt="companyLogo" />
+                  {/* <Image src={SkinHealth} alt="companyLogo" /> */}
                 </div>
                 <Title level={4} className={styles.name}>
                   The Skin Clinic - London
@@ -403,39 +402,36 @@ export const Index: FC<OnlineBookingProps> = ({
   }
   return (
     <>
-      <CommonHeader />
       <Layout>
+        <CommonHeader
+          title={t('setup.online-booking.online-booking')}
+          isLeftOutlined
+          reversePath="/setup"
+        />
         <div className={styles.onlineBookingContainer}>
           {!getStarted && (
             <>
-              <div className={styles.onlineBookingHeader}>
-                {!isMobile && (
-                  <>
-                    <Breadcrumb
-                      breadcrumbItems={[
-                        {
-                          breadcrumbName: t('setup.online-booking.setup'),
-                          path: '/setup',
-                        },
-                        {
-                          breadcrumbName: t(
-                            'setup.online-booking.online-booking'
-                          ),
-                          path: '/setup/online-booking',
-                        },
-                      ]}
-                    />
-                    <Title level={4}>
-                      {t('setup.online-booking.online-booking')}
-                    </Title>
-                  </>
-                )}
-                {isMobile && (
-                  <Title>
-                    <LeftOutlined /> {t('setup.online-booking.online-booking')}
+              {!isMobile && (
+                <div className={styles.onlineBookingHeader}>
+                  <Breadcrumb
+                    items={[
+                      {
+                        breadcrumbName: t('setup.online-booking.setup'),
+                        path: 'setup',
+                      },
+                      {
+                        breadcrumbName: t(
+                          'setup.online-booking.online-booking'
+                        ),
+                        path: 'setup/online-booking',
+                      },
+                    ]}
+                  />
+                  <Title level={4}>
+                    {t('setup.online-booking.online-booking')}
                   </Title>
-                )}
-              </div>
+                </div>
+              )}
               <GetStarted />
             </>
           )}

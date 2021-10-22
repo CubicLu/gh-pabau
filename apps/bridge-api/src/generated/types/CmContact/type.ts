@@ -92,18 +92,18 @@ export const CmContact = objectType({
         return root.SocialSurveyFeedback
       },
     })
-    t.list.field('CmContactAlert', {
-      type: 'CmContactAlert',
+    t.list.field('ContactAlert', {
+      type: 'ContactAlert',
       args: {
-        where: 'CmContactAlertWhereInput',
-        orderBy: 'CmContactAlertOrderByWithRelationInput',
-        cursor: 'CmContactAlertWhereUniqueInput',
+        where: 'ContactAlertWhereInput',
+        orderBy: 'ContactAlertOrderByWithRelationInput',
+        cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactAlertScalarFieldEnum',
+        distinct: 'ContactAlertScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactAlert
+        return root.ContactAlert
       },
     })
     t.list.field('AccountBalance', {
@@ -190,18 +190,18 @@ export const CmContact = objectType({
         return root.CmContactMedicalCondition
       },
     })
-    t.list.field('CmContactNote', {
-      type: 'CmContactNote',
+    t.list.field('ContactNote', {
+      type: 'ContactNote',
       args: {
-        where: 'CmContactNoteWhereInput',
-        orderBy: 'CmContactNoteOrderByWithRelationInput',
-        cursor: 'CmContactNoteWhereUniqueInput',
+        where: 'ContactNoteWhereInput',
+        orderBy: 'ContactNoteOrderByWithRelationInput',
+        cursor: 'ContactNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactNoteScalarFieldEnum',
+        distinct: 'ContactNoteScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactNote
+        return root.ContactNote
       },
     })
     t.list.field('MedicalFormContact', {
@@ -454,10 +454,58 @@ export const CmContact = objectType({
         return root.Activity
       },
     })
+    t.list.field('Albums', {
+      type: 'PhotoAlbum',
+      args: {
+        where: 'PhotoAlbumWhereInput',
+        orderBy: 'PhotoAlbumOrderByWithRelationInput',
+        cursor: 'PhotoAlbumWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PhotoAlbumScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Albums
+      },
+    })
     t.nullable.field('ContactPreference', {
       type: 'ContactPreference',
       resolve(root: any) {
         return root.ContactPreference
+      },
+    })
+    t.nullable.field('MarketingSourceData', {
+      type: 'MarketingSource',
+      resolve(root: any) {
+        return root.MarketingSourceData
+      },
+    })
+    t.list.field('Voucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Voucher
+      },
+    })
+    t.list.field('PurchasedVoucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PurchasedVoucher
       },
     })
     t.nullable.field('_count', {

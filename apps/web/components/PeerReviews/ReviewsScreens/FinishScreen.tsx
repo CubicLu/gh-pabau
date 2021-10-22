@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Button } from '@pabau/ui'
 import TickMarkIcon from '../assets/TickMark'
-import styles from '../../../pages/PeerReviews/index.module.less'
+import styles from '../../../pages/peer-reviews/index.module.less'
 
 export interface P {
   finishTitle: string
