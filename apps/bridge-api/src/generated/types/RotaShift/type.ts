@@ -9,8 +9,8 @@ export const RotaShift = objectType({
   definition(t) {
     t.int('id')
     t.int('uid')
-    t.decimal('start')
-    t.decimal('end')
+    t.float('start')
+    t.float('end')
     t.int('company_id')
     t.nullable.string('notes')
     t.nullable.field('last_seen', { type: 'DateTime' })
