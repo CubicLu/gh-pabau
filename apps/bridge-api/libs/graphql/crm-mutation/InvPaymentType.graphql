@@ -1,0 +1,48 @@
+fragment InvPaymentTypeFields on InvPaymentType {
+  id
+  name
+  epos_display
+  description
+  company_id
+  uid
+  created_date
+  modified_date
+  is_active
+  is_money
+  default
+  type
+}
+
+fragment InvPaymentType on InvPaymentType {
+  ...InvPaymentTypeFields
+  Company {
+    ...CompanyFields
+  }
+  GlCode {
+    ...GlCodeFields
+  }
+}
+
+mutation createOneInvPaymentType($data: InvPaymentTypeCreateInput!) {
+  createOneInvPaymentType(data: $data) {
+    ...InvPaymentType
+  }
+}
+
+mutation updateOneInvPaymentType($where: InvPaymentTypeWhereUniqueInput!, $data: InvPaymentTypeUpdateInput!) {
+  updateOneInvPaymentType(where: $where, data: $data) {
+    ...InvPaymentType
+  }
+}
+
+mutation deleteOneInvPaymentType($where: InvPaymentTypeWhereUniqueInput!) {
+  deleteOneInvPaymentType(where: $where) {
+    ...InvPaymentType
+  }
+}
+
+mutation updateManyInvPaymentType($where: InvPaymentTypeWhereInput, $data: InvPaymentTypeUpdateManyMutationInput!) {
+  updateManyInvPaymentType(where: $where, data: $data) {
+    count
+  }
+}

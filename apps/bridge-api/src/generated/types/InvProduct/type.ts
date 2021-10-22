@@ -12,7 +12,7 @@ export const InvProduct = objectType({
     t.string('name')
     t.nullable.string('sku')
     t.nullable.string('unit')
-    t.string('size')
+    t.nullable.string('size')
     t.nullable.int('product_order')
     t.string('um')
     t.nullable.float('cost')
@@ -211,6 +211,20 @@ export const InvProduct = objectType({
       },
       resolve(root: any) {
         return root.CompanyService
+      },
+    })
+    t.list.field('InsuranceContractPrice', {
+      type: 'InsuranceContractPrice',
+      args: {
+        where: 'InsuranceContractPriceWhereInput',
+        orderBy: 'InsuranceContractPriceOrderByWithRelationInput',
+        cursor: 'InsuranceContractPriceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InsuranceContractPriceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsuranceContractPrice
       },
     })
     t.nullable.field('_count', {

@@ -1,9 +1,44 @@
 query basicContactDetails($id: Int!) {
   findFirstCmContact(where: { ID: { equals: $id } }) {
     id: ID
-    Fname
-    Lname
+    firstName:Fname
+    lastName:Lname
+    isActive: is_active
     gender
+    patientID:custom_id
+    dob:DOB
+    email:Email
+    avatar: Avatar
+    street: MailingStreet
+    city: MailingCity
+    county: MailingProvince
+    postCode: MailingPostal
+    country: MailingCountry
+    mobile: Mobile
+    home: Phone
+    labelData: CmContactLabel {
+      labelDetail: CmLabel {
+        label: name
+        color
+      }
+    }
+    marketingSource:MarketingSourceData{
+      name
+    }
+    customField: CmContactCustom{
+      title: custom_field_label
+      id: custom_field_id
+      value: custom_field_value
+    }
+    contactNotes: ContactNote(
+      where: { Note: { not: { equals: "" } } }
+      orderBy: { CreatedDate: desc }
+    ) {
+      ID
+    }
+    bookingNotes: Booking(orderBy: { create_date: desc }) {
+      id
+    }
   }
 }
 query findContacts($searchTerm1: String, $searchTerm2: String) {
@@ -83,7 +118,7 @@ query getContactCustomFields {
   custom: findManyManageCustomFieldCategory {
     id
     name
-    ManageCustomField {
+    ManageCustomField(where:{field_for: { in: [CONTACT, CONTACTLEAD] }}) {
       id
       field_label
       field_type
@@ -208,6 +243,131 @@ mutation createOneContact(
     labels: $labels
     contactPreferences: $contactPreferences
   ) {
+    ID
+  }
+}
+
+query findEditContactDetail($id: Int) {
+  contact: findFirstCmContact(where: { ID: { equals: $id } }) {
+    Fname
+    Lname
+    salutation: Salutation
+    gender
+    MarketingSource
+    DOB
+    Email
+    Mobile
+    Phone
+    MailingProvince
+    MailingCountry
+    MailingStreet
+    MailingCity
+    MailingPostal
+    MarketingOptInPost
+    MarketingOptInText
+    MarketingOptInEmail
+    MarketingOptInPhone
+    needToKnows: need_to_knows
+    privacyPolicy: privacy_policy
+    active: is_active
+    contactPreference: ContactPreference {
+      family
+      emergencyContact: emergency_contact
+      nextOfKin: next_of_kin
+      insuranceProvider: insurance_provider
+      gp
+      company
+      bookAppointments: book_appointments
+      bookClass: book_class
+      loyalty
+      myPackages: my_packages
+      purchasePackage: purchase_package
+      payments
+      appointments
+      class
+      documents
+      medications
+      allergies
+      gpDetails: gp_details
+      shareLink: share_link
+      accessCode: access_code
+    }
+    customField: CmContactCustom {
+      custom_field_id
+      custom_field_label
+      custom_field_value
+    }
+    labels: CmContactLabel {
+      id: label_id
+    }
+    contactMeta: ContactMeta(
+      where: { meta_name: { equals: "preferred_language" } }
+    ) {
+      meta_value
+    }
+  }
+}
+
+mutation updateOneContact
+(
+  $contactId: Int!
+  $firstName: String!
+  $lastName: String!
+  $email: String!
+  $salutation: String!
+  $mailingProvince: String!
+  $mailingCity: String!
+  $mailingStreet: String!
+  $mailingPostal: String!
+  $mailingCountry: String!
+  $marketingOptInEmail: Int!
+  $marketingOptInPhone: Int!
+  $marketingOptInPost: Int!
+  $marketingOptInText: Int!
+  $marketingSource: Int!
+  $DOB: DateTime
+  $mobile: String!
+  $phone: String!
+  $gender: String!
+  $preferredLanguage: String!
+  $privacyPolicy: String
+  $needToKnows: Boolean
+  $customFields: [UpdateContactCustomFieldType]
+  $labels: UpdateContactLabelType
+  $contactPreferences: ContactPreferenceDataInput
+  $isActive: Int
+)
+{
+  updateOneContact(
+    contactId: $contactId
+    data:{
+      Fname: $firstName
+      Lname: $lastName
+      Email: $email
+      Salutation: $salutation
+      MailingProvince: $mailingProvince
+      MailingCity: $mailingCity
+      MailingStreet: $mailingStreet
+      MailingPostal: $mailingPostal
+      MailingCountry: $mailingCountry
+      MarketingOptInEmail: $marketingOptInEmail
+      MarketingOptInPhone: $marketingOptInPhone
+      MarketingOptInPost: $marketingOptInPost
+      MarketingOptInText: $marketingOptInText
+      MarketingSource: $marketingSource
+      DOB: $DOB
+      Mobile: $mobile
+      Phone: $phone
+      gender: $gender
+      preferred_language: $preferredLanguage
+      privacy_policy: $privacyPolicy
+      need_to_knows: $needToKnows
+      is_active: $isActive
+    }
+    customFields: $customFields
+    contactPreferences:$contactPreferences
+    labels: $labels
+  ){
     ID
   }
 }

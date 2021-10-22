@@ -1,0 +1,40 @@
+query getStaffDetails($userID: Int!) {
+  findUniqueUser(where: { id: $userID }) {
+     Staff: CmStaffGeneral {
+      Fname
+      Lname
+      Email
+      CellPhone
+      Location
+      OtherLocations: Locations {
+        id
+        name
+      }
+      PrimaryLocation: CompanyBranch {
+        id
+        name
+      }
+      Birthdate
+      CreatedDate
+   StaffNote {
+        note: Dependents
+      }
+  }
+    image
+    job_title
+  }
+}
+
+query getCompanyPositions {
+  positions: findManyCompanyPosition(
+  where:{
+    position: {not: {equals:""}}
+  }
+   orderBy:{
+     position: asc
+   }
+  ) {
+    id
+    position
+  }
+}

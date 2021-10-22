@@ -94,6 +94,13 @@ const ImageViewerSidebarItem = ({
   }
   useEffect(() => {
     if (source === '' && origin !== '') {
+      let path = origin
+      const pathArr = path.split('photos/')
+      if (pathArr?.length) {
+        pathArr[1] = `thumb_${pathArr[1]}`
+        path = pathArr.join('photos/')
+      }
+
       const img = new Image()
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
@@ -118,7 +125,7 @@ const ImageViewerSidebarItem = ({
       img.addEventListener('error', () => {
         setSource('load-error')
       })
-      img.src = origin
+      img.src = path
     }
   }, [source, origin])
 
@@ -208,11 +215,14 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
           <div
             className={classNames(
               styles.albumDropdownItem,
-              currentAlbum?.id &&
-                currentAlbum?.id === item?.id &&
-                styles.selected
+              (currentAlbum?.id && currentAlbum?.id === item?.id) ||
+                (currentAlbum?.id === null &&
+                  currentAlbum?.name === 'Uncategorized' &&
+                  item?.name === 'Uncategorized')
+                ? styles.selected
+                : ''
             )}
-            key={`album-dropdown-item-${index}`}
+            key={item?.id}
             onClick={() => {
               onAlbumSelect?.(item)
               setImageItems(item?.imageList as AlbumImageItem[])
@@ -253,11 +263,25 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
   }
 
   useEffect(() => {
+    const compare = (a, b) => {
+      if (dayjs(a.date) > dayjs(b.date)) {
+        return -1
+      }
+      if (dayjs(a.date) < dayjs(b.date)) {
+        return 1
+      }
+      return 0
+    }
+
     if (albums?.length > 0 && !selectedAlbum) {
+      const sortedImages = albums[0]?.imageList?.sort(compare)
+      albums[0].imageList = sortedImages
       setCurrentAlbum(albums[0])
       setImageItems(albums[0]?.imageList as AlbumImageItem[])
     }
     if (selectedAlbum) {
+      const sortedImages = selectedAlbum?.imageList?.sort(compare) || []
+      selectedAlbum.imageList = sortedImages
       setCurrentAlbum(selectedAlbum)
       setImageItems(selectedAlbum?.imageList as AlbumImageItem[])
     }
@@ -290,7 +314,7 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
           </div>
         </Popover>
         {imageItems?.map((item, index) => (
-          <React.Fragment key={`image-item-${index}`}>
+          <React.Fragment key={item?.id}>
             {(index === 0 ||
               !dayjs(imageItems[index - 1].date).isSame(item.date, 'year')) && (
               <>
@@ -324,7 +348,7 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
                 )}
               </div>
               <div>
-                <React.Fragment key={`${currentAlbum?.name}-${index}`}>
+                <React.Fragment key={item?.id}>
                   <ImageViewerSidebarItem
                     comparingMode={comparingMode}
                     currentAlbum={currentAlbum?.name || ''}

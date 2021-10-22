@@ -1,0 +1,37 @@
+fragment ContactMetaFields on ContactMeta {
+  id
+  contact_id
+  meta_name
+  meta_value
+}
+
+fragment ContactMeta on ContactMeta {
+  ...ContactMetaFields
+  Contact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneContactMeta($data: ContactMetaCreateInput!) {
+  createOneContactMeta(data: $data) {
+    ...ContactMeta
+  }
+}
+
+mutation updateOneContactMeta($where: ContactMetaWhereUniqueInput!, $data: ContactMetaUpdateInput!) {
+  updateOneContactMeta(where: $where, data: $data) {
+    ...ContactMeta
+  }
+}
+
+mutation deleteOneContactMeta($where: ContactMetaWhereUniqueInput!) {
+  deleteOneContactMeta(where: $where) {
+    ...ContactMeta
+  }
+}
+
+mutation updateManyContactMeta($where: ContactMetaWhereInput, $data: ContactMetaUpdateManyMutationInput!) {
+  updateManyContactMeta(where: $where, data: $data) {
+    count
+  }
+}

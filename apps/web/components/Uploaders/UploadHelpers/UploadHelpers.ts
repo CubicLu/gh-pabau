@@ -19,7 +19,7 @@ async function postData(url = '', data, file) {
     cache: 'no-cache',
     credentials: 'same-origin',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token.substring(1, token.length - 1)}`,
     },
     redirect: 'follow',
     body: postData,
@@ -35,5 +35,8 @@ export type ImgBlock = {
 }
 
 export const getImage = (url: string): string => `${cdnURL}${url}`
+
+export const getDocument = (url: string): string =>
+  `${cdnURL}/cdn/documents/${url}`
 
 export default postData

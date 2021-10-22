@@ -1,0 +1,49 @@
+fragment CmCampaignFields on CmCampaign {
+  ID
+  OwnerID
+  CompaignName
+  Type
+  Status
+  StartDate
+  EndDate
+  ExpectedRevenue
+  BudgetedCost
+  ActualCost
+  ExpectedResponse
+  NumSent
+  Description
+  CreatedDate
+  IpAddress
+  company_id
+}
+
+fragment CmCampaign on CmCampaign {
+  ...CmCampaignFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCmCampaign($data: CmCampaignCreateInput!) {
+  createOneCmCampaign(data: $data) {
+    ...CmCampaign
+  }
+}
+
+mutation updateOneCmCampaign($where: CmCampaignWhereUniqueInput!, $data: CmCampaignUpdateInput!) {
+  updateOneCmCampaign(where: $where, data: $data) {
+    ...CmCampaign
+  }
+}
+
+mutation deleteOneCmCampaign($where: CmCampaignWhereUniqueInput!) {
+  deleteOneCmCampaign(where: $where) {
+    ...CmCampaign
+  }
+}
+
+mutation updateManyCmCampaign($where: CmCampaignWhereInput, $data: CmCampaignUpdateManyMutationInput!) {
+  updateManyCmCampaign(where: $where, data: $data) {
+    count
+  }
+}
