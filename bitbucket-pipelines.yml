@@ -270,7 +270,7 @@ pipelines:
               name: unit tests
               size: 8x
               runs-on:
-                - 'self-hosted'
+                - 'self.hosted'
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=HEAD~1
@@ -289,7 +289,7 @@ pipelines:
               name: integration tests
               size: 8x
               runs-on:
-                - 'self-hosted'
+                - 'self.hosted'
               services:
                 - docker
               script:
@@ -355,7 +355,7 @@ pipelines:
           max-time: 80
           size: 8x
           runs-on:
-            - 'self-hosted'
+            - 'self.hosted'
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
