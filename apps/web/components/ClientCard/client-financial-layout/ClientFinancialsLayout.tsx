@@ -108,6 +108,7 @@ export interface FinancialStatements {
 }
 
 export interface ClientFinancialsLayoutProps {
+  clientId?: number
   isEmpty?: boolean
   totalOutstanding?: number
   totalInvoiced?: number

@@ -1,0 +1,40 @@
+query getPayments($take: Int!, $skip: Int!, $id: Int!){
+  findManyInvPayment(
+    take: $take,
+    skip: $skip,
+    where:{
+      contact_id:{equals:$id}
+    }){
+    id
+    date
+    pmethod
+    amount
+    InvSale{
+      custom_id
+      Location{
+        name
+      }
+      InvBiller{
+        name
+      }
+    }
+    User{
+      full_name
+    }
+  }
+}
+
+query totalFinancePaymentCount($id: Int!){
+  aggregateInvPayment(
+    where:{
+      contact_id:{equals:$id}
+    }
+  ){
+    count{
+      id
+    }
+    sum{
+      amount
+    }
+  }
+}

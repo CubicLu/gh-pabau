@@ -190,7 +190,7 @@ const Financial = () => {
           onExpand={handleExpandsionClick}
           onFilterSubmit={handleFilter}
         />
-        <Payments {...props} />
+        <Payments {...props} clientId={Number.parseInt(`${router.query.id}`)} />
         <Items
           dataProps={props}
           invoiceEmployeeOptions={invoiceEmployeeOptions}

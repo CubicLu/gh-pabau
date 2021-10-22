@@ -4882,7 +4882,7 @@ en:
   ui.client-card-financial.payments.employee: 'Employee'
   ui.client-card-financial.payments.paid-by: 'Paid by'
   ui.client-card-financial.payments.method: 'Method'
-  ui.client-card-financial.payments.amount: 'Amount'
+  ui.client-card-financial.payments.amount: 'Payment Amount'
   ui.client-card-financial.payments.delete-payments: 'Delete Payments'
   ui.client-card-financial.payments.delete-payments-desc: 'Are you sure you want to void your payment? This action is permanent and cannot be undone'
   ui.client-card-financial.payments.delete-payments-alert-message: 'Following payments will be deleted'
