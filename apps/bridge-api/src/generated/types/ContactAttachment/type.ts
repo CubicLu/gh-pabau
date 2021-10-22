@@ -34,7 +34,7 @@ export const ContactAttachment = objectType({
     t.nullable.int('medical_form_id')
     t.nullable.string('tags')
     t.nullable.string('medical_uniqid')
-    t.field('Contact', {
+    t.nullable.field('Contact', {
       type: 'CmContact',
       resolve(root: any) {
         return root.Contact

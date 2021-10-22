@@ -1,0 +1,52 @@
+fragment CmExtraPatientFields on CmExtraPatient {
+  id
+  contact_id
+  nhs_number
+  gp
+  surgeon
+  company_id
+  date_of_death
+  external_clinic
+  assigned_clinic
+  treatment_group
+  assigned_diary
+  marketing_source
+  referral_source
+}
+
+fragment CmExtraPatient on CmExtraPatient {
+  ...CmExtraPatientFields
+  Company {
+    ...CompanyFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+  MarketingSource {
+    ...MarketingSourceFields
+  }
+}
+
+mutation createOneCmExtraPatient($data: CmExtraPatientCreateInput!) {
+  createOneCmExtraPatient(data: $data) {
+    ...CmExtraPatient
+  }
+}
+
+mutation updateOneCmExtraPatient($where: CmExtraPatientWhereUniqueInput!, $data: CmExtraPatientUpdateInput!) {
+  updateOneCmExtraPatient(where: $where, data: $data) {
+    ...CmExtraPatient
+  }
+}
+
+mutation deleteOneCmExtraPatient($where: CmExtraPatientWhereUniqueInput!) {
+  deleteOneCmExtraPatient(where: $where) {
+    ...CmExtraPatient
+  }
+}
+
+mutation updateManyCmExtraPatient($where: CmExtraPatientWhereInput, $data: CmExtraPatientUpdateManyMutationInput!) {
+  updateManyCmExtraPatient(where: $where, data: $data) {
+    count
+  }
+}

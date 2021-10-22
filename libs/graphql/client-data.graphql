@@ -23,7 +23,7 @@ query ClientsDataAggregate {
   findManyCmContactCount
 }
 
-query ClientsGetNextAppointments($id: Int!, $start_date: Decimal!) {
+query ClientsGetNextAppointments($id: Int!, $start_date: Float!) {
   findFirstCmContact(where: { ID: { equals: $id } }) {
     Booking(where: { start_date: { gt: $start_date } }) {
       id
