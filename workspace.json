@@ -30,7 +30,7 @@
             "root": "apps/web",
             "outputPath": "dist/apps/web",
             "maxWorkers": 8,
-            "memoryLimit": 8096,
+            "memoryLimit": 8192,
             "verbose": true,
             "progress": true
           },
