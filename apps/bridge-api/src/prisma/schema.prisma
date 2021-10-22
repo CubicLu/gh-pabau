@@ -10510,8 +10510,8 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  start          Decimal
-  end            Decimal
+  start          Float
+  end            Float
   company_id     Int            @map("occupier")
   notes          String?
   last_seen      DateTime?
@@ -10593,8 +10593,8 @@ model RotaShift {
 model Booking {
   id                            Int             @id @default(autoincrement())
   title                         String
-  start_date                    Decimal
-  end_date                      Decimal
+  start_date                    Float
+  end_date                      Float
   start_time                    Int?
   end_time                      Int?
   service                       String?
@@ -10602,8 +10602,8 @@ model Booking {
   UID                           Int
   company_id                    Int             @map("occupier")
   backgroudcolor                String?
-  create_date                   Decimal?
-  update_date                   Decimal?
+  create_date                   Float?
+  update_date                   Float?
   status                        String
   estimated_cost                Float?
   tips                          Float?

@@ -1,78 +1,78 @@
 query getDashboardData(
-    $start_date: Decimal
-    $end_date: Decimal
-    $user_id: Int
-    $location_id: Int
+  $start_date: Float
+  $end_date: Float
+  $user_id: Int
+  $location_id: Int
+) {
+  dashboardData(
+    data: {
+      start_date: $start_date
+      end_date: $end_date
+      user_id: $user_id
+      location_id: $location_id
+    }
   ) {
-    dashboardData(
-      data: {
-        start_date: $start_date
-        end_date: $end_date
-        user_id: $user_id
-        location_id: $location_id
+    bookingStatusCount {
+      totalBooking
+      totalBookingPer
+      totalOnlineBooking
+      totalOnlineBookingPer
+      appointmentList {
+        label
+        count
+        per
       }
-    ){
-      bookingStatusCount{
-        totalBooking
-        totalBookingPer
-        totalOnlineBooking
-        totalOnlineBookingPer
-        appointmentList{
-          label
-          count
-          per
-        }
-        onlineAppointmentList{
-					label
-          count
-          per
-        }
+      onlineAppointmentList {
+        label
+        count
+        per
       }
-      salesCount{
-        totalAvailableCategoryTypePer
-        totalAvailableCategoryTypeCount
-        totalAvailableCategoryTypeAmount
-        salesList{
-          label
-          count
-          per
-        }
+    }
+    salesCount {
+      totalAvailableCategoryTypePer
+      totalAvailableCategoryTypeCount
+      totalAvailableCategoryTypeAmount
+      salesList {
+        label
+        count
+        per
       }
-     allbooking{
-      bookingsByStatus{
+    }
+    allbooking {
+      bookingsByStatus {
         status
-        chartDataSet{
+        chartDataSet {
           label
           value
         }
       }
     }
-    allSales{
-      salesByProductCategoryType{
+    allSales {
+      salesByProductCategoryType {
         status
-        chartDataSet{
+        chartDataSet {
           label
           value
         }
       }
     }
-    retailSales{
-      retailSalesDetails{
+    retailSales {
+      retailSalesDetails {
         name
         units
         value
         per
       }
     }
-    serviceSales{
-      serviceSalesDetails{
+    serviceSales {
+      serviceSalesDetails {
         name
         units
         value
         per
       }
     }
-    otherSalesDetails{
+    otherSalesDetails {
       newClientCount
       avgBiller
       RevPerhour
