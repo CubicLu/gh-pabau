@@ -264,7 +264,7 @@ const LeadsStagesComponent = () => {
     isLoadingGetAllLeadsDetail,
     getAllLeadsError,
     getAllLeadsDetailData,
-    setLeadsState,
+    leadsState,
     allStages,
     leadsDefaultParams,
     leadsLenghtRef,
