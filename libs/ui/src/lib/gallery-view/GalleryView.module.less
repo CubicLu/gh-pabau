@@ -27,6 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+
     @media screen and (max-width: 479px) {
       button:first-child {
         padding: unset;
@@ -39,7 +40,49 @@
     }
 
     .downloadBtn {
-      margin: 10px 0;
+      margin: 0px;
+    }
+
+    .albumDropdownBtn {
+      :global {
+        .ant-dropdown {
+          padding: 4px 0px;
+          min-width: 200px !important;
+
+          ul {
+            width: 100%;
+            border: 1px solid #f0f0f0;
+            box-shadow: 3px 3px 10px #f0f0f0;
+          }
+
+          .ant-menu-item {
+            display: flex;
+            align-items: center;
+            margin: 0px !important;
+            padding: 0px 8px 0px 4px !important;
+            line-height: 0px;
+
+            > span,
+            > svg {
+              width: 20%;
+              line-height: 0px;
+              margin: 0px;
+            }
+
+            div {
+              width: 80%;
+              padding-right: 4px;
+            }
+
+            &:hover {
+              background-color: #88d2ec29;
+              path {
+                fill: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
     }
 
     button {
@@ -296,6 +339,18 @@
           color: #3d3d46;
         }
       }
+      .dropable {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0.29;
+        // background: rgba(135, 206, 235);
+        z-index: 1;
+        border-radius: 6px;
+        cursor: pointer;
+      }
     }
     .albumInfo {
       text-align: center;
@@ -402,6 +457,7 @@
     }
     &:hover {
       .check-wrappers {
+        cursor: pointer;
         position: absolute;
         right: 15px;
         top: 12px;

@@ -101,14 +101,14 @@ interface DataSourceType {
 export interface AlbumDataProps {
   data: AlbumProps
   onFolderClick: (index) => void
-  selectedImage: Array<string>
+  selectedImages: ImageProps[]
+  setSelectedImages: (e) => void
   handleOnChange: (checked, img) => void
   loading: boolean
-  setSelectedImage: (e) => void
   showMenu: boolean
   setOpenDeleteModal: (e) => void
   openDeleteModal: boolean
-  handleImageMove: (album) => void
+  handleImageMove: (album, images) => void
   drop: (e) => void
   allowDrop: (e) => void
   drag: (e) => void
@@ -130,10 +130,10 @@ export interface AlbumDataProps {
 export const AlbumData: FC<AlbumDataProps> = ({
   data,
   onFolderClick,
-  selectedImage,
+  selectedImages,
   handleOnChange,
   loading = true,
-  setSelectedImage,
+  setSelectedImages,
   showMenu,
   openDeleteModal,
   setOpenDeleteModal,
@@ -192,7 +192,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
       )
       setAlbumImageList(temp)
     }
-  }, [data.albumImage, listView, selectedImage])
+  }, [data.albumImage, listView, selectedImages])
 
   const handleAlbumDownload = (albumImage) => {
     albumImage.map((img) => {
@@ -329,7 +329,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
         return (
           <div className={styles.folderContentFirst}>
             <Checkbox
-              checked={selectedImage.includes(value?.[0] as never)}
+              checked={selectedImages.includes(value?.[0] as never)}
               onChange={(e) => handleOnChange(e.target.checked, value?.[0])}
             >
               <Card bordered={false}>
@@ -413,8 +413,8 @@ export const AlbumData: FC<AlbumDataProps> = ({
         <div
           className={styles.menuItem}
           onClick={() => {
-            selectedImage.push(img as never)
-            setSelectedImage([...selectedImage])
+            selectedImages.push(img as never)
+            setSelectedImages([...selectedImages])
             imgDownload(img)
           }}
         >
@@ -538,7 +538,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <div className={styles.menuItem} onClick={() => handleDownload()}>
               <DownloadOutlined />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.download.button')}
-              {`(${selectedImage.length})`}
+              {`(${selectedImages.length})`}
             </div>
             <div
               className={styles.menuItem}
@@ -546,7 +546,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             >
               <EnterOutlined />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.menu.move.button')}{' '}
-              {`(${selectedImage.length})`}
+              {`(${selectedImages.length})`}
               <div className={styles.leftItem}>
                 <RightOutlined />
               </div>
@@ -554,17 +554,17 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <div className={styles.menuItem}>
               <Share />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.share.button')}{' '}
-              {`(${selectedImage.length})`}
+              {`(${selectedImages.length})`}
             </div>
             <div className={styles.menuItem}>
               <TagOutlined />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.tag.button')}{' '}
-              {`(${selectedImage.length})`}
+              {`(${selectedImages.length})`}
             </div>
             <div className={styles.menuItem}>
               <EyeOutlined />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.studio.button')}{' '}
-              {`(${selectedImage.length})`}
+              {`(${selectedImages.length})`}
             </div>
             <div
               className={styles.menuItem}
@@ -574,7 +574,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             >
               <DeleteOutlined />
               &nbsp;&nbsp;&nbsp;{t('galley.list.album.delete.button')}{' '}
-              {`(${selectedImage.length})`}
+              {`(${selectedImages.length})`}
             </div>
           </div>
         </div>
@@ -585,7 +585,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
               <LeftOutlined onClick={() => handleDrawerContent()} />
             </span>
             <h3>
-              {t('galley.list.album.move.button')} ({selectedImage.length})
+              {t('galley.list.album.move.button')} ({selectedImages.length})
             </h3>
           </div>
           <div className={styles.menuContentMobileBody}>
@@ -596,11 +596,11 @@ export const AlbumData: FC<AlbumDataProps> = ({
                     <div
                       className={styles.menuItem}
                       key={album.albumTitle.toString()}
-                      onClick={() => handleImageMove(album.albumTitle)}
+                      onClick={() => handleImageMove(album.albumTitle, [])}
                     >
                       <ImageAlbum />
                       &nbsp;&nbsp;&nbsp;
-                      {album.albumTitle} {`(${selectedImage.length})`}
+                      {album.albumTitle} {`(${selectedImages.length})`}
                     </div>
                   )
               )}
@@ -679,12 +679,20 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <div className={styles.albumImagesDiv}>
             {data.album?.map((x, i) => (
               <div key={i}>
-                <div
-                  className={styles.albumContainer}
-                  id={x.albumTitle}
-                  onDrop={(ev) => drop(ev)}
-                  onDragOver={(ev) => allowDrop(ev)}
-                >
+                <div className={styles.albumContainer}>
+                  <div
+                    id={`tar${x.id}`}
+                    className={styles.dropable}
+                    onClick={() => onFolderClick(i)}
+                    onDrop={(ev) => drop(ev)}
+                    onDragOver={(ev) => allowDrop(ev)}
+                    onDragLeave={() => {
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore
+                      document.querySelector(`#tar${x.id}`).style.background =
+                        'transparent'
+                    }}
+                  ></div>
                   <div className={styles.checkWrapper}>
                     {!isMobile ? (
                       <Popover
@@ -708,10 +716,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
                   </div>
                   <div
                     className={styles.gridContainer}
-                    onClick={() => onFolderClick(i)}
                     onDragStart={(event) => dragAlbum(event)}
                     draggable={true}
-                    id={x.albumTitle}
+                    id={x.id?.toString()}
                   >
                     {showAlbumImages(x)}
                   </div>
@@ -741,46 +748,25 @@ export const AlbumData: FC<AlbumDataProps> = ({
                   data.albumImage?.length > 0 &&
                   data.albumImage.map((x: ImageProps, i) => {
                     return (
-                      <Checkbox
-                        checked={selectedImage.includes(x as never)}
-                        key={i}
-                        onChange={(value) =>
-                          handleOnChange(value.target.checked, x)
-                        }
-                        className={
-                          selectedImage.includes(x as never)
-                            ? classNames(styles.checked, styles.showCheck)
-                            : ''
-                        }
-                      >
-                        <div className={styles.imagePreview}>
-                          <div className={styles.checkWrappers}>
-                            {!isMobile ? (
-                              <Popover
-                                placement="bottomRight"
-                                content={() => <DotButtonMenu img={x.img} />}
-                                trigger="click"
-                                className={styles.imageDotButton}
-                              >
-                                <div className={styles.dotBtn}>
-                                  <Dot />
-                                </div>
-                              </Popover>
-                            ) : (
-                              <div
-                                className={styles.dotBtn}
-                                onClick={() => setDotMenuDrawer(true)}
-                              >
-                                <Dot />
-                              </div>
-                            )}
-                          </div>
+                      <div key={x?.id} className={styles.imagePreview}>
+                        <Checkbox
+                          checked={selectedImages.includes(x as never)}
+                          key={i}
+                          onChange={(value) =>
+                            handleOnChange(value.target.checked, x)
+                          }
+                          className={
+                            selectedImages.includes(x as never)
+                              ? classNames(styles.checked, styles.showCheck)
+                              : ''
+                          }
+                        >
                           <div className={styles.imageAlbum} key={i}>
                             <ImageItem
                               origin={x.img}
                               className={`img${i}`}
                               alt={x.img}
-                              id={x.img}
+                              id={x.id}
                               key={i}
                               draggable={true}
                               onDragStart={(event) => drag(event)}
@@ -795,8 +781,29 @@ export const AlbumData: FC<AlbumDataProps> = ({
                               </div>
                             ) : null}
                           </div>
+                        </Checkbox>
+                        <div className={styles.checkWrappers}>
+                          {!isMobile ? (
+                            <Popover
+                              placement="bottomRight"
+                              content={() => <DotButtonMenu img={x.img} />}
+                              trigger="click"
+                              className={styles.imageDotButton}
+                            >
+                              <div className={styles.dotBtn}>
+                                <Dot />
+                              </div>
+                            </Popover>
+                          ) : (
+                            <div
+                              className={styles.dotBtn}
+                              onClick={() => setDotMenuDrawer(true)}
+                            >
+                              <Dot />
+                            </div>
+                          )}
                         </div>
-                      </Checkbox>
+                      </div>
                     )
                   })}
                 {loading && (
@@ -827,7 +834,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             {isMobile && showMenu && (
               <div className={styles.bottomBar}>
                 <ToTopOutlined onClick={() => setMenuDrawer(true)} />
-                <h3>{selectedImage.length} photos selected</h3>
+                <h3>{selectedImages.length} photos selected</h3>
                 <Drawer
                   placement={'bottom'}
                   closable={false}
@@ -929,7 +936,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
         {isMobile && showMenu && (
           <div className={styles.bottomBar}>
             <ToTopOutlined onClick={() => setMenuDrawer(true)} />
-            <h3>{selectedImage.length} photos selected</h3>
+            <h3>{selectedImages.length} photos selected</h3>
             <Drawer
               placement={'bottom'}
               closable={false}
