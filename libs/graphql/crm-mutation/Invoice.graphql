@@ -13,9 +13,3 @@ fragment InvoiceFields on Invoice {
 fragment Invoice on Invoice {
   ...InvoiceFields
 }
-
-mutation createOneInvoice($data: InvoiceCreateInput!) {
-  createOneInvoice(data: $data) {
-    ...Invoice
-  }
-}

@@ -12,10 +12,10 @@ import { Voided } from '../../../components/ClientCard/client-financial-layout/v
 import { Statements } from '../../../components/ClientCard/client-financial-layout/statements/Statements'
 import { useQuery } from '@apollo/client'
 import {
-  GetFinanceInvoicesDocument,
-  TotalFinanceInvoiceCountDocument,
+  GetFinancialInvoicesDocument,
+  TotalInvoiceCountDocument,
   GetInvoiceDocument,
-  GetFullInvoicesDocument,
+  GetContactInvoicesDocument,
 } from '@pabau/graphql'
 import {
   financialInvoices,
@@ -37,7 +37,7 @@ const Financial = () => {
     statements: financialStatements,
   }
   const [pagination, setPagination] = useState({
-    take: 10,
+    take: 50,
     skip: 0,
   })
   const [saleId, setSaleId] = useState(0)
@@ -83,7 +83,7 @@ const Financial = () => {
 
   const getsalesDetailsQueryVariables = useMemo(() => {
     const queryOptions = {
-      skip: saleId === 0,
+      skip: Number.parseInt(`${saleId}`) === 0,
       variables: {
         id: Number.parseInt(`${saleId}`),
       },
@@ -91,7 +91,7 @@ const Financial = () => {
     return queryOptions
   }, [saleId])
 
-  const { data: totalInvoices } = useQuery(TotalFinanceInvoiceCountDocument, {
+  const { data: totalInvoices } = useQuery(TotalInvoiceCountDocument, {
     skip: !router.query.id,
     variables: {
       where: {
@@ -116,14 +116,14 @@ const Financial = () => {
       },
     },
   })
-  const { data: allInvoice } = useQuery(GetFullInvoicesDocument, {
+  const { data: allInvoice } = useQuery(GetContactInvoicesDocument, {
     skip: !router.query.id,
     variables: {
-      id: Number.parseInt(`${router.query.id}`),
+      contactID: Number.parseInt(`${router.query.id}`),
     },
   })
   const { data: invoice, loading } = useQuery(
-    GetFinanceInvoicesDocument,
+    GetFinancialInvoicesDocument,
     getQueryVariables
   )
 
@@ -186,7 +186,7 @@ const Financial = () => {
             ].filter((item) => !!item) as string[]) ?? []
           }
           onChangePagination={handlePagination}
-          totalInoviceCount={totalInvoices?.aggregateInvoice?.count?.id}
+          totalInvoiceCount={totalInvoices?.aggregateInvoice?.count?.id}
           onExpand={handleExpandsionClick}
           onFilterSubmit={handleFilter}
         />

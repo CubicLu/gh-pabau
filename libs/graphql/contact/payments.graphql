@@ -1,14 +1,19 @@
-query getPayments($take: Int!, $skip: Int!, $id: Int!){
+query getPayments($contactID: Int!, $take: Int = 50, $skip: Int = 0){
   findManyInvPayment(
     take: $take,
     skip: $skip,
     where:{
-      contact_id:{equals:$id}
+      contact_id:{equals:$contactID}
     }){
     id
     date
     pmethod
     amount
+    CmContact{
+      AccountBalance{
+        balance
+      }
+    }
     InvSale{
       custom_id
       Location{
@@ -24,10 +29,10 @@ query getPayments($take: Int!, $skip: Int!, $id: Int!){
   }
 }
 
-query totalFinancePaymentCount($id: Int!){
+query totalPaymentsCount($ContactID: Int!){
   aggregateInvPayment(
     where:{
-      contact_id:{equals:$id}
+      contact_id:{equals:$ContactID}
     }
   ){
     count{

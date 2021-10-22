@@ -9,10 +9,7 @@ import {
 import { Typography, Button, Popover, Radio, Space, Skeleton } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
-import {
-  GetPaymentsDocument,
-  TotalFinancePaymentCountDocument,
-} from '@pabau/graphql'
+import { GetPaymentsDocument, TotalPaymentsCountDocument } from '@pabau/graphql'
 import { useQuery } from '@apollo/client'
 import dayjs from 'dayjs'
 import { useUser } from '../../../../context/UserContext'
@@ -24,17 +21,14 @@ const getInvoicePaymentValues = () => {
   }
 }
 
-export const Payments: FC<ClientFinancialsLayoutProps> = ({
-  accountCredit,
-  clientId,
-}) => {
+export const Payments: FC<ClientFinancialsLayoutProps> = ({ clientId }) => {
   const { t } = useTranslation('common')
   const { Text } = Typography
   const user = useUser()
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -45,7 +39,7 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
     const queryOptions = {
       skip: !clientId,
       variables: {
-        id: clientId,
+        contactID: clientId,
         take: paginateData.limit,
         skip: paginateData.offset,
       },
@@ -54,15 +48,12 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginateData.limit, paginateData.offset, clientId])
 
-  const { data: totalPaymentCounts } = useQuery(
-    TotalFinancePaymentCountDocument,
-    {
-      skip: !clientId,
-      variables: {
-        id: clientId,
-      },
-    }
-  )
+  const { data: totalPaymentCounts } = useQuery(TotalPaymentsCountDocument, {
+    skip: !clientId,
+    variables: {
+      ContactID: clientId,
+    },
+  })
   const { data: payment, loading } = useQuery(
     GetPaymentsDocument,
     getQueryVariables
@@ -339,19 +330,28 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
           <div className={styles.pagination}>
             <Pagination
               total={paginateData.total}
-              defaultPageSize={10}
+              defaultPageSize={50}
+              pageSizeOptions={['10', '25', '50', '100']}
               showSizeChanger={false}
               onChange={onPaginationChange}
               pageSize={paginateData.limit}
               current={paginateData.currentPage}
               showingRecords={paginateData.showingRecords}
+              onPageSizeChange={(pageSize) => {
+                setPaginateData({
+                  ...paginateData,
+                  limit: pageSize,
+                })
+              }}
             />
           </div>
           <InvoiceFooter
             buttons={[
               {
                 text: t('ui.client-card-financial.payments.account-credit'),
-                value: accountCredit,
+                value:
+                  payment?.findManyInvPayment[0]?.CmContact?.AccountBalance[0]
+                    ?.balance,
                 valueColor: '#65CD98',
               },
               {

@@ -20,7 +20,7 @@ import {
   Skeleton,
 } from 'antd'
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
-import { GetFinanceInvoicesQuery, GetInvoiceQuery } from '@pabau/graphql'
+import { GetFinancialInvoicesQuery, GetInvoiceQuery } from '@pabau/graphql'
 import EditInvoice from './EditInvoice'
 import InvoiceFooter from './invoice-footer/InvoiceFooter'
 import dayjs from 'dayjs'
@@ -47,7 +47,7 @@ export interface ISalesItemProps {
 }
 
 interface P {
-  invoice: GetFinanceInvoicesQuery
+  invoice: GetFinancialInvoicesQuery
   salesDetails: GetInvoiceQuery
   salesDetaillLoading: boolean
   loading: boolean
@@ -62,7 +62,7 @@ interface P {
     dateStart: string,
     dateEnd: string
   ): void
-  totalInoviceCount: number
+  totalInvoiceCount: number
 }
 
 export const Invoices: FC<P> = (props) => {
@@ -71,7 +71,7 @@ export const Invoices: FC<P> = (props) => {
     salesDetails,
     salesDetaillLoading,
     loading,
-    totalInoviceCount,
+    totalInvoiceCount,
     invoiceEmployeeOptions,
     locationOptions,
     onChangePagination,
@@ -90,7 +90,7 @@ export const Invoices: FC<P> = (props) => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -171,16 +171,16 @@ export const Invoices: FC<P> = (props) => {
   useEffect(() => {
     setPaginateData({
       ...paginateData,
-      total: totalInoviceCount,
+      total: totalInvoiceCount,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalInoviceCount])
+  }, [totalInvoiceCount])
 
   useEffect(() => {
     if (invoices) {
       setPaginateData((d) => ({
         ...d,
-        total: totalInoviceCount,
+        total: totalInvoiceCount,
         showingRecords: invoices?.length,
       }))
     }
@@ -770,12 +770,24 @@ export const Invoices: FC<P> = (props) => {
             <div className={styles.pagination}>
               <Pagination
                 total={paginateData.total}
-                defaultPageSize={10}
+                defaultPageSize={50}
+                pageSizeOptions={['10', '25', '50', '100']}
                 showSizeChanger={false}
                 onChange={onPaginationChange}
                 pageSize={paginateData.limit}
                 current={paginateData.currentPage}
                 showingRecords={paginateData.showingRecords}
+                onPageSizeChange={(pageSize) => {
+                  const offset =
+                    paginateData.limit * (paginateData.currentPage - 1)
+                  setPaginateData({
+                    ...paginateData,
+                    offset,
+                    currentPage: paginateData.currentPage,
+                    limit: pageSize,
+                  })
+                  onChangePagination?.(pageSize, offset)
+                }}
               />
             </div>
             <InvoiceFooter

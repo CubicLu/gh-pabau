@@ -48,35 +48,3 @@ query getInvoice($id: Int!) {
     guid
   }
 }
-
-query getFinanceInvoices($take: Int!, $skip: Int!, $where: InvoiceWhereInput){
-  findManyInvoice(take: $take, skip: $skip, where: $where){
-    id
-    amount
-    billers
-    date
-    issue_to
-    location_name
-    status
-  }
-}
-
-query getFullInvoices($id: Int!){
-  findManyInvoice(where:{customer_id:{equals:$id}}){
-    id
-    amount
-    billers
-    date
-    issue_to
-    location_name
-    status
-  }
-}
-
-query totalFinanceInvoiceCount($where: InvoiceWhereInput){
-  aggregateInvoice(where: $where){
-    count{
-      id
-    }
-  }
-}
