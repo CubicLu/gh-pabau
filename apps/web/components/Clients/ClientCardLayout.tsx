@@ -27,6 +27,7 @@ import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { getRealIp } from '../../helper/getRealIp'
 import { useUser } from '../../context/UserContext'
+import { getCompanyTimezoneDate } from '../../helper/getCompanyTimezoneDate'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -160,11 +161,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       const noteBody = {
         Note: note,
         IpAddress: ipAddress + '',
-        // CreatedDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        CreatedDate: dayjs
-          .tz(dayjs(), me?.companyTimezone)
-          .format('YYYY-MM-DD HH:mm:ss'),
-        // CreatedDate: dayjs.tz(dayjs(), 'Europe/Kaliningrad').format(''),
+        CreatedDate: me?.companyTimezone
+          ? getCompanyTimezoneDate(me?.companyTimezone)
+          : dayjs().utc().format(),
         User: { connect: { id: me?.user } },
         CmContact: { connect: { ID: clientId } },
       }
@@ -259,10 +258,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       })
     }
   }, [contactDetails, notesCountLoading])
-<<<<<<< HEAD
 
-=======
->>>>>>> 2c7d4435d1bfc54ef009c5b72559174f3bb66c35
   const handleEditAll = () => {
     setOpenEditModal(true)
   }
