@@ -1,6 +1,6 @@
 import { extendType, intArg, inputObjectType, nullable } from 'nexus'
 import { Context } from '../../../context'
-import { PublicStaffResponse } from '../nexus-type/index'
+import { PublicStaffResponse } from '../nexus-type'
 import moment from 'moment'
 
 const PSTInput = inputObjectType({
@@ -26,7 +26,11 @@ export const Public_Staff = extendType({
           where: {
             ...input.where,
             RotaShift: {
-              some: { start: { gt: moment().format('YYYYMMDDHHmmss') } },
+              some: {
+                start: {
+                  gt: Number.parseFloat(moment().format('YYYYMMDDHHmmss')),
+                },
+              },
             },
             User: { hide_online_bookings: 0 },
           },
