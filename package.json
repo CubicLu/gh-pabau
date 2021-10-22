@@ -4,7 +4,7 @@
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
-    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543\" nx",
+    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=8096\" nx",
     "serve": "yarn nx serve",
     "build:bridge-api": "yarn nx export bridge-api",
     "hasura:cli": "ts-node tools/cli/hasura.ts",
@@ -324,7 +324,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 91,
+  "bump-rebuild-all": 92,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }

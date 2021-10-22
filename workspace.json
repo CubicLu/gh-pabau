@@ -30,7 +30,7 @@
             "root": "apps/web",
             "outputPath": "dist/apps/web",
             "maxWorkers": 8,
-            "memoryLimit": 5120,
+            "memoryLimit": 8096,
             "verbose": true,
             "progress": true
           },
@@ -55,7 +55,7 @@
           "builder": "@nrwl/next:export",
           "options": {
             "buildTarget": "web:build:production",
-            "memoryLimit": 5120,
+            "memoryLimit": 6144,
             "verbose": true,
             "progress": true
           }
