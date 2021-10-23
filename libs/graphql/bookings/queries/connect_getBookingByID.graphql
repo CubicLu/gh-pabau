@@ -20,10 +20,14 @@ query GetBookingById($id: Int) {
   }
 }
 
-query GetCompanyAppointmentsByDate($startDate: Float, $companyId: Int) {
+query GetCompanyAppointmentsByDate(
+  $startDate: Float
+  $endDate: Float
+  $companyId: Int
+) {
   findManyBooking(
     where: {
-      start_date: { equals: $startDate }
+      start_date: { gt: $startDate, lt: $endDate }
       company_id: { equals: $companyId }
     }
   ) {

@@ -13,7 +13,12 @@ interface P {
 
 export const Appointments: FC<P> = ({ date, appointments }) => {
   return (
-    <div className={styles.appointmentContainer}>
+    <div
+      className={styles.appointmentContainer}
+      style={{
+        border: appointments?.length > 0 ? '1px solid #f4f5f7' : 'none',
+      }}
+    >
       {appointments &&
         appointments?.length > 0 &&
         appointments.map((appt) => {
