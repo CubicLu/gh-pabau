@@ -72,7 +72,7 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
 
   const { data: appointmentsData } = useGetCompanyAppointmentsByDateQuery({
     variables: {
-      startDate: 20190724160000,
+      startDate: 20180725120000,
       companyId: me?.company,
     },
   })
