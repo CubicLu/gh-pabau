@@ -347,6 +347,9 @@ pipelines:
                   yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || (docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine; exit 1)
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
                 - |
+                  echo "Reloading Metadata"
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:refresh-metadata
+                - |
                   echo "Checking Metadata is consistent so far..."
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
                 - |
