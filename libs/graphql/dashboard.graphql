@@ -1,6 +1,6 @@
 query getDashboardData(
-    $start_date: Decimal
-    $end_date: Decimal
+    $start_date: Float
+    $end_date: Float
     $user_id: Int
     $location_id: Int
   ) {
