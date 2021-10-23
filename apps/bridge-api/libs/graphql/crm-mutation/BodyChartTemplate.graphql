@@ -1,0 +1,45 @@
+fragment BodyChartTemplateFields on BodyChartTemplate {
+  id
+  template_name
+  template_url
+  tags
+  company_id
+  uid
+  creation_date
+  chart_order
+  template_type
+}
+
+fragment BodyChartTemplate on BodyChartTemplate {
+  ...BodyChartTemplateFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneBodyChartTemplate($data: BodyChartTemplateCreateInput!) {
+  createOneBodyChartTemplate(data: $data) {
+    ...BodyChartTemplate
+  }
+}
+
+mutation updateOneBodyChartTemplate($where: BodyChartTemplateWhereUniqueInput!, $data: BodyChartTemplateUpdateInput!) {
+  updateOneBodyChartTemplate(where: $where, data: $data) {
+    ...BodyChartTemplate
+  }
+}
+
+mutation deleteOneBodyChartTemplate($where: BodyChartTemplateWhereUniqueInput!) {
+  deleteOneBodyChartTemplate(where: $where) {
+    ...BodyChartTemplate
+  }
+}
+
+mutation updateManyBodyChartTemplate(
+  $where: BodyChartTemplateWhereInput
+  $data: BodyChartTemplateUpdateManyMutationInput!
+) {
+  updateManyBodyChartTemplate(where: $where, data: $data) {
+    count
+  }
+}

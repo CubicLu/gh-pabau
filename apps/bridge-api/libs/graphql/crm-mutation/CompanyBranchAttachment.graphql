@@ -1,0 +1,48 @@
+fragment CompanyBranchAttachmentFields on CompanyBranchAttachment {
+  id
+  company_id
+  location_id
+  type
+  url
+  description
+}
+
+fragment CompanyBranchAttachment on CompanyBranchAttachment {
+  ...CompanyBranchAttachmentFields
+  Company {
+    ...CompanyFields
+  }
+  CompanyBranch {
+    ...CompanyBranchFields
+  }
+}
+
+mutation createOneCompanyBranchAttachment($data: CompanyBranchAttachmentCreateInput!) {
+  createOneCompanyBranchAttachment(data: $data) {
+    ...CompanyBranchAttachment
+  }
+}
+
+mutation updateOneCompanyBranchAttachment(
+  $where: CompanyBranchAttachmentWhereUniqueInput!
+  $data: CompanyBranchAttachmentUpdateInput!
+) {
+  updateOneCompanyBranchAttachment(where: $where, data: $data) {
+    ...CompanyBranchAttachment
+  }
+}
+
+mutation deleteOneCompanyBranchAttachment($where: CompanyBranchAttachmentWhereUniqueInput!) {
+  deleteOneCompanyBranchAttachment(where: $where) {
+    ...CompanyBranchAttachment
+  }
+}
+
+mutation updateManyCompanyBranchAttachment(
+  $where: CompanyBranchAttachmentWhereInput
+  $data: CompanyBranchAttachmentUpdateManyMutationInput!
+) {
+  updateManyCompanyBranchAttachment(where: $where, data: $data) {
+    count
+  }
+}

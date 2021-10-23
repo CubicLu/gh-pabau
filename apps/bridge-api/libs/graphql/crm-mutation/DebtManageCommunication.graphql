@@ -1,0 +1,48 @@
+fragment DebtManageCommunicationFields on DebtManageCommunication {
+  id
+  invoice_id
+  communication_id
+  letter_no
+  type
+  company_id
+  uid
+  creation_date
+  modified_date
+}
+
+fragment DebtManageCommunication on DebtManageCommunication {
+  ...DebtManageCommunicationFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneDebtManageCommunication($data: DebtManageCommunicationCreateInput!) {
+  createOneDebtManageCommunication(data: $data) {
+    ...DebtManageCommunication
+  }
+}
+
+mutation updateOneDebtManageCommunication(
+  $where: DebtManageCommunicationWhereUniqueInput!
+  $data: DebtManageCommunicationUpdateInput!
+) {
+  updateOneDebtManageCommunication(where: $where, data: $data) {
+    ...DebtManageCommunication
+  }
+}
+
+mutation deleteOneDebtManageCommunication($where: DebtManageCommunicationWhereUniqueInput!) {
+  deleteOneDebtManageCommunication(where: $where) {
+    ...DebtManageCommunication
+  }
+}
+
+mutation updateManyDebtManageCommunication(
+  $where: DebtManageCommunicationWhereInput
+  $data: DebtManageCommunicationUpdateManyMutationInput!
+) {
+  updateManyDebtManageCommunication(where: $where, data: $data) {
+    count
+  }
+}
