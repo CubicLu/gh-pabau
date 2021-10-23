@@ -53,21 +53,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 })
 
-const groupByPipelineId = (arr, parentObj, childObj, property) => {
-  const shouldNotBeEmpty = (obj) => {
-    return obj && obj !== `null` && obj !== `undefined`
-  }
-
+const groupByPipelineId = (arr, property) => {
   return arr.reduce(function (memo, x) {
-    if (
-      shouldNotBeEmpty(x[parentObj]) &&
-      shouldNotBeEmpty(x[parentObj][childObj]) &&
-      shouldNotBeEmpty(x[parentObj][childObj][property])
-    ) {
-      if (!memo[x[parentObj][childObj][property]]) {
-        memo[x[parentObj][childObj][property]] = []
+    if (x[property] && x[property] !== `null` && x[property] !== `undefined`) {
+      if (!memo[x[property]]) {
+        memo[x[property]] = []
       }
-      memo[x[parentObj][childObj][property]].push(x)
+      memo[x[property]].push(x)
     }
     return memo
   }, {})
@@ -225,11 +217,10 @@ const LeadsStagesComponent = () => {
         getAllLeadsDetailData?.findManyCmLead?.length > 0
       ) {
         leadsContainerRef.current.scrollTop = scrollRef.current.position
+
         const mapLeadsPipelineWise = groupByPipelineId(
           getAllLeadsDetailData?.findManyCmLead,
-          'PipelineStage',
-          'Pipeline',
-          'id'
+          'LeadStatus'
         )
 
         if (
@@ -239,9 +230,7 @@ const LeadsStagesComponent = () => {
           leadsArrayRef.current.leadsArray = mapLeadsPipelineWise
           const localLeadState = { ...leadsState }
           for (const stageObject of allStages) {
-            const {
-              Pipeline: { id },
-            } = stageObject
+            const { id } = stageObject
             const existingLeads = localLeadState[id] ? localLeadState[id] : []
             const newLeads = mapLeadsPipelineWise[id]
               ? mapLeadsPipelineWise[id]
@@ -285,10 +274,7 @@ const LeadsStagesComponent = () => {
           <DragDropContext onDragEnd={onDragEnd}>
             <div className={styles.cardMainWrapper}>
               {allStages?.map((stage, stageIndex) => {
-                const {
-                  name,
-                  Pipeline: { id },
-                } = stage
+                const { name, id } = stage
                 return (
                   <Droppable key={Math.random()} droppableId={`${id}`}>
                     {(provided, snapshot) => (
@@ -365,11 +351,7 @@ const LeadsStagesComponent = () => {
                                               'onLeadTitleClickHandler'
                                             )
                                           }
-                                          labels={[
-                                            '#Label1',
-                                            '#Label',
-                                            '#Label',
-                                          ]}
+                                          labels={['#Label1', '#Label']}
                                           leadOwnerName={username}
                                           leadOwnerImg={userImage}
                                           contactName={contactName}
