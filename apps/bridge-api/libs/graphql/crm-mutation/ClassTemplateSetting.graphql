@@ -1,0 +1,45 @@
+fragment ClassTemplateSettingFields on ClassTemplateSetting {
+  id
+  company_id
+  class_wait_list_template_enable
+  class_wait_list_template_id
+  class_wait_list_sms_template_enable
+  class_wait_list_sms_template_id
+  uid
+  creation_date
+  modified_date
+}
+
+fragment ClassTemplateSetting on ClassTemplateSetting {
+  ...ClassTemplateSettingFields
+}
+
+mutation createOneClassTemplateSetting($data: ClassTemplateSettingCreateInput!) {
+  createOneClassTemplateSetting(data: $data) {
+    ...ClassTemplateSetting
+  }
+}
+
+mutation updateOneClassTemplateSetting(
+  $where: ClassTemplateSettingWhereUniqueInput!
+  $data: ClassTemplateSettingUpdateInput!
+) {
+  updateOneClassTemplateSetting(where: $where, data: $data) {
+    ...ClassTemplateSetting
+  }
+}
+
+mutation deleteOneClassTemplateSetting($where: ClassTemplateSettingWhereUniqueInput!) {
+  deleteOneClassTemplateSetting(where: $where) {
+    ...ClassTemplateSetting
+  }
+}
+
+mutation updateManyClassTemplateSetting(
+  $where: ClassTemplateSettingWhereInput
+  $data: ClassTemplateSettingUpdateManyMutationInput!
+) {
+  updateManyClassTemplateSetting(where: $where, data: $data) {
+    count
+  }
+}

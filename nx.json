@@ -32,28 +32,29 @@
     }
   },
   "projects": {
-    "backend": {
-      "tags": []
-    },
-    "bridge-api": {
-      "tags": []
-    },
-    "connect": {
-      "tags": [],
-      "implicitDependencies": ["hasura"]
-    },
-    "connect-e2e": {
-      "tags": [],
-      "implicitDependencies": ["connect"]
-    },
-    "graphql": {
-      "tags": []
-    },
     "hasura": {
       "tags": [],
       "implicitDependencies": ["bridge-api", "backend"]
     },
-    "i18n": {
+    "web": {
+      "tags": [],
+      "implicitDependencies": ["hasura"]
+    },
+    "web-e2e": {
+      "tags": [],
+      "implicitDependencies": ["web"]
+    },
+    "ui": {
+      "tags": []
+    },
+    "ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ui"]
+    },
+    "yup": {
+      "tags": []
+    },
+    "backend": {
       "tags": []
     },
     "mgmt": {
@@ -64,26 +65,23 @@
       "tags": [],
       "implicitDependencies": ["mgmt"]
     },
-    "storage": {
-      "tags": []
-    },
-    "ui": {
-      "tags": []
-    },
-    "ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ui"]
-    },
-    "web": {
+    "connect": {
       "tags": [],
       "implicitDependencies": ["hasura"]
     },
-    "web-e2e": {
+    "connect-e2e": {
       "tags": [],
-      "implicitDependencies": ["web"]
+      "implicitDependencies": ["connect"]
     },
-    "yup": {
+    "bridge-api": {
       "tags": []
-    }
+    },
+    "i18n": {
+      "tags": []
+    },
+    "graphql": {
+      "tags": []
+    },
+    "storage": { "tags": [] }
   }
 }

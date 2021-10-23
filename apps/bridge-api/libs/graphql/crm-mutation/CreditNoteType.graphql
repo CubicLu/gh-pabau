@@ -1,0 +1,41 @@
+fragment CreditNoteTypeFields on CreditNoteType {
+  id
+  company_id
+  name
+  code
+  prefix
+  quick_access
+  credit_note_type
+  is_disabled
+}
+
+fragment CreditNoteType on CreditNoteType {
+  ...CreditNoteTypeFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCreditNoteType($data: CreditNoteTypeCreateInput!) {
+  createOneCreditNoteType(data: $data) {
+    ...CreditNoteType
+  }
+}
+
+mutation updateOneCreditNoteType($where: CreditNoteTypeWhereUniqueInput!, $data: CreditNoteTypeUpdateInput!) {
+  updateOneCreditNoteType(where: $where, data: $data) {
+    ...CreditNoteType
+  }
+}
+
+mutation deleteOneCreditNoteType($where: CreditNoteTypeWhereUniqueInput!) {
+  deleteOneCreditNoteType(where: $where) {
+    ...CreditNoteType
+  }
+}
+
+mutation updateManyCreditNoteType($where: CreditNoteTypeWhereInput, $data: CreditNoteTypeUpdateManyMutationInput!) {
+  updateManyCreditNoteType(where: $where, data: $data) {
+    count
+  }
+}

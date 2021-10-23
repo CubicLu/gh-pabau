@@ -1,10 +1,10 @@
 {
   "name": "pabau",
-  "version": "2.0.675",
+  "version": "2.0.690",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
-    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543\" nx",
+    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=16384\" nx",
     "serve": "yarn nx serve",
     "build:bridge-api": "yarn nx export bridge-api",
     "hasura:cli": "ts-node tools/cli/hasura.ts",
@@ -102,7 +102,6 @@
     "@sendgrid/mail": "7.4.6",
     "@sentry/react": "6.11.0",
     "@sentry/tracing": "6.11.0",
-    "@zeit/next-less": "1.0.1",
     "antd": "4.10.3",
     "apollo-server": "2.24.0",
     "axios": "0.22.0",
@@ -325,7 +324,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 81,
+  "bump-rebuild-all": 113,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }
