@@ -19,7 +19,7 @@
     "dev:connect": "concurrently -m 16 --kill-others-on-fail -n HASURA,HASURA-SEED,PRISMA,WEB,WEB-PRELOADER,LAUNCH-BROWSER,BACKEND -c red,red,green,blue,grey,grey,magenta \"delay 5 && yarn hasura:stop && docker-compose -f hasura/docker-compose.yml up -d postgres && wait-on -w 1200 http-get://localhost:4000 && yarn hasura:start\" \"delay 22 && wait-on -w 1200 http-get://localhost:8080/console && (yarn hasura:cli seeds apply --database-name default || echo 'Seed apply failed') && open-cli 'http://localhost:8080' && wait-on http://localhost:4200 && open-cli 'http://localhost:4200'\" \"yarn bridge:start\" \"delay 25 && yarn connect:start\" \"delay 15 && wait-on tcp:4000 && wait-on http://localhost:4200\" \"delay 20 && wait-on http://localhost:4200\" \"yarn nx serve backend\"",
     "dev:light": "concurrently \"yarn nx serve web\" \"yarn nx serve bridge-api\"",
     "bridge:start": "yarn nx serve bridge-api",
-    "bridge:start2": "cross-env NODE_OPTIONS=\"--max-old-space-size=16384\" node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/main.cjs",
+    "bridge:start2": "node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/main.cjs",
     "mysql:start": "docker-compose -f tools/pabau1/docker-compose.yml up -d || (docker-compose -f tools/pabau1/docker-compose.yml down && docker-compose -f tools/pabau1/docker-compose.yml up -d)",
     "postgres:start": "docker-compose -f hasura/docker-compose.yml up -d postgres",
     "hasura:start": "run-script-os",
@@ -324,7 +324,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 110,
+  "bump-rebuild-all": 111,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }

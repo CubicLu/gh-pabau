@@ -88,7 +88,7 @@ pipelines:
                   curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
                   chmod +x ~/docker-compose
                   mv ~/docker-compose /usr/local/bin/docker-compose
-                - yarn bridge:start2 &
+                - yarn bridge:start2
                 - |
                   echo "Waiting for bridge-api to boot..."
                   yarn wait-on -t 160000 -w 20000 http-get://localhost:4000
