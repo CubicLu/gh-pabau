@@ -1,0 +1,44 @@
+fragment CmContactViewedFields on CmContactViewed {
+  id
+  contact_id
+  user_id
+  company_id
+  date
+}
+
+fragment CmContactViewed on CmContactViewed {
+  ...CmContactViewedFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneCmContactViewed($data: CmContactViewedCreateInput!) {
+  createOneCmContactViewed(data: $data) {
+    ...CmContactViewed
+  }
+}
+
+mutation updateOneCmContactViewed($where: CmContactViewedWhereUniqueInput!, $data: CmContactViewedUpdateInput!) {
+  updateOneCmContactViewed(where: $where, data: $data) {
+    ...CmContactViewed
+  }
+}
+
+mutation deleteOneCmContactViewed($where: CmContactViewedWhereUniqueInput!) {
+  deleteOneCmContactViewed(where: $where) {
+    ...CmContactViewed
+  }
+}
+
+mutation updateManyCmContactViewed($where: CmContactViewedWhereInput, $data: CmContactViewedUpdateManyMutationInput!) {
+  updateManyCmContactViewed(where: $where, data: $data) {
+    count
+  }
+}

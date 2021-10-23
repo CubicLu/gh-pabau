@@ -11,14 +11,16 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 5120
+      memory: 7168
 
 pipelines:
   pull-requests:
     '**':
       - step:
           name: yarn audit
-          size: 2x
+          size: 4x
+          runs-on:
+            - 'self.hosted'
           caches:
             - nodemodules
             - yarncustom
@@ -34,7 +36,9 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              size: 1x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
@@ -43,29 +47,35 @@ pipelines:
                 - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace
-                - yarn lint:graphql-inspector
+                # - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
                 - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
+                # - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
           - step:
               name: lint
+              runs-on:
+                - 'self.hosted'
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=origin/master
 
           - step:
               name: unit tests
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=origin/master
 
           - step:
               name: integration tests
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               services:
                 - docker
               script:
@@ -116,7 +126,9 @@ pipelines:
                   yarn load-testing
           - step:
               name: e2e
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               caches:
                 - cypress
               script:
@@ -127,7 +139,9 @@ pipelines:
       - step:
           name: build
           max-time: 80
-          size: 2x
+          size: 4x
+          runs-on:
+            - 'self.hosted'
           script:
             #                - while true; do ps -aux && sleep 30; done &
             - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2-staging.pabau.com/v1/graphql' yarn affected:export --base=origin/master --prod
@@ -136,7 +150,9 @@ pipelines:
       - parallel:
           - step:
               name: deploy dockers
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               services:
                 - docker
               script:
@@ -150,6 +166,8 @@ pipelines:
           - step:
               name: deploy previews
               image: node
+              runs-on:
+                - 'self.hosted'
               max-time: 20
               script:
                 #                - while true; do ps -aux && sleep 30; done &
@@ -194,6 +212,8 @@ pipelines:
       - step:
           name: announce to slack
           max-time: 25
+          runs-on:
+            - 'self.hosted'
           script:
             #                - while true; do ps -aux && sleep 30; done &
             - cat dist/bot_message2.txt || true
@@ -230,7 +250,9 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          size: 2x
+          size: 4x
+          runs-on:
+            - 'self.hosted'
           caches:
             - node
           script:
@@ -245,7 +267,9 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              size: 1x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
@@ -254,28 +278,34 @@ pipelines:
                 - yarn lint:tsc --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace
-                - yarn lint:graphql-inspector
+                # - yarn lint:graphql-inspector
                 - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
-                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
+                # - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
 
           - step:
               name: lint
+              runs-on:
+                - 'self.hosted'
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=HEAD~1
 
-          - step:
-              name: unit tests
-              size: 2x
-              script:
-                #                - while true; do ps -aux && sleep 30; done &
-                - yarn affected:test --base=HEAD~1
+          # - step:
+          #     name: unit tests
+          #     size: 8x
+          #     runs-on:
+          #       - 'self.hosted'
+          #     script:
+          #       #                - while true; do ps -aux && sleep 30; done &
+          #       - yarn affected:test --base=HEAD~1
 
           - step:
               name: e2e
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               caches:
                 - cypress
               script:
@@ -285,7 +315,9 @@ pipelines:
                 - yarn affected:e2e --base=HEAD~1 || true
           - step:
               name: integration tests
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               services:
                 - docker
               script:
@@ -337,6 +369,8 @@ pipelines:
       - step:
           name: bump version
           max-time: 5
+          runs-on:
+            - 'self.hosted'
           script:
             # Get an oauth access token using the client credentials, parsing out the token with jq.
             - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
@@ -349,7 +383,9 @@ pipelines:
       - step:
           name: build
           max-time: 80
-          size: 2x
+          size: 4x
+          runs-on:
+            - 'self.hosted'
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
@@ -359,7 +395,9 @@ pipelines:
       - parallel:
           - step:
               name: deploy dockers
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               deployment: production-dockers
               services:
                 - docker
@@ -374,6 +412,8 @@ pipelines:
           - step:
               name: deploy previews
               max-time: 20
+              runs-on:
+                - 'self.hosted'
               deployment: production-serverless
               script:
                 #                - while true; do ps -aux && sleep 30; done &
@@ -410,6 +450,8 @@ pipelines:
       - step:
           name: announce to slack
           max-time: 25
+          runs-on:
+            - 'self.hosted'
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - cat dist/bot_message2.txt || true

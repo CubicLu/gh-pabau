@@ -1,0 +1,43 @@
+fragment XeroIntegrationFields on XeroIntegration {
+  id
+  company_id
+  client_id
+  tenant_id
+  client_secret
+  refresh_token
+  redirect_uri
+  default_tax_method
+  payments_account_code
+  items_account_code
+  payments_enabled
+  tracking_categories_enabled
+  default_invoice_status
+  enabled
+  created_at
+  modified_at
+}
+
+fragment XeroIntegration on XeroIntegration {
+  ...XeroIntegrationFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneXeroIntegration($data: XeroIntegrationCreateInput!) {
+  createOneXeroIntegration(data: $data) {
+    ...XeroIntegration
+  }
+}
+
+mutation updateOneXeroIntegration($where: XeroIntegrationWhereUniqueInput!, $data: XeroIntegrationUpdateInput!) {
+  updateOneXeroIntegration(where: $where, data: $data) {
+    ...XeroIntegration
+  }
+}
+
+mutation deleteOneXeroIntegration($where: XeroIntegrationWhereUniqueInput!) {
+  deleteOneXeroIntegration(where: $where) {
+    ...XeroIntegration
+  }
+}
