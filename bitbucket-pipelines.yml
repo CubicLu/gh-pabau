@@ -11,7 +11,7 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 7168
+      memory: 16384
 
 pipelines:
   pull-requests:
@@ -303,7 +303,9 @@ pipelines:
 
           - step:
               name: e2e
-              size: 2x
+              size: 4x
+              runs-on:
+                - 'self.hosted'
               caches:
                 - cypress
               script:
@@ -410,6 +412,8 @@ pipelines:
           - step:
               name: deploy previews
               max-time: 20
+              runs-on:
+                - 'self.hosted'
               deployment: production-serverless
               script:
                 #                - while true; do ps -aux && sleep 30; done &
