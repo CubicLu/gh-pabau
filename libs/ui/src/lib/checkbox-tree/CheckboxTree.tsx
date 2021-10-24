@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from 'react'
 import { Tree } from 'antd'
+import { TreeProps } from 'antd/lib/tree'
 import style from './CheckboxTree.module.less'
 
 export interface TreeDataType {
@@ -7,7 +8,7 @@ export interface TreeDataType {
   key: string | number
   children?: TreeDataType[]
 }
-export interface CheckboxTreeProps {
+export interface CheckboxTreeProps extends TreeProps {
   treeData: TreeDataType[]
   expandedKeys?: string[]
   checkedKeys: (string | number)[]
