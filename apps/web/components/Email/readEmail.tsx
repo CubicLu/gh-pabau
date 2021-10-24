@@ -282,10 +282,10 @@ export const ReadEmail: FC<P> = ({
             </div>
             <div className={styles.mediaDetails}>
               <div className={styles.mediaAlbum}>
-                <img src={Img2} alt="" />
+                {/* <img src={Img2} alt="" />
                 <img src={Img2} alt="" />
                 <img src={Img3} alt="" />
-                <img src={Img2} alt="" />
+                <img src={Img2} alt="" /> */}
               </div>
               <div className={styles.clientButton}>
                 <Button type="default">
