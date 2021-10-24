@@ -5309,6 +5309,8 @@ en:
   team.user.personal.details.employee.end.date.label: 'Employment end date'
   team.user.personal.details.primary.location.label: 'Primary Location'
   team.user.personal.details.other.location.label: 'Other Locations'
+  team.user.personal.details.password.reset.success.text: 'Success! - we have emailed a reset link to'
+  team.user.personal.details.password.reset.fail.text: 'An error occured while sending reset passord email'
   team.user.services.save.changes.button: 'Save changes'
   team.user.services.title: 'Services'
   team.user.services.choose.services.title: ' Choose the services this employee can perform'
