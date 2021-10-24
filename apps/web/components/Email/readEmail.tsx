@@ -9,8 +9,6 @@ import {
 } from '@ant-design/icons'
 import { Button, Dropdown, Popover, Skeleton } from 'antd'
 import { Avatar } from '@pabau/ui'
-import Img2 from '../../assets/images/connect/Lip.png'
-import Img3 from '../../assets/images/connect/Lip.png'
 import { ReactComponent as Reply } from '../../assets/images/reply.svg'
 import { ReactComponent as Forward } from '../../assets/images/forward.svg'
 import { ReactComponent as ReplyAll } from '../../assets/images/reply-all.svg'
