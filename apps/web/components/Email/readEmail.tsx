@@ -9,10 +9,8 @@ import {
 } from '@ant-design/icons'
 import { Button, Dropdown, Popover, Skeleton } from 'antd'
 import { Avatar } from '@pabau/ui'
-import Img1 from '../../assets/images/connect/Chest.png'
 import Img2 from '../../assets/images/connect/Lip.png'
 import Img3 from '../../assets/images/connect/Lip.png'
-import Img4 from '../../assets/images/connect/Chest.png'
 import { ReactComponent as Reply } from '../../assets/images/reply.svg'
 import { ReactComponent as Forward } from '../../assets/images/forward.svg'
 import { ReactComponent as ReplyAll } from '../../assets/images/reply-all.svg'
@@ -286,10 +284,10 @@ export const ReadEmail: FC<P> = ({
             </div>
             <div className={styles.mediaDetails}>
               <div className={styles.mediaAlbum}>
-                <img src={Img1} alt="" />
+                <img src={Img2} alt="" />
                 <img src={Img2} alt="" />
                 <img src={Img3} alt="" />
-                <img src={Img4} alt="" />
+                <img src={Img2} alt="" />
               </div>
               <div className={styles.clientButton}>
                 <Button type="default">
