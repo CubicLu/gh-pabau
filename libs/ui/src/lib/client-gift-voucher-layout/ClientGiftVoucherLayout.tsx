@@ -91,7 +91,7 @@ export const ClientGiftVoucherLayout: FC<ClientGiftVoucherLayoutProps> = ({
                   >
                     <VoucherCard
                       {...item.voucher}
-                      dotMenuOptions={DotMenuOptions}
+                      menuOptions={DotMenuOptions}
                     />
                   </div>
                 ))}
@@ -106,7 +106,7 @@ export const ClientGiftVoucherLayout: FC<ClientGiftVoucherLayoutProps> = ({
                   >
                     <VoucherCard
                       {...item.voucher}
-                      dotMenuOptions={[...DotMenuOptions].map((item) => {
+                      menuOptions={[...DotMenuOptions].map((item) => {
                         const newItem = { ...item }
                         if (newItem.label === 'Force Expire') {
                           newItem.icon = <StarOutlined />
