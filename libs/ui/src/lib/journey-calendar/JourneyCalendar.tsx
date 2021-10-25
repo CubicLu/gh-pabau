@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useRef } from 'react'
 import { Row, Col } from 'antd'
 import { useTranslation } from 'react-i18next'
 import styles from './JourneyCalendar.module.less'
@@ -8,6 +8,7 @@ import { Button } from '@pabau/ui'
 import { useSwipeable } from 'react-swipeable'
 import { useWindowSize } from 'react-use'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
+import useGestures from './Gestures'
 
 interface CalendarState {
   array: string[]
@@ -38,6 +39,8 @@ export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
   })
 
   const [daysToAppend, setDaysToAppend] = useState(9)
+
+  const swiperRef = useRef(null)
 
   const getDaysArray = (start: Date, end: Date) => {
     const arr: Array<string> = []
@@ -174,6 +177,11 @@ export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
     setDaysToAppend(result)
   }, [resizeEvent])
 
+  useGestures(swiperRef, {
+    onSwipeLeft: handleNext,
+    onSwipeRight: handlePrev,
+  })
+
   return (
     <>
       {resizeEvent.width < 992 ? (
@@ -201,7 +209,7 @@ export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
                   ) : null}
                   <div
                     className={`${styles.JourneyCalendarSlider}`}
-                    {...handlers}
+                    ref={swiperRef}
                   >
                     <div
                       className={`${styles.JourneyCalendarSliderWrapper}`}
