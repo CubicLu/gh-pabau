@@ -72,7 +72,7 @@ const Index: FC<UserDetailsProps> = ({
   const { fields, graphData } = userDetail(t)
   const [tabKey, setTabKey] = useState<string>('1')
   const isMobile = useMedia('(max-width: 768px)')
-  const [userImage, setUserImage] = useState<string>(AvatarImage)
+  const [userImage, setUserImage] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [fieldsData, setFieldsData] = useState<customFieldsProps[]>(fields)
@@ -160,10 +160,15 @@ const Index: FC<UserDetailsProps> = ({
                       <Skeleton.Avatar
                         className={styles.skeletonIcon}
                         active={true}
-                        size={'large'}
+                        size={54}
                       />
                     ) : (
-                      <Avatar src={userImage} size={'large'} edit={true} />
+                      <Avatar
+                        name={fullName}
+                        src={userImage}
+                        size={54}
+                        edit={true}
+                      />
                     )}
                   </div>
                   <div className={styles.userHeadTitle}>

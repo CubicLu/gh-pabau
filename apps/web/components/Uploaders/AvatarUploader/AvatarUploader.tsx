@@ -69,6 +69,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
 
   const handleImageChange = async (e) => {
     setImage(URL.createObjectURL(e.target.files[0]))
+    setCroppedImage(URL.createObjectURL(e.target.files[0]))
     // setDisabled(false)
     e.target.value = ''
   }
