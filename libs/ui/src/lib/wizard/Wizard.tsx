@@ -5,14 +5,16 @@ import classnames from 'classnames'
 interface WizardProps {
   onPrev?: () => void
   onNext?: () => void
+  extraBtnClick?: () => void
   active: number
   allSteps: number
+  nextBtnLabel?: string | number | React.ReactNode
   disableNextStep?: boolean
+  disablePrevStep?: boolean
   nextButtonDecorator?: React.ReactNode
   nextButtonContent?: React.ReactNode | string
-  previousButtonContent?: React.ReactNode | string
+  prevButtonContent?: React.ReactNode | string
   background?: string
-  allowDisablePrevious?: boolean
   finishDisablesNextStep?: boolean
   hideNextStep?: boolean
   hidePrevStep?: boolean
@@ -22,14 +24,15 @@ interface WizardProps {
 export const Wizard: React.FC<WizardProps> = ({
   onPrev,
   onNext,
+  extraBtnClick,
   active,
   allSteps,
   disableNextStep = false,
+  disablePrevStep = true,
   nextButtonDecorator,
   background,
   nextButtonContent,
-  previousButtonContent,
-  allowDisablePrevious = true,
+  prevButtonContent,
   finishDisablesNextStep = true,
   hideStep = false,
   hideNextStep = false,
@@ -43,20 +46,19 @@ export const Wizard: React.FC<WizardProps> = ({
         gridTemplateColumns: `1fr `.repeat(hideStep ? 2 : 3),
       }}
     >
-      {hidePrevStep ? (
-        <div />
-      ) : (
+      {!hidePrevStep && (
         <div>
           <Button
             onClick={() => onPrev?.()}
             disabled={
-              active <= 0 || (active === allSteps - 1 && allowDisablePrevious)
+              active <= 0 || (active === allSteps - 1 && disablePrevStep)
             }
           >
-            {previousButtonContent || 'Previous Step'}
+            {prevButtonContent || 'Previous Step'}
           </Button>
         </div>
       )}
+
       {!hideStep && (
         <span
           className={classnames(styles.breadcrumbgraytxt, styles.centeredtext)}
@@ -64,25 +66,11 @@ export const Wizard: React.FC<WizardProps> = ({
           Step {active + 1}/{allSteps}
         </span>
       )}
-      {hideNextStep ? (
-        <div />
-      ) : (
-        <>
-          {nextButtonDecorator ? (
-            <div className={styles.nextButtonDecorator}>
-              {nextButtonDecorator}
-              <Button
-                type="primary"
-                onClick={() => onNext?.()}
-                disabled={
-                  disableNextStep ||
-                  (allSteps - 1 <= active && finishDisablesNextStep)
-                }
-              >
-                {nextButtonContent || 'Next Step'}
-              </Button>
-            </div>
-          ) : (
+
+      {nextButtonDecorator ? (
+        <div className={styles.nextButtonDecorator}>
+          {nextButtonDecorator}
+          {!hideNextStep && (
             <Button
               type="primary"
               onClick={() => onNext?.()}
@@ -93,8 +81,21 @@ export const Wizard: React.FC<WizardProps> = ({
             >
               {nextButtonContent || 'Next Step'}
             </Button>
-          )}{' '}
-        </>
+          )}
+        </div>
+      ) : (
+        !hideNextStep && (
+          <Button
+            type="primary"
+            onClick={() => onNext?.()}
+            disabled={
+              disableNextStep ||
+              (allSteps - 1 <= active && finishDisablesNextStep)
+            }
+          >
+            {nextButtonContent || 'Next Step'}
+          </Button>
+        )
       )}
     </div>
   )
