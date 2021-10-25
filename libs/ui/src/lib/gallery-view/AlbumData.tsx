@@ -39,17 +39,22 @@ import { ReactComponent as Share } from '../../assets/images/image-share.svg'
 import { ReactComponent as ImageAlbum } from '../../assets/images/image-album.svg'
 import dayjs from 'dayjs'
 
+const getThumb = (src: string) => {
+  if (src.includes('photos/')) {
+    const pathArr = src.split('photos/')
+    pathArr[1] = `thumb_${pathArr[1]}`
+    return pathArr.join('photos/')
+  } else {
+    return src
+  }
+}
+
 const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   const [source, setSource] = useState('')
 
   useEffect(() => {
     if (source === '' && origin !== '') {
-      let path = origin
-      if (origin.includes('photos/')) {
-        const pathArr = origin.split('photos/')
-        pathArr[1] = `thumb_${pathArr[1]}`
-        path = pathArr.join('photos/')
-      }
+      const path = getThumb(origin)
       const img = new Image()
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
@@ -69,11 +74,7 @@ const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
           img.width,
           img.height
         )
-        if (isDirectPath) {
-          setSource(path)
-        } else {
-          setSource(canvas.toDataURL())
-        }
+        setSource(canvas.toDataURL())
       })
       img.addEventListener('error', () => {
         setSource('')
@@ -83,7 +84,11 @@ const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   }, [isDirectPath, origin, source])
 
   return source ? (
-    <img src={source} alt="content" {...props} />
+    <img
+      src={!isDirectPath ? source : getThumb(origin)}
+      alt="content"
+      {...props}
+    />
   ) : (
     <div {...props}>
       <Skeleton.Image />
@@ -568,19 +573,17 @@ export const AlbumData: FC<AlbumDataProps> = ({
       if (album.albumImage.length > 0 && album.albumImage.slice(0, 4)) {
         return (
           <>
-            {album.albumImage.slice(0, 4).map((item, key) => {
-              return (
-                <ImageItem
-                  isDirectPath
-                  origin={item?.img}
-                  alt={album.albumTitle}
-                  key={key}
-                  className={styles.gridItem}
-                  id={album.albumTitle}
-                  draggable={false}
-                />
-              )
-            })}
+            {album.albumImage.slice(0, 4).map((item, key) => (
+              <ImageItem
+                isDirectPath
+                origin={item?.img}
+                alt={album.albumTitle}
+                key={key}
+                className={styles.gridItem}
+                id={album.albumTitle}
+                draggable={false}
+              />
+            ))}
             {Array.from({ length: 4 - album.albumImage.length })
               .fill(null)
               .map((_, i) => i)
