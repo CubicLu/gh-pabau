@@ -20,8 +20,6 @@ import { useTranslation } from 'react-i18next'
 import {
   Button,
   SimpleDropdown,
-  Notification,
-  NotificationType,
   BasicModal,
   CamUploaderModal,
   UploadingImageProps,
@@ -45,6 +43,16 @@ import { ReactComponent as ImageAlbum } from '../../assets/images/image-album.sv
 import { ReactComponent as ListIcon } from '../../assets/images/list.svg'
 import { ReactComponent as GridIcon } from '../../assets/images/grid.svg'
 
+const albumFinder = (albums, albumId) => {
+  const album = albums?.find((el) => {
+    if (el?.id === albumId) {
+      return el
+    } else if (el?.album) albumFinder?.(el?.album, albumId)
+    return null
+  })
+  return album
+}
+
 export interface GalleryProps {
   albumList: AlbumProps
   images: ImageProps[]
@@ -56,7 +64,7 @@ export interface GalleryProps {
     onPageSizeChange: (size: number) => void
     currentPage: number
   }
-  onAlbumCreate?: (name: string) => void
+  onAlbumCreate?: (name: string, moveImages?: ImageProps[]) => void
   albumCreateLoading?: boolean
   onAlbumUpdate?: (data: AlbumProps) => void
   albumUpdateLoading?: boolean
@@ -113,6 +121,7 @@ export const GalleryView: FC<GalleryProps> = ({
 
   const [selectAll, setSelectAll] = useState(false)
   const [selectedImages, setSelectedImages] = useState<ImageProps[]>([])
+  const [singleImageMoveId, setSingleImageMoveId] = useState<number>()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [status, setStatus] = useState(true)
   const [imagesList, setImagesList] = useState(images)
@@ -138,7 +147,10 @@ export const GalleryView: FC<GalleryProps> = ({
     if (!currentData || currentData?.id === 0) {
       setCurrentData(albumList)
     } else {
-      // This block will be used when nested album will be considered
+      const currAlbum = albumFinder(albumList?.album, currentData?.id)
+      if (currAlbum) {
+        setCurrentData(currAlbum)
+      }
     }
   }, [albumList, currentData])
 
@@ -295,10 +307,10 @@ export const GalleryView: FC<GalleryProps> = ({
             <div>{album.name}</div>
           </Menu.Item>
         ))}
-        {/* <Menu.Item key="New" onClick={() => setCreateAlbumModal((e) => !e)}>
+        <Menu.Item key="New" onClick={() => setCreateAlbumModal((e) => !e)}>
           <PlusOutlined />
           <div>{t('galley.view.album.create.album.modal.title')}</div>
-        </Menu.Item> */}
+        </Menu.Item>
       </Menu>
     )
   }
@@ -894,6 +906,7 @@ export const GalleryView: FC<GalleryProps> = ({
         )}{' '}
         <AlbumData
           data={{ ...currentData, albumImage: imagesList || [] }}
+          allAlbums={data?.album}
           onFolderClick={onFolderClick}
           selectedImages={selectedImages}
           handleOnChange={handleOnChange}
@@ -927,6 +940,18 @@ export const GalleryView: FC<GalleryProps> = ({
               setCreateAlbumModal((e) => !e)
             }
           }}
+          onSingleImageMove={(album, image, isCreateAlbum) => {
+            if (image) {
+              if ((album || album === 0) && !isCreateAlbum) {
+                onImagesMove?.(album, [image])
+              }
+              if (!album && isCreateAlbum) {
+                setAlbumName('')
+                setSingleImageMoveId(image)
+                setCreateAlbumModal(() => true)
+              }
+            }
+          }}
         />
       </div>
 
@@ -950,16 +975,25 @@ export const GalleryView: FC<GalleryProps> = ({
         }}
         onDelete={() => console.log()}
         onOk={() => {
-          if (editAlbumId) {
-            const editedAlbum = data?.album?.find(
-              (el) => el?.id === editAlbumId
-            )
-            onAlbumUpdate?.({
-              ...editedAlbum,
-              albumTitle: albumName,
-            } as AlbumProps)
-          } else {
-            onAlbumCreate?.(albumName)
+          if (albumName) {
+            if (editAlbumId) {
+              const editedAlbum = data?.album?.find(
+                (el) => el?.id === editAlbumId
+              )
+              onAlbumUpdate?.({
+                ...editedAlbum,
+                albumTitle: albumName,
+              } as AlbumProps)
+            } else {
+              if (singleImageMoveId) {
+                const img = imagesList?.find(
+                  (el) => el?.id === singleImageMoveId
+                )
+                if (img) onAlbumCreate?.(albumName, [img])
+              } else {
+                onAlbumCreate?.(albumName, selectedImages)
+              }
+            }
           }
         }}
         title={

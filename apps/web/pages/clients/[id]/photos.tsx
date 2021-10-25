@@ -19,6 +19,7 @@ import {
   useGetPhotoAlbumsQuery,
   GetPhotoAlbumsDocument,
   useCountAlbumPhotosQuery,
+  CountAlbumPhotosDocument,
   useCreateContactPhotoMutation,
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
@@ -87,6 +88,10 @@ const Photos: FC = () => {
     currentPage: 1,
   })
 
+  const [movingImagesOnAlbumCreate, setMovingImagesOnAlbumCreate] = useState<
+    number[]
+  >([])
+
   const [albumCreateLoading, setAlbumCreateLoading] = useState(false)
   const [albumUpdateLoading, setAlbumUpdateLoading] = useState(false)
   const [albumDeleteLoading, setAlbumDeleteLoading] = useState(false)
@@ -123,7 +128,7 @@ const Photos: FC = () => {
     fetchPolicy: 'network-only',
     variables: {
       contactId: contactId,
-      albumId: 0,
+      albumId: albumId,
     },
   })
 
@@ -144,6 +149,12 @@ const Photos: FC = () => {
         NotificationType?.success,
         `${data?.album_name} created successfully!`
       )
+
+      if (movingImagesOnAlbumCreate?.length > 0) {
+        const moveImages = [...movingImagesOnAlbumCreate]
+        onImagesMove(data?.id, moveImages)
+        setMovingImagesOnAlbumCreate([])
+      }
     },
     onError(error) {
       setAlbumCreateLoading(false)
@@ -293,7 +304,10 @@ const Photos: FC = () => {
     }
   }, [albumImages, albumImagesLoading])
 
-  const onAlbumCreate = (album: string) => {
+  const onAlbumCreate = (album: string, moveImages: ImageProps[] = []) => {
+    if (moveImages?.length > 0) {
+      setMovingImagesOnAlbumCreate(moveImages?.map((el) => el?.id))
+    }
     setAlbumCreateLoading(true)
     createAlbum({
       variables: {
@@ -487,26 +501,34 @@ const Photos: FC = () => {
     }
   }
 
-  const onImagesMove = (albumId: number, imageIds: number[]) => {
-    if ((albumId === 0 || albumId) && imageIds?.length > 0)
+  const onImagesMove = (album: number, images: number[]) => {
+    if ((album === 0 || album) && images?.length > 0) {
       moveImageToAlbum({
         variables: {
-          album: albumId,
-          images: imageIds,
+          album: album,
+          images: images,
         },
         refetchQueries: [
+          {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
+          },
           {
             query: GetPhotoAlbumsDocument,
             variables: {
               contactId: contactId,
             },
           },
-          {
-            query: GetAlbumPhotosDocument,
-            variables: variables,
+          albumId === 0 && {
+            query: CountAlbumPhotosDocument,
+            variables: {
+              contactId: contactId,
+              albumId: 0,
+            },
           },
         ],
       })
+    }
   }
 
   return (
