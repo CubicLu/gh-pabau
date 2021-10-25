@@ -1,0 +1,63 @@
+fragment InvProductFields on InvProduct {
+  id
+  code
+  name
+  sku
+  unit
+  size
+  product_order
+  um
+  cost
+  price
+  alert_quantity
+  show_on_website
+  image
+  category_id
+  supplier_id
+  note
+  company_id
+  uid
+  created_date
+  modified_date
+  Description
+  custom_id
+  category_custom_id
+  PriceListGroup_id
+  VATRate_id
+  imported
+  old_barcode
+  max_level
+  is_active
+  product_points
+  open_sale
+  new_imported
+  sage_nominal_code
+  procedure_date
+  product_account_code_xero
+  allow_negative_qty
+}
+
+fragment InvProduct on InvProduct {
+  ...InvProductFields
+  User {
+    ...UserFields
+  }
+  Company {
+    ...CompanyFields
+  }
+  InvCategory {
+    ...InvCategoryFields
+  }
+  Supplier {
+    ...AccountManagerFields
+  }
+  Tax {
+    ...TaxFields
+  }
+}
+
+mutation deleteOneInvProduct($where: InvProductWhereUniqueInput!) {
+  deleteOneInvProduct(where: $where) {
+    ...InvProduct
+  }
+}

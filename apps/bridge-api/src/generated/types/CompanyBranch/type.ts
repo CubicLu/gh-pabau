@@ -216,18 +216,18 @@ export const CompanyBranch = objectType({
         return root.InvSale
       },
     })
-    t.list.field('ServiceLocationPrice', {
-      type: 'ServiceLocationPrice',
+    t.list.field('ServiceLocationTier', {
+      type: 'ServiceLocationTier',
       args: {
-        where: 'ServiceLocationPriceWhereInput',
-        orderBy: 'ServiceLocationPriceOrderByWithRelationInput',
-        cursor: 'ServiceLocationPriceWhereUniqueInput',
+        where: 'ServiceLocationTierWhereInput',
+        orderBy: 'ServiceLocationTierOrderByWithRelationInput',
+        cursor: 'ServiceLocationTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ServiceLocationPriceScalarFieldEnum',
+        distinct: 'ServiceLocationTierScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ServiceLocationPrice
+        return root.ServiceLocationTier
       },
     })
     t.nullable.field('_count', {

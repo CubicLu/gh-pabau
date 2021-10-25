@@ -1841,6 +1841,34 @@ export const Company = objectType({
         return root.SmsSender
       },
     })
+    t.list.field('Pathway', {
+      type: 'Pathway',
+      args: {
+        where: 'PathwayWhereInput',
+        orderBy: 'PathwayOrderByWithRelationInput',
+        cursor: 'PathwayWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Pathway
+      },
+    })
+    t.list.field('PathwayStep', {
+      type: 'PathwayStep',
+      args: {
+        where: 'PathwayStepWhereInput',
+        orderBy: 'PathwayStepOrderByWithRelationInput',
+        cursor: 'PathwayStepWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStep
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

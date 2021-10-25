@@ -115,9 +115,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         return {
           ...item,
           notes: [],
-          count:
-            data?.findFirstCmContact?.contactNotes?.length +
-              data?.findFirstCmContact?.bookingNotes?.length || 0,
+          count: data?.findFirstCmContact?.contactNotes?.length || 0,
           loading: true,
           appointments: [],
         }

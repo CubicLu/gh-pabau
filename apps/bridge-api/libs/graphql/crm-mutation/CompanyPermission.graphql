@@ -1,0 +1,33 @@
+fragment CompanyPermissionFields on CompanyPermission {
+  id
+  company_id
+  section
+}
+
+fragment CompanyPermission on CompanyPermission {
+  ...CompanyPermissionFields
+  Company {
+    ...CompanyFields
+  }
+  Page {
+    ...PageFields
+  }
+}
+
+mutation createOneCompanyPermission($data: CompanyPermissionCreateInput!) {
+  createOneCompanyPermission(data: $data) {
+    ...CompanyPermission
+  }
+}
+
+mutation updateOneCompanyPermission($where: CompanyPermissionWhereUniqueInput!, $data: CompanyPermissionUpdateInput!) {
+  updateOneCompanyPermission(where: $where, data: $data) {
+    ...CompanyPermission
+  }
+}
+
+mutation deleteOneCompanyPermission($where: CompanyPermissionWhereUniqueInput!) {
+  deleteOneCompanyPermission(where: $where) {
+    ...CompanyPermission
+  }
+}
