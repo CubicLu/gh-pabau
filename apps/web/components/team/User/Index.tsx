@@ -220,7 +220,10 @@ const Index: FC<UserDetailsProps> = ({
                   staffDataLoading={staffDataLoading}
                 />
               </TabPane>
-              <TabPane tab={<span>Services</span>} key="2">
+              <TabPane
+                tab={<span>{t('team.user.services.title')}</span>}
+                key="2"
+              >
                 <Service />
               </TabPane>
               <TabPane tab={<span>Permissions</span>} key="3">
