@@ -5,7 +5,6 @@ import {
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
   useCreateOneContactNoteMutation,
-  GetContactHeaderDocument,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -25,7 +24,6 @@ import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
-import { getRealIp } from '../../helper/getRealIp'
 import { useUser } from '../../context/UserContext'
 import { getCompanyTimezoneDate } from '../../helper/getCompanyTimezoneDate'
 import dayjs from 'dayjs'
@@ -53,7 +51,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const [basicContactData, setBasicContactData] = useState(null)
   const [openEditModal, setOpenEditModal] = useState(false)
 
-  const [addMutation] = useCreateOneContactNoteMutation({
+  const [addClientNote] = useCreateOneContactNoteMutation({
     onCompleted() {
       Notification(NotificationType.success, 'Successfully created the note')
     },
@@ -77,9 +75,14 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
 
   const [
     getContactDetails,
-    { data: contactDetails, loading: notesCountLoading },
+    {
+      data: contactDetails,
+      loading: notesCountLoading,
+      refetch: getContactRefetch,
+    },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
+    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 
@@ -154,27 +157,18 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   }, [customFieldData, data])
 
   const handleAddNewClientNote = async (note) => {
-    const ipAddress = await getRealIp()
-    if (ipAddress) {
-      const noteBody = {
-        Note: note,
-        IpAddress: ipAddress + '',
-        CreatedDate: me?.companyTimezone
-          ? getCompanyTimezoneDate(me?.companyTimezone)
-          : dayjs().utc().format(),
-        User: { connect: { id: me?.user } },
-        CmContact: { connect: { ID: clientId } },
-      }
-      await addMutation({
-        variables: { data: noteBody },
-        refetchQueries: [
-          {
-            query: GetContactHeaderDocument,
-            ...getQueryVariables,
-          },
-        ],
-      })
+    const noteBody = {
+      Note: note,
+      CreatedDate: me?.companyTimezone
+        ? getCompanyTimezoneDate(me?.companyTimezone)
+        : dayjs().utc().format(),
+      User: { connect: { id: me?.user } },
+      CmContact: { connect: { ID: clientId } },
     }
+    await addClientNote({
+      variables: { data: noteBody },
+    })
+    getContactRefetch()
   }
 
   const tabItems: readonly TabItem[] = [
