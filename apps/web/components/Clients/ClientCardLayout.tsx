@@ -159,8 +159,8 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const handleAddNewClientNote = async (note) => {
     const noteBody = {
       Note: note,
-      CreatedDate: me?.companyTimezone
-        ? getCompanyTimezoneDate(me?.companyTimezone)
+      CreatedDate: me?.timezone
+        ? getCompanyTimezoneDate(me?.timezone)
         : dayjs().utc().format(),
       User: { connect: { id: me?.user } },
       CmContact: { connect: { ID: clientId } },

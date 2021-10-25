@@ -81,7 +81,7 @@ export const UserProvider: FC = ({ children }) => {
         imageUrl: data.me.image,
         companyDateFormat: data.me.Company.details.date_format,
         currency: data.me.Company.details.currency,
-        companyTimezone: data.me.Company.details.timezone.php_format,
+        timezone: data.me.Company.details.timezone.php_format,
       }
     : null
 
