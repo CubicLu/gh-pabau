@@ -5,128 +5,6 @@ import dayjs from 'dayjs'
 import { statusDataByDayMonth } from './statuses.service'
 import { getPreviousDateRange } from '../finance/dateRange.service'
 
-export const retrieveBookingStatuses = async (
-  ctx: Context,
-  data: DateRangeInput
-) => {
-  const onlineAppointment = []
-  const appointment = []
-  let BookingStatusCountOnline = []
-  let BookingStatusCount = []
-  let prevBookingOnline = []
-  let prevBooking = []
-  const prev_data = getPreviousDateRange(data.start_date, data.end_date)
-  prevBookingOnline = await ctx.prisma.$queryRaw`SELECT count(id)
-    FROM salon_bookings a
-    where ${
-      prev_data.prevStartDate && prev_data.prevEndDate
-        ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
-        : Prisma.empty
-    } contact_id>0 and Online=1 and status not in ('') ${
-    data.location_id
-      ? Prisma.sql`and location_id=${data.location_id}`
-      : Prisma.empty
-  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}`
-
-  prevBooking = await ctx.prisma.$queryRaw`SELECT count(id)
-      FROM salon_bookings a
-      where ${
-        prev_data.prevStartDate && prev_data.prevEndDate
-          ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
-          : Prisma.empty
-      } contact_id>0 and status not in ('') ${
-    data.location_id
-      ? Prisma.sql`and location_id=${data.location_id}`
-      : Prisma.empty
-  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}`
-
-  BookingStatusCountOnline = await ctx.prisma.$queryRaw`SELECT status, count(id)
-      FROM salon_bookings a
-      where ${
-        data.start_date && data.end_date
-          ? Prisma.sql`start_date between ${data.start_date} and ${data.end_date} and`
-          : Prisma.empty
-      } contact_id>0 and Online=1 and status not in ('') ${
-    data.location_id
-      ? Prisma.sql`and location_id=${data.location_id}`
-      : Prisma.empty
-  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
-      group by status`
-
-  BookingStatusCount = await ctx.prisma.$queryRaw`SELECT status, count(id)
-      FROM salon_bookings a
-      where ${
-        data.start_date && data.end_date
-          ? Prisma.sql`start_date between ${data.start_date} and ${data.end_date} and`
-          : Prisma.empty
-      } contact_id>0 and status not in ('') ${
-    data.location_id
-      ? Prisma.sql`and location_id=${data.location_id}`
-      : Prisma.empty
-  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}
-      group by status`
-
-  BookingStatusCount?.map((item) => {
-    appointment.push({
-      label: item.status,
-      count: item['count(id)'],
-      per:
-        (
-          ((item['count(id)'] ?? 0) * 100) /
-          BookingStatusCount?.reduce((prev, cur) => {
-            return prev + cur['count(id)'] ?? 0
-          }, 0)
-        ).toFixed(2) + '%',
-    })
-    return item
-  })
-  BookingStatusCountOnline?.map((item) => {
-    onlineAppointment.push({
-      label: item.status,
-      count: item['count(id)'],
-      per:
-        (
-          ((item['count(id)'] ?? 0) * 100) /
-          BookingStatusCountOnline?.reduce((prev, cur) => {
-            return prev + cur['count(id)'] ?? 0
-          }, 0)
-        ).toFixed(2) + '%',
-    })
-    return item
-  })
-  return {
-    totalBooking: BookingStatusCount?.reduce((prev, cur) => {
-      return prev + cur['count(id)'] ?? 0
-    }, 0), // total bookings for only required status
-    totalBookingPer: `${(BookingStatusCount?.length > 0 &&
-    prev_data.prevStartDate &&
-    prev_data.prevStartDate
-      ? (BookingStatusCount?.reduce((prev, cur) => {
-          return prev + cur['count(id)'] ?? 0
-        }, 0) *
-          100) /
-          prevBooking[0]['count(id)'] ?? 0
-      : 0
-    ).toFixed(2)}%`,
-    totalOnlineBooking: BookingStatusCountOnline?.reduce((prev, cur) => {
-      return prev + cur['count(id)'] ?? 0
-    }, 0), // total online bookings for only required status
-    totalOnlineBookingPer: `${(BookingStatusCountOnline?.length > 0 &&
-    prev_data.prevStartDate &&
-    prev_data.prevStartDate
-      ? (BookingStatusCountOnline?.reduce((prev, cur) => {
-          return prev + cur['count(id)'] ?? 0
-        }, 0) *
-          100) /
-          prevBookingOnline[0]['count(id)'] ?? 0
-      : 0
-    ).toFixed(2)}%`,
-    appointmentList: appointment.length > 0 ? appointment : null,
-    onlineAppointmentList:
-      onlineAppointment.length > 0 ? onlineAppointment : null,
-  }
-}
-
 export const retrieveAllBookingChartData = async (
   ctx: Context,
   data: DateRangeInput
@@ -249,5 +127,135 @@ export const retrieveAllBookingChartData = async (
   }
   return {
     bookingsByStatus: final ?? null,
+  }
+}
+
+export const retrieveAllBookingStatusCount = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  const appointment = []
+  const prev_data = getPreviousDateRange(data.start_date, data.end_date)
+  const bookingStatusCount = await ctx.prisma.booking.groupBy({
+    by: ['status'],
+    where: {
+      NOT: [{ Contact: null }],
+      start_date: { gte: data.start_date || undefined },
+      status: { not: '' },
+      end_date: { lte: data.end_date || undefined },
+      location_id: { equals: data.location_id || undefined },
+      UID: { equals: data.user_id || undefined },
+    },
+    _count: {
+      id: true,
+    },
+  })
+  const prevBooking = await ctx.prisma.$queryRaw`SELECT count(id)
+      FROM salon_bookings a
+      where ${
+        prev_data.prevStartDate && prev_data.prevEndDate
+          ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
+          : Prisma.empty
+      } contact_id>0 and status not in ('') ${
+    data.location_id
+      ? Prisma.sql`and location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}`
+
+  bookingStatusCount?.map((item) => {
+    appointment.push({
+      label: item.status,
+      count: item._count.id,
+      per:
+        (
+          ((item._count.id ?? 0) * 100) /
+          bookingStatusCount?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0)
+        ).toFixed(2) + '%',
+    })
+    return item
+  })
+  return {
+    totalBooking: bookingStatusCount?.reduce((prev, cur) => {
+      return prev + cur._count.id ?? 0
+    }, 0), // total bookings for only required status
+    totalBookingPer: `${(bookingStatusCount?.length > 0 &&
+    prev_data.prevStartDate &&
+    prev_data.prevStartDate
+      ? (bookingStatusCount?.reduce((prev, cur) => {
+          return prev + cur._count.id ?? 0
+        }, 0) *
+          100) /
+          prevBooking[0]['count(id)'] ?? 0
+      : 0
+    ).toFixed(2)}%`,
+    appointmentList: appointment.length > 0 ? appointment : null,
+  }
+}
+
+export const retrieveOnlineBookingStatusCount = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  const onlineAppointment = []
+  const prev_data = getPreviousDateRange(data.start_date, data.end_date)
+  const onlineBookingStatusCount = await ctx.prisma.booking.groupBy({
+    by: ['status'],
+    where: {
+      NOT: [{ Contact: null }],
+      start_date: { gte: data.start_date || undefined },
+      status: { not: '' },
+      end_date: { lte: data.end_date || undefined },
+      location_id: { equals: data.location_id || undefined },
+      UID: { equals: data.user_id || undefined },
+      Online: { equals: 1 },
+    },
+    _count: {
+      id: true,
+    },
+  })
+  const prevBookingOnline = await ctx.prisma.$queryRaw`SELECT count(id)
+  FROM salon_bookings a
+  where ${
+    prev_data.prevStartDate && prev_data.prevEndDate
+      ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
+      : Prisma.empty
+  } contact_id>0 and Online=1 and status not in ('') ${
+    data.location_id
+      ? Prisma.sql`and location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}`
+
+  onlineBookingStatusCount?.map((item) => {
+    onlineAppointment.push({
+      label: item.status,
+      count: item._count.id,
+      per:
+        (
+          ((item._count.id ?? 0) * 100) /
+          onlineBookingStatusCount?.reduce((prev, cur) => {
+            return prev + cur._count.id ?? 0
+          }, 0)
+        ).toFixed(2) + '%',
+    })
+    return item
+  })
+  return {
+    totalOnlineBooking: onlineBookingStatusCount?.reduce((prev, cur) => {
+      return prev + cur._count.id ?? 0
+    }, 0), // total online bookings for only required status
+    totalOnlineBookingPer: `${(onlineBookingStatusCount?.length > 0 &&
+    prev_data.prevStartDate &&
+    prev_data.prevStartDate
+      ? (onlineBookingStatusCount?.reduce((prev, cur) => {
+          return prev + cur._count.id ?? 0
+        }, 0) *
+          100) /
+          prevBookingOnline[0]['count(id)'] ?? 0
+      : 0
+    ).toFixed(2)}%`,
+    onlineAppointmentList:
+      onlineAppointment.length > 0 ? onlineAppointment : null,
   }
 }

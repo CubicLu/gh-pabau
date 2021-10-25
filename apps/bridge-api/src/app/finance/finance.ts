@@ -1306,9 +1306,11 @@ export const retrieveSalesCount = async (
     totalAvailableCategoryTypeCount: sale?.reduce((prev, cur) => {
       return prev + cur['count(sale_id)'] ?? 0
     }, 0),
-    totalAvailableCategoryTypeAmount: sale?.reduce((prev, cur) => {
-      return prev + cur['SUM(b.total)'] ?? 0
-    }, 0),
+    totalAvailableCategoryTypeAmount: sale
+      ?.reduce((prev, cur) => {
+        return prev + cur['SUM(b.total)'] ?? 0
+      }, 0)
+      .toFixed(2),
     totalAvailableCategoryTypePer: `${(sale?.length > 0 &&
     prev_data.prevStartDate &&
     prev_data.prevEndDate

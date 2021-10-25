@@ -218,6 +218,8 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToUserData
       ),
       dashboardData: rules.authentication.isAuthenticated,
+      getBookingStatus: rules.authentication.isAuthenticated,
+      getFinanceDetails: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,
