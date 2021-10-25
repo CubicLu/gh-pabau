@@ -23,6 +23,7 @@ import dayjs from 'dayjs'
 import {
   useGetActiveLocationQuery,
   useGetCompanyPositionsQuery,
+  useForgotPasswordMutation,
 } from '@pabau/graphql'
 export interface GraphDataProps {
   daysLeft: string
@@ -69,6 +70,28 @@ const PersonalDetail: FC<P> = ({
   } = useGetActiveLocationQuery({
     ssr: false,
   })
+  const [
+    forgetPasswordMutation,
+    { loading: forgetPasswordLoading },
+  ] = useForgotPasswordMutation({
+    onCompleted() {
+      setIsDisableResetEmail(true)
+      Notification(
+        NotificationType.success,
+
+        `${t('team.user.personal.details.password.reset.success.text')} ${
+          personalData.email
+        }`
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+
+        t('team.user.personal.details.password.reset.fail.text')
+      )
+    },
+  })
   useEffect(() => {
     if (OtherLocation?.locations) {
       setActiveLocations([...OtherLocation?.locations])
@@ -100,11 +123,11 @@ const PersonalDetail: FC<P> = ({
   }, [staffTitleData])
 
   const handleResetPasswordEmail = () => {
-    Notification(
-      NotificationType.success,
-      'Success! - we have emailed a reset link to email@email.com'
-    )
-    setIsDisableResetEmail(true)
+    forgetPasswordMutation({
+      variables: {
+        email: personalData.email,
+      },
+    })
   }
 
   const setSkeleton = (classname: string) => (
@@ -179,6 +202,7 @@ const PersonalDetail: FC<P> = ({
                       className={styles.personalBtn}
                       onClick={handleResetPasswordEmail}
                       disabled={isDisableResetEmail}
+                      loading={forgetPasswordLoading}
                     >
                       {t('team.user.personal.details.reset.password.button')}
                     </Button>
@@ -386,7 +410,12 @@ const PersonalDetail: FC<P> = ({
                   </div>
                 </div>
                 <div className={styles.personalDetailHeadMobileBtn}>
-                  <Button className={styles.personalBtn}>
+                  <Button
+                    className={styles.personalBtn}
+                    onClick={handleResetPasswordEmail}
+                    disabled={isDisableResetEmail}
+                    loading={forgetPasswordLoading}
+                  >
                     Send reset password email
                   </Button>
                   <Button
