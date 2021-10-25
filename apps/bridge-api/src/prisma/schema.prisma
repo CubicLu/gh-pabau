@@ -327,6 +327,8 @@ model Company {
   InsuranceContractPrice InsuranceContractPrice[]
   ContactAttachment      ContactAttachment[]
   SmsSender              SmsSender[]
+  Pathway                Pathway[]
+  PathwayStep            PathwayStep[]
   @@map("admin")
 }
 
@@ -1932,6 +1934,8 @@ model CmContact {
   MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
   Voucher                   Voucher[]                   @relation("Voucher")
   PurchasedVoucher          Voucher[]                   @relation("PurchasedVoucher")
+  PathwaysTaken             PathwaysTaken[]
+  PathwayStepsTaken         PathwayStepsTaken[]
 
   @@unique([ID, company_id], name: "primary")
   @@index([CreatedDate], name: "CreatedDate")
@@ -4889,7 +4893,9 @@ model Pathway {
   order        Int?            @default(0)
   PathwayTaken PathwaysTaken[]
   PathwayStep  PathwayStep[]
+  Company      Company?        @relation(fields: [company_id], references: [id])
 
+  @@index([company_id], name: "company_id")
   @@map("cp_pathways")
 }
 
@@ -4902,10 +4908,14 @@ model PathwaysTaken {
   status            cp_pathways_taken_status @default(ACTIVE)
   comment           String
   Pathway           Pathway                  @relation(fields: [pathway_id], references: [id])
+  CmContact         CmContact                @relation(fields: [contact_id], references: [ID])
+  Booking           Booking                  @relation(fields: [booking_id], references: [id])
   PathwayStepsTaken PathwayStepsTaken[]
 
 
   @@index([pathway_id, contact_id], name: "pathway_id")
+  @@index([contact_id], name: "contact_id")
+  @@index([booking_id], name: "booking_id")
   @@map("cp_pathways_taken")
 }
 
@@ -4925,9 +4935,12 @@ model PathwayStep {
   who_does_this String?
 
   Pathway           Pathway             @relation(fields: [pathway_id], references: [id])
+  Company           Company?            @relation(fields: [company_id], references: [id])
   PathwayStepsTaken PathwayStepsTaken[]
 
+
   @@index([pathway_id], name: "pathway_id")
+  @@index([company_id], name: "company_id")
   @@map("cp_steps")
 }
 
@@ -4942,12 +4955,13 @@ model PathwayStepsTaken {
   record_id     Int
   PathwaysTaken PathwaysTaken         @relation(fields: [path_taken_id], references: [id])
   PathwayStep   PathwayStep           @relation(fields: [step_id], references: [id])
-
+  CmContact     CmContact             @relation(fields: [contact_id], references: [ID])
 
   @@unique([step_id, path_taken_id], name: "step_id_3")
   @@index([path_taken_id], name: "path_taken_id")
   @@index([step_id, contact_id], name: "step_id")
   @@index([step_id], name: "step_id_2")
+  @@index([contact_id], name: "contact_id")
   @@map("cp_steps_taken")
 }
 
@@ -10698,6 +10712,7 @@ model Booking {
   CmStaffGeneral                CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
   CompanyBranch                 CompanyBranch?  @relation(fields: [location_id], references: [id])
   CompanyService                CompanyService? @relation(fields: [service_id], references: [id])
+  PathwaysTaken                 PathwaysTaken[]
 
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
