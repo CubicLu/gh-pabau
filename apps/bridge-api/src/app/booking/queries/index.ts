@@ -1,1 +1,1 @@
-export * from './Public_Bookings'
+export * from './Public_BookedAppointments'

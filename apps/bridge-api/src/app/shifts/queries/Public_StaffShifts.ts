@@ -12,7 +12,7 @@ export const PSInput = inputObjectType({
   },
 })
 
-export const Public_Shifts = extendType({
+export const Public_StaffShifts = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('Public_StaffShifts', {
