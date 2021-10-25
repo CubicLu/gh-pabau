@@ -1,7 +1,12 @@
 query getContactHeader($id: Int!) {
   notes: findUniqueCmContact(where: { ID: $id }) {
     contact: ContactNote(
-      where: { Note: { not: { equals: "" } } }
+      where: { 
+        Note: { not: { equals: "" } }
+        User: {
+          id: { not: { equals: null } }
+        }
+      }
       orderBy: { CreatedDate: desc }
     ) {
       ID
@@ -13,7 +18,12 @@ query getContactHeader($id: Int!) {
       }
     }
     appointment: Booking(
-      where: { title: { not: { equals: "" } } }
+      where: { 
+        title: { not: { equals: "" } }
+        User: {
+          id: { not: { equals: null } }
+        }
+      }
       orderBy: { create_date: desc }
     ) {
       title

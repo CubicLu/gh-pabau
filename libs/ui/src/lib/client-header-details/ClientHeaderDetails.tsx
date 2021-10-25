@@ -228,7 +228,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               className={styles.contact}
                             >{`By ${item?.User?.contact}`}</div>
                             <div className={styles.date}>{`On ${dayjs(
-                              item?.date.toString()
+                              item?.date
                             )
                               .utc()
                               .format('D MMM YYYY hh:mm A')}`}</div>
@@ -305,10 +305,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                     <div className={styles.clientNoteItem}>
                       <div>
                         <Avatar
-                          src={note?.User?.avatar}
-                          name={
-                            note?.User?.contact && getImage(note?.User?.contact)
+                          src={
+                            note?.User?.avatar && getImage(note?.User?.avatar)
                           }
+                          name={note?.User?.contact}
                           size={32}
                         />
                       </div>
@@ -317,9 +317,11 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                         <div
                           className={styles.contact}
                         >{`By ${note?.User?.contact}`}</div>
-                        <div className={styles.date}>{`On ${dayjs(
-                          note.date?.toString()
-                        ).format('D MMM YYYY hh:mm A')}`}</div>
+                        {note?.date && (
+                          <div className={styles.date}>{`On ${dayjs(
+                            note?.date.toString()
+                          ).format('D MMM YYYY hh:mm A')}`}</div>
+                        )}
                       </div>
                     </div>
                   </div>
