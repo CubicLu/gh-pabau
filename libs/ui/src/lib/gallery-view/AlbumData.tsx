@@ -184,43 +184,8 @@ export const AlbumData: FC<AlbumDataProps> = ({
   const [moveAlbum, setMoveAlbum] = useState(false)
   const [albumDotMenuDrawer, setAlbumDotMenuDrawer] = useState(false)
   const [albumListDrawer, setAlbumListDrawer] = useState(false)
-  const [albumImageList, setAlbumImageList] = useState([])
-  const [listAlbumData, setListAlbumData] = useState([])
   const [photoDeleteModal, setPhotoDeleteModal] = useState(false)
   const [albumImage, setAlbumImage] = useState('')
-
-  useEffect(() => {
-    const temp = []
-    if (listView) {
-      data.album?.map((albumData, index) =>
-        temp.push({
-          name: [albumData, index],
-          files: [calculateAlbumLength(albumData), index],
-          lastModified: dayjs(albumData.modifiedDate).format(
-            'DD.MM.YYYY'
-          ) as string,
-        } as never)
-      )
-      setListAlbumData(temp)
-    }
-  }, [data, listView])
-
-  useEffect(() => {
-    const temp = []
-    if (listView) {
-      data.albumImage?.map((x, index) =>
-        temp.push({
-          id: x?.id,
-          name: [x, index],
-          owner: 'me',
-          lastModified: dayjs(new Date((x?.date || 0) * 1000 || '')).format(
-            'DD.MM.YYYY'
-          ) as string,
-        } as never)
-      )
-      setAlbumImageList(temp)
-    }
-  }, [data.albumImage, listView, selectedImages])
 
   const handleAlbumDownload = (albumImage) => {
     albumImage.map((img) => {
@@ -364,6 +329,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             >
               <Card bordered={false}>
                 <ImageItem
+                  isDirectPath
                   origin={value?.[0]?.img || ''}
                   alt={'none'}
                   className={styles.tableImage}
@@ -1023,18 +989,33 @@ export const AlbumData: FC<AlbumDataProps> = ({
         {data.album.length > 0 && (
           <Table
             columns={listAlbumColumns}
-            dataSource={listAlbumData}
+            dataSource={data?.album?.map(
+              (albumData, index) =>
+                ({
+                  name: [albumData, index],
+                  files: [calculateAlbumLength(albumData), index],
+                  lastModified: dayjs(albumData.modifiedDate).format(
+                    'DD.MM.YYYY'
+                  ) as string,
+                } as never)
+            )}
             pagination={false}
           />
         )}
         {data?.albumImage?.length > 0 &&
-          albumImageList.length > 0 &&
           (loading ? (
             <LoadingTable columns={albumImageColumn} />
           ) : (
             <Table
               columns={albumImageColumn}
-              dataSource={albumImageList}
+              dataSource={data.albumImage?.map((x, index) => ({
+                id: x?.id,
+                name: [x, index],
+                owner: 'me',
+                lastModified: dayjs(
+                  new Date((x?.date || 0) * 1000 || '')
+                ).format('DD.MM.YYYY') as string,
+              }))}
               pagination={false}
               scroll={{ x: 'max-content' }}
             />
