@@ -6,6 +6,7 @@ import {
   CmLead,
   LeadStatus,
   CmLeadNote,
+  CommunicationRecipient
 } from '@prisma/client'
 
 interface WhereInputType {
@@ -34,6 +35,7 @@ export type ActivityData = Activity & {
     Activity: Activity[]
     LeadStatusData: LeadStatus
     CmLeadNote: CmLeadNote[]
+    CommunicationRecipient: CommunicationRecipient[]
   }
 }
 

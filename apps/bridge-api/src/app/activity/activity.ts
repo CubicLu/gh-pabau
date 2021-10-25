@@ -54,6 +54,74 @@ export const retrieveActivityGraphData = async (
   }
 }
 
+export const retrieveActivityData = async (where, ctx, skip, take, andQuery, orQuery, prepareSearchQuery, prepareOrderQuery, activitySelect) => {
+  return ctx.prisma.activity.findMany({
+    where: {
+      due_start_date: {
+        gte: where?.startDate,
+        lte: where?.endDate,
+      },
+      ActivityType: { name: { in: where?.activityType } },
+      status: { in: where?.status },
+      AssignedUser: {
+        id: { in: where?.userId },
+      },
+      AND: [
+        ...andQuery,
+        {
+          OR: orQuery,
+        },
+        {
+          OR: prepareSearchQuery,
+        },
+      ],
+    },
+    skip: skip,
+    take: take,
+    orderBy: prepareOrderQuery,
+    select: {
+      ...activitySelect.select,
+      CmContact: {
+        select: {
+          ...activitySelect.select?.CmContact?.select,
+          Activity: {
+            select: {
+              id: true,
+              status: true,
+              finished_at: true,
+            },
+          },
+        },
+      },
+      CmLead: {
+        select: {
+          ...activitySelect.select?.CmLead?.select,
+          CmLeadNote: {
+            select: {
+              Note: true,
+              CreatedDate: true,
+            },
+          },
+          Activity: {
+            select: {
+              id: true,
+              status: true,
+              finished_at: true,
+            },
+          },
+          EnumStatus: true,
+          LeadStatusData: {
+            select: {
+              status_name: true,
+              is_convert: true,
+            },
+          },
+        },
+      },
+    },
+  })
+}
+
 const leadStatusMapper = (search: string) => {
   const value = search?.split('%')?.[1]
   const statusMap = {
@@ -332,8 +400,8 @@ export const calculateLeadLostObject = (
   return noteData
 }
 
-const prepareDateQuery = (menu: string | number, operand: string) => {
-  const dateMapper = {
+const retrieveDateMapper = () => {
+  return {
     'last quarter': [
       dayjs().utc().add(-1, 'quarter').startOf('quarter').format(),
       dayjs().utc().add(-1, 'quarter').endOf('quarter').format(),
@@ -459,6 +527,10 @@ const prepareDateQuery = (menu: string | number, operand: string) => {
       dayjs().utc().add(6, 'month').endOf('day').format(),
     ],
   }
+}
+
+const prepareDateQuery = (menu: string | number, operand: string) => {
+  const dateMapper = retrieveDateMapper()
   const operandMapper = {
     is: {
       gte: dateMapper[menu][0],
@@ -638,7 +710,7 @@ const prepareDoneQuery = (value: string, operand: string) => {
   return operandMapper[operand]
 }
 
-const prepareOperandQuery = async (
+export const prepareOperandQuery = async (
   column: string,
   menu: string,
   operand: string,
@@ -646,7 +718,7 @@ const prepareOperandQuery = async (
 ) => {
   const data = getColumnData(column)
   let operandQuery
-  switch (data.key) {
+  switch (data?.key) {
     case 'Date':
       operandQuery = prepareDateQuery(menu, operand)
       break
@@ -662,11 +734,15 @@ const prepareOperandQuery = async (
     case 'Done':
       operandQuery = prepareDoneQuery(menu, operand)
       break
+    default: 
+      undefined
+      break
   }
   return operandQuery
 }
 
 const bindQueryIntoModelVariable = (column: string, data) => {
+  console.log('column----------', column, data)
   return getColumnData(column, data)?.filter
 }
 
@@ -693,5 +769,157 @@ export const prepareFilterQuery = async (
       bindQueryIntoModelVariable(item.filterColumn, prepareInnerObject)
     )
   }
+  console.log('queryObject---------------', queryObject)
   return queryObject
+}
+
+export const manualFilterOnBasicOperand = (columnValue, key, item) => {
+  switch(columnValue.operand) {
+    case 'is': {
+      if (item[key] === Number(columnValue.menuOption)) {
+        return item
+      }
+      break
+    }
+    case 'is not': {
+      if (item[key] !== Number(columnValue.menuOption)) {
+        return item
+      }
+      break
+    }
+    case 'is empty': {
+      if (!item[key]) {
+        return item
+      }
+      break
+    }
+    case 'is not empty': {
+      if (item[key]) {
+        return item
+      }
+      break
+    }
+  }
+}
+
+export const manualFilterOnDateOperand = (columnValue, key, item) => {
+  let dateMapper = retrieveDateMapper()
+                  let date = dateMapper[columnValue.menuOption]
+                  console.log('date----------', date)
+                  switch(columnValue.operand) {
+                    case 'is': {
+                      if (item[key] >= date[0] && item[key] <= date[1]) {
+                        return item
+                      }
+                      break
+                    }
+                    case 'is not': {
+                      if (!(item[key] >= date[0] && item[key] <= date[1])) {
+                        return item
+                      }
+                      break
+                    }
+                    case 'is later than': {
+                      if (item[key] > date[1]) {
+                        return item
+                      }
+                      break
+                    }
+                    case 'is earlier than': {
+                      if (item[key] < date[0]) {
+                        return item
+                      }
+                      break
+                    }
+                    case 'is exactly or later than': {
+                      if (item[key] >= date[0]) {
+                        return item
+                      }
+                      break
+                    }
+                    case 'is exactly or earlier than': {
+                      if (item[key] <= date[1]) {
+                        return item
+                      }
+                      break
+                    }
+                    case 'is empty': {
+                      if (!item[key]) {
+                        return item
+                      }
+                      break
+                    }
+                    case 'is not empty': {
+                      if (item.firstActivityTime) {
+                        return item
+                      }
+                      break
+                    }
+                  }
+}
+
+export const manualFilterOnStringOperand = (columnValue, key, item) => {
+  let value = columnValue?.menuOption?.toLowerCase()
+  switch(columnValue.operand) {
+    case 'is': {
+      if (item[key] === value) {
+        return item
+      }
+      break
+    }
+    case 'is not': {
+      if (item[key] !== value) {
+        return item
+      }
+      break
+    }
+    case 'is empty': {
+      if (!item[key]) {
+        return item
+      }
+      break
+    }
+    case 'is not empty': {
+      if (item[key]) {
+        return item
+      }
+      break
+    }
+    case 'contains': {
+      if (item[key].includes(value)) {
+        return item
+      }
+      break
+    }
+    case 'does not contain': {
+      if (!item[key].includes(value)) {
+        return item
+      }
+      break
+    }
+    case 'start with': {
+      if (item[key].startsWith(value)) {
+        return item
+      }
+      break
+    }
+    case 'does not start with': {
+      if (!item[key].startsWith(value)) {
+        return item
+      }
+      break
+    }
+    case 'ends with': {
+      if (item[key].endsWith(value)) {
+        return item
+      }
+      break
+    }
+    case 'does not end with': {
+      if (!item[key].endsWith(value)) {
+        return item
+      }
+      break
+    }
+  }
 }

@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Select, Radio, Spin } from 'antd'
+import { Select, Radio, Spin, InputNumber } from 'antd'
 import { getData } from './FilterOptionData'
 import { UserOutlined, CheckOutlined, AimOutlined } from '@ant-design/icons'
-import { FormikInput } from '@pabau/ui'
+import { Input as FormikInput } from 'formik-antd'
 import styles from './CreateFilterModal.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { TFunction } from 'react-i18next'
@@ -20,8 +20,8 @@ export interface PersonList {
 }
 
 export interface SubjectMenuProps {
-  value: string | number
-  onChange: (item: string | number) => void
+  value: string
+  onChange: (item: string) => void
   disabled: boolean
 }
 
@@ -32,22 +32,22 @@ export interface OptionList {
 
 export interface ToggleMenuProps {
   options: OptionList[]
-  value: string | number
-  onChange: (item: string | number) => void
+  value: string
+  onChange: (item: string) => void
   disabled: boolean
 }
 
 export interface SelectMenuProps {
   optionList: OptionList[]
-  defaultValue?: number | string
-  value: string | number
-  onChange: (item: string | number) => void
+  defaultValue?: string
+  value: string
+  onChange: (item: string) => void
   disabled: boolean
 }
 
 export interface DateMenuProps {
-  value: string | number
-  onChange: (item: string | number) => void
+  value: string
+  onChange: (item: string) => void
   t: TFunction<'common'>
   disabled: boolean
 }
@@ -198,6 +198,19 @@ const SubjectMenu: FC<SubjectMenuProps> = ({ value, onChange, disabled }) => {
   )
 }
 
+const NumberMenu: FC<SubjectMenuProps> = ({ value, onChange, disabled }) => {
+  return (
+    <div className={styles.subjectInput}>
+      <InputNumber
+        min={1}
+        value={Number(value)}
+        disabled={disabled}
+        onChange={(item) => onChange(item.toString())}
+      />
+    </div>
+  )
+}
+
 const ToggleMenu: FC<ToggleMenuProps> = ({
   options,
   value,
@@ -223,8 +236,8 @@ const ToggleMenu: FC<ToggleMenuProps> = ({
 interface FilterMenuProps {
   columnName: string
   personsList: PersonList[]
-  value: string | number
-  onChange: (value: string | number) => void
+  value: string
+  onChange: (value: string) => void
   activityTypeOption: OptionList[]
   userId: number
   disabled: boolean
@@ -332,7 +345,10 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       case 'Lead last activity date':
       case 'Lead lost time':
       case 'Date of entering stage':
-      case 'Update time': {
+      case 'Update time':
+      case 'Last email received':
+      case 'Last email sent':
+      case 'Next activity date': {
         return (
           <DateMenu
             value={value}
@@ -416,12 +432,8 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       case 'Subject':
       case 'Lead email':
       case 'Lead phone':
-      case 'Lead done activities':
-      case 'Lead last activity (days)':
       case 'Lead lost reason':
-      case 'Lead total activities':
-      case 'Lead descriptions':
-      case 'Activities to do': {
+      case 'Lead descriptions': {
         return (
           <SubjectMenu value={value} onChange={onChange} disabled={disabled} />
         )
@@ -505,6 +517,16 @@ export const FilterMenu: FC<FilterMenuProps> = ({
             onChange={onChange}
             disabled={disabled}
           />
+        )
+        break
+      }
+      case 'Lead done activities':
+      case 'Activities to do':
+      case 'Email messages count':
+      case 'Lead total activities':
+      case 'Lead last activity (days)': {
+        return (
+          <NumberMenu value={value} onChange={onChange} disabled={disabled} />
         )
         break
       }

@@ -147,6 +147,22 @@ export const getData = (t) => {
       label: t('create.filter.modal.lead.column.lead.date.entring.stage'),
     },
     {
+      key: 'Email messages count',
+      label: t('create.filter.modal.lead.column.lead.email.messages.stage'),
+    },
+    {
+      key: 'Last email received',
+      label: t('create.filter.modal.lead.column.lead.last.email.received.stage'),
+    },
+    {
+      key: 'Last email sent',
+      label: t('create.filter.modal.lead.column.lead.last.email.sent'),
+    },
+    {
+      key: 'Next activity date',
+      label: t('create.filter.modal.lead.column.lead.next.activity.date'),
+    },
+    {
       key: 'Pipeline',
       label: t('create.filter.modal.lead.column.lead.pipeline'),
     },
@@ -255,6 +271,26 @@ export const getData = (t) => {
     },
   ]
 
+  const numberOperands = [
+    ...basicOperands,
+    {
+      key: 'is more than',
+      label: t('create.filter.modal.date.is.more.than.operand'),
+    },
+    {
+      key: 'is less than',
+      label: t('create.filter.modal.date.is.less.than.operand'),
+    },
+    {
+      key: 'is more or equal to',
+      label: t('create.filter.modal.date.is.more.or.equal.to.operand'),
+    },
+    {
+      key: 'is less or equal to',
+      label: t('create.filter.modal.date.is.less.or.equal.to.operand'),
+    },
+  ]
+
   const manageOperandBasedOnColumn = {
     'Add time': dateOperands,
     'Assigned to user': userOperands,
@@ -273,12 +309,12 @@ export const getData = (t) => {
     'Won time': dateOperands,
     'Lead owner': userOperands,
     'Lead closed on': dateOperands,
-    'Lead done activities': basicOperands,
+    'Lead done activities': numberOperands,
     'First activity time': dateOperands,
     'Lead last activity date': dateOperands,
-    'Lead last activity (days)': basicOperands,
+    'Lead last activity (days)': numberOperands,
     'Lead lost reason': stringOperands,
-    'Lead total activities': basicOperands,
+    'Lead total activities': numberOperands,
     'Lead lost time': dateOperands,
     'Lead source': basicOperands,
     'Won by': userOperands,
@@ -290,7 +326,11 @@ export const getData = (t) => {
     Pipeline: basicOperands,
     Title: basicOperands,
     'Update time': dateOperands,
-    'Activities to do': basicOperands,
+    'Activities to do': numberOperands,
+    'Next activity date': dateOperands,
+    'Last email received': dateOperands,
+    'Last email sent': dateOperands,
+    'Email messages count': numberOperands
   }
 
   const dateMenu = [

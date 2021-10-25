@@ -207,7 +207,10 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
         case 'Lead last activity date':
         case 'Lead lost time':
         case 'Date of entering stage':
-        case 'Update time': {
+        case 'Update time':
+        case 'Last email received':
+        case 'Last email sent':
+        case 'Next activity date': {
           data[index].menuOption = 'last quarter'
           break
         }
@@ -660,6 +663,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         <BasicModal
           className={styles.filterModalWrapper}
           visible={showModal}
+          hasScroll={true}
           centered
           title={
             values.id
@@ -677,7 +681,9 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
           footer={false}
         >
           <Form layout="vertical">
+            <div className={styles.filterContentMain}>
             <div className={styles.filterContentWrap}>
+              {console.log('0values-----------', values)}
               <h5>{t('create.filter.modal.all.condition.title')}</h5>
               <RenderFilterMenu
                 items={values.andFilterOption}
@@ -819,6 +825,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                 </span>
               </div>
             )}
+            </div>
             <div className={styles.btnWrapper}>
               {(values.isFilterOwner || loggedUser.admin) && values.id && (
                 <Button
