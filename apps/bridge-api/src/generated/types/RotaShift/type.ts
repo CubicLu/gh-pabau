@@ -39,19 +39,19 @@ export const RotaShift = objectType({
         return root.Company
       },
     })
-    t.field('Location', {
+    t.nullable.field('Location', {
       type: 'CompanyBranch',
       resolve(root: any) {
         return root.Location
       },
     })
-    t.field('CompanyRoom', {
+    t.nullable.field('CompanyRoom', {
       type: 'CompanyRoom',
       resolve(root: any) {
         return root.CompanyRoom
       },
     })
-    t.field('HolidayRequest', {
+    t.nullable.field('HolidayRequest', {
       type: 'HolidayRequest',
       resolve(root: any) {
         return root.HolidayRequest
