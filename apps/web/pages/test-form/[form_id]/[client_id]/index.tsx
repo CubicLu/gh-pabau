@@ -321,7 +321,8 @@ export const TestForm = () => {
       }
       await addMedicalAttrMutation({
         variables: { data: { ...creatMedicalAttrVariables } },
-      }).then((e) => (item.attrId = e.data.createOneMedicalAttr.id))
+      }).then((e) => console.log('addMedicalAttrMutation =', e))
+      // item.attrId = e.data.createOneMedicalAttr.id
     }
     saveMedicalFormContact(draggedForms)
   }
