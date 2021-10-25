@@ -655,7 +655,8 @@
                 "output": "/"
               }
             ],
-            "maxWorkers": 1,
+            "maxWorkers": 4,
+            "memoryLimit": 7168,
             "generatePackageJson": true
           },
           "configurations": {

@@ -221,6 +221,8 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.interceptAccessToUserData
       ),
+      // getToken
+      getRefreshToken: rules.authentication.isAuthenticated,
       dashboardData: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
