@@ -1,0 +1,17 @@
+query getServiceCategories{
+  ServiceCategories: findManyServiceCategory{
+    id
+    name
+    _count {CompanyService}
+    Services :CompanyService{
+      id
+      name
+    }
+  }
+}
+
+query getStaffServices($userID: Int!) {
+  getStaffServices(staffId: $userID) {
+    id
+  }
+}
