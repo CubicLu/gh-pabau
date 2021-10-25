@@ -27,7 +27,6 @@ import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
-import { getRealIp } from '../../helper/getRealIp'
 import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { getCompanyTimezoneDate } from '../../helper/getCompanyTimezoneDate'
@@ -57,7 +56,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const [basicContactData, setBasicContactData] = useState(null)
   const [openEditModal, setOpenEditModal] = useState(false)
 
-  const [addMutation] = useCreateOneContactNoteMutation({
+  const [addClientNote] = useCreateOneContactNoteMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
@@ -117,9 +116,14 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
 
   const [
     getContactDetails,
-    { data: contactDetails, loading: notesCountLoading },
+    {
+      data: contactDetails,
+      loading: notesCountLoading,
+      refetch: getContactRefetch,
+    },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
+    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 
@@ -181,9 +185,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         return {
           ...item,
           notes: [],
-          count:
-            data?.findFirstCmContact?.contactNotes?.length +
-              data?.findFirstCmContact?.bookingNotes?.length || 0,
+          count: data?.findFirstCmContact?.contactNotes?.length || 0,
           loading: true,
           appointments: [],
         }
@@ -196,27 +198,18 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   }, [customFieldData, data])
 
   const handleAddNewClientNote = async (note) => {
-    const ipAddress = await getRealIp()
-    if (ipAddress) {
-      const noteBody = {
-        Note: note,
-        IpAddress: ipAddress + '',
-        CreatedDate: me?.companyTimezone
-          ? getCompanyTimezoneDate(me?.companyTimezone)
-          : dayjs().utc().format(),
-        User: { connect: { id: me?.user } },
-        CmContact: { connect: { ID: clientId } },
-      }
-      await addMutation({
-        variables: { data: noteBody },
-        refetchQueries: [
-          {
-            query: GetContactHeaderDocument,
-            ...getQueryVariables,
-          },
-        ],
-      })
+    const noteBody = {
+      Note: note,
+      CreatedDate: me?.timezone
+        ? getCompanyTimezoneDate(me?.timezone)
+        : dayjs().utc().format(),
+      User: { connect: { id: me?.user } },
+      CmContact: { connect: { ID: clientId } },
     }
+    await addClientNote({
+      variables: { data: noteBody },
+    })
+    getContactRefetch()
   }
 
   const handleEditNote = async (id, note) => {

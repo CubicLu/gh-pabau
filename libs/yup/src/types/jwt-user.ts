@@ -36,5 +36,5 @@ export interface AuthenticatedUser extends JwtUser {
   companies: CompanyPersona[]
   companyDateFormat: string
   currency?: string
-  companyTimezone: string
+  timezone: string
 }
