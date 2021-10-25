@@ -1,0 +1,10 @@
+query googleToken($token:String){
+  getRefreshToken(token : $token){
+    access_token
+    refresh_token
+    token_type
+    expiry_date
+    email
+    scope
+  }
+}

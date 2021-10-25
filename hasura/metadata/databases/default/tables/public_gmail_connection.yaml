@@ -1,0 +1,45 @@
+table:
+  name: gmail_connection
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - email
+    - company_id
+    - user_id
+    - access_token
+    - created_at
+    - updated_at
+    - refresh_token
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - company_id
+    - user_id
+    - access_token
+    - email
+    - refresh_token
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - access_token
+    - company_id
+    - email
+    - refresh_token
+    - user_id
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: user
