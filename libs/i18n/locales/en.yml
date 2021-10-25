@@ -5412,6 +5412,11 @@ en:
   journey.modal.appointements.status.arrived: Arrived
   journey.modal.appointements.status.in.progress: In Progress
   journey.modal.appointements.status.complete: Complete
+  team.user.personal.details.avtar.modal.title: 'Edit Photo'
+  team.user.personal.details.avtar.cancel.button: 'Cancel'
+  team.user.personal.details.avtar.create.button: 'Create'
+  team.user.personal.details.avtar.Preview.title: 'Preview'
+  team.user.personal.details.avtar.upload.button: 'Upload file'
   team.user.personal.details.password.reset.success.text: 'Success! - we have emailed a reset link to'
   team.user.personal.details.password.reset.fail.text: 'An error occured while sending reset passord email'
   team.user.services.save.changes.button: 'Save changes'
