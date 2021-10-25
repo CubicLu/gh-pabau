@@ -39,7 +39,7 @@ import { ReactComponent as Share } from '../../assets/images/image-share.svg'
 import { ReactComponent as ImageAlbum } from '../../assets/images/image-album.svg'
 import dayjs from 'dayjs'
 
-const ImageItem = ({ origin, ...props }) => {
+const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   const [source, setSource] = useState('')
 
   useEffect(() => {
@@ -69,14 +69,18 @@ const ImageItem = ({ origin, ...props }) => {
           img.width,
           img.height
         )
-        setSource(canvas.toDataURL())
+        if (isDirectPath) {
+          setSource(path)
+        } else {
+          setSource(canvas.toDataURL())
+        }
       })
       img.addEventListener('error', () => {
         setSource('')
       })
       img.src = path
     }
-  }, [origin, source])
+  }, [isDirectPath, origin, source])
 
   return source ? (
     <img src={source} alt="content" {...props} />
@@ -114,7 +118,7 @@ export interface AlbumDataProps {
   onFolderClick: (index) => void
   selectedImages: ImageProps[]
   setSelectedImages: (e) => void
-  handleOnChange: (checked, img) => void
+  handleImageSelection: (checked, img) => void
   loading: boolean
   showMenu: boolean
   setOpenDeleteModal: (e) => void
@@ -148,7 +152,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
   allAlbums,
   onFolderClick,
   selectedImages,
-  handleOnChange,
+  handleImageSelection,
   loading = true,
   setSelectedImages,
   showMenu,
@@ -201,6 +205,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
     if (listView) {
       data.albumImage?.map((x, index) =>
         temp.push({
+          id: x?.id,
           name: [x, index],
           owner: 'me',
           lastModified: dayjs(new Date((x?.date || 0) * 1000 || '')).format(
@@ -348,7 +353,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <div className={styles.folderContentFirst}>
             <Checkbox
               checked={selectedImages.includes(value?.[0] as never)}
-              onChange={(e) => handleOnChange(e.target.checked, value?.[0])}
+              onChange={(e) =>
+                handleImageSelection(e.target.checked, value?.[0])
+              }
             >
               <Card bordered={false}>
                 <ImageItem
@@ -403,6 +410,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
               className={styles.btnCircle}
               shape="circle"
               icon={<MoreOutlined />}
+              title="hell"
             />
           </Popover>
         ) : (
@@ -457,7 +465,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <Menu.Item
             key={album.id.toString()}
             onClick={() => {
-              onSingleImageMove?.(album.id, imageId)
+              onSingleImageMove?.(album.id, imageId, false)
               closePopover?.()
             }}
           >
@@ -562,8 +570,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <>
             {album.albumImage.slice(0, 4).map((item, key) => {
               return (
-                <img
-                  src={item?.img}
+                <ImageItem
+                  isDirectPath
+                  origin={item?.img}
                   alt={album.albumTitle}
                   key={key}
                   className={styles.gridItem}
@@ -841,7 +850,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                           checked={selectedImages.includes(x as never)}
                           key={i}
                           onChange={(value) =>
-                            handleOnChange(value.target.checked, x)
+                            handleImageSelection(value.target.checked, x)
                           }
                           className={
                             selectedImages.includes(x as never)

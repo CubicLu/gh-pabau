@@ -410,7 +410,7 @@ export const GalleryView: FC<GalleryProps> = ({
     link.remove()
   }
 
-  const handleOnChange = async (checked: boolean, img) => {
+  const handleImageSelection = async (checked: boolean, img) => {
     const storeImg = [...selectedImages]
     const idx = storeImg.indexOf(img as never)
     checked ? storeImg.push(img as never) : storeImg.splice(idx, 1)
@@ -909,7 +909,7 @@ export const GalleryView: FC<GalleryProps> = ({
           allAlbums={data?.album}
           onFolderClick={onFolderClick}
           selectedImages={selectedImages}
-          handleOnChange={handleOnChange}
+          handleImageSelection={handleImageSelection}
           loading={loading}
           setSelectedImages={setSelectedImages}
           showMenu={showMenu}
