@@ -5,6 +5,8 @@ import {
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
   useCreateOneContactNoteMutation,
+  useUpdateOneContactNoteMutation,
+  useDeleteOneContactNoteMutation,
   GetContactHeaderDocument,
 } from '@pabau/graphql'
 import {
@@ -27,6 +29,7 @@ import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { getRealIp } from '../../helper/getRealIp'
 import { useUser } from '../../context/UserContext'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { getCompanyTimezoneDate } from '../../helper/getCompanyTimezoneDate'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -42,6 +45,7 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { t } = useTranslationI18()
   const { me } = useUser()
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
@@ -55,10 +59,46 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
 
   const [addMutation] = useCreateOneContactNoteMutation({
     onCompleted() {
-      Notification(NotificationType.success, 'Successfully created the note')
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.create')
+      )
     },
     onError() {
-      Notification(NotificationType.error, 'Error occured while creating note')
+      Notification(
+        NotificationType.error,
+        t('clients.clientcard.notes.clientnote.create.errormessage')
+      )
+    },
+  })
+
+  const [editMutation] = useUpdateOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.edit')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('clients.clientcard.notes.clientnote.edit.errormessage')
+      )
+    },
+  })
+
+  const [deleteMutation] = useDeleteOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.delete')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('clients.clientcard.notes.clientnote.delete.errormessage')
+      )
     },
   })
 
@@ -177,6 +217,32 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         ],
       })
     }
+  }
+
+  const handleEditNote = async (id, note) => {
+    await editMutation({
+      variables: { where: { ID: id }, data: { Note: { set: note } } },
+      refetchQueries: [
+        {
+          query: GetContactHeaderDocument,
+          ...getQueryVariables,
+        },
+      ],
+    })
+  }
+
+  const handleDeleteNote = async (id) => {
+    await deleteMutation({
+      variables: {
+        where: { ID: id },
+      },
+      refetchQueries: [
+        {
+          query: GetContactHeaderDocument,
+          ...getQueryVariables,
+        },
+      ],
+    })
   }
 
   const tabItems: readonly TabItem[] = [
@@ -321,6 +387,8 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         notes={contactData}
         getContactDetails={getContactDetails}
         handleAddNewClientNote={handleAddNewClientNote}
+        handleEditNote={handleEditNote}
+        handleDeleteNote={handleDeleteNote}
       >
         {children}
       </ClientCard>

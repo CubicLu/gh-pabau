@@ -35,6 +35,8 @@ export interface ClientHeaderDetailsProps {
   getContactDetails?: () => void
   client?: ClientData
   handleAddNewClientNote?: (e: string) => void
+  handleEditNote?: (id: number, e: string) => void
+  handleDeleteNote?: (id: number | string) => void
 }
 
 interface ClientCountDetails {
@@ -47,6 +49,8 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   getContactDetails,
   client,
   handleAddNewClientNote,
+  handleEditNote,
+  handleDeleteNote,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -94,18 +98,21 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     }
   }
 
-  const handleEditClientNote = () => {
-    const notes = [...noteItems]
-    if (currentNote) notes[currentClientNote].content = currentNote
-    setNoteItems(notes)
+  const handleEditClientNote = (id) => {
+    console.log('item id========', id)
+    // const notes = [...noteItems]
+    // if (currentNote) notes[currentClientNote].content = currentNote
+    // setNoteItems(notes)
+    handleEditNote?.(id, currentNote)
     setCurrentNote('')
     setCurrentClientNote(-1)
   }
 
-  const handleDeleteClientNote = (index) => {
-    const notes = [...noteItems]
-    notes.splice(index, 1)
-    setNoteItems(notes)
+  const handleDeleteClientNote = (id) => {
+    // const notes = [...noteItems]
+    // notes.splice(index, 1)
+    // setNoteItems(notes)
+    handleDeleteNote?.(id)
     setCurrentNote('')
     setCurrentClientNote(-1)
   }
@@ -246,7 +253,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               icon={<DeleteOutlined />}
                               shape="circle"
                               size="small"
-                              onClick={() => handleDeleteClientNote(index)}
+                              onClick={() => handleDeleteClientNote(item.ID)}
                             />
                           </div>
                         </div>
@@ -264,7 +271,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               shape="circle"
                               size="small"
                               icon={<SaveOutlined />}
-                              onClick={() => handleEditClientNote()}
+                              onClick={() => handleEditClientNote(item.ID)}
                             />
                             <Button
                               icon={<UndoOutlined />}

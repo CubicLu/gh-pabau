@@ -147,6 +147,8 @@ interface P {
   notes?: ClientNotes
   getContactDetails?: () => void
   handleAddNewClientNote?: (e: string) => void
+  handleEditNote?: (id: number | string, e: string) => void
+  handleDeleteNote?: (id: number | string) => void
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
@@ -163,6 +165,8 @@ const ClientCardModal: FC<P> = ({
   notes,
   getContactDetails,
   handleAddNewClientNote,
+  handleEditNote,
+  handleDeleteNote,
   onClose,
   tabs,
   activeTab,
@@ -911,6 +915,8 @@ const ClientCardModal: FC<P> = ({
                   getContactDetails={getContactDetails}
                   client={client}
                   handleAddNewClientNote={handleAddNewClientNote}
+                  handleEditNote={handleEditNote}
+                  handleDeleteNote={handleDeleteNote}
                 />
               )}
             </div>

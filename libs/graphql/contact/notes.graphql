@@ -25,9 +25,3 @@ query getContactHeader($id: Int!) {
     }
   }
 }
-
-mutation createClientNote($data: ContactNoteCreateInput!) {
-  createOneClientNote(data: $data) {
-    ID
-  }
-}
