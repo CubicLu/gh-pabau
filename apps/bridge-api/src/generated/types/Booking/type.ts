@@ -117,5 +117,25 @@ export const Booking = objectType({
         return root.CompanyService
       },
     })
+    t.list.field('PathwaysTaken', {
+      type: 'PathwaysTaken',
+      args: {
+        where: 'PathwaysTakenWhereInput',
+        orderBy: 'PathwaysTakenOrderByWithRelationInput',
+        cursor: 'PathwaysTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwaysTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwaysTaken
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'BookingCountOutputType',
+      resolve(root: any) {
+        return root._count
+      },
+    })
   },
 })
