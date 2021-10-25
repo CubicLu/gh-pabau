@@ -16,9 +16,7 @@ const content = {
   installed: {
     client_id: process.env.GOOGLE_CLIENT_ID,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
-    //The redirect uris can't be affected bcz it only for pass in token request
-    // Once setup google cloud project for pabau we can add www.pabau.com as rediract uris and also add in GCP
-    redirect_uris: ['/setup/senders'],
+    redirect_uris: ['https://prelive-crm.new.pabau.com/setup/senders'],
   },
 }
 
