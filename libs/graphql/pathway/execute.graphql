@@ -1,0 +1,10 @@
+query getPathway($pathway_id: Int!) {
+  Pathway: findFirstPathway(where: { id: { equals: $pathway_id } }) {
+    id
+    name: pathway_name
+    Steps: PathwayStep {
+      name
+      type: step
+    }
+  }
+}
