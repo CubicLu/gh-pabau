@@ -199,6 +199,8 @@ export const permissions = shield(
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
+      findManyFilteredRotaShift: rules.authentication.isAuthenticated,
+
       findManyProductsWithAvailableQuantity:
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
