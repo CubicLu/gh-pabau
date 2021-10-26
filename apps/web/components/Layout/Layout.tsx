@@ -20,7 +20,7 @@ import { Unauthorized } from '../Unauthorized'
 import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
 import Login from '../../pages/login'
-import LegacyPage from '../LegacyPage'
+import Journey from '../Journey/Journey'
 
 interface ProductNews {
   id: string
@@ -36,7 +36,6 @@ const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,
   requireAdminAccess = false,
-  handleSearch,
   ...props
 }) => {
   const { me, login, logout } = useUser()
@@ -148,6 +147,7 @@ const Layout: FC<LayoutProps> = ({
         onMessageIconClick={() => setShowChat((e) => !e)}
         legacyContent={!!legacyPage}
         taskManagerIFrameComponent={<TaskManagerIFrame />}
+        journeyRender={(handleClose) => <Journey handleClose={handleClose} />}
         clientCreateRender={(handleClose) => (
           <ClientCreate handleClose={handleClose} />
         )}
@@ -160,17 +160,16 @@ const Layout: FC<LayoutProps> = ({
           showChat={showChat}
           title="Pabau"
           isShowSearch={true}
-          onChatClick={() => setShowChat((e) => !e)}
           clientCreateRender={(handleClose) => (
             <ClientCreate handleClose={handleClose} />
           )}
           leadCreateRender={(handleClose) => (
             <LeadCreate handleClose={handleClose} />
           )}
-          handleSearch={handleSearch}
         />
         <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
-        {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
+
+        {children}
       </PabauLayout>
       <div className={styles.stickyPopoutContainer}>
         <StickyPopout />

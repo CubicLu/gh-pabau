@@ -1,0 +1,36 @@
+fragment ApiDebugFields on ApiDebug {
+  id
+  data_received
+  company_id
+  api_code
+  created_date
+  data_type
+}
+
+fragment ApiDebug on ApiDebug {
+  ...ApiDebugFields
+}
+
+mutation createOneApiDebug($data: ApiDebugCreateInput!) {
+  createOneApiDebug(data: $data) {
+    ...ApiDebug
+  }
+}
+
+mutation updateOneApiDebug($where: ApiDebugWhereUniqueInput!, $data: ApiDebugUpdateInput!) {
+  updateOneApiDebug(where: $where, data: $data) {
+    ...ApiDebug
+  }
+}
+
+mutation deleteOneApiDebug($where: ApiDebugWhereUniqueInput!) {
+  deleteOneApiDebug(where: $where) {
+    ...ApiDebug
+  }
+}
+
+mutation updateManyApiDebug($where: ApiDebugWhereInput, $data: ApiDebugUpdateManyMutationInput!) {
+  updateManyApiDebug(where: $where, data: $data) {
+    count
+  }
+}

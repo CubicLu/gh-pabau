@@ -31,10 +31,10 @@ import Invoice from '../../components/Account/Invoice'
 import Payments from '../../components/Account/Payments'
 import Debt from '../../components/Account/Debt'
 import CreditNote from '../../components/Account/CreditNote'
+import CommonHeader from '../../components/CommonHeader'
 import { FilterValueType } from '../../components/Account/TableLayout'
 import styles from './accounts.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
 import { Formik } from 'formik'
 import { useUser } from '../../context/UserContext'
@@ -67,7 +67,10 @@ export function Account() {
   const { Title } = Typography
   const { Option } = Select
   const [activeTab, setActiveTab] = useState('0')
-  const [showDateFilter, setShowDateFilter] = useState(false)
+  const [showDateFilter, setShowDateFilter] = useState({
+    desktop: false,
+    mobile: false,
+  })
   const [selectedRange, setSelectedRange] = useState<string>(
     t('account.finance.date.range.option.month')
   )
@@ -83,7 +86,10 @@ export function Account() {
     dayjs().startOf('month'),
     dayjs(),
   ])
-  const [isPopOverVisible, setIsPopOverVisible] = useState(false)
+  const [isPopOverVisible, setIsPopOverVisible] = useState({
+    desktop: false,
+    mobile: false,
+  })
   const [locationList, setLocationList] = useState<FilterList[]>([])
   const [issuingCompanyList, setIssuingCompanyList] = useState<FilterList[]>([])
   const [creditNoteTypesList, setCreditNoteTypesList] = useState<FilterList[]>(
@@ -152,7 +158,7 @@ export function Account() {
   const onDateFilterApply = () => {
     setFilterDate([...selectedDates])
     setFilterRange(selectedRange)
-    setShowDateFilter(false)
+    setShowDateFilter({ desktop: false, mobile: false })
   }
 
   const onDataRangeSelect = (value) => {
@@ -263,7 +269,10 @@ export function Account() {
         />
       )}
       <div className={styles.footer}>
-        <Button type="ghost" onClick={() => setShowDateFilter(false)}>
+        <Button
+          type="ghost"
+          onClick={() => setShowDateFilter({ desktop: false, mobile: false })}
+        >
           {t('account.finance.date.range.btn.cancel')}
         </Button>
         <Button
@@ -367,7 +376,7 @@ export function Account() {
           value.creditNoteType = ''
         }
         setFilterValues(value)
-        setIsPopOverVisible(false)
+        setIsPopOverVisible({ desktop: false, mobile: false })
       }}
     >
       {({ setFieldValue, handleReset, values, handleSubmit }) => (
@@ -471,8 +480,39 @@ export function Account() {
 
   return (
     <div ref={accountRef}>
-      <CommonHeader />
       <Layout active={'account'} {...user}>
+        <CommonHeader
+          isShowSearch
+          searchInputPlaceHolder={searchPlaceHoler[activeTab]}
+          handleSearch={(value) => setSearchValue(value)}
+          title={t('account.finance.title')}
+          searchValue={searchValue}
+        >
+          <Dropdown
+            overlay={dateRange}
+            placement="bottomRight"
+            trigger={['click']}
+            visible={showDateFilter.mobile}
+            onVisibleChange={(val) =>
+              setShowDateFilter({ desktop: false, mobile: val })
+            }
+          >
+            <CalendarOutlined className={styles.marketingIconStyle} />
+          </Dropdown>
+
+          <Popover
+            trigger="click"
+            content={renderFilter}
+            placement="bottomRight"
+            overlayClassName={styles.filterPopOver}
+            visible={isPopOverVisible.mobile}
+            onVisibleChange={(visible) =>
+              setIsPopOverVisible({ desktop: false, mobile: visible })
+            }
+          >
+            <FilterOutlined className={styles.marketingIconStyle} />
+          </Popover>
+        </CommonHeader>
         <div
           className={classNames(styles.desktopHeader, styles.mobileViewNone)}
         >
@@ -491,14 +531,18 @@ export function Account() {
                 onChange={(item) => {
                   setSearchValue(item)
                 }}
+                searchValue={searchValue}
               />
             </div>
             <Dropdown
+              key="desktop-dropdown"
               overlay={dateRange}
               placement="bottomRight"
               trigger={['click']}
-              visible={showDateFilter}
-              onVisibleChange={(val) => setShowDateFilter(val)}
+              visible={showDateFilter.desktop}
+              onVisibleChange={(val) =>
+                setShowDateFilter({ desktop: val, mobile: false })
+              }
             >
               <Button type="ghost">
                 <CalendarOutlined />{' '}
@@ -537,8 +581,10 @@ export function Account() {
               content={renderFilter}
               placement="bottomRight"
               overlayClassName={styles.filterPopOver}
-              visible={isPopOverVisible}
-              onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+              visible={isPopOverVisible.desktop}
+              onVisibleChange={(visible) =>
+                setIsPopOverVisible({ desktop: visible, mobile: false })
+              }
             >
               <Button type="ghost">
                 <FilterOutlined />
@@ -547,6 +593,7 @@ export function Account() {
             </Popover>
           </div>
         </div>
+
         <Divider style={{ margin: 0 }} />
         <div className={styles.tabWrapper}>
           <TabMenu

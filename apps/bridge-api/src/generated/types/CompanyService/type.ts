@@ -56,6 +56,12 @@ export const CompanyService = objectType({
         return root.Company
       },
     })
+    t.nullable.field('Product', {
+      type: 'InvProduct',
+      resolve(root: any) {
+        return root.Product
+      },
+    })
     t.list.field('CompanyRoomService', {
       type: 'CompanyRoomService',
       args: {
@@ -74,6 +80,62 @@ export const CompanyService = objectType({
       type: 'ServiceCategory',
       resolve(root: any) {
         return root.ServiceCategory
+      },
+    })
+    t.list.field('SocialSurveyFeedback', {
+      type: 'SocialSurveyFeedback',
+      args: {
+        where: 'SocialSurveyFeedbackWhereInput',
+        orderBy: 'SocialSurveyFeedbackOrderByWithRelationInput',
+        cursor: 'SocialSurveyFeedbackWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SocialSurveyFeedbackScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SocialSurveyFeedback
+      },
+    })
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
+      args: {
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserTier
+      },
+    })
+    t.list.field('ServiceLocationTier', {
+      type: 'ServiceLocationTier',
+      args: {
+        where: 'ServiceLocationTierWhereInput',
+        orderBy: 'ServiceLocationTierOrderByWithRelationInput',
+        cursor: 'ServiceLocationTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceLocationTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceLocationTier
+      },
+    })
+    t.list.field('Booking', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByWithRelationInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Booking
       },
     })
     t.nullable.field('_count', {

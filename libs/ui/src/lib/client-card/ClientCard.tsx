@@ -3,30 +3,31 @@ import {
   ClientDetails,
   CustomTabMenu,
   ClientDashboardLayout,
-  ClientAppointmentsLayout,
-  ClientCommunicationsLayout,
-  ClientConsentsLayout,
-  ClientDocumentsLayout,
-  ClientFinancialsLayout,
-  ClientGiftVoucherLayout,
-  ClientLabTestsLayout,
-  ClientLoyaltyLayout,
-  ClientFormsLayout,
-  ClientMedicalHistoryLayout,
-  ClientPackagesLayout,
-  ClientPhotosLayout,
-  ClientPrescriptionsLayout,
-  ClientTaskLayout,
-  ClientTreatmentNotesLayout,
-  ClientVaccineHistoryLayout,
+  // ClientAppointments,
+  // ClientCommunicationsLayout,
+  // ClientDocumentsLayout,
+  // ClientFinancialsLayout,
+  // ClientGiftVoucherLayout,
+  // ClientLabTestsLayout,
+  // ClientLoyaltyLayout,
+  // ClientFormsLayout,
+  // ClientPackagesLayout,
+  // ClientPhotosLayout,
+  // ClientPrescriptionsLayout,
+  // ClientTaskLayout,
+  // ClientVaccineHistoryLayout,
   Button,
   TabMenu,
   Avatar,
   Search,
   StickyPopout,
+  TabItem,
   CommunicationTimelineProps,
   ActivitiesProps,
   AvatarUploader,
+  ReferredByOption,
+  FieldOrderItem,
+  ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -38,8 +39,8 @@ import {
   Badge,
   Drawer,
   Tag,
-  Tooltip,
   ConfigProvider,
+  Tooltip,
 } from 'antd'
 import {
   RightOutlined,
@@ -57,7 +58,7 @@ import {
   SaveOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
+import React, { FC, useState, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -79,28 +80,23 @@ import { ReactComponent as SvgVoiceNote } from '../../assets/images/popout/voice
 import menuAlert from '../../assets/images/menu-alert.svg'
 import styles from './ClientCard.module.less'
 import {
-  nextAppointments,
-  medicalHistory,
-  medications,
-  conversation,
-  tests,
-  products,
-  loyaltyData,
   thirdPartySearchResults,
   appointments,
-  clientPackages,
-  formFilterButtons,
-  forms,
   vouchers,
-  prescriptions,
-  testList,
+  // nextAppointments,
+  // medicalHistory,
+  // medications,
+  // conversation,
+  // tests,
+  // products,
+  // loyaltyData,
+  // clientPackages,
+  // formFilterButtons,
+  // forms,
+  // prescriptions,
+  // testList,
 } from './mock'
-// import {
-//   topCategories,
-//   categoryOptions,
-//   recipientList,
-//   allDocument,
-// } from '../all-template-modal/mock'
+import { useRouter } from 'next/router'
 
 const { TextArea } = Input
 interface PopoutProps {
@@ -114,57 +110,73 @@ interface PopoutProps {
   title: string
 }
 
-interface ClientNote {
+export interface ClientNote {
   avatar: string
   content: string
   client: string
   date: string
 }
 
-interface ClientNotes {
-  client: ClientNote[]
-  appointment: ClientNote[]
+interface StaffDetails {
+  contact?: string
+  avatar?: string
 }
 
-interface SearchItem {
-  id: string
-  firstName: string
-  lastName: string
-  avatarUrl: string
+export interface ClientNoteDetails {
+  ID?: number | string
+  content: string
+  date: string
+  User: StaffDetails
 }
 
-export interface ClientCardProps {
-  searchResults: SearchItem[]
-  visible: boolean
-  clientData: ClientData
-  notes: ClientNotes
-  medicalConditions: string[]
-  alerts: string[]
-  onClose: () => void
-  FinancialTabComponent?: ReactNode
-  communicationTabProps?: CommunicationTimelineProps
-  activitiesTabProps?: ActivitiesProps
+export interface ClientAppointmentDetails {
+  title: string
+  date?: number
+  User?: StaffDetails
 }
 
-const ClientCardModal: FC<ClientCardProps> = ({
-  visible,
-  clientData,
-  searchResults,
+export interface ClientNotes {
+  notes: ClientNoteDetails[]
+  count: number
+  loading: boolean
+  appointments: ClientAppointmentDetails[]
+}
+
+interface P {
+  client: ClientData
+  notes?: ClientNotes
+  getContactDetails?: () => void
+  onClose?: () => void
+  tabs?: readonly TabItem[]
+  onTabChanged?(newKey: string): void
+  activeTab?: string
+  referredByOptions?: ReferredByOption[]
+  loading?: boolean
+  customFields?: FieldOrderItem[]
+  dateFormat?: string
+  handleEditAll?: () => void
+}
+
+const ClientCardModal: FC<P> = ({
+  client,
   notes,
-  medicalConditions,
-  alerts,
+  getContactDetails,
   onClose,
-  FinancialTabComponent,
-  communicationTabProps,
-  activitiesTabProps,
+  tabs,
+  activeTab,
+  children,
+  onTabChanged,
+  referredByOptions,
+  loading,
+  customFields,
+  dateFormat,
+  handleEditAll,
 }) => {
   const { t } = useTranslation('common')
+  const { push } = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
-  const [init, setInit] = useState(false)
-  const [client, setClient] = useState<ClientData>()
   const [search, setSearch] = useState(false)
-  const [alert, setAlert] = useState('')
   const [note, setNote] = useState('')
   const [currentNote, setCurrentNote] = useState('')
   const [noteItems, setNoteItems] = useState<ClientNote[]>([])
@@ -259,15 +271,6 @@ const ClientCardModal: FC<ClientCardProps> = ({
   const [isSubMenu, setIsSubMenu] = useState(false)
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
-  const handleAddAlert = () => {
-    if (alert !== '') {
-      const items = [...alertItems, alert]
-      setAlertItems(items)
-      setAlert('')
-    }
-    setAddingAlert(false)
-  }
-
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
@@ -285,23 +288,14 @@ const ClientCardModal: FC<ClientCardProps> = ({
     }
   }
 
-  const handleSearchSelect = (id) => {
-    const selected = searchResults.find((el) => Number(el.id) === id)
-    if (selected && client) {
-      const { firstName, lastName } = selected
-      setClient({ ...client, fullName: `${firstName} ${lastName}` })
-    }
-    setSearch(false)
-  }
-
   const onClickCommunication = () => {
     setIsSubMenu(true)
     setMenuHeaderTitle(t('dashboard.create.menu.title.communication'))
   }
 
   const onBackToMainMenu = () => {
-    setIsSubMenu(false)
-    setMenuHeaderTitle(t('dashboard.create.menu.title.create'))
+    //TODO: review this. Prefer <Link />
+    push('..')
   }
 
   const menuItems = [
@@ -564,15 +558,6 @@ const ClientCardModal: FC<ClientCardProps> = ({
     setCurrentClientNote(-1)
   }
 
-  useEffect(() => {
-    if (!init) {
-      if (alerts.length > 0) setAlertItems(alerts)
-      if (clientData) setClient(clientData)
-      if (notes?.client?.length > 0) setNoteItems(notes.client)
-      setInit(true)
-    }
-  }, [init, alerts, clientData, notes])
-
   const medicalHistoryPopover = (
     <>
       <div className={styles.medicalHistoryItem}>
@@ -597,7 +582,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
     >
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
-          {alertItems.map((item, index) => (
+          {alertItems?.map((item, index) => (
             <div className={styles.staffAlert} key={`staff-alert-${index}`}>
               {item}
             </div>
@@ -605,12 +590,13 @@ const ClientCardModal: FC<ClientCardProps> = ({
         </div>
       )}
       {addingAlert && (
+        // TODO: make this formik
         <TextArea
           autoFocus
-          value={alert}
-          onChange={(e) => setAlert(e.target.value)}
-          onPressEnter={(_) => handleAddAlert()}
-          onBlur={(_) => handleAddAlert()}
+          // value={alert}
+          onChange={(e) => alert('TODO: fire mutation here')}
+          // onPressEnter={(_) => handleAddAlert()}
+          // onBlur={(_) => handleAddAlert()}
           style={{ marginTop: '12px' }}
         />
       )}
@@ -640,7 +626,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
             className={styles.clientNotesContainer}
             ref={clientNotePopoverRef}
           >
-            {noteItems.map((item, index) => (
+            {noteItems?.map((item, index) => (
               <div key={`client-${index}`} className={styles.clientNote}>
                 {index !== currentClientNote && (
                   <div className={styles.clientNoteItem}>
@@ -712,20 +698,21 @@ const ClientCardModal: FC<ClientCardProps> = ({
         </div>
         <div className={styles.clientNotesTab}>
           <div className={styles.clientNotesContainer}>
-            {notes.appointment.map((note, index) => (
-              <div key={`appointment-${index}`} className={styles.clientNote}>
-                <div>
-                  <Avatar src={note.avatar} name={note.client} size={32} />
-                </div>
-                <div>
-                  <div className={styles.content}>{note.content}</div>
-                  <div className={styles.client}>{`By ${note.client}`}</div>
-                  <div className={styles.date}>{`On ${moment(note.date).format(
-                    'D MMM YYYY hh:mm A'
-                  )}`}</div>
-                </div>
-              </div>
-            ))}
+            TODO
+            {/*{notes.appointment.map((note, index) => (*/}
+            {/*  <div key={`appointment-${index}`} className={styles.clientNote}>*/}
+            {/*    <div>*/}
+            {/*      <Avatar src={note.avatar} name={note.client} size={32} />*/}
+            {/*    </div>*/}
+            {/*    <div>*/}
+            {/*      <div className={styles.content}>{note.content}</div>*/}
+            {/*      <div className={styles.client}>{`By ${note.client}`}</div>*/}
+            {/*      <div className={styles.date}>{`On ${moment(note.date).format(*/}
+            {/*        'D MMM YYYY hh:mm A'*/}
+            {/*      )}`}</div>*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*))}*/}
           </div>
         </div>
       </TabMenu>
@@ -821,42 +808,39 @@ const ClientCardModal: FC<ClientCardProps> = ({
     </div>
   )
 
-  const handleChangeImage = (avatar) => {
-    if (client) setClient({ ...client, avatar })
-  }
-
+  //TODO: remove the Modal from top level (it'll break css:( )
   return (
     <Modal
-      visible={visible}
+      visible={true}
+      transitionName="" //TODO: only set this to empty after first animation?
       closable={false}
       footer={null}
       width={'100%'}
       wrapClassName={styles.clientCard}
     >
-      <ConfigProvider>
-        {moment().format('MM/DD') ===
-          moment(clientData.dob).format('MM/DD') && (
-          <Confetti
-            recycle={false}
-            tweenDuration={60000}
-            numberOfPieces={1000}
-          />
-        )}
-        {/* <AllTemplateModal
-          visible={showLetterModal}
-          title="All Template"
-          topCategories={topCategories}
-          categoryOptions={categoryOptions}
-          recipientList={recipientList}
-          allDocument={allDocument}
-        /> */}
+      <ConfigProvider
+        getPopupContainer={(node) => {
+          if (node) {
+            return node as HTMLElement
+          }
+          return document.body as HTMLElement
+        }}
+      >
+        {client?.dob &&
+          moment().format('MM/DD') === moment(client?.dob).format('MM/DD') && (
+            <Confetti
+              recycle={false}
+              tweenDuration={60000}
+              numberOfPieces={1000}
+            />
+          )}
         <div className={styles.clientCardContainer}>
           <div className={styles.clientCardHeader}>
             <div className={styles.clientCardHeaderTitle}>
               <LeftOutlined
                 onClick={() => {
                   window.dispatchEvent(new Event('storage'))
-                  onClose()
+                  onClose?.()
                 }}
                 className={styles.backToButton}
               />
@@ -871,7 +855,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <AvatarUploader
                     visible={showAvatarUploader}
                     title={t('ui.clientdetails.uploadavatar.title')}
-                    onCreate={handleChangeImage}
+                    onCreate={() => alert('TODO')}
                     imageURL={client ? client.avatar : ''}
                     onCancel={() => setShowAvatarUploader(false)}
                   />
@@ -881,13 +865,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 className={styles.clientFullName}
                 onClick={() => !search && setSearch(true)}
               >
-                {!search && `${client?.fullName}`}
-                {search && (
-                  <Search
-                    searchResults={searchResults}
-                    resultSelectedHandler={(id) => handleSearchSelect(id)}
-                  />
-                )}
+                {client?.fullName}
               </div>
             </div>
             <div className={styles.clientCardHeaderOps}>
@@ -925,196 +903,136 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 </div>
               )}
               {!isMobile && (
-                <>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Medical history'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={medicalHistoryPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Medical history">
-                        <Badge
-                          count={<CheckCircleFilled />}
-                          offset={[0, 18]}
-                          style={{ color: '#65cd98' }}
-                        >
-                          <MedicalHistory className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Notes'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientNotesPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Notes">
-                        <Badge
-                          count={noteItems.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Note className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Staff alerts'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientAlertsPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Staff alerts" placement="bottomRight">
-                        <Badge
-                          count={alertItems.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Alert className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                </>
+                <ClientHeaderDetails
+                  notes={notes}
+                  getContactDetails={getContactDetails}
+                  client={client}
+                />
               )}
             </div>
           </div>
           <div className={styles.clientCardBody}>
             <div className={styles.clientDetails}>
-              {client && (
-                <ClientDetails
-                  clientData={client}
-                  onCreateEmail={() => handleCreatePopout('email')}
-                  onCreateCall={() => handleCreatePopout('call')}
-                  searchResults={thirdPartySearchResults}
-                  appointments={appointments}
-                />
-              )}
+              <ClientDetails
+                clientData={client}
+                onCreateEmail={() => handleCreatePopout('email')}
+                onCreateCall={() => handleCreatePopout('call')}
+                searchResults={thirdPartySearchResults}
+                appointments={appointments}
+                referredByOptions={referredByOptions}
+                loading={loading}
+                customFields={customFields}
+                dateFormat={dateFormat}
+                handleEditAll={handleEditAll}
+              />
             </div>
             <div className={styles.clientCardContent}>
               <CustomTabMenu
                 tabPosition={isMobile ? 'top' : 'left'}
                 tabWidth={isMobile ? '160px' : '200px'}
-                tabItems={tabItems}
+                tabs={tabs || []}
+                onActiveChanged={(key) => onTabChanged?.(key)}
+                activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
                 <div style={{ padding: '12px' }}>
-                  <ClientDashboardLayout
-                    nextAppointments={nextAppointments}
-                    medicalHistory={medicalHistory}
-                    medications={medications}
-                    products={products}
-                    tests={tests}
-                    alerts={alertItems}
-                    conversation={conversation}
-                  />
+                  <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
-                <div>
-                  <ClientAppointmentsLayout />
-                </div>
-                <div>
-                  {FinancialTabComponent ? (
-                    FinancialTabComponent
-                  ) : (
-                    <ClientFinancialsLayout />
-                  )}
-                </div>
-                <div>
-                  <ClientPackagesLayout
-                    items={clientPackages}
-                    handleSendEmail={(type) => handleCreatePopout(type)}
-                  />
-                </div>
-                <div>
-                  <ClientCommunicationsLayout
-                    isLoading={communicationTabProps?.isLoading}
-                    eventsData={communicationTabProps?.eventsData || []}
-                    eventDateFormat={
-                      communicationTabProps?.eventDateFormat || ''
-                    }
-                  />
-                </div>
-                <div>
-                  <ClientFormsLayout
-                    isEmpty={false}
-                    formFilters={formFilterButtons}
-                    forms={forms}
-                    onButtonFilterClick={(e) => {
-                      return Promise.resolve(true)
-                    }}
-                    onFilterClick={(e) => Promise.resolve(true)}
-                    onPrintClick={(e) => Promise.resolve(true)}
-                    onShareCick={(e) => Promise.resolve(true)}
-                    onVersionClick={(e) => Promise.resolve(true)}
-                    onEditClick={(e) => Promise.resolve(true)}
-                    onPinClick={(e) => Promise.resolve(true)}
-                    onDeleteClick={(e) => Promise.resolve(true)}
-                  />
-                </div>
-                <div>
-                  <ClientPhotosLayout isEmpty={true} />
-                </div>
-                <div>
-                  <ClientDocumentsLayout isEmpty={true} />
-                </div>
-                <div>
-                  <ClientPrescriptionsLayout
-                    isEmpty={false}
-                    prescriptions={prescriptions}
-                    onPreviewClick={(e) => {
-                      return Promise.resolve(true)
-                    }}
-                    onPrintClick={(e) => Promise.resolve(true)}
-                    onShareClick={(e) => Promise.resolve(true)}
-                    onEditClick={(e) => Promise.resolve(true)}
-                    onRepeatClick={(e) => Promise.resolve(true)}
-                    onDeleteClick={(e) => Promise.resolve(true)}
-                  />
-                </div>
-                <div>
-                  <ClientLabTestsLayout
-                    isEmpty={false}
-                    testList={testList}
-                    onViewReportClick={(e) => {
-                      return Promise.resolve(true)
-                    }}
-                    onPrintClick={(e) => Promise.resolve(true)}
-                    onShareClick={(e) => Promise.resolve(true)}
-                    onDeleteClick={(e) => Promise.resolve(true)}
-                  />
-                </div>
-                <div>
-                  <ClientGiftVoucherLayout
-                    isEmpty={false}
-                    activeVouchers={activeVouchers}
-                    expiredVouchers={expiredVouchers}
-                    onCardSelect={(e) => {
-                      return Promise.resolve(true)
-                    }}
-                  />
-                </div>
-                <div>
-                  <ClientLoyaltyLayout
-                    isEmpty={false}
-                    data={loyaltyData}
-                    onLoyaltySelect={(e) => {
-                      return Promise.resolve(true)
-                    }}
-                  />
-                </div>
-                <div>
-                  <ClientTaskLayout isEmpty={true} />
-                </div>
+                {/*<div>*/}
+                {/*  <ClientAppointmentsLayout isEmpty={true} />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  {FinancialTabComponent ? (*/}
+                {/*    FinancialTabComponent*/}
+                {/*  ) : (*/}
+                {/*    <ClientFinancialsLayout />*/}
+                {/*  )}*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientPackagesLayout items={clientPackages} />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientCommunicationsLayout isEmpty={true} />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientFormsLayout*/}
+                {/*    isEmpty={false}*/}
+                {/*    formFilters={formFilterButtons}*/}
+                {/*    forms={forms}*/}
+                {/*    onButtonFilterClick={(e) => {*/}
+                {/*      console.log('Filter button selected:', e) //Removed while integration*/}
+                {/*      return Promise.resolve(true)*/}
+                {/*    }}*/}
+                {/*    onFilterClick={(e) => Promise.resolve(true)}*/}
+                {/*    onPrintClick={(e) => Promise.resolve(true)}*/}
+                {/*    onShareCick={(e) => Promise.resolve(true)}*/}
+                {/*    onVersionClick={(e) => Promise.resolve(true)}*/}
+                {/*    onEditClick={(e) => Promise.resolve(true)}*/}
+                {/*    onPinClick={(e) => Promise.resolve(true)}*/}
+                {/*    onDeleteClick={(e) => Promise.resolve(true)}*/}
+                {/*  />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientPhotosLayout isEmpty={true} />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientDocumentsLayout isEmpty={true} />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientPrescriptionsLayout*/}
+                {/*    isEmpty={false}*/}
+                {/*    prescriptions={prescriptions}*/}
+                {/*    onPreviewClick={(e) => {*/}
+                {/*      console.log('Preview selected:', e)*/}
+                {/*      return Promise.resolve(true)*/}
+                {/*    }}*/}
+                {/*    onPrintClick={(e) => Promise.resolve(true)}*/}
+                {/*    onShareClick={(e) => Promise.resolve(true)}*/}
+                {/*    onEditClick={(e) => Promise.resolve(true)}*/}
+                {/*    onRepeatClick={(e) => Promise.resolve(true)}*/}
+                {/*    onDeleteClick={(e) => Promise.resolve(true)}*/}
+                {/*  />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientLabTestsLayout*/}
+                {/*    isEmpty={false}*/}
+                {/*    testList={testList}*/}
+                {/*    onViewReportClick={(e) => {*/}
+                {/*      console.log('View report selected:', e)*/}
+                {/*      return Promise.resolve(true)*/}
+                {/*    }}*/}
+                {/*    onPrintClick={(e) => Promise.resolve(true)}*/}
+                {/*    onShareClick={(e) => Promise.resolve(true)}*/}
+                {/*    onDeleteClick={(e) => Promise.resolve(true)}*/}
+                {/*  />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientVaccineHistoryLayout isEmpty={true} />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientGiftVoucherLayout*/}
+                {/*    isEmpty={false}*/}
+                {/*    activeVouchers={activeVouchers}*/}
+                {/*    expiredVouchers={expiredVouchers}*/}
+                {/*    onCardSelect={(e) => {*/}
+                {/*      console.log('Card selected:', e)*/}
+                {/*      return Promise.resolve(true)*/}
+                {/*    }}*/}
+                {/*  />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientLoyaltyLayout*/}
+                {/*    isEmpty={false}*/}
+                {/*    data={loyaltyData}*/}
+                {/*    onLoyaltySelect={(e) => {*/}
+                {/*      console.log('Loyalty selected:', e) //Removed while integration*/}
+                {/*      return Promise.resolve(true)*/}
+                {/*    }}*/}
+                {/*  />*/}
+                {/*</div>*/}
+                {/*<div>*/}
+                {/*  <ClientTaskLayout isEmpty={true} />*/}
+                {/*</div>*/}
               </CustomTabMenu>
             </div>
           </div>
@@ -1174,8 +1092,8 @@ const ClientCardModal: FC<ClientCardProps> = ({
   )
 }
 
-export const ClientCard: FC<ClientCardProps> = ({ visible, ...props }) => {
-  return visible ? <ClientCardModal visible={visible} {...props} /> : <div />
+export const ClientCard: FC<P> = ({ ...props }) => {
+  return <ClientCardModal {...props} />
 }
 
 export default ClientCard

@@ -1,16 +1,16 @@
-import React, { FC, useEffect, useMemo, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 import LayoutComponent from '../../components/Layout/Layout'
+import { useUser } from '../../context/UserContext'
+import useWindowSize from '../../hooks/useWindowSize'
 import { Layout, Tabs } from 'antd'
+import AddButton from '../../components/AddButton'
 import dayjs from 'dayjs'
 import { useMedia } from 'react-use'
 import ClientsHeader from '../../components/Clients/ClientsHeader'
 import LeftSideBar from '../../components/Clients/LeftSideBar'
-import ContentComponent, {
-  SourceDataProps,
-} from '../../components/Clients/Content'
+import ContentComponent from '../../components/Clients/Content'
 import CommonHeader from '../../components/CommonHeader'
 import MergeComponent from '../../components/Clients/MergeComponent'
-import { clientsList } from '../../mocks/ClientsList'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { BasicModal } from '@pabau/ui'
 import { intersectionBy, differenceBy, groupBy } from 'lodash'
@@ -27,7 +27,9 @@ import {
   useAddLabelMutation,
 } from '@pabau/graphql'
 import ClientCreate from '../../components/Clients/ClientCreate'
+import router from 'next/router'
 import styles from './clients.module.less'
+
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
 
@@ -51,8 +53,7 @@ export const tab = {
   labels: 'labels',
 }
 
-export const Clients: FC = () => {
-  const clientRef = useRef(null)
+export const Clients = () => {
   const [searchText, setSearchText] = useState('')
   const [labelsList, setLabelsList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -328,9 +329,6 @@ export const Clients: FC = () => {
 
   const [sourceData, setSourceData] = useState<SourceDataProps[]>(clientsList)
   const [selectedTab, setSelectedTab] = useState(tab.clients)
-  const [sourceFilteredData, setSourceFilteredData] = useState<
-    SourceDataProps[]
-  >(clientsList)
   const [isArchived, setIsArchived] = useState(false)
   const [labels, setLabels] = useState<Labels[]>([])
   const [selectedLabels, setSelectedLabels] = useState([])
@@ -353,8 +351,8 @@ export const Clients: FC = () => {
   // const [responseLabels, setResponseLabels] = useState(false)
 
   const { t } = useTranslationI18()
-  const isMobile = useMedia('(max-width: 768px)', false)
-
+  const size = useWindowSize()
+  const user = useUser()
   useEffect(() => {
     setSourceData(clientsList)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -525,85 +523,8 @@ export const Clients: FC = () => {
     setDeleteModal((e) => !e)
   }
 
-  const showDeleteConfirm = () => {
-    let newSourceData = []
-    if (isEdit) {
-      newSourceData = sourceData.filter((data) => {
-        return data.id !== editedValues.id
-      })
-      setIsEdit(false)
-    } else if (!isArchived) {
-      newSourceData = sourceData.map((data) => {
-        const temp = { ...data }
-        if (selectedRowKeys.includes(temp.id)) {
-          temp.is_active = 0
-          temp.date_archived = dayjs().format('DD-MM-YYYY, h:mm:ss a')
-        }
-        return temp
-      })
-    } else {
-      newSourceData = sourceData.filter((data) => {
-        return !selectedRowKeys.includes(data.id)
-      })
-    }
-    setSourceData(newSourceData)
-    setSelectedRowKeys([])
-    setDeleteModal(false)
-  }
-
-  const handleCreateClient = (values) => {
-    if (isEdit) {
-      const activeValue = active ? 1 : 0
-      const editedClient = {
-        id: editedValues.id,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        mobileNumber: values.phoneNumber,
-        label: values.selectedLabels,
-        is_active: activeValue,
-        date_archived:
-          editedValues.is_active === 1 && activeValue === 0
-            ? dayjs().format('DD-MM-YYYY, h:mm:ss a')
-            : editedValues.date_archived,
-        dob: dayjs(values.dateOfBirth).format('DD-MM-YYYY'),
-        postal: values.postCode,
-        city: values.city,
-        priceQuote: editedValues.priceQuote,
-        orderNotes: editedValues.orderNotes,
-        setupFee: editedValues.setupFee,
-      }
-      const editedIndex = sourceData.findIndex(
-        (data) => data.id === editedValues.id
-      )
-      const data = [...sourceData]
-      data.splice(editedIndex, 1, editedClient)
-      setSourceData(data)
-      setIsEdit(false)
-    } else {
-      const newClient = {
-        id: sourceData.length + 1,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        mobileNumber: values.phoneNumber,
-        label: values.selectedLabels,
-        is_active: 1,
-        date_archived: '',
-        dob: dayjs(values.dateOfBirth).format('DD-MM-YYYY'),
-        postal: values.postCode,
-        city: values.city,
-        priceQuote: '',
-        orderNotes: '',
-        setupFee: '',
-      }
-      setSourceData((prevState) => [...prevState, newClient])
-      setCreateClientModalVisible(false)
-    }
-  }
-
   const toggleCreateClientModal = () => {
-    setCreateClientModalVisible(!createClientModalVisible)
+    setCreateClientModalVisible((e) => !e)
   }
 
   const closeEditModal = () => {
@@ -666,6 +587,10 @@ export const Clients: FC = () => {
     setSourceData(newSourceData)
   }
 
+  const handleRowClick = ({ id }) => {
+    router.push('/clients/[id]', `/clients/${id}`, { scroll: true })
+  }
+
   const randomInRange = (min, max) => {
     return Math.random() * (max - min) + min
   }
@@ -723,7 +648,6 @@ export const Clients: FC = () => {
   const renderContentTable = (
     <ContentComponent
       searchText={searchText}
-      sourceData={sourceFilteredData}
       handleLabelClick={handleLabelClick}
       isArchived={isArchived}
       labels={labels}
@@ -761,31 +685,45 @@ export const Clients: FC = () => {
       duplicateContactsData={duplicateContactsData}
     />
   )
-  console.log('filtered contacts========', sourceFilteredData)
+
   return (
     <div>
-      <CommonHeader
-        title={t('clients.commonHeader')}
-        isShowSearch={false}
-        displayCreateButton={true}
-        handleCreate={toggleCreateClientModal}
-      />
-      <LayoutComponent active={'clients'} isDisplayingFooter={false}>
+      <LayoutComponent active={'clients'} isDisplayingFooter={false} {...user}>
+        <CommonHeader
+          isShowSearch
+          searchInputPlaceHolder={t('clients.header.search.placeHolder')}
+          handleSearch={(searchTerm) => setSearchText(searchTerm)}
+          title={t('clients.commonHeader')}
+          searchValue={searchText}
+          displayCreateButton={true}
+          handleCreate={toggleCreateClientModal}
+        >
+          <AddButton
+            onClick={toggleCreateClientModal}
+            onFilterSource={() => false}
+            addFilter={true}
+            schema={{
+              createButtonLabel: t('setup.taxrate.newbtn'),
+            }}
+            tableSearch={false}
+            needTranslation={true}
+          />
+        </CommonHeader>
         <div>
-          {isMobile && (
+          {size.width < 768 && (
             <Tabs
               style={{ minHeight: '0vh' }}
               className={styles.tabContentWrap}
               onChange={(val) => setSelectedTab(val)}
               defaultActiveKey={selectedTab}
             >
-              <div>
-                <ClientsHeader
-                  searchText={searchText}
-                  setSearchText={setSearchText}
-                  toggleCreateClientModal={toggleCreateClientModal}
-                />
-              </div>
+              {/*<div>*/}
+              {/*  <ClientsHeader*/}
+              {/*    searchText={searchText}*/}
+              {/*    setSearchText={setSearchText}*/}
+              {/*    toggleCreateClientModal={toggleCreateClientModal}*/}
+              {/*  />*/}
+              {/*</div>*/}
               <TabPane tab={t('clients.leftSidebar.clients')} key={tab.clients}>
                 {renderContentTable}
               </TabPane>
@@ -809,7 +747,7 @@ export const Clients: FC = () => {
               </TabPane>
             </Tabs>
           )}
-          {!isMobile && (
+          {size.width > 767 && (
             <div>
               <ClientsHeader
                 searchText={searchText}
@@ -871,6 +809,7 @@ export const Clients: FC = () => {
           handleClose={isEdit ? closeEditModal : toggleCreateClientModal}
           handleSubmit={handleCreateClient}
           isEdit={isEdit}
+          contactId={0}
           activated={active}
           onActivated={(val) => setActive(val)}
           editedValues={

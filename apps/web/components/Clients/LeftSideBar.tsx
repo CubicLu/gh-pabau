@@ -8,17 +8,16 @@ import {
 } from '@ant-design/icons'
 import { ReactComponent as ArchivedIcon } from '../../assets/images/archived-icon.svg'
 import styles from '../../pages/clients/clients.module.less'
-import { SourceDataProps } from './Content'
 import CreateLabel from './CreateLabel'
 import classNames from 'classnames'
 import { Labels, tab } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
-import { AddLabelMutation, Exact } from '@pabau/graphql'
+import { AddLabelMutation, Exact, useClientsDataAggregateQuery } from '@pabau/graphql'
 
 const { SubMenu } = Menu
 
-interface LeftSideBarProps {
+interface P {
   selectedTab?: string
   setSelectedTab?: (val) => void
   labels?: Labels[]
@@ -49,7 +48,9 @@ interface LeftSideBarProps {
   >
 }
 
-export const LeftSideBar: FC<LeftSideBarProps> = ({
+const labels = []
+
+export const LeftSideBar = ({
   selectedTab,
   setSelectedTab,
   labels,
@@ -68,8 +69,10 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   handleApplyLabel,
   labelCountAll,
   contactsLabels,
-}) => {
+}: P) => {
   const { t } = useTranslationI18()
+  const { data } = useClientsDataAggregateQuery()
+
   const handleSelectedTab = (e) => {
     setSelectedTab(e.key)
   }
@@ -91,7 +94,8 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.clients} onClick={handleClientClick}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.clients')}</span>
-            <span>{getClientsCountData?.cmContactsCount}</span>
+            {/*<span>{getClientsCountData?.cmContactsCount}</span>*/}
+            <span>{data?.findManyCmContactCount}</span>
           </div>
         </Menu.Item>
         <Menu.Item key={tab.contacts}>

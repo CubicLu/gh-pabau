@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import React, { FC } from 'react'
-import { InvoiceProp } from './../ClientFinancialsLayout'
+import { InvoiceProp } from '../ClientFinancialsLayout'
 import styles from './Tabs.module.less'
 import { Form, Input, DatePicker, Select, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'

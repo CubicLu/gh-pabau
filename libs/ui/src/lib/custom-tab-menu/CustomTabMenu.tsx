@@ -1,97 +1,101 @@
 import { Collapse, Tabs } from 'antd'
-import cn from 'classnames'
-import React, { FC, ReactNode, useState } from 'react'
+import classNames from 'classnames'
+import React, { FC, useEffect, useState } from 'react'
 import styles from './CustomTabMenu.module.less'
 
 const { Panel } = Collapse
 const { TabPane } = Tabs
 
-export interface CustomTabItem {
-  key: number
-  content: ReactNode
-  children?: { key: number; content: ReactNode }[]
+export interface TabItem {
+  key: string
+  name: string
+  count?: number
+  tags?: readonly string[]
+  childTabs?: readonly TabItem[]
 }
 
-export interface CustomTabMenuProps {
+interface P {
   tabPosition: 'top' | 'left'
   tabWidth: string
-  tabItems: CustomTabItem[]
+  tabs: Readonly<TabItem[]>
+  activeTab?: string
+  onActiveChanged?(key: string): void
   minHeight?: string
 }
 
-export const CustomTabMenu: FC<CustomTabMenuProps> = ({
+export const CustomTabMenu: FC<P> = ({
   tabPosition,
   tabWidth,
-  tabItems,
+  tabs,
+  activeTab,
   minHeight = '1px',
+  onActiveChanged,
   children,
 }) => {
-  const [activeKey, setActiveKey] = useState(0)
-
   const LeftPositionTabs = (
     <div
       className={styles.leftPositionTabs}
       style={{ minHeight, gridTemplateColumns: `${tabWidth} 1fr` }}
     >
       <div className={styles.tabMenuItems} style={{ width: tabWidth }}>
-        {tabItems.map((tabItem, index) => (
-          <React.Fragment key={`tab-item-${tabItem.key}`}>
-            {!tabItem.children && (
-              <div
-                className={cn(
-                  styles.tabMenuItem,
-                  tabItem.key === activeKey ? styles.active : ''
-                )}
-                onClick={() => {
-                  setActiveKey(tabItem.key)
-                }}
-              >
-                {tabItem.content}
-              </div>
-            )}
-            {tabItem.children && (
-              <div
-                className={cn(
-                  styles.expandableItem,
-                  tabItem.children.map((item) => item.key).includes(activeKey)
-                    ? styles.active
-                    : ''
-                )}
-              >
-                <Collapse expandIconPosition="right">
-                  <Panel key="1" header={tabItem.content}>
-                    {tabItem.children.map((item) => (
-                      <div
-                        key={`tab-sub-item-${item.key}`}
-                        className={cn(
-                          styles.tabMenuItem,
-                          item.key === activeKey ? styles.active : ''
-                        )}
-                        onClick={() => setActiveKey(item.key)}
-                      >
-                        {item.content}
-                      </div>
-                    ))}
-                  </Panel>
-                </Collapse>
-              </div>
-            )}
-          </React.Fragment>
-        ))}
+        {tabs?.map((tab) => {
+          //TODO: add count and tags to ui
+          const { name, count, tags, childTabs } = tab
+
+          return (
+            <React.Fragment key={name}>
+              {(!childTabs || childTabs.length === 0) && (
+                <div
+                  className={classNames(
+                    styles.tabMenuItem,
+                    tab.key === activeTab ? styles.active : ''
+                  )}
+                  onClick={() => {
+                    onActiveChanged?.(tab.key)
+                  }}
+                >
+                  {name}
+                </div>
+              )}
+              {childTabs && childTabs.length > 0 && (
+                <div
+                  className={classNames(
+                    styles.expandableItem,
+                    activeTab && childTabs.find((e) => e.key === activeTab)
+                      ? styles.active
+                      : ''
+                  )}
+                >
+                  <Collapse expandIconPosition="right">
+                    <Panel key="1" header={<>tabItem.content</>}>
+                      {childTabs.map((tab) => {
+                        const { name } = tab
+
+                        return (
+                          <div
+                            key={`tab-sub-item-${name}`}
+                            className={classNames(
+                              styles.tabMenuItem,
+                              tab.key === activeTab ? styles.active : ''
+                            )}
+                            onClick={() => onActiveChanged?.(tab.key)}
+                          >
+                            {name}
+                          </div>
+                        )
+                      })}
+                    </Panel>
+                  </Collapse>
+                </div>
+              )}
+            </React.Fragment>
+          )
+        })}
       </div>
       <div className={styles.tabPaneItems}>
-        {Array.isArray(children) &&
-          children.map((tabPane, index) => (
-            <div
-              key={`tab-pane-${index}`}
-              className={cn(
-                styles.tabPaneItem,
-                index === activeKey ? styles.active : ''
-              )}
-            >
-              {tabPane}
-            </div>
-          ))}
+        <div className={classNames(styles.tabPaneItem, styles.active)}>
+          {children}
+        </div>
       </div>
     </div>
   )
@@ -100,47 +104,35 @@ export const CustomTabMenu: FC<CustomTabMenuProps> = ({
       <div className={styles.mainTabMenuItems}>
         <Tabs
           tabPosition={tabPosition}
-          onChange={(activeKey) => setActiveKey(Number(activeKey))}
+          onChange={(name) => onActiveChanged?.(name)}
         >
-          {tabItems.map((tabItem) => (
-            <TabPane tab={tabItem.content} key={tabItem.key}>
-              {tabItem.children && (
-                <Tabs
-                  tabPosition={tabPosition}
-                  onChange={(activeKey) => setActiveKey(Number(activeKey))}
-                >
-                  {tabItem.children.map((item) => (
-                    <TabPane tab={item.content} key={item.key} />
-                  ))}
-                </Tabs>
-              )}
-            </TabPane>
-          ))}
+          {tabs?.map((tab) => {
+            const { childTabs, name } = tab
+            return (
+              <TabPane tab={<>item.content</>} key={name}>
+                {childTabs && childTabs.length > 0 && (
+                  <Tabs
+                    tabPosition={tabPosition}
+                    onChange={(name) => onActiveChanged?.(name)}
+                  >
+                    {childTabs.map(({ key, name }) => (
+                      <TabPane tab={<>item.content</>} key={key} />
+                    ))}
+                  </Tabs>
+                )}
+              </TabPane>
+            )
+          })}
         </Tabs>
       </div>
       <div className={styles.tabPaneItems}>
-        {Array.isArray(children) &&
-          children.map((tabPane, index) => (
-            <div
-              key={`tab-pane-${index}`}
-              className={cn(
-                styles.tabPaneItem,
-                index === activeKey ? styles.active : ''
-              )}
-            >
-              {tabPane}
-            </div>
-          ))}
+        <div className={classNames(styles.tabPaneItem)}>{children}</div>
       </div>
     </div>
   )
-  return tabPosition === 'top' ? (
+  return (
     <div className={styles.customTabMenuContainer} style={{ minHeight }}>
-      {TopPositionTabs}
-    </div>
-  ) : (
-    <div className={styles.customTabMenuContainer} style={{ minHeight }}>
-      {LeftPositionTabs}
+      {tabPosition === 'top' ? TopPositionTabs : LeftPositionTabs}
     </div>
   )
 }

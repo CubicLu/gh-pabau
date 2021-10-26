@@ -219,18 +219,18 @@ export const User = objectType({
         return root.UserAlertPermission
       },
     })
-    t.list.field('CmContactAlert', {
-      type: 'CmContactAlert',
+    t.list.field('ContactAlert', {
+      type: 'ContactAlert',
       args: {
-        where: 'CmContactAlertWhereInput',
-        orderBy: 'CmContactAlertOrderByWithRelationInput',
-        cursor: 'CmContactAlertWhereUniqueInput',
+        where: 'ContactAlertWhereInput',
+        orderBy: 'ContactAlertOrderByWithRelationInput',
+        cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactAlertScalarFieldEnum',
+        distinct: 'ContactAlertScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactAlert
+        return root.ContactAlert
       },
     })
     t.nullable.field('CmStaffGeneral', {
@@ -309,18 +309,18 @@ export const User = objectType({
         return root.CmContactViewed
       },
     })
-    t.list.field('CmContactNote', {
-      type: 'CmContactNote',
+    t.list.field('ContactNote', {
+      type: 'ContactNote',
       args: {
-        where: 'CmContactNoteWhereInput',
-        orderBy: 'CmContactNoteOrderByWithRelationInput',
-        cursor: 'CmContactNoteWhereUniqueInput',
+        where: 'ContactNoteWhereInput',
+        orderBy: 'ContactNoteOrderByWithRelationInput',
+        cursor: 'ContactNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactNoteScalarFieldEnum',
+        distinct: 'ContactNoteScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactNote
+        return root.ContactNote
       },
     })
     t.list.field('InvProduct', {
@@ -623,18 +623,46 @@ export const User = objectType({
         return root.PasswordResetAuth
       },
     })
-    t.list.field('ActivityUserColumns', {
-      type: 'ActivityUserColumns',
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
       args: {
-        where: 'ActivityUserColumnsWhereInput',
-        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
-        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ActivityUserColumnsScalarFieldEnum',
+        distinct: 'ServiceUserTierScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ActivityUserColumns
+        return root.ServiceUserTier
+      },
+    })
+    t.list.field('ActivityUserState', {
+      type: 'ActivityUserState',
+      args: {
+        where: 'ActivityUserStateWhereInput',
+        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        cursor: 'ActivityUserStateWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserStateScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserState
+      },
+    })
+    t.list.field('ActivityUserFilter', {
+      type: 'ActivityUserFilter',
+      args: {
+        where: 'ActivityUserFilterWhereInput',
+        orderBy: 'ActivityUserFilterOrderByWithRelationInput',
+        cursor: 'ActivityUserFilterWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserFilterScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserFilter
       },
     })
     t.nullable.field('_count', {

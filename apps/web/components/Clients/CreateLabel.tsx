@@ -19,11 +19,11 @@ interface CreateLabelsProps {
   children?: ReactNode
   labels?: Labels[]
   setLabels?: (val: Labels[]) => void
-  selectedLabels?: any
-  setSelectedLabels?: (val) => void
+  selectedLabels?: Labels[]
+  setSelectedLabels?: (val: Labels[]) => void
   fromHeader?: boolean
-  defaultSelectedLabels?: any
-  setDefaultSelectedLabels?: (val) => void
+  defaultSelectedLabels?: Labels[]
+  setDefaultSelectedLabels?: (val: Labels[]) => void
   handleApplyLabel?: (val) => void
   labelsList?: any
   selectedRowKeys?: any
@@ -166,7 +166,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       target: { value },
       key,
     } = e
-
     if (key === 'Enter' && value) {
       if (isEdit) {
         editLabelData({ text: value, color: selectedColor, count: 0 })

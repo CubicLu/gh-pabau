@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import {
   TagOutlined,
   ImportOutlined,
@@ -15,12 +15,11 @@ import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
-import { AddLabelMutation, Exact } from '@pabau/graphql'
+import { AddLabelMutation, Exact, useClientsDataQuery } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 
-interface ClientsContentProps {
+interface P {
   searchText?: string
-  sourceData?: SourceDataProps[]
   handleLabelClick?: (e, val, id) => void
   isArchived?: boolean
   labels?: Labels[]
@@ -52,29 +51,7 @@ interface ClientsContentProps {
   insertContactsLabelsMutaton?: (val) => void
 }
 
-export interface SourceDataProps {
-  id: number
-  firstName?: string
-  lastName?: string
-  email?: string
-  mobileNumber?: string
-  label?: Labels[]
-  is_active?: number
-  date_archived?: string
-  dob?: string
-  postal?: string
-  city?: string
-  priceQuote?: string
-  orderNotes?: string
-  setupFee?: string
-  is_dismissed?: boolean
-  avatar?: string
-  clientLabel?: any
-  setLabelsList?: (val) => void
-}
-
-export const ClientsContent: FC<ClientsContentProps> = ({
-  sourceData,
+export const ClientsContent = ({
   handleLabelClick,
   isArchived,
   labels,
@@ -97,9 +74,12 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   setLabelsList,
   addLabelMutation,
   insertContactsLabelsMutaton,
-}) => {
+}: P) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
+
+  const { data } = useClientsDataQuery()
+
   const [selectedPrimaryColumn, setSelectedPrimaryColumn] = useState([
     'Avatar',
     'Name',
@@ -108,6 +88,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     'Label',
   ])
   const [selectedSecondaryColumn, setSelectedSecondaryColumn] = useState([])
+
   const rowSelection = {
     selectedRowKeys,
     onChange: setSelectedRowKeys,
@@ -171,7 +152,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           {t('clients.content.column.label')}
         </div>
       ),
-      dataIndex: null,
+      dataIndex: 'label',
       visible: visiblePrimaryColumns('Label'),
       render: function renderLabel(data) {
         const { clientLabel } = data
@@ -287,35 +268,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     },
   ]
 
-  const onCheckAllChange = () => {
-    if (selectedRowKeys.length !== dataSource().length) {
-      setSelectedRowKeys(dataSource().map((data) => data.id))
-    } else {
-      setSelectedRowKeys([])
-    }
-  }
-
   const handleMobileSelectRow = (id) => {
     const selectedData = [...selectedRowKeys]
     const index = selectedData.indexOf(id)
     index === -1 ? selectedData.push(id) : selectedData.splice(index, 1)
     setSelectedRowKeys([...selectedData])
-  }
-
-  const dataSource = () => {
-    if (isArchived) {
-      return sourceData?.map((e: { id }) => ({
-        key: e.id,
-        ...e,
-      }))
-    } else {
-      return sourceData
-        ?.filter((e) => e.is_active === 1)
-        .map((e: { id }) => ({
-          key: e.id,
-          ...e,
-        }))
-    }
   }
 
   const mobileLabelPopupContent = (data) => {
@@ -346,6 +303,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     return <Tooltip title={title}>{icon}</Tooltip>
   }
 
+  if (!data) return <>...</>
   return (
     <div className={styles.tableContent}>
       {!isMobile && selectedRowKeys.length > 0 && (
@@ -353,10 +311,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           <Checkbox
             indeterminate={
               selectedRowKeys.length > 0 &&
-              selectedRowKeys.length !== dataSource().length
+              selectedRowKeys.length !== data.findManyCmContact.length
             }
-            onChange={onCheckAllChange}
-            checked={selectedRowKeys.length === dataSource().length}
+            //@@@TODO
+            // onChange={onCheckAllChange}
+            checked={selectedRowKeys.length === data.findManyCmContact.length}
           ></Checkbox>
           <CreateLabel
             selectedLabels={selectedLabels}
@@ -413,45 +372,67 @@ export const ClientsContent: FC<ClientsContentProps> = ({
         </div>
       )}
       {!isMobile ? (
-        <div>
-          <Table
-            dataSource={dataSource()}
-            scroll={{ x: 'max-content' }}
-            sticky={{ offsetHeader: 80, offsetScroll: 0 }}
-            columns={columns}
-            pagination={false}
-            noDataBtnText={t('clients.noDataBtnText')}
-            noDataText={t('clients.noDataText')}
-            rowSelection={rowSelection}
-            showHeader={selectedRowKeys.length === 0}
-            onRowClick={handleRowClick}
-            loading={getClientsCountLoading}
-          />
-          <div className={styles.paginationContainer}>
-            <Pagination
-              total={paginateData.total}
-              defaultPageSize={10}
-              showSizeChanger={false}
-              onChange={onPaginationChange}
-              pageSize={paginateData.limit}
-              current={paginateData.currentPage}
-              showingRecords={paginateData.showingRecords}
-              pageSizeOptions={['10', '25', '50', '100']}
-              onPageSizeChange={(pageSize) => {
-                setPaginateData({
-                  ...paginateData,
-                  offset: 0,
-                  limit: pageSize,
-                  currentPage: 1,
-                })
-              }}
-            />
-          </div>
+        <Table
+          dataSource={data.findManyCmContact}
+          scroll={{ x: 'max-content' }}
+          columns={columns}
+          pagination={false}
+          noDataBtnText={t('clients.noDataBtnText')}
+          noDataText={t('clients.noDataText')}
+          rowSelection={rowSelection}
+          showHeader={selectedRowKeys.length === 0}
+          onRowClick={handleRowClick}
+          loading={false}
+        />
+        // <div>
+        //   <Table
+        //     dataSource={dataSource()}
+        //     scroll={{ x: 'max-content' }}
+        //     sticky={{ offsetHeader: 80, offsetScroll: 0 }}
+        //     columns={columns}
+        //     pagination={false}
+        //     noDataBtnText={t('clients.noDataBtnText')}
+        //     noDataText={t('clients.noDataText')}
+        //     rowSelection={rowSelection}
+        //     showHeader={selectedRowKeys.length === 0}
+        //     onRowClick={handleRowClick}
+        //     loading={getClientsCountLoading}
+        //   />
+        //   <div className={styles.paginationContainer}>
+        //     <Pagination
+        //       total={paginateData.total}
+        //       defaultPageSize={10}
+        //       showSizeChanger={false}
+        //       onChange={onPaginationChange}
+        //       pageSize={paginateData.limit}
+        //       current={paginateData.currentPage}
+        //       showingRecords={paginateData.showingRecords}
+        //       pageSizeOptions={['10', '25', '50', '100']}
+        //       onPageSizeChange={(pageSize) => {
+        //         setPaginateData({
+        //           ...paginateData,
+        //           offset: 0,
+        //           limit: pageSize,
+        //           currentPage: 1,
+        //         })
+        //       }}
+        //     />
+        //   </div>
         </div>
       ) : (
         <div className={styles.clientMainWrapper}>
-          {dataSource().map((data: SourceDataProps) => {
-            return (
+          {data.findManyCmContact
+
+            //TODO move this .map() to .graphql
+            .map((e) => ({
+              ...e,
+              label: [
+                { label: 'abcd', color: 'red' },
+                { label: 'asdf', color: 'green' },
+              ],
+            }))
+
+            .map((data) => (
               <div
                 key={data.id}
                 className={classNames(styles.clientMobWrap, {
@@ -473,7 +454,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                     trigger={'click'}
                     placement={'bottom'}
                   >
-                    {data.clientLabel.length > 0 && (
+                    {data.label.length > 0 && (
                       <Button
                         icon={<TagOutlined />}
                         style={
@@ -498,8 +479,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                   </Popover>
                 </div>
               </div>
-            )
-          })}
+            ))}
         </div>
       )}
     </div>

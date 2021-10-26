@@ -183,7 +183,7 @@ export const MedicalHistory = () => {
           ) : (
             <>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   {
                     breadcrumbName: 'Account',
                     path: 'connect/account',

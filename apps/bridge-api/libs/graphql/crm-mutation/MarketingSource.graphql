@@ -1,0 +1,39 @@
+fragment MarketingSourceFields on MarketingSource {
+  id
+  name
+  company_id
+  custom_id
+  public
+  imported
+}
+
+fragment MarketingSource on MarketingSource {
+  ...MarketingSourceFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneMarketingSource($data: MarketingSourceCreateInput!) {
+  createOneMarketingSource(data: $data) {
+    ...MarketingSource
+  }
+}
+
+mutation updateOneMarketingSource($where: MarketingSourceWhereUniqueInput!, $data: MarketingSourceUpdateInput!) {
+  updateOneMarketingSource(where: $where, data: $data) {
+    ...MarketingSource
+  }
+}
+
+mutation deleteOneMarketingSource($where: MarketingSourceWhereUniqueInput!) {
+  deleteOneMarketingSource(where: $where) {
+    ...MarketingSource
+  }
+}
+
+mutation updateManyMarketingSource($where: MarketingSourceWhereInput, $data: MarketingSourceUpdateManyMutationInput!) {
+  updateManyMarketingSource(where: $where, data: $data) {
+    count
+  }
+}
