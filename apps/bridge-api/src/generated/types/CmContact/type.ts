@@ -204,20 +204,6 @@ export const CmContact = objectType({
         return root.ContactNote
       },
     })
-    t.list.field('MedicalFormContact', {
-      type: 'MedicalFormContact',
-      args: {
-        where: 'MedicalFormContactWhereInput',
-        orderBy: 'MedicalFormContactOrderByWithRelationInput',
-        cursor: 'MedicalFormContactWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormContactScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.MedicalFormContact
-      },
-    })
     t.list.field('CmExtraGym', {
       type: 'CmExtraGym',
       args: {
