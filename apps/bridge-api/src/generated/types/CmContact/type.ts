@@ -508,6 +508,34 @@ export const CmContact = objectType({
         return root.PurchasedVoucher
       },
     })
+    t.list.field('PathwaysTaken', {
+      type: 'PathwaysTaken',
+      args: {
+        where: 'PathwaysTakenWhereInput',
+        orderBy: 'PathwaysTakenOrderByWithRelationInput',
+        cursor: 'PathwaysTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwaysTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwaysTaken
+      },
+    })
+    t.list.field('PathwayStepsTaken', {
+      type: 'PathwayStepsTaken',
+      args: {
+        where: 'PathwayStepsTakenWhereInput',
+        orderBy: 'PathwayStepsTakenOrderByWithRelationInput',
+        cursor: 'PathwayStepsTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepsTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStepsTaken
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmContactCountOutputType',
       resolve(root: any) {

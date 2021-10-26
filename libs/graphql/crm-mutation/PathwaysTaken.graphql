@@ -13,6 +13,12 @@ fragment PathwaysTaken on PathwaysTaken {
   Pathway {
     ...PathwayFields
   }
+  CmContact {
+    ...CmContactFields
+  }
+  Booking {
+    ...BookingFields
+  }
 }
 
 mutation createOnePathwaysTaken($data: PathwaysTakenCreateInput!) {

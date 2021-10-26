@@ -12,7 +12,8 @@ export default {
     borderColor: '#000',
     bookNowButton: false,
     buttonLabel: 'Book Now',
-    dotMenuShow: false,
+    showMenu: false,
+
     voucherType: '',
     voucherNum: 100001,
     voucherPrice: 100,
@@ -65,7 +66,7 @@ export default {
         type: 'boolean',
       },
     },
-    dotMenuShow: {
+    showMenu: {
       control: {
         type: 'boolean',
       },
