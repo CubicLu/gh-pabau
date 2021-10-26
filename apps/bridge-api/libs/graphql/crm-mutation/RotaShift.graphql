@@ -1,0 +1,71 @@
+fragment RotaShiftFields on RotaShift {
+  id
+  uid
+  start
+  end
+  company_id
+  notes
+  last_seen
+  last_modified
+  last_notified
+  last_published
+  first_created
+  user_created
+  repeat_id
+  reason_code
+  reason_data
+  holiday_id
+  cal_id
+  is_cal
+  note_color
+  location_id
+  request
+  sickness
+  imported
+  tag_name
+  room_id
+  force_created
+}
+
+fragment RotaShift on RotaShift {
+  ...RotaShiftFields
+  Company {
+    ...CompanyFields
+  }
+  Location {
+    ...CompanyBranchFields
+  }
+  CompanyRoom {
+    ...CompanyRoomFields
+  }
+  HolidayRequest {
+    ...HolidayRequestFields
+  }
+  CmStaffGeneral {
+    ...CmStaffGeneralFields
+  }
+}
+
+mutation createOneRotaShift($data: RotaShiftCreateInput!) {
+  createOneRotaShift(data: $data) {
+    ...RotaShift
+  }
+}
+
+mutation updateOneRotaShift($where: RotaShiftWhereUniqueInput!, $data: RotaShiftUpdateInput!) {
+  updateOneRotaShift(where: $where, data: $data) {
+    ...RotaShift
+  }
+}
+
+mutation deleteOneRotaShift($where: RotaShiftWhereUniqueInput!) {
+  deleteOneRotaShift(where: $where) {
+    ...RotaShift
+  }
+}
+
+mutation updateManyRotaShift($where: RotaShiftWhereInput, $data: RotaShiftUpdateManyMutationInput!) {
+  updateManyRotaShift(where: $where, data: $data) {
+    count
+  }
+}

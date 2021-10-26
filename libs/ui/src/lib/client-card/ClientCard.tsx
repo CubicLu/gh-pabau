@@ -25,6 +25,9 @@ import {
   CommunicationTimelineProps,
   ActivitiesProps,
   AvatarUploader,
+  ReferredByOption,
+  FieldOrderItem,
+  ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -107,28 +110,67 @@ interface PopoutProps {
   title: string
 }
 
-interface ClientNote {
+export interface ClientNote {
   avatar: string
   content: string
   client: string
   date: string
 }
 
+interface StaffDetails {
+  contact?: string
+  avatar?: string
+}
+
+export interface ClientNoteDetails {
+  ID?: number | string
+  content: string
+  date: string
+  User: StaffDetails
+}
+
+export interface ClientAppointmentDetails {
+  title: string
+  date?: number
+  User?: StaffDetails
+}
+
+export interface ClientNotes {
+  notes: ClientNoteDetails[]
+  count: number
+  loading: boolean
+  appointments: ClientAppointmentDetails[]
+}
+
 interface P {
   client: ClientData
+  notes?: ClientNotes
+  getContactDetails?: () => void
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
   activeTab?: string
+  referredByOptions?: ReferredByOption[]
+  loading?: boolean
+  customFields?: FieldOrderItem[]
+  dateFormat?: string
+  handleEditAll?: () => void
 }
 
 const ClientCardModal: FC<P> = ({
   client,
+  notes,
+  getContactDetails,
   onClose,
   tabs,
   activeTab,
   children,
   onTabChanged,
+  referredByOptions,
+  loading,
+  customFields,
+  dateFormat,
+  handleEditAll,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -540,7 +582,7 @@ const ClientCardModal: FC<P> = ({
     >
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
-          {alertItems.map((item, index) => (
+          {alertItems?.map((item, index) => (
             <div className={styles.staffAlert} key={`staff-alert-${index}`}>
               {item}
             </div>
@@ -584,7 +626,7 @@ const ClientCardModal: FC<P> = ({
             className={styles.clientNotesContainer}
             ref={clientNotePopoverRef}
           >
-            {noteItems.map((item, index) => (
+            {noteItems?.map((item, index) => (
               <div key={`client-${index}`} className={styles.clientNote}>
                 {index !== currentClientNote && (
                   <div className={styles.clientNoteItem}>
@@ -861,81 +903,28 @@ const ClientCardModal: FC<P> = ({
                 </div>
               )}
               {!isMobile && (
-                <>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Medical history'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={medicalHistoryPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Medical history">
-                        <Badge
-                          count={<CheckCircleFilled />}
-                          offset={[0, 18]}
-                          style={{ color: '#65cd98' }}
-                        >
-                          <MedicalHistory className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Notes'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientNotesPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Notes">
-                        <Badge
-                          count={noteItems.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Note className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Staff alerts'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientAlertsPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Staff alerts" placement="bottomRight">
-                        <Badge
-                          count={alertItems.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Alert className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                </>
+                <ClientHeaderDetails
+                  notes={notes}
+                  getContactDetails={getContactDetails}
+                  client={client}
+                />
               )}
             </div>
           </div>
           <div className={styles.clientCardBody}>
             <div className={styles.clientDetails}>
-              {client && (
-                <ClientDetails
-                  clientData={client}
-                  onCreateEmail={() => handleCreatePopout('email')}
-                  onCreateCall={() => handleCreatePopout('call')}
-                  searchResults={thirdPartySearchResults}
-                  appointments={appointments}
-                />
-              )}
+              <ClientDetails
+                clientData={client}
+                onCreateEmail={() => handleCreatePopout('email')}
+                onCreateCall={() => handleCreatePopout('call')}
+                searchResults={thirdPartySearchResults}
+                appointments={appointments}
+                referredByOptions={referredByOptions}
+                loading={loading}
+                customFields={customFields}
+                dateFormat={dateFormat}
+                handleEditAll={handleEditAll}
+              />
             </div>
             <div className={styles.clientCardContent}>
               <CustomTabMenu

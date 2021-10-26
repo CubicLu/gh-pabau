@@ -119,6 +119,12 @@ export const CmStaffGeneral = objectType({
         return root.RotaShift
       },
     })
+    t.nullable.field('StaffNote', {
+      type: 'StaffNote',
+      resolve(root: any) {
+        return root.StaffNote
+      },
+    })
     t.list.field('InventoryDiscrepancy', {
       type: 'InventoryDiscrepancy',
       args: {

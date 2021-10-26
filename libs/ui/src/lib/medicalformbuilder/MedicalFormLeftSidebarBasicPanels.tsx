@@ -25,8 +25,8 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          isDragging={snapshot.isDragging}
-          className={snapshot.isDragging ? styles.dndDragging : ''}
+          isDragging={snapshot?.isDragging ? true : false}
+          className={snapshot?.isDragging ? styles.dndDragging : ''}
         >
           {draggedForm && (
             <LeftSidebarElement
@@ -82,9 +82,9 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        isDragging={snapshot.isDragging}
+                        isDragging={snapshot?.isDragging ? true : false}
                         className={
-                          snapshot.isDragging ? styles.dndDragging : ''
+                          snapshot?.isDragging ? styles.dndDragging : ''
                         }
                       >
                         <LeftSidebarElement
@@ -105,7 +105,8 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                 (form) =>
                   form.formName === 'basic_singlechoice' ||
                   form.formName === 'basic_multiplechoice' ||
-                  form.formName === 'basic_dropdown'
+                  form.formName === 'basic_dropdown' ||
+                  form.formName === 'basic_slider'
               )
               .map((form) => {
                 return snapshot.draggingFromThisWith === form.formName ? (
@@ -127,9 +128,9 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        isDragging={snapshot.isDragging}
+                        isDragging={snapshot?.isDragging ? true : false}
                         className={
-                          snapshot.isDragging ? styles.dndDragging : ''
+                          snapshot?.isDragging ? styles.dndDragging : ''
                         }
                       >
                         <LeftSidebarElement
@@ -173,9 +174,9 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        isDragging={snapshot.isDragging}
+                        isDragging={snapshot?.isDragging ? true : false}
                         className={
-                          snapshot.isDragging ? styles.dndDragging : ''
+                          snapshot?.isDragging ? styles.dndDragging : ''
                         }
                       >
                         <LeftSidebarElement
@@ -196,10 +197,11 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                 (form) =>
                   form.formName === 'basic_conditions' ||
                   form.formName === 'basic_drugs' ||
-                  form.formName === 'basic_traveldestination' ||
-                  form.formName === 'basic_vaccinescheduler' ||
-                  form.formName === 'basic_vaccinehistory' ||
-                  form.formName === 'basic_labtests'
+                  // form.formName === 'basic_traveldestination' ||
+                  // form.formName === 'basic_vaccinescheduler' ||
+                  // form.formName === 'basic_vaccinehistory' ||
+                  form.formName === 'basic_labtests' ||
+                  form.formName === 'basic_snomed'
               )
               .map((form) => {
                 return snapshot.draggingFromThisWith === form.formName ? (
@@ -221,9 +223,9 @@ export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        isDragging={snapshot.isDragging}
+                        isDragging={snapshot?.isDragging ? true : false}
                         className={
-                          snapshot.isDragging ? styles.dndDragging : ''
+                          snapshot?.isDragging ? styles.dndDragging : ''
                         }
                       >
                         <LeftSidebarElement

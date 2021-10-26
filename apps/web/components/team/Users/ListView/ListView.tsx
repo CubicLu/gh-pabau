@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { userDataProps } from '../../../../pages/team/users'
 import { Button, Avatar, Table } from '@pabau/ui'
 import styles from './ListView.module.less'
+import { useRouter } from 'next/router'
 
 interface ListViewProps {
   users: userDataProps[]
@@ -13,7 +14,7 @@ interface ListViewProps {
 export const ListView: FC<ListViewProps> = ({ users }) => {
   const { t } = useTranslation('common')
   const [rowId, setRowId] = useState<number>()
-
+  const router = useRouter()
   const columns = [
     {
       title: t('team.user.listview.name.label'),
@@ -32,12 +33,7 @@ export const ListView: FC<ListViewProps> = ({ users }) => {
       ),
       visible: true,
     },
-    {
-      title: t('team.user.listview.last.activity.label'),
-      dataIndex: 'lastActivity',
-      key: 'lastActivity',
-      visible: true,
-    },
+
     {
       title: t('team.user.listview.mobile.label'),
       dataIndex: 'mobile',
@@ -63,6 +59,12 @@ export const ListView: FC<ListViewProps> = ({ users }) => {
       visible: true,
     },
     {
+      title: t('team.user.listview.last.activity.label'),
+      dataIndex: 'lastActivity',
+      key: 'lastActivity',
+      visible: true,
+    },
+    {
       title: '',
       dataIndex: 'edit',
       key: 'edit',
@@ -81,6 +83,10 @@ export const ListView: FC<ListViewProps> = ({ users }) => {
     setRowId(record.id)
   }
 
+  const onRowClickHandle = (record: userDataProps) => {
+    router.push(`/team/user/${record.id}`)
+  }
+
   return (
     <div className={styles.listViewWrapper}>
       <Table
@@ -90,6 +96,7 @@ export const ListView: FC<ListViewProps> = ({ users }) => {
         pagination={false}
         onRowHover={onRowHoverHandle}
         isHover={true}
+        onRowClick={onRowClickHandle}
       />
     </div>
   )

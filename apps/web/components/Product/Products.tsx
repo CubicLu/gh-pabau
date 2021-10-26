@@ -443,7 +443,7 @@ export const Products = ({
             {
               id: 0,
               name: t('products.list.filter.all'),
-              count: countData.total ?? 0,
+              count: countData?.total ?? 0,
             },
             // ...modal?.findManyInvCategory,
             ...getCategoriesBindCount(modal?.findManyInvCategory),
@@ -497,7 +497,7 @@ export const Products = ({
     return list?.map((item) => {
       return {
         ...item,
-        count: countData.findManyInvCategory.find((i) => i.id === item.id)
+        count: countData?.findManyInvCategory.find((i) => i.id === item.id)
           ?.count.length,
       }
     })

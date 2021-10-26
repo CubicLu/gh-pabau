@@ -4,17 +4,23 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { createPortal } from 'react-dom'
 import {
   PlusOutlined,
-  FontColorsOutlined,
   MailOutlined,
   PhoneOutlined,
   EditOutlined,
   DeleteOutlined,
   FieldNumberOutlined,
+  CheckOutlined,
+  DownOutlined,
+  AlignLeftOutlined,
+  GlobalOutlined,
+  MessageOutlined,
 } from '@ant-design/icons'
 import { Tooltip, Popover } from 'antd'
-import { Button, InlineEditDataTypes } from '@pabau/ui'
+import { Button, InlineEditDataTypes, FieldOrderItem } from '@pabau/ui'
 import { ReactComponent as CustomDateOutlined } from '../../assets/images/custom-date.svg'
 import { ReactComponent as DragAreaOutlined } from '../../assets/images/drag-area.svg'
+import { ReactComponent as SingleLine } from '../../assets/images/single-line.svg'
+import { ReactComponent as RadioIcon } from '../../assets/images/radio-button.svg'
 import styles from './CustomizeFields.module.less'
 
 const dragEl =
@@ -30,15 +36,6 @@ enum FieldType {
   email,
   priceList,
   membershipNumber,
-}
-
-interface FieldOrderItem {
-  title: string
-  fieldName: string
-  type: string
-  field: FieldType
-  value: string
-  selectOptions?: string[]
 }
 
 export interface CustomizeFieldsProps {
@@ -137,31 +134,43 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                           <div className={styles.draggingItemBody}>
                             <div>
                               <div className={styles.fieldType}>
-                                {item.type === InlineEditDataTypes.text && (
-                                  <FontColorsOutlined />
+                                {item.type === InlineEditDataTypes.string && (
+                                  <SingleLine />
+                                )}
+                                {(item.type === InlineEditDataTypes.text ||
+                                  item.type ===
+                                    InlineEditDataTypes.address) && (
+                                  <AlignLeftOutlined />
                                 )}
                                 {item.type === InlineEditDataTypes.date && (
                                   <CustomDateOutlined />
                                 )}
-                                {item.type === InlineEditDataTypes.phone && (
+                                {(item.type === InlineEditDataTypes.phone ||
+                                  item.type ===
+                                    InlineEditDataTypes.basicPhone) && (
                                   <PhoneOutlined />
                                 )}
                                 {item.type === InlineEditDataTypes.email && (
                                   <MailOutlined />
                                 )}
-                                {item.type === InlineEditDataTypes.dropdown && (
-                                  <FontColorsOutlined />
+                                {item.type === InlineEditDataTypes.list && (
+                                  <DownOutlined />
                                 )}
-                                {item.type ===
-                                  InlineEditDataTypes.multipleChoice && (
-                                  <FontColorsOutlined />
+                                {item.type === InlineEditDataTypes.multiple && (
+                                  <CheckOutlined />
                                 )}
-                                {item.type ===
-                                  InlineEditDataTypes.singleChoice && (
-                                  <FontColorsOutlined />
+                                {item.type === InlineEditDataTypes.bool && (
+                                  <RadioIcon />
                                 )}
                                 {item.type === InlineEditDataTypes.number && (
                                   <FieldNumberOutlined />
+                                )}
+                                {item.type === InlineEditDataTypes.url && (
+                                  <GlobalOutlined />
+                                )}
+                                {item.type ===
+                                  InlineEditDataTypes.localizedMessage && (
+                                  <MessageOutlined />
                                 )}
                               </div>
                               <div className={styles.fieldTitle}>
@@ -170,7 +179,15 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                             </div>
                             <div>
                               <div className={styles.deleteField}>
-                                <DeleteOutlined />
+                                <Tooltip
+                                  title={t(
+                                    'ui.clientdetails.customise.delete.message'
+                                  )}
+                                  placement="bottom"
+                                  overlayStyle={{ maxWidth: '200px' }}
+                                >
+                                  <DeleteOutlined />
+                                </Tooltip>
                               </div>
                               <div className={styles.editField}>
                                 <EditOutlined />
@@ -187,11 +204,6 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                               </div>
                             </div>
                           </div>
-                          {(item.type === 'phone' || item.type === 'email') && (
-                            <div className={styles.draggingItemDescription}>
-                              {t('ui.clientdetails.customise.appearsin')}
-                            </div>
-                          )}
                         </div>
                       )
                     }
