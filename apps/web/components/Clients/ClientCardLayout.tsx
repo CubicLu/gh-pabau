@@ -25,7 +25,7 @@ import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
-import { getCompanyTimezoneDate } from '../../helper/getCompanyTimezoneDate'
+import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -41,6 +41,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
   const { me } = useUser()
+  const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
@@ -156,12 +157,10 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     }
   }, [customFieldData, data])
 
-  const handleAddNewClientNote = async (note) => {
+  const handleAddNewClientNote = async (note: string) => {
     const noteBody = {
       Note: note,
-      CreatedDate: me?.timezone
-        ? getCompanyTimezoneDate(me?.timezone)
-        : dayjs().utc().format(),
+      CreatedDate: timezoneDate() || dayjs().utc().format(),
       User: { connect: { id: me?.user } },
       CmContact: { connect: { ID: clientId } },
     }
