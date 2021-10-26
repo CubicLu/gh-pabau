@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React from 'react'
 import { Menu, Skeleton } from 'antd'
 import {
   TagOutlined,
@@ -13,7 +13,11 @@ import classNames from 'classnames'
 import { Labels, tab } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
-import { AddLabelMutation, Exact, useClientsDataAggregateQuery } from '@pabau/graphql'
+import {
+  AddLabelMutation,
+  Exact,
+  useClientsDataAggregateQuery,
+} from '@pabau/graphql'
 
 const { SubMenu } = Menu
 
@@ -47,8 +51,6 @@ interface P {
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
   >
 }
-
-const labels = []
 
 export const LeftSideBar = ({
   selectedTab,
