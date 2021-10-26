@@ -69,7 +69,11 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
           <div className={styles.clientContainer}>
             <Avatar size={52} src={avatar} name={clientName} />
             <div className={styles.clientInfo}>
-              <p>{clientName}</p>
+              <p
+                style={{ color: status === 'no-show' ? '#ff5b64' : '#3d3d46' }}
+              >
+                {clientName}
+              </p>
               <span>{serviceName}</span>
               <div>{checkingStatus}</div>
             </div>

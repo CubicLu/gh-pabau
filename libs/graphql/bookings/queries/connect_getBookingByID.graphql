@@ -37,6 +37,7 @@ query GetCompanyAppointmentsByDate(
     start_time
     company_id
     service_id
+    contact_id
     service
     CmStaffGeneral {
       Avatar

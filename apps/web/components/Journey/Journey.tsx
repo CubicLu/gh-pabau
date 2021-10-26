@@ -112,10 +112,7 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
         </div>
         <div className={styles.grid}>
           <div className={styles.gridItems}>
-            <Appointments
-              date="2021-10-21T12:10:28+05:30"
-              appointments={appointements}
-            />
+            <Appointments appointments={appointements} />
           </div>
           <div className={styles.gridItems}>
             <Tile

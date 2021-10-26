@@ -7,11 +7,11 @@ import AppointmentItem, { AppointmentItemP } from './AppointmentItem'
 import styles from './Appointments.module.less'
 
 interface P {
-  date?: Date | string
   appointments?: AppointmentItemP[]
+  filterStatus?: string[]
 }
 
-export const Appointments: FC<P> = ({ date, appointments }) => {
+export const Appointments: FC<P> = ({ appointments, filterStatus }) => {
   return (
     <div
       className={styles.appointmentContainer}
@@ -21,9 +21,18 @@ export const Appointments: FC<P> = ({ date, appointments }) => {
     >
       {appointments &&
         appointments?.length > 0 &&
+        filterStatus?.length === 0 &&
         appointments.map((appt) => {
           return <AppointmentItem key={appt.key} {...appt} />
         })}
+      {appointments &&
+        appointments?.length > 0 &&
+        filterStatus?.length > 0 &&
+        appointments
+          .filter((appt) => filterStatus?.includes(appt.status))
+          .map((appt) => {
+            return <AppointmentItem key={appt.key} {...appt} />
+          })}
     </div>
   )
 }
