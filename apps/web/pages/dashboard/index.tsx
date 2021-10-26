@@ -93,11 +93,15 @@ export function Index() {
       variables: {
         start_date:
           filterRange !== 'All records'
-            ? dayjs(new Date(`${filterDate[0]}`)).format('YYYYMMDDHHmmss')
+            ? Number.parseFloat(
+                dayjs(new Date(`${filterDate[0]}`)).format('YYYYMMDDHHmmss')
+              )
             : null,
         end_date:
           filterRange !== 'All records'
-            ? dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss')
+            ? Number.parseFloat(
+                dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss')
+              )
             : null,
         location_id:
           dashboardMode === 1 || location.key === 0 ? null : location?.key,

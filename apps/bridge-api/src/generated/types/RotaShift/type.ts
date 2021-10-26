@@ -9,8 +9,8 @@ export const RotaShift = objectType({
   definition(t) {
     t.int('id')
     t.int('uid')
-    t.decimal('start')
-    t.decimal('end')
+    t.float('start')
+    t.float('end')
     t.int('company_id')
     t.nullable.string('notes')
     t.nullable.field('last_seen', { type: 'DateTime' })
@@ -39,19 +39,19 @@ export const RotaShift = objectType({
         return root.Company
       },
     })
-    t.field('Location', {
+    t.nullable.field('Location', {
       type: 'CompanyBranch',
       resolve(root: any) {
         return root.Location
       },
     })
-    t.field('CompanyRoom', {
+    t.nullable.field('CompanyRoom', {
       type: 'CompanyRoom',
       resolve(root: any) {
         return root.CompanyRoom
       },
     })
-    t.field('HolidayRequest', {
+    t.nullable.field('HolidayRequest', {
       type: 'HolidayRequest',
       resolve(root: any) {
         return root.HolidayRequest

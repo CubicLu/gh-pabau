@@ -19,32 +19,32 @@ query getFinanceDetails(
         per
       }
     }
-    allSales{
-      salesByProductCategoryType{
+    allSales {
+      salesByProductCategoryType {
         status
-        chartDataSet{
+        chartDataSet {
           label
           value
         }
       }
     }
-    retailSales{
-      retailSalesDetails{
+    retailSales {
+      retailSalesDetails {
         name
         units
         value
         per
       }
     }
-    serviceSales{
-      serviceSalesDetails{
+    serviceSales {
+      serviceSalesDetails {
         name
         units
         value
         per
       }
     }
-    otherSalesDetails{
+    otherSalesDetails {
       newClientCount
       avgBiller
       RevPerhour
