@@ -2,10 +2,8 @@ import React, { FC, useState, useEffect, useRef } from 'react'
 import { Row, Col } from 'antd'
 import { useTranslation } from 'react-i18next'
 import styles from './JourneyCalendar.module.less'
-import arrow from '../journey-calendar/arrow.svg'
 import dayjs from 'dayjs'
 import { Button } from '@pabau/ui'
-import { useSwipeable } from 'react-swipeable'
 import { useWindowSize } from 'react-use'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import useGestures from './Gestures'
@@ -82,13 +80,6 @@ export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
     const nextArray = getDaysArray(nextArrayStartDate, nextArrayEndDate)
     return { previousArray, nextArray }
   }
-
-  const handlers = useSwipeable({
-    onSwipedLeft: () => handleNext(),
-    onSwipedRight: () => handlePrev(),
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: true,
-  })
 
   const handleTodays = () => {
     setInitialDates()
