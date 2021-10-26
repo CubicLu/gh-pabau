@@ -1,4 +1,3 @@
-
 query companyServicesByCategory($company_id: Int!) {
   Public_ServiceCategories(where: {company_id: $company_id}) {
     id
