@@ -24,9 +24,10 @@ import {
   ClientAppointmentDetails,
 } from '../client-card/ClientCard'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { getImage } from '../../helper/uploaders/UploadHelpers'
 import styles from './ClientHeaderDetails.module.less'
-
+dayjs.extend(utc)
 const { TextArea } = Input
 
 export interface ClientHeaderDetailsProps {
@@ -225,7 +226,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                             >{`By ${item?.User?.contact}`}</div>
                             <div className={styles.date}>{`On ${dayjs(
                               item?.date
-                            ).format('D MMM YYYY hh:mm A')}`}</div>
+                            )
+                              .utc()
+                              .format('D MMM YYYY hh:mm A')}`}</div>
                           </div>
                           <div>
                             <Button
@@ -299,10 +302,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                     <div className={styles.clientNoteItem}>
                       <div>
                         <Avatar
-                          src={note?.User?.avatar}
-                          name={
-                            note?.User?.contact && getImage(note?.User?.contact)
+                          src={
+                            note?.User?.avatar && getImage(note?.User?.avatar)
                           }
+                          name={note?.User?.contact}
                           size={32}
                         />
                       </div>
@@ -311,9 +314,11 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                         <div
                           className={styles.contact}
                         >{`By ${note?.User?.contact}`}</div>
-                        <div className={styles.date}>{`On ${dayjs(
-                          note.date
-                        ).format('D MMM YYYY hh:mm A')}`}</div>
+                        {note?.date && (
+                          <div className={styles.date}>{`On ${dayjs(
+                            note?.date.toString()
+                          ).format('D MMM YYYY hh:mm A')}`}</div>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -1,17 +1,19 @@
-import React, { FC, useState } from 'react'
-import { Modal, Tabs, Drawer } from 'antd'
+import React, { FC, useState, useEffect } from 'react'
+import { Modal, Tabs, Drawer, Skeleton } from 'antd'
 import { useMedia } from 'react-use'
-
 import Layout from '../../Layout/Layout'
 import {
   Breadcrumb,
   Avatar,
   Button,
   PabauPlus,
-  AvatarUploader,
+  Notification as ResNotification,
+  NotificationType,
 } from '@pabau/ui'
+import AvatarUploader from '../../../../web/components/Uploaders/AvatarUploader/AvatarUploader'
+import { useTranslation } from 'react-i18next'
 import styles from './UserDetail.module.less'
-import { userDetail, fields, graphData } from '../../../mocks/UserDetail'
+import { userDetail } from '../../../mocks/UserDetail'
 import PersonalDetail from './PersonalDetail/PersonalDetail'
 import Permission from './Permissions/Permissions'
 import Document from './Documents/Documents'
@@ -20,8 +22,9 @@ import Performance from './Performance/Performance'
 import Emergency from './Emergency/Emergency'
 import CustomizeFields from './PersonalDetail/CustomizeFields'
 import CommonHeader from '../../../components/CommonHeader'
-import AvatarImage from '../../../assets/images/avatar.png'
 import { LeftOutlined } from '@ant-design/icons'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { useUpdateOneUserMutation } from '@pabau/graphql'
 const { TabPane } = Tabs
 
 export interface customFieldsProps {
@@ -35,24 +38,64 @@ export interface customFieldsProps {
   placeholder?: string
   helpTooltip?: string
 }
-
-interface customUserProps {
-  id?: string
-  name?: string
+export interface StaffDetails {
+  firstname: string
+  lastname: string
+  staffTitle: string
+  birthday?: Date
+  mobilePhone: string
+  email: string
+  employmentStartDate?: Date
+  otherLocations: number[]
+  primaryLocation: number
+  primaryLocationName: string
+  image: string
+  Location: string
+  notes: string
 }
-
-const Index: FC<customUserProps> = ({ id, name }) => {
+export interface LocationDetails {
+  id: number
+  name: string
+}
+interface UserDetailsProps {
+  personalData?: StaffDetails
+  staffDataLoading?: boolean
+  userId?: number
+}
+const Index: FC<UserDetailsProps> = ({
+  personalData,
+  staffDataLoading,
+  userId,
+}) => {
+  const { t } = useTranslation('common')
+  const { fields, graphData } = userDetail(t)
   const [tabKey, setTabKey] = useState<string>('1')
   const isMobile = useMedia('(max-width: 768px)')
-  const [userImage, setUserImage] = useState<string>(AvatarImage)
+  const [userImage, setUserImage] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [fieldsData, setFieldsData] = useState<customFieldsProps[]>(fields)
-
+  const [personalDetails, setPersonalDetails] = useState<StaffDetails>()
+  const fullName = `${personalData?.firstname ?? ''} ${
+    personalData?.lastname ?? ''
+  }`
+  const [updateProfileMutation] = useUpdateOneUserMutation({
+    onCompleted() {
+      ResNotification(
+        NotificationType.success,
+        t('account.settings.response.notification.profilesection.success')
+      )
+    },
+    onError() {
+      ResNotification(
+        NotificationType.error,
+        t('account.settings.response.notification.error')
+      )
+    },
+  })
   const handleSaveCustomFields = (field: customFieldsProps[]) => {
     setFieldsData(field)
   }
-
   const handleCloseModal = () => {
     setShowModal(false)
   }
@@ -60,43 +103,94 @@ const Index: FC<customUserProps> = ({ id, name }) => {
   const handleShowAvatarUploader = () => {
     setShowAvatarUploader(true)
   }
-
-  const handleChangeImage = (image: string) => {
-    setUserImage(image)
+  const handleImage = (imageData) => {
+    const { url, path } = imageData
+    setUserImage(url)
+    handleInputChange({ image: url })
+    updateProfileMutation({
+      variables: {
+        where: { id: userId },
+        data: {
+          image: { set: path },
+        },
+      },
+    })
   }
-
+  const handleInputChange = (obj) => {
+    if (personalDetails && Object.keys(personalDetails)?.length) {
+      setPersonalDetails({ ...personalDetails, ...obj })
+    }
+  }
   const handleTabChange = (key: string) => {
     setTabKey(key)
   }
+  useEffect(() => {
+    if (personalData) {
+      setPersonalDetails(personalData)
+    }
+    if (personalData?.image) {
+      setUserImage(getImage(personalData?.image))
+    }
+  }, [personalData])
   return (
     <div className={styles.userDetailMain}>
       <Layout>
         <CommonHeader
           isLeftOutlined
           reversePath="/team/users"
-          title={userDetail.name}
+          title={fullName}
         />
         <div className={styles.userDetailMainWrapper}>
           <div className={styles.userDetailWrapper}>
             <div className={styles.mobileUserHeader}>
-              <LeftOutlined /> <h2>{userDetail.name}</h2>
+              <LeftOutlined /> <h2>{fullName}</h2>
             </div>
             <div className={styles.userDetailHeader}>
               <div>
                 <Breadcrumb
                   items={[
                     { breadcrumbName: 'Users', path: 'team/users' },
-                    { breadcrumbName: userDetail.name, path: '' },
+                    { breadcrumbName: fullName, path: '' },
                   ]}
                 />
                 <div className={styles.userHead}>
                   <div onClick={handleShowAvatarUploader}>
-                    <Avatar src={userImage} size={'large'} edit={true} />
+                    {staffDataLoading ? (
+                      <Skeleton.Avatar
+                        className={styles.skeletonIcon}
+                        active={true}
+                        size={54}
+                      />
+                    ) : (
+                      <Avatar
+                        name={fullName}
+                        src={userImage}
+                        size={54}
+                        edit={true}
+                      />
+                    )}
                   </div>
                   <div className={styles.userHeadTitle}>
-                    <h2>{id}</h2>
-                    <h2>{name}</h2>
-                    <p>{userDetail.post}</p>
+                    <h2>
+                      {staffDataLoading ? (
+                        <Skeleton.Input
+                          active={true}
+                          className={styles.skeletonName}
+                        />
+                      ) : (
+                        fullName
+                      )}
+                    </h2>
+                    <p>
+                      {staffDataLoading ? (
+                        <Skeleton.Input
+                          active={true}
+                          className={styles.skeletonJobTitle}
+                        />
+                      ) : (
+                        personalData?.staffTitle ?? ''
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -118,10 +212,22 @@ const Index: FC<customUserProps> = ({ id, name }) => {
               tabPosition={isMobile ? 'top' : 'left'}
               onChange={handleTabChange}
             >
-              <TabPane tab={<span>Personal Details</span>} key="1">
-                <PersonalDetail field={fieldsData} graphData={graphData} />
+              <TabPane
+                tab={<span>{t('team.user.personal.details.title')}</span>}
+                key="1"
+              >
+                <PersonalDetail
+                  t={t}
+                  personalData={personalDetails}
+                  field={fieldsData}
+                  graphData={graphData}
+                  staffDataLoading={staffDataLoading}
+                />
               </TabPane>
-              <TabPane tab={<span>Services</span>} key="2">
+              <TabPane
+                tab={<span>{t('team.user.services.title')}</span>}
+                key="2"
+              >
                 <Service />
               </TabPane>
               <TabPane tab={<span>Permissions</span>} key="3">
@@ -197,13 +303,19 @@ const Index: FC<customUserProps> = ({ id, name }) => {
           </Drawer>
         )}
 
-        <AvatarUploader
-          visible={showAvatarUploader}
-          title={'Edit Photo'}
-          imageURL={AvatarImage}
-          onCreate={handleChangeImage}
-          onCancel={() => setShowAvatarUploader(false)}
-        />
+        {showAvatarUploader && (
+          <AvatarUploader
+            visible={showAvatarUploader}
+            section={'avatar_photos'}
+            type={'file_attachments'}
+            title={t('team.user.personal.details.avtar.modal.title')}
+            imageURL={userImage}
+            width={400}
+            height={400}
+            successHandler={handleImage}
+            onCancel={() => setShowAvatarUploader(false)}
+          />
+        )}
       </Layout>
     </div>
   )

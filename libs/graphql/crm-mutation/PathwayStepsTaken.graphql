@@ -1,0 +1,50 @@
+fragment PathwayStepsTakenFields on PathwayStepsTaken {
+  id
+  step_id
+  path_taken_id
+  contact_id
+  date
+  time
+  status
+  record_id
+}
+
+fragment PathwayStepsTaken on PathwayStepsTaken {
+  ...PathwayStepsTakenFields
+  PathwaysTaken {
+    ...PathwaysTakenFields
+  }
+  PathwayStep {
+    ...PathwayStepFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+}
+
+mutation createOnePathwayStepsTaken($data: PathwayStepsTakenCreateInput!) {
+  createOnePathwayStepsTaken(data: $data) {
+    ...PathwayStepsTaken
+  }
+}
+
+mutation updateOnePathwayStepsTaken($where: PathwayStepsTakenWhereUniqueInput!, $data: PathwayStepsTakenUpdateInput!) {
+  updateOnePathwayStepsTaken(where: $where, data: $data) {
+    ...PathwayStepsTaken
+  }
+}
+
+mutation deleteOnePathwayStepsTaken($where: PathwayStepsTakenWhereUniqueInput!) {
+  deleteOnePathwayStepsTaken(where: $where) {
+    ...PathwayStepsTaken
+  }
+}
+
+mutation updateManyPathwayStepsTaken(
+  $where: PathwayStepsTakenWhereInput
+  $data: PathwayStepsTakenUpdateManyMutationInput!
+) {
+  updateManyPathwayStepsTaken(where: $where, data: $data) {
+    count
+  }
+}
