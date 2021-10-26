@@ -14,7 +14,6 @@ import {
   LabelDataProps,
   FieldSetting,
   LimitLocation,
-  OtherCompany,
 } from '@pabau/ui'
 import { Dayjs } from 'dayjs'
 
@@ -68,7 +67,7 @@ export const Index: FC<GeneralProps> = ({
   }
 
   const isAddress = () => {
-    if (fieldsSettings && fieldsSettings?.length > 0) {
+    if (fieldsSettings && fieldsSettings?.length > 0 && !isLoading) {
       for (const field of fieldsSettings) {
         if (
           field.field_name === 'MailingStreet' ||
@@ -108,14 +107,13 @@ export const Index: FC<GeneralProps> = ({
         isMarketingSourceLoading={isMarketingSourceLoading}
         requiredLabel={requiredLabel}
       />
-      {fieldsSettings && (
-        <ContactInfo
-          values={values}
-          fieldsSettings={fieldsSettings}
-          setFieldValue={setFieldValue}
-          requiredLabel={requiredLabel}
-        />
-      )}
+      <ContactInfo
+        values={values}
+        fieldsSettings={fieldsSettings}
+        setFieldValue={setFieldValue}
+        requiredLabel={requiredLabel}
+        isLoading={isLoading}
+      />
       {(isAddress() ||
         (limitContactsLocations && limitContactsLocations.length > 0) ||
         (customFields && customFields.length > 0)) && (
@@ -135,30 +133,32 @@ export const Index: FC<GeneralProps> = ({
               requiredLabel={requiredLabel}
             />
           )}
-          {limitContactsLocations && limitContactsLocations?.length > 0 && (
-            <AntForm
-              className={styles.subscriptionForm}
-              layout={'vertical'}
-              requiredMark={false}
-            >
-              <h5>{t('quickCreate.client.modal.general.location.title')}</h5>
-              {limitContactsLocations.map((item) => (
-                <AntForm.Item
-                  name={`limitContactsLocations_${item.id}`}
-                  key={item.id}
-                >
-                  <div className={styles.switchBtn}>
-                    <Switch
-                      name={`limitContactsLocations_${item.id}`}
-                      defaultChecked={true}
-                    />
-                    <p>{item.name}</p>
-                  </div>
-                </AntForm.Item>
-              ))}
-            </AntForm>
-          )}
-          {customFields && customFields?.length > 0 && (
+          {!isLoading &&
+            limitContactsLocations &&
+            limitContactsLocations?.length > 0 && (
+              <AntForm
+                className={styles.subscriptionForm}
+                layout={'vertical'}
+                requiredMark={false}
+              >
+                <h5>{t('quickCreate.client.modal.general.location.title')}</h5>
+                {limitContactsLocations.map((item) => (
+                  <AntForm.Item
+                    name={`limitContactsLocations_${item.id}`}
+                    key={item.id}
+                  >
+                    <div className={styles.switchBtn}>
+                      <Switch
+                        name={`limitContactsLocations_${item.id}`}
+                        defaultChecked={true}
+                      />
+                      <p>{item.name}</p>
+                    </div>
+                  </AntForm.Item>
+                ))}
+              </AntForm>
+            )}
+          {!isLoading && customFields && customFields?.length > 0 && (
             <CustomField
               customFields={customFields}
               setFieldValue={setFieldValue}

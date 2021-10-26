@@ -1,0 +1,81 @@
+query getDashboardData(
+  $start_date: Float
+  $end_date: Float
+  $user_id: Int
+  $location_id: Int
+) {
+  dashboardData(
+    data: {
+      start_date: $start_date
+      end_date: $end_date
+      user_id: $user_id
+      location_id: $location_id
+    }
+  ) {
+    bookingStatusCount {
+      totalBooking
+      totalBookingPer
+      totalOnlineBooking
+      totalOnlineBookingPer
+      appointmentList {
+        label
+        count
+        per
+      }
+      onlineAppointmentList {
+        label
+        count
+        per
+      }
+    }
+    salesCount {
+      totalAvailableCategoryTypePer
+      totalAvailableCategoryTypeCount
+      totalAvailableCategoryTypeAmount
+      salesList {
+        label
+        count
+        per
+      }
+    }
+    allbooking {
+      bookingsByStatus {
+        status
+        chartDataSet {
+          label
+          value
+        }
+      }
+    }
+    allSales {
+      salesByProductCategoryType {
+        status
+        chartDataSet {
+          label
+          value
+        }
+      }
+    }
+    retailSales {
+      retailSalesDetails {
+        name
+        units
+        value
+        per
+      }
+    }
+    serviceSales {
+      serviceSalesDetails {
+        name
+        units
+        value
+        per
+      }
+    }
+    otherSalesDetails {
+      newClientCount
+      avgBiller
+      RevPerhour
+    }
+  }
+}

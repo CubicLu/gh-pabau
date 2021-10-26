@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { ClockCircleOutlined } from '@ant-design/icons'
-import verifyLogo from '../../../assets/lottie/connect-verify.json'
+import verifyLogo from '../../../../../libs/ui/src/assets/lottie/connect-verify.json'
 import location from '../../../assets/images/connect/location.png'
 import styles from './booking.module.less'
 import { MyLottie, Button } from '@pabau/ui'
-import { ReactComponent as Home } from '../../../assets/images/Home.svg'
-import { ReactComponent as Laptop } from '../../../assets/images/laptop.svg'
+import { ReactComponent as Home } from '../../../../../libs/ui/src/assets/images/Home.svg'
+import { ReactComponent as Laptop } from '../../../../../libs/ui/src/assets/images/laptop.svg'
 
 /* eslint-disable-next-line */
 export interface BookingProps {

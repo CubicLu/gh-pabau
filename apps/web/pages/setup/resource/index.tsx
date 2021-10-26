@@ -295,8 +295,8 @@ export function Resource() {
     if (isChecked) {
       const data = treeData.map((tree) =>
         tree.children && tree.children.length > 0
-          ? tree.children.map((child) => child.key)
-          : [tree.key]
+          ? tree.children.map((child) => child.key as string)
+          : [tree.key as string]
       )
       setCheckedKeys(data.flat())
       setAllEmployeeServicesSelected(true)

@@ -8,7 +8,12 @@ import React, {
 } from 'react'
 import Layout from '../../components/Layout/Layout'
 import ActivitiesHeader from '../../components/Activities/ActivitiesHeader'
+import {
+  FilterDataProps,
+  FilterDataObjectType,
+} from '../../components/Activities/CreateFilterModal'
 import ActivitiesTable from '../../components/Activities/ActivitiesTable'
+import { OptionList } from '../../components/Activities/FilterMenu'
 import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tabs, Tooltip, Popover, Skeleton } from 'antd'
@@ -28,9 +33,10 @@ import {
   useGetActivityTypesQuery,
   useActivityUserListQuery,
   useFindManyActivityDataQuery,
-  useFindFirstActivityUserColumnsQuery,
+  useFindFirstActivityUserStateQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
+import { useUser } from '../../context/UserContext'
 import { PlusSquareFilled } from '@ant-design/icons'
 dayjs.extend(utc)
 
@@ -178,6 +184,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const isMobile = useMedia('(max-width: 768px)')
   const [sourceData, setSourceData] = useState([])
   const [tabValue, setTabValue] = useState(tabs.toDo)
+  const loggedUser = useUser()
   // const [filterTabValue, setFilterTabValue] = useState(
   //   Object.values(filterTabsObj)
   // )
@@ -190,7 +197,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [selectedDates, setSelectedDates] = useState<Dayjs[]>([])
   const [createActivityVisible, setCreateActivityVisible] = useState(false)
   const [events, setEvents] = useState<EventsData[]>([])
-  const [selectFilterUser, setSelectFilterUser] = useState()
+  const [selectFilterUser, setSelectFilterUser] = useState<number[]>([])
   const [personsList, setPersonsList] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   // const [overdueCount, setOverDueCount] = useState(0)
@@ -201,6 +208,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [filterActivityType, setFilterActivityType] = useState<
     ActivityTypeFilter[]
   >([])
+  const [activityTypeOption, setActivityTypeOption] = useState<OptionList[]>([])
   const [selectedActivityType, setSelectedActivityType] = useState<string[]>([
     'Email',
     'Call',
@@ -216,6 +224,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     currentPage: 1,
     showingRecords: 0,
   })
+  const [userFilterData, setUserFilterData] = useState<FilterDataProps>({})
   const [activityTypeLoading, setActivityTypeLoading] = useState<boolean>(true)
   const [selectedColumn, setSelectedColumn] = useState<string[]>([])
   const [userActiveColumn, setUserActiveColumn] = useState<string[]>([])
@@ -223,6 +232,11 @@ export const Index: FC<IndexProps> = ({ client }) => {
     field: 'Due date',
     order: 'asc',
   })
+  const [
+    filterDataObject,
+    setFilterDataObject,
+  ] = useState<FilterDataObjectType>()
+  const [userColumns, setUserColumns] = useState<string[]>([])
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
@@ -238,6 +252,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
         activityType: selectedActivityType,
         userId: selectFilterUser,
         activeColumns: selectedColumn,
+        filterOption: filterDataObject,
         orderValue,
       },
     }
@@ -245,7 +260,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
       delete queryOptions.variables.search
       delete queryOptions.variables.activeColumns
     }
-    if (!selectFilterUser) {
+    if (!filterDataObject) {
+      delete queryOptions.variables.filterOption
+    }
+    if (selectFilterUser.length === 0) {
       delete queryOptions.variables.userId
     }
     if (tabValue === 'To do') {
@@ -271,12 +289,13 @@ export const Index: FC<IndexProps> = ({ client }) => {
     paginateData.limit,
     selectFilterUser,
     orderValue,
+    filterDataObject,
   ])
 
   const {
     data: activityActiveResponse,
     loading: activityActiveLoading,
-  } = useFindFirstActivityUserColumnsQuery()
+  } = useFindFirstActivityUserStateQuery()
 
   const {
     loading: filterLoading,
@@ -379,6 +398,13 @@ export const Index: FC<IndexProps> = ({ client }) => {
         })
       }
       setFilterActivityType(tempData)
+      const item = [...filterData?.findManyActivityType]?.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setActivityTypeOption(item)
     }
     if (!filterLoading) setActivityTypeLoading(filterLoading)
   }, [filterData, filterLoading])
@@ -465,12 +491,36 @@ export const Index: FC<IndexProps> = ({ client }) => {
   // }, [])
 
   useEffect(() => {
-    if (activityActiveResponse?.findFirstActivityUserColumns) {
-      const data = JSON.parse(
-        activityActiveResponse?.findFirstActivityUserColumns?.columns
-      )
-      const column = data?.columns
+    if (activityActiveResponse?.findFirstActivityUserState) {
+      const response = activityActiveResponse.findFirstActivityUserState
+      const data = JSON.parse(response?.columns)
+      const column = data?.columns ?? []
+      const temp: FilterDataProps = {}
+      if (response?.user_filter) {
+        temp.type = 'user'
+        temp.id = response?.user_filter
+      } else if (response?.custom_filter) {
+        const activityFilterResponse = response?.ActivityUserFilter
+        temp.type = 'filter'
+        temp.id = response?.custom_filter
+        if (activityFilterResponse) {
+          temp.filter = {
+            andFilterOption: JSON.parse(activityFilterResponse?.data)
+              ?.andFilterOption,
+            column: JSON.parse(activityFilterResponse?.columns)?.columns,
+            orFilterOption: JSON.parse(activityFilterResponse?.data)
+              ?.orFilterOption,
+            name: activityFilterResponse?.name,
+            shared: activityFilterResponse?.shared,
+          }
+        }
+      } else if (response?.user_group_filter) {
+        temp.type = 'userGroup'
+        temp.id = response?.user_group_filter
+      }
+      setUserFilterData(temp)
       setUserActiveColumn(column)
+      setUserColumns(column)
     }
   }, [activityActiveResponse])
 
@@ -926,7 +976,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
       <RangePicker
         format={'DD MMM YYYY'}
         value={[selectedDates?.[0], selectedDates?.[1]]}
-        onChange={(val) => setSelectedDates(val)}
+        onChange={(val, dateStrings) =>
+          setSelectedDates([dayjs(dateStrings[0]), dayjs(dateStrings[1])])
+        }
       />
     )
   }
@@ -1086,12 +1138,18 @@ export const Index: FC<IndexProps> = ({ client }) => {
             totalActivity={paginateData.total}
             searchText={searchText}
             setSearchText={setSearchText}
-            createActivityVisible={createActivityVisible}
             toggleCreateActivityModal={toggleCreateActivityModal}
             selectFilterUser={selectFilterUser}
             setSelectFilterUser={setSelectFilterUser}
             personsList={personsList}
             isMobile={isMobile}
+            loggedUser={loggedUser?.me}
+            activityTypeOption={activityTypeOption}
+            filterData={userFilterData}
+            selectedColumn={selectedColumn}
+            setFilterDataObject={setFilterDataObject}
+            userColumns={userColumns}
+            setUserActiveColumn={setUserActiveColumn}
           />
         )}
         <div>
@@ -1141,10 +1199,18 @@ export const Index: FC<IndexProps> = ({ client }) => {
             totalActivity={paginateData.total}
             searchText={searchText}
             setSearchText={setSearchText}
+            toggleCreateActivityModal={toggleCreateActivityModal}
             selectFilterUser={selectFilterUser}
             setSelectFilterUser={setSelectFilterUser}
             personsList={personsList}
             isMobile={isMobile}
+            loggedUser={loggedUser?.me}
+            activityTypeOption={activityTypeOption}
+            filterData={userFilterData}
+            selectedColumn={selectedColumn}
+            setFilterDataObject={setFilterDataObject}
+            userColumns={userColumns}
+            setUserActiveColumn={setUserActiveColumn}
           />
         )}
         {/* <div className={styles.subHeader}>
@@ -1323,6 +1389,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             userActiveColumn={userActiveColumn}
             setCreateActivityVisible={setCreateActivityVisible}
             tabValue={tabValue}
+            loggedUser={loggedUser?.me}
           />
         )}
       </Layout>

@@ -1533,6 +1533,34 @@ export const Company = objectType({
         return root.MedicalFormAdvancedSetting
       },
     })
+    t.list.field('MedicalFormContactHistory', {
+      type: 'MedicalFormContactHistory',
+      args: {
+        where: 'MedicalFormContactHistoryWhereInput',
+        orderBy: 'MedicalFormContactHistoryOrderByWithRelationInput',
+        cursor: 'MedicalFormContactHistoryWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactHistoryScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContactHistory
+      },
+    })
+    t.list.field('MedicalAttr', {
+      type: 'MedicalAttr',
+      args: {
+        where: 'MedicalAttrWhereInput',
+        orderBy: 'MedicalAttrOrderByWithRelationInput',
+        cursor: 'MedicalAttrWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalAttrScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalAttr
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {
@@ -1701,18 +1729,32 @@ export const Company = objectType({
         return root.ContactPreference
       },
     })
-    t.list.field('ActivityUserColumns', {
-      type: 'ActivityUserColumns',
+    t.list.field('ActivityUserState', {
+      type: 'ActivityUserState',
       args: {
-        where: 'ActivityUserColumnsWhereInput',
-        orderBy: 'ActivityUserColumnsOrderByWithRelationInput',
-        cursor: 'ActivityUserColumnsWhereUniqueInput',
+        where: 'ActivityUserStateWhereInput',
+        orderBy: 'ActivityUserStateOrderByWithRelationInput',
+        cursor: 'ActivityUserStateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ActivityUserColumnsScalarFieldEnum',
+        distinct: 'ActivityUserStateScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ActivityUserColumns
+        return root.ActivityUserState
+      },
+    })
+    t.list.field('ActivityUserFilter', {
+      type: 'ActivityUserFilter',
+      args: {
+        where: 'ActivityUserFilterWhereInput',
+        orderBy: 'ActivityUserFilterOrderByWithRelationInput',
+        cursor: 'ActivityUserFilterWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityUserFilterScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ActivityUserFilter
       },
     })
     t.list.field('ActivityType', {
@@ -1797,6 +1839,62 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.InsuranceContractPrice
+      },
+    })
+    t.list.field('ContactAttachment', {
+      type: 'ContactAttachment',
+      args: {
+        where: 'ContactAttachmentWhereInput',
+        orderBy: 'ContactAttachmentOrderByWithRelationInput',
+        cursor: 'ContactAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactAttachment
+      },
+    })
+    t.list.field('SmsSender', {
+      type: 'SmsSender',
+      args: {
+        where: 'SmsSenderWhereInput',
+        orderBy: 'SmsSenderOrderByWithRelationInput',
+        cursor: 'SmsSenderWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SmsSenderScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SmsSender
+      },
+    })
+    t.list.field('Pathway', {
+      type: 'Pathway',
+      args: {
+        where: 'PathwayWhereInput',
+        orderBy: 'PathwayOrderByWithRelationInput',
+        cursor: 'PathwayWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Pathway
+      },
+    })
+    t.list.field('PathwayStep', {
+      type: 'PathwayStep',
+      args: {
+        where: 'PathwayStepWhereInput',
+        orderBy: 'PathwayStepOrderByWithRelationInput',
+        cursor: 'PathwayStepWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStep
       },
     })
     t.nullable.field('_count', {

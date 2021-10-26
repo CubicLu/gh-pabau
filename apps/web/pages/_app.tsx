@@ -15,9 +15,6 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
 import Router from 'next/router'
-import i18next from 'i18next'
-import { I18nextProvider, initReactI18next } from 'react-i18next'
-import { languages } from '@pabau/i18n'
 import { Integrations } from '@sentry/tracing'
 import * as Sentry from '@sentry/react'
 import { ErrorNotification } from '../components/Notification/ErrorNotification'
@@ -29,6 +26,7 @@ import 'react-vertical-timeline-component/style.min.css'
 
 require('../../../libs/ui/src/styles/antd.less')
 import { UserProvider } from '../context/UserContext'
+import TranslationWrapper from '../components/TranslationWrapper'
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
@@ -149,22 +147,15 @@ apolloClient = new ApolloClient({
   cache,
 })
 
-i18next.use(initReactI18next).init({
-  interpolation: { escapeValue: false },
-  lng: 'en',
-  keySeparator: false,
-  resources: languages,
-})
-
 function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <Sentry.ErrorBoundary fallback={() => <>An error has occurred</>}>
       <ApolloProvider client={apolloClient}>
-        <I18nextProvider i18n={i18next}>
-          <UserProvider>
+        <UserProvider>
+          <TranslationWrapper>
             <Component {...pageProps} />
-          </UserProvider>
-        </I18nextProvider>
+          </TranslationWrapper>
+        </UserProvider>
       </ApolloProvider>
     </Sentry.ErrorBoundary>
   )
