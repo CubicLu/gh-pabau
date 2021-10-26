@@ -2,12 +2,10 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { PathwayLayout } from '../../../../components/Pathway/PathwayLayout'
 
-type PathwayStep =
-  | {
-      name: string
-      data?: Record<string, any>
-    }
-  | { lock: true }
+type PathwayStep = {
+  name: string
+  data?: Record<string, any>
+}
 
 export interface Pathway {
   name: string
@@ -34,7 +32,7 @@ const Appointments = () => {
             name: 'consent-forms',
           },
           {
-            lock: true,
+            name: 'pinscreen',
           },
           {
             name: 'photos',
@@ -53,9 +51,7 @@ const Appointments = () => {
     <PathwayLayout
       pathway={data.getPathway}
       client={Number(router.query['client-id'])}
-    >
-      SHOW STEPS HERE 1. 2. 3.
-    </PathwayLayout>
+    />
   )
 }
 
