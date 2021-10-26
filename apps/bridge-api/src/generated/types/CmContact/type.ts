@@ -506,6 +506,8 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.CmLead
+      },
+    })
     t.list.field('PathwaysTaken', {
       type: 'PathwaysTaken',
       args: {
