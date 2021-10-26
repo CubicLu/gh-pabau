@@ -1,4 +1,4 @@
-query GetClientsAllAppointments($locationId: Int, $take: Int, $skip: Int) {
+query GetClientsAllAppointments($take: Int, $skip: Int) {
   findManyBooking(
     take: $take
     skip: $skip
@@ -6,7 +6,6 @@ query GetClientsAllAppointments($locationId: Int, $take: Int, $skip: Int) {
     where: {
       Online: { equals: 1 }
       status: { equals: "Waiting" }
-      location_id: { equals: $locationId }
       Contact: { ID: { not: { equals: 0 } } }
     }
   ) {
@@ -35,7 +34,7 @@ query GetClientsAllAppointments($locationId: Int, $take: Int, $skip: Int) {
       name
     }
     Service: CompanyService {
-      isVirtual: online_only_service
+      iscVirtual: online_only_service
     }
     appt_note: title
     appt_status: status
@@ -57,7 +56,6 @@ query GetClientsAllAppointments($locationId: Int, $take: Int, $skip: Int) {
     where: {
       Online: { equals: 1 }
       status: { equals: "Waiting" }
-      location_id: { equals: $locationId }
       Contact: { ID: { not: { equals: 0 } } }
     }
   )
