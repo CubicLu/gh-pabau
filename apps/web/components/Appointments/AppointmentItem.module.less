@@ -117,3 +117,23 @@
     }
   }
 }
+
+@media (min-width: 0px) and (max-width: 767px) {
+  .mobileViewHidden {
+    display: none;
+  }
+  .appointmentItem {
+    min-width: 100%;
+    width: 100%;
+
+    .clientContainer {
+      display: flex;
+      align-items: center;
+      .clientInfo {
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

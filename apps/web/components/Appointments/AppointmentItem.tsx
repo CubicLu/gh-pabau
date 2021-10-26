@@ -54,18 +54,18 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
   return (
     <div className={styles.appointmentItem}>
       <Row className={styles.content}>
-        <Col lg={1} md={1}>
+        <Col lg={1} md={1} xs={1}>
           <div
             style={{ background: appointementColor ? appointementColor : '' }}
             className={styles.divider}
           ></div>
         </Col>
-        <Col lg={2} md={2}>
+        <Col lg={2} md={2} xs={3}>
           <div className={styles.timeTextStyle}>
             <span>{time}</span>
           </div>
         </Col>
-        <Col lg={7} md={7}>
+        <Col lg={7} md={7} xs={17}>
           <div className={styles.clientContainer}>
             <Avatar size={52} src={avatar} name={clientName} />
             <div className={styles.clientInfo}>
@@ -75,13 +75,13 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
             </div>
           </div>
         </Col>
-        <Col lg={5} md={5}>
+        <Col lg={5} md={5} className={styles.mobileViewHidden}>
           <div className={styles.textAlignment}>
             <UserOutlined className={styles.iconSize} />
             <span>{staffMember}</span>
           </div>
         </Col>
-        <Col lg={4} md={4}>
+        <Col lg={4} md={4} className={styles.mobileViewHidden}>
           <div className={styles.statusLabel}>
             <ButtonLabel
               type={paymentStatus === 'paid' ? 'success' : 'danger'}
@@ -89,7 +89,7 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
             />
           </div>
         </Col>
-        <Col lg={4} md={4}>
+        <Col lg={4} md={4} xs={2}>
           <div className={styles.counterButtonStyle}>
             <button>0/5</button>
           </div>
