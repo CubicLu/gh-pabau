@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useCallback } from 'react'
-
+import { debounce } from 'lodash'
 let passiveOptionAccessed = false
 const options = {
   get passive() {
@@ -12,6 +13,7 @@ const supportsPassiveEvents = passiveOptionAccessed
 const isTouchDevice =
   'ontouchstart' ||
   navigator.maxTouchPoints > 0 ||
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (navigator as any).msMaxTouchPoints > 0
 
 interface ITouchEvent {
@@ -34,29 +36,11 @@ interface CustomTouch {
 class Pointer {
   x: number
   y: number
-  /**
-   *
-   * @param {{clientX:number, clientY: number}} touch event touch object
-   */
   constructor(touch: ITouchEvent) {
     this.x = touch.clientX
     this.y = touch.clientY
   }
 }
-
-const debounce = (func: Function, wait: number) => {
-  let timeout: NodeJS.Timeout
-  return function (...args) {
-    const context = clearTimeout(timeout)
-    timeout = setTimeout(() => func.apply(context, args), wait)
-  }
-}
-
-/**
- *
- * @param {{x: number, y: number}} p1
- * @param {{x: number, y: number}} p2
- */
 const getDistance = (p1: Pointer, p2: Pointer) => {
   const powX = Math.pow(p1.x - p2.x, 2)
   const powY = Math.pow(p1.y - p2.y, 2)
@@ -64,51 +48,24 @@ const getDistance = (p1: Pointer, p2: Pointer) => {
   return Math.sqrt(powX + powY)
 }
 
-/**
- *
- * @param {{x: number, y: number}} p1
- * @param {{x: number, y: number}} p2
- */
 const getAngleDeg = (p1: Pointer, p2: Pointer) => {
   return (Math.atan2(p1.y - p2.y, p1.x - p2.x) * 180) / Math.PI
 }
 
-/**
- *
- * @param {Object} ref React ref object
- * @param {{
-    onPanStart: function,
-    onPanMove: function,
-    onSwipeLeft: function,
-    onSwipeRight: function,
-    onSwipeUp: function,
-    onSwipeDown: function,
-    onPanEnd: function,
-    onSwipeLeftEnd: function,
-    onSwipeRightEnd: function,
-    onSwipeUpEnd: function,
-    onSwipeDownEnd: function,
-    onPinchStart: function,
-    onPinchChanged: function,
-    onPinchEnd: function,
-    }} handlers
- * @param {{
-  minDelta: number
-}} options
-*/
 export default function useGestures(
   ref: React.RefObject<HTMLElement>,
   handlers: {
     onSwipeLeft: () => void
     onSwipeRight: () => void
-  },
-  options = {
-    minDelta: 10,
   }
+  // options = {
+  //   minDelta: 10,
+  // }
 ) {
   const touchesRef = useRef<CustomTouch>()
   const gestureRef = useRef('')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const initialTouches = useRef<any>(null)
 
   const getCurrentTouches = (
@@ -179,6 +136,7 @@ export default function useGestures(
 
   const handleTouchMove = useCallback(
     (event) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const currentTouches: any = getCurrentTouches(
         event,
         event.touches,
@@ -195,8 +153,8 @@ export default function useGestures(
         let eventName, theGesture
 
         if (
-          Math.abs(currentTouches.deltaX) >= options.minDelta &&
-          Math.abs(currentTouches.deltaY) < options.minDelta
+          Math.abs(currentTouches.deltaX) >= 10 &&
+          Math.abs(currentTouches.deltaY) < 10
         ) {
           if (currentTouches.deltaX < 0) {
             eventName = 'onSwipeLeft'
@@ -206,8 +164,8 @@ export default function useGestures(
             theGesture = 'swipeRight'
           }
         } else if (
-          Math.abs(currentTouches.deltaX) < options.minDelta &&
-          Math.abs(currentTouches.deltaY) >= options.minDelta
+          Math.abs(currentTouches.deltaX) < 10 &&
+          Math.abs(currentTouches.deltaY) >= 10
         ) {
           if (currentTouches.deltaY < 0) {
             eventName = 'onSwipeUp'
@@ -229,7 +187,8 @@ export default function useGestures(
         }
       }
     },
-    [callHandler, options.minDelta]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [callHandler, 10]
   )
 
   const handleTouchEnd = useCallback(
@@ -239,8 +198,8 @@ export default function useGestures(
         event.changedTouches,
         null
       )
-      if (touchesRef.current && touchesRef.current.pointers) {
-        if (touchesRef.current.pointers.length === 2) {
+      if (touchesRef?.current && touchesRef?.current?.pointers) {
+        if (touchesRef?.current?.pointers?.length === 2) {
           callHandler('onPinchEnd', currentTouches)
         } else {
           callHandler('onPanEnd', currentTouches)
@@ -263,7 +222,8 @@ export default function useGestures(
   )
 
   useEffect(() => {
-    const element: any = ref && ref.current ? ref.current : ref
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const element: any = ref?.current ? ref.current : ref
 
     if (!isTouchDevice) return
 
@@ -272,7 +232,7 @@ export default function useGestures(
       !element.addEventListener ||
       typeof element.addEventListener !== 'function'
     ) {
-      if (process && process.env && process.env.NODE_ENV === 'development') {
+      if (process?.env?.NODE_ENV === 'development') {
         console.warn(
           `useGestures - Missing a reference to a 'ref object' or the a instance of HTMLElement`
         )

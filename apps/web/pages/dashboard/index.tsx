@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Avatar, Button, RangePicker } from '@pabau/ui'
+import { Avatar, Button, RangePicker, JourneyCalendar } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
 import styles from './dashboard.module.less'
 import { useUser } from '../../context/UserContext'
@@ -43,6 +43,7 @@ export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
   const user = useUser()
   const { t } = useTranslationI18()
+  const [activeDate, setActiveDate] = useState(new Date())
   const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
@@ -458,6 +459,10 @@ export function Index() {
             </div>
           </div>
           <div className={styles.bottomWrapper}>
+            <JourneyCalendar
+              activeDate={activeDate}
+              setActiveDate={setActiveDate}
+            />
             <TopBoard
               appointment={appointment}
               onlineAppointment={onlineAppointment}
