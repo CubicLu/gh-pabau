@@ -1,6 +1,5 @@
-import { objectType, extendType, list } from 'nexus'
-import fetch from 'node-fetch'
-import axios from 'axios'
+import { objectType, extendType, nonNull, stringArg } from 'nexus'
+import { SendTextLocalSMS } from '../../app/sms/sms-textlocal-service'
 
 export const SmsTest = objectType({
   name: 'SmsTest',
@@ -13,36 +12,16 @@ export const SendSMS = extendType({
   definition(t) {
     t.list.field('SendSmsTest', {
       type: 'SmsTest',
+      args: {
+        from: nonNull(stringArg()),
+        to: nonNull(stringArg()),
+        message: nonNull(stringArg()),
+      },
       async resolve(parent, args) {
         try {
-          return axios
-            .post('https://api.textlocal.in/send/', {
-              apiKey: 'QvSIMgCvR9U-eNOm93rgwXA7eSENQz2jrXmb75tji3',
-              sender: 'PabauT',
-              numbers: ['38970584221'],
-              message: 'Pabau Test',
-            })
-            .then(function (response) {
-              // console.log(response);
-              console.log(response.data.errors)
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-
-          // const textLocalApiKey = "QvSIMgCvR9U-eNOm93rgwXA7eSENQz2jrXmb75tji3";
-          // const numbersTo = 38970584221;
-          // const senderName = "PabauTest";
-          // const smsMessage = "Test Pabau SMS";
-          // const textlocalSendSms = "https://api.textlocal.in/send/?apikey=" + textLocalApiKey + "&numbers=" + numbersTo + "&sender=" + senderName + "&message=" + smsMessage
-          //
-          // return fetch(textlocalSendSms)
-          //   .then((result) =>
-          //     console.log(result)
-          //   )
-          //   .catch((error) => {
-          //     throw new Error(error)
-          //   })
+          console.log(args)
+          const sentSMS = SendTextLocalSMS(args)
+          //  console.log(sentSMS)
         } catch (error) {
           return error
         }
