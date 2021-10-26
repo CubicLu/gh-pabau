@@ -1,0 +1,48 @@
+query getServices(
+  $userID: Int = 0
+  $locationID: Int = 0
+  $contractID: Int = 0
+  $take: Int = 100
+  $skip: Int = 0
+) {
+  services: findManyCompanyService(skip: $skip, take: $take) {
+    id
+    name
+    color
+    availability
+    description
+    duration
+    disabledusers
+    disabled_locations
+    Product {
+      id
+      price
+      InsuranceContractPrice(
+        where: { Contract: { id: { equals: $contractID } } }
+      ) {
+        id
+        price
+      }
+    }
+    ServiceCategory {
+      id
+      name
+    }
+    ServiceUserTier(where: { User: { id: { equals: $userID } } }) {
+      id
+      price
+    }
+    ServiceLocationTier(where: { Location: { id: { equals: $locationID } } }) {
+      id
+      price
+    }
+  }
+}
+
+query getServicesById($service_id: Int) {
+  services: findManyCompanyService(where: { id: { equals: $service_id } }) {
+    id
+    name
+    color
+  }
+}

@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react'
 import styles from './ImageViewerEx.module.less'
 import cn from 'classnames'
+import { Skeleton } from 'antd'
 import { toCanvas } from 'html-to-image'
 import { GlassMagnifier } from 'react-image-magnifiers'
 import { useTranslation } from 'react-i18next'
@@ -53,6 +54,7 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
   const { t } = useTranslation('common')
   const viewerRef = React.createRef<ReactZoomPanPinchRef>()
   const [imageData, setImageData] = useState('')
+  const [currScale, setCurrScale] = useState(scale)
   const [screenshot, setScreenshot] = useState('')
   const [largeScreenshot, setLargeScreenshot] = useState('')
 
@@ -69,6 +71,12 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
         const { width: imgWidth, height: imgHeight } = img
+        if (imgWidth < width) {
+          setCurrScale(width / imgWidth)
+        } else {
+          setCurrScale(1)
+        }
+
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
         canvas.width = imgWidth
@@ -81,8 +89,8 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
           imgHeight,
           0,
           0,
-          width,
-          (width * imgHeight) / imgWidth
+          imgWidth > width ? width : imgWidth,
+          imgHeight > height ? (width * imgHeight) / imgWidth : imgHeight
         )
         setImageData(canvas.toDataURL())
       })
@@ -181,7 +189,7 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
           <TransformWrapper
             ref={viewerRef}
             minScale={1}
-            initialScale={scale}
+            initialScale={currScale}
             initialPositionX={positionX}
             initialPositionY={positionY}
             limitToBounds={false}
@@ -214,7 +222,11 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
           />
         </div>
       )}
-      {src && !imageData && <div className={styles.loadingImage} />}
+      {src && !imageData && (
+        <div className={styles.loadingImage}>
+          <Skeleton.Image />
+        </div>
+      )}
       {src && viewMagnifier && (!screenshot || !largeScreenshot) && (
         <div className={styles.preparingMagnifier} />
       )}

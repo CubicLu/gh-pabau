@@ -50,6 +50,7 @@ export interface LayoutProps {
   leadCreateRender?: (handleClose?: () => void) => JSX.Element
   handleSearch?: (searchTerm: string) => void
   badgeCountList?: BadgeCountList
+  journeyRender?: (handleClose?: () => void) => JSX.Element
 }
 
 interface BadgeCountList {
@@ -78,6 +79,7 @@ export const Layout: FC<LayoutProps> = ({
   clientCreateRender,
   leadCreateRender,
   badgeCountList,
+  journeyRender,
   ...rest
 }) => {
   let initCollapsed = true
@@ -112,6 +114,7 @@ export const Layout: FC<LayoutProps> = ({
             relativeTime={relativeTime}
             taskManagerIFrameComponent={taskManagerIFrameComponent}
             clientCreateRender={clientCreateRender}
+            journeyRender={journeyRender}
             leadCreateRender={leadCreateRender}
             sidebarCollapsed={collapsed}
             toggleSidebar={(e) => handleCollapsedChange(e)}

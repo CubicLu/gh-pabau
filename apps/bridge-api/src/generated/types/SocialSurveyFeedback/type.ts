@@ -41,6 +41,12 @@ export const SocialSurveyFeedback = objectType({
         return root.User
       },
     })
+    t.field('CompanyService', {
+      type: 'CompanyService',
+      resolve(root: any) {
+        return root.CompanyService
+      },
+    })
     t.list.field('Response', {
       type: 'SocialSurveyFeedbackResponse',
       args: {

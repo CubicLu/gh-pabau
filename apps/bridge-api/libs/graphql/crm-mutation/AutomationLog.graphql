@@ -1,0 +1,36 @@
+fragment AutomationLogFields on AutomationLog {
+  id
+  company
+  date_created
+  message
+  parent_id
+  uid
+}
+
+fragment AutomationLog on AutomationLog {
+  ...AutomationLogFields
+}
+
+mutation createOneAutomationLog($data: AutomationLogCreateInput!) {
+  createOneAutomationLog(data: $data) {
+    ...AutomationLog
+  }
+}
+
+mutation updateOneAutomationLog($where: AutomationLogWhereUniqueInput!, $data: AutomationLogUpdateInput!) {
+  updateOneAutomationLog(where: $where, data: $data) {
+    ...AutomationLog
+  }
+}
+
+mutation deleteOneAutomationLog($where: AutomationLogWhereUniqueInput!) {
+  deleteOneAutomationLog(where: $where) {
+    ...AutomationLog
+  }
+}
+
+mutation updateManyAutomationLog($where: AutomationLogWhereInput, $data: AutomationLogUpdateManyMutationInput!) {
+  updateManyAutomationLog(where: $where, data: $data) {
+    count
+  }
+}
