@@ -250,7 +250,7 @@ const serviceSalesData = objectType({
   },
 })
 
-const otherDashboardDetails = objectType({
+const otherSalesDetail = objectType({
   name: 'otherSalesDetails',
   definition(t) {
     t.int('newClientCount')
@@ -266,6 +266,6 @@ export const FinanceResponseType = objectType({
     t.field('allSales', { type: salesByProductCategoryType })
     t.field('retailSales', { type: retailSalesData })
     t.field('serviceSales', { type: serviceSalesData })
-    t.field('otherSalesDetails', { type: otherDashboardDetails })
+    t.field('otherSalesDetails', { type: otherSalesDetail })
   },
 })

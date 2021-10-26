@@ -13,17 +13,11 @@ import {
   InvoiceArgs,
   StatementArgs,
   StatementOutput,
+  DateRangeInput,
 } from './types'
 import dayjs from 'dayjs'
 import { statusDataByDayMonth } from '../booking/statuses.service'
 import { getPreviousDateRange } from './dateRange.service'
-
-interface DateRangeInput {
-  start_date?: number
-  end_date?: number
-  location_id?: number
-  user_id?: number
-}
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -1271,7 +1265,9 @@ export const retrieveSalesCount = async (
     prev_data.prevStartDate && prev_data.prevEndDate
       ? Prisma.sql`b.date BETWEEN ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
       : Prisma.empty
-  } sale_id>0 and product_category_type not in ('') ${
+  } sale_id>0 and product_category_type not in ('') and b.occupier = ${
+    ctx.authenticated.company
+  } ${
     data.location_id
       ? Prisma.sql`and b.location_id=${data.location_id}`
       : Prisma.empty
@@ -1286,7 +1282,9 @@ export const retrieveSalesCount = async (
       data.start_date && data.end_date
         ? Prisma.sql`b.date BETWEEN ${start_date} and ${end_date} and`
         : Prisma.empty
-    } sale_id>0 and product_category_type not in ('') ${
+    } sale_id>0 and product_category_type not in ('') and b.occupier = ${
+    ctx.authenticated.company
+  } ${
     data.location_id
       ? Prisma.sql`and b.location_id=${data.location_id}`
       : Prisma.empty
@@ -1392,7 +1390,9 @@ export const retrieveSalesChartData = async (
       sale = await ctx.prisma.$queryRaw`select product_category_type,
         YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
-        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') ${
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and b.location_id=${data.location_id}`
           : Prisma.empty
@@ -1408,7 +1408,9 @@ export const retrieveSalesChartData = async (
       sale = await ctx.prisma.$queryRaw`select product_category_type,
         MONTHNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
-        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') ${
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and b.location_id=${data.location_id}`
           : Prisma.empty
@@ -1424,7 +1426,9 @@ export const retrieveSalesChartData = async (
       sale = await ctx.prisma.$queryRaw`select product_category_type,
         DATE(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
-        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') ${
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and b.location_id=${data.location_id}`
           : Prisma.empty
@@ -1440,7 +1444,9 @@ export const retrieveSalesChartData = async (
       sale = await ctx.prisma.$queryRaw`select product_category_type,
         DAYNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
-        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') ${
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and b.location_id=${data.location_id}`
           : Prisma.empty
@@ -1456,11 +1462,13 @@ export const retrieveSalesChartData = async (
       sale = await ctx.prisma.$queryRaw`select product_category_type,
         YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
-        WHERE product_category_type not in ('') ${
-          data.location_id
-            ? Prisma.sql`and b.location_id=${data.location_id}`
-            : Prisma.empty
-        }${
+        WHERE product_category_type not in ('') and b.occupier = ${
+          ctx.authenticated.company
+        } ${
+        data.location_id
+          ? Prisma.sql`and b.location_id=${data.location_id}`
+          : Prisma.empty
+      }${
         data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty
       }
         group by product_category_type, GROUPING
@@ -1485,7 +1493,9 @@ export const retrieveRetailSalesData = async (
       data.start_date && data.end_date
         ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date} and`
         : Prisma.empty
-    } a.product_category_type="retail" and product_category_type not in ('') and a.product_id>0 ${
+    } a.product_category_type="retail" and product_category_type not in ('') and a.product_id>0 and b.occupier = ${
+    ctx.authenticated.company
+  } ${
     data.location_id
       ? Prisma.sql`and b.location_id=${data.location_id}`
       : Prisma.empty
@@ -1535,7 +1545,9 @@ export const retrieveServiceSalesData = async (
       data.start_date && data.end_date
         ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date} and`
         : Prisma.empty
-    } a.product_category_type="service" and product_category_type not in ('') and a.product_id>0 ${
+    } a.product_category_type="service" and product_category_type not in ('') and a.product_id>0 and b.occupier = ${
+    ctx.authenticated.company
+  } ${
     data.location_id
       ? Prisma.sql`and b.location_id=${data.location_id}`
       : Prisma.empty
@@ -1593,7 +1605,7 @@ export const retriveOtherDetails = async (
     day = dayjs(endDate).diff(startDate, 'day')
   } else {
     const allRecordDates = await ctx.prisma
-      .$queryRaw`SELECT MIN(b.created_date),MAX(b.created_date) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id`
+      .$queryRaw`SELECT MIN(b.created_date),MAX(b.created_date) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${ctx.authenticated.company}`
     const startDate = dayjs(
       `${allRecordDates[0]['MIN(b.created_date)']}` as 'YYYY-MM-DDTHH:mm:ssZ'
     ).format('YYYY-MM-DD')
@@ -1607,9 +1619,11 @@ export const retriveOtherDetails = async (
   }
 
   const newClientCount = await ctx.prisma
-    .$queryRaw`SELECT count(CreatedDate) from cm_contacts ${
+    .$queryRaw`SELECT count(CreatedDate) from cm_contacts where Occupier = ${
+    ctx.authenticated.company
+  } ${
     (data.start_date && data.end_date) || data.location_id || data.user_id
-      ? Prisma.sql`where`
+      ? Prisma.sql`and`
       : Prisma.empty
   } ${
     data.start_date && data.end_date
@@ -1630,9 +1644,11 @@ export const retriveOtherDetails = async (
   }`
 
   const avgBiller = await ctx.prisma
-    .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id ${
+    .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${
+    ctx.authenticated.company
+  } ${
     (data.start_date && data.end_date) || data.location_id || data.user_id
-      ? Prisma.sql`where`
+      ? Prisma.sql`and`
       : Prisma.empty
   } ${
     data.start_date && data.end_date
@@ -1653,9 +1669,11 @@ export const retriveOtherDetails = async (
   }`
 
   const total = await ctx.prisma
-    .$queryRaw`SELECT SUM(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id ${
+    .$queryRaw`SELECT SUM(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${
+    ctx.authenticated.company
+  } ${
     (data.start_date && data.end_date) || data.location_id || data.user_id
-      ? Prisma.sql`where`
+      ? Prisma.sql`and`
       : Prisma.empty
   } ${
     data.start_date && data.end_date

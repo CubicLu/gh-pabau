@@ -1,4 +1,4 @@
-import { inputObjectType, objectType } from 'nexus'
+import { objectType } from 'nexus'
 
 export const PublicBookingResponse = objectType({
   name: 'Public_Booking',
@@ -9,16 +9,6 @@ export const PublicBookingResponse = objectType({
     t.int('UID')
     t.int('all_day')
     t.int('location_id')
-  },
-})
-
-export const DashboardInputType = inputObjectType({
-  name: 'DashboardInputType',
-  definition(t) {
-    t.float('start_date')
-    t.float('end_date')
-    t.int('location_id')
-    t.int('user_id')
   },
 })
 const CountDetails = objectType({
@@ -46,13 +36,6 @@ const ChartData = objectType({
   },
 })
 
-const bookingsByStatus = objectType({
-  name: 'allBookingChartDetails',
-  definition(t) {
-    t.list.field('bookingsByStatus', { type: ChartData })
-  },
-})
-
 export const BookingCountResponseType = objectType({
   name: 'getBookingStatusCount',
   definition(t) {
@@ -64,7 +47,7 @@ export const BookingCountResponseType = objectType({
 export const BookingDetailResponseType = objectType({
   name: 'getBookingChartDetail',
   definition(t) {
-    t.field('allBookingChartDetails', { type: bookingsByStatus })
+    t.list.field('bookingsByStatus', { type: ChartData })
   },
 })
 
@@ -73,7 +56,7 @@ const OnlineBookingCounts = objectType({
   definition(t) {
     t.int('totalOnlineBooking')
     t.string('totalOnlineBookingPer')
-    t.list.field('onlineAppointmentList', { type: CountDetails })
+    t.list.field('onlineBookingList', { type: CountDetails })
   },
 })
 
@@ -82,6 +65,6 @@ const AllBookingCounts = objectType({
   definition(t) {
     t.int('totalBooking')
     t.string('totalBookingPer')
-    t.list.field('appointmentList', { type: CountDetails })
+    t.list.field('bookingList', { type: CountDetails })
   },
 })

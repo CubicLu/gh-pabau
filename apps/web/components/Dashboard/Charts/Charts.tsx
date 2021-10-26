@@ -115,7 +115,7 @@ export const Charts: FC<ICharts> = ({
       align: 'left',
     },
     tooltip: {
-      valuePrefix: '£',
+      valuePrefix: `${stringToCurrencySignConverter(user.me?.currency)}`,
     },
     series: List,
     legend: {
@@ -285,9 +285,9 @@ export const Charts: FC<ICharts> = ({
               <div className={styles.chartsHeader}>
                 {!loading ? (
                   stringToCurrencySignConverter(user.me?.currency) +
-                  (totalSalesCount.count.toLocaleString(undefined, {
+                  (totalSalesCount.count ?? 0).toLocaleString(undefined, {
                     maximumFractionDigits: 2,
-                  }) ?? 0)
+                  })
                 ) : (
                   <Skeleton.Input active className={styles.titleSkeleton} />
                 )}

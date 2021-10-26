@@ -126,12 +126,12 @@ export function Index() {
   )
   useEffect(() => {
     setAppointment(
-      bookingCounts?.getBookingStatusCount?.allBookingCounts?.appointmentList ??
+      bookingCounts?.getBookingStatusCount?.allBookingCounts?.bookingList ??
         defaultAppointmentList
     )
     setOnlineAppointment(
       bookingCounts?.getBookingStatusCount?.onlineBookingCounts
-        ?.onlineAppointmentList ?? defaultOnlineAppointmentList
+        ?.onlineBookingList ?? defaultOnlineAppointmentList
     )
     setSales(
       financeDetails?.getFinanceDetails?.salesCount?.salesList ??
@@ -511,8 +511,7 @@ export function Index() {
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}
               BookingData={
-                bookingDetails?.getBookingChartDetail?.allBookingChartDetails
-                  ?.bookingsByStatus
+                bookingDetails?.getBookingChartDetail?.bookingsByStatus
               }
               salesData={
                 financeDetails?.getFinanceDetails?.allSales

@@ -58,7 +58,9 @@ export const retrieveAllBookingChartData = async (
       FROM salon_bookings a
       where start_date between ${data.start_date} and ${
         data.end_date
-      } and contact_id>0 and status not in ('') ${
+      } and contact_id>0 and status not in ('') and a.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and location_id=${data.location_id}`
           : Prisma.empty
@@ -74,7 +76,9 @@ export const retrieveAllBookingChartData = async (
       FROM salon_bookings a
       where start_date between ${data.start_date} and ${
         data.end_date
-      } and contact_id>0 and status not in ('') ${
+      } and contact_id>0 and status not in ('') and a.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and location_id=${data.location_id}`
           : Prisma.empty
@@ -90,7 +94,9 @@ export const retrieveAllBookingChartData = async (
       FROM salon_bookings a
       where start_date between ${data.start_date} and ${
         data.end_date
-      } and contact_id>0 and status not in ('') ${
+      } and contact_id>0 and status not in ('') and a.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and location_id=${data.location_id}`
           : Prisma.empty
@@ -106,7 +112,9 @@ export const retrieveAllBookingChartData = async (
       FROM salon_bookings a
       where start_date between ${data.start_date} and ${
         data.end_date
-      } and contact_id>0 and status not in ('') ${
+      } and contact_id>0 and status not in ('') and a.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and location_id=${data.location_id}`
           : Prisma.empty
@@ -120,7 +128,9 @@ export const retrieveAllBookingChartData = async (
       booking = await ctx.prisma
         .$queryRaw`SELECT status, YEAR(DATE_FORMAT(SUBSTRING(a.start_date,1,8),'%Y-%m-%d')) as grouping, count(id)
       FROM salon_bookings a
-      where contact_id>0 and status not in ('') ${
+      where contact_id>0 and status not in ('') and a.occupier = ${
+        ctx.authenticated.company
+      } ${
         data.location_id
           ? Prisma.sql`and location_id=${data.location_id}`
           : Prisma.empty
@@ -162,7 +172,9 @@ export const retrieveAllBookingStatusCount = async (
         prev_data.prevStartDate && prev_data.prevEndDate
           ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
           : Prisma.empty
-      } contact_id>0 and status not in ('') ${
+      } contact_id>0 and status not in ('') and a.occupier=${
+    ctx.authenticated.company
+  } ${
     data.location_id
       ? Prisma.sql`and location_id=${data.location_id}`
       : Prisma.empty
@@ -200,7 +212,7 @@ export const retrieveAllBookingStatusCount = async (
     }, 0), // total bookings for only required status
     totalBookingPer:
       (Number.isFinite(+totalBookingPer) ? totalBookingPer : '0.00') + '%',
-    appointmentList: appointment.length > 0 ? appointment : null,
+    bookingList: appointment.length > 0 ? appointment : null,
   }
 }
 
@@ -231,7 +243,9 @@ export const retrieveOnlineBookingStatusCount = async (
     prev_data.prevStartDate && prev_data.prevEndDate
       ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
       : Prisma.empty
-  } contact_id>0 and Online=1 and status not in ('') ${
+  } contact_id>0 and Online=1 and status not in ('') and a.occupier = ${
+    ctx.authenticated.company
+  } ${
     data.location_id
       ? Prisma.sql`and location_id=${data.location_id}`
       : Prisma.empty
@@ -271,7 +285,6 @@ export const retrieveOnlineBookingStatusCount = async (
       (Number.isFinite(+totalOnlineBookingPer)
         ? totalOnlineBookingPer
         : '0.00') + '%',
-    onlineAppointmentList:
-      onlineAppointment.length > 0 ? onlineAppointment : null,
+    onlineBookingList: onlineAppointment.length > 0 ? onlineAppointment : null,
   }
 }

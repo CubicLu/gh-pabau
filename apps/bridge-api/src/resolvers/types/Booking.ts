@@ -82,13 +82,7 @@ export const BookingStatus = extendType({
         data: arg({ type: BookingInputTypes }),
       },
       async resolve(_root, { data }, ctx: Context) {
-        const allBookingChartDetails = await retrieveAllBookingChartData(
-          ctx,
-          data
-        )
-        return {
-          allBookingChartDetails: allBookingChartDetails,
-        }
+        return await retrieveAllBookingChartData(ctx, data)
       },
     })
   },
