@@ -1,30 +1,46 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { PathwayLayout } from '../../../../components/Pathway/PathwayLayout'
-import { DemoStep } from '../../../../components/Pathway/Steps/DemoStep'
 
-export interface PathwayStep {
-  name: string
-  // children: React.ReactNode
-}
+type PathwayStep =
+  | {
+      name: string
+      data?: Record<string, any>
+    }
+  | { lock: true }
 
 export interface Pathway {
   name: string
-  doctorSteps: PathwayStep[]
-  patientSteps?: PathwayStep[]
+  steps: PathwayStep[]
 }
 
 const Appointments = () => {
   const router = useRouter()
 
   //TODO: replace this with a useQuery hook to get the real data:
+  // The steps[].name is used in apps/web/components/Pathway/PathwayLayout.tsx
   const { data }: { data: { getPathway: Pathway } } = {
     data: {
       getPathway: {
         name: 'Standard',
-        doctorSteps: [
+        steps: [
           {
-            name: 'demo',
+            name: 'check-details',
+          },
+          {
+            name: 'medical-history',
+          },
+          {
+            name: 'consent-forms',
+          },
+          {
+            lock: true,
+          },
+          {
+            name: 'photos',
+          },
+          {
+            name: 'treatment-form',
           },
         ],
       },
