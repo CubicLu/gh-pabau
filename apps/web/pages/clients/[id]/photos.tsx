@@ -271,6 +271,14 @@ const Photos = () => {
             setShowPhotoStudio((e) => !e)
             setStudioAlbumId(0)
             setStudioImageId(0)
+            getAlbumPhotos({
+              variables: {
+                contactId: router.query.id ? Number(router.query.id) : 0,
+                albumId: albumId,
+                skip: (paginatedData?.currentPage - 1) * paginatedData?.perPage,
+                take: paginatedData?.perPage,
+              },
+            })
           }}
         />
       )}
