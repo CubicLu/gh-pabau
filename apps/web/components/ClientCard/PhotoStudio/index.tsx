@@ -62,6 +62,27 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     },
   })
 
+  const [
+    getUncatAlbumPhotos,
+    { data: dUnCatPhotos },
+  ] = useGetAlbumPhotosLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const { data: dAlbums, loading: dAlbumsLoading } = useGetPhotoAlbumsQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      contactId: contactId,
+    },
+  })
+
+  const [
+    getCurrentAlbumData,
+    { data: dCurrentAlbum, loading: dCurrentAlbumloading },
+  ] = useGetPhotoAlbumLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
     onCompleted(data) {
       const path = data?.createOneContactAttachment?.linkref
@@ -74,12 +95,20 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingImages(cAddedFiles)
-        getCurrentAlbumData({
-          variables: {
-            albumId: currentAlbumData?.id,
-            contactId: contactId,
-          },
-        })
+        if (
+          data?.createOneContactAttachment?.album_id === currentAlbumData?.id
+        ) {
+          const cCurrAlbumData = { ...currentAlbumData }
+          cCurrAlbumData.imageCount = cCurrAlbumData.imageCount + 1
+          cCurrAlbumData.imageList.push({
+            date: dayjs().format('YYYY-MM-DD'),
+            id: data?.createOneContactAttachment?.id,
+            origin: data?.createOneContactAttachment?.linkref?.includes('http')
+              ? data?.createOneContactAttachment?.linkref
+              : `${cdn}${data?.createOneContactAttachment?.linkref}`,
+          })
+          setCurrentAlbumData(cCurrAlbumData)
+        }
       }
     },
   })
@@ -98,12 +127,20 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingImages(cAddedFiles)
-        getUncatAlbumPhotos({
-          variables: {
-            contactId: contactId,
-            albumId: 0,
-          },
-        })
+        if (
+          data?.createOneContactAttachment?.album_id === currentAlbumData?.id
+        ) {
+          const cCurrAlbumData = { ...currentAlbumData }
+          cCurrAlbumData.imageCount = cCurrAlbumData.imageCount + 1
+          cCurrAlbumData.imageList.push({
+            date: dayjs().format('YYYY-MM-DD'),
+            id: data?.createOneContactAttachment?.id,
+            origin: data?.createOneContactAttachment?.linkref?.includes('http')
+              ? data?.createOneContactAttachment?.linkref
+              : `${cdn}${data?.createOneContactAttachment?.linkref}`,
+          })
+          setCurrentAlbumData(cCurrAlbumData)
+        }
       }
     },
   })
@@ -133,27 +170,6 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
         }
       }
     },
-  })
-
-  const [
-    getUncatAlbumPhotos,
-    { data: dUnCatPhotos },
-  ] = useGetAlbumPhotosLazyQuery({
-    fetchPolicy: 'network-only',
-  })
-
-  const { data: dAlbums, loading: dAlbumsLoading } = useGetPhotoAlbumsQuery({
-    fetchPolicy: 'network-only',
-    variables: {
-      contactId: contactId,
-    },
-  })
-
-  const [
-    getCurrentAlbumData,
-    { data: dCurrentAlbum, loading: dCurrentAlbumloading },
-  ] = useGetPhotoAlbumLazyQuery({
-    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {

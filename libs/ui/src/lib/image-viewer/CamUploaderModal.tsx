@@ -251,7 +251,7 @@ const Dropzone: FC<DropzoneProps> = ({
 }
 export interface CamUploaderProps {
   visible: boolean
-  onClose: () => void
+  onClose: (done?: boolean) => void
   showCamera?: boolean
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (images: UploadingImageProps[]) => void
@@ -334,7 +334,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       />
       <Modal
         visible={visible}
-        onCancel={onClose}
+        onCancel={() => onClose?.(false)}
         width={mobile ? '100vw' : '980px'}
         className={classNames(styles.uppyModal, mobile && styles.fullScreen)}
         closable={false}
@@ -343,7 +343,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         <div className={styles.uppyModalHeader}>
           {mobile && (
             <span>
-              <LeftOutlined onClick={onClose} />
+              <LeftOutlined onClick={() => onClose?.(false)} />
             </span>
           )}
           <div className={styles.title}>
@@ -354,7 +354,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           </div>
           {!mobile && (
             <div>
-              <CloseOutlined onClick={onClose} />{' '}
+              <CloseOutlined onClick={() => onClose?.(false)} />{' '}
             </div>
           )}
           {mobile && showCamera && (
@@ -432,7 +432,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             )}
           </div>
           <div>
-            <Button type="default" ghost onClick={onClose}>
+            <Button type="default" ghost onClick={() => onClose?.(true)}>
               Done
             </Button>
           </div>
