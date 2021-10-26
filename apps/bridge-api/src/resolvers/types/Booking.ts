@@ -5,7 +5,10 @@ import {
   retrieveOnlineBookingStatusCount,
   retrieveAllBookingChartData,
 } from '../../app/booking/statuses'
-import { BookingResponseType } from '../../app/booking/nexus-type'
+import {
+  BookingCountResponseType,
+  BookingDetailResponseType,
+} from '../../app/booking/nexus-type'
 
 const BookingInputTypes = inputObjectType({
   name: 'BookingInputTypes',
@@ -56,8 +59,8 @@ export const BookingExtended = extendType({
 export const BookingStatus = extendType({
   type: 'Query',
   definition(t) {
-    t.field('getBookingStatus', {
-      type: BookingResponseType,
+    t.field('getBookingStatusCount', {
+      type: BookingCountResponseType,
       args: {
         data: arg({ type: BookingInputTypes }),
       },
@@ -67,13 +70,23 @@ export const BookingStatus = extendType({
           ctx,
           data
         )
+        return {
+          allBookingCounts: allBookingCounts,
+          onlineBookingCounts: onlineBookingCounts,
+        }
+      },
+    })
+    t.field('getBookingChartDetail', {
+      type: BookingDetailResponseType,
+      args: {
+        data: arg({ type: BookingInputTypes }),
+      },
+      async resolve(_root, { data }, ctx: Context) {
         const allBookingChartDetails = await retrieveAllBookingChartData(
           ctx,
           data
         )
         return {
-          allBookingCounts: allBookingCounts,
-          onlineBookingCounts: onlineBookingCounts,
           allBookingChartDetails: allBookingChartDetails,
         }
       },

@@ -41,11 +41,17 @@ const bookingsByStatus = objectType({
   },
 })
 
-export const BookingResponseType = objectType({
-  name: 'getBookingStatus',
+export const BookingCountResponseType = objectType({
+  name: 'getBookingStatusCount',
   definition(t) {
     t.field('onlineBookingCounts', { type: OnlineBookingCounts })
     t.field('allBookingCounts', { type: AllBookingCounts })
+  },
+})
+
+export const BookingDetailResponseType = objectType({
+  name: 'getBookingChartDetail',
+  definition(t) {
     t.field('allBookingChartDetails', { type: bookingsByStatus })
   },
 })
@@ -65,14 +71,5 @@ const AllBookingCounts = objectType({
     t.int('totalBooking')
     t.string('totalBookingPer')
     t.list.field('appointmentList', { type: CountDetails })
-  },
-})
-
-export const DashboardResponseType = objectType({
-  name: 'dashboardData',
-  definition(t) {
-    t.field('onlineBookingCounts', { type: OnlineBookingCounts })
-    t.field('allBookingCounts', { type: AllBookingCounts })
-    t.field('allbooking', { type: bookingsByStatus })
   },
 })

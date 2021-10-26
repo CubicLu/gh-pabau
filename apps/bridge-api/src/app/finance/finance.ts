@@ -14,10 +14,16 @@ import {
   StatementArgs,
   StatementOutput,
 } from './types'
-import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
 import { statusDataByDayMonth } from '../booking/statuses.service'
 import { getPreviousDateRange } from './dateRange.service'
+
+interface DateRangeInput {
+  start_date?: number
+  end_date?: number
+  location_id?: number
+  user_id?: number
+}
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -1302,6 +1308,17 @@ export const retrieveSalesCount = async (
     }
     return item
   })
+  const totalAvailableCategoryTypePer = (sale?.length > 0 &&
+  prev_data.prevStartDate &&
+  prev_data.prevEndDate
+    ? (sale?.reduce((prev, cur) => {
+        return prev + cur['SUM(b.total)'] ?? 0
+      }, 0) *
+        100) /
+        prevSales[0]['SUM(b.total)'] ?? 0
+    : 0
+  ).toFixed(2)
+
   return {
     totalAvailableCategoryTypeCount: sale?.reduce((prev, cur) => {
       return prev + cur['count(sale_id)'] ?? 0
@@ -1311,16 +1328,10 @@ export const retrieveSalesCount = async (
         return prev + cur['SUM(b.total)'] ?? 0
       }, 0)
       .toFixed(2),
-    totalAvailableCategoryTypePer: `${(sale?.length > 0 &&
-    prev_data.prevStartDate &&
-    prev_data.prevEndDate
-      ? (sale?.reduce((prev, cur) => {
-          return prev + cur['SUM(b.total)'] ?? 0
-        }, 0) *
-          100) /
-          prevSales[0]['SUM(b.total)'] ?? 0
-      : 0
-    ).toFixed(2)}%`,
+    totalAvailableCategoryTypePer:
+      (Number.isFinite(+totalAvailableCategoryTypePer)
+        ? totalAvailableCategoryTypePer
+        : '0.00') + '%',
     salesList: SalesList.length > 0 ? SalesList : null,
   }
 }

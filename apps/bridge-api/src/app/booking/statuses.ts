@@ -1,9 +1,15 @@
 import { Context } from '../../context'
 import { Prisma } from '@prisma/client'
-import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
 import { statusDataByDayMonth } from './statuses.service'
 import { getPreviousDateRange } from '../finance/dateRange.service'
+
+interface DateRangeInput {
+  start_date?: number
+  end_date?: number
+  location_id?: number
+  user_id?: number
+}
 
 export const retrieveAllBookingChartData = async (
   ctx: Context,
@@ -176,20 +182,24 @@ export const retrieveAllBookingStatusCount = async (
     })
     return item
   })
+
+  const totalBookingPer = (bookingStatusCount?.length > 0 &&
+  prev_data.prevStartDate &&
+  prev_data.prevStartDate
+    ? (bookingStatusCount?.reduce((prev, cur) => {
+        return prev + cur._count.id ?? 0
+      }, 0) *
+        100) /
+        prevBooking[0]['count(id)'] ?? 0
+    : 0
+  ).toFixed(2)
+
   return {
     totalBooking: bookingStatusCount?.reduce((prev, cur) => {
       return prev + cur._count.id ?? 0
     }, 0), // total bookings for only required status
-    totalBookingPer: `${(bookingStatusCount?.length > 0 &&
-    prev_data.prevStartDate &&
-    prev_data.prevStartDate
-      ? (bookingStatusCount?.reduce((prev, cur) => {
-          return prev + cur._count.id ?? 0
-        }, 0) *
-          100) /
-          prevBooking[0]['count(id)'] ?? 0
-      : 0
-    ).toFixed(2)}%`,
+    totalBookingPer:
+      (Number.isFinite(+totalBookingPer) ? totalBookingPer : '0.00') + '%',
     appointmentList: appointment.length > 0 ? appointment : null,
   }
 }
@@ -241,20 +251,26 @@ export const retrieveOnlineBookingStatusCount = async (
     })
     return item
   })
+
+  const totalOnlineBookingPer = (onlineBookingStatusCount?.length > 0 &&
+  prev_data.prevStartDate &&
+  prev_data.prevStartDate
+    ? (onlineBookingStatusCount?.reduce((prev, cur) => {
+        return prev + cur._count.id ?? 0
+      }, 0) *
+        100) /
+        prevBookingOnline[0]['count(id)'] ?? 0
+    : 0
+  ).toFixed(2)
+
   return {
     totalOnlineBooking: onlineBookingStatusCount?.reduce((prev, cur) => {
       return prev + cur._count.id ?? 0
     }, 0), // total online bookings for only required status
-    totalOnlineBookingPer: `${(onlineBookingStatusCount?.length > 0 &&
-    prev_data.prevStartDate &&
-    prev_data.prevStartDate
-      ? (onlineBookingStatusCount?.reduce((prev, cur) => {
-          return prev + cur._count.id ?? 0
-        }, 0) *
-          100) /
-          prevBookingOnline[0]['count(id)'] ?? 0
-      : 0
-    ).toFixed(2)}%`,
+    totalOnlineBookingPer:
+      (Number.isFinite(+totalOnlineBookingPer)
+        ? totalOnlineBookingPer
+        : '0.00') + '%',
     onlineAppointmentList:
       onlineAppointment.length > 0 ? onlineAppointment : null,
   }
