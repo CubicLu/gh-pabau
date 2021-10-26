@@ -189,6 +189,7 @@ export interface ImageViewerProps {
   setUploadingImages?: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
   removeImage?: (imagePath: string) => void
+  loading?: boolean
 }
 
 const ImageViewerModal: FC<ImageViewerProps> = ({
@@ -203,6 +204,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   setUploadingImages,
   uploadImage,
   removeImage,
+  loading = false,
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
@@ -844,6 +846,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             sidebarOpen={sidebarOpen}
             setIsDragging={setIsDragging}
             setSidebarOpen={setSidebarOpen}
+            loading={loading}
           />
           {isMobile && (
             <div className={styles.imageViewerModalFooter}>
