@@ -216,8 +216,6 @@ const LeadsStagesComponent = () => {
         limit + skip !== leadsLenghtRef.current.leadsLength &&
         getAllLeadsDetailData?.findManyCmLead?.length > 0
       ) {
-        leadsContainerRef.current.scrollTop = scrollRef.current.position
-
         const mapLeadsPipelineWise = groupByPipelineId(
           getAllLeadsDetailData?.findManyCmLead,
           'LeadStatus'
@@ -229,6 +227,7 @@ const LeadsStagesComponent = () => {
         ) {
           leadsArrayRef.current.leadsArray = mapLeadsPipelineWise
           const localLeadState = { ...leadsState }
+
           for (const stageObject of allStages) {
             const { id } = stageObject
             const existingLeads = localLeadState[id] ? localLeadState[id] : []
@@ -244,8 +243,6 @@ const LeadsStagesComponent = () => {
           leadsLenghtRef.current.leadsLength = limit + skip
           leadsContainerRef.current.scrollTop = scrollRef.current.position
         }
-      } else if (getAllLeadsDetailData?.findManyCmLead?.length === 0) {
-        leadsContainerRef.current.scrollTop = scrollRef.current.position
       }
     }
   }, [
@@ -304,6 +301,7 @@ const LeadsStagesComponent = () => {
                             leadsState?.[id]?.map((item, index) => {
                               let contactName,
                                 contactImg,
+                                userName,
                                 userImage = ''
                               const {
                                 Name,
@@ -312,10 +310,16 @@ const LeadsStagesComponent = () => {
                                 status,
                                 Contact,
                                 Activity,
-                                User: { image, username },
+                                User,
                               } = item
 
-                              userImage = image ? getImage(image) : austin
+                              if (User) {
+                                userImage = User.image
+                                  ? getImage(User.image)
+                                  : austin
+                                userName = User.username
+                              }
+
                               if (
                                 typeof ContactID === 'number' &&
                                 ContactID !== 0
@@ -352,7 +356,7 @@ const LeadsStagesComponent = () => {
                                             )
                                           }
                                           labels={['#Label1', '#Label']}
-                                          leadOwnerName={username}
+                                          leadOwnerName={userName}
                                           leadOwnerImg={userImage}
                                           contactName={contactName}
                                           contactImg={contactImg}
