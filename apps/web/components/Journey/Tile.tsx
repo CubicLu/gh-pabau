@@ -6,25 +6,25 @@ interface TileP {
   icon?: React.ReactNode
   text: string
   count: number
-  value?: string
+  name?: string
   onTileClick?: (tile: string) => void
-  filterStatus?: string[]
+  filterStatus?: string
 }
 
 const Tile: FC<TileP> = ({
   icon,
   text,
   count,
-  value,
+  name,
   onTileClick,
   filterStatus,
 }) => {
   return (
     <div
       className={classNames(styles.tileContainer, {
-        [styles.selectedTile]: filterStatus?.includes(value),
+        [styles.selectedTile]: name === filterStatus,
       })}
-      onClick={() => onTileClick?.(value)}
+      onClick={() => onTileClick?.(name)}
     >
       <div className={styles.iconCenter}>{icon}</div>
       <div className={styles.textContainer}>

@@ -17,16 +17,21 @@ interface JourneyP {
   handleClose?: () => void
 }
 
+const dateFormat = 'YYYYMMDDHHmmss'
+// eslint-disable-next-line unicorn/prefer-set-has
+const notInProgressStatuses = ['waiting', 'cancelled', 'complete']
+
 const Journey: FC<JourneyP> = () => {
   const { t } = useTranslationI18()
+  const [allAppointments, setAllAppointments] = useState([])
   const [appointements, setAppointments] = useState([])
   const [selectedDate, setSelectedDate] = useState(dayjs().format('MMM D YYYY'))
-  const [filterStatus, setFilterStatus] = useState([])
+  const [filterStatus, setFilterStatus] = useState<string>()
   const [startDate, setStartDate] = useState<number>(
-    Number.parseFloat(dayjs().format('YYYYMMDDHHmmss'))
+    Number.parseFloat(dayjs().format(dateFormat))
   )
   const [endDate, setEndDate] = useState<number>(
-    Number.parseFloat(dayjs().add(1, 'day').format('YYYYMMDDHHmmss'))
+    Number.parseFloat(dayjs().add(1, 'day').format(dateFormat))
   )
 
   const { me } = useUser()
@@ -40,11 +45,9 @@ const Journey: FC<JourneyP> = () => {
   })
 
   useEffect(() => {
-    const startDate = Number.parseFloat(
-      dayjs(selectedDate).format('YYYYMMDDHHmmss')
-    )
+    const startDate = Number.parseFloat(dayjs(selectedDate).format(dateFormat))
     const endDate = Number.parseFloat(
-      dayjs(selectedDate).add(1, 'day').format('YYYYMMDDHHmmss')
+      dayjs(selectedDate).add(1, 'day').format(dateFormat)
     )
     setStartDate(startDate)
     setEndDate(endDate)
@@ -53,9 +56,7 @@ const Journey: FC<JourneyP> = () => {
   useEffect(() => {
     if (appointmentsData?.findManyBooking?.length > 0) {
       const appointements = appointmentsData.findManyBooking
-        .filter(
-          (appt) => appt?.contact_id !== null && appt.status !== 'Cancelled'
-        )
+        .filter((appt) => appt?.Contact !== null && appt.status !== 'Cancelled')
         .map((appt) => {
           return {
             key: appt.id.toString(),
@@ -70,19 +71,35 @@ const Journey: FC<JourneyP> = () => {
             checkingStatus: appt.status,
             service_id: appt?.service_id,
             staffMember: `Dr. ${appt.CmStaffGeneral?.Fname} ${appt.CmStaffGeneral?.Lname}`,
-            paymentStatus: 'unpaid',
-            status: appt.status,
+            paymentStatus: appt.InvSale ? 'paid' : 'unpaid',
+            status: appt.status.toLocaleLowerCase(),
             date: appt.start_date,
           }
         })
       setAppointments(appointements)
+      setAllAppointments(appointements)
     } else {
       setAppointments(null)
     }
   }, [appointmentsData])
 
+  useEffect(() => {
+    if (filterStatus === 'in-progress') {
+      const filteredAppts = allAppointments.filter(
+        (appt) => !notInProgressStatuses.includes(appt.status)
+      )
+      setAppointments(filteredAppts)
+    } else {
+      const filteredAppts = allAppointments.filter(
+        (appt) => appt.status === filterStatus
+      )
+      setAppointments(filteredAppts)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterStatus])
+
   const onTileClick = (tile: string) => {
-    setFilterStatus([tile])
+    setFilterStatus(tile)
   }
 
   return (
@@ -95,39 +112,45 @@ const Journey: FC<JourneyP> = () => {
       </div>
       <div className={styles.grid}>
         <div className={styles.gridItems}>
-          <Appointments
-            appointments={appointements}
-            filterStatus={filterStatus}
-          />
+          <Appointments appointments={appointements} />
         </div>
         <div className={styles.gridItems}>
           <Tile
             text={t('journey.modal.appointements.status.waiting')}
             count={
-              (appointements?.length > 0 &&
-                appointements.filter((appt) => appt?.status === 'Waiting')
+              (allAppointments?.length > 0 &&
+                allAppointments.filter((appt) => appt?.status === 'waiting')
                   ?.length) ||
               0
             }
-            value="Waiting"
+            name="waiting"
             onTileClick={onTileClick}
             icon={<Waiting />}
             filterStatus={filterStatus}
           />
           <Tile
             text={t('journey.modal.appointements.status.in.progress')}
-            count={10}
+            count={
+              (allAppointments?.length > 0 &&
+                allAppointments.filter(
+                  (appt) => !notInProgressStatuses.includes(appt.status)
+                )?.length) ||
+              0
+            }
             icon={<InProgress />}
+            name="in-progress"
+            onTileClick={onTileClick}
+            filterStatus={filterStatus}
           />
           <Tile
             text={t('journey.modal.appointements.status.complete')}
             count={
-              (appointements?.length > 0 &&
-                appointements.filter((appt) => appt?.status === 'Complete')
+              (allAppointments?.length > 0 &&
+                allAppointments.filter((appt) => appt?.status === 'complete')
                   ?.length) ||
               0
             }
-            value={'Complete'}
+            name={'complete'}
             onTileClick={onTileClick}
             icon={<Complete />}
             filterStatus={filterStatus}
