@@ -55,6 +55,7 @@ fragment CmLeadFields on CmLead {
   latest_interaction
   location_id
   need_to_knows
+  pipeline_stage_id
 }
 
 fragment CmLead on CmLead {
@@ -71,7 +72,10 @@ fragment CmLead on CmLead {
   LeadStatusData {
     ...LeadStatusFields
   }
-  CmContact {
+  PipelineStage {
+    ...PipelineStageFields
+  }
+  Contact {
     ...CmContactFields
   }
 }

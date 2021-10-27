@@ -1,0 +1,59 @@
+fragment JobConfigurationFields on JobConfiguration {
+  id
+  company_id
+  about_us
+  color_scheme
+  opening_blurb
+  page_title
+  first_name
+  last_name
+  email
+  dob
+  phone
+  address
+  city
+  postal
+  country
+  cover_letter
+  resume
+  date_available
+  linkedin
+  reference
+  how_did_hear
+  who_referred
+  default_reply
+}
+
+fragment JobConfiguration on JobConfiguration {
+  ...JobConfigurationFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneJobConfiguration($data: JobConfigurationCreateInput!) {
+  createOneJobConfiguration(data: $data) {
+    ...JobConfiguration
+  }
+}
+
+mutation updateOneJobConfiguration($where: JobConfigurationWhereUniqueInput!, $data: JobConfigurationUpdateInput!) {
+  updateOneJobConfiguration(where: $where, data: $data) {
+    ...JobConfiguration
+  }
+}
+
+mutation deleteOneJobConfiguration($where: JobConfigurationWhereUniqueInput!) {
+  deleteOneJobConfiguration(where: $where) {
+    ...JobConfiguration
+  }
+}
+
+mutation updateManyJobConfiguration(
+  $where: JobConfigurationWhereInput
+  $data: JobConfigurationUpdateManyMutationInput!
+) {
+  updateManyJobConfiguration(where: $where, data: $data) {
+    count
+  }
+}

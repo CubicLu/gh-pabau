@@ -1026,7 +1026,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
       <RangePicker
         format={'DD MMM YYYY'}
         value={[selectedDates?.[0], selectedDates?.[1]]}
-        onChange={(val) => setSelectedDates(val)}
+        onChange={(val, dateStrings) =>
+          setSelectedDates([dayjs(dateStrings[0]), dayjs(dateStrings[1])])
+        }
       />
     )
   }
