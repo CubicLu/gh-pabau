@@ -12,11 +12,34 @@ import {
   useGetAlbumPhotosQuery,
   useCountAlbumPhotosQuery,
   useGetAlbumPhotosLazyQuery,
+  useGetPhotoAlbumsLazyQuery,
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
   useDeleteOnePhotoAlbumMutation,
 } from '@pabau/graphql'
 const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+
+const iterateTo = (dataArr) => {
+  return dataArr?.map((item) => {
+    return {
+      id: item?.id,
+      albumTitle: item?.name,
+      modifiedDate: item?.modified_date || item?.creation_date,
+      imageCount: item?.imageCount?.imageList,
+      albumImage: item?.Photos?.map((el) => {
+        return {
+          id: el?.id,
+          date: el?.date,
+          img: !el?.linkref?.includes('http')
+            ? attachmentsBaseUrl + el?.linkref
+            : el?.linkref,
+          isSensitive: false,
+        }
+      }),
+      album: item?.albums ? iterateTo(item?.albums) : [],
+    }
+  })
+}
 
 const Photos = () => {
   const router = useRouter()
@@ -61,9 +84,16 @@ const Photos = () => {
   })
 
   const [
-    getAlbumPhotos,
+    getAlbumPhotosManually,
     { data: manualAlbumPhotos, loading: manualAlbumPhotosLoading },
   ] = useGetAlbumPhotosLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const [
+    getPhotoAlbumsManually,
+    { data: manualPhotoAlbums, loading: manualPhotoAlbumsLoading },
+  ] = useGetPhotoAlbumsLazyQuery({
     fetchPolicy: 'network-only',
   })
 
@@ -72,27 +102,6 @@ const Photos = () => {
   const [deleteAlbum] = useDeleteOnePhotoAlbumMutation()
 
   useEffect(() => {
-    const iterateTo = (dataArr) => {
-      return dataArr?.map((item) => {
-        return {
-          id: item?.id,
-          albumTitle: item?.name,
-          modifiedDate: item?.modified_date || item?.creation_date,
-          imageCount: item?.imageCount?.imageList,
-          albumImage: item?.Photos?.map((el) => {
-            return {
-              id: el?.id,
-              date: el?.date,
-              img: !el?.linkref?.includes('http')
-                ? attachmentsBaseUrl + el?.linkref
-                : el?.linkref,
-              isSensitive: false,
-            }
-          }),
-          album: item?.albums ? iterateTo(item?.albums) : [],
-        }
-      })
-    }
     if (albumsData?.findManyPhotoAlbum && !albumsLoading) {
       const innerAlbums = iterateTo(albumsData?.findManyPhotoAlbum)
       const cAlbums = {
@@ -132,19 +141,43 @@ const Photos = () => {
       manualAlbumPhotos?.findManyContactAttachment &&
       !manualAlbumPhotosLoading
     ) {
-      const images = manualAlbumPhotos?.findManyContactAttachment?.map((el) => {
-        return {
-          id: el?.id,
-          img: !el?.origin?.includes('http')
-            ? attachmentsBaseUrl + el?.origin
-            : el?.origin,
-          date: el?.date,
-          isSensitive: false,
-        }
-      })
-      setCurrAlbumImages(images)
+      setCurrAlbumImages(null)
+      setTimeout(() => {
+        const images = manualAlbumPhotos?.findManyContactAttachment?.map(
+          (el) => {
+            return {
+              id: el?.id,
+              img: !el?.origin?.includes('http')
+                ? attachmentsBaseUrl + el?.origin
+                : el?.origin,
+              date: el?.date,
+              isSensitive: false,
+            }
+          }
+        )
+        setCurrAlbumImages(images)
+      }, 0)
     }
   }, [manualAlbumPhotos, manualAlbumPhotosLoading])
+
+  useEffect(() => {
+    if (manualPhotoAlbums?.findManyPhotoAlbum && !manualPhotoAlbumsLoading) {
+      const innerAlbums = iterateTo(manualPhotoAlbums?.findManyPhotoAlbum)
+      const cAlbums = {
+        id: 0,
+        albumTitle:
+          unCatImagesCount?.aggregateContactAttachment?.count?._all > 0
+            ? 'Uncategorized'
+            : '',
+        imageCount:
+          unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
+        albumImage: [],
+        modifiedDate: '',
+        album: innerAlbums,
+      }
+      setAlbums(cAlbums)
+    }
+  }, [manualPhotoAlbums, manualPhotoAlbumsLoading, unCatImagesCount])
 
   const onAlbumCreate = (album: string) => {
     createAlbum({
@@ -271,12 +304,17 @@ const Photos = () => {
             setShowPhotoStudio((e) => !e)
             setStudioAlbumId(0)
             setStudioImageId(0)
-            getAlbumPhotos({
+            getAlbumPhotosManually({
               variables: {
                 contactId: router.query.id ? Number(router.query.id) : 0,
                 albumId: albumId,
                 skip: (paginatedData?.currentPage - 1) * paginatedData?.perPage,
                 take: paginatedData?.perPage,
+              },
+            })
+            getPhotoAlbumsManually({
+              variables: {
+                contactId: router.query.id ? Number(router.query.id) : 0,
               },
             })
           }}

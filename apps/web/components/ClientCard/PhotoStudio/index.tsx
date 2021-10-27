@@ -84,28 +84,26 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   })
 
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingImages(cAddedFiles)
-        if (
-          data?.createOneContactAttachment?.album_id === currentAlbumData?.id
-        ) {
+        if (data?.album_id === currentAlbumData?.id) {
           const cCurrAlbumData = { ...currentAlbumData }
           cCurrAlbumData.imageCount = cCurrAlbumData.imageCount + 1
           cCurrAlbumData.imageList.push({
             date: dayjs().format('YYYY-MM-DD'),
-            id: data?.createOneContactAttachment?.id,
-            origin: data?.createOneContactAttachment?.linkref?.includes('http')
-              ? data?.createOneContactAttachment?.linkref
-              : `${cdn}${data?.createOneContactAttachment?.linkref}`,
+            id: data?.id,
+            origin: data?.linkref?.includes('http')
+              ? data?.linkref
+              : `${cdn}${data?.linkref}`,
           })
           setCurrentAlbumData(cCurrAlbumData)
         }
@@ -116,28 +114,26 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const [
     createAttachmentOutOfAlbum,
   ] = useCreateContactPhotoWithoutAlbumMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingImages(cAddedFiles)
-        if (
-          data?.createOneContactAttachment?.album_id === currentAlbumData?.id
-        ) {
+        if (data?.album_id === currentAlbumData?.id) {
           const cCurrAlbumData = { ...currentAlbumData }
           cCurrAlbumData.imageCount = cCurrAlbumData.imageCount + 1
           cCurrAlbumData.imageList.push({
             date: dayjs().format('YYYY-MM-DD'),
-            id: data?.createOneContactAttachment?.id,
-            origin: data?.createOneContactAttachment?.linkref?.includes('http')
-              ? data?.createOneContactAttachment?.linkref
-              : `${cdn}${data?.createOneContactAttachment?.linkref}`,
+            id: data?.id,
+            origin: data?.linkref?.includes('http')
+              ? data?.linkref
+              : `${cdn}${data?.linkref}`,
           })
           setCurrentAlbumData(cCurrAlbumData)
         }
@@ -146,27 +142,24 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   })
 
   const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
-    onCompleted(data) {
-      const id = data?.deleteOneContactAttachment?.id
+    onCompleted({ deleteOneContactAttachment: data }) {
+      const id = data?.id
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.id === id)
       if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
         cAddedFiles.splice(idx, 1)
         setUploadingImages(cAddedFiles)
-        if (currentAlbumData?.id) {
-          getCurrentAlbumData({
-            variables: {
-              albumId: currentAlbumData?.id,
-              contactId: contactId,
-            },
-          })
-        } else {
-          getUncatAlbumPhotos({
-            variables: {
-              contactId: contactId,
-              albumId: 0,
-            },
-          })
+        const cCurrAlbumData = { ...currentAlbumData }
+        const cIdx = cCurrAlbumData?.imageList?.findIndex(
+          (el) => el?.id === cFile?.id
+        )
+        if (cIdx !== -1) {
+          if (cCurrAlbumData.imageCount) {
+            cCurrAlbumData.imageCount = cCurrAlbumData.imageCount - 1
+          }
+          cCurrAlbumData.imageList.splice(cIdx, 1)
+          setCurrentAlbumData(cCurrAlbumData)
         }
       }
     },
@@ -390,26 +383,27 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     const cAddedFiles = [...uploadingImages]
     const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === imagePath)
     if (idx !== -1) {
-      const data = new FormData()
-      data.append('file_path', imagePath)
-      const cFile = cAddedFiles[idx]
-      cFile.loading = true
-      cAddedFiles.splice(idx, 1, cFile)
-      setUploadingImages(cAddedFiles)
+      console.log("WILL WORK WHEN MARTIN's RESOLVER GET MERGED")
+      // const data = new FormData()
+      // data.append('file_path', imagePath)
+      // const cFile = cAddedFiles[idx]
+      // cFile.loading = true
+      // cAddedFiles.splice(idx, 1, cFile)
+      // setUploadingImages(cAddedFiles)
 
-      const res = await postData(
-        `${baseURL}delete-photo`,
-        { file_path: imagePath },
-        null
-      )
-      if (res.success) {
-        const cFile = cAddedFiles[idx]
-        deleteAttachmentInAlbum({
-          variables: {
-            id: cFile?.id,
-          },
-        })
-      }
+      // const res = await postData(
+      //   `${baseURL}delete-photo`,
+      //   { file_path: imagePath },
+      //   null
+      // )
+      // if (res.success) {
+      //   const cFile = cAddedFiles[idx]
+      //   deleteAttachmentInAlbum({
+      //     variables: {
+      //       id: cFile?.id,
+      //     },
+      //   })
+      // }
     }
   }
 
