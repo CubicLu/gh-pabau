@@ -1254,6 +1254,7 @@ en:
   setup.discount.data.enterdiscountcode: 'Enter discount’s code'
   setup.discount.data.advancedsettings: 'Advanced settings'
   setup.clinic: 'Our clinic'
+  setup.business: 'Business'
   setup.clinic.bussiness.details: 'Business Details'
   setup.clinic.user: Users
   setup.clinic.user.group: 'User Groups'
@@ -1265,14 +1266,19 @@ en:
   setup.clinic.general.pos: 'Point of Sale'
   setup.clinic.general.referral: Referral
   setup.clinic.integrations: Integrations
-  setup.clinic.data: Data
+  setup.clinic.integrations.connectedApps: 'Connected Apps'
+  setup.clinic.integrations.marketplace: 'App Marketplace'
+  setup.clinic.integrations.apiKey: 'API Key'
+  setup.clinic.integrations.developerHub: 'Developer Hub'
+  setup.clinic.data: 'Data Management'
   setup.clinic.data.custom.field: 'Custom Fields'
   setup.clinic.data.imports: 'Data Imports'
+  setup.clinic.data.labels: 'Labels'
   setup.clinic.subscription: 'Pabau Subscription'
   setup.clinic.subscription.billing: 'Billing Details'
   setup.clinic.subscription.billing.details: 'Billing history'
   setup.clinic.subscription.addons: Addons
-  setup.product.service.title: 'Products & Services'
+  setup.product.service.title: 'Services'
   setup.services: Services
   setup.product: Products
   setup.packages: Packages
@@ -1310,6 +1316,7 @@ en:
   setup.financials.invoice: 'Invoice Templates'
   setup.financials.payment.type: 'Payment Types'
   setup.financials.contract: 'Contract Pricing'
+  setup.financials.pricing.rules: 'Pricing Rules'
   setup.financials.cancellation: 'Cancellation Policy'
   setup.developer: 'Developer & Other'
   setup.developer.webhooks: Webhooks
@@ -1335,6 +1342,17 @@ en:
   setup.developer.issuing.companies: 'Issuing companies'
   setup.developer.job.status: 'Job statues'
   setup.developer.supplier.categories: 'Supplier categories'
+  setup.developer.others: 'Objects'
+  setup.developer.others.departments: 'Departments'
+  setup.developer.others.blockout: 'Block Out Options'
+  setup.developer.others.appointment.status: 'Appointment Statuses'
+  setup.developer.others.activity.types: 'Activity Types'
+  setup.developer.others.credit.notes: 'Credit Note types'
+  setup.developer.others.petty.cash: 'Petty Cash Types'
+  setup.developer.others.salutations: 'Salutations'
+  setup.developer.others.cancellation.reason: 'Cancellation Reasons'
+  setup.developer.others.family: 'Family Relationships'
+  setup.developer.others.issue.company: 'Issuing Companies'
   setup.blockout.notification.create.success: 'Success! You have successfully created a blockout option'
   setup.blockout.notification.create.error: 'Error! While creating a blockout option'
   setup.blockout.notification.edit.success: 'Success! You have successfully edited a blockout option'

@@ -106,6 +106,10 @@
       text-transform: capitalize;
       color: #9292a3;
       cursor: pointer;
+      // :global .ant-collapse {
+      //   background-color: #fff !important;
+      //   border: unset !important;
+      // }
 
       &:first-child {
         border-top: 1px solid #ecedf0;
@@ -142,6 +146,8 @@
     }
 
     :global .ant-collapse {
+      background-color: #fff !important;
+      border: unset !important;
       > .ant-collapse-item {
         > .ant-collapse-header {
           padding: 9px 16px !important;
