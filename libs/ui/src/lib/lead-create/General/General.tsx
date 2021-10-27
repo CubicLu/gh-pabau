@@ -21,7 +21,7 @@ interface GeneralProps {
   values?: InitialDetailsDataProps
   setFieldValue(
     field: keyof InitialDetailsDataProps,
-    values: Dayjs | null | string | string[] | boolean | number
+    values: string | string[] | boolean | number | Dayjs | null
   ): void
   fieldsSettings?: FieldSetting[]
   salutationData?: CommonProps[]

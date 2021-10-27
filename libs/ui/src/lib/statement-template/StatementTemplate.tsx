@@ -95,8 +95,13 @@ export const StatementTemplate: FC<StatementTemplateProps> = ({
                 {t('invoice.label.name.from')}
               </span>
               {clinicDetails?.map((clinicDetails) => {
-                const { website, email, phone, address, country } =
-                  clinicDetails
+                const {
+                  website,
+                  email,
+                  phone,
+                  address,
+                  country,
+                } = clinicDetails
                 return (
                   <>
                     <span className={styles.section1Text}>{website}</span>

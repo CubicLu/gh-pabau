@@ -319,8 +319,9 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const [type, setType] = useState<RelationshipType>('family-member')
   const [customizingFields, setCustomizingFields] = useState(false)
   const [hoverDetails, setHoverDetails] = useState(false)
-  const [fieldsOrder, setFieldsOrder] =
-    useState<FieldOrderItem[]>(defaultFieldOrder)
+  const [fieldsOrder, setFieldsOrder] = useState<FieldOrderItem[]>(
+    defaultFieldOrder
+  )
   const [form] = Form.useForm()
   const [clientLabels, setClientLabels] = useState<Labels[]>([])
   const [cardBadgeUpdate, setCardBadgeUpdate] = useState(

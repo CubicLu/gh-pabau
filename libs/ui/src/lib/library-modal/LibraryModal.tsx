@@ -135,8 +135,9 @@ export const LibraryModal: FC<LibraryModalProps> = ({
     styles.paddingCenter,
     styles.paddingLeft,
   ]
-  const [bundleTypesObject, setBundleTypes] =
-    useState<DefaultBundleType>(defaultBundleTypes)
+  const [bundleTypesObject, setBundleTypes] = useState<DefaultBundleType>(
+    defaultBundleTypes
+  )
   const [selected, setSelected] = useState(0)
 
   const handleClickItem = (type) => {

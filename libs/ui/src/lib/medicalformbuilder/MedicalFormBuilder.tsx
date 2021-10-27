@@ -110,18 +110,25 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
   const [medicalFormType, setMedicalFormType] = useState(preFormType)
-  const [medicalFormServices, setMedicalFormServices] =
-    useState(preFormServices)
+  const [medicalFormServices, setMedicalFormServices] = useState(
+    preFormServices
+  )
   const [formSaveLabel, setFormSaveLabel] = useState('')
-  const [currentMedicalForm, setCurrentMedicalForm] =
-    useState<MedicalFormItem>()
+  const [
+    currentMedicalForm,
+    setCurrentMedicalForm,
+  ] = useState<MedicalFormItem>()
   const [visiblePreview, setVisiblePreview] = useState(false)
   const [activatePanel, setActivatePanel] = useState('1')
   const [clickedCreateForm, setClickedCreateForm] = useState(false)
   const [clickedPreviewForm, setClickedPreviewForm] = useState(false)
   const [formData, setFormData] = useState('')
-  const [advSettingData, setAdvSettingData] =
-    useState<MedicaFormAdvanceSettingData>(defaultMedicaFormAdvanceSettingData)
+  const [
+    advSettingData,
+    setAdvSettingData,
+  ] = useState<MedicaFormAdvanceSettingData>(
+    defaultMedicaFormAdvanceSettingData
+  )
   const [draggedFormCnts, setDraggedFormCnts] = useState(0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
   const [disabledButton, setDisabledButton] = useState(true)

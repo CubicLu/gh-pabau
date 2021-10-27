@@ -1490,13 +1490,15 @@ export const communicationEventsData = [
     ],
     pinItems: [
       {
-        item: 'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf',
+        item:
+          'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf',
       },
       {
         item: 'http://www.africau.edu/images/default/sample.pdf',
       },
       {
-        item: 'https://i.pinimg.com/originals/a3/f7/01/a3f70197315949b3f320764a8a194c32.jpg',
+        item:
+          'https://i.pinimg.com/originals/a3/f7/01/a3f70197315949b3f320764a8a194c32.jpg',
       },
     ],
     displayCollapse: true,
@@ -1799,7 +1801,8 @@ const formData = {
   createdOn: '2021-03-01T00:00:00Z',
   createdBy: 'Bruno Ballardin',
   electronicOrderNo: 'AA3655583543',
-  to: 'The Doctors Laboratory, 76 Wimpole Street, London, W1G 9RT Tel: 020 7307 7373',
+  to:
+    'The Doctors Laboratory, 76 Wimpole Street, London, W1G 9RT Tel: 020 7307 7373',
   requestingDoctor: 'Dr. Anna Chapman',
   requestDate: '2021-03-01T00:00:00Z',
   patientId: '326',

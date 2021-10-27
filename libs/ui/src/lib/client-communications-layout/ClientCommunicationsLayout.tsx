@@ -8,18 +8,21 @@ export interface ClientCommunicationsLayoutProps {
   isLoading?: boolean
 }
 
-export const ClientCommunicationsLayout: FC<ClientCommunicationsLayoutProps> =
-  ({ eventDateFormat, eventsData, isLoading }) => {
-    const ref = useRef<HTMLDivElement>(null)
-    return (
-      <div className={styles.clientLayout} ref={ref}>
-        <CommunicationTimeline
-          eventsData={eventsData}
-          eventDateFormat={eventDateFormat}
-          isLoading={isLoading}
-        />
-      </div>
-    )
-  }
+export const ClientCommunicationsLayout: FC<ClientCommunicationsLayoutProps> = ({
+  eventDateFormat,
+  eventsData,
+  isLoading,
+}) => {
+  const ref = useRef<HTMLDivElement>(null)
+  return (
+    <div className={styles.clientLayout} ref={ref}>
+      <CommunicationTimeline
+        eventsData={eventsData}
+        eventDateFormat={eventDateFormat}
+        isLoading={isLoading}
+      />
+    </div>
+  )
+}
 
 export default ClientCommunicationsLayout

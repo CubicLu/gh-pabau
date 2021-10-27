@@ -902,8 +902,9 @@ const UpcomingAppointmentReminderStory = ({
   </EmailSmsPreview>
 )
 
-export const UpComingAppointmentReminders =
-  UpcomingAppointmentReminderStory.bind({})
+export const UpComingAppointmentReminders = UpcomingAppointmentReminderStory.bind(
+  {}
+)
 UpComingAppointmentReminders.args = {
   greeting: 'Hi Anna,',
   message:

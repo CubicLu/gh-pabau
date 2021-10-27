@@ -17,7 +17,8 @@ export const DefaultFormTypeItems: FormTypeGroupInfo = {
   medicalHistory: {
     label: 'Medical History',
     selected: false,
-    desc: 'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information     ',
+    desc:
+      'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information     ',
     icon: <MedicalHistory />,
     iconSelected: <MedicalHistorySelected />,
   },
@@ -38,7 +39,8 @@ export const DefaultFormTypeItems: FormTypeGroupInfo = {
   epaper: {
     label: 'ePaper',
     selected: false,
-    desc: 'ePaper allows you to either scan in a document or upload a PDF to draw directly onto the screen using a stylus or apple pencil',
+    desc:
+      'ePaper allows you to either scan in a document or upload a PDF to draw directly onto the screen using a stylus or apple pencil',
     icon: <EPaper />,
     iconSelected: <EPaperSelected />,
   },

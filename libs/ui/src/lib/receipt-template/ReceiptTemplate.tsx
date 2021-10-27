@@ -91,8 +91,13 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
                 {t('invoice.label.name.from')}
               </span>
               {clinicDetails?.map((clinicDetails) => {
-                const { website, email, phone, address, country } =
-                  clinicDetails
+                const {
+                  website,
+                  email,
+                  phone,
+                  address,
+                  country,
+                } = clinicDetails
                 return (
                   <>
                     <span className={styles.section1Text}>{website}</span>
@@ -105,8 +110,13 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
               })}
             </div>
             {receiptDetails?.map((receiptDetails) => {
-              const { key, receipt, issuedTo, issuedBy, paymentDate } =
-                receiptDetails
+              const {
+                key,
+                receipt,
+                issuedTo,
+                issuedBy,
+                paymentDate,
+              } = receiptDetails
               return (
                 <div className={styles.right} key={key}>
                   <div className={styles.rightInner}>
