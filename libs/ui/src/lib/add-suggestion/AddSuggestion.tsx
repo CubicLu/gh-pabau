@@ -1,22 +1,27 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Select } from 'antd'
 import styles from './AddSuggestion.module.less'
+import { CompanyListItem } from '@pabau/ui'
 const { Option } = Select
 
 export interface AddSuggestionProps {
   label: string
   defaultSelected: Array<string | number>
-  options: Array<string | number>
-  onChange: (value) => void
+  options: CompanyListItem[]
+  onChange: (value: Array<string | number>) => void
 }
 
 export const AddSuggestion: FC<AddSuggestionProps> = ({
   label,
-  defaultSelected,
-  options,
+  defaultSelected = [],
+  options = [],
   onChange,
 }) => {
   const [selected, setSelected] = useState(defaultSelected)
+
+  useEffect(() => {
+    setSelected(defaultSelected)
+  }, [defaultSelected])
 
   const handleChange = (value) => {
     setSelected(value)
@@ -30,13 +35,13 @@ export const AddSuggestion: FC<AddSuggestionProps> = ({
         mode="multiple"
         style={{ width: '100%' }}
         placeholder={label}
-        defaultValue={selected}
+        value={selected}
         onChange={handleChange}
       >
         {options?.length &&
           options.map((el, index) => (
-            <Option key={`multiCheckBoxOption${index}`} value={el}>
-              {el || ''}
+            <Option key={`multiCheckBoxOption${index}`} value={el.id}>
+              {el.name}
             </Option>
           ))}
       </Select>

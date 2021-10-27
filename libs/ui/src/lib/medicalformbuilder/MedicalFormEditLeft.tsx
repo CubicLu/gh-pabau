@@ -2,6 +2,7 @@ import {
   defaultSelectedFormInfos,
   MedicalForms,
   SelectedForms,
+  CompanyListItem,
 } from '@pabau/ui'
 import { Collapse } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
@@ -19,11 +20,15 @@ interface P {
   isEditing: () => boolean
   medicalForms: MedicalForms[]
   changeFormName: (formName: string) => void
+  changeService: (services: Array<string | number>) => void
   changeFormType: (formType: string) => void
   formName: string
+  medicalFormType: string
+  medicalFormServices: string
   changeLayout: (noRight: boolean) => void
   runPreviewPdf: () => void
   handlingClickLeft: (componentName: string) => void
+  companyServiceListItems: CompanyListItem[]
 }
 
 const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
@@ -33,12 +38,17 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
     isEditing,
     medicalForms,
     changeFormName,
+    changeService,
     changeFormType,
     formName,
+    medicalFormType = '',
+    medicalFormServices = '',
     changeLayout,
     runPreviewPdf,
     handlingClickLeft,
+    companyServiceListItems = [],
   } = props
+
   const [selectedFormTypes, setSelectedFormTypes] = useState<SelectedForms>(
     defaultSelectedFormInfos
   )
@@ -98,6 +108,50 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
       setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
   }, [openPanel])
 
+  useEffect(() => {
+    const setting = {
+      medicalHistory: false,
+      consent: false,
+      treatment: false,
+      epaper: false,
+      prescription: false,
+      lab: false,
+    }
+    if (medicalFormType !== '') {
+      switch (medicalFormType) {
+        case 'questionnaire':
+          setting.medicalHistory = true
+          break
+        case 'consent':
+          setting.consent = true
+          break
+        case 'treatment':
+          setting.treatment = true
+          break
+        case 'prescription':
+          setting.prescription = true
+          break
+        case 'lab':
+          setting.lab = true
+          break
+        case 'epaper':
+          setting.epaper = true
+          break
+      }
+    }
+    setSelectedFormTypes(setting)
+    setIsEpaper(setting.epaper)
+    if (medicalFormType !== '' && setting.epaper === false) {
+      setOpenPanel(['2'])
+      setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
+    } else {
+      setOpenPanel(['1'])
+      setComponentClass(
+        styles.medicalFormEditLeftPanelCollapseComponentCollapse
+      )
+    }
+  }, [medicalFormType])
+
   return (
     <div className={styles.medicalFormEditLeftPanel}>
       <Collapse
@@ -115,7 +169,11 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
             isEditing={isEditing}
             onSelectFormType={onSelectFormType}
             changeFormName={changeFormName}
+            changeService={changeService}
             formName={formName}
+            medicalFormType={medicalFormType}
+            medicalFormServices={medicalFormServices}
+            companyServiceListItems={companyServiceListItems}
           />
           {isEpaper && <MedicalFormUploadButtons onPreviewPdf={onPreviewPdf} />}
         </Panel>
