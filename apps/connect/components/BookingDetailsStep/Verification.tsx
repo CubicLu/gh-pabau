@@ -57,10 +57,12 @@ export const Verification: FC<P> = ({ backToStep }) => {
             />
           </h5>
           <div className={styles.imgTag}>
-            <img
-              src={'https://crm.pabau.com' + selectedData.employee.Avatar}
-              alt={'nothing'}
-            />
+            {selectedData.employee.Avatar !== '' && (
+              <img
+                src={'https://crm.pabau.com' + selectedData.employee.Avatar}
+                alt={selectedData.employee.Avatar}
+              />
+            )}
             <p>{selectedData.employee.Public_User.full_name}</p>
           </div>
         </div>

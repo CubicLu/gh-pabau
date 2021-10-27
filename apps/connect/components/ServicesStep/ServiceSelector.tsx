@@ -1,4 +1,4 @@
-import React, { useState, FC, useContext } from 'react'
+import React, { useState, useEffect, FC, useContext } from 'react'
 import {
   QuestionCircleOutlined,
   ClockCircleOutlined,
@@ -40,8 +40,8 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
   const [showReviewsModal, setShowReviewsModal] = useState(false)
   const [showServiceInfoModal, setShowServiceInfoModal] = useState(false)
   const [previewService, setPreviewService] = useState(null)
-  // CRAP
 
+  // CRAP
   const [Vcount, setVcount] = useState(0)
   const [Vprice, setVprice] = useState(0)
   const [VoucherData, setVoucherData] = useState(voucherData)
@@ -77,11 +77,18 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
     skip: hasMasterCategories,
   })
 
+  useEffect(() => {
+    if (!loadingServicesByCategory && !hasMasterCategories) {
+      setSelectedData(
+        actionTypes.SET_CATEGORY_ID,
+        servicesByCategory.Public_ServiceCategories[0].id
+      )
+    }
+  }, [loadingServicesByCategory])
+
   if (errorServices || errorServicesByCategory) return <div>Error!</div>
   if (loadingServices || loadingServicesByCategory) return <div>Loading...</div>
 
-  if (!hasMasterCategories) {
-  }
   // EVENT HANDLERS
 
   // RENDER HELPERS
@@ -342,7 +349,7 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
                 <Rate
                   disabled
                   className={styles.consultatioRate}
-                  defaultValue={val.online_only_service ? 0 : 5}
+                  defaultValue={val.online_only_service ? 0 : val.rating}
                 />
 
                 <span
