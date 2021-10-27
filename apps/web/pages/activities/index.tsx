@@ -232,8 +232,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
     field: 'Due date',
     order: 'asc',
   })
-  const [filterDataObject, setFilterDataObject] =
-    useState<FilterDataObjectType>()
+  const [
+    filterDataObject,
+    setFilterDataObject,
+  ] = useState<FilterDataObjectType>()
   const [userColumns, setUserColumns] = useState<string[]>([])
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
@@ -290,11 +292,15 @@ export const Index: FC<IndexProps> = ({ client }) => {
     filterDataObject,
   ])
 
-  const { data: activityActiveResponse, loading: activityActiveLoading } =
-    useFindFirstActivityUserStateQuery()
+  const {
+    data: activityActiveResponse,
+    loading: activityActiveLoading,
+  } = useFindFirstActivityUserStateQuery()
 
-  const { loading: filterLoading, data: filterData } =
-    useGetActivityTypesQuery()
+  const {
+    loading: filterLoading,
+    data: filterData,
+  } = useGetActivityTypesQuery()
   // const { loading: activityLoading, error: activityError, data: activityData } = useQuery(findManyActivity, getQueryVariables)
   // const { data: activityAggregateData, loading: aggregateLoading } = useQuery(activityCount, getAggregateQueryVariables)
   const { data: userListData } = useActivityUserListQuery({
@@ -304,8 +310,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
   })
   // const { data: activityGraph, loading: activityGraphLoading } = useQuery(activityGraphQuery, getAggregateQueryVariables)
 
-  const { data: activityResponse, loading: activityDataLoading } =
-    useFindManyActivityDataQuery(getQueryVariables)
+  const {
+    data: activityResponse,
+    loading: activityDataLoading,
+  } = useFindManyActivityDataQuery(getQueryVariables)
 
   useEffect(() => {
     const response = activityResponse?.findManyActivityData

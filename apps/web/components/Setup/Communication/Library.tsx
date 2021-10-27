@@ -25,7 +25,8 @@ const formTypeItems: FormTypeGroupInfo = {
   email: {
     label: 'Email',
     selected: false,
-    desc: 'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information     ',
+    desc:
+      'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information     ',
     icon: <MailOutlined />,
     iconSelected: <MailOutlined />,
   },

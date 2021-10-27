@@ -470,10 +470,12 @@ export function Report(props: ReportProps) {
     setMeta(newMeta)
   }
 
-  const [getCellDetails, { data: cellDetails, loading: cellDetailsLoading }] =
-    useCellDetailsLazyQuery({
-      fetchPolicy: 'no-cache',
-    })
+  const [
+    getCellDetails,
+    { data: cellDetails, loading: cellDetailsLoading },
+  ] = useCellDetailsLazyQuery({
+    fetchPolicy: 'no-cache',
+  })
 
   const handleSelectCell = (
     row: number,

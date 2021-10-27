@@ -180,8 +180,9 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
   const [voidModal, setVoidModal] = useState(false)
   const [showHistoryDrawer, setShowHistoryDrawer] = useState(false)
   const [showRefundModal, setShowRefundModal] = useState(false)
-  const [showCheckoutWarningModal, setShowCheckoutWarningModal] =
-    useState(false)
+  const [showCheckoutWarningModal, setShowCheckoutWarningModal] = useState(
+    false
+  )
 
   return (
     <>

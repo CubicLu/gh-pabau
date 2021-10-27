@@ -70,8 +70,10 @@ const ProductList = (): JSX.Element => {
   }
   const [productSearchTerm, setProductSearchTerm] = useState<string>()
   const [supplierSearchTerm, setSupplierSearchTerm] = useState<string>()
-  const [purchaseOrdersSearchTerm, setPurchaseOrdersSearchTerm] =
-    useState<string>()
+  const [
+    purchaseOrdersSearchTerm,
+    setPurchaseOrdersSearchTerm,
+  ] = useState<string>()
   const [stockSearchTerm, setStockSearchTerm] = useState<string>()
   const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState(false)

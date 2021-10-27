@@ -120,8 +120,10 @@ const ClientLeadMenu = ({
   disabled,
   options,
 }) => {
-  const [fetchContactName, { data: contactData }] =
-    useFindContactNameLazyQuery()
+  const [
+    fetchContactName,
+    { data: contactData },
+  ] = useFindContactNameLazyQuery()
   const [fetchLeadName, { data: leadData }] = useFindLeadNameLazyQuery()
   const [clientName, setClientName] = useState<string>()
   const [leadName, setLeadName] = useState<string>()
@@ -248,8 +250,10 @@ export const FilterMenu: FC<FilterMenuProps> = ({
 
   const { statusMenu, freeBusyOption, doneOption } = getData(t)
   const [fetchLead, { data, loading }] = useFindManyLeadsLazyQuery()
-  const [fetchContact, { data: contactData, loading: contactLoading }] =
-    useFindManyContactsLazyQuery()
+  const [
+    fetchContact,
+    { data: contactData, loading: contactLoading },
+  ] = useFindManyContactsLazyQuery()
   useEffect(() => {
     if (personsList.length > 0) {
       setUserList([

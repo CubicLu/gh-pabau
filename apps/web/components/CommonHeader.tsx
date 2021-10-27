@@ -50,8 +50,9 @@ const CommonHeader: FC<P> = ({
   const user = useUser()
   const [showChat, setShowChat] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
-  const [openNotificationDrawer, setNotificationDrawer] =
-    useState<boolean>(false)
+  const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
+    false
+  )
   const [showSearch, setShowSearch] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const { t } = useTranslationI18()

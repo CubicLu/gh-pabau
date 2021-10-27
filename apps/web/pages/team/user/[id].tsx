@@ -12,11 +12,13 @@ const GetUserDetails = () => {
   const queryVariable = useMemo(() => {
     return { userID: staffId }
   }, [staffId])
-  const { data: staffData, loading: staffDataLoading } =
-    useGetStaffDetailsQuery({
-      variables: queryVariable,
-      skip: !staffId,
-    })
+  const {
+    data: staffData,
+    loading: staffDataLoading,
+  } = useGetStaffDetailsQuery({
+    variables: queryVariable,
+    skip: !staffId,
+  })
   useEffect(() => {
     const response = staffData?.findUniqueUser
     if (response) {

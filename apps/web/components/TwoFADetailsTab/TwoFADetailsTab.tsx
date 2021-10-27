@@ -12,8 +12,10 @@ import { useUser } from '../../context/UserContext'
 const TwoFADetailsTab = () => {
   const { me } = useUser()
   const { t } = useTranslationI18()
-  const { data: twoFAdata, loading: twoFAloading } =
-    useGetCompanyDetails2faQuery()
+  const {
+    data: twoFAdata,
+    loading: twoFAloading,
+  } = useGetCompanyDetails2faQuery()
 
   const [updateCompanyDetails2faMutation] = useUpdateCompanyDetails2faMutation()
   const [twoFAstatus, setTwoFAstatus] = useState(0)

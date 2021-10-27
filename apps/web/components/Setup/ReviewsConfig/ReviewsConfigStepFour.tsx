@@ -24,8 +24,9 @@ export const ReviewsConfigStepFour: FC<ReviewsConfigStepFourProps> = ({
 }) => {
   const isMobile = useMedia('(max-width: 767px)', false)
   const [openPreview, setOpenPreview] = useState(false)
-  const [currentReviews, setCurrentReviews] =
-    useState<ReviewSliderProps>(defaultPreview)
+  const [currentReviews, setCurrentReviews] = useState<ReviewSliderProps>(
+    defaultPreview
+  )
   const [embedCodeView, setEmbedCodeView] = useState(false)
   const [embedCode, setEmbedCode] = useState('')
   return (

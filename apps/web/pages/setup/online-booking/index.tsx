@@ -56,8 +56,9 @@ export const Index: FC<OnlineBookingProps> = ({
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 767px)', false)
   const [getStarted, setGetStarted] = useState(false)
-  const [builder, setBuilder] =
-    useState<OnlineBookingBuilder>(defaultBuilderData)
+  const [builder, setBuilder] = useState<OnlineBookingBuilder>(
+    defaultBuilderData
+  )
 
   useEffect(() => {
     setBuilder(builderSetting)

@@ -267,8 +267,9 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   setFilterOption,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
-  const [initialValue, setInitialValue] =
-    useState<InitialValueTypes>(defaultValue)
+  const [initialValue, setInitialValue] = useState<InitialValueTypes>(
+    defaultValue
+  )
   const { t } = useTranslationI18()
   const { visibilityMenuOption } = getData(t)
 

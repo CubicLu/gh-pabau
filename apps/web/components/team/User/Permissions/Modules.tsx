@@ -10,8 +10,9 @@ const Modules: FC<ModulesProps> = ({
   handleModuleSaveChanges,
   PermissionFields,
 }) => {
-  const [mainFields, setMainFields] =
-    useState<PermissionFieldType[]>(PermissionFields)
+  const [mainFields, setMainFields] = useState<PermissionFieldType[]>(
+    PermissionFields
+  )
 
   const UnCheckAll = () => {
     for (const f of mainFields) {
@@ -34,8 +35,8 @@ const Modules: FC<ModulesProps> = ({
   }
 
   const onChange = (index: number, ind: number) => {
-    mainFields[index].container[ind].value =
-      !mainFields[index].container[ind].value
+    mainFields[index].container[ind].value = !mainFields[index].container[ind]
+      .value
     setMainFields([...mainFields])
     handleModuleSaveChanges(mainFields)
   }

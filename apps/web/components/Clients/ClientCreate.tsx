@@ -118,8 +118,10 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess])
 
-  const [getFieldSettingData, { data: fieldSettingData, loading }] =
-    useGetTblModuleFieldsSettingsLazyQuery()
+  const [
+    getFieldSettingData,
+    { data: fieldSettingData, loading },
+  ] = useGetTblModuleFieldsSettingsLazyQuery()
 
   const [
     getSalutationData,
@@ -141,16 +143,20 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     { data: customFieldData, loading: customFieldLoading },
   ] = useGetContactCustomFieldsLazyQuery()
 
-  const [getLabels, { data: labelsQueryData, loading: labelLoading }] =
-    useGetCmLabelsLazyQuery()
+  const [
+    getLabels,
+    { data: labelsQueryData, loading: labelLoading },
+  ] = useGetCmLabelsLazyQuery()
 
-  const [getContact, { data: contactData, loading: editContactLoading }] =
-    useFindEditContactDetailLazyQuery({
-      variables: {
-        id: contactId,
-      },
-      fetchPolicy: 'no-cache',
-    })
+  const [
+    getContact,
+    { data: contactData, loading: editContactLoading },
+  ] = useFindEditContactDetailLazyQuery({
+    variables: {
+      id: contactId,
+    },
+    fetchPolicy: 'no-cache',
+  })
 
   const [addMutation] = useCreateOneContactMutation({
     onCompleted(data) {

@@ -171,8 +171,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     const { t } = useTranslationI18()
     // const [sourceData, setSourceData] = useState<ActivitiesDataProps[]>([])
 
-    const [visibleAddColumnPopover, setVisibleAddColumnPopover] =
-      useState(false)
+    const [visibleAddColumnPopover, setVisibleAddColumnPopover] = useState(
+      false
+    )
     // const [displayData, setDisplayData] = useState([])
     // const [selectedColumn, setSelectedColumn] = useState(defaultColumns)
     const [displayAddColumn, setDisplayAddColumn] = useState(true)
@@ -1412,24 +1413,22 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
       },
     }
 
-    const handleResize =
-      (col, index) =>
-      (e, { size }) => {
-        const nextColumns = [...columns]
-        nextColumns[index] = {
-          ...nextColumns[index],
-          width: size?.width,
-        }
-        setColumns(nextColumns)
-        const updateColumns = columnItem.map((data) => {
-          const temp = { ...data }
-          if (temp.columnName === col.columnName) {
-            temp['width'] = size?.width
-          }
-          return temp
-        })
-        setColumnItem(updateColumns)
+    const handleResize = (col, index) => (e, { size }) => {
+      const nextColumns = [...columns]
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size?.width,
       }
+      setColumns(nextColumns)
+      const updateColumns = columnItem.map((data) => {
+        const temp = { ...data }
+        if (temp.columnName === col.columnName) {
+          temp['width'] = size?.width
+        }
+        return temp
+      })
+      setColumnItem(updateColumns)
+    }
 
     const dragProps = {
       async onDragEnd(fromIndex, toIndex) {

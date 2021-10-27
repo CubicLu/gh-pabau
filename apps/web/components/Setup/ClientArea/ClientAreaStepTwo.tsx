@@ -21,8 +21,9 @@ export const ClientAreaStepTwo: FC<ClientAreaStepTwoProps> = ({ settings }) => {
   })
   const handleClickWidgetOps = () => {
     const widgets = { ...setting }
-    widgets[currentWidget.mainKey].widgets[currentWidget.id].isEnabled =
-      !currentWidget.isEnabled
+    widgets[currentWidget.mainKey].widgets[
+      currentWidget.id
+    ].isEnabled = !currentWidget.isEnabled
     setSetting({ ...widgets })
     setVisible(false)
   }

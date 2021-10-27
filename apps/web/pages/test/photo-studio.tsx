@@ -35,15 +35,19 @@ export const Index: FC = () => {
     fetchPolicy: 'network-only',
   })
 
-  const [getPhotos, { data: photos, loading: photosLoading }] =
-    useGetPhotoAlbumLazyQuery({
-      fetchPolicy: 'network-only',
-    })
+  const [
+    getPhotos,
+    { data: photos, loading: photosLoading },
+  ] = useGetPhotoAlbumLazyQuery({
+    fetchPolicy: 'network-only',
+  })
 
-  const [getAlbums, { data: albums, loading: albumsLoading }] =
-    useGetPhotoAlbumsLazyQuery({
-      fetchPolicy: 'network-only',
-    })
+  const [
+    getAlbums,
+    { data: albums, loading: albumsLoading },
+  ] = useGetPhotoAlbumsLazyQuery({
+    fetchPolicy: 'network-only',
+  })
 
   useEffect(() => {
     if (debouncedContactId) {

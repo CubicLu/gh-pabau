@@ -140,22 +140,24 @@ export function Index() {
     setTotalBooking({
       count:
         bookingCounts?.getBookingStatusCount?.allBookingCounts?.totalBooking,
-      per: bookingCounts?.getBookingStatusCount?.allBookingCounts
-        ?.totalBookingPer,
+      per:
+        bookingCounts?.getBookingStatusCount?.allBookingCounts?.totalBookingPer,
     })
     setTotalOnlineBooking({
       count:
         bookingCounts?.getBookingStatusCount?.onlineBookingCounts
           ?.totalOnlineBooking,
-      per: bookingCounts?.getBookingStatusCount?.onlineBookingCounts
-        ?.totalOnlineBookingPer,
+      per:
+        bookingCounts?.getBookingStatusCount?.onlineBookingCounts
+          ?.totalOnlineBookingPer,
     })
     setTotalSalesCount({
       count:
         financeDetails?.getFinanceDetails?.salesCount
           ?.totalAvailableCategoryTypeAmount,
-      per: financeDetails?.getFinanceDetails?.salesCount
-        ?.totalAvailableCategoryTypePer,
+      per:
+        financeDetails?.getFinanceDetails?.salesCount
+          ?.totalAvailableCategoryTypePer,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [financeDetails, bookingCounts, bookingDetails])

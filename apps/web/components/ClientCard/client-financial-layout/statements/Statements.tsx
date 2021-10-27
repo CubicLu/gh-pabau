@@ -34,8 +34,9 @@ export const Statements: FC<P> = (props) => {
   const { Text } = Typography
   const { Option } = Select
   const { t } = useTranslation('common')
-  const [showCreateStatementModal, setShowCreateStatementModal] =
-    useState(false)
+  const [showCreateStatementModal, setShowCreateStatementModal] = useState(
+    false
+  )
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,

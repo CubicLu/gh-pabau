@@ -189,8 +189,9 @@ const defaultValue: InitialLocationProps = {
 const LocationsLayout: FC<P> = ({ schema }) => {
   const { t } = useTranslationI18()
   const { badgesList } = getBadgesList(t)
-  const [initialValues, setInitialValues] =
-    useState<InitialLocationProps>(defaultValue)
+  const [initialValues, setInitialValues] = useState<InitialLocationProps>(
+    defaultValue
+  )
   const [employeeListData, setEmployeeListData] = useState<EmployeeListProps[]>(
     []
   )
@@ -280,19 +281,23 @@ const LocationsLayout: FC<P> = ({ schema }) => {
 
   const { data: employeeDataResponse } = useListEmployeeQueryQuery()
   const { data: lastOrder, refetch } = useGetLastOrderQuery()
-  const { data: locationLimit, loading: locationLimitLoading } =
-    useLocationLimitQuery()
+  const {
+    data: locationLimit,
+    loading: locationLimitLoading,
+  } = useLocationLimitQuery()
   const {
     data: activeLocationCount,
     refetch: refetchActiveLocationCount,
     loading: activeLoading,
   } = useActiveLocationCountQuery()
 
-  const [loadStaffList, { data: staffData, loading: staffDataLoading }] =
-    useGetLocationStaffListLazyQuery({
-      ...getStaffQueryVariables,
-      fetchPolicy: 'network-only',
-    })
+  const [
+    loadStaffList,
+    { data: staffData, loading: staffDataLoading },
+  ] = useGetLocationStaffListLazyQuery({
+    ...getStaffQueryVariables,
+    fetchPolicy: 'network-only',
+  })
 
   const [locationData, setLocationData] = useState(null)
 

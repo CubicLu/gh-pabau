@@ -49,16 +49,19 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
   const { data, loading } = useFindManyUserGroupsQuery()
 
   const { data: listPages, loading: listPagesLoader } = useFindManyPagesQuery()
-  const { data: reportsList, loading: listReportLoader } =
-    useFindManyReportsQuery()
+  const {
+    data: reportsList,
+    loading: listReportLoader,
+  } = useFindManyReportsQuery()
   const { reportsTabData, columns } = useData(t)
 
   const [column, setColumn] = useState<PermissionColumnType[]>(columns)
   const [isAddGroupLoading, setAddGroupLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const [reportsData, setReportsData] =
-    useState<ReportsPermissionTableProps>(reportsTabData)
+  const [reportsData, setReportsData] = useState<ReportsPermissionTableProps>(
+    reportsTabData
+  )
 
   const [addGroup] = useCreateOneUserGroupMutation({
     onCompleted() {

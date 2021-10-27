@@ -29,8 +29,9 @@ export const BuilderTab: FC<BuilderTabProps> = ({ builder }) => {
   const [form] = Form.useForm()
   const isMdScreen = useMedia('(min-width: 992px)', false)
   const BuilderPanel = ({ builder }) => {
-    const [setting, setSetting] =
-      useState<OnlineBookingBuilder>(defaultBuilderData)
+    const [setting, setSetting] = useState<OnlineBookingBuilder>(
+      defaultBuilderData
+    )
     useEffect(() => {
       setSetting(builder)
     }, [builder])

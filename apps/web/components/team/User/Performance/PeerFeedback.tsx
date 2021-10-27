@@ -17,8 +17,9 @@ const PeerFeedbackTab = () => {
   const [reports, setReports] = useState<ReportProps[]>(performance.reports)
   const [showRemindModal, setShowRemindModal] = useState<boolean>(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedRemindEmployees, setSelectedRemindEmployees] =
-    useState<Employee[]>()
+  const [selectedRemindEmployees, setSelectedRemindEmployees] = useState<
+    Employee[]
+  >()
 
   const onReportDelete = (reportId: number) => {
     const newReports: ReportProps[] = reports.filter(

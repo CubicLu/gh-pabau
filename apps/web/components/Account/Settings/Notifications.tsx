@@ -156,16 +156,15 @@ const Notification: FC<NotificationProps> = ({
         checked={checked}
         onChange={(val) => {
           if (type === 'pabau_notification') {
-            userCurrPabauNotification =
-              userCurrPabauNotification?.notification_type
-                ? {
-                    ...userCurrPabauNotification,
-                    enabled: val,
-                  }
-                : {
-                    notification_type: userCurrPabauNotification?.id,
-                    enabled: val,
-                  }
+            userCurrPabauNotification = userCurrPabauNotification?.notification_type
+              ? {
+                  ...userCurrPabauNotification,
+                  enabled: val,
+                }
+              : {
+                  notification_type: userCurrPabauNotification?.id,
+                  enabled: val,
+                }
             onPabauNotificationChange(userCurrPabauNotification)
           } else {
             onAlertChange?.({ ...currentTab, [`${type}`]: val ? 1 : 0 })

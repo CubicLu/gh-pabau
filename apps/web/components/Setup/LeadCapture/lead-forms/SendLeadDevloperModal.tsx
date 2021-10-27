@@ -9,53 +9,52 @@ interface SendLeadDevloperModalInterface {
   onSendToDeveloper: () => void
   onClose: () => void
 }
-export const SendLeadDevloperModal: React.FC<SendLeadDevloperModalInterface> =
-  ({ openModal, onSendToDeveloper, onClose }) => {
-    return (
-      <Modal
-        modalWidth={682}
-        centered={true}
-        onOk={onSendToDeveloper}
-        closable={true}
-        onCancel={onClose}
-        visible={openModal}
-        title={'Send To Developer'}
-        newButtonText={'Send'}
-        btnType={ButtonTypes.default}
+export const SendLeadDevloperModal: React.FC<SendLeadDevloperModalInterface> = ({
+  openModal,
+  onSendToDeveloper,
+  onClose,
+}) => {
+  return (
+    <Modal
+      modalWidth={682}
+      centered={true}
+      onOk={onSendToDeveloper}
+      closable={true}
+      onCancel={onClose}
+      visible={openModal}
+      title={'Send To Developer'}
+      newButtonText={'Send'}
+      btnType={ButtonTypes.default}
+    >
+      <Formik
+        enableReinitialize={true}
+        onSubmit={(values, { resetForm }) => {
+          console.log('formik onsubmit', values)
+        }}
+        initialValues={{ email: '' }}
       >
-        <Formik
-          enableReinitialize={true}
-          onSubmit={(values, { resetForm }) => {
-            console.log('formik onsubmit', values)
-          }}
-          initialValues={{ email: '' }}
+        <AntForm
+          layout={'vertical'}
+          requiredMark={false}
+          className={styles.clinicLeadCaptureForm}
         >
-          <AntForm
-            layout={'vertical'}
-            requiredMark={false}
-            className={styles.clinicLeadCaptureForm}
+          <AntForm.Item
+            label={'email'}
+            name={'email'}
+            className={styles.clinicLabelStyle}
+            rules={[
+              {
+                required: true,
+                message: `* required email`,
+              },
+            ]}
           >
-            <AntForm.Item
-              label={'email'}
-              name={'email'}
-              className={styles.clinicLabelStyle}
-              rules={[
-                {
-                  required: true,
-                  message: `* required email`,
-                },
-              ]}
-            >
-              <Input
-                name={'email'}
-                placeholder={'client@email.com'}
-                autoFocus
-              />
-            </AntForm.Item>
-          </AntForm>
-        </Formik>
-      </Modal>
-    )
-  }
+            <Input name={'email'} placeholder={'client@email.com'} autoFocus />
+          </AntForm.Item>
+        </AntForm>
+      </Formik>
+    </Modal>
+  )
+}
 
 export default SendLeadDevloperModal

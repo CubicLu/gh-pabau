@@ -17,13 +17,17 @@ const Service: FC = () => {
   const router = useRouter()
   const userId = Number(router.query['id'])
   const [serviceCategoriesData, setServiceCategoriesData] = useState([])
-  const { data: serviceCategoryData, loading: serviceCategoryLoading } =
-    useGetServiceCategoriesQuery()
-  const { data: staffServiceData, loading: staffServiceLoading } =
-    useGetStaffServicesQuery({
-      variables: { userID: userId },
-      skip: !userId,
-    })
+  const {
+    data: serviceCategoryData,
+    loading: serviceCategoryLoading,
+  } = useGetServiceCategoriesQuery()
+  const {
+    data: staffServiceData,
+    loading: staffServiceLoading,
+  } = useGetStaffServicesQuery({
+    variables: { userID: userId },
+    skip: !userId,
+  })
   useEffect(() => {
     const obj = [
       {

@@ -130,8 +130,10 @@ export const CreateProduct = ({
     OperationType.create,
     OperationType.delete,
   ]
-  const { data: customFields, loading: fetchingCustomFields } =
-    useProductCustomFieldsQuery()
+  const {
+    data: customFields,
+    loading: fetchingCustomFields,
+  } = useProductCustomFieldsQuery()
 
   useEffect(() => {
     setShowModal(visible)

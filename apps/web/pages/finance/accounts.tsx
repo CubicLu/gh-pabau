@@ -105,8 +105,10 @@ export function Account() {
 
   const { data: locations } = useFindAllowedLocationQuery()
   const { data: issuingCompanyData } = useIssuingCompaniesQuery()
-  const [getCreditNote, { data: creditNoteTypeData }] =
-    useCreditNoteTypesLazyQuery()
+  const [
+    getCreditNote,
+    { data: creditNoteTypeData },
+  ] = useCreditNoteTypesLazyQuery()
 
   useEffect(() => {
     if (activeTab === '3') {

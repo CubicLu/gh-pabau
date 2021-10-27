@@ -61,10 +61,12 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     skip: !router.query['id'],
   })
 
-  const { data: customFieldData, loading: customFieldLoading } =
-    useGetContactCustomFieldsQuery({
-      skip: !router.query['id'],
-    })
+  const {
+    data: customFieldData,
+    loading: customFieldLoading,
+  } = useGetContactCustomFieldsQuery({
+    skip: !router.query['id'],
+  })
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {

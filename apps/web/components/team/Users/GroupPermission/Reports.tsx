@@ -40,10 +40,12 @@ const Reports: FC<ReportsProps> = ({
   const { t } = useTranslation('common')
   const { columns, loaderDatasource, loaderColumns } = useData(t)
 
-  const [reportsData, setReportsData] =
-    useState<ReportsPermissionTableProps>(reportsTabData)
-  const [reportColumn, setReportColumn] =
-    useState<PermissionColumnType[]>(columns)
+  const [reportsData, setReportsData] = useState<ReportsPermissionTableProps>(
+    reportsTabData
+  )
+  const [reportColumn, setReportColumn] = useState<PermissionColumnType[]>(
+    columns
+  )
 
   const [editUserReportsMutation] = useUpdateReportPermissionMutation({
     onCompleted() {
