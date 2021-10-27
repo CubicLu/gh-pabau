@@ -1,0 +1,119 @@
+.appointmentItem:nth-child(1) {
+  .content {
+    .divider {
+      border-top-left-radius: 4px;
+    }
+  }
+}
+.appointmentItem:nth-last-child(1) {
+  .content {
+    .divider {
+      border-bottom-left-radius: 4px;
+    }
+  }
+}
+
+.appointmentItem {
+  width: 100%;
+  min-width: 768px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #ffffff;
+  .content {
+    align-items: center;
+    height: 92px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  .divider {
+    width: 7px;
+    height: 92px;
+  }
+
+  .timeTextStyle {
+    span {
+      font-size: 14px;
+      line-height: 18px;
+      color: #3d3d46;
+    }
+  }
+  .clientContainer {
+    display: flex;
+    align-items: center;
+    .clientInfo {
+      margin-left: 13px;
+      p {
+        font-size: 16px;
+        line-height: 18px;
+        color: #3d3d46;
+        margin-bottom: 2px;
+      }
+      span {
+        font-size: 14px;
+        line-height: 18px;
+        color: #3d3d46;
+        display: block;
+      }
+      div {
+        display: block;
+        font-size: 12px;
+        line-height: 16px;
+        color: #54b2d3;
+      }
+    }
+  }
+
+  .textAlignment {
+    display: flex;
+    align-items: center;
+    span {
+      font-size: 14px;
+      line-height: 18px;
+      color: #3d3d46;
+      display: block;
+      padding-left: 11px;
+    }
+    .iconSize {
+      color: #54b2d3;
+      font-size: 17px;
+    }
+  }
+  .statusLabel {
+    display: flex;
+    justify-content: center;
+    button {
+      font-size: 14px;
+      min-width: 60px;
+    }
+  }
+  .counterButtonStyle {
+    display: flex;
+    justify-content: center;
+    button {
+      padding: 0 5px;
+      min-width: 37px;
+      height: 24px;
+      font-size: 14px;
+      border-radius: 4px;
+      background: #54b2d3;
+      border: 1px solid #54b2d3;
+      color: #fff;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .appointmentItem:nth-child(1) {
+    .content {
+      .divider {
+        border-top-left-radius: 0px;
+      }
+    }
+  }
+  .appointmentItem:nth-last-child(1) {
+    .content {
+      .divider {
+        border-bottom-left-radius: 0px;
+      }
+    }
+  }
+}

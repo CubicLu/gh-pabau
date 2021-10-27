@@ -186,3 +186,10 @@ export interface StatementOutput {
   items: SalesData[]
   payments: StatementPaymentDetails
 }
+
+export interface DateRangeInput {
+  start_date?: number
+  end_date?: number
+  location_id?: number
+  user_id?: number
+}
