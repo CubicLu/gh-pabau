@@ -35,6 +35,7 @@ export interface BasicModalProps {
   dangerButtonText?: string
   newButtonDisable?: boolean
   btnType?: ButtonTypes
+  modalBodyClass?: string
 }
 
 export function BasicModal({
@@ -56,6 +57,7 @@ export function BasicModal({
   wrapClassName,
   submitting = false,
   btnType = ButtonTypes.primary,
+  modalBodyClass,
   ...props
 }: PropsWithChildren<BasicModalProps & ModalProps>): JSX.Element {
   return (
@@ -72,7 +74,9 @@ export function BasicModal({
       wrapClassName={classNames(styles.modal, wrapClassName)}
       {...props}
     >
-      <div className={styles.modalContent}>{children}</div>
+      <div className={classNames(styles.modalContent, modalBodyClass)}>
+        {children}
+      </div>
       {footer && (
         <div className={styles.modalFooter}>
           {specialBooleanLabel && onSpecialBooleanClick && (

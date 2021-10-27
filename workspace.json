@@ -521,7 +521,7 @@
       "sourceRoot": "apps/connect",
       "projectType": "application",
       "schematics": {},
-      "_architect": {
+      "architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {
@@ -655,12 +655,12 @@
                 "output": "/"
               }
             ],
-            "maxWorkers": 1,
+            "maxWorkers": 4,
+            "memoryLimit": 7168,
             "generatePackageJson": true
           },
           "configurations": {
             "production": {
-              "maxWorkers": 4,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -697,6 +697,14 @@
           "options": {
             "jestConfig": "apps/bridge-api/jest.config.js",
             "runInBand": true
+          }
+        },
+        "integration": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/bridge-api-e2e"],
+          "options": {
+            "jestConfig": "apps/bridge-api/jest.e2e.config.js",
+            "runInBand": false
           }
         },
         "deploy-docker": {

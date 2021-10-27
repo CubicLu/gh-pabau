@@ -1,10 +1,19 @@
-import userAvatar from '../../assets/images/users/austin.png'
+import moment from 'moment'
+import userAvatar from '../../assets/images/users/user.png'
 import laserChin from '../../assets/images/client-card/package/laser-chin.png'
 import laserLip from '../../assets/images/client-card/package/laser-lip.png'
 import arya from '../../assets/images/users/arya.png'
 import linda from '../../assets/images/users/linda.png'
 import liza from '../../assets/images/users/liza.png'
 import EmployeeImg from './assets/employees/1.png'
+import { ReactComponent as LabOrderIcon } from '../../assets/images/lab.svg'
+import { ReactComponent as MedicalHistoryIcon } from '../../assets/images/medical-history.svg'
+import { ReactComponent as Note } from '../../assets/images/note.svg'
+import { ReactComponent as Pencil } from '../../assets/images/pencil.svg'
+import { VoucherListProps } from '../client-gift-voucher-layout/ClientGiftVoucherLayout'
+import { VoucherCardProps } from '../voucher-card/VoucherCard'
+import labTests from '../../assets/images/lab-tests.svg'
+import Prescriptions2 from '../../assets/images/user2.png'
 
 export const searchResults = [
   { id: '1', firstName: 'Will', lastName: 'Lawsons', avatarUrl: userAvatar },
@@ -50,18 +59,25 @@ export const notes = {
 }
 
 export const clientData = {
-  fullName: 'Bruno Ballardin',
+  fullName: 'Jon Snow',
+  firstName: 'Jon',
+  lastName: 'Snow',
   avatar: userAvatar,
   isActive: true,
   cardOption: '',
-  labels: ['#coporate', '#new-patient', 'new client', '2 no shows'],
+  labels: [
+    { label: '#coporate', color: '#1a89d0', count: 0 },
+    { label: '#new-patient', color: '#1bba2a', count: 0 },
+    { label: 'new client', color: '#467a34', count: 0 },
+    { label: '2 no shows', color: '#6892bf', count: 0 },
+  ],
   onAccount: -540,
   outStanding: 540,
   patientID: '325',
   referredBy: 'Doctor Referral',
   dob: '1969-06-16',
   gender: 'Male',
-  address: '68 Vassall Road, London, SW9 6HY',
+  address: '',
   phone: '383299103',
   email: 'bruno.ballardin@outlook.com',
   regDate: '2021-01-01',
@@ -187,6 +203,208 @@ export const conversation = {
   ],
 }
 
+export const clientAppointments = [
+  {
+    serviceName: 'Follow up consultation (20310) in clinic',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'cancelled',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-07-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+    notes: 'He is unsure about which area to get treated',
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'no show',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-07-01T20:15:01Z',
+    apptDate: '2021-07-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+    notes: 'He is unsure about which area to get treated',
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    otherEmployees: [{ name: 'Laura Sutton', avatar: userAvatar }],
+    status: 'no show',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-07-01T20:15:01Z',
+    apptDate: '2021-07-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    otherEmployees: [
+      { name: 'Laura Sutton', avatar: userAvatar },
+      { name: 'Jeff Koons', avatar: userAvatar },
+    ],
+    status: 'no show',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-07-01T20:15:01Z',
+    apptDate: '2021-07-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'no show',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-07-01T20:15:01Z',
+    apptDate: '2021-07-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+  {
+    serviceName: 'Virtual Consultation - Acne consultation',
+    employee: { name: 'Jemima Mellerio', avatar: userAvatar },
+    status: 'waiting',
+    locationName: 'The London Skin and Hair Clinic',
+    createdDate: '2021-06-30T20:15:01Z',
+    apptDate: '2021-08-03T20:15:01Z',
+    isVirtual: true,
+    smsReminder: true,
+    emailReminder: true,
+    remindersSent: true,
+  },
+]
+
 export const thirdPartySearchResults = [
   {
     name: 'Deddington Health Centre',
@@ -224,11 +442,13 @@ export const clientPackages = [
     avatar: arya,
     packageName: 'Laser / Chin',
     packageUsage: 6,
-    expDate: '2021-07-21',
+    expDate: moment().add(1, 'years').format('YYYY-MM-DD'),
     actDate: '2021-07-21',
     valueEach: 0,
     used: 0,
     invoice: 0,
+    lastSaw: 'John Smith',
+    lastVisited: '2021-02-15',
   },
   {
     id: '2',
@@ -236,11 +456,13 @@ export const clientPackages = [
     avatar: linda,
     packageName: 'Laser / Lip',
     packageUsage: 6,
-    expDate: '2021-07-21',
+    expDate: moment().add(1, 'years').format('YYYY-MM-DD'),
     actDate: '2021-07-21',
     valueEach: 0,
-    used: 3,
+    used: 5,
     invoice: 0,
+    lastSaw: 'John Smith',
+    lastVisited: '2021-06-30',
   },
   {
     id: '3',
@@ -253,6 +475,8 @@ export const clientPackages = [
     valueEach: 0,
     used: 6,
     invoice: 0,
+    lastSaw: 'John Smith',
+    lastVisited: '2021-08-15',
   },
 ]
 
@@ -1104,6 +1328,298 @@ export const serviceData = [
   },
 ]
 
+export const vouchers = (): Record<string, VoucherListProps[]> => {
+  const voucher: VoucherCardProps = {
+    cardWidth: 500,
+    backgroundColor1: '#9013FE',
+    backgroundColor2: '#BD10E0',
+    borderColor: '#000',
+    gradientType: 'linear-gradient',
+    bookNowButton: false,
+    voucherPrice: 100,
+    voucherPriceLabel: 'Voucher Value',
+    voucherSoldPrice: 100,
+    voucherSoldPriceLabel: 'Sold 5',
+    voucherRelation: 'Family',
+    voucherRelationLabel: 'Redeem on all services',
+    currencyType: '£',
+    showMenu: true,
+    buttonLabel: '',
+    voucherType: '',
+    termsConditions:
+      'lorem ipsum, quia dolor sit, amet, consectetur, adipiscivelit, sed quia non numquam eius modi tempora incidunt, utlabore et dolore magnam aliquam quaerat voluptatem.',
+    onMenuClick: () => {
+      return
+    },
+  }
+
+  const activeVouchers: VoucherListProps[] = [
+    {
+      id: 1,
+      validTill: '2021-08-30T11:50:05.916Z',
+      voucher: {
+        ...voucher,
+        backgroundColor1: '#5AA8FF',
+        backgroundColor2: '#077DFF',
+      },
+    },
+    {
+      id: 2,
+      validTill: '2021-08-01T11:50:05.916Z',
+      voucher: {
+        ...voucher,
+        backgroundColor1: '#FDB720',
+        backgroundColor2: '#E86D22',
+      },
+    },
+  ]
+
+  const expiredVouchers: VoucherListProps[] = [
+    {
+      id: 3,
+      validTill: '2019-07-31T10:04:25.000Z',
+      voucher: {
+        ...voucher,
+      },
+    },
+  ]
+
+  return {
+    activeVouchers,
+    expiredVouchers,
+  }
+}
+
+export const testList = [
+  {
+    id: 1,
+    name: 'DL7 Lab Profile',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Received',
+    isPreviewAvailable: true,
+  },
+
+  {
+    id: 2,
+    name: 'DL7 Lab Profile',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Awaiting results',
+    isPreviewAvailable: false,
+  },
+  {
+    id: 3,
+    name: 'H5 Blood Test',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Received',
+    isPreviewAvailable: true,
+  },
+]
+
+export const prescriptions = [
+  {
+    id: 1,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: labTests,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+  {
+    id: 2,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: Prescriptions2,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+  {
+    id: 3,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: labTests,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+]
+
+export const communicationEventsData = [
+  {
+    id: 1,
+    type: 'sms',
+    eventName: 'Scheduled SMS: Appointment 21 May with Ben Ballardin',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    description:
+      'Hi! Please confirm your appointment with Dr. Kovalsky at Skin Health Clinic at 21 May at 14:00.',
+    dateTime: '17-07-2022, 03:00 pm',
+  },
+  {
+    id: 2,
+    type: 'mail',
+    eventName: 'Your Feedback',
+    description:
+      'Dear Mr. Ballardin, You are attending London and I think it is a great opportunity to see your therapist and hear some feedback on your recent pains. Please let me know and I will schedule an appointment for you and Dr. Kovalsky. I hope you will get better an...',
+    dateTime: '05-07-2021, 12:00 pm',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    openedBy: [
+      { firstName: 'Alexis', lastName: 'Moor' },
+      { firstName: 'William', lastName: 'Brandham' },
+    ],
+    pinItems: [
+      {
+        item:
+          'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf',
+      },
+      {
+        item: 'http://www.africau.edu/images/default/sample.pdf',
+      },
+      {
+        item:
+          'https://i.pinimg.com/originals/a3/f7/01/a3f70197315949b3f320764a8a194c32.jpg',
+      },
+    ],
+    displayCollapse: true,
+  },
+  {
+    id: 3,
+    type: 'mail',
+    eventName: 'Your Feedback',
+    description:
+      'Dear Mr. Ballardin, You are attending London and I think it is a great opportunity to see your therapist and hear some feedback on your recent pains. Please let me know and I will schedule an appointment for you and Dr. Kovalsky. I hope you will get better an...',
+    dateTime: '05-07-2021, 12:00 pm',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    openedBy: [
+      { firstName: 'Alexis', lastName: 'Moor' },
+      { firstName: 'William', lastName: 'Brandham' },
+    ],
+    displayCollapse: true,
+  },
+  {
+    id: 4,
+    type: 'letter',
+    eventName: 'Printed',
+    description:
+      'Dear Smith, I saw this lovely 40 year old gentleman for a removal of a mole',
+    dateTime: '03-07-2021, 12:00 pm',
+    status: 'Awaiting Correction',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    displayCollapse: true,
+  },
+  {
+    id: 5,
+    type: 'mail',
+    eventName: 'We Are Remaining Open for In-Clinic Appointments',
+    description:
+      'Dear Mr. Ballardin, You are attending London and I think it is a great opportunity to see your therapist and hear some feedback on your recent pains. Please let me know and I will schedule an appointment for you and Dr. Kovalsky. I hope you will get better an...',
+    dateTime: '02-07-2021, 12:00 pm',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    openedBy: [
+      { firstName: 'Alexis', lastName: 'Moor' },
+      { firstName: 'William', lastName: 'Brandham' },
+    ],
+    displayCollapse: true,
+  },
+  {
+    id: 6,
+    type: 'mail',
+    eventName: 'We Are Remaining Open for In-Clinic Appointments',
+    description:
+      'Dear Mr. Ballardin, You are attending London and I think it is a great opportunity to see your therapist and hear some feedback on your recent pains. Please let me know and I will schedule an appointment for you and Dr. Kovalsky. I hope you will get better an...',
+    dateTime: '02-07-2021, 12:00 pm',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    openedBy: [
+      { firstName: 'Alexis', lastName: 'Moor' },
+      { firstName: 'William', lastName: 'Brandham' },
+    ],
+    displayCollapse: true,
+  },
+  {
+    id: 9,
+    type: 'call',
+    eventName: 'Outbound call to Ben Ballardin',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    dateTime: '10-04-2021, 12:00 pm',
+  },
+  {
+    id: 7,
+    type: 'sms',
+    eventName: 'Appointment 13 Mar with Ben Ballardin',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    description:
+      'Hi! Please let me know if you want to cancel your appointment',
+    status: 'Failed',
+    dateTime: '01-07-2021, 03:00 pm',
+  },
+  {
+    id: 8,
+    type: 'sms',
+    eventName: 'Appointment 13 Mar with Ben Ballardin',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    description:
+      'Hi! Please let me know if you want to cancel your appointment',
+    dateTime: '01-07-2021, 03:00 pm',
+  },
+  {
+    id: 10,
+    type: 'voice',
+    eventName: 'GP Referral dictation',
+    authorName: 'Vedran Taneski',
+    dateTime: '10-04-2021, 12:00 pm',
+    audioFile: 'https://www.mfiles.co.uk/mp3-downloads/gs-cd-track2.mp3',
+  },
+  {
+    id: 11,
+    type: 'letter',
+    eventName:
+      'Your Medical Report from The London Skin and Hair Clinic (Test)',
+    description:
+      'Dear Smith, I saw this lovely 40 year old gentleman for a removal of a mole',
+    dateTime: '03-07-2021, 11:00 pm',
+    status: 'Awaiting review',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    displayCollapse: true,
+  },
+  {
+    id: 12,
+    type: 'letter',
+    eventName:
+      'Your Medical Report from The London Skin and Hair Clinic (Test)',
+    description:
+      'Dear Smith, I saw this lovely 40 year old gentleman for a removal of a mole',
+    dateTime: '03-07-2021, 10:00 pm',
+    status: 'Completed',
+    moved: { from: { name: 'Vedran Taneski' }, to: { name: 'Ben Gough' } },
+    displayCollapse: true,
+    sharedWith: [
+      { firstName: 'Alexis', lastName: 'Moor' },
+      { firstName: 'William', lastName: 'Brandham' },
+    ],
+  },
+]
+
 export const loyaltyData = [
   {
     id: 1,
@@ -1174,5 +1690,215 @@ export const loyaltyData = [
     time: '16:25',
     action: 'Percantage paid on spend - at ringup only',
     points: '+5.00',
+  },
+]
+
+export const ActivityEventsData = [
+  {
+    id: 1,
+    type: 'lostEmail',
+    eventName: 'Send brochure Lost Email',
+    clientName: 'Kane',
+    dateTime: '30-06-2022, 3:15 pm',
+    taskChecked: false,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 2,
+    type: 'call',
+    eventName: 'Call to Bruno Ballardin',
+    clientName: 'Kane',
+    dateTime: '29-06-2022, 3:15 pm',
+    taskChecked: false,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 3,
+    type: 'email',
+    eventName: 'Email to Bruno Ballardin',
+    clientName: 'Kane',
+    dateTime: '28-06-2022, 3:15 pm',
+    taskChecked: false,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 4,
+    type: 'letter',
+    eventName: 'Send letter to Bruno Ballardin',
+    clientName: 'Kane',
+    dateTime: '27-06-2022, 3:15 pm',
+    taskChecked: false,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 5,
+    type: 'sms',
+    eventName: 'Send SMS',
+    clientName: 'Kane',
+    dateTime: '26-06-2022, 3:15 pm',
+    taskChecked: false,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 6,
+    type: 'lostEmail',
+    eventName: 'Send brochure Lost Email',
+    clientName: 'Kane',
+    dateTime: '18-06-2021, 3:15 pm',
+    taskChecked: true,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 7,
+    type: 'sms',
+    eventName: 'Send SMS',
+    clientName: 'Kane',
+    dateTime: '14-05-2021, 3:15 pm',
+    taskChecked: true,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 8,
+    type: 'call',
+    eventName: 'Call to Bruno Ballardin',
+    clientName: 'Kane',
+    dateTime: '14-05-2021, 3:15 pm',
+    taskChecked: true,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 9,
+    type: 'email',
+    eventName: 'Email to Bruno Ballardin',
+    clientName: 'Kane',
+    dateTime: '14-05-2021, 3:15 pm',
+    taskChecked: true,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 10,
+    type: 'letter',
+    eventName: 'Send letter to Bruno Ballardin',
+    clientName: 'Kane',
+    dateTime: '14-05-2021, 3:15 pm',
+    taskChecked: true,
+    taskUserName: 'Jeremy Epstein',
+  },
+  {
+    id: 11,
+    type: 'lostEmail',
+    eventName: 'Send brochure Lost Email',
+    clientName: 'Kane',
+    dateTime: '14-05-2021, 3:15 pm',
+    taskChecked: true,
+    taskUserName: 'Jeremy Epstein',
+  },
+]
+
+const formData = {
+  patient: 'Bruno Ballardin',
+  lastUpdate: '2021-03-01T00:00:00Z',
+  createdOn: '2021-03-01T00:00:00Z',
+  createdBy: 'Bruno Ballardin',
+  electronicOrderNo: 'AA3655583543',
+  to:
+    'The Doctors Laboratory, 76 Wimpole Street, London, W1G 9RT Tel: 020 7307 7373',
+  requestingDoctor: 'Dr. Anna Chapman',
+  requestDate: '2021-03-01T00:00:00Z',
+  patientId: '326',
+  requestId: 'AA3655583543',
+  dob: '1969-11-28T00:00:00Z',
+  gender: 'Male',
+  labsTests: 'LSH4 (Roaccutane): FBC, U+es, LFTs, Lipid profile',
+  additionalTests: 'Allergy profile 1, Cadmium, Plutonium',
+  fasting: 'Yes',
+  clinicalDetails: 'Acne - severe adult',
+  dateSampleTaken: '–',
+  timeSampleTaken: '–',
+}
+
+export const formFilterButtons = [
+  {
+    id: 1,
+    type: 'Treatment',
+    selected: true,
+    icon: Note,
+  },
+  {
+    id: 2,
+    type: 'Consent',
+    selected: true,
+    icon: Pencil,
+  },
+  {
+    id: 3,
+    type: 'Medical History',
+    selected: true,
+    icon: MedicalHistoryIcon,
+  },
+  {
+    id: 4,
+    type: 'Lab Request',
+    selected: true,
+    icon: LabOrderIcon,
+  },
+]
+
+export const forms = [
+  {
+    id: 1,
+    name: 'LSAH Bloods or Swab Lab Request Form',
+    user: 'Bruno Ballardin',
+    created: '2021-08-21T08:30:00.00Z',
+    type: 'Lab Request',
+    icon: LabOrderIcon,
+    isPinned: false,
+    isAdminForm: false,
+    data: formData,
+  },
+  {
+    id: 2,
+    name: 'Botox Treatment Form',
+    user: 'Erika Chapman',
+    created: '2021-08-20T08:30:00.00Z',
+    type: 'Treatment',
+    icon: Note,
+    isPinned: false,
+    isAdminForm: false,
+    data: {
+      ...formData,
+      patient: 'Erika Chapman',
+      createdBy: 'Erika Chapman',
+    },
+  },
+  {
+    id: 3,
+    name: 'COVID 19 Consent Form',
+    user: 'John Smith',
+    created: '2021-08-19T08:30:00.00Z',
+    type: 'Consent',
+    icon: Pencil,
+    isPinned: false,
+    isAdminForm: false,
+    data: {
+      ...formData,
+      patient: 'John Smith',
+      createdBy: 'John Smith',
+    },
+  },
+  {
+    id: 4,
+    name: 'Medical History Form',
+    user: 'Jane Rache',
+    created: '2021-08-18T08:30:00.00Z',
+    type: 'Medical History',
+    icon: MedicalHistoryIcon,
+    isPinned: false,
+    isAdminForm: true,
+    data: {
+      ...formData,
+      patient: 'Jane Rache',
+      createdBy: 'Jane Rache',
+    },
   },
 ]

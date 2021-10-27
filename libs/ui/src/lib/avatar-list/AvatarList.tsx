@@ -29,8 +29,8 @@ export const AvatarList: FC<AvatarListProps> = ({
                 key={index}
                 isLoading={isLoading}
                 size={size}
-                zIndex={3 - index}
-                marginLeft={`-6px`}
+                zIndex={index + 3}
+                marginLeft={`-10px`}
               />
             )
           })}
@@ -49,8 +49,8 @@ export const AvatarList: FC<AvatarListProps> = ({
                   size={size}
                   name={user.name}
                   src={user.avatarUrl}
-                  zIndex={3 - index}
-                  marginLeft={`-6px`}
+                  zIndex={index + 3}
+                  marginLeft={`-10px`}
                 />
               ))}
             {users &&
@@ -66,8 +66,8 @@ export const AvatarList: FC<AvatarListProps> = ({
                     size={size}
                     name={user.name}
                     src={user.avatarUrl}
-                    zIndex={3 - index}
-                    marginLeft={`-6px`}
+                    zIndex={index + 3}
+                    marginLeft={`-10px`}
                   />
                 ))}
           </div>

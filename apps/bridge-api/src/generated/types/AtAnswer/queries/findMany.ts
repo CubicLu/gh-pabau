@@ -4,7 +4,7 @@ export const AtAnswerFindManyQuery = queryField('findManyAtAnswer', {
   type: nonNull(list(nonNull('AtAnswer'))),
   args: {
     where: 'AtAnswerWhereInput',
-    orderBy: list('AtAnswerOrderByInput'),
+    orderBy: list('AtAnswerOrderByWithRelationInput'),
     cursor: 'AtAnswerWhereUniqueInput',
     distinct: 'AtAnswerScalarFieldEnum',
     skip: 'Int',

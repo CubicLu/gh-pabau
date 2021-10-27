@@ -19,26 +19,29 @@ export const languageMenu = [
     label: 'English',
     logo: ENSVG,
     selected: true,
+    shortLabel: 'en',
   },
   {
     label: 'English (UK)',
     logo: ENSVG,
     selected: true,
-    shortLabel: 'EN',
+    shortLabel: 'en',
   },
   {
-    label: 'en',
+    label: 'English (US)',
     logo: USSVG,
     selected: true,
+    shortLabel: 'en-us'
   },
   {
-    label: 'fr',
+    label: 'France',
     logo: FRSVG,
-    shortLabel: 'FR',
+    shortLabel: 'fr',
   },
   {
 
-    label: 'sp',
+    label: 'Spain',
+    shortLabel: 'es',
     logo: SPSVG,
   },
   {

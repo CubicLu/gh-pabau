@@ -6,7 +6,7 @@ export const ManageCustomFieldFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ManageCustomFieldWhereInput',
-      orderBy: list('ManageCustomFieldOrderByInput'),
+      orderBy: list('ManageCustomFieldOrderByWithRelationInput'),
       cursor: 'ManageCustomFieldWhereUniqueInput',
       distinct: 'ManageCustomFieldScalarFieldEnum',
       skip: 'Int',

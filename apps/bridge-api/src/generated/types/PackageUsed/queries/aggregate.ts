@@ -4,7 +4,7 @@ export const PackageUsedAggregateQuery = queryField('aggregatePackageUsed', {
   type: 'AggregatePackageUsed',
   args: {
     where: 'PackageUsedWhereInput',
-    orderBy: list('PackageUsedOrderByInput'),
+    orderBy: list('PackageUsedOrderByWithRelationInput'),
     cursor: 'PackageUsedWhereUniqueInput',
     distinct: 'PackageUsedScalarFieldEnum',
     skip: 'Int',

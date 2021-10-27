@@ -55,12 +55,28 @@ fragment CmLeadFields on CmLead {
   latest_interaction
   location_id
   need_to_knows
+  pipeline_stage_id
 }
 
 fragment CmLead on CmLead {
   ...CmLeadFields
   Company {
     ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+  MarketingSource {
+    ...MarketingSourceFields
+  }
+  LeadStatusData {
+    ...LeadStatusFields
+  }
+  PipelineStage {
+    ...PipelineStageFields
+  }
+  Contact {
+    ...CmContactFields
   }
 }
 

@@ -6,7 +6,7 @@ export const ContactPackageAggregateQuery = queryField(
     type: 'AggregateContactPackage',
     args: {
       where: 'ContactPackageWhereInput',
-      orderBy: list('ContactPackageOrderByInput'),
+      orderBy: list('ContactPackageOrderByWithRelationInput'),
       cursor: 'ContactPackageWhereUniqueInput',
       distinct: 'ContactPackageScalarFieldEnum',
       skip: 'Int',

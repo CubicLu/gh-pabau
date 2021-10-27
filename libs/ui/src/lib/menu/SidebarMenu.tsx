@@ -5,17 +5,20 @@ import {
   TeamOutlined,
   CalendarOutlined,
   FundOutlined,
-  RiseOutlined,
+  AimOutlined,
   ShoppingCartOutlined,
-  WalletOutlined,
-  ProfileOutlined,
+  DollarOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
+import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
+import styles from './Menu.module.less'
 
 export interface SidebarMenuItem {
   menuName: string
   icon?: JSX.Element
   path?: string
   children?: SidebarMenuItem[]
+  displayBadge?: boolean
 }
 
 export const sidebarTranslations = {
@@ -23,10 +26,7 @@ export const sidebarTranslations = {
   calendar: 'sidebar.calendar',
   team: 'sidebar.team',
   staffmanager: 'sidebar.team.staffmanager',
-  targets: 'sidebar.team.targets',
   schedule: 'sidebar.team.schedule',
-  hiring: 'sidebar.team.hiring',
-  commissions: 'sidebar.team.commissions',
   leads: 'sidebar.leads',
   reports: 'sidebar.reports',
   stock: 'sidebar.stock',
@@ -35,12 +35,12 @@ export const sidebarTranslations = {
   purchaseorder: 'sidebar.stock.purchaseorder',
   suppliers: 'sidebar.stock.suppliers',
   marketing: 'sidebar.marketing',
-  campaigns: 'sidebar.marketing.campaigns',
+  broadcasts: 'sidebar.marketing.broadcasts',
   reviews: 'sidebar.marketing.reivews',
   giftvouchers: 'sidebar.marketing.giftvouchers',
   referraltracker: 'sidebar.marketing.referraltracker',
   loyalty: 'sidebar.marketing.loyalty',
-  financials: 'sidebar.marketing.fanancials',
+  money: 'sidebar.marketing.money',
   accounts: 'sidebar.financials.accounts',
   cashup: 'sidebar.financials.cashup',
   contacts: 'sidebar.contacts',
@@ -50,6 +50,7 @@ export const sidebarTranslations = {
   profile: 'sidebar.mobile.profile',
   chat: 'sidebar.mobile.chat',
   notifications: 'sidebar.mobile.notifications',
+  activities: 'sidebar.activities',
 }
 
 export const sidebarMenu: SidebarMenuItem[] = [
@@ -72,27 +73,20 @@ export const sidebarMenu: SidebarMenuItem[] = [
         path: '/team/users',
       },
       {
-        menuName: 'Targets',
-        path: '/team/targets',
-      },
-      {
         menuName: 'Schedule',
         path: '/team/schedule',
-      },
-      {
-        menuName: 'Hiring',
-        path: '/team/hiring',
-      },
-      {
-        menuName: 'Commissions',
-        path: '/team/commissions',
       },
     ],
   },
   {
     menuName: 'Leads',
-    icon: <RiseOutlined />,
+    icon: <AimOutlined />,
     path: '/leads',
+  },
+  {
+    menuName: 'Clients',
+    icon: <UserOutlined />,
+    path: '/clients',
   },
   {
     menuName: 'Reports',
@@ -126,7 +120,7 @@ export const sidebarMenu: SidebarMenuItem[] = [
     icon: <NotificationOutlined />,
     children: [
       {
-        menuName: 'Campaigns',
+        menuName: 'Broadcasts',
         path: '/marketing/campaigns',
       },
       {
@@ -148,31 +142,14 @@ export const sidebarMenu: SidebarMenuItem[] = [
     ],
   },
   {
-    menuName: 'Financials',
-    icon: <WalletOutlined />,
-    children: [
-      {
-        menuName: 'Accounts',
-        path: '/finance/accounts',
-      },
-      {
-        menuName: 'Cashup',
-        path: '/finance/cashup',
-      },
-    ],
+    menuName: 'Money',
+    icon: <DollarOutlined />,
+    path: '/finance/accounts',
   },
   {
-    menuName: 'Contacts',
-    icon: <ProfileOutlined />,
-    children: [
-      {
-        menuName: 'Clients',
-        path: '/clients',
-      },
-      {
-        menuName: 'Case manager',
-        path: '/clients/cases',
-      },
-    ],
+    menuName: 'Activities',
+    icon: <ActivityIcon className={styles.activityIcon} />,
+    path: '/activities',
+    displayBadge: true,
   },
 ]

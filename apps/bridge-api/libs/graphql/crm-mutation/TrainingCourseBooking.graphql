@@ -1,0 +1,45 @@
+fragment TrainingCourseBookingFields on TrainingCourseBooking {
+  id
+  course_id
+  webinar_id
+  course_date
+  trainer
+  encore
+}
+
+fragment TrainingCourseBooking on TrainingCourseBooking {
+  ...TrainingCourseBookingFields
+  TrainingCourse {
+    ...TrainingCourseFields
+  }
+}
+
+mutation createOneTrainingCourseBooking($data: TrainingCourseBookingCreateInput!) {
+  createOneTrainingCourseBooking(data: $data) {
+    ...TrainingCourseBooking
+  }
+}
+
+mutation updateOneTrainingCourseBooking(
+  $where: TrainingCourseBookingWhereUniqueInput!
+  $data: TrainingCourseBookingUpdateInput!
+) {
+  updateOneTrainingCourseBooking(where: $where, data: $data) {
+    ...TrainingCourseBooking
+  }
+}
+
+mutation deleteOneTrainingCourseBooking($where: TrainingCourseBookingWhereUniqueInput!) {
+  deleteOneTrainingCourseBooking(where: $where) {
+    ...TrainingCourseBooking
+  }
+}
+
+mutation updateManyTrainingCourseBooking(
+  $where: TrainingCourseBookingWhereInput
+  $data: TrainingCourseBookingUpdateManyMutationInput!
+) {
+  updateManyTrainingCourseBooking(where: $where, data: $data) {
+    count
+  }
+}

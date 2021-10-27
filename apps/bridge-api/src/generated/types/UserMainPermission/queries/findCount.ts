@@ -6,7 +6,7 @@ export const UserMainPermissionFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'UserMainPermissionWhereInput',
-      orderBy: list('UserMainPermissionOrderByInput'),
+      orderBy: list('UserMainPermissionOrderByWithRelationInput'),
       cursor: 'UserMainPermissionWhereUniqueInput',
       distinct: 'UserMainPermissionScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const StaffMetaFindFirstQuery = queryField('findFirstStaffMeta', {
   type: 'StaffMeta',
   args: {
     where: 'StaffMetaWhereInput',
-    orderBy: list('StaffMetaOrderByInput'),
+    orderBy: list('StaffMetaOrderByWithRelationInput'),
     cursor: 'StaffMetaWhereUniqueInput',
     distinct: 'StaffMetaScalarFieldEnum',
     skip: 'Int',

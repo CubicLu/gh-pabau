@@ -92,25 +92,25 @@ export const CmContact = objectType({
         return root.SocialSurveyFeedback
       },
     })
-    t.list.field('CmContactAlert', {
-      type: 'CmContactAlert',
+    t.list.field('ContactAlert', {
+      type: 'ContactAlert',
       args: {
-        where: 'CmContactAlertWhereInput',
-        orderBy: 'CmContactAlertOrderByInput',
-        cursor: 'CmContactAlertWhereUniqueInput',
+        where: 'ContactAlertWhereInput',
+        orderBy: 'ContactAlertOrderByWithRelationInput',
+        cursor: 'ContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactAlertScalarFieldEnum',
+        distinct: 'ContactAlertScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactAlert
+        return root.ContactAlert
       },
     })
     t.list.field('AccountBalance', {
       type: 'AccountBalance',
       args: {
         where: 'AccountBalanceWhereInput',
-        orderBy: 'AccountBalanceOrderByInput',
+        orderBy: 'AccountBalanceOrderByWithRelationInput',
         cursor: 'AccountBalanceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -124,7 +124,7 @@ export const CmContact = objectType({
       type: 'AccountBalanceLog',
       args: {
         where: 'AccountBalanceLogWhereInput',
-        orderBy: 'AccountBalanceLogOrderByInput',
+        orderBy: 'AccountBalanceLogOrderByWithRelationInput',
         cursor: 'AccountBalanceLogWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -138,7 +138,7 @@ export const CmContact = objectType({
       type: 'CmContactLocation',
       args: {
         where: 'CmContactLocationWhereInput',
-        orderBy: 'CmContactLocationOrderByInput',
+        orderBy: 'CmContactLocationOrderByWithRelationInput',
         cursor: 'CmContactLocationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -152,7 +152,7 @@ export const CmContact = objectType({
       type: 'CmContactTravel',
       args: {
         where: 'CmContactTravelWhereInput',
-        orderBy: 'CmContactTravelOrderByInput',
+        orderBy: 'CmContactTravelOrderByWithRelationInput',
         cursor: 'CmContactTravelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -166,7 +166,7 @@ export const CmContact = objectType({
       type: 'CmContactViewed',
       args: {
         where: 'CmContactViewedWhereInput',
-        orderBy: 'CmContactViewedOrderByInput',
+        orderBy: 'CmContactViewedOrderByWithRelationInput',
         cursor: 'CmContactViewedWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -180,7 +180,7 @@ export const CmContact = objectType({
       type: 'CmContactMedicalCondition',
       args: {
         where: 'CmContactMedicalConditionWhereInput',
-        orderBy: 'CmContactMedicalConditionOrderByInput',
+        orderBy: 'CmContactMedicalConditionOrderByWithRelationInput',
         cursor: 'CmContactMedicalConditionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -190,39 +190,25 @@ export const CmContact = objectType({
         return root.CmContactMedicalCondition
       },
     })
-    t.list.field('CmContactNote', {
-      type: 'CmContactNote',
+    t.list.field('ContactNote', {
+      type: 'ContactNote',
       args: {
-        where: 'CmContactNoteWhereInput',
-        orderBy: 'CmContactNoteOrderByInput',
-        cursor: 'CmContactNoteWhereUniqueInput',
+        where: 'ContactNoteWhereInput',
+        orderBy: 'ContactNoteOrderByWithRelationInput',
+        cursor: 'ContactNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactNoteScalarFieldEnum',
+        distinct: 'ContactNoteScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactNote
-      },
-    })
-    t.list.field('MedicalFormContact', {
-      type: 'MedicalFormContact',
-      args: {
-        where: 'MedicalFormContactWhereInput',
-        orderBy: 'MedicalFormContactOrderByInput',
-        cursor: 'MedicalFormContactWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormContactScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.MedicalFormContact
+        return root.ContactNote
       },
     })
     t.list.field('CmExtraGym', {
       type: 'CmExtraGym',
       args: {
         where: 'CmExtraGymWhereInput',
-        orderBy: 'CmExtraGymOrderByInput',
+        orderBy: 'CmExtraGymOrderByWithRelationInput',
         cursor: 'CmExtraGymWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -236,7 +222,7 @@ export const CmContact = objectType({
       type: 'CmExtraPatient',
       args: {
         where: 'CmExtraPatientWhereInput',
-        orderBy: 'CmExtraPatientOrderByInput',
+        orderBy: 'CmExtraPatientOrderByWithRelationInput',
         cursor: 'CmExtraPatientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -250,7 +236,7 @@ export const CmContact = objectType({
       type: 'CmExtraSalon',
       args: {
         where: 'CmExtraSalonWhereInput',
-        orderBy: 'CmExtraSalonOrderByInput',
+        orderBy: 'CmExtraSalonOrderByWithRelationInput',
         cursor: 'CmExtraSalonWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -264,7 +250,7 @@ export const CmContact = objectType({
       type: 'InvPayment',
       args: {
         where: 'InvPaymentWhereInput',
-        orderBy: 'InvPaymentOrderByInput',
+        orderBy: 'InvPaymentOrderByWithRelationInput',
         cursor: 'InvPaymentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -278,7 +264,7 @@ export const CmContact = objectType({
       type: 'LoyaltyLog',
       args: {
         where: 'LoyaltyLogWhereInput',
-        orderBy: 'LoyaltyLogOrderByInput',
+        orderBy: 'LoyaltyLogOrderByWithRelationInput',
         cursor: 'LoyaltyLogWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -298,7 +284,7 @@ export const CmContact = objectType({
       type: 'ContactAttachment',
       args: {
         where: 'ContactAttachmentWhereInput',
-        orderBy: 'ContactAttachmentOrderByInput',
+        orderBy: 'ContactAttachmentOrderByWithRelationInput',
         cursor: 'ContactAttachmentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -312,7 +298,7 @@ export const CmContact = objectType({
       type: 'ContactPackage',
       args: {
         where: 'ContactPackageWhereInput',
-        orderBy: 'ContactPackageOrderByInput',
+        orderBy: 'ContactPackageOrderByWithRelationInput',
         cursor: 'ContactPackageWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -332,7 +318,7 @@ export const CmContact = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByInput',
+        orderBy: 'BookingOrderByWithRelationInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -346,7 +332,7 @@ export const CmContact = objectType({
       type: 'InvSale',
       args: {
         where: 'InvSaleWhereInput',
-        orderBy: 'InvSaleOrderByInput',
+        orderBy: 'InvSaleOrderByWithRelationInput',
         cursor: 'InvSaleWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -360,7 +346,7 @@ export const CmContact = objectType({
       type: 'InventoryMovement',
       args: {
         where: 'InventoryMovementWhereInput',
-        orderBy: 'InventoryMovementOrderByInput',
+        orderBy: 'InventoryMovementOrderByWithRelationInput',
         cursor: 'InventoryMovementWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -374,7 +360,7 @@ export const CmContact = objectType({
       type: 'ContactInsurance',
       args: {
         where: 'ContactInsuranceWhereInput',
-        orderBy: 'ContactInsuranceOrderByInput',
+        orderBy: 'ContactInsuranceOrderByWithRelationInput',
         cursor: 'ContactInsuranceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -388,7 +374,7 @@ export const CmContact = objectType({
       type: 'ContactMeta',
       args: {
         where: 'ContactMetaWhereInput',
-        orderBy: 'ContactMetaOrderByInput',
+        orderBy: 'ContactMetaOrderByWithRelationInput',
         cursor: 'ContactMetaWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -402,7 +388,7 @@ export const CmContact = objectType({
       type: 'CommunicationRecipient',
       args: {
         where: 'CommunicationRecipientWhereInput',
-        orderBy: 'CommunicationRecipientOrderByInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
         cursor: 'CommunicationRecipientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -416,7 +402,7 @@ export const CmContact = objectType({
       type: 'CmContactCustom',
       args: {
         where: 'CmContactCustomWhereInput',
-        orderBy: 'CmContactCustomOrderByInput',
+        orderBy: 'CmContactCustomOrderByWithRelationInput',
         cursor: 'CmContactCustomWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -430,7 +416,7 @@ export const CmContact = objectType({
       type: 'CmContactLabel',
       args: {
         where: 'CmContactLabelWhereInput',
-        orderBy: 'CmContactLabelOrderByInput',
+        orderBy: 'CmContactLabelOrderByWithRelationInput',
         cursor: 'CmContactLabelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -438,6 +424,116 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.CmContactLabel
+      },
+    })
+    t.list.field('Activity', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Activity
+      },
+    })
+    t.list.field('Albums', {
+      type: 'PhotoAlbum',
+      args: {
+        where: 'PhotoAlbumWhereInput',
+        orderBy: 'PhotoAlbumOrderByWithRelationInput',
+        cursor: 'PhotoAlbumWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PhotoAlbumScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Albums
+      },
+    })
+    t.nullable.field('ContactPreference', {
+      type: 'ContactPreference',
+      resolve(root: any) {
+        return root.ContactPreference
+      },
+    })
+    t.nullable.field('MarketingSourceData', {
+      type: 'MarketingSource',
+      resolve(root: any) {
+        return root.MarketingSourceData
+      },
+    })
+    t.list.field('Voucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Voucher
+      },
+    })
+    t.list.field('PurchasedVoucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PurchasedVoucher
+      },
+    })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
+      },
+    })
+    t.list.field('PathwaysTaken', {
+      type: 'PathwaysTaken',
+      args: {
+        where: 'PathwaysTakenWhereInput',
+        orderBy: 'PathwaysTakenOrderByWithRelationInput',
+        cursor: 'PathwaysTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwaysTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwaysTaken
+      },
+    })
+    t.list.field('PathwayStepsTaken', {
+      type: 'PathwayStepsTaken',
+      args: {
+        where: 'PathwayStepsTakenWhereInput',
+        orderBy: 'PathwayStepsTakenOrderByWithRelationInput',
+        cursor: 'PathwayStepsTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepsTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStepsTaken
       },
     })
     t.nullable.field('_count', {

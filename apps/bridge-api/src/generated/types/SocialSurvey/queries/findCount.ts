@@ -6,7 +6,7 @@ export const SocialSurveyFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'SocialSurveyWhereInput',
-      orderBy: list('SocialSurveyOrderByInput'),
+      orderBy: list('SocialSurveyOrderByWithRelationInput'),
       cursor: 'SocialSurveyWhereUniqueInput',
       distinct: 'SocialSurveyScalarFieldEnum',
       skip: 'Int',

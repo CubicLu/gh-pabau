@@ -36,8 +36,8 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
   shape,
 }) => {
   const imageRef = useRef(null)
-  const [image, setImage] = useState<string>(imageURL)
-  const [croppedImage, setCroppedImage] = useState<string>(image)
+  const [image, setImage] = useState(imageURL)
+  const [croppedImage, setCroppedImage] = useState(image)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [crop, setCrop] = useState({

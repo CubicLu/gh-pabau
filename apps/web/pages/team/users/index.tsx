@@ -1,11 +1,12 @@
 import {
   FilterOutlined,
   PlusSquareFilled,
-  SearchOutlined,
+  AppstoreOutlined,
+  MenuOutlined,
 } from '@ant-design/icons'
 import { useFindManyCompanyStaffUsersQuery } from '@pabau/graphql'
-import { Breadcrumb, Pagination, TabMenu, UserProps, UserTile } from '@pabau/ui'
-import { Image, Input } from 'antd'
+import { Pagination, TabMenu, UserProps, UserTile, GridVsList } from '@pabau/ui'
+import { Image } from 'antd'
 import classNames from 'classnames'
 import moment from 'moment'
 import { useRouter } from 'next/router'
@@ -13,7 +14,6 @@ import React, { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import searchEmpty from '../../../../../libs/ui/src/assets/images/empty.png'
-import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
 import addButtonStyles from '../../../components/AddButton.module.less'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
@@ -44,7 +44,6 @@ const Index: FunctionComponent = () => {
   const [tabValue, setTabValue] = useState<string | number>(0)
   const [isNewGroup, setIsNewGroup] = useState<boolean>(false)
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
-  const [isMobileSearch, setMobileSearch] = useState(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [isActive, setIsActive] = useState(0)
   const [department, setDepartment] = useState('')
@@ -217,48 +216,36 @@ const Index: FunctionComponent = () => {
 
   const MobileHeaderButtonJsx = () => {
     return tabValue.toString() === '0' ? (
-      isMobileSearch ? (
-        <div className={styles.mobileSearchInput}>
-          <Input
-            className={styles.searchMarketingStyle}
-            placeholder={t('team.user.header.search.placeholder')}
-            value={searchValue}
-            onChange={(e) => handleSearch(e.target.value)}
-            suffix={
-              <CloseIcon
-                onClick={() => {
-                  setSearchValue('')
-                  setMobileSearch(false)
-                }}
-              />
-            }
-            autoFocus
-          />
-        </div>
-      ) : (
-        <div
-          className={classNames(
-            addButtonStyles.marketingIcon,
-            addButtonStyles.desktopViewNone,
-            styles.mobileViewIcons
-          )}
-        >
-          <SearchOutlined
-            className={addButtonStyles.marketingIconStyle}
-            onClick={() => {
-              setMobileSearch(true)
-            }}
-          />
-          <FilterOutlined
-            className={addButtonStyles.marketingIconStyle}
-            onClick={() => setMobFilterDrawer((e) => !e)}
-          />
-          <PlusSquareFilled
-            className={addButtonStyles.plusIconStyle}
-            onClick={() => onNewStaffMemberClick?.()}
-          />
-        </div>
-      )
+      <div
+        className={classNames(
+          addButtonStyles.marketingIcon,
+          addButtonStyles.desktopViewNone,
+          styles.mobileViewIcons
+        )}
+      >
+        <FilterOutlined
+          className={addButtonStyles.marketingIconStyle}
+          onClick={() => setMobFilterDrawer((e) => !e)}
+        />
+        <GridVsList
+          onChange={onViewChange}
+          selectedValue={userView}
+          displayTypes={[
+            {
+              title: 'Grid',
+              icon: <AppstoreOutlined />,
+            },
+            {
+              title: 'List',
+              icon: <MenuOutlined />,
+            },
+          ]}
+        />
+        <PlusSquareFilled
+          className={addButtonStyles.plusIconStyle}
+          onClick={() => onNewStaffMemberClick?.()}
+        />
+      </div>
     ) : (
       <div
         className={classNames(
@@ -277,30 +264,47 @@ const Index: FunctionComponent = () => {
 
   return (
     <div className={styles.userMainWrapper}>
-      <CommonHeader
-        title={'Users'}
-        isContent={true}
-        ContentJsx={MobileHeaderButtonJsx}
-      />
       <Layout {...user}>
+        <CommonHeader
+          isShowSearch={tabValue.toString() === '0' ? true : false}
+          handleSearch={(e) => handleSearch(e)}
+          searchInputPlaceHolder={t('team.user.header.search.placeholder')}
+          isLeftOutlined
+          reversePath="/team"
+          title={'Users'}
+          searchValue={searchValue}
+        >
+          <MobileHeaderButtonJsx />
+        </CommonHeader>
         <div className={styles.header}>
           <div className={styles.headerTitle}>
             {!isMobile && (
-              <>
-                <Breadcrumb
-                  breadcrumbItems={[
+              <div style={{ display: 'flex' }}>
+                {/* <Breadcrumb
+                  items={[
                     {
-                      path: '/team',
+                      path: 'team',
                       breadcrumbName: t('team.user.breadcrumb.team'),
                     },
                     {
-                      path: '/team/users',
+                      path: 'team/users',
                       breadcrumbName: t('team.user.breadcrumb.users'),
                     },
                   ]}
-                />
+                /> */}
                 <h4>{t('team.user.title')}</h4>
-              </>
+                <h3
+                  style={{
+                    marginLeft: '10px',
+                    color: '#54b2d3',
+                    borderRadius: '50%',
+                    backgroundColor: '#f0f2f5',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {paginateData.total}
+                </h3>
+              </div>
             )}
           </div>
           <div className={styles.headerFilter}>
@@ -315,6 +319,7 @@ const Index: FunctionComponent = () => {
               onCancelFilterDrawer={() => setMobFilterDrawer(false)}
               onReset={handleReset}
               onApply={handleApply}
+              searchValue={searchValue}
             >
               {t('team.user.filter.button')}
             </Filter>
@@ -350,6 +355,7 @@ const Index: FunctionComponent = () => {
                         return (
                           <UserTile
                             key={user.id}
+                            id={user.id}
                             name={user.full_name}
                             title={user.job_title}
                             vacation={

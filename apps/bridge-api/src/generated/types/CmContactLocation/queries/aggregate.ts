@@ -6,7 +6,7 @@ export const CmContactLocationAggregateQuery = queryField(
     type: 'AggregateCmContactLocation',
     args: {
       where: 'CmContactLocationWhereInput',
-      orderBy: list('CmContactLocationOrderByInput'),
+      orderBy: list('CmContactLocationOrderByWithRelationInput'),
       cursor: 'CmContactLocationWhereUniqueInput',
       distinct: 'CmContactLocationScalarFieldEnum',
       skip: 'Int',

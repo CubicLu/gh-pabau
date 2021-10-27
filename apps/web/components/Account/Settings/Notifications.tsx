@@ -221,6 +221,7 @@ const Notification: FC<NotificationProps> = ({
           loading ? (
             <Skeleton.Button
               active
+              key={key}
               style={{
                 width: 120,
                 borderRadius: '100px',

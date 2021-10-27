@@ -4,7 +4,7 @@ export const AtAnswerFindFirstQuery = queryField('findFirstAtAnswer', {
   type: 'AtAnswer',
   args: {
     where: 'AtAnswerWhereInput',
-    orderBy: list('AtAnswerOrderByInput'),
+    orderBy: list('AtAnswerOrderByWithRelationInput'),
     cursor: 'AtAnswerWhereUniqueInput',
     distinct: 'AtAnswerScalarFieldEnum',
     skip: 'Int',

@@ -19,7 +19,6 @@ interface Invoice {
   paymentBy: string
   status: boolean
 }
-
 const defaultBillingHistory: Invoice[] = [
   {
     invoiceNo: '#45645456456576',
@@ -229,7 +228,7 @@ export const BillingHistory = () => {
       <div className={styles.billingHistory}>
         <div className={styles.billingHistoryHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
                 path: 'connect/account',

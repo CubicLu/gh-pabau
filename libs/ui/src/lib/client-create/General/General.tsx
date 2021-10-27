@@ -48,9 +48,9 @@ interface GeneralProps {
 }
 
 interface Label {
+  id?: number
   label?: string
   color?: string
-  count?: number
 }
 
 const customColorData = [
@@ -118,6 +118,7 @@ export const General: FC<GeneralProps> = ({
     label: '',
     color: '',
   })
+  const [isSpace, setIsSpace] = useState(false)
 
   const editLabelData = (valueObject) => {
     const labelData = [...labels]
@@ -160,18 +161,27 @@ export const General: FC<GeneralProps> = ({
 
   const handleKeyPress = (e) => {
     const { value } = e.target
-    if (e.key === 'Enter' && value) {
+    const newValue = value.trim()
+    if (e.key === 'Enter' && newValue) {
       if (isEdit) {
-        editLabelData({ label: value, color: selectedColor })
+        editLabelData({ label: newValue, color: selectedColor })
       } else {
         if (selectedId) {
-          addLabelData({ id: selectedId, label: value, color: selectedColor })
+          addLabelData({
+            id: selectedId,
+            label: newValue,
+            color: selectedColor,
+          })
         } else {
-          if (labelsData.some((item) => item.value === value)) {
-            const data = labelsData.find((item) => item.value === value)
-            addLabelData({ id: data?.id, label: value, color: selectedColor })
+          if (labelsData.some((item) => item.value === newValue)) {
+            const data = labelsData.find((item) => item.value === newValue)
+            addLabelData({
+              id: data?.id,
+              label: newValue,
+              color: selectedColor,
+            })
           } else {
-            addLabelData({ label: value, color: selectedColor })
+            addLabelData({ label: newValue, color: selectedColor })
           }
         }
       }
@@ -180,30 +190,37 @@ export const General: FC<GeneralProps> = ({
       setDisplayColorPicker(false)
       setSelectedColor('')
       setSelectedId('')
+    } else if (e.key === ' ') {
+      setIsSpace(true)
     }
   }
 
   const handleVisible = (value) => {
-    if (isEdit) {
-      editLabelData({ label: newLabel.label, color: selectedColor })
-    } else if (!value && newLabel.label) {
-      if (selectedId) {
-        addLabelData({ id: selectedId, label: value, color: selectedColor })
-      } else {
-        if (labelsData.some((item) => item.value === value)) {
-          const data = labelsData.find((item) => item.value === value)
-          addLabelData({ id: data?.id, label: value, color: selectedColor })
+    if (!isSpace) {
+      if (isEdit) {
+        editLabelData({ label: newLabel.label, color: selectedColor })
+      } else if (!value && newLabel.label?.trim()) {
+        const labelValue = newLabel.label?.trim()
+        if (labelsData.some((item) => item.value === labelValue)) {
+          const data = labelsData.find((item) => item.value === labelValue)
+          addLabelData({
+            id: data?.id,
+            label: labelValue,
+            color: selectedColor,
+          })
         } else {
-          addLabelData({ label: value, color: selectedColor })
+          addLabelData({ label: labelValue, color: selectedColor })
         }
       }
+      setNewLabel({ label: '', color: '' })
+      setVisible(value)
+      setDisplayColorPicker(false)
+      setSelectedColor('')
+      setSelectedId('')
+      setIsEdit(false)
+    } else {
+      setIsSpace(false)
     }
-    setNewLabel({ label: '', color: '' })
-    setVisible(value)
-    setDisplayColorPicker(false)
-    setSelectedColor('')
-    setSelectedId('')
-    setIsEdit(false)
   }
 
   const handleSelect = (label, index) => {
@@ -333,6 +350,7 @@ export const General: FC<GeneralProps> = ({
       </div>
     )
   }
+
   return (
     <div className={styles.generalDiv}>
       <div className={styles.generalHeaderTitle}>
@@ -358,80 +376,90 @@ export const General: FC<GeneralProps> = ({
         </Popover>
       </div>
       <AntForm layout={'vertical'} requiredMark={false}>
-        <div className={styles.salutationFirstDiv}>
-          {fieldsSettings?.find(
-            (thread) => thread.field_name === 'salutation'
-          ) && (
-            <div className={styles.salutation}>
-              <AntForm.Item
-                label={`${t('quickCreate.client.modal.general.salutation')}${
-                  salutationData && salutationData?.length > 0
-                    ? requiredLabel('salutation')
-                    : ''
-                }`}
-                name={'salutation'}
-              >
-                {!isSalutationLoading ? (
-                  <Select
+        <div>
+          {isLoading ? (
+            <div className={styles.skeletonLoaderContent}>
+              <SkeletonContent />
+              <SkeletonContent />
+            </div>
+          ) : (
+            <div className={styles.salutationFirstDiv}>
+              {fieldsSettings?.find(
+                (thread) => thread.field_name === 'salutation'
+              ) && (
+                <div className={styles.salutation}>
+                  <AntForm.Item
+                    label={`${t(
+                      'quickCreate.client.modal.general.salutation'
+                    )}${
+                      salutationData && salutationData?.length > 0
+                        ? requiredLabel('salutation')
+                        : ''
+                    }`}
                     name={'salutation'}
-                    placeholder={t(
-                      'quickCreate.client.modal.general.salutation.placeholder'
-                    )}
                   >
-                    {salutationData?.map((item) => (
-                      <Select.Option key={item.id} value={item.name}>
-                        {item.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                ) : (
-                  <div className={styles.skeletonWrapper}>
-                    <Skeleton
-                      className={className(
-                        styles.salutationSkeleton,
-                        styles.skeletonInput
-                      )}
-                      paragraph={false}
-                      active
-                    />
-                  </div>
-                )}
-              </AntForm.Item>
+                    {!isSalutationLoading ? (
+                      <Select
+                        name={'salutation'}
+                        placeholder={t(
+                          'quickCreate.client.modal.general.salutation.placeholder'
+                        )}
+                      >
+                        {salutationData?.map((item) => (
+                          <Select.Option key={item.id} value={item.name}>
+                            {item.name}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    ) : (
+                      <div className={styles.skeletonWrapper}>
+                        <Skeleton
+                          className={className(
+                            styles.salutationSkeleton,
+                            styles.skeletonInput
+                          )}
+                          paragraph={false}
+                          active
+                        />
+                      </div>
+                    )}
+                  </AntForm.Item>
+                </div>
+              )}
+              <div className={styles.firstName}>
+                <AntForm.Item
+                  label={`${t(
+                    'quickCreate.client.modal.general.firstName'
+                  )} (${t('quickcreate.required.label')})`}
+                  name={'Fname'}
+                >
+                  <Input
+                    size="middle"
+                    name={'Fname'}
+                    placeholder={t(
+                      'quickCreate.client.modal.general.firstName.placeHolder'
+                    )}
+                  />
+                </AntForm.Item>
+              </div>
+              <div className={styles.lastName}>
+                <AntForm.Item
+                  label={`${t(
+                    'quickCreate.client.modal.general.lastName'
+                  )} (${t('quickcreate.required.label')})`}
+                  name={'Lname'}
+                >
+                  <Input
+                    size="middle"
+                    name={'Lname'}
+                    placeholder={t(
+                      'quickCreate.client.modal.general.lastName.placeHolder'
+                    )}
+                  />
+                </AntForm.Item>
+              </div>
             </div>
           )}
-
-          <div className={styles.firstName}>
-            <AntForm.Item
-              label={`${t('quickCreate.client.modal.general.firstName')} (${t(
-                'quickcreate.required.label'
-              )})`}
-              name={'Fname'}
-            >
-              <Input
-                size="middle"
-                name={'Fname'}
-                placeholder={t(
-                  'quickCreate.client.modal.general.firstName.placeHolder'
-                )}
-              />
-            </AntForm.Item>
-          </div>
-          <div className={styles.lastName}>
-            <AntForm.Item
-              label={`${t('quickCreate.client.modal.general.lastName')} (${t(
-                'quickcreate.required.label'
-              )})`}
-              name={'Lname'}
-            >
-              <Input
-                size="middle"
-                name={'Lname'}
-                placeholder={t(
-                  'quickCreate.client.modal.general.lastName.placeHolder'
-                )}
-              />
-            </AntForm.Item>
-          </div>
         </div>
 
         {isLoading ? (
@@ -482,6 +510,15 @@ export const General: FC<GeneralProps> = ({
                   placeholder={t(
                     'quickCreate.client.modal.general.hearOption.selectOption'
                   )}
+                  value={
+                    values?.['MarketingSource']
+                      ? marketingSources?.find(
+                          (source) =>
+                            source.id ===
+                            Number.parseInt(values?.['MarketingSource'])
+                        )?.name
+                      : undefined
+                  }
                 >
                   {marketingSources?.map((item) => (
                     <Select.Option key={item.id} value={item.id}>
@@ -519,7 +556,9 @@ export const General: FC<GeneralProps> = ({
                 disabledDate={(current) => {
                   return current && current > dayjs().endOf('day')
                 }}
-                onChange={(date) => setFieldValue('DOB', date)}
+                onChange={(date, dateString) =>
+                  setFieldValue('DOB', dayjs(dateString))
+                }
                 placeholder={'DD/MM/YY'}
                 getPopupContainer={(trigger) =>
                   trigger.parentElement as HTMLElement
@@ -543,6 +582,15 @@ export const General: FC<GeneralProps> = ({
               placeholder={t(
                 'quickCreate.client.modal.general.preferredLanguage.default'
               )}
+              value={
+                values?.['preferredLanguage']
+                  ? languageMenu.find(
+                      (menu) =>
+                        menu.shortLabel ===
+                        values?.['preferredLanguage']?.toUpperCase()
+                    )?.label
+                  : undefined
+              }
             >
               {languageMenu.map((item, index) => (
                 <Select.Option key={index} value={item.shortLabel}>

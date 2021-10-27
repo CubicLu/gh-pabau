@@ -4,7 +4,7 @@ export const CompanyMetaAggregateQuery = queryField('aggregateCompanyMeta', {
   type: 'AggregateCompanyMeta',
   args: {
     where: 'CompanyMetaWhereInput',
-    orderBy: list('CompanyMetaOrderByInput'),
+    orderBy: list('CompanyMetaOrderByWithRelationInput'),
     cursor: 'CompanyMetaWhereUniqueInput',
     distinct: 'CompanyMetaScalarFieldEnum',
     skip: 'Int',

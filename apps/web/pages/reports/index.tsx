@@ -295,13 +295,19 @@ const Reports: FC = () => {
     <Unauthorized />
   ) : (
     <Layout {...user} active="reports">
-      <CommonHeader title={t('setup.reports.title')} />
+      <CommonHeader
+        title={t('setup.reports.title')}
+        isShowSearch
+        searchValue={searchValue}
+        searchInputPlaceHolder={t('setup.reports.search.text.placeholder')}
+        handleSearch={handleSearch}
+      />
       <Card bodyStyle={{ padding: 0 }}>
         <Row
           className={classNames(styles.headerContainer, styles.mobileViewNone)}
         >
           <Col span={24} sm={10} className={styles.headingContainer}>
-            <div />
+            {/* <div /> */}
             <Title>
               {!searchValue
                 ? t('setup.reports.title')
@@ -310,14 +316,17 @@ const Reports: FC = () => {
           </Col>
           <Col span={24} sm={14} className={styles.searchContainer}>
             <div className={styles.search}>
-              <SetupSearchInput onChange={handleSearch} />
+              <SetupSearchInput
+                onChange={handleSearch}
+                searchValue={searchValue}
+              />
             </div>
           </Col>
         </Row>
         <Divider style={{ margin: 0 }} className={styles.mobileViewNone} />
-        <div className={classNames(styles.search, styles.desktopViewNone)}>
+        {/* <div className={classNames(styles.search, styles.desktopViewNone)}>
           <SetupSearchInput onChange={handleSearch} />
-        </div>
+        </div> */}
         {!searchValue ? (
           <Row className={styles.bodyContainer} gutter={{ md: 24, xs: 16 }}>
             {reportsData.map((item, index) => {

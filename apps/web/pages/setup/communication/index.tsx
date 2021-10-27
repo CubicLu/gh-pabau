@@ -1,4 +1,4 @@
-import { SearchOutlined } from '@ant-design/icons'
+import { PlusSquareFilled, SearchOutlined } from '@ant-design/icons'
 import {
   Breadcrumb,
   Button,
@@ -13,7 +13,6 @@ import {
 } from '@pabau/ui'
 import { Input, Typography } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
-// import notificationBannerImage from '../../../assets/images/notification-image.png'
 import icon from '../../../assets/images/notification.png'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
@@ -22,6 +21,7 @@ import {
   chooseTemplateStepArgs,
   defaultChooseTemplateState,
 } from '../../../components/Setup/Communication/choose-modal.data'
+import useWindowSize from '../../../hooks/useWindowSize'
 import Custom from '../../../components/Setup/Communication/Custom'
 import Library from '../../../components/Setup/Communication/Library'
 import createTemplateStateArgs from '../../../components/Setup/Communication/template-modal.data'
@@ -59,6 +59,7 @@ const tabMenuProps: Array<string> = ['Custom', 'Library']
 // interface IndexProps {}
 
 export const Index: FC = () => {
+  const size = useWindowSize()
   const [hideBanner, setHideBanner] = useState(false)
   const [currentTab, setCurrentTab] = useState('0')
   const [query, setQuery] = useState('')
@@ -163,8 +164,28 @@ export const Index: FC = () => {
 
   return (
     <>
-      <CommonHeader />
       <Layout>
+        <CommonHeader
+          isLeftOutlined
+          reversePath="/setup"
+          title="Communication Templates"
+          isShowSearch
+          searchInputPlaceHolder={
+            currentTab === '0' ? 'Search in Custom' : 'Search in Library'
+          }
+          handleSearch={(value) => setQuery(value)}
+          searchValue={query}
+        >
+          {currentTab === '0' && (
+            <>
+              <MedicalFilter mobileView {...communicationFilterProps} />
+              <PlusSquareFilled
+                className={styles.plusIconStyle}
+                onClick={() => chooseTemplateAction()}
+              />
+            </>
+          )}
+        </CommonHeader>
         {/* Need to upgrade Last NotificationBanner  */}
         <NotificationBanner
           title="Enable client notifications"
@@ -174,50 +195,52 @@ export const Index: FC = () => {
           setHide={[hideBanner, setHideBanner]}
         />
         <div className={styles.medicalFormsContainer}>
-          <div className={styles.medicalFormsHeader}>
-            <div>
-              <Breadcrumb
-                breadcrumbItems={[
-                  { breadcrumbName: 'Setup', path: '' },
-                  { breadcrumbName: 'Communication Templates', path: '' },
-                ]}
-              />
-              <Title>{'Communication Templates'}</Title>
-            </div>
-            <div className={styles.medicalFormsOps}>
-              {currentTab === '0' && (
-                <>
-                  <div>
-                    <Input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      addonAfter={<SearchOutlined />}
-                      placeholder="Search in Custom"
-                    />
-                  </div>
-                  <div>
-                    <MedicalFilter {...communicationFilterProps} />
-                  </div>
-                  <div>
-                    <Button
-                      type="primary"
-                      onClick={() => chooseTemplateAction()}
-                    >
-                      {'Create Template'}
-                    </Button>
-                  </div>
-                </>
-              )}
-              {currentTab === '1' && (
-                <Input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  addonAfter={<SearchOutlined />}
-                  placeholder="Search in Library"
+          {size.width > 767 && (
+            <div className={styles.medicalFormsHeader}>
+              <div>
+                <Breadcrumb
+                  items={[
+                    { breadcrumbName: 'Setup', path: '' },
+                    { breadcrumbName: 'Communication Templates', path: '' },
+                  ]}
                 />
-              )}
+                <Title>{'Communication Templates'}</Title>
+              </div>
+              <div className={styles.medicalFormsOps}>
+                {currentTab === '0' && (
+                  <>
+                    <div>
+                      <Input
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        addonAfter={<SearchOutlined />}
+                        placeholder="Search in Custom"
+                      />
+                    </div>
+                    <div>
+                      <MedicalFilter {...communicationFilterProps} />
+                    </div>
+                    <div>
+                      <Button
+                        type="primary"
+                        onClick={() => chooseTemplateAction()}
+                      >
+                        {'Create Template'}
+                      </Button>
+                    </div>
+                  </>
+                )}
+                {currentTab === '1' && (
+                  <Input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    addonAfter={<SearchOutlined />}
+                    placeholder="Search in Library"
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          )}
           <TabMenu
             tabPosition="top"
             minHeight="100vh"

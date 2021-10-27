@@ -2,10 +2,14 @@ import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, Pagination } from '@pabau/ui'
 import styles from './Payments.module.less'
-import { ClientFinancialsLayoutProps } from './../ClientFinancialsLayout'
+import {
+  ClientFinancialsLayoutProps,
+  InvoiceProp,
+} from './../ClientFinancialsLayout'
 import { Typography, Button, Popover, Radio, Space } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
+import EditInvoice from './../invoices/EditInvoice'
 
 const getInvoicePaymentValues = () => {
   return {
@@ -17,6 +21,7 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
   payments,
   accountCredit,
   totalPayments,
+  invoices,
 }) => {
   const { t } = useTranslation('common')
   const { Text } = Typography
@@ -27,32 +32,45 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
     currentPage: 1,
     showingRecords: 0,
   })
+  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceProp>()
+  const [showEditInvoice, setShowEditInvoice] = useState(false)
   const [paymentFilter, setPaymentFilter] = useState(getInvoicePaymentValues())
 
+  const onPressInvNo = (e) => {
+    const invoice = invoices.find((x) => x.id === e.toString())
+    setSelectedInvoice(invoice)
+    setShowEditInvoice(true)
+  }
+
   const columns = [
-    {
-      title: t('ui.client-card-financial.payments.date'),
-      dataIndex: 'date',
-      className: 'columnTitle',
-      width: 100,
-      visible: true,
-    },
-    {
-      title: t('ui.client-card-financial.payments.invoice-no'),
-      dataIndex: 'invoiceNo',
-      visible: true,
-      width: 80,
-      render: function renderItem(value) {
-        return <span className={styles.primaryText}>#{value}</span>
-      },
-    },
     {
       title: t('ui.client-card-financial.payments.payment-no'),
       dataIndex: 'paymentNo',
       visible: true,
+      width: 40,
+      render: function renderItem(value, row) {
+        return (
+          <span className={styles.paymentNo}>
+            <span>{row.date}</span>
+            <span>#{value}</span>
+          </span>
+        )
+      },
+    },
+    {
+      title: t('ui.client-card-financial.payments.against'),
+      dataIndex: 'invoiceNo',
+      visible: true,
       width: 80,
       render: function renderItem(value) {
-        return <span className={styles.primaryText}>#{value}</span>
+        return (
+          <span
+            className={styles.primaryText}
+            onClick={() => onPressInvNo(value)}
+          >
+            INV-{value}
+          </span>
+        )
       },
     },
     {
@@ -129,55 +147,63 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
   }
 
   return (
-    <div className={styles.payments}>
-      <div className={styles.filterRow}>
-        <Popover
-          content={filterContent}
-          title={t('ui.client-card-financial.invoices.filter-by')}
-          placement="bottomRight"
-          overlayClassName={styles.paymentsFilter}
-        >
-          <div className={styles.filter}>
-            <FilterOutlined />
-          </div>
-        </Popover>
-      </div>
-      <Table
-        loading={false}
-        draggable={false}
-        scroll={{ x: true }}
-        dataSource={payments?.map((e: { id }) => ({
-          key: e.id,
-          ...e,
-        }))}
-        columns={columns}
-        noDataText={t('ui.client-card-financial.payments')}
-      />
-      <div className={styles.pagination}>
-        <Pagination
-          total={paginateData.total}
-          defaultPageSize={10}
-          showSizeChanger={false}
-          onChange={onPaginationChange}
-          pageSize={paginateData.limit}
-          current={paginateData.currentPage}
-          showingRecords={paginateData.showingRecords}
+    <>
+      {showEditInvoice && (
+        <EditInvoice
+          invoice={selectedInvoice}
+          onModalBackPress={() => setShowEditInvoice(false)}
+        />
+      )}
+      <div className={styles.payments}>
+        <div className={styles.filterRow}>
+          <Popover
+            content={filterContent}
+            title={t('ui.client-card-financial.invoices.filter-by')}
+            placement="bottomRight"
+            overlayClassName={styles.paymentsFilter}
+          >
+            <div className={styles.filter}>
+              <FilterOutlined />
+            </div>
+          </Popover>
+        </div>
+        <Table
+          loading={false}
+          draggable={false}
+          scroll={{ x: true }}
+          dataSource={payments?.map((e: { id }) => ({
+            key: e.id,
+            ...e,
+          }))}
+          columns={columns}
+          noDataText={t('ui.client-card-financial.payments')}
+        />
+        <div className={styles.pagination}>
+          <Pagination
+            total={paginateData.total}
+            defaultPageSize={10}
+            showSizeChanger={false}
+            onChange={onPaginationChange}
+            pageSize={paginateData.limit}
+            current={paginateData.currentPage}
+            showingRecords={paginateData.showingRecords}
+          />
+        </div>
+
+        <InvoiceFooter
+          buttons={[
+            {
+              text: t('ui.client-card-financial.payments.account-credit'),
+              value: accountCredit,
+              valueColor: '#65CD98',
+            },
+            {
+              text: t('ui.client-card-financial.payments.total-payments'),
+              value: totalPayments,
+            },
+          ]}
         />
       </div>
-
-      <InvoiceFooter
-        buttons={[
-          {
-            text: t('ui.client-card-financial.payments.account-credit'),
-            value: accountCredit,
-            valueColor: '#65CD98',
-          },
-          {
-            text: t('ui.client-card-financial.payments.total-payments'),
-            value: totalPayments,
-          },
-        ]}
-      />
-    </div>
+    </>
   )
 }

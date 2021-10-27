@@ -24,7 +24,7 @@ export const TrainingCourse = objectType({
       type: 'TrainingCourseBooking',
       args: {
         where: 'TrainingCourseBookingWhereInput',
-        orderBy: 'TrainingCourseBookingOrderByInput',
+        orderBy: 'TrainingCourseBookingOrderByWithRelationInput',
         cursor: 'TrainingCourseBookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -38,7 +38,7 @@ export const TrainingCourse = objectType({
       type: 'TrainCourseDate',
       args: {
         where: 'TrainCourseDateWhereInput',
-        orderBy: 'TrainCourseDateOrderByInput',
+        orderBy: 'TrainCourseDateOrderByWithRelationInput',
         cursor: 'TrainCourseDateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

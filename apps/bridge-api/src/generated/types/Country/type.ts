@@ -30,7 +30,7 @@ export const Country = objectType({
       type: 'CmContactTravel',
       args: {
         where: 'CmContactTravelWhereInput',
-        orderBy: 'CmContactTravelOrderByInput',
+        orderBy: 'CmContactTravelOrderByWithRelationInput',
         cursor: 'CmContactTravelWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

@@ -6,7 +6,7 @@ export const ClassProductFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ClassProductWhereInput',
-      orderBy: list('ClassProductOrderByInput'),
+      orderBy: list('ClassProductOrderByWithRelationInput'),
       cursor: 'ClassProductWhereUniqueInput',
       distinct: 'ClassProductScalarFieldEnum',
       skip: 'Int',

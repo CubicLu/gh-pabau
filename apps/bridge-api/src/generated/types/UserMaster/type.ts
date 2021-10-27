@@ -39,7 +39,7 @@ export const UserMaster = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByInput',
+        orderBy: 'BookingOrderByWithRelationInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

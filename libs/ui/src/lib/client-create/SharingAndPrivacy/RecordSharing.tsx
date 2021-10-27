@@ -9,7 +9,7 @@ import styles from './SharingPrivacy.module.less'
 interface P {
   setFieldValue(
     field: keyof InitialDetailsProps,
-    values: Record<string, string>
+    values: Record<string, number>
   ): void
   values?: InitialDetailsProps
 }
@@ -20,24 +20,15 @@ export interface RecordSharing {
   color: string
 }
 
-export interface RecordSharingOptions {
-  key: string
-  title: string
-  displayTitle: string
-  description: string
-  icon: ReactNode
-  isShowPlus?: boolean
-}
-
 const RecordSharing: FC<P> = ({ setFieldValue, values }) => {
   const { t } = useTranslation('common')
   const sectionToShareData = sectionToShare(t)
   const recordToSharingOptionData = recordToSharingOption(t)
 
   const handleChange = (name, value) => {
-    const selectedData = values?.['recordSharing']
+    const selectedData = values ? { ...values['recordSharing'] } : {}
     if (selectedData) {
-      selectedData[name] = value
+      selectedData[name] = Number.parseInt(value)
       setFieldValue('recordSharing', selectedData)
     }
   }
@@ -58,11 +49,11 @@ const RecordSharing: FC<P> = ({ setFieldValue, values }) => {
                 data={recordToSharingOptionData}
                 selectedValue={
                   values?.['recordSharing']
-                    ? values?.['recordSharing']?.[data.key]
+                    ? values?.['recordSharing']?.[data.key].toString()
                     : undefined
                 }
-                handleChange={(value) => {
-                  handleChange?.(data.key, value.key)
+                handleChange={(changeData) => {
+                  handleChange?.(data.key, changeData.value)
                 }}
               />
             </div>

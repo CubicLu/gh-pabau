@@ -7,6 +7,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { notificationIcons } from './mock'
 import styles from './NotificationDrawer.module.less'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
+import dayjs from 'dayjs'
 
 export interface NotificationDrawerItemType {
   id: string
@@ -15,8 +16,8 @@ export interface NotificationDrawerItemType {
   notificationTypeIcon: string
   title: string
   desc: string
-  read: number[]
-  users: number[]
+  is_read: boolean
+  is_deleted: boolean
   link: string
 }
 
@@ -24,18 +25,14 @@ interface P {
   notify: NotificationDrawerItemType
   relativeTime?: (lan: string, date: Date) => string
   user?: Partial<AuthenticatedUser> & JwtUser
-  updateMutation?: MutationFunction
-  deleteMutation?: MutationFunction
-  readAddMutation?: MutationFunction
+  updateNotificationState?: MutationFunction
 }
 
 export const NotificationItem: FC<P> = ({
   notify,
   relativeTime,
   user,
-  updateMutation,
-  deleteMutation,
-  readAddMutation,
+  updateNotificationState,
 }) => {
   const [notifyTime, setNotifyTime] = useState(
     relativeTime?.('en', notify?.notificationTime)
@@ -63,21 +60,16 @@ export const NotificationItem: FC<P> = ({
     return notificationIcon?.icon
   }
 
-  const isReadNotification = (users) => {
-    return !!users?.find((user_id) => user_id === user?.user)
-  }
-
   const handleOnClick = async (notification) => {
-    const { id, link } = notification
-    const { read } = notification
-
-    if (!isReadNotification(read)) {
+    const { id, link, is_read, is_deleted } = notification
+    if (!is_read) {
       const variables = {
-        company: user?.company,
-        notification: id,
+        id,
         user: user?.user,
+        is_read: true,
+        is_deleted,
       }
-      await readAddMutation?.({
+      await updateNotificationState?.({
         variables,
         optimisticResponse: {},
       })
@@ -88,19 +80,31 @@ export const NotificationItem: FC<P> = ({
   }
 
   const removeSingleNotification = async (notification) => {
-    const { id, users } = notification
-    const sent_to = users.filter((user_id) => user_id !== user?.user)
-    const variables = { id, sent_to }
-    sent_to?.length > 0
-      ? await updateMutation?.({ variables, optimisticResponse: {} })
-      : await deleteMutation?.({
-          variables: { id: notification.id },
-          optimisticResponse: {},
-        })
+    const { id, is_read } = notification
+    const variables = {
+      id,
+      user: user?.user,
+      is_deleted: true,
+      is_read,
+    }
+    await updateNotificationState?.({
+      variables,
+      optimisticResponse: {},
+    })
   }
 
-  const getFormattedDate = (date: Date) =>
-    Intl.DateTimeFormat('en-US').format(new Date(date))
+  const getFormattedDate = (date: string) => date.replaceAll('-', '/')
+
+  const isValidTime = (time: string) => {
+    const formats = ['am', 'pm', 'AM', 'PM']
+    let isValid = false
+    for (const format of formats) {
+      if (time.includes(format)) {
+        isValid = true
+      }
+    }
+    return isValid
+  }
 
   const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
     const { variables, notificationType, sentBy, desc } = notification
@@ -122,8 +126,12 @@ export const NotificationItem: FC<P> = ({
         const replaceVariable = `[${key}]`
         let variableValue = variables[key]
 
-        if (key === 'date') {
+        if (key.includes('date') && variableValue?.includes('-')) {
           variableValue = getFormattedDate(variableValue)
+        }
+
+        if (key.includes('time') && !isValidTime(variableValue)) {
+          variableValue = dayjs('1/1/1 ' + variableValue).format('hh:mma')
         }
 
         notification[returnType] = notification[returnType]?.replace(
@@ -164,7 +172,7 @@ export const NotificationItem: FC<P> = ({
             <p>{getNotificationDescOrTitle(notify, 'desc')}</p>
           </div>
           <div className={styles.readStatus}>
-            {!isReadNotification(notify?.read) && <span />}
+            {!notify?.is_read && <span />}
           </div>
         </div>
       </div>

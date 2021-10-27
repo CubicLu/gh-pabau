@@ -10,6 +10,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 import 'react-vertical-timeline-component/style.min.css'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { withI18next } from 'storybook-addon-i18next'
 import '../src/assets/fonts/fonts.css'
 require('../src/styles/antd.less')

@@ -4,7 +4,7 @@ export const AcLogUrlAggregateQuery = queryField('aggregateAcLogUrl', {
   type: 'AggregateAcLogUrl',
   args: {
     where: 'AcLogUrlWhereInput',
-    orderBy: list('AcLogUrlOrderByInput'),
+    orderBy: list('AcLogUrlOrderByWithRelationInput'),
     cursor: 'AcLogUrlWhereUniqueInput',
     distinct: 'AcLogUrlScalarFieldEnum',
     skip: 'Int',

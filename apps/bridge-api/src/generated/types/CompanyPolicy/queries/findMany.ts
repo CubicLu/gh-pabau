@@ -4,7 +4,7 @@ export const CompanyPolicyFindManyQuery = queryField('findManyCompanyPolicy', {
   type: nonNull(list(nonNull('CompanyPolicy'))),
   args: {
     where: 'CompanyPolicyWhereInput',
-    orderBy: list('CompanyPolicyOrderByInput'),
+    orderBy: list('CompanyPolicyOrderByWithRelationInput'),
     cursor: 'CompanyPolicyWhereUniqueInput',
     distinct: 'CompanyPolicyScalarFieldEnum',
     skip: 'Int',

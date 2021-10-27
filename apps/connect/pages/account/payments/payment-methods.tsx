@@ -29,7 +29,7 @@ export const PaymentMethods = () => {
       <div className={styles.paymentMethods}>
         <div className={styles.paymentMethodsHeader}>
           <Breadcrumb
-            breadcrumbItems={[
+            items={[
               {
                 breadcrumbName: t('connect.account.title'),
                 path: 'connect/account',

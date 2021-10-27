@@ -4,7 +4,7 @@ export const AtQuizTakeFindManyQuery = queryField('findManyAtQuizTake', {
   type: nonNull(list(nonNull('AtQuizTake'))),
   args: {
     where: 'AtQuizTakeWhereInput',
-    orderBy: list('AtQuizTakeOrderByInput'),
+    orderBy: list('AtQuizTakeOrderByWithRelationInput'),
     cursor: 'AtQuizTakeWhereUniqueInput',
     distinct: 'AtQuizTakeScalarFieldEnum',
     skip: 'Int',

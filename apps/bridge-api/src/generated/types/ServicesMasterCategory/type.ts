@@ -23,7 +23,7 @@ export const ServicesMasterCategory = objectType({
       type: 'ServiceCategory',
       args: {
         where: 'ServiceCategoryWhereInput',
-        orderBy: 'ServiceCategoryOrderByInput',
+        orderBy: 'ServiceCategoryOrderByWithRelationInput',
         cursor: 'ServiceCategoryWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -37,7 +37,7 @@ export const ServicesMasterCategory = objectType({
       type: 'InvCategory',
       args: {
         where: 'InvCategoryWhereInput',
-        orderBy: 'InvCategoryOrderByInput',
+        orderBy: 'InvCategoryOrderByWithRelationInput',
         cursor: 'InvCategoryWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

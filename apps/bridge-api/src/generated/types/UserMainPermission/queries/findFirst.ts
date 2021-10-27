@@ -6,7 +6,7 @@ export const UserMainPermissionFindFirstQuery = queryField(
     type: 'UserMainPermission',
     args: {
       where: 'UserMainPermissionWhereInput',
-      orderBy: list('UserMainPermissionOrderByInput'),
+      orderBy: list('UserMainPermissionOrderByWithRelationInput'),
       cursor: 'UserMainPermissionWhereUniqueInput',
       distinct: 'UserMainPermissionScalarFieldEnum',
       skip: 'Int',

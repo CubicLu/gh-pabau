@@ -2,6 +2,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import { Button, Popover } from 'antd'
 import React, { FC, ReactNode } from 'react'
 import styles from './DotButton.module.less'
+import classNames from 'classnames'
 
 interface IOption {
   key: number
@@ -20,10 +21,18 @@ interface P {
   ignoreOption?: IgnoreOption
   popoverVisible?: boolean
   setPopoverVisible?(x): void
+  onMenuClick?: (data) => void
+  customClass?: string
 }
 
 export const DotButton: FC<P> = ({ ...props }) => {
-  const { menuList, ignoreOption, popoverVisible, setPopoverVisible } = props
+  const {
+    menuList,
+    ignoreOption,
+    popoverVisible,
+    setPopoverVisible,
+    customClass,
+  } = props
 
   const renderItem = (key, icon, label, onClick, ignoreOptionFlag) => {
     if (ignoreOptionFlag) {
@@ -34,7 +43,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
         <div
           className={styles.dotList}
           key={`three-dot-menu-content-${key}`}
-          onClick={() => onClick?.()}
+          onClick={() => onClick?.() || props?.onMenuClick?.(key)}
         >
           {icon}
           <p>{label}</p>
@@ -46,7 +55,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
       <div
         className={styles.dotList}
         key={`three-dot-menu-content-${key}`}
-        onClick={() => onClick?.()}
+        onClick={() => onClick?.() || props?.onMenuClick?.(key)}
       >
         {icon}
         <p>{label}</p>
@@ -56,7 +65,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
 
   const prepareContent = () => {
     return (
-      <div className={styles.dotWrapper}>
+      <div className={classNames(styles.dotWrapper, customClass)}>
         {menuList?.map(({ key, icon, label, onClick }) =>
           renderItem(key, icon, label, onClick, ignoreOption)
         )}
@@ -65,7 +74,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
   }
 
   return (
-    <div className={styles.popOverContainer}>
+    <div className={classNames(styles.popOverContainer, customClass)}>
       {menuList ? (
         ignoreOption ? (
           <Popover
@@ -85,11 +94,13 @@ export const DotButton: FC<P> = ({ ...props }) => {
             content={prepareContent()}
             placement="leftTop"
             trigger="click"
+            visible={popoverVisible}
           >
             <Button
               className={styles.btnCircle}
               shape="circle"
               icon={<MoreOutlined />}
+              onClick={() => setPopoverVisible?.(!popoverVisible)}
             />
           </Popover>
         )

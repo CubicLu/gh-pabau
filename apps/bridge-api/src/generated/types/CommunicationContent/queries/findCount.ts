@@ -6,7 +6,7 @@ export const CommunicationContentFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CommunicationContentWhereInput',
-      orderBy: list('CommunicationContentOrderByInput'),
+      orderBy: list('CommunicationContentOrderByWithRelationInput'),
       cursor: 'CommunicationContentWhereUniqueInput',
       distinct: 'CommunicationContentScalarFieldEnum',
       skip: 'Int',

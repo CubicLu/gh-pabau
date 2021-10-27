@@ -1,4 +1,9 @@
-import { BellOutlined, MailOutlined } from '@ant-design/icons'
+import {
+  BellOutlined,
+  MailOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from '@ant-design/icons'
 import { MutationFunction } from '@apollo/client'
 import {
   Dropdown as AvatarDropDown,
@@ -6,6 +11,7 @@ import {
   NotificationDrawer,
   QuickCreate,
 } from '@pabau/ui'
+import Link from 'next/link'
 import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
 import React, { useState, useEffect } from 'react'
@@ -13,6 +19,7 @@ import styles from './Header.module.less'
 import { Search } from './search/Search'
 import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
+import journeyCalendar from '../../assets/images/journey-calendar.png'
 
 const AntHeader = Layout.Header
 
@@ -30,9 +37,7 @@ interface P {
   notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
   readNewsMutation?: MutationFunction
-  deleteNotification?: MutationFunction
-  updateNotification?: MutationFunction
-  readAddMutation?: MutationFunction
+  updateNotificationState?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
   user?: Partial<AuthenticatedUser> & JwtUser
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
@@ -45,8 +50,11 @@ interface P {
   // ) => void
   // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   taskManagerIFrameComponent?: JSX.Element
-  clientCreateRender?: () => JSX.Element
-  leadCreateRender?: () => JSX.Element
+  journeyRender?: (handleClose?: () => void) => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
+  sidebarCollapsed?: boolean
+  toggleSidebar?: (e: boolean) => void
 }
 
 export const Header = ({
@@ -57,22 +65,32 @@ export const Header = ({
   onMessageIconClick,
   onLogOut,
   relativeTime,
-  deleteNotification,
-  updateNotification,
-  readAddMutation,
+  updateNotificationState,
   readNewsMutation,
   taskManagerIFrameComponent,
   clientCreateRender,
   leadCreateRender,
+  sidebarCollapsed,
+  toggleSidebar,
+  journeyRender,
 }: P): JSX.Element => {
-  const [openNotificationDrawer, setNotificationDrawer] =
-    useState<boolean>(false)
+  const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
+    false
+  )
+  const [sidebarcollapsed, setSidebarcollapsed] = useState(sidebarCollapsed)
   const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
-  const [unreadNotificationCount, setUnreadNotificationCount] =
-    useState<number>(0)
+  const [openJourneyModal, setJourneyModal] = useState<boolean>(false)
+  const [
+    unreadNotificationCount,
+    setUnreadNotificationCount,
+  ] = useState<number>(0)
 
   const isReadNotify = (users: number[]) => {
     return !!users?.find((user_id) => user_id === user?.user)
+  }
+
+  const toggleJourneyModal = () => {
+    setJourneyModal((e) => !e)
   }
 
   const setUnreadNotify = (notifyArray, readKey, setter) => {
@@ -92,11 +110,15 @@ export const Header = ({
     setUnreadNotify(productNews, 'readUsers', (length) =>
       setUnreadNewsCount(length)
     )
-    setUnreadNotify(notifications, 'read', (length) =>
-      setUnreadNotificationCount(length)
-    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productNews, notifications])
+  }, [productNews])
+
+  useEffect(() => {
+    const unReadNotifications =
+      notifications?.filter((notification) => !notification.is_read)?.length ||
+      0
+    setUnreadNotificationCount(unReadNotifications)
+  }, [notifications])
 
   return (
     <>
@@ -112,16 +134,52 @@ export const Header = ({
           }}
         >
           <Row>
-            <Col md={6} lg={8}>
-              <Logo />
+            <Col md={6} lg={6}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <div>
+                  {React.createElement(
+                    sidebarcollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                    {
+                      className: classNames(
+                        styles.sidebarCollapseIcon,
+                        sidebarcollapsed && styles.sidebarCollapsed
+                      ),
+                      onClick: () => {
+                        if (toggleSidebar) {
+                          toggleSidebar(!sidebarcollapsed)
+                        }
+                        setSidebarcollapsed(!sidebarcollapsed)
+                      },
+                    }
+                  )}
+                </div>
+                <Link href="/">
+                  <Logo style={{ cursor: 'pointer' }} />
+                </Link>
+              </div>
             </Col>
-            <Col md={8} lg={8} className={styles.headerSearchCenter}>
+            <Col md={8} lg={12} className={styles.headerSearchCenter}>
               <div style={{ width: '400px' }}>
                 {searchRender ? searchRender(<Search />) : <Search />}
               </div>
+              <div style={{ marginLeft: 10 }}>
+                <QuickCreate
+                  clientCreateRender={clientCreateRender}
+                  leadCreateRender={leadCreateRender}
+                />
+              </div>
             </Col>
-            <Col md={10} lg={8} className={styles.headerIconEnd}>
+            <Col md={10} lg={6} className={styles.headerIconEnd}>
               <div className={styles.headerAlign}>
+                <div onClick={() => setJourneyModal((e) => !e)}>
+                  <img alt="journey-calendar" src={journeyCalendar} />
+                </div>
                 <Badge
                   count={unreadNewsCount + unreadNotificationCount}
                   className={styles.badgeCircle}
@@ -137,12 +195,6 @@ export const Header = ({
                     onClick={() => onMessageIconClick?.()}
                   />
                 </Badge>
-                <div>
-                  <QuickCreate
-                    clientCreateRender={clientCreateRender}
-                    leadCreateRender={leadCreateRender}
-                  />
-                </div>
                 <AvatarDropDown
                   taskManagerIFrameComponent={taskManagerIFrameComponent}
                   userData={user}
@@ -153,7 +205,7 @@ export const Header = ({
           </Row>
         </div>
       </AntHeader>
-
+      {journeyRender && openJourneyModal && journeyRender(toggleJourneyModal)}
       {openNotificationDrawer && (
         <NotificationDrawer
           user={user}
@@ -164,10 +216,8 @@ export const Header = ({
           notifications={notifications}
           productNews={productNews}
           relativeTime={relativeTime}
-          deleteNotification={deleteNotification}
-          updateNotification={updateNotification}
           readNewsMutation={readNewsMutation}
-          readAddMutation={readAddMutation}
+          updateNotificationState={updateNotificationState}
         />
       )}
     </>

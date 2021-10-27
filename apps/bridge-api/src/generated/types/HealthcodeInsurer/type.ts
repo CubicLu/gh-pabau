@@ -23,7 +23,7 @@ export const HealthcodeInsurer = objectType({
       type: 'InsuranceDetail',
       args: {
         where: 'InsuranceDetailWhereInput',
-        orderBy: 'InsuranceDetailOrderByInput',
+        orderBy: 'InsuranceDetailOrderByWithRelationInput',
         cursor: 'InsuranceDetailWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

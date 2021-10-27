@@ -15,12 +15,14 @@ import {
   useGetMarketingSourcesLazyQuery,
   useGetContactCustomFieldsLazyQuery,
   useFindManyLimitContactLocationLazyQuery,
-  useFindManySharedCompanyLazyQuery,
   useGetCmLabelsLazyQuery,
   useCreateOneContactMutation,
   GetTblModuleFieldsSettingsQuery,
+  useFindEditContactDetailLazyQuery,
+  useUpdateOneContactMutation,
 } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
+import dayjs from 'dayjs'
 
 export interface Label {
   label?: string
@@ -41,13 +43,9 @@ export interface ClientCreateWebProps {
   onSelectTemplate?: (string) => void
   searchText?: string
   onSearchTextChange?: (string) => void
-  handleSubmit?: (val) => void
+  handleSubmit?: (val?) => void
   isEdit?: boolean
-  editedValues?: InitialDetailsProps
-  activated?: boolean
-  onActivated?: (val: boolean) => void
-  defaultLabels?: Label[]
-  defaultSelectedLabels?: Label[]
+  contactId?: number
   handleDelete?: () => void
   deleteModalVisible?: boolean
   onDelete?: () => void
@@ -57,10 +55,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   modalVisible = true,
   handleClose,
   isEdit = false,
-  editedValues,
-  defaultLabels,
-  defaultSelectedLabels,
-  ...props
+  contactId,
+  handleSubmit,
 }) => {
   const { t } = useTranslation('common')
   const user = useUser()
@@ -82,38 +78,45 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     MailingStreet: '',
     MailingCity: '',
     MailingPostal: '',
-    MarketingOptInEmail: false,
-    MarketingOptInText: false,
-    MarketingOptInPost: false,
-    MarketingOptInPhone: false,
-    marketingPromotion: ['subscriptionToReceive'],
+    marketingPromotion: ['sms', 'email', 'phone', 'postal', 'needToKnows'],
     recordSharing: {
-      company: 'access',
-      emergencyContact: 'sharing',
-      family: 'sharing',
-      gp: 'sharing',
-      insuranceProvider: 'sharing',
-      nextOfKin: 'restricted',
+      company: 0,
+      emergencyContact: 0,
+      family: 0,
+      gp: 0,
+      insuranceProvider: 0,
+      nextOfKin: 0,
     },
-    privacyPolicy: 'No response',
+    privacyPolicy: '0',
     settingSharing: {
-      bookAppointments: true,
-      bookClass: false,
-      loyalty: true,
-      myPackages: false,
-      purchasePackage: false,
-      payments: false,
-      appointments: false,
-      class: false,
-      documents: false,
-      medications: false,
-      allergies: false,
-      gpDetails: false,
+      bookAppointments: 0,
+      bookClass: 0,
+      loyalty: 0,
+      myPackages: 0,
+      purchasePackage: 0,
+      payments: 0,
+      appointments: 0,
+      class: 0,
+      documents: 0,
+      medications: 0,
+      allergies: 0,
+      gpDetails: 0,
     },
-    shareLink: 'https://prelive-crm.new.pabau.com/',
+    shareLink: '',
   })
   const [customFields, setCustomFields] = useState<CustomFieldsProps[]>([])
   const [isVisible, setVisible] = useState(modalVisible)
+  const [accessCode, setAceessCode] = useState(0)
+  const [isSuccess, setSuccess] = useState(false)
+  const [labels, setLabels] = useState([])
+  const [active, setActive] = useState(false)
+
+  useEffect(() => {
+    if (!isEdit) {
+      setAceessCode(Math.floor(1000 + Math.random() * 9000))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess])
 
   const [getFieldSettingData, { data: fieldSettingData, loading }] =
     useGetTblModuleFieldsSettingsLazyQuery()
@@ -134,16 +137,24 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   ] = useFindManyLimitContactLocationLazyQuery()
 
   const [
-    getOtherCompaniesData,
-    { data: otherCompaniesData, loading: otherCompanyLoading },
-  ] = useFindManySharedCompanyLazyQuery()
-
-  const [
     getCustomFieldData,
     { data: customFieldData, loading: customFieldLoading },
   ] = useGetContactCustomFieldsLazyQuery()
 
-  const [getLabels, { data: labelsQueryData }] = useGetCmLabelsLazyQuery()
+  const [
+    getLabels,
+    { data: labelsQueryData, loading: labelLoading },
+  ] = useGetCmLabelsLazyQuery()
+
+  const [
+    getContact,
+    { data: contactData, loading: editContactLoading },
+  ] = useFindEditContactDetailLazyQuery({
+    variables: {
+      id: contactId,
+    },
+    fetchPolicy: 'no-cache',
+  })
 
   const [addMutation] = useCreateOneContactMutation({
     onCompleted(data) {
@@ -152,6 +163,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           NotificationType.success,
           t('quickCreate.client.modal.create.success')
         )
+        setSuccess(!isSuccess)
       }
     },
     onError(error) {
@@ -160,11 +172,18 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           NotificationType.error,
           t('quickCreate.client.modal.create.contact.exits.error')
         )
-      } else {
+      }
+    },
+  })
+
+  const [updateMutation] = useUpdateOneContactMutation({
+    onCompleted(data) {
+      if (data) {
         Notification(
-          NotificationType.error,
-          t('quickCreate.client.modal.create.contact.error')
+          NotificationType.success,
+          t('quickCreate.client.modal.update.success')
         )
+        setSuccess(!isSuccess)
       }
     },
   })
@@ -176,11 +195,31 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       getMarketingSourceData()
       getLabels()
       getLimitLocationData()
-      getOtherCompaniesData()
       getCustomFieldData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible])
+
+  useEffect(() => {
+    if (
+      !loading &&
+      !marketingSourceLoading &&
+      !locationLoading &&
+      !customFieldLoading &&
+      !labelLoading &&
+      isEdit
+    ) {
+      getContact()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    loading,
+    marketingSourceLoading,
+    locationLoading,
+    customFieldLoading,
+    isEdit,
+    labelLoading,
+  ])
 
   useEffect(() => {
     const requiredField = {
@@ -190,13 +229,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       Lname: Yup.string().required(
         t('quickCreate.validation.lastName.required')
       ),
-    }
-    let initialValuesObj = initialValues
-    if (isEdit && editedValues) {
-      initialValuesObj = {
-        ...initialValuesObj,
-        ...editedValues,
-      }
     }
     if (fieldSettingData) {
       const data: GetTblModuleFieldsSettingsQuery = fieldSettingData
@@ -216,10 +248,9 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
         }
       }
     }
-    setInitialValues(initialValuesObj)
     setValidationObject(requiredField)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fieldSettingData, isEdit, editedValues])
+  }, [fieldSettingData])
 
   useEffect(() => {
     if (
@@ -262,7 +293,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       setValidationObject(validationObj)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [salutationData, initialValues])
+  }, [salutationData])
 
   useEffect(() => {
     if (marketingSourceData?.findManyMarketingSource?.length === 0) {
@@ -271,7 +302,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       setValidationObject(validationObj)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [marketingSourceData, initialValues])
+  }, [marketingSourceData])
 
   useEffect(() => {
     if (customFieldData) {
@@ -353,6 +384,105 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customFieldData])
 
+  useEffect(() => {
+    const values = initialValues
+    const marketingPromotionValues = []
+    if (contactData?.contact) {
+      const data = contactData.contact
+      for (const key of Object.keys(values)) {
+        if (key === 'recordSharing') {
+          if (data.contactPreference) {
+            Object.keys(values['recordSharing']).map(
+              (key) =>
+                (values['recordSharing'][key] = data.contactPreference[key])
+            )
+          }
+        } else if (key === 'settingSharing') {
+          if (data.contactPreference) {
+            Object.keys(values['settingSharing']).map(
+              (key) =>
+                (values['settingSharing'][key] = data.contactPreference[key])
+            )
+          }
+        } else if (key === 'shareLink') {
+          values['shareLink'] = data.contactPreference?.shareLink ?? ''
+        } else if (key === 'marketingPromotion') {
+          if (data.MarketingOptInPost) {
+            marketingPromotionValues.push('postal')
+          }
+          if (data.MarketingOptInEmail) {
+            marketingPromotionValues.push('email')
+          }
+          if (data.MarketingOptInPhone) {
+            marketingPromotionValues.push('phone')
+          }
+          if (data.MarketingOptInText) {
+            marketingPromotionValues.push('sms')
+          }
+          if (data.needToKnows) {
+            marketingPromotionValues.push('needToKnows')
+          }
+          values['marketingPromotion'] = marketingPromotionValues
+        } else if (key === 'preferredLanguage') {
+          if (data.contactMeta.length > 0) {
+            values['preferredLanguage'] = data.contactMeta[0].meta_value
+          }
+        } else if (key === 'MarketingSource') {
+          if (
+            marketingSourceData?.findManyMarketingSource.find(
+              (source) => source.id === data['MarketingSource']
+            )
+          ) {
+            values['MarketingSource'] = data['MarketingSource'].toString()
+          }
+        } else if (key.includes('customField_')) {
+          if (data.customField.length > 0) {
+            const id = Number.parseInt(key.split('_')[1])
+            if (
+              data.customField.find((field) => field.custom_field_id === id)
+            ) {
+              values[key] = data.customField.find(
+                (field) => field.custom_field_id === id
+              ).custom_field_value
+            }
+          }
+        } else {
+          values[key] = data[key]
+        }
+      }
+      setAceessCode(
+        Number.parseInt(data.contactPreference?.accessCode) ??
+          Math.floor(1000 + Math.random() * 9000)
+      )
+      if (data.labels.length > 0) {
+        const labelData = data.labels.map((label) => {
+          const findLabel = labelsData.find(
+            (labelData) => labelData.id === label.id
+          )
+          return {
+            id: label.id,
+            label: findLabel.value,
+            color: findLabel.color,
+          }
+        })
+        setLabels(labelData)
+      }
+      if (data.active) {
+        setActive(true)
+      } else {
+        setActive(false)
+      }
+      setInitialValues({ ...values })
+    } else if (contactData && !editContactLoading) {
+      handleSubmit?.()
+      Notification(
+        NotificationType.error,
+        t('quickCreate.client.modal.update.detail.error')
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactData])
+
   const checkIsLoading = () => {
     return (
       salutationLoading ||
@@ -360,20 +490,26 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       marketingSourceLoading ||
       locationLoading ||
       customFieldLoading ||
-      otherCompanyLoading
+      editContactLoading
     )
   }
 
   const handleCloseModal = () => {
     setVisible(false)
+    setLabels([])
+    setActive(false)
     handleClose?.()
+  }
+
+  const onActivated = (value) => {
+    setActive(value)
   }
 
   const handleCreate = async (values, resetForm, setSelectedLabels) => {
     const customFieldsValue: cmFieldsCreateProps[] = []
     const limitContactsLocationsIds: number[] = []
-    const otherCompanyIds: number[] = []
-
+    const deleteLabels: number[] = []
+    let createLabels = values.selectedLabels
     for (const field of Object.keys(values)) {
       let value = values[field]
 
@@ -394,7 +530,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
               id: Number.parseInt(strVal[1]),
               value:
                 matchedField.field_type === 'date'
-                  ? value.format('YYYY-MM-DD')
+                  ? dayjs(value).format('YYYY-MM-DD')
                   : value.toString(),
             })
           }
@@ -402,9 +538,20 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       } else if (field.includes('limitContactsLocations_') && value) {
         const strVal = field.split('_')
         limitContactsLocationsIds.push(Number.parseInt(strVal[1]))
-      } else if (field.includes('otherCompany_') && value) {
-        const strVal = field.split('_')
-        otherCompanyIds.push(Number.parseInt(strVal[1]))
+      }
+    }
+
+    if (isEdit && contactData.contact?.labels.length > 0) {
+      for (const label of contactData.contact.labels) {
+        if (
+          !values.selectedLabels.find((selected) => selected.id === label.id)
+        ) {
+          deleteLabels.push(label.id)
+        } else {
+          createLabels = createLabels.filter(
+            (selected) => selected.id !== label.id
+          )
+        }
       }
     }
 
@@ -412,16 +559,17 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       firstName: values.Fname,
       lastName: values.Lname,
       email: values.Email,
-      salutation: values.salutation,
+      salutation: values.salutation ?? '',
       mailingProvince: values.MailingProvince,
       mailingCity: values.MailingCity,
       mailingStreet: values.MailingStreet,
       mailingPostal: values.MailingPostal,
       mailingCountry: values.MailingCountry,
-      marketingOptInEmail: values.MarketingOptInEmail ? 1 : 0,
-      marketingOptInPhone: values.MarketingOptInPhone ? 1 : 0,
-      marketingOptInPost: values.MarketingOptInPost ? 1 : 0,
-      marketingOptInText: values.MarketingOptInText ? 1 : 0,
+      marketingOptInEmail: values.marketingPromotion.includes('email') ? 1 : 0,
+      marketingOptInPhone: values.marketingPromotion.includes('phone') ? 1 : 0,
+      marketingOptInPost: values.marketingPromotion.includes('postal') ? 1 : 0,
+      marketingOptInText: values.marketingPromotion.includes('sms') ? 1 : 0,
+      needToKnows: values.marketingPromotion.includes('needToKnows'),
       marketingSource: values.MarketingSource
         ? Number.parseInt(values.MarketingSource)
         : 0,
@@ -430,18 +578,40 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       phone: values.Phone,
       gender: values.gender,
       preferredLanguage: values.preferredLanguage.toLowerCase(),
-      otherCompanyIds: otherCompanyIds,
-      limitContactsLocations: limitContactsLocationsIds,
-      labels: values.selectedLabels,
+      privacyPolicy: values.privacyPolicy,
+      labels: !isEdit
+        ? createLabels
+        : {
+            createLabels,
+            deleteLabels,
+          },
       customFields: customFieldsValue,
+      contactPreferences: {
+        family: values.recordSharing.family,
+        emergency_contact: values.recordSharing.emergencyContact,
+        next_of_kin: values.recordSharing.nextOfKin,
+        insurance_provider: values.recordSharing.insuranceProvider,
+        gp: values.recordSharing.gp,
+        company: values.recordSharing.company,
+        book_appointments: values.settingSharing.bookAppointments,
+        book_class: values.settingSharing.bookClass,
+        loyalty: values.settingSharing.loyalty,
+        my_packages: values.settingSharing.myPackages,
+        purchase_package: values.settingSharing.purchasePackage,
+        payments: values.settingSharing.payments,
+        appointments: values.settingSharing.appointments,
+        class: values.settingSharing.class,
+        documents: values.settingSharing.documents,
+        medications: values.settingSharing.medications,
+        allergies: values.settingSharing.allergies,
+        gp_details: values.settingSharing.gpDetails,
+        share_link: values.shareLink,
+        access_code: accessCode.toString(),
+      },
     }
 
-    if (otherCompanyIds.length === 0) {
-      delete variables.otherCompanyIds
-    }
-
-    if (limitContactsLocationsIds.length === 0) {
-      delete variables.limitContactsLocations
+    if (limitContactsLocationsIds.length > 0 && !isEdit) {
+      variables['limitContactsLocations'] = limitContactsLocationsIds
     }
 
     if (values.selectedLabels.length === 0) {
@@ -452,14 +622,30 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       delete variables.customFields
     }
 
-    const response = await addMutation({
-      variables,
-      optimisticResponse: {},
-    })
+    let response
+    if (!isEdit) {
+      response = await addMutation({
+        variables,
+        optimisticResponse: {},
+      })
+    } else {
+      response = await updateMutation({
+        variables: {
+          ...variables,
+          isActive: active ? 1 : 0,
+          contactId,
+        },
+        optimisticResponse: {},
+      })
+    }
 
     if (response.data) {
       resetForm()
       setSelectedLabels([])
+      if (isEdit) {
+        handleSubmit?.()
+        setActive(false)
+      }
     }
   }
 
@@ -473,16 +659,20 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       fieldsSettings={fieldSettingData?.findManyTblModuleFieldsSetting}
       marketingSources={marketingSourceData?.findManyMarketingSource}
       limitContactsLocations={limitLocationData?.findManyLimitContactLocation}
-      otherCompanies={otherCompaniesData?.findManySharedCompany}
-      isLoading={loading}
+      isLoading={!isEdit ? loading : checkIsLoading()}
       isMarketingSourceLoading={marketingSourceLoading}
       isSalutationLoading={salutationLoading}
       labelsData={labelsData}
+      defaultLabels={labels}
+      defaultSelectedLabels={labels}
       initialValues={initialValues}
       validationObject={validationObject}
       isDisabledBtn={checkIsLoading()}
-      companyName={user?.me?.Company?.details?.company_name}
-      {...props}
+      companyName={user?.me?.companyName}
+      accessCode={accessCode}
+      isEdit={isEdit}
+      activated={active}
+      onActivated={onActivated}
     />
   )
 }

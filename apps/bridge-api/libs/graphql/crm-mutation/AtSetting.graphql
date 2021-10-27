@@ -1,0 +1,35 @@
+fragment AtSettingFields on AtSetting {
+  id
+  company_id
+  logo
+  background
+  font_family
+}
+
+fragment AtSetting on AtSetting {
+  ...AtSettingFields
+}
+
+mutation createOneAtSetting($data: AtSettingCreateInput!) {
+  createOneAtSetting(data: $data) {
+    ...AtSetting
+  }
+}
+
+mutation updateOneAtSetting($where: AtSettingWhereUniqueInput!, $data: AtSettingUpdateInput!) {
+  updateOneAtSetting(where: $where, data: $data) {
+    ...AtSetting
+  }
+}
+
+mutation deleteOneAtSetting($where: AtSettingWhereUniqueInput!) {
+  deleteOneAtSetting(where: $where) {
+    ...AtSetting
+  }
+}
+
+mutation updateManyAtSetting($where: AtSettingWhereInput, $data: AtSettingUpdateManyMutationInput!) {
+  updateManyAtSetting(where: $where, data: $data) {
+    count
+  }
+}

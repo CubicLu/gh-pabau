@@ -4,7 +4,7 @@ export const CandidateAggregateQuery = queryField('aggregateCandidate', {
   type: 'AggregateCandidate',
   args: {
     where: 'CandidateWhereInput',
-    orderBy: list('CandidateOrderByInput'),
+    orderBy: list('CandidateOrderByWithRelationInput'),
     cursor: 'CandidateWhereUniqueInput',
     distinct: 'CandidateScalarFieldEnum',
     skip: 'Int',

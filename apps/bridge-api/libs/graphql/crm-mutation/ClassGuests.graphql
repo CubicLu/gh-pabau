@@ -1,0 +1,37 @@
+fragment ClassGuestsFields on ClassGuests {
+  id
+  guest_name
+  signing_date
+  class_id
+  company_id
+  cancel_status
+  mobile
+}
+
+fragment ClassGuests on ClassGuests {
+  ...ClassGuestsFields
+}
+
+mutation createOneClassGuests($data: ClassGuestsCreateInput!) {
+  createOneClassGuests(data: $data) {
+    ...ClassGuests
+  }
+}
+
+mutation updateOneClassGuests($where: ClassGuestsWhereUniqueInput!, $data: ClassGuestsUpdateInput!) {
+  updateOneClassGuests(where: $where, data: $data) {
+    ...ClassGuests
+  }
+}
+
+mutation deleteOneClassGuests($where: ClassGuestsWhereUniqueInput!) {
+  deleteOneClassGuests(where: $where) {
+    ...ClassGuests
+  }
+}
+
+mutation updateManyClassGuests($where: ClassGuestsWhereInput, $data: ClassGuestsUpdateManyMutationInput!) {
+  updateManyClassGuests(where: $where, data: $data) {
+    count
+  }
+}

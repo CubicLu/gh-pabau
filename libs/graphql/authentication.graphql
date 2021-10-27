@@ -21,6 +21,7 @@ query retrieveAuthenticatedUser {
         company_name
         language
         currency
+        date_format
       }
     }
     companies: companies {

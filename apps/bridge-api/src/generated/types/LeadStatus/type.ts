@@ -15,10 +15,37 @@ export const LeadStatus = objectType({
     t.string('email_template_from')
     t.int('is_default')
     t.int('is_convert')
+    t.nullable.int('pipeline_id')
     t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company
+      },
+    })
+    t.nullable.field('Pipeline', {
+      type: 'Pipeline',
+      resolve(root: any) {
+        return root.Pipeline
+      },
+    })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'LeadStatusCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

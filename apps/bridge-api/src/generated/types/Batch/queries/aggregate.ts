@@ -4,7 +4,7 @@ export const BatchAggregateQuery = queryField('aggregateBatch', {
   type: 'AggregateBatch',
   args: {
     where: 'BatchWhereInput',
-    orderBy: list('BatchOrderByInput'),
+    orderBy: list('BatchOrderByWithRelationInput'),
     cursor: 'BatchWhereUniqueInput',
     distinct: 'BatchScalarFieldEnum',
     skip: 'Int',

@@ -152,7 +152,7 @@ query purchaseOrdersList(
 
 query findLastInvCategoryOrderId {
   aggregateInvCategory {
-    max {
+    _max {
       order
     }
   }
@@ -166,7 +166,7 @@ query categoryList(
 ) {
   findManyInvCategory(
     where: {
-      category_type: { not: { equals: "service" } }
+      category_type: { in: ["retail", "injectable", "consumable"] }
       disabled: { equals: $disabled }
       name: { contains: $searchTerm }
     }
@@ -181,7 +181,7 @@ query categoryList(
   }
   findManyInvCategoryCount(
     where: {
-      category_type: { not: { equals: "service" } }
+      category_type: { in: ["retail", "injectable", "consumable"] }
       disabled: { equals: $disabled }
       name: { contains: $searchTerm }
     }
@@ -307,7 +307,10 @@ query retrieveProductsGroupByMasterCategory {
     id
     name
     ord
-    InvCategory {
+    InvCategory(
+      where: { category_type: { in: ["retail", "injectable", "consumable"] } }
+      orderBy: { order: desc }
+    ) {
       id
       name
     }
@@ -317,7 +320,7 @@ query retrieveProductsGroupByMasterCategory {
 
 query retrieveProductGroups {
   findManyInvCategory(
-    where: { category_type: { not: { equals: "service" } } }
+    where: { category_type: { in: ["retail", "injectable", "consumable"] } }
     orderBy: { order: desc }
   ) {
     ...Category
@@ -333,7 +336,7 @@ query createProductModalInit {
     ...ProductTaxFields
   }
   findManyInvCategory(
-    where: { category_type: { not: { equals: "service" } } }
+    where: { category_type: { in: ["retail", "injectable", "consumable"] } }
     orderBy: { order: asc }
   ) {
     ...Category
@@ -483,5 +486,52 @@ mutation updateOneServicesMasterCategory(
     categories: $categories
   ) {
     ...ServicesMasterCategory
+  }
+}
+
+query retrieveProductCountByCategory($active: Int = 1, $search: String = "") {
+  findManyInvCategory(
+    where: { category_type: { in: ["retail", "injectable", "consumable"] } }
+    orderBy: { order: asc }
+  ) {
+    id
+    name
+    count: InvProduct(
+      where: {
+        is_active: { equals: $active }
+        AND: { name: { contains: $search } }
+      }
+    ) {
+      name
+      is_active
+    }
+  }
+  total: findManyProductsWithAvailableQuantityCount(
+    where: { active: $active, search: $search }
+  )
+}
+
+query getProducts($take: Int = 100, $skip: Int = 0) {
+  products: findManyInvProduct(
+    where: {
+      InvCategory: { category_type: { equals: "retail" } }
+      AND: { is_active: { equals: 1 } }
+    }
+    orderBy: { name: asc }
+    skip: $skip
+    take: $take
+  ) {
+    id
+    name
+    image
+    price
+    is_active
+    Category: InvCategory {
+      id
+      name
+    }
+    stock: _count {
+      count: InvWarehouseProduct
+    }
   }
 }

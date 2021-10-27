@@ -6,7 +6,7 @@ export const ClassMasterFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ClassMasterWhereInput',
-      orderBy: list('ClassMasterOrderByInput'),
+      orderBy: list('ClassMasterOrderByWithRelationInput'),
       cursor: 'ClassMasterWhereUniqueInput',
       distinct: 'ClassMasterScalarFieldEnum',
       skip: 'Int',

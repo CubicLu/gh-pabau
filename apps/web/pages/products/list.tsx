@@ -1,10 +1,4 @@
-import {
-  DownloadOutlined,
-  FilterOutlined,
-  MenuOutlined,
-  PlusSquareFilled,
-  SearchOutlined,
-} from '@ant-design/icons'
+import { DownloadOutlined, PlusSquareFilled } from '@ant-design/icons'
 import { useCreateProductModalInitQuery } from '@pabau/graphql'
 import { Button, MobileSidebar, NotificationDrawer, TabMenu } from '@pabau/ui'
 import { Card, Divider, Input as AntInput, Typography } from 'antd'
@@ -19,6 +13,7 @@ import PurchaseOrder from '../../components/Product/PurchaseOrder'
 import StockTake from '../../components/Product/StockTake'
 import Supplier from '../../components/Product/Supplier'
 import Filter from '../../components/Product/Filter'
+import CommonHeader from '../../components/CommonHeader'
 import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './list.module.less'
@@ -172,44 +167,61 @@ const ProductList = (): JSX.Element => {
   }, [searchTerm])
 
   return (
-    <div className={styles.productsListContainer}>
-      <Layout {...user}>
+    <Layout {...user}>
+      <CommonHeader
+        isShowSearch
+        searchInputPlaceHolder={t('products.list.searchbar.placeholder')}
+        handleSearch={(value) => setSearchTerm(value)}
+        title={tabItemText[activeTab]}
+        searchValue={searchTerm}
+      >
+        {activeTab === ActiveTab.Products && (
+          <DownloadOutlined className={styles.downloadIconStyle} />
+        )}
+        {(activeTab === ActiveTab.Products ||
+          activeTab === ActiveTab.PurchaseOrders ||
+          activeTab === ActiveTab.Category) && (
+          <Filter
+            initialValues={initialValues}
+            selectedCategoryType={selectedCategoryType}
+            activeTab={activeTab}
+            categoryType={categoryType}
+            ActiveTab={ActiveTab}
+            changeFilter={(status) => updateFilterStatus(status)}
+            changeCategoryType={(type) => {
+              if (activeTab === '0') setSelectedCategoryType(type)
+            }}
+          />
+        )}
+        <PlusSquareFilled
+          className={styles.plusIconStyle}
+          onClick={() => handleCreate()}
+        />
+      </CommonHeader>
+      <div className={styles.productsListContainer}>
         <Card bodyStyle={{ padding: 0 }} style={{ borderBottomWidth: 0 }}>
-          <div className={styles.headerContainer}>
-            <Title>
-              {isMobile && (
-                <MenuOutlined
-                  className={styles.menuIconStyle}
-                  onClick={() => setMenuDrawer(true)}
-                />
-              )}
-              {tabItemText[activeTab]}
-            </Title>
-            <div className={styles.headerRight}>
-              {!isMobile && (
+          {!isMobile && (
+            <div className={styles.headerContainer}>
+              <Title>{tabItemText[activeTab]}</Title>
+              <div className={styles.headerRight}>
                 <Search
+                  value={searchTerm}
                   className={styles.searchBar}
                   placeholder={t('products.list.searchbar.placeholder')}
                   allowClear
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              )}
-              {isMobile && (
-                <SearchOutlined className={styles.searchIconStyle} />
-              )}
-              {activeTab === ActiveTab.Products && !isMobile && (
-                <Button onClick={() => router.push('/products/export')}>
-                  <DownloadOutlined />
-                  {t('products.list.export')}
-                </Button>
-              )}
-              {activeTab === ActiveTab.Products && isMobile && (
-                <DownloadOutlined className={styles.downloadIconStyle} />
-              )}
-              {(activeTab === ActiveTab.Products ||
-                activeTab === ActiveTab.PurchaseOrders ||
-                activeTab === ActiveTab.Category) &&
-                !isMobile && (
+
+                {activeTab === ActiveTab.Products && (
+                  <Button onClick={() => router.push('/products/export')}>
+                    <DownloadOutlined />
+                    {t('products.list.export')}
+                  </Button>
+                )}
+
+                {(activeTab === ActiveTab.Products ||
+                  activeTab === ActiveTab.PurchaseOrders ||
+                  activeTab === ActiveTab.Category) && (
                   <Filter
                     initialValues={initialValues}
                     selectedCategoryType={selectedCategoryType}
@@ -222,25 +234,12 @@ const ProductList = (): JSX.Element => {
                     }}
                   />
                 )}
-              {(activeTab === ActiveTab.Products ||
-                activeTab === ActiveTab.PurchaseOrders ||
-                activeTab === ActiveTab.Category) &&
-                isMobile && (
-                  <FilterOutlined className={styles.filterIconStyle} />
-                )}
-              {!isMobile && (
                 <Button type="primary" onClick={() => handleCreate()}>
                   {newBtnText[activeTab]}
                 </Button>
-              )}
-              {isMobile && (
-                <PlusSquareFilled
-                  className={styles.plusIconStyle}
-                  onClick={() => handleCreate()}
-                />
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </Card>
         <Divider style={{ margin: 0 }} />
         <TabMenu
@@ -298,8 +297,8 @@ const ProductList = (): JSX.Element => {
             closeDrawer={() => setNotificationDrawer((e) => !e)}
           />
         )}
-      </Layout>
-    </div>
+      </div>
+    </Layout>
   )
 }
 

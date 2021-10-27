@@ -4,7 +4,7 @@ export const CmLeadNoteFindFirstQuery = queryField('findFirstCmLeadNote', {
   type: 'CmLeadNote',
   args: {
     where: 'CmLeadNoteWhereInput',
-    orderBy: list('CmLeadNoteOrderByInput'),
+    orderBy: list('CmLeadNoteOrderByWithRelationInput'),
     cursor: 'CmLeadNoteWhereUniqueInput',
     distinct: 'CmLeadNoteScalarFieldEnum',
     skip: 'Int',

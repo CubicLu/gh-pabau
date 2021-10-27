@@ -6,7 +6,7 @@ export const TrainCourseDateAggregateQuery = queryField(
     type: 'AggregateTrainCourseDate',
     args: {
       where: 'TrainCourseDateWhereInput',
-      orderBy: list('TrainCourseDateOrderByInput'),
+      orderBy: list('TrainCourseDateOrderByWithRelationInput'),
       cursor: 'TrainCourseDateWhereUniqueInput',
       distinct: 'TrainCourseDateScalarFieldEnum',
       skip: 'Int',

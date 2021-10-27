@@ -6,7 +6,7 @@ export const BodyChartTemplateAggregateQuery = queryField(
     type: 'AggregateBodyChartTemplate',
     args: {
       where: 'BodyChartTemplateWhereInput',
-      orderBy: list('BodyChartTemplateOrderByInput'),
+      orderBy: list('BodyChartTemplateOrderByWithRelationInput'),
       cursor: 'BodyChartTemplateWhereUniqueInput',
       distinct: 'BodyChartTemplateScalarFieldEnum',
       skip: 'Int',

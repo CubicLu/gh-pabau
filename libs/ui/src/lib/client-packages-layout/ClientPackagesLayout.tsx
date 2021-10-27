@@ -8,7 +8,6 @@ import {
   MoreOutlined,
   EditOutlined,
   ExceptionOutlined,
-  PlusOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons'
 import { MyLottie as Lottie, Table, TabMenu } from '@pabau/ui'
@@ -30,9 +29,12 @@ export interface ClientPackageItem {
   valueEach: number
   used: number
   invoice: number
+  lastSaw: string
+  lastVisited: string
 }
 export interface ClientPackagesLayoutProps {
   items: ClientPackageItem[]
+  handleSendEmail?: (type) => void
 }
 
 interface GridItemProps {
@@ -51,34 +53,89 @@ const defaultPackageItem: ClientPackageItem = {
   valueEach: 0,
   used: 0,
   invoice: 0,
+  lastSaw: '',
+  lastVisited: '',
 }
 
 export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
   items,
+  handleSendEmail,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const isMobile = useMedia('(max-width: 767px)', false)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
-  const [currentItem, setCurrentItem] =
-    useState<ClientPackageItem>(defaultPackageItem)
-  const [openActions, setOpenActions] = useState(false)
+  const [currentItem, setCurrentItem] = useState<ClientPackageItem>(
+    defaultPackageItem
+  )
 
-  const tableItemActionPopover = (
+  const [openActions, setOpenActions] = useState(false)
+  const [openPopover, setOpenPopover] = useState(false)
+  const [openNormalDrawer, setOpenNormalDrawer] = useState(false)
+  const [openExpiredDrawer, setOpenExpiredDrawer] = useState(false)
+
+  const tableItemActionPopover = (expired: boolean) => (
     <div className={styles.tableItemActionPopoverContainer}>
-      <div className={styles.changeHistory}>
-        <div className={styles.icon}>
-          <EditOutlined />
-        </div>
-        <div className={styles.text}>Change expiry</div>
-      </div>
-      <div className={styles.void}>
-        <div className={styles.icon}>
-          <ExceptionOutlined />
-        </div>
-        <div className={styles.text}>Void</div>
-      </div>
+      {!expired ? (
+        <div className={styles.text}>Send reminder</div>
+      ) : (
+        <>
+          <div className={styles.changeHistory}>
+            <div className={styles.icon}>
+              <EditOutlined />
+            </div>
+            <div className={styles.text}>Change expiry</div>
+          </div>
+          <div className={styles.void}>
+            <div className={styles.icon}>
+              <ExceptionOutlined />
+            </div>
+            <div className={styles.text}>Void</div>
+          </div>
+        </>
+      )}
     </div>
   )
+
+  const mobileDrawer = (expired: boolean, item) => {
+    if (expired) {
+      return (
+        <div
+          className={styles.moreIcon}
+          onClick={() => {
+            setOpenExpiredDrawer(true)
+            setCurrentItem(item)
+          }}
+        >
+          <MoreOutlined />
+        </div>
+      )
+    } else {
+      return (
+        <div
+          className={styles.moreIcon}
+          onClick={() => {
+            setOpenNormalDrawer(true)
+            setCurrentItem(item)
+          }}
+        >
+          <MoreOutlined />
+        </div>
+      )
+    }
+  }
+
+  const infoTooltip = (item: ClientPackageItem) => {
+    const purchaseDate = moment(item.actDate).format('DD/MM/YYYY')
+    const daysFromLastVisited = moment().diff(item.lastVisited, 'days')
+    return (
+      <div className={styles.infoTooltip}>
+        <p>Purchased on: {purchaseDate}</p>
+        <p>Booking frequency: every 5 weeks</p>
+        <p>Last saw: {item.lastSaw}</p>
+        <p>Last visited: {daysFromLastVisited} days ago</p>
+      </div>
+    )
+  }
 
   const GridItem = ({ item, expired }: GridItemProps) => {
     const { id, thumbnail, avatar, packageName, packageUsage, used } = item
@@ -93,21 +150,29 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >
-          <div className={styles.infoIcon}>
-            <InfoCircleOutlined />
-          </div>
+          <Tooltip placement="bottomLeft" title={infoTooltip(item)}>
+            <div className={styles.infoIcon}>
+              <InfoCircleOutlined />
+            </div>
+          </Tooltip>
           {isMobile ? (
-            (hover || (openActions && currentItem.id === id)) && (
+            hover || (openPopover && currentItem.id === id) ? (
+              moment().diff(item.lastVisited, 'days') >= 90 ? (
+                <div
+                  className={styles.redIcon}
+                  onClick={() => handleSendEmail?.('email')}
+                ></div>
+              ) : (
+                mobileDrawer(expired, item)
+              )
+            ) : null
+          ) : moment().diff(item.lastVisited, 'days') >= 90 ? (
+            hover ? (
               <div
-                className={styles.moreIcon}
-                onClick={() => {
-                  setOpenActions(true)
-                  setCurrentItem(item)
-                }}
-              >
-                <MoreOutlined />
-              </div>
-            )
+                className={styles.redIcon}
+                onClick={() => handleSendEmail?.('email')}
+              ></div>
+            ) : null
           ) : (
             <Popover
               placement="bottomLeft"
@@ -115,16 +180,16 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
                 styles.tableItemActionPopover,
                 currentItem.id !== id ? styles.hidePopover : ''
               )}
-              content={tableItemActionPopover}
+              content={tableItemActionPopover(expired)}
               trigger="click"
-              visible={openActions}
-              onVisibleChange={(visible) => setOpenActions(visible)}
+              visible={openPopover}
+              onVisibleChange={(visible) => setOpenPopover(visible)}
             >
-              {(hover || (openActions && currentItem.id === id)) && (
+              {(hover || (openPopover && currentItem.id === id)) && (
                 <div
                   className={styles.moreIcon}
                   onClick={() => {
-                    setOpenActions(true)
+                    setOpenPopover(true)
                     setCurrentItem(item)
                   }}
                 >
@@ -138,7 +203,11 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
         <div
           className={cn(
             styles.gridPackageUsage,
-            expired ? styles.red : styles.green
+            expired
+              ? styles.red
+              : packageUsage - used === 1
+              ? styles.orange
+              : styles.green
           )}
         >{`${used}/${packageUsage}`}</div>
         <div className={styles.gridPackageProgress}>
@@ -148,13 +217,22 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
               title="William Brandham - redeemed on 23/10/2021"
             >
               <div className={styles.usedItem}>
-                <div style={{ backgroundImage: `url(${avatar})` }} />
+                <div
+                  className={styles.greenSession}
+                  style={{ backgroundImage: `url(${avatar})` }}
+                />
               </div>
             </Tooltip>
           ))}
           {_.times(packageUsage - used).map((_item, index) => (
             <div key={`remain-item-${index}`}>
-              <div />
+              <div
+                className={
+                  packageUsage - used === 1
+                    ? styles.lastSession
+                    : styles.greenSession
+                }
+              />
             </div>
           ))}
         </div>
@@ -194,7 +272,14 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
               <div key={`used-item-${index}`} className={styles.usedItem} />
             ))}
             {_.times(packageUsage - used).map((_item, index) => (
-              <div key={`remain-item-${index}`} className={styles.remainItem} />
+              <div
+                key={`remain-item-${index}`}
+                className={
+                  packageUsage - used === 1
+                    ? styles.lastSession
+                    : styles.remainItem
+                }
+              />
             ))}
           </div>
         )
@@ -244,15 +329,7 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
       // eslint-disable-next-line react/display-name
       render: (data) =>
         isMobile ? (
-          <div
-            className={styles.tableItemAction}
-            onClick={() => {
-              setOpenActions(true)
-              setCurrentItem(data)
-            }}
-          >
-            <MoreOutlined />
-          </div>
+          mobileDrawer(isExpired(data), data)
         ) : (
           <Popover
             placement="bottomLeft"
@@ -260,15 +337,15 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
               styles.tableItemActionPopover,
               currentItem.id !== data.id ? styles.hidePopover : ''
             )}
-            content={tableItemActionPopover}
+            content={tableItemActionPopover(isExpired(data))}
             trigger="click"
-            visible={openActions}
-            onVisibleChange={(visible) => setOpenActions(visible)}
+            visible={openPopover}
+            onVisibleChange={(visible) => setOpenPopover(visible)}
           >
             <div
               className={styles.tableItemAction}
               onClick={() => {
-                setOpenActions(true)
+                setOpenPopover(true)
                 setCurrentItem(data)
               }}
             >
@@ -319,9 +396,6 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
               >
                 <ListView />
               </div>
-              <div className={styles.plusItem}>
-                <PlusOutlined />
-              </div>
             </div>
           )}
           <div className={styles.tabsContainer}>
@@ -353,9 +427,6 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
                       onClick={() => setViewMode('list')}
                     >
                       <ListView />
-                    </div>
-                    <div className={styles.plusItem}>
-                      <PlusOutlined />
                     </div>
                   </div>
                 )}
@@ -402,9 +473,6 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
                     >
                       <ListView />
                     </div>
-                    <div className={styles.plusItem}>
-                      <PlusOutlined />
-                    </div>
                   </div>
                 )}
                 {viewMode === 'list' && (
@@ -434,23 +502,42 @@ export const ClientPackagesLayout: FC<ClientPackagesLayoutProps> = ({
         </>
       )}
       {isMobile && (
-        <Drawer
-          visible={openActions}
-          placement="bottom"
-          closable={false}
-          onClose={() => setOpenActions(false)}
-          className={styles.packageItemDrawer}
-        >
-          <div className={styles.packageItemDrawerHeader}>
-            <div
-              className={styles.handler}
-              onClick={() => setOpenActions(false)}
-            />
-          </div>
-          <div className={styles.packageItemDrawerBody}>
-            {tableItemActionPopover}
-          </div>
-        </Drawer>
+        <>
+          <Drawer
+            visible={openNormalDrawer}
+            placement="bottom"
+            closable={false}
+            onClose={() => setOpenNormalDrawer(false)}
+            className={styles.packageItemDrawer}
+          >
+            <div className={styles.packageItemDrawerHeader}>
+              <div
+                className={styles.handler}
+                onClick={() => setOpenNormalDrawer(false)}
+              />
+            </div>
+            <div className={styles.packageItemDrawerBody}>
+              {tableItemActionPopover(false)}
+            </div>
+          </Drawer>
+          <Drawer
+            visible={openExpiredDrawer}
+            placement="bottom"
+            closable={false}
+            onClose={() => setOpenExpiredDrawer(false)}
+            className={styles.packageItemDrawer}
+          >
+            <div className={styles.packageItemDrawerHeader}>
+              <div
+                className={styles.handler}
+                onClick={() => setOpenExpiredDrawer(false)}
+              />
+            </div>
+            <div className={styles.packageItemDrawerBody}>
+              {tableItemActionPopover(true)}
+            </div>
+          </Drawer>
+        </>
       )}
     </div>
   )

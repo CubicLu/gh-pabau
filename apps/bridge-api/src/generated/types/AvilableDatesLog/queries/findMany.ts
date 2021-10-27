@@ -6,7 +6,7 @@ export const AvilableDatesLogFindManyQuery = queryField(
     type: nonNull(list(nonNull('AvilableDatesLog'))),
     args: {
       where: 'AvilableDatesLogWhereInput',
-      orderBy: list('AvilableDatesLogOrderByInput'),
+      orderBy: list('AvilableDatesLogOrderByWithRelationInput'),
       cursor: 'AvilableDatesLogWhereUniqueInput',
       distinct: 'AvilableDatesLogScalarFieldEnum',
       skip: 'Int',

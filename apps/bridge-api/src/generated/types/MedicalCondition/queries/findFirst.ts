@@ -6,7 +6,7 @@ export const MedicalConditionFindFirstQuery = queryField(
     type: 'MedicalCondition',
     args: {
       where: 'MedicalConditionWhereInput',
-      orderBy: list('MedicalConditionOrderByInput'),
+      orderBy: list('MedicalConditionOrderByWithRelationInput'),
       cursor: 'MedicalConditionWhereUniqueInput',
       distinct: 'MedicalConditionScalarFieldEnum',
       skip: 'Int',

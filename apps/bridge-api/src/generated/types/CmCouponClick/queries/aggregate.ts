@@ -6,7 +6,7 @@ export const CmCouponClickAggregateQuery = queryField(
     type: 'AggregateCmCouponClick',
     args: {
       where: 'CmCouponClickWhereInput',
-      orderBy: list('CmCouponClickOrderByInput'),
+      orderBy: list('CmCouponClickOrderByWithRelationInput'),
       cursor: 'CmCouponClickWhereUniqueInput',
       distinct: 'CmCouponClickScalarFieldEnum',
       skip: 'Int',

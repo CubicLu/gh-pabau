@@ -1,24 +1,25 @@
+import { PlusSquareFilled, SearchOutlined } from '@ant-design/icons'
 import {
-  LeftOutlined,
-  PlusSquareFilled,
-  SearchOutlined,
-} from '@ant-design/icons'
-import {
-  FindMedicalFormsDocument,
-  MedicalFormOrderByInput,
+  MedicalFormOrderByWithRelationInput,
   MedicalFormWhereInput,
-  MessageTemplateOrderByInput,
+  MessageTemplateOrderByWithRelationInput,
   MessageTemplateWhereInput,
   SortOrder,
   useCreateOneMedicalFormMutation,
   useFindMedicalFormsCountQuery,
   useFindMedicalFormsQuery,
+  FindMedicalFormsDocument,
   useFindMessageTemplateQuery,
   useFindUserQuery,
   useGetBusinessDetailsQuery,
-  UserOrderByInput,
+  UserOrderByWithRelationInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
+  useFindManyUserGroupsQuery,
+  useFindManyCompanyServicesQuery,
+  useFindManyLabTestsQuery,
+  useFindInvProductsQuery,
+  useFindManyMedicalCondtionsQuery,
 } from '@pabau/graphql'
 import {
   Breadcrumb,
@@ -28,25 +29,80 @@ import {
   MedicalFilter,
   MedicalFormBuilder,
   MedicalFormItem,
-  MobileHeader,
   Notification,
   NotificationBanner,
   NotificationType,
   SmsMessageTemplateItem,
   TabMenu,
   UserListItem,
+  UserGroupListItem,
+  CompanyListItem,
+  LabTestsListItem,
+  InvProductsListItem,
+  MedicalConditionsListItem,
+  useLiveQuery,
+  MacroItem,
 } from '@pabau/ui'
+import { useUser } from '../../../context/UserContext'
 import { Input, Typography } from 'antd'
 import dayjs from 'dayjs'
-import Link from 'next/link'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import notificationBannerImage from '../../../assets/images/notification-image.png'
 import Layout from '../../../components/Layout/Layout'
 import Custom from '../../../components/MedicalForms/Custom'
 import Library from '../../../components/MedicalForms/Library'
+import CommonHeader from '../../../components/CommonHeader'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { gql, useMutation } from '@apollo/client'
 import styles from './index.module.less'
 const { Title } = Typography
+
+const LIST_QUERY_MACRO = gql`
+  query medical_form_macro($createdBy: Int = 0) {
+    medical_form_macro(
+      where: {
+        _or: [{ created_by: { _eq: $createdBy } }, { type: { _eq: 0 } }]
+      }
+    ) {
+      id
+      createdAt
+      title
+      message
+      type
+      created_by
+      company_id
+    }
+  }
+`
+const ADD_MUTATION_MACRO = gql`
+  mutation insert_medical_form_macro_one(
+    $title: String
+    $message: String
+    $type: Int
+    $created_by: Int
+    $company_id: Int
+  ) {
+    insert_medical_form_macro_one(
+      object: {
+        title: $title
+        message: $message
+        type: $type
+        created_by: $created_by
+        company_id: $company_id
+      }
+    ) {
+      id
+    }
+  }
+`
+
+const DELETE_MUTATION_MACRO = gql`
+  mutation delete_medical_form_macro_by_pk($id: Int!) {
+    delete_medical_form_macro_by_pk(id: $id) {
+      id
+    }
+  }
+`
 
 enum Tab {
   Custom = '0',
@@ -71,6 +127,7 @@ export const Index: FC = () => {
   const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
     []
   )
+  const [medicalFormMacros, setMedicalFormMacros] = useState<MacroItem[]>([])
   const [smsMessageTemplateItems, setSmsMessageTemplateItems] = useState<
     SmsMessageTemplateItem[]
   >([])
@@ -83,6 +140,24 @@ export const Index: FC = () => {
       full_name: 'Appointment owner',
     },
   ])
+
+  const [userGroupListItems, setUserGroupListItems] = useState<
+    UserGroupListItem[]
+  >([])
+
+  const [companyServiceListItems, setCompanyServiceListItems] = useState<
+    CompanyListItem[]
+  >([])
+
+  const [labTestsListItems, setLabTestsListItems] = useState<
+    LabTestsListItem[]
+  >([])
+  const [invProductsListItems, setInvProductsListItems] = useState<
+    InvProductsListItem[]
+  >([])
+  const [medicalConditionsListItems, setMedicalConditionsListItems] = useState<
+    MedicalConditionsListItem[]
+  >([])
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -99,7 +174,7 @@ export const Index: FC = () => {
   })
 
   const { t } = useTranslationI18()
-
+  const loggedInUser = useUser()
   const getQueryVariables = useMemo(() => {
     const whereQuery: MedicalFormWhereInput = {}
     whereQuery.AND = []
@@ -112,7 +187,7 @@ export const Index: FC = () => {
       whereQuery.AND.push({ name: { contains: searchData.searchValue } })
     }
 
-    const orderBy: MedicalFormOrderByInput = {
+    const orderBy: MedicalFormOrderByWithRelationInput = {
       [searchData.sortName]: searchData.sortOrder,
     }
 
@@ -136,7 +211,7 @@ export const Index: FC = () => {
   const whereQuerySmsTemplate: MessageTemplateWhereInput = {}
   whereQuerySmsTemplate.AND = []
   whereQuerySmsTemplate.AND.push({ template_type: { equals: 'sms' } })
-  const orderBySmsTemplate: MessageTemplateOrderByInput = {
+  const orderBySmsTemplate: MessageTemplateOrderByWithRelationInput = {
     template_id: SortOrder.Asc,
   }
 
@@ -154,7 +229,7 @@ export const Index: FC = () => {
   const whereQueryEmailTemplate: MessageTemplateWhereInput = {}
   whereQueryEmailTemplate.AND = []
   whereQueryEmailTemplate.AND.push({ template_type: { equals: 'email' } })
-  const orderByEmailTemplate: MessageTemplateOrderByInput = {
+  const orderByEmailTemplate: MessageTemplateOrderByWithRelationInput = {
     template_id: SortOrder.Asc,
   }
 
@@ -172,7 +247,7 @@ export const Index: FC = () => {
   const whereQueryUserList: UserWhereInput = {}
   whereQueryUserList.AND = []
   whereQueryUserList.AND.push({ deleted: { not: { equals: 1 } } })
-  const orderByUserList: UserOrderByInput = {
+  const orderByUserList: UserOrderByWithRelationInput = {
     full_name: SortOrder.Asc,
   }
 
@@ -184,6 +259,12 @@ export const Index: FC = () => {
   }
 
   const userLists = useFindUserQuery(getUserListQueryVariables)
+
+  const { data: userGroups } = useFindManyUserGroupsQuery()
+  const { data: companyServices } = useFindManyCompanyServicesQuery()
+  const { data: labTests } = useFindManyLabTestsQuery()
+  const { data: invProducts } = useFindInvProductsQuery()
+  const { data: medicalConditions } = useFindManyMedicalCondtionsQuery()
 
   useEffect(() => {
     if (businessDetails?.data?.me?.Company?.details?.date_format)
@@ -199,6 +280,7 @@ export const Index: FC = () => {
           key: medicalForm.id.toString(),
           name: medicalForm.name,
           formType: medicalForm.form_type,
+          serviceId: medicalForm.service_id,
           createdAt:
             companyDateFormat === 'd/m/Y'
               ? dayjs(medicalForm.created_at).format('DD/MM/YYYY HH:mm:ss')
@@ -302,6 +384,67 @@ export const Index: FC = () => {
     }
   }, [userLists])
 
+  useEffect(() => {
+    console.log('userGroups', userGroups)
+    if (userGroups?.findManyUserGroup) {
+      const userGroupList = userGroups?.findManyUserGroup.map((userGroup) => ({
+        id: userGroup.id,
+        group_name: userGroup.group_name,
+      }))
+      setUserGroupListItems(userGroupList)
+    }
+  }, [userGroups])
+
+  useEffect(() => {
+    console.log('companyServices', companyServices)
+    if (companyServices?.findManyCompanyService) {
+      const companyServiceList = companyServices?.findManyCompanyService.map(
+        (companyService) => ({
+          id: companyService.id,
+          name: companyService.name,
+        })
+      )
+      setCompanyServiceListItems(companyServiceList)
+    }
+  }, [companyServices])
+
+  useEffect(() => {
+    console.log('labTests', labTests)
+    if (labTests?.findManyInvCategory) {
+      const labTestsList = labTests?.findManyInvCategory.map((labTest) => ({
+        id: labTest.id,
+        name: labTest.name,
+      }))
+      setLabTestsListItems(labTestsList)
+    }
+  }, [labTests])
+
+  useEffect(() => {
+    console.log('invProducts', invProducts)
+    if (invProducts?.findManyInvProduct) {
+      const invProductsList = invProducts?.findManyInvProduct.map(
+        (invProduct) => ({
+          id: invProduct.id,
+          name: invProduct.name,
+          category_id: invProduct.category_id,
+        })
+      )
+      setInvProductsListItems(invProductsList)
+    }
+  }, [invProducts])
+  useEffect(() => {
+    console.log('medicalConditions', medicalConditions)
+    if (medicalConditions?.findManyMedicalCondition) {
+      const medicalConditionsList = medicalConditions?.findManyMedicalCondition.map(
+        (medicalCondition) => ({
+          id: medicalCondition.id,
+          name: medicalCondition.name,
+        })
+      )
+      setMedicalConditionsListItems(medicalConditionsList)
+    }
+  }, [medicalConditions])
+
   const [addMutation] = useCreateOneMedicalFormMutation({
     onCompleted(data) {
       Notification(
@@ -330,9 +473,8 @@ export const Index: FC = () => {
   })
 
   const saveForm = async (medicalItem) => {
-    console.log('medicalItem =', medicalItem)
     setShowCreateForm(false)
-
+    console.log('medicalItem', medicalItem)
     const updateVariables = {
       where: {
         id: Number(medicalItem.key),
@@ -340,6 +482,7 @@ export const Index: FC = () => {
       data: {
         name: { set: medicalItem.name },
         data: { set: medicalItem.formData },
+        service_id: { set: medicalItem.serviceId },
         form_type: {
           set:
             medicalItem.formType === 'medicalHistory'
@@ -347,37 +490,37 @@ export const Index: FC = () => {
               : medicalItem.formType,
         },
         updated_at: { set: dayjs() },
-        MedicalFormAdvancedSetting:
-          Number(medicalItem.advSetting.id) === 0
-            ? {
-                create: [
-                  {
-                    share_to_client:
-                      medicalItem.advSetting.shareToClient === 1 ? true : false,
-                    reminder: medicalItem.advSetting.reminder,
-                    data: JSON.stringify(medicalItem.advSetting.data),
-                  },
-                ],
-              }
-            : {
-                update: [
-                  {
-                    data: {
-                      share_to_client: {
-                        set:
-                          medicalItem.advSetting.shareToClient === 1
-                            ? true
-                            : false,
-                      },
-                      reminder: { set: medicalItem.advSetting.reminder },
-                      data: JSON.stringify(medicalItem.advSetting.data),
-                    },
-                    where: {
-                      id: Number(medicalItem.advSetting.id),
-                    },
-                  },
-                ],
-              },
+        MedicalFormAdvancedSetting: {},
+        // Number(medicalItem.advSetting.id) === 0
+        //   ? {
+        //       create: [
+        //         {
+        //           share_to_client:
+        //             medicalItem.advSetting.shareToClient === 1 ? true : false,
+        //           reminder: medicalItem.advSetting.reminder,
+        //           data: JSON.stringify(medicalItem.advSetting.data),
+        //         },
+        //       ],
+        //     }
+        //   : {
+        //       update: [
+        //         {
+        //           data: {
+        //             share_to_client: {
+        //               set:
+        //                 medicalItem.advSetting.shareToClient === 1
+        //                   ? true
+        //                   : false,
+        //             },
+        //             reminder: { set: medicalItem.advSetting.reminder },
+        //             data: JSON.stringify(medicalItem.advSetting.data),
+        //           },
+        //           where: {
+        //             id: Number(medicalItem.advSetting.id),
+        //           },
+        //         },
+        //       ],
+        //     },
       },
     }
 
@@ -395,7 +538,7 @@ export const Index: FC = () => {
         printout: '',
         user_created: 0,
         encoded: 0,
-        service_id: '',
+        service_id: medicalItem.serviceId,
         temp_static: 0,
         old_data: '',
         form_category: '',
@@ -455,6 +598,97 @@ export const Index: FC = () => {
     setSearchrData(newSearchData)
   }
 
+  const getMacroQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        createdBy: loggedInUser?.me?.user,
+      },
+    }
+    return queryOptions
+  }, [loggedInUser])
+
+  const { data: macros } = useLiveQuery(
+    LIST_QUERY_MACRO,
+    getMacroQueryVariables
+  )
+
+  useEffect(() => {
+    if (typeof macros !== 'undefined' && macros) {
+      const medicalFormMacroList = macros.map((macro, index) => ({
+        id: macro.id,
+        title: macro.title,
+        message: macro.message,
+        type: macro.type,
+        createdAt:
+          companyDateFormat === 'd/m/Y'
+            ? dayjs(macro.createdAt).format('DD/MM/YYYY HH:mm:ss')
+            : dayjs(macro.createdAt).format('MM/DD/YYYY HH:mm:ss'),
+      }))
+      setMedicalFormMacros(medicalFormMacroList)
+    }
+  }, [macros, companyDateFormat])
+
+  const [addMacroMutation] = useMutation(ADD_MUTATION_MACRO, {
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('setup.medical.forms.macro.create.text')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.medical.forms.macro.create.err.text')
+      )
+    },
+  })
+
+  const [delMacroMutation] = useMutation(DELETE_MUTATION_MACRO, {
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('setup.medical.forms.macro.del.text')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.medical.forms.macro.del.err.text')
+      )
+    },
+  })
+
+  const onHandleMacro = async (action, macro) => {
+    if (action === 'add') {
+      const creatMacroVariables = {
+        title: macro.title,
+        message: macro.message,
+        type: macro.type,
+        company_id: loggedInUser?.me?.company,
+        created_by: loggedInUser?.me?.user,
+      }
+      await addMacroMutation({
+        variables: creatMacroVariables,
+        refetchQueries: [
+          {
+            query: LIST_QUERY_MACRO,
+            ...getMacroQueryVariables,
+          },
+        ],
+      })
+    } else if (action === 'del') {
+      await delMacroMutation({
+        variables: { id: Number(macro.id) },
+        refetchQueries: [
+          {
+            query: LIST_QUERY_MACRO,
+            ...getMacroQueryVariables,
+          },
+        ],
+      })
+    }
+  }
+
   return (
     <Layout>
       <NotificationBanner
@@ -470,51 +704,40 @@ export const Index: FC = () => {
 
       <div className={styles.medicalFormsContainer}>
         <div className={styles.desktopViewNone}>
-          {currentTab === Tab.Custom && (
-            <MobileHeader className={styles.mobileHeader}>
-              <div className={styles.allContentAlignMobile}>
-                <div className={styles.mobileHeaderTextStyle}>
-                  <Link href="/setup">
-                    <LeftOutlined />
-                  </Link>
-                  <p>{t('setup.medical.forms.patientFormName')}</p>
-                </div>
-                <div className={styles.mobileHeaderOpsStyle}>
-                  <MedicalFilter />
-                  <PlusSquareFilled
-                    className={styles.plusIconStyle}
-                    onClick={() => setShowCreateForm(true)}
-                  />
-                </div>
-              </div>
-            </MobileHeader>
-          )}
-          {currentTab === Tab.Library && (
-            <MobileHeader className={styles.mobileHeader}>
-              <div className={styles.allContentAlignMobile}>
-                <div className={styles.mobileHeaderTextStyle}>
-                  <Link href="/setup">
-                    <LeftOutlined />
-                  </Link>
-                  <p>{t('setup.medical.forms.patientFormName')}</p>
-                </div>
-                <div className={styles.mobileHeaderOpsStyle}>
-                  <Input
-                    value={searchData.searchValue}
-                    onChange={(e) =>
-                      changeSearchData({ searchValue: e.target.value })
-                    }
-                    placeholder={t('setup.medical.forms.searchLibrary')}
-                  />
-                </div>
-              </div>
-            </MobileHeader>
-          )}
+          <CommonHeader
+            title={t('setup.medical.forms.patientFormName')}
+            isLeftOutlined
+            reversePath="/setup"
+            isShowSearch
+            searchValue={
+              currentTab === Tab.Library ? query : searchData.searchValue
+            }
+            searchInputPlaceHolder={
+              currentTab === Tab.Library
+                ? t('setup.medical.forms.searchLibrary')
+                : t('setup.medical.forms.searchMyForms')
+            }
+            handleSearch={(value) => {
+              currentTab === Tab.Library
+                ? setQuery(value)
+                : changeSearchData({ searchValue: value })
+            }}
+          >
+            {currentTab === Tab.Custom && (
+              <>
+                <MedicalFilter mobileView />
+                <PlusSquareFilled
+                  className={styles.plusIconStyle}
+                  onClick={() => setShowCreateForm(true)}
+                />
+              </>
+            )}
+          </CommonHeader>
         </div>
         <div className={styles.medicalFormsHeader}>
           <div>
             <Breadcrumb
-              breadcrumbItems={[
+              items={[
                 {
                   breadcrumbName: t('navigation-breadcrumb-setup'),
                   path: 'setup',
@@ -565,12 +788,20 @@ export const Index: FC = () => {
                 visible={showCreateForm}
                 previewData=""
                 preFormName=""
+                preFormType=""
+                preFormServices=""
                 onHideFormBuilder={() => setShowCreateForm(false)}
                 onSaveForm={saveForm}
                 create={true}
                 smsMessageTemplateItems={smsMessageTemplateItems}
                 emailMessageTemplateItems={emailMessageTemplateItems}
                 userListItems={userListItems}
+                userGroupListItems={userGroupListItems}
+                labTestsListItems={labTestsListItems}
+                invProductsListItems={invProductsListItems}
+                medicalConditionsListItems={medicalConditionsListItems}
+                medicalFormMacros={medicalFormMacros}
+                companyServiceListItems={companyServiceListItems}
               />
             )}
           </div>
@@ -590,7 +821,14 @@ export const Index: FC = () => {
             smsMessageTemplateItems={smsMessageTemplateItems}
             emailMessageTemplateItems={emailMessageTemplateItems}
             userListItems={userListItems}
+            userGroupListItems={userGroupListItems}
+            labTestsListItems={labTestsListItems}
+            invProductsListItems={invProductsListItems}
+            medicalConditionsListItems={medicalConditionsListItems}
+            companyServiceListItems={companyServiceListItems}
+            medicalFormMacros={medicalFormMacros}
             onSaveForm={saveForm}
+            onHandleMacro={onHandleMacro}
             pagenateParams={paginateData}
             updatePaginateData={updatePaginateData}
           />

@@ -6,7 +6,7 @@ export const ClinicalSoftwareAggregateQuery = queryField(
     type: 'AggregateClinicalSoftware',
     args: {
       where: 'ClinicalSoftwareWhereInput',
-      orderBy: list('ClinicalSoftwareOrderByInput'),
+      orderBy: list('ClinicalSoftwareOrderByWithRelationInput'),
       cursor: 'ClinicalSoftwareWhereUniqueInput',
       distinct: 'ClinicalSoftwareScalarFieldEnum',
       skip: 'Int',

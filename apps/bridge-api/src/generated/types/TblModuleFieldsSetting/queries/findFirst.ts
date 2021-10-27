@@ -6,7 +6,7 @@ export const TblModuleFieldsSettingFindFirstQuery = queryField(
     type: 'TblModuleFieldsSetting',
     args: {
       where: 'TblModuleFieldsSettingWhereInput',
-      orderBy: list('TblModuleFieldsSettingOrderByInput'),
+      orderBy: list('TblModuleFieldsSettingOrderByWithRelationInput'),
       cursor: 'TblModuleFieldsSettingWhereUniqueInput',
       distinct: 'TblModuleFieldsSettingScalarFieldEnum',
       skip: 'Int',

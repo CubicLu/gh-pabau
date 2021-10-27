@@ -11,8 +11,9 @@
 }
 .header-margin {
   margin-top: 80px;
+
   @media screen and (max-width: 767px) {
-    margin-top: 64px;
+    margin-top: 68px;
   }
 }
 .sidebar-margin {
@@ -42,7 +43,16 @@
     padding: 0;
     width: auto;
   }
-
+  :global {
+    .ant-layout-header {
+      padding: 16px 16px 21px 16px !important;
+      position: fixed;
+      z-index: 3;
+      width: 100%;
+      line-height: 0px;
+      top: 0;
+    }
+  }
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   .layout-content {

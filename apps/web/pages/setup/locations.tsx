@@ -12,6 +12,7 @@ export const Index: NextPage = () => {
     shortLower: t('setup.locations.title.short'),
     createButtonLabel: t('setup.locations.header.create.title'),
     searchPlaceholder: t('setup.locations.header.search.placeholder'),
+    noDataText: t('setup.locations.noDataText'),
     messages: {
       create: {
         success: t('setup.locations.notification.create.success'),

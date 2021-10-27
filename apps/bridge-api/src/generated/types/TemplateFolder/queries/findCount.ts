@@ -6,7 +6,7 @@ export const TemplateFolderFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'TemplateFolderWhereInput',
-      orderBy: list('TemplateFolderOrderByInput'),
+      orderBy: list('TemplateFolderOrderByWithRelationInput'),
       cursor: 'TemplateFolderWhereUniqueInput',
       distinct: 'TemplateFolderScalarFieldEnum',
       skip: 'Int',

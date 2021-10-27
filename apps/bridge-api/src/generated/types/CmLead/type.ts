@@ -63,6 +63,7 @@ export const CmLead = objectType({
     t.nullable.field('latest_interaction', { type: 'DateTime' })
     t.nullable.int('location_id')
     t.nullable.int('need_to_knows')
+    t.nullable.int('pipeline_stage_id')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
@@ -73,7 +74,7 @@ export const CmLead = objectType({
       type: 'CmLeadCustomField',
       args: {
         where: 'CmLeadCustomFieldWhereInput',
-        orderBy: 'CmLeadCustomFieldOrderByInput',
+        orderBy: 'CmLeadCustomFieldOrderByWithRelationInput',
         cursor: 'CmLeadCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -87,7 +88,7 @@ export const CmLead = objectType({
       type: 'CommunicationRecipient',
       args: {
         where: 'CommunicationRecipientWhereInput',
-        orderBy: 'CommunicationRecipientOrderByInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
         cursor: 'CommunicationRecipientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -101,7 +102,7 @@ export const CmLead = objectType({
       type: 'CmLeadNote',
       args: {
         where: 'CmLeadNoteWhereInput',
-        orderBy: 'CmLeadNoteOrderByInput',
+        orderBy: 'CmLeadNoteOrderByWithRelationInput',
         cursor: 'CmLeadNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -109,6 +110,50 @@ export const CmLead = objectType({
       },
       resolve(root: any) {
         return root.CmLeadNote
+      },
+    })
+    t.nullable.field('User', {
+      type: 'User',
+      resolve(root: any) {
+        return root.User
+      },
+    })
+    t.list.field('Activity', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Activity
+      },
+    })
+    t.nullable.field('MarketingSource', {
+      type: 'MarketingSource',
+      resolve(root: any) {
+        return root.MarketingSource
+      },
+    })
+    t.nullable.field('LeadStatusData', {
+      type: 'LeadStatus',
+      resolve(root: any) {
+        return root.LeadStatusData
+      },
+    })
+    t.nullable.field('PipelineStage', {
+      type: 'PipelineStage',
+      resolve(root: any) {
+        return root.PipelineStage
+      },
+    })
+    t.nullable.field('Contact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.Contact
       },
     })
     t.nullable.field('_count', {

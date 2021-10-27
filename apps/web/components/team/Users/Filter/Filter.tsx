@@ -8,13 +8,24 @@ import {
   useFindManyCompanyBranchesLazyQuery,
   useFindManyCompanyDepartmentsLazyQuery,
 } from '@pabau/graphql'
-import { Button, GridVsList, MobileHeader, SimpleDropdown } from '@pabau/ui'
-import { Checkbox, Drawer, Input, Popover, Radio, Select, Skeleton } from 'antd'
+import { Button, GridVsList, SimpleDropdown } from '@pabau/ui'
+import {
+  Checkbox,
+  Drawer,
+  Input,
+  Popover,
+  Radio,
+  Select,
+  Skeleton,
+  Tooltip,
+  Layout as AntLayout,
+} from 'antd'
 import classNames from 'classnames'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import addButtonStyles from '../../../AddButton.module.less'
 import styles from './Filter.module.less'
+const { Header: AntHeader } = AntLayout
 
 interface P {
   onNewStaffMemberClick?: () => void
@@ -32,6 +43,7 @@ interface P {
     admin: string
   ) => void
   onReset: () => void
+  searchValue?: string
 }
 
 export const Filter: FunctionComponent<P> = ({
@@ -45,6 +57,7 @@ export const Filter: FunctionComponent<P> = ({
   onCancelFilterDrawer,
   onApply,
   onReset,
+  searchValue,
 }) => {
   const { t } = useTranslation('common')
   const [isActive, setIsActive] = useState(true)
@@ -158,6 +171,9 @@ export const Filter: FunctionComponent<P> = ({
               value={locationValue}
               onSelect={(value) => setLocation(value)}
             >
+              <Select.Option key={'all'} value={''}>
+                ALL
+              </Select.Option>
               {locationData?.findManyCompanyBranch?.map((item) => (
                 <Select.Option key={item.id} value={item.id}>
                   {item.name}
@@ -200,7 +216,7 @@ export const Filter: FunctionComponent<P> = ({
         className={addButtonStyles.mobFilterDrawer}
         closable={false}
       >
-        <MobileHeader className={addButtonStyles.marketingSourceFilterHeader}>
+        <AntHeader className={addButtonStyles.marketingSourceFilterHeader}>
           <div className={addButtonStyles.allContentAlignMobile}>
             <div className={addButtonStyles.marketingTextStyle}>
               <span onClick={handleReset}>
@@ -212,7 +228,7 @@ export const Filter: FunctionComponent<P> = ({
               </span>
             </div>
           </div>
-        </MobileHeader>
+        </AntHeader>
         <div style={{ marginTop: '91px', padding: '0 24px' }}>
           {filterContent(true)}
         </div>
@@ -235,6 +251,7 @@ export const Filter: FunctionComponent<P> = ({
         {tabValue.toString() === '0' ? (
           <div>
             <Input
+              value={searchValue}
               className={addButtonStyles.searchMarketingStyle}
               placeholder={t('team.user.header.search.placeholder')}
               onChange={(e) => onSearch?.(e.target.value)}
@@ -261,25 +278,39 @@ export const Filter: FunctionComponent<P> = ({
               </Button>
             </Popover>
             <span className={styles.GridVsList}>
-              <GridVsList
-                onChange={onViewChange}
-                selectedValue={userView}
-                displayTypes={[
-                  {
-                    title: 'Grid',
-                    icon: <AppstoreOutlined className={styles.GridIcons} />,
-                  },
-                  {
-                    title: 'List',
-                    icon: (
-                      <MenuOutlined
-                        style={{ paddingBottom: 300 }}
-                        className={styles.GridIcons}
-                      />
-                    ),
-                  },
-                ]}
-              />
+              <Tooltip title="Grid View" placement="top">
+                <span className={styles.toolTip}>
+                  <GridVsList
+                    onChange={onViewChange}
+                    selectedValue={userView}
+                    displayTypes={[
+                      {
+                        title: 'Grid',
+                        icon: <AppstoreOutlined className={styles.GridIcons} />,
+                      },
+                    ]}
+                  />
+                </span>
+              </Tooltip>
+              <Tooltip placement="top" title="List View">
+                <span className={styles.toolTip}>
+                  <GridVsList
+                    onChange={onViewChange}
+                    selectedValue={userView}
+                    displayTypes={[
+                      {
+                        title: 'List',
+                        icon: (
+                          <MenuOutlined
+                            style={{ paddingBottom: 300 }}
+                            className={styles.GridIcons}
+                          />
+                        ),
+                      },
+                    ]}
+                  />
+                </span>
+              </Tooltip>
             </span>
             <Button
               className={addButtonStyles.createSourceBtn}

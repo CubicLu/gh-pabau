@@ -14,6 +14,7 @@ export interface AvatarUploaderProps {
   visible: boolean
   title: string
   onCancel?: () => void
+  onDelete?: () => void
   imageURL: string
   shape?: string
   width: number
@@ -31,6 +32,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
   visible,
   title,
   onCancel,
+  onDelete,
   imageURL,
   shape,
   width,
@@ -67,6 +69,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
 
   const handleImageChange = async (e) => {
     setImage(URL.createObjectURL(e.target.files[0]))
+    setCroppedImage(URL.createObjectURL(e.target.files[0]))
     // setDisabled(false)
     e.target.value = ''
   }
@@ -74,6 +77,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
   const handleDelete = () => {
     setImage('')
     setCroppedImage('')
+    onDelete?.()
   }
 
   const handleClose = () => {
@@ -171,7 +175,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
           )}
         </div>
         <div className={styles.previewWrap}>
-          <p>Preview</p>
+          <p>{t('team.user.personal.details.avtar.Preview.title')}</p>
           {croppedImage && (
             <div className={styles.avatarMap}>
               <Avatar
@@ -224,21 +228,23 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
             onChange={handleImageChange}
           />
           <PlusOutlined />
-          Upload file
+          {t('team.user.personal.details.avtar.upload.button')}
         </Button>
         <Button onClick={handleDelete}>
           <DeleteOutlined />
         </Button>
       </div>
       <div className={styles.btnPreviewWrapper}>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>
+          {t('team.user.personal.details.avtar.cancel.button')}
+        </Button>
         <Button
           type={'primary'}
           // disabled={disabled}
           loading={loading}
           onClick={handleCreate}
         >
-          Create
+          {t('team.user.personal.details.avtar.create.button')}
         </Button>
       </div>
     </BasicModal>

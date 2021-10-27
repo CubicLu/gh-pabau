@@ -4,7 +4,7 @@ export const SmsPurchaseFindFirstQuery = queryField('findFirstSmsPurchase', {
   type: 'SmsPurchase',
   args: {
     where: 'SmsPurchaseWhereInput',
-    orderBy: list('SmsPurchaseOrderByInput'),
+    orderBy: list('SmsPurchaseOrderByWithRelationInput'),
     cursor: 'SmsPurchaseWhereUniqueInput',
     distinct: 'SmsPurchaseScalarFieldEnum',
     skip: 'Int',

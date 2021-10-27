@@ -4,7 +4,7 @@ export const CmLeadAggregateQuery = queryField('aggregateCmLead', {
   type: 'AggregateCmLead',
   args: {
     where: 'CmLeadWhereInput',
-    orderBy: list('CmLeadOrderByInput'),
+    orderBy: list('CmLeadOrderByWithRelationInput'),
     cursor: 'CmLeadWhereUniqueInput',
     distinct: 'CmLeadScalarFieldEnum',
     skip: 'Int',

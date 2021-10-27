@@ -3,7 +3,6 @@ import styles from '../ClientCreate.module.less'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import GeneralComponent from './General'
 import ContactInfo from './ContactInfo'
-import { Subscriptions } from './Subscriptions'
 import Addresses from './Addresses'
 import CustomField from './CustomField'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +14,6 @@ import {
   LabelDataProps,
   FieldSetting,
   LimitLocation,
-  OtherCompany,
 } from '@pabau/ui'
 import { Dayjs } from 'dayjs'
 
@@ -39,7 +37,6 @@ interface GeneralProps {
   fieldsSettings?: FieldSetting[]
   marketingSources?: CommonProps[]
   limitContactsLocations?: LimitLocation[]
-  otherCompanies?: OtherCompany[]
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
   labelsData: LabelDataProps[]
@@ -57,7 +54,6 @@ export const Index: FC<GeneralProps> = ({
   selectedLabels,
   setSelectedLabels,
   limitContactsLocations,
-  otherCompanies,
   isLoading = false,
   labelsData,
   isMarketingSourceLoading,
@@ -71,7 +67,7 @@ export const Index: FC<GeneralProps> = ({
   }
 
   const isAddress = () => {
-    if (fieldsSettings && fieldsSettings?.length > 0) {
+    if (fieldsSettings && fieldsSettings?.length > 0 && !isLoading) {
       for (const field of fieldsSettings) {
         if (
           field.field_name === 'MailingStreet' ||
@@ -111,20 +107,15 @@ export const Index: FC<GeneralProps> = ({
         isMarketingSourceLoading={isMarketingSourceLoading}
         requiredLabel={requiredLabel}
       />
-      {fieldsSettings && (
-        <ContactInfo
-          values={values}
-          fieldsSettings={fieldsSettings}
-          setFieldValue={setFieldValue}
-          requiredLabel={requiredLabel}
-        />
-      )}
-      {fieldsSettings?.find((thread) => thread.field_name === 'opt_in') && (
-        <Subscriptions />
-      )}
+      <ContactInfo
+        values={values}
+        fieldsSettings={fieldsSettings}
+        setFieldValue={setFieldValue}
+        requiredLabel={requiredLabel}
+        isLoading={isLoading}
+      />
       {(isAddress() ||
         (limitContactsLocations && limitContactsLocations.length > 0) ||
-        (otherCompanies && otherCompanies.length > 0) ||
         (customFields && customFields.length > 0)) && (
         <div
           className={`${styles.moreBtn} ${!moreVisible && styles.paddingAtEnd}`}
@@ -142,50 +133,32 @@ export const Index: FC<GeneralProps> = ({
               requiredLabel={requiredLabel}
             />
           )}
-          {limitContactsLocations && limitContactsLocations?.length > 0 && (
-            <AntForm
-              className={styles.subscriptionForm}
-              layout={'vertical'}
-              requiredMark={false}
-            >
-              <h5>Available in locations</h5>
-              {limitContactsLocations.map((item) => (
-                <AntForm.Item
-                  name={`limitContactsLocations_${item.id}`}
-                  key={item.id}
-                >
-                  <div className={styles.switchBtn}>
-                    <Switch
-                      name={`limitContactsLocations_${item.id}`}
-                      defaultChecked={true}
-                    />
-                    <p>{item.name}</p>
-                  </div>
-                </AntForm.Item>
-              ))}
-            </AntForm>
-          )}
-          {otherCompanies && otherCompanies.length > 0 && (
-            <AntForm
-              className={styles.subscriptionForm}
-              layout={'vertical'}
-              requiredMark={false}
-            >
-              <h5>Other Companies</h5>
-              {otherCompanies.map((item) => (
-                <AntForm.Item
-                  name={`otherCompany_${item.company_id}`}
-                  key={item.company_id}
-                >
-                  <div className={styles.switchBtn}>
-                    <Switch name={`otherCompany_${item.company_id}`} />
-                    <p>{item.company_name}</p>
-                  </div>
-                </AntForm.Item>
-              ))}
-            </AntForm>
-          )}
-          {customFields && customFields?.length > 0 && (
+          {!isLoading &&
+            limitContactsLocations &&
+            limitContactsLocations?.length > 0 && (
+              <AntForm
+                className={styles.subscriptionForm}
+                layout={'vertical'}
+                requiredMark={false}
+              >
+                <h5>{t('quickCreate.client.modal.general.location.title')}</h5>
+                {limitContactsLocations.map((item) => (
+                  <AntForm.Item
+                    name={`limitContactsLocations_${item.id}`}
+                    key={item.id}
+                  >
+                    <div className={styles.switchBtn}>
+                      <Switch
+                        name={`limitContactsLocations_${item.id}`}
+                        defaultChecked={true}
+                      />
+                      <p>{item.name}</p>
+                    </div>
+                  </AntForm.Item>
+                ))}
+              </AntForm>
+            )}
+          {!isLoading && customFields && customFields?.length > 0 && (
             <CustomField
               customFields={customFields}
               setFieldValue={setFieldValue}

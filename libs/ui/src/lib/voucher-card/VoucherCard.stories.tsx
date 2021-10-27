@@ -1,5 +1,5 @@
 import React from 'react'
-import { VoucherCard } from './VoucherCard'
+import VoucherCard, { VoucherCardProps } from './VoucherCard'
 
 export default {
   title: 'UI/VoucherCard',
@@ -12,7 +12,7 @@ export default {
     borderColor: '#000',
     bookNowButton: false,
     buttonLabel: 'Book Now',
-    dotMenuShow: false,
+    showMenu: false,
 
     voucherType: '',
     voucherNum: 100001,
@@ -23,6 +23,11 @@ export default {
     voucherRelation: 'Family',
     voucherRelationLabel: 'Redeem on all services',
     currencyType: '£',
+    termsConditions: `
+      lorem ipsum, quia dolor sit, amet, consectetur, adipisci
+      velit, sed quia non numquam eius modi tempora incidunt, ut
+      labore et dolore magnam aliquam quaerat voluptatem.
+    `,
   },
   argTypes: {
     cardWidth: {
@@ -61,7 +66,7 @@ export default {
         type: 'boolean',
       },
     },
-    dotMenuShow: {
+    showMenu: {
       control: {
         type: 'boolean',
       },
@@ -73,17 +78,24 @@ export default {
       },
     },
   },
+  parameters: {
+    layout: 'fullscreen',
+  },
 }
 
-const VoucherCardStory = ({ ...args }) => <VoucherCard {...args} />
+const VoucherCardStory = ({ ...args }: VoucherCardProps) => (
+  <div style={{ margin: '20px', maxWidth: '500px' }}>
+    <VoucherCard {...args} />
+  </div>
+)
 export const BasicVoucherCard = VoucherCardStory.bind({})
 export const ValentineVoucherCard = VoucherCardStory.bind({})
 export const BirthdayVoucherCard = VoucherCardStory.bind({})
 export const FlowersVoucherCard = VoucherCardStory.bind({})
 export const BookingVoucherCard = VoucherCardStory.bind({})
+export const CustomVoucherCard = VoucherCardStory.bind({})
 
 BasicVoucherCard.args = {
-  cardWidth: 500,
   backgroundColor1: '#9013FE',
   backgroundColor2: '#BD10E0',
   gradientType: 'linear-gradient',
@@ -94,7 +106,6 @@ BasicVoucherCard.args = {
 }
 
 ValentineVoucherCard.args = {
-  cardWidth: 500,
   backgroundColor1: '#9013FE',
   backgroundColor2: '#BD10E0',
   gradientType: 'linear-gradient',
@@ -105,7 +116,6 @@ ValentineVoucherCard.args = {
 }
 
 BirthdayVoucherCard.args = {
-  cardWidth: 500,
   backgroundColor1: '#9013FE',
   backgroundColor2: '#BD10E0',
   gradientType: 'linear-gradient',
@@ -116,7 +126,6 @@ BirthdayVoucherCard.args = {
 }
 
 FlowersVoucherCard.args = {
-  cardWidth: 500,
   backgroundColor1: '#9013FE',
   backgroundColor2: '#BD10E0',
   gradientType: 'linear-gradient',
@@ -127,12 +136,21 @@ FlowersVoucherCard.args = {
 }
 
 BookingVoucherCard.args = {
-  cardWidth: 500,
   backgroundColor1: '#9013FE',
   backgroundColor2: '#BD10E0',
   gradientType: 'linear-gradient',
   borderColor: '#000',
   bookNowButton: true,
   voucherType: '',
+  buttonLabel: 'Book Now',
+}
+
+CustomVoucherCard.args = {
+  backgroundColor1: '#9013FE',
+  backgroundColor2: '#BD10E0',
+  gradientType: 'linear-gradient',
+  borderColor: '#000',
+  bookNowButton: true,
+  voucherType: 'Custom',
   buttonLabel: 'Book Now',
 }

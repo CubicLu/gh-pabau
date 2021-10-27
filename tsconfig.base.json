@@ -17,25 +17,23 @@
     "esModuleInterop": true,
     "paths": {
       "@pabau/graphql": ["libs/graphql/generated/graphql.ts"],
+      "@pabau/i18n": ["libs/i18n/src/index.ts"],
       "@pabau/ui": ["libs/ui/src/index.ts"],
-      "@pabau/yup": ["libs/yup/src/index.ts"],
-      "@pabau/i18n": ["libs/i18n/src/index.ts"]
+      "@pabau/yup": ["libs/yup/src/index.ts"]
     },
-    "allowUnreachableCode": true, //TODO: 12 errors
-    "skipLibCheck": true, //TODO: 17 errors
-    "importsNotUsedAsValues": "preserve", //TODO: 128 errors
-    "strictBindCallApply": false, //TODO: 1 error
-    "strictFunctionTypes": false, //TODO: 10 errors
-    "strictNullChecks": false, //TODO: 537 errors
-    "strictPropertyInitialization": false, //TODO: requires strictNullChecks on first
-    "noStrictGenericChecks": false, //default: false
-    //"noUncheckedIndexedAccess": true,
-    "allowUmdGlobalAccess": false, //default: false
+    "allowUnreachableCode": true,
+    "skipLibCheck": true,
+    "importsNotUsedAsValues": "preserve",
+    "strictBindCallApply": false,
+    "strictFunctionTypes": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noStrictGenericChecks": false,
+    "allowUmdGlobalAccess": false,
     "allowUnusedLabels": false,
     "alwaysStrict": true,
-    "suppressImplicitAnyIndexErrors": false, //default: false
+    "suppressImplicitAnyIndexErrors": false,
     "suppressExcessPropertyErrors": false
-    //"incremental": true //TODO: fully test switching branches etc
   },
   "exclude": ["node_modules", "tmp"]
 }

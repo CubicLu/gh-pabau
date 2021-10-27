@@ -6,7 +6,7 @@ export const AcceptEmailTokenAggregateQuery = queryField(
     type: 'AggregateAcceptEmailToken',
     args: {
       where: 'AcceptEmailTokenWhereInput',
-      orderBy: list('AcceptEmailTokenOrderByInput'),
+      orderBy: list('AcceptEmailTokenOrderByWithRelationInput'),
       cursor: 'AcceptEmailTokenWhereUniqueInput',
       distinct: 'AcceptEmailTokenScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CheckinProductFindManyQuery = queryField(
     type: nonNull(list(nonNull('CheckinProduct'))),
     args: {
       where: 'CheckinProductWhereInput',
-      orderBy: list('CheckinProductOrderByInput'),
+      orderBy: list('CheckinProductOrderByWithRelationInput'),
       cursor: 'CheckinProductWhereUniqueInput',
       distinct: 'CheckinProductScalarFieldEnum',
       skip: 'Int',

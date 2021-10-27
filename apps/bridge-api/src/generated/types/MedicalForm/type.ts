@@ -44,7 +44,7 @@ export const MedicalForm = objectType({
       type: 'MedicalFormAdvancedSetting',
       args: {
         where: 'MedicalFormAdvancedSettingWhereInput',
-        orderBy: 'MedicalFormAdvancedSettingOrderByInput',
+        orderBy: 'MedicalFormAdvancedSettingOrderByWithRelationInput',
         cursor: 'MedicalFormAdvancedSettingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -52,6 +52,20 @@ export const MedicalForm = objectType({
       },
       resolve(root: any) {
         return root.MedicalFormAdvancedSetting
+      },
+    })
+    t.list.field('MedicalFormContact', {
+      type: 'MedicalFormContact',
+      args: {
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContact
       },
     })
     t.nullable.field('_count', {

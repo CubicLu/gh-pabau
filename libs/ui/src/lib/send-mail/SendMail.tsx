@@ -16,7 +16,7 @@ import {
   Notification,
   NotificationType,
 } from '@pabau/ui'
-import { Input, Popover, Select, Tag } from 'antd'
+import { Input, Popover, Select, Tag, Checkbox } from 'antd'
 import { UploadProps } from 'antd/es/upload'
 import cn from 'classnames'
 import React, { FC, useEffect, useRef, useState } from 'react'
@@ -705,14 +705,50 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
         ))}
       </div>
       <div className={styles.sendMailOperations}>
-        <div className={styles.sendButtonContainer}>
-          <Popover
-            placement="topRight"
-            content={
-              <div
-                className={styles.saveItem}
+        <div className={styles.sendMailOpsWrapper}>
+          <SendMailOps
+            message={message}
+            onChangeSignature={(signature) =>
+              onMessageWithTagChange(message + signature)
+            }
+            onProposeTimeSelected={(time) => {
+              onMessageWithTagChange(message + time)
+            }}
+            onChooseTemplate={(template) =>
+              onMessageWithTagChange(message + template)
+            }
+          />
+        </div>
+        <div className={styles.attachActionWrapper}>
+          <div className={styles.sendButtonContainer}>
+            <Popover
+              placement="topRight"
+              content={
+                <div
+                  className={styles.saveItem}
+                  onClick={() =>
+                    onSave({
+                      sendTo,
+                      ccList,
+                      bccList,
+                      subject,
+                      sender: currentSender,
+                      message: '',
+                      attachFiles: {
+                        files: attachedFiles,
+                        images: attachedImages,
+                      },
+                    })
+                  }
+                >
+                  {`Save email (Don't send)`}
+                </div>
+              }
+            >
+              <Button
+                type="primary"
                 onClick={() =>
-                  onSave({
+                  onSend({
                     sendTo,
                     ccList,
                     bccList,
@@ -726,57 +762,30 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
                   })
                 }
               >
-                {`Save email (Don't send)`}
-              </div>
-            }
+                <SendOutlined />
+                Send
+                <DownOutlined />
+              </Button>
+            </Popover>
+          </div>
+          <div
+            className={styles.attachIcon}
+            onClick={() => setShowAttachDlg(true)}
           >
-            <Button
-              type="primary"
-              onClick={() =>
-                onSend({
-                  sendTo,
-                  ccList,
-                  bccList,
-                  subject,
-                  sender: currentSender,
-                  message: '',
-                  attachFiles: {
-                    files: attachedFiles,
-                    images: attachedImages,
-                  },
-                })
-              }
-            >
-              <SendOutlined />
-              Send
-              <DownOutlined />
-            </Button>
-          </Popover>
+            <PaperClipOutlined />
+          </div>
+          <div
+            className={styles.pictureAttachIcon}
+            onClick={() => setShowAttachDlg(true)}
+          >
+            <PictureOutlined />
+          </div>
+          <Checkbox>
+            <span className={styles.checkBoxTitle}>
+              Create a task to follow up
+            </span>
+          </Checkbox>
         </div>
-        <div
-          className={styles.attachIcon}
-          onClick={() => setShowAttachDlg(true)}
-        >
-          <PaperClipOutlined />
-        </div>
-        <div
-          className={styles.pictureAttachIcon}
-          onClick={() => setShowAttachDlg(true)}
-        >
-          <PictureOutlined />
-        </div>
-        <SendMailOps
-          message={message}
-          onChangeSignature={(signature) =>
-            onMessageWithTagChange(message + signature)
-          }
-          onProposeTimeSelected={(time) => {
-            onMessageWithTagChange(message + time)
-          }}
-          onChooseTemplate={(template) =>
-            onMessageWithTagChange(message + template)
-          }
-        />
       </div>
       {showAttachDlg && (
         <AttachDialog

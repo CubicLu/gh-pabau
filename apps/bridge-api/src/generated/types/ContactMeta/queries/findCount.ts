@@ -6,7 +6,7 @@ export const ContactMetaFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ContactMetaWhereInput',
-      orderBy: list('ContactMetaOrderByInput'),
+      orderBy: list('ContactMetaOrderByWithRelationInput'),
       cursor: 'ContactMetaWhereUniqueInput',
       distinct: 'ContactMetaScalarFieldEnum',
       skip: 'Int',

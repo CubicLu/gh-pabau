@@ -19,6 +19,7 @@ export interface MedicalFilterType {
 
 export interface MedicalFilterProps {
   filter?: MedicalFilterType
+  mobileView?: boolean
   onApply?(val: MedicalFilterType): void
 }
 
@@ -37,6 +38,7 @@ const defaultFilter: MedicalFilterType = {
 
 export const MedicalFilter: FC<MedicalFilterProps> = ({
   filter = defaultFilter,
+  mobileView = false,
   onApply = () => {
     return true
   },
@@ -97,7 +99,7 @@ export const MedicalFilter: FC<MedicalFilterProps> = ({
       </div>
       <p className={styles.filterViewerSubTitle}>Form type</p>
       <FormType
-        setting={filters.formtype}
+        medicalFormType=""
         onChangeSetting={(val) => handleChangeSetting(val)}
       />
       <p className={styles.filterViewerSubTitle}>Language</p>
@@ -121,7 +123,11 @@ export const MedicalFilter: FC<MedicalFilterProps> = ({
           setVisible(val)
         }}
       >
-        <Button icon={<FilterOutlined />}>Filter</Button>
+        {mobileView ? (
+          <FilterOutlined className={styles.marketingIconStyle} />
+        ) : (
+          <Button icon={<FilterOutlined />}>Filter</Button>
+        )}
       </Popover>
     </div>
   )

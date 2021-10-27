@@ -383,15 +383,16 @@ export const Profile: FC<ProfileProps> = ({
                 <Select
                   showSearch
                   value={profile?.timezone}
-                  defaultValue={'Europe/London'}
+                  defaultValue={'(GMT +00:00) London'}
                   onChange={(val) => handleInputChange({ timezone: val })}
                 >
                   {timezones.map(
-                    (item: { timezone: string; text: string }, index) => (
-                      <Option key={index} value={item.timezone}>
-                        {item.timezone}
-                      </Option>
-                    )
+                    ({ text }, index) =>
+                      text && (
+                        <Option key={index} value={text}>
+                          {text}
+                        </Option>
+                      )
                   )}
                 </Select>
               </Form.Item>

@@ -223,7 +223,13 @@ export const Table: FC<TableType> = ({
   }
 
   const renderAmount = (val) => {
-    return <div> $ {val?.toFixed(2)} </div>
+    return (
+      <div>
+        {' '}
+        {typeof val === 'number' && '$'}{' '}
+        {typeof val === 'number' ? val?.toFixed(2) : val}{' '}
+      </div>
+    )
   }
 
   const renderCodeInput = (code) => {
@@ -300,7 +306,9 @@ export const Table: FC<TableType> = ({
         ?.filter((col: any) => col.visible === true)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((col: any) => {
-          if (
+          if (col?.render) {
+            return col
+          } else if (
             col &&
             (col.dataIndex === 'public' ||
               col.dataIndex === 'is_active' ||
@@ -381,12 +389,8 @@ export const Table: FC<TableType> = ({
             render: function render() {
               const width = key.skeletonWidth ?? '200px'
               return (
-                <div>
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    style={{ width: width }}
-                  />
+                <div className={styles.columnLoader} style={{ width: width }}>
+                  <Skeleton.Input active={true} size="small" />
                 </div>
               )
             },

@@ -4,7 +4,7 @@ export const InvProductFindCountQuery = queryField('findManyInvProductCount', {
   type: nonNull('Int'),
   args: {
     where: 'InvProductWhereInput',
-    orderBy: list('InvProductOrderByInput'),
+    orderBy: list('InvProductOrderByWithRelationInput'),
     cursor: 'InvProductWhereUniqueInput',
     distinct: 'InvProductScalarFieldEnum',
     skip: 'Int',

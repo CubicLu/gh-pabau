@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useMemo } from 'react'
+import React, { FC, useState, useEffect, useMemo, RefObject } from 'react'
 import { Table, Pagination } from '@pabau/ui'
 import { QueryResult } from '@apollo/client'
 import { Dayjs } from 'dayjs'
@@ -6,6 +6,23 @@ import {
   CreditNotesQueryVariables,
   CreditNoteCountQueryVariables,
 } from '@pabau/graphql'
+
+export interface AccountTabProps {
+  searchTerm: string
+  selectedDates: Dayjs[]
+  filterValue: FilterValueType
+  selectedRange: string
+  accountRef: RefObject<HTMLDivElement>
+  companyCurrency: string
+}
+
+export interface PaginateDataType {
+  total: number
+  offset: number
+  limit: number
+  currentPage: number
+  showingRecords: number
+}
 
 export interface FilterValueType {
   location: number
@@ -32,6 +49,7 @@ export interface TableLayoutProps {
   listQuery?: (variable: QueryVariable) => QueryResult
   aggregateQuery?: (variable: AggregateQueryVariables) => QueryResult
   setIsHealthcodeEnabled?: (value: boolean) => void
+  accountRef: RefObject<HTMLDivElement>
 }
 interface Column {
   title: string
@@ -52,6 +70,7 @@ const TableLayout: FC<TableLayoutProps> = ({
   noDataText,
   tabName,
   setIsHealthcodeEnabled,
+  accountRef,
 }) => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -63,6 +82,20 @@ const TableLayout: FC<TableLayoutProps> = ({
   const [tableData, setTableData] = useState([])
   const [aggregateCount, setAggregateCount] = useState()
   const [isLoading, setIsLoading] = useState(true)
+
+  const resetPagination = () => {
+    setPaginateData({
+      total: 0,
+      offset: 0,
+      limit: 50,
+      currentPage: 1,
+      showingRecords: 0,
+    })
+  }
+
+  useEffect(() => {
+    resetPagination()
+  }, [searchTerm, selectedDates, filterValue])
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -171,12 +204,20 @@ const TableLayout: FC<TableLayoutProps> = ({
     }
   }, [tableData, aggregateCount])
 
+  useEffect(() => {
+    if (accountRef.current) {
+      accountRef.current.scrollIntoView({ behavior: 'auto' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.currentPage, paginateData.limit])
+
   return (
     <section>
       <div>
         <Table
           columns={columns}
-          sticky={{ offsetScroll: 80, offsetHeader: 40 }}
+          style={{ height: '100%' }}
+          sticky={{ offsetHeader: 70, offsetScroll: 0 }}
           scroll={{ x: 'max-content' }}
           key={loading?.toString()}
           loading={isLoading}

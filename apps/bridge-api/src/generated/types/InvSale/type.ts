@@ -78,7 +78,7 @@ export const InvSale = objectType({
         return root.Company
       },
     })
-    t.field('Location', {
+    t.nullable.field('Location', {
       type: 'CompanyBranch',
       resolve(root: any) {
         return root.Location
@@ -124,7 +124,7 @@ export const InvSale = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByInput',
+        orderBy: 'BookingOrderByWithRelationInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -138,7 +138,7 @@ export const InvSale = objectType({
       type: 'InvPayment',
       args: {
         where: 'InvPaymentWhereInput',
-        orderBy: 'InvPaymentOrderByInput',
+        orderBy: 'InvPaymentOrderByWithRelationInput',
         cursor: 'InvPaymentWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -152,7 +152,7 @@ export const InvSale = objectType({
       type: 'SaleItem',
       args: {
         where: 'SaleItemWhereInput',
-        orderBy: 'SaleItemOrderByInput',
+        orderBy: 'SaleItemOrderByWithRelationInput',
         cursor: 'SaleItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -160,6 +160,20 @@ export const InvSale = objectType({
       },
       resolve(root: any) {
         return root.SaleItem
+      },
+    })
+    t.list.field('Voucher', {
+      type: 'Voucher',
+      args: {
+        where: 'VoucherWhereInput',
+        orderBy: 'VoucherOrderByWithRelationInput',
+        cursor: 'VoucherWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'VoucherScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Voucher
       },
     })
     t.nullable.field('_count', {

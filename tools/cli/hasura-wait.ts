@@ -27,7 +27,6 @@ retry(async () => {
   })
     .then(e => e.json())
     .then(e => {
-      console.log("got json!", e)
       if (!e || e.code !== "parse-failed") throw new Error("Error from remote " + JSON.stringify(e))
       console.log("Hasura is now up!")
     })

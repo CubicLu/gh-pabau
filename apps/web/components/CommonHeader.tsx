@@ -1,133 +1,185 @@
 import {
+  CloseCircleFilled,
   LeftOutlined,
   MenuOutlined,
-  PlusSquareFilled,
   SearchOutlined,
 } from '@ant-design/icons'
-import {
-  MobileHeader,
-  MobileSidebar,
-  NotificationDrawer,
-  SetupSearchInput,
-} from '@pabau/ui'
-import classNames from 'classnames'
-import { useRouter } from 'next/router'
-import React, { FC, useState } from 'react'
-import Search from '../components/Search'
+import { MobileSidebar, NotificationDrawer } from '@pabau/ui'
+import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
+import { Layout as AntLayout, Input } from 'antd'
+import React, { FC, useState, useEffect, ReactNode } from 'react'
 import { useUser } from '../context/UserContext'
-import { useGridData } from '../hooks/useGridData'
+import { getImage } from './Uploaders/UploadHelpers/UploadHelpers'
+import Search from '../components/Search'
+import Chat from '../components/Chat/Chat'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
-import styles from './Setup.module.less'
+import styles from './CommonHeader.module.less'
+import Link from 'next/link'
+import classNames from 'classnames'
+const AntHeader = AntLayout.Header
 
 interface P {
-  handleSearch?: (searchTerm: string) => void
   title?: string
   isShowSearch?: boolean
-  isContent?: boolean
-  ContentJsx?: () => JSX.Element
+  searchValue?: string
+  searchInputPlaceHolder?: string
+  reversePath?: string
+  handleSearch?: (searchTerm: string) => void
   isLeftOutlined?: boolean
-  displayCreateButton?: boolean
-  handleCreate?: () => void
   showChat?: boolean
-  onChatClick?: () => void
-  clientCreateRender?: () => JSX.Element
-  leadCreateRender?: () => JSX.Element
+  clientCreateRender?: (handleClose?: () => void) => JSX.Element
+  leadCreateRender?: (handleClose?: () => void) => JSX.Element
+  displayActivity?: boolean
+  renderActivity?: ReactNode
 }
 
 const CommonHeader: FC<P> = ({
   handleSearch,
-  title = 'Setup',
-  isShowSearch,
-  isContent,
-  ContentJsx,
+  title = 'Pabau',
+  reversePath = '/',
+  searchInputPlaceHolder,
+  isShowSearch = false,
+  searchValue,
   isLeftOutlined = false,
-  displayCreateButton = false,
-  handleCreate,
-  onChatClick,
+  children = null,
   clientCreateRender,
   leadCreateRender,
+  displayActivity = false,
+  renderActivity,
 }) => {
   const user = useUser()
+  const [showChat, setShowChat] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] =
     useState<boolean>(false)
   const [showSearch, setShowSearch] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const { t } = useTranslationI18()
-  const { getParentSetupData } = useGridData(t)
-  const router = useRouter()
 
-  const handleBack = () => {
-    const parentMenu = getParentSetupData(router.pathname)
-
-    if (parentMenu.length > 0) {
-      router.push({
-        pathname: '/setup',
-        query: { menu: parentMenu[0]?.keyValue },
-      })
-    } else {
-      router.push('/setup')
-    }
-  }
+  useEffect(() => {
+    setSearchTerm(searchValue)
+  }, [searchValue])
 
   return (
-    <div className={classNames(styles.setupPage, styles.desktopViewNone)}>
-      <MobileHeader className={styles.pabauMobileHeader}>
+    <div className={styles.desktopViewNone}>
+      <AntHeader className={styles.pabauCommonHeader}>
         <div className={styles.mobileViewAlign}>
-          <div className={styles.mobileViewHeaderHeading}>
-            {isLeftOutlined ? (
-              <LeftOutlined onClick={handleBack} />
-            ) : (
-              <MenuOutlined
-                className="menuHeaderIconColor"
-                onClick={() => {
-                  setMenuDrawer(() => !openMenuDrawer)
-                }}
-              />
-            )}
-            <p>{title}</p>
-          </div>
-          <div className={styles.rightContentWrapper}>
-            {!isLeftOutlined && isShowSearch && (
-              <div className={styles.searchInput}>
-                {!showSearch ? (
-                  <SearchOutlined
-                    onClick={() => {
-                      setShowSearch(true)
-                    }}
-                  />
-                ) : (
-                  <div className={styles.search}>
-                    <SetupSearchInput
-                      onChange={handleSearch}
-                      placeholder={
-                        isLeftOutlined ? t('integration.search') : ''
-                      }
+          {!showSearch && (
+            <div
+              className={classNames(
+                styles.commonHeaderHeading,
+                !isShowSearch && !children ? styles.w100 : styles.w50
+              )}
+            >
+              {isLeftOutlined ? (
+                <Link href={reversePath}>
+                  <LeftOutlined />
+                </Link>
+              ) : (
+                <MenuOutlined
+                  className={styles.menuHeaderIconColor}
+                  onClick={() => {
+                    setMenuDrawer(() => !openMenuDrawer)
+                  }}
+                />
+              )}
+              <p className={!isShowSearch && !children && styles.centeredTitle}>
+                {title}
+              </p>
+            </div>
+          )}
+          {(isShowSearch || children) && (
+            <div
+              className={classNames(
+                styles.rightContentWrapper,
+                (!isShowSearch && !children) || showSearch
+                  ? styles.w100
+                  : styles.w50
+              )}
+            >
+              {isShowSearch && (
+                <div className={styles.searchInput}>
+                  {!showSearch ? (
+                    <SearchOutlined
+                      onClick={() => {
+                        setShowSearch(() => true)
+                      }}
+                      className={classNames(
+                        styles.marketingIconStyle,
+                        children && styles.paddingRight
+                      )}
                     />
-                  </div>
-                )}
-              </div>
-            )}
-            {isContent && <ContentJsx />}
-          </div>
-          {displayCreateButton && (
-            <div className={styles.createPlusIcon}>
-              <PlusSquareFilled
-                className={styles.plusIconStyle}
-                onClick={() => handleCreate?.()}
-              />
+                  ) : (
+                    <div className={styles.searchInput}>
+                      {isLeftOutlined ? (
+                        <Link href={reversePath}>
+                          <LeftOutlined />
+                        </Link>
+                      ) : (
+                        <MenuOutlined
+                          className={styles.menuHeaderIconColor}
+                          onClick={() => {
+                            setMenuDrawer(() => !openMenuDrawer)
+                          }}
+                        />
+                      )}
+                      <Input
+                        value={searchTerm}
+                        className={styles.searchStyle}
+                        placeholder={
+                          searchInputPlaceHolder ||
+                          t('basic-crud-table-input-search-placeholder')
+                        }
+                        onChange={(e) => {
+                          setSearchTerm(e.target.value)
+                          handleSearch?.(e.target.value)
+                        }}
+                        suffix={
+                          searchTerm ? (
+                            <CloseCircleFilled
+                              className={styles.closeIcon}
+                              onClick={() => {
+                                setSearchTerm('')
+                                handleSearch?.('')
+                              }}
+                            />
+                          ) : (
+                            <CloseIcon
+                              onClick={() => {
+                                setShowSearch(() => false)
+                              }}
+                            />
+                          )
+                        }
+                        autoFocus
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+              {!showSearch && children}
+              {displayActivity && <div>{renderActivity}</div>}
             </div>
           )}
         </div>
-      </MobileHeader>
+      </AntHeader>
       {openMenuDrawer && (
         <MobileSidebar
           searchRender={() => <Search />}
           onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
           onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
-          onClickChatDrawer={onChatClick}
+          onClickChatDrawer={() => setShowChat(() => true)}
           clientCreateRender={clientCreateRender}
           leadCreateRender={leadCreateRender}
-          userData={user?.me}
+          onLogout={user?.logout}
+          userData={{
+            company: user?.me?.company,
+            user: user?.me?.user,
+            fullName: user?.me?.full_name,
+            companyName: user?.me?.companyName,
+            imageUrl: getImage(user?.me?.imageUrl),
+            ...user?.me,
+          }}
         />
       )}
       {openNotificationDrawer && (
@@ -136,6 +188,7 @@ const CommonHeader: FC<P> = ({
           closeDrawer={() => setNotificationDrawer((e) => !e)}
         />
       )}
+      <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
     </div>
   )
 }
