@@ -1,10 +1,10 @@
 import {
   AddSuggestion,
-  defaultSelectedFormInfos,
   FormType,
   SelectedForms,
+  CompanyListItem,
 } from '@pabau/ui'
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormName from './MedicalFormName'
@@ -13,27 +13,53 @@ interface MedicalFormGeneralProps {
   isEditing: () => boolean
   onSelectFormType: (val: SelectedForms) => void
   changeFormName: (formName: string) => void
+  changeService: (services: Array<string | number>) => void
   formName: string
+  medicalFormType: string
+  companyServiceListItems: CompanyListItem[]
+  medicalFormServices: string
 }
 
 const MedicalFormGeneralPanel: FC<MedicalFormGeneralProps> = ({
   isEditing,
   onSelectFormType,
   changeFormName,
+  changeService,
   formName,
+  medicalFormType = '',
+  companyServiceListItems = [],
+  medicalFormServices = '',
 }) => {
   const { t } = useTranslation('common')
+  const [defaultServices, setDefaultServices] = useState<
+    Array<string | number>
+  >([])
+
+  useEffect(() => {
+    console.log('companyServiceListItems', companyServiceListItems)
+  }, [companyServiceListItems])
+
+  useEffect(() => {
+    console.log('medicalFormServices', medicalFormServices)
+    if (medicalFormServices === 'null' || medicalFormServices === '') {
+      setDefaultServices([])
+    } else {
+      setDefaultServices(
+        medicalFormServices.split(',').map(function (item) {
+          return Number(item.trim())
+        })
+      )
+    }
+  }, [medicalFormServices])
+
   const onChangeSetting = (setting) => {
     onSelectFormType(setting)
   }
   const onSelectServices = (services) => {
     console.log(services)
+    changeService(services)
   }
-  const serviceOptions = [
-    t('ui.medicalformbuilder.form.service.category'),
-    t('ui.medicalformbuilder.form.service.all'),
-  ]
-  const defaultServices = []
+
   return (
     <div className={styles.medicalFormGeneralPanel}>
       <MedicalFormName
@@ -45,12 +71,12 @@ const MedicalFormGeneralPanel: FC<MedicalFormGeneralProps> = ({
       <AddSuggestion
         label={t('ui.medicalformbuilder.form.suggestion')}
         defaultSelected={defaultServices}
-        options={serviceOptions}
+        options={companyServiceListItems}
         onChange={onSelectServices}
       />
       <FormType
         isEditing={isEditing}
-        setting={defaultSelectedFormInfos}
+        medicalFormType={medicalFormType}
         onChangeSetting={onChangeSetting}
       />
     </div>

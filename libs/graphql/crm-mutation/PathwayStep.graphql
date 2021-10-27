@@ -19,6 +19,9 @@ fragment PathwayStep on PathwayStep {
   Pathway {
     ...PathwayFields
   }
+  Company {
+    ...CompanyFields
+  }
 }
 
 mutation createOnePathwayStep($data: PathwayStepCreateInput!) {
