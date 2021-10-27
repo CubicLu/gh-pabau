@@ -494,6 +494,20 @@ export const CmContact = objectType({
         return root.PurchasedVoucher
       },
     })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
+      },
+    })
     t.list.field('PathwaysTaken', {
       type: 'PathwaysTaken',
       args: {

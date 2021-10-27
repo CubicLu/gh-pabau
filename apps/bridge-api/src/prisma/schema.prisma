@@ -1934,6 +1934,7 @@ model CmContact {
   MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
   Voucher                   Voucher[]                   @relation("Voucher")
   PurchasedVoucher          Voucher[]                   @relation("PurchasedVoucher")
+  CmLead                    CmLead[]
   PathwaysTaken             PathwaysTaken[]
   PathwayStepsTaken         PathwayStepsTaken[]
 
@@ -2641,6 +2642,7 @@ model CmLead {
   latest_interaction       DateTime?
   location_id              Int?                     @default(0)
   need_to_knows            Int?                     @default(1)
+  pipeline_stage_id        Int?
   Company                  Company                  @relation(fields: [company_id], references: [id])
   CmLeadCustomField        CmLeadCustomField[]
   CommunicationRecipient   CommunicationRecipient[]
@@ -2649,7 +2651,8 @@ model CmLead {
   Activity                 Activity[]
   MarketingSource          MarketingSource?         @relation(fields: [LeadSource], references: [id])
   LeadStatusData           LeadStatus?              @relation(fields: [LeadStatus], references: [id])
-
+  PipelineStage            PipelineStage?           @relation(fields: [pipeline_stage_id], references: [id])
+  Contact                  CmContact?               @relation(fields: [ContactID], references: [ID])
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
   @@index([LeadStatus], name: "LeadStatus")
@@ -9903,30 +9906,38 @@ model PhotoAlbum {
 //
 model Pipeline {
   id              Int     @id @default(autoincrement())
-  company_id      Int
+  company_id      Int?
   name            String
   description     String
   status          Int     @default(0)
   services_ids    String
   note            String
   restrict_stages Boolean @default(false)
+  reference       String?
 
-  LeadStatus LeadStatus[]
+  LeadStatus    LeadStatus[]
+  PipelineStage PipelineStage[]
+  @@index([company_id], name: "company_id")
   @@map("pipeline")
 }
 
-//
-//model pipeline_stages {
-//  id               Int      @id @default(autoincrement())
-//  company_id       Int
-//  pipeline_id      Int
-//  name             String
-//  stage_order      Int      @default(0)
-//  custom_field_ids String
-//  note             String
-//  created_date     DateTime @default(now())
-//  updated_date     DateTime @default(now())
-//}
+model PipelineStage {
+  id               Int      @id @default(autoincrement())
+  company_id       Int?
+  pipeline_id      Int?
+  name             String
+  stage_order      Int      @default(0)
+  custom_field_ids String
+  note             String
+  created_date     DateTime @default(now())
+  updated_date     DateTime @default(now())
+
+  Pipeline Pipeline? @relation(fields: [pipeline_id], references: [id])
+  CmLead   CmLead[]
+  @@index([company_id], name: "company_id")
+  @@map("pipeline_stages")
+}
+
 //
 //model pipeline_stage_custom_fields {
 //  id                 Int      @id @default(autoincrement())
