@@ -3,7 +3,6 @@ import { ImageViewer, ImageViewerAlbum, UploadingImageProps } from '@pabau/ui'
 import { useUser } from '../../../context/UserContext'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import postData from '../../Uploaders/UploadHelpers/UploadHelpers'
 import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
@@ -142,24 +141,36 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   })
 
   const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
-    onCompleted({ deleteOneContactAttachment: data }) {
-      const id = data?.id
-      const cAddedFiles = [...uploadingImages]
-      const idx = cAddedFiles?.findIndex((el) => el?.id === id)
-      if (idx !== -1) {
-        const cFile = cAddedFiles[idx]
-        cAddedFiles.splice(idx, 1)
-        setUploadingImages(cAddedFiles)
-        const cCurrAlbumData = { ...currentAlbumData }
-        const cIdx = cCurrAlbumData?.imageList?.findIndex(
-          (el) => el?.id === cFile?.id
-        )
-        if (cIdx !== -1) {
-          if (cCurrAlbumData.imageCount) {
-            cCurrAlbumData.imageCount = cCurrAlbumData.imageCount - 1
+    onCompleted({ deleteContactAttachmentPhoto: data }) {
+      if (data.success) {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingImages]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cAddedFiles.splice(idx, 1)
+          setUploadingImages(cAddedFiles)
+          const cCurrAlbumData = { ...currentAlbumData }
+          const cIdx = cCurrAlbumData?.imageList?.findIndex(
+            (el) => el?.id === cFile?.id
+          )
+          if (cIdx !== -1) {
+            if (cCurrAlbumData.imageCount) {
+              cCurrAlbumData.imageCount = cCurrAlbumData.imageCount - 1
+            }
+            cCurrAlbumData.imageList.splice(cIdx, 1)
+            setCurrentAlbumData(cCurrAlbumData)
           }
-          cCurrAlbumData.imageList.splice(cIdx, 1)
-          setCurrentAlbumData(cCurrAlbumData)
+        }
+      } else {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingImages]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = false
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingImages(cAddedFiles)
         }
       }
     },
@@ -383,27 +394,18 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     const cAddedFiles = [...uploadingImages]
     const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === imagePath)
     if (idx !== -1) {
-      console.log("WILL WORK WHEN MARTIN's RESOLVER GET MERGED")
-      // const data = new FormData()
-      // data.append('file_path', imagePath)
-      // const cFile = cAddedFiles[idx]
-      // cFile.loading = true
-      // cAddedFiles.splice(idx, 1, cFile)
-      // setUploadingImages(cAddedFiles)
+      const data = new FormData()
+      data.append('file_path', imagePath)
+      const cFile = cAddedFiles[idx]
+      cFile.loading = true
+      cAddedFiles.splice(idx, 1, cFile)
+      setUploadingImages(cAddedFiles)
 
-      // const res = await postData(
-      //   `${baseURL}delete-photo`,
-      //   { file_path: imagePath },
-      //   null
-      // )
-      // if (res.success) {
-      //   const cFile = cAddedFiles[idx]
-      //   deleteAttachmentInAlbum({
-      //     variables: {
-      //       id: cFile?.id,
-      //     },
-      //   })
-      // }
+      deleteAttachmentInAlbum({
+        variables: {
+          id: cFile?.id,
+        },
+      })
     }
   }
 
