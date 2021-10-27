@@ -7,6 +7,7 @@ query getFinancialInvoices($take: Int = 50, $skip: Int = 0, $where: InvoiceWhere
     issue_to
     location_name
     status
+    guid
   }
 }
 

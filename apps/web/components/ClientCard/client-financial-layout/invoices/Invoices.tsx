@@ -20,7 +20,7 @@ import {
   Skeleton,
 } from 'antd'
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
-import { GetFinancialInvoicesQuery, GetInvoiceQuery } from '@pabau/graphql'
+import { GetFinancialInvoicesQuery, SaleItemsQuery } from '@pabau/graphql'
 import EditInvoice from './EditInvoice'
 import InvoiceFooter from './invoice-footer/InvoiceFooter'
 import dayjs from 'dayjs'
@@ -48,13 +48,13 @@ export interface ISalesItemProps {
 
 interface P {
   invoice: GetFinancialInvoicesQuery
-  salesDetails: GetInvoiceQuery
+  salesDetails: SaleItemsQuery
   salesDetaillLoading: boolean
   loading: boolean
   invoiceEmployeeOptions: string[]
   locationOptions: string[]
   onChangePagination?(take: number, skip: number): void
-  onExpand?(id: number): void
+  onExpand?(id: string): void
   onFilterSubmit?(
     type: string,
     employee: string,
@@ -104,8 +104,9 @@ export const Invoices: FC<P> = (props) => {
   useEffect(() => {
     const invoicesDetails = []
     invoice?.findManyInvoice?.map((item) => {
-      const discount = salesDetails?.invoice?.discount_amount
-      const inv_total = salesDetails?.invoice?.inv_total
+      const lastIndex = salesDetails?.items?.length - 1
+      const discount = salesDetails?.items[lastIndex]?.InvSale?.discount_amount
+      const inv_total = salesDetails?.items[lastIndex]?.InvSale?.inv_total
       invoicesDetails.push({
         id: `${item.id}`,
         date: dayjs(`${item.date}`).format('DD/MM/YYYY'),
@@ -115,9 +116,9 @@ export const Invoices: FC<P> = (props) => {
         paid: item.status === 'paid' ? true : false,
         items: saleItems,
         totalVat: totalVat,
-        amountPaid: salesDetails?.invoice?.paid_amount,
+        amountPaid: salesDetails?.items[lastIndex]?.InvSale?.paid_amount,
         subtotal: discount !== 0 ? inv_total + discount : inv_total,
-        tips: salesDetails?.invoice?.tip,
+        tips: salesDetails?.items[lastIndex]?.InvSale?.tip,
         grandTotal: item.amount,
       })
       return invoicesDetails
@@ -129,20 +130,20 @@ export const Invoices: FC<P> = (props) => {
   useEffect(() => {
     const items: ISalesItemProps[] = []
     let total_vat = 0
-    salesDetails?.invoice?.SaleItem?.map((item, index) => {
+    salesDetails?.items?.map((item, index) => {
       items.push({
         employee: '',
         id: index,
-        name: item.product_name,
+        name: item.name,
         quantity: item.quantity,
-        price: item.unit_price + item.val_tax,
+        price: item.unit_price + item.discount,
         tax: item.tax_total,
         discount: item.UnitDiscount,
         totalPrice:
           item.quantity *
           (item.unit_price - item.UnitDiscount + item.tax_total),
       })
-      const unit_price = item.quantity * item.unit_price - item.val_tax
+      const unit_price = item.quantity * item.unit_price - item.discount
       const vat_multiplier = item.Tax?.rate / 100 + 1
       const vat_value =
         item.quantity > 1
@@ -158,12 +159,12 @@ export const Invoices: FC<P> = (props) => {
   useEffect(() => {
     setTotalOutstanding(
       salesDetails
-        ? salesDetails?.invoice?.paid_amount
+        ? salesDetails?.items[0]?.InvSale?.paid_amount
         : invoice?.findManyInvoice[0]?.amount ?? 0
     )
     setTotalInvoiced(
       salesDetails
-        ? salesDetails?.invoice?.inv_total
+        ? salesDetails?.items[0]?.InvSale?.inv_total
         : invoice?.findManyInvoice[0]?.amount ?? 0
     )
   }, [salesDetails, invoice])
@@ -293,7 +294,10 @@ export const Invoices: FC<P> = (props) => {
             </span>
             <span
               onClick={() => {
-                onExpand?.(row['key'])
+                const index = invoice?.findManyInvoice?.findIndex(
+                  (item) => item.id === Number.parseInt(row['id'])
+                )
+                onExpand?.(invoice?.findManyInvoice[index]?.guid)
                 if (expandedRow === row['key']) return setExpandedRow(0)
 
                 setExpandedRow(row['key'])

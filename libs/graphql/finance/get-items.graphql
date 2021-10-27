@@ -9,6 +9,13 @@ query saleItems($guid: String!) {
     discount: val_tax
     tax_total
     quantity
+    UnitDiscount
+    InvSale{
+      discount_amount
+      inv_total
+      paid_amount
+      tip
+    }
     Tax {
       id
       name
@@ -19,9 +26,6 @@ query saleItems($guid: String!) {
       id
       name
       image
-      in_stock: _count {
-        InvWarehouseProduct
-      }
       alert_quantity
       allow_negative_qty
     }

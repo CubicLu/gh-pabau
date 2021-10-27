@@ -14,7 +14,7 @@ import { useQuery } from '@apollo/client'
 import {
   GetFinancialInvoicesDocument,
   TotalInvoiceCountDocument,
-  GetInvoiceDocument,
+  SaleItemsDocument,
   GetContactInvoicesDocument,
 } from '@pabau/graphql'
 import {
@@ -40,7 +40,7 @@ const Financial = () => {
     take: 50,
     skip: 0,
   })
-  const [saleId, setSaleId] = useState(0)
+  const [saleId, setSaleId] = useState('')
   const [invoiceFilter, setInvoiceFilter] = useState<InitialFilterValue>({
     type: 'all',
     employee: 'all',
@@ -83,9 +83,9 @@ const Financial = () => {
 
   const getsalesDetailsQueryVariables = useMemo(() => {
     const queryOptions = {
-      skip: Number.parseInt(`${saleId}`) === 0,
+      skip: !saleId,
       variables: {
-        id: Number.parseInt(`${saleId}`),
+        guid: saleId,
       },
     }
     return queryOptions
@@ -128,7 +128,7 @@ const Financial = () => {
   )
 
   const { data: salesDetails, loading: salesDetaillLoading } = useQuery(
-    GetInvoiceDocument,
+    SaleItemsDocument,
     getsalesDetailsQueryVariables
   )
   const handlePagination = (take, skip) => {
