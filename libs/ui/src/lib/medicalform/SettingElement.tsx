@@ -1,4 +1,4 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import { MedicalFormTypes, LabTestsListItem } from '@pabau/ui'
 import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +13,7 @@ import dobIcon from '../../assets/images/medicalform_dob.svg'
 import drawingIcon from '../../assets/images/medicalform_drawing.svg'
 import dropdownIcon from '../../assets/images/medicalform_dropdown.svg'
 import drugsIcon from '../../assets/images/medicalform_drugs.svg'
+import snomedIcon from '../../assets/images/medicalform_drugs.svg'
 import headingIcon from '../../assets/images/medicalform_heading.svg'
 import labTestIcon from '../../assets/images/medicalform_labtest.svg'
 import longAnswerIcon from '../../assets/images/medicalform_longanswer.svg'
@@ -20,6 +21,7 @@ import multipleChoiceIcon from '../../assets/images/medicalform_multiplechoice.s
 import shortAnswerIcon from '../../assets/images/medicalform_shortanswer.svg'
 import signatureIcon from '../../assets/images/medicalform_signature.svg'
 import singleChoiceIcon from '../../assets/images/medicalform_singlechoice.svg'
+import sliderIcon from '../../assets/images/medicalform_singlechoice.svg'
 import textBlockIcon from '../../assets/images/medicalform_textblock.svg'
 import travelDesctinationIcon from '../../assets/images/medicalform_traveldestination.svg'
 import vaccineHistoryIcon from '../../assets/images/medicalform_vaccinehistory.svg'
@@ -27,6 +29,7 @@ import vaccineSchedulerIcon from '../../assets/images/medicalform_vaccineschedul
 import SettingElementAdvanced from './SettingElementAdvanced'
 import SettingElementFileUpload from './SettingElementFileUpload'
 import SettingElementMultiOptions from './SettingElementMultiOptions'
+import SettingElementMultiSelect from './SettingElementMultiSelect'
 import SettingElementOption from './SettingElementOption'
 import SettingElementQuestion from './SettingElementQuestion'
 import SettingElementSignature from './SettingElementSignature'
@@ -44,6 +47,7 @@ interface P {
   selectedForm: MedicalFormTypes
   handleSave?: (form: MedicalFormTypes) => void
   handleDelete?: () => void
+  labTestsListItems?: LabTestsListItem[]
 }
 
 const SettingElement: FC<P> = ({
@@ -52,6 +56,7 @@ const SettingElement: FC<P> = ({
   selectedForm,
   handleSave,
   handleDelete,
+  labTestsListItems,
 }) => {
   const { t } = useTranslation('common')
   const [form, setForm] = useState(_.cloneDeep(selectedForm))
@@ -196,7 +201,22 @@ const SettingElement: FC<P> = ({
       title: t('ui.medicalform.setting.component.vaccinehistory.title'),
       desc: t('ui.medicalform.setting.component.vaccinehistory.description'),
     },
-
+    {
+      component: 'basic_snomed',
+      type: { type },
+      iconUrl: snomedIcon,
+      bgcolor: '#FAAD14',
+      title: t('ui.medicalform.setting.component.snomed.title'),
+      desc: t('ui.medicalform.setting.component.snomed.description'),
+    },
+    {
+      component: 'basic_slider',
+      type: { type },
+      iconUrl: sliderIcon,
+      bgcolor: '#65CD98',
+      title: t('ui.medicalform.setting.component.slider.title'),
+      desc: t('ui.medicalform.setting.component.slider.description'),
+    },
     {
       component: 'custom_emailmarketing',
       type: { type },
@@ -332,6 +352,7 @@ const SettingElement: FC<P> = ({
   const saveFunc = () => {
     if (
       component === 'basic_singlechoice' ||
+      component === 'basic_slider' ||
       component === 'basic_multiplechoice' ||
       component === 'basic_dropdown'
     ) {
@@ -414,9 +435,11 @@ const SettingElement: FC<P> = ({
               filteredComponent[0].component === 'basic_conditions' ||
               filteredComponent[0].component === 'basic_drugs' ||
               filteredComponent[0].component === 'basic_labtests' ||
-              filteredComponent[0].component === 'basic_traveldestination' ||
-              filteredComponent[0].component === 'basic_vaccinescheduler' ||
-              filteredComponent[0].component === 'basic_vaccinehistory' ||
+              // filteredComponent[0].component === 'basic_traveldestination' ||
+              // filteredComponent[0].component === 'basic_vaccinescheduler' ||
+              // filteredComponent[0].component === 'basic_vaccinehistory' ||
+              filteredComponent[0].component === 'basic_snomed' ||
+              filteredComponent[0].component === 'basic_slider' ||
               filteredComponent[0].component === 'custom_emailmarketing' ||
               filteredComponent[0].component === 'custom_smsmarketing' ||
               filteredComponent[0].component === 'custom_phonecall' ||
@@ -445,8 +468,16 @@ const SettingElement: FC<P> = ({
               filteredComponent[0].component === 'basic_staticimage' ||
               filteredComponent[0].component === 'basic_photo') && (
               <SettingElementQuestion
-                desc={t('ui.medicalform.setting.question.description')}
-                title={t('ui.medicalform.setting.question.title')}
+                desc={
+                  filteredComponent[0].component === 'basic_signature'
+                    ? t('ui.medicalform.setting.signature.description')
+                    : t('ui.medicalform.setting.question.description')
+                }
+                title={
+                  filteredComponent[0].component === 'basic_signature'
+                    ? t('ui.medicalform.setting.signature.title')
+                    : t('ui.medicalform.setting.question.title')
+                }
                 value={form.txtQuestion}
                 valueWithTag={form.txtQuestionWithTag}
                 componentName={filteredComponent[0].component}
@@ -471,7 +502,15 @@ const SettingElement: FC<P> = ({
                 onChangeText={onChangeText}
               />
             )}
+            {filteredComponent[0].component === 'basic_labtests' && (
+              <SettingElementMultiSelect
+                onChange={eventhandler}
+                paramItems={selectedForm.arrItems ? selectedForm.arrItems : []}
+                options={labTestsListItems}
+              />
+            )}
             {(filteredComponent[0].component === 'basic_singlechoice' ||
+              filteredComponent[0].component === 'basic_slider' ||
               filteredComponent[0].component === 'basic_dropdown') && (
               <SettingElementOption
                 onChange={eventhandler}
@@ -485,11 +524,13 @@ const SettingElement: FC<P> = ({
               />
             )}
             {(filteredComponent[0].component === 'basic_singlechoice' ||
+              filteredComponent[0].component === 'basic_slider' ||
               filteredComponent[0].component === 'basic_multiplechoice' ||
               filteredComponent[0].component === 'basic_dropdown') &&
               errMsg !== '' && <SettingMedicalFormError errMsg={errMsg} />}
             {(filteredComponent[0].component === 'basic_shortanswer' ||
               filteredComponent[0].component === 'basic_longanswer' ||
+              filteredComponent[0].component === 'basic_signature' ||
               filteredComponent[0].component === 'basic_singlechoice' ||
               filteredComponent[0].component === 'basic_multiplechoice' ||
               filteredComponent[0].component === 'basic_dropdown') && (
