@@ -55,7 +55,7 @@ const Journey: FC<JourneyP> = () => {
 
   useEffect(() => {
     if (appointmentsData?.findManyBooking?.length > 0) {
-      const appointements = appointmentsData.findManyBooking
+      const allAppointements = appointmentsData.findManyBooking
         .filter((appt) => appt?.Contact !== null && appt.status !== 'Cancelled')
         .map((appt) => {
           return {
@@ -76,8 +76,11 @@ const Journey: FC<JourneyP> = () => {
             date: appt.start_date,
           }
         })
-      setAppointments(appointements)
-      setAllAppointments(appointements)
+      setAllAppointments(allAppointements)
+      const initialAppointments = allAppointements.filter(
+        (appt) => appt.status !== 'complete'
+      )
+      setAppointments(initialAppointments)
     } else {
       setAppointments(null)
     }
