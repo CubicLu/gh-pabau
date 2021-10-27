@@ -33,10 +33,8 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
   const [outStanding, setOutstanding] = useState(invoice?.grandTotal)
   const [paymentAllocated, setPaymentAllocated] = useState(0)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [
-    selectedPayment,
-    setSelectedPayment,
-  ] = useState<InvoiceInvoicePayments>()
+  const [selectedPayment, setSelectedPayment] =
+    useState<InvoiceInvoicePayments>()
 
   useEffect(() => {
     let paymentAllocated_ = 0

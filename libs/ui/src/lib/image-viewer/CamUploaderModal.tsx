@@ -329,7 +329,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         accept={validTypes?.join(', ')}
         className={styles.fileInput}
         onChange={(e) => {
-          const cFiles = (e.target.files as unknown) as File[]
+          const cFiles = e.target.files as unknown as File[]
           handleAddFiles([...cFiles])
         }}
       />

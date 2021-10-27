@@ -70,10 +70,8 @@ export const ClientPrescriptionsLayout: FC<ClientPrescriptionsLayoutProps> = ({
   const [openPrescriptionOptions, setOpenPrescriptionOptions] = useState<
     Record<string, boolean>
   >({ abc: true }) //{abc: true} is just a semple initial value
-  const [
-    drawerPrescription,
-    setDrawerPrescription,
-  ] = useState<PrescriptionListProps>()
+  const [drawerPrescription, setDrawerPrescription] =
+    useState<PrescriptionListProps>()
 
   useEffect(() => {
     setPrescriptionList(prescriptions)

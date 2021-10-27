@@ -46,9 +46,8 @@ export const Clients = () => {
   const [defaultSelectedLabels, setDefaultSelectedLabels] = useState<Labels[]>(
     []
   )
-  const [createClientModalVisible, setCreateClientModalVisible] = useState(
-    false
-  )
+  const [createClientModalVisible, setCreateClientModalVisible] =
+    useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [isEdit, setIsEdit] = useState(false)

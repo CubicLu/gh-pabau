@@ -288,9 +288,8 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
     },
   ]
   const [isDragging, setIsDragging] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState<SelectIndexProps[]>(
-    defaultIndex
-  )
+  const [selectedIndex, setSelectedIndex] =
+    useState<SelectIndexProps[]>(defaultIndex)
   const [progressGalleryIndex, setProgressGalleryIndex] = useState(
     defaultProgressGalleryIndex
   )

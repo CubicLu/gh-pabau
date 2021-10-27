@@ -435,12 +435,11 @@ export const Index: FC = () => {
   useEffect(() => {
     console.log('medicalConditions', medicalConditions)
     if (medicalConditions?.findManyMedicalCondition) {
-      const medicalConditionsList = medicalConditions?.findManyMedicalCondition.map(
-        (medicalCondition) => ({
+      const medicalConditionsList =
+        medicalConditions?.findManyMedicalCondition.map((medicalCondition) => ({
           id: medicalCondition.id,
           name: medicalCondition.name,
-        })
-      )
+        }))
       setMedicalConditionsListItems(medicalConditionsList)
     }
   }, [medicalConditions])

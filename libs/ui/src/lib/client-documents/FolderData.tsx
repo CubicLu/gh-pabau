@@ -823,9 +823,8 @@ export const FolderData: FC<FolderDataProps> = React.memo(
                                                 <div
                                                   className={styles.circle}
                                                   style={{
-                                                    backgroundColor: stc(
-                                                      firstName
-                                                    ),
+                                                    backgroundColor:
+                                                      stc(firstName),
                                                   }}
                                                   key={index}
                                                 >
@@ -961,9 +960,8 @@ export const FolderData: FC<FolderDataProps> = React.memo(
                                               <div
                                                 className={styles.circle}
                                                 style={{
-                                                  backgroundColor: stc(
-                                                    firstName
-                                                  ),
+                                                  backgroundColor:
+                                                    stc(firstName),
                                                 }}
                                                 key={index}
                                               >

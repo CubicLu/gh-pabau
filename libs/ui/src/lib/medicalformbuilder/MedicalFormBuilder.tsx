@@ -110,9 +110,8 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
   const [medicalFormType, setMedicalFormType] = useState(preFormType)
-  const [medicalFormServices, setMedicalFormServices] = useState(
-    preFormServices
-  )
+  const [medicalFormServices, setMedicalFormServices] =
+    useState(preFormServices)
   const [formSaveLabel, setFormSaveLabel] = useState('')
   const [currentMedicalForm, setCurrentMedicalForm] =
     useState<MedicalFormItem>()

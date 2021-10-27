@@ -24,15 +24,13 @@ export const eventsData: EventsDataProps[] = [
     ],
     pinItems: [
       {
-        item:
-          'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf',
+        item: 'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf',
       },
       {
         item: 'http://www.africau.edu/images/default/sample.pdf',
       },
       {
-        item:
-          'https://i.pinimg.com/originals/a3/f7/01/a3f70197315949b3f320764a8a194c32.jpg',
+        item: 'https://i.pinimg.com/originals/a3/f7/01/a3f70197315949b3f320764a8a194c32.jpg',
       },
     ],
     displayCollapse: true,

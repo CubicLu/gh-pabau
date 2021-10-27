@@ -288,13 +288,11 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     loading: activeLoading,
   } = useActiveLocationCountQuery()
 
-  const [
-    loadStaffList,
-    { data: staffData, loading: staffDataLoading },
-  ] = useGetLocationStaffListLazyQuery({
-    ...getStaffQueryVariables,
-    fetchPolicy: 'network-only',
-  })
+  const [loadStaffList, { data: staffData, loading: staffDataLoading }] =
+    useGetLocationStaffListLazyQuery({
+      ...getStaffQueryVariables,
+      fetchPolicy: 'network-only',
+    })
 
   const [locationData, setLocationData] = useState(null)
 

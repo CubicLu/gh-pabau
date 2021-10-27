@@ -30,9 +30,8 @@ export const DropdownOptionsTree: FC<P> = ({
   options,
   onItemSelect,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<DropdownOption[]>(
-    options
-  )
+  const [selectedOptions, setSelectedOptions] =
+    useState<DropdownOption[]>(options)
   const [showDrawer, setShowDrawer] = useState(false)
   const isMobile = useMedia('(max-width: 768px)', false)
 

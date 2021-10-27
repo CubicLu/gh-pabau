@@ -185,14 +185,8 @@ export const TestForm = () => {
   })
 
   useEffect(() => {
-    const {
-      clientName,
-      dob,
-      homeAddress,
-      postcode,
-      homePhone,
-      mobilePhone,
-    } = defaultData
+    const { clientName, dob, homeAddress, postcode, homePhone, mobilePhone } =
+      defaultData
     setClientName(clientName)
     setDob(dob)
     setHomeAddress(homeAddress)
@@ -435,12 +429,11 @@ export const TestForm = () => {
 
   useEffect(() => {
     if (medicalConditions?.findManyMedicalCondition) {
-      const medicalConditionsList = medicalConditions?.findManyMedicalCondition.map(
-        (medicalCondition) => ({
+      const medicalConditionsList =
+        medicalConditions?.findManyMedicalCondition.map((medicalCondition) => ({
           id: medicalCondition.id,
           name: medicalCondition.name,
-        })
-      )
+        }))
       setMedicalConditionsListItems(medicalConditionsList)
     }
   }, [medicalConditions])
@@ -506,21 +499,23 @@ export const TestForm = () => {
     }
   }
 
-  const [
-    addMedicalFormContactMutation,
-  ] = useCreateOneMedicalFormContactMutation({
-    onCompleted(data) {
-      console.log('Completed: useCreateOneMedicalFormContactMutation =', data)
-      Notification(NotificationType.success, t('setup.medical.forms.save.text'))
-    },
-    onError(err) {
-      console.log('Error: useCreateOneMedicalFormContactMutation =', err)
-      Notification(
-        NotificationType.error,
-        t('  setup.medical.forms.save.err.text')
-      )
-    },
-  })
+  const [addMedicalFormContactMutation] =
+    useCreateOneMedicalFormContactMutation({
+      onCompleted(data) {
+        console.log('Completed: useCreateOneMedicalFormContactMutation =', data)
+        Notification(
+          NotificationType.success,
+          t('setup.medical.forms.save.text')
+        )
+      },
+      onError(err) {
+        console.log('Error: useCreateOneMedicalFormContactMutation =', err)
+        Notification(
+          NotificationType.error,
+          t('  setup.medical.forms.save.err.text')
+        )
+      },
+    })
 
   const [addMedicalAttrMutation] = useCreateOneMedicalAttrMutation({
     onCompleted(data) {

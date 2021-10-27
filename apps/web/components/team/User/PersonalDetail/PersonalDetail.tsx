@@ -60,38 +60,32 @@ const PersonalDetail: FC<P> = ({
   const [staffTitleObj, setStaffTitleObj] = useState<StaffTitleDetails[]>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isDisable, setIsDisable] = useState<boolean>(true)
-  const {
-    data: staffTitleData,
-    loading: staffTitleLoading,
-  } = useGetCompanyPositionsQuery()
-  const {
-    data: OtherLocation,
-    loading: otherLocationLoading,
-  } = useGetActiveLocationQuery({
-    ssr: false,
-  })
-  const [
-    forgetPasswordMutation,
-    { loading: forgetPasswordLoading },
-  ] = useForgotPasswordMutation({
-    onCompleted() {
-      setIsDisableResetEmail(true)
-      Notification(
-        NotificationType.success,
+  const { data: staffTitleData, loading: staffTitleLoading } =
+    useGetCompanyPositionsQuery()
+  const { data: OtherLocation, loading: otherLocationLoading } =
+    useGetActiveLocationQuery({
+      ssr: false,
+    })
+  const [forgetPasswordMutation, { loading: forgetPasswordLoading }] =
+    useForgotPasswordMutation({
+      onCompleted() {
+        setIsDisableResetEmail(true)
+        Notification(
+          NotificationType.success,
 
-        `${t('team.user.personal.details.password.reset.success.text')} ${
-          personalData.email
-        }`
-      )
-    },
-    onError() {
-      Notification(
-        NotificationType.error,
+          `${t('team.user.personal.details.password.reset.success.text')} ${
+            personalData.email
+          }`
+        )
+      },
+      onError() {
+        Notification(
+          NotificationType.error,
 
-        t('team.user.personal.details.password.reset.fail.text')
-      )
-    },
-  })
+          t('team.user.personal.details.password.reset.fail.text')
+        )
+      },
+    })
   useEffect(() => {
     if (OtherLocation?.locations) {
       setActiveLocations([...OtherLocation?.locations])

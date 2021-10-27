@@ -23,9 +23,8 @@ const SetNotificationModal: FC<SetNotificationProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const [reminderCheck, setReminderCheck] = useState(reminder)
-  const [requestFeedbackCheck, setRequestFeedbackCheck] = useState(
-    requestFeedback
-  )
+  const [requestFeedbackCheck, setRequestFeedbackCheck] =
+    useState(requestFeedback)
   const handleClickClose = () => {
     onClose()
   }

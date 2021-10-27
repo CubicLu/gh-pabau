@@ -8,25 +8,24 @@ export interface CommunicationTemplatePreviewProps {
   sms: string
 }
 
-export const CommunicationTemplatePreview: FC<CommunicationTemplatePreviewProps> = ({
-  sms,
-}) => {
-  const { t } = useTranslation('common')
+export const CommunicationTemplatePreview: FC<CommunicationTemplatePreviewProps> =
+  ({ sms }) => {
+    const { t } = useTranslation('common')
 
-  const btn = (
-    <Button className={styles.sendButton}>
-      {t('notifications.commonNotificationHeader.sendTestSms')}
-    </Button>
-  )
-  return (
-    <div className={styles.previewContainer}>
-      <Card title="Example Message" extra={btn}>
-        <div className={styles.templatePreview}>
-          <Smstext smsMessage={sms} />
-        </div>
-      </Card>
-    </div>
-  )
-}
+    const btn = (
+      <Button className={styles.sendButton}>
+        {t('notifications.commonNotificationHeader.sendTestSms')}
+      </Button>
+    )
+    return (
+      <div className={styles.previewContainer}>
+        <Card title="Example Message" extra={btn}>
+          <div className={styles.templatePreview}>
+            <Smstext smsMessage={sms} />
+          </div>
+        </Card>
+      </div>
+    )
+  }
 
 export default CommunicationTemplatePreview

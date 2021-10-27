@@ -10,7 +10,7 @@ const Appointments = () => {
   // DONT DO THIS! Move to libs/graphql
   const { data } = useQuery(
     gql`
-      query($id: Int!) {
+      query ($id: Int!) {
         findFirstCmContact(where: { ID: { equals: $id } }) {
           Booking {
             id

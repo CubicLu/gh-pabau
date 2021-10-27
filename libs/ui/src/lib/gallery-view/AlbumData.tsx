@@ -378,7 +378,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             {x.albumImage.slice(0, 4).map((item, key) => {
               return (
                 <img
-                  src={(item as unknown) as string}
+                  src={item as unknown as string}
                   alt={x.albumTitle}
                   key={key}
                   className={styles.gridItem}

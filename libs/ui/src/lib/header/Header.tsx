@@ -74,16 +74,13 @@ export const Header = ({
   toggleSidebar,
   journeyRender,
 }: P): JSX.Element => {
-  const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
-    false
-  )
+  const [openNotificationDrawer, setNotificationDrawer] =
+    useState<boolean>(false)
   const [sidebarcollapsed, setSidebarcollapsed] = useState(sidebarCollapsed)
   const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
   const [openJourneyModal, setJourneyModal] = useState<boolean>(false)
-  const [
-    unreadNotificationCount,
-    setUnreadNotificationCount,
-  ] = useState<number>(0)
+  const [unreadNotificationCount, setUnreadNotificationCount] =
+    useState<number>(0)
 
   const isReadNotify = (users: number[]) => {
     return !!users?.find((user_id) => user_id === user?.user)

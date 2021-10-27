@@ -97,7 +97,7 @@ export const makeServiceGroups = (
       name: service,
       prefix: parentGroup?.prefix,
       suffix: parentGroup?.suffix,
-      ...(defaultGroup || {}),
+      ...defaultGroup,
     }
     const services = makeServiceGroups(
       servicesData[service].details || servicesData[service] || [],

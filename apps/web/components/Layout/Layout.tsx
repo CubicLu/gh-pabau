@@ -50,13 +50,11 @@ const Layout: FC<LayoutProps> = ({
 
   const [switchCompany] = useSwitchCompanyMutation()
 
-  const [
-    updateNotificationStateMutation,
-  ] = useUpdate_Notification_StateMutation()
+  const [updateNotificationStateMutation] =
+    useUpdate_Notification_StateMutation()
 
-  const [
-    insertProductNewsReadOneMutation,
-  ] = useInsert_Product_News_Read_OneMutation()
+  const [insertProductNewsReadOneMutation] =
+    useInsert_Product_News_Read_OneMutation()
   useEffect(() => {
     if (productNewsData?.product_news?.length > 0) {
       const news: ProductNews[] = productNewsData?.product_news.map((news) => {
