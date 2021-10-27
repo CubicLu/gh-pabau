@@ -204,20 +204,6 @@ export const CmContact = objectType({
         return root.ContactNote
       },
     })
-    t.list.field('MedicalFormContact', {
-      type: 'MedicalFormContact',
-      args: {
-        where: 'MedicalFormContactWhereInput',
-        orderBy: 'MedicalFormContactOrderByWithRelationInput',
-        cursor: 'MedicalFormContactWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormContactScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.MedicalFormContact
-      },
-    })
     t.list.field('CmExtraGym', {
       type: 'CmExtraGym',
       args: {
@@ -506,6 +492,20 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.PurchasedVoucher
+      },
+    })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
       },
     })
     t.list.field('PathwaysTaken', {
