@@ -5,8 +5,10 @@
 
   > div {
     &:nth-child(1) {
+      // width: 100%;
+      // max-width: 370px;
       width: 100%;
-      max-width: 370px;
+      max-width: 100%;
       margin-right: 1rem;
       display: flex;
       flex-wrap: wrap;
@@ -15,6 +17,8 @@
         max-width: unset;
       }
       > div {
+        max-width: 100%;
+        width: 100%;
         margin-bottom: 1rem;
         &:last-child {
           margin-bottom: 0;
@@ -34,10 +38,6 @@
     }
   }
 }
-
-
-
-
 
 .allergiesContainer {
   width: 100%;
