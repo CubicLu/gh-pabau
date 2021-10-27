@@ -9,7 +9,7 @@ import {
   retrieveActivityData,
   prepareActivityDataWithCustomField,
   manualFilterOnAndOperandColumns,
-  manualFilterOnOrOperandColumns
+  manualFilterOnOrOperandColumns,
 } from '../activity'
 import { groupBy } from 'lodash'
 
@@ -339,13 +339,14 @@ export const ActivityQuery = extendType({
                 filterColumns.includes(item)
               )
             )
-            const availableCustomColumns = where?.filterOption?.andFilterOption.map(
-              (item) => {
+            const availableCustomColumns = where?.filterOption?.andFilterOption
+              .map((item) => {
                 if (customColumns.has(item.filterColumn)) {
                   return item
                 }
-              }
-            )
+                return undefined
+              })
+              .filter((item) => item)
             // console.log('availableCustomColumns--------------', availableCustomColumns)
             const activityFilterData = []
             if (availableCustomColumns.length > 0) {

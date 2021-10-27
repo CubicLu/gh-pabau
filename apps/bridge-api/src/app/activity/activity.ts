@@ -116,8 +116,8 @@ export const retrieveActivityData = async (
           LastUpdated: true,
           CmContact: {
             select: {
-              OwnerID: true
-            }
+              OwnerID: true,
+            },
           },
           CmLeadNote: {
             select: {
@@ -731,9 +731,10 @@ export const prepareOperandQuery = async (
     case 'Done':
       operandQuery = prepareDoneQuery(menu, operand)
       break
-    default:
-      undefined
+    default: {
+      return undefined
       break
+    }
   }
   return operandQuery
 }
@@ -771,9 +772,10 @@ export const prepareFilterQuery = async (
 const manualFilterOnBasicOperand = (
   columnValue: ActivityFilterOptionType,
   value: number | string,
-  type: string = 'number'
+  type = 'number'
 ) => {
-  let inputValue = type === 'number' ? Number(columnValue.menuOption) : columnValue.menuOption
+  const inputValue =
+    type === 'number' ? Number(columnValue.menuOption) : columnValue.menuOption
   switch (columnValue.operand) {
     case 'is': {
       if (value === inputValue) {
@@ -806,7 +808,10 @@ const manualFilterOnDoneColumn = (
   columnValue: ActivityFilterOptionType,
   value: string
 ) => {
-  let inputValue = columnValue.menuOption === 'Done' ? ['Done'] : ['Pending', 'Working on', 'Reopened', 'Awaiting']
+  const inputValue =
+    columnValue.menuOption === 'Done'
+      ? ['Done']
+      : ['Pending', 'Working on', 'Reopened', 'Awaiting']
   switch (columnValue.operand) {
     case 'is': {
       if (inputValue.includes(value)) {
@@ -1050,9 +1055,11 @@ const retrieveUserGroupMembers = async (ctx: Context, value: number) => {
   return ids
 }
 
-const manualFilterOnUserOperand = async (columnValue: ActivityFilterOptionType,
+const manualFilterOnUserOperand = async (
+  columnValue: ActivityFilterOptionType,
   value: number,
-  ctx: Context) => {
+  ctx: Context
+) => {
   const data = Number(columnValue.menuOption)
   switch (columnValue.operand) {
     case 'is': {
@@ -1080,7 +1087,7 @@ const manualFilterOnUserOperand = async (columnValue: ActivityFilterOptionType,
       break
     }
     case 'belongs to team': {
-      let ids = await retrieveUserGroupMembers(ctx, data)
+      const ids = await retrieveUserGroupMembers(ctx, data)
       if (ids.includes(value)) {
         return true
       }
@@ -1099,7 +1106,6 @@ export const prepareActivityDataWithCustomField = async (
       const contactAllActivity = item?.CmContact?.Activity ?? []
       const leadNote = item?.CmLead?.CmLeadNote
 
-      
       console.log('id--------------', item.CmLead?.ID)
 
       leadAllActivity.sort((a, b) => {
@@ -1344,440 +1350,387 @@ export const manualFilterOnAndOperandColumns = (
       if (count === availableCustomColumns.length) {
         return item
       }
+      return undefined
     })
     .filter((item) => item)
 }
 
-export const manualFilterOnOrOperandColumns = async (activities: ActivityResponseType[], filters: ActivityFilterOptionType[], ctx: Context) => {
+export const manualFilterOnOrOperandColumns = async (
+  activities: ActivityResponseType[],
+  filters: ActivityFilterOptionType[],
+  ctx: Context
+) => {
   console.log('filters---------------', filters)
-  let data = await Promise.all(activities
-  .map(async (item) => {
-    let count = 0
-    for (const columnValue of filters) {
-      console.log('columnValue------------', columnValue)
-      switch (columnValue.filterColumn) {
-        case 'Add time': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.created_at
-            )
-          ) {
-            count += 1
+  const data = await Promise.all(
+    activities.map(async (item) => {
+      let count = 0
+      for (const columnValue of filters) {
+        console.log('columnValue------------', columnValue)
+        switch (columnValue.filterColumn) {
+          case 'Add time': {
+            if (manualFilterOnDateOperand(columnValue, item?.created_at)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Assigned to user': {
-          if (
-            manualFilterOnUserOperand(
-              columnValue,
-              item?.assigned_to,
-              ctx
-            )
-          ) {
-            count += 1
+          case 'Assigned to user': {
+            if (
+              manualFilterOnUserOperand(columnValue, item?.assigned_to, ctx)
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Client name': {
-          if (
-            manualFilterOnBasicOperand(
-              columnValue,
-              item?.contact_id
-            )
-          ) {
-            count += 1
+          case 'Client name': {
+            if (manualFilterOnBasicOperand(columnValue, item?.contact_id)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Creator': {
-          if (
-            manualFilterOnUserOperand(
-              columnValue,
-              item?.User?.id,
-              ctx
-            )
-          ) {
-            count += 1
+          case 'Creator': {
+            if (manualFilterOnUserOperand(columnValue, item?.User?.id, ctx)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Done': {
-          if (
-            manualFilterOnDoneColumn(
-              columnValue,
-              item?.status
-            )
-          ) {
-            count += 1
+          case 'Done': {
+            if (manualFilterOnDoneColumn(columnValue, item?.status)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Type': {
-          if (
-            manualFilterOnBasicOperand(
-              columnValue,
-              item?.type,
-            )
-          ) {
-            count += 1
+          case 'Type': {
+            if (manualFilterOnBasicOperand(columnValue, item?.type)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Subject': {
-          if (
-            manualFilterOnStringOperand(
-              columnValue,
-              item?.subject,
-            )
-          ) {
-            count += 1
+          case 'Subject': {
+            if (manualFilterOnStringOperand(columnValue, item?.subject)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Due date': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.due_start_date,
-            )
-          ) {
-            count += 1
+          case 'Due date': {
+            if (manualFilterOnDateOperand(columnValue, item?.due_start_date)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Free/busy': {
-          if (
-            manualFilterOnBasicOperand(
-              columnValue,
-              item?.available ? '1' : '0',
-            )
-          ) {
-            count += 1
+          case 'Free/busy': {
+            if (
+              manualFilterOnBasicOperand(
+                columnValue,
+                item?.available ? '1' : '0'
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Status': {
-          if (
-            manualFilterOnBasicOperand(
-              columnValue,
-              item?.status,
-            )
-          ) {
-            count += 1
+          case 'Status': {
+            if (manualFilterOnBasicOperand(columnValue, item?.status)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead name': {
-          if (
-            manualFilterOnBasicOperand(
-              columnValue,
-              item?.CmLead?.ID
-            )
-          ) {
-            count += 1
+          case 'Lead name': {
+            if (manualFilterOnBasicOperand(columnValue, item?.CmLead?.ID)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead email': {
-          if (
-            manualFilterOnStringOperand(
-              columnValue,
-              item?.CmLead?.Email
-            )
-          ) {
-            count += 1
+          case 'Lead email': {
+            if (manualFilterOnStringOperand(columnValue, item?.CmLead?.Email)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead phone': {
-          if (
-            manualFilterOnStringOperand(
-              columnValue,
-              item?.CmLead?.Phone
-            )
-          ) {
-            count += 1
+          case 'Lead phone': {
+            if (manualFilterOnStringOperand(columnValue, item?.CmLead?.Phone)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead created date': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.CreatedDate
-            )
-          ) {
-            count += 1
+          case 'Lead created date': {
+            if (
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.CreatedDate)
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Won time': {
-          if (
-            item?.CmLead?.EnumStatus === 'Converted' &&
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.CreatedDate
-            )
-          ) {
-            count += 1
+          case 'Won time': {
+            if (
+              item?.CmLead?.EnumStatus === 'Converted' &&
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.CreatedDate)
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead owner': {
-          if (
-            await manualFilterOnUserOperand(
-              columnValue,
-              item?.CmLead?.OwnerID,
-              ctx
-            )
-          ) {
-            count += 1
+          case 'Lead owner': {
+            if (
+              await manualFilterOnUserOperand(
+                columnValue,
+                item?.CmLead?.OwnerID,
+                ctx
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead closed on': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.ConvertDate
-            )
-          ) {
-            count += 1
+          case 'Lead closed on': {
+            if (
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.ConvertDate)
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead done activities': {
-          if (
-            manualFilterOnNumberOperand(
-              columnValue,
-              item?.CmLead?.leadDoneActivities
-            )
-          ) {
-            count += 1
+          case 'Lead done activities': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadDoneActivities
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'First activity time': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.firstActivityTime
-            )
-          ) {
-            count += 1
+          case 'First activity time': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.firstActivityTime
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead last activity date': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.leadLastActivityDate
-            )
-          ) {
-            count += 1
+          case 'Lead last activity date': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLastActivityDate
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead last activity (days)': {
-          if (
-            manualFilterOnNumberOperand(
-              columnValue,
-              item?.CmLead?.leadDoneActivities
-            )
-          ) {
-            count += 1
+          case 'Lead last activity (days)': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadDoneActivities
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead lost reason': {
-          if (
-            manualFilterOnStringOperand(
-              columnValue,
-              item?.CmLead?.leadLostReason
-            )
-          ) {
-            count += 1
+          case 'Lead lost reason': {
+            if (
+              manualFilterOnStringOperand(
+                columnValue,
+                item?.CmLead?.leadLostReason
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead total activities': {
-          if (
-            manualFilterOnNumberOperand(
-              columnValue,
-              item?.CmLead?.leadTotalActivities
-            )
-          ) {
-            count += 1
+          case 'Lead total activities': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadTotalActivities
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead lost time': {
-          if (
-            manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
-          ) {
-            count += 1
+          case 'Lead lost time': {
+            if (
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead source': {
-          if (
-            manualFilterOnBasicOperand(columnValue, item?.CmLead?.MarketingSource?.id)
-          ) {
-            count += 1
+          case 'Lead source': {
+            if (
+              manualFilterOnBasicOperand(
+                columnValue,
+                item?.CmLead?.MarketingSource?.id
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Won by': {
-          if (
-            item?.CmLead?.EnumStatus === 'Converted' && await manualFilterOnUserOperand(columnValue, item?.CmLead?.User?.id, ctx)
-          ) {
-            count += 1
+          case 'Won by': {
+            if (
+              item?.CmLead?.EnumStatus === 'Converted' &&
+              (await manualFilterOnUserOperand(
+                columnValue,
+                item?.CmLead?.User?.id,
+                ctx
+              ))
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead stage': {
-          if (
-            manualFilterOnBasicOperand(columnValue, item?.CmLead?.LeadStatusData?.id)
-          ) {
-            count += 1
+          case 'Lead stage': {
+            if (
+              manualFilterOnBasicOperand(
+                columnValue,
+                item?.CmLead?.LeadStatusData?.id
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead descriptions': {
-          if (
-            manualFilterOnStringOperand(columnValue, item?.CmLead?.Description)
-          ) {
-            count += 1
+          case 'Lead descriptions': {
+            if (
+              manualFilterOnStringOperand(
+                columnValue,
+                item?.CmLead?.Description
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead status': {
-          if (
-            manualFilterOnBasicOperand(columnValue, item?.CmLead?.EnumStatus, 'string')
-          ) {
-            count += 1
+          case 'Lead status': {
+            if (
+              manualFilterOnBasicOperand(
+                columnValue,
+                item?.CmLead?.EnumStatus,
+                'string'
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Activities to do': {
-          if (
-            manualFilterOnNumberOperand(
-              columnValue,
-              item?.CmLead?.leadActivitesToDo
-            )
-          ) {
-            count += 1
+          case 'Activities to do': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadActivitesToDo
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Lead creator': {
-          if (
-            await manualFilterOnUserOperand(
-              columnValue,
-              item?.CmLead?.CmContact?.OwnerID,
-              ctx
-            )
-          ) {
-            count += 1
+          case 'Lead creator': {
+            if (
+              await manualFilterOnUserOperand(
+                columnValue,
+                item?.CmLead?.CmContact?.OwnerID,
+                ctx
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Date of entering stage': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.ConvertDate
-            )
-          ) {
-            count += 1
+          case 'Date of entering stage': {
+            if (
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.ConvertDate)
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Email messages count': {
-          if (
-            manualFilterOnNumberOperand(
-              columnValue,
-              item?.CmLead?.emailMessagesCount
-            )
-          ) {
-            count += 1
+          case 'Email messages count': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.emailMessagesCount
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Last email received': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.leadLastEmailReceived
-            )
-          ) {
-            count += 1
+          case 'Last email received': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLastEmailReceived
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Last email sent': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.leadLastEmailSend
-            )
-          ) {
-            count += 1
+          case 'Last email sent': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLastEmailSend
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Next activity date': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              item?.CmLead?.leadNextActivityDate
-            )
-          ) {
-            count += 1
+          case 'Next activity date': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadNextActivityDate
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Pipeline': {
-          if (
-            manualFilterOnBasicOperand(
-              columnValue,
-              item?.CmLead?.LeadStatusData?.pipeline_id
-            )
-          ) {
-            count += 1
+          case 'Pipeline': {
+            if (
+              manualFilterOnBasicOperand(
+                columnValue,
+                item?.CmLead?.LeadStatusData?.pipeline_id
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Title': {
-          if (
-            manualFilterOnBasicOperand(
-              columnValue,
-              item?.CmLead?.ID
-            )
-          ) {
-            count += 1
+          case 'Title': {
+            if (manualFilterOnBasicOperand(columnValue, item?.CmLead?.ID)) {
+              count += 1
+            }
+            break
           }
-          break
-        }
-        case 'Update time': {
-          if (
-            manualFilterOnDateOperand(
-              columnValue,
-              new Date(item?.CmLead?.LastUpdated)
-            )
-          ) {
-            count += 1
+          case 'Update time': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                new Date(item?.CmLead?.LastUpdated)
+              )
+            ) {
+              count += 1
+            }
+            break
           }
-          break
         }
       }
-    }
-    console.log('----------count----------', count)
-    if (count > 0) {
-      return item
-    }
-  }))
-  return data?.filter(item => item)
+      console.log('----------count----------', count)
+      if (count > 0) {
+        return item
+      }
+    })
+  )
+  return data?.filter((item) => item)
 }

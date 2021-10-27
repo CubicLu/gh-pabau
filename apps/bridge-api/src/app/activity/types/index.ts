@@ -7,7 +7,7 @@ import {
   LeadStatus,
   CmLeadNote,
   CommunicationRecipient,
-  MarketingSource
+  MarketingSource,
 } from '@prisma/client'
 
 interface WhereInputType {
