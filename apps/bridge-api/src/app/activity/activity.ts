@@ -4,7 +4,13 @@ import utc from 'dayjs/plugin/utc'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear'
 import { getColumnData } from './filterColumn'
 import { cm_leads_EnumStatus } from '@prisma/client'
-import { LeadNoteType, LeadResponse, ActivityFilterOptionType } from './types'
+import {
+  LeadNoteType,
+  LeadResponse,
+  ActivityFilterOptionType,
+  ActivityResponseType,
+  ActivityData,
+} from './types'
 dayjs.extend(utc)
 dayjs.extend(quarterOfYear)
 
@@ -54,7 +60,17 @@ export const retrieveActivityGraphData = async (
   }
 }
 
-export const retrieveActivityData = async (where, ctx, skip, take, andQuery, orQuery, prepareSearchQuery, prepareOrderQuery, activitySelect) => {
+export const retrieveActivityData = async (
+  where,
+  ctx,
+  skip,
+  take,
+  andQuery,
+  orQuery,
+  prepareSearchQuery,
+  prepareOrderQuery,
+  activitySelect
+) => {
   return ctx.prisma.activity.findMany({
     where: {
       due_start_date: {
@@ -96,6 +112,13 @@ export const retrieveActivityData = async (where, ctx, skip, take, andQuery, orQ
       CmLead: {
         select: {
           ...activitySelect.select?.CmLead?.select,
+          ID: true,
+          LastUpdated: true,
+          CmContact: {
+            select: {
+              OwnerID: true
+            }
+          },
           CmLeadNote: {
             select: {
               Note: true,
@@ -382,7 +405,7 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
   return sortMapper[field]
 }
 
-export const calculateLeadLostObject = (
+const calculateLeadLostObject = (
   leadStatus: string,
   leadNote: LeadNoteType[]
 ): LeadResponse => {
@@ -586,33 +609,7 @@ const prepareUserQuery = async (
     },
   }
   if (operand === 'belongs to team') {
-    const group = await ctx.prisma.userGroup.findMany({
-      where: {
-        UserGroupMember: {
-          some: {
-            user_id: { equals: value },
-          },
-        },
-      },
-      select: {
-        UserGroupMember: {
-          select: {
-            user_id: true,
-            group_id: true,
-          },
-        },
-      },
-    })
-    const ids = []
-    if (group.length > 0) {
-      for (const item of group) {
-        for (const member of item?.UserGroupMember) {
-          ids.push(member.user_id)
-        }
-      }
-    } else {
-      ids.push(value)
-    }
+    const ids = await retrieveUserGroupMembers(ctx, value)
     return {
       in: ids,
     }
@@ -625,7 +622,7 @@ const prepareBasicQuery = (value: string, operand: string, type: string) => {
   if (type === 'number') {
     queryValue = Number.parseInt(value)
   } else if (type === 'boolean') {
-    queryValue = Boolean(value)
+    queryValue = value === '1' ? true : false
   }
   const operandMapper = {
     is: {
@@ -734,7 +731,7 @@ export const prepareOperandQuery = async (
     case 'Done':
       operandQuery = prepareDoneQuery(menu, operand)
       break
-    default: 
+    default:
       undefined
       break
   }
@@ -742,7 +739,6 @@ export const prepareOperandQuery = async (
 }
 
 const bindQueryIntoModelVariable = (column: string, data) => {
-  console.log('column----------', column, data)
   return getColumnData(column, data)?.filter
 }
 
@@ -769,157 +765,1019 @@ export const prepareFilterQuery = async (
       bindQueryIntoModelVariable(item.filterColumn, prepareInnerObject)
     )
   }
-  console.log('queryObject---------------', queryObject)
   return queryObject
 }
 
-export const manualFilterOnBasicOperand = (columnValue, key, item) => {
-  switch(columnValue.operand) {
+const manualFilterOnBasicOperand = (
+  columnValue: ActivityFilterOptionType,
+  value: number | string,
+  type: string = 'number'
+) => {
+  let inputValue = type === 'number' ? Number(columnValue.menuOption) : columnValue.menuOption
+  switch (columnValue.operand) {
     case 'is': {
-      if (item[key] === Number(columnValue.menuOption)) {
-        return item
+      if (value === inputValue) {
+        return true
       }
       break
     }
     case 'is not': {
-      if (item[key] !== Number(columnValue.menuOption)) {
-        return item
+      if (value !== inputValue) {
+        return true
       }
       break
     }
     case 'is empty': {
-      if (!item[key]) {
-        return item
+      if (!value) {
+        return true
       }
       break
     }
     case 'is not empty': {
-      if (item[key]) {
-        return item
+      if (value) {
+        return true
       }
       break
     }
   }
 }
 
-export const manualFilterOnDateOperand = (columnValue, key, item) => {
-  let dateMapper = retrieveDateMapper()
-                  let date = dateMapper[columnValue.menuOption]
-                  console.log('date----------', date)
-                  switch(columnValue.operand) {
-                    case 'is': {
-                      if (item[key] >= date[0] && item[key] <= date[1]) {
-                        return item
-                      }
-                      break
-                    }
-                    case 'is not': {
-                      if (!(item[key] >= date[0] && item[key] <= date[1])) {
-                        return item
-                      }
-                      break
-                    }
-                    case 'is later than': {
-                      if (item[key] > date[1]) {
-                        return item
-                      }
-                      break
-                    }
-                    case 'is earlier than': {
-                      if (item[key] < date[0]) {
-                        return item
-                      }
-                      break
-                    }
-                    case 'is exactly or later than': {
-                      if (item[key] >= date[0]) {
-                        return item
-                      }
-                      break
-                    }
-                    case 'is exactly or earlier than': {
-                      if (item[key] <= date[1]) {
-                        return item
-                      }
-                      break
-                    }
-                    case 'is empty': {
-                      if (!item[key]) {
-                        return item
-                      }
-                      break
-                    }
-                    case 'is not empty': {
-                      if (item.firstActivityTime) {
-                        return item
-                      }
-                      break
-                    }
-                  }
-}
-
-export const manualFilterOnStringOperand = (columnValue, key, item) => {
-  let value = columnValue?.menuOption?.toLowerCase()
-  switch(columnValue.operand) {
+const manualFilterOnDoneColumn = (
+  columnValue: ActivityFilterOptionType,
+  value: string
+) => {
+  let inputValue = columnValue.menuOption === 'Done' ? ['Done'] : ['Pending', 'Working on', 'Reopened', 'Awaiting']
+  switch (columnValue.operand) {
     case 'is': {
-      if (item[key] === value) {
-        return item
+      if (inputValue.includes(value)) {
+        return true
       }
       break
     }
     case 'is not': {
-      if (item[key] !== value) {
-        return item
+      if (!inputValue.includes(value)) {
+        return true
       }
       break
     }
     case 'is empty': {
-      if (!item[key]) {
-        return item
+      if (!value) {
+        return true
       }
       break
     }
     case 'is not empty': {
-      if (item[key]) {
-        return item
+      if (value) {
+        return true
+      }
+      break
+    }
+  }
+}
+
+const manualFilterOnDateOperand = (
+  columnValue: ActivityFilterOptionType,
+  value: Date
+) => {
+  const dateMapper = retrieveDateMapper()
+  const date = dateMapper[columnValue.menuOption]
+  console.log('date----------', date)
+  switch (columnValue.operand) {
+    case 'is': {
+      if (value >= date[0] && value <= date[1]) {
+        return true
+      }
+      break
+    }
+    case 'is not': {
+      if (!(value >= date[0] && value <= date[1])) {
+        return true
+      }
+      break
+    }
+    case 'is later than': {
+      if (value > date[1]) {
+        return true
+      }
+      break
+    }
+    case 'is earlier than': {
+      if (value < date[0]) {
+        return true
+      }
+      break
+    }
+    case 'is exactly or later than': {
+      if (value >= date[0]) {
+        return true
+      }
+      break
+    }
+    case 'is exactly or earlier than': {
+      if (value <= date[1]) {
+        return true
+      }
+      break
+    }
+    case 'is empty': {
+      if (!value) {
+        return true
+      }
+      break
+    }
+    case 'is not empty': {
+      if (value) {
+        return true
+      }
+      break
+    }
+  }
+}
+
+const manualFilterOnStringOperand = (
+  columnValue: ActivityFilterOptionType,
+  value: string
+) => {
+  const data = columnValue?.menuOption?.toLowerCase()
+  switch (columnValue.operand) {
+    case 'is': {
+      if (value === data) {
+        return true
+      }
+      break
+    }
+    case 'is not': {
+      if (value !== data) {
+        return true
+      }
+      break
+    }
+    case 'is empty': {
+      if (!value) {
+        return true
+      }
+      break
+    }
+    case 'is not empty': {
+      if (value) {
+        return true
       }
       break
     }
     case 'contains': {
-      if (item[key].includes(value)) {
-        return item
+      if (value.includes(data)) {
+        return true
       }
       break
     }
     case 'does not contain': {
-      if (!item[key].includes(value)) {
-        return item
+      if (!value.includes(data)) {
+        return true
       }
       break
     }
     case 'start with': {
-      if (item[key].startsWith(value)) {
-        return item
+      if (value.startsWith(data)) {
+        return true
       }
       break
     }
     case 'does not start with': {
-      if (!item[key].startsWith(value)) {
-        return item
+      if (!value.startsWith(data)) {
+        return true
       }
       break
     }
     case 'ends with': {
-      if (item[key].endsWith(value)) {
-        return item
+      if (value.endsWith(data)) {
+        return true
       }
       break
     }
     case 'does not end with': {
-      if (!item[key].endsWith(value)) {
-        return item
+      if (!value.endsWith(data)) {
+        return true
       }
       break
     }
   }
+}
+
+const manualFilterOnNumberOperand = (
+  columnValue: ActivityFilterOptionType,
+  value: number
+) => {
+  switch (columnValue.operand) {
+    case 'is': {
+      if (value === Number(columnValue.menuOption)) {
+        return true
+      }
+      break
+    }
+    case 'is not': {
+      if (value !== Number(columnValue.menuOption)) {
+        return true
+      }
+      break
+    }
+    case 'is empty': {
+      if (!value) {
+        return true
+      }
+      break
+    }
+    case 'is not empty': {
+      if (value) {
+        return true
+      }
+      break
+    }
+    case 'is more than': {
+      if (value > Number(columnValue.menuOption)) {
+        return true
+      }
+      break
+    }
+    case 'is less than': {
+      if (value < Number(columnValue.menuOption)) {
+        return true
+      }
+      break
+    }
+    case 'is more or equal to': {
+      if (value >= Number(columnValue.menuOption)) {
+        return true
+      }
+      break
+    }
+    case 'is less or equal to': {
+      if (value <= Number(columnValue.menuOption)) {
+        return true
+      }
+      break
+    }
+  }
+}
+
+const retrieveUserGroupMembers = async (ctx: Context, value: number) => {
+  const group = await ctx.prisma.userGroup.findMany({
+    where: {
+      UserGroupMember: {
+        some: {
+          user_id: { equals: value },
+        },
+      },
+    },
+    select: {
+      UserGroupMember: {
+        select: {
+          user_id: true,
+          group_id: true,
+        },
+      },
+    },
+  })
+  const ids = []
+  if (group.length > 0) {
+    for (const item of group) {
+      for (const member of item?.UserGroupMember) {
+        ids.push(member.user_id)
+      }
+    }
+  } else {
+    ids.push(value)
+  }
+  return ids
+}
+
+const manualFilterOnUserOperand = async (columnValue: ActivityFilterOptionType,
+  value: number,
+  ctx: Context) => {
+  const data = Number(columnValue.menuOption)
+  switch (columnValue.operand) {
+    case 'is': {
+      if (value === data) {
+        return true
+      }
+      break
+    }
+    case 'is not': {
+      if (value !== data) {
+        return true
+      }
+      break
+    }
+    case 'is empty': {
+      if (!value) {
+        return true
+      }
+      break
+    }
+    case 'is not empty': {
+      if (value) {
+        return true
+      }
+      break
+    }
+    case 'belongs to team': {
+      let ids = await retrieveUserGroupMembers(ctx, data)
+      if (ids.includes(value)) {
+        return true
+      }
+      break
+    }
+  }
+}
+
+export const prepareActivityDataWithCustomField = async (
+  ctx: Context,
+  activityData: ActivityData[]
+): Promise<ActivityResponseType[]> => {
+  return await Promise.all(
+    activityData.map(async (item: ActivityData) => {
+      const leadAllActivity = item?.CmLead?.Activity ?? []
+      const contactAllActivity = item?.CmContact?.Activity ?? []
+      const leadNote = item?.CmLead?.CmLeadNote
+
+      
+      console.log('id--------------', item.CmLead?.ID)
+
+      leadAllActivity.sort((a, b) => {
+        return (
+          new Date(a.finished_at).getTime() - new Date(b.finished_at).getTime()
+        )
+      })
+
+      leadNote.sort((a, b) => {
+        return (
+          new Date(b.CreatedDate).getTime() - new Date(a.CreatedDate).getTime()
+        )
+      })
+
+      const leadLost = calculateLeadLostObject(
+        item.CmLead?.EnumStatus,
+        leadNote
+      )
+      const lastEmailSend = await ctx.prisma.communication.findFirst({
+        where: {
+          from_address: { equals: item.CmLead?.Email },
+          company_id: { equals: ctx.authenticated.company },
+        },
+        orderBy: {
+          date: 'desc',
+        },
+      })
+      const leadLastEmailReceived = await ctx.prisma.communicationRecipient.findMany(
+        {
+          where: {
+            recipient_id: { equals: item.CmLead?.ID },
+            recipient_type: { equals: 'LEAD' },
+          },
+          orderBy: {
+            Communication: {
+              date: 'desc',
+            },
+          },
+          select: {
+            Communication: {
+              select: {
+                date: true,
+              },
+            },
+          },
+        }
+      )
+      const leadLastActivityDate = [...leadAllActivity]
+        .reverse()
+        .find((item) => item?.status === 'Done')?.finished_at
+      return {
+        ...item,
+        duration: dayjs(item.due_end_date).diff(
+          dayjs(item.due_start_date),
+          'minutes'
+        ),
+        CmLead: {
+          ...item.CmLead,
+          leadDoneActivities: leadAllActivity.filter(
+            (item) => item?.status === 'Done'
+          )?.length,
+          firstActivityTime: leadAllActivity.find(
+            (item) => item?.status === 'Done'
+          )?.finished_at,
+          leadLastActivityDate: leadLastActivityDate,
+          leadLastActivityDays:
+            leadLastActivityDate && dayjs().diff(leadLastActivityDate, 'days'),
+          leadTotalActivities: leadAllActivity.length,
+          leadActivitesToDo: leadAllActivity.filter(
+            (item) => item?.status !== 'Done'
+          )?.length,
+          leadNextActivityDate: leadAllActivity.find(
+            (item) => item?.status !== 'Done'
+          ).due_start_date,
+          leadLostTime: leadLost?.lostTime,
+          leadLastEmailReceived:
+            leadLastEmailReceived?.[0]?.Communication?.date,
+          emailMessagesCount: leadLastEmailReceived.length,
+          leadLastEmailSend: lastEmailSend?.date,
+          wonBy:
+            item.CmLead?.EnumStatus === 'Converted'
+              ? item.CmLead?.User?.full_name
+              : '',
+          wonTime:
+            item.CmLead?.EnumStatus === 'Converted'
+              ? item.CmLead?.CreatedDate
+              : null,
+          leadLostReason: leadLost?.lostReason,
+          leadStage: item.CmLead?.LeadStatusData?.status_name,
+        },
+        CmContact: {
+          ...item.CmContact,
+          clientTotalActivities: contactAllActivity.length,
+        },
+      }
+    })
+  )
+}
+
+export const manualFilterOnAndOperandColumns = (
+  activities: ActivityResponseType[],
+  availableCustomColumns: ActivityFilterOptionType[]
+) => {
+  return activities
+    .map((item) => {
+      let count = 0
+      for (const columnValue of availableCustomColumns) {
+        console.log('columnValue------------', columnValue)
+        switch (columnValue.filterColumn) {
+          case 'Lead done activities': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadDoneActivities
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'First activity time': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.firstActivityTime
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Lead last activity date': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLastActivityDate
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Lead last activity (days)': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadDoneActivities
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Lead lost reason': {
+            if (
+              manualFilterOnStringOperand(
+                columnValue,
+                item?.CmLead?.leadLostReason
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Lead total activities': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadTotalActivities
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Lead lost time': {
+            if (
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Activities to do': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.leadActivitesToDo
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Email messages count': {
+            if (
+              manualFilterOnNumberOperand(
+                columnValue,
+                item?.CmLead?.emailMessagesCount
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Last email received': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLastEmailReceived
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Last email sent': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLastEmailSend
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Next activity date': {
+            if (
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadNextActivityDate
+              )
+            ) {
+              count += 1
+            }
+            break
+          }
+        }
+      }
+      console.log('----------count----------', count)
+      if (count === availableCustomColumns.length) {
+        return item
+      }
+    })
+    .filter((item) => item)
+}
+
+export const manualFilterOnOrOperandColumns = async (activities: ActivityResponseType[], filters: ActivityFilterOptionType[], ctx: Context) => {
+  console.log('filters---------------', filters)
+  let data = await Promise.all(activities
+  .map(async (item) => {
+    let count = 0
+    for (const columnValue of filters) {
+      console.log('columnValue------------', columnValue)
+      switch (columnValue.filterColumn) {
+        case 'Add time': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.created_at
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Assigned to user': {
+          if (
+            manualFilterOnUserOperand(
+              columnValue,
+              item?.assigned_to,
+              ctx
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Client name': {
+          if (
+            manualFilterOnBasicOperand(
+              columnValue,
+              item?.contact_id
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Creator': {
+          if (
+            manualFilterOnUserOperand(
+              columnValue,
+              item?.User?.id,
+              ctx
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Done': {
+          if (
+            manualFilterOnDoneColumn(
+              columnValue,
+              item?.status
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Type': {
+          if (
+            manualFilterOnBasicOperand(
+              columnValue,
+              item?.type,
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Subject': {
+          if (
+            manualFilterOnStringOperand(
+              columnValue,
+              item?.subject,
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Due date': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.due_start_date,
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Free/busy': {
+          if (
+            manualFilterOnBasicOperand(
+              columnValue,
+              item?.available ? '1' : '0',
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Status': {
+          if (
+            manualFilterOnBasicOperand(
+              columnValue,
+              item?.status,
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead name': {
+          if (
+            manualFilterOnBasicOperand(
+              columnValue,
+              item?.CmLead?.ID
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead email': {
+          if (
+            manualFilterOnStringOperand(
+              columnValue,
+              item?.CmLead?.Email
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead phone': {
+          if (
+            manualFilterOnStringOperand(
+              columnValue,
+              item?.CmLead?.Phone
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead created date': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.CreatedDate
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Won time': {
+          if (
+            item?.CmLead?.EnumStatus === 'Converted' &&
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.CreatedDate
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead owner': {
+          if (
+            await manualFilterOnUserOperand(
+              columnValue,
+              item?.CmLead?.OwnerID,
+              ctx
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead closed on': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.ConvertDate
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead done activities': {
+          if (
+            manualFilterOnNumberOperand(
+              columnValue,
+              item?.CmLead?.leadDoneActivities
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'First activity time': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.firstActivityTime
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead last activity date': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.leadLastActivityDate
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead last activity (days)': {
+          if (
+            manualFilterOnNumberOperand(
+              columnValue,
+              item?.CmLead?.leadDoneActivities
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead lost reason': {
+          if (
+            manualFilterOnStringOperand(
+              columnValue,
+              item?.CmLead?.leadLostReason
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead total activities': {
+          if (
+            manualFilterOnNumberOperand(
+              columnValue,
+              item?.CmLead?.leadTotalActivities
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead lost time': {
+          if (
+            manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead source': {
+          if (
+            manualFilterOnBasicOperand(columnValue, item?.CmLead?.MarketingSource?.id)
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Won by': {
+          if (
+            item?.CmLead?.EnumStatus === 'Converted' && await manualFilterOnUserOperand(columnValue, item?.CmLead?.User?.id, ctx)
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead stage': {
+          if (
+            manualFilterOnBasicOperand(columnValue, item?.CmLead?.LeadStatusData?.id)
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead descriptions': {
+          if (
+            manualFilterOnStringOperand(columnValue, item?.CmLead?.Description)
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead status': {
+          if (
+            manualFilterOnBasicOperand(columnValue, item?.CmLead?.EnumStatus, 'string')
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Activities to do': {
+          if (
+            manualFilterOnNumberOperand(
+              columnValue,
+              item?.CmLead?.leadActivitesToDo
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Lead creator': {
+          if (
+            await manualFilterOnUserOperand(
+              columnValue,
+              item?.CmLead?.CmContact?.OwnerID,
+              ctx
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Date of entering stage': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.ConvertDate
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Email messages count': {
+          if (
+            manualFilterOnNumberOperand(
+              columnValue,
+              item?.CmLead?.emailMessagesCount
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Last email received': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.leadLastEmailReceived
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Last email sent': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.leadLastEmailSend
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Next activity date': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              item?.CmLead?.leadNextActivityDate
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Pipeline': {
+          if (
+            manualFilterOnBasicOperand(
+              columnValue,
+              item?.CmLead?.LeadStatusData?.pipeline_id
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Title': {
+          if (
+            manualFilterOnBasicOperand(
+              columnValue,
+              item?.CmLead?.ID
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+        case 'Update time': {
+          if (
+            manualFilterOnDateOperand(
+              columnValue,
+              new Date(item?.CmLead?.LastUpdated)
+            )
+          ) {
+            count += 1
+          }
+          break
+        }
+      }
+    }
+    console.log('----------count----------', count)
+    if (count > 0) {
+      return item
+    }
+  }))
+  return data?.filter(item => item)
 }

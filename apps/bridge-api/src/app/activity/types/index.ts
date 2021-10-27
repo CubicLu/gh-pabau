@@ -6,7 +6,8 @@ import {
   CmLead,
   LeadStatus,
   CmLeadNote,
-  CommunicationRecipient
+  CommunicationRecipient,
+  MarketingSource
 } from '@prisma/client'
 
 interface WhereInputType {
@@ -36,6 +37,8 @@ export type ActivityData = Activity & {
     LeadStatusData: LeadStatus
     CmLeadNote: CmLeadNote[]
     CommunicationRecipient: CommunicationRecipient[]
+    CmContact: CmContact
+    MarketingSource: MarketingSource
   }
 }
 
@@ -54,4 +57,38 @@ export interface ActivityFilterOptionType {
   filterColumn?: string
   operand?: string
   menuOption?: string
+}
+
+export type ActivityResponseType = Activity & {
+  ActivityType: ActivityType
+  User: User
+  CmContact: CmContact & {
+    Activity: Activity[]
+    clientTotalActivities?: number
+  }
+  duration: number
+  CmLead: CmLead & {
+    User: User
+    Activity: Activity[]
+    LeadStatusData: LeadStatus
+    CmLeadNote: CmLeadNote[]
+    CmContact: CmContact
+    MarketingSource: MarketingSource
+    CommunicationRecipient: CommunicationRecipient[]
+    leadDoneActivities: number
+    firstActivityTime?: Date
+    leadLastActivityDate?: Date
+    leadLastActivityDays?: number
+    leadTotalActivities?: number
+    leadActivitesToDo?: number
+    leadNextActivityDate: Date
+    leadLostTime?: Date
+    leadLastEmailReceived?: Date
+    emailMessagesCount?: number
+    leadLastEmailSend?: Date
+    wonBy?: string
+    wonTime?: Date
+    leadLostReason?: string
+    leadStage?: string
+  }
 }

@@ -42,7 +42,7 @@
     }
   }
   .custom-activity {
-    justify-content: space-between;
+    justify-content: flex-start;
     display: flex;
     align-items: center;
     margin-bottom: 16px;
@@ -66,10 +66,15 @@
         }
       }
     }
+    .activity-dropdown {
+      width: 150px !important;
+      min-width: 150px !important;
+      margin-right: 16px;
+    }
     :global {
       .ant-select {
-        width: 160px;
-        min-width: 160px;
+        width: 200px;
+        min-width: 200px;
         margin-right: 16px;
         &:last-child {
           margin-right: 0;
@@ -107,7 +112,7 @@
       }
     }
     .filter-menu-wrapper {
-      min-width: 160px;
+      min-width: 210px;
       margin-right: 20px;
     }
     .client-wrapper {
@@ -246,7 +251,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-    padding: 0 20px 40px;
+    padding: 0 40px 40px;
   .btn-danger {
     background: #ff5b64;
     border-radius: 4px;

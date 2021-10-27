@@ -152,7 +152,9 @@ export const getData = (t) => {
     },
     {
       key: 'Last email received',
-      label: t('create.filter.modal.lead.column.lead.last.email.received.stage'),
+      label: t(
+        'create.filter.modal.lead.column.lead.last.email.received.stage'
+      ),
     },
     {
       key: 'Last email sent',
@@ -330,7 +332,7 @@ export const getData = (t) => {
     'Next activity date': dateOperands,
     'Last email received': dateOperands,
     'Last email sent': dateOperands,
-    'Email messages count': numberOperands
+    'Email messages count': numberOperands,
   }
 
   const dateMenu = [

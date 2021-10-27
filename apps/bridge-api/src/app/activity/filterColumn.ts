@@ -113,28 +113,28 @@ export const getColumnData = (column: string, data = {}) => {
       type: 'string',
       filter: {
         CmLead: {
-          CreatedDate: data
-        }
-      }
+          CreatedDate: data,
+        },
+      },
     },
     'Won time': {
       key: 'Date',
       type: 'string',
       filter: {
         CmLead: {
-          EnumStatus: { equals: "Converted" },
-          ConvertDate: data
-        }
-      }
+          EnumStatus: { equals: 'Converted' },
+          ConvertDate: data,
+        },
+      },
     },
     'Lead closed on': {
       key: 'Date',
       type: 'string',
       filter: {
         CmLead: {
-          ConvertDate: data
-        }
-      }
+          ConvertDate: data,
+        },
+      },
     },
     'Lead source': {
       key: 'Basic',
@@ -142,18 +142,18 @@ export const getColumnData = (column: string, data = {}) => {
       filter: {
         CmLead: {
           MarketingSource: {
-            id: data
-          }
-        }
-      }
+            id: data,
+          },
+        },
+      },
     },
     'Won by': {
       key: 'User',
       type: 'string',
       filter: {
         CmLead: {
-          EnumStatus: {equals: "Converted"},
-          User: { id: data }
+          EnumStatus: { equals: 'Converted' },
+          User: { id: data },
         },
       },
     },
@@ -163,10 +163,10 @@ export const getColumnData = (column: string, data = {}) => {
       filter: {
         CmLead: {
           LeadStatusData: {
-            id: data
-          }
-        }
-      }
+            id: data,
+          },
+        },
+      },
     },
     'Lead descriptions': {
       key: 'Name',
@@ -182,9 +182,9 @@ export const getColumnData = (column: string, data = {}) => {
       type: 'string',
       filter: {
         CmLead: {
-          EnumStatus: data
-        }
-      }
+          EnumStatus: data,
+        },
+      },
     },
     'Lead creator': {
       key: 'User',
@@ -192,7 +192,7 @@ export const getColumnData = (column: string, data = {}) => {
       filter: {
         CmLead: {
           CmContact: {
-            OwnerID: data
+            OwnerID: data,
           },
         },
       },
@@ -202,22 +202,22 @@ export const getColumnData = (column: string, data = {}) => {
       type: 'string',
       filter: {
         CmLead: {
-          ConvertDate: data
-        }
-      }
+          ConvertDate: data,
+        },
+      },
     },
-    'Pipeline': {
+    Pipeline: {
       key: 'Basic',
       type: 'number',
       filter: {
         CmLead: {
           LeadStatusData: {
-            pipeline_id: data
-          }
-        }
-      }
+            pipeline_id: data,
+          },
+        },
+      },
     },
-    'Title': {
+    Title: {
       key: 'Basic',
       type: 'number',
       filter: {
@@ -231,12 +231,12 @@ export const getColumnData = (column: string, data = {}) => {
       type: 'string',
       filter: {
         CmLead: {
-          LastUpdated: data
-        }
-      }
-    }
+          LastUpdated: data,
+        },
+      },
+    },
   }
-  let a = filterMapper?.[column]
+  const a = filterMapper?.[column]
   console.log('a------------', JSON.stringify(a))
   return a
 }
