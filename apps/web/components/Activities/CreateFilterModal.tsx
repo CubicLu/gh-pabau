@@ -684,7 +684,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
           <Form layout="vertical">
             <div className={styles.filterContentMain}>
               <div className={styles.filterContentWrap}>
-                {console.log('0values-----------', values)}
                 <h5>{t('create.filter.modal.all.condition.title')}</h5>
                 <RenderFilterMenu
                   items={values.andFilterOption}

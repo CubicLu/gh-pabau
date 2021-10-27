@@ -846,7 +846,6 @@ const manualFilterOnDateOperand = (
 ) => {
   const dateMapper = retrieveDateMapper()
   const date = dateMapper[columnValue.menuOption]
-  console.log('date----------', date)
   switch (columnValue.operand) {
     case 'is': {
       if (value >= date[0] && value <= date[1]) {
@@ -1106,8 +1105,6 @@ export const prepareActivityDataWithCustomField = async (
       const contactAllActivity = item?.CmContact?.Activity ?? []
       const leadNote = item?.CmLead?.CmLeadNote
 
-      console.log('id--------------', item.CmLead?.ID)
-
       leadAllActivity.sort((a, b) => {
         return (
           new Date(a.finished_at).getTime() - new Date(b.finished_at).getTime()
@@ -1213,7 +1210,6 @@ export const manualFilterOnAndOperandColumns = (
     .map((item) => {
       let count = 0
       for (const columnValue of availableCustomColumns) {
-        console.log('columnValue------------', columnValue)
         switch (columnValue.filterColumn) {
           case 'Lead done activities': {
             if (
@@ -1346,7 +1342,6 @@ export const manualFilterOnAndOperandColumns = (
           }
         }
       }
-      console.log('----------count----------', count)
       if (count === availableCustomColumns.length) {
         return item
       }
@@ -1360,12 +1355,10 @@ export const manualFilterOnOrOperandColumns = async (
   filters: ActivityFilterOptionType[],
   ctx: Context
 ) => {
-  console.log('filters---------------', filters)
   const data = await Promise.all(
     activities.map(async (item) => {
       let count = 0
       for (const columnValue of filters) {
-        console.log('columnValue------------', columnValue)
         switch (columnValue.filterColumn) {
           case 'Add time': {
             if (manualFilterOnDateOperand(columnValue, item?.created_at)) {
@@ -1726,7 +1719,6 @@ export const manualFilterOnOrOperandColumns = async (
           }
         }
       }
-      console.log('----------count----------', count)
       if (count > 0) {
         return item
       }

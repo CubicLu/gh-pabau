@@ -236,7 +236,5 @@ export const getColumnData = (column: string, data = {}) => {
       },
     },
   }
-  const a = filterMapper?.[column]
-  console.log('a------------', JSON.stringify(a))
-  return a
+  return filterMapper?.[column]
 }

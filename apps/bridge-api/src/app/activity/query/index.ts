@@ -316,7 +316,6 @@ export const ActivityQuery = extendType({
               activityData: finalActivityResponse,
             }
           } else {
-            console.log('ELSE PART')
             const activityData = await retrieveActivityData(
               where,
               ctx,
@@ -347,7 +346,6 @@ export const ActivityQuery = extendType({
                 return undefined
               })
               .filter((item) => item)
-            // console.log('availableCustomColumns--------------', availableCustomColumns)
             const activityFilterData = []
             if (availableCustomColumns.length > 0) {
               const response = manualFilterOnAndOperandColumns(
