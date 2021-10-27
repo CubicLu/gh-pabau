@@ -9,7 +9,10 @@ describe('AddSuggestion', () => {
       <AddSuggestion
         label={'Example label'}
         defaultSelected={[1, 2]}
-        options={['Opt1', 'Opt2']}
+        options={[
+          { id: 1, name: 'Opt1' },
+          { id: 2, name: 'Opt2' },
+        ]}
         onChange={() => {
           return true
         }}
