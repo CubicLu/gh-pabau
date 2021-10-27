@@ -332,15 +332,13 @@ export const Products = ({
       },
     })
   }
-  const {
-    data: listAllProducts,
-    loading: loadingAllProducts,
-  } = useRetrieveAllInvProductsQuery({
-    variables: {
-      ...getQueryVariables,
-    },
-    fetchPolicy: 'network-only',
-  })
+  const { data: listAllProducts, loading: loadingAllProducts } =
+    useRetrieveAllInvProductsQuery({
+      variables: {
+        ...getQueryVariables,
+      },
+      fetchPolicy: 'network-only',
+    })
 
   const getCountQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -359,40 +357,6 @@ export const Products = ({
     },
     fetchPolicy: 'network-only',
   })
-  const [
-    createOneInvProductMutation,
-    { loading: addMutationLoading },
-  ] = useCreateOneInvProductMutation({
-    onCompleted(product) {
-      changeModalState(false)
-      Notification(
-        NotificationType.success,
-        t('products.list.products.notification.product.create.success', {
-          name: product?.createOneInvProduct?.name,
-        })
-      )
-    },
-    onError(error) {
-      const err = uniqueConstraintErrorDecoder(error)
-      Notification(
-        NotificationType.error,
-        err?.type === 'UniqueConstraintError'
-          ? t(
-              'products.list.products.notification.product.create.error.uniqueConstraint',
-              {
-                field: err?.field,
-              }
-            )
-          : t('products.list.products.notification.product.create.error')
-      )
-    },
-    refetchQueries: [
-      {
-        query: RetrieveAllInvProductsDocument,
-        ...getQueryVariables,
-      },
-      fetchPolicy: 'network-only',
-    })
   const [createOneInvProductMutation, { loading: addMutationLoading }] =
     useCreateOneInvProductMutation({
       onCompleted(product) {
