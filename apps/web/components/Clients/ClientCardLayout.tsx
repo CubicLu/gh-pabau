@@ -7,7 +7,6 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
-  GetContactHeaderDocument,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -15,6 +14,7 @@ import {
   ClientNotes,
   Notification,
   NotificationType,
+  BasicModal as Modal,
 } from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
@@ -54,7 +54,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     appointments: [],
   })
   const [basicContactData, setBasicContactData] = useState(null)
-  const [openEditModal, setOpenEditModal] = useState(false)
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false)
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
+  const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
 
   const [addClientNote] = useCreateOneContactNoteMutation({
     onCompleted() {
@@ -215,27 +217,19 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const handleEditNote = async (id, note) => {
     await editMutation({
       variables: { where: { ID: id }, data: { Note: { set: note } } },
-      refetchQueries: [
-        {
-          query: GetContactHeaderDocument,
-          ...getQueryVariables,
-        },
-      ],
     })
+    getContactRefetch()
   }
 
   const handleDeleteNote = async (id) => {
-    await deleteMutation({
-      variables: {
-        where: { ID: id },
-      },
-      refetchQueries: [
-        {
-          query: GetContactHeaderDocument,
-          ...getQueryVariables,
-        },
-      ],
-    })
+    setOpenDeleteModal((val) => !val)
+    setDeleteNoteId(id)
+    // await deleteMutation({
+    //   variables: {
+    //     where: { ID: id },
+    //   },
+    // })
+    // getContactRefetch()
   }
 
   const tabItems: readonly TabItem[] = [
@@ -327,6 +321,18 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     refetch()
   }
 
+  const handleDeleteSubmit = async () => {
+    if (deleteNoteId) {
+      setOpenDeleteModal((val) => !val)
+      await deleteMutation({
+        variables: {
+          where: { ID: deleteNoteId },
+        },
+      })
+      getContactRefetch()
+    }
+  }
+
   return (
     <Layout>
       <ClientCard
@@ -396,6 +402,27 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
           contactId={clientId}
         />
       )}
+      <Modal
+        modalWidth={682}
+        centered={true}
+        visible={openDeleteModal}
+        onCancel={() => setOpenDeleteModal((val) => !val)}
+        onOk={() => handleDeleteSubmit()}
+        newButtonText={t('clients.content.delete.confirm.yes')}
+        title={t('clients.clientcard.notes.clientnote.deletemodal.title')}
+      >
+        <span
+          style={{
+            fontFamily: 'Circular-Std-Book',
+            fontWeight: 'normal',
+            fontSize: '16px',
+            lineHeight: '20px',
+            color: '#9292A3',
+          }}
+        >
+          {t('clients.clientcard.notes.clientnote.deletemodal.content')}
+        </span>
+      </Modal>
     </Layout>
   )
 }

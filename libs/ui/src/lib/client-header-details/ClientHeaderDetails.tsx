@@ -68,6 +68,8 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     notes: 0,
     staff: 0,
   })
+  const [openNotes, setOpenNotes] = useState<boolean>(false)
+  const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
   useEffect(() => {
     setNoteItems(notes?.notes)
@@ -115,6 +117,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     handleDeleteNote?.(id)
     setCurrentNote('')
     setCurrentClientNote(-1)
+    setIsDeleting(true)
   }
 
   const medicalHistoryPopover = (
@@ -369,6 +372,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           trigger="click"
           content={clientNotesPopover}
           overlayClassName={styles.clientCardHeaderPopover}
+          visible={openNotes}
+          onVisibleChange={(val) => {
+            !isDeleting && setOpenNotes(val)
+          }}
         >
           <div
             onClick={() => {
