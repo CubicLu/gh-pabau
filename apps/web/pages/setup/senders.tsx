@@ -1,18 +1,36 @@
 import {
+  DownOutlined,
+  ExclamationCircleOutlined,
   FilterOutlined,
+  GoogleOutlined,
   MailOutlined,
   MobileOutlined,
+  PhoneOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
-import { Breadcrumb, Button } from '@pabau/ui'
-import { Col, Row, Typography } from 'antd'
+import { Breadcrumb, Button, Notification, NotificationType } from '@pabau/ui'
+import {
+  InsertGmailConnectionDocument,
+  FindGmailConnectionDocument,
+  GoogleTokenDocument,
+  DeleteGmailConnectionDocument,
+} from '@pabau/graphql'
+import { Col, Modal, Popover, Row, Tag, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 import Layout from '../../components/Layout/Layout'
 import CommonHeader from '../../components/CommonHeader'
-import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
+import { ReactComponent as Google } from '../../assets/images/google.svg'
+import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
+import { ReactComponent as Office } from '../../assets/images/office365.svg'
+import Login from '../../components/Email/login'
+import { useUser } from '../../context/UserContext'
+
+import React, { useEffect, useState } from 'react'
+import { useLazyQuery, useMutation } from '@apollo/client'
+const { confirm } = Modal
 
 const { Title } = Typography
 
@@ -74,8 +92,182 @@ export const Communications: React.FC = () => {
   const router = useRouter()
   const { t } = useTranslationI18()
 
+  const [showLogin, setShowLogin] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const [userData, setUserData] = useState('')
+
+  const { me } = useUser()
+  const url = new URL(window.location.href)
+
+  const [loadConnection, { data: gmailConnection }] = useLazyQuery(
+    FindGmailConnectionDocument,
+    {
+      variables: {
+        companyId: me.company,
+        userId: me.user,
+      },
+    }
+  )
+
+  const [refreshToken, { data }] = useLazyQuery(GoogleTokenDocument, {
+    variables: {
+      token: url.searchParams.get('code'),
+    },
+  })
+
+  useEffect(() => {
+    loadConnection()
+    if (url.searchParams.get('code')) {
+      refreshToken()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (data?.getRefreshToken) {
+      insertGmailConnection(data.getRefreshToken).then(async () => {
+        await loadConnection()
+        setIsLoggedIn(true)
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  useEffect(() => {
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      setIsLoggedIn(true)
+      setUserData(gmailConnection.gmail_connection[0].email)
+    }
+  }, [gmailConnection])
+
+  const insertGmailConnection = async (refreshToken) => {
+    await insertConnection({
+      variables: {
+        accessToken: refreshToken.access_token,
+        refreshToken: refreshToken.refresh_token,
+        email: refreshToken.email,
+        companyId: me.company,
+        userId: me.user,
+      },
+      optimisticResponse: {},
+      refetchQueries: [
+        {
+          query: FindGmailConnectionDocument,
+          variables: {
+            companyId: me.company,
+            userId: me.user,
+          },
+        },
+      ],
+    })
+  }
+
+  const [insertConnection] = useMutation(InsertGmailConnectionDocument, {
+    onCompleted() {
+      console.log()
+    },
+    onError(e) {
+      console.log(e)
+    },
+  })
+
+  const [removeConnection] = useMutation(DeleteGmailConnectionDocument, {
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        'Google connection removed successfully'
+      )
+    },
+    onError(e) {
+      console.log(e)
+    },
+  })
+
+  const handleRemoveLink = async () => {
+    await showConfirm()
+  }
+
+  const handleGoogleLogin = () => {
+    console.log()
+  }
+
+  const handleShowLogin = async () => {
+    if (!isLoggedIn) {
+      setShowLogin(true)
+    }
+  }
+
+  const removeGmailConnection = async () => {
+    await removeConnection({
+      variables: {
+        email: userData,
+        companyId: me.company,
+        userId: me.user,
+      },
+      optimisticResponse: {},
+      refetchQueries: [
+        {
+          query: FindGmailConnectionDocument,
+          variables: {
+            companyId: me.company,
+            userId: me.user,
+          },
+        },
+      ],
+    })
+  }
+  const showConfirm = () => {
+    confirm({
+      title: 'Unlink your Google account',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you wish to unlink your Google account?',
+      onOk() {
+        console.log('Remove link', userData)
+        removeGmailConnection().then(() => {
+          setIsLoggedIn(false)
+          setUserData('')
+        })
+      },
+      onCancel() {
+        console.log('Close popup')
+      },
+    })
+  }
+
+  const content = () => {
+    return (
+      <div className={styles.mailOptionContent}>
+        <div className={styles.mailOptionItem}>
+          <Sender /> <p>Create SMS</p>
+        </div>
+        <div
+          className={styles.mailOptionItem}
+          style={userData ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
+          onClick={() => handleShowLogin()}
+        >
+          <GoogleOutlined /> <p>Connect Google</p>
+        </div>
+        <div className={styles.mailOptionItem}>
+          <Office /> <p>Connect Office 365</p>
+        </div>
+        <div
+          className={styles.mailOptionItem}
+          onClick={() => router.push('senders/create')}
+        >
+          <MailOutlined /> <p>Connect other email</p>
+        </div>
+        <div className={styles.mailOptionItem}>
+          <PhoneOutlined /> <p>Add phone number</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Layout {...user} active={'setup'}>
+      {showLogin && <Login handleGoogleLogin={handleGoogleLogin} />}
+
       <CommonHeader
         isLeftOutlined
         reversePath="/setup"
@@ -103,13 +295,12 @@ export const Communications: React.FC = () => {
               <FilterOutlined />
               {t('setup.senders.filter')}
             </Button>
-            <Button
-              onClick={() => router.push('senders/create')}
-              backgroundColor="#54B2D3"
-              className={styles.senderButton}
-            >
-              {t('setup.senders.create')}
-            </Button>
+            <Popover placement="bottomRight" content={content} trigger="click">
+              <Button backgroundColor="#54B2D3" className={styles.senderButton}>
+                {t('setup.senders.create')}
+                <DownOutlined />
+              </Button>
+            </Popover>
           </div>
         </div>
         <div className={styles.cardContent}>
@@ -144,6 +335,27 @@ export const Communications: React.FC = () => {
                 </Button>
               </Col>
             ))}
+            {isLoggedIn && (
+              <Col span={4} xs={12} sm={8} md={6}>
+                <Button className={styles.senderItem}>
+                  <div className={styles.itemHeader}>
+                    <Google />
+                    <div className={styles.verifiedWrapper}>
+                      <div
+                        className={styles.defaultText}
+                        onClick={() => handleRemoveLink()}
+                      >
+                        <Tag color="red">Stop syncing</Tag>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.itemBody}>
+                    <div>Clinic Bookings</div>
+                    <div className={styles.email}>{userData}</div>
+                  </div>
+                </Button>
+              </Col>
+            )}
           </Row>
         </div>
       </div>
