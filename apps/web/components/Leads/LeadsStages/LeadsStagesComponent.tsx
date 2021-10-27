@@ -68,7 +68,7 @@ const groupByPipelineId = (arr, property) => {
 const LeadsStagesComponent = () => {
   const [allStages, setAllStages] = useState([])
   const [leadsDefaultParams, setLeadsDefaultParams] = useState({
-    limit: 10,
+    limit: 100,
     skip: 0,
   })
   const [leadsState, setLeadsState] = useState({})
