@@ -16,7 +16,7 @@ import {
   useUpdateCarePathwaysOrderMutation,
 } from '@pabau/graphql'
 import styles from './index.module.less'
-import { MenuOutlined, SearchOutlined } from '@ant-design/icons'
+import { MenuOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
 
@@ -180,22 +180,11 @@ export const Index: FC = () => {
           </div>
           <div className={styles.carePathwaysOps}>
             {currentTab === Tab.Pathways && (
-              <>
-                {/* <div className={styles.carePathwaysSearch}>
-                  <div className={styles.carePathSearchField}>
-                    <Input
-                      placeholder={t('setup.care-pathways.search.placeholder')}
-                    />
-                    <SearchOutlined />
-                  </div>
-                </div> */}
-
-                <div className={styles.ButtonTb}>
-                  <Button type="primary">
-                    {t('setup.care-pathways.create-pathway.button')}
-                  </Button>
-                </div>
-              </>
+              <div className={styles.ButtonTb}>
+                <Button type="primary">
+                  {t('setup.care-pathways.create-pathway.button')}
+                </Button>
+              </div>
             )}
             {currentTab === Tab.Library && (
               <Input placeholder={t('setup.medical.forms.searchLibrary')} />
