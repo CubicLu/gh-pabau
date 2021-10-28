@@ -70,7 +70,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
     const shifts = getShiftsOnDate(value)
 
     if (!shifts) {
-      return []
+      return <div></div>
     }
 
     return (

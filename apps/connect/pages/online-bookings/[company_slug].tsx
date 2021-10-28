@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 
@@ -12,14 +12,17 @@ import DateTimeSelector from '../../components/DateTimeStep/DateTimeSelector'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
+
 //import { useCreateAppointmentMutation } from '@pabau/graphql'
 
-import { BookingData } from '../../types/booking'
+//import { BookingData } from '../../types/booking'
 import { SettingsContext } from '../../context/settings-context'
 
 export function Index() {
   const [currentStep, setCurrentStep] = useState<number>(0)
-  const [selectedData, setSelectedData] = useState<BookingData>()
+  const [hasMasterCategories, setHasMasterCategories] = useState<boolean>(true)
+  //const [selectedData, setSelectedData] = useState<BookingData>()
   const { t } = useTranslationI18()
 
   const settings = useContext(SettingsContext)
@@ -68,6 +71,30 @@ export function Index() {
     )
   }
 
+  const {
+    loading: loadingServices,
+    error: errorServices,
+    data: servicesCategorised,
+  } = useCompanyServicesCategorisedQuery({
+    variables: {
+      company_id: settings?.id,
+    },
+  })
+
+  useEffect(() => {
+    if (
+      !loadingServices &&
+      servicesCategorised.Public_MasterCategories.length === 0
+    ) {
+      setCurrentStep(1)
+      setHasMasterCategories(false)
+    }
+  }, [servicesCategorised, loadingServices])
+
+  if (errorServices) return <div>Error!</div>
+  if (loadingServices) return <div>Loading...</div>
+
+  console.log('Rendering Page', currentStep)
   return (
     <div className={styles.onlineBooking}>
       <Header
@@ -105,6 +132,7 @@ export function Index() {
                 onSelected={() => {
                   setCurrentStep(currentStep + 1)
                 }}
+                hasMasterCategories={hasMasterCategories}
               />
             </div>
           )}
