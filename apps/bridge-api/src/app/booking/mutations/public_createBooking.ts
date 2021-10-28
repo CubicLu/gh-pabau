@@ -12,8 +12,8 @@ const PublicCreateBookingResponse = objectType({
   },
 })
 
-const PCBData2 = inputObjectType({
-  name: 'PCBData2',
+const PCBData = inputObjectType({
+  name: 'PCBData',
   definition(t) {
     t.nonNull.field('start_date', { type: 'DateTime' })
     t.nonNull.int('user_id')
@@ -29,6 +29,9 @@ const PCBContact = inputObjectType({
   name: 'PCBContact',
   definition(t) {
     t.int('contact_id')
+    t.string('first_name')
+    t.string('last_name')
+    t.string('email')
   },
 })
 
@@ -39,11 +42,10 @@ export const public_createOnlineBooking = extendType({
       type: PublicCreateBookingResponse,
       description: 'Create booking from public',
       args: {
-        data: nullable(PCBData2),
+        data: nullable(PCBData),
         contact: nullable(PCBContact),
       },
       async resolve(_, input, ctx: Context) {
-        console.log(input)
         const serviceTiers = await getTier(
           input.data.service_ids,
           input.data.user_id,
@@ -51,7 +53,25 @@ export const public_createOnlineBooking = extendType({
           ctx
         )
 
-        console.log('TIERS', serviceTiers)
+        // if (!input.contact.contact_id) {
+        //   const contact = await ctx.prisma.cmContact.findFirst({
+        //     where: {
+        //       Еmail: { equals: input.contact.email | undefined },
+        //       company_id: input.data.company_id,
+        //     },
+        //     select: {
+        //       ID: true,
+        //     },
+        //   })
+        //
+        //   console.log('CN', contact)
+        //
+        //   // const contact = createContact(ctx, {
+        //   //   Fname: input.data.first_name,
+        //   //   Lname: input.data.last_name,
+        //   //   Email: input.data.email
+        //   // })
+        // }
 
         const services = await ctx.prisma.companyService.findMany({
           where: { id: { in: input.data.service_ids } },
@@ -97,7 +117,7 @@ export const public_createOnlineBooking = extendType({
           startDate = moment(endDate)
           startDateAsInt = Number.parseInt(startDate.format('YYYYMMDDHHmm00'))
         }
-        console.log('DATA', insertData)
+
         //   const res = await ctx.prisma.booking.create({
         //     data: {
         //       ...bookingData,
@@ -132,10 +152,8 @@ export const public_createOnlineBooking = extendType({
           },
         })
 
-        console.log('RESULT', res)
-
         return {
-          success: true,
+          success: !!res,
         }
       },
     })
