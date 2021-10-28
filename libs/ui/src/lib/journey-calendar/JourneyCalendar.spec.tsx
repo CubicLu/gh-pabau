@@ -10,7 +10,7 @@ describe('JourneyCalendar', () => {
         setActiveDate={(val) => {
           console.log(val)
         }}
-        activeDate="Oct 21 2021"
+        activeDate={new Date()}
       />
     )
     expect(baseElement).toBeTruthy()
