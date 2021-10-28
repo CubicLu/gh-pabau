@@ -1,0 +1,43 @@
+fragment CompanyBranchGroupFields on CompanyBranchGroup {
+  id
+  name
+  shared_data
+  company_id
+}
+
+fragment CompanyBranchGroup on CompanyBranchGroup {
+  ...CompanyBranchGroupFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCompanyBranchGroup($data: CompanyBranchGroupCreateInput!) {
+  createOneCompanyBranchGroup(data: $data) {
+    ...CompanyBranchGroup
+  }
+}
+
+mutation updateOneCompanyBranchGroup(
+  $where: CompanyBranchGroupWhereUniqueInput!
+  $data: CompanyBranchGroupUpdateInput!
+) {
+  updateOneCompanyBranchGroup(where: $where, data: $data) {
+    ...CompanyBranchGroup
+  }
+}
+
+mutation deleteOneCompanyBranchGroup($where: CompanyBranchGroupWhereUniqueInput!) {
+  deleteOneCompanyBranchGroup(where: $where) {
+    ...CompanyBranchGroup
+  }
+}
+
+mutation updateManyCompanyBranchGroup(
+  $where: CompanyBranchGroupWhereInput
+  $data: CompanyBranchGroupUpdateManyMutationInput!
+) {
+  updateManyCompanyBranchGroup(where: $where, data: $data) {
+    count
+  }
+}

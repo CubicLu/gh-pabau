@@ -1,5 +1,9 @@
 query getInvoices($contactID: Int!, $take: Int, $skip: Int) {
-  sales: findManyInvSale(where: {CmContact: {ID: {equals: $contactID}}, inv_total: {gte: 0}}, take: $take, skip: $skip) {
+  sales: findManyInvSale(
+    where: { CmContact: { ID: { equals: $contactID } }, inv_total: { gte: 0 } }
+    take: $take
+    skip: $skip
+  ) {
     id
     invoice_no: custom_id
     guid
@@ -31,6 +35,43 @@ query getInvoices($contactID: Int!, $take: Int, $skip: Int) {
     Location {
       id
       name
+    }
+  }
+}
+
+query getContactSaleItems($contactID: Int!) {
+  items: findManySaleItem(
+    where: { InvSale: { CmContact: { ID: { equals: $contactID } } } }
+  ) {
+    id
+    name: product_name
+    code: product_code
+    type: product_category_type
+    unit_price
+    gross_total
+    discount: val_tax
+    tax_total
+    quantity
+    Tax {
+      id
+      name
+      value
+      rate
+    }
+    Product {
+      id
+      name
+      image
+    }
+    Sale: InvSale {
+      custom_id
+      date
+      type: reference_no
+      total: inv_total
+      Biller: InvBiller {
+        id
+        name
+      }
     }
   }
 }

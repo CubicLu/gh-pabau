@@ -1,17 +1,48 @@
-import { Button, ButtonTypes, MedicalFormTypes } from '@pabau/ui'
+import {
+  MedicalFormTypes,
+  MacroItem,
+  UserGroupListItem,
+  InvProductsListItem,
+  MedicalConditionsListItem,
+} from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './FormComponent.module.less'
 import FormComponentInnerElement from './FormComponentInnerElement'
+import FormSaveButton from './FormSaveButton'
 
 interface P {
   draggedForms: MedicalFormTypes[]
   formSaveLabel?: string
   processSaveForm?: () => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
+  medicalFormMacros?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
+  userGroupListItems?: UserGroupListItem[]
+  hideMacro?: boolean
+  hidePadlock?: boolean
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
-  const { draggedForms, formSaveLabel = '', processSaveForm } = props
+  const {
+    draggedForms,
+    formSaveLabel = '',
+    processSaveForm,
+    onHandleMacro,
+    medicalFormMacros = [],
+    invProductsListItems = [],
+    medicalConditionsListItems = [],
+    userGroupListItems = [],
+    hideMacro = false,
+    hidePadlock = false,
+  } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
+  const [macroItems, setMacroItems] = useState<MacroItem[]>([])
+
+  useEffect(() => {
+    setMacroItems(medicalFormMacros)
+  }, [medicalFormMacros])
+
   useEffect(() => {
     const requiredForms = draggedForms.filter((form) => form.required === true)
     if (
@@ -64,21 +95,23 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
               handleId={form.id}
               formData={form}
               handlingSaveForm={handlingSaveForm}
+              onHandleMacro={onHandleMacro}
+              macroItems={macroItems}
+              invProductsListItems={invProductsListItems}
+              medicalConditionsListItems={medicalConditionsListItems}
+              hideMacro={hideMacro}
             />
           </div>
         )
       })}
       {draggedForms?.length > 0 && (
-        <div className={styles.formComponentButton}>
-          <Button
-            type={ButtonTypes.primary}
-            size="middle"
-            disabled={disableSaveButton}
-            onClick={onSaveForm}
-          >
-            {formSaveLabel === '' ? 'Save Form' : formSaveLabel}
-          </Button>
-        </div>
+        <FormSaveButton
+          saveForm={onSaveForm}
+          disableSaveButton={disableSaveButton}
+          formSaveLabel={formSaveLabel}
+          userGroupListItems={userGroupListItems}
+          hidePadlock={hidePadlock}
+        />
       )}
     </div>
   )
