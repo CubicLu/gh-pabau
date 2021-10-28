@@ -306,6 +306,11 @@ export const TestForm = () => {
       },
     }
 
+    console.log(
+      'creatMedicalFormContactVariables =',
+      creatMedicalFormContactVariables
+    )
+
     await addMedicalFormContactMutation({
       variables: { data: { ...creatMedicalFormContactVariables } },
     })
@@ -319,6 +324,7 @@ export const TestForm = () => {
         description: '',
         Company: {},
       }
+      console.log('creatMedicalAttrVariables =', creatMedicalAttrVariables)
       await addMedicalAttrMutation({
         variables: { data: { ...creatMedicalAttrVariables } },
       }).then((e) => (item.attrId = e.data.createOneMedicalAttr.id))
@@ -352,12 +358,12 @@ export const TestForm = () => {
       if (cssClass === 'input_text' || cssClass === 'textarea')
         item.attrValue = item.txtValue
       else if (cssClass === 'checkbox') {
-        const vals = item.arrItems.filter((arrItem) =>
-          item.arrValue.indexOf(arrItem.id.toString())
+        const vals = item.arrItems.filter(
+          (arrItem) => item.arrValue.indexOf(arrItem.id.toString()) >= 0
         )
         if (vals.length > 0) {
-          const val = vals.map((val) => btoa(val.name))
-          item.attrValue = val.join(',')
+          const val1 = vals.map((val) => btoa(val.name))
+          item.attrValue = val1.join(',')
         } else {
           item.attrValue = ''
         }
