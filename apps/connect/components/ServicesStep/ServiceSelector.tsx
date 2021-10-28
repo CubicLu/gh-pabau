@@ -84,7 +84,13 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
         servicesByCategory.Public_ServiceCategories[0].id
       )
     }
-  }, [loadingServicesByCategory])
+  }, [
+    loadingServicesByCategory,
+    servicesByCategory,
+    hasMasterCategories,
+    actionTypes.SET_CATEGORY_ID,
+    setSelectedData,
+  ])
 
   if (errorServices || errorServicesByCategory) return <div>Error!</div>
   if (loadingServices || loadingServicesByCategory) return <div>Loading...</div>

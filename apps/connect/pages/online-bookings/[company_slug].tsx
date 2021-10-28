@@ -16,13 +16,13 @@ import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
 
 //import { useCreateAppointmentMutation } from '@pabau/graphql'
 
-import { BookingData } from '../../types/booking'
+//import { BookingData } from '../../types/booking'
 import { SettingsContext } from '../../context/settings-context'
 
 export function Index() {
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [hasMasterCategories, setHasMasterCategories] = useState<boolean>(true)
-  const [selectedData, setSelectedData] = useState<BookingData>()
+  //const [selectedData, setSelectedData] = useState<BookingData>()
   const { t } = useTranslationI18()
 
   const settings = useContext(SettingsContext)
@@ -89,7 +89,7 @@ export function Index() {
       setCurrentStep(1)
       setHasMasterCategories(false)
     }
-  }, [servicesCategorised])
+  }, [servicesCategorised, loadingServices])
 
   if (errorServices) return <div>Error!</div>
   if (loadingServices) return <div>Loading...</div>
