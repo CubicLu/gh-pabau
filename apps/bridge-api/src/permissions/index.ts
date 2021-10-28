@@ -114,6 +114,7 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
+      deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
@@ -130,6 +131,8 @@ export const permissions = shield(
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      findManyPathwaysTaken: allow,
+      findManyPathwayStepsTaken: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
@@ -199,6 +202,8 @@ export const permissions = shield(
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
+      findManyFilteredRotaShift: rules.authentication.isAuthenticated,
+
       findManyProductsWithAvailableQuantity:
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
@@ -219,7 +224,10 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.interceptAccessToUserData
       ),
-      dashboardData: rules.authentication.isAuthenticated,
+      getBookingStatusCount: rules.authentication.isAuthenticated,
+      getBookingChartDetail: rules.authentication.isAuthenticated,
+      // getToken
+      getRefreshToken: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,
