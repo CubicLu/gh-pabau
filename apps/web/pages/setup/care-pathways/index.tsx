@@ -1,59 +1,155 @@
 import React, { FC, useState, useEffect } from 'react'
-import { Breadcrumb, TabMenu } from '@pabau/ui'
+import { Button, Breadcrumb, TabMenu } from '@pabau/ui'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import Layout from '../../../components/Layout/Layout'
-import { Typography } from 'antd'
-// import dayjs from 'dayjs'
-// import Custom from '../../../components/MedicalForms/Custom'
-// import Library from '../../../components/MedicalForms/Library'
+import { Typography, Input } from 'antd'
 import CommonHeader from '../../../components/CommonHeader'
 import { PathwaysCard } from '../../../components/Setup/CarePathways'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import { useGetCarePathwaysQuery } from '@pabau/graphql'
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+} from 'react-sortable-hoc'
+import {
+  useGetCarePathwaysQuery,
+  GetCarePathwaysDocument,
+  useUpdateCarePathwaysOrderMutation,
+} from '@pabau/graphql'
 import styles from './index.module.less'
-import { MenuOutlined } from '@ant-design/icons'
+import { MenuOutlined, SearchOutlined } from '@ant-design/icons'
+
 const { Title } = Typography
 
-// enum Tab {
-//   Pathways = '0',
-//   Library = '1',
-// }
+enum Tab {
+  Pathways = '0',
+  Library = '1',
+}
+
+const DragHandle = SortableHandle(() => <MenuOutlined />)
+
+const SortableItem = SortableElement((props) => {
+  const { value: pathway } = props
+  return (
+    <PathwaysCard
+      key={pathway?.id}
+      icon=""
+      title={pathway?.pathway_name}
+      count={pathway?.count}
+      description={pathway?.description}
+      loading={false}
+    >
+      <DragHandle />
+    </PathwaysCard>
+  )
+})
+
+const SortableList = SortableContainer((props) => {
+  const { items, ...restProps } = props
+  return (
+    <div className={styles.customCardWrapper}>
+      {items.map((item, index) => (
+        <SortableItem
+          key={item?.id}
+          index={index}
+          value={item}
+          {...restProps}
+        />
+      ))}
+    </div>
+  )
+})
+
+interface PathwayObject {
+  id: number
+  pathway_name: string
+  description: string
+  order: number
+  count: number
+}
 
 export const Index: FC = () => {
   const [currentTab, setCurrentTab] = useState('0')
-  const [pathwaysList, setPathwaysList] = useState([])
+  const [pathwaysList, setPathwaysList] = useState<PathwayObject[]>()
   const { t } = useTranslationI18()
 
-  const { data, loading } = useGetCarePathwaysQuery({})
+  const { data, loading } = useGetCarePathwaysQuery()
+
+  const [updateOrderMutation] = useUpdateCarePathwaysOrderMutation()
 
   const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list)
+    const result = [...list]
+
     const [removed] = result.splice(startIndex, 1)
     result.splice(endIndex, 0, removed)
-
-    return result
+    return JSON.parse(JSON.stringify(result))
   }
 
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return
+  const updateOrder = async (values) => {
+    if (values?.id) {
+      await updateOrderMutation({
+        variables: {
+          id: values.id,
+          order: values.order,
+        },
+        refetchQueries: [{ query: GetCarePathwaysDocument }],
+      })
     }
-
-    const items = reorder(
-      pathwaysList,
-      result.source.index,
-      result.destination.index
-    )
-
-    setPathwaysList(items)
   }
-  //TODO: remove it
-  console.log('currentTab', currentTab)
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    const items = reorder(pathwaysList, oldIndex, newIndex)
+    let isCustomOrder = false
+    for (const item of pathwaysList) {
+      if (item.order === 0) {
+        isCustomOrder = true
+      }
+    }
+    if (isCustomOrder) {
+      const totalRecord = pathwaysList.length
+      const lastOrderValue = pathwaysList?.[0].order
+      const newData = []
+      for (const [index, item] of items.entries()) {
+        newData.push({
+          ...item,
+          order: lastOrderValue + totalRecord - index,
+        })
+      }
+      for (let i = 0; i <= newData.length; i++) {
+        updateOrder(newData[i])
+      }
+      setPathwaysList(newData)
+    } else {
+      const newData = items.map((pathway: any, i) => {
+        pathway.order = pathwaysList[i].order
+        return pathway
+      })
+      if (oldIndex > newIndex) {
+        for (let i = newIndex; i <= oldIndex; i++) {
+          updateOrder(newData[i])
+        }
+      } else {
+        for (let i = oldIndex; i <= newIndex; i++) {
+          updateOrder(newData[i])
+        }
+      }
+      setPathwaysList(newData)
+    }
+  }
+
   useEffect(() => {
-    if (data?.findManyPathway) {
-      setPathwaysList(data.findManyPathway)
+    if (data?.findManyPathway && !loading) {
+      const pathwayData = [...data.findManyPathway]?.map((item) => {
+        return {
+          id: item.id,
+          count: item?._count?.PathwayStep,
+          pathway_name: item.pathway_name,
+          description: item.description,
+          order: item.order,
+        }
+      })
+      setPathwaysList([...pathwayData])
     }
-  }, [data])
+  }, [data, loading])
 
   return (
     <Layout>
@@ -64,7 +160,7 @@ export const Index: FC = () => {
             isLeftOutlined
             reversePath="/setup"
             isShowSearch
-          ></CommonHeader>
+          />
         </div>
         <div className={styles.carePathwaysHeader}>
           <div>
@@ -82,6 +178,29 @@ export const Index: FC = () => {
             />
             <Title>{t('setup.care-pathways.page.title')}</Title>
           </div>
+          <div className={styles.carePathwaysOps}>
+            {currentTab === Tab.Pathways && (
+              <>
+                {/* <div className={styles.carePathwaysSearch}>
+                  <div className={styles.carePathSearchField}>
+                    <Input
+                      placeholder={t('setup.care-pathways.search.placeholder')}
+                    />
+                    <SearchOutlined />
+                  </div>
+                </div> */}
+
+                <div className={styles.ButtonTb}>
+                  <Button type="primary">
+                    {t('setup.care-pathways.create-pathway.button')}
+                  </Button>
+                </div>
+              </>
+            )}
+            {currentTab === Tab.Library && (
+              <Input placeholder={t('setup.medical.forms.searchLibrary')} />
+            )}
+          </div>
         </div>
 
         <TabMenu
@@ -94,61 +213,33 @@ export const Index: FC = () => {
           onTabClick={(key) => setCurrentTab(key)}
         >
           <div className={styles.container}>
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="droppable">
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    // style={getListStyle(snapshot.isDraggingOver)}
-                    {...provided.droppableProps}
-                  >
-                    {loading
-                      ? [...Array.from({ length: 6 })].map((value, index) => {
-                          return (
-                            <PathwaysCard
-                              key={index}
-                              icon=""
-                              title=""
-                              count={index}
-                              description=""
-                            />
-                          )
-                        })
-                      : pathwaysList.length > 0 &&
-                        pathwaysList.map((pathway, index) => {
-                          return (
-                            <Draggable
-                              key={pathway.id}
-                              draggableId={pathway.id.toString()}
-                              index={index}
-                            >
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                >
-                                  <PathwaysCard
-                                    key={pathway.id}
-                                    icon=""
-                                    title={pathway.pathway_name}
-                                    count={pathway._count.PathwayStep}
-                                    description={pathway.description}
-                                  >
-                                    <MenuOutlined
-                                      {...provided.dragHandleProps}
-                                    />
-                                  </PathwaysCard>
-                                </div>
-                              )}
-                            </Draggable>
-                          )
-                        })}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+            {loading ? (
+              <div className={styles.customCardWrapper}>
+                {[...Array.from({ length: 6 })].map((value, index) => {
+                  return (
+                    <PathwaysCard
+                      loading={true}
+                      key={index}
+                      icon=""
+                      title={''}
+                      count={0}
+                      description={''}
+                    ></PathwaysCard>
+                  )
+                })}
+              </div>
+            ) : (
+              pathwaysList?.length > 0 && (
+                <SortableList
+                  useDragHandle
+                  axis="xy"
+                  items={pathwaysList}
+                  onSortEnd={onSortEnd}
+                />
+              )
+            )}
           </div>
+
           <div></div>
         </TabMenu>
       </div>

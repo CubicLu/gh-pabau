@@ -4733,6 +4733,8 @@ en:
   setup.care-pathways.page.title: 'Care Pathways'
   setup.care-pathways.tabs.pathways: 'Pathways'
   setup.care-pathways.tabs.library: 'Library'
+  setup.care-pathways.search.placeholder: 'Search in Care Pathways'
+  setup.care-pathways.create-pathway.button: 'Create Pathway'
   ui.all-template-modal.title: 'All Template'
   ui.all-template-modal.first-left-tab: 'All'
   ui.all-template-modal.second-left-tab: 'My templates'

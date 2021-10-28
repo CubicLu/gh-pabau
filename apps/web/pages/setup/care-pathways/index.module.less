@@ -9,11 +9,6 @@
   }
 }
 
-.marketing-icon-style {
-  font-size: 19px;
-  color: var(--light-grey-color);
-}
-
 .care-pathways-header {
   display: flex;
   justify-content: space-between;
@@ -31,13 +26,24 @@
   .care-pathways-ops {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    flex: 1;
     > div {
       margin-left: 1rem;
     }
     .care-pathways-search {
-      display: flex;
+      padding-left: 40%;
       > div {
         margin-left: 1rem;
+      }
+      .care-path-search-field {
+        position: relative;
+        :global .anticon-search {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
       }
     }
   }
@@ -46,17 +52,9 @@
   }
 }
 
-.desktop-view-none {
-  display: none;
-}
-
 @media (min-width: 200px) and (max-width: 767px) {
   .care-pathways-header {
     display: none;
-  }
-
-  .desktop-view-none {
-    display: block;
   }
 }
 
@@ -105,4 +103,16 @@
   color: var(--primary-color);
   font-size: 25px;
   border-radius: 4px;
+}
+
+.container {
+  padding: 24px;
+  .containerData {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .customCardWrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
