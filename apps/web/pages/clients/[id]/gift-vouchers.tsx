@@ -3,57 +3,50 @@ import { useRouter } from 'next/router'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import { useGetSoldVouchersQuery } from '@pabau/graphql'
 import { ClientGiftVoucherLayout } from '@pabau/ui'
+import dayjs from 'dayjs'
+import { useUser } from '../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 const Appointments = () => {
   const router = useRouter()
-
+  const user = useUser()
   const { data } = useGetSoldVouchersQuery({
     variables: {
       contactID: Number(router.query['id']),
     },
   })
 
-  console.log('data', data)
-
-  const activeVouchers: any = data?.vouchers?.map(
-    (val) =>
-      val.status === 'Active' && {
+  const voucherData = (data) => {
+    return data?.map((val) => {
+      return {
         id: val.id,
         validTill: val?.expiry_date,
         voucher: {
           backgroundColor1: '#9013FE',
           backgroundColor2: '#BD10E0',
-          gradientType: 'radial-gradient',
-          buttonLabel: 'button',
+          gradientType: 'linear-gradient',
           borderColor: '#000',
-          voucherPrice: val.amount,
-          voucherPriceLabel: val.description,
-          voucherRelation: '',
-          voucherRelationLabel: val.description,
+          voucherPrice: val?.amount,
+          voucherNum: val?.code,
+          voucherSoldPrice: val?.remaining_balance,
+          currencyType: stringToCurrencySignConverter(user.me?.currency),
+          voucherPriceLabel: 'Voucher Value',
+          voucherSoldPriceLabel: `Expires on: ${dayjs(val?.expiry_date).format(
+            'DD MMM'
+          )}`,
+          // voucherRelation: 'Family',
+          voucherRelationLabel: val?.description,
         },
       }
-  )
+    })
+  }
 
-  const expiredVouchers: any = data?.vouchers?.map(
-    (val) =>
-      val.status !== 'Active' && {
-        id: val.id,
-        validTill: val?.expiry_date,
-        voucher: {
-          backgroundColor1: '#9013FE',
-          backgroundColor2: '#BD10E0',
-          gradientType: 'radial-gradient',
-          buttonLabel: 'button',
-          borderColor: '#000',
-          voucherPrice: val.amount,
-          voucherPriceLabel: val.description,
-          voucherRelation: '',
-          voucherRelationLabel: val.description,
-        },
-      }
+  const activeVouchers: any = data?.vouchers?.filter(
+    (val) => val.status === 'Active' && val
   )
-
-  console.log('voucherData', data)
+  const expiredVouchers: any = data?.vouchers?.filter(
+    (val) => val.status !== 'Active' && val
+  )
 
   return (
     <div>
@@ -62,10 +55,12 @@ const Appointments = () => {
         activeTab="gift-vouchers"
       >
         <ClientGiftVoucherLayout
-          isEmpty={false}
-          activeVouchers={activeVouchers || []}
-          expiredVouchers={expiredVouchers || []}
-          onCardSelect={undefined}
+          isEmpty={
+            activeVouchers?.length || expiredVouchers?.length ? false : true
+          }
+          activeVouchers={voucherData(activeVouchers) || []}
+          expiredVouchers={voucherData(expiredVouchers) || []}
+          onCardSelect={(e) => Promise.resolve(true)}
         />
       </ClientCardLayout>
     </div>
