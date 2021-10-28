@@ -25,10 +25,8 @@ import {
   useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
-// const baseURL = `${cdnURL}/v2/api/contact/`
-const baseURL = `http://localhost:5000/`
-// const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
-const attachmentsBaseUrl = `http://localhost:5000/`
+const baseURL = `${cdnURL}/v2/api/contact/`
+const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
 
 const Photos = () => {
   const api = axios.create({
