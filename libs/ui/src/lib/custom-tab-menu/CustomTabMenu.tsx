@@ -54,7 +54,14 @@ export const CustomTabMenu: FC<P> = ({
                     onActiveChanged?.(tab.key)
                   }}
                 >
-                  {name}
+                  <div className={styles.titleCountWrapper}>
+                    {name}
+                    {count && (
+                      <div className={styles.countWrapper}>
+                        <div className={styles.countContainer}>{count}</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               {childTabs && childTabs.length > 0 && (

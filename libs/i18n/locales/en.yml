@@ -5413,3 +5413,5 @@ en:
   team.user.services.save.changes.button: 'Save changes'
   team.user.services.title: 'Services'
   team.user.services.choose.services.title: ' Choose the services this employee can perform'
+  clients.activities.markAsDone: 'Mark as done'
+  clients.activities.markAsNotDone: 'Mark as not done'

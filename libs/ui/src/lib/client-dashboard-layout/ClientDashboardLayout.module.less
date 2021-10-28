@@ -3,8 +3,7 @@
   display: flex;
   flex-wrap: wrap;
 
-  > div {
-    &:nth-child(1) {
+  .childernWrapper {
       width: 100%;
       max-width: 370px;
       margin-right: 1rem;
@@ -20,9 +19,12 @@
           margin-bottom: 0;
         }
       }
-    }
   }
-
+  .card-coustom-wrapper{
+    width: 100%;
+    // display: flex;
+    // max-width: none !important;
+  }
   @media (max-width: 767px) {
     display: flex;
     flex-direction: column;

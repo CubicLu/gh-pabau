@@ -88,8 +88,24 @@
               width: 24px;
               height: 24px;
               padding: 0;
-              display: block;
+              display: flex;
+              justify-content: center;
+              align-items: center;
               transition: 0.5s ease;
+            }
+            .dotList {
+              display: flex;
+              align-items: center;
+              margin-bottom: 10px;
+              cursor: pointer;
+              &:last-child {
+                margin-bottom: 0;
+              }
+              p {
+                margin: 0 0 0 10px;
+                line-height: 14px;
+                font-size: 14px;
+              }
             }
           }
         }
@@ -445,6 +461,18 @@
       display: flex;
       justify-content: flex-end;
       padding: 0 16px 16px;
+    }
+  }
+}
+.custom-popover {
+  width: 200px;
+  z-index: 2;
+  :global {
+    .ant-popover-inner {
+      border-radius: 4px;
+      .ant-popover-inner-content {
+        padding: 8px 12px;
+      }
     }
   }
 }

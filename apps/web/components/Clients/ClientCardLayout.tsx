@@ -4,6 +4,7 @@ import {
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
+  useCountClinetActivityQuery,
 } from '@pabau/graphql'
 import { ClientCard, TabItem, ClientNotes } from '@pabau/ui'
 import React, {
@@ -21,11 +22,25 @@ import ClientCreate from '../Clients/ClientCreate'
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
+  cssClass?: string
 }
 
-export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
+export const ClientCardLayout: FC<P> = ({
+  clientId,
+  children,
+  activeTab,
+  cssClass,
+}) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const contactID = Number(router.query['id'])
+  const {
+    data: countData,
+    loading: countLoading,
+  } = useCountClinetActivityQuery({
+    variables: { contactID },
+    skip: !contactID,
+  })
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
@@ -138,7 +153,11 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     { key: 'emr', name: 'EMR' },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
     { key: 'loyalty', name: 'Loyalty' },
-    { key: 'activities', name: 'Activities' },
+    {
+      key: 'activities',
+      name: 'Activities',
+      count: countData?.findManyActivityCount,
+    },
 
     // {
     //   key: 2,
@@ -220,6 +239,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   return (
     <Layout>
       <ClientCard
+        cssClass={cssClass}
         onClose={() => router.push('/clients')}
         tabs={tabItems}
         activeTab={activeTab}

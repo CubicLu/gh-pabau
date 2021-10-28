@@ -155,10 +155,12 @@ interface P {
   customFields?: FieldOrderItem[]
   dateFormat?: string
   handleEditAll?: () => void
+  cssClass?: string
 }
 
 const ClientCardModal: FC<P> = ({
   client,
+  cssClass,
   notes,
   getContactDetails,
   onClose,
@@ -935,8 +937,13 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px' }}>
-                  <ClientDashboardLayout>{children}</ClientDashboardLayout>
+                <div
+                  className={styles.clientCode}
+                  style={{ padding: cssClass ? '0px' : '12px' }}
+                >
+                  <ClientDashboardLayout cssClass={cssClass}>
+                    {children}
+                  </ClientDashboardLayout>
                 </div>
                 {/*<div>*/}
                 {/*  <ClientAppointmentsLayout isEmpty={true} />*/}
