@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.705",
+  "version": "2.0.707",
   "private": true,
   "type": "commonjs",
   "license": "Copyright Hambrand Technologies Ltd",
@@ -177,7 +177,6 @@
     "react-signature-canvas": "1.0.3",
     "react-sortable-hoc": "2.0.0",
     "react-string-replace": "0.4.4",
-    "react-swipeable": "6.2.0",
     "react-use": "17.2.4",
     "react-vertical-timeline-component": "3.3.3",
     "react-zoom-pan-pinch": "2.1.3",
