@@ -1,4 +1,4 @@
-import { extendType, intArg, objectType } from 'nexus'
+import { extendType, intArg, objectType, nonNull, list } from 'nexus'
 import { Context } from '../../context'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
