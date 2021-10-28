@@ -1670,6 +1670,8 @@ en:
   setup.taxrate.notification.createmodal.inputs.glcode.placeholder: eg. Nail Bar
   setup.taxrate.notification.createmodal.deletebtn: Delete
   setup.taxrate.notification.createmodal.activebtn: Active
+  setup.online-booking.activity.appointment.booked.title: 'Appointment Booked'
+  setup.online-booking.activity.appointment.booked.text: '{{time}} for {{serviceCount}} service with {{staffname}} by {{clientName}}'
   products.list.newbtn.product: 'New Product'
   products.list.newbtn.category: 'New Category'
   products.list.newbtn.supplier: 'New Supplier'

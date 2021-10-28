@@ -94,13 +94,16 @@ export const Index: FC<OnlineBookingProps> = ({
       const bookingData = data?.findManyBooking.map((booking) => {
         return {
           id: booking.id,
-          status: 'Appointment Booked',
+          status: t('setup.online-booking.activity.appointment.booked.title'),
           time: dayjs(booking.create_date.toString()).format('hh:mm A'),
-          details: `${dayjs(booking.start_date.toString()).format(
-            'ddd D MMM hh:mm A'
-          )} for 1 service with ${booking?.CmStaffGeneral?.Fname} ${
-            booking?.CmStaffGeneral?.Lname
-          } by ${booking?.Contact?.Fname} ${booking?.Contact?.Lname}`,
+          details: t('setup.online-booking.activity.appointment.booked.text', {
+            time: `${dayjs(booking.start_date.toString()).format(
+              'ddd D MMM hh:mm A'
+            )}`,
+            serviceCount: 1,
+            staffname: `${booking?.CmStaffGeneral?.Fname} ${booking?.CmStaffGeneral?.Lname}`,
+            clientName: `${booking?.Contact?.Fname} ${booking?.Contact?.Lname}`,
+          }),
           userImage: booking?.CmStaffGeneral?.User?.image
             ? getImage(booking?.CmStaffGeneral?.User?.image)
             : '',
