@@ -1,8 +1,8 @@
-import {objectType, extendType, nonNull, stringArg} from 'nexus'
-import {Context} from "../../context"
-import {SendTextLocalSMS} from '../../app/sms/sms-textlocal-service'
-import {SendNexmoSMS} from "../../app/sms/sms-nexmo-service";
-import { TextLocalResponse, NexmoResponse } from '../../app/sms/dto';
+import { objectType, extendType, nonNull, stringArg } from 'nexus'
+import { Context } from '../../context'
+import { SendTextLocalSMS } from '../../app/sms/sms-textlocal-service'
+import { SendNexmoSMS } from '../../app/sms/sms-nexmo-service'
+import { TextLocalResponse, NexmoResponse } from '../../app/sms/dto'
 
 export const SendSmsType = objectType({
   name: 'SendSmsType',
@@ -24,24 +24,28 @@ export const SendSMS = extendType({
       },
       async resolve(parent: any, args, ctx: Context) {
         try {
-          const international_company = await ctx.prisma.companyDetails.findFirst({
-            where: {
-              company_id: ctx.authenticated.company
+          const international_company = await ctx.prisma.companyDetails.findFirst(
+            {
+              where: {
+                company_id: ctx.authenticated.company,
+              },
             }
-          })
+          )
           const responseData = {
             success: false,
-            message_count: 0
+            message_count: 0,
           }
-          if (international_company.county == 'United States') {
-            const smsResponse:NexmoResponse = await SendNexmoSMS(args)
-            if (smsResponse.messages[0].status == '0') {
+          if (international_company.county === 'United States') {
+            const smsResponse: NexmoResponse = await SendNexmoSMS(args)
+            if (smsResponse.messages[0].status === '0') {
               responseData.success = true
             }
-            responseData.message_count = parseInt(smsResponse['message-count'])
+            responseData.message_count = Number.parseInt(
+              smsResponse['message-count']
+            )
           } else {
-            const smsResponse:TextLocalResponse = await SendTextLocalSMS(args)
-            if (smsResponse.status == 'success') {
+            const smsResponse: TextLocalResponse = await SendTextLocalSMS(args)
+            if (smsResponse.status === 'success') {
               responseData.success = true
             }
             responseData.message_count = smsResponse.num_messages
