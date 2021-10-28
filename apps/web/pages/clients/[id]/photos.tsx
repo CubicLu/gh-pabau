@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { cdnURL } from '../../../baseUrl'
 import dayjs from 'dayjs'
 import { useUser } from '../../../context/UserContext'
-import { AlbumProps, ImageProps, ClientPhotosLayout } from '@pabau/ui'
+import axios from 'axios'
+import {
+  AlbumProps,
+  ImageProps,
+  ClientPhotosLayout,
+  UploadingImageProps,
+} from '@pabau/ui'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import PhotoStudio from '../../../components/ClientCard/PhotoStudio'
 import {
+  GetAlbumPhotosDocument,
   useGetPhotoAlbumsQuery,
   GetPhotoAlbumsDocument,
   useGetAlbumPhotosQuery,
@@ -16,7 +23,12 @@ import {
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
   useDeleteOnePhotoAlbumMutation,
+  useCreateContactPhotoMutation,
+  useCreateContactPhotoWithoutAlbumMutation,
+  useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
+
+const baseURL = `${cdnURL}/v2/api/contact/`
 const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
 
 const iterateTo = (dataArr) => {
@@ -42,6 +54,15 @@ const iterateTo = (dataArr) => {
 }
 
 const Photos = () => {
+  const api = axios.create({
+    baseURL: baseURL,
+    headers: {
+      Authorization:
+        localStorage?.getItem('token') &&
+        `Bearer ${localStorage?.getItem('token')?.replaceAll('"', '')}`,
+    },
+  })
+
   const router = useRouter()
   const { me } = useUser()
   const [albums, setAlbums] = useState<AlbumProps>()
@@ -50,15 +71,31 @@ const Photos = () => {
   const [showPhotoStudio, setShowPhotoStudio] = useState(false)
   const [studioAlbumId, setStudioAlbumId] = useState<number>(0)
   const [studioImageId, setStudioImageId] = useState<number>(0)
+  const [uploadingFiles, setUploadingFiles] = useState<UploadingImageProps[]>(
+    []
+  )
   const [paginatedData, setPaginatedData] = useState({
     perPage: 50,
     currentPage: 1,
   })
 
+  const contactId = useMemo(() => {
+    return router.query.id ? Number(router.query.id) : 0
+  }, [router.query.id])
+
+  const variables = useMemo(() => {
+    return {
+      contactId: contactId,
+      albumId: albumId,
+      skip: (paginatedData?.currentPage - 1) * paginatedData?.perPage,
+      take: paginatedData?.perPage,
+    }
+  }, [albumId, contactId, paginatedData?.currentPage, paginatedData?.perPage])
+
   const { data: albumsData, loading: albumsLoading } = useGetPhotoAlbumsQuery({
     fetchPolicy: 'network-only',
     variables: {
-      contactId: router.query.id ? Number(router.query.id) : 0,
+      contactId: contactId,
     },
   })
 
@@ -67,18 +104,13 @@ const Photos = () => {
     loading: albumImagesLoading,
   } = useGetAlbumPhotosQuery({
     fetchPolicy: 'network-only',
-    variables: {
-      contactId: router.query.id ? Number(router.query.id) : 0,
-      albumId: albumId,
-      skip: (paginatedData?.currentPage - 1) * paginatedData?.perPage,
-      take: paginatedData?.perPage,
-    },
+    variables: variables,
   })
 
   const { data: unCatImagesCount } = useCountAlbumPhotosQuery({
     fetchPolicy: 'network-only',
     variables: {
-      contactId: router.query.id ? Number(router.query.id) : 0,
+      contactId: contactId,
       albumId: 0,
     },
   })
@@ -101,6 +133,64 @@ const Photos = () => {
   const [updateAlbum] = useUpdateOnePhotoAlbumMutation()
   const [deleteAlbum] = useDeleteOnePhotoAlbumMutation()
 
+  const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
+      const cAddedFiles = [...uploadingFiles]
+      const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
+      if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
+        cFile.id = data?.id
+        cFile.loading = false
+        cFile.isUploadCompleted = true
+        cAddedFiles.splice(idx, 1, cFile)
+        setUploadingFiles(cAddedFiles)
+      }
+    },
+  })
+
+  const [
+    createAttachmentOutOfAlbum,
+  ] = useCreateContactPhotoWithoutAlbumMutation({
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
+      const cAddedFiles = [...uploadingFiles]
+      const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
+      if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
+        cFile.id = data?.id
+        cFile.loading = false
+        cFile.isUploadCompleted = true
+        cAddedFiles.splice(idx, 1, cFile)
+        setUploadingFiles(cAddedFiles)
+      }
+    },
+  })
+
+  const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
+    onCompleted({ deleteContactAttachmentPhoto: data }) {
+      if (data?.success) {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          cAddedFiles.splice(idx, 1)
+          setUploadingFiles(cAddedFiles)
+        }
+      } else {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = false
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingFiles(cAddedFiles)
+        }
+      }
+    },
+  })
+
   useEffect(() => {
     if (albumsData?.findManyPhotoAlbum && !albumsLoading) {
       const innerAlbums = iterateTo(albumsData?.findManyPhotoAlbum)
@@ -122,6 +212,7 @@ const Photos = () => {
 
   useEffect(() => {
     if (albumImages?.findManyContactAttachment && !albumImagesLoading) {
+      setCurrAlbumImages([])
       const images = albumImages?.findManyContactAttachment?.map((el) => {
         return {
           id: el?.id,
@@ -132,7 +223,9 @@ const Photos = () => {
           isSensitive: false,
         }
       })
-      setCurrAlbumImages(images)
+      setTimeout(() => {
+        setCurrAlbumImages(images)
+      }, 0)
     }
   }, [albumImages, albumImagesLoading])
 
@@ -188,7 +281,7 @@ const Photos = () => {
           modified_date: dayjs().format('YYYY-MM-DD'),
           Contact: {
             connect: {
-              ID: Number(router.query.id),
+              ID: contactId,
             },
           },
           Company: {
@@ -202,7 +295,7 @@ const Photos = () => {
         {
           query: GetPhotoAlbumsDocument,
           variables: {
-            contactId: router.query.id ? Number(router.query.id) : 0,
+            contactId: contactId,
           },
         },
       ],
@@ -224,7 +317,7 @@ const Photos = () => {
         {
           query: GetPhotoAlbumsDocument,
           variables: {
-            contactId: router.query.id ? Number(router.query.id) : 0,
+            contactId: contactId,
           },
         },
       ],
@@ -243,13 +336,188 @@ const Photos = () => {
           {
             query: GetPhotoAlbumsDocument,
             variables: {
-              contactId: router.query.id ? Number(router.query.id) : 0,
+              contactId: contactId,
             },
           },
         ],
       })
     } else {
       console.log('KUCH TO GARH BARH HY')
+    }
+  }
+
+  const onImageUpload = async (fileData: UploadingImageProps) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
+    if (idx !== -1) {
+      const CancelToken = axios.CancelToken
+      const source = CancelToken.source()
+
+      const config = {
+        onUploadProgress: function (progressEvent) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+          const percAddedFiles = [...uploadingFiles]
+          const percIdx = percAddedFiles?.findIndex(
+            (el) => el?.id === fileData?.id
+          )
+          if (percIdx !== -1) {
+            const percFile = percAddedFiles[percIdx]
+            percFile.uploadPercentage = percentCompleted
+            percAddedFiles.splice(percIdx, 1, percFile)
+            setUploadingFiles(percAddedFiles)
+          }
+        },
+        cancelToken: source.token,
+      }
+      const data = new FormData()
+      data.append('File', fileData?.file)
+
+      const upStartFiles = [...uploadingFiles]
+      const upStartIdx = upStartFiles?.findIndex(
+        (el) => el?.id === fileData?.id
+      )
+      if (upStartIdx !== -1) {
+        const uppFile = upStartFiles[upStartIdx]
+        uppFile.isUploadStarted = true
+        uppFile.uploadPercentage = 0
+        uppFile.cancelToken = source
+        uppFile.isFailed = false
+        upStartFiles.splice(upStartIdx, 1, uppFile)
+        setUploadingFiles(upStartFiles)
+      }
+
+      await api
+        .post('upload-photo', data, config)
+        .then((res) => {
+          const data = JSON.parse(JSON.stringify(res.data))
+          if (data?.success) {
+            const upCompFiles = [...uploadingFiles]
+            const upCompIdx = upCompFiles?.findIndex(
+              (el) => el?.id === fileData?.id
+            )
+            if (upCompIdx !== -1) {
+              const uppCompFile = upCompFiles[upCompIdx]
+              uppCompFile.uploadedPath = data?.path
+              uppCompFile.loading = true
+              upCompFiles.splice(upCompIdx, 1, uppCompFile)
+              setUploadingFiles(upCompFiles)
+              if (fileData?.albumId > 0) {
+                createAttachmentInAlbum({
+                  variables: {
+                    album_id: albumId,
+                    attachment_type: 'contact',
+                    contact_id: contactId,
+                    date: dayjs().unix(),
+                    image_url: data?.path,
+                    uploaded_by: me?.user,
+                    company_id: me?.company,
+                  },
+                  refetchQueries: [
+                    {
+                      query: GetPhotoAlbumsDocument,
+                      variables: {
+                        contactId: contactId,
+                      },
+                    },
+                    {
+                      query: GetAlbumPhotosDocument,
+                      variables: variables,
+                    },
+                  ],
+                })
+              }
+              if (fileData?.albumId === 0) {
+                createAttachmentOutOfAlbum({
+                  variables: {
+                    attachment_type: 'contact',
+                    contact_id: contactId,
+                    date: dayjs().unix(),
+                    image_url: data?.path,
+                    uploaded_by: me?.user,
+                    company_id: me?.company,
+                  },
+                  refetchQueries: [
+                    {
+                      query: GetPhotoAlbumsDocument,
+                      variables: {
+                        contactId: contactId,
+                      },
+                    },
+                    {
+                      query: GetAlbumPhotosDocument,
+                      variables: variables,
+                    },
+                  ],
+                })
+              }
+            }
+          } else {
+            const files = [...uploadingFiles]
+            const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
+            if (fileIdx !== -1) {
+              const file = files[fileIdx]
+              file.isFailed = true
+              files.splice(fileIdx, 1, file)
+              setUploadingFiles(files)
+            }
+          }
+        })
+        .catch(() => {
+          const files = [...uploadingFiles]
+          const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
+          if (fileIdx !== -1) {
+            const file = files[fileIdx]
+            file.isFailed = true
+            files.splice(fileIdx, 1, file)
+            setUploadingFiles(files)
+          }
+        })
+    }
+  }
+
+  const onUploadCancel = async (fileData: UploadingImageProps) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
+    if (idx !== -1) {
+      await fileData?.cancelToken?.cancel()
+      cAddedFiles.splice(idx, 1)
+      setUploadingFiles(cAddedFiles)
+    }
+  }
+
+  const onImageRemove = (imageId: number) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === imageId)
+    if (idx !== -1) {
+      const cFile = cAddedFiles[idx]
+      cFile.loading = true
+      cAddedFiles.splice(idx, 1, cFile)
+      setUploadingFiles(cAddedFiles)
+    }
+    if (imageId) {
+      const cCurrAlbumImages = [...currAlbumImages]
+      const cImageIndex = cCurrAlbumImages?.findIndex(
+        (el) => el?.id === imageId
+      )
+      deleteAttachmentInAlbum({
+        variables: {
+          id: imageId,
+        },
+        refetchQueries: [
+          {
+            query: GetPhotoAlbumsDocument,
+            variables: {
+              contactId: contactId,
+            },
+          },
+          cImageIndex !== -1 && {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
+          },
+        ],
+      })
     }
   }
 
@@ -291,6 +559,11 @@ const Photos = () => {
           onAlbumCreate={onAlbumCreate}
           onAlbumUpdate={onAlbumUpdate}
           onAlbumDelete={onAlbumDelete}
+          onImageUpload={onImageUpload}
+          onImageRemove={onImageRemove}
+          onUploadCancel={onUploadCancel}
+          uploadingImages={uploadingFiles}
+          setUploadingImages={setUploadingFiles}
           openImageStudio={openPhotoStudio}
         />
       </ClientCardLayout>

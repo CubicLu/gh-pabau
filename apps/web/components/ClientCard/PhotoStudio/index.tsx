@@ -6,7 +6,6 @@ import dayjs from 'dayjs'
 import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
-  useCountAlbumPhotosQuery,
   useGetPhotoAlbumLazyQuery,
   useGetAlbumPhotosLazyQuery,
   useCreateContactPhotoMutation,
@@ -50,62 +49,24 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     UploadingImageProps[]
   >()
 
-  const {
-    data: unCatPhotosCount,
-    loading: countUncatPhotosLoading,
-  } = useCountAlbumPhotosQuery({
-    fetchPolicy: 'network-only',
-    variables: {
-      albumId: 0,
-      contactId: contactId,
-    },
-  })
-
-  const [
-    getUncatAlbumPhotos,
-    { data: dUnCatPhotos },
-  ] = useGetAlbumPhotosLazyQuery({
-    fetchPolicy: 'network-only',
-  })
-
-  const { data: dAlbums, loading: dAlbumsLoading } = useGetPhotoAlbumsQuery({
-    fetchPolicy: 'network-only',
-    variables: {
-      contactId: contactId,
-    },
-  })
-
-  const [
-    getCurrentAlbumData,
-    { data: dCurrentAlbum, loading: dCurrentAlbumloading },
-  ] = useGetPhotoAlbumLazyQuery({
-    fetchPolicy: 'network-only',
-  })
-
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
-    onCompleted({ createOneContactAttachment: data }) {
-      const path = data?.linkref
+    onCompleted(data) {
+      const path = data?.createOneContactAttachment?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.id
+        cFile.id = data?.createOneContactAttachment?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingImages(cAddedFiles)
-        if (data?.album_id === currentAlbumData?.id) {
-          const cCurrAlbumData = { ...currentAlbumData }
-          cCurrAlbumData.imageCount = cCurrAlbumData.imageCount + 1
-          cCurrAlbumData.imageList.push({
-            date: dayjs().format('YYYY-MM-DD'),
-            id: data?.id,
-            origin: data?.linkref?.includes('http')
-              ? data?.linkref
-              : `${cdn}${data?.linkref}`,
-          })
-          setCurrentAlbumData(cCurrAlbumData)
-        }
+        getCurrentAlbumData({
+          variables: {
+            albumId: currentAlbumData?.id,
+            contactId: contactId,
+          },
+        })
       }
     },
   })
@@ -113,29 +74,23 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const [
     createAttachmentOutOfAlbum,
   ] = useCreateContactPhotoWithoutAlbumMutation({
-    onCompleted({ createOneContactAttachment: data }) {
-      const path = data?.linkref
+    onCompleted(data) {
+      const path = data?.createOneContactAttachment?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.id
+        cFile.id = data?.createOneContactAttachment?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingImages(cAddedFiles)
-        if (data?.album_id === currentAlbumData?.id) {
-          const cCurrAlbumData = { ...currentAlbumData }
-          cCurrAlbumData.imageCount = cCurrAlbumData.imageCount + 1
-          cCurrAlbumData.imageList.push({
-            date: dayjs().format('YYYY-MM-DD'),
-            id: data?.id,
-            origin: data?.linkref?.includes('http')
-              ? data?.linkref
-              : `${cdn}${data?.linkref}`,
-          })
-          setCurrentAlbumData(cCurrAlbumData)
-        }
+        getUncatAlbumPhotos({
+          variables: {
+            contactId: contactId,
+            albumId: 0,
+          },
+        })
       }
     },
   })
@@ -176,26 +131,35 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     },
   })
 
-  useEffect(() => {
-    if (
-      unCatPhotosCount?.aggregateContactAttachment?.count?._all &&
-      !countUncatPhotosLoading
-    ) {
-      getUncatAlbumPhotos({
-        variables: {
-          contactId: contactId,
-          albumId: 0,
-          skip: 0,
-          take: unCatPhotosCount?.aggregateContactAttachment?.count?._all,
-        },
-      })
-    }
-  }, [
-    countUncatPhotosLoading,
-    contactId,
+  const [
     getUncatAlbumPhotos,
-    unCatPhotosCount?.aggregateContactAttachment?.count,
-  ])
+    { data: dUnCatPhotos },
+  ] = useGetAlbumPhotosLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const { data: dAlbums, loading: dAlbumsLoading } = useGetPhotoAlbumsQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      contactId: contactId,
+    },
+  })
+
+  const [
+    getCurrentAlbumData,
+    { data: dCurrentAlbum, loading: dCurrentAlbumloading },
+  ] = useGetPhotoAlbumLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  useEffect(() => {
+    getUncatAlbumPhotos({
+      variables: {
+        contactId: contactId,
+        albumId: 0,
+      },
+    })
+  }, [contactId, getUncatAlbumPhotos])
 
   useEffect(() => {
     setNonAlbumPhotos(dUnCatPhotos?.findManyContactAttachment)
@@ -390,12 +354,10 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     }
   }
 
-  const removeImage = async (imagePath) => {
+  const removeImage = async (imageId: number) => {
     const cAddedFiles = [...uploadingImages]
-    const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === imagePath)
+    const idx = cAddedFiles?.findIndex((el) => el?.id === imageId)
     if (idx !== -1) {
-      const data = new FormData()
-      data.append('file_path', imagePath)
       const cFile = cAddedFiles[idx]
       cFile.loading = true
       cAddedFiles.splice(idx, 1, cFile)
@@ -403,7 +365,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
 
       deleteAttachmentInAlbum({
         variables: {
-          id: cFile?.id,
+          id: imageId,
         },
       })
     }
