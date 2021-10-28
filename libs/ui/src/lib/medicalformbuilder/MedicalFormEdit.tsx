@@ -5,6 +5,8 @@ import {
   Notification,
   NotificationType,
   RuleProp,
+  CompanyListItem,
+  LabTestsListItem,
 } from '@pabau/ui'
 import { Col, Modal, Row } from 'antd'
 import { cloneDeep, isEqual } from 'lodash'
@@ -34,21 +36,23 @@ const medicalForms = [
   { id: 11, formType: 'basic', formName: 'basic_conditions' },
   { id: 12, formType: 'basic', formName: 'basic_drugs' },
   { id: 13, formType: 'basic', formName: 'basic_labtests' },
-  { id: 14, formType: 'basic', formName: 'basic_traveldestination' },
-  { id: 15, formType: 'basic', formName: 'basic_vaccinescheduler' },
-  { id: 16, formType: 'basic', formName: 'basic_vaccinehistory' },
-  { id: 17, formType: 'custom', formName: 'custom_emailmarketing' },
-  { id: 18, formType: 'custom', formName: 'custom_smsmarketing' },
-  { id: 19, formType: 'custom', formName: 'custom_phonecall' },
-  { id: 20, formType: 'custom', formName: 'custom_lettermarketing' },
-  { id: 21, formType: 'custom', formName: 'custom_membershipnumber' },
-  { id: 22, formType: 'custom', formName: 'custom_authorizationcode' },
-  { id: 23, formType: 'custom', formName: 'custom_company' },
-  { id: 24, formType: 'custom', formName: 'custom_dob' },
-  { id: 25, formType: 'custom', formName: 'custom_gender' },
-  { id: 26, formType: 'custom', formName: 'custom_physicaladdress' },
-  { id: 27, formType: 'custom', formName: 'custom_referredby' },
-  { id: 28, formType: 'custom', formName: 'custom_telephonenumber' },
+  // { id: 14, formType: 'basic', formName: 'basic_traveldestination' },
+  // { id: 15, formType: 'basic', formName: 'basic_vaccinescheduler' },
+  // { id: 16, formType: 'basic', formName: 'basic_vaccinehistory' },
+  { id: 14, formType: 'basic', formName: 'basic_snomed' },
+  { id: 15, formType: 'basic', formName: 'basic_slider' },
+  { id: 16, formType: 'custom', formName: 'custom_emailmarketing' },
+  { id: 17, formType: 'custom', formName: 'custom_smsmarketing' },
+  { id: 18, formType: 'custom', formName: 'custom_phonecall' },
+  { id: 19, formType: 'custom', formName: 'custom_lettermarketing' },
+  { id: 20, formType: 'custom', formName: 'custom_membershipnumber' },
+  { id: 21, formType: 'custom', formName: 'custom_authorizationcode' },
+  { id: 22, formType: 'custom', formName: 'custom_company' },
+  { id: 23, formType: 'custom', formName: 'custom_dob' },
+  { id: 24, formType: 'custom', formName: 'custom_gender' },
+  { id: 25, formType: 'custom', formName: 'custom_physicaladdress' },
+  { id: 26, formType: 'custom', formName: 'custom_referredby' },
+  { id: 27, formType: 'custom', formName: 'custom_telephonenumber' },
 ]
 const previewMapping = [
   { heading: 'basic_heading' },
@@ -65,9 +69,11 @@ const previewMapping = [
   { signature: 'basic_signature' },
   { cl_drugs: 'basic_drugs' },
   { labs_tests: 'basic_labtests' },
-  { vaccine_scheduler: 'basic_vaccinescheduler' },
-  { vaccine_history: 'basic_vaccinehistory' },
-  { travel_destination: 'basic_traveldestination' },
+  // { vaccine_scheduler: 'basic_vaccinescheduler' },
+  // { vaccine_history: 'basic_vaccinehistory' },
+  { snomed: 'basic_snomed' },
+  { slider: 'basic_slider' },
+  // { travel_destination: 'basic_traveldestination' },
   { btn_medical_condition: 'basic_conditions' },
   { diagram: 'empty' },
   { facediagram: 'empty' },
@@ -108,7 +114,7 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
 }
 
 const reverseForm = (form) => {
-  console.log('reverseForm =', form)
+  console.log('reverseForm', form)
   const mappingInfo = previewMapping.filter(
     (item) => Object.values(item)[0] === form.formName
   )
@@ -130,6 +136,10 @@ const reverseForm = (form) => {
     linked = form.txtLinkedField
     values = form.txtQuestion
     if (cssClass === 'textarea') {
+      defaults = form.txtBlock
+    }
+
+    if (cssClass === 'snomed') {
       defaults = form.txtBlock
     }
 
@@ -185,12 +195,11 @@ const reverseForm = (form) => {
       }
     }
   }
+  console.log('reverseObj', reverseObj)
   return reverseObj
 }
 
 const getFormInfo = (form) => {
-  // let name = ''
-  console.log('form =', form)
   let label = ''
   if (form.title) {
     if (typeof form.title === 'object') {
@@ -236,6 +245,10 @@ const getFormInfo = (form) => {
     txtBlockValue = form.defaults ? form.defaults : ''
   }
 
+  if (form.cssClass === 'snomed') {
+    txtBlockValue = form.defaults ? form.defaults : ''
+  }
+
   if (form.cssClass === 'staticText') {
     txtBlockValue = form.values.trim()
   }
@@ -258,15 +271,18 @@ const getFormInfo = (form) => {
   let signData = ''
   if (form.cssClass === 'signature' && typeof form.values === 'string') {
     signData = form.values
+    txtInputTypeValue = form.fldtype
   }
 
   let arrItemsValue: OptionType[] = []
   if (
     (form.cssClass === 'checkbox' ||
       form.cssClass === 'radio' ||
+      form.cssClass === 'slider' ||
       form.cssClass === 'select' ||
       form.cssClass === 'staticImage' ||
       form.cssClass === 'diagram_mini' ||
+      form.cssClass === 'labs_tests' ||
       form.cssClass === 'image') &&
     typeof form.values !== 'string'
   ) {
@@ -296,6 +312,7 @@ interface P {
   previewData: string
   changeFormName: (formName: string) => void
   changeFormType: (formType: string) => void
+  changeService: (services: Array<string | number>) => void
   clickedCreateForm: boolean
   clickedPreviewForm: boolean
   clearCreateFormBtn: () => void
@@ -303,13 +320,18 @@ interface P {
   onSaveForm: (formdata: string) => void
   triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
+  medicalFormType: string
+  medicalFormServices: string
   currentRules?: RuleProp[]
   currentAdvSettings?: MedicaFormAdvanceSettingData
+  companyServiceListItems?: CompanyListItem[]
+  labTestsListItems?: LabTestsListItem[]
 }
 
 const MedicalFormEdit: FC<P> = ({
   previewData,
   changeFormName,
+  changeService,
   changeFormType,
   clickedCreateForm,
   clearCreateFormBtn,
@@ -318,8 +340,12 @@ const MedicalFormEdit: FC<P> = ({
   onSaveForm,
   triggerChangeForms,
   formName,
+  medicalFormType = '',
+  medicalFormServices = '',
   currentRules = [],
   currentAdvSettings = defaultMedicaFormAdvanceSettingData,
+  companyServiceListItems = [],
+  labTestsListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
@@ -341,6 +367,7 @@ const MedicalFormEdit: FC<P> = ({
       const reversedFormObject = {
         form_structure: reversedFormData,
       }
+      console.log('reversedFormObject =', reversedFormObject)
       const formData = btoa(
         unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
       )
@@ -384,6 +411,7 @@ const MedicalFormEdit: FC<P> = ({
     ) {
       const previewDataArray = JSON.parse(atob(previewData))
       const previewForms = []
+      console.log('previewDataArray', previewDataArray)
       if (previewDataArray['form_structure']) {
         for (const form of previewDataArray['form_structure']) {
           let formName = ''
@@ -448,6 +476,7 @@ const MedicalFormEdit: FC<P> = ({
   }
 
   const handlingSaveForm = (form) => {
+    console.log('handlingSaveForm', form)
     const index = draggedForms.findIndex((item) => item['id'] === form.id)
     if (index !== -1) {
       draggedForms.splice(index, 1, form)
@@ -813,9 +842,13 @@ const MedicalFormEdit: FC<P> = ({
             refreshDraggedForms={refreshDraggedForms}
             isEditing={isEditing}
             medicalForms={medicalForms}
+            companyServiceListItems={companyServiceListItems}
             changeFormName={changeFormName}
+            changeService={changeService}
             changeFormType={changeFormType}
             formName={formName}
+            medicalFormType={medicalFormType}
+            medicalFormServices={medicalFormServices}
             changeLayout={changeLayout}
             runPreviewPdf={runPreviewPdf}
             handlingClickLeft={handlingClickLeft}
@@ -849,6 +882,7 @@ const MedicalFormEdit: FC<P> = ({
                 handlingFormSetting={handlingFormSetting}
                 handlingDeleteForm={handlingDeleteForm}
                 handlingSaveForm={handlingSaveForm}
+                labTestsListItems={labTestsListItems}
               />
             )}
           </Col>

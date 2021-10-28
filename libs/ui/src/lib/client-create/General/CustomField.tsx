@@ -133,8 +133,11 @@ const CustomField: FC<CustomFieldProps> = ({
                           ? dayjs(values[`customField_${item.id}`]?.toString())
                           : undefined
                       }
-                      onChange={(date) =>
-                        setFieldValue(`customField_${item.id}`, date)
+                      onChange={(date, dateString) =>
+                        setFieldValue(
+                          `customField_${item.id}`,
+                          dayjs(dateString)
+                        )
                       }
                       placeholder={t(
                         'quickCreate.custom.field.date.placeholder'
