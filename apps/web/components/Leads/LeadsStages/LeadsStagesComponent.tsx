@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { Tooltip } from 'antd'
 import { KanbanCard } from '@pabau/ui'
 import {
   useGetKanbanLeadsLazyQuery,
@@ -282,10 +283,18 @@ const LeadsStagesComponent = () => {
                             className={styles.leadStageTitlemain}
                           >
                             <div className={styles.leadStageTitle}>
-                              <div className={styles.leadStageName}>{name}</div>
+                              <Tooltip
+                                title={name}
+                                placement={'top'}
+                                overlayClassName={styles.overlay}
+                              >
+                                <div className={styles.leadStageName}>
+                                  {name}
+                                </div>
+                              </Tooltip>
                               <div
                                 className={styles.leadCount}
-                              >{`$0 . 5 Leads`}</div>
+                              >{`£0 . 5 Leads`}</div>
                             </div>
                           </div>
                         </div>
@@ -317,7 +326,7 @@ const LeadsStagesComponent = () => {
                                 userImage = User.image
                                   ? getImage(User.image)
                                   : austin
-                                userName = User.username
+                                userName = User.full_name
                               }
 
                               if (

@@ -17,6 +17,7 @@ query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
     User {
       id
       username
+      full_name
       image
     }
     Activity {
@@ -56,4 +57,8 @@ query getLeadPipelines {
       stage_order
     }
   }
+}
+
+query getCmLeadCount {
+  findManyCmLeadCount(where: { company_id: { equals: 8254 } })
 }
