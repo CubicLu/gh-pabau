@@ -150,10 +150,6 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     setDisabledTagIndexs(disableTagIndexArr)
   }, [disabledTags])
 
-  // useEffect(() => {
-  //   setOnlyEnabledTags(enabledTags)
-  // }, [enabledTags])
-
   useEffect(() => {
     if (valueWithTag === '') {
       let editorState = EditorState.createEmpty()
@@ -413,6 +409,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
       })
     }
     if (!showTagButton) inputChars += lastChars
+    props.onChange?.(inputChars)
     if (fullChange) props.onFullChange?.(inputChars)
   }
 
@@ -431,7 +428,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
 
   const onEditorStateChange = (e) => {
     const contentState = e.getCurrentContent()
-    const oldContentState = editorState.getCurrentContent()
+    // const oldContentState = editorState.getCurrentContent()
     const inputText = contentState.getPlainText()
     const findInfo = findWithRegex(HANDLE_REGEX, inputText)
     if (findInfo) {
@@ -458,13 +455,18 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
         findInfo,
         findTag.length > 0 ? false : true
       )
-    } else if (
-      contentState === oldContentState ||
-      contentState.getPlainText().length <= maxLength
-    ) {
+    } else {
       setEditorState(e)
       props.onChange?.(contentState.getPlainText())
     }
+    // } else if (
+    //   contentState === oldContentState ||
+    //   (maxLength !== 0 && contentState.getPlainText().length <= maxLength)
+    // ) {
+    //   setEditorState(e)
+    //   props.onChange?.(contentState.getPlainText())
+    // }
+
     triggerSaveInputChars(false)
   }
 

@@ -21,7 +21,7 @@ interface JourneyP {
 const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
   const { t } = useTranslationI18()
   const [appointements, setAppointments] = useState([])
-  const [selectedDate, setSelectedDate] = useState(dayjs().format('MMM D YYYY'))
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [startDate, setStartDate] = useState<number>(
     Number.parseFloat(dayjs().format('YYYYMMDDHHmmss'))
   )

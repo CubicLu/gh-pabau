@@ -13,6 +13,7 @@ COPY . .
 RUN yarn add -D prisma@2.29.1
 RUN node_modules/.bin/prisma generate
 RUN yarn add dayjs
+RUN yarn add form-data
 
 EXPOSE 4000
 ENTRYPOINT [ "node", "main.js" ]
