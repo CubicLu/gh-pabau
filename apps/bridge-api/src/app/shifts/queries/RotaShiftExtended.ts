@@ -1,4 +1,4 @@
-import { extendType, intArg } from 'nexus'
+import { extendType } from 'nexus'
 import { RotaShift } from '@prisma/client'
 import dayjs from 'dayjs'
 
