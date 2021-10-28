@@ -1,1 +1,1 @@
-export * from './prescription'
+export * from './MedicalFormExtended'
