@@ -44,6 +44,16 @@ import { ReactComponent as ImageAlbum } from '../../assets/images/image-album.sv
 import { ReactComponent as ListIcon } from '../../assets/images/list.svg'
 import { ReactComponent as GridIcon } from '../../assets/images/grid.svg'
 
+const albumFinder = (albums, albumId) => {
+  const album = albums?.find((el) => {
+    if (el?.id === albumId) {
+      return el
+    } else if (el?.album) albumFinder?.(el?.album, albumId)
+    return null
+  })
+  return album
+}
+
 export interface GalleryProps {
   albumList: AlbumProps
   images: ImageProps[]
@@ -62,6 +72,7 @@ export interface GalleryProps {
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (data: UploadingImageProps[]) => void
   onImageUpload?: (data: UploadingImageProps) => void
+  onImageRemove?: (imageId: number) => void
   onUploadCancel?: (data: UploadingImageProps) => void
 }
 
@@ -77,6 +88,7 @@ export const GalleryView: FC<GalleryProps> = ({
   uploadingImages,
   setUploadingImages,
   onImageUpload,
+  onImageRemove,
   onUploadCancel,
 }) => {
   const { t } = useTranslation('common')
@@ -131,7 +143,10 @@ export const GalleryView: FC<GalleryProps> = ({
     if (!currentData || currentData?.id === 0) {
       setCurrentData(albumList)
     } else {
-      // This block will be used when nested album will be considered
+      const currAlbum = albumFinder(albumList?.album, currentData?.id)
+      if (currAlbum) {
+        setCurrentData(currAlbum)
+      }
     }
   }, [albumList, currentData])
 
@@ -1010,9 +1025,14 @@ export const GalleryView: FC<GalleryProps> = ({
         uploadingImages={uploadingImages}
         visible={uploadModal}
         setUploadingImages={setUploadingImages}
-        onClose={() => setUploadModal((e) => !e)}
+        onClose={(done?: boolean) => {
+          setUploadModal((e) => !e)
+          if (done) {
+            setUploadingImages?.([])
+          }
+        }}
         uploadImage={onImageUpload}
-        removeImage={(img) => console.log('RE:', img)}
+        removeImage={onImageRemove}
         onCancelUpload={onUploadCancel}
       />
 

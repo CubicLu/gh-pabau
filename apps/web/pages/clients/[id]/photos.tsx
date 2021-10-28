@@ -22,10 +22,13 @@ import {
   useDeleteOnePhotoAlbumMutation,
   useCreateContactPhotoMutation,
   useCreateContactPhotoWithoutAlbumMutation,
+  useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
-const baseURL = `${cdnURL}/v2/api/contact/`
-const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+// const baseURL = `${cdnURL}/v2/api/contact/`
+const baseURL = `http://localhost:5000/`
+// const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+const attachmentsBaseUrl = `http://localhost:5000/`
 
 const Photos = () => {
   const api = axios.create({
@@ -91,13 +94,13 @@ const Photos = () => {
   const [deleteAlbum] = useDeleteOnePhotoAlbumMutation()
 
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingFiles]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
@@ -109,17 +112,41 @@ const Photos = () => {
   const [
     createAttachmentOutOfAlbum,
   ] = useCreateContactPhotoWithoutAlbumMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingFiles]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingFiles(cAddedFiles)
+      }
+    },
+  })
+
+  const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
+    onCompleted({ deleteContactAttachmentPhoto: data }) {
+      if (data?.success) {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          cAddedFiles.splice(idx, 1)
+          setUploadingFiles(cAddedFiles)
+        }
+      } else {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = false
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingFiles(cAddedFiles)
+        }
       }
     },
   })
@@ -166,6 +193,7 @@ const Photos = () => {
 
   useEffect(() => {
     if (albumImages?.findManyContactAttachment && !albumImagesLoading) {
+      setCurrAlbumImages([])
       const images = albumImages?.findManyContactAttachment?.map((el) => {
         return {
           id: el?.id,
@@ -176,7 +204,9 @@ const Photos = () => {
           isSensitive: false,
         }
       })
-      setCurrAlbumImages(images)
+      setTimeout(() => {
+        setCurrAlbumImages(images)
+      }, 0)
     }
   }, [albumImages, albumImagesLoading])
 
@@ -395,6 +425,40 @@ const Photos = () => {
     }
   }
 
+  const onImageRemove = (imageId: number) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === imageId)
+    if (idx !== -1) {
+      const cFile = cAddedFiles[idx]
+      cFile.loading = true
+      cAddedFiles.splice(idx, 1, cFile)
+      setUploadingFiles(cAddedFiles)
+    }
+    if (imageId) {
+      const cCurrAlbumImages = [...currAlbumImages]
+      const cImageIndex = cCurrAlbumImages?.findIndex(
+        (el) => el?.id === imageId
+      )
+      deleteAttachmentInAlbum({
+        variables: {
+          id: imageId,
+        },
+        refetchQueries: [
+          {
+            query: GetPhotoAlbumsDocument,
+            variables: {
+              contactId: contactId,
+            },
+          },
+          cImageIndex !== -1 && {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
+          },
+        ],
+      })
+    }
+  }
+
   return (
     <ClientCardLayout clientId={contactId} activeTab="photos">
       <ClientPhotosLayout
@@ -427,6 +491,7 @@ const Photos = () => {
         onAlbumUpdate={onAlbumUpdate}
         onAlbumDelete={onAlbumDelete}
         onImageUpload={onImageUpload}
+        onImageRemove={onImageRemove}
         onUploadCancel={onUploadCancel}
         uploadingImages={uploadingFiles}
         setUploadingImages={setUploadingFiles}

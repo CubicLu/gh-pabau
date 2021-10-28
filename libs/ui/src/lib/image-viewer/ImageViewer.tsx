@@ -902,9 +902,12 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
         {showCamUploader && (
           <CamUploader
             visible={showCamUploader}
-            onClose={() => {
+            onClose={(done?: boolean) => {
               setShowCamera(false)
               setShowCamUploader(() => false)
+              if (done) {
+                setUploadingImages?.([])
+              }
             }}
             uploadingImages={uploadingImages as UploadingImageProps[]}
             setUploadingImages={(images) => setUploadingImages?.(images)}
