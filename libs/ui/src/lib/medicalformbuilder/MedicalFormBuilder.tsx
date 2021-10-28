@@ -9,6 +9,12 @@ import {
   NotificationType,
   SmsMessageTemplateItem,
   UserListItem,
+  UserGroupListItem,
+  MacroItem,
+  CompanyListItem,
+  LabTestsListItem,
+  InvProductsListItem,
+  MedicalConditionsListItem,
 } from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
 import className from 'classnames'
@@ -27,6 +33,7 @@ const defaultMedicalForm = {
   key: '',
   name: '',
   formType: 'Treatment form',
+  serviceId: '',
   createdAt: '23/10/2020',
   version: {
     currentVersion: '3',
@@ -62,12 +69,21 @@ interface MedicalFormBuilderProps {
   visible: boolean
   onHideFormBuilder: () => void
   onSaveForm?: (MedicalFormItem) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
   preFormName: string
+  preFormType: string
+  preFormServices: string
   create?: boolean
   currentForm?: MedicalFormItem
   smsMessageTemplateItems?: SmsMessageTemplateItem[]
   emailMessageTemplateItems?: EmailMessageTemplateItem[]
   userListItems?: UserListItem[]
+  userGroupListItems?: UserGroupListItem[]
+  labTestsListItems?: LabTestsListItem[]
+  companyServiceListItems?: CompanyListItem[]
+  medicalFormMacros?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
 }
 
 export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
@@ -75,15 +91,28 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   visible = false,
   onHideFormBuilder,
   onSaveForm,
+  onHandleMacro,
   preFormName = '',
+  preFormType = '',
+  preFormServices = '',
   create = true,
   currentForm = null,
   smsMessageTemplateItems = [],
   emailMessageTemplateItems = [],
   userListItems = [],
+  userGroupListItems = [],
+  labTestsListItems = [],
+  medicalFormMacros = [],
+  companyServiceListItems = [],
+  invProductsListItems = [],
+  medicalConditionsListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
+  const [medicalFormType, setMedicalFormType] = useState(preFormType)
+  const [medicalFormServices, setMedicalFormServices] = useState(
+    preFormServices
+  )
   const [formSaveLabel, setFormSaveLabel] = useState('')
   const [
     currentMedicalForm,
@@ -102,7 +131,6 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   )
   const [draggedFormCnts, setDraggedFormCnts] = useState(0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
-
   const [disabledButton, setDisabledButton] = useState(true)
 
   useEffect(() => {
@@ -110,7 +138,17 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   }, [preFormName])
 
   useEffect(() => {
-    if (currentForm) setCurrentMedicalForm(currentForm)
+    setMedicalFormType(preFormType)
+  }, [preFormType])
+
+  useEffect(() => {
+    setMedicalFormServices(preFormServices)
+  }, [preFormServices])
+
+  useEffect(() => {
+    if (currentForm) {
+      setCurrentMedicalForm(currentForm)
+    }
   }, [currentForm])
 
   useEffect(() => {
@@ -125,6 +163,11 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
     setFormName(formName)
     if (currentMedicalForm) currentMedicalForm.name = formName
     if (defaultMedicalForm) defaultMedicalForm.name = formName
+  }
+
+  const changeService = (services) => {
+    if (currentMedicalForm) currentMedicalForm.serviceId = services.toString()
+    if (defaultMedicalForm) defaultMedicalForm.serviceId = services.toString()
   }
 
   const triggerChangeForms = (forms) => {
@@ -181,6 +224,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   }
 
   const handleSaveForm = (formData) => {
+    console.log('formData', formData)
     clearCreateFormBtn()
     if (create) {
       if (defaultMedicalForm) {
@@ -255,10 +299,12 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
           <MedicalFormEdit
             previewData={previewData}
             changeFormName={changeFormName}
+            changeService={changeService}
             changeFormType={changeFormType}
             clickedCreateForm={clickedCreateForm}
             clickedPreviewForm={clickedPreviewForm}
             clearCreateFormBtn={clearCreateFormBtn}
+            companyServiceListItems={companyServiceListItems}
             getFormData={getFormData}
             onSaveForm={handleSaveForm}
             formName={formName}
@@ -266,6 +312,9 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
             currentRules={
               create ? defaultMedicalForm?.rules : currentMedicalForm?.rules
             }
+            medicalFormType={medicalFormType}
+            medicalFormServices={medicalFormServices}
+            labTestsListItems={labTestsListItems}
           />
           {visiblePreview === true && (
             <MedicalFormPreview
@@ -274,6 +323,11 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
               formData={formData}
               formName={formName}
               formSaveLabel={formSaveLabel}
+              onHandleMacro={onHandleMacro}
+              medicalFormMacros={medicalFormMacros}
+              userGroupListItems={userGroupListItems}
+              invProductsListItems={invProductsListItems}
+              medicalConditionsListItems={medicalConditionsListItems}
             />
           )}
         </TabPane>

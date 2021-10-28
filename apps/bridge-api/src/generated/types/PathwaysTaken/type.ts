@@ -20,6 +20,18 @@ export const PathwaysTaken = objectType({
         return root.Pathway
       },
     })
+    t.field('CmContact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.CmContact
+      },
+    })
+    t.field('Booking', {
+      type: 'Booking',
+      resolve(root: any) {
+        return root.Booking
+      },
+    })
     t.list.field('PathwayStepsTaken', {
       type: 'PathwayStepsTaken',
       args: {

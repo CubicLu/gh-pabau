@@ -6,6 +6,7 @@ import { medicalFormData } from '../../../../components/MedicalForms/mock'
 interface MedicalFormItem {
   name: string
   formType: string
+  serviceId: string
   createdAt: string
   version: MedicalFormVersion
   status: string
@@ -45,6 +46,8 @@ export const EditMedicalForm: React.FC<CustomProps> = ({ data }) => {
         previewData=""
         onHideFormBuilder={hideFormBuilder}
         preFormName={Item.name}
+        preFormType={Item.formType}
+        preFormServices={Item.serviceId}
       />
     </div>
   )
