@@ -32,7 +32,9 @@ const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons, loading }) => {
                   }}
                 >
                   {stringToCurrencySignConverter(user.me?.currency)}
-                  {(b.value ?? 0).toFixed(2)}
+                  {(b.value ?? 0).toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  })}
                 </Text>
               ) : (
                 <Skeleton.Input

@@ -31,3 +31,32 @@ query saleItems($guid: String!) {
     }
   }
 }
+
+query getItemsData($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
+  items:findManySaleItem(where:
+    {InvSale:{customer_id:{equals: $customer_id}}}
+    take: $take,
+    skip: $skip
+  ){
+    item_name:product_name
+    item_type:product_category_type
+    quantity
+  	InvSale{
+      total
+      date
+      custom_id
+      biller_name
+    	InvBiller{
+        name
+      }
+    }
+  }
+}
+
+query totalItemsCount($customer_id: Int!){
+  aggregateSaleItem(where:{InvSale:{customer_id:{equals:$customer_id}}}){
+    _count{
+      id
+    }
+  }
+}

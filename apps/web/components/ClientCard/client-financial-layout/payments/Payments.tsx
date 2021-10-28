@@ -238,7 +238,7 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
         <Table
           rowKey="key"
           pagination={false}
-          dataSource={[...Array.from({ length: 8 })].map((_, index) => (
+          dataSource={[...Array.from({ length: 10 })].map((_, index) => (
             <div key={index}>
               <Skeleton.Input
                 active={true}
