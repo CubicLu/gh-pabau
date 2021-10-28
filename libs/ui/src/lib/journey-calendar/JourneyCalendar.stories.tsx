@@ -1,22 +1,19 @@
 /* eslint-disable */
-import React from 'react'
+import React, { useState } from 'react'
 import JourneyCalendar from './JourneyCalendar'
 
 export default {
   component: JourneyCalendar,
   title: 'UI/JourneyCalendar',
-  args: {},
-  argTypes: {},
 }
 
-const CalendarStory = ({ args }) => {
-  return <JourneyCalendar {...args}/>
+const JourneyCalendarStory = (args) => {
+  const [activeDate, setActiveDate] = useState(new Date())
+  return <JourneyCalendar {...args} activeDate={activeDate} setActiveDate={setActiveDate} />
 }
 
-export const Basic = CalendarStory.bind({})
-Basic.args = {
-  setActiveDate: (val) => {
-    console.log(val)
-  },
-  activeDate: 'Oct 21 2021'
+export const Calendar = JourneyCalendarStory.bind({})
+Calendar.args = {
+  activeDate: new Date(),
+  setActiveDate: (val) => console.log(val)
 }

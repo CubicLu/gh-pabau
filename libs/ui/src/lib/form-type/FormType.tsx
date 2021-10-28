@@ -29,7 +29,7 @@ interface Setting {
 
 export interface FormTypeProps {
   isEditing?: () => boolean
-  setting: Setting
+  medicalFormType: string
   onChangeSetting: (val: Setting) => void
 }
 
@@ -45,7 +45,7 @@ interface FormTypeInfo {
 
 export const FormType: FC<FormTypeProps> = ({
   isEditing,
-  setting,
+  medicalFormType = '',
   onChangeSetting,
 }) => {
   const { t } = useTranslation('common')
@@ -94,7 +94,7 @@ export const FormType: FC<FormTypeProps> = ({
   const goClickItem = (name) => {
     const typeInfo = { ...formTypeInfo }
     const newValue = !typeInfo[name].selected
-    for (const key of Object.keys(setting)) {
+    for (const key of Object.keys(typeInfo)) {
       typeInfo[key].selected = false
     }
     typeInfo[name].selected = newValue
@@ -110,6 +110,9 @@ export const FormType: FC<FormTypeProps> = ({
   }
 
   const handleClickItem = (name) => {
+    const typeInfo = { ...formTypeInfo }
+    if (typeInfo[name].selected === true) return
+
     if (isEditing?.() === true) {
       showWarningMessage(name)
       return
@@ -118,58 +121,53 @@ export const FormType: FC<FormTypeProps> = ({
   }
 
   useEffect(() => {
-    const defaultTypeInfos: FormTypeInfo = {
+    const formTypeInfo: FormTypeInfo = {
       medicalHistory: {
         label: medicalHistoryLabel,
-        selected: false,
+        selected: medicalFormType === 'questionnaire' ? true : false,
         desc: medicalHistoryDesc,
         icon: <MedicalHistory />,
         iconSelected: <MedicalHistorySelected />,
       },
       consent: {
         label: consentLabel,
-        selected: false,
+        selected: medicalFormType === 'consent' ? true : false,
         desc: consentDesc,
         icon: <Consent />,
         iconSelected: <ConsentSelected />,
       },
       treatment: {
         label: treatmentLabel,
-        selected: false,
+        selected: medicalFormType === 'treatment' ? true : false,
         desc: treatmentDesc,
         icon: <Treatment />,
         iconSelected: <TreatmentSelected />,
       },
       epaper: {
         label: epaperLabel,
-        selected: false,
+        selected: medicalFormType === 'epaper' ? true : false,
         desc: epaperDesc,
         icon: <EPaper />,
         iconSelected: <EPaperSelected />,
       },
       prescription: {
         label: prescriptionLabel,
-        selected: false,
+        selected: medicalFormType === 'prescription' ? true : false,
         desc: prescriptionDesc,
         icon: <Prescription />,
         iconSelected: <PrescriptionSelected />,
       },
       lab: {
         label: labLabel,
-        selected: false,
+        selected: medicalFormType === 'lab' ? true : false,
         desc: labDesc,
         icon: <Lab />,
         iconSelected: <LabSelected />,
       },
     }
-
-    const typeInfo = { ...defaultTypeInfos }
-    for (const key of Object.keys(setting)) {
-      typeInfo[key].selected = setting[key]
-    }
-    setFormTypesInfo({ ...typeInfo })
+    setFormTypesInfo(formTypeInfo)
   }, [
-    setting,
+    medicalFormType,
     medicalHistoryLabel,
     medicalHistoryDesc,
     consentLabel,

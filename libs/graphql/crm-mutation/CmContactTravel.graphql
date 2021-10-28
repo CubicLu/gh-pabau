@@ -27,9 +27,6 @@ fragment CmContactTravel on CmContactTravel {
   User {
     ...UserFields
   }
-  MedicalFormContact {
-    ...MedicalFormContactFields
-  }
 }
 
 mutation createOneCmContactTravel($data: CmContactTravelCreateInput!) {

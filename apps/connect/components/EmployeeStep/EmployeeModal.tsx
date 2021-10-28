@@ -11,6 +11,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from '../Header.module.less'
 import { SettingsContext } from '../../context/settings-context'
+import moment from 'moment'
 
 interface P {
   employeeData: Staff
@@ -50,8 +51,7 @@ const renderdesk = (employeeData) => {
                 <span className={Styles.deskRatting}>{item.rating}/5</span>
                 <Badge dot color={'gray'} />
                 <span className={Styles.deskMonth}>
-                  {item.date}
-                  month ago
+                  {moment(new Date(item.date * 1000)).fromNow()}
                 </span>
               </div>
             </div>
@@ -87,8 +87,7 @@ const rendermobile = (employeeData) => {
                 <span className={Styles.deskRatting}>{item.rating}/5</span>
                 <Badge dot color={'gray'} />
                 <span className={Styles.deskMonth}>
-                  {item.date}
-                  month ago
+                  {moment(new Date(item.date * 1000)).fromNow()}
                 </span>
               </div>
             </div>
@@ -112,7 +111,13 @@ const EmployeeModal: FC<P> = ({ employeeData, estimatedCost }) => {
   return (
     <Modal
       visible={isVisible}
-      onCancel={() => setIsVisible(false)}
+      onCancel={(e) => {
+        setIsVisible(false)
+        e.stopPropagation()
+      }}
+      onOk={(e) => {
+        e.stopPropagation()
+      }}
       footer={false}
     >
       <div className={Styles.mbLogo}>
@@ -135,11 +140,13 @@ const EmployeeModal: FC<P> = ({ employeeData, estimatedCost }) => {
       <div>
         <div className={Styles.modifuContex}>
           <div className={Styles.contentBox}>
-            <img
-              src={settings.pod_url + employeeData.Avatar}
-              className={Styles.userImage}
-              alt={'nothing'}
-            />
+            {employeeData.Avatar !== '' && (
+              <img
+                src={settings.pod_url + employeeData.Avatar}
+                className={Styles.userImage}
+                alt={'nothing'}
+              />
+            )}
             <div className={Styles.userDetailWrapper}>
               <div className={Styles.userDetail}>
                 <p className={Styles.userName}>

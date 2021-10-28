@@ -1,0 +1,59 @@
+query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
+  findManyCmLead(take: $limit, skip: $skip) {
+    lead_id: ID
+    Name: Fname
+    Avatar
+    lastName: Lname
+    OwnerID
+    ContactID
+    Contact {
+      Fname
+      Lname
+      Avatar
+    }
+    Title
+    status: EnumStatus
+    LastUpdated
+    User {
+      id
+      username
+      image
+    }
+    Activity {
+      id
+      note
+      subject
+      due_start_date
+      due_end_date
+      created_by
+      status
+    }
+    LeadStatus
+    PipelineStage {
+      id
+      name
+      stage_order
+      note
+      Pipeline {
+        id
+        name
+        status
+        description
+      }
+    }
+  }
+}
+
+query getLeadPipelines {
+  findManyPipeline(where: { reference: { equals: "leads" } }) {
+    name
+    description
+    status
+    note
+    PipelineStage {
+      id
+      name
+      stage_order
+    }
+  }
+}
