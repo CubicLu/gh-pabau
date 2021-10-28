@@ -8,7 +8,7 @@ import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
   useGetPhotoAlbumLazyQuery,
-  useGetUncatPhotosLazyQuery,
+  useGetAlbumPhotosLazyQuery,
   useCreateContactPhotoMutation,
   useCreateContactPhotoWithoutAlbumMutation,
   useDeleteContactPhotoMutation,
@@ -89,6 +89,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
         getUncatAlbumPhotos({
           variables: {
             contactId: contactId,
+            albumId: 0,
           },
         })
       }
@@ -134,7 +135,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const [
     getUncatAlbumPhotos,
     { data: dUnCatPhotos },
-  ] = useGetUncatPhotosLazyQuery({
+  ] = useGetAlbumPhotosLazyQuery({
     fetchPolicy: 'network-only',
   })
 
@@ -156,6 +157,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     getUncatAlbumPhotos({
       variables: {
         contactId: contactId,
+        albumId: 0,
       },
     })
   }, [contactId, getUncatAlbumPhotos])
