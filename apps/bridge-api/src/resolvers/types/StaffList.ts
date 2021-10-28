@@ -25,8 +25,8 @@ const StaffListType = objectType({
     t.string('last_login')
     t.string('CellPhone')
     t.string('Email')
-    t.string('City')
-    t.int('sickness')
+    t.string('location')
+    t.string('created')
   },
 })
 
@@ -61,13 +61,10 @@ export const PabauStaffList = extendType({
             searchTerm = `%${input.searchTerm}%`
           }
 
-          const date = Number.parseInt(
-            new Date().toISOString().replace(/\D/g, '').slice(0, -3)
-          )
           const staffList = await ctx.prisma
-            .$queryRaw`SELECT u.id,u.full_name,u.main_contact,u.job_title, u.admin,u.image,u.last_login,g.CellPhone,g.Email,g.City,g.ID as staff_id,r.sickness
+            .$queryRaw`SELECT u.id,u.full_name,u.main_contact,u.job_title, u.admin,u.image,u.last_login,u.created,g.CellPhone,g.Email,g.ID as staff_id, c.name as location
                       FROM cm_staff_general g left join users u on g.pabau_id = u.id
-                      left join (SELECT uid,sickness FROM rota_shifts where start <= ${date} and end >= ${date})  as r on r.uid = g.id
+                      left join (SELECT id, name FROM company_branches) as c on  g.DefaultLocation = c.id 
                       WHERE g.Occupier = ${companyId}
                        ${
                          input.admin

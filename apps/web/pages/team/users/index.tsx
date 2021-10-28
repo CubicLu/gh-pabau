@@ -25,6 +25,7 @@ import {
 import { useUser } from '../../../context/UserContext'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 import styles from './index.module.less'
+import dayjs from 'dayjs'
 
 export interface userDataProps extends UserProps {
   lastActivity: string
@@ -39,7 +40,9 @@ const Index: FunctionComponent = () => {
   const { t } = useTranslation('common')
   const router = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
-  const [currentDate] = useState(moment().utc())
+  const [currentDate] = useState(
+    Number.parseFloat(dayjs().format('YYYYMMDDHHmmss'))
+  )
   const [userView, setUserView] = useState<string>('Grid')
   const [tabValue, setTabValue] = useState<string | number>(0)
   const [isNewGroup, setIsNewGroup] = useState<boolean>(false)
@@ -92,6 +95,41 @@ const Index: FunctionComponent = () => {
   ])
 
   const { data, loading } = useFindManyCompanyStaffUsersQuery(getQueryVariables)
+  const [userTileData, setUserTitleData] = useState<UserProps[]>()
+
+  useEffect(() => {
+    if (data?.staffList?.staffList) {
+      const user = data.staffList.staffList.map((user) => {
+        let vacationDetail
+        const userHoliday = data.onVacationUsers.find(
+          (thread) => thread.uid === user.staff_id
+        )
+        if (userHoliday) {
+          vacationDetail = {
+            startDate: dayjs((userHoliday?.start).toString()).format(
+              'DD-MM-YYYY'
+            ),
+            endDate: dayjs((userHoliday?.end).toString()).format('DD-MM-YYYY'),
+          }
+        }
+
+        return {
+          id: user.id,
+          name: user.full_name,
+          title: user.job_title,
+          vacation: vacationDetail,
+          active: isOnline(user.last_login),
+          available: userHoliday && !userHoliday.sickness,
+          isPending: !user.last_login || user.created === user.last_login,
+          owner: user.main_contact,
+          img: user.image && getImage(user.image),
+          admin: user.admin,
+          isSick: userHoliday && userHoliday.sickness === 1,
+        }
+      })
+      setUserTitleData(user)
+    }
+  }, [data])
 
   useEffect(() => {
     setPaginateData((paginateData) => ({
@@ -130,45 +168,6 @@ const Index: FunctionComponent = () => {
     const end = moment(lastLogin).utc()
     const minutes = now.diff(end, 'minutes')
     return minutes <= 5
-  }
-
-  const isAvailable = (staffId?: number) => {
-    if (staffId) {
-      if (data?.onVacationUsers.length > 0) {
-        const userHoliday = data.onVacationUsers.find(
-          (thread) => thread.staff_id === staffId
-        )
-        if (userHoliday) {
-          return false
-        }
-      }
-      return true
-    }
-    return true
-  }
-  const isPending = (staffId?: number) => {
-    if (staffId) {
-      if (data?.pendingVacationUsers.length > 0) {
-        const userPendingHoliday = data.pendingVacationUsers.find(
-          (thread) => thread.staff_id === staffId
-        )
-        if (userPendingHoliday) {
-          return true
-        }
-      }
-      return false
-    }
-    return false
-  }
-
-  const getVacation = (staffId?: number) => {
-    const userHoliday = data?.onVacationUsers.find(
-      (thread) => thread.staff_id === staffId
-    )
-    return {
-      startDate: moment(userHoliday.holiday_from).format('DD-MM-YYYY'),
-      endDate: moment(userHoliday.holiday_to).format('DD-MM-YYYY'),
-    }
   }
 
   const onViewChange = (type: string) => {
@@ -350,29 +349,13 @@ const Index: FunctionComponent = () => {
                           />
                         )
                       })
-                    : data?.staffList?.staffList.length > 0
-                    ? data.staffList.staffList.map((user) => {
+                    : userTileData?.length > 0
+                    ? userTileData.map((user) => {
                         return (
                           <UserTile
                             key={user.id}
-                            id={user.id}
-                            name={user.full_name}
-                            title={user.job_title}
-                            vacation={
-                              !isAvailable(user.staff_id) &&
-                              getVacation(user.staff_id)
-                            }
-                            active={isOnline(user.last_login)}
-                            available={isAvailable(user.staff_id)}
-                            isPending={
-                              isAvailable(user.staff_id) &&
-                              isPending(user.staff_id)
-                            }
-                            owner={user.main_contact}
-                            img={user.image && getImage(user.image)}
-                            admin={user.admin}
                             isLoading={loading}
-                            isSick={user.sickness === 1}
+                            {...user}
                           />
                         )
                       })
@@ -398,12 +381,13 @@ const Index: FunctionComponent = () => {
                         name: user.full_name,
                         img: user.image && getImage(user.image),
                         title: user.job_title,
-                        lastActivity: moment(user.last_login).format(
-                          'DD-MM-YYYY'
-                        ),
+                        lastActivity:
+                          !(
+                            !user.last_login || user.created === user.last_login
+                          ) && dayjs(user.last_login).format('DD-MM-YYYY'),
                         mobile: user.CellPhone,
                         email: user.Email,
-                        location: user.City,
+                        location: user.location,
                         userGroup: user.admin ? 'Staff' : 'User',
                       }
                     })}

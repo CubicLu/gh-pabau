@@ -3,7 +3,7 @@ query findManyCompanyStaffUsers(
   $offset: Int!
   $limit: Int!
   $active: Int!
-  $currentDate: DateTime
+  $currentDate: Float
   $department: String
   $locationId: Int
   $admin: Int
@@ -29,30 +29,22 @@ query findManyCompanyStaffUsers(
       job_title
       image
       last_login
-      City
-      sickness
+      created
+      location
     }
   }
-  onVacationUsers: findManyHolidayRequest(
+  onVacationUsers: findManyRotaShift(
     where: {
-      holiday_from: { lte: $currentDate }
-      AND: { holiday_to: { gte: $currentDate } }
+      start: { lte: $currentDate }
+      AND: { end: { gte: $currentDate } }
+      reason_code :{equals : "Holiday"}
+      HolidayRequest: { status: {equals : "Approved"} }
     }
   ) {
-    staff_id
-    holiday_from
-    holiday_to
-    leave_type
-    status
-  }
-  pendingVacationUsers: findManyHolidayRequest(
-    where: { holiday_from: { gt: $currentDate } }
-  ) {
-    staff_id
-    holiday_from
-    holiday_to
-    leave_type
-    status
+    uid
+    start
+    end
+    sickness
   }
 }
 

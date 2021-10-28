@@ -8,7 +8,7 @@ import {
   useFindManyCompanyBranchesLazyQuery,
   useFindManyCompanyDepartmentsLazyQuery,
 } from '@pabau/graphql'
-import { Button, GridVsList, SimpleDropdown } from '@pabau/ui'
+import { Button, GridVsList } from '@pabau/ui'
 import {
   Checkbox,
   Drawer,
@@ -137,15 +137,20 @@ export const Filter: FunctionComponent<P> = ({
           departmentCalled &&
           !departmentLoader &&
           companyDepartments?.findManyCompanyDepartment?.length > 0 && (
-            <SimpleDropdown
+            <Select
+              className={styles.locationDropdown}
               value={departmentValue}
-              dropdownItems={companyDepartments?.findManyCompanyDepartment?.map(
-                (thread) => {
-                  return thread.department
-                }
-              )}
-              onSelected={(value) => setDepartment(value)}
-            />
+              onSelect={(value) => setDepartment(value)}
+            >
+              <Select.Option key={'all'} value={''}>
+                Select
+              </Select.Option>
+              {companyDepartments?.findManyCompanyDepartment?.map((item) => (
+                <Select.Option key={item.department} value={item.department}>
+                  {item.department}
+                </Select.Option>
+              ))}
+            </Select>
           )
         )}
       </div>

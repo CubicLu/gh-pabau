@@ -34,25 +34,6 @@ interface UnavailableProps {
   vacation?: Vacation
 }
 
-const UnavailableStatus: FC<UnavailableProps> = ({ vacation }) => {
-  const { t } = useTranslation('common')
-  return (
-    <Tooltip
-      title={`${t('team.user.grid.on.vacation.tooltip')}: ${
-        vacation?.startDate
-      }  - ${vacation?.endDate}`}
-      placement="bottom"
-    >
-      <div
-        className={styles.inner}
-        style={{
-          backgroundImage: `url(${Airplane})`,
-        }}
-      />
-    </Tooltip>
-  )
-}
-
 const UserIsAdmin: VoidFunctionComponent = (): JSX.Element => {
   const { t } = useTranslation('common')
   return (
@@ -139,11 +120,15 @@ export const UserTile: FC<UserProps> = ({
             />
             {!isMobile && <OwnerButtonJsx />}
             <div className={styles.userInfo}>
-              <p className={styles.name}>{name}</p>
+              <Tooltip title={name}>
+                <p className={styles.name}>{name}</p>
+              </Tooltip>
               <div className={styles.titleWrapper}>
                 {admin && <UserIsAdmin />}
                 {title !== '' ? (
-                  <p className={styles.title}>{title}</p>
+                  <Tooltip title={title}>
+                    <p className={styles.title}>{title}</p>
+                  </Tooltip>
                 ) : (
                   <span>
                     <p className={styles.title} style={{ color: '#54B2D3' }}>
@@ -155,7 +140,7 @@ export const UserTile: FC<UserProps> = ({
             </div>
           </div>
           <div className={styles.vacationWrapper}>
-            {available && isPending && (
+            {isPending && (
               <Button
                 className={styles.btnVacationPending}
                 disabled={true}
@@ -166,7 +151,24 @@ export const UserTile: FC<UserProps> = ({
                 </span>
               </Button>
             )}
-            {!available && <UnavailableStatus vacation={vacation} />}
+            {available && (
+              <Tooltip
+                title={`${t('team.user.grid.on.vacation.tooltip')}: ${
+                  vacation?.startDate
+                }  - ${vacation?.endDate}`}
+                placement="bottom"
+              >
+                <div
+                  className={className(
+                    styles.inner,
+                    available && isSick && styles.innerIcon
+                  )}
+                  style={{
+                    backgroundImage: `url(${Airplane})`,
+                  }}
+                />
+              </Tooltip>
+            )}
             {isSick && (
               <div
                 className={styles.inner}
