@@ -80,7 +80,6 @@ export const Activities: FC<ActivitiesProps> = ({
     []
   )
   const [visibleFilterPopUp, setVisibleFilterPopUp] = useState(false)
-  const [popOverVisible, setPopOverVisible] = useState(false)
   const [selectedFilterKey, setSelectedFilterKey] = useState<string[]>([])
   const [dateRange, setDateRange] = useState<Dayjs[]>([])
   const [paginateData, setPaginateData] = useState({
@@ -273,10 +272,6 @@ export const Activities: FC<ActivitiesProps> = ({
                       className={styles.btnCircle}
                       shape="circle"
                       icon={<MoreOutlined />}
-                      onClick={() => {
-                        console.log('click', popOverVisible)
-                        setPopOverVisible(!popOverVisible)
-                      }}
                     />
                   </Tooltip>
                 </Popover>
