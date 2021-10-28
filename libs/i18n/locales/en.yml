@@ -5436,10 +5436,13 @@ en:
   team.user.personal.details.employee.end.date.label: 'Employment end date'
   team.user.personal.details.primary.location.label: 'Primary Location'
   team.user.personal.details.other.location.label: 'Other Locations'
-  journey.modal.appointements.status.waiting: Waiting
-  journey.modal.appointements.status.arrived: Arrived
-  journey.modal.appointements.status.in.progress: In Progress
-  journey.modal.appointements.status.complete: Complete
+  journey.modal.appointements.status.waiting: 'Waiting'
+  journey.modal.appointements.status.arrived: 'Arrived'
+  journey.modal.appointements.status.in.progress: 'In Progress'
+  journey.modal.appointements.status.complete: 'Complete'
+  journey.modal.appointments.dr.name: 'Dr. {{drName}}'
+  journey.modal.appointments.item.payment.status.paid: 'Paid'
+  journey.modal.appointments.item.payment.status.unpaid: 'Unpaid'
   team.user.personal.details.avtar.modal.title: 'Edit Photo'
   team.user.personal.details.avtar.cancel.button: 'Cancel'
   team.user.personal.details.avtar.create.button: 'Create'

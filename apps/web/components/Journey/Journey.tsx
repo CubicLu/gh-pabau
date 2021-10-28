@@ -9,6 +9,10 @@ import { ReactComponent as InProgress } from '../../assets/images/in-progress.sv
 import { ReactComponent as Complete } from '../../assets/images/complete.svg'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import Appointments from '../Appointments/Appointments'
+import {
+  PaymentStatus,
+  AppointmentItemP,
+} from '../Appointments/AppointmentItem'
 import { useGetCompanyAppointmentsByDateQuery } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
 import { JourneyCalendar } from '@pabau/ui'
@@ -20,15 +24,14 @@ interface JourneyP {
 }
 
 const dateFormat = 'YYYYMMDDHHmmss'
-// eslint-disable-next-line unicorn/prefer-set-has
-const notInProgressStatuses = ['waiting', 'cancelled', 'complete']
 
 const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
   const { t } = useTranslationI18()
-  const [appointements, setAppointments] = useState([])
-  const [allAppointments, setAllAppointments] = useState([])
+  const [appointements, setAppointments] = useState<AppointmentItemP[]>([])
+  const [allAppointments, setAllAppointments] = useState<AppointmentItemP[]>([])
   const [filterStatus, setFilterStatus] = useState<string>()
   const [selectedDate, setSelectedDate] = useState(dayjs().format('MMM D YYYY'))
+  const [inProgressAppts, setInprogressAppts] = useState<number[]>([])
   const [startDate, setStartDate] = useState<number>(
     Number.parseFloat(dayjs().format(dateFormat))
   )
@@ -46,6 +49,12 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
     },
   })
 
+  const addInProgressAppt = (appt: number) => {
+    setInprogressAppts((prevState) => {
+      return [...prevState, appt]
+    })
+  }
+
   useEffect(() => {
     const startDate = Number.parseFloat(dayjs(selectedDate).format(dateFormat))
     const endDate = Number.parseFloat(
@@ -56,6 +65,7 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
   }, [selectedDate])
 
   useEffect(() => {
+    setInprogressAppts([])
     if (appointmentsData?.findManyBooking?.length > 0) {
       const appointements = appointmentsData.findManyBooking
         .filter((appt) => appt?.Contact !== null && appt.status !== 'Cancelled')
@@ -72,8 +82,12 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
             serviceName: appt?.service,
             checkingStatus: appt.status,
             service_id: appt?.service_id,
-            staffMember: `Dr. ${appt.CmStaffGeneral?.Fname} ${appt.CmStaffGeneral?.Lname}`,
-            paymentStatus: appt.InvSale ? 'paid' : 'unpaid',
+            staffMember: t('journey.modal.appointments.dr.name', {
+              drName: `${appt.CmStaffGeneral?.Fname} ${appt.CmStaffGeneral?.Lname}`,
+            }),
+            paymentStatus: appt.InvSale
+              ? PaymentStatus.paid
+              : PaymentStatus.unpaid,
             status: appt.status.toLocaleLowerCase(),
             date: appt.start_date,
           }
@@ -82,7 +96,9 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
       setAllAppointments(appointements)
     } else {
       setAppointments(null)
+      setAllAppointments(null)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appointmentsData])
 
   const renderHeaderCenter = () => (
@@ -99,13 +115,14 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
 
   useEffect(() => {
     if (filterStatus === 'in-progress') {
-      const filteredAppts = allAppointments.filter(
-        (appt) => !notInProgressStatuses.includes(appt.status)
+      const filteredAppts = allAppointments.filter((appt) =>
+        inProgressAppts?.includes(appt.id)
       )
       setAppointments(filteredAppts)
     } else {
       const filteredAppts = allAppointments.filter(
-        (appt) => appt.status === filterStatus
+        (appt) =>
+          appt.status === filterStatus && !inProgressAppts?.includes(appt.id)
       )
       setAppointments(filteredAppts)
     }
@@ -137,15 +154,21 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
         </div>
         <div className={styles.grid}>
           <div className={styles.gridItems}>
-            <Appointments appointments={appointements} />
+            <Appointments
+              appointments={appointements}
+              addInProgressAppt={addInProgressAppt}
+            />
           </div>
           <div className={styles.gridItems}>
             <Tile
               text={t('journey.modal.appointements.status.waiting')}
               count={
                 (allAppointments?.length > 0 &&
-                  allAppointments.filter((appt) => appt?.status === 'waiting')
-                    ?.length) ||
+                  allAppointments.filter(
+                    (appt) =>
+                      appt?.status === 'waiting' &&
+                      !inProgressAppts?.includes(appt.id)
+                  )?.length) ||
                 0
               }
               name="waiting"
@@ -155,13 +178,7 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
             />
             <Tile
               text={t('journey.modal.appointements.status.in.progress')}
-              count={
-                (allAppointments?.length > 0 &&
-                  allAppointments.filter(
-                    (appt) => !notInProgressStatuses.includes(appt.status)
-                  )?.length) ||
-                0
-              }
+              count={inProgressAppts?.length || 0}
               icon={<InProgress />}
               name="in-progress"
               onTileClick={onTileClick}

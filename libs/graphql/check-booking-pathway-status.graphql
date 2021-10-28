@@ -13,6 +13,7 @@ query checkPathwayStatus($bookingId: Int) {
         id
         name
         step
+        order
         PathwayStepsTaken(
           where: { PathwaysTaken: { booking_id: { equals: $bookingId } } }
         ) {

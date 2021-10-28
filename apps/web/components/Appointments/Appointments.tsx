@@ -8,15 +8,22 @@ import styles from './Appointments.module.less'
 
 interface P {
   appointments?: AppointmentItemP[]
+  addInProgressAppt?: (appt: number) => void
 }
 
-export const Appointments: FC<P> = ({ appointments }) => {
+export const Appointments: FC<P> = ({ appointments, addInProgressAppt }) => {
   return (
     <div>
       {appointments && appointments?.length > 0 && (
         <div className={styles.appointmentContainer}>
           {appointments.map((appt) => {
-            return <AppointmentItem key={appt.key} {...appt} />
+            return (
+              <AppointmentItem
+                key={appt.key}
+                {...appt}
+                addInProgressAppt={addInProgressAppt}
+              />
+            )
           })}
         </div>
       )}

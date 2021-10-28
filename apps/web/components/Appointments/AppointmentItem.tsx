@@ -1,14 +1,14 @@
-/**
- * This is a Pabau Appointments
- */
-
 import React, { FC, useState, useEffect } from 'react'
 import { Row, Col } from 'antd'
 import { Avatar } from '@pabau/ui'
 import { UserOutlined } from '@ant-design/icons'
 import { ButtonLabel } from '@pabau/ui'
 import styles from './AppointmentItem.module.less'
-import { useGetServicesByIdQuery } from '@pabau/graphql'
+import {
+  useGetServicesByIdQuery,
+  useCheckPathwayStatusQuery,
+} from '@pabau/graphql'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface AppointmentItemP {
   id?: number
@@ -21,11 +21,29 @@ export interface AppointmentItemP {
   staffMember?: string
   paymentStatus: string
   status?: string
-  date?: string | Date
+  date?: number
   service_id?: number
 }
 
-export const AppointmentItem: FC<AppointmentItemP> = ({
+interface AppointmentItemHandler {
+  addInProgressAppt?: (appt: number) => void
+}
+
+export enum PaymentStatus {
+  paid = 'paid',
+  unpaid = 'unpaid',
+}
+
+interface PathwayStep {
+  id: number
+  step: string
+  stepName: string
+  status: string
+  order: number
+}
+
+export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
+  id,
   time,
   avatar,
   clientName,
@@ -35,14 +53,55 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
   paymentStatus,
   status,
   service_id,
+  addInProgressAppt,
 }) => {
   const [appointementColor, setAppointmentColor] = useState('')
+  const [pathwayStep, setPathwayStep] = useState<PathwayStep[]>([])
+  const [currentStep, setCurrentStep] = useState<number>(0)
+  const { t } = useTranslationI18()
 
   const { data: serviceData } = useGetServicesByIdQuery({
     variables: {
       service_id: service_id,
     },
   })
+
+  const { data: pathwayTakenData } = useCheckPathwayStatusQuery({
+    variables: {
+      bookingId: id,
+    },
+  })
+
+  useEffect(() => {
+    if (pathwayStep?.length > 0) {
+      const currentStep =
+        pathwayStep.filter((step) => step.status === 'completed')?.length + 1
+      setCurrentStep(currentStep)
+    }
+  }, [pathwayStep])
+
+  useEffect(() => {
+    if (pathwayTakenData?.PathwayTaken?.length > 0) {
+      const { PathwayTaken } = pathwayTakenData
+      const activePathway = PathwayTaken.find(
+        (pathway) => pathway.status === 'ACTIVE'
+      )?.Pathway
+      const pathwaySteps = [...activePathway?.PathwayStep]
+        .sort((a, b) => a.order - b.order)
+        ?.map((step) => {
+          return {
+            id: step.id,
+            stepName: step?.name,
+            step: step?.step,
+            status: step.PathwayStepsTaken?.[0]?.status || '',
+            order: step.order,
+          }
+        })
+      setPathwayStep(pathwaySteps)
+      addInProgressAppt(id)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathwayTakenData])
 
   useEffect(() => {
     if (serviceData?.services.length > 0) {
@@ -67,7 +126,10 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
         </Col>
         <Col lg={7} md={7} xs={17}>
           <div className={styles.clientContainer}>
-            <Avatar size={52} src={avatar} name={clientName} />
+            <div className={styles.avatarContainer}>
+              {pathwayStep?.length > 0 && <p>{currentStep}</p>}
+              <Avatar size={52} src={avatar} name={clientName} />
+            </div>
             <div className={styles.clientInfo}>
               <p
                 style={{ color: status === 'no-show' ? '#ff5b64' : '#3d3d46' }}
@@ -89,14 +151,18 @@ export const AppointmentItem: FC<AppointmentItemP> = ({
           <div className={styles.statusLabel}>
             <ButtonLabel
               type={paymentStatus === 'paid' ? 'success' : 'danger'}
-              text={paymentStatus}
+              text={t(
+                `journey.modal.appointments.item.payment.status.${paymentStatus}`
+              )}
             />
           </div>
         </Col>
         <Col lg={4} md={4} xs={2}>
-          <div className={styles.counterButtonStyle}>
-            <button>0/5</button>
-          </div>
+          {pathwayStep?.length > 0 && (
+            <div className={styles.counterButtonStyle}>
+              <button>{`${currentStep}/${pathwayStep?.length}`}</button>
+            </div>
+          )}
         </Col>
       </Row>
     </div>
