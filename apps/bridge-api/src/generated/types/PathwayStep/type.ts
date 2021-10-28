@@ -26,6 +26,12 @@ export const PathwayStep = objectType({
         return root.Pathway
       },
     })
+    t.nullable.field('Company', {
+      type: 'Company',
+      resolve(root: any) {
+        return root.Company
+      },
+    })
     t.list.field('PathwayStepsTaken', {
       type: 'PathwayStepsTaken',
       args: {
