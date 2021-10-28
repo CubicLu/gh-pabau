@@ -1,4 +1,4 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import { MedicalFormTypes, LabTestsListItem } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import SettingElement from '../medicalform/SettingElement'
 import styles from './RightSidebar.module.less'
@@ -11,6 +11,7 @@ interface P {
   handlingFormSetting?: (componentID?: string) => void
   handlingDeleteForm?: (componentID?: string) => void
   handlingSaveForm?: (form: MedicalFormTypes) => void
+  labTestsListItems?: LabTestsListItem[]
 }
 
 export const RightSidebar: FC<P> = ({
@@ -21,6 +22,7 @@ export const RightSidebar: FC<P> = ({
   handlingFormSetting,
   handlingDeleteForm,
   handlingSaveForm,
+  labTestsListItems,
 }) => {
   const [isVisible, setIsVisible] = useState(display)
 
@@ -56,6 +58,7 @@ export const RightSidebar: FC<P> = ({
           selectedForm={selectedForm}
           handleSave={handleSave}
           handleDelete={handleDelete}
+          labTestsListItems={labTestsListItems}
         />
       </div>
     </div>

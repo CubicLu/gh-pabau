@@ -1,0 +1,52 @@
+fragment MedicalContactAttrFields on MedicalContactAttr {
+  id
+  attr_id
+  contact_id
+  value
+  updated_at
+  created_at
+  deleted_at
+  nhs_locum_id
+  group_label
+  medical_form_contact_id
+  attachment_size
+  custom_contact_name
+  custom_contact_id
+}
+
+fragment MedicalContactAttr on MedicalContactAttr {
+  ...MedicalContactAttrFields
+  MedicalFormContact {
+    ...MedicalFormContactFields
+  }
+}
+
+mutation createOneMedicalContactAttr($data: MedicalContactAttrCreateInput!) {
+  createOneMedicalContactAttr(data: $data) {
+    ...MedicalContactAttr
+  }
+}
+
+mutation updateOneMedicalContactAttr(
+  $where: MedicalContactAttrWhereUniqueInput!
+  $data: MedicalContactAttrUpdateInput!
+) {
+  updateOneMedicalContactAttr(where: $where, data: $data) {
+    ...MedicalContactAttr
+  }
+}
+
+mutation deleteOneMedicalContactAttr($where: MedicalContactAttrWhereUniqueInput!) {
+  deleteOneMedicalContactAttr(where: $where) {
+    ...MedicalContactAttr
+  }
+}
+
+mutation updateManyMedicalContactAttr(
+  $where: MedicalContactAttrWhereInput
+  $data: MedicalContactAttrUpdateManyMutationInput!
+) {
+  updateManyMedicalContactAttr(where: $where, data: $data) {
+    count
+  }
+}

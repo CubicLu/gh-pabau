@@ -8,8 +8,10 @@ describe('MedicalFormBuilder', () => {
       <MedicalFormBuilder
         previewData=""
         onHideFormBuilder={() => ''}
-        visible={false}
+        visible={true}
         preFormName=""
+        preFormType=""
+        preFormServices=""
         create={true}
       />
     )
