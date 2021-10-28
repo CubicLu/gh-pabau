@@ -30,7 +30,7 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
   const [appointements, setAppointments] = useState<AppointmentItemP[]>([])
   const [allAppointments, setAllAppointments] = useState<AppointmentItemP[]>([])
   const [filterStatus, setFilterStatus] = useState<string>()
-  const [selectedDate, setSelectedDate] = useState(dayjs().format('MMM D YYYY'))
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [inProgressAppts, setInprogressAppts] = useState<number[]>([])
   const [startDate, setStartDate] = useState<number>(
     Number.parseFloat(dayjs().format(dateFormat))

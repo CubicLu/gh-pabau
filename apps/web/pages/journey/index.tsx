@@ -27,7 +27,7 @@ const Journey: FC<JourneyP> = () => {
   const { t } = useTranslationI18()
   const [appointements, setAppointments] = useState<AppointmentItemP[]>([])
   const [allAppointments, setAllAppointments] = useState<AppointmentItemP[]>([])
-  const [selectedDate, setSelectedDate] = useState(dayjs().format('MMM D YYYY'))
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [inProgressAppts, setInprogressAppts] = useState<number[]>([])
   const [filterStatus, setFilterStatus] = useState<string>()
   const [startDate, setStartDate] = useState<number>(
