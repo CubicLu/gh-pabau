@@ -188,7 +188,7 @@ export interface ImageViewerProps {
   uploadingImages?: UploadingImageProps[]
   setUploadingImages?: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
-  removeImage?: (imagePath: string) => void
+  removeImage?: (imageId: number) => void
 }
 
 const ImageViewerModal: FC<ImageViewerProps> = ({

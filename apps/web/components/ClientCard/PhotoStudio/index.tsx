@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { ImageViewer, ImageViewerAlbum, UploadingImageProps } from '@pabau/ui'
 import { useUser } from '../../../context/UserContext'
 import axios from 'axios'
