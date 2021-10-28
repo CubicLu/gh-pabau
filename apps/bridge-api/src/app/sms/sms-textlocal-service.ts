@@ -1,11 +1,6 @@
 import axios from 'axios'
 
-if (process.env.TEXTLOCAL_API_KEY) {
-  console.log('Initializing sendgrid with an API key...')
-}
-
 export const SendTextLocalSMS = async (args) => {
-  console.log(args)
   const tlClient = axios.create({
     baseURL: 'https://api.txtlocal.com',
     params: {
@@ -18,9 +13,9 @@ export const SendTextLocalSMS = async (args) => {
   return tlClient
     .post('/send')
     .then(function (response) {
-      console.log(response.data)
+     return response.data
     })
     .catch(function (error) {
-      console.log(error)
+      return error
     })
 }

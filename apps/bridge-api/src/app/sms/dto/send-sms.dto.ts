@@ -1,18 +1,13 @@
-export interface TemplateData {
-  url?: string
-  name?: string
+export interface TextLocalResponse {
+  status?: string
+  num_messages?: number
 }
 
-export interface IData {
-  key: string
-  value: string | number | boolean
+export interface NexmoResponse {
+  messages?: any
 }
 
-export interface DynamicTemplateData {
-  fields?: IData[]
-}
-
-export interface SmsInput extends DynamicTemplateData {
+export interface SmsInput {
   to: Array<string> | string
   from?: string
   message?: string

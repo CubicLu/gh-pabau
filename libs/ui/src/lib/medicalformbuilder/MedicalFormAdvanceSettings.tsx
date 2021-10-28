@@ -102,11 +102,15 @@ const MedicalFormAdvanceSettings: FC<P> = ({
             onChange={(e) => onChangeSetting('headingUse', e.target.value)}
             value={settingData.data.headingUse}
           >
-            <Radio value={'use_to_separate'}>
-              {t('ui.medicalformbuilder.advanced.basic.heading.separate')}
+            <Radio value={'heading_by_default'}>
+              {t(
+                'ui.medicalformbuilder.advanced.basic.heading.default.heading'
+              )}
             </Radio>
-            <Radio value={'use_to_create_section'}>
-              {t('ui.medicalformbuilder.advanced.basic.heading.section')}
+            <Radio value={'section_by_default'}>
+              {t(
+                'ui.medicalformbuilder.advanced.basic.heading.default.section'
+              )}
             </Radio>
           </Radio.Group>
         </div>
@@ -141,14 +145,16 @@ const MedicalFormAdvanceSettings: FC<P> = ({
               checked={Number(settingData.reminder) === 0 ? false : true}
             >
               {t('ui.medicalformbuilder.advanced.basic.reminder')}
-              <InputNumber
-                style={{ width: '100%' }}
-                min={0}
-                step={1}
-                onChange={(e) => onChangeSetting('reminder', Number(e))}
-                value={settingData.reminder}
-              />
             </Checkbox>
+          </div>
+          <div>
+            <InputNumber
+              style={{ width: '100%' }}
+              min={0}
+              step={1}
+              onChange={(e) => onChangeSetting('reminder', Number(e))}
+              value={settingData.reminder}
+            />
           </div>
         </div>
       </div>
@@ -273,87 +279,6 @@ const MedicalFormAdvanceSettings: FC<P> = ({
               />
             </div>
           </div>
-        </div>
-      </div>
-      <div className={styles.formContainer}>
-        <Title level={5}>
-          {t('ui.medicalformbuilder.advanced.payment.title')}
-        </Title>
-        <label>{t('ui.medicalformbuilder.advanced.payment.description')}</label>
-        <div className={styles.formGroup}>
-          <Checkbox
-            onChange={(e) =>
-              onChangeSetting('paymentEnable', e.target.checked ? 1 : 0)
-            }
-            checked={
-              Number(settingData.data.paymentEnable) === 0 ? false : true
-            }
-          >
-            {t('ui.medicalformbuilder.advanced.payment.enablepay')}
-          </Checkbox>
-        </div>
-        <p>{t('ui.medicalformbuilder.advanced.payment.clientcard')}</p>
-        <div className={styles.formGroup}>
-          <p>{t('ui.medicalformbuilder.advanced.payment.amount')}</p>
-          <InputNumber
-            style={{ width: '100%' }}
-            min={0}
-            step={1}
-            value={settingData.data.paymentAmount}
-            onChange={(e) => onChangeSetting('paymentAmount', Number(e))}
-          />
-        </div>
-      </div>
-      <div className={styles.formContainer} style={{ marginTop: 2 }}>
-        <label>{t('ui.medicalformbuilder.advanced.payment.info')}</label>
-        <div className={styles.formGroup}>
-          <p>{t('ui.medicalformbuilder.advanced.payment.cardnumber')}</p>
-          <Input
-            value={settingData.data.cardNumber}
-            onChange={(e) => onChangeSetting('cardNumber', e.target.value)}
-            placeholder={'XXXX-XXXX-XXXX-XXXX'}
-          />
-        </div>
-        <Row gutter={24}>
-          <Col span={12}>
-            <div className={styles.formGroup}>
-              <p>Expiration</p>
-              <Input
-                value={settingData.data.cardExpiration}
-                onChange={(e) =>
-                  onChangeSetting('cardExpiration', e.target.value)
-                }
-                placeholder={'MM/YY'}
-              />
-            </div>
-          </Col>
-          <Col span={12}>
-            <div className={styles.formGroup}>
-              <p>CVV</p>
-              <Input
-                value={settingData.data.cardCvv}
-                onChange={(e) => onChangeSetting('cardCvv', e.target.value)}
-                placeholder={'XXX'}
-              />
-            </div>
-          </Col>
-        </Row>
-        <div className={styles.formGroup}>
-          <Button
-            disabled={
-              !settingData.data.cardNumber ||
-              !settingData.data.cardExpiration ||
-              !settingData.data.cardCvv
-            }
-            type="primary"
-            block
-            onClick={onAddCardDetails}
-          >
-            {t('ui.medicalformbuilder.advanced.payment.addcard')}
-          </Button>
-        </div>
-        <div className={styles.formGroup} style={{ marginBottom: 20 }}>
-          <label>{t('ui.medicalformbuilder.advanced.payment.detail')}</label>
         </div>
       </div>
     </div>

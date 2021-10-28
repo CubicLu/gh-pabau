@@ -11,13 +11,13 @@ export interface Context {
    * The Prisma Client
    */
   prisma: PrismaClient
-
   /**
    * For Authentication module to resolve pod user.id, we have this emergency hatch that returns a PrismaClient instance
    * for the specified pod.
    *
    * @param remote_url - The `remote_url` from the database
    */
+
   prismaArray(remote_url: string): PrismaClient
 
   /**

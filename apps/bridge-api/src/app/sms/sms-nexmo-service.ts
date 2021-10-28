@@ -1,24 +1,23 @@
 import axios from 'axios'
 
-export const SendNexmoSMS = async (from, to, message) => {
+export const SendNexmoSMS = async (args) => {
   const tlClient = axios.create({
     baseURL: 'https://rest.nexmo.com',
     params: {
       api_key: process.env.NEXMO_API_KEY, //Text local api key
       api_secret: process.env.NEXMO_API_SICRET,
       type: 'unicode',
-      from: from,
-      to: to,
-      text: message,
+      from: args.from,
+      to: args.to,
+      text: args.message,
     },
   })
   return tlClient
     .get('/sms/json?')
     .then(function (response) {
-      // console.log(response);
-      console.log(response.data)
+     return response.data
     })
     .catch(function (error) {
-      console.log(error)
+      return error
     })
 }

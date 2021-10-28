@@ -14,5 +14,6 @@ export const SendersResult = objectType({
     t.string('data')
     t.int('is_default')
     t.int('enterprise_email')
+    t.string('senders_name')
   },
 })

@@ -1,0 +1,45 @@
+fragment ApiKeyFields on ApiKey {
+  id
+  company_id
+  api_key
+  app_type
+  created_date
+  contacts
+  bookings
+  invoices
+  locations
+  services
+  staff
+  financials
+  leads
+  medical_forms
+  reports
+}
+
+fragment ApiKey on ApiKey {
+  ...ApiKeyFields
+}
+
+mutation createOneApiKey($data: ApiKeyCreateInput!) {
+  createOneApiKey(data: $data) {
+    ...ApiKey
+  }
+}
+
+mutation updateOneApiKey($where: ApiKeyWhereUniqueInput!, $data: ApiKeyUpdateInput!) {
+  updateOneApiKey(where: $where, data: $data) {
+    ...ApiKey
+  }
+}
+
+mutation deleteOneApiKey($where: ApiKeyWhereUniqueInput!) {
+  deleteOneApiKey(where: $where) {
+    ...ApiKey
+  }
+}
+
+mutation updateManyApiKey($where: ApiKeyWhereInput, $data: ApiKeyUpdateManyMutationInput!) {
+  updateManyApiKey(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,35 @@
+fragment AppSubscriptionFields on AppSubscription {
+  id
+  key_value
+  name
+  Description
+  price
+}
+
+fragment AppSubscription on AppSubscription {
+  ...AppSubscriptionFields
+}
+
+mutation createOneAppSubscription($data: AppSubscriptionCreateInput!) {
+  createOneAppSubscription(data: $data) {
+    ...AppSubscription
+  }
+}
+
+mutation updateOneAppSubscription($where: AppSubscriptionWhereUniqueInput!, $data: AppSubscriptionUpdateInput!) {
+  updateOneAppSubscription(where: $where, data: $data) {
+    ...AppSubscription
+  }
+}
+
+mutation deleteOneAppSubscription($where: AppSubscriptionWhereUniqueInput!) {
+  deleteOneAppSubscription(where: $where) {
+    ...AppSubscription
+  }
+}
+
+mutation updateManyAppSubscription($where: AppSubscriptionWhereInput, $data: AppSubscriptionUpdateManyMutationInput!) {
+  updateManyAppSubscription(where: $where, data: $data) {
+    count
+  }
+}

@@ -13,6 +13,7 @@ export const getSenders = async (ctx: Context) => {
       data: email.company_email,
       is_default: email.default_email,
       enterprise_email: email.enterprise_email,
+      senders_name: email.senders_name,
     })
   }
 
