@@ -236,7 +236,7 @@ export const TestForm = () => {
   }, [businessDetails])
 
   const saveMedicalFormContact = async (draggedForms: MedicalFormTypes[]) => {
-    const complete = 0
+    const complete = 1
     const custom_contact_id = 0
     const custom_contact_name = ''
     const custom_user_name = ''
@@ -352,7 +352,7 @@ export const TestForm = () => {
       if (cssClass === 'labs_tests') {
         attr_name = index + 'labs_tests[]'
       }
-      item.attrName = attr_name.replace(' ', '_').toLowerCase()
+      item.attrName = attr_name.replace('_', ' ').toLowerCase()
 
       if (cssClass === 'input_text' || cssClass === 'textarea')
         item.attrValue = item.txtValue
