@@ -8,6 +8,10 @@ query getFinancialInvoices($take: Int = 50, $skip: Int = 0, $where: InvoiceWhere
     location_name
     status
     guid
+    amount_paid
+    discount_amount
+    inv_total
+    tip
   }
 }
 

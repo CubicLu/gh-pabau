@@ -9,7 +9,7 @@ import {
 import { Typography, Button, Popover, Radio, Space, Skeleton } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
-import { GetPaymentsDocument, TotalPaymentsCountDocument } from '@pabau/graphql'
+import { GetPaymentsDocument } from '@pabau/graphql'
 import { useQuery } from '@apollo/client'
 import dayjs from 'dayjs'
 import { useUser } from '../../../../context/UserContext'
@@ -21,7 +21,10 @@ const getInvoicePaymentValues = () => {
   }
 }
 
-export const Payments: FC<ClientFinancialsLayoutProps> = ({ clientId }) => {
+export const Payments: FC<ClientFinancialsLayoutProps> = ({
+  clientId,
+  totalPaymentCounts,
+}) => {
   const { t } = useTranslation('common')
   const { Text } = Typography
   const user = useUser()
@@ -48,12 +51,6 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({ clientId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginateData.limit, paginateData.offset, clientId])
 
-  const { data: totalPaymentCounts } = useQuery(TotalPaymentsCountDocument, {
-    skip: !clientId,
-    variables: {
-      ContactID: clientId,
-    },
-  })
   const { data: payment, loading } = useQuery(
     GetPaymentsDocument,
     getQueryVariables
@@ -64,7 +61,7 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({ clientId }) => {
     payment?.findManyInvPayment?.map((item, index) => {
       paymentsDetails.push({
         id: index,
-        date: dayjs(`${item.date}` as 'YYYYMMDDHHmmss').format('DD/MM/YYYY'),
+        date: dayjs.unix(item?.date).format('DD/MM/YYYY'),
         invoiceNo: item?.InvSale?.custom_id,
         paymentNo: item?.id,
         location: item?.InvSale?.Location?.name,

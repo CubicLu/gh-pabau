@@ -1,6 +1,7 @@
 import React, { FC, useRef } from 'react'
 import styles from './ClientFinancialsLayout.module.less'
 import { TabMenu } from '@pabau/ui'
+import { TotalPaymentsCountQuery } from '@pabau/graphql'
 
 export interface InvoiceInvoicePayments {
   id: number
@@ -122,6 +123,7 @@ export interface ClientFinancialsLayoutProps {
   voidedPayments: FinancialVoidedPayment[]
   statements: FinancialStatements[]
   tabLabels?: string[]
+  totalPaymentCounts?: TotalPaymentsCountQuery
 }
 
 export const ClientFinancialsLayout: FC<ClientFinancialsLayoutProps> = (

@@ -100,13 +100,16 @@ export const Invoices: FC<P> = (props) => {
   const [isClear, setIsClear] = useState(true)
   const [saleItems, setSaleItem] = useState<ISalesItemProps[]>()
   const [totalVat, setTotalVat] = useState(0)
+  const [expansionKey, setExpansionKey] = useState('')
 
   useEffect(() => {
     const invoicesDetails = []
+    const expandedInvoice = invoice?.findManyInvoice?.filter(
+      (item) => item.guid === expansionKey
+    )
     invoice?.findManyInvoice?.map((item) => {
-      const lastIndex = salesDetails?.items?.length - 1
-      const discount = salesDetails?.items[lastIndex]?.InvSale?.discount_amount
-      const inv_total = salesDetails?.items[lastIndex]?.InvSale?.inv_total
+      const discount = expandedInvoice[0]?.discount_amount
+      const inv_total = expandedInvoice[0]?.inv_total
       invoicesDetails.push({
         id: `${item.id}`,
         date: dayjs(`${item.date}`).format('DD/MM/YYYY'),
@@ -116,9 +119,9 @@ export const Invoices: FC<P> = (props) => {
         paid: item.status === 'paid' ? true : false,
         items: saleItems,
         totalVat: totalVat,
-        amountPaid: salesDetails?.items[lastIndex]?.InvSale?.paid_amount,
+        amountPaid: expandedInvoice[0]?.amount_paid,
         subtotal: discount !== 0 ? inv_total + discount : inv_total,
-        tips: salesDetails?.items[lastIndex]?.InvSale?.tip,
+        tips: expandedInvoice[0]?.tip,
         grandTotal: item.amount,
       })
       return invoicesDetails
@@ -157,16 +160,20 @@ export const Invoices: FC<P> = (props) => {
   }, [salesDetails])
 
   useEffect(() => {
+    const expandedInvoice = invoice?.findManyInvoice?.filter(
+      (item) => item.guid === expansionKey
+    )
     setTotalOutstanding(
       salesDetails
-        ? salesDetails?.items[0]?.InvSale?.paid_amount
+        ? expandedInvoice[0]?.amount_paid
         : invoice?.findManyInvoice[0]?.amount ?? 0
     )
     setTotalInvoiced(
       salesDetails
-        ? salesDetails?.items[0]?.InvSale?.inv_total
+        ? expandedInvoice[0]?.inv_total
         : invoice?.findManyInvoice[0]?.amount ?? 0
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesDetails, invoice])
 
   useEffect(() => {
@@ -297,6 +304,7 @@ export const Invoices: FC<P> = (props) => {
                 const index = invoice?.findManyInvoice?.findIndex(
                   (item) => item.id === Number.parseInt(row['id'])
                 )
+                setExpansionKey(invoice?.findManyInvoice[index]?.guid)
                 onExpand?.(invoice?.findManyInvoice[index]?.guid)
                 if (expandedRow === row['key']) return setExpandedRow(0)
 

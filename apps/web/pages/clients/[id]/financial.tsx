@@ -16,6 +16,7 @@ import {
   TotalInvoiceCountDocument,
   SaleItemsDocument,
   GetContactInvoicesDocument,
+  TotalPaymentsCountDocument,
 } from '@pabau/graphql'
 import {
   financialInvoices,
@@ -131,6 +132,13 @@ const Financial = () => {
     SaleItemsDocument,
     getsalesDetailsQueryVariables
   )
+
+  const { data: totalPaymentCounts } = useQuery(TotalPaymentsCountDocument, {
+    skip: !router.query.id,
+    variables: {
+      ContactID: Number.parseInt(`${router.query.id}`),
+    },
+  })
   const handlePagination = (take, skip) => {
     setPagination({
       take: take,
@@ -160,7 +168,9 @@ const Financial = () => {
         tabPosition="top"
         menuItems={[
           `Invoices (${totalInvoices?.aggregateInvoice?.count?.id ?? 0})`,
-          `Payments`,
+          `Payments (${
+            totalPaymentCounts?.aggregateInvPayment?.count?.id ?? 0
+          })`,
           `Items`,
           `Voided`,
           `Statements`,
@@ -190,7 +200,11 @@ const Financial = () => {
           onExpand={handleExpandsionClick}
           onFilterSubmit={handleFilter}
         />
-        <Payments {...props} clientId={Number.parseInt(`${router.query.id}`)} />
+        <Payments
+          {...props}
+          totalPaymentCounts={totalPaymentCounts}
+          clientId={Number.parseInt(`${router.query.id}`)}
+        />
         <Items
           dataProps={props}
           invoiceEmployeeOptions={invoiceEmployeeOptions}

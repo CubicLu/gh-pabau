@@ -4,6 +4,10 @@ fragment InvoiceFields on Invoice {
   guid
   date
   amount
+  amount_paid
+  discount_amount
+  inv_total
+  tip
   status
   location_name
   billers
