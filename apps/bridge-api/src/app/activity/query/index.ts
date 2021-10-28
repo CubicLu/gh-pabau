@@ -58,11 +58,21 @@ export const CmLeadCustomType = objectType({
     t.string('Phone')
     t.string('Description')
     t.field('User', { type: 'User' })
+    t.field('Contact', { type: 'CmContact' })
+    t.field('PipelineStage', { type: 'PipelineStage' })
     t.field('ConvertDate', { type: 'DateTime' })
     t.field('CreatedDate', { type: 'DateTime' })
+    t.field('LastUpdated', { type: 'DateTime' })
     t.int('leadDoneActivities')
+    t.int('leadActivitesToDo')
+    t.int('emailMessagesCount')
+    t.int('location_id')
+    t.field('Location', { type: 'CompanyBranch' })
     t.field('firstActivityTime', { type: 'DateTime' })
     t.field('leadLastActivityDate', { type: 'DateTime' })
+    t.field('leadNextActivityDate', { type: 'DateTime' })
+    t.field('leadLastEmailReceived', { type: 'DateTime' })
+    t.field('leadLastEmailSend', { type: 'DateTime' })
     t.int('leadLastActivityDays')
     t.int('leadTotalActivities')
     t.string('leadLostReason')
@@ -163,6 +173,11 @@ const customFields = [
   'wonTime',
   'leadLostReason',
   'leadStage',
+  'leadActivitesToDo',
+  'emailMessagesCount',
+  'leadLastEmailSend',
+  'leadLastEmailReceived',
+  'leadNextActivityDate',
 ]
 
 const customFilterColumnList = [

@@ -37,6 +37,7 @@ import {
   useGetMarketingSourcesQuery,
   useGetLeadStatusQuery,
   useRetrievePipelineQuery,
+  useGetActiveLocationQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
@@ -243,6 +244,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [leadSourceData, setLeadSourceData] = useState<OptionList[]>([])
   const [leadStageData, setLeadStageData] = useState<OptionList[]>([])
   const [pipelineData, setPipelineData] = useState<OptionList[]>([])
+  const [locationData, setLocationData] = useState<OptionList[]>([])
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
@@ -324,6 +326,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const { data: leadSourceResponse } = useGetMarketingSourcesQuery()
   const { data: leadStatusResponse } = useGetLeadStatusQuery()
   const { data: pipelineResponse } = useRetrievePipelineQuery()
+  const { data: locationResponse } = useGetActiveLocationQuery()
 
   useEffect(() => {
     if (leadSourceResponse?.findManyMarketingSource) {
@@ -364,6 +367,18 @@ export const Index: FC<IndexProps> = ({ client }) => {
       setPipelineData(records)
     }
   }, [pipelineResponse])
+
+  useEffect(() => {
+    if (locationResponse?.locations) {
+      const records = [...locationResponse.locations]?.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setLocationData(records)
+    }
+  }, [locationResponse])
 
   useEffect(() => {
     const response = activityResponse?.findManyActivityData
@@ -1203,6 +1218,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             leadSourceData={leadSourceData}
             leadStageData={leadStageData}
             pipelineData={pipelineData}
+            locationData={locationData}
           />
         )}
         <div>
@@ -1267,6 +1283,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             leadSourceData={leadSourceData}
             leadStageData={leadStageData}
             pipelineData={pipelineData}
+            locationData={locationData}
           />
         )}
         {/* <div className={styles.subHeader}>

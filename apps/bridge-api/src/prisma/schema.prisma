@@ -1932,6 +1932,7 @@ model CmContact {
   Albums                    PhotoAlbum[]
   ContactPreference         ContactPreference?
   MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
+  User                      User?                       @relation(fields: [OwnerID], references: [id])
   Voucher                   Voucher[]                   @relation("Voucher")
   PurchasedVoucher          Voucher[]                   @relation("PurchasedVoucher")
   CmLead                    CmLead[]
@@ -2653,6 +2654,7 @@ model CmLead {
   LeadStatusData           LeadStatus?              @relation(fields: [LeadStatus], references: [id])
   PipelineStage            PipelineStage?           @relation(fields: [pipeline_stage_id], references: [id])
   Contact                  CmContact?               @relation(fields: [ContactID], references: [ID])
+  Location                 CompanyBranch?           @relation(fields: [location_id], references: [id])
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
   @@index([LeadStatus], name: "LeadStatus")
@@ -3804,6 +3806,7 @@ model CompanyBranch {
   InvSale                 InvSale[]
 
   ServiceLocationTier ServiceLocationTier[]
+  CmLead              CmLead[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -12831,6 +12834,7 @@ model User {
   ActivityUserState            ActivityUserState[]
   ActivityUserFilter           ActivityUserFilter[]
 
+  CmContact CmContact[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

@@ -211,7 +211,7 @@ export const getColumnData = (column: string, data = {}) => {
       type: 'number',
       filter: {
         CmLead: {
-          LeadStatusData: {
+          PipelineStage: {
             pipeline_id: data,
           },
         },
@@ -232,6 +232,15 @@ export const getColumnData = (column: string, data = {}) => {
       filter: {
         CmLead: {
           LastUpdated: data,
+        },
+      },
+    },
+    Location: {
+      key: 'Basic',
+      type: 'number',
+      filter: {
+        CmLead: {
+          location_id: data,
         },
       },
     },

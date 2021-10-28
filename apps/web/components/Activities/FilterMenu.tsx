@@ -245,6 +245,7 @@ interface FilterMenuProps {
   leadSourceData: OptionList[]
   leadStageData: OptionList[]
   pipelineData: OptionList[]
+  locationData: OptionList[]
 }
 
 export const FilterMenu: FC<FilterMenuProps> = ({
@@ -259,6 +260,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
   leadSourceData,
   leadStageData,
   pipelineData,
+  locationData,
 }) => {
   const { t } = useTranslationI18()
   const [userList, setUserList] = useState<PersonList[]>([])
@@ -501,7 +503,17 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         return (
           <SelectMenu
             optionList={pipelineData}
-            defaultValue={'Pending'}
+            value={value === '' ? undefined : value}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )
+        break
+      }
+      case 'Location': {
+        return (
+          <SelectMenu
+            optionList={locationData}
             value={value === '' ? undefined : value}
             onChange={onChange}
             disabled={disabled}

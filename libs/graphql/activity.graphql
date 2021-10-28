@@ -113,6 +113,29 @@ query findManyActivityData(
         lastName: Lname
         email: Email
         phone: Phone
+        location_id
+        LastUpdated
+        Location {
+          id
+          name
+        }
+        Contact {
+          User {
+            full_name
+          }
+        }
+        PipelineStage {
+          id
+          pipeline_id
+          Pipeline {
+            name
+          }
+        }
+        leadActivitesToDo
+        emailMessagesCount
+        leadLastEmailSend
+        leadLastEmailReceived
+        leadNextActivityDate
         description: Description
         createdDate: CreatedDate
         wonTime

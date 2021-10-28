@@ -176,6 +176,10 @@ export const getData = (t) => {
       key: 'Update time',
       label: t('create.filter.modal.lead.column.lead.update.time'),
     },
+    {
+      key: 'Location',
+      label: t('create.filter.modal.lead.column.lead.location'),
+    },
   ]
 
   const activityTypeMapper = {
@@ -333,6 +337,7 @@ export const getData = (t) => {
     'Last email received': dateOperands,
     'Last email sent': dateOperands,
     'Email messages count': numberOperands,
+    Location: basicOperands,
   }
 
   const dateMenu = [

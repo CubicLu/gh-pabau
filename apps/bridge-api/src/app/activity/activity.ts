@@ -114,7 +114,7 @@ export const retrieveActivityData = async (
           ...activitySelect.select?.CmLead?.select,
           ID: true,
           LastUpdated: true,
-          CmContact: {
+          Contact: {
             select: {
               OwnerID: true,
             },
@@ -130,6 +130,7 @@ export const retrieveActivityData = async (
               id: true,
               status: true,
               finished_at: true,
+              due_start_date: true,
             },
           },
           EnumStatus: true,
@@ -242,6 +243,41 @@ export const prepareSearchObject = (
       CmLead: {
         LeadStatusData: {
           status_name: { contains: search },
+        },
+      },
+    },
+    'Lead location': {
+      CmLead: {
+        Location: {
+          name: { contains: search },
+        },
+      },
+    },
+    Title: {
+      CmLead: {
+        AND: {
+          OR: [
+            { Fname: { contains: search } },
+            { Lname: { contains: search } },
+          ],
+        },
+      },
+    },
+    Pipeline: {
+      CmLead: {
+        PipelineStage: {
+          Pipeline: {
+            name: { contains: search },
+          },
+        },
+      },
+    },
+    'Lead creator': {
+      CmLead: {
+        Contact: {
+          User: {
+            full_name: { contains: search },
+          },
         },
       },
     },
@@ -363,6 +399,42 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
       CmLead: {
         Activity: {
           count: sortOrder,
+        },
+      },
+    },
+    'Lead location': {
+      CmLead: {
+        Location: {
+          name: sortOrder,
+        },
+      },
+    },
+    Title: {
+      CmLead: { Fname: sortOrder },
+    },
+    'Update time': {
+      CmLead: { LastUpdate: sortOrder },
+    },
+    Pipeline: {
+      CmLead: {
+        PipelineStage: {
+          Pipeline: {
+            name: sortOrder,
+          },
+        },
+      },
+    },
+    'Date of entering stage': {
+      CmLead: {
+        ConvertDate: sortOrder,
+      },
+    },
+    'Lead creator': {
+      CmLead: {
+        Contact: {
+          User: {
+            full_name: sortOrder,
+          },
         },
       },
     },
@@ -1629,7 +1701,7 @@ export const manualFilterOnOrOperandColumns = async (
             if (
               await manualFilterOnUserOperand(
                 columnValue,
-                item?.CmLead?.CmContact?.OwnerID,
+                item?.CmLead?.Contact?.OwnerID,
                 ctx
               )
             ) {
@@ -1693,7 +1765,7 @@ export const manualFilterOnOrOperandColumns = async (
             if (
               manualFilterOnBasicOperand(
                 columnValue,
-                item?.CmLead?.LeadStatusData?.pipeline_id
+                item?.CmLead?.PipelineStage?.pipeline_id
               )
             ) {
               count += 1
@@ -1712,6 +1784,14 @@ export const manualFilterOnOrOperandColumns = async (
                 columnValue,
                 new Date(item?.CmLead?.LastUpdated)
               )
+            ) {
+              count += 1
+            }
+            break
+          }
+          case 'Location': {
+            if (
+              manualFilterOnBasicOperand(columnValue, item?.CmLead?.location_id)
             ) {
               count += 1
             }
