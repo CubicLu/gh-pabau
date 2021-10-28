@@ -18,6 +18,7 @@ import {
   GetPhotoAlbumsDocument,
   useGetAlbumPhotosQuery,
   useCountAlbumPhotosQuery,
+  CountAlbumPhotosDocument,
   useGetAlbumPhotosLazyQuery,
   useGetPhotoAlbumsLazyQuery,
   useCreateOnePhotoAlbumMutation,
@@ -449,6 +450,13 @@ const Photos = () => {
                       query: GetAlbumPhotosDocument,
                       variables: variables,
                     },
+                    {
+                      query: CountAlbumPhotosDocument,
+                      variables: {
+                        contactId: contactId,
+                        albumId: 0,
+                      },
+                    },
                   ],
                 })
               }
@@ -577,6 +585,8 @@ const Photos = () => {
             setShowPhotoStudio((e) => !e)
             setStudioAlbumId(0)
             setStudioImageId(0)
+          }}
+          fetchFunc={() => {
             getAlbumPhotosManually({
               variables: {
                 contactId: router.query.id ? Number(router.query.id) : 0,

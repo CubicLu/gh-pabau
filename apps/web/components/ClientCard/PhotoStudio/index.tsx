@@ -20,6 +20,7 @@ export interface PhotoStudioProps {
   photoId?: number
   albumId?: number
   contactId: number
+  fetchFunc?: () => void
 }
 
 export const PhotoStudio: FC<PhotoStudioProps> = ({
@@ -29,6 +30,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   photoId,
   albumId,
   contactId,
+  fetchFunc,
 }) => {
   const cdn = `${cdnURL}/cdn/attachments/`
   const baseURL = `${cdnURL}/v2/api/contact/`
@@ -50,13 +52,13 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   >()
 
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
@@ -68,19 +70,20 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
           },
         })
       }
+      if (data?.album_id === albumId) fetchFunc?.()
     },
   })
 
   const [
     createAttachmentOutOfAlbum,
   ] = useCreateContactPhotoWithoutAlbumMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
@@ -92,6 +95,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
           },
         })
       }
+      if (data?.album_id === albumId) fetchFunc?.()
     },
   })
 

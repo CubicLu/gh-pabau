@@ -185,6 +185,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
     if (listView) {
       data.albumImage?.map((x, index) =>
         temp.push({
+          id: x?.id,
           name: [x, index],
           owner: 'me',
           lastModified: dayjs(new Date((x?.date || 0) * 1000 || '')).format(
@@ -333,18 +334,18 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <Checkbox
               checked={selectedImage.includes(value?.[0] as never)}
               onChange={(e) => handleOnChange(e.target.checked, value?.[0])}
-            >
-              <Card bordered={false}>
-                <ImageItem
-                  origin={value?.[0]?.img || ''}
-                  alt={'none'}
-                  className={styles.tableImage}
-                />
-              </Card>
-              <div>
-                <p>{filename[filename.length - 1]}</p>
-              </div>
-            </Checkbox>
+            />
+            <Card bordered={false}>
+              <ImageItem
+                origin={value?.[0]?.img || ''}
+                alt={'none'}
+                className={styles.tableImage}
+                onClick={() => openImageStudio?.(data?.id, value?.[0]?.id)}
+              />
+            </Card>
+            <div>
+              <p>{filename[filename.length - 1]}</p>
+            </div>
           </div>
         )
       },
