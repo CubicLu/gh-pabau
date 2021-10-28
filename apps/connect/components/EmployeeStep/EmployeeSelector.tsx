@@ -57,11 +57,13 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
             className={Styles.oldBox}
           >
             <div className={Styles.contentBox}>
-              <img
-                src={settings.pod_url + val.Avatar}
-                alt="User Avatar"
-                className={Styles.userImage}
-              />
+              {val.Avatar !== '' && (
+                <img
+                  src={settings.pod_url + val.Avatar}
+                  alt="User Avatar"
+                  className={Styles.userImage}
+                />
+              )}
               <div className={Styles.userDetailWrapper}>
                 <div className={Styles.userDetail}>
                   <div className={Styles.userdetailInner}>
