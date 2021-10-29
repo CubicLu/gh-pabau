@@ -9,7 +9,7 @@ import {
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 import * as Icon from '@ant-design/icons'
-import { Activities, ActivitiesDataProps, Pagination } from '@pabau/ui'
+import { Activities, ActivitiesDataProps, PaginationType } from '@pabau/ui'
 
 const Appointments = () => {
   const router = useRouter()
@@ -17,7 +17,7 @@ const Appointments = () => {
   const [activityDetails, setActivityDetails] = useState<ActivitiesDataProps[]>(
     []
   )
-  const [pagination, setPagination] = useState<Pagination>({
+  const [pagination, setPagination] = useState<PaginationType>({
     total: 0,
     offSet: 0,
     limit: 10,

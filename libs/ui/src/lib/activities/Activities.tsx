@@ -31,7 +31,7 @@ import {
 } from '@ant-design/icons'
 
 dayjs.extend(calendar)
-export interface Pagination {
+export interface PaginationType {
   total?: number
   limit?: number
   offSet?: number
@@ -41,8 +41,8 @@ export interface ActivitiesProps {
   eventsData: ActivitiesDataProps[]
   eventDateFormat: string
   isLoading?: boolean
-  setPagination?: (e: Pagination) => void
-  pagination?: Pagination
+  setPagination?: (e: PaginationType) => void
+  pagination?: PaginationType
   colorClass?: string
 }
 
