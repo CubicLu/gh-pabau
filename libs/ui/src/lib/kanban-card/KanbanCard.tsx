@@ -91,7 +91,7 @@ export const KanbanCard: FC<KanbanCardProps> = ({
         trigger={['click']}
         overlayStyle={{ width: '150px' }}
       >
-        {activityStatusIcon}
+        <div className={styles.activityWrapper}>{activityStatusIcon}</div>
       </Tooltip>
     )
   }
