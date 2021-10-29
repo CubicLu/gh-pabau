@@ -33,7 +33,9 @@ export const findManyRotaExtended = extendType({
         }
 
         if (args.where?.user_ids?.length > 0) {
-          where.AND.push({ User: { id: { in: args.where.user_ids } } })
+          where.AND.push({
+            CmStaffGeneral: { User: { id: { in: args.where.user_ids } } },
+          })
         }
         if (args.where?.group_ids?.length > 0) {
           where.AND.push({
