@@ -204,20 +204,6 @@ export const CmContact = objectType({
         return root.ContactNote
       },
     })
-    t.list.field('MedicalFormContact', {
-      type: 'MedicalFormContact',
-      args: {
-        where: 'MedicalFormContactWhereInput',
-        orderBy: 'MedicalFormContactOrderByWithRelationInput',
-        cursor: 'MedicalFormContactWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormContactScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.MedicalFormContact
-      },
-    })
     t.list.field('CmExtraGym', {
       type: 'CmExtraGym',
       args: {
@@ -508,32 +494,46 @@ export const CmContact = objectType({
         return root.PurchasedVoucher
       },
     })
-    t.list.field('CommunicationAttachment', {
-      type: 'CommunicationAttachment',
+    t.list.field('CmLead', {
+      type: 'CmLead',
       args: {
-        where: 'CommunicationAttachmentWhereInput',
-        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
-        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CommunicationAttachmentScalarFieldEnum',
+        distinct: 'CmLeadScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CommunicationAttachment
+        return root.CmLead
       },
     })
-    t.list.field('RecallSchedule', {
-      type: 'RecallSchedule',
+    t.list.field('PathwaysTaken', {
+      type: 'PathwaysTaken',
       args: {
-        where: 'RecallScheduleWhereInput',
-        orderBy: 'RecallScheduleOrderByWithRelationInput',
-        cursor: 'RecallScheduleWhereUniqueInput',
+        where: 'PathwaysTakenWhereInput',
+        orderBy: 'PathwaysTakenOrderByWithRelationInput',
+        cursor: 'PathwaysTakenWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'RecallScheduleScalarFieldEnum',
+        distinct: 'PathwaysTakenScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.RecallSchedule
+        return root.PathwaysTaken
+      },
+    })
+    t.list.field('PathwayStepsTaken', {
+      type: 'PathwayStepsTaken',
+      args: {
+        where: 'PathwayStepsTakenWhereInput',
+        orderBy: 'PathwayStepsTakenOrderByWithRelationInput',
+        cursor: 'PathwayStepsTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepsTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStepsTaken
       },
     })
     t.nullable.field('_count', {
