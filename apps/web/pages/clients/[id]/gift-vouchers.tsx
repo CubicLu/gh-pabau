@@ -34,8 +34,10 @@ const Appointments = () => {
           voucherSoldPriceLabel: `Expires on: ${dayjs(val?.expiry_date).format(
             'DD MMM'
           )}`,
-          // voucherRelation: 'Family',
-          voucherRelationLabel: val?.description,
+          voucherRelation: val?.description,
+          termsConditions:
+            'This voucher is non-refundable and cannot be exchanged for cash in part or full. It is valid until the date mentioned on the voucher',
+          // voucherRelationLabel: val?.description,
         },
       }
     })
