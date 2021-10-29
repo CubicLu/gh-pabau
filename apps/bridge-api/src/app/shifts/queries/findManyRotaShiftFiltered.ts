@@ -51,7 +51,7 @@ export const findManyRotaExtended = extendType({
           })
         }
 
-        const shifts = await ctx.prisma.rotaShift.findMany({
+        return await ctx.prisma.rotaShift.findMany({
           where: {
             ...where,
             company_id: ctx.authenticated.company,
@@ -81,11 +81,6 @@ export const findManyRotaExtended = extendType({
             },
           },
         })
-
-        return shifts.map((item) => ({
-          ...item,
-          duration: item.end - item.start,
-        }))
       },
     })
   },
