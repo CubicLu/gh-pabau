@@ -29,7 +29,6 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from '../../style.module.less'
 import { gql, useMutation } from '@apollo/client'
-
 const { Title } = Typography
 
 const defaultData = {
@@ -237,7 +236,7 @@ export const TestForm = () => {
   }, [businessDetails])
 
   const saveMedicalFormContact = async (draggedForms: MedicalFormTypes[]) => {
-    const complete = 0
+    const complete = 1
     const custom_contact_id = 0
     const custom_contact_name = ''
     const custom_user_name = ''
@@ -306,6 +305,11 @@ export const TestForm = () => {
       },
     }
 
+    console.log(
+      'creatMedicalFormContactVariables =',
+      creatMedicalFormContactVariables
+    )
+
     await addMedicalFormContactMutation({
       variables: { data: { ...creatMedicalFormContactVariables } },
     })
@@ -319,6 +323,7 @@ export const TestForm = () => {
         description: '',
         Company: {},
       }
+      console.log('creatMedicalAttrVariables =', creatMedicalAttrVariables)
       await addMedicalAttrMutation({
         variables: { data: { ...creatMedicalAttrVariables } },
       }).then((e) => (item.attrId = e.data.createOneMedicalAttr.id))
@@ -347,17 +352,17 @@ export const TestForm = () => {
       if (cssClass === 'labs_tests') {
         attr_name = index + 'labs_tests[]'
       }
-      item.attrName = attr_name.replace(' ', '_').toLowerCase()
+      item.attrName = attr_name.replace('_', ' ').toLowerCase()
 
       if (cssClass === 'input_text' || cssClass === 'textarea')
         item.attrValue = item.txtValue
       else if (cssClass === 'checkbox') {
-        const vals = item.arrItems.filter((arrItem) =>
-          item.arrValue.indexOf(arrItem.id.toString())
+        const vals = item.arrItems.filter(
+          (arrItem) => item.arrValue.indexOf(arrItem.id.toString()) >= 0
         )
         if (vals.length > 0) {
-          const val = vals.map((val) => btoa(val.name))
-          item.attrValue = val.join(',')
+          const val1 = vals.map((val) => btoa(val.name))
+          item.attrValue = val1.join(',')
         } else {
           item.attrValue = ''
         }

@@ -7,6 +7,8 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
+  useUpdateOneCmContactMutation,
+  useUpsertOneCmContactCustomMutation,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -54,9 +56,10 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     appointments: [],
   })
   const [basicContactData, setBasicContactData] = useState(null)
-  const [openEditModal, setOpenEditModal] = useState<boolean>(false)
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
   const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
+  const [openEditModal, setOpenEditModal] = useState(false)
+  const user = useUser()
 
   const [addClientNote] = useCreateOneContactNoteMutation({
     onCompleted() {
@@ -103,6 +106,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     },
   })
 
+
   const getQueryVariables = useMemo(() => {
     return {
       variables: { id: clientId },
@@ -139,6 +143,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   } = useGetContactCustomFieldsQuery({
     skip: !router.query['id'],
   })
+
+  const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
+  const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
@@ -192,7 +199,14 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
           appointments: [],
         }
       })
-      const contactDetails = { ...data?.findFirstCmContact }
+      const contactDetails = {
+        ...data?.findFirstCmContact,
+        referredBy: data?.findFirstCmContact.marketingSource,
+        isActive: data?.findFirstCmContact?.isActive,
+        country:
+          data?.findFirstCmContact?.country ||
+          data?.findFirstCmContact?.Company?.details?.country,
+      }
       delete contactDetails?.contactNotes
       delete contactDetails?.bookingNotes
       setBasicContactData(contactDetails)
@@ -316,7 +330,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     setOpenEditModal(true)
   }
 
-  const handleEditSubmit = () => {
+  const handleEditAllSubmit = () => {
     setOpenEditModal(false)
     refetch()
   }
@@ -347,13 +361,16 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         customFields={customField}
         dateFormat={GetFormat()}
         handleEditAll={handleEditAll}
+        updatebasicContactMutation={updatebasicContactMutation}
+        updateContactCustomMutation={updateContactCustomMutation}
+        clientId={clientId}
+        companyId={user?.me?.company}
         client={
           basicContactData
             ? ({
                 ...basicContactData,
                 fullName: `${basicContactData?.firstName}
                   ${basicContactData?.lastName}`,
-                referredBy: basicContactData?.marketingSource?.name,
                 avatar: basicContactData?.avatar
                   ? getImage(basicContactData?.avatar)
                   : '',
@@ -361,8 +378,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   mobile: basicContactData?.mobile,
                   home: basicContactData?.home,
                 },
-                isActive:
-                  data.findFirstCmContact?.isActive === 1 ? true : false,
                 address: [
                   basicContactData?.street,
                   basicContactData?.city,
@@ -388,6 +403,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         handleAddNewClientNote={handleAddNewClientNote}
         handleEditNote={handleEditNote}
         handleDeleteNote={handleDeleteNote}
+        setBasicContactData={setBasicContactData}
       >
         {children}
       </ClientCard>
@@ -398,7 +414,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
             setOpenEditModal(false)
           }}
           isEdit={openEditModal}
-          handleSubmit={handleEditSubmit}
+          handleSubmit={handleEditAllSubmit}
           contactId={clientId}
         />
       )}

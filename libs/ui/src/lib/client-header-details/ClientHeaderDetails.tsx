@@ -69,7 +69,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     staff: 0,
   })
   const [openNotes, setOpenNotes] = useState<boolean>(false)
-  const [isDeleting, setIsDeleting] = useState<boolean>(false)
+  const [isDeletingNotes, setIsDeletingNotes] = useState<boolean>(false)
 
   useEffect(() => {
     setNoteItems(notes?.notes)
@@ -83,41 +83,22 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
-      // const items: ClientNoteDetails[] = [
-      //   {
-      //     content: note,
-      //     date: dayjs().format('YYYY-MM-DD hh:mm A'),
-      //     User: {
-      //       contact: client?.fullName || '',
-      //       avatar: client?.avatar || '',
-      //     },
-      //   },
-      //   ...noteItems,
-      // ]
-      // setNoteItems(items)
       setNote('')
       handleAddNewClientNote?.(note)
     }
   }
 
   const handleEditClientNote = (id) => {
-    console.log('item id========', id)
-    // const notes = [...noteItems]
-    // if (currentNote) notes[currentClientNote].content = currentNote
-    // setNoteItems(notes)
     handleEditNote?.(id, currentNote)
     setCurrentNote('')
     setCurrentClientNote(-1)
   }
 
   const handleDeleteClientNote = (id) => {
-    // const notes = [...noteItems]
-    // notes.splice(index, 1)
-    // setNoteItems(notes)
     handleDeleteNote?.(id)
     setCurrentNote('')
     setCurrentClientNote(-1)
-    setIsDeleting(true)
+    setIsDeletingNotes(true)
   }
 
   const medicalHistoryPopover = (
@@ -374,7 +355,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           overlayClassName={styles.clientCardHeaderPopover}
           visible={openNotes}
           onVisibleChange={(val) => {
-            !isDeleting && setOpenNotes(val)
+            !isDeletingNotes && setOpenNotes(val)
           }}
         >
           <div

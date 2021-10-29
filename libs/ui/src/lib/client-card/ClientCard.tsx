@@ -97,6 +97,7 @@ import {
   // testList,
 } from './mock'
 import { useRouter } from 'next/router'
+import { MutationFunction } from '@apollo/client'
 
 const { TextArea } = Input
 interface PopoutProps {
@@ -158,6 +159,11 @@ interface P {
   customFields?: FieldOrderItem[]
   dateFormat?: string
   handleEditAll?: () => void
+  updatebasicContactMutation?: MutationFunction
+  updateContactCustomMutation?: MutationFunction
+  clientId?: number
+  companyId?: number
+  setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
 }
 
 const ClientCardModal: FC<P> = ({
@@ -177,6 +183,11 @@ const ClientCardModal: FC<P> = ({
   customFields,
   dateFormat,
   handleEditAll,
+  updatebasicContactMutation,
+  updateContactCustomMutation,
+  clientId,
+  companyId,
+  setBasicContactData,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -934,6 +945,11 @@ const ClientCardModal: FC<P> = ({
                 customFields={customFields}
                 dateFormat={dateFormat}
                 handleEditAll={handleEditAll}
+                updatebasicContactMutation={updatebasicContactMutation}
+                updateContactCustomMutation={updateContactCustomMutation}
+                clientId={clientId}
+                companyId={companyId}
+                setBasicContactData={setBasicContactData}
               />
             </div>
             <div className={styles.clientCardContent}>

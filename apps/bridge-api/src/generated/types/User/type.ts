@@ -665,6 +665,20 @@ export const User = objectType({
         return root.ActivityUserFilter
       },
     })
+    t.list.field('MedicalForm', {
+      type: 'MedicalForm',
+      args: {
+        where: 'MedicalFormWhereInput',
+        orderBy: 'MedicalFormOrderByWithRelationInput',
+        cursor: 'MedicalFormWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalForm
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {
