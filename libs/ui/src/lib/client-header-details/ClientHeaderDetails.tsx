@@ -77,18 +77,6 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
-      // const items: ClientNoteDetails[] = [
-      //   {
-      //     content: note,
-      //     date: dayjs().format('YYYY-MM-DD hh:mm A'),
-      //     User: {
-      //       contact: client?.fullName || '',
-      //       avatar: client?.avatar || '',
-      //     },
-      //   },
-      //   ...noteItems,
-      // ]
-      // setNoteItems(items)
       setNote('')
       handleAddNewClientNote?.(note)
     }
