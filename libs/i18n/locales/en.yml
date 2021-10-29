@@ -5450,3 +5450,5 @@ en:
   team.user.services.save.changes.button: 'Save changes'
   team.user.services.title: 'Services'
   team.user.services.choose.services.title: ' Choose the services this employee can perform'
+  client.label.create.message: Success! You have successfully created a label
+  client.label.create.error.message: 'Error! While creating a label'
