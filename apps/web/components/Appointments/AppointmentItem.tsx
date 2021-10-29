@@ -9,6 +9,8 @@ import {
   useCheckPathwayStatusQuery,
 } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { ReactComponent as OutlinedClockCircle } from '../../assets/images/icons/outline-clock-circle.svg'
+import dayjs from 'dayjs'
 
 export interface AppointmentItemP {
   id?: number
@@ -17,8 +19,8 @@ export interface AppointmentItemP {
   avatar?: string
   clientName?: string
   serviceName?: string
-  checkingStatus?: string
   staffMember?: string
+  checkedInTime?: string
   paymentStatus: string
   status?: string
   date?: number
@@ -33,7 +35,6 @@ export enum PaymentStatus {
   paid = 'paid',
   unpaid = 'unpaid',
 }
-
 interface PathwayStep {
   id: number
   step: string
@@ -48,18 +49,17 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
   avatar,
   clientName,
   serviceName,
-  checkingStatus,
   staffMember,
   paymentStatus,
   status,
   service_id,
+  checkedInTime,
   addInProgressAppt,
 }) => {
   const [appointementColor, setAppointmentColor] = useState('')
   const [pathwayStep, setPathwayStep] = useState<PathwayStep[]>([])
   const [currentStep, setCurrentStep] = useState<number>(0)
   const { t } = useTranslationI18()
-
   const { data: serviceData } = useGetServicesByIdQuery({
     variables: {
       service_id: service_id,
@@ -110,6 +110,13 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
     }
   }, [serviceData])
 
+  const getCurrentCheckedInTime = () => {
+    const currentTime = dayjs().format()
+    const hours = dayjs(currentTime).diff(checkedInTime, 'hours')
+    const minutes = dayjs(currentTime).diff(checkedInTime, 'minute')
+    return `${hours}:${minutes}`
+  }
+
   return (
     <div className={styles.appointmentItem}>
       <Row className={styles.content}>
@@ -137,7 +144,20 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
                 {clientName}
               </p>
               <span>{serviceName}</span>
-              <div>{checkingStatus}</div>
+              <div
+                className={styles.appointementStatus}
+                style={{
+                  color: status === 'checked-in' ? '#FF5B64' : '#54B2D3',
+                }}
+              >
+                {status}
+                {status === 'checked-in' && (
+                  <div>
+                    <OutlinedClockCircle />{' '}
+                    <span>{getCurrentCheckedInTime()}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Col>

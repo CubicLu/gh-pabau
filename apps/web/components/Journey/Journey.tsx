@@ -80,7 +80,6 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
               appt?.Contact?.Lname || ''
             }`,
             serviceName: appt?.service,
-            checkingStatus: appt.status,
             service_id: appt?.service_id,
             staffMember: t('journey.modal.appointments.dr.name', {
               drName: `${appt.CmStaffGeneral?.Fname} ${appt.CmStaffGeneral?.Lname}`,
@@ -92,7 +91,9 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
             date: appt.start_date,
           }
         })
-      setAppointments(appointements)
+      setAppointments(
+        appointements.filter((appt) => appt.status !== 'complete')
+      )
       setAllAppointments(appointements)
     } else {
       setAppointments(null)
@@ -119,18 +120,26 @@ const Journey: FC<JourneyP> = ({ modalVisible = true, handleClose }) => {
         inProgressAppts?.includes(appt.id)
       )
       setAppointments(filteredAppts)
-    } else {
+    } else if (filterStatus) {
       const filteredAppts = allAppointments.filter(
         (appt) =>
           appt.status === filterStatus && !inProgressAppts?.includes(appt.id)
       )
       setAppointments(filteredAppts)
+    } else {
+      setAppointments(
+        allAppointments.filter((appt) => appt.status !== 'complete')
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterStatus])
 
   const onTileClick = (tile: string) => {
-    setFilterStatus(tile)
+    if (filterStatus === tile) {
+      setFilterStatus(null)
+    } else {
+      setFilterStatus(tile)
+    }
   }
 
   return (
