@@ -1,0 +1,36 @@
+query getRotaShifts(
+  $where: RotaShiftFilterInput
+  $take: Int = 50
+  $skip: Int = 0
+) {
+  findManyFilteredRotaShift(take: $take, skip: $skip, where: $where) {
+    id
+    start
+    end
+    created_at: first_created
+    repeat_id
+    color: note_color
+    reason_code
+    reason_data
+    duration
+    Location {
+      id
+      name
+    }
+    Staff: CmStaffGeneral {
+      ID
+      uid: pabau_id
+      Fname
+      Lname
+      deleted_on
+      company_id
+      User {
+        UserGroupMember {
+          UserGroup {
+            id
+          }
+        }
+      }
+    }
+  }
+}
