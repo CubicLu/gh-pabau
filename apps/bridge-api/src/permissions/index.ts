@@ -117,6 +117,8 @@ export const permissions = shield(
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
+
+      upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -201,6 +203,8 @@ export const permissions = shield(
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
+      findManyFilteredRotaShift: rules.authentication.isAuthenticated,
+
       findManyProductsWithAvailableQuantity:
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
