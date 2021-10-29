@@ -12,6 +12,7 @@ export default {
     onMenuClickHandler: () => {
       console.log('onMenuClickHandler')
     },
+    leadCount: 4,
     leadsItems: [
       {
         key: 'leads1',
@@ -51,6 +52,7 @@ export default {
 const LeadsNavigationComponent: FC<LeadsNavigationProps> = ({
   onProjectClickHandler,
   onMenuClickHandler,
+  leadCount,
   leadsItems,
   InboundLeadsItems,
   optionItems,
@@ -61,6 +63,7 @@ const LeadsNavigationComponent: FC<LeadsNavigationProps> = ({
       onProjectClickHandler={onProjectClickHandler}
       onMenuClickHandler={onMenuClickHandler}
       onSelectLeadsHandler={action('onLeadsSelect')}
+      leadCount={leadCount}
       leadsItems={leadsItems}
       onSelectInboundLeadsHandler={action('onInboundLeadsSelect')}
       InboundLeadsItems={InboundLeadsItems}

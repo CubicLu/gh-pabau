@@ -1,5 +1,17 @@
-query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
-  findManyCmLead(take: $limit, skip: $skip) {
+query getKanbanLeads(
+  $limit: Int = 10
+  $skip: Int = 0
+  $company_id: Int
+  $pipeline_id: Int
+) {
+  findManyCmLead(
+    take: $limit
+    skip: $skip
+    where: {
+      company_id: { equals: $company_id }
+      PipelineStage: { pipeline_id: { equals: $pipeline_id } }
+    }
+  ) {
     lead_id: ID
     Name: Fname
     Avatar
@@ -59,6 +71,13 @@ query getLeadPipelines {
   }
 }
 
-query getCmLeadCount($equals: Int) {
-  findManyCmLeadCount(where: { company_id: { equals: $equals } })
+query getCmLeadCount($company_id: Int, $pipeline_id: Int) {
+  findManyCmLeadCount(
+    where: {
+      PipelineStage: {
+        pipeline_id: { equals: $pipeline_id }
+        company_id: { equals: $company_id }
+      }
+    }
+  )
 }

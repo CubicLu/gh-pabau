@@ -71,6 +71,8 @@ const LeadsStagesComponent = () => {
   const [leadsDefaultParams, setLeadsDefaultParams] = useState({
     limit: 100,
     skip: 0,
+    company_id: 8119,
+    pipeline_id: 1,
   })
   const [leadsState, setLeadsState] = useState({})
   const [queryIsCalled, setQueryIsCalled] = useState(false)
@@ -173,8 +175,14 @@ const LeadsStagesComponent = () => {
   }
 
   useEffect(() => {
-    if (allStages.length === 0) getAllKanbanStages()
-  }, [allStages, getAllKanbanStages])
+    if (allStages.length === 0)
+      getAllKanbanStages({
+        variables: {
+          company_id: leadsDefaultParams.company_id,
+          pipeline_id: leadsDefaultParams.pipeline_id,
+        },
+      })
+  }, [allStages, getAllKanbanStages, leadsDefaultParams])
 
   useEffect(() => {
     if (
@@ -272,7 +280,8 @@ const LeadsStagesComponent = () => {
           <DragDropContext onDragEnd={onDragEnd}>
             <div className={styles.cardMainWrapper}>
               {allStages?.map((stage, stageIndex) => {
-                const { name, id } = stage
+                const { name, id, _count } = stage
+                const leadParStage = _count?.CmLead ? _count.CmLead : 0
                 return (
                   <Droppable key={Math.random()} droppableId={`${id}`}>
                     {(provided, snapshot) => (
@@ -294,7 +303,7 @@ const LeadsStagesComponent = () => {
                               </Tooltip>
                               <div
                                 className={styles.leadCount}
-                              >{`£0 . 5 Leads`}</div>
+                              >{`£0 . ${leadParStage} Leads`}</div>
                             </div>
                           </div>
                         </div>

@@ -8,6 +8,7 @@ import LeadsNavigation from './LeadsNavigation'
 
 describe('LeadsNavigation', () => {
   it('should render successfully', () => {
+    const leadCount = 4
     const leadsItems = [
       {
         key: 'leads1',
@@ -50,6 +51,7 @@ describe('LeadsNavigation', () => {
           console.log('onMenuClickHandler')
         }}
         onSelectLeadsHandler={action('onLeadsSelect')}
+        leadCount={leadCount}
         leadsItems={leadsItems}
         onSelectInboundLeadsHandler={action('onInboundLeadsSelect')}
         InboundLeadsItems={InboundLeadsItems}
