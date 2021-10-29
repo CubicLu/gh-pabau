@@ -1,5 +1,5 @@
 .follow-wrapper {
-  .header-lian{
+  .header-lian {
     border-bottom: 1px solid #ecedf0;
   }
   .header {
@@ -21,52 +21,52 @@
         color: #9292a3;
       }
       .header-icon-wrap {
-       button{
-         cursor: pointer;
-         align-items: center;
-         display: flex;
-         justify-content: center;
-         height: 24px;
-         width: 24px;
-         margin-left: 8px;
-         background: #fff;
-         border: 1px solid #54b2d3;
-         border-radius: 3px;
-         padding: 0;
-         svg {
-           path {
-             fill: #54b2d3;
-           }
-         }
-         span{
-           font-size: 11px;
-           color: #54b2d3;
-         }
-         &:hover {
-           background: #54b2d3;
-           span{
-             font-size: 11px;
-             color: white;
-           }
-           svg {
-             path {
-               fill: #fff;
-             }
-           }
-         }
-         &.active {
-           background: #54b2d3;
-           span{
-             font-size: 11px;
-             color: white;
-           }
-           svg {
-             path {
-               fill: #fff;
-             }
-           }
-         }
-       }
+        button {
+          cursor: pointer;
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          height: 24px;
+          width: 24px;
+          margin-left: 8px;
+          background: #fff;
+          border: 1px solid #54b2d3;
+          border-radius: 3px;
+          padding: 0;
+          svg {
+            path {
+              fill: #54b2d3;
+            }
+          }
+          span {
+            font-size: 11px;
+            color: #54b2d3;
+          }
+          &:hover {
+            background: #54b2d3;
+            span {
+              font-size: 11px;
+              color: white;
+            }
+            svg {
+              path {
+                fill: #fff;
+              }
+            }
+          }
+          &.active {
+            background: #54b2d3;
+            span {
+              font-size: 11px;
+              color: white;
+            }
+            svg {
+              path {
+                fill: #fff;
+              }
+            }
+          }
+        }
         :global .anticon {
           margin-left: 0;
         }
@@ -146,10 +146,10 @@
           padding: 2px 8px;
           border-radius: 4px;
           margin-right: 8px;
-          @media only screen and (max-width: 992px){
+          @media only screen and (max-width: 992px) {
             margin-right: 8px;
           }
-          span{
+          span {
             font-size: 12px;
             line-height: 16px;
             display: block;
@@ -159,18 +159,18 @@
       .pin-wrap {
         .pin-button-class {
           padding: 2px 8px;
-          color: #9292A3;
+          color: #9292a3;
           height: unset;
           font-size: 12px;
           margin-right: 8px;
-          span{
+          span {
             margin-right: 6px;
           }
           &:hover {
-            color: #40A0C1;
+            color: #40a0c1;
           }
           &.active-pin {
-            color: #40A0C1;
+            color: #40a0c1;
           }
         }
       }
@@ -190,7 +190,7 @@
           line-height: 20px !important;
           color: #3d3d46;
           font-weight: 500;
-          margin-bottom: 0px ;
+          margin-bottom: 0px;
         }
         .time-wrap {
           display: flex;
@@ -198,13 +198,53 @@
           line-height: 16px;
           color: #9292a3;
           text-align: right;
+        }
+        .circle-icon {
+          cursor: pointer;
+          border: 1px solid #9292a3;
+          border-radius: 50%;
+        }
+        .active-collapse {
+          svg {
+            border-color: #40a0c1;
+            path {
+              stroke: #40a0c1;
+            }
           }
-          .circle-icon {
-            cursor: pointer;
-            border: 1px solid #9292a3;
-            border-radius: 50%;
+        }
+        :global .ant-btn-circle {
+          //display: none;
+          min-width: 24px;
+          width: 24px;
+          height: 24px;
+          padding: 0;
+          display: block;
+          transition: 0.5s ease;
+        }
+        .opened {
+          color: #9292a3;
+          cursor: pointer;
+          font-size: 12px;
+          line-height: 16px;
+          margin-top: 5px;
+          display: flex;
+          align-items: center;
+          &:hover {
+            color: #54b2d3;
           }
-          .active-collapse {
+          :global .anticon {
+            margin-right: 5px;
+          }
+        }
+        .status-class {
+          font-size: 12px;
+          line-height: 16px;
+          display: flex;
+          margin-right: 6px;
+          span {
+            margin-right: 5px;
+          }
+          &:hover {
             svg {
               border-color: #40a0c1;
               path {
@@ -212,48 +252,8 @@
               }
             }
           }
-          :global .ant-btn-circle {
-            //display: none;
-            min-width: 24px;
-            width: 24px;
-            height: 24px;
-            padding: 0;
-            display: block;
-            transition: 0.5s ease;
-          }
-          .opened {
-            color: #9292a3;
-            cursor: pointer;
-            font-size: 12px;
-            line-height: 16px;
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            &:hover {
-              color: #54b2d3;
-            }
-            :global .anticon {
-              margin-right: 5px;
-            }
-          }
-          .status-class {
-            font-size: 12px;
-            line-height: 16px;
-            display: flex;
-            margin-right: 6px;
-            span {
-              margin-right: 5px;
-            }
-            &:hover {
-              svg {
-                border-color: #40a0c1;
-                path {
-                  stroke: #40a0c1;
-                }
-              }
-            }
-          }
         }
+      }
       .inbound-email-wrapper {
         .inbound-email-wrap {
           border: 1px solid #9292a3;
@@ -261,257 +261,254 @@
           display: flex;
           margin: 0 6px 0 0;
 
-          .leftButton{
+          .leftButton {
             border-right: 1px solid #9292a3;
             padding: 3px 7px;
             svg {
               height: 12px;
             }
           }
-          .rightButton{
+          .rightButton {
             padding: 3px 7px;
           }
         }
-
       }
+    }
+    .time {
+      font-size: 12px;
+      font-family: 'Roboto', sans-serif;
+      line-height: 16px;
+      color: #9292a3;
+    }
+    .expand-class {
+      height: auto;
+    }
+    .collapse-class {
+      height: 22px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start !important;
+      @media screen and (max-width: 576px) {
+        min-height: 34px;
+        height: 36px;
       }
-      .time {
-        font-size: 12px;
-        font-family: 'Roboto', sans-serif;
-        line-height: 16px;
-        color: #9292a3;
-      }
-      .expand-class {
-        height: auto;
-      }
-      .collapse-class {
-        height: 22px;
-        overflow: hidden;
-        display: flex;
-        align-items: flex-start !important;
-        @media screen and (max-width: 576px) {
-         min-height: 34px;
-         height: 36px;
-        }
-      }
-      .client-name-wrap {
-        display: flex;
-        .client-name-text {
-          margin-right: 5px;
-        }
-      }
+    }
+    .client-name-wrap {
+      display: flex;
       .client-name-text {
+        margin-right: 5px;
+      }
+    }
+    .client-name-text {
+      font-size: 12px;
+      line-height: 16px;
+      font-family: 'Roboto', sans-serif;
+      color: #9292a3;
+      display: flex;
+      align-items: center;
+      @media screen and (max-width: 767px) {
+        line-height: 22px;
+      }
+    }
+    .bottom-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      white-space: pre-line;
+      h5 {
         font-size: 12px;
         line-height: 16px;
-        font-family: 'Roboto', sans-serif;
-        color: #9292a3;
-        display: flex;
-        align-items: center;
-        @media screen and (max-width: 767px) {
-          line-height: 22px;
-        }
-      }
-      .bottom-text {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        white-space: pre-line;
-        h5 {
-          font-size: 12px;
-          line-height: 16px;
-          color: #3d3d46;
-          margin-top: 5px;
-          margin-top: 5px;
-          margin-bottom: 8px;
-          font-weight: 500;
-        }
-      }
-
-      h6 {
-        font-style: italic;
-        font-family: 'Roboto', sans-serif;
+        color: #3d3d46;
+        margin-top: 5px;
+        margin-top: 5px;
+        margin-bottom: 8px;
         font-weight: 500;
-        font-size: 12px;
-        line-height: 16px;
-        color: #3d3d46;
-        margin-bottom: 0;
-        background: #fefdef;
-        margin-top: 8px;
-        display: inline-flex;
-        padding: 0 2px;
       }
     }
 
-    .line-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 3px;
-      align-items: center;
-      .dot{
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background-color: #9292A3;
-        display: inline-block;
-        margin: 0 8px;
-      }
-      .arrow-wrap{
-        margin: 0 8px;
-      }
-      .specific-icon{
-        div{
-          display: flex;
-          align-items: center;
-        }
-      }
-      .openByWrap {
-        display: flex;
-        align-items: center;
-      }
-      .custom-eye,
-      .shared-with {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-
-        border-radius: 4px;
-        background: rgba(236, 237, 240, 0.5);
-        :global .anticon {
-          margin-right: 0 !important;
-          color: #9292a3;
-        }
-
-        &:hover {
-          color: #54b2d3;
-          background: #eef7fb;
-          .shared-with {
-            :global .anticon {
-              color: #54b2d3;
-              margin-right: 0;
-            }
-          }
-        }
-      }
-      .wrap-icon {
-        svg {
-          path {
-            fill: #9292a3;
-          }
-        }
-      }
-    }
-
-    :global .vertical-timeline-element {
-      width: 100%;
-      padding: 6px 16px;
-      margin-top: 0;
+    h6 {
+      font-style: italic;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+      color: #3d3d46;
       margin-bottom: 0;
-      @media screen and (max-width: 767px) {
-        padding-right: 0;
-      }
-      .vertical-timeline-element-icon {
-        top: 6px;
-        left: 16px;
-        width: 24px;
-        height: 24px;
-        box-shadow: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 12px;
-        svg {
-          width: 12px;
-          height: 12px;
-          left: unset;
-          top: unset;
-          margin: 0;
-        }
-      }
-      .vertical-timeline-element-content {
-        margin-left: 34px;
-        border: 1px solid #ecedf0;
-        box-shadow: none;
-        position: relative;
-        //cursor: pointer;
-        .vertical-timeline-element-content-arrow {
-          &:before {
-            content: '';
-            position: absolute;
-            border-top: 10px solid transparent;
-            border-right: 7px solid #ffffff;
-            border-bottom: 10px solid transparent;
-            left: 1px;
-            top: -10px;
-            z-index: 1;
-          }
-          &:after {
-            content: '';
-            position: absolute;
-            border-top: 10px solid transparent;
-            border-right: 7px solid #ecedf0;
-            border-bottom: 10px solid transparent;
-            left: 0px;
-            top: -10px;
-          }
-        }
-        .vertical-timeline-element-date {
-          display: none;
-        }
-      }
+      background: #fefdef;
+      margin-top: 8px;
+      display: inline-flex;
+      padding: 0 2px;
     }
   }
-  .timeline-wrap {
-    margin-top: 10px;
-    .content-wrapper {
-      .empty-events {
-        border: 1px solid #ecedf0;
-        box-sizing: border-box;
-        border-radius: 4px;
-        padding: 15px;
-        width: 92%;
-        height: calc(100vh - 266px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        max-width: 1170px;
-        margin: 20px auto;
-        color: #3d3d46;
-        font-size: 14px;
-        line-height: 20px;
-      }
-    }
 
-    :global {
-      .vertical-timeline {
-        padding: 0;
-        @media screen and (max-width: 767px) {
-          width: 95%;
-        }
-        &:before {
-          width: 1px;
-          background: #ecedf0;
-          left: 27px;
-          height: calc(100% - 47px);
-          top: -12px;
-        }
+  .line-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 3px;
+    align-items: center;
+    .dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background-color: #9292a3;
+      display: inline-block;
+      margin: 0 8px;
+    }
+    .arrow-wrap {
+      margin: 0 8px;
+    }
+    .specific-icon {
+      div {
+        display: flex;
+        align-items: center;
       }
     }
-  }
-  :global {
-    .ant-pagination {
+    .openByWrap {
       display: flex;
-      justify-content: flex-end;
       align-items: center;
-      padding: 15px 43px;
-      @media screen and (max-width: 767px) {
-        justify-content: flex-start;
-        padding: 15px 24px;
+    }
+    .custom-eye,
+    .shared-with {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+
+      border-radius: 4px;
+      background: rgba(236, 237, 240, 0.5);
+      :global .anticon {
+        margin-right: 0 !important;
+        color: #9292a3;
+      }
+
+      &:hover {
+        color: #54b2d3;
+        background: #eef7fb;
+        .shared-with {
+          :global .anticon {
+            color: #54b2d3;
+            margin-right: 0;
+          }
+        }
+      }
+    }
+    .wrap-icon {
+      svg {
+        path {
+          fill: #9292a3;
+        }
       }
     }
   }
+
+  :global .vertical-timeline-element {
+    width: 100%;
+    padding: 6px 16px;
+    margin-top: 0;
+    margin-bottom: 0;
+    @media screen and (max-width: 767px) {
+      padding-right: 0;
+    }
+    .vertical-timeline-element-icon {
+      top: 6px;
+      left: 16px;
+      width: 24px;
+      height: 24px;
+      box-shadow: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 12px;
+      svg {
+        width: 12px;
+        height: 12px;
+        left: unset;
+        top: unset;
+        margin: 0;
+      }
+    }
+    .vertical-timeline-element-content {
+      margin-left: 34px;
+      border: 1px solid #ecedf0;
+      box-shadow: none;
+      position: relative;
+      //cursor: pointer;
+      .vertical-timeline-element-content-arrow {
+        &:before {
+          content: '';
+          position: absolute;
+          border-top: 10px solid transparent;
+          border-right: 7px solid #ffffff;
+          border-bottom: 10px solid transparent;
+          left: 1px;
+          top: -10px;
+          z-index: 1;
+        }
+        &:after {
+          content: '';
+          position: absolute;
+          border-top: 10px solid transparent;
+          border-right: 7px solid #ecedf0;
+          border-bottom: 10px solid transparent;
+          left: 0px;
+          top: -10px;
+        }
+      }
+      .vertical-timeline-element-date {
+        display: none;
+      }
+    }
+  }
+}
+.timeline-wrap {
+  margin-top: 10px;
+  .content-wrapper {
+    .empty-events {
+      border: 1px solid #ecedf0;
+      box-sizing: border-box;
+      border-radius: 4px;
+      padding: 15px;
+      width: 92%;
+      height: calc(100vh - 266px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 1170px;
+      margin: 20px auto;
+      color: #3d3d46;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+
+  :global {
+    .vertical-timeline {
+      padding: 0;
+      @media screen and (max-width: 767px) {
+        width: 95%;
+      }
+      &:before {
+        width: 1px;
+        background: #ecedf0;
+        left: 27px;
+        height: calc(100% - 47px);
+        top: -12px;
+      }
+    }
+  }
+}
+.ant-pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 15px 43px;
+  @media screen and (max-width: 767px) {
+    justify-content: flex-start;
+    padding: 15px 24px;
+  }
+}
 
 .mail-open {
   :global {
@@ -659,7 +656,7 @@
       align-items: center;
       margin-bottom: 8px;
       padding: 5px 16px;
-      &:hover{
+      &:hover {
         background-color: #eef7fb;
         cursor: pointer;
       }
@@ -667,15 +664,16 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        background: #ECEDF0;
-        border: 1px solid #ECEDF0;
+        background: #ecedf0;
+        border: 1px solid #ecedf0;
         margin-right: 8px;
         display: flex;
         justify-content: center;
         align-items: center;
         :global {
-          .anticon-file-image, .anticon-file {
-            color: #9292A3;
+          .anticon-file-image,
+          .anticon-file {
+            color: #9292a3;
             font-size: 12px;
           }
         }
@@ -684,7 +682,7 @@
         margin: 0;
         font-size: 14px;
         line-height: 18px;
-        color: #3D3D46;
+        color: #3d3d46;
       }
     }
   }
@@ -699,7 +697,7 @@
     height: 4px;
     display: flex;
     justify-content: center;
-    background: #E3E3E5;
+    background: #e3e3e5;
     border-radius: 16px;
   }
   :global {
@@ -725,20 +723,19 @@
   }
 }
 
-.inboundEmailContent{
-  div{
+.inboundEmailContent {
+  div {
     display: flex;
     align-items: center;
     margin-bottom: 4px;
     cursor: pointer;
-    p{
+    p {
       margin: 0 0 0 8px;
       font-size: 14px;
       color: #444;
     }
-    .delete-txt{
+    .delete-txt {
       margin-left: 22px;
     }
   }
 }
-
