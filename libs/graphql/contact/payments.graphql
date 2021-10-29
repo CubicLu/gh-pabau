@@ -1,29 +1,28 @@
-query getPayments($contactID: Int!, $take: Int = 50, $skip: Int = 0){
-  findManyInvPayment(
-    take: $take,
-    skip: $skip,
-    where:{
-      contact_id:{equals:$contactID}
-    }){
+query getPayments($contactID: Int!, $take: Int = 50, $skip: Int = 0) {
+  payments: findManyInvPayment(
+    take: $take
+    skip: $skip
+    where: { contact_id: { equals: $contactID } }
+  ) {
     id
     date
     pmethod
     amount
-    CmContact{
-      AccountBalance{
+    contact: CmContact {
+      AccountBalance {
         balance
       }
     }
-    InvSale{
+    sales: InvSale {
       custom_id
-      Location{
+      location: Location {
         name
       }
-      InvBiller{
+      biller: InvBiller {
         name
       }
     }
-    User{
+    user: User {
       full_name
     }
   }

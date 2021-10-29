@@ -58,15 +58,15 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
 
   useEffect(() => {
     const paymentsDetails = []
-    payment?.findManyInvPayment?.map((item, index) => {
+    payment?.payments?.map((item, index) => {
       paymentsDetails.push({
         id: index,
         date: dayjs.unix(item?.date).format('DD/MM/YYYY'),
-        invoiceNo: item?.InvSale?.custom_id,
+        invoiceNo: item?.sales?.custom_id,
         paymentNo: item?.id,
-        location: item?.InvSale?.Location?.name,
-        employee: item?.InvSale?.InvBiller?.name,
-        paidBy: item?.User?.full_name,
+        location: item?.sales?.location?.name,
+        employee: item?.sales?.biller?.name,
+        paidBy: item?.user?.full_name,
         method: item?.pmethod,
         amount: item?.amount,
       })
@@ -88,7 +88,7 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
       setPaginateData((d) => ({
         ...d,
         total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
-        showingRecords: payment?.findManyInvPayment?.length,
+        showingRecords: payment?.payments?.length,
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -347,8 +347,8 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
               {
                 text: t('ui.client-card-financial.payments.account-credit'),
                 value:
-                  payment?.findManyInvPayment[0]?.CmContact?.AccountBalance[0]
-                    ?.balance,
+                  payment?.payments[0]?.contact?.AccountBalance[0]?.balance ??
+                  0,
                 valueColor: '#65CD98',
               },
               {

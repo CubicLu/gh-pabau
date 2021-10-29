@@ -72,8 +72,8 @@ export const Invoices: FC<P> = (props) => {
     salesDetaillLoading,
     loading,
     totalInvoiceCount,
-    invoiceEmployeeOptions,
-    locationOptions,
+    invoiceEmployeeOptions = [],
+    locationOptions = [],
     onChangePagination,
     onFilterSubmit,
     onExpand,
@@ -119,7 +119,7 @@ export const Invoices: FC<P> = (props) => {
         paid: item.status === 'paid' ? true : false,
         items: saleItems,
         totalVat: totalVat,
-        amountPaid: expandedInvoice[0]?.amount_paid,
+        amountPaid: expandedInvoice[0]?.paid_amount,
         subtotal: discount !== 0 ? inv_total + discount : inv_total,
         tips: expandedInvoice[0]?.tip,
         grandTotal: item.amount,
@@ -165,7 +165,7 @@ export const Invoices: FC<P> = (props) => {
     )
     setTotalOutstanding(
       salesDetails
-        ? expandedInvoice[0]?.amount_paid
+        ? expandedInvoice[0]?.paid_amount
         : invoice?.findManyInvoice[0]?.amount ?? 0
     )
     setTotalInvoiced(

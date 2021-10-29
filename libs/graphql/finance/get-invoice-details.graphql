@@ -1,5 +1,5 @@
 query getInvoice($id: Int!) {
-  invoice: findFirstInvSale(where: {id: { equals: $id }}) {
+  invoice: findFirstInvSale(where: { id: { equals: $id } }) {
     id
     number: custom_id
     date
@@ -9,17 +9,6 @@ query getInvoice($id: Int!) {
     discount_amount
     inv_total
     tip
-    SaleItem{
-      product_name
-      quantity
-      unit_price
-      tax_total
-      val_tax
-      UnitDiscount
-      Tax{
-        rate
-      }
-    }
     Customer: CmContact {
       ID
       Fname

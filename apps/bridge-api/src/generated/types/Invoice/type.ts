@@ -12,7 +12,7 @@ export const Invoice = objectType({
     t.nullable.string('guid')
     t.field('date', { type: 'DateTime' })
     t.nullable.float('amount')
-    t.nullable.float('amount_paid')
+    t.nullable.float('paid_amount')
     t.nullable.float('discount_amount')
     t.nullable.float('inv_total')
     t.nullable.float('tip')
