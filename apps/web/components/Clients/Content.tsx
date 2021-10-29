@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   TagOutlined,
   ImportOutlined,
@@ -7,7 +7,7 @@ import {
   AppstoreOutlined,
 } from '@ant-design/icons'
 import { Button, Avatar, Table, Checkbox, Pagination } from '@pabau/ui'
-import { Popover, Tooltip } from 'antd'
+import { Popover, Tooltip, Skeleton } from 'antd'
 import { useMedia } from 'react-use'
 import { Labels } from '../../pages/clients'
 import CreateLabel from './CreateLabel'
@@ -15,7 +15,16 @@ import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
-import { AddLabelMutation, Exact, useClientsDataQuery } from '@pabau/graphql'
+import {
+  AddLabelMutation,
+  Exact,
+  // useClientsDataQuery,
+  useGetContactsLazyQuery,
+  // useClientsDataLazyQuery,
+  useGetContactsByLabelLazyQuery,
+  useClientListContactsCountLazyQuery,
+  useGetContactsByLabelCountLazyQuery,
+} from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 
 interface P {
@@ -34,10 +43,10 @@ interface P {
   handleApplyLabel?: (val) => void
   handleRowClick?: (val) => void
   handleRecoverClick?: (val) => void
-  paginateData?: any
-  onPaginationChange?: (val) => void
-  getClientsCountLoading?: boolean
-  setPaginateData?: (val) => void
+  // paginateData?: any
+  // onPaginationChange?: (val) => void
+  // getClientsCountLoading?: boolean
+  // setPaginateData?: (val) => void
   labelsList?: any
   addLabelMutation?: (
     options?: MutationFunctionOptions<
@@ -49,9 +58,12 @@ interface P {
   >
   setLabelsList?: (val) => void
   insertContactsLabelsMutaton?: (val) => void
+  selectedTab?: string
+  filterLabelIds?: number[]
 }
 
 export const ClientsContent = ({
+  searchText = '',
   handleLabelClick,
   isArchived,
   labels,
@@ -66,19 +78,61 @@ export const ClientsContent = ({
   handleApplyLabel,
   handleRowClick,
   handleRecoverClick,
-  paginateData,
-  onPaginationChange,
-  getClientsCountLoading,
-  setPaginateData,
+  // paginateData,
+  // onPaginationChange,
+  // getClientsCountLoading,
+  // setPaginateData,
   labelsList,
   setLabelsList,
   addLabelMutation,
   insertContactsLabelsMutaton,
+  selectedTab,
+  filterLabelIds,
 }: P) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
+  const [paginateData, setPaginateData] = useState({
+    total: 0,
+    offset: 0,
+    limit: 50,
+    currentPage: 1,
+    showingRecords: 0,
+  })
 
-  const { data } = useClientsDataQuery()
+  // const [
+  //   getClientData,
+  //   { data, loading: clientDataLoading },
+  // ] = useClientsDataLazyQuery({
+  //   fetchPolicy: 'network-only',
+  // })
+
+  const [
+    getContactList,
+    { data, loading: contactsLoading },
+  ] = useGetContactsLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const [
+    getContactsByLabel,
+    { data: contactLabelData, loading: contactLabelLoading },
+  ] = useGetContactsByLabelLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const [
+    getContactListCount,
+    { data: getClientsCountData, loading: contactsListCountLoading },
+  ] = useClientListContactsCountLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const [
+    getContactsByLabelCount,
+    { data: getfilteredContactsCount, loading: filteredCountLoading },
+  ] = useGetContactsByLabelCountLazyQuery({
+    fetchPolicy: 'network-only',
+  })
 
   const [selectedPrimaryColumn, setSelectedPrimaryColumn] = useState([
     'Avatar',
@@ -88,6 +142,119 @@ export const ClientsContent = ({
     'Label',
   ])
   const [selectedSecondaryColumn, setSelectedSecondaryColumn] = useState([])
+  const [clientsData, setClientsData] = useState(null)
+
+  useEffect(() => {
+    if (selectedTab !== 'createLabel') mapTabDetails(selectedTab)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTab, searchText])
+
+  useEffect(() => {
+    if (data?.findManyCmContact) setClientsData(data?.findManyCmContact)
+    if (getClientsCountData?.findManyCmContactCount)
+      setPaginateData((val) => ({
+        ...val,
+        total: getClientsCountData?.findManyCmContactCount,
+        showingRecords: data?.findManyCmContact?.length || val?.showingRecords,
+      }))
+  }, [data, contactsLoading, getClientsCountData, contactsListCountLoading])
+
+  useEffect(() => {
+    if (contactLabelData?.findManyCmContact)
+      setClientsData(contactLabelData?.findManyCmContact)
+    if (getfilteredContactsCount?.findManyCmContactCount)
+      setPaginateData((val) => ({
+        ...val,
+        total: getfilteredContactsCount?.findManyCmContactCount,
+        showingRecords: contactLabelData?.findManyCmContact?.length,
+      }))
+  }, [
+    contactLabelData,
+    contactLabelLoading,
+    getfilteredContactsCount,
+    filteredCountLoading,
+  ])
+
+  const handlePaginationCall = (offset = 0, limit) => {
+    const tabName = selectedTab?.split(',')[0]
+    if (['clients', 'contacts'].includes(tabName)) {
+      getContactList({
+        variables: {
+          offset: offset,
+          limit: limit,
+          searchTerm: '%' + searchText + '%',
+        },
+      })
+    } else if (
+      labelsList?.find((item) => item?.name === tabName?.split(',')[0])
+    ) {
+      getContactsByLabel({
+        variables: {
+          offset: offset,
+          limit: limit,
+          searchTerm: '%' + searchText + '%',
+          labelIds: filterLabelIds,
+        },
+      })
+    }
+  }
+
+  const onPaginationChange = (currentPage) => {
+    const offset = paginateData.limit * (currentPage - 1)
+    setPaginateData({
+      ...paginateData,
+      offset,
+      currentPage,
+    })
+    handlePaginationCall(offset, paginateData?.limit)
+  }
+
+  const mapTabDetails = (tab) => {
+    const tabName = tab?.split(',')[0]
+    if (tabName === 'clients' || tabName === 'contacts') {
+      getContactList({
+        variables: {
+          offset: paginateData.offset,
+          limit: paginateData.limit,
+          searchTerm: '%' + searchText + '%',
+        },
+      })
+
+      getContactListCount({
+        variables: {
+          searchTerm: '%' + searchText + '%',
+        },
+      })
+    } else if (
+      labelsList?.find((item) => item?.name === tabName?.split(',')[0])
+    ) {
+      getContactsByLabel({
+        variables: {
+          offset: paginateData.offset,
+          limit: paginateData.limit,
+          searchTerm: '%' + searchText + '%',
+          labelIds: filterLabelIds,
+        },
+      })
+      getContactsByLabelCount({
+        variables: {
+          searchTerm: '%' + searchText + '%',
+          labelIds: filterLabelIds,
+        },
+      })
+    }
+  }
+
+  // useEffect(() => {
+  //   if (data?.findManyCmContact) setClientsData(data?.findManyCmContact)
+  //   if (
+  //     !clientsDataLoading &&
+  //     !filteredContactsLoading &&
+  //     data?.findManyCmContact &&
+  //     getfilteredContacts?.findManyCmContact
+  //   )
+  //     setIsLoading(false)
+  // }, [data, clientsDataLoading, getfilteredContacts, filteredContactsLoading])
 
   const rowSelection = {
     selectedRowKeys,
@@ -152,60 +319,60 @@ export const ClientsContent = ({
           {t('clients.content.column.label')}
         </div>
       ),
-      dataIndex: 'label',
+      dataIndex: 'labels',
       visible: visiblePrimaryColumns('Label'),
       render: function renderLabel(data) {
-        const { clientLabel } = data
+        // const { clientLabel } = data
         return (
           <Popover
             trigger={'hover'}
             placement={'bottom'}
-            content={clientLabel?.map(
-              (label, index) =>
-                label && (
+            content={data?.map(
+              (item, index) =>
+                item && (
                   <div className={styles.contentLabel}>
                     <Button
                       className={styles.labelButton}
                       key={index}
                       style={{
-                        border: `1px solid ${label?.color}`,
-                        color: label?.color,
+                        border: `1px solid ${item?.label?.color}`,
+                        color: item?.label?.color,
                       }}
                       backgroundColor={''}
                       onClick={(e) =>
-                        handleLabelClick(e, label?.name, label?.id)
+                        handleLabelClick(e, item?.label?.name, item?.label?.id)
                       }
                       icon={<TagOutlined />}
                     >
-                      {label?.name}
+                      {item?.label?.name}
                     </Button>
                   </div>
                 )
             )}
           >
             <div className={styles.labelShow}>
-              {clientLabel?.slice(0, 2).map(
-                (label, index) =>
-                  label && (
+              {data?.slice(0, 2).map(
+                (item, index) =>
+                  item && (
                     <Button
                       className={styles.labelButton}
                       key={index}
                       style={{
-                        border: `1px solid ${label?.color}`,
-                        color: label?.color,
+                        border: `1px solid ${item?.label?.color}`,
+                        color: item?.label?.color,
                       }}
                       backgroundColor={''}
                       onClick={(e) =>
-                        handleLabelClick(e, label?.name, label?.id)
+                        handleLabelClick(e, item?.label?.name, item?.label?.id)
                       }
                       icon={<TagOutlined />}
                     >
-                      {label?.name}
+                      {item?.label?.name}
                     </Button>
                   )
               )}
               {/*<p>...</p>*/}
-              {clientLabel?.length > 2 && !clientLabel.includes(undefined) ? (
+              {data?.length > 2 && !data.includes(undefined) ? (
                 <p>
                   <b>. . .</b>
                 </p>
@@ -273,24 +440,27 @@ export const ClientsContent = ({
     const index = selectedData.indexOf(id)
     index === -1 ? selectedData.push(id) : selectedData.splice(index, 1)
     setSelectedRowKeys([...selectedData])
+    handleRowClick({ id })
   }
 
   const mobileLabelPopupContent = (data) => {
     return (
       <div>
-        {data.label?.map((label, index) => {
+        {data?.labels?.map((label, index) => {
           return (
             <div className={styles.labelWrapper} key={index}>
               <Button
                 className={styles.labelButton}
                 style={{
-                  border: `1px solid ${label.color}`,
-                  color: label.color,
+                  border: `1px solid ${label?.label?.color}`,
+                  color: label?.label?.color,
                 }}
-                onClick={(e) => handleLabelClick(e, label.label, label?.id)}
+                onClick={(e) =>
+                  handleLabelClick(e, label?.label?.name, label?.id)
+                }
                 icon={<TagOutlined />}
               >
-                {label.label}
+                {label?.label?.name}
               </Button>
             </div>
           )
@@ -303,7 +473,6 @@ export const ClientsContent = ({
     return <Tooltip title={title}>{icon}</Tooltip>
   }
 
-  if (!data) return <>...</>
   return (
     <div className={styles.tableContent}>
       {!isMobile && selectedRowKeys.length > 0 && (
@@ -330,7 +499,7 @@ export const ClientsContent = ({
             selectedRowKeys={selectedRowKeys}
             setLabelsList={setLabelsList}
             addLabelMutation={addLabelMutation}
-            sourceData={sourceData}
+            // sourceData={sourceData}
             insertContactsLabelsMutaton={insertContactsLabelsMutaton}
             // contactsLabels={contactsLabels}
           >
@@ -372,18 +541,22 @@ export const ClientsContent = ({
         </div>
       )}
       {!isMobile ? (
-        <Table
-          dataSource={data.findManyCmContact}
-          scroll={{ x: 'max-content' }}
-          columns={columns}
-          pagination={false}
-          noDataBtnText={t('clients.noDataBtnText')}
-          noDataText={t('clients.noDataText')}
-          rowSelection={rowSelection}
-          showHeader={selectedRowKeys.length === 0}
-          onRowClick={handleRowClick}
-          loading={false}
-        />
+        <div>
+          <Table
+            dataSource={clientsData}
+            scroll={{ x: 'max-content' }}
+            columns={columns}
+            pagination={false}
+            noDataBtnText={t('clients.noDataBtnText')}
+            noDataText={t('clients.noDataText')}
+            rowSelection={rowSelection}
+            showHeader={selectedRowKeys.length === 0}
+            onRowClick={handleRowClick}
+            // loading={isLoading}
+            loading={contactsLoading || contactLabelLoading}
+          />
+        </div>
+      ) : (
         // <div>
         //   <Table
         //     dataSource={dataSource()}
@@ -418,70 +591,111 @@ export const ClientsContent = ({
         //       }}
         //     />
         //   </div>
-        </div>
-      ) : (
+        // </div> contactsLoading || contactLabelLoading
         <div className={styles.clientMainWrapper}>
-          {data.findManyCmContact
-
-            //TODO move this .map() to .graphql
-            .map((e) => ({
-              ...e,
-              label: [
-                { label: 'abcd', color: 'red' },
-                { label: 'asdf', color: 'green' },
-              ],
-            }))
-
-            .map((data) => (
-              <div
-                key={data.id}
-                className={classNames(styles.clientMobWrap, {
-                  [styles.selectedRowClass]: selectedRowKeys.includes(data.id),
-                })}
-                onClick={() => handleMobileSelectRow(data.id)}
-              >
-                <div className={styles.avatarClientIcon}>
-                  <Avatar name={data.firstName} />
+          {contactsLoading || contactLabelLoading
+            ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+                <div key={item} className={styles.clientMobSkeletonWrap}>
+                  <div className={styles.clientAvatar}>
+                    <Skeleton.Avatar
+                      active={true}
+                      size="large"
+                    ></Skeleton.Avatar>
+                  </div>
+                  <div className={styles.clientContentWrapper}>
+                    <div className={styles.name}>
+                      <Skeleton.Input active={true} size="small" />
+                    </div>
+                    <div className={styles.email}>
+                      <Skeleton.Input active={true} size="small" />
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.clientContent}>
-                  <h5>{`${data.firstName} ${data.lastName}`}</h5>
-                  <span>{data.email}</span>
-                  <span>{data.mobileNumber}</span>
-                </div>
-                <div className={styles.badgeClient}>
-                  <Popover
-                    content={() => mobileLabelPopupContent(data)}
-                    trigger={'click'}
-                    placement={'bottom'}
+              ))
+            : clientsData
+
+                //TODO move this .map() to .graphql
+                // ?.map((e) => ({
+                //   ...e,
+                //   label: [
+                //     { label: 'abcd', color: 'red' },
+                //     { label: 'asdf', color: 'green' },
+                //   ],
+                // }))
+
+                ?.map((data) => (
+                  <div
+                    key={data?.id}
+                    className={classNames(styles.clientMobWrap, {
+                      [styles.selectedRowClass]: selectedRowKeys.includes(
+                        data?.id
+                      ),
+                    })}
+                    onClick={() => handleMobileSelectRow(data?.id)}
                   >
-                    {data.label.length > 0 && (
-                      <Button
-                        icon={<TagOutlined />}
-                        style={
-                          data.label.length === 1
-                            ? {
-                                border: `1px solid ${data.label[0].color}`,
-                                color: data.label[0].color,
-                              }
-                            : {
-                                border: '1px solid rgba(84, 178, 211, 1)',
-                                color: 'rgba(84, 178, 211, 1)',
-                              }
-                        }
+                    <div className={styles.avatarClientIcon}>
+                      <Avatar name={data.firstName} size={40} />
+                    </div>
+                    <div className={styles.clientContent}>
+                      <h5>{`${data.firstName} ${data.lastName}`}</h5>
+                      <span>{data.email}</span>
+                      <span>{data.mobileNumber}</span>
+                    </div>
+                    <div className={styles.badgeClient}>
+                      <Popover
+                        content={() => mobileLabelPopupContent(data)}
+                        trigger={'click'}
+                        placement={'bottom'}
                       >
-                        {data.label.length === 1
-                          ? data.label[0].label
-                          : `${data.label.length} ${t(
-                              'quickCreate.client.modal.general.labels'
-                            )}`}
-                      </Button>
-                    )}
-                  </Popover>
-                </div>
-              </div>
-            ))}
+                        {data?.labels?.length > 0 && (
+                          <Button
+                            icon={<TagOutlined />}
+                            style={
+                              data?.labels?.length === 1
+                                ? {
+                                    border: `1px solid ${data?.labels[0]?.label?.color}`,
+                                    color: data?.labels[0]?.label?.color,
+                                  }
+                                : {
+                                    border: '1px solid rgba(84, 178, 211, 1)',
+                                    color: 'rgba(84, 178, 211, 1)',
+                                  }
+                            }
+                          >
+                            {data?.labels?.length === 1
+                              ? data?.labels[0]?.label?.name
+                              : `${data?.labels?.length} ${t(
+                                  'quickCreate.client.modal.general.labels'
+                                )}`}
+                          </Button>
+                        )}
+                      </Popover>
+                    </div>
+                  </div>
+                ))}
         </div>
       )}
+      <div className={styles.paginationContainer}>
+        <Pagination
+          total={paginateData.total}
+          defaultPageSize={10}
+          showSizeChanger={false}
+          onChange={onPaginationChange}
+          pageSize={paginateData.limit}
+          current={paginateData.currentPage}
+          showingRecords={paginateData.showingRecords}
+          pageSizeOptions={['10', '25', '50', '100']}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              offset: 0,
+              limit: pageSize,
+              currentPage: 1,
+            })
+            handlePaginationCall(0, pageSize)
+          }}
+        />
+      </div>
     </div>
   )
 }

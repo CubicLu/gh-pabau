@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Menu, Skeleton } from 'antd'
 import {
   TagOutlined,
@@ -7,7 +7,6 @@ import {
   ExportOutlined,
 } from '@ant-design/icons'
 import { ReactComponent as ArchivedIcon } from '../../assets/images/archived-icon.svg'
-import styles from '../../pages/clients/clients.module.less'
 import CreateLabel from './CreateLabel'
 import classNames from 'classnames'
 import { Labels, tab } from '../../pages/clients'
@@ -16,8 +15,11 @@ import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 import {
   AddLabelMutation,
   Exact,
-  useClientsDataAggregateQuery,
+  // useClientsDataAggregateQuery,
+  useClientListContactsCountQuery,
+  // useGetLabelsQuery,
 } from '@pabau/graphql'
+import styles from '../../pages/clients/clients.module.less'
 
 const { SubMenu } = Menu
 
@@ -25,14 +27,14 @@ interface P {
   selectedTab?: string
   setSelectedTab?: (val) => void
   labels?: Labels[]
-  sourceData?: SourceDataProps[]
+  // sourceData?: SourceDataProps[]
   handleLabelClick?: (e, val, id) => void
   handleClientClick?: () => void
   handleArchivedClick?: () => void
   setLabels?: (val: Labels[]) => void
   selectedLabels?: Labels[]
   setSelectedLabels?: (val: Labels[]) => void
-  duplicateData?: SourceDataProps[][]
+  // duplicateData?: SourceDataProps[][]
   getClientsCountData?: any
   duplicateContactsCount?: any
   labelsList?: any
@@ -50,13 +52,14 @@ interface P {
   ) => Promise<
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
   >
+  searchText?: string
 }
 
 export const LeftSideBar = ({
   selectedTab,
   setSelectedTab,
   labels,
-  sourceData,
+  // sourceData,
   handleLabelClick,
   handleClientClick,
   handleArchivedClick,
@@ -71,17 +74,49 @@ export const LeftSideBar = ({
   handleApplyLabel,
   labelCountAll,
   contactsLabels,
+  searchText = '',
 }: P) => {
   const { t } = useTranslationI18()
-  const { data } = useClientsDataAggregateQuery()
+  // const { data } = useClientsDataAggregateQuery()
+  const { data } = useClientListContactsCountQuery({
+    variables: {
+      searchTerm: '%' + searchText + '%',
+    },
+  })
+  // const { data: labelList, loading: labelListLoading } = useGetLabelsQuery()
+
+  const [labelData, setLabelData] = useState(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (labelsList?.length) {
+      setLabelData(labelsList)
+    }
+    if (!labelLoading && labelsList?.length) setIsLoading(false)
+  }, [labelsList, labelLoading])
+
+  // const getAllLabelsCount = (data) => {
+  //   const labels = [...data]
+  //   let cnt
+  //   return labels.map((item) => {
+  //     const { CmContactLabel } = item
+  //     cnt = 0
+  //     for (const l of CmContactLabel) {
+  //       if (!!l.CmContact.is_active === true) {
+  //         cnt++
+  //       }
+  //     }
+  //     return { ...item, count: cnt }
+  //   })
+  // }
 
   const handleSelectedTab = (e) => {
     setSelectedTab(e.key)
   }
 
-  const getValueByKey = (object, key) => {
-    return object.find((item) => item.id === key)?.['count']
-  }
+  // const getValueByKey = (object, key) => { to be removed
+  //   return object.find((item) => item.id === key)?.['count']
+  // }
 
   return (
     <div className={styles.clientLeftSidebar}>
@@ -101,8 +136,9 @@ export const LeftSideBar = ({
           </div>
         </Menu.Item>
         <Menu.Item key={tab.contacts}>
-          <div>
+          <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.contacts')}</span>
+            <span>{data?.findManyCmContactCount}</span>
           </div>
         </Menu.Item>
         <Menu.Item key={tab.mergeFix}>
@@ -118,7 +154,7 @@ export const LeftSideBar = ({
         <SubMenu title={t('clients.leftSidebar.labels')} key="mainLabels">
           <SubMenu
             style={
-              labelsList.length > 10
+              labelData?.length > 10
                 ? {
                     height: '200px',
                     overflowY: 'auto',
@@ -130,7 +166,7 @@ export const LeftSideBar = ({
             title={'no title'}
             className={styles.modifiedItem}
           >
-            {labelLoading
+            {isLoading
               ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
                   <Menu.Item key={item}>
                     <div className={styles.labelSkeletonWrapper}>
@@ -147,7 +183,7 @@ export const LeftSideBar = ({
                     </div>
                   </Menu.Item>
                 ))
-              : labelsList?.map((label) => {
+              : labelData?.map((label) => {
                   return (
                     label?.name && (
                       <div
@@ -169,7 +205,8 @@ export const LeftSideBar = ({
                           <span>
                             <TagOutlined /> {label.name}
                           </span>
-                          <span>{getValueByKey(labelCountAll, label.id)}</span>
+                          {/* <span>{getValueByKey(labelCountAll, label.id)}</span> */}
+                          <span>{label?.count}</span>
                         </div>
                       </div>
                     )
@@ -181,12 +218,12 @@ export const LeftSideBar = ({
               selectedLabels={selectedLabels}
               setSelectedLabels={setSelectedLabels}
               labels={labels}
-              labelsList={labelsList}
+              labelsList={labelData}
               setLabels={setLabels}
               addLabelMutation={addLabelMutation}
               handleApplyLabel={handleApplyLabel}
               // contactsLabels={contactsLabels}
-              sourceData={sourceData}
+              // sourceData={sourceData}
             >
               <div>
                 <PlusCircleOutlined /> {t('clients.leftSidebar.createLabels')}

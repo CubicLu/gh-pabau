@@ -20,19 +20,22 @@ query GetContacts(
         }
       ]
     }
+    orderBy: {
+      Fname: asc,
+    }
   ) {
-    Avatar
-    ID
-    Fname
-    Lname
-    Email
-    Mobile
-    DOB
-    MailingCity
-    MailingPostal
+    id: ID
+    firstName: Fname
+    lastName: Lname
     is_active
-    CmContactLabel {
-       label_id
+    email: Email
+    mobileNumber: Mobile
+    labels: CmContactLabel {
+      id
+      label: CmLabel {
+        name
+        color
+      }
     }
   }
 }
@@ -65,19 +68,22 @@ query GetContactsByLabel(
         }
       }
     }
+    orderBy: {
+      Fname: asc,
+    }
   ) {
-    Avatar
-    ID
-    Fname
-    Lname
-    Email
-    Mobile
-    DOB
-    MailingCity
-    MailingPostal
+    id: ID
+    firstName: Fname
+    lastName: Lname
     is_active
-    CmContactLabel {
-       label_id
+    email: Email
+    mobileNumber: Mobile
+    labels: CmContactLabel {
+      id
+      label: CmLabel {
+        name
+        color
+      }
     }
   }
 }
