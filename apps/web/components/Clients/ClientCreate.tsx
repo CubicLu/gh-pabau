@@ -284,16 +284,20 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   }, [limitLocationData])
 
   useEffect(() => {
+    const initialValuesObj = initialValues
     if (salutationData?.findManyUserSalutation?.length > 0) {
-      const initialValuesObj = initialValues
       initialValuesObj['salutation'] =
         salutationData?.findManyUserSalutation[0].name
-      setInitialValues(initialValuesObj)
     } else {
       const validationObj = validationObject
       delete validationObj['salutation']
       setValidationObject(validationObj)
     }
+    if (salutationData?.findFirstCompanyDetails) {
+      initialValuesObj['MailingCountry'] =
+        salutationData?.findFirstCompanyDetails?.country
+    }
+    setInitialValues(initialValuesObj)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salutationData])
 
@@ -448,6 +452,9 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
               ).custom_field_value
             }
           }
+        } else if (key === 'MailingCountry') {
+          values[key] =
+            data[key] || salutationData?.findFirstCompanyDetails?.country
         } else {
           values[key] = data[key]
         }

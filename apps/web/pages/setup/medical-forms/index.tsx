@@ -55,6 +55,7 @@ import CommonHeader from '../../../components/CommonHeader'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { gql, useMutation } from '@apollo/client'
 import styles from './index.module.less'
+
 const { Title } = Typography
 
 const LIST_QUERY_MACRO = gql`
