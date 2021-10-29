@@ -59,6 +59,6 @@ query getLeadPipelines {
   }
 }
 
-query getCmLeadCount {
-  findManyCmLeadCount(where: { company_id: { equals: 8254 } })
+query getCmLeadCount($equals: Int) {
+  findManyCmLeadCount(where: { company_id: { equals: $equals } })
 }

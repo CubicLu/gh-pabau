@@ -43,9 +43,7 @@ export function Index(props: IndexProps) {
     const companyId = 8254
     getCmLeadCount({
       variables: {
-        where: {
-          company_id: { equals: companyId },
-        },
+        equals: companyId,
       },
     })
   }, [getCmLeadCount])
