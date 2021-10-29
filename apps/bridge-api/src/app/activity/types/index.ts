@@ -9,6 +9,7 @@ import {
   CommunicationRecipient,
   MarketingSource,
   PipelineStage,
+  Communication,
 } from '@prisma/client'
 
 interface WhereInputType {
@@ -26,6 +27,10 @@ export interface ActivityInputType {
   take?: number
 }
 
+interface CommunicationRecipientType extends CommunicationRecipient {
+  Communication: Communication
+}
+
 export type ActivityData = Activity & {
   ActivityType: ActivityType
   User: User
@@ -38,7 +43,7 @@ export type ActivityData = Activity & {
     LeadStatusData: LeadStatus
     CmLeadNote: CmLeadNote[]
     PipelineStage: PipelineStage
-    CommunicationRecipient: CommunicationRecipient[]
+    CommunicationRecipient: CommunicationRecipientType[]
     Contact: CmContact
     MarketingSource: MarketingSource
   }
@@ -77,7 +82,7 @@ export type ActivityResponseType = Activity & {
     Contact: CmContact
     MarketingSource: MarketingSource
     PipelineStage: PipelineStage
-    CommunicationRecipient: CommunicationRecipient[]
+    CommunicationRecipient: CommunicationRecipientType[]
     leadDoneActivities: number
     firstActivityTime?: Date
     leadLastActivityDate?: Date

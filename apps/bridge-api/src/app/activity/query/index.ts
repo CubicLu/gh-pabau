@@ -177,6 +177,7 @@ const customFields = [
   'emailMessagesCount',
   'leadLastEmailSend',
   'leadLastEmailReceived',
+  'leadLastEmailReceived1',
   'leadNextActivityDate',
 ]
 

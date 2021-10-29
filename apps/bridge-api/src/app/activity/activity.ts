@@ -140,6 +140,15 @@ export const retrieveActivityData = async (
               is_convert: true,
             },
           },
+          CommunicationRecipient: {
+            select: {
+              Communication: {
+                select: {
+                  date: true,
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -975,6 +984,7 @@ const manualFilterOnStringOperand = (
   value: string
 ) => {
   const data = columnValue?.menuOption?.toLowerCase()
+  value = value?.toLowerCase()
   switch (columnValue.operand) {
     case 'is': {
       if (value === data) {
@@ -1001,37 +1011,37 @@ const manualFilterOnStringOperand = (
       break
     }
     case 'contains': {
-      if (value.includes(data)) {
+      if (value?.includes(data)) {
         return true
       }
       break
     }
     case 'does not contain': {
-      if (!value.includes(data)) {
+      if (!value?.includes(data)) {
         return true
       }
       break
     }
     case 'start with': {
-      if (value.startsWith(data)) {
+      if (value?.startsWith(data)) {
         return true
       }
       break
     }
     case 'does not start with': {
-      if (!value.startsWith(data)) {
+      if (!value?.startsWith(data)) {
         return true
       }
       break
     }
     case 'ends with': {
-      if (value.endsWith(data)) {
+      if (value?.endsWith(data)) {
         return true
       }
       break
     }
     case 'does not end with': {
-      if (!value.endsWith(data)) {
+      if (!value?.endsWith(data)) {
         return true
       }
       break
@@ -1189,6 +1199,19 @@ export const prepareActivityDataWithCustomField = async (
         )
       })
 
+      const leadEmailReceived = item?.CmLead?.CommunicationRecipient.map(
+        (item) => {
+          if (item?.Communication?.date) {
+            return item?.Communication?.date
+          }
+          return undefined
+        }
+      ).filter((item) => item)
+
+      const leadLastEmailReceived = leadEmailReceived.sort((a, b) => {
+        return new Date(b).getTime() - new Date(a).getTime()
+      })?.[0]
+
       const leadLost = calculateLeadLostObject(
         item.CmLead?.EnumStatus,
         leadNote
@@ -1202,26 +1225,6 @@ export const prepareActivityDataWithCustomField = async (
           date: 'desc',
         },
       })
-      const leadLastEmailReceived = await ctx.prisma.communicationRecipient.findMany(
-        {
-          where: {
-            recipient_id: { equals: item.CmLead?.ID },
-            recipient_type: { equals: 'LEAD' },
-          },
-          orderBy: {
-            Communication: {
-              date: 'desc',
-            },
-          },
-          select: {
-            Communication: {
-              select: {
-                date: true,
-              },
-            },
-          },
-        }
-      )
       const leadLastActivityDate = [...leadAllActivity]
         .reverse()
         .find((item) => item?.status === 'Done')?.finished_at
@@ -1250,9 +1253,8 @@ export const prepareActivityDataWithCustomField = async (
             (item) => item?.status !== 'Done'
           ).due_start_date,
           leadLostTime: leadLost?.lostTime,
-          leadLastEmailReceived:
-            leadLastEmailReceived?.[0]?.Communication?.date,
-          emailMessagesCount: leadLastEmailReceived.length,
+          leadLastEmailReceived: leadLastEmailReceived,
+          emailMessagesCount: item?.CmLead?.CommunicationRecipient?.length,
           leadLastEmailSend: lastEmailSend?.date,
           wonBy:
             item.CmLead?.EnumStatus === 'Converted'

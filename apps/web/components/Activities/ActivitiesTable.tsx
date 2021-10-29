@@ -1908,7 +1908,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               return styles.overdueRow
             } else if (
               now <= dueDate &&
-              now.format('DD') === dueDate.format('DD')
+              now.format('DDMMYY') === dueDate.format('DDMMYY')
             ) {
               return styles.todayRow
             }
