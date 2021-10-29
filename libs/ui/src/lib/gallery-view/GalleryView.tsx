@@ -23,6 +23,8 @@ import {
   Notification,
   NotificationType,
   FormikInput,
+  CamUploaderModal,
+  UploadingImageProps,
 } from '@pabau/ui'
 import AlbumData, { ImageProps, AlbumProps } from './AlbumData'
 import {
@@ -42,6 +44,16 @@ import { ReactComponent as ImageAlbum } from '../../assets/images/image-album.sv
 import { ReactComponent as ListIcon } from '../../assets/images/list.svg'
 import { ReactComponent as GridIcon } from '../../assets/images/grid.svg'
 
+const albumFinder = (albums, albumId) => {
+  const album = albums?.find((el) => {
+    if (el?.id === albumId) {
+      return el
+    } else if (el?.album) albumFinder?.(el?.album, albumId)
+    return null
+  })
+  return album
+}
+
 export interface GalleryProps {
   albumList: AlbumProps
   images: ImageProps[]
@@ -56,6 +68,13 @@ export interface GalleryProps {
   onAlbumCreate?: (name: string) => void
   onAlbumUpdate?: (data: AlbumProps) => void
   onAlbumDelete?: (data: AlbumProps) => void
+  openImageStudio?: (album: number, image: number) => void
+
+  uploadingImages: UploadingImageProps[]
+  setUploadingImages: (data: UploadingImageProps[]) => void
+  onImageUpload?: (data: UploadingImageProps) => void
+  onImageRemove?: (imageId: number) => void
+  onUploadCancel?: (data: UploadingImageProps) => void
 }
 
 export const GalleryView: FC<GalleryProps> = ({
@@ -67,6 +86,12 @@ export const GalleryView: FC<GalleryProps> = ({
   onAlbumCreate,
   onAlbumUpdate,
   onAlbumDelete,
+  openImageStudio,
+  uploadingImages,
+  setUploadingImages,
+  onImageUpload,
+  onImageRemove,
+  onUploadCancel,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -102,6 +127,8 @@ export const GalleryView: FC<GalleryProps> = ({
   const [deleteAlbumModal, setDeleteAlbumModal] = useState(false)
   const [listView, setListView] = useState(false)
 
+  const [uploadModal, setUploadModal] = useState(false)
+
   useEffect(() => {
     setImagesList(images)
   }, [images])
@@ -115,8 +142,15 @@ export const GalleryView: FC<GalleryProps> = ({
     setDeleteAlbumModal(false)
     setEditAlbumLoading(false)
     setDeleteAlbumLoading(false)
-    setCurrentData(albumList)
-  }, [albumList])
+    if (!currentData || currentData?.id === 0) {
+      setCurrentData(albumList)
+    } else {
+      const currAlbum = albumFinder(albumList?.album, currentData?.id)
+      if (currAlbum) {
+        setCurrentData(currAlbum)
+      }
+    }
+  }, [albumList, currentData])
 
   const employee = ['will lawsons', 'jessica Winter', 'Jeff Hackley']
   const services = ['abc', 'xyz', 'ert', 'botox']
@@ -229,7 +263,10 @@ export const GalleryView: FC<GalleryProps> = ({
       >
         <FolderOutlined /> {t('galley.view.album.create.new.album')}
       </div>
-      <div className={styles.contentItem}>
+      <div
+        className={styles.contentItem}
+        onClick={() => setUploadModal((e) => !e)}
+      >
         <UploadOutlined /> {t('galley.view.album.create.photo.upload')}
       </div>
     </div>
@@ -338,12 +375,6 @@ export const GalleryView: FC<GalleryProps> = ({
     setSelectedImage([])
     setShowMenu(false)
     setOpenDeleteModal(false)
-  }
-
-  const handleImageStudio = () => {
-    console.log('SELECTED IMAGES:', selectedImage)
-    console.log('C:', currentData)
-    // setShowStudio(() => true)
   }
 
   const handleDownload = () => {
@@ -558,10 +589,6 @@ export const GalleryView: FC<GalleryProps> = ({
     ev.dataTransfer.setData('albumData', ev.target.id)
   }
 
-  const changeContentView = (view: boolean) => {
-    setListView(view)
-  }
-
   return (
     <div className={styles.mainLayout}>
       <div>
@@ -614,6 +641,7 @@ export const GalleryView: FC<GalleryProps> = ({
                       type="primary"
                       className={styles.btnCreate}
                       onClick={() => setCreatePopover((e) => !e)}
+                      onBlur={() => setCreatePopover(() => false)}
                     >
                       <PlusOutlined />
                       {t('galley.view.album.create')}
@@ -670,12 +698,15 @@ export const GalleryView: FC<GalleryProps> = ({
                   <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
                     {t('galley.view.album.view.album')} <DownOutlined />
                   </Button>
-                  <button
+                  <Button
+                    type="primary"
                     className={styles.btnCreate}
                     onClick={() => setCreateAlbumDrawer((e) => !e)}
+                    onBlur={() => setCreateAlbumDrawer(() => false)}
                   >
-                    <PlusOutlined /> Create
-                  </button>
+                    <PlusOutlined />
+                    {t('galley.view.album.create')}
+                  </Button>
                   <Drawer
                     placement={'bottom'}
                     closable={false}
@@ -762,7 +793,7 @@ export const GalleryView: FC<GalleryProps> = ({
               <div className={styles.viewContainer}>
                 <div
                   className={styles.viewItem}
-                  onClick={() => changeContentView(false)}
+                  onClick={() => setListView(false)}
                 >
                   {!listView ? (
                     <GridIcon style={{ fill: '#54B2D3' }} />
@@ -772,7 +803,7 @@ export const GalleryView: FC<GalleryProps> = ({
                 </div>
                 <div
                   className={styles.viewItem}
-                  onClick={() => changeContentView(true)}
+                  onClick={() => setListView(true)}
                 >
                   {listView ? (
                     <ListIcon style={{ fill: '#54B2D3' }} />
@@ -801,10 +832,6 @@ export const GalleryView: FC<GalleryProps> = ({
               </span>
               {!isMobile && (
                 <div className={styles.rightSide}>
-                  <Button type="ghost" onClick={() => handleImageStudio()}>
-                    <EyeOutlined />
-                    Studio {`(${selectedImage.length})`}
-                  </Button>
                   <Button type="ghost" onClick={() => handleDownload()}>
                     <DownloadOutlined />
                     {t('galley.list.album.download.button')}{' '}
@@ -900,25 +927,31 @@ export const GalleryView: FC<GalleryProps> = ({
                     trigger="click"
                     visible={createPopover}
                   >
-                    <button
+                    <Button
+                      type="primary"
                       className={styles.btnCreate}
                       onClick={() => setCreatePopover((e) => !e)}
+                      onBlur={() => setCreatePopover(() => false)}
                     >
-                      <PlusOutlined /> {t('galley.view.album.create')}
-                    </button>
+                      <PlusOutlined />
+                      {t('galley.view.album.create')}
+                    </Button>
                   </Popover>
                 ) : (
-                  <button
+                  <Button
+                    type="primary"
                     className={styles.btnCreate}
                     onClick={() => setCreateAlbumDrawer((e) => !e)}
+                    onBlur={() => setCreateAlbumDrawer(() => false)}
                   >
-                    <PlusOutlined /> {t('galley.view.album.create')}
-                  </button>
+                    <PlusOutlined />
+                    {t('galley.view.album.create')}
+                  </Button>
                 )}
                 <div className={styles.viewContainer}>
                   <div
                     className={styles.viewItem}
-                    onClick={() => changeContentView(false)}
+                    onClick={() => setListView(false)}
                   >
                     {!listView ? (
                       <GridIcon style={{ fill: '#54B2D3' }} />
@@ -928,7 +961,7 @@ export const GalleryView: FC<GalleryProps> = ({
                   </div>
                   <div
                     className={styles.viewItem}
-                    onClick={() => changeContentView(true)}
+                    onClick={() => setListView(true)}
                   >
                     {listView ? (
                       <ListIcon style={{ fill: '#54B2D3' }} />
@@ -976,8 +1009,25 @@ export const GalleryView: FC<GalleryProps> = ({
               setCreateAlbumModal((e) => !e)
             }
           }}
+          openImageStudio={openImageStudio}
         />
       </div>
+
+      <CamUploaderModal
+        albumId={currentData?.id || 0}
+        uploadingImages={uploadingImages}
+        visible={uploadModal}
+        setUploadingImages={setUploadingImages}
+        onClose={(done?: boolean) => {
+          setUploadModal((e) => !e)
+          if (done) {
+            setUploadingImages?.([])
+          }
+        }}
+        uploadImage={onImageUpload}
+        removeImage={onImageRemove}
+        onCancelUpload={onUploadCancel}
+      />
 
       <Modal
         centered

@@ -6,6 +6,7 @@ import Layout from '../../components/Layout/Layout'
 import useDebounce from '../../hooks/useDebounce'
 import PhotoStudio from '../../components/ClientCard/PhotoStudio'
 import {
+  useCountAlbumPhotosQuery,
   useGetPhotoAlbumLazyQuery,
   useGetPhotoAlbumsLazyQuery,
   useGetAlbumPhotosLazyQuery,
@@ -14,19 +15,25 @@ import {
 export const Index: FC = () => {
   const user = useUser()
   const [showPhotoStudio, setShowPhotoStudio] = useState(false)
-  const [showPopover, setShowPopover] = useState(false)
 
   const [userAlbums, setUserAlbums] = useState(null)
   const [albumPhotos, setAlbumPhotos] = useState(null)
 
   const [contactId, setContactId] = useState(
-    // 10552384
-    23936780
+    10552384
+    // 23936780
     // 22459581
   )
   const [albumId, setAlbumId] = useState(null)
   const [photoId, setPhotoId] = useState(null)
   const debouncedContactId = useDebounce(contactId, 500)
+
+  const { data: unCatPhotosCount } = useCountAlbumPhotosQuery({
+    variables: {
+      albumId: 0,
+      contactId: debouncedContactId,
+    },
+  })
 
   const [
     getUncategorizedPhotos,
@@ -60,10 +67,17 @@ export const Index: FC = () => {
         variables: {
           contactId: debouncedContactId,
           albumId: 0,
+          skip: 0,
+          take: unCatPhotosCount?.aggregateContactAttachment?.count?._all || 25,
         },
       })
     }
-  }, [debouncedContactId, getAlbums, getUncategorizedPhotos])
+  }, [
+    debouncedContactId,
+    getAlbums,
+    getUncategorizedPhotos,
+    unCatPhotosCount?.aggregateContactAttachment?.count?._all,
+  ])
 
   useEffect(() => {
     setPhotoId(null)
@@ -115,8 +129,8 @@ export const Index: FC = () => {
             value={albumId}
             onChange={(value) => {
               setAlbumId(value)
-              setShowPopover(false)
               if (value && contactId) {
+                setAlbumPhotos(null)
                 getPhotos({
                   variables: {
                     contactId: contactId,
@@ -137,7 +151,6 @@ export const Index: FC = () => {
           <Popover
             placement="bottomRight"
             trigger="click"
-            visible={showPopover}
             content={
               <div
                 style={{
@@ -168,10 +181,7 @@ export const Index: FC = () => {
                             height: '100%',
                             cursor: 'pointer',
                           }}
-                          onClick={() => {
-                            setShowPopover(false)
-                            setPhotoId(el?.id)
-                          }}
+                          onClick={() => setPhotoId(el?.id)}
                         />
                       </div>
                     ))
@@ -179,12 +189,7 @@ export const Index: FC = () => {
               </div>
             }
           >
-            <Button
-              onClick={() => setShowPopover(() => !showPopover)}
-              type="primary"
-            >
-              Select Image
-            </Button>
+            <Button type="primary">Select Image</Button>
             <div style={{ maxWidth: '150px' }}>
               {photoId && (
                 <img

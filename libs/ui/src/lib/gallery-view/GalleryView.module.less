@@ -336,91 +336,78 @@
   }
   :global {
     .ant-checkbox-wrapper {
-      @media only screen and (max-width: 767px) {
-        width: unset;
-      }
       span {
         padding: unset;
       }
       position: relative;
-      margin-left: 0;
       .ant-checkbox {
-        @media only screen and (max-width: 767px) {
-          top: 10px;
-          left: 15px;
-          padding: unset;
-        }
-        top: 19px;
-        left: 10px;
+        top: 5px;
+        left: 3px;
         position: absolute;
         z-index: 2;
-        display: none;
-      }
-      &:hover .ant-checkbox {
-        display: block;
-      }
-      .showCheck {
-        display: block;
       }
     }
   }
-  .checked {
-    :global {
-      .ant-checkbox {
-        display: block;
-      }
-    }
-  }
+
   .image-preview {
+    height: fit-content;
+    margin-right: 5px;
+    margin-bottom: 5px;
+
     @media only screen and (max-width: 767px) {
       margin-bottom: 5px;
     }
     position: relative;
     .check-wrappers {
-      @media only screen and (max-width: 767px) {
-        top: 5px !important;
-        right: 10px !important;
-      }
+      cursor: pointer;
       position: absolute;
-      right: 15px;
-      top: 15px;
-      visibility: hidden;
+      width: fit-content;
+      top: 0;
+      padding: 10px;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
       svg {
         fill: #000000a6;
       }
-      .imageDotButton {
-        color: red;
-        background-color: red;
-      }
+
       .dotBtn {
         padding: 3px 11px 0 11px;
         background-color: white;
         border-radius: 50%;
         height: 100%;
-        width: 100%;
+      }
+
+      &:first-child {
+        left: 0px;
+      }
+      &:last-child {
+        right: 0;
       }
     }
     &:hover {
       .check-wrappers {
         position: absolute;
-        right: 15px;
-        top: 12px;
-        visibility: visible;
+        display: flex;
         svg {
           fill: #000000a6;
         }
+      }
+    }
+    &.showCheck {
+      .check-wrappers {
+        display: flex;
       }
     }
   }
   .imageAlbum {
     width: 130px;
     height: 130px;
-    margin-right: 5px;
-    margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid #eeeeee;
+    position: relative;
 
     :global .ant-skeleton-image {
       width: 96px;
@@ -438,10 +425,6 @@
       border-radius: 4px;
     }
     .sensitive-class {
-      @media only screen and (max-width: 767px) {
-        width: 90px;
-        height: 90px;
-      }
       display: flex;
       flex-direction: column;
       font-size: 14px;
@@ -453,10 +436,11 @@
       transform: translate(-50%, -50%);
       align-items: center;
       justify-content: center;
-      width: 130px;
-      height: 130px;
+      width: 100%;
+      height: 100%;
       z-index: 10;
       background-color: rgba(0, 0, 0, 0.9);
+      border-radius: 4px;
       :global {
         .anticon {
           margin-bottom: 8px;
@@ -1219,6 +1203,10 @@
   }
   img {
     margin-top: 12px;
+  }
+  > div:last-child {
+    display: flex;
+    align-items: center;
   }
 }
 

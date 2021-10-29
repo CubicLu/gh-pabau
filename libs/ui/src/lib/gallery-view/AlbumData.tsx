@@ -31,12 +31,8 @@ import dayjs from 'dayjs'
 
 const ImageItem = ({ origin, ...props }) => {
   const [source, setSource] = useState('')
-  const [src, setSrc] = useState('')
 
   useEffect(() => {
-    if (src !== origin) {
-      setSource('')
-    }
     if (source === '' && origin !== '') {
       let path = origin
       if (origin.includes('photos/')) {
@@ -63,15 +59,14 @@ const ImageItem = ({ origin, ...props }) => {
           img.width,
           img.height
         )
-        setSrc(origin)
         setSource(canvas.toDataURL())
       })
       img.addEventListener('error', () => {
-        setSource('load-error')
+        setSource('')
       })
       img.src = path
     }
-  }, [origin, source, src])
+  }, [origin, source])
 
   return source ? (
     <img src={source} alt="content" {...props} />
@@ -130,6 +125,7 @@ export interface AlbumDataProps {
   }
   onAlbumRename?: (id: number) => void
   onAlbumDelete: (id: number) => void
+  openImageStudio?: (album, image) => void
 }
 
 export const AlbumData: FC<AlbumDataProps> = ({
@@ -154,6 +150,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
   setCurrentData,
   paginateData,
   onAlbumRename,
+  openImageStudio,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -188,6 +185,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
     if (listView) {
       data.albumImage?.map((x, index) =>
         temp.push({
+          id: x?.id,
           name: [x, index],
           owner: 'me',
           lastModified: dayjs(new Date((x?.date || 0) * 1000 || '')).format(
@@ -336,18 +334,18 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <Checkbox
               checked={selectedImage.includes(value?.[0] as never)}
               onChange={(e) => handleOnChange(e.target.checked, value?.[0])}
-            >
-              <Card bordered={false}>
-                <ImageItem
-                  origin={value?.[0]?.img || ''}
-                  alt={'none'}
-                  className={styles.tableImage}
-                />
-              </Card>
-              <div>
-                <p>{filename[filename.length - 1]}</p>
-              </div>
-            </Checkbox>
+            />
+            <Card bordered={false}>
+              <ImageItem
+                origin={value?.[0]?.img || ''}
+                alt={'none'}
+                className={styles.tableImage}
+                onClick={() => openImageStudio?.(data?.id, value?.[0]?.id)}
+              />
+            </Card>
+            <div>
+              <p>{filename[filename.length - 1]}</p>
+            </div>
           </div>
         )
       },
@@ -471,24 +469,24 @@ export const AlbumData: FC<AlbumDataProps> = ({
     setMoveAlbum((e) => !e)
   }
 
-  const showAlbumImages = (x) => {
-    if (x.albumImage && x.albumImage.length > 0) {
-      if (x.albumImage.length > 0 && x.albumImage.slice(0, 4)) {
+  const showAlbumImages = (album) => {
+    if (album.albumImage && album.albumImage.length > 0) {
+      if (album.albumImage.length > 0 && album.albumImage.slice(0, 4)) {
         return (
           <>
-            {x.albumImage.slice(0, 4).map((item, key) => {
+            {album.albumImage.slice(0, 4).map((item, key) => {
               return (
                 <ImageItem
                   origin={item?.img}
-                  alt={x.albumTitle}
+                  alt={album.albumTitle}
                   key={key}
                   className={styles.gridItem}
-                  id={x.albumTitle}
+                  id={album.albumTitle}
                   draggable={false}
                 />
               )
             })}
-            {Array.from({ length: 4 - x.albumImage.length })
+            {Array.from({ length: 4 - album.albumImage.length })
               .fill(null)
               .map((_, i) => i)
               .map((i) => (
@@ -742,67 +740,72 @@ export const AlbumData: FC<AlbumDataProps> = ({
               className={styles.albumImagesDiv}
             >
               <div className={styles.galleryAlbumImage}>
-                {data.imageCount > 0 &&
-                  !loading &&
+                {!loading &&
                   data.albumImage?.length > 0 &&
                   data.albumImage.map((x: ImageProps, i) => {
                     return (
-                      <Checkbox
-                        checked={selectedImage.includes(x as never)}
-                        key={i}
-                        onChange={(value) =>
-                          handleOnChange(value.target.checked, x)
-                        }
+                      <div
                         className={
                           selectedImage.includes(x as never)
-                            ? classNames(styles.checked, styles.showCheck)
-                            : ''
+                            ? classNames(styles.imagePreview, styles.showCheck)
+                            : styles.imagePreview
                         }
+                        key={i}
                       >
-                        <div className={styles.imagePreview}>
-                          <div className={styles.checkWrappers}>
-                            {!isMobile ? (
-                              <Popover
-                                placement="bottomRight"
-                                content={() => <DotButtonMenu img={x.img} />}
-                                trigger="click"
-                                className={styles.imageDotButton}
-                              >
-                                <div className={styles.dotBtn}>
-                                  <Dot />
-                                </div>
-                              </Popover>
-                            ) : (
-                              <div
-                                className={styles.dotBtn}
-                                onClick={() => setDotMenuDrawer(true)}
-                              >
+                        <div
+                          className={styles.imageAlbum}
+                          key={i}
+                          onClick={() => openImageStudio?.(data?.id, x?.id)}
+                        >
+                          <ImageItem
+                            origin={x.img}
+                            className={`img${i}`}
+                            alt={x.img}
+                            id={x.img}
+                            key={i}
+                            draggable={true}
+                            onDragStart={(event) => drag(event)}
+                          />
+                          {x.isSensitive ? (
+                            <div className={styles.sensitiveClass}>
+                              <EyeInvisibleOutlined />
+                              {!isMobile && <p>Sensitive Content</p>}
+                              <span onClick={() => (x.isSensitive = false)}>
+                                {t('galley.list.image.show')}
+                              </span>
+                            </div>
+                          ) : null}
+                        </div>
+                        <div className={styles.checkWrappers}>
+                          <Checkbox
+                            checked={selectedImage.includes(x as never)}
+                            onChange={(value) =>
+                              handleOnChange(value.target.checked, x)
+                            }
+                          />
+                        </div>
+                        <div className={styles.checkWrappers}>
+                          {!isMobile ? (
+                            <Popover
+                              placement="bottomRight"
+                              content={() => <DotButtonMenu img={x.img} />}
+                              trigger="click"
+                              className={styles.imageDotButton}
+                            >
+                              <div className={styles.dotBtn}>
                                 <Dot />
                               </div>
-                            )}
-                          </div>
-                          <div className={styles.imageAlbum} key={i}>
-                            <ImageItem
-                              origin={x.img}
-                              className={`img${i}`}
-                              alt={x.img}
-                              id={x.img}
-                              key={i}
-                              draggable={true}
-                              onDragStart={(event) => drag(event)}
-                            />
-                            {x.isSensitive ? (
-                              <div className={styles.sensitiveClass}>
-                                <EyeInvisibleOutlined />
-                                {!isMobile && <p>Sensitive Content</p>}
-                                <span onClick={() => (x.isSensitive = false)}>
-                                  {t('galley.list.image.show')}
-                                </span>
-                              </div>
-                            ) : null}
-                          </div>
+                            </Popover>
+                          ) : (
+                            <div
+                              className={styles.dotBtn}
+                              onClick={() => setDotMenuDrawer(true)}
+                            >
+                              <Dot />
+                            </div>
+                          )}
                         </div>
-                      </Checkbox>
+                      </div>
                     )
                   })}
                 {loading && (
