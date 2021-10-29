@@ -31,7 +31,7 @@ import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { getCompanyTimezoneDate } from '../../helper/getCompanyTimezoneDate'
+import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -48,6 +48,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const router = useRouter()
   const { t } = useTranslationI18()
   const { me } = useUser()
+  const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
@@ -105,7 +106,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       )
     },
   })
-
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -213,12 +213,10 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     }
   }, [customFieldData, data])
 
-  const handleAddNewClientNote = async (note) => {
+  const handleAddNewClientNote = async (note: string) => {
     const noteBody = {
       Note: note,
-      CreatedDate: me?.timezone
-        ? getCompanyTimezoneDate(me?.timezone)
-        : dayjs().utc().format(),
+      CreatedDate: timezoneDate() || dayjs().utc().format(),
       User: { connect: { id: me?.user } },
       CmContact: { connect: { ID: clientId } },
     }
