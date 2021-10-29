@@ -41,6 +41,7 @@ import {
   Tag,
   ConfigProvider,
   Tooltip,
+  Skeleton,
 } from 'antd'
 import {
   RightOutlined,
@@ -58,7 +59,7 @@ import {
   SaveOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useRef } from 'react'
+import React, { FC, useState, useRef, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -161,6 +162,7 @@ interface P {
   clientId?: number
   companyId?: number
   setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
+  searchRender?: () => JSX.Element
 }
 
 const ClientCardModal: FC<P> = ({
@@ -182,6 +184,7 @@ const ClientCardModal: FC<P> = ({
   clientId,
   companyId,
   setBasicContactData,
+  searchRender,
 }) => {
   const { t } = useTranslation('common')
   const { push } = useRouter()
@@ -281,6 +284,12 @@ const ClientCardModal: FC<P> = ({
   )
   const [isSubMenu, setIsSubMenu] = useState(false)
   const [isOpenMenu, setIsOpenMenu] = useState(false)
+
+  useEffect(() => {
+    if (loading) {
+      setSearch(false)
+    }
+  }, [loading])
 
   const handleAddNote = (e) => {
     e.preventDefault()
@@ -876,7 +885,17 @@ const ClientCardModal: FC<P> = ({
                 className={styles.clientFullName}
                 onClick={() => !search && setSearch(true)}
               >
-                {client?.fullName}
+                {loading ? (
+                  <Skeleton
+                    className={styles.skeletonName}
+                    paragraph={false}
+                    active
+                  />
+                ) : !search && client?.fullName ? (
+                  client?.fullName
+                ) : (
+                  search && (searchRender ? searchRender() : <Search />)
+                )}
               </div>
             </div>
             <div className={styles.clientCardHeaderOps}>

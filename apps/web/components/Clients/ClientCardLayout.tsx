@@ -20,6 +20,7 @@ import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
+import Search from '../Search'
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -50,6 +51,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     skip: !router.query['id'],
     ssr: false,
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
     ...getQueryVariables,
   })
 
@@ -271,7 +273,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   .join(', '),
                 relationships: [],
                 labels:
-                  data.findFirstCmContact?.labelData?.map((data) => {
+                  data?.findFirstCmContact?.labelData?.map((data) => {
                     return {
                       label: data?.labelDetail?.label,
                       color: data?.labelDetail?.color,
@@ -283,6 +285,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         notes={contactData}
         getContactDetails={getContactDetails}
         setBasicContactData={setBasicContactData}
+        searchRender={() => <Search isHideLead={true} />}
       >
         {children}
       </ClientCard>

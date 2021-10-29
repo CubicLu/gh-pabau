@@ -972,6 +972,7 @@ en:
   intercom.article.title.how.send.social: 'How to send a Social Survey manually'
   intercom.article.title.how.add.links: 'How to add and hyperlink a picture in a template'
   header-search-text-placeholder: 'Search clients or leads'
+  header-search-client-text-placeholder: 'Search clients'
   footer-guides-header-status-text: 'Related guides'
   footer.webinar.join.btn: 'Join class'
   footer.webinar.register.btn: 'Register'
