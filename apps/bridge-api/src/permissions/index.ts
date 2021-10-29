@@ -114,9 +114,12 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
+      deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
+
+      upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,

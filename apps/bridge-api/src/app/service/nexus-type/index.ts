@@ -71,15 +71,14 @@ export const PublicServiceResponse = objectType({
     t.int('max_clients')
     t.int('online_only_service')
     t.float('rating', {
-      resolve(parent, input, ctx: Context) {
-        // const res = ctx.prisma.socialSurveyFeedback.aggregate({
-        //   _avg: {
-        //     rating: true,
-        //   },
-        //   where: { service_id: parent.id || undefined },
-        // })
-        // console.log(res)
-        return 5
+      async resolve(parent, input, ctx: Context) {
+        const res = await ctx.prisma.socialSurveyFeedback.aggregate({
+          _avg: {
+            rating: true,
+          },
+          where: { service_id: parent.id || undefined },
+        })
+        return res._avg.rating
       },
     })
     t.list.field('Public_SocialSurveyFeedback', {
