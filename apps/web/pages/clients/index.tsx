@@ -35,6 +35,7 @@ const { Sider, Content } = Layout
 //TODO: dont put this in pages
 export interface Labels {
   label?: string
+  text?: string
   count?: number
   color?: string
   id?: number
