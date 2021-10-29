@@ -12,8 +12,10 @@ export const RotaShiftFilterInput = inputObjectType({
   name: 'RotaShiftFilterInput',
   definition(t) {
     t.list.int('location_ids')
-    t.list.int('group_ids')
     t.list.int('user_ids')
+    t.int('group_id')
+    t.float('start_date')
+    t.float('end_date')
   },
 })
 export const findManyRotaExtended = extendType({
@@ -33,14 +35,16 @@ export const findManyRotaExtended = extendType({
         }
 
         if (args.where?.user_ids?.length > 0) {
-          where.AND.push({ User: { id: { in: args.where.user_ids } } })
+          where.AND.push({
+            CmStaffGeneral: { User: { id: { in: args.where.user_ids } } },
+          })
         }
-        if (args.where?.group_ids?.length > 0) {
+        if (args.where?.group_id) {
           where.AND.push({
             CmStaffGeneral: {
               User: {
                 UserGroupMember: {
-                  UserGroup: { id: { in: args.where.group_ids } },
+                  UserGroup: { id: { equals: args.where.group_id } },
                 },
               },
             },
@@ -51,6 +55,8 @@ export const findManyRotaExtended = extendType({
           where: {
             ...where,
             company_id: ctx.authenticated.company,
+            start: { gte: args.where.start_date || undefined },
+            end: { lte: args.where.end_date || undefined },
           },
           skip: args.skip,
           take: args.take,
