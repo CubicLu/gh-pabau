@@ -42,12 +42,7 @@ export const UserProvider: FC = ({ children }) => {
     }
   })()
   // End of hack
-  let jwtTokenG
-  if (typeof window !== 'undefined') {
-    jwtTokenG = window['token'] || null
-  } else {
-    jwtTokenG = null
-  }
+  const jwtTokenG = typeof window !== 'undefined' ? window['token'] : null
 
   const [token, setToken] = usePersistedTokenState(null)
 
