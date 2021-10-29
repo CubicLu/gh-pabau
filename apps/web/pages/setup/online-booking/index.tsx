@@ -294,12 +294,9 @@ export const Index: FC<OnlineBookingProps> = ({
                             <span className={styles.time}>{e.time}</span>
                           </div>
                           <div>
-                            <span
-                              className={styles.description}
-                              dangerouslySetInnerHTML={{
-                                __html: e.details || '',
-                              }}
-                            ></span>
+                            <span className={styles.description}>
+                              {e.details}
+                            </span>
                           </div>
                         </div>
                       </div>
