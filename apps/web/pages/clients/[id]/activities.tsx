@@ -45,16 +45,19 @@ const Appointments = () => {
   const renderTooltip = ({ title, icon }) => {
     return <Tooltip title={title}>{icon}</Tooltip>
   }
-  const handleColorClass = (date) => {
+  const handleColorClass = (date, status) => {
     const dueDate = dayjs(date)
     const now = dayjs()
-    let style
-    if (now > dueDate) {
-      style = styles.overdueRow
-    } else if (now <= dueDate && now.format('DD') === dueDate.format('DD')) {
-      style = styles.todayRow
-    } else {
-      style = styles.todo
+    let style = styles.todo
+    if (status.toLocaleLowerCase() !== 'done') {
+      if (now > dueDate) {
+        style = styles.overdueRow
+      } else if (
+        now <= dueDate &&
+        now.format('DDMMYY') === dueDate.format('DDMMYY')
+      ) {
+        style = styles.todayRow
+      }
     }
     return style
   }
@@ -67,7 +70,6 @@ const Appointments = () => {
             id: d.id,
             dateTime: dayjs(d.due_start_date).format('DD-MM-YYYY, h:mm a'),
             eventName: d.subject,
-            clientName: d.Creator.full_name,
             type: d.ActivityType.name,
             taskUserName: d.Assigned.full_name,
             description: d.note,
@@ -76,7 +78,7 @@ const Appointments = () => {
               title: '',
               icon: React.createElement(Icon?.[d.ActivityType.badge]),
             }),
-            dateColor: handleColorClass(d.due_start_date),
+            dateColor: handleColorClass(d.due_start_date, d.status),
           })
         }
         setActivityDetails(activity)

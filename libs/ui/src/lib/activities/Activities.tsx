@@ -6,7 +6,7 @@ import {
 import confetti from 'canvas-confetti'
 import { FilterOutlined } from '@ant-design/icons'
 import styles from './Activities.module.less'
-import { groupByDay } from './utils'
+import { groupAcitvitiesByDay } from './utils'
 import dayjs, { Dayjs } from 'dayjs'
 import { Pagination, Button, Popover, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -22,15 +22,26 @@ import { ReactComponent as UserIcon } from '../../assets/images/timeline/filled-
 import TimeLineFilterPopover from './FilterPopover'
 import TimelineSkeleton from './ActivitySkeleton'
 import calendar from 'dayjs/plugin/calendar'
+import weekOfYear from 'dayjs/plugin/weekOfYear'
 import classNames from 'classnames'
 import {
   EditOutlined,
   DeleteOutlined,
   ShareAltOutlined,
   MoreOutlined,
+  TeamOutlined,
 } from '@ant-design/icons'
 
 dayjs.extend(calendar)
+dayjs.extend(weekOfYear)
+
+const calendarFormat = {
+  lastDay: `[Yesterday]`,
+  sameDay: `[Today]`,
+  nextDay: `[Tomorrow]`,
+  sameWeek: `dddd`,
+  nextWeek: `[Next] dddd`,
+}
 export interface PaginationType {
   total?: number
   limit?: number
@@ -126,7 +137,7 @@ export const Activities: FC<ActivitiesProps> = ({
     }
   }
 
-  const { days = [], eventsByDay } = groupByDay(
+  const { days = [], eventsByDay } = groupAcitvitiesByDay(
     !pagination
       ? filteredEvents.slice(
           paginateData.offset,
@@ -202,13 +213,60 @@ export const Activities: FC<ActivitiesProps> = ({
 
   const timeFormat = (date) => {
     const standardDateFormat = dayjs(date, eventDateFormat)
-    if (
-      dayjs(standardDateFormat) < dayjs().subtract(6, 'days') ||
-      dayjs(standardDateFormat) > dayjs().add(6, 'days')
-    ) {
-      return dayjs(date, eventDateFormat).format('DD MMM [at] h:mm a')
+    let diff
+    const now = dayjs()
+    if (now < date) {
+      diff = now.diff(standardDateFormat, 'days')
+    } else {
+      diff = standardDateFormat.diff(now, 'days')
     }
-    return dayjs(date, eventDateFormat).calendar()
+    if (diff === 0) {
+      let dayDiff
+      if (now < date) {
+        dayDiff =
+          Number(now.format('DD')) - Number(standardDateFormat.format('DD'))
+      } else {
+        dayDiff =
+          Number(standardDateFormat.format('DD')) - Number(now.format('DD'))
+      }
+      if (dayDiff > 0) {
+        diff = 1
+      } else if (dayDiff < 0) {
+        diff = -1
+      }
+    }
+    let weekDiff
+    if (now < date) {
+      weekDiff = dayjs().week() - standardDateFormat.week()
+    } else {
+      weekDiff = standardDateFormat.week() - dayjs().week()
+    }
+    const retVal =
+      diff === -1
+        ? 'lastDay'
+        : diff === 0
+        ? 'sameDay'
+        : diff === 1
+        ? 'nextDay'
+        : weekDiff === 0
+        ? 'sameWeek'
+        : weekDiff === 1
+        ? 'nextWeek'
+        : ''
+    if (retVal) {
+      return (
+        <Tooltip title={date} placement={'topRight'}>
+          {standardDateFormat.format(calendarFormat[retVal])}
+        </Tooltip>
+      )
+    } else {
+      if (
+        dayjs(standardDateFormat) < dayjs().subtract(6, 'days') ||
+        dayjs(standardDateFormat) > dayjs().add(6, 'days')
+      ) {
+        return <>{dayjs(date, eventDateFormat).format('DD MMM [at] h:mm a')}</>
+      }
+    }
   }
 
   const onPageChange = (currentPage) => {
@@ -295,7 +353,7 @@ export const Activities: FC<ActivitiesProps> = ({
           <div className={styles.clientNameWrap}>
             <div className={styles.clientNameText}>{event.clientName}</div>
             <div className={styles.clientNameText}>
-              <UserIcon /> &nbsp;
+              <TeamOutlined /> &nbsp;
               {event.taskUserName}
             </div>
           </div>
