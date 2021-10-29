@@ -322,13 +322,13 @@ model Company {
   InsurerContract    InsurerContract[]
 
 
-  Voucher                Voucher[]
-  Package                Package[]
-  InsuranceContractPrice InsuranceContractPrice[]
-  ContactAttachment      ContactAttachment[]
-  SmsSender              SmsSender[]
-  Pathway                Pathway[]
-  PathwayStep            PathwayStep[]
+  Voucher                 Voucher[]
+  Package                 Package[]
+  InsuranceContractPrice  InsuranceContractPrice[]
+  ContactAttachment       ContactAttachment[]
+  SmsSender               SmsSender[]
+  Pathway                 Pathway[]
+  PathwayStep             PathwayStep[]
   CommunicationAttachment CommunicationAttachment[]
   Recall                  Recall[]
   @@map("admin")
