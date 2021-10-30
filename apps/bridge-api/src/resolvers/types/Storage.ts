@@ -1,4 +1,4 @@
-import { extendType, intArg, objectType } from 'nexus'
+import { extendType, intArg, objectType, list, nonNull } from 'nexus'
 import { Context } from '../../context'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
@@ -14,6 +14,14 @@ const DeleteContactPhotoResponse = objectType({
   },
 })
 
+const DeleteManyContactPhotoResponse = objectType({
+  name: 'deleteManyContactPhotoResponse',
+  definition(t) {
+    t.boolean('success')
+    t.int('count')
+  },
+})
+
 export interface DeleteOutput {
   success?: boolean
   code?: string
@@ -22,8 +30,17 @@ export interface DeleteOutput {
   photo?: number
 }
 
+export interface DeleteManyOutput {
+  success?: boolean
+  count?: number
+}
+
 export interface DeleteContactPhotoInput {
   id: number
+}
+
+export interface DeleteManyContactPhotoInput {
+  ids: number[]
 }
 
 export const uploadImage = extendType({
@@ -64,7 +81,8 @@ export const DeleteContactAttachmentPhoto = extendType({
           postData.append('file_path', attachment.linkref)
 
           const response = await fetch(
-            'https://cdn.pabau.com/v2/api/contact/delete-photo',
+            // 'https://cdn.pabau.com/v2/api/contact/delete-photo',
+            'http://localhost:5000/delete-photo',
             {
               method: 'POST',
               headers: {
@@ -88,6 +106,77 @@ export const DeleteContactAttachmentPhoto = extendType({
           return { ...res, photo: id } as DeleteOutput
         } catch {
           return { success: false, photo: id } as DeleteOutput
+        }
+      },
+    })
+  },
+})
+
+export const DeleteManyContactAttachmentPhoto = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.field('deleteManyContactAttachmentPhoto', {
+      type: DeleteManyContactPhotoResponse,
+      args: {
+        ids: nonNull(list(intArg())),
+      },
+      resolve: async function (
+        _,
+        args: DeleteManyContactPhotoInput,
+        ctx: Context
+      ) {
+        const { ids } = args
+        let deleted = []
+        try {
+          for (const id of ids) {
+            const attachment = await ctx.prisma.contactAttachment.findFirst({
+              where: {
+                id: { equals: id },
+                company_id: { equals: ctx.authenticated.company },
+              },
+              select: {
+                linkref: true,
+              },
+            })
+
+            const postData = new FormData()
+            postData.append('file_path', attachment.linkref)
+
+            const response = await fetch(
+              // 'https://cdn.pabau.com/v2/api/contact/delete-photo',
+              'http://localhost:5000/delete-photo',
+              {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${ctx.authJwt}`,
+                },
+                redirect: 'follow',
+                body: postData,
+              }
+            )
+
+            const res: DeleteOutput = await response.json()
+            if (res.success === true) {
+              deleted.push(id)
+            }
+          }
+
+          if (deleted?.length > 0) {
+            deleted = deleted?.map((el) => {
+              return {
+                id: { equals: el },
+              }
+            })
+            await ctx.prisma.contactAttachment.deleteMany({
+              where: {
+                OR: deleted,
+              },
+            })
+          }
+
+          return { success: true, count: deleted?.length } as DeleteManyOutput
+        } catch {
+          return { success: false, count: 0 } as DeleteManyOutput
         }
       },
     })

@@ -73,8 +73,9 @@ export interface GalleryProps {
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (data: UploadingImageProps[]) => void
   onImageUpload?: (data: UploadingImageProps) => void
-  onImageRemove?: (imageId: number) => void
+  onImageRemove?: (imageId: number[]) => void
   onUploadCancel?: (data: UploadingImageProps) => void
+  imagesDeleteLoading?: boolean
 }
 
 export const GalleryView: FC<GalleryProps> = ({
@@ -92,6 +93,7 @@ export const GalleryView: FC<GalleryProps> = ({
   onImageUpload,
   onImageRemove,
   onUploadCancel,
+  imagesDeleteLoading,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -119,7 +121,7 @@ export const GalleryView: FC<GalleryProps> = ({
 
   const [selectAll, setSelectAll] = useState(false)
   const [selectedImage, setSelectedImage] = useState([])
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const [imageDeleteModal, setImageDeleteModal] = useState(false)
   const [status, setStatus] = useState(true)
   const [dragAlbumTitle, setDragAlbumTitle] = useState('')
   const [imagesList, setImagesList] = useState(images)
@@ -142,6 +144,9 @@ export const GalleryView: FC<GalleryProps> = ({
     setDeleteAlbumModal(false)
     setEditAlbumLoading(false)
     setDeleteAlbumLoading(false)
+    setImageDeleteModal(false)
+    setShowMenu(false)
+    setSelectedImage([])
     if (!currentData || currentData?.id === 0) {
       setCurrentData(albumList)
     } else {
@@ -362,19 +367,16 @@ export const GalleryView: FC<GalleryProps> = ({
       )
     })
     setCurrentData(moveAlbum)
-    handleDelete()
+    handleImagesDelete()
   }
 
-  const handleDelete = () => {
-    const moveAlbum = { ...currentData }
-    selectedImage.map((img: ImageProps) => {
-      const idx = moveAlbum.albumImage.findIndex((i) => i.img === img.img)
-      return moveAlbum.albumImage.splice(idx, 1)
-    })
-    setCurrentData(moveAlbum)
-    setSelectedImage([])
-    setShowMenu(false)
-    setOpenDeleteModal(false)
+  const handleImagesDelete = () => {
+    if (selectedImage?.length > 0) {
+      const deleteImages = (selectedImage as ImageProps[])?.map(
+        (el) => el?.id || 0
+      )
+      onImageRemove?.(deleteImages)
+    }
   }
 
   const handleDownload = () => {
@@ -859,7 +861,7 @@ export const GalleryView: FC<GalleryProps> = ({
                   <Button
                     type="ghost"
                     onClick={() => {
-                      setOpenDeleteModal(!openDeleteModal)
+                      setImageDeleteModal(!imageDeleteModal)
                     }}
                   >
                     <DeleteOutlined />
@@ -982,8 +984,6 @@ export const GalleryView: FC<GalleryProps> = ({
           loading={loading}
           setSelectedImage={setSelectedImage}
           showMenu={showMenu}
-          setOpenDeleteModal={setOpenDeleteModal}
-          openDeleteModal={openDeleteModal}
           handleImageMove={handleImageMove}
           drop={drop}
           allowDrop={allowDrop}
@@ -1010,6 +1010,7 @@ export const GalleryView: FC<GalleryProps> = ({
             }
           }}
           openImageStudio={openImageStudio}
+          onImageDelete={(imageId: number) => onImageRemove?.([imageId])}
         />
       </div>
 
@@ -1025,7 +1026,7 @@ export const GalleryView: FC<GalleryProps> = ({
           }
         }}
         uploadImage={onImageUpload}
-        removeImage={onImageRemove}
+        removeImage={(imageId: number) => onImageRemove?.([imageId])}
         onCancelUpload={onUploadCancel}
       />
 
@@ -1093,12 +1094,15 @@ export const GalleryView: FC<GalleryProps> = ({
 
       <Modal
         centered={true}
-        onCancel={() => setOpenDeleteModal(false)}
-        onOk={handleDelete}
-        visible={openDeleteModal}
+        onCancel={() => {
+          setImageDeleteModal(false)
+        }}
+        onOk={handleImagesDelete}
+        visible={imageDeleteModal}
         title={t('galley.list.view.delete.modal.title')}
         cancelText={t('common-label-cancel')}
         okText={t('galley.list.view.delete.ok.button')}
+        confirmLoading={imagesDeleteLoading}
       >
         <div>
           <p>

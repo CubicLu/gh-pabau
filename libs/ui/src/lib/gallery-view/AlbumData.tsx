@@ -106,8 +106,6 @@ export interface AlbumDataProps {
   loading: boolean
   setSelectedImage: (e) => void
   showMenu: boolean
-  setOpenDeleteModal: (e) => void
-  openDeleteModal: boolean
   handleImageMove: (album) => void
   drop: (e) => void
   allowDrop: (e) => void
@@ -125,7 +123,8 @@ export interface AlbumDataProps {
   }
   onAlbumRename?: (id: number) => void
   onAlbumDelete: (id: number) => void
-  openImageStudio?: (album, image) => void
+  openImageStudio?: (album: number, image: number) => void
+  onImageDelete?: (imagesId: number) => void
 }
 
 export const AlbumData: FC<AlbumDataProps> = ({
@@ -136,8 +135,6 @@ export const AlbumData: FC<AlbumDataProps> = ({
   loading = true,
   setSelectedImage,
   showMenu,
-  openDeleteModal,
-  setOpenDeleteModal,
   handleImageMove,
   drop,
   allowDrop,
@@ -151,6 +148,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
   paginateData,
   onAlbumRename,
   openImageStudio,
+  onImageDelete,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -162,7 +160,8 @@ export const AlbumData: FC<AlbumDataProps> = ({
   const [albumImageList, setAlbumImageList] = useState([])
   const [listAlbumData, setListAlbumData] = useState([])
   const [photoDeleteModal, setPhotoDeleteModal] = useState(false)
-  const [albumImage, setAlbumImage] = useState('')
+  const [imageDeleteLoading, setImageDeleteLoading] = useState(false)
+  const [deleteImageId, setDeleteImageId] = useState<number>(0)
 
   useEffect(() => {
     const temp = []
@@ -178,6 +177,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
       )
       setListAlbumData(temp)
     }
+    setDeleteImageId(0)
+    setPhotoDeleteModal(() => false)
+    setImageDeleteLoading((e) => false)
   }, [data, listView])
 
   useEffect(() => {
@@ -195,6 +197,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
       )
       setAlbumImageList(temp)
     }
+    setDeleteImageId(0)
+    setPhotoDeleteModal(() => false)
+    setImageDeleteLoading((e) => false)
   }, [data.albumImage, listView, selectedImage])
 
   const handleAlbumDownload = (albumImage) => {
@@ -374,7 +379,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
         return !isMobile ? (
           <Popover
             placement="left"
-            content={() => <DotButtonMenu img={record?.name?.[0]?.img} />}
+            content={() => (
+              <DotButtonMenu imageId={record.id} img={record?.name?.[0]?.img} />
+            )}
             trigger="click"
             className={styles.imageDotButton}
           >
@@ -401,7 +408,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             >
               <div className={styles.mobileHeader}>
                 <div className={styles.handler} />
-                <DotButtonMenu img={record.name[0]} />
+                <DotButtonMenu img={record.name[0]} imageId={record.id} />
               </div>
             </Drawer>
           </>
@@ -410,7 +417,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
     },
   ]
 
-  const DotButtonMenu = ({ img }) => (
+  const DotButtonMenu = ({ img, imageId }) => (
     <div className={styles.menuContentMobileBody}>
       <div className={styles.menuContentList}>
         <div
@@ -454,8 +461,8 @@ export const AlbumData: FC<AlbumDataProps> = ({
         <div
           className={styles.menuItem}
           onClick={() => {
-            setPhotoDeleteModal((e) => !e)
-            setAlbumImage(img)
+            setPhotoDeleteModal(() => true)
+            setDeleteImageId(imageId)
           }}
         >
           <DeleteOutlined />
@@ -519,19 +526,6 @@ export const AlbumData: FC<AlbumDataProps> = ({
     return albumImageLen
   }
 
-  const handleDelete = () => {
-    const temp = { ...data }
-    temp.albumImage.map((x, i) => {
-      if (x.img === albumImage) {
-        temp.albumImage.splice(i, 1)
-      }
-      return 1
-    })
-    setCurrentData(temp)
-    setAlbumImage('')
-    setPhotoDeleteModal(false)
-  }
-
   const ImageMenuDrawer = () => (
     <div className={styles.menuContentMobileHeader}>
       <div className={styles.handler} />
@@ -572,7 +566,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <div
               className={styles.menuItem}
               onClick={() => {
-                setOpenDeleteModal(!openDeleteModal)
+                setPhotoDeleteModal(() => true)
               }}
             >
               <DeleteOutlined />
@@ -755,7 +749,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
                         <div
                           className={styles.imageAlbum}
                           key={i}
-                          onClick={() => openImageStudio?.(data?.id, x?.id)}
+                          onClick={() =>
+                            openImageStudio?.(data?.id, Number(x?.id))
+                          }
                         >
                           <ImageItem
                             origin={x.img}
@@ -788,7 +784,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
                           {!isMobile ? (
                             <Popover
                               placement="bottomRight"
-                              content={() => <DotButtonMenu img={x.img} />}
+                              content={() => (
+                                <DotButtonMenu img={x.img} imageId={x.id} />
+                              )}
                               trigger="click"
                               className={styles.imageDotButton}
                             >
@@ -892,9 +890,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                         </div>
                         <div
                           className={styles.menuItem}
-                          onClick={() => {
-                            setOpenDeleteModal(!openDeleteModal)
-                          }}
+                          onClick={() => setPhotoDeleteModal(() => true)}
                         >
                           <DeleteOutlined />
                           &nbsp;&nbsp;&nbsp;
@@ -972,12 +968,20 @@ export const AlbumData: FC<AlbumDataProps> = ({
       )}
       <Modal
         centered={true}
-        onCancel={() => setPhotoDeleteModal(false)}
-        onOk={() => handleDelete()}
+        onCancel={() => {
+          setDeleteImageId(0)
+          setPhotoDeleteModal(() => false)
+          setImageDeleteLoading(() => false)
+        }}
+        onOk={() => {
+          onImageDelete?.(deleteImageId)
+          setImageDeleteLoading(() => true)
+        }}
         visible={photoDeleteModal}
         title={t('galley.list.view.delete.modal.title')}
         cancelText={t('common-label-cancel')}
         okText={t('galley.list.view.delete.ok.button')}
+        confirmLoading={imageDeleteLoading}
       >
         <div>
           <p>{t('galley.list.view.delete.modal.photo.description')}</p>

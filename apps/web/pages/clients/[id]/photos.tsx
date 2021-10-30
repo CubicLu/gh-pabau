@@ -9,6 +9,8 @@ import {
   ImageProps,
   ClientPhotosLayout,
   UploadingImageProps,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import PhotoStudio from '../../../components/ClientCard/PhotoStudio'
@@ -26,11 +28,14 @@ import {
   useDeleteOnePhotoAlbumMutation,
   useCreateContactPhotoMutation,
   useCreateContactPhotoWithoutAlbumMutation,
+  useDeleteManyContactPhotoMutation,
   useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
-const baseURL = `${cdnURL}/v2/api/contact/`
-const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+// const baseURL = `${cdnURL}/v2/api/contact/`
+const baseURL = `http://localhost:5000/`
+// const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+const attachmentsBaseUrl = `http://localhost:5000/`
 
 const iterateTo = (dataArr) => {
   return dataArr?.map((item) => {
@@ -79,6 +84,9 @@ const Photos = () => {
     perPage: 50,
     currentPage: 1,
   })
+
+  const [multipleDelImages, setMultipleDelImages] = useState(0)
+  const [imagesDeleteLoading, setImagesDeleteLoading] = useState(false)
 
   const contactId = useMemo(() => {
     return router.query.id ? Number(router.query.id) : 0
@@ -192,6 +200,18 @@ const Photos = () => {
     },
   })
 
+  const [deleteManyAttachments] = useDeleteManyContactPhotoMutation({
+    onCompleted({ deleteManyContactAttachmentPhoto: data }) {
+      if (data.success && data.count === multipleDelImages) {
+        Notification(NotificationType.success, 'Images deleted successfully')
+        setImagesDeleteLoading(() => false)
+      }
+    },
+    onError() {
+      setImagesDeleteLoading(() => false)
+    },
+  })
+
   useEffect(() => {
     if (albumsData?.findManyPhotoAlbum && !albumsLoading) {
       const innerAlbums = iterateTo(albumsData?.findManyPhotoAlbum)
@@ -208,6 +228,7 @@ const Photos = () => {
         album: innerAlbums,
       }
       setAlbums(cAlbums)
+      setMultipleDelImages(0)
     }
   }, [albumsData, albumsLoading, unCatImagesCount])
 
@@ -227,6 +248,7 @@ const Photos = () => {
       setTimeout(() => {
         setCurrAlbumImages(images)
       }, 0)
+      setMultipleDelImages(0)
     }
   }, [albumImages, albumImagesLoading])
 
@@ -495,37 +517,73 @@ const Photos = () => {
     }
   }
 
-  const onImageRemove = (imageId: number) => {
-    const cAddedFiles = [...uploadingFiles]
-    const idx = cAddedFiles?.findIndex((el) => el?.id === imageId)
-    if (idx !== -1) {
-      const cFile = cAddedFiles[idx]
-      cFile.loading = true
-      cAddedFiles.splice(idx, 1, cFile)
-      setUploadingFiles(cAddedFiles)
-    }
-    if (imageId) {
-      const cCurrAlbumImages = [...currAlbumImages]
-      const cImageIndex = cCurrAlbumImages?.findIndex(
-        (el) => el?.id === imageId
-      )
-      deleteAttachmentInAlbum({
-        variables: {
-          id: imageId,
-        },
-        refetchQueries: [
-          {
-            query: GetPhotoAlbumsDocument,
-            variables: {
-              contactId: contactId,
+  const onImageRemove = (imageIds: number[]) => {
+    if (imageIds?.length > 0) {
+      if (imageIds?.length === 1) {
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === imageIds[0])
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = true
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingFiles(cAddedFiles)
+        }
+        const cCurrAlbumImages = [...currAlbumImages]
+        const cImageIndex = cCurrAlbumImages?.findIndex(
+          (el) => el?.id === imageIds[0]
+        )
+        deleteAttachmentInAlbum({
+          variables: {
+            id: imageIds[0],
+          },
+          refetchQueries: [
+            {
+              query: GetPhotoAlbumsDocument,
+              variables: {
+                contactId: contactId,
+              },
             },
+            cImageIndex !== -1 && {
+              query: GetAlbumPhotosDocument,
+              variables: variables,
+            },
+            albumId === 0 && {
+              query: CountAlbumPhotosDocument,
+              variables: {
+                contactId: contactId,
+                albumId: 0,
+              },
+            },
+          ],
+        })
+      } else {
+        setMultipleDelImages(imageIds?.length)
+        setImagesDeleteLoading(() => true)
+        deleteManyAttachments({
+          variables: {
+            ids: imageIds,
           },
-          cImageIndex !== -1 && {
-            query: GetAlbumPhotosDocument,
-            variables: variables,
-          },
-        ],
-      })
+          refetchQueries: [
+            {
+              query: GetPhotoAlbumsDocument,
+              variables: {
+                contactId: contactId,
+              },
+            },
+            {
+              query: GetAlbumPhotosDocument,
+              variables: variables,
+            },
+            albumId === 0 && {
+              query: CountAlbumPhotosDocument,
+              variables: {
+                contactId: contactId,
+                albumId: 0,
+              },
+            },
+          ],
+        })
+      }
     }
   }
 
@@ -573,6 +631,7 @@ const Photos = () => {
           uploadingImages={uploadingFiles}
           setUploadingImages={setUploadingFiles}
           openImageStudio={openPhotoStudio}
+          imagesDeleteLoading={imagesDeleteLoading}
         />
       </ClientCardLayout>
       {router.query.id && showPhotoStudio && (
