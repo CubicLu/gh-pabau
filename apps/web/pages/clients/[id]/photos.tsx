@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { cdnURL } from '../../../baseUrl'
 import dayjs from 'dayjs'
 import { useUser } from '../../../context/UserContext'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import axios from 'axios'
 import {
   AlbumProps,
@@ -67,6 +68,7 @@ const Photos = () => {
     },
   })
 
+  const { t } = useTranslationI18()
   const router = useRouter()
   const { me } = useUser()
   const [albums, setAlbums] = useState<AlbumProps>()
@@ -174,7 +176,7 @@ const Photos = () => {
     },
   })
 
-  const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
+  const [deleteOneAttachment] = useDeleteContactPhotoMutation({
     onCompleted({ deleteContactAttachmentPhoto: data }) {
       if (data?.success) {
         const id = data?.photo
@@ -195,18 +197,47 @@ const Photos = () => {
           setUploadingFiles(cAddedFiles)
         }
       }
+      Notification(
+        NotificationType.success,
+        t('ui.clientcard.photos.notification.delete.success', {
+          count: 1,
+          suffix: '',
+        })
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('ui.clientcard.photos.notification.delete.error', {
+          count: 1,
+          suffix: '',
+        })
+      )
     },
   })
 
   const [deleteManyAttachments] = useDeleteManyContactPhotoMutation({
     onCompleted({ deleteManyContactAttachmentPhoto: data }) {
       if (data.success && data.count === multipleDelImages) {
-        Notification(NotificationType.success, 'Images deleted successfully')
+        Notification(
+          NotificationType.success,
+          t('ui.clientcard.photos.notification.delete.success', {
+            count: data?.count,
+            suffix: data?.count > 1 ? 's' : '',
+          })
+        )
         setImagesDeleteLoading(() => false)
       }
     },
     onError() {
       setImagesDeleteLoading(() => false)
+      Notification(
+        NotificationType.error,
+        t('ui.clientcard.photos.notification.delete.error', {
+          count: multipleDelImages,
+          suffix: multipleDelImages > 1 ? 's' : '',
+        })
+      )
     },
   })
 
@@ -530,7 +561,7 @@ const Photos = () => {
         const cImageIndex = cCurrAlbumImages?.findIndex(
           (el) => el?.id === imageIds[0]
         )
-        deleteAttachmentInAlbum({
+        deleteOneAttachment({
           variables: {
             id: imageIds[0],
           },
