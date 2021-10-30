@@ -29,6 +29,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from '../../style.module.less'
 import { gql, useMutation } from '@apollo/client'
+
 const { Title } = Typography
 
 const defaultData = {
