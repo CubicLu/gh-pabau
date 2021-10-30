@@ -2,14 +2,11 @@ import React, { FC, useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, Pagination } from '@pabau/ui'
 import styles from './Payments.module.less'
-import {
-  ClientFinancialsLayoutProps,
-  FinancialPayment,
-} from './../ClientFinancialsLayout'
+import { FinancialPayment } from './../ClientFinancialsLayout'
 import { Typography, Button, Popover, Radio, Space, Skeleton } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
-import { GetPaymentsDocument } from '@pabau/graphql'
+import { GetPaymentsDocument, TotalPaymentsCountQuery } from '@pabau/graphql'
 import { useQuery } from '@apollo/client'
 import dayjs from 'dayjs'
 import { useUser } from '../../../../context/UserContext'
@@ -21,7 +18,12 @@ const getInvoicePaymentValues = () => {
   }
 }
 
-export const Payments: FC<ClientFinancialsLayoutProps> = ({
+interface IPaymentsProps {
+  clientId?: number
+  totalPaymentCounts?: TotalPaymentsCountQuery
+}
+
+export const Payments: FC<IPaymentsProps> = ({
   clientId,
   totalPaymentCounts,
 }) => {

@@ -5,8 +5,6 @@ import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import { Invoices } from '../../../components/ClientCard/client-financial-layout/invoices/Invoices'
 import { Payments } from '../../../components/ClientCard/client-financial-layout/payments/Payments'
 import { Items } from '../../../components/ClientCard/client-financial-layout/items/Items'
-import { Voided } from '../../../components/ClientCard/client-financial-layout/voided/Voided'
-import { Statements } from '../../../components/ClientCard/client-financial-layout/statements/Statements'
 import { useQuery } from '@apollo/client'
 import {
   GetFinancialInvoicesDocument,
@@ -15,25 +13,9 @@ import {
   TotalPaymentsCountDocument,
   TotalItemsCountDocument,
 } from '@pabau/graphql'
-import {
-  financialInvoices,
-  financialPayments,
-  financialItems,
-  financialVoidedPayments,
-  financialStatements,
-  invoiceEmployeeOptions,
-  locationOptions,
-} from '../../../mocks/ClientCardMock'
 
 const Financial = () => {
   const router = useRouter()
-  const props = {
-    ...financialInvoices,
-    payments: financialPayments,
-    items: financialItems,
-    voidedPayments: financialVoidedPayments,
-    statements: financialStatements,
-  }
   const [pagination, setPagination] = useState({
     take: 50,
     skip: 0,
@@ -130,7 +112,6 @@ const Financial = () => {
           onExpand={handleExpandsionClick}
         />
         <Payments
-          {...props}
           totalPaymentCounts={totalPaymentCounts}
           clientId={Number.parseInt(`${router.query.id}`)}
         />
@@ -138,10 +119,10 @@ const Financial = () => {
           totalItemsCounts={
             totalItemsCounts?.aggregateSaleItem?._count?.id ?? 0
           }
-          invoiceEmployeeOptions={invoiceEmployeeOptions}
+          invoiceEmployeeOptions={[]}
         />
-        <Voided {...props} />
-        <Statements dataProps={props} locationOptions={locationOptions} />
+        <span>Voided component</span>
+        <span>Statements component</span>
       </TabMenu>
     </ClientCardLayout>
   )
