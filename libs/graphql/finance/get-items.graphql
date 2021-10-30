@@ -32,7 +32,7 @@ query saleItems($guid: String!) {
   }
 }
 
-query getItemsData($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
+query getContactSaleItem($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
   items:findManySaleItem(where:
     {InvSale:{customer_id:{equals: $customer_id}}}
     take: $take,
@@ -53,7 +53,7 @@ query getItemsData($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
   }
 }
 
-query totalItemsCount($customer_id: Int!){
+query countContactSaleItem($customer_id: Int!){
   aggregateSaleItem(where:{InvSale:{customer_id:{equals:$customer_id}}}){
     _count{
       id

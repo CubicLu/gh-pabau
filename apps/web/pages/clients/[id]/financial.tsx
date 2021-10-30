@@ -11,7 +11,7 @@ import {
   TotalInvoiceCountDocument,
   SaleItemsDocument,
   TotalPaymentsCountDocument,
-  TotalItemsCountDocument,
+  CountContactSaleItemDocument,
 } from '@pabau/graphql'
 
 const Financial = () => {
@@ -66,7 +66,7 @@ const Financial = () => {
       ContactID: Number.parseInt(`${router.query.id}`),
     },
   })
-  const { data: totalItemsCounts } = useQuery(TotalItemsCountDocument, {
+  const { data: totalItemsCounts } = useQuery(CountContactSaleItemDocument, {
     skip: !router.query.id,
     variables: {
       customer_id: Number.parseInt(`${router.query.id}`),

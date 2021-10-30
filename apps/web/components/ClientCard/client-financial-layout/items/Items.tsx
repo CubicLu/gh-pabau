@@ -15,7 +15,7 @@ import {
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
 import { useQuery } from '@apollo/client'
-import { GetItemsDataDocument } from '@pabau/graphql'
+import { GetContactSaleItemDocument } from '@pabau/graphql'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 
@@ -66,7 +66,7 @@ export const Items: FC<P> = (props) => {
   }, [paginateData.limit, paginateData.offset, router.query.id])
 
   const { data: itemsData, loading: itemsLoading } = useQuery(
-    GetItemsDataDocument,
+    GetContactSaleItemDocument,
     getQueryVariables
   )
 
