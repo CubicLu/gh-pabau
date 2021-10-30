@@ -32,10 +32,8 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   contactId,
   fetchFunc,
 }) => {
-  // const cdn = `${cdnURL}/cdn/attachments/`
-  const cdn = `http://localhost:5000/`
-  // const baseURL = `${cdnURL}/v2/api/contact/`
-  const baseURL = `http://localhost:5000/`
+  const cdn = `${cdnURL}/cdn/attachments/`
+  const baseURL = `${cdnURL}/v2/api/contact/`
   const api = axios.create({
     baseURL: baseURL,
     headers: {

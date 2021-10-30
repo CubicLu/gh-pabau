@@ -81,8 +81,7 @@ export const DeleteContactAttachmentPhoto = extendType({
           postData.append('file_path', attachment.linkref)
 
           const response = await fetch(
-            // 'https://cdn.pabau.com/v2/api/contact/delete-photo',
-            'http://localhost:5000/delete-photo',
+            'https://cdn.pabau.com/v2/api/contact/delete-photo',
             {
               method: 'POST',
               headers: {
@@ -143,8 +142,7 @@ export const DeleteManyContactAttachmentPhoto = extendType({
             postData.append('file_path', attachment.linkref)
 
             const response = await fetch(
-              // 'https://cdn.pabau.com/v2/api/contact/delete-photo',
-              'http://localhost:5000/delete-photo',
+              'https://cdn.pabau.com/v2/api/contact/delete-photo',
               {
                 method: 'POST',
                 headers: {
