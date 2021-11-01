@@ -71,7 +71,7 @@ en:
   notifications.bookedOntoClass.message: 'We look forward to seeing you then!'
   notifications.noShowAppointment.greeting: 'Hi, Anna'
   notifications.noShowAppointment.subTitle: 'Sorry you missed your appointment!'
-  notifications.noShowAppointment.message: 'We hope everything is okay with you. We had you scheduled to see Dr. Christine today at 11:00 but unfortunately, you didn''t show up.'
+  notifications.noShowAppointment.message: "We hope everything is okay with you. We had you scheduled to see Dr. Christine today at 11:00 but unfortunately, you didn't show up."
   notifications.noShowAppointment.closingText: 'Looking forward to hearing from you soon,'
   notifications.noShowAppointment.signatureBlock: 'Your friends at The Clinic'
   notifications.waitList.greeting: 'Dear Sophia,'
@@ -86,23 +86,23 @@ en:
   notifications.invoice.closingText: 'Looking forward to hearing from you soon'
   notifications.invoice.signatureBlock: 'Your friends at The Clinic'
   notifications.invoice.message:
-      - 'Thank you for your recent visit at M-A Hair Dressing & Spa.'
+    - 'Thank you for your recent visit at M-A Hair Dressing & Spa.'
   notifications.invoice.outstanding.greeting: 'Hi Anna,'
   notifications.invoice.outstanding.bestRegards: 'Best regards,'
   notifications.invoice.outstanding.senderFirstName: Rina
   notifications.invoice.outstanding.footerText: 'Looking forward to hearing from you soon,'
   notifications.invoice.outstanding.footerText2: 'Your friends at The Clinic'
   notifications.invoice.outstanding.message:
-      - 'I hope you are well.'
-      - 'I just wanted to drop you a quick note to remind you that 02/03/2021 in respect of our invoice 00001 is due for payment on 31/03/2021.'
-      - 'I would be really grateful if you could confirm that everything is on track for payment.'
+    - 'I hope you are well.'
+    - 'I just wanted to drop you a quick note to remind you that 02/03/2021 in respect of our invoice 00001 is due for payment on 31/03/2021.'
+    - 'I would be really grateful if you could confirm that everything is on track for payment.'
   notifications.birthday.wishingMessage: 'Happy Birthday!'
   notifications.birthday.closingText: 'Warm regards,'
   notifications.birthday.signatureBlock: 'The clinic team'
   notifications.birthday.messages:
-      - 'Your friends at clinic would like to wish you a glorious and happy birthday.'
-      - 'Here''s a £30 voucher to spend on your next visit.'
-      - 'We look forward to seeing you soon!'
+    - 'Your friends at clinic would like to wish you a glorious and happy birthday.'
+    - "Here's a £30 voucher to spend on your next visit."
+    - 'We look forward to seeing you soon!'
   notifications.classSpotAvailable.greeting: 'Dear Sophia,'
   notifications.classSpotAvailable.message: 'Good news! You recently were placed in our waitlist and a new class is now available. If you would still like to book your appointment, you must take action before the spot is taken.'
   notifications.giftVoucher.greeting: 'Congratulations Sophia,you have received a Gift Voucher'
@@ -413,7 +413,7 @@ en:
   setup.discount.data.selectemployee: 'Select emloyee'
   setup.discount.data.clearallbutton: 'Clear all'
   setup.discount.data.applyfilterbutton: 'Apply filters'
-  setup.discount.data.enterdiscountname: 'Enter discount''s name'
+  setup.discount.data.enterdiscountname: "Enter discount's name"
   setup.discount.data.egpercentage: 'e.g. 15%'
   setup.discount.data.egpaund: 'e.g. £ 15'
   setup.discount.data.enterdiscountcode: 'Enter discount’s code'
@@ -1015,7 +1015,7 @@ en:
   setup.courses.package.general.name.placeholder: 'Enter package name'
   setup.courses.package.general.category: Cagegory
   setup.courses.package.general.category.placeholder: 'Select a category'
-  setup.courses.package.general.image: 'Image'''
+  setup.courses.package.general.image: "Image'"
   setup.courses.package.general.image.choose: 'Choose from library'
   setup.courses.package.general.enable: 'Enable online purchase'
   setup.courses.package.drawer.quantity.validate.required: 'Quantity is required'
@@ -1159,8 +1159,8 @@ en:
   setup.drugs.fullscreenmdoal.frequency.validate.required: 'Frequency is required'
   setup.drugs.fullscreenmdoal.route.validate.required: 'Route is required'
   setup.drugs.fullscreenmdoal.form.general: General
-  setup.drugs.fullscreenmdoal.form.name: 'Drugs''s Name'
-  setup.drugs.fullscreenmdoal.form.name.placeholder: 'Enter Drugs''s Name'
+  setup.drugs.fullscreenmdoal.form.name: "Drugs's Name"
+  setup.drugs.fullscreenmdoal.form.name.placeholder: "Enter Drugs's Name"
   setup.drugs.fullscreenmdoal.form.medical: Medical
   setup.drugs.fullscreenmdoal.form.dosage: Dosage
   setup.drugs.fullscreenmdoal.form.dosage.placeholder: 'e.g. 50 mg'
@@ -2090,7 +2090,7 @@ en:
   settings.calendar.advanced.input.orderingemployee.tooltip: 'Your calendar will automatically arrange itself to be ordered by location.'
   settings.calendar.advanced.input.hideclientname.label: 'Hide client name on appointment arrival notification'
   settings.calendar.advanced.input.hideclientname.tooltip: 'We will mask the clients full name when they are checked in.'
-  settings.calendar.advanced.input.allowservice.label: 'Allow service without contract''s price'
+  settings.calendar.advanced.input.allowservice.label: "Allow service without contract's price"
   settings.calendar.advanced.input.allowservice.tooltip: 'We will allow you to book services even if they do not have a price.'
   settings.calendar.advanced.input.hideshowaccounts.label: 'Hide/Show accounts'
   settings.calendar.advanced.input.hideshowaccounts.tooltip: 'This will allow you to view financial information from the calendar.'
@@ -2099,7 +2099,7 @@ en:
   settings.calendar.advanced.input.revertroom.label: 'Revert to original room view'
   settings.calendar.advanced.input.revertroom.tooltip: 'Disable room view ordering by service priority.'
   unauthorized.page.403.label: '403'
-  unauthorized.page.title: 'you don''t have permissions to access this page'
+  unauthorized.page.title: "you don't have permissions to access this page"
   unauthorized.page.button.label: 'Go to homepage'
   marketingreviews.notification.title: Reviews
   marketingreviews.notification.description: 'You are not displaying your reviews on your website, and therefore you are not receiving Google Ranking, as well as customers not being able to see them!'
@@ -2180,10 +2180,10 @@ en:
   notifications.appointments.cancelAppointment.description: 'Automatically sends to clients when an appointment is cancelled'
   notifications.appointments.noShowAppointment.description: 'Automatically sends to clients when an appointment is marked as no show'
   notifications.appointments.waitList.description: 'Automatically sends to clients when an appointment slot becomes available'
-  notifications.classes.classBooked.description: 'Automatically sends to clients when they''re booked for a class'
-  notifications.classes.classBookedGroup.description: 'Automatically sends to clients when they''re booked for a class (group)'
+  notifications.classes.classBooked.description: "Automatically sends to clients when they're booked for a class"
+  notifications.classes.classBookedGroup.description: "Automatically sends to clients when they're booked for a class (group)"
   notifications.classes.cancelledClassBooking.description: 'Automatically sends to clients when they cancel a class booking'
-  notifications.classes.classNoShowAppointment.description: 'Automatically sends to clients when they don''t show for a class'
+  notifications.classes.classNoShowAppointment.description: "Automatically sends to clients when they don't show for a class"
   notifications.classes.classRescheduled.description: 'Automatically sends to clients when a class is rescheduled'
   notifications.classes.classReminder.description: 'Automatically sends a reminder to a client who has registered to a class'
   notifications.classes.classSpotAvailable.description: 'Automatically sends to clients when a class slot becomes available'
@@ -2193,10 +2193,10 @@ en:
   notifications.engagement.giftVoucher.description: 'The default email template you will send when clients purchase a gift voucher'
   notifications.engagement.outstandingInvoice.description: 'The default email template you will send with a clients Outstanding invoice attached'
   notifications.other.packageSession.description: 'The default email template you will send when a client has used all their package sessions'
-  notifications.other.clinicEmailingTimeline.description: 'The email you will send when you are emailing a client''s timeline'
+  notifications.other.clinicEmailingTimeline.description: "The email you will send when you are emailing a client's timeline"
   notifications.other.connectRegistration.description: 'The email the client receives when they register to your Online Booking portal'
   notifications.other.emailAppointment.description: 'The email you will send if someone requested a list of their appointment history'
-  notifications.other.birthday.description: 'The default email template you will send if it''s a client''s birthday'
+  notifications.other.birthday.description: "The default email template you will send if it's a client's birthday"
   notifications.Sharing.prescription.description: 'The email you will send when you email someone a copy of their prescription'
   notifications.Sharing.note.description: 'The email you will send when you email someone a copy of their note'
   notifications.Sharing.medicalForms.description: 'The email you will send when you email someone a copy of their medical form'
@@ -2208,7 +2208,7 @@ en:
   notifications.documentShared.standardMessage: 'The email you will send when you share a document with a client through Pabau Connect'
   notifications.documentShared.greeting: 'Dear Sophia,'
   notifications.documentShared.messageLine1: 'You have received a new secure email'
-  notifications.documentShared.messageLine2: 'View and download your document in your documents area of the ''Pabau Connect'' app'
+  notifications.documentShared.messageLine2: "View and download your document in your documents area of the 'Pabau Connect' app"
   notifications.documentShared.buttonName: 'View Document'
   notifications.documentShared.closingText: 'Kind regards,'
   notifications.documentShared.signatureBlock: 'The Clinic Team'
@@ -2226,7 +2226,7 @@ en:
   notifications.secureEmailTemplate.fromMessage: From
   notifications.prescription.greeting: 'Hi Anna,'
   notifications.prescription.messageLine1: 'You have received a new prescription'
-  notifications.prescription.messageLine2: 'View and download your prescription in your appointment summary of the ''Pabau Connect'' app.'
+  notifications.prescription.messageLine2: "View and download your prescription in your appointment summary of the 'Pabau Connect' app."
   notifications.prescription.buttonName: 'View Prescription'
   notifications.prescription.closingText: 'Kind regards,'
   notifications.prescription.signatureBlock: 'The Clinic Team'
@@ -2237,7 +2237,7 @@ en:
   notifications.prescription.standardMessage: 'The email you will send when you email someone a copy of their prescription'
   notifications.note.greeting: 'Hi Carter,'
   notifications.note.messageLine1: 'You have received a new note'
-  notifications.note.messageLine2: 'View your note in your message centre of the ''Pabau Connect'' app.'
+  notifications.note.messageLine2: "View your note in your message centre of the 'Pabau Connect' app."
   notifications.note.buttonName: 'View Message'
   notifications.note.closingText: 'Kind regards,'
   notifications.note.signatureBlock: 'The Clinic Team'
@@ -2248,7 +2248,7 @@ en:
   notifications.note.standardMessage: 'The email you will send when you email someone a copy of their note'
   notifications.letters.greeting: 'Hi Shopia,'
   notifications.letters.messageLine1: 'You have received a new letter'
-  notifications.letters.messageLine2: 'View and download your letter in your appointment summary of the ''Pabau Connect'' app.'
+  notifications.letters.messageLine2: "View and download your letter in your appointment summary of the 'Pabau Connect' app."
   notifications.letters.buttonName: 'View Letter'
   notifications.letters.closingText: 'Kind regards,'
   notifications.letters.signatureBlock: 'The Clinic Team'
@@ -2259,7 +2259,7 @@ en:
   notifications.letters.standardMessage: 'The email you will send when you email someone a copy of their letter'
   notifications.labResults.greeting: 'Hi Anna,'
   notifications.labResults.messageLine1: 'You have received a lab result'
-  notifications.labResults.messageLine2: 'View and download your test results in your labs area of the ''Pabau Connect'' app.'
+  notifications.labResults.messageLine2: "View and download your test results in your labs area of the 'Pabau Connect' app."
   notifications.labResults.buttonName: 'View Lab Results'
   notifications.labResults.closingText: 'Kind regards,'
   notifications.labResults.signatureBlock: 'The Clinic Team'
@@ -4061,8 +4061,8 @@ en:
   account.settings.response.notification.updated: 'Already Updated'
   account.settings.response.notification.password: 'Password Updated Successfully'
   account.settings.response.notification.password.error: 'Something went wrong while updating password'
-  account.settings.response.notification.password.error.confirm: 'Confirm password didn''t matched!'
-  account.settings.response.notification.password.error.notmatched: 'Old password didn''t matched!'
+  account.settings.response.notification.password.error.confirm: "Confirm password didn't matched!"
+  account.settings.response.notification.password.error.notmatched: "Old password didn't matched!"
   account.settings.response.notification.password.error.username: 'You can not use your email as password!'
   account.settings.response.notification.password.error.short: 'Password too short!'
   account.settings.response.notification.password.error.number: 'Password must include at least one number'
@@ -4373,10 +4373,10 @@ en:
   setup.medical.forms.save.err.text: 'Error! While saving the medical form'
   setup.medical.forms.search.asc: Ascending
   setup.medical.forms.search.desc: Descending
-  account.finance.payments.empty.data.text: 'There aren''t any payments, yet'
-  account.finance.invoice.empty.data.text: 'There aren''t any invoices, yet'
-  account.finance.debt.empty.data.text: 'There isn''t any debt, yet'
-  account.finance.credit.not.empty.data.text: 'There aren''t any credit notes, yet'
+  account.finance.payments.empty.data.text: "There aren't any payments, yet"
+  account.finance.invoice.empty.data.text: "There aren't any invoices, yet"
+  account.finance.debt.empty.data.text: "There isn't any debt, yet"
+  account.finance.credit.not.empty.data.text: "There aren't any credit notes, yet"
   ui.client-card-financial.invoices: Invoices
   ui.client-card-financial.invoices.all: All
   ui.client-card-financial.invoices.date: Date
@@ -4619,7 +4619,7 @@ en:
   setup.reports.remove-metric: 'Remove Metric'
   setup.reports.showing: Showing
   setup.reports.show: Show
-  setup.reports.table.error: 'Error occured while loading a table, data can''t be rendered right now'
+  setup.reports.table.error: "Error occured while loading a table, data can't be rendered right now"
   setup.reports.table.empty: 'There is no data available for now'
   news.empty.msg: 'No news yet'
   news.empty.hint: 'Stay tuned! News will show up here'
@@ -5113,7 +5113,7 @@ en:
   dashboard.create.modal.enter.verification.header: 'Verification Complete'
   dashboard.create.modal.add.phone.header.message: 'Add phone number to this record'
   dashboard.create.modal.add.phone.body.message: 'Record calls straight to your CRM so you can keep all your conversations in one place'
-  dashboard.create.modal.call.failed.popout.message: ''''
+  dashboard.create.modal.call.failed.popout.message: "'"
   timeline.filter.activity: Activity
   timeline.filter.forms: Forms
   timeline.filter.medicalQuestionnaire: 'Medical Questionnaire'
@@ -5258,7 +5258,7 @@ en:
   galley.list.view.photo.name: Name
   galley.list.view.delete.ok.button: 'Delete forever'
   galley.list.view.delete.modal.title: 'Delete forever ?'
-  galley.list.view.delete.modal.photo.description: 'Photo will be deleted forever and you won''t be able to restore them.'
+  galley.list.view.delete.modal.photo.description: "Photo will be deleted forever and you won't be able to restore them."
   galley.list.image.show: Show
   galley.list.menu.new.album: 'New Album'
   galley.list.menu.Owner.album: Owner
@@ -5405,7 +5405,7 @@ en:
   create.filter.modal.search.result.match.label: '{{count}} MATCHES'
   create.filter.modal.no.search.label: 'No match found'
   create.filter.modal.no.search.desc: 'Please check your spelling'
-  create.filter.modal.shared.filter.tooltip: 'You''re viewer of this filter. Only the owner {{name}} can make changes here.'
+  create.filter.modal.shared.filter.tooltip: "You're viewer of this filter. Only the owner {{name}} can make changes here."
   create.filter.modal.creator.name: 'Creator: {{name}}'
   create.filter.modal.last.modified.label: 'Last modified: {{date}}'
   create.filter.modal.deleted.filter.message: 'You have successfully deleted a filter'
@@ -5622,3 +5622,6 @@ en:
   clients.clientcard.notes.clientnote.delete.errormessage: 'Error occured while deleting note'
   clients.clientcard.notes.clientnote.deletemodal.title: 'Delete client Note'
   clients.clientcard.notes.clientnote.deletemodal.content: 'This note will be deleted. This action is irreversible'
+  journey.modal.appointments.dr.name: 'Dr. {{drName}}'
+  journey.modal.appointments.item.payment.status.paid: 'Paid'
+  journey.modal.appointments.item.payment.status.unpaid: 'Unpaid'
