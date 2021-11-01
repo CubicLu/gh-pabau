@@ -477,11 +477,7 @@ export const Search: FC<P> = ({
       <div className={styles.desktopViewNone}>
         <Input
           className={classNames(styles.searchInputStyle)}
-          placeholder={
-            !isHideLead
-              ? t('header-search-client-text-placeholder')
-              : t('header-search-text-placeholder')
-          }
+          placeholder={t('header-search-text-placeholder')}
           value={searchTerm}
           prefix={<SearchOutlined style={{ color: '#BFBFBF' }} />}
           onChange={(e) => setSearchTerm(e.target.value)}

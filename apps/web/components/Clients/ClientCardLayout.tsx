@@ -21,6 +21,7 @@ import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
 import Search from '../Search'
+import { useTranslation } from 'react-i18next'
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -40,6 +41,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const [basicContactData, setBasicContactData] = useState(null)
   const [openEditModal, setOpenEditModal] = useState(false)
   const user = useUser()
+  const { t } = useTranslation('common')
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -285,7 +287,12 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         notes={contactData}
         getContactDetails={getContactDetails}
         setBasicContactData={setBasicContactData}
-        searchRender={() => <Search isHideLead={true} />}
+        searchRender={() => (
+          <Search
+            isHideLead={true}
+            placeHolder={t('search.client.placeholder')}
+          />
+        )}
       >
         {children}
       </ClientCard>

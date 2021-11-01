@@ -6,6 +6,7 @@ en:
     marketingsource-header-edit: 'Edit Marketing Source'
     KEY: Text
     search.placeholder: 'Search clients or leads'
+    search.client.placeholder: 'Search clients'
     avatar.balance: Balance
     avatar.account.settings: 'Account Settings'
     avatar.tasks: Tasks
