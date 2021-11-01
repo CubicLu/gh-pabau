@@ -604,21 +604,23 @@ export const GalleryView: FC<GalleryProps> = ({
                       {t('galley.view.album.view.album')} <DownOutlined />
                     </Button>
                   </Popover>
-                  <Popover
-                    placement="bottomRight"
-                    content={<CreateContent />}
-                    trigger="click"
-                    visible={createPopover}
-                  >
-                    <Button
-                      type="primary"
-                      className={styles.btnCreate}
-                      onClick={() => setCreatePopover((e) => !e)}
+                  {currentData?.id === 0 && (
+                    <Popover
+                      placement="bottomRight"
+                      content={<CreateContent />}
+                      trigger="click"
+                      visible={createPopover}
                     >
-                      <PlusOutlined />
-                      {t('galley.view.album.create')}
-                    </Button>
-                  </Popover>
+                      <Button
+                        type="primary"
+                        className={styles.btnCreate}
+                        onClick={() => setCreatePopover((e) => !e)}
+                      >
+                        <PlusOutlined />
+                        {t('galley.view.album.create')}
+                      </Button>
+                    </Popover>
+                  )}
                 </>
               )}
               {isMobile && (
@@ -893,28 +895,29 @@ export const GalleryView: FC<GalleryProps> = ({
                 >
                   <CreateContent />
                 </Drawer>
-                {!isMobile ? (
-                  <Popover
-                    placement="bottomRight"
-                    content={<CreateContent />}
-                    trigger="click"
-                    visible={createPopover}
-                  >
+                {currentData?.id === 0 &&
+                  (!isMobile ? (
+                    <Popover
+                      placement="bottomRight"
+                      content={<CreateContent />}
+                      trigger="click"
+                      visible={createPopover}
+                    >
+                      <button
+                        className={styles.btnCreate}
+                        onClick={() => setCreatePopover((e) => !e)}
+                      >
+                        <PlusOutlined /> {t('galley.view.album.create')}
+                      </button>
+                    </Popover>
+                  ) : (
                     <button
                       className={styles.btnCreate}
-                      onClick={() => setCreatePopover((e) => !e)}
+                      onClick={() => setCreateAlbumDrawer((e) => !e)}
                     >
                       <PlusOutlined /> {t('galley.view.album.create')}
                     </button>
-                  </Popover>
-                ) : (
-                  <button
-                    className={styles.btnCreate}
-                    onClick={() => setCreateAlbumDrawer((e) => !e)}
-                  >
-                    <PlusOutlined /> {t('galley.view.album.create')}
-                  </button>
-                )}
+                  ))}
                 <div className={styles.viewContainer}>
                   <div
                     className={styles.viewItem}
