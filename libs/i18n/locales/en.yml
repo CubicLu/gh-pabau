@@ -5230,7 +5230,9 @@ en:
   galley.view.album.create: Create
   galley.view.album.apply: Apply
   galley.view.album.create.album.modal.title: 'New Album'
-  galley.view.album.create.album.modal.button: Create
+  galley.view.album.edit.album.modal.title: 'Edit Album'
+  galley.view.album.create.album.modal.button: 'Create'
+  galley.view.album.edit.album.modal.button: 'Update'
   galley.view.album.create.album.placeholder: 'Album name'
   galley.view.album.create.album.name: Name
   galley.list.album.download.button: Download

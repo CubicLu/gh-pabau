@@ -147,7 +147,11 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     { key: 'financial', name: 'Financials' },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
-    { key: 'emr', name: 'EMR' },
+    {
+      key: 'emr',
+      name: 'EMR',
+      childTabs: [{ key: 'photos', name: 'Photos' }],
+    },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
     { key: 'loyalty', name: 'Loyalty' },
     { key: 'activities', name: 'Activities' },

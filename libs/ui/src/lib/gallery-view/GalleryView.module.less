@@ -1,6 +1,6 @@
 .headerText {
   padding: 0 0 24px 0;
-  margin-bottom: 24px;
+  margin-bottom: 0px;
   border-bottom: 1px solid #ecedf0;
   display: flex;
   justify-content: space-between;
@@ -32,16 +32,26 @@
         padding: unset;
       }
     }
+
+    .filterButton {
+      border: none;
+      padding: 0px;
+    }
+
+    .downloadBtn {
+      margin: 10px 0;
+    }
+
     button {
       margin: 0px 10px;
       @media screen and (max-width: 479px) {
         margin: 0px 8px;
       }
     }
-    .viewContainer{
+    .viewContainer {
       display: flex;
       flex-wrap: wrap;
-      .viewItem{
+      .viewItem {
         margin: 5px;
         cursor: pointer;
         svg {
@@ -79,16 +89,35 @@
       background: #54b2d3;
       border: none;
       border-radius: 4px;
-      padding: 2px 7px;
+      padding: 4px 7px;
+      height: fit-content;
       font-size: 14px;
       line-height: 22px;
       color: #fff;
       cursor: pointer;
-    }
-    .create-content {
-      padding: 10px !important;
-      .content-item {
-        padding: 5px !important;
+      :global {
+        .ant-popover-inner-content {
+          padding: 10px 0px;
+          width: fit-content;
+          min-width: 170px;
+        }
+      }
+      span:last-child {
+        margin-left: 5px;
+      }
+      .create-content {
+        .content-item {
+          cursor: pointer;
+          padding: 5px 20px;
+
+          > span {
+            margin-right: 5px;
+          }
+
+          &:hover {
+            background-color: #eeeeee;
+          }
+        }
       }
     }
   }
@@ -109,16 +138,22 @@
   }
 }
 
+.displayNone {
+  display: none !important;
+}
+
 .galleryImgBox {
   display: flex;
   //flex-wrap: wrap;
   overflow: auto;
   margin-bottom: 20px;
+  height: 100%;
+
   .galleryWrap {
-    display: contents;
-    justify-content: center;
-    flex-direction: row;
-    align-items: center;
+    // display: contents;
+    // justify-content: center;
+    // flex-direction: row;
+    // align-items: center;
     position: relative;
     //flex-wrap: wrap;
     :global {
@@ -150,129 +185,140 @@
     }
     .check-wrapper {
       position: absolute;
-      right: 25px;
-      top: 10px;
-      visibility: visible;
-      svg {
-        fill: #000000a6;
-      }
-    }
-    &:hover {
-      .check-wrapper {
-        position: absolute;
-        right: 25px;
-        top: 10px;
-        visibility: visible;
-        svg {
-          fill: #000000a6;
-        }
-      }
-    }
-    .albumContainer{
-    position: relative;
-    margin: 0 12px 0 12px;
-    .check-wrapper {
-      position: absolute;
-      right: 25px;
+      right: 15px;
       top: 10px;
       z-index: 1;
       visibility: hidden;
       svg {
         fill: #000000a6;
       }
-      .dotBtn {
-        cursor: pointer;
-        padding: 3px 10px 0 10px;
-        background-color: white;
-        border-radius: 50%;
-        height: 100%;
-        width: 100%;
-      }
     }
-    &:hover {
+    &:hover .check-wrapper {
+      visibility: visible;
+    }
+
+    .albumContainer {
+      position: relative;
+      margin: 0 12px 0 12px;
       .check-wrapper {
-        position: absolute;
-        right: 25px;
-        top: 10px;
-        visibility: visible;
-        svg {
-          fill: #000000a6;
+        visibility: hidden;
+        .dotBtn {
+          cursor: pointer;
+          padding: 3px 11px 0 11px;
+          box-shadow: 3px 3px 5px lightgray;
+          background-color: white;
+          border-radius: 50%;
+          height: 100%;
+          width: 100%;
         }
       }
-    }
-    .grid-container {
-      display: grid;
-      grid-row-gap: 2px;
-      grid-template-columns: auto auto;
-      border: 1px solid transparent;
-      cursor: pointer;
-      position: relative;
-      &:hover {
-        border: 1px solid deepskyblue;
-        border-radius: 6px;
-        .check-wrapper {
-          position: absolute;
-          right: 25px;
-          top: 10px;
-          visibility: visible;
-          svg {
-            fill: #000000a6;
+      &:hover .check-wrapper {
+        visibility: visible;
+      }
+      .grid-container {
+        display: grid;
+        grid-row-gap: 2px;
+        grid-template-columns: auto auto;
+        border: 1px solid transparent;
+        cursor: pointer;
+        position: relative;
+        height: 145px;
+        width: 145px;
+
+        &:hover {
+          border: 1px solid deepskyblue;
+          border-radius: 6px;
+          .check-wrapper {
+            visibility: visible;
+            svg {
+              fill: #000000a6;
+            }
           }
         }
-      }
-      .check-wrapper {
-        position: absolute;
-        right: 25px;
-        top: 10px;
-        visibility: hidden;
-        svg {
-          fill: #000000a6;
+        .check-wrapper {
+          visibility: hidden;
+        }
+        .grid-item {
+          width: 70px;
+          max-width: 100%;
+          height: 70px;
+          object-fit: cover;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid lightgray;
+          //padding: 2px;
+          &:first-child {
+            border-radius: 6px 0 0 0;
+          }
+          &:nth-child(2) {
+            border-radius: 0 6px 0 0;
+          }
+          &:nth-child(3) {
+            border-radius: 0 0 0 6px;
+          }
+          &:nth-child(4) {
+            border-radius: 0 0 6px 0;
+          }
+
+          :global {
+            .ant-skeleton-image {
+              width: 55px;
+              height: 55px;
+
+              svg {
+                width: 30px;
+                height: 30px;
+              }
+            }
+          }
+          @media only screen and (min-width: 360px) and (max-width: 420px) {
+            width: 69px;
+          }
+        }
+        .blankAlbum {
+          height: 145px;
+          width: 141.5px;
+          border-radius: 4px;
+          border: 1px solid lightgray;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          :global .ant-skeleton-image {
+            width: 115px;
+            height: 120px;
+          }
+        }
+        h2 {
+          font-size: 14px;
+          line-height: 18px;
+          color: #3d3d46;
         }
       }
-      .grid-item {
-        width: 70px;
-        max-width: 100%;
-        height: 70px;
-        object-fit: cover;
-        //padding: 2px;
-        &:first-child {
-          border-radius: 6px 0 0 0;
-        }
-        &:nth-child(2) {
-          border-radius: 0 6px 0 0;
-        }
-        &:nth-child(3) {
-          border-radius: 0 0 0 6px;
-        }
-        &:nth-child(4) {
-          border-radius: 0 0 6px 0;
-        }
-        @media only screen and (min-width: 360px) and (max-width: 420px) {
-          width: 69px;
-        }
-      }
-      .blankAlbum {
-        height: 145px;
-        width: 140px;
-        border-radius: 4px;
-        background-color: #f4f4f4;
-      }
-      h2 {
-        font-size: 14px;
-        line-height: 18px;
-        color: #3d3d46;
-      }
-    }
     }
     .albumInfo {
       text-align: center;
+      padding-top: 5px;
       .albumTitle {
-        font-size: 16px;
+        font-size: 14px;
+        color: var(--grey-text-color);
         margin: 0;
       }
       .albumCount {
         margin: 0;
       }
+    }
+  }
+
+  .albumImagesDiv {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    > div {
+      min-width: 170px;
+      margin-top: 24px;
     }
   }
 }
@@ -282,9 +328,8 @@
 .galleryAlbumImage {
   display: flex;
   flex-wrap: wrap;
-  border-top: 1px solid #ecedf0;
   padding-top: 20px;
-  margin: 0 14px 14px 14px;
+  margin: 0px 14px 14px 14px !important;
   @media only screen and (max-width: 767px) {
     margin: 0 11px 0 11px;
     max-width: 414px;
@@ -348,7 +393,7 @@
         background-color: red;
       }
       .dotBtn {
-        padding: 3px 10px 0 10px;
+        padding: 3px 11px 0 11px;
         background-color: white;
         border-radius: 50%;
         height: 100%;
@@ -372,6 +417,15 @@
     height: 130px;
     margin-right: 5px;
     margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eeeeee;
+
+    :global .ant-skeleton-image {
+      width: 96px;
+      height: 96px;
+    }
     cursor: pointer;
     @media only screen and (max-width: 767px) {
       width: 90px;
@@ -418,7 +472,7 @@
   border-top: 1px solid #ecedf0;
   padding-top: 9px;
   margin: 0 14px 14px 14px;
-  .photoLabel{
+  .photoLabel {
     width: 100%;
     margin-bottom: 12px;
   }
@@ -438,7 +492,7 @@
       margin: 0 2px 4px 2px;
     }
 
-    .shareIcon{
+    .shareIcon {
       background-color: #fff;
       padding: 0;
       position: absolute;
@@ -452,25 +506,24 @@
       width: 28px;
       height: 28px;
       flex-direction: row;
-
     }
-.imageAlbumIcon{
-  background-color: #40A0C1;
-  padding: 0;
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  flex-direction: row;
-}
-    .imageAlbumIconClock{
-      background-color: #40A0C1;
+    .imageAlbumIcon {
+      background-color: #40a0c1;
+      padding: 0;
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      flex-direction: row;
+    }
+    .imageAlbumIconClock {
+      background-color: #40a0c1;
       padding: 0px 6px 0px 6px;
       position: absolute;
       bottom: 5px;
@@ -483,7 +536,7 @@
       justify-content: center;
       width: 28px;
       height: 28px;
-      svg:last-child{
+      svg:last-child {
         margin-top: 5px;
       }
     }
@@ -545,8 +598,8 @@
         }
         .ant-popover-inner-content {
           padding: 12px 10px;
-          .dotWrapper{
-            margin:1000px;
+          .dotWrapper {
+            margin: 1000px;
           }
           h5 {
             color: #3d3d46;
@@ -600,8 +653,8 @@
     }
   }
 }
-.arrowItems{
-  h5{
+.arrowItems {
+  h5 {
     cursor: pointer;
   }
 }
@@ -731,7 +784,16 @@
         justify-content: flex-start;
         width: 100%;
         color: #3d3d46;
-        margin:5px;
+        margin: 5px;
+
+        .active {
+          color: #54b2d3;
+        }
+
+        .inActive {
+          color: #fff;
+        }
+
         .galleryIcon {
           width: 44px;
           height: 44px;
@@ -769,8 +831,30 @@
 .mainLayout {
   display: flex;
   flex-direction: column;
+  position: relative;
+  height: 100%;
+
+  > div:first-child {
+    margin-top: 20px;
+    height: 100%;
+    padding-bottom: 80px;
+  }
+
   .headerMenu {
-    padding: 15px 0 0 20px;
+    padding: 0px 0 0 20px;
+  }
+
+  .pagination {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    > div {
+      padding: 0px;
+
+      > ul {
+        padding-right: 0px;
+      }
+    }
   }
   /* justify-content: center; */
 }
@@ -800,6 +884,19 @@
       }
       .leftItem {
         float: right;
+      }
+
+      &:first-child {
+        border-bottom: 1px solid #ecedf0;
+      }
+      &:last-child {
+        color: red;
+        > span {
+          color: red;
+          > svg {
+            fill: red;
+          }
+        }
       }
     }
   }
@@ -848,7 +945,9 @@
   }
 }
 .gridViewItemSkeleton {
-  margin-top: 20px;
+  margin-top: 0px;
+  padding: 0px;
+
   @media only screen and (max-width: 767px) {
     max-width: 414px;
   }
@@ -871,16 +970,16 @@
       justify-content: center;
       align-items: center;
       border-radius: 4px;
-      margin: 0 6px 10px 6px;
+      margin: 0 5px 10px 5px;
       border: 1px solid #eee;
     }
   }
 }
 
-.imageListContentWrap{
-  display:flex;
+.imageListContentWrap {
+  display: flex;
   flex-wrap: wrap;
-  :global{
+  :global {
     .ant-card {
       width: 50px;
       height: 60px;
@@ -891,23 +990,23 @@
       }
     }
   }
-  p{
+  p {
     margin-top: 20px;
     margin-left: 10px;
   }
-  img{
-    margin-top:12px;
+  img {
+    margin-top: 12px;
   }
 }
-.imageListViewWrap{
+.imageListViewWrap {
   width: 100%;
-  margin-left:10px;
-  :global{
-    .ant-table{
-      .ant-table-container{
-        .ant-table-thead{
-          th{
-            background-color: #ECEDF0;
+  margin-left: 10px;
+  :global {
+    .ant-table {
+      .ant-table-container {
+        .ant-table-thead {
+          th {
+            background-color: #ecedf0;
             width: 33%;
             &:first-child {
               text-align: left;
@@ -920,13 +1019,13 @@
             }
           }
         }
-        .ant-table-tbody{
-          tr{
+        .ant-table-tbody {
+          tr {
             cursor: pointer;
-            &:hover{
-              //background-color: #ECEDF0 !important;
+            &:hover {
+              background-color: #ecedf0 !important;
             }
-            td{
+            td {
               background: unset;
               width: 33%;
               &:first-child {
@@ -945,16 +1044,17 @@
     }
   }
 }
-.albumListView{
+.albumListView {
+  height: 100%;
   overflow: auto;
-  margin-left:10px;
-  :global{
-    .ant-table{
+  margin-left: 10px;
+  :global {
+    .ant-table {
       min-width: 650px;
-      .ant-table-container{
-        .ant-table-thead{
-          th{
-            background-color: #ECEDF0;
+      .ant-table-container {
+        .ant-table-thead {
+          th {
+            background-color: #ecedf0;
             width: 33%;
             &:first-child {
               text-align: left;
@@ -967,13 +1067,11 @@
             }
           }
         }
-        .ant-table-tbody{
-          tr{
+        .ant-table-tbody {
+          tr {
             cursor: pointer;
-            &:hover{
-              //background-color: #ECEDF0 !important;
-            }
-            td{
+
+            td {
               background: unset;
               width: 33%;
               &:first-child {
@@ -992,16 +1090,38 @@
       }
     }
   }
+
+  .tableImage {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    border: 1px solid lightgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :global {
+      .ant-skeleton-image {
+        width: 45px;
+        height: 45px;
+        svg {
+          width: 22.5px;
+          height: 22.5px;
+        }
+      }
+    }
+  }
 }
-.tableFirstCol{
+.tableFirstCol {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  p{
+  p {
     margin: 0;
     font-size: 14px;
+    max-width: 500px;
   }
-  .gridAlbum{
+  .gridAlbum {
     position: relative;
     margin: 0 12px 0 12px;
     flex-wrap: wrap;
@@ -1012,10 +1132,15 @@
     border: 1px solid transparent;
     cursor: pointer;
     .grid-item {
+      border: 1px solid lightgray;
       width: 30px;
       max-width: 100%;
       height: 30px;
       object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       &:first-child {
         border-radius: 3px 0 0 0;
       }
@@ -1028,48 +1153,83 @@
       &:nth-child(4) {
         border-radius: 0 0 3px 0;
       }
-      //@media only screen and (min-width: 360px) and (max-width: 420px) {
-      //  width: 69px;
-      //}
+
+      :global .ant-skeleton-image {
+        height: 22px;
+        width: 22px;
+
+        svg {
+          width: 12px;
+          height: 12px;
+        }
+      }
     }
     .blankAlbum {
       height: 60px;
       width: 60px;
       border-radius: 4px;
-      background-color: #f4f4f4;
+      border: 1px solid lightgray;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      :global .ant-skeleton-image {
+        width: 46px;
+        height: 48px;
+
+        svg {
+          width: 25px;
+          height: 25px;
+        }
+      }
     }
   }
 }
-.folderContentFirst{
-  display:flex;
+.folderContentFirst {
+  display: flex;
   flex-wrap: wrap;
-  :global{
-    .ant-checkbox-wrapper{
+  :global {
+    .ant-checkbox-wrapper {
       display: flex;
       //flex-wrap: wrap;
       align-items: center;
-      .ant-checkbox{
+      .ant-checkbox {
         height: 17px;
       }
-      span{
+      .ant-checkbox + span {
         display: flex;
+        align-items: center;
       }
     }
     .ant-card {
-      width: 50px;
-      height: 60px;
       .ant-card-body {
-        padding: 0;
-        width: 100%;
-        height: 100%;
+        padding: 0px 10px;
+
+        img {
+          margin-top: 0px;
+        }
       }
     }
   }
-  p{
-    margin-top: 20px;
-    margin-left: 10px;
+  p {
+    margin: 0px;
+    max-width: 600px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
   }
-  img{
-    margin-top:12px;
+  img {
+    margin-top: 12px;
+  }
+}
+
+.column-loader {
+  > div {
+    width: 100%;
+
+    > span {
+      width: 100%;
+    }
   }
 }
