@@ -40,7 +40,7 @@ export const DropdownWithCheck: FC<DropdownWithCheckProps> = ({
     >
       {dropdownItems?.map((item) => (
         <Select.Option key={item.key} value={item.key} disabled={item.disable}>
-          {item.label} {item.tag && <Tag color="gray">{item.tag}</Tag>}
+          {item.label} {item.tag && <Tag color="#c4c4c6">{item.tag}</Tag>}
         </Select.Option>
       ))}
     </Select>

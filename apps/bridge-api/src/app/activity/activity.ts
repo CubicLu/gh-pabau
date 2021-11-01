@@ -4,7 +4,7 @@ import utc from 'dayjs/plugin/utc'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear'
 import { getColumnData } from './filterColumn'
 import { cm_leads_EnumStatus } from '@prisma/client'
-import UserService from '../user/UserService'
+import UserGroupService from '../user/usergroup.service'
 import {
   LeadNoteType,
   LeadResponse,
@@ -33,6 +33,9 @@ export const retrieveActivityGraphData = async (
       status: { in: where?.status },
       AssignedUser: {
         id: { in: where?.userId },
+      },
+      Company: {
+        id: { equals: ctx.authenticated.company },
       },
       AND: [
         ...andQuery,
@@ -82,6 +85,9 @@ export const retrieveActivityData = async (
       status: { in: where?.status },
       AssignedUser: {
         id: { in: where?.userId },
+      },
+      Company: {
+        id: { equals: ctx.authenticated.company },
       },
       AND: [
         ...andQuery,
@@ -691,7 +697,8 @@ const prepareUserQuery = async (
     },
   }
   if (operand === 'belongs to team') {
-    const ids = await UserService.retrieveUserGroupMembers(ctx, value)
+    const userGroup = new UserGroupService(ctx)
+    const ids = await userGroup.retrieveUserGroupMembers(value)
     return {
       in: ids,
     }
@@ -1138,7 +1145,8 @@ const manualFilterOnUserOperand = async (
       break
     }
     case 'belongs to team': {
-      const ids = await UserService.retrieveUserGroupMembers(ctx, data)
+      const userGroup = new UserGroupService(ctx)
+      const ids = await userGroup.retrieveUserGroupMembers(data)
       if (ids.includes(value)) {
         return true
       }

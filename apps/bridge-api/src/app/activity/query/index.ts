@@ -318,6 +318,9 @@ export const ActivityQuery = extendType({
                   AssignedUser: {
                     id: { in: where?.userId },
                   },
+                  Company: {
+                    id: { equals: ctx.authenticated.company },
+                  },
                   AND: [
                     ...andQuery,
                     {

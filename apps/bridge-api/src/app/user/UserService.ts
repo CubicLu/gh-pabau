@@ -1,5 +1,3 @@
-import { Context } from '../../context'
-
 export default class UserService {
   public constructor(private prismaArray, private user) {}
 
@@ -18,36 +16,5 @@ export default class UserService {
         },
       },
     })
-  }
-
-  public static retrieveUserGroupMembers = async (
-    ctx: Context,
-    userId: number
-  ): Promise<number[]> => {
-    const group = await ctx.prisma.userGroup.findMany({
-      where: {
-        UserGroupMember: {
-          some: {
-            user_id: { equals: userId },
-          },
-        },
-      },
-      select: {
-        UserGroupMember: {
-          select: {
-            user_id: true,
-            group_id: true,
-          },
-        },
-      },
-    })
-    if (group.length === 0) return [userId]
-    const ids = []
-    for (const item of group) {
-      for (const member of item?.UserGroupMember) {
-        ids.push(member.user_id)
-      }
-    }
-    return ids
   }
 }
