@@ -246,7 +246,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             onClick={() => onFolderClick(value[1])}
           >
             <div className={styles.gridAlbum}>{showAlbumImages(value[0])}</div>
-            <p>{value[0].albumTitle}</p>
+            <p>{value[0].albumTitle?.substring(0, 40)}</p>
           </div>
         )
       },
@@ -338,7 +338,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
               />
             </Card>
             <div>
-              <p>{filename[filename.length - 1]}</p>
+              <p>{filename?.[filename.length - 1]?.substring(0, 40)}</p>
             </div>
           </div>
         )
