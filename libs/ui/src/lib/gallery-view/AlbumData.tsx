@@ -832,7 +832,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                             origin={x.img}
                             className={`img${i}`}
                             alt={x.img}
-                            id={x.img}
+                            id={x.id}
                             key={i}
                             draggable={true}
                             onDragStart={(event) => dragImage(event)}

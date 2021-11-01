@@ -635,8 +635,6 @@ const Photos: FC = () => {
   }
 
   const onImagesMove = (album: number, images: number[]) => {
-    console.log(images)
-    return
     if ((album === 0 || album) && images?.length > 0) {
       moveImageToAlbum({
         variables: {
@@ -650,18 +648,17 @@ const Photos: FC = () => {
               contactId: contactId,
             },
           },
-          album === albumId && {
+          {
             query: GetAlbumPhotosDocument,
             variables: variables,
           },
-          album === albumId &&
-            albumId === 0 && {
-              query: CountAlbumPhotosDocument,
-              variables: {
-                contactId: contactId,
-                albumId: 0,
-              },
+          albumId === 0 && {
+            query: CountAlbumPhotosDocument,
+            variables: {
+              contactId: contactId,
+              albumId: 0,
             },
+          },
         ],
       })
     }
