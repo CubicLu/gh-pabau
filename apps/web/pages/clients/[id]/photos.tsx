@@ -29,8 +29,10 @@ import {
   useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
-const baseURL = `${cdnURL}/v2/api/contact/`
-const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+// const baseURL = `${cdnURL}/v2/api/contact/`
+const baseURL = `http://localhost:5000/`
+// const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+const attachmentsBaseUrl = `http://localhost:5000/`
 
 const iterateTo = (dataArr) => {
   return dataArr?.map((item) => {
@@ -541,6 +543,25 @@ const Photos: FC = () => {
         variables: {
           id: imageId,
         },
+        refetchQueries: [
+          {
+            query: GetPhotoAlbumsDocument,
+            variables: {
+              contactId: contactId,
+            },
+          },
+          {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
+          },
+          albumId === 0 && {
+            query: CountAlbumPhotosDocument,
+            variables: {
+              contactId: contactId,
+              albumId: 0,
+            },
+          },
+        ],
       })
     }
   }
@@ -554,14 +575,14 @@ const Photos: FC = () => {
         },
         refetchQueries: [
           {
-            query: GetAlbumPhotosDocument,
-            variables: variables,
-          },
-          album === albumId && {
             query: GetPhotoAlbumsDocument,
             variables: {
               contactId: contactId,
             },
+          },
+          album === albumId && {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
           },
           album === albumId &&
             albumId === 0 && {
