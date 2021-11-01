@@ -729,18 +729,17 @@ const Photos: FC = () => {
               contactId: contactId,
             },
           },
-          album === albumId && {
+          {
             query: GetAlbumPhotosDocument,
             variables: variables,
           },
-          album === albumId &&
-            albumId === 0 && {
-              query: CountAlbumPhotosDocument,
-              variables: {
-                contactId: contactId,
-                albumId: 0,
-              },
+          albumId === 0 && {
+            query: CountAlbumPhotosDocument,
+            variables: {
+              contactId: contactId,
+              albumId: 0,
             },
+          },
         ],
       })
     }

@@ -247,7 +247,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             onClick={() => onFolderClick(value[1])}
           >
             <div className={styles.gridAlbum}>{showAlbumImages(value[0])}</div>
-            <p>{value[0].albumTitle}</p>
+            <p>{value[0].albumTitle?.substring(0, 40)}</p>
           </div>
         )
       },
@@ -327,7 +327,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <Checkbox
               checked={selectedImages.includes(value?.[0] as never)}
               onChange={(e) =>
-                handleImageSelection(e.target.checked, value?.[0])
+                handleImageSelection?.(e.target.checked, value?.[0])
               }
             />
             <Card bordered={false}>
@@ -339,7 +339,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
               />
             </Card>
             <div>
-              <p>{filename[filename.length - 1]}</p>
+              <p>{filename?.[filename.length - 1]?.substring(0, 40)}</p>
             </div>
           </div>
         )
@@ -521,7 +521,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             className={styles.menuItem}
             onClick={() => {
               setPhotoDeleteModal((e) => !e)
-              setAlbumImage(img)
+              setDeleteImageId(imageId)
             }}
           >
             <DeleteOutlined />
@@ -841,7 +841,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                           <Checkbox
                             checked={selectedImages.includes(x)}
                             onChange={(value) =>
-                              handleImageSelection(value.target.checked, x)
+                              handleImageSelection?.(value.target.checked, x)
                             }
                           />
                         </div>

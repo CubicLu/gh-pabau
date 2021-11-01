@@ -8,7 +8,7 @@ import {
   EnterOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-  FilterOutlined,
+  // FilterOutlined,
   FolderOutlined,
   MinusOutlined,
   PlusOutlined,
@@ -527,7 +527,7 @@ export const GalleryView: FC<GalleryProps> = ({
             <div className={styles.rightSide}>
               {!isMobile && (
                 <>
-                  <Popover
+                  {/* <Popover
                     placement="bottomRight"
                     title={<Text />}
                     content={<Content />}
@@ -536,7 +536,7 @@ export const GalleryView: FC<GalleryProps> = ({
                     <Button type="ghost" className={styles.filterButton}>
                       <FilterOutlined />
                     </Button>
-                  </Popover>
+                  </Popover> */}
                   <Popover
                     placement="bottomRight"
                     title={<AlbumText />}
@@ -605,13 +605,13 @@ export const GalleryView: FC<GalleryProps> = ({
                       </div>
                     </div>
                   </Drawer>
-                  <Button
+                  {/* <Button
                     type="ghost"
                     onClick={() => setFilterDrawer(true)}
                     className={styles.filterButton}
                   >
                     <FilterOutlined />
-                  </Button>
+                  </Button> */}
                   <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
                     {t('galley.view.album.view.album')} <DownOutlined />
                   </Button>
@@ -829,9 +829,9 @@ export const GalleryView: FC<GalleryProps> = ({
                     </Tooltip>
                   )}
                 </button>
-                <button className={styles.btnFilter}>
+                {/* <button className={styles.btnFilter}>
                   <FilterOutlined />
-                </button>
+                </button> */}
                 <Drawer
                   placement={'bottom'}
                   closable={false}
