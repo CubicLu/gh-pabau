@@ -1,5 +1,7 @@
 import React, { FC } from 'react'
-import { ClientDashboardLayout } from './ClientDashboardLayout'
+import ClientDashboardLayout, {
+  ClientDashboardLayoutProps,
+} from './ClientDashboardLayout'
 
 import userAvatar from '../../assets/images/users/austin.png'
 
@@ -11,7 +13,7 @@ export default {
   argTypes: {},
 }
 
-const ClientDashboardLayoutStory: FC = (args) => {
+const ClientDashboardLayoutStory: FC<ClientDashboardLayoutProps> = (args) => {
   return (
     <div style={{ width: '800px' }}>
       <ClientDashboardLayout {...args} />
