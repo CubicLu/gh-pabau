@@ -27,6 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+
     @media screen and (max-width: 479px) {
       button:first-child {
         padding: unset;
@@ -39,7 +40,49 @@
     }
 
     .downloadBtn {
-      margin: 10px 0;
+      margin: 0px;
+    }
+
+    .albumDropdownBtn {
+      :global {
+        .ant-dropdown {
+          padding: 4px 0px;
+          min-width: 200px !important;
+
+          ul {
+            width: 100%;
+            border: 1px solid #f0f0f0;
+            box-shadow: 3px 3px 10px #f0f0f0;
+          }
+
+          .ant-menu-item {
+            display: flex;
+            align-items: center;
+            margin: 0px !important;
+            padding: 0px 8px 0px 4px !important;
+            line-height: 0px;
+
+            > span,
+            > svg {
+              width: 20%;
+              line-height: 0px;
+              margin: 0px;
+            }
+
+            div {
+              width: 80%;
+              padding-right: 4px;
+            }
+
+            &:hover {
+              background-color: #88d2ec29;
+              path {
+                fill: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
     }
 
     button {
@@ -103,7 +146,7 @@
         }
       }
       span:last-child {
-        margin-left: 5px;
+        margin-left: 8px;
       }
       .create-content {
         .content-item {
@@ -296,6 +339,20 @@
           color: #3d3d46;
         }
       }
+      .dropable {
+        position: absolute;
+        background-color: transparent;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      :global .dropEffect {
+        background-color: rgba(135, 206, 235, 0.29);
+      }
     }
     .albumInfo {
       text-align: center;
@@ -324,6 +381,52 @@
 }
 .boxItem {
   display: flex;
+}
+
+.dotBtnAlbumDropdown {
+  height: 260px;
+  min-width: 250px;
+  overflow: auto;
+
+  > span {
+    font-size: 12px;
+    cursor: pointer;
+    padding-bottom: 6px;
+    display: flex;
+    justify-content: flex-end;
+    svg {
+      fill: gray;
+    }
+  }
+  > ul {
+    border: 0px;
+
+    > li {
+      min-height: 35px;
+      display: flex;
+      align-items: center;
+      padding: 0px 8px !important;
+
+      > div {
+        padding-left: 12px;
+      }
+
+      > span {
+        margin: 0px;
+      }
+
+      &:hover {
+        background-color: #88d2ec29 !important;
+
+        svg path {
+          fill: var(--primary-color);
+        }
+        div {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
 }
 .galleryAlbumImage {
   display: flex;
@@ -387,6 +490,7 @@
     }
     &:hover {
       .check-wrappers {
+        cursor: pointer;
         position: absolute;
         display: flex;
         svg {
@@ -1051,6 +1155,7 @@
             }
           }
         }
+
         .ant-table-tbody {
           tr {
             cursor: pointer;
@@ -1071,6 +1176,13 @@
             }
           }
         }
+      }
+    }
+
+    .ant-table-wrapper:last-child {
+      .ant-table-content {
+        min-height: 400px;
+        padding-bottom: 96px;
       }
     }
   }
@@ -1103,6 +1215,7 @@
   p {
     margin: 0;
     font-size: 14px;
+    max-width: 500px;
   }
   .gridAlbum {
     position: relative;
@@ -1200,6 +1313,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 500px;
   }
   img {
     margin-top: 12px;
