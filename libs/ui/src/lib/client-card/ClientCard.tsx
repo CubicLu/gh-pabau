@@ -819,6 +819,8 @@ const ClientCardModal: FC<P> = ({
     </div>
   )
 
+  const haveSubTabs = ['financial', 'gift-vouchers']
+
   //TODO: remove the Modal from top level (it'll break css:( )
   return (
     <Modal
@@ -953,7 +955,9 @@ const ClientCardModal: FC<P> = ({
               >
                 <div
                   className={
-                    activeTab === 'financial' ? styles.customTabs : styles.tab
+                    haveSubTabs.includes(activeTab)
+                      ? styles.customTabs
+                      : styles.tab
                   }
                 >
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
