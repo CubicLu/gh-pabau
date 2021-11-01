@@ -97,6 +97,7 @@ const Photos: FC = () => {
   })
 
   const [multipleDelImages, setMultipleDelImages] = useState(0)
+  const [singleImgDelLoading, setSingleImgDelLoading] = useState(false)
   const [imagesDeleteLoading, setImagesDeleteLoading] = useState(false)
   const [movingImagesOnAlbumCreate, setMovingImagesOnAlbumCreate] = useState<
     number[]
@@ -267,6 +268,7 @@ const Photos: FC = () => {
 
   const [deleteOneAttachment] = useDeleteContactPhotoMutation({
     onCompleted({ deleteContactAttachmentPhoto: data }) {
+      setSingleImgDelLoading(() => false)
       if (data?.success) {
         const id = data?.photo
         const cAddedFiles = [...uploadingFiles]
@@ -295,6 +297,7 @@ const Photos: FC = () => {
       )
     },
     onError() {
+      setSingleImgDelLoading(() => false)
       Notification(
         NotificationType.error,
         t('ui.clientcard.photos.notification.delete.error', {
@@ -316,6 +319,25 @@ const Photos: FC = () => {
           })
         )
         setImagesDeleteLoading(() => false)
+      } else {
+        if (data.count > 0) {
+          Notification(
+            NotificationType.success,
+            t('ui.clientcard.photos.notification.delete.success', {
+              count: data?.count,
+              suffix: data?.count > 1 ? 's' : '',
+            })
+          )
+        }
+        setImagesDeleteLoading(() => false)
+        const leftCount = multipleDelImages - data.count
+        Notification(
+          NotificationType.error,
+          t('ui.clientcard.photos.notification.delete.error', {
+            count: leftCount,
+            suffix: leftCount > 1 ? 's' : '',
+          })
+        )
       }
     },
     onError() {
@@ -660,6 +682,7 @@ const Photos: FC = () => {
         const cImageIndex = cCurrAlbumImages?.findIndex(
           (el) => el?.id === imageIds[0]
         )
+        setSingleImgDelLoading(() => true)
         deleteOneAttachment({
           variables: {
             id: imageIds[0],
@@ -685,7 +708,7 @@ const Photos: FC = () => {
           ],
         })
       } else {
-        setMultipleDelImages(imageIds?.length)
+        setMultipleDelImages(imageIds?.filter((el) => el !== 0)?.length)
         setImagesDeleteLoading(() => true)
         deleteManyAttachments({
           variables: {
@@ -794,6 +817,7 @@ const Photos: FC = () => {
           onImagesMove={onImagesMove}
           openImageStudio={openPhotoStudio}
           imagesDeleteLoading={imagesDeleteLoading}
+          singleImgDelLoading={singleImgDelLoading}
         />
       </ClientCardLayout>
       {router.query.id && showPhotoStudio && (

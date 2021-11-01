@@ -78,6 +78,7 @@ export interface GalleryProps {
   onImageRemove?: (imageId: number[]) => void
   onUploadCancel?: (data: UploadingImageProps) => void
   imagesDeleteLoading?: boolean
+  singleImgDelLoading?: boolean
 
   onImagesMove?: (album, images) => void
 }
@@ -101,6 +102,7 @@ export const GalleryView: FC<GalleryProps> = ({
   onImageRemove,
   onUploadCancel,
   imagesDeleteLoading,
+  singleImgDelLoading,
   onImagesMove,
 }) => {
   const { t } = useTranslation('common')
@@ -141,6 +143,7 @@ export const GalleryView: FC<GalleryProps> = ({
     setImagesList(images)
     setShowMenu(false)
     setSelectedImages([])
+    setImageDeleteModal(false)
   }, [images])
 
   useEffect(() => {
@@ -537,7 +540,7 @@ export const GalleryView: FC<GalleryProps> = ({
                       <FilterOutlined />
                     </Button>
                   </Popover> */}
-                  <Popover
+                  {/* <Popover
                     placement="bottomRight"
                     title={<AlbumText />}
                     content={<AlbumContent />}
@@ -547,23 +550,25 @@ export const GalleryView: FC<GalleryProps> = ({
                     <Button type="ghost" className={styles.downloadBtn}>
                       {t('galley.view.album.view.album')} <DownOutlined />
                     </Button>
-                  </Popover>
-                  <Popover
-                    placement="bottomRight"
-                    content={<CreateContent />}
-                    trigger="click"
-                    visible={createPopover}
-                  >
-                    <Button
-                      type="primary"
-                      className={styles.btnCreate}
-                      onClick={() => setCreatePopover((e) => !e)}
-                      onBlur={() => setCreatePopover(() => false)}
+                  </Popover> */}
+                  {currentData?.id === 0 && (
+                    <Popover
+                      placement="bottomRight"
+                      content={<CreateContent />}
+                      trigger="click"
+                      visible={createPopover}
                     >
-                      <PlusOutlined />
-                      {t('galley.view.album.create')}
-                    </Button>
-                  </Popover>
+                      <Button
+                        type="primary"
+                        className={styles.btnCreate}
+                        onClick={() => setCreatePopover((e) => !e)}
+                        onBlur={() => setCreatePopover(() => false)}
+                      >
+                        <PlusOutlined />
+                        {t('galley.view.album.create')}
+                      </Button>
+                    </Popover>
+                  )}
                 </>
               )}
               {isMobile && (
@@ -612,9 +617,9 @@ export const GalleryView: FC<GalleryProps> = ({
                   >
                     <FilterOutlined />
                   </Button> */}
-                  <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
+                  {/* <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
                     {t('galley.view.album.view.album')} <DownOutlined />
-                  </Button>
+                  </Button> */}
                   <Button
                     type="primary"
                     className={styles.btnCreate}
@@ -841,34 +846,35 @@ export const GalleryView: FC<GalleryProps> = ({
                 >
                   <CreateContent />
                 </Drawer>
-                {!isMobile ? (
-                  <Popover
-                    placement="bottomRight"
-                    content={<CreateContent />}
-                    trigger="click"
-                    visible={createPopover}
-                  >
+                {currentData?.id === 0 &&
+                  (!isMobile ? (
+                    <Popover
+                      placement="bottomRight"
+                      content={<CreateContent />}
+                      trigger="click"
+                      visible={createPopover}
+                    >
+                      <Button
+                        type="primary"
+                        className={styles.btnCreate}
+                        onClick={() => setCreatePopover((e) => !e)}
+                        onBlur={() => setCreatePopover(() => false)}
+                      >
+                        <PlusOutlined />
+                        {t('galley.view.album.create')}
+                      </Button>
+                    </Popover>
+                  ) : (
                     <Button
                       type="primary"
                       className={styles.btnCreate}
-                      onClick={() => setCreatePopover((e) => !e)}
-                      onBlur={() => setCreatePopover(() => false)}
+                      onClick={() => setCreateAlbumDrawer((e) => !e)}
+                      onBlur={() => setCreateAlbumDrawer(() => false)}
                     >
                       <PlusOutlined />
                       {t('galley.view.album.create')}
                     </Button>
-                  </Popover>
-                ) : (
-                  <Button
-                    type="primary"
-                    className={styles.btnCreate}
-                    onClick={() => setCreateAlbumDrawer((e) => !e)}
-                    onBlur={() => setCreateAlbumDrawer(() => false)}
-                  >
-                    <PlusOutlined />
-                    {t('galley.view.album.create')}
-                  </Button>
-                )}
+                  ))}
                 <div className={styles.viewContainer}>
                   <div
                     className={styles.viewItem}
@@ -933,6 +939,7 @@ export const GalleryView: FC<GalleryProps> = ({
           }}
           openImageStudio={openImageStudio}
           onImageDelete={(imageId: number) => onImageRemove?.([imageId])}
+          singleImgDelLoading={singleImgDelLoading}
           onSingleImageMove={(album, image, isCreateAlbum) => {
             if (image) {
               if ((album || album === 0) && !isCreateAlbum) {

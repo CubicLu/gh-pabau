@@ -147,6 +147,7 @@ export interface AlbumDataProps {
   onAlbumDelete: (id: number) => void
   openImageStudio?: (album: number, image: number) => void
   onImageDelete?: (imagesId: number) => void
+  singleImgDelLoading?: boolean
   onSingleImageMove?: (
     albumId: number,
     imageId: number,
@@ -177,6 +178,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
   onAlbumRename,
   openImageStudio,
   onImageDelete,
+  singleImgDelLoading,
   onSingleImageMove,
 }) => {
   const { t } = useTranslation('common')
@@ -187,8 +189,12 @@ export const AlbumData: FC<AlbumDataProps> = ({
   const [albumDotMenuDrawer, setAlbumDotMenuDrawer] = useState(false)
   const [albumListDrawer, setAlbumListDrawer] = useState(false)
   const [photoDeleteModal, setPhotoDeleteModal] = useState(false)
-  const [imageDeleteLoading, setImageDeleteLoading] = useState(false)
   const [deleteImageId, setDeleteImageId] = useState<number>(0)
+
+  useEffect(() => {
+    setDeleteImageId(0)
+    setPhotoDeleteModal(() => false)
+  }, [data.albumImage])
 
   const handleAlbumDownload = (albumImage) => {
     albumImage.map((img) => {
@@ -366,51 +372,55 @@ export const AlbumData: FC<AlbumDataProps> = ({
       width: '10%',
       skeletonWidth: '10%',
       render: function renderTableSource(text, record) {
-        return !isMobile ? (
-          <Popover
-            placement="left"
-            content={() => (
-              <DotButtonMenu
-                img={record?.name?.[0]?.img}
-                imageId={record?.id}
-                albumMenu={false}
-              />
-            )}
-            trigger="click"
-            className={styles.imageDotButton}
-          >
-            <Button
-              className={styles.btnCircle}
-              shape="circle"
-              icon={<MoreOutlined />}
-              title="hell"
-            />
-          </Popover>
-        ) : (
-          <>
-            <Button
-              className={styles.btnCircle}
-              shape="circle"
-              icon={<MoreOutlined />}
-              onClick={() => setAlbumListDrawer(true)}
-            />
-            <Drawer
-              placement={'bottom'}
-              closable={false}
-              onClose={() => setAlbumListDrawer((e) => !e)}
-              visible={albumListDrawer}
-              className={styles.createContentMobile}
-            >
-              <div className={styles.mobileHeader}>
-                <div className={styles.handler} />
+        return selectedImages?.length <= 0 ? (
+          !isMobile ? (
+            <Popover
+              placement="left"
+              content={() => (
                 <DotButtonMenu
-                  img={record.name[0]}
-                  imageId={record.id}
+                  img={record?.name?.[0]?.img}
+                  imageId={record?.id}
                   albumMenu={false}
                 />
-              </div>
-            </Drawer>
-          </>
+              )}
+              trigger="click"
+              className={styles.imageDotButton}
+            >
+              <Button
+                className={styles.btnCircle}
+                shape="circle"
+                icon={<MoreOutlined />}
+                title="hell"
+              />
+            </Popover>
+          ) : (
+            <>
+              <Button
+                className={styles.btnCircle}
+                shape="circle"
+                icon={<MoreOutlined />}
+                onClick={() => setAlbumListDrawer(true)}
+              />
+              <Drawer
+                placement={'bottom'}
+                closable={false}
+                onClose={() => setAlbumListDrawer((e) => !e)}
+                visible={albumListDrawer}
+                className={styles.createContentMobile}
+              >
+                <div className={styles.mobileHeader}>
+                  <div className={styles.handler} />
+                  <DotButtonMenu
+                    img={record.name[0]}
+                    imageId={record.id}
+                    albumMenu={false}
+                  />
+                </div>
+              </Drawer>
+            </>
+          )
+        ) : (
+          ''
         )
       },
     },
@@ -846,31 +856,32 @@ export const AlbumData: FC<AlbumDataProps> = ({
                           />
                         </div>
                         <div className={styles.checkWrappers}>
-                          {!isMobile ? (
-                            <Popover
-                              placement="bottomRight"
-                              content={() => (
-                                <DotButtonMenu
-                                  img={x.img}
-                                  imageId={x.id}
-                                  albumMenu={false}
-                                />
-                              )}
-                              trigger="click"
-                              className={styles.imageDotButton}
-                            >
-                              <div className={styles.dotBtn}>
+                          {selectedImages?.length <= 0 &&
+                            (!isMobile ? (
+                              <Popover
+                                placement="bottomRight"
+                                content={() => (
+                                  <DotButtonMenu
+                                    img={x.img}
+                                    imageId={x.id}
+                                    albumMenu={false}
+                                  />
+                                )}
+                                trigger="click"
+                                className={styles.imageDotButton}
+                              >
+                                <div className={styles.dotBtn}>
+                                  <Dot />
+                                </div>
+                              </Popover>
+                            ) : (
+                              <div
+                                className={styles.dotBtn}
+                                onClick={() => setDotMenuDrawer(true)}
+                              >
                                 <Dot />
                               </div>
-                            </Popover>
-                          ) : (
-                            <div
-                              className={styles.dotBtn}
-                              onClick={() => setDotMenuDrawer(true)}
-                            >
-                              <Dot />
-                            </div>
-                          )}
+                            ))}
                         </div>
                       </div>
                     )
@@ -1055,17 +1066,13 @@ export const AlbumData: FC<AlbumDataProps> = ({
         onCancel={() => {
           setDeleteImageId(0)
           setPhotoDeleteModal(() => false)
-          setImageDeleteLoading(() => false)
         }}
-        onOk={() => {
-          onImageDelete?.(deleteImageId)
-          setImageDeleteLoading(() => true)
-        }}
+        onOk={() => onImageDelete?.(deleteImageId)}
         visible={photoDeleteModal}
         title={t('galley.list.view.delete.modal.title')}
         cancelText={t('common-label-cancel')}
         okText={t('galley.list.view.delete.ok.button')}
-        confirmLoading={imageDeleteLoading}
+        confirmLoading={singleImgDelLoading}
       >
         <div>
           <p>{t('galley.list.view.delete.modal.photo.description')}</p>
