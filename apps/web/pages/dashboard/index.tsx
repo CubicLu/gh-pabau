@@ -130,8 +130,8 @@ export function Index() {
         defaultAppointmentList
     )
     setOnlineAppointment(
-      bookingCounts?.getBookingStatusCount?.onlineBookingCounts
-        ?.onlineBookingList ?? defaultOnlineAppointmentList
+      bookingCounts?.getBookingStatusCount?.onlineBookingCounts?.bookingList ??
+        defaultOnlineAppointmentList
     )
     setSales(
       financeDetails?.getFinanceDetails?.salesCount?.salesList ??
@@ -145,11 +145,10 @@ export function Index() {
     })
     setTotalOnlineBooking({
       count:
-        bookingCounts?.getBookingStatusCount?.onlineBookingCounts
-          ?.totalOnlineBooking,
+        bookingCounts?.getBookingStatusCount?.onlineBookingCounts?.totalBooking,
       per:
         bookingCounts?.getBookingStatusCount?.onlineBookingCounts
-          ?.totalOnlineBookingPer,
+          ?.totalBookingPer,
     })
     setTotalSalesCount({
       count:
