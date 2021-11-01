@@ -2430,7 +2430,7 @@ model ContactNote {
   Note        String
   Status      cm_contact_notes_Status @default(Enable)
   CreatedDate DateTime
-  IpAddress   String
+  IpAddress   String?
   imported    Boolean                 @default(false)
   User        User                    @relation(fields: [OwnerID], references: [id])
   CmContact   CmContact               @relation(fields: [ContactID], references: [ID])
