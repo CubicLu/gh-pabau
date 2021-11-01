@@ -130,6 +130,8 @@ export const permissions = shield(
       ),
     },
     Query: {
+      //DuplicateContacts
+      // duplicateContacts: rules.authentication.isAuthenticated,
       findManyContactPackage: allow,
       findManyBooking: allow,
       findFirstUserMaster: allow,
