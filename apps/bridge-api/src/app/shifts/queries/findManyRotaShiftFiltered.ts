@@ -55,8 +55,8 @@ export const findManyRotaExtended = extendType({
           where: {
             ...where,
             company_id: ctx.authenticated.company,
-            start: { gte: args.where.start_date || undefined },
-            end: { lte: args.where.end_date || undefined },
+            start: { gte: args.where?.start_date || undefined },
+            end: { lte: args.where?.end_date || undefined },
           },
           skip: args.skip,
           take: args.take,
