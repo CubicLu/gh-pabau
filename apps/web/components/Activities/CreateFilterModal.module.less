@@ -1,4 +1,12 @@
 .filter-modal-wrapper {
+  padding: 30px 0 0;
+  
+  .filter-content-main {
+    height: calc(100vh - 220px);
+    overflow: auto;
+    overflow-x: hidden;
+    padding: 0 40px;
+}
   :global {
     .ant-modal-content {
       .ant-modal-header {
@@ -8,6 +16,9 @@
           text-transform: capitalize;
           color: #3d3d46;
         }
+      }
+      .ant-modal-body {
+        
       }
     }
   }
@@ -31,7 +42,7 @@
     }
   }
   .custom-activity {
-    justify-content: space-between;
+    justify-content: flex-start;
     display: flex;
     align-items: center;
     margin-bottom: 16px;
@@ -55,10 +66,15 @@
         }
       }
     }
+    .activity-dropdown {
+      width: 150px !important;
+      min-width: 150px !important;
+      margin-right: 16px;
+    }
     :global {
       .ant-select {
-        width: 170px;
-        min-width: 170px;
+        width: 200px;
+        min-width: 200px;
         margin-right: 16px;
         &:last-child {
           margin-right: 0;
@@ -76,8 +92,8 @@
     .custom-radio-wrapper,
     .subject-input {
       display: flex;
-      width: 170px;
-      min-width: 170px;
+      width: 160px;
+      min-width: 160px;
       :global {
        .ant-radio-button-wrapper {
         width: 70px;
@@ -96,7 +112,7 @@
       }
     }
     .filter-menu-wrapper {
-      min-width: 170px;
+      min-width: 210px;
       margin-right: 20px;
     }
     .client-wrapper {
@@ -235,7 +251,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 40px;
+    padding: 0 40px 40px;
   .btn-danger {
     background: #ff5b64;
     border-radius: 4px;
