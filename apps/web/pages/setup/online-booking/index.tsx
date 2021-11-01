@@ -20,7 +20,6 @@ import {
   FullScreenReportModal,
   OperationType,
 } from '@pabau/ui'
-import Image from 'next/image'
 import { Avatar, Col, Row, Typography } from 'antd'
 import classNames from 'classnames'
 import Highcharts from 'highcharts'
