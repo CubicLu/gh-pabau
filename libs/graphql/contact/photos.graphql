@@ -111,3 +111,10 @@ mutation deleteContactPhoto($id: Int!) {
     id
   }
 }
+
+mutation moveContactAttachments($album: Int!, $images: [Int]!) {
+  moveAttachments(albumId: $album, imageIds: $images) {
+    success
+    album
+  }
+}

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import styles from './ClientPhotosLayout.module.less'
-import { GalleryView, GalleryProps, AlbumProps, ImageProps } from '@pabau/ui'
+import { GalleryView, GalleryProps } from '@pabau/ui'
 
 export const ClientPhotosLayout: FC<GalleryProps> = ({
   albumList = {
