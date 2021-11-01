@@ -8,7 +8,7 @@ import PhotoStudio from '../../components/ClientCard/PhotoStudio'
 import {
   useGetPhotoAlbumLazyQuery,
   useGetPhotoAlbumsLazyQuery,
-  useGetUncatPhotosLazyQuery,
+  useGetAlbumPhotosLazyQuery,
 } from '@pabau/graphql'
 
 export const Index: FC = () => {
@@ -31,7 +31,7 @@ export const Index: FC = () => {
   const [
     getUncategorizedPhotos,
     { data: unCatPhotos, loading: unCatPhotosLoading },
-  ] = useGetUncatPhotosLazyQuery({
+  ] = useGetAlbumPhotosLazyQuery({
     fetchPolicy: 'network-only',
   })
 
@@ -59,6 +59,7 @@ export const Index: FC = () => {
       getUncategorizedPhotos({
         variables: {
           contactId: debouncedContactId,
+          albumId: 0,
         },
       })
     }
