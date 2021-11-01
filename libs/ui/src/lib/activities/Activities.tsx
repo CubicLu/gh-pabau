@@ -22,7 +22,7 @@ import { ReactComponent as UserIcon } from '../../assets/images/timeline/filled-
 import TimeLineFilterPopover from './FilterPopover'
 import TimelineSkeleton from './ActivitySkeleton'
 import calendar from 'dayjs/plugin/calendar'
-import weekOfYear from 'dayjs/plugin/weekOfYear'
+import isoWeek from 'dayjs/plugin/isoWeek'
 import classNames from 'classnames'
 import {
   EditOutlined,
@@ -33,7 +33,7 @@ import {
 } from '@ant-design/icons'
 
 dayjs.extend(calendar)
-dayjs.extend(weekOfYear)
+dayjs.extend(isoWeek)
 
 const calendarFormat = {
   lastDay: `[Yesterday]`,
@@ -54,7 +54,8 @@ export interface ActivitiesProps {
   isLoading?: boolean
   setPagination?: (e: PaginationType) => void
   pagination?: PaginationType
-  colorClass?: string
+  handleMenuClick?: (name: string, id: number) => void
+  DisplayDate?: (date: Date) => string
 }
 
 export interface ActivitiesDataProps {
@@ -84,6 +85,8 @@ export const Activities: FC<ActivitiesProps> = ({
   isLoading,
   pagination,
   setPagination,
+  handleMenuClick,
+  DisplayDate,
 }) => {
   const { t } = useTranslation('common')
   const [events, setEvents] = useState<ActivitiesDataProps[]>([])
@@ -212,34 +215,22 @@ export const Activities: FC<ActivitiesProps> = ({
   }
 
   const timeFormat = (date) => {
-    const standardDateFormat = dayjs(date, eventDateFormat)
+    const standardDateFormat = dayjs(date, eventDateFormat).startOf('day')
+    const now = dayjs().startOf('day')
     let diff
-    const now = dayjs()
+    const isCurrentYear = standardDateFormat.year() === now.year()
     if (now < date) {
       diff = now.diff(standardDateFormat, 'days')
     } else {
       diff = standardDateFormat.diff(now, 'days')
     }
-    if (diff === 0) {
-      let dayDiff
+    let weekDiff = -1
+    if (diff <= 14 && diff > 1) {
       if (now < date) {
-        dayDiff =
-          Number(now.format('DD')) - Number(standardDateFormat.format('DD'))
+        weekDiff = now.isoWeek() - standardDateFormat.isoWeek()
       } else {
-        dayDiff =
-          Number(standardDateFormat.format('DD')) - Number(now.format('DD'))
+        weekDiff = standardDateFormat.isoWeek() - now.isoWeek()
       }
-      if (dayDiff > 0) {
-        diff = 1
-      } else if (dayDiff < 0) {
-        diff = -1
-      }
-    }
-    let weekDiff
-    if (now < date) {
-      weekDiff = dayjs().week() - standardDateFormat.week()
-    } else {
-      weekDiff = standardDateFormat.week() - dayjs().week()
     }
     const retVal =
       diff === -1
@@ -255,17 +246,21 @@ export const Activities: FC<ActivitiesProps> = ({
         : ''
     if (retVal) {
       return (
-        <Tooltip title={date} placement={'topRight'}>
-          {standardDateFormat.format(calendarFormat[retVal])}
+        <Tooltip
+          title={
+            isCurrentYear
+              ? dayjs(date, eventDateFormat).format('MM-DD h:mm')
+              : DisplayDate?.(date)
+          }
+          placement={'topRight'}
+        >
+          {dayjs(date, eventDateFormat).format(calendarFormat[retVal])}
         </Tooltip>
       )
+    } else if (!isCurrentYear) {
+      return <div>{DisplayDate?.(date)}</div>
     } else {
-      if (
-        dayjs(standardDateFormat) < dayjs().subtract(6, 'days') ||
-        dayjs(standardDateFormat) > dayjs().add(6, 'days')
-      ) {
-        return <>{dayjs(date, eventDateFormat).format('DD MMM [at] h:mm a')}</>
-      }
+      return <div>{dayjs(date, eventDateFormat).format('MM-DD h:mm')}</div>
     }
   }
 
@@ -274,23 +269,23 @@ export const Activities: FC<ActivitiesProps> = ({
     setPagination?.({ ...pagination, offSet: offset, currentPage: currentPage })
     setPaginateData((d) => ({ ...d, offset, currentPage }))
   }
-  const renderItem = (key, icon, label, onClick) => {
+  const renderItem = (key, icon, label, onClick, id) => {
     return (
       <div
         className={styles.dotList}
         key={`three-dot-menu-content-${key}`}
-        //onClick={}
+        onClick={(e) => handleMenuClick?.(label, id)}
       >
         {icon}
         <p>{label}</p>
       </div>
     )
   }
-  const prepareContent = (menuList) => {
+  const prepareContent = (menuList, id) => {
     return (
       <div className={classNames(styles.dotWrapper)}>
         {menuList?.map(({ key, icon, label, onClick }) =>
-          renderItem(key, icon, label, onClick)
+          renderItem(key, icon, label, onClick, id)
         )}
       </div>
     )
@@ -313,7 +308,7 @@ export const Activities: FC<ActivitiesProps> = ({
             <div className={styles.popOverContainer}>
               {menuList.length > 0 && (
                 <Popover
-                  content={prepareContent(menuList)}
+                  content={prepareContent(menuList, event.id)}
                   placement="left"
                   trigger="click"
                   overlayClassName={styles.customPopover}

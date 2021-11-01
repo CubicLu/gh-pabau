@@ -1,19 +1,30 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
-import { Tooltip } from 'antd'
+import { Tooltip, Modal } from 'antd'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import styles from './clientCardLayout.module.less'
 import {
   useGetActivityQuery,
   useCountClinetActivityQuery,
+  useDeleteManyActivityMutation,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
 import * as Icon from '@ant-design/icons'
-import { Activities, ActivitiesDataProps, PaginationType } from '@pabau/ui'
-
+import {
+  Activities,
+  ActivitiesDataProps,
+  Notification as ResNotification,
+  NotificationType,
+  PaginationType,
+} from '@pabau/ui'
+import { DisplayDate } from '../../../hooks/displayDate'
 const Appointments = () => {
   const router = useRouter()
   const contactID = Number(router.query['id'])
+  const [isActivityDelete, setIsActivityDelete] = useState(false)
+  const [activityId, setActivityId] = useState<number>(0)
+  const { t } = useTranslation('common')
   const [activityDetails, setActivityDetails] = useState<ActivitiesDataProps[]>(
     []
   )
@@ -30,9 +41,10 @@ const Appointments = () => {
       take: pagination.limit,
     }
   }, [contactID, pagination.offSet, pagination.limit])
-  const { loading, data: activityData } = useGetActivityQuery({
+  const { loading, data: activityData, refetch } = useGetActivityQuery({
     variables: queryVariable,
     skip: !contactID,
+    notifyOnNetworkStatusChange: true,
   })
 
   const {
@@ -42,6 +54,25 @@ const Appointments = () => {
     variables: { contactID },
     skip: !contactID,
   })
+  const [
+    deleteActivityMutation,
+    { loading: isDeleteLoading },
+  ] = useDeleteManyActivityMutation({
+    onCompleted() {
+      ResNotification(
+        NotificationType.success,
+        t('clients.activities.delete.message')
+      )
+      setIsActivityDelete(false)
+      refetch()
+    },
+    onError() {
+      ResNotification(
+        NotificationType.error,
+        t('clients.activities.delete.error.message')
+      )
+    },
+  })
   const renderTooltip = ({ title, icon }) => {
     return <Tooltip title={title}>{icon}</Tooltip>
   }
@@ -49,7 +80,10 @@ const Appointments = () => {
     const dueDate = dayjs(date)
     const now = dayjs()
     let style = styles.todo
-    if (status.toLocaleLowerCase() !== 'done') {
+    if (
+      status.toLocaleLowerCase() !==
+      t('timeline.status.done').toLocaleLowerCase()
+    ) {
       if (now > dueDate) {
         style = styles.overdueRow
       } else if (
@@ -60,6 +94,12 @@ const Appointments = () => {
       }
     }
     return style
+  }
+  const handleMenuClick = (name, id) => {
+    if (name === t('timeline.dotMenu.delete')) {
+      setActivityId(id)
+      setIsActivityDelete(true)
+    }
   }
   useEffect(() => {
     if (activityData?.findManyActivity) {
@@ -92,6 +132,13 @@ const Appointments = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countData])
+  const handleDelete = () => {
+    deleteActivityMutation({
+      variables: {
+        ids: [activityId],
+      },
+    })
+  }
   return (
     <div className={styles.wrapper}>
       <ClientCardLayout
@@ -99,12 +146,28 @@ const Appointments = () => {
         clientId={Number(router.query['id'])}
         activeTab="activities"
       >
+        <Modal
+          centered={true}
+          onCancel={() => setIsActivityDelete(false)}
+          onOk={() => handleDelete()}
+          visible={isActivityDelete}
+          title={t('galley.list.view.delete.modal.title')}
+          cancelText={t('common-label-cancel')}
+          okText={t('galley.list.view.delete.ok.button')}
+          confirmLoading={isDeleteLoading}
+        >
+          <div>
+            <p>{t('clients.activities.delete.modal.message')}</p>
+          </div>
+        </Modal>
         <Activities
           eventsData={activityDetails}
           eventDateFormat={'DD-MM-YYYY, h:mm a'}
           isLoading={loading || countLoading}
           pagination={pagination}
           setPagination={setPagination}
+          handleMenuClick={handleMenuClick}
+          DisplayDate={DisplayDate}
         />
       </ClientCardLayout>
     </div>
