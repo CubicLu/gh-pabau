@@ -333,25 +333,31 @@ export const TestForm = () => {
   }
 
   const saveMedicalFormHistory = (draggedForms: MedicalFormTypes[]) => {
+    console.log('draggedForms111 =', draggedForms)
+    let attrNameIndex = 0
+    let newDraggedForms: MedicalFormTypes[] = []
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [index, item] of draggedForms.entries()) {
-      let attr_name = ''
       const cssClassArr = previewMapping.filter(
         (mappingItem) => Object.values(mappingItem)[0] === item.formName
       )
       let cssClass = ''
       if (cssClassArr.length > 0) cssClass = Object.keys(cssClassArr[0])[0]
-
+      if (cssClass === '' || cssClass === 'heading') {
+        continue
+      }
+      let attr_name = ''
       if (item.txtQuestion !== '') {
-        attr_name = index + item.txtQuestion.trim()
+        attr_name = attrNameIndex + item.txtQuestion.trim()
       } else if (item.txtValue !== '') {
-        attr_name = index + item.txtValue.trim()
+        attr_name = attrNameIndex + item.txtValue.trim()
       } else if (item.arrItems.length > 0) {
-        attr_name = index + item.arrItems[0].name.trim()
+        attr_name = attrNameIndex + item.arrItems[0].name.trim()
       } else {
-        attr_name = index + 'nothing'
+        attr_name = attrNameIndex + 'nothing'
       }
       if (cssClass === 'labs_tests') {
-        attr_name = index + 'labs_tests[]'
+        attr_name = attrNameIndex + 'labs_tests[]'
       }
       item.attrName = attr_name.replace('_', ' ').toLowerCase()
 
@@ -375,9 +381,14 @@ export const TestForm = () => {
         else item.attrValue = ''
       } else if (cssClass === 'labs_tests') {
         item.attrValue = item.arrValue.join(',')
+      } else {
+        item.attrName = ''
       }
+      newDraggedForms = [...newDraggedForms, item]
+      attrNameIndex++
     }
-    saveMedicalAttr(draggedForms)
+    console.log('newDraggedForms =', newDraggedForms)
+    saveMedicalAttr(newDraggedForms)
   }
 
   const loggedInUser = useUser()
