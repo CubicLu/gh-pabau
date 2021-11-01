@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { FC, useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { cdnURL } from '../../../baseUrl'
 import dayjs from 'dayjs'
@@ -16,18 +16,19 @@ import {
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import PhotoStudio from '../../../components/ClientCard/PhotoStudio'
 import {
+  useGetAlbumPhotosQuery,
   GetAlbumPhotosDocument,
   useGetPhotoAlbumsQuery,
   GetPhotoAlbumsDocument,
-  useGetAlbumPhotosQuery,
   useCountAlbumPhotosQuery,
   CountAlbumPhotosDocument,
   useGetAlbumPhotosLazyQuery,
   useGetPhotoAlbumsLazyQuery,
+  useCreateContactPhotoMutation,
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
   useDeleteOnePhotoAlbumMutation,
-  useCreateContactPhotoMutation,
+  useMoveContactAttachmentsMutation,
   useCreateContactPhotoWithoutAlbumMutation,
   useDeleteManyContactPhotoMutation,
   useDeleteContactPhotoMutation,
@@ -58,7 +59,17 @@ const iterateTo = (dataArr) => {
   })
 }
 
-const Photos = () => {
+const albumFinder = (albums, albumId) => {
+  const album = albums?.find((el) => {
+    if (el?.id === albumId) {
+      return el
+    } else if (el?.album) albumFinder?.(el?.album, albumId)
+    return null
+  })
+  return album
+}
+
+const Photos: FC = () => {
   const api = axios.create({
     baseURL: baseURL,
     headers: {
@@ -87,6 +98,13 @@ const Photos = () => {
 
   const [multipleDelImages, setMultipleDelImages] = useState(0)
   const [imagesDeleteLoading, setImagesDeleteLoading] = useState(false)
+  const [movingImagesOnAlbumCreate, setMovingImagesOnAlbumCreate] = useState<
+    number[]
+  >([])
+
+  const [albumCreateLoading, setAlbumCreateLoading] = useState(false)
+  const [albumUpdateLoading, setAlbumUpdateLoading] = useState(false)
+  const [albumDeleteLoading, setAlbumDeleteLoading] = useState(false)
 
   const contactId = useMemo(() => {
     return router.query.id ? Number(router.query.id) : 0
@@ -120,7 +138,7 @@ const Photos = () => {
     fetchPolicy: 'network-only',
     variables: {
       contactId: contactId,
-      albumId: 0,
+      albumId: albumId,
     },
   })
 
@@ -138,9 +156,80 @@ const Photos = () => {
     fetchPolicy: 'network-only',
   })
 
-  const [createAlbum] = useCreateOnePhotoAlbumMutation()
-  const [updateAlbum] = useUpdateOnePhotoAlbumMutation()
-  const [deleteAlbum] = useDeleteOnePhotoAlbumMutation()
+  const [createAlbum] = useCreateOnePhotoAlbumMutation({
+    onCompleted({ createOnePhotoAlbum: data }) {
+      const cAlbums = { ...albums }
+      cAlbums?.album?.push({
+        id: data?.id,
+        albumTitle: data?.album_name,
+        modifiedDate: data?.modified_date,
+        imageCount: 0,
+        albumImage: [],
+        album: [],
+      })
+      setAlbums(cAlbums)
+      setAlbumCreateLoading(false)
+      Notification(
+        NotificationType?.success,
+        `${data?.album_name} created successfully!`
+      )
+
+      if (movingImagesOnAlbumCreate?.length > 0) {
+        const moveImages = [...movingImagesOnAlbumCreate]
+        onImagesMove(data?.id, moveImages)
+        setMovingImagesOnAlbumCreate([])
+      }
+    },
+    onError(error) {
+      setAlbumCreateLoading(false)
+      Notification(NotificationType?.error, error?.message)
+    },
+  })
+  const [updateAlbum] = useUpdateOnePhotoAlbumMutation({
+    onCompleted({ updateOnePhotoAlbum: data }) {
+      const cAlbums = { ...albums }
+      const idx = cAlbums?.album?.findIndex((el) => el?.id === data?.id)
+      if (idx !== -1) {
+        cAlbums?.album?.splice(idx, 1, {
+          id: data?.id,
+          albumTitle: data?.album_name,
+          modifiedDate: data?.modified_date,
+          imageCount: cAlbums[idx]?.imageCount,
+          albumImage: cAlbums[idx]?.albumImage,
+          album: cAlbums[idx]?.album,
+        })
+        setAlbums(cAlbums)
+      }
+      setAlbumUpdateLoading(false)
+      Notification(
+        NotificationType?.success,
+        `${data?.album_name} updated successfully!`
+      )
+    },
+    onError(error) {
+      setAlbumUpdateLoading(false)
+      Notification(NotificationType?.error, error?.message)
+    },
+  })
+  const [deleteAlbum] = useDeleteOnePhotoAlbumMutation({
+    onCompleted({ deleteOnePhotoAlbum: data }) {
+      const cAlbums = { ...albums }
+      const idx = cAlbums?.album?.findIndex((el) => el?.id === data?.id)
+      if (idx !== -1) {
+        cAlbums?.album?.splice(idx, 1)
+        setAlbums(cAlbums)
+      }
+      setAlbumDeleteLoading(false)
+      Notification(
+        NotificationType?.success,
+        `${data?.album_name} deleted successfully!`
+      )
+    },
+    onError(error) {
+      setAlbumDeleteLoading(false)
+      Notification(NotificationType?.error, error?.message)
+    },
+  })
 
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
     onCompleted({ createOneContactAttachment: data }) {
@@ -241,6 +330,34 @@ const Photos = () => {
     },
   })
 
+  const [moveImageToAlbum] = useMoveContactAttachmentsMutation({
+    onCompleted({ moveAttachments: data }) {
+      if (data?.success && data?.album !== 0) {
+        if (document.querySelector(`#tar${data?.album}`)) {
+          document
+            ?.querySelector(`#tar${data?.album}`)
+            ?.classList?.remove('dropEffect')
+        }
+
+        const tarAlbum = albumFinder?.(albums?.album, data?.album)
+        Notification(
+          NotificationType?.success,
+          `Image moved and ${
+            tarAlbum?.albumTitle || 'album'
+          } updated succesfully!`
+        )
+      } else {
+        Notification(
+          NotificationType?.success,
+          `Image moved and uncategorized album updated succesfully!`
+        )
+      }
+    },
+    onError(error) {
+      Notification(NotificationType?.error, error?.message)
+    },
+  })
+
   useEffect(() => {
     if (albumsData?.findManyPhotoAlbum && !albumsLoading) {
       const innerAlbums = iterateTo(albumsData?.findManyPhotoAlbum)
@@ -324,7 +441,11 @@ const Photos = () => {
     }
   }, [manualPhotoAlbums, manualPhotoAlbumsLoading, unCatImagesCount])
 
-  const onAlbumCreate = (album: string) => {
+  const onAlbumCreate = (album: string, moveImages: ImageProps[] = []) => {
+    if (moveImages?.length > 0) {
+      setMovingImagesOnAlbumCreate(moveImages?.map((el) => el?.id))
+    }
+    setAlbumCreateLoading(true)
     createAlbum({
       variables: {
         data: {
@@ -343,18 +464,11 @@ const Photos = () => {
           },
         },
       },
-      refetchQueries: [
-        {
-          query: GetPhotoAlbumsDocument,
-          variables: {
-            contactId: contactId,
-          },
-        },
-      ],
     })
   }
 
   const onAlbumUpdate = (album: AlbumProps) => {
+    setAlbumUpdateLoading(true)
     updateAlbum({
       variables: {
         where: {
@@ -365,18 +479,11 @@ const Photos = () => {
           modified_date: { set: dayjs().format('YYYY-MM-DD') },
         },
       },
-      refetchQueries: [
-        {
-          query: GetPhotoAlbumsDocument,
-          variables: {
-            contactId: contactId,
-          },
-        },
-      ],
     })
   }
 
   const onAlbumDelete = (album: AlbumProps) => {
+    setAlbumDeleteLoading(true)
     if (album.imageCount <= 0) {
       deleteAlbum({
         variables: {
@@ -384,17 +491,9 @@ const Photos = () => {
             id: album?.id,
           },
         },
-        refetchQueries: [
-          {
-            query: GetPhotoAlbumsDocument,
-            variables: {
-              contactId: contactId,
-            },
-          },
-        ],
       })
     } else {
-      console.log('KUCH TO GARH BARH HY')
+      // This block will be used when we get delete whole album along with its nested albums and images by Martin
     }
   }
 
@@ -616,6 +715,37 @@ const Photos = () => {
     }
   }
 
+  const onImagesMove = (album: number, images: number[]) => {
+    if ((album === 0 || album) && images?.length > 0) {
+      moveImageToAlbum({
+        variables: {
+          album: album,
+          images: images,
+        },
+        refetchQueries: [
+          {
+            query: GetPhotoAlbumsDocument,
+            variables: {
+              contactId: contactId,
+            },
+          },
+          album === albumId && {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
+          },
+          album === albumId &&
+            albumId === 0 && {
+              query: CountAlbumPhotosDocument,
+              variables: {
+                contactId: contactId,
+                albumId: 0,
+              },
+            },
+        ],
+      })
+    }
+  }
+
   const openPhotoStudio = (album: number, image: number) => {
     setStudioAlbumId(album)
     setStudioImageId(image)
@@ -652,13 +782,17 @@ const Photos = () => {
             },
           }}
           onAlbumCreate={onAlbumCreate}
+          albumCreateLoading={albumCreateLoading}
           onAlbumUpdate={onAlbumUpdate}
+          albumUpdateLoading={albumUpdateLoading}
           onAlbumDelete={onAlbumDelete}
+          albumDeleteLoading={albumDeleteLoading}
           onImageUpload={onImageUpload}
           onImageRemove={onImageRemove}
           onUploadCancel={onUploadCancel}
           uploadingImages={uploadingFiles}
           setUploadingImages={setUploadingFiles}
+          onImagesMove={onImagesMove}
           openImageStudio={openPhotoStudio}
           imagesDeleteLoading={imagesDeleteLoading}
         />

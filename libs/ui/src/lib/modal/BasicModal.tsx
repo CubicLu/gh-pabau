@@ -1,10 +1,11 @@
 import React, { PropsWithChildren } from 'react'
-import { Modal } from 'antd'
+import { Modal, Spin } from 'antd'
 import Button from '../button/Button'
 import { Checkbox, ButtonTypes } from '@pabau/ui'
 import styles from './BasicModal.module.less'
 import { ModalProps } from 'antd/lib/modal'
 import classNames from 'classnames'
+import { LoadingOutlined } from '@ant-design/icons'
 export interface BasicModalProps {
   onOk?: () => void
   onCancel?: () => void
@@ -36,6 +37,7 @@ export interface BasicModalProps {
   newButtonDisable?: boolean
   btnType?: ButtonTypes
   modalBodyClass?: string
+  loading?: boolean
 }
 
 export function BasicModal({
@@ -58,6 +60,7 @@ export function BasicModal({
   submitting = false,
   btnType = ButtonTypes.primary,
   modalBodyClass,
+  loading,
   ...props
 }: PropsWithChildren<BasicModalProps & ModalProps>): JSX.Element {
   return (
@@ -99,14 +102,17 @@ export function BasicModal({
           {newButtonText && (
             <Button
               type={btnType}
-              className={styles.btnStyle}
+              className={classNames(styles.btnStyle, loading && styles.loading)}
               disabled={newButtonDisable || !isValidate || submitting}
               onClick={() => {
                 submitting = true
-                onOk?.()
+                !loading && onOk?.()
                 submitting = false
               }}
             >
+              {loading && (
+                <Spin spinning={loading} indicator={<LoadingOutlined />} />
+              )}{' '}
               {newButtonText}
             </Button>
           )}

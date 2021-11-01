@@ -75,6 +75,8 @@ export const permissions = shield(
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
       createOneContactNote: rules.authentication.isAuthenticated,
+      updateOneContactNote: rules.authentication.isAuthenticated,
+      deleteOneContactNote: rules.authentication.isAuthenticated,
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -93,6 +95,7 @@ export const permissions = shield(
       createOneContactAttachment: rules.authentication.isAuthenticated,
       deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
       deleteManyContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      moveAttachments: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
