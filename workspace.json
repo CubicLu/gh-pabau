@@ -1,6 +1,326 @@
 {
   "version": 1,
   "projects": {
+    "hasura": {
+      "root": "hasura",
+      "sourceRoot": "hasura",
+      "projectType": "custom",
+      "architect": {
+        "deploy-docker": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "sh hasura/deploy.sh"
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "web": {
+      "root": "apps/web",
+      "sourceRoot": "apps/web",
+      "projectType": "application",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/next:build",
+          "options": {
+            "root": "apps/web",
+            "outputPath": "dist/apps/web"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/next:server",
+          "options": {
+            "buildTarget": "web:build",
+            "dev": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "web:build:production",
+              "dev": false
+            }
+          }
+        },
+        "export": {
+          "builder": "@nrwl/next:export",
+          "options": {
+            "buildTarget": "web:build:production"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/web/**/*.{ts,tsx,js,jsx}"],
+            "maxWarnings": 0
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/web/jest.config.js",
+            "runInBand": true
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "sh apps/web/cicd/deploy.sh"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p apps/web && tsc -p apps/web/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "web-e2e": {
+      "root": "apps/web-e2e",
+      "sourceRoot": "apps/web-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/web-e2e/cypress.json",
+            "tsConfig": "apps/web-e2e/tsconfig.e2e.json",
+            "devServerTarget": "web:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "web:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/web-e2e/**/*.{js,ts}"]
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p apps/web-e2e && tsc -p apps/web-e2e/tsconfig.e2e.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "graphql": {
+      "root": "libs/graphql",
+      "sourceRoot": "libs/graphql",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/graphql/**/*.{ts,tsx,js,jsx}"],
+            "maxWarnings": 0
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p libs/graphql/tsconfig.lib.json && tsc -p libs/graphql/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "ui": {
+      "root": "libs/ui",
+      "sourceRoot": "libs/ui/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/ui/**/*.{ts,tsx,js,jsx}"],
+            "maxWarnings": 0
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/jest.config.js",
+            "passWithNoTests": true,
+            "runInBand": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "export": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/ui",
+            "config": {
+              "configFolder": "libs/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "sh libs/ui/cicd/deploy.sh"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p libs/ui/tsconfig.lib.json && tsc -p libs/ui/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "ui-e2e": {
+      "root": "apps/ui-e2e",
+      "sourceRoot": "apps/ui-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ui-e2e/cypress.json",
+            "tsConfig": "apps/ui-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ui:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "ui:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ui-e2e/**/*.{js,ts}"]
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p apps/ui-e2e && tsc -p apps/ui-e2e/tsconfig.e2e.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "yup": {
+      "root": "libs/yup",
+      "sourceRoot": "libs/yup/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/yup/**/*.[tj]s"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/yup/jest.config.js",
+            "passWithNoTests": false,
+            "runInBand": true
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p libs/yup/tsconfig.lib.json && tsc -p libs/yup/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
     "backend": {
       "root": "apps/backend",
       "sourceRoot": "apps/backend/src",
@@ -69,308 +389,6 @@
             "commands": [
               {
                 "command": "tsc -p apps/backend && tsc -p apps/backend/tsconfig.spec.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "bridge-api": {
-      "root": "apps/bridge-api",
-      "sourceRoot": "apps/bridge-api/src",
-      "projectType": "application",
-      "prefix": "bridge-api",
-      "architect": {
-        "export": {
-          "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/bridge-api",
-            "main": "apps/bridge-api/src/main.ts",
-            "tsConfig": "apps/bridge-api/tsconfig.app.json",
-            "assets": [
-              "apps/bridge-api/src/assets",
-              "apps/bridge-api/src/prisma",
-              {
-                "glob": "healthcheck.sh",
-                "input": "apps/bridge-api/cicd",
-                "output": "/"
-              }
-            ],
-            "maxWorkers": 1,
-            "generatePackageJson": true
-          },
-          "configurations": {
-            "production": {
-              "maxWorkers": 4,
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/bridge-api/src/environments/environment.ts",
-                  "with": "apps/bridge-api/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "bridge-api:export"
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "bridge-api:export"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/bridge-api/**/*.ts"],
-            "maxWarnings": 0
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bridge-api"],
-          "options": {
-            "jestConfig": "apps/bridge-api/jest.config.js",
-            "runInBand": true
-          }
-        },
-        "integration": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bridge-api-e2e"],
-          "options": {
-            "jestConfig": "apps/bridge-api/jest.e2e.config.js",
-            "runInBand": false
-          }
-        },
-        "deploy-docker": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "command": "sh apps/bridge-api/cicd/deploy.sh"
-          },
-          "configurations": {
-            "production": {}
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p apps/bridge-api/tsconfig.app.json && tsc -p apps/bridge-api/tsconfig.spec.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "connect": {
-      "root": "apps/connect",
-      "sourceRoot": "apps/connect",
-      "projectType": "application",
-      "schematics": {},
-      "_architect": {
-        "build": {
-          "builder": "@nrwl/next:build",
-          "options": {
-            "root": "apps/connect",
-            "outputPath": "dist/apps/connect"
-          },
-          "configurations": {
-            "production": {}
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/next:server",
-          "options": {
-            "buildTarget": "connect:build",
-            "dev": true
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "connect:build:production",
-              "dev": false
-            }
-          }
-        },
-        "export": {
-          "builder": "@nrwl/next:export",
-          "options": {
-            "buildTarget": "connect:build:production"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/connect/**/*.{ts,tsx,js,jsx}"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/connect/jest.config.js",
-            "passWithNoTests": true,
-            "runInBand": true
-          }
-        },
-        "deploy": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "command": "sh apps/connect/cicd/deploy.sh"
-          },
-          "configurations": {
-            "production": {}
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p apps/connect && tsc -p apps/connect/tsconfig.spec.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "connect-e2e": {
-      "root": "apps/connect-e2e",
-      "sourceRoot": "apps/connect-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/connect-e2e/cypress.json",
-            "tsConfig": "apps/connect-e2e/tsconfig.e2e.json",
-            "devServerTarget": "connect:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "connect:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/connect-e2e/**/*.{js,ts}"]
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p apps/connect-e2e && tsc -p apps/connect-e2e/tsconfig.e2e.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "graphql": {
-      "root": "libs/graphql",
-      "sourceRoot": "libs/graphql",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/graphql/**/*.{ts,tsx,js,jsx}"],
-            "maxWarnings": 0
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p libs/graphql/tsconfig.lib.json && tsc -p libs/graphql/tsconfig.spec.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "hasura": {
-      "root": "hasura",
-      "sourceRoot": "hasura",
-      "projectType": "custom",
-      "architect": {
-        "deploy-docker": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "command": "sh hasura/deploy.sh"
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "i18n": {
-      "root": "libs/i18n",
-      "sourceRoot": "libs/i18n/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/i18n/**/*.[tj]s"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/i18n"],
-          "options": {
-            "jestConfig": "libs/i18n/jest.config.js",
-            "passWithNoTests": true,
-            "runInBand": true
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p libs/i18n/tsconfig.lib.json && tsc -p libs/i18n/tsconfig.spec.json",
                 "forwardAllArgs": false
               }
             ]
@@ -498,6 +516,261 @@
         }
       }
     },
+    "connect": {
+      "root": "apps/connect",
+      "sourceRoot": "apps/connect",
+      "projectType": "application",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/next:build",
+          "options": {
+            "root": "apps/connect",
+            "outputPath": "dist/apps/connect"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/next:server",
+          "options": {
+            "buildTarget": "connect:build",
+            "dev": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "connect:build:production",
+              "dev": false
+            }
+          }
+        },
+        "export": {
+          "builder": "@nrwl/next:export",
+          "options": {
+            "buildTarget": "connect:build:production"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/connect/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/connect/jest.config.js",
+            "passWithNoTests": true,
+            "runInBand": true
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "sh apps/connect/cicd/deploy.sh"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p apps/connect && tsc -p apps/connect/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "connect-e2e": {
+      "root": "apps/connect-e2e",
+      "sourceRoot": "apps/connect-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/connect-e2e/cypress.json",
+            "tsConfig": "apps/connect-e2e/tsconfig.e2e.json",
+            "devServerTarget": "connect:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "connect:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/connect-e2e/**/*.{js,ts}"]
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p apps/connect-e2e && tsc -p apps/connect-e2e/tsconfig.e2e.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "bridge-api": {
+      "root": "apps/bridge-api",
+      "sourceRoot": "apps/bridge-api/src",
+      "projectType": "application",
+      "prefix": "bridge-api",
+      "architect": {
+        "export": {
+          "builder": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/bridge-api",
+            "main": "apps/bridge-api/src/main.ts",
+            "tsConfig": "apps/bridge-api/tsconfig.app.json",
+            "assets": [
+              "apps/bridge-api/src/assets",
+              "apps/bridge-api/src/prisma",
+              {
+                "glob": "healthcheck.sh",
+                "input": "apps/bridge-api/cicd",
+                "output": "/"
+              }
+            ],
+            "maxWorkers": 4,
+            "memoryLimit": 7168,
+            "generatePackageJson": true
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bridge-api/src/environments/environment.ts",
+                  "with": "apps/bridge-api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bridge-api:export"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "bridge-api:export"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/bridge-api/**/*.ts"],
+            "maxWarnings": 0
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/bridge-api"],
+          "options": {
+            "jestConfig": "apps/bridge-api/jest.config.js",
+            "runInBand": true
+          }
+        },
+        "integration": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/bridge-api-e2e"],
+          "options": {
+            "jestConfig": "apps/bridge-api/jest.e2e.config.js",
+            "runInBand": false
+          }
+        },
+        "deploy-docker": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "sh apps/bridge-api/cicd/deploy.sh"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p apps/bridge-api/tsconfig.app.json && tsc -p apps/bridge-api/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
+    "i18n": {
+      "root": "libs/i18n",
+      "sourceRoot": "libs/i18n/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/i18n/**/*.[tj]s"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/i18n"],
+          "options": {
+            "jestConfig": "libs/i18n/jest.config.js",
+            "passWithNoTests": true,
+            "runInBand": true
+          }
+        },
+        "tsc": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "commands": [
+              {
+                "command": "tsc -p libs/i18n/tsconfig.lib.json && tsc -p libs/i18n/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        }
+      }
+    },
     "storage": {
       "root": "apps/storage",
       "sourceRoot": "apps/storage/src",
@@ -545,279 +818,6 @@
           "options": {
             "jestConfig": "apps/storage/jest.config.js",
             "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "ui": {
-      "root": "libs/ui",
-      "sourceRoot": "libs/ui/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/ui/**/*.{ts,tsx,js,jsx}"],
-            "maxWarnings": 0
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ui/jest.config.js",
-            "passWithNoTests": true,
-            "runInBand": true
-          }
-        },
-        "storybook": {
-          "builder": "@nrwl/storybook:storybook",
-          "options": {
-            "uiFramework": "@storybook/react",
-            "port": 4400,
-            "config": {
-              "configFolder": "libs/ui/.storybook"
-            }
-          },
-          "configurations": {
-            "ci": {
-              "quiet": true
-            }
-          }
-        },
-        "export": {
-          "builder": "@nrwl/storybook:build",
-          "options": {
-            "uiFramework": "@storybook/react",
-            "outputPath": "dist/storybook/ui",
-            "config": {
-              "configFolder": "libs/ui/.storybook"
-            }
-          },
-          "configurations": {
-            "ci": {
-              "quiet": true
-            }
-          }
-        },
-        "deploy": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "command": "sh libs/ui/cicd/deploy.sh"
-          },
-          "configurations": {
-            "production": {}
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p libs/ui/tsconfig.lib.json && tsc -p libs/ui/tsconfig.spec.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "ui-e2e": {
-      "root": "apps/ui-e2e",
-      "sourceRoot": "apps/ui-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/ui-e2e/cypress.json",
-            "tsConfig": "apps/ui-e2e/tsconfig.e2e.json",
-            "devServerTarget": "ui:storybook"
-          },
-          "configurations": {
-            "ci": {
-              "devServerTarget": "ui:storybook:ci"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/ui-e2e/**/*.{js,ts}"]
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p apps/ui-e2e && tsc -p apps/ui-e2e/tsconfig.e2e.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "web": {
-      "root": "apps/web",
-      "sourceRoot": "apps/web",
-      "projectType": "application",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/next:build",
-          "options": {
-            "root": "apps/web",
-            "outputPath": "dist/apps/web"
-          },
-          "configurations": {
-            "production": {}
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/next:server",
-          "options": {
-            "buildTarget": "web:build",
-            "dev": true
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "web:build:production",
-              "dev": false
-            }
-          }
-        },
-        "export": {
-          "builder": "@nrwl/next:export",
-          "options": {
-            "buildTarget": "web:build:production"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/web/**/*.{ts,tsx,js,jsx}"],
-            "maxWarnings": 0
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/web/jest.config.js",
-            "runInBand": true
-          }
-        },
-        "deploy": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "command": "sh apps/web/cicd/deploy.sh"
-          },
-          "configurations": {
-            "production": {}
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p apps/web && tsc -p apps/web/tsconfig.spec.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "web-e2e": {
-      "root": "apps/web-e2e",
-      "sourceRoot": "apps/web-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/web-e2e/cypress.json",
-            "tsConfig": "apps/web-e2e/tsconfig.e2e.json",
-            "devServerTarget": "web:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "web:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/web-e2e/**/*.{js,ts}"]
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p apps/web-e2e && tsc -p apps/web-e2e/tsconfig.e2e.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
-    "yup": {
-      "root": "libs/yup",
-      "sourceRoot": "libs/yup/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/yup/**/*.[tj]s"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/yup/jest.config.js",
-            "passWithNoTests": false,
-            "runInBand": true
-          }
-        },
-        "tsc": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "commands": [
-              {
-                "command": "tsc -p libs/yup/tsconfig.lib.json && tsc -p libs/yup/tsconfig.spec.json",
-                "forwardAllArgs": false
-              }
-            ]
-          },
-          "configurations": {
-            "production": {}
           }
         }
       }

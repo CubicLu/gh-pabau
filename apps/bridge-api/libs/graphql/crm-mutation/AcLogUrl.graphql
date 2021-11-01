@@ -1,0 +1,34 @@
+fragment AcLogUrlFields on AcLogUrl {
+  id
+  url
+  file
+  referer
+}
+
+fragment AcLogUrl on AcLogUrl {
+  ...AcLogUrlFields
+}
+
+mutation createOneAcLogUrl($data: AcLogUrlCreateInput!) {
+  createOneAcLogUrl(data: $data) {
+    ...AcLogUrl
+  }
+}
+
+mutation updateOneAcLogUrl($where: AcLogUrlWhereUniqueInput!, $data: AcLogUrlUpdateInput!) {
+  updateOneAcLogUrl(where: $where, data: $data) {
+    ...AcLogUrl
+  }
+}
+
+mutation deleteOneAcLogUrl($where: AcLogUrlWhereUniqueInput!) {
+  deleteOneAcLogUrl(where: $where) {
+    ...AcLogUrl
+  }
+}
+
+mutation updateManyAcLogUrl($where: AcLogUrlWhereInput, $data: AcLogUrlUpdateManyMutationInput!) {
+  updateManyAcLogUrl(where: $where, data: $data) {
+    count
+  }
+}

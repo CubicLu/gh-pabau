@@ -1,0 +1,37 @@
+fragment TemplateFolderFields on TemplateFolder {
+  id
+  company_id
+  folder_name
+  folder_description
+}
+
+fragment TemplateFolder on TemplateFolder {
+  ...TemplateFolderFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneTemplateFolder($data: TemplateFolderCreateInput!) {
+  createOneTemplateFolder(data: $data) {
+    ...TemplateFolder
+  }
+}
+
+mutation updateOneTemplateFolder($where: TemplateFolderWhereUniqueInput!, $data: TemplateFolderUpdateInput!) {
+  updateOneTemplateFolder(where: $where, data: $data) {
+    ...TemplateFolder
+  }
+}
+
+mutation deleteOneTemplateFolder($where: TemplateFolderWhereUniqueInput!) {
+  deleteOneTemplateFolder(where: $where) {
+    ...TemplateFolder
+  }
+}
+
+mutation updateManyTemplateFolder($where: TemplateFolderWhereInput, $data: TemplateFolderUpdateManyMutationInput!) {
+  updateManyTemplateFolder(where: $where, data: $data) {
+    count
+  }
+}

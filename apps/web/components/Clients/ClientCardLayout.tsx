@@ -4,6 +4,8 @@ import {
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
+  useUpdateOneCmContactMutation,
+  useUpsertOneCmContactCustomMutation,
 } from '@pabau/graphql'
 import { ClientCard, TabItem, ClientNotes } from '@pabau/ui'
 import React, {
@@ -17,6 +19,7 @@ import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
+import { useUser } from '../../context/UserContext'
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -35,6 +38,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   })
   const [basicContactData, setBasicContactData] = useState(null)
   const [openEditModal, setOpenEditModal] = useState(false)
+  const user = useUser()
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -67,6 +71,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   } = useGetContactCustomFieldsQuery({
     skip: !router.query['id'],
   })
+
+  const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
+  const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
@@ -115,14 +122,19 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         return {
           ...item,
           notes: [],
-          count:
-            data?.findFirstCmContact?.contactNotes?.length +
-              data?.findFirstCmContact?.bookingNotes?.length || 0,
+          count: data?.findFirstCmContact?.contactNotes?.length || 0,
           loading: true,
           appointments: [],
         }
       })
-      const contactDetails = { ...data?.findFirstCmContact }
+      const contactDetails = {
+        ...data?.findFirstCmContact,
+        referredBy: data?.findFirstCmContact.marketingSource,
+        isActive: data?.findFirstCmContact?.isActive,
+        country:
+          data?.findFirstCmContact?.country ||
+          data?.findFirstCmContact?.Company?.details?.country,
+      }
       delete contactDetails?.contactNotes
       delete contactDetails?.bookingNotes
       setBasicContactData(contactDetails)
@@ -212,7 +224,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     setOpenEditModal(true)
   }
 
-  const handleEditSubmit = () => {
+  const handleEditAllSubmit = () => {
     setOpenEditModal(false)
     refetch()
   }
@@ -231,13 +243,16 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         customFields={customField}
         dateFormat={GetFormat()}
         handleEditAll={handleEditAll}
+        updatebasicContactMutation={updatebasicContactMutation}
+        updateContactCustomMutation={updateContactCustomMutation}
+        clientId={clientId}
+        companyId={user?.me?.company}
         client={
           basicContactData
             ? ({
                 ...basicContactData,
                 fullName: `${basicContactData?.firstName}
                   ${basicContactData?.lastName}`,
-                referredBy: basicContactData?.marketingSource?.name,
                 avatar: basicContactData?.avatar
                   ? getImage(basicContactData?.avatar)
                   : '',
@@ -245,8 +260,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   mobile: basicContactData?.mobile,
                   home: basicContactData?.home,
                 },
-                isActive:
-                  data.findFirstCmContact?.isActive === 1 ? true : false,
                 address: [
                   basicContactData?.street,
                   basicContactData?.city,
@@ -269,6 +282,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         }
         notes={contactData}
         getContactDetails={getContactDetails}
+        setBasicContactData={setBasicContactData}
       >
         {children}
       </ClientCard>
@@ -279,7 +293,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
             setOpenEditModal(false)
           }}
           isEdit={openEditModal}
-          handleSubmit={handleEditSubmit}
+          handleSubmit={handleEditAllSubmit}
           contactId={clientId}
         />
       )}

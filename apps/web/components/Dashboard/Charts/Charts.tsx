@@ -1,23 +1,111 @@
 import React, { FC } from 'react'
-import { Row, Col, Table } from 'antd'
+import { Row, Col, Table, Skeleton } from 'antd'
 import * as Highcharts from 'highcharts'
 import { CustomHighChart } from '@pabau/ui'
+import { ICount } from '../TopBoard/TopBoard'
 import styles from './Charts.module.less'
-import { columns, data } from '../../../mocks/Dashboard'
+import { columns } from '../../../mocks/Dashboard'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { useUser } from '../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 interface ILocation {
-  key: string
+  key: number
   label: string
   date?: string
   select: boolean
 }
 
+interface IData {
+  label: string
+  value: 0
+}
+
+interface IChartDetails {
+  status?: string
+  chartDataSet: IData[]
+}
+
+interface ITableColumns {
+  name: string
+  per: string
+  units: number
+  value: number
+}
+
 interface ICharts {
   location: ILocation
   dashboardMode: number
+  BookingData: IChartDetails[]
+  salesData: IChartDetails[]
+  totalBooking: ICount
+  totalOnlineBooking: ICount
+  totalSalesCount: ICount
+  productDetails: ITableColumns[]
+  serviceDetails: ITableColumns[]
+  loading: boolean
 }
 
-export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
+export const Charts: FC<ICharts> = ({
+  location,
+  BookingData,
+  salesData,
+  totalBooking,
+  totalOnlineBooking,
+  totalSalesCount,
+  productDetails,
+  serviceDetails,
+  loading,
+}) => {
+  const { t } = useTranslationI18()
+  const user = useUser()
+  const List = []
+  if (salesData && salesData.length > 0) {
+    salesData.map((item) => {
+      List.push({
+        type: 'line',
+        name: item.status,
+        allowPointSelect: true,
+        data: item.chartDataSet?.map((item) => item.value),
+        marker: {
+          lineWidth: 2,
+          fillColor: 'white',
+          lineColor: '',
+          symbol: 'circle',
+        },
+      })
+      return item
+    })
+  } else {
+    const details = [
+      t('dashboard.chart.service.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.chart.product.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.chart.package.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.chart.gift.label', {
+        fallbackLng: 'en',
+      }),
+    ]
+    details.map((item) => {
+      List.push({
+        name: item,
+        allowPointSelect: true,
+        data: [(0, 0, 0, 0)],
+        type: 'line',
+        marker: {
+          lineColor: '',
+          color: '',
+        },
+      })
+      return item
+    })
+  }
+
   const optionLine: Highcharts.Options = {
     chart: {
       type: 'line',
@@ -26,58 +114,17 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
       text: '',
       align: 'left',
     },
-    series: [
-      {
-        type: 'line',
-        name: 'Pencilled-in',
-        data: [380, 0, 0, 0, 45, 0, 0, 0],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: '#54B2D3',
-          symbol: 'circle',
-        },
-      },
-      {
-        type: 'line',
-        name: 'Packages',
-        data: [0, 0, 0, 0, 0, 0, 0, 0],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: 'green',
-          symbol: 'circle',
-        },
-      },
-      {
-        type: 'line',
-        name: 'Services',
-        data: [],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: '#FAAD14',
-          symbol: 'circle',
-        },
-      },
-      {
-        type: 'line',
-        name: 'Products',
-        data: [],
-        marker: {
-          lineWidth: 2,
-          fillColor: 'white',
-          lineColor: '#6383F1',
-          symbol: 'circle',
-        },
-      },
-    ],
+    tooltip: {
+      valuePrefix: `${stringToCurrencySignConverter(user.me?.currency)}`,
+    },
+    series: List,
     legend: {
       itemMarginTop: 15,
       itemStyle: {
         color: '#3D3D46',
         fontWeight: 'normal',
         fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+        textTransform: 'capitalize',
       },
     },
     yAxis: [
@@ -87,6 +134,12 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
           text: '',
         },
         labels: {
+          formatter: function (value) {
+            return `${
+              stringToCurrencySignConverter(user.me?.currency) +
+              value.value.toLocaleString()
+            }`
+          },
           style: {
             fontSize: '14px',
             fontStyle: 'normal',
@@ -109,80 +162,67 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
           color: '#9292A3',
         },
       },
-      categories: [
-        'Sat 16',
-        'Sun 17',
-        'Mon 18',
-        'Tue 19',
-        'Wed 20',
-        'Thu 21',
-        'Fri 22',
-        'Sat 23',
-      ],
+      categories:
+        salesData && salesData.length > 0
+          ? [...new Set(salesData[0]?.chartDataSet?.map((item) => item.label))]
+          : [],
     },
+  }
+  const dataList = []
+  if (BookingData && BookingData.length > 0) {
+    BookingData.map((item) => {
+      dataList.push({
+        name: item.status,
+        allowPointSelect: true,
+        data: item.chartDataSet?.map((item) => item.value),
+        type: 'column',
+        marker: {
+          lineColor: '#54B2D3',
+          color: '#54B2D3',
+        },
+        pointWidth: 15,
+      })
+      return item
+    })
+  } else {
+    const details = [
+      t('dashboard.complete.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.waiting.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.cancel.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.no.show.label', {
+        fallbackLng: 'en',
+      }),
+      t('dashboard.deposits.label', {
+        fallbackLng: 'en',
+      }),
+    ]
+    details.map((item) => {
+      dataList.push({
+        name: item,
+        allowPointSelect: true,
+        data: [0, 0, 0, 0, 0],
+        type: 'column',
+        marker: {
+          lineColor: '#54B2D3',
+          color: '#54B2D3',
+        },
+        pointWidth: 15,
+      })
+      return item
+    })
   }
 
   const option1: Highcharts.Options = {
     title: {
       text: '',
     },
-    series: [
-      {
-        name: 'Pencilled-in',
-        allowPointSelect: true,
-        data: [0, 1, 4, 3, 2, 1, 2, 3],
-        type: 'column',
-        marker: {
-          lineColor: '#54B2D3',
-          color: '#54B2D3',
-        },
-        pointWidth: 20,
-      },
-      {
-        name: 'Confirmed',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#ED72AA',
-          color: '#ED72AA',
-        },
-        pointWidth: 20,
-      },
-      {
-        name: 'Completed',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#FAAD14',
-          color: '#FAAD14',
-        },
-        pointWidth: 20,
-      },
-      {
-        name: 'Did-not-show',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#6383F1',
-          color: '#6383F1',
-        },
-        pointWidth: 20,
-      },
-      {
-        name: 'Busy',
-        allowPointSelect: true,
-        data: [],
-        type: 'column',
-        marker: {
-          lineColor: '#ED72AA',
-          color: '#ED72AA',
-        },
-        pointWidth: 20,
-      },
-    ],
+    series: dataList,
     legend: {
       symbolHeight: 8,
       symbolWidth: 24,
@@ -194,6 +234,7 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
         color: '#3D3D46',
         fontWeight: 'normal',
         fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+        textTransform: 'capitalize',
       },
     },
     xAxis: {
@@ -207,16 +248,14 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
           color: '#9292A3',
         },
       },
-      categories: [
-        'Sat 16',
-        'Sun 17',
-        'Mon 18',
-        'Tue 19',
-        'Wed 20',
-        'Thu 21',
-        'Fri 22',
-        'Sat 23',
-      ],
+      categories:
+        BookingData && BookingData.length > 0
+          ? [
+              ...new Set(
+                BookingData[0]?.chartDataSet?.map((item) => item.label)
+              ),
+            ]
+          : [],
     },
     yAxis: [
       {
@@ -243,26 +282,77 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.charts}>
             <div className={styles.chartsWrap}>
-              <div className={styles.chartsHeader}>£0</div>
-              <div className={styles.chartsSubHeader}>Recent sales</div>
-              <div className={styles.chartsExtraHeader}>
-                {dashboardMode === 1
-                  ? `${location.label},` + location.date
-                  : 'all locations, last 7 days'}
+              <div className={styles.chartsHeader}>
+                {!loading ? (
+                  stringToCurrencySignConverter(user.me?.currency) +
+                  (totalSalesCount.count ?? 0).toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  })
+                ) : (
+                  <Skeleton.Input active className={styles.titleSkeleton} />
+                )}
               </div>
-              <CustomHighChart options={optionLine} />
+              <div className={styles.chartsSubHeader}>
+                {!loading ? (
+                  t('dashboard.recent.sales', {
+                    fallbackLng: 'en',
+                  })
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
+              </div>
+              <div className={styles.chartsExtraHeader}>
+                {!loading ? (
+                  location.label +
+                  `${location.date ? `${',' + location.date}` : ''}`
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
+              </div>
+              {!loading ? (
+                <CustomHighChart options={optionLine} />
+              ) : (
+                <Skeleton.Input active className={styles.chartSkeleton} />
+              )}
             </div>
           </div>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.charts}>
             <div className={styles.chartsWrap}>
-              <div className={styles.chartsHeader}>5 booked</div>
-              <div className={styles.chartsSubHeader}>Recent Appointments</div>
-              <div className={styles.chartsExtraHeader}>
-                {location.label}, {location.date}
+              <div className={styles.chartsHeader}>
+                {!loading ? (
+                  `${
+                    (totalBooking.count ?? 0) + (totalOnlineBooking.count ?? 0)
+                  } ${t('dashboard.booked.label', {
+                    fallbackLng: 'en',
+                  })}`
+                ) : (
+                  <Skeleton.Input active className={styles.titleSkeleton} />
+                )}
               </div>
-              <CustomHighChart options={option1} />
+              <div className={styles.chartsSubHeader}>
+                {!loading ? (
+                  t('dashboard.recent.appointments.label', {
+                    fallbackLng: 'en',
+                  })
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
+              </div>
+              <div className={styles.chartsExtraHeader}>
+                {!loading ? (
+                  location.label +
+                  `${location.date ? `${',' + location.date}` : ''}`
+                ) : (
+                  <Skeleton.Input active className={styles.countSkeleton} />
+                )}
+              </div>
+              {!loading ? (
+                <CustomHighChart options={option1} />
+              ) : (
+                <Skeleton.Input active className={styles.chartSkeleton} />
+              )}
             </div>
           </div>
         </Col>
@@ -270,22 +360,100 @@ export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
       <Row gutter={16}>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.chartsTable}>
-            <Table
-              columns={columns}
-              dataSource={data}
-              title={() => 'Products'}
-              pagination={false}
-            />
+            {!loading ? (
+              <Table
+                columns={columns}
+                dataSource={productDetails?.map((d) => {
+                  return {
+                    ...d,
+                    value:
+                      stringToCurrencySignConverter(user.me?.currency) +
+                      d.value.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                      }),
+                  }
+                })}
+                title={() =>
+                  t('dashboard.product.table.label', {
+                    fallbackLng: 'en',
+                  })
+                }
+                scroll={{ y: 580 }}
+                pagination={false}
+              />
+            ) : (
+              <Table
+                rowKey="key"
+                pagination={false}
+                dataSource={[...Array.from({ length: 8 })].map((_, index) => ({
+                  key: `key${index}`,
+                }))}
+                columns={[...Array.from({ length: 4 })].map((column, index) => {
+                  return {
+                    render: function renderPlaceholder() {
+                      return (
+                        <Skeleton
+                          key={index}
+                          title
+                          active={true}
+                          paragraph={false}
+                          className={styles.tableSkeleton}
+                        />
+                      )
+                    },
+                  }
+                })}
+              />
+            )}
           </div>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <div className={styles.chartsTable}>
-            <Table
-              columns={columns}
-              dataSource={data}
-              title={() => 'Services'}
-              pagination={false}
-            />
+            {!loading ? (
+              <Table
+                columns={columns}
+                dataSource={serviceDetails?.map((d) => {
+                  return {
+                    ...d,
+                    value:
+                      stringToCurrencySignConverter(user.me?.currency) +
+                      d.value.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                      }),
+                  }
+                })}
+                title={() =>
+                  t('dashboard.service.table.label', {
+                    fallbackLng: 'en',
+                  })
+                }
+                scroll={{ y: 580 }}
+                pagination={false}
+              />
+            ) : (
+              <Table
+                rowKey="key"
+                pagination={false}
+                dataSource={[...Array.from({ length: 8 })].map((_, index) => ({
+                  key: `key${index}`,
+                }))}
+                columns={[...Array.from({ length: 4 })].map((column, index) => {
+                  return {
+                    render: function renderPlaceholder() {
+                      return (
+                        <Skeleton
+                          key={index}
+                          title
+                          active={true}
+                          paragraph={false}
+                          className={styles.tableSkeleton}
+                        />
+                      )
+                    },
+                  }
+                })}
+              />
+            )}
           </div>
         </Col>
       </Row>

@@ -1,0 +1,82 @@
+fragment CompanyServiceFields on CompanyService {
+  id
+  company_id
+  name
+  duration
+  description
+  price
+  disabledusers
+  color
+  group_id
+  online_book
+  product_id
+  imported
+  communication_template
+  service_order
+  sms_mode
+  sms_name
+  sms_days_after
+  sms_send_time
+  sms_id
+  treatment_group_id
+  custom_id
+  pos_only
+  prep_time
+  finish_time
+  deposit_amount
+  friendly_name
+  max_clients
+  default_room_id
+  follow_up_period
+  deposit_type
+  max_models
+  availability
+  force_credit_payment
+  disabled_locations
+  addon_services
+  service_participants
+  with_summary_title
+  online_book_type
+  proc_code
+  duration_day
+  invoice_text
+  invoice_item_name
+  online_only_service
+}
+
+fragment CompanyService on CompanyService {
+  ...CompanyServiceFields
+  Company {
+    ...CompanyFields
+  }
+  Product {
+    ...InvProductFields
+  }
+  ServiceCategory {
+    ...ServiceCategoryFields
+  }
+}
+
+mutation createOneCompanyService($data: CompanyServiceCreateInput!) {
+  createOneCompanyService(data: $data) {
+    ...CompanyService
+  }
+}
+
+mutation updateOneCompanyService($where: CompanyServiceWhereUniqueInput!, $data: CompanyServiceUpdateInput!) {
+  updateOneCompanyService(where: $where, data: $data) {
+    ...CompanyService
+  }
+}
+
+mutation deleteOneCompanyService($where: CompanyServiceWhereUniqueInput!) {
+  deleteOneCompanyService(where: $where) {
+    ...CompanyService
+  }
+}
+
+mutation updateManyCompanyService($where: CompanyServiceWhereInput, $data: CompanyServiceUpdateManyMutationInput!) {
+  updateManyCompanyService(where: $where, data: $data) {
+    count
+  }
+}

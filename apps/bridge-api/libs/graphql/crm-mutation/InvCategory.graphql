@@ -1,0 +1,62 @@
+fragment InvCategoryFields on InvCategory {
+  id
+  code
+  name
+  order
+  category_type
+  company_id
+  user_id
+  created_date
+  modified_date
+  custom_id
+  PriceListGroup_id
+  imported
+  technical
+  image
+  disabled
+  tax_id
+  master_cat_id
+}
+
+fragment InvCategory on InvCategory {
+  ...InvCategoryFields
+  Company {
+    ...CompanyFields
+  }
+  MasterCategory {
+    ...ServicesMasterCategoryFields
+  }
+  ServiceCategory {
+    ...ServiceCategoryFields
+  }
+  Tax {
+    ...TaxFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneInvCategory($data: InvCategoryCreateInput!) {
+  createOneInvCategory(data: $data) {
+    ...InvCategory
+  }
+}
+
+mutation updateOneInvCategory($where: InvCategoryWhereUniqueInput!, $data: InvCategoryUpdateInput!) {
+  updateOneInvCategory(where: $where, data: $data) {
+    ...InvCategory
+  }
+}
+
+mutation deleteOneInvCategory($where: InvCategoryWhereUniqueInput!) {
+  deleteOneInvCategory(where: $where) {
+    ...InvCategory
+  }
+}
+
+mutation updateManyInvCategory($where: InvCategoryWhereInput, $data: InvCategoryUpdateManyMutationInput!) {
+  updateManyInvCategory(where: $where, data: $data) {
+    count
+  }
+}
