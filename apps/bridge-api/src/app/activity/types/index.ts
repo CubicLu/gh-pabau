@@ -11,6 +11,7 @@ import {
   PipelineStage,
   Communication,
 } from '@prisma/client'
+import { Dayjs } from 'dayjs'
 
 interface WhereInputType {
   startDate?: Date
@@ -93,7 +94,7 @@ export type ActivityResponseType = Activity & {
     leadLostTime?: Date
     leadLastEmailReceived?: Date
     emailMessagesCount?: number
-    leadLastEmailSend?: Date
+    leadLastEmailSend?: Dayjs
     wonBy?: string
     wonTime?: Date
     leadLostReason?: string

@@ -4,6 +4,7 @@ import utc from 'dayjs/plugin/utc'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear'
 import { getColumnData } from './filterColumn'
 import { cm_leads_EnumStatus } from '@prisma/client'
+import UserService from '../user/UserService'
 import {
   LeadNoteType,
   LeadResponse,
@@ -690,7 +691,7 @@ const prepareUserQuery = async (
     },
   }
   if (operand === 'belongs to team') {
-    const ids = await retrieveUserGroupMembers(ctx, value)
+    const ids = await UserService.retrieveUserGroupMembers(ctx, value)
     return {
       in: ids,
     }
@@ -1105,37 +1106,6 @@ const manualFilterOnNumberOperand = (
   }
 }
 
-const retrieveUserGroupMembers = async (ctx: Context, value: number) => {
-  const group = await ctx.prisma.userGroup.findMany({
-    where: {
-      UserGroupMember: {
-        some: {
-          user_id: { equals: value },
-        },
-      },
-    },
-    select: {
-      UserGroupMember: {
-        select: {
-          user_id: true,
-          group_id: true,
-        },
-      },
-    },
-  })
-  const ids = []
-  if (group.length > 0) {
-    for (const item of group) {
-      for (const member of item?.UserGroupMember) {
-        ids.push(member.user_id)
-      }
-    }
-  } else {
-    ids.push(value)
-  }
-  return ids
-}
-
 const manualFilterOnUserOperand = async (
   columnValue: ActivityFilterOptionType,
   value: number,
@@ -1168,7 +1138,7 @@ const manualFilterOnUserOperand = async (
       break
     }
     case 'belongs to team': {
-      const ids = await retrieveUserGroupMembers(ctx, data)
+      const ids = await UserService.retrieveUserGroupMembers(ctx, data)
       if (ids.includes(value)) {
         return true
       }
@@ -1216,15 +1186,17 @@ export const prepareActivityDataWithCustomField = async (
         item.CmLead?.EnumStatus,
         leadNote
       )
-      const lastEmailSend = await ctx.prisma.communication.findFirst({
-        where: {
-          from_address: { equals: item.CmLead?.Email },
-          company_id: { equals: ctx.authenticated.company },
-        },
-        orderBy: {
-          date: 'desc',
-        },
-      })
+      // In future we will add this field on db level
+
+      // const lastEmailSend = await ctx.prisma.communication.findFirst({
+      //   where: {
+      //     from_address: { equals: item.CmLead?.Email },
+      //     company_id: { equals: ctx.authenticated.company },
+      //   },
+      //   orderBy: {
+      //     date: 'desc',
+      //   },
+      // })
       const leadLastActivityDate = [...leadAllActivity]
         .reverse()
         .find((item) => item?.status === 'Done')?.finished_at
@@ -1255,7 +1227,7 @@ export const prepareActivityDataWithCustomField = async (
           leadLostTime: leadLost?.lostTime,
           leadLastEmailReceived: leadLastEmailReceived,
           emailMessagesCount: item?.CmLead?.CommunicationRecipient?.length,
-          leadLastEmailSend: lastEmailSend?.date,
+          leadLastEmailSend: dayjs().utc(),
           wonBy:
             item.CmLead?.EnumStatus === 'Converted'
               ? item.CmLead?.User?.full_name
@@ -1392,17 +1364,17 @@ export const manualFilterOnAndOperandColumns = (
             }
             break
           }
-          case 'Last email sent': {
-            if (
-              manualFilterOnDateOperand(
-                columnValue,
-                item?.CmLead?.leadLastEmailSend
-              )
-            ) {
-              count += 1
-            }
-            break
-          }
+          // case 'Last email sent': {
+          //   if (
+          //     manualFilterOnDateOperand(
+          //       columnValue,
+          //       item?.CmLead?.leadLastEmailSend
+          //     )
+          //   ) {
+          //     count += 1
+          //   }
+          //   break
+          // }
           case 'Next activity date': {
             if (
               manualFilterOnDateOperand(
@@ -1741,17 +1713,17 @@ export const manualFilterOnOrOperandColumns = async (
             }
             break
           }
-          case 'Last email sent': {
-            if (
-              manualFilterOnDateOperand(
-                columnValue,
-                item?.CmLead?.leadLastEmailSend
-              )
-            ) {
-              count += 1
-            }
-            break
-          }
+          // case 'Last email sent': {
+          //   if (
+          //     manualFilterOnDateOperand(
+          //       columnValue,
+          //       item?.CmLead?.leadLastEmailSend
+          //     )
+          //   ) {
+          //     count += 1
+          //   }
+          //   break
+          // }
           case 'Next activity date': {
             if (
               manualFilterOnDateOperand(

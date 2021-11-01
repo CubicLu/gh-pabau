@@ -159,6 +159,8 @@ export const getData = (t) => {
     {
       key: 'Last email sent',
       label: t('create.filter.modal.lead.column.lead.last.email.sent'),
+      disable: true,
+      tag: t('create.filter.modal.lead.column.soon.feature.tag'),
     },
     {
       key: 'Next activity date',

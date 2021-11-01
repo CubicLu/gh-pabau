@@ -5491,6 +5491,7 @@ en:
   create.filter.modal.lead.column.lead.email.messages.stage: 'Email messages count'
   create.filter.modal.lead.column.lead.last.email.received.stage: 'Last email received'
   create.filter.modal.lead.column.lead.last.email.sent: 'Last email sent'
+  create.filter.modal.lead.column.soon.feature.tag: 'Soon'
   create.filter.modal.lead.column.lead.next.activity.date: 'Next activity date'
   create.filter.modal.lead.column.lead.pipeline: 'Pipeline'
   create.filter.modal.lead.column.lead.title: 'Title'
