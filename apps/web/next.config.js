@@ -4,8 +4,17 @@ const withNx = require('@nrwl/next/plugins/with-nx')
 const withLess = require('next-with-less')
 const withYaml = require('next-plugin-yaml')
 const removeImports = require('next-remove-imports')
+const withBundleAnalyzer = require('@next/bundle-analyzer')
 
 module.exports = withPlugins([
+  // https://www.npmjs.com/package/@next/bundle-analyzer
+  [
+    withBundleAnalyzer,
+    {
+      enabled: process.env.ANALYZE === 'true',
+    },
+  ],
+
   [
     removeImports,
     {
