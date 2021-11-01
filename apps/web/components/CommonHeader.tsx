@@ -31,6 +31,7 @@ interface P {
   leadCreateRender?: (handleClose?: () => void) => JSX.Element
   displayActivity?: boolean
   renderActivity?: ReactNode
+  isShowMenuDrawer?: boolean
 }
 
 const CommonHeader: FC<P> = ({
@@ -46,6 +47,7 @@ const CommonHeader: FC<P> = ({
   leadCreateRender,
   displayActivity = false,
   renderActivity,
+  isShowMenuDrawer = true,
 }) => {
   const user = useUser()
   const [showChat, setShowChat] = useState(false)
@@ -77,12 +79,14 @@ const CommonHeader: FC<P> = ({
                   <LeftOutlined />
                 </Link>
               ) : (
-                <MenuOutlined
-                  className={styles.menuHeaderIconColor}
-                  onClick={() => {
-                    setMenuDrawer(() => !openMenuDrawer)
-                  }}
-                />
+                isShowMenuDrawer && (
+                  <MenuOutlined
+                    className={styles.menuHeaderIconColor}
+                    onClick={() => {
+                      setMenuDrawer(() => !openMenuDrawer)
+                    }}
+                  />
+                )
               )}
               <p className={!isShowSearch && !children && styles.centeredTitle}>
                 {title}
@@ -117,12 +121,14 @@ const CommonHeader: FC<P> = ({
                           <LeftOutlined />
                         </Link>
                       ) : (
-                        <MenuOutlined
-                          className={styles.menuHeaderIconColor}
-                          onClick={() => {
-                            setMenuDrawer(() => !openMenuDrawer)
-                          }}
-                        />
+                        isShowMenuDrawer && (
+                          <MenuOutlined
+                            className={styles.menuHeaderIconColor}
+                            onClick={() => {
+                              setMenuDrawer(() => !openMenuDrawer)
+                            }}
+                          />
+                        )
                       )}
                       <Input
                         value={searchTerm}
