@@ -20,9 +20,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Button,
   SimpleDropdown,
-  Notification,
-  NotificationType,
-  FormikInput,
+  BasicModal,
   CamUploaderModal,
   UploadingImageProps,
 } from '@pabau/ui'
@@ -35,6 +33,7 @@ import {
   Popover,
   Tooltip,
   Modal,
+  Input,
 } from 'antd'
 import { ReactComponent as Gallery } from '../../assets/images/album.svg'
 import { ReactComponent as Calender } from '../../assets/images/calender-item.svg'
@@ -65,15 +64,20 @@ export interface GalleryProps {
     onPageSizeChange: (size: number) => void
     currentPage: number
   }
-  onAlbumCreate?: (name: string) => void
+  onAlbumCreate?: (name: string, moveImages?: ImageProps[]) => void
+  albumCreateLoading?: boolean
   onAlbumUpdate?: (data: AlbumProps) => void
+  albumUpdateLoading?: boolean
   onAlbumDelete?: (data: AlbumProps) => void
+  albumDeleteLoading?: boolean
 
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (data: UploadingImageProps[]) => void
   onImageUpload?: (data: UploadingImageProps) => void
   onImageRemove?: (imageId: number) => void
   onUploadCancel?: (data: UploadingImageProps) => void
+
+  onImagesMove?: (album, images) => void
 }
 
 export const GalleryView: FC<GalleryProps> = ({
@@ -83,13 +87,17 @@ export const GalleryView: FC<GalleryProps> = ({
   loading = false,
   paginateData,
   onAlbumCreate,
+  albumCreateLoading,
   onAlbumUpdate,
+  albumUpdateLoading,
   onAlbumDelete,
+  albumDeleteLoading,
   uploadingImages,
   setUploadingImages,
   onImageUpload,
   onImageRemove,
   onUploadCancel,
+  onImagesMove,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -108,18 +116,16 @@ export const GalleryView: FC<GalleryProps> = ({
 
   const [albumName, setAlbumName] = useState('')
   const [editAlbumId, setEditAlbumId] = useState<number | null>(null)
-  const [editAlbumLoading, setEditAlbumLoading] = useState(false)
   const [deleteAlbumId, setDeleteAlbumId] = useState<number | null>(null)
-  const [deleteAlbumLoading, setDeleteAlbumLoading] = useState(false)
   const [createAlbumModal, setCreateAlbumModal] = useState(false)
   const [createPopover, setCreatePopover] = useState(false)
   const [createAlbumDrawer, setCreateAlbumDrawer] = useState(false)
 
   const [selectAll, setSelectAll] = useState(false)
-  const [selectedImage, setSelectedImage] = useState([])
+  const [selectedImages, setSelectedImages] = useState<ImageProps[]>([])
+  const [singleImageMoveId, setSingleImageMoveId] = useState<number>()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [status, setStatus] = useState(true)
-  const [dragAlbumTitle, setDragAlbumTitle] = useState('')
   const [imagesList, setImagesList] = useState(images)
   const [sensitiveImg, setSensitiveImg] = useState([])
   const [deleteAlbumModal, setDeleteAlbumModal] = useState(false)
@@ -129,6 +135,8 @@ export const GalleryView: FC<GalleryProps> = ({
 
   useEffect(() => {
     setImagesList(images)
+    setShowMenu(false)
+    setSelectedImages([])
   }, [images])
 
   useEffect(() => {
@@ -138,8 +146,6 @@ export const GalleryView: FC<GalleryProps> = ({
     setDeleteAlbumId(null)
     setCreateAlbumModal(false)
     setDeleteAlbumModal(false)
-    setEditAlbumLoading(false)
-    setDeleteAlbumLoading(false)
     if (!currentData || currentData?.id === 0) {
       setCurrentData(albumList)
     } else {
@@ -270,33 +276,55 @@ export const GalleryView: FC<GalleryProps> = ({
     </div>
   )
 
-  const DropdownMenu = () => (
-    <Menu className={styles.menuItemList}>
-      {currentData?.album?.map((albumValue) => (
-        <Menu.Item
-          key={albumValue.albumTitle.toString()}
-          onClick={() => handleImageMove(albumValue.albumTitle)}
-        >
-          <ImageAlbum />
-          &nbsp;&nbsp;&nbsp;{albumValue.albumTitle}
+  const AlbumDropdownMenu = () => {
+    const filtered: { id: number; name: string }[] = []
+    const iterateToAlbms = (albums) => {
+      for (const el of albums) {
+        if (el?.id !== currentData?.id) {
+          filtered.push({
+            id: el?.id,
+            name: el?.albumTitle,
+          })
+          if (el?.album?.length) iterateToAlbms(el?.album)
+        }
+      }
+    }
+    iterateToAlbms(data?.album)
+    if (currentData?.id !== 0)
+      filtered.unshift({ id: 0, name: 'Uncategorized' })
+
+    return (
+      <Menu className={styles.menuItemList}>
+        {filtered?.map((album) => (
+          <Menu.Item
+            key={album.id.toString()}
+            onClick={() =>
+              onImagesMove?.(
+                album.id,
+                selectedImages?.map((el) => el?.id)
+              )
+            }
+          >
+            <ImageAlbum />
+            <div>{album.name}</div>
+          </Menu.Item>
+        ))}
+        <Menu.Item key="New" onClick={() => setCreateAlbumModal((e) => !e)}>
+          <PlusOutlined />
+          <div>{t('galley.view.album.create.album.modal.title')}</div>
         </Menu.Item>
-      ))}
-      <Menu.Item key="New" onClick={() => setCreateAlbumModal((e) => !e)}>
-        <PlusOutlined />
-        &nbsp;&nbsp;&nbsp;
-        <span>{t('galley.view.album.create.album.modal.title')}</span>
-      </Menu.Item>
-    </Menu>
-  )
+      </Menu>
+    )
+  }
 
   const handleSelectAll = () => {
     if (selectAll) {
       setSelectAll(false)
       setShowMenu(false)
-      setSelectedImage([])
+      setSelectedImages([])
     } else {
       setSelectAll(true)
-      setSelectedImage([...currentData.albumImage] as never)
+      setSelectedImages([...currentData.albumImage])
     }
   }
 
@@ -321,6 +349,8 @@ export const GalleryView: FC<GalleryProps> = ({
       isSensitive: false,
       img: x,
     }))
+    setSelectedImages([])
+    setShowMenu(false)
     setCurrentData({ ...currentData.album[index], albumImage: alterImg as [] })
     saveNudityData({ ...currentData.album[index], albumImage: alterImg })
   }
@@ -349,40 +379,26 @@ export const GalleryView: FC<GalleryProps> = ({
     saveNudityData({ ...newData, albumImage: alterImg })
   }
 
-  const handleImageMove = (album) => {
-    const moveAlbum = { ...currentData }
-    moveAlbum.album.map((albumData) => {
-      return (
-        albumData.albumTitle === album &&
-        selectedImage.map((img: ImageProps) =>
-          albumData.albumImage.push(img.img as never)
-        )
-      )
-    })
-    setCurrentData(moveAlbum)
-    handleDelete()
-  }
-
   const handleDelete = () => {
     const moveAlbum = { ...currentData }
-    selectedImage.map((img: ImageProps) => {
+    selectedImages.map((img: ImageProps) => {
       const idx = moveAlbum.albumImage.findIndex((i) => i.img === img.img)
       return moveAlbum.albumImage.splice(idx, 1)
     })
     setCurrentData(moveAlbum)
-    setSelectedImage([])
+    setSelectedImages([])
     setShowMenu(false)
     setOpenDeleteModal(false)
   }
 
   const handleImageStudio = () => {
-    console.log('SELECTED IMAGES:', selectedImage)
+    console.log('SELECTED IMAGES:', selectedImages)
     console.log('C:', currentData)
     // setShowStudio(() => true)
   }
 
   const handleDownload = () => {
-    selectedImage.map((img: ImageProps) => {
+    selectedImages.map((img: ImageProps) => {
       return imgDownload(img.img)
     })
   }
@@ -396,12 +412,12 @@ export const GalleryView: FC<GalleryProps> = ({
     link.remove()
   }
 
-  const handleOnChange = async (checked: boolean, img) => {
-    const storeImg = [...selectedImage]
+  const handleImageSelection = async (checked: boolean, img) => {
+    const storeImg = [...selectedImages]
     const idx = storeImg.indexOf(img as never)
     checked ? storeImg.push(img as never) : storeImg.splice(idx, 1)
     storeImg.length > 0 ? setShowMenu(true) : setShowMenu(false)
-    await setSelectedImage([...storeImg])
+    await setSelectedImages([...storeImg])
   }
 
   const handleBulkHide = () => {
@@ -467,130 +483,34 @@ export const GalleryView: FC<GalleryProps> = ({
   //   }
   // }
 
-  const drag = (ev) => {
-    ev.dataTransfer.setData('text', ev.target.id)
-    const img = new Image()
-    img.src = ev.target.id
-    img.width = 200
-    img.height = 200
-    ev.dataTransfer.setDragImage(img, 10, 10)
-  }
-
   const drop = (ev) => {
     ev.preventDefault()
-    const data = ev.dataTransfer.getData('text')
-    const albumDataTitle = ev.dataTransfer.getData('albumData')
-    if (data !== '') {
-      const dropData = { ...currentData }
-      const fileData = data.split('/')
-      const imagesDrop = imagesList
-      if (dropData.albumTitle === 'Album') {
-        dropData.album.map((albumData) => {
-          if (albumData.albumTitle === dragAlbumTitle) {
-            albumData.albumImage.push(data)
-            const idx = imagesDrop.indexOf(data)
-            imagesDrop.splice(idx, 1)
-            Notification(
-              NotificationType.success,
-              `${
-                fileData[fileData.length - 1]
-              } has been moved to ${dragAlbumTitle}`
-            )
-          }
-          return 1
-        })
-        setImagesList(imagesDrop)
-        setData(dropData)
-        setCurrentData(dropData)
-      } else {
-        dropData.album.map((albumData) => {
-          if (albumData.albumTitle === dragAlbumTitle) {
-            albumData.albumImage.push(data)
-            dropData.albumImage.map((dropAlbum, i) => {
-              if (dropAlbum.img === data) {
-                dropData.albumImage.splice(i, 1)
-                return Notification(
-                  NotificationType.success,
-                  `${fileData[fileData.length - 1]} has been moved ${
-                    dropData.albumTitle
-                  } to ${dragAlbumTitle}`
-                )
-              }
-              return 1
-            })
-            setCurrentData(dropData)
-            // setData(dropData)
-            // setChanges((e) => !e)
-          }
-          return 1
-        })
-      }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      document.querySelector(`#${ev.target.id}`).style.backgroundColor = 'white'
+    if (ev.dataTransfer.getData('imageId')) {
+      const tarAlbumId = Number(ev.target.id.replace('tar', ''))
+      const draggedImageId = Number(ev.dataTransfer.getData('imageId'))
+      onImagesMove?.(tarAlbumId, [draggedImageId])
     }
-    if (albumDataTitle !== '') {
-      const dropData = { ...currentData }
-      let transferAlbum = {}
-      dropData.album.map((albums) => {
-        if (albums.albumTitle === albumDataTitle) {
-          transferAlbum = albums
-        }
-        return 1
-      })
-      dropData.album.map((albumData) => {
-        if (
-          albumData.albumTitle === dragAlbumTitle &&
-          albumData.albumTitle !== albumDataTitle
-        ) {
-          albumData.album.push(transferAlbum as AlbumProps)
-          dropData.album.map((dropAlbum, i) => {
-            if (dropAlbum.albumTitle === albumDataTitle) {
-              dropData.album.splice(i, 1)
-            }
-            return 1
-          })
-        }
-        return 1
-      })
-      if (dropData.albumTitle === 'Album') {
-        setData(dropData)
-        if (albumDataTitle !== dragAlbumTitle) {
-          Notification(
-            NotificationType.success,
-            `${albumDataTitle} has been moved into ${dragAlbumTitle}`
-          )
-        }
-      } else {
-        if (albumDataTitle !== dragAlbumTitle) {
-          Notification(
-            NotificationType.success,
-            `${dragAlbumTitle} has been moved ${dropData.albumTitle} to ${dragAlbumTitle}`
-          )
-        }
-      }
-      setCurrentData(dropData)
-      // setChanges((e) => !e)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      document.querySelector(`#${albumDataTitle}`).style.backgroundColor =
-        'white'
+    if (ev.dataTransfer.getData('albumId')) {
+      // This block will be used when album can be dragged and dropped in other albums
+      const tarAlbumId = Number(ev.target.id.replace('tar', ''))
+      const draggedAlbumId = Number(ev.dataTransfer.getData('albumId'))
+      document
+        ?.querySelector(`#${ev.target.id}`)
+        ?.classList.remove('dropEffect')
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    document.querySelector(`#${ev.target.id}`).style.backgroundColor = 'white'
   }
 
   const allowDrop = (ev) => {
     ev.preventDefault()
-    setDragAlbumTitle(ev.target.id)
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    document.querySelector(`#${ev.target.id}`).style.backgroundColor = 'skyblue'
+    document?.querySelector(`#${ev.target.id}`)?.classList.add('dropEffect')
+  }
+
+  const dragImage = (ev) => {
+    ev.dataTransfer.setData('imageId', ev.target.id)
   }
 
   const dragAlbum = (ev) => {
-    ev.dataTransfer.setData('albumData', ev.target.id)
+    ev.dataTransfer.setData('albumId', ev.target.id)
   }
 
   return (
@@ -838,31 +758,35 @@ export const GalleryView: FC<GalleryProps> = ({
                 <div className={styles.rightSide}>
                   <Button type="ghost" onClick={() => handleImageStudio()}>
                     <EyeOutlined />
-                    Studio {`(${selectedImage.length})`}
+                    Studio {`(${selectedImages.length})`}
                   </Button>
                   <Button type="ghost" onClick={() => handleDownload()}>
                     <DownloadOutlined />
                     {t('galley.list.album.download.button')}{' '}
-                    {`(${selectedImage.length})`}
+                    {`(${selectedImages.length})`}
                   </Button>
-                  <Dropdown overlay={<DropdownMenu />} placement="bottomRight">
-                    <Button type="ghost">
+                  <Dropdown
+                    overlay={<AlbumDropdownMenu />}
+                    placement="bottomRight"
+                    trigger={['click']}
+                  >
+                    <Button type="ghost" className={styles.albumDropdownBtn}>
                       <EnterOutlined />
                       {t('galley.list.album.move.button')}{' '}
-                      {`(${selectedImage.length})`}
+                      {`(${selectedImages.length})`}
                     </Button>
                   </Dropdown>
                   <Button className={styles.shareTextBtn} type="ghost">
                     <Share />
                     <span>
                       {t('galley.list.album.share.button')}{' '}
-                      {`(${selectedImage.length})`}
+                      {`(${selectedImages.length})`}
                     </span>
                   </Button>
                   <Button type="ghost">
                     <TagOutlined />
                     {t('galley.list.album.tag.button')}{' '}
-                    {`(${selectedImage.length})`}
+                    {`(${selectedImages.length})`}
                   </Button>
                   <Button
                     type="ghost"
@@ -872,7 +796,7 @@ export const GalleryView: FC<GalleryProps> = ({
                   >
                     <DeleteOutlined />
                     {t('galley.list.album.delete.button')}{' '}
-                    {`(${selectedImage.length})`}
+                    {`(${selectedImages.length})`}
                   </Button>
                 </div>
               )}
@@ -984,21 +908,22 @@ export const GalleryView: FC<GalleryProps> = ({
         )}{' '}
         <AlbumData
           data={{ ...currentData, albumImage: imagesList || [] }}
+          allAlbums={data?.album}
           onFolderClick={onFolderClick}
-          selectedImage={selectedImage}
-          handleOnChange={handleOnChange}
+          selectedImages={selectedImages}
+          handleImageSelection={handleImageSelection}
           loading={loading}
-          setSelectedImage={setSelectedImage}
+          setSelectedImages={setSelectedImages}
           showMenu={showMenu}
           setOpenDeleteModal={setOpenDeleteModal}
           openDeleteModal={openDeleteModal}
-          handleImageMove={handleImageMove}
+          handleImageMove={(album, images) => onImagesMove?.(album, images)}
           drop={drop}
           allowDrop={allowDrop}
-          drag={drag}
+          dragImage={dragImage}
+          dragAlbum={dragAlbum}
           handleDownload={handleDownload}
           imgDownload={imgDownload}
-          dragAlbum={dragAlbum}
           listView={listView}
           setCurrentData={setCurrentData}
           paginateData={paginateData}
@@ -1015,6 +940,18 @@ export const GalleryView: FC<GalleryProps> = ({
               setEditAlbumId(editAlbum?.id)
               setAlbumName(editAlbum?.albumTitle)
               setCreateAlbumModal((e) => !e)
+            }
+          }}
+          onSingleImageMove={(album, image, isCreateAlbum) => {
+            if (image) {
+              if ((album || album === 0) && !isCreateAlbum) {
+                onImagesMove?.(album, [image])
+              }
+              if (!album && isCreateAlbum) {
+                setAlbumName('')
+                setSingleImageMoveId(image)
+                setCreateAlbumModal(() => true)
+              }
             }
           }}
         />
@@ -1036,26 +973,35 @@ export const GalleryView: FC<GalleryProps> = ({
         onCancelUpload={onUploadCancel}
       />
 
-      <Modal
-        centered
+      <BasicModal
+        modalWidth={600}
         onCancel={() => {
           setAlbumName('')
           setEditAlbumId(null)
           setCreateAlbumModal((e) => !e)
         }}
+        onDelete={() => console.log()}
         onOk={() => {
-          if (editAlbumId) {
-            const editedAlbum = data?.album?.find(
-              (el) => el?.id === editAlbumId
-            )
-            onAlbumUpdate?.({
-              ...editedAlbum,
-              albumTitle: albumName,
-            } as AlbumProps)
-          } else {
-            onAlbumCreate?.(albumName)
+          if (albumName) {
+            if (editAlbumId) {
+              const editedAlbum = data?.album?.find(
+                (el) => el?.id === editAlbumId
+              )
+              onAlbumUpdate?.({
+                ...editedAlbum,
+                albumTitle: albumName,
+              } as AlbumProps)
+            } else {
+              if (singleImageMoveId) {
+                const img = imagesList?.find(
+                  (el) => el?.id === singleImageMoveId
+                )
+                if (img) onAlbumCreate?.(albumName, [img])
+              } else {
+                onAlbumCreate?.(albumName, selectedImages)
+              }
+            }
           }
-          setEditAlbumLoading((e) => !e)
         }}
         title={
           editAlbumId
@@ -1063,40 +1009,24 @@ export const GalleryView: FC<GalleryProps> = ({
             : t('galley.view.album.create.album.modal.title')
         }
         visible={createAlbumModal}
-        okText={
+        newButtonText={
           editAlbumId
             ? t('galley.view.album.edit.album.modal.button')
             : t('galley.view.album.create.album.modal.button')
         }
-        okButtonProps={{
-          disabled: !albumName,
-        }}
-        confirmLoading={editAlbumLoading}
+        loading={albumCreateLoading || albumUpdateLoading}
       >
         <div className={styles.modalContent}>
           <label>{t('galley.view.album.create.album.name')}</label>
-          <FormikInput
+          <Input
             autoFocus
             name="name"
             placeholder={t('galley.view.album.create.album.placeholder')}
             value={albumName}
-            onPressEnter={() => {
-              if (editAlbumId) {
-                const editedAlbum = data?.album?.find(
-                  (el) => el?.id === editAlbumId
-                )
-                onAlbumUpdate?.({
-                  ...editedAlbum,
-                  albumTitle: albumName,
-                } as AlbumProps)
-              } else {
-                onAlbumCreate?.(albumName)
-              }
-            }}
             onChange={(e) => setAlbumName(e.target.value)}
           />
         </div>
-      </Modal>
+      </BasicModal>
 
       <Modal
         centered={true}
@@ -1109,7 +1039,7 @@ export const GalleryView: FC<GalleryProps> = ({
       >
         <div>
           <p>
-            {selectedImage.length > 0 ? selectedImage.length : 1}{' '}
+            {selectedImages.length > 0 ? selectedImages.length : 1}{' '}
             {`item will be
             deleted forever and you won't be able to restore them.`}
           </p>
@@ -1126,16 +1056,13 @@ export const GalleryView: FC<GalleryProps> = ({
           const deleteAlbum = data?.album?.find(
             (el) => el?.id === deleteAlbumId
           )
-          if (deleteAlbum) {
-            onAlbumDelete?.(deleteAlbum)
-            setDeleteAlbumLoading((e) => !e)
-          }
+          if (deleteAlbum) onAlbumDelete?.(deleteAlbum)
         }}
         visible={deleteAlbumModal}
         title={t('galley.list.view.delete.modal.title')}
         cancelText={t('common-label-cancel')}
         okText={t('galley.list.view.delete.ok.button')}
-        confirmLoading={deleteAlbumLoading}
+        confirmLoading={albumDeleteLoading}
       >
         <div>
           <p>
