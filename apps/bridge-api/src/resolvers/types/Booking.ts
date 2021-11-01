@@ -2,7 +2,6 @@ import { extendType, list, nonNull, arg, inputObjectType } from 'nexus'
 import { Context } from '../../context'
 import {
   retrieveAllBookingStatusCount,
-  retrieveOnlineBookingStatusCount,
   retrieveAllBookingChartData,
 } from '../../app/booking/statuses'
 import {
@@ -65,10 +64,15 @@ export const BookingStatus = extendType({
         data: arg({ type: BookingInputTypes }),
       },
       async resolve(_root, { data }, ctx: Context) {
-        const allBookingCounts = await retrieveAllBookingStatusCount(ctx, data)
-        const onlineBookingCounts = await retrieveOnlineBookingStatusCount(
+        const allBookingCounts = await retrieveAllBookingStatusCount(
           ctx,
-          data
+          data,
+          false
+        )
+        const onlineBookingCounts = await retrieveAllBookingStatusCount(
+          ctx,
+          data,
+          true
         )
         return {
           allBookingCounts: allBookingCounts,

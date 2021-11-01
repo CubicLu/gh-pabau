@@ -37,7 +37,12 @@ query GetCompanyAppointmentsByDate(
     start_time
     company_id
     service_id
+    contact_id
     service
+    InvSale {
+      id
+      paid_amount
+    }
     CmStaffGeneral {
       Avatar
       Lname
