@@ -39,8 +39,8 @@ const ChartData = objectType({
 export const BookingCountResponseType = objectType({
   name: 'getBookingStatusCount',
   definition(t) {
-    t.field('onlineBookingCounts', { type: OnlineBookingCounts })
-    t.field('allBookingCounts', { type: AllBookingCounts })
+    t.field('onlineBookingCounts', { type: BookingCounts })
+    t.field('allBookingCounts', { type: BookingCounts })
   },
 })
 
@@ -51,16 +51,7 @@ export const BookingDetailResponseType = objectType({
   },
 })
 
-const OnlineBookingCounts = objectType({
-  name: 'onlineBookingCounts',
-  definition(t) {
-    t.int('totalOnlineBooking')
-    t.string('totalOnlineBookingPer')
-    t.list.field('onlineBookingList', { type: CountDetails })
-  },
-})
-
-const AllBookingCounts = objectType({
+const BookingCounts = objectType({
   name: 'allBookingCounts',
   definition(t) {
     t.int('totalBooking')
