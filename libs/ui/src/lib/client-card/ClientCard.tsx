@@ -190,7 +190,7 @@ const ClientCardModal: FC<P> = ({
   setBasicContactData,
 }) => {
   const { t } = useTranslation('common')
-  const { push } = useRouter()
+  // const { push } = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [search, setSearch] = useState(false)
@@ -313,7 +313,7 @@ const ClientCardModal: FC<P> = ({
 
   const onBackToMainMenu = () => {
     //TODO: review this. Prefer <Link />
-    push('..')
+    // push?.('..')
   }
 
   const menuItems = [
@@ -961,7 +961,7 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px' }}>
+                <div style={{ padding: '12px', height: '100%' }}>
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}
