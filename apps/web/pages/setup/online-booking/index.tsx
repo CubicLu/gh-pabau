@@ -45,6 +45,7 @@ import {
   PromoteTab,
 } from '../../../components/Setup/OnlineBooking'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import Link from 'next/link'
 import styles from './index.module.less'
 import { useGetClientsAllAppointmentsQuery } from '@pabau/graphql'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
@@ -94,19 +95,23 @@ export const Index: FC<OnlineBookingProps> = ({
       const bookingData = data?.findManyBooking.map((booking) => {
         return {
           id: booking.id,
-          status: t('setup.online-booking.activity.appointment.booked.title'),
+          status: t('setup.online-booking.activity.appointment.booked.title', {
+            fname: `${booking?.CmStaffGeneral?.Fname}`,
+          }),
           time: dayjs(booking.create_date.toString()).format('hh:mm A'),
           details: t('setup.online-booking.activity.appointment.booked.text', {
             time: `${dayjs(booking.start_date.toString()).format(
               'ddd D MMM hh:mm A'
             )}`,
-            serviceCount: 1,
+            serviceCount: `${booking.service}`,
             staffname: `${booking?.CmStaffGeneral?.Fname} ${booking?.CmStaffGeneral?.Lname}`,
-            clientName: `${booking?.Contact?.Fname} ${booking?.Contact?.Lname}`,
           }),
           userImage: booking?.CmStaffGeneral?.User?.image
             ? getImage(booking?.CmStaffGeneral?.User?.image)
             : '',
+          contact_id: booking?.contact_id,
+          contact: { ...booking?.Contact },
+          CmStaffGeneral: { ...booking?.CmStaffGeneral },
         }
       })
       setBookingActivities(bookingData)
@@ -295,7 +300,12 @@ export const Index: FC<OnlineBookingProps> = ({
                           </div>
                           <div>
                             <span className={styles.description}>
-                              {e.details}
+                              {e.details}{' '}
+                              <Link href={'/clients/' + e?.contact_id}>
+                                <a>
+                                  {e.contact.Fname} {e.contact.Lname}
+                                </a>
+                              </Link>
                             </span>
                           </div>
                         </div>
