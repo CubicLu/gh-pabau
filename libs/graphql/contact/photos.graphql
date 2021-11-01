@@ -107,8 +107,10 @@ mutation createContactPhotoWithoutAlbum(
 }
 
 mutation deleteContactPhoto($id: Int!) {
-  deleteOneContactAttachment(where: { id: $id }) {
-    id
+  deleteContactAttachmentPhoto(id: $id) {
+    success
+    error
+    photo
   }
 }
 

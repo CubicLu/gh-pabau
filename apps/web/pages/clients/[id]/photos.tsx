@@ -26,6 +26,7 @@ import {
   useDeleteOnePhotoAlbumMutation,
   useMoveContactAttachmentsMutation,
   useCreateContactPhotoWithoutAlbumMutation,
+  useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
 const baseURL = `${cdnURL}/v2/api/contact/`
@@ -206,13 +207,13 @@ const Photos: FC = () => {
   })
 
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingFiles]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
@@ -224,17 +225,41 @@ const Photos: FC = () => {
   const [
     createAttachmentOutOfAlbum,
   ] = useCreateContactPhotoWithoutAlbumMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingFiles]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
         setUploadingFiles(cAddedFiles)
+      }
+    },
+  })
+
+  const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
+    onCompleted({ deleteContactAttachmentPhoto: data }) {
+      if (data?.success) {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          cAddedFiles.splice(idx, 1)
+          setUploadingFiles(cAddedFiles)
+        }
+      } else {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = false
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingFiles(cAddedFiles)
+        }
       }
     },
   })
@@ -288,6 +313,7 @@ const Photos: FC = () => {
 
   useEffect(() => {
     if (albumImages?.findManyContactAttachment && !albumImagesLoading) {
+      setCurrAlbumImages([])
       const images = albumImages?.findManyContactAttachment?.map((el) => {
         return {
           id: el?.id,
@@ -298,7 +324,9 @@ const Photos: FC = () => {
           isSensitive: false,
         }
       })
-      setCurrAlbumImages(images)
+      setTimeout(() => {
+        setCurrAlbumImages(images)
+      }, 0)
     }
   }, [albumImages, albumImagesLoading])
 
@@ -499,6 +527,43 @@ const Photos: FC = () => {
     }
   }
 
+  const onImageRemove = (imageId: number) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === imageId)
+    if (idx !== -1) {
+      const cFile = cAddedFiles[idx]
+      cFile.loading = true
+      cAddedFiles.splice(idx, 1, cFile)
+      setUploadingFiles(cAddedFiles)
+    }
+    if (imageId) {
+      deleteAttachmentInAlbum({
+        variables: {
+          id: imageId,
+        },
+        refetchQueries: [
+          {
+            query: GetPhotoAlbumsDocument,
+            variables: {
+              contactId: contactId,
+            },
+          },
+          {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
+          },
+          albumId === 0 && {
+            query: CountAlbumPhotosDocument,
+            variables: {
+              contactId: contactId,
+              albumId: 0,
+            },
+          },
+        ],
+      })
+    }
+  }
+
   const onImagesMove = (album: number, images: number[]) => {
     if ((album === 0 || album) && images?.length > 0) {
       moveImageToAlbum({
@@ -508,22 +573,23 @@ const Photos: FC = () => {
         },
         refetchQueries: [
           {
-            query: GetAlbumPhotosDocument,
-            variables: variables,
-          },
-          {
             query: GetPhotoAlbumsDocument,
             variables: {
               contactId: contactId,
             },
           },
-          albumId === 0 && {
-            query: CountAlbumPhotosDocument,
-            variables: {
-              contactId: contactId,
-              albumId: 0,
-            },
+          album === albumId && {
+            query: GetAlbumPhotosDocument,
+            variables: variables,
           },
+          album === albumId &&
+            albumId === 0 && {
+              query: CountAlbumPhotosDocument,
+              variables: {
+                contactId: contactId,
+                albumId: 0,
+              },
+            },
         ],
       })
     }
@@ -564,6 +630,7 @@ const Photos: FC = () => {
         onAlbumDelete={onAlbumDelete}
         albumDeleteLoading={albumDeleteLoading}
         onImageUpload={onImageUpload}
+        onImageRemove={onImageRemove}
         onUploadCancel={onUploadCancel}
         uploadingImages={uploadingFiles}
         setUploadingImages={setUploadingFiles}

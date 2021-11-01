@@ -10,6 +10,7 @@ const DeleteContactPhotoResponse = objectType({
     t.string('code')
     t.string('message')
     t.string('error')
+    t.int('photo')
   },
 })
 
@@ -18,6 +19,7 @@ export interface DeleteOutput {
   code?: string
   message?: string
   error?: string
+  photo?: number
 }
 
 export interface DeleteContactPhotoInput {
@@ -146,10 +148,9 @@ export const DeleteContactAttachmentPhoto = extendType({
             })
           }
 
-          return res as DeleteOutput
-        } catch (error) {
-          console.log(error)
-          return { success: false } as DeleteOutput
+          return { ...res, photo: id } as DeleteOutput
+        } catch {
+          return { success: false, photo: id } as DeleteOutput
         }
       },
     })
