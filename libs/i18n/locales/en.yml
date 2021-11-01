@@ -5614,3 +5614,6 @@ en:
   setup.medical.forms.macro.del.err.text: 'Error! While deleting the macro'
   client.label.create.message: 'Success! You have successfully created a label'
   client.label.create.error.message: 'Error! While creating a label'
+  journey.modal.appointments.dr.name: 'Dr. {{drName}}'
+  journey.modal.appointments.item.payment.status.paid: 'Paid'
+  journey.modal.appointments.item.payment.status.unpaid: 'Unpaid'
