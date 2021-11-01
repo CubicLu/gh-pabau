@@ -368,7 +368,9 @@ export const TestForm = () => {
           (arrItem) => item.arrValue.indexOf(arrItem.id.toString()) >= 0
         )
         if (vals.length > 0) {
-          const val1 = vals.map((val) => btoa(val.name))
+          const val1 = vals.map((val) =>
+            btoa(unescape(encodeURIComponent(val.name)))
+          )
           item.attrValue = val1.join(',')
         } else {
           item.attrValue = ''
