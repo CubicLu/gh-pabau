@@ -125,7 +125,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     {
       data: contactDetails,
       loading: notesCountLoading,
-      refetch: getContactRefetch,
+      refetch: getContactHeaderRefetch,
     },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
@@ -223,25 +223,19 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     await addClientNote({
       variables: { data: noteBody },
     })
-    getContactRefetch()
+    getContactHeaderRefetch()
   }
 
   const handleEditNote = async (id, note) => {
     await editMutation({
       variables: { where: { ID: id }, data: { Note: { set: note } } },
     })
-    getContactRefetch()
+    getContactHeaderRefetch()
   }
 
   const handleDeleteNote = async (id) => {
     setOpenDeleteModal((val) => !val)
     setDeleteNoteId(id)
-    // await deleteMutation({
-    //   variables: {
-    //     where: { ID: id },
-    //   },
-    // })
-    // getContactRefetch()
   }
 
   const tabItems: readonly TabItem[] = [
@@ -341,7 +335,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
           where: { ID: deleteNoteId },
         },
       })
-      getContactRefetch()
+      getContactHeaderRefetch()
     }
   }
 
