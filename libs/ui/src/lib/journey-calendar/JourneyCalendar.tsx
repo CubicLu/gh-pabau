@@ -190,7 +190,7 @@ export const JourneyCalendar: FC<Props> = ({ activeDate, setActiveDate }) => {
       <div className={styles.JourneyCalendar}>
         <div className={styles.jc_container}>
           <div className={styles.JourneyCalendarWrapper}>
-            <Row justify="space-between" gutter={16}>
+            <Row justify="space-between">
               <Col className={styles.jcLeftCol}>
                 <div className={styles.journyCalenderColWrap}>
                   {resizeEvent.width > 991 ? (
