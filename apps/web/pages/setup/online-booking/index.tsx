@@ -96,7 +96,7 @@ export const Index: FC<OnlineBookingProps> = ({
         return {
           id: booking.id,
           status: t('setup.online-booking.activity.appointment.booked.title', {
-            fname: `${booking?.CmStaffGeneral?.Fname}`,
+            fname: `${booking?.Contact?.Fname}`,
           }),
           time: dayjs(booking.create_date.toString()).format('hh:mm A'),
           details: t('setup.online-booking.activity.appointment.booked.text', {
