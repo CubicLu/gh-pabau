@@ -56,6 +56,10 @@
         right: 0;
         bottom: 0;
         margin-bottom: 0;
+
+        box-shadow: 0 0 0 0 rgba(84, 178, 211, 1);
+        transform: scale(1);
+        animation: pulse 2s infinite;
       }
     }
 
@@ -134,6 +138,7 @@
       background: #54b2d3;
       border: 1px solid #54b2d3;
       color: #fff;
+      transition: all 0.2s ease-in-out;
     }
   }
 }
@@ -152,6 +157,23 @@
         border-bottom-left-radius: 0px;
       }
     }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(84, 178, 211, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(84, 178, 211, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(84, 178, 211, 0);
   }
 }
 

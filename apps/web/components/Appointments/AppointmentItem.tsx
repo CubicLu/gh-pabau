@@ -59,6 +59,7 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
   const [appointementColor, setAppointmentColor] = useState('')
   const [pathwayStep, setPathwayStep] = useState<PathwayStep[]>([])
   const [currentStep, setCurrentStep] = useState<number>(0)
+  const [grow, setGrow] = useState<boolean>(false)
   const { t } = useTranslationI18()
   const { data: serviceData } = useGetServicesByIdQuery({
     variables: {
@@ -73,11 +74,19 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
   })
 
   useEffect(() => {
+    setGrow(false)
+  }, [currentStep])
+
+  useEffect(() => {
     if (pathwayStep?.length > 0) {
-      const currentStep =
+      const activeStep =
         pathwayStep.filter((step) => step.status === 'completed')?.length + 1
-      setCurrentStep(currentStep)
+      currentStep > 0 && setGrow(true)
+      setTimeout(() => {
+        setCurrentStep(activeStep)
+      }, 400)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathwayStep])
 
   useEffect(() => {
@@ -180,7 +189,9 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
         <Col lg={4} md={4} xs={2}>
           {pathwayStep?.length > 0 && (
             <div className={styles.counterButtonStyle}>
-              <button>{`${currentStep}/${pathwayStep?.length}`}</button>
+              <button
+                style={{ transform: grow ? 'scale(1.5)' : 'none' }}
+              >{`${currentStep}/${pathwayStep?.length}`}</button>
             </div>
           )}
         </Col>
