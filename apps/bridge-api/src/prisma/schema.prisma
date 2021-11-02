@@ -14662,6 +14662,11 @@ enum cp_steps_step {
   video
   photo
   details
+  pinscreen
+  studio
+  draw
+  payment
+  splash
 }
 
 enum cp_steps_taken_status {
