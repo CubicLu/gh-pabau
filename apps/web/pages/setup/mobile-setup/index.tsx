@@ -3,9 +3,8 @@ import { Layout, Menu as AntMenu } from 'antd'
 import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
 import styles from './index.module.less'
-import {
+import SetupMenu, {
   SetupBottomMenu,
-  SetupMenu,
   setupMenuTranslation,
   SetupMiddleMenu,
 } from './SetupMenu'

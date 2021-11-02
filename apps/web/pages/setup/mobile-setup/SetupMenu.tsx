@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   NotificationOutlined,
   DashboardOutlined,
@@ -50,7 +51,7 @@ export const setupMenuTranslation = {
   helpcenter: 'setup.menu.help',
 }
 
-export const SetupMenu: SetupMenuItem[] = [
+const SetupMenu: SetupMenuItem[] = [
   {
     menuName: 'Dashboard',
     icon: <DashboardOutlined />,
@@ -179,3 +180,5 @@ export const SetupBottomMenu: SetupMenuItem[] = [
     path: '',
   },
 ]
+
+export default SetupMenu
