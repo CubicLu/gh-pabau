@@ -23,6 +23,9 @@
     white-space: nowrap;
     overflow: hidden;
     max-width: 220px;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .label-and-btn {
@@ -72,12 +75,12 @@
       justify-content: flex-end;
 
       .activity-wrapper {
-        span {
-          cursor: pointer;
-          font-size: 18px;
-          &:hover {
-            font-size: 22px;
-          }
+        cursor: pointer;
+        font-size: 18px;
+        transform: scale(1);
+        transition: 0.5s;
+        &:hover {
+          transform: scale(1.2);
         }
       }
     }
