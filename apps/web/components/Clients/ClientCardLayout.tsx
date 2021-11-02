@@ -69,12 +69,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         t('clients.clientcard.notes.clientnote.create')
       )
     },
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('clients.clientcard.notes.clientnote.create.errormessage')
-      )
-    },
   })
 
   const [editMutation] = useUpdateOneContactNoteMutation({
@@ -84,12 +78,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         t('clients.clientcard.notes.clientnote.edit')
       )
     },
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('clients.clientcard.notes.clientnote.edit.errormessage')
-      )
-    },
   })
 
   const [deleteMutation] = useDeleteOneContactNoteMutation({
@@ -97,12 +85,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       Notification(
         NotificationType.success,
         t('clients.clientcard.notes.clientnote.delete')
-      )
-    },
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('clients.clientcard.notes.clientnote.delete.errormessage')
       )
     },
   })
@@ -129,7 +111,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
-    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 
