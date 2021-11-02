@@ -1,6 +1,6 @@
 .formComponet {
   padding: 36px 40px;
-  min-width: 616px;
+  // min-width: 616px;
   .formComponentTitle {
     font-style: normal;
     font-weight: normal;
@@ -9,6 +9,49 @@
     display: flex;
     align-items: center;
     color: #3d3d46;
+
+    :global {
+      .ant-btn {
+        font-size: 0.8rem;
+        border-radius: 4px;
+        letter-spacing: 0.05em;
+        padding-left: 1em;
+        padding-right: 1em;
+        line-height: 1.5715;
+        position: relative;
+        display: inline-block;
+        font-weight: 400;
+        white-space: nowrap;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        user-select: none;
+        touch-action: manipulation;
+      }
+      .ant-btn-danger {
+        color: #7f4d0d;
+        background: #ffe1b3;
+        border-color: #e9cda3;
+        text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+        box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+      }
+      .ant-btn-primary {
+        color: #7a787a;
+        background: #eeedef;
+        border-color: #d4d3d5;
+        text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+        box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+      }
+      .ant-btn-sm {
+        height: 18px;
+        padding: 0px 3px;
+        font-size: 11px;
+        border-radius: 2px;
+      }
+      .ant-checkbox {
+        display: inline-block;
+      }
+    }
   }
   .formComponentDescription {
     font-style: normal;
@@ -70,11 +113,217 @@
       }
     }
   }
+  .textFieldWithMacroValue {
+    border: 1px solid #ecedf0;
+    color: rgba(0, 0, 0, 0.65);
+    border-radius: 2px;
+    display: inline-block;
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+    :global {
+      .DraftEditor-root {
+        padding: 0 5px 0px 30px;
+        cursor: text;
+      }
+      .public-DraftStyleDefault-block {
+        margin: 0.6em 0;
+      }
+
+      .Hashtag {
+        color: green;
+      }
+
+      .HashtagList {
+        margin: 2px 0 0 0;
+        list-style-type: none;
+        position: absolute;
+        width: 100%;
+        border: 1px solid #ecedf0;
+        z-index: 10000000;
+        background-color: white;
+        overflow-y: auto;
+        max-height: 200px;
+        padding-inline-start: 0px;
+      }
+
+      .HashtagListItem {
+        padding: 10px 25px;
+        border-bottom: 1px solid #e4e5e9;
+      }
+
+      .HashtagListItem {
+        .HashtagListItemTitle {
+          font-weight: bold;
+          font-size: 14px;
+        }
+        .HashtagListItemMessage {
+          font-size: 12px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      .HashtagListItem.current {
+        background-color: #eef7fb;
+        .HashtagListItemTitle {
+          color: blue;
+          font-weight: bold;
+        }
+      }
+      .HashtagListItem:hover {
+        background-color: #eef7fb;
+        .HashtagListItemTitle {
+          color: blue;
+          font-weight: bold;
+        }
+      }
+    }
+    .macroBtn {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+      cursor: pointer;
+    }
+  }
+
+  .textFieldArea {
+    min-height: 200px;
+  }
+
+  .hideMicro {
+    :global {
+      .DraftEditor-root {
+        padding-left: 5px !important;
+      }
+    }
+  }
+
+  .textFieldWithMacroValue:hover {
+    border: 1px solid #54b2d3;
+  }
+
+  .textFieldWithMacroValue:focus {
+    border: 1px solid #54b2d3;
+  }
+
+  .textFieldWithSnomed {
+    border: 1px solid #ecedf0;
+    color: rgba(0, 0, 0, 0.65);
+    border-radius: 2px;
+    display: inline-block;
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+    :global {
+      .DraftEditor-root {
+        padding: 0 12px 0px 12px;
+        cursor: text;
+      }
+      .snomedList {
+        margin: 2px 0 0 0;
+        list-style-type: none;
+        position: absolute;
+        width: 100%;
+        border: 1px solid lightblue;
+        z-index: 10000000;
+        background-color: white;
+        overflow-y: auto;
+        max-height: 250px;
+        padding-inline-start: 0px;
+      }
+      .snomedListItem {
+        padding: 12px;
+        border-bottom: 1px solid #ecedf0;
+      }
+
+      .snomedListItem.current {
+        background: #eef7fb;
+      }
+
+      .snomedListItem:hover {
+        background: #eef7fb;
+      }
+
+      .public-DraftStyleDefault-block {
+        margin: 0.6em 0;
+      }
+      .Hashtag {
+        color: green;
+      }
+    }
+
+    .snomed {
+      background: lightblue;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .snomedLoading {
+      margin-top: 10px;
+      position: absolute;
+      left: 50%;
+      :global {
+        .ant-spin-spinning {
+          position: relative;
+          left: -50%;
+        }
+      }
+    }
+
+    .snomedTitle {
+      font-size: 14px;
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      color: #3d3d46;
+    }
+    .snomedDescription {
+      font-size: 12px;
+      line-height: 14px;
+      display: flow-root;
+      align-items: center;
+      color: #9292a3;
+      .snomedFsn {
+        float: left;
+        width: 80%;
+      }
+      .snomedConceptId {
+        float: right;
+        text-align: right;
+        width: 20%;
+      }
+    }
+    .snomedHighLight {
+      color: #54b2d3;
+      font-weight: bolder;
+      background-color: transparent;
+      padding: 0;
+    }
+  }
+  .textFieldWithSnomed:hover {
+    border: 1px solid #54b2d3;
+  }
+
+  .textFieldWithSnomed:focus {
+    border: 1px solid #54b2d3;
+  }
 }
 
 .formTextArea {
   .formTextAreaValue {
     margin-top: 11px;
+    position: relative;
+    .customTextArea {
+      padding-left: 30px;
+    }
+    .macroBtn {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+    }
   }
 }
 
@@ -90,7 +339,7 @@
   }
 }
 
-.formSingleChoice {
+.formSingleChoiceYesNo {
   .formSingleOptions {
     width: 100%;
     :global {
@@ -118,6 +367,79 @@
         }
       }
     }
+  }
+}
+
+.formSingleChoice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+  .formSingleChoiceTitle {
+    display: flex;
+    width: 49%;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #3d3d46;
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .formSingleChoiceRequiredMark {
+      color: red;
+      margin-left: 3px;
+      display: contents;
+    }
+  }
+  .formSingleOptionsYesNo {
+    display: flex;
+    width: 49%;
+    align-items: center;
+    justify-content: space-between;
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+    }
+    :global {
+      .ant-radio-group {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .radioDiv {
+      width: 49%;
+      :global {
+        .ant-radio-wrapper {
+          border: 1px solid #ecedf0;
+          box-sizing: border-box;
+          border-radius: 4px;
+          width: 100%;
+          padding: 16px;
+          font-size: 14px;
+        }
+        .ant-radio-wrapper.ant-radio-wrapper-checked {
+          background: #eef7fb;
+          border: 1px solid #54b2d3;
+          box-sizing: border-box;
+          border-radius: 4px;
+          color: #54b2d3;
+        }
+      }
+    }
+  }
+}
+
+.formSlider {
+  .formSliderOptions {
+    display: block;
   }
 }
 
@@ -415,6 +737,17 @@
           border-radius: 4px;
           padding: 16px;
           cursor: auto;
+          .formDrugsOptionsItemTooltipTitle {
+            color: #7ec9e0;
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+          .formDrugsOptionsItemTooltipItemEmpty {
+            margin-bottom: 13px;
+          }
+          .formDrugsOptionsItemTooltipItem {
+            margin-bottom: 13px;
+          }
           .formDrugsOptionsItemTooltipItem:hover {
             cursor: pointer;
             text-decoration: underline;
@@ -465,14 +798,186 @@
   cursor: pointer;
 }
 .formComponentButton {
+  display: flex;
+  flex-direction: row;
   padding: 36px 40px;
+  .btnCircle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px !important;
+    margin-left: 10px;
+    :global {
+      .anticon {
+        line-height: 0;
+      }
+      .ant-popover-inner-content {
+        padding: 0;
+      }
+    }
+  }
   :global {
     .ant-btn {
       width: 100%;
     }
   }
 }
+
+.lockPanel {
+  .lockItem {
+    padding: 3px 0px;
+    .lockTitle {
+      margin-left: 5px;
+    }
+  }
+}
+
+.lockGroup {
+  margin-bottom: 10px;
+}
+
+.lockDivider {
+  border-top: 1px solid #ecedf0;
+  font-size: 12px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #9292a3;
+  text-transform: uppercase;
+  padding-top: 15px;
+}
+
 .formRequiredMark {
   color: red;
   margin-left: 3px;
+}
+.autocompleteWrap {
+  :global {
+    .ant-select-item-option {
+      border-bottom: 1px solid #ecedf0;
+    }
+  }
+}
+.snomedEditor {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid black;
+}
+
+.formSnomedArea {
+  .formSnomedAreaValue {
+    margin-top: 11px;
+    border: 1px solid #ecedf0;
+    color: rgba(0, 0, 0, 0.65);
+    border-radius: 2px;
+    display: inline-block;
+    background-color: #fff;
+    width: 100%;
+    :global {
+      .DraftEditor-root {
+        padding: 0 11px;
+        cursor: text;
+      }
+    }
+    .snomed {
+      background: lightblue;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .snomedList {
+      position: absolute;
+      margin: 4px 0 0 0;
+      padding: 0;
+      // box-shadow: 0 0 2px #54b2d3;
+      border: 1px solid #54b2d3;
+      list-style: none;
+      background: white;
+      width: 74.5%;
+      z-index: 1;
+      height: 300px;
+      overflow: auto;
+    }
+
+    .snomedListItem {
+      padding: 10px;
+    }
+
+    .snomedListItem.current {
+      background: lightgrey;
+    }
+
+    .snomedLoading {
+      margin-top: 10px;
+      position: absolute;
+      left: 50%;
+      :global {
+        .ant-spin-spinning {
+          position: relative;
+          left: -50%;
+        }
+      }
+    }
+
+    .snomedItem {
+      padding: 12px;
+      border-bottom: 1px solid #ecedf0;
+    }
+    .snomedItem:hover {
+      background: #eef7fb;
+    }
+    .snomedTitle {
+      font-size: 14px;
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      color: #3d3d46;
+    }
+    .snomedDescription {
+      font-size: 12px;
+      line-height: 14px;
+      display: flow-root;
+      align-items: center;
+      color: #9292a3;
+    }
+    .snomedFsn {
+      float: left;
+      width: 80%;
+    }
+    .snomedConceptId {
+      float: right;
+      text-align: right;
+      width: 20%;
+    }
+    .snomedHighLight {
+      color: #54b2d3;
+      font-weight: bolder;
+      background-color: transparent;
+      padding: 0;
+    }
+  }
+
+  .formSnomedAreaValue:hover {
+    border: 1px solid #54b2d3;
+  }
+
+  .formSnomedAreaValue:focus {
+    border: 1px solid #54b2d3;
+  }
+
+  :global {
+    .public-DraftStyleDefault-block {
+      margin: 0.6em 0;
+    }
+
+    .Snomed {
+      background: lightblue;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+  }
 }

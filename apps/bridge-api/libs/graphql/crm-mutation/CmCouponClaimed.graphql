@@ -1,0 +1,39 @@
+fragment CmCouponClaimedFields on CmCouponClaimed {
+  id
+  coupon_id
+  claim_date
+  claim_full_name
+  claim_email
+  active
+}
+
+fragment CmCouponClaimed on CmCouponClaimed {
+  ...CmCouponClaimedFields
+  CmCoupon {
+    ...CmCouponFields
+  }
+}
+
+mutation createOneCmCouponClaimed($data: CmCouponClaimedCreateInput!) {
+  createOneCmCouponClaimed(data: $data) {
+    ...CmCouponClaimed
+  }
+}
+
+mutation updateOneCmCouponClaimed($where: CmCouponClaimedWhereUniqueInput!, $data: CmCouponClaimedUpdateInput!) {
+  updateOneCmCouponClaimed(where: $where, data: $data) {
+    ...CmCouponClaimed
+  }
+}
+
+mutation deleteOneCmCouponClaimed($where: CmCouponClaimedWhereUniqueInput!) {
+  deleteOneCmCouponClaimed(where: $where) {
+    ...CmCouponClaimed
+  }
+}
+
+mutation updateManyCmCouponClaimed($where: CmCouponClaimedWhereInput, $data: CmCouponClaimedUpdateManyMutationInput!) {
+  updateManyCmCouponClaimed(where: $where, data: $data) {
+    count
+  }
+}

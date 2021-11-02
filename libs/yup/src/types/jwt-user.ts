@@ -25,7 +25,7 @@ export interface JwtUser {
 export interface CompanyPersona {
   id: number
   name: string
-  logoUrl?: string
+  logo?: string
 }
 
 export interface AuthenticatedUser extends JwtUser {
@@ -36,4 +36,5 @@ export interface AuthenticatedUser extends JwtUser {
   companies: CompanyPersona[]
   companyDateFormat: string
   currency?: string
+  timezone: string
 }

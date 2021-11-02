@@ -1,4 +1,13 @@
-import { ArrayItem, MedicalFormTypes, OptionType } from '@pabau/ui'
+import {
+  ArrayItem,
+  MedicalFormTypes,
+  OptionType,
+  MacroItem,
+  UserGroupListItem,
+  InvProductsListItem,
+  MedicalConditionsListItem,
+  previewMapping,
+} from '@pabau/ui'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import FormComponentMain from './FormComponentMain'
@@ -18,38 +27,12 @@ const medicalForms = [
   { id: 11, formType: 'basic', formName: 'form_drugs' },
   { id: 12, formType: 'basic', formName: 'form_travel' },
   { id: 13, formType: 'basic', formName: 'form_labtests' },
-]
-
-const previewMapping = [
-  { heading: 'form_statictext' },
-  { staticText: 'form_statictext' },
-  { input_text: 'form_textfield' },
-  { team: 'empty' },
-  { textarea: 'form_textarea' },
-  { checkbox: 'form_checkbox' },
-  { radio: 'form_singlechoice' },
-  { select: 'form_dropdown' },
-  { image: 'form_drawing' },
-  { staticImage: 'form_image' },
-  { diagram_mini: 'form_drawing' },
-  { signature: 'form_signature' },
-  { cl_drugs: 'form_drugs' },
-  { labs_tests: 'form_labtests' },
-  { vaccine_scheduler: 'empty' },
-  { vaccine_history: 'empty' },
-  { travel_destination: 'form_travel' },
-  { btn_medical_condition: 'form_medicalcondition' },
-  { diagram: 'empty' },
-  { facediagram: 'empty' },
-  { diagram_mini: 'empty' },
-  { photo_and_drawer: 'form_photoupload' },
-  { epaper: 'empty' },
-  { custom_photo_and_drawer: 'empty' },
-  { cl_services: 'empty' },
-  { history_data: 'empty' },
+  { id: 14, formType: 'basic', formName: 'form_snomed' },
+  { id: 15, formType: 'basic', formName: 'form_slider' },
 ]
 
 const getFormInfo = (form) => {
+  console.log('getFormInfo', form)
   // let name = ''
   let label = ''
   if (form.title) {
@@ -96,6 +79,10 @@ const getFormInfo = (form) => {
     txtBlockValue = form.defaults ? form.defaults : ''
   }
 
+  if (form.cssClass === 'snomed') {
+    txtBlockValue = form.defaults ? form.defaults : ''
+  }
+
   if (form.cssClass === 'staticText') {
     txtBlockValue = form.values.trim()
   }
@@ -118,15 +105,18 @@ const getFormInfo = (form) => {
   let signData = ''
   if (form.cssClass === 'signature' && typeof form.values === 'string') {
     signData = form.values
+    txtInputTypeValue = form.fldtype
   }
 
   let arrItemsValue: OptionType[] = []
   if (
     (form.cssClass === 'checkbox' ||
       form.cssClass === 'radio' ||
+      form.cssClass === 'slider' ||
       form.cssClass === 'select' ||
       form.cssClass === 'staticImage' ||
       form.cssClass === 'diagram_mini' ||
+      form.cssClass === 'labs_tests' ||
       form.cssClass === 'image') &&
     typeof form.values !== 'string'
   ) {
@@ -188,12 +178,26 @@ interface P {
   previewData: string
   formSaveLabel?: string
   saveMedicalFormHistory?: (draggedForms: MedicalFormTypes[]) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
+  medicalFormMacros?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
+  userGroupListItems?: UserGroupListItem[]
+  hideMacro?: boolean
+  hidePadlock?: boolean
 }
 
 export const FormComponentBuilder: FC<P> = ({
   previewData,
   formSaveLabel = '',
   saveMedicalFormHistory,
+  onHandleMacro,
+  medicalFormMacros = [],
+  userGroupListItems = [],
+  invProductsListItems = [],
+  medicalConditionsListItems = [],
+  hideMacro = false,
+  hidePadlock = false,
 }) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
@@ -201,6 +205,7 @@ export const FormComponentBuilder: FC<P> = ({
     setDraggedForms([])
     if (typeof previewData != 'undefined' && previewData !== '') {
       const previewDataArray = JSON.parse(atob(previewData))
+      console.log('previewDataArray', previewDataArray)
       const previewForms = []
       if (previewDataArray['form_structure']) {
         for (const form of previewDataArray['form_structure']) {
@@ -239,6 +244,13 @@ export const FormComponentBuilder: FC<P> = ({
         draggedForms={draggedForms}
         formSaveLabel={formSaveLabel}
         processSaveForm={processSaveForm}
+        onHandleMacro={onHandleMacro}
+        medicalFormMacros={medicalFormMacros}
+        userGroupListItems={userGroupListItems}
+        invProductsListItems={invProductsListItems}
+        medicalConditionsListItems={medicalConditionsListItems}
+        hideMacro={hideMacro}
+        hidePadlock={hidePadlock}
       />
     </div>
   )

@@ -11,7 +11,8 @@ const NextAppointments = () => {
   const router = useRouter()
   const { data } = useClientsGetNextAppointmentsQuery({
     //TODO: calculcate start_date to now()
-    variables: { id: Number(router.query['id']), start_date: '20210927000000' },
+    variables: { id: Number(router.query['id']), start_date: 20210927000000 },
+    skip: !router.query['id'],
   })
   return (
     <div className={styles.nextAppointmentContainer}>

@@ -1,0 +1,40 @@
+fragment AcceptEmailTokenFields on AcceptEmailToken {
+  id
+  company_id
+  email
+  token
+}
+
+fragment AcceptEmailToken on AcceptEmailToken {
+  ...AcceptEmailTokenFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneAcceptEmailToken($data: AcceptEmailTokenCreateInput!) {
+  createOneAcceptEmailToken(data: $data) {
+    ...AcceptEmailToken
+  }
+}
+
+mutation updateOneAcceptEmailToken($where: AcceptEmailTokenWhereUniqueInput!, $data: AcceptEmailTokenUpdateInput!) {
+  updateOneAcceptEmailToken(where: $where, data: $data) {
+    ...AcceptEmailToken
+  }
+}
+
+mutation deleteOneAcceptEmailToken($where: AcceptEmailTokenWhereUniqueInput!) {
+  deleteOneAcceptEmailToken(where: $where) {
+    ...AcceptEmailToken
+  }
+}
+
+mutation updateManyAcceptEmailToken(
+  $where: AcceptEmailTokenWhereInput
+  $data: AcceptEmailTokenUpdateManyMutationInput!
+) {
+  updateManyAcceptEmailToken(where: $where, data: $data) {
+    count
+  }
+}

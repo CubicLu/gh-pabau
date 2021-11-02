@@ -28,6 +28,8 @@ import {
   ProgressGallery,
   PresentModal,
   CreateLabels,
+  CamUploaderModal as CamUploader,
+  UploadingImageProps,
 } from '@pabau/ui'
 import { Modal as AntModal, Input, Popover, Drawer, Tooltip } from 'antd'
 import singlePhotoMode from '../../assets//images/image-viewer/comparing/single-photo.svg'
@@ -46,7 +48,8 @@ import sixSideMode from '../../assets//images/image-viewer/comparing/six-side.sv
 import sixSideActiveMode from '../../assets//images/image-viewer/comparing/six-side-active.svg'
 import photoGalleryMode from '../../assets//images/image-viewer/comparing/photo-gallery.svg'
 import photoGalleryActiveMode from '../../assets//images/image-viewer/comparing/photo-gallery-active.svg'
-
+import { ReactComponent as CameraCircleFilled } from '../../assets//images/image-viewer/camera-circle-filled.svg'
+import { ReactComponent as PhotoCircleFilled } from '../../assets//images/image-viewer/photo-circle-filled.svg'
 import styles from './ImageViewer.module.less'
 
 export interface AlbumImageTag {
@@ -182,6 +185,10 @@ export interface ImageViewerProps {
   selectedPhotoId?: number
   onAlbumSelect?: (album) => void
   onClose: () => void
+  uploadingImages?: UploadingImageProps[]
+  setUploadingImages?: (images: UploadingImageProps[]) => void
+  uploadImage?: (image: UploadingImageProps) => void
+  removeImage?: (imageId: number) => void
 }
 
 const ImageViewerModal: FC<ImageViewerProps> = ({
@@ -192,9 +199,16 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   selectedPhotoId,
   onAlbumSelect,
   onClose,
+  uploadingImages,
+  setUploadingImages,
+  uploadImage,
+  removeImage,
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
+  const [showCamera, setShowCamera] = useState(false)
+  const [showCamUploader, setShowCamUploader] = useState(false)
+
   const [editTitle, setEditTitle] = useState(false)
   const [isDefaultPhoto, setIsDefaultPhoto] = useState(false)
   const [comparingMode, setComparingMode] = useState<ComparingMode>(
@@ -792,6 +806,25 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
               )}
             </div>
           </div>
+          {!isMobile && (
+            <div className={styles.uppyButtons}>
+              <div>
+                <PhotoCircleFilled
+                  onClick={() => {
+                    setShowCamera(false)
+                    setShowCamUploader(() => true)
+                  }}
+                />
+                <CameraCircleFilled
+                  onClick={() => {
+                    setShowCamera(true)
+                    setShowCamUploader(() => true)
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
           <ImageViewerSidebar
             comparingMode={comparingMode}
             selectedIndex={
@@ -802,7 +835,12 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             setSelectedIndex={() => setSelectedIndex(defaultIndex)}
             albums={albums}
             selectedAlbum={currentAlbum}
-            onAlbumSelect={(album) => onAlbumSelect?.(album)}
+            onAlbumSelect={(album) => {
+              if (album !== currentAlbum?.id) {
+                setUploadingImages?.([])
+              }
+              onAlbumSelect?.(album)
+            }}
             sidebarOpen={sidebarOpen}
             setIsDragging={setIsDragging}
             setSidebarOpen={setSidebarOpen}
@@ -820,6 +858,22 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                 >
                   {createLabelsChild}
                 </CreateLabels>
+                <div className={styles.uppyButtons}>
+                  <div>
+                    <PhotoCircleFilled
+                      onClick={() => {
+                        setShowCamera(false)
+                        setShowCamUploader(() => true)
+                      }}
+                    />
+                    <CameraCircleFilled
+                      onClick={() => {
+                        setShowCamera(true)
+                        setShowCamUploader(() => true)
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
               <div>
                 <Tooltip title={t('ui.imageviewer.comparingmode.tooltip')}>
@@ -845,6 +899,24 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             comparingMode={comparingMode}
           />
         </div>
+        {showCamUploader && (
+          <CamUploader
+            visible={showCamUploader}
+            onClose={(done?: boolean) => {
+              setShowCamera(false)
+              setShowCamUploader(() => false)
+              if (done) {
+                setUploadingImages?.([])
+              }
+            }}
+            uploadingImages={uploadingImages as UploadingImageProps[]}
+            setUploadingImages={(images) => setUploadingImages?.(images)}
+            showCamera={showCamera}
+            uploadImage={uploadImage}
+            removeImage={removeImage}
+            albumId={currentAlbum?.id || 0}
+          />
+        )}
       </AntModal>
 
       {isMobile && (

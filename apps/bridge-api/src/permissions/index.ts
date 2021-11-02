@@ -75,6 +75,8 @@ export const permissions = shield(
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
       createOneContactNote: rules.authentication.isAuthenticated,
+      updateOneContactNote: rules.authentication.isAuthenticated,
+      deleteOneContactNote: rules.authentication.isAuthenticated,
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -91,6 +93,8 @@ export const permissions = shield(
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
+      deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      moveAttachments: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -113,6 +117,12 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
+      deleteOneContactAttachment: rules.authentication.isAuthenticated,
+      createDuplicateActivity: rules.authentication.isAuthenticated,
+      //Connect Public
+      public_createOnlineBooking: allow,
+
+      upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -121,11 +131,15 @@ export const permissions = shield(
       ),
     },
     Query: {
+      //DuplicateContacts
+      // duplicateContacts: rules.authentication.isAuthenticated,
       findManyContactPackage: allow,
       findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      findManyPathwaysTaken: allow,
+      findManyPathwayStepsTaken: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
@@ -195,6 +209,8 @@ export const permissions = shield(
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
+      findManyFilteredRotaShift: rules.authentication.isAuthenticated,
+
       findManyProductsWithAvailableQuantity:
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
@@ -215,6 +231,10 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.interceptAccessToUserData
       ),
+      getBookingStatusCount: rules.authentication.isAuthenticated,
+      getBookingChartDetail: rules.authentication.isAuthenticated,
+      // getToken
+      getRefreshToken: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,
@@ -226,7 +246,14 @@ export const permissions = shield(
       subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
       subscriptionDetails: rules.authentication.isAuthenticated,
       subscriptionCardDetails: rules.authentication.isAuthenticated,
-
+      // Connect Public
+      findFirstCompany: allow,
+      Public_MasterCategories: allow,
+      Public_BookedAppointments: allow,
+      Public_Locations: allow,
+      Public_ServiceCategories: allow,
+      Public_StaffShifts: allow,
+      Public_Staff: allow,
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //statement template

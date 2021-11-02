@@ -1,0 +1,45 @@
+fragment LeadStatusFields on LeadStatus {
+  id
+  company_id
+  status_name
+  status_order
+  email_template_id
+  email_template_from
+  is_default
+  is_convert
+  pipeline_id
+}
+
+fragment LeadStatus on LeadStatus {
+  ...LeadStatusFields
+  Company {
+    ...CompanyFields
+  }
+  Pipeline {
+    ...PipelineFields
+  }
+}
+
+mutation createOneLeadStatus($data: LeadStatusCreateInput!) {
+  createOneLeadStatus(data: $data) {
+    ...LeadStatus
+  }
+}
+
+mutation updateOneLeadStatus($where: LeadStatusWhereUniqueInput!, $data: LeadStatusUpdateInput!) {
+  updateOneLeadStatus(where: $where, data: $data) {
+    ...LeadStatus
+  }
+}
+
+mutation deleteOneLeadStatus($where: LeadStatusWhereUniqueInput!) {
+  deleteOneLeadStatus(where: $where) {
+    ...LeadStatus
+  }
+}
+
+mutation updateManyLeadStatus($where: LeadStatusWhereInput, $data: LeadStatusUpdateManyMutationInput!) {
+  updateManyLeadStatus(where: $where, data: $data) {
+    count
+  }
+}

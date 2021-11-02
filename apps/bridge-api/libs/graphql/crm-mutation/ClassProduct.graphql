@@ -1,0 +1,50 @@
+fragment ClassProductFields on ClassProduct {
+  id
+  code
+  name
+  unit
+  size
+  product_order
+  um
+  cost
+  price
+  alert_quantity
+  image
+  category_id
+  company_id
+  uid
+  created_date
+  modified_date
+  product_desc
+}
+
+fragment ClassProduct on ClassProduct {
+  ...ClassProductFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneClassProduct($data: ClassProductCreateInput!) {
+  createOneClassProduct(data: $data) {
+    ...ClassProduct
+  }
+}
+
+mutation updateOneClassProduct($where: ClassProductWhereUniqueInput!, $data: ClassProductUpdateInput!) {
+  updateOneClassProduct(where: $where, data: $data) {
+    ...ClassProduct
+  }
+}
+
+mutation deleteOneClassProduct($where: ClassProductWhereUniqueInput!) {
+  deleteOneClassProduct(where: $where) {
+    ...ClassProduct
+  }
+}
+
+mutation updateManyClassProduct($where: ClassProductWhereInput, $data: ClassProductUpdateManyMutationInput!) {
+  updateManyClassProduct(where: $where, data: $data) {
+    count
+  }
+}

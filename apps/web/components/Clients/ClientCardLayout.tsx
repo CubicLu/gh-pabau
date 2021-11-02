@@ -4,8 +4,20 @@ import {
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
+  useCreateOneContactNoteMutation,
+  useUpdateOneContactNoteMutation,
+  useDeleteOneContactNoteMutation,
+  useUpdateOneCmContactMutation,
+  useUpsertOneCmContactCustomMutation,
 } from '@pabau/graphql'
-import { ClientCard, TabItem, ClientNotes } from '@pabau/ui'
+import {
+  ClientCard,
+  TabItem,
+  ClientNotes,
+  Notification,
+  NotificationType,
+  BasicModal as Modal,
+} from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
   FC,
@@ -17,6 +29,14 @@ import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
+import { useUser } from '../../context/UserContext'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -26,8 +46,10 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { t } = useTranslationI18()
+  const { me } = useUser()
+  const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
-  const [openEditModal, setOpenEditModal] = useState(false)
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
     count: 0,
@@ -35,6 +57,55 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     appointments: [],
   })
   const [basicContactData, setBasicContactData] = useState(null)
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
+  const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
+  const [openEditModal, setOpenEditModal] = useState(false)
+  const user = useUser()
+
+  const [addClientNote] = useCreateOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.create')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('clients.clientcard.notes.clientnote.create.errormessage')
+      )
+    },
+  })
+
+  const [editMutation] = useUpdateOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.edit')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('clients.clientcard.notes.clientnote.edit.errormessage')
+      )
+    },
+  })
+
+  const [deleteMutation] = useDeleteOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.delete')
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('clients.clientcard.notes.clientnote.delete.errormessage')
+      )
+    },
+  })
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -45,15 +116,20 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const { data, loading, refetch } = useBasicContactDetailsQuery({
     skip: !router.query['id'],
     ssr: false,
-    notifyOnNetworkStatusChange: true,    
+    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 
   const [
     getContactDetails,
-    { data: contactDetails, loading: notesCountLoading },
+    {
+      data: contactDetails,
+      loading: notesCountLoading,
+      refetch: getContactHeaderRefetch,
+    },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
+    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 
@@ -67,6 +143,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   } = useGetContactCustomFieldsQuery({
     skip: !router.query['id'],
   })
+
+  const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
+  const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
@@ -115,19 +194,49 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         return {
           ...item,
           notes: [],
-          count:
-            data?.findFirstCmContact?.contactNotes?.length +
-              data?.findFirstCmContact?.bookingNotes?.length || 0,
+          count: data?.findFirstCmContact?.contactNotes?.length || 0,
           loading: true,
           appointments: [],
         }
       })
-      const contactDetails = { ...data?.findFirstCmContact }
+      const contactDetails = {
+        ...data?.findFirstCmContact,
+        referredBy: data?.findFirstCmContact.marketingSource,
+        isActive: data?.findFirstCmContact?.isActive,
+        country:
+          data?.findFirstCmContact?.country ||
+          data?.findFirstCmContact?.Company?.details?.country,
+      }
       delete contactDetails?.contactNotes
       delete contactDetails?.bookingNotes
       setBasicContactData(contactDetails)
     }
   }, [customFieldData, data])
+
+  const handleAddNewClientNote = async (note: string) => {
+    const noteBody = {
+      Note: note,
+      CreatedDate: timezoneDate() || dayjs().utc().format(),
+      User: { connect: { id: me?.user } },
+      CmContact: { connect: { ID: clientId } },
+    }
+    await addClientNote({
+      variables: { data: noteBody },
+    })
+    getContactHeaderRefetch()
+  }
+
+  const handleEditNote = async (id, note) => {
+    await editMutation({
+      variables: { where: { ID: id }, data: { Note: { set: note } } },
+    })
+    getContactHeaderRefetch()
+  }
+
+  const handleDeleteNote = async (id) => {
+    setOpenDeleteModal((val) => !val)
+    setDeleteNoteId(id)
+  }
 
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
@@ -135,7 +244,11 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     { key: 'financial', name: 'Financials' },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
-    { key: 'emr', name: 'EMR' },
+    {
+      key: 'emr',
+      name: 'EMR',
+      childTabs: [{ key: 'photos', name: 'Photos' }],
+    },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
     { key: 'loyalty', name: 'Loyalty' },
     { key: 'activities', name: 'Activities' },
@@ -196,14 +309,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     // },
   ] as const
 
-  const handleEditAll = () => {
-    setOpenEditModal(true)
-  }
-
-  const handleEditSubmit = () => {
-    setOpenEditModal(false)
-    refetch()
-  }
   useEffect(() => {
     if (contactDetails?.notes) {
       setContactData((item) => {
@@ -216,6 +321,27 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       })
     }
   }, [contactDetails, notesCountLoading])
+
+  const handleEditAll = () => {
+    setOpenEditModal(true)
+  }
+
+  const handleEditAllSubmit = () => {
+    setOpenEditModal(false)
+    refetch()
+  }
+
+  const handleDeleteSubmit = async () => {
+    if (deleteNoteId) {
+      setOpenDeleteModal((val) => !val)
+      await deleteMutation({
+        variables: {
+          where: { ID: deleteNoteId },
+        },
+      })
+      getContactHeaderRefetch()
+    }
+  }
 
   return (
     <Layout>
@@ -231,13 +357,16 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         customFields={customField}
         dateFormat={GetFormat()}
         handleEditAll={handleEditAll}
+        updatebasicContactMutation={updatebasicContactMutation}
+        updateContactCustomMutation={updateContactCustomMutation}
+        clientId={clientId}
+        companyId={user?.me?.company}
         client={
           basicContactData
             ? ({
                 ...basicContactData,
                 fullName: `${basicContactData?.firstName}
                   ${basicContactData?.lastName}`,
-                referredBy: basicContactData?.marketingSource?.name,
                 avatar: basicContactData?.avatar
                   ? getImage(basicContactData?.avatar)
                   : '',
@@ -245,8 +374,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   mobile: basicContactData?.mobile,
                   home: basicContactData?.home,
                 },
-                isActive:
-                  data.findFirstCmContact?.isActive === 1 ? true : false,
                 address: [
                   basicContactData?.street,
                   basicContactData?.city,
@@ -269,6 +396,10 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         }
         notes={contactData}
         getContactDetails={getContactDetails}
+        handleAddNewClientNote={handleAddNewClientNote}
+        handleEditNote={handleEditNote}
+        handleDeleteNote={handleDeleteNote}
+        setBasicContactData={setBasicContactData}
       >
         {children}
       </ClientCard>
@@ -279,10 +410,31 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
             setOpenEditModal(false)
           }}
           isEdit={openEditModal}
-          handleSubmit={handleEditSubmit}
+          handleSubmit={handleEditAllSubmit}
           contactId={clientId}
         />
       )}
+      <Modal
+        modalWidth={682}
+        centered={true}
+        visible={openDeleteModal}
+        onCancel={() => setOpenDeleteModal((val) => !val)}
+        onOk={() => handleDeleteSubmit()}
+        newButtonText={t('clients.content.delete.confirm.yes')}
+        title={t('clients.clientcard.notes.clientnote.deletemodal.title')}
+      >
+        <span
+          style={{
+            fontFamily: 'Circular-Std-Book',
+            fontWeight: 'normal',
+            fontSize: '16px',
+            lineHeight: '20px',
+            color: '#9292A3',
+          }}
+        >
+          {t('clients.clientcard.notes.clientnote.deletemodal.content')}
+        </span>
+      </Modal>
     </Layout>
   )
 }

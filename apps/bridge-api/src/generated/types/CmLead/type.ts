@@ -63,6 +63,7 @@ export const CmLead = objectType({
     t.nullable.field('latest_interaction', { type: 'DateTime' })
     t.nullable.int('location_id')
     t.nullable.int('need_to_knows')
+    t.nullable.int('pipeline_stage_id')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
@@ -141,6 +142,24 @@ export const CmLead = objectType({
       type: 'LeadStatus',
       resolve(root: any) {
         return root.LeadStatusData
+      },
+    })
+    t.nullable.field('PipelineStage', {
+      type: 'PipelineStage',
+      resolve(root: any) {
+        return root.PipelineStage
+      },
+    })
+    t.nullable.field('Contact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.Contact
+      },
+    })
+    t.nullable.field('Location', {
+      type: 'CompanyBranch',
+      resolve(root: any) {
+        return root.Location
       },
     })
     t.nullable.field('_count', {

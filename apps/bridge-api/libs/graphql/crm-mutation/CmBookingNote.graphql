@@ -1,0 +1,37 @@
+fragment CmBookingNoteFields on CmBookingNote {
+  ID
+  OwnerID
+  AppointmentID
+  Note
+  Status
+  CreatedDate
+  IpAddress
+}
+
+fragment CmBookingNote on CmBookingNote {
+  ...CmBookingNoteFields
+}
+
+mutation createOneCmBookingNote($data: CmBookingNoteCreateInput!) {
+  createOneCmBookingNote(data: $data) {
+    ...CmBookingNote
+  }
+}
+
+mutation updateOneCmBookingNote($where: CmBookingNoteWhereUniqueInput!, $data: CmBookingNoteUpdateInput!) {
+  updateOneCmBookingNote(where: $where, data: $data) {
+    ...CmBookingNote
+  }
+}
+
+mutation deleteOneCmBookingNote($where: CmBookingNoteWhereUniqueInput!) {
+  deleteOneCmBookingNote(where: $where) {
+    ...CmBookingNote
+  }
+}
+
+mutation updateManyCmBookingNote($where: CmBookingNoteWhereInput, $data: CmBookingNoteUpdateManyMutationInput!) {
+  updateManyCmBookingNote(where: $where, data: $data) {
+    count
+  }
+}
