@@ -8,7 +8,7 @@ import {
   SetupMenu,
   setupMenuTranslation,
   SetupMiddleMenu,
-} from './setup-menu'
+} from './SetupMenu'
 import Flag from '../../../assets/images/united-kingdom.png'
 
 const { SubMenu } = AntMenu
