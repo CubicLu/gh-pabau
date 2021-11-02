@@ -7918,7 +7918,7 @@ model JobStatus {
 //}
 
 model LeadStatus {
-  id                  Int       @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   company_id          Int?
   status_name         String
   status_order        Int
@@ -7926,12 +7926,9 @@ model LeadStatus {
   email_template_from String
   is_default          Int
   is_convert          Int
-  pipeline_id         Int?
-  Company             Company?  @relation(fields: [company_id], references: [id])
-  Pipeline            Pipeline? @relation(fields: [pipeline_id], references: [id])
+  Company             Company? @relation(fields: [company_id], references: [id])
 
   CmLead CmLead[]
-  @@index([pipeline_id], name: "pipeline_id")
   @@map("lead_status")
 }
 
@@ -9919,7 +9916,6 @@ model Pipeline {
   restrict_stages Boolean @default(false)
   reference       String?
 
-  LeadStatus    LeadStatus[]
   PipelineStage PipelineStage[]
   @@index([company_id], name: "company_id")
   @@map("pipeline")
