@@ -1943,6 +1943,7 @@ model CmContact {
   CommunicationAttachment   CommunicationAttachment[]
   RecallSchedule            RecallSchedule[]
 
+  MedicalFormContact MedicalFormContact[]
   @@unique([ID, company_id], name: "primary")
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Fname], name: "Fname")
@@ -8526,7 +8527,7 @@ model MedicalFormContact {
   deleted_at                DateTime?
   complete                  Int
   locked                    Int
-  user_created              Int
+  user_created              Int?
   user_updated              Int
   related_to                Int
   custom_user_name          String
@@ -8544,6 +8545,8 @@ model MedicalFormContact {
   form_contact_number       Int                         @default(0)
   diagnosis_code            String
   Form                      MedicalForm                 @relation(fields: [form_id], references: [id])
+  Contact                   CmContact?                  @relation(fields: [contact_id], references: [ID])
+  CreatedBy                 User?                       @relation(fields: [user_created], references: [id])
   MedicalFormContactHistory MedicalFormContactHistory[]
   MedicalContactAttr        MedicalContactAttr[]
 
@@ -12849,8 +12852,9 @@ model User {
   ActivityUserState            ActivityUserState[]
   ActivityUserFilter           ActivityUserFilter[]
 
-  MedicalForm MedicalForm[]
-  CmContact   CmContact[]
+  MedicalForm        MedicalForm[]
+  CmContact          CmContact[]
+  MedicalFormContact MedicalFormContact[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

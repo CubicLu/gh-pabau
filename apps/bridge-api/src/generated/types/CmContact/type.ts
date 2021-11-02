@@ -542,32 +542,18 @@ export const CmContact = objectType({
         return root.PathwayStepsTaken
       },
     })
-    t.list.field('CommunicationAttachment', {
-      type: 'CommunicationAttachment',
+    t.list.field('MedicalFormContact', {
+      type: 'MedicalFormContact',
       args: {
-        where: 'CommunicationAttachmentWhereInput',
-        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
-        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CommunicationAttachmentScalarFieldEnum',
+        distinct: 'MedicalFormContactScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CommunicationAttachment
-      },
-    })
-    t.list.field('RecallSchedule', {
-      type: 'RecallSchedule',
-      args: {
-        where: 'RecallScheduleWhereInput',
-        orderBy: 'RecallScheduleOrderByWithRelationInput',
-        cursor: 'RecallScheduleWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'RecallScheduleScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.RecallSchedule
+        return root.MedicalFormContact
       },
     })
     t.nullable.field('_count', {
