@@ -41,15 +41,21 @@ const Appointments = () => {
       take: pagination.limit,
     }
   }, [contactID, pagination.offSet, pagination.limit])
-  const { loading, data: activityData, refetch } = useGetActivityQuery({
+  const {
+    loading,
+    data: activityData,
+    refetch: reFetchActivity,
+  } = useGetActivityQuery({
     variables: queryVariable,
     skip: !contactID,
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
   })
 
   const {
     data: countData,
     loading: countLoading,
+    refetch: reFetchCountActivity,
   } = useCountClinetActivityQuery({
     variables: { contactID },
     skip: !contactID,
@@ -64,7 +70,8 @@ const Appointments = () => {
         t('clients.activities.delete.message')
       )
       setIsActivityDelete(false)
-      refetch()
+      reFetchActivity()
+      reFetchCountActivity()
     },
     onError() {
       ResNotification(

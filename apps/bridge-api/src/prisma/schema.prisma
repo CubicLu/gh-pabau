@@ -2429,7 +2429,7 @@ model ContactNote {
   Note        String
   Status      cm_contact_notes_Status @default(Enable)
   CreatedDate DateTime
-  IpAddress   String
+  IpAddress   String?
   imported    Boolean                 @default(false)
   User        User                    @relation(fields: [OwnerID], references: [id])
   CmContact   CmContact               @relation(fields: [ContactID], references: [ID])
@@ -2509,7 +2509,7 @@ model CmDrug {
   is_active    Boolean
   product_id   Int
   lot_number   String
-  expiry_date  DateTime
+  expiry_date  DateTime?
   field_order  Int?       @default(0)
   is_vaccine   Int
   is_required  Int
@@ -8457,6 +8457,7 @@ model MedicalForm {
   lab_id                 Int
   is_private             Boolean   @default(false)
   Company                Company?  @relation(fields: [company_id], references: [id])
+  CreatedBy              User?     @relation(fields: [user_created], references: [id])
 
   MedicalFormAdvancedSetting MedicalFormAdvancedSetting[]
 
@@ -12831,6 +12832,7 @@ model User {
   ActivityUserState            ActivityUserState[]
   ActivityUserFilter           ActivityUserFilter[]
 
+  MedicalForm MedicalForm[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
