@@ -24,6 +24,8 @@ describe('ClientPhotosLayout', () => {
           onPageChange: () => false,
           onPageSizeChange: () => false,
         }}
+        uploadingImages={[]}
+        setUploadingImages={() => false}
       />
     )
     expect(baseElement).toBeTruthy()
