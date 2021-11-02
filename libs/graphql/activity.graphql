@@ -354,7 +354,7 @@ query getActivity($contactID: Int!,$skip: Int = 0,$take: Int = 50){
   }
 }
 
-query countClinetActivity($contactID: Int!){
+query countClientActivity($contactID: Int!){
   findManyActivityCount(where:{contact_id:{equals: $contactID}})
 }
 query retrievePipeline {

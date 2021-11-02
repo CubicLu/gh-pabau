@@ -5359,10 +5359,10 @@ en:
   create.filter.modal.shared.visibility.desc: 'All users in the company can see and use this filter'
   create.filter.modal.status.pending: Pending
   create.filter.modal.status.workingOn: 'Working on'
-  create.filter.modal.status.reopened: 'Reopened'
-  create.filter.modal.status.done: 'Done'
-  create.filter.modal.status.awaiting: 'Awaiting'
-  create.filter.modal.activity.option.label: 'Activity'
+  create.filter.modal.status.reopened: Reopened
+  create.filter.modal.status.done: Done
+  create.filter.modal.status.awaiting: Awaiting
+  create.filter.modal.activity.option.label: Activity
   create.filter.modal.lead.option.label: 'Lead'
   create.filter.modal.activity.column.add.time: 'Add time'
   create.filter.modal.activity.column.assigned.user: 'Assigned to user'

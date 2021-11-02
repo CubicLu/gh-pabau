@@ -62,7 +62,7 @@ export const CustomTabMenu: FC<P> = ({
                 >
                   <div className={styles.titleCountWrapper}>
                     {tab.name}
-                    {tab.count && tab.count >= 0 && (
+                    {Object.keys(tab).includes('count') && (
                       <div className={styles.countWrapper}>
                         <div className={styles.countContainer}>{tab.count}</div>
                       </div>

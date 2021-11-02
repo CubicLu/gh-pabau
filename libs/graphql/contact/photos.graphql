@@ -124,10 +124,3 @@ mutation moveContactAttachments($album: Int!, $images: [Int]!) {
     album
   }
 }
-
-mutation moveContactAttachments($album: Int!, $images: [Int]!) {
-  moveAttachments(albumId: $album, imageIds: $images) {
-    success
-    album
-  }
-}

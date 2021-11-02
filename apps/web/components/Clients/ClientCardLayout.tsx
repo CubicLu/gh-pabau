@@ -7,7 +7,7 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
-  useCountClinetActivityQuery,
+  useCountClientActivityQuery,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
 } from '@pabau/graphql'
@@ -53,10 +53,9 @@ export const ClientCardLayout: FC<P> = ({
 }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
-  const contactID = Number(router.query['id'])
-  const { data: countData } = useCountClinetActivityQuery({
-    variables: { contactID },
-    skip: !contactID,
+  const { data: countActivities } = useCountClientActivityQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
   })
   const { t } = useTranslationI18()
   const { me } = useUser()
@@ -247,7 +246,7 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'activities',
       name: 'Activities',
-      count: countData?.findManyActivityCount,
+      count: countActivities?.findManyActivityCount,
     },
 
     // {

@@ -5,7 +5,7 @@ import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import styles from './clientCardLayout.module.less'
 import {
   useGetActivityQuery,
-  useCountClinetActivityQuery,
+  useCountClientActivityQuery,
   useDeleteManyActivityMutation,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
@@ -19,7 +19,7 @@ import {
   PaginationType,
 } from '@pabau/ui'
 import { DisplayDate } from '../../../hooks/displayDate'
-const Appointments = () => {
+const ActivitiesTab = () => {
   const router = useRouter()
   const contactID = Number(router.query['id'])
   const [isActivityDelete, setIsActivityDelete] = useState(false)
@@ -31,7 +31,7 @@ const Appointments = () => {
   const [pagination, setPagination] = useState<PaginationType>({
     total: 0,
     offSet: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
   })
   const queryVariable = useMemo(() => {
@@ -56,7 +56,7 @@ const Appointments = () => {
     data: countData,
     loading: countLoading,
     refetch: reFetchCountActivity,
-  } = useCountClinetActivityQuery({
+  } = useCountClientActivityQuery({
     variables: { contactID },
     skip: !contactID,
   })
@@ -181,4 +181,4 @@ const Appointments = () => {
   )
 }
 
-export default Appointments
+export default ActivitiesTab
