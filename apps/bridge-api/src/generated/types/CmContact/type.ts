@@ -466,6 +466,12 @@ export const CmContact = objectType({
         return root.MarketingSourceData
       },
     })
+    t.nullable.field('User', {
+      type: 'User',
+      resolve(root: any) {
+        return root.User
+      },
+    })
     t.list.field('Voucher', {
       type: 'Voucher',
       args: {
