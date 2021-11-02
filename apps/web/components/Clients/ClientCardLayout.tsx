@@ -4,10 +4,20 @@ import {
   useGetMarketingSourcesQuery,
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
+  useCreateOneContactNoteMutation,
+  useUpdateOneContactNoteMutation,
+  useDeleteOneContactNoteMutation,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
 } from '@pabau/graphql'
-import { ClientCard, TabItem, ClientNotes } from '@pabau/ui'
+import {
+  ClientCard,
+  TabItem,
+  ClientNotes,
+  Notification,
+  NotificationType,
+  BasicModal as Modal,
+} from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
   FC,
@@ -20,6 +30,13 @@ import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -29,6 +46,9 @@ interface P
 export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { t } = useTranslationI18()
+  const { me } = useUser()
+  const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
@@ -37,8 +57,37 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     appointments: [],
   })
   const [basicContactData, setBasicContactData] = useState(null)
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
+  const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
   const [openEditModal, setOpenEditModal] = useState(false)
   const user = useUser()
+
+  const [addClientNote] = useCreateOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.create')
+      )
+    },
+  })
+
+  const [editMutation] = useUpdateOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.edit')
+      )
+    },
+  })
+
+  const [deleteMutation] = useDeleteOneContactNoteMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.delete')
+      )
+    },
+  })
 
   const getQueryVariables = useMemo(() => {
     return {
@@ -55,7 +104,11 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
 
   const [
     getContactDetails,
-    { data: contactDetails, loading: notesCountLoading },
+    {
+      data: contactDetails,
+      loading: notesCountLoading,
+      refetch: getContactHeaderRefetch,
+    },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
     ...getQueryVariables,
@@ -141,13 +194,42 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     }
   }, [customFieldData, data])
 
+  const handleAddNewClientNote = async (note: string) => {
+    const noteBody = {
+      Note: note,
+      CreatedDate: timezoneDate() || dayjs().utc().format(),
+      User: { connect: { id: me?.user } },
+      CmContact: { connect: { ID: clientId } },
+    }
+    await addClientNote({
+      variables: { data: noteBody },
+    })
+    getContactHeaderRefetch()
+  }
+
+  const handleEditNote = async (id, note) => {
+    await editMutation({
+      variables: { where: { ID: id }, data: { Note: { set: note } } },
+    })
+    getContactHeaderRefetch()
+  }
+
+  const handleDeleteNote = async (id) => {
+    setOpenDeleteModal((val) => !val)
+    setDeleteNoteId(id)
+  }
+
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
     { key: 'appointments', name: 'Appointments' },
     { key: 'financial', name: 'Financials' },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
-    { key: 'emr', name: 'EMR' },
+    {
+      key: 'emr',
+      name: 'EMR',
+      childTabs: [{ key: 'photos', name: 'Photos' }],
+    },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
     { key: 'loyalty', name: 'Loyalty' },
     { key: 'activities', name: 'Activities' },
@@ -220,6 +302,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
       })
     }
   }, [contactDetails, notesCountLoading])
+
   const handleEditAll = () => {
     setOpenEditModal(true)
   }
@@ -227,6 +310,18 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const handleEditAllSubmit = () => {
     setOpenEditModal(false)
     refetch()
+  }
+
+  const handleDeleteSubmit = async () => {
+    if (deleteNoteId) {
+      setOpenDeleteModal((val) => !val)
+      await deleteMutation({
+        variables: {
+          where: { ID: deleteNoteId },
+        },
+      })
+      getContactHeaderRefetch()
+    }
   }
 
   return (
@@ -282,6 +377,9 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         }
         notes={contactData}
         getContactDetails={getContactDetails}
+        handleAddNewClientNote={handleAddNewClientNote}
+        handleEditNote={handleEditNote}
+        handleDeleteNote={handleDeleteNote}
         setBasicContactData={setBasicContactData}
       >
         {children}
@@ -297,6 +395,27 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
           contactId={clientId}
         />
       )}
+      <Modal
+        modalWidth={682}
+        centered={true}
+        visible={openDeleteModal}
+        onCancel={() => setOpenDeleteModal((val) => !val)}
+        onOk={() => handleDeleteSubmit()}
+        newButtonText={t('clients.content.delete.confirm.yes')}
+        title={t('clients.clientcard.notes.clientnote.deletemodal.title')}
+      >
+        <span
+          style={{
+            fontFamily: 'Circular-Std-Book',
+            fontWeight: 'normal',
+            fontSize: '16px',
+            lineHeight: '20px',
+            color: '#9292A3',
+          }}
+        >
+          {t('clients.clientcard.notes.clientnote.deletemodal.content')}
+        </span>
+      </Modal>
     </Layout>
   )
 }

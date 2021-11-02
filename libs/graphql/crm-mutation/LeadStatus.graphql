@@ -7,16 +7,12 @@ fragment LeadStatusFields on LeadStatus {
   email_template_from
   is_default
   is_convert
-  pipeline_id
 }
 
 fragment LeadStatus on LeadStatus {
   ...LeadStatusFields
   Company {
     ...CompanyFields
-  }
-  Pipeline {
-    ...PipelineFields
   }
 }
 

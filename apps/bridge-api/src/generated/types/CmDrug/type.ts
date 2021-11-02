@@ -18,7 +18,7 @@ export const CmDrug = objectType({
     t.boolean('is_active')
     t.int('product_id')
     t.string('lot_number')
-    t.field('expiry_date', { type: 'DateTime' })
+    t.nullable.field('expiry_date', { type: 'DateTime' })
     t.nullable.int('field_order')
     t.int('is_vaccine')
     t.int('is_required')
