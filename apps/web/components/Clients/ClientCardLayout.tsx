@@ -61,9 +61,6 @@ export const ClientCardLayout: FC<P> = ({
   const { t } = useTranslationI18()
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
-  const { t } = useTranslationI18()
-  const { me } = useUser()
-  const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
@@ -84,12 +81,6 @@ export const ClientCardLayout: FC<P> = ({
         t('clients.clientcard.notes.clientnote.create')
       )
     },
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('clients.clientcard.notes.clientnote.create.errormessage')
-      )
-    },
   })
 
   const [editMutation] = useUpdateOneContactNoteMutation({
@@ -99,12 +90,6 @@ export const ClientCardLayout: FC<P> = ({
         t('clients.clientcard.notes.clientnote.edit')
       )
     },
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('clients.clientcard.notes.clientnote.edit.errormessage')
-      )
-    },
   })
 
   const [deleteMutation] = useDeleteOneContactNoteMutation({
@@ -112,12 +97,6 @@ export const ClientCardLayout: FC<P> = ({
       Notification(
         NotificationType.success,
         t('clients.clientcard.notes.clientnote.delete')
-      )
-    },
-    onError() {
-      Notification(
-        NotificationType.error,
-        t('clients.clientcard.notes.clientnote.delete.errormessage')
       )
     },
   })
@@ -144,7 +123,6 @@ export const ClientCardLayout: FC<P> = ({
     },
   ] = useGetContactHeaderLazyQuery({
     ssr: false,
-    notifyOnNetworkStatusChange: true,
     ...getQueryVariables,
   })
 

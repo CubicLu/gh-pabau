@@ -8,7 +8,7 @@ import {
   EnterOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-  FilterOutlined,
+  // FilterOutlined,
   FolderOutlined,
   MinusOutlined,
   PlusOutlined,
@@ -24,7 +24,7 @@ import {
   CamUploaderModal,
   UploadingImageProps,
 } from '@pabau/ui'
-import AlbumData, { ImageProps, AlbumProps } from './AlbumData'
+import { AlbumData, ImageProps, AlbumProps } from '@pabau/ui'
 import {
   Breadcrumb,
   Drawer,
@@ -69,6 +69,7 @@ export interface GalleryProps {
   onAlbumUpdate?: (data: AlbumProps) => void
   albumUpdateLoading?: boolean
   onAlbumDelete?: (data: AlbumProps) => void
+  openImageStudio?: (album: number, image: number) => void
   albumDeleteLoading?: boolean
 
   uploadingImages: UploadingImageProps[]
@@ -91,6 +92,7 @@ export const GalleryView: FC<GalleryProps> = ({
   onAlbumUpdate,
   albumUpdateLoading,
   onAlbumDelete,
+  openImageStudio,
   albumDeleteLoading,
   uploadingImages,
   setUploadingImages,
@@ -391,12 +393,6 @@ export const GalleryView: FC<GalleryProps> = ({
     setOpenDeleteModal(false)
   }
 
-  const handleImageStudio = () => {
-    console.log('SELECTED IMAGES:', selectedImages)
-    console.log('C:', currentData)
-    // setShowStudio(() => true)
-  }
-
   const handleDownload = () => {
     selectedImages.map((img: ImageProps) => {
       return imgDownload(img.img)
@@ -534,7 +530,7 @@ export const GalleryView: FC<GalleryProps> = ({
             <div className={styles.rightSide}>
               {!isMobile && (
                 <>
-                  <Popover
+                  {/* <Popover
                     placement="bottomRight"
                     title={<Text />}
                     content={<Content />}
@@ -543,7 +539,7 @@ export const GalleryView: FC<GalleryProps> = ({
                     <Button type="ghost" className={styles.filterButton}>
                       <FilterOutlined />
                     </Button>
-                  </Popover>
+                  </Popover> */}
                   <Popover
                     placement="bottomRight"
                     title={<AlbumText />}
@@ -612,13 +608,13 @@ export const GalleryView: FC<GalleryProps> = ({
                       </div>
                     </div>
                   </Drawer>
-                  <Button
+                  {/* <Button
                     type="ghost"
                     onClick={() => setFilterDrawer(true)}
                     className={styles.filterButton}
                   >
                     <FilterOutlined />
-                  </Button>
+                  </Button> */}
                   <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
                     {t('galley.view.album.view.album')} <DownOutlined />
                   </Button>
@@ -756,10 +752,6 @@ export const GalleryView: FC<GalleryProps> = ({
               </span>
               {!isMobile && (
                 <div className={styles.rightSide}>
-                  <Button type="ghost" onClick={() => handleImageStudio()}>
-                    <EyeOutlined />
-                    Studio {`(${selectedImages.length})`}
-                  </Button>
                   <Button type="ghost" onClick={() => handleDownload()}>
                     <DownloadOutlined />
                     {t('galley.list.album.download.button')}{' '}
@@ -840,9 +832,9 @@ export const GalleryView: FC<GalleryProps> = ({
                     </Tooltip>
                   )}
                 </button>
-                <button className={styles.btnFilter}>
+                {/* <button className={styles.btnFilter}>
                   <FilterOutlined />
-                </button>
+                </button> */}
                 <Drawer
                   placement={'bottom'}
                   closable={false}
@@ -942,6 +934,7 @@ export const GalleryView: FC<GalleryProps> = ({
               setCreateAlbumModal((e) => !e)
             }
           }}
+          openImageStudio={openImageStudio}
           onSingleImageMove={(album, image, isCreateAlbum) => {
             if (image) {
               if ((album || album === 0) && !isCreateAlbum) {

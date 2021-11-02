@@ -79,6 +79,8 @@ mutation createContactPhoto(
   ) {
     id
     linkref
+    album_id
+    date
   }
 }
 
@@ -103,6 +105,8 @@ mutation createContactPhotoWithoutAlbum(
   ) {
     id
     linkref
+    album_id
+    date
   }
 }
 
