@@ -178,17 +178,19 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                               </div>
                             </div>
                             <div>
-                              <div className={styles.deleteField}>
-                                <Tooltip
-                                  title={t(
-                                    'ui.clientdetails.customise.delete.message'
-                                  )}
-                                  placement="bottom"
-                                  overlayStyle={{ maxWidth: '200px' }}
-                                >
-                                  <DeleteOutlined />
-                                </Tooltip>
-                              </div>
+                              {item.fieldName.includes('customField_') && (
+                                <div className={styles.deleteField}>
+                                  <Tooltip
+                                    title={t(
+                                      'ui.clientdetails.customise.delete.message'
+                                    )}
+                                    placement="bottom"
+                                    overlayStyle={{ maxWidth: '200px' }}
+                                  >
+                                    <DeleteOutlined />
+                                  </Tooltip>
+                                </div>
+                              )}
                               <div className={styles.editField}>
                                 <EditOutlined />
                               </div>
