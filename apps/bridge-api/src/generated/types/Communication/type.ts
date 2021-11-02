@@ -30,26 +30,6 @@ export const Communication = objectType({
         return root.Company
       },
     })
-    t.list.field('CommunicationRecipient', {
-      type: 'CommunicationRecipient',
-      args: {
-        where: 'CommunicationRecipientWhereInput',
-        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
-        cursor: 'CommunicationRecipientWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'CommunicationRecipientScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.CommunicationRecipient
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'CommunicationCountOutputType',
-      resolve(root: any) {
-        return root._count
-      },
-    })
     t.list.field('CommunicationAttachment', {
       type: 'CommunicationAttachment',
       args: {
@@ -62,6 +42,20 @@ export const Communication = objectType({
       },
       resolve(root: any) {
         return root.CommunicationAttachment
+      },
+    })
+    t.list.field('CommunicationRecipient', {
+      type: 'CommunicationRecipient',
+      args: {
+        where: 'CommunicationRecipientWhereInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
+        cursor: 'CommunicationRecipientWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationRecipientScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationRecipient
       },
     })
     t.nullable.field('_count', {
