@@ -21,24 +21,22 @@ const Appointments = () => {
     data: {
       getPathway: {
         name: 'Standard',
+        // 'questionnaire','consent','treatment','prescription','lab','recall','aftercare','timeline','summary','video','photo','details','pinscreen','studio','draw','payment','splash'
         steps: [
           {
-            name: 'check-details',
+            name: 'details',
           },
           {
-            name: 'medical-history',
-          },
-          {
-            name: 'consent-forms',
+            name: 'consent',
           },
           {
             name: 'pinscreen',
           },
           {
-            name: 'photos',
+            name: 'photo',
           },
           {
-            name: 'treatment-form',
+            name: 'treatment',
           },
         ],
       },

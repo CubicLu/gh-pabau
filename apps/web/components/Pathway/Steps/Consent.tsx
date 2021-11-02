@@ -9,7 +9,7 @@ interface P {
   data?: Record<string, any> // This must be present for each Step
 }
 
-export const ConsentForms = ({ onSubmit, data }: P) => (
+export const Consent = ({ onSubmit, data }: P) => (
   <>
     <h2>Consent Forms</h2>
     <h3>{JSON.stringify(data)}</h3>

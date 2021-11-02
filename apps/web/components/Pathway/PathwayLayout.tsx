@@ -1,12 +1,12 @@
 import { Button } from '@pabau/ui'
 import { Pathway } from '../../pages/pathway/[pathway-id]/execute'
-import { ConsentForms } from './Steps/ConsentForms'
+import { Consent } from './Steps/Consent'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
 import { PinScreen } from './PinScreen'
-import { CheckDetails } from './Steps/CheckDetails'
-import { PhotosStep } from './Steps/Photos'
-import { TreatmentFormStep } from './Steps/TreatmentForm'
+import { Details } from './Steps/Details'
+import { PhotosStep } from './Steps/Photo'
+import { TreatmentFormStep } from './Steps/Treatment'
 import { FinishScreen } from './FinishScreen'
 import { useRouter } from 'next/router'
 import { useUser } from '../../context/UserContext'
@@ -24,11 +24,11 @@ interface P {
  * Here we map the names to the component
  */
 const hydratables: Record<string, ({ onSubmit, data }: any) => JSX.Element> = {
-  'check-details': CheckDetails,
-  'consent-forms': ConsentForms,
-  'medical-history': MedicalHistoryStep,
-  photos: PhotosStep,
-  'treament-form': TreatmentFormStep,
+  details: Details,
+  consent: Consent,
+  // 'medical-history': MedicalHistoryStep,
+  photo: PhotosStep,
+  treatment: TreatmentFormStep,
   pinscreen: PinScreen,
   'contract-selection': ContractSelection,
 } as const

@@ -9,7 +9,7 @@ interface P {
   data?: Record<string, any> // This must be present for each Step
 }
 
-export const CheckDetails = ({ onSubmit, data }: P) => (
+export const Details = ({ onSubmit, data }: P) => (
   <>
     <h2>Check Details</h2>
     <h3>{JSON.stringify(data)}</h3>
