@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from 'formik'
 
 interface FormProps {
-  testString: string
+  testString?: string
 }
 
 interface P {

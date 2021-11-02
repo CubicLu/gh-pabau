@@ -1,9 +1,9 @@
 import { Button } from '@pabau/ui'
-import { Pathway } from '../../pages/pathway/[pathway-id]/execute/[client-id]'
+import { Pathway } from '../../pages/pathway/[pathway-id]/execute'
 import { ConsentForms } from './Steps/ConsentForms'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
-import { LockScreen } from './LockScreen'
+import { PinScreen } from './PinScreen'
 import { CheckDetails } from './Steps/CheckDetails'
 import { PhotosStep } from './Steps/Photos'
 import { TreatmentFormStep } from './Steps/TreatmentForm'
@@ -12,6 +12,8 @@ import { useRouter } from 'next/router'
 import { useUser } from '../../context/UserContext'
 import MedicalHistory from '../ClientCard/dashboard/MedicalHistory'
 import { MedicalHistoryStep } from './Steps/MedicalHistory'
+import { ContractSelection } from './ContractSelection'
+import { HandToPatientSplash } from './HandToPatientSplash'
 
 interface P {
   client: any //TODO: set this to the graphql type
@@ -27,32 +29,23 @@ const hydratables: Record<string, ({ onSubmit, data }: any) => JSX.Element> = {
   'medical-history': MedicalHistoryStep,
   photos: PhotosStep,
   'treament-form': TreatmentFormStep,
+  pinscreen: PinScreen,
+  'contract-selection': ContractSelection,
 } as const
+
+/**
+ * Place any screens that go before the main customer steps here. After these screens, a splash screen will show
+ * prompting the staff user to hand control of the device to the patient. This splash isn't a discrete step as it will
+ * timeout.
+ */
+const prependScreens = [{ name: 'contract-selection' }] as const
 
 export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [stepState, setStepState] = useState<any>({})
 
-  let customerFirstStep = 0
-  let lockWasFound = false
-  // eslint-disable-next-line unicorn/no-array-for-each
-  pathway.steps.forEach((pathway, i) => {
-    if ('lock' in pathway) {
-      if (lockWasFound) {
-        console.error(
-          'Multiple lock screens were found - this is not supported'
-        )
-      }
-      customerFirstStep = i + 1
-      lockWasFound = true
-    }
-  })
-
-  //TODO @@@
-  if (!lockWasFound) {
-    console.warn('No lock screen was found - this is not a supported scenario')
-  }
+  const customerFirstStep = prependScreens.length
 
   const isCustomerOnFirstStep = step === customerFirstStep
 
@@ -62,15 +55,17 @@ export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
   }
 
   const HydratedScreen = useMemo(() => {
-    const currentStep = pathway.steps[step]
-    if (!currentStep) return FinishScreen
-    if ('lock' in currentStep && currentStep.lock === true) {
-      return LockScreen
-    }
-    if (!('lock' in currentStep)) {
-      if (!(currentStep.name in hydratables)) throw new Error('step not found')
-      return hydratables[currentStep.name]
-    }
+    const currentStep =
+      step >= prependScreens.length
+        ? pathway.steps[step - prependScreens.length]
+        : prependScreens[step]
+    if (!currentStep) return <FinishScreen />
+    if (!(currentStep.name in hydratables)) throw new Error('step not found')
+    const Hydrated = hydratables[currentStep.name]
+    const HydratedJsx = <Hydrated onSubmit={submitCallback} data={stepState} />
+    if (step === prependScreens.length)
+      return <HandToPatientSplash>{HydratedJsx}</HandToPatientSplash>
+    return HydratedJsx
   }, [pathway.steps, step])
 
   const { me } = useUser()
@@ -104,9 +99,8 @@ export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
           Current step: {step + 1} - {JSON.stringify(pathway.steps[step])}
         </p>
         <p>
-          pathway_id={router.query['pathway-id']}
-          client_id={router.query['client-id']}
-          logged_in_id={me.user}
+          pathway_id={router.query['pathway-id']} - client_id=
+          {router.query['client-id']} - logged_in_id={me.user}
         </p>
       </div>
       <div
@@ -115,7 +109,7 @@ export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
           margin: '1em',
         }}
       >
-        <HydratedScreen onSubmit={submitCallback} data={stepState} />
+        {HydratedScreen}
       </div>
     </div>
   )

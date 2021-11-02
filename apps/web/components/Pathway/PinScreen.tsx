@@ -9,7 +9,7 @@ interface P {
   data?: Record<string, any>
 }
 
-export const LockScreen = ({ onSubmit, data }: P) => (
+export const PinScreen = ({ onSubmit, data }: P) => (
   <>
     <h2>Lock Screen</h2>
     <h3>{JSON.stringify(data)}</h3>
