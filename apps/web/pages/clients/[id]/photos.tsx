@@ -13,6 +13,7 @@ import {
   NotificationType,
 } from '@pabau/ui'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
+import PhotoStudio from '../../../components/ClientCard/PhotoStudio'
 import {
   useGetAlbumPhotosQuery,
   GetAlbumPhotosDocument,
@@ -20,6 +21,8 @@ import {
   GetPhotoAlbumsDocument,
   useCountAlbumPhotosQuery,
   CountAlbumPhotosDocument,
+  useGetAlbumPhotosLazyQuery,
+  useGetPhotoAlbumsLazyQuery,
   useCreateContactPhotoMutation,
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
@@ -79,6 +82,9 @@ const Photos: FC = () => {
   const [albums, setAlbums] = useState<AlbumProps>()
   const [albumId, setAlbumId] = useState<number>(0)
   const [currAlbumImages, setCurrAlbumImages] = useState<ImageProps[]>(null)
+  const [showPhotoStudio, setShowPhotoStudio] = useState(false)
+  const [studioAlbumId, setStudioAlbumId] = useState<number>(0)
+  const [studioImageId, setStudioImageId] = useState<number>(0)
   const [uploadingFiles, setUploadingFiles] = useState<UploadingImageProps[]>(
     []
   )
@@ -129,6 +135,20 @@ const Photos: FC = () => {
       contactId: contactId,
       albumId: albumId,
     },
+  })
+
+  const [
+    getAlbumPhotosManually,
+    { data: manualAlbumPhotos, loading: manualAlbumPhotosLoading },
+  ] = useGetAlbumPhotosLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const [
+    getPhotoAlbumsManually,
+    { data: manualPhotoAlbums, loading: manualPhotoAlbumsLoading },
+  ] = useGetPhotoAlbumsLazyQuery({
+    fetchPolicy: 'network-only',
   })
 
   const [createAlbum] = useCreateOnePhotoAlbumMutation({
@@ -330,6 +350,49 @@ const Photos: FC = () => {
     }
   }, [albumImages, albumImagesLoading])
 
+  useEffect(() => {
+    if (
+      manualAlbumPhotos?.findManyContactAttachment &&
+      !manualAlbumPhotosLoading
+    ) {
+      setCurrAlbumImages(null)
+      setTimeout(() => {
+        const images = manualAlbumPhotos?.findManyContactAttachment?.map(
+          (el) => {
+            return {
+              id: el?.id,
+              img: !el?.origin?.includes('http')
+                ? attachmentsBaseUrl + el?.origin
+                : el?.origin,
+              date: el?.date,
+              isSensitive: false,
+            }
+          }
+        )
+        setCurrAlbumImages(images)
+      }, 0)
+    }
+  }, [manualAlbumPhotos, manualAlbumPhotosLoading])
+
+  useEffect(() => {
+    if (manualPhotoAlbums?.findManyPhotoAlbum && !manualPhotoAlbumsLoading) {
+      const innerAlbums = iterateTo(manualPhotoAlbums?.findManyPhotoAlbum)
+      const cAlbums = {
+        id: 0,
+        albumTitle:
+          unCatImagesCount?.aggregateContactAttachment?.count?._all > 0
+            ? 'Uncategorized'
+            : '',
+        imageCount:
+          unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
+        albumImage: [],
+        modifiedDate: '',
+        album: innerAlbums,
+      }
+      setAlbums(cAlbums)
+    }
+  }, [manualPhotoAlbums, manualPhotoAlbumsLoading, unCatImagesCount])
+
   const onAlbumCreate = (album: string, moveImages: ImageProps[] = []) => {
     if (moveImages?.length > 0) {
       setMovingImagesOnAlbumCreate(moveImages?.map((el) => el?.id))
@@ -489,6 +552,13 @@ const Photos: FC = () => {
                       query: GetAlbumPhotosDocument,
                       variables: variables,
                     },
+                    {
+                      query: CountAlbumPhotosDocument,
+                      variables: {
+                        contactId: contactId,
+                        albumId: 0,
+                      },
+                    },
                   ],
                 })
               }
@@ -578,65 +648,101 @@ const Photos: FC = () => {
               contactId: contactId,
             },
           },
-          album === albumId && {
+          {
             query: GetAlbumPhotosDocument,
             variables: variables,
           },
-          album === albumId &&
-            albumId === 0 && {
-              query: CountAlbumPhotosDocument,
-              variables: {
-                contactId: contactId,
-                albumId: 0,
-              },
+          albumId === 0 && {
+            query: CountAlbumPhotosDocument,
+            variables: {
+              contactId: contactId,
+              albumId: 0,
             },
+          },
         ],
       })
     }
   }
 
+  const openPhotoStudio = (album: number, image: number) => {
+    setStudioAlbumId(album)
+    setStudioImageId(image)
+    setShowPhotoStudio((e) => !e)
+  }
+
   return (
-    <ClientCardLayout clientId={contactId} activeTab="photos">
-      <ClientPhotosLayout
-        albumList={albums}
-        images={currAlbumImages}
-        onAlbumClick={(id) => {
-          if (id !== albumId) {
-            setAlbumId(id)
-            setPaginatedData({
-              ...paginatedData,
-              currentPage: 1,
+    <>
+      <ClientCardLayout clientId={Number(router.query.id)} activeTab="photos">
+        <ClientPhotosLayout
+          albumList={albums}
+          images={currAlbumImages}
+          onAlbumClick={(id) => {
+            if (id !== albumId) {
+              setAlbumId(id)
+              setPaginatedData({
+                ...paginatedData,
+                currentPage: 1,
+              })
+            }
+          }}
+          loading={albumImagesLoading}
+          paginateData={{
+            currentPage: paginatedData?.currentPage,
+            pageSize: paginatedData?.perPage,
+            onPageChange: (page) => {
+              setPaginatedData({ ...paginatedData, currentPage: page })
+            },
+            onPageSizeChange: (size) => {
+              setPaginatedData({
+                ...paginatedData,
+                perPage: size,
+              })
+            },
+          }}
+          openImageStudio={openPhotoStudio}
+          onAlbumCreate={onAlbumCreate}
+          albumCreateLoading={albumCreateLoading}
+          onAlbumUpdate={onAlbumUpdate}
+          albumUpdateLoading={albumUpdateLoading}
+          onAlbumDelete={onAlbumDelete}
+          albumDeleteLoading={albumDeleteLoading}
+          onImageUpload={onImageUpload}
+          onImageRemove={onImageRemove}
+          onUploadCancel={onUploadCancel}
+          uploadingImages={uploadingFiles}
+          setUploadingImages={setUploadingFiles}
+          onImagesMove={onImagesMove}
+        />
+      </ClientCardLayout>
+      {router.query.id && showPhotoStudio && (
+        <PhotoStudio
+          visible={showPhotoStudio}
+          contactId={Number(router.query.id)}
+          albumId={studioAlbumId}
+          photoId={studioImageId}
+          setVisible={() => {
+            setShowPhotoStudio((e) => !e)
+            setStudioAlbumId(0)
+            setStudioImageId(0)
+          }}
+          fetchFunc={() => {
+            getAlbumPhotosManually({
+              variables: {
+                contactId: router.query.id ? Number(router.query.id) : 0,
+                albumId: albumId,
+                skip: (paginatedData?.currentPage - 1) * paginatedData?.perPage,
+                take: paginatedData?.perPage,
+              },
             })
-          }
-        }}
-        loading={albumImagesLoading}
-        paginateData={{
-          currentPage: paginatedData?.currentPage,
-          pageSize: paginatedData?.perPage,
-          onPageChange: (page) => {
-            setPaginatedData({ ...paginatedData, currentPage: page })
-          },
-          onPageSizeChange: (size) => {
-            setPaginatedData({
-              ...paginatedData,
-              perPage: size,
+            getPhotoAlbumsManually({
+              variables: {
+                contactId: router.query.id ? Number(router.query.id) : 0,
+              },
             })
-          },
-        }}
-        onAlbumCreate={onAlbumCreate}
-        albumCreateLoading={albumCreateLoading}
-        onAlbumUpdate={onAlbumUpdate}
-        albumUpdateLoading={albumUpdateLoading}
-        onAlbumDelete={onAlbumDelete}
-        albumDeleteLoading={albumDeleteLoading}
-        onImageUpload={onImageUpload}
-        onImageRemove={onImageRemove}
-        onUploadCancel={onUploadCancel}
-        uploadingImages={uploadingFiles}
-        setUploadingImages={setUploadingFiles}
-        onImagesMove={onImagesMove}
-      />
-    </ClientCardLayout>
+          }}
+        />
+      )}
+    </>
   )
 }
 
