@@ -74,6 +74,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   useEffect(() => {
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
+    setIsDeletingNotes(false)
     if (notes?.count)
       setCountDetails((item) => {
         return { ...item, notes: notes?.count }
