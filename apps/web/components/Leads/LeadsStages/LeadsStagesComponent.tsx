@@ -54,22 +54,10 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 })
 
-const groupByPipelineId = (arr, property) => {
-  return arr.reduce(function (memo, x) {
-    if (x[property] && x[property] !== `null` && x[property] !== `undefined`) {
-      if (!memo[x[property]]) {
-        memo[x[property]] = []
-      }
-      memo[x[property]].push(x)
-    }
-    return memo
-  }, {})
-}
-
 const LeadsStagesComponent = () => {
   const [allStages, setAllStages] = useState([])
   const [leadsDefaultParams, setLeadsDefaultParams] = useState({
-    limit: 100,
+    limit: 30,
     skip: 0,
     company_id: 8119,
     pipeline_id: 1,
@@ -77,9 +65,14 @@ const LeadsStagesComponent = () => {
   const [leadsState, setLeadsState] = useState({})
   const [queryIsCalled, setQueryIsCalled] = useState(false)
   const leadsLenghtRef = useRef({ leadsLength: 0 })
-  const leadsArrayRef = useRef({ leadsArray: [] })
+  const leadsArrayRef = useRef({ leadsObj: {} })
   const leadsContainerRef = useRef(null)
   const scrollRef = useRef({ position: 0 })
+  const stageQueryRef = useRef({
+    queryCalled: 0,
+    queryCompleted: false,
+    stageWithLeads: [],
+  })
 
   const [
     getAllKanbanStages,
@@ -99,7 +92,14 @@ const LeadsStagesComponent = () => {
       data: getAllLeadsDetailData,
       error: getAllLeadsError,
     },
-  ] = useGetKanbanLeadsLazyQuery({ fetchPolicy: 'network-only' })
+  ] = useGetKanbanLeadsLazyQuery({
+    fetchPolicy: 'network-only',
+    onCompleted: () => {
+      const stageQuery = stageQueryRef.current
+      stageQuery.queryCompleted = true
+      stageQuery.queryCalled = stageQuery.queryCalled + 1
+    },
+  })
 
   const onDragEnd = (result) => {
     const { source, destination } = result
@@ -154,8 +154,8 @@ const LeadsStagesComponent = () => {
   )
 
   const findStatusOfActivity = (activitys) => {
-    if (activitys.length === 0) return 'no activity scheduled'
-    else {
+    if (activitys?.length === 0) return 'no activity scheduled'
+    else if (activitys) {
       for (const activity of activitys) {
         if (
           new Date(activity.due_start_date) < new Date() &&
@@ -185,25 +185,60 @@ const LeadsStagesComponent = () => {
   }, [allStages, getAllKanbanStages, leadsDefaultParams])
 
   useEffect(() => {
+    if (allStages.length > 0 && !queryIsCalled) {
+      let stageWithNoLeads = []
+      if (Object.keys(leadsState).length > 0) {
+        stageWithNoLeads = Object.keys(leadsState).filter(
+          (i) => leadsState[i].length >= leadsLenghtRef.current.leadsLength
+        )
+      } else {
+        for (const stage of allStages) {
+          stageWithNoLeads.push(stage['id'])
+        }
+      }
+      stageQueryRef.current.stageWithLeads = stageWithNoLeads
+    }
+  }, [allStages, queryIsCalled, leadsState, stageQueryRef])
+
+  useEffect(() => {
+    const stageQuery = stageQueryRef.current
     if (
+      stageQuery.stageWithLeads.length > 0 &&
+      stageQuery.queryCalled < stageQuery.stageWithLeads.length &&
       leadsDefaultParams.skip + leadsDefaultParams.limit !==
-      leadsLenghtRef.current.leadsLength
+        leadsLenghtRef.current.leadsLength
     ) {
-      setQueryIsCalled(true)
+      const stageIndex = Number.parseInt(
+        stageQuery.stageWithLeads[stageQuery.queryCalled]
+      )
+
+      if (stageQuery.queryCalled === 0) setQueryIsCalled(true)
       getAllKanbanLeadsDetails({
-        variables: { ...leadsDefaultParams },
+        variables: {
+          ...leadsDefaultParams,
+          leadStatus_id: stageIndex,
+        },
       })
     }
-  }, [leadsDefaultParams, getAllKanbanLeadsDetails])
+  }, [
+    leadsDefaultParams,
+    getAllKanbanLeadsDetails,
+    allStages,
+    stageQueryRef,
+    leadsState,
+    queryIsCalled,
+  ])
 
   useEffect(() => {
     if (
       calledGetAllStages &&
       !isLoadingGetAllStages &&
       !getAllStagesError &&
-      getAllStagesData
-    )
-      getAllStagesData?.stages?.length && setAllStages(getAllStagesData.stages)
+      getAllStagesData &&
+      getAllStagesData?.stages?.length
+    ) {
+      setAllStages(getAllStagesData.stages)
+    }
   }, [
     calledGetAllStages,
     getAllStagesData,
@@ -212,59 +247,51 @@ const LeadsStagesComponent = () => {
   ])
 
   useEffect(() => {
+    const stageQuery = stageQueryRef.current
+    const leadsArray = leadsArrayRef.current
     if (
-      allStages?.length > 0 &&
+      allStages.length > 0 &&
       queryIsCalled &&
       calledGetAllLeadsDetail &&
       !isLoadingGetAllLeadsDetail &&
       !getAllLeadsError &&
-      getAllLeadsDetailData
+      getAllLeadsDetailData &&
+      stageQuery.queryCalled <= allStages.length &&
+      stageQuery.queryCompleted
     ) {
       const { limit, skip } = leadsDefaultParams
-      if (
-        limit + skip !== leadsLenghtRef.current.leadsLength &&
-        getAllLeadsDetailData?.findManyCmLead?.length > 0
-      ) {
-        const mapLeadsPipelineWise = groupByPipelineId(
-          getAllLeadsDetailData?.findManyCmLead,
-          'LeadStatus'
-        )
+      const indexOfStages =
+        stageQuery.stageWithLeads[stageQuery.queryCalled - 1]
 
-        if (
-          JSON.stringify(leadsArrayRef.current.leadsArray) !==
-          JSON.stringify(mapLeadsPipelineWise)
-        ) {
-          leadsArrayRef.current.leadsArray = mapLeadsPipelineWise
-          const localLeadState = { ...leadsState }
-
-          for (const stageObject of allStages) {
-            const { id } = stageObject
-            const existingLeads = localLeadState[id] ? localLeadState[id] : []
-            const newLeads = mapLeadsPipelineWise[id]
-              ? mapLeadsPipelineWise[id]
-              : []
-            if (JSON.stringify(existingLeads) !== JSON.stringify(newLeads)) {
-              localLeadState[id] = [...existingLeads, ...newLeads]
-            }
-          }
-          setLeadsState(localLeadState)
-          setQueryIsCalled(false)
-          leadsLenghtRef.current.leadsLength = limit + skip
-          leadsContainerRef.current.scrollTop = scrollRef.current.position
-        }
+      const localLeadState = {
+        ...leadsState,
+        [indexOfStages]: leadsState[indexOfStages]
+          ? [
+              ...leadsState[indexOfStages],
+              ...getAllLeadsDetailData.findManyCmLead,
+            ]
+          : getAllLeadsDetailData.findManyCmLead,
+      }
+      leadsArray.leadsObj[indexOfStages] = getAllLeadsDetailData.findManyCmLead
+      setLeadsState(localLeadState)
+      stageQuery.queryCompleted = false
+      if (stageQuery.queryCalled === stageQuery.stageWithLeads.length) {
+        setQueryIsCalled(false)
+        leadsLenghtRef.current.leadsLength = limit + skip
+        stageQuery.queryCalled = 0
+        leadsContainerRef.current.scrollTop = scrollRef.current.position
       }
     }
   }, [
-    calledGetAllLeadsDetail,
+    allStages,
+    queryIsCalled,
     isLoadingGetAllLeadsDetail,
     getAllLeadsError,
     getAllLeadsDetailData,
-    leadsState,
-    allStages,
     leadsDefaultParams,
-    leadsLenghtRef,
-    leadsArrayRef,
-    queryIsCalled,
+    leadsState,
+    stageQueryRef,
+    calledGetAllLeadsDetail,
   ])
 
   return (

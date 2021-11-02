@@ -3,6 +3,7 @@ query getKanbanLeads(
   $skip: Int = 0
   $company_id: Int
   $pipeline_id: Int
+  $leadStatus_id: Int
 ) {
   findManyCmLead(
     take: $limit
@@ -10,6 +11,7 @@ query getKanbanLeads(
     where: {
       company_id: { equals: $company_id }
       PipelineStage: { pipeline_id: { equals: $pipeline_id } }
+      LeadStatus: { equals: $leadStatus_id }
     }
   ) {
     lead_id: ID
