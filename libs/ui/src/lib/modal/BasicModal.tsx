@@ -38,7 +38,6 @@ export interface BasicModalProps {
   btnType?: ButtonTypes
   modalBodyClass?: string
   loading?: boolean
-  loading?: boolean
   hasScroll?: boolean
 }
 
