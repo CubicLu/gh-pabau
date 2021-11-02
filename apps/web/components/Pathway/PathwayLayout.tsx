@@ -1,5 +1,5 @@
 import { Button } from '@pabau/ui'
-import { Pathway } from '../../pages/pathway/[pathway-id]/execute'
+import { Pathway } from '../../pages/pathway/[pathway-id]' //TODO: importing from pages feels dirty
 import { Consent } from './Steps/Consent'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
@@ -10,8 +10,6 @@ import { TreatmentFormStep } from './Steps/Treatment'
 import { FinishScreen } from './FinishScreen'
 import { useRouter } from 'next/router'
 import { useUser } from '../../context/UserContext'
-import MedicalHistory from '../ClientCard/dashboard/MedicalHistory'
-import { MedicalHistoryStep } from './Steps/MedicalHistory'
 import { ContractSelection } from './ContractSelection'
 import { HandToPatientSplash } from './HandToPatientSplash'
 
@@ -26,7 +24,7 @@ interface P {
 const hydratables: Record<string, ({ onSubmit, data }: any) => JSX.Element> = {
   details: Details,
   consent: Consent,
-  // 'medical-history': MedicalHistoryStep,
+  // 'medical-history': MedicalHistoryStep, //TODO
   photo: PhotosStep,
   treatment: TreatmentFormStep,
   pinscreen: PinScreen,
