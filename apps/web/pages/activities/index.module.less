@@ -33,8 +33,10 @@
           top: 50%;
           transform: translateY(-50%);
         }
-        &:hover, &:active, &:focus {
-          color: #7ec9e0
+        &:hover,
+        &:active,
+        &:focus {
+          color: #7ec9e0;
         }
       }
     }
@@ -788,18 +790,19 @@
     }
   }
 }
-:global
-  .statusBtnMenu.ant-popover
-  .ant-popover-inner
-  > .ant-popover-inner-content
-  > div {
-  color: red;
-  & > div {
-    &:not(:last-child) {
-      margin-bottom: 10px;
-    }
-  }
-}
+//TODO: make this pure!
+// :global
+//   .statusBtnMenu.ant-popover
+//   .ant-popover-inner
+//   > .ant-popover-inner-content
+//   > div {
+//   color: red;
+//   & > div {
+//     &:not(:last-child) {
+//       margin-bottom: 10px;
+//     }
+//   }
+// }
 .choose-column-wrapper {
   background: #ffffff;
   border-radius: 2px;
@@ -1655,7 +1658,7 @@
   h5 {
     font-size: 16px;
     line-height: 24px;
-    color: #3D3D46;
+    color: #3d3d46;
     margin-bottom: 8px;
     padding: 12px 16px 0;
   }
@@ -1670,7 +1673,7 @@
   }
   .filter-user-group {
     :global {
-       .ant-divider-horizontal {
+      .ant-divider-horizontal {
         margin: 10px 0;
       }
     }
@@ -1700,7 +1703,6 @@
           }
         }
       }
-
     }
   }
   .user-content-list {
@@ -1722,11 +1724,11 @@
         line-height: 36px;
       }
       &.active {
-        color: #54B2D3;
+        color: #54b2d3;
         h4 {
-          color: #54B2D3;
+          color: #54b2d3;
         }
-       }
+      }
     }
   }
   .footer-btn {
@@ -1745,26 +1747,26 @@
     }
 
     &:hover {
-      background: #EEF7FB;
-      color: #3D3D46;
+      background: #eef7fb;
+      color: #3d3d46;
       .icon-wrapper {
         :global {
           .anticon-edit {
             display: block;
             width: 24px;
             height: 24px;
-            border: 1px solid #40A0C1;
+            border: 1px solid #40a0c1;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #40A0C1;
+            color: #40a0c1;
           }
         }
       }
     }
     &.active {
-      color: #54B2D3;
+      color: #54b2d3;
     }
     .filter-category {
       display: flex;
@@ -1778,7 +1780,6 @@
       display: flex;
       cursor: pointer;
       .strike-wrapper {
-
         .strike-line {
           position: relative;
           &:before {
@@ -1786,7 +1787,7 @@
             position: absolute;
             width: 1px;
             height: 100%;
-            background: #54B2D3;
+            background: #54b2d3;
             transform: rotate(-45deg);
             left: 50%;
           }
@@ -1800,7 +1801,7 @@
       }
       span {
         margin-left: 0;
-       :global .anticon-check {
+        :global .anticon-check {
           margin-left: 8px;
         }
       }
@@ -1813,19 +1814,19 @@
     padding: 5px 16px;
     cursor: pointer;
     &.active {
-      color: #54B2D3;
+      color: #54b2d3;
       .sub-child-wrapper {
         .sub-child-content {
-          h6, span{
-            color: #54B2D3;
+          h6,
+          span {
+            color: #54b2d3;
           }
           .checkIcon {
-            color: #54B2D3;
+            color: #54b2d3;
           }
         }
       }
-
-     }
+    }
     .sub-child-wrapper {
       display: flex;
       .avtarIcon {
@@ -1839,13 +1840,13 @@
           margin: 0;
           font-size: 14px;
           font-size: 14px;
-          color: #3D3D46;
+          color: #3d3d46;
           line-height: 22px;
         }
         .count-text {
           font-size: 12px;
           line-height: 16px;
-          color: #9292A3;
+          color: #9292a3;
         }
         .highlight {
           color: #54b2d3;
@@ -1863,7 +1864,7 @@
     cursor: pointer;
     .user-tab {
       display: flex;
-      :global  {
+      :global {
         .ant-avatar-circle {
           width: 28px;
           height: 28px;
@@ -1895,14 +1896,14 @@
     &.active {
       .user-tab {
         h4 {
-          color: #54B2D3;
+          color: #54b2d3;
         }
         .you-text {
-          color: #54B2D3
+          color: #54b2d3;
         }
       }
       .check-icon {
-        color: #54B2D3;
+        color: #54b2d3;
       }
     }
   }
@@ -1915,7 +1916,7 @@
     width: 100%;
     h5 {
       font-size: 16px;
-      color:var(--grey-text-color);
+      color: var(--grey-text-color);
       margin: 0;
       padding-top: 0;
     }
