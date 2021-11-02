@@ -118,6 +118,8 @@ export const permissions = shield(
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
+      // Pathway
+      upsertOnePathwayStepsTaken: allow,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
