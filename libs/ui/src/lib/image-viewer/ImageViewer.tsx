@@ -188,7 +188,7 @@ export interface ImageViewerProps {
   uploadingImages?: UploadingImageProps[]
   setUploadingImages?: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
-  removeImage?: (imagePath: string) => void
+  removeImage?: (imageId: number) => void
 }
 
 const ImageViewerModal: FC<ImageViewerProps> = ({
@@ -902,9 +902,12 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
         {showCamUploader && (
           <CamUploader
             visible={showCamUploader}
-            onClose={() => {
+            onClose={(done?: boolean) => {
               setShowCamera(false)
               setShowCamUploader(() => false)
+              if (done) {
+                setUploadingImages?.([])
+              }
             }}
             uploadingImages={uploadingImages as UploadingImageProps[]}
             setUploadingImages={(images) => setUploadingImages?.(images)}

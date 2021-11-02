@@ -148,6 +148,9 @@ interface P {
   client: ClientData
   notes?: ClientNotes
   getContactDetails?: () => void
+  handleAddNewClientNote?: (e: string) => void
+  handleEditNote?: (id: number | string, e: string) => void
+  handleDeleteNote?: (id: number | string) => void
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
@@ -169,6 +172,9 @@ const ClientCardModal: FC<P> = ({
   client,
   notes,
   getContactDetails,
+  handleAddNewClientNote,
+  handleEditNote,
+  handleDeleteNote,
   onClose,
   tabs,
   activeTab,
@@ -187,7 +193,7 @@ const ClientCardModal: FC<P> = ({
   searchRender,
 }) => {
   const { t } = useTranslation('common')
-  const { push } = useRouter()
+  // const { push } = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [search, setSearch] = useState(false)
@@ -305,6 +311,7 @@ const ClientCardModal: FC<P> = ({
       ]
       setNoteItems(items)
       setNote('')
+      handleAddNewClientNote?.(note)
     }
   }
 
@@ -315,7 +322,7 @@ const ClientCardModal: FC<P> = ({
 
   const onBackToMainMenu = () => {
     //TODO: review this. Prefer <Link />
-    push('..')
+    // push?.('..')
   }
 
   const menuItems = [
@@ -937,6 +944,9 @@ const ClientCardModal: FC<P> = ({
                   notes={notes}
                   getContactDetails={getContactDetails}
                   client={client}
+                  handleAddNewClientNote={handleAddNewClientNote}
+                  handleEditNote={handleEditNote}
+                  handleDeleteNote={handleDeleteNote}
                 />
               )}
             </div>
@@ -970,7 +980,7 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px' }}>
+                <div style={{ padding: '12px', height: '100%' }}>
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}
