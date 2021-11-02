@@ -38,6 +38,8 @@ export interface BasicModalProps {
   btnType?: ButtonTypes
   modalBodyClass?: string
   loading?: boolean
+  loading?: boolean
+  hasScroll?: boolean
 }
 
 export function BasicModal({
@@ -61,6 +63,7 @@ export function BasicModal({
   btnType = ButtonTypes.primary,
   modalBodyClass,
   loading,
+  hasScroll = false,
   ...props
 }: PropsWithChildren<BasicModalProps & ModalProps>): JSX.Element {
   return (
@@ -77,7 +80,13 @@ export function BasicModal({
       wrapClassName={classNames(styles.modal, wrapClassName)}
       {...props}
     >
-      <div className={classNames(styles.modalContent, modalBodyClass)}>
+      <div
+        className={
+          hasScroll
+            ? classNames(modalBodyClass)
+            : classNames(styles.modalContent, modalBodyClass)
+        }
+      >
         {children}
       </div>
       {footer && (

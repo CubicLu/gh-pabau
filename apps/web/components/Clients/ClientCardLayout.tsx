@@ -61,6 +61,9 @@ export const ClientCardLayout: FC<P> = ({
   const { t } = useTranslationI18()
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
+  const { t } = useTranslationI18()
+  const { me } = useUser()
+  const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],

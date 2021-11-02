@@ -49,6 +49,7 @@ export const CustomTabMenu: FC<P> = ({
       <div className={styles.tabMenuItems} style={{ width: tabWidth }}>
         {tabs?.map((tab) => {
           //TODO: add count and tags to ui
+
           return (
             <React.Fragment key={tab.name}>
               {(!tab.childTabs || tab.childTabs.length === 0) && (

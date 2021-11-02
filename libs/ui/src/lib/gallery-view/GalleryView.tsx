@@ -74,6 +74,7 @@ export interface GalleryProps {
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (data: UploadingImageProps[]) => void
   onImageUpload?: (data: UploadingImageProps) => void
+  onImageRemove?: (imageId: number) => void
   onUploadCancel?: (data: UploadingImageProps) => void
 
   onImagesMove?: (album, images) => void
@@ -94,6 +95,7 @@ export const GalleryView: FC<GalleryProps> = ({
   uploadingImages,
   setUploadingImages,
   onImageUpload,
+  onImageRemove,
   onUploadCancel,
   onImagesMove,
 }) => {
@@ -960,9 +962,14 @@ export const GalleryView: FC<GalleryProps> = ({
         uploadingImages={uploadingImages}
         visible={uploadModal}
         setUploadingImages={setUploadingImages}
-        onClose={() => setUploadModal((e) => !e)}
+        onClose={(done?: boolean) => {
+          setUploadModal((e) => !e)
+          if (done) {
+            setUploadingImages?.([])
+          }
+        }}
         uploadImage={onImageUpload}
-        removeImage={(img) => console.log('RE:', img)}
+        removeImage={onImageRemove}
         onCancelUpload={onUploadCancel}
       />
 

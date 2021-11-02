@@ -156,6 +156,12 @@ export const CmLead = objectType({
         return root.Contact
       },
     })
+    t.nullable.field('Location', {
+      type: 'CompanyBranch',
+      resolve(root: any) {
+        return root.Location
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmLeadCountOutputType',
       resolve(root: any) {
