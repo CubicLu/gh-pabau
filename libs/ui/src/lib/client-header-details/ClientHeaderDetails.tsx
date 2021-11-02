@@ -34,6 +34,9 @@ export interface ClientHeaderDetailsProps {
   notes?: ClientNotes
   getContactDetails?: () => void
   client?: ClientData
+  handleAddNewClientNote?: (e: string) => void
+  handleEditNote?: (id: number, e: string) => void
+  handleDeleteNote?: (id: number | string) => void
 }
 
 interface ClientCountDetails {
@@ -45,6 +48,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   notes = { notes: [], count: 0, notesCountLoading: false, appointments: [] },
   getContactDetails,
   client,
+  handleAddNewClientNote,
+  handleEditNote,
+  handleDeleteNote,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -62,10 +68,13 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     notes: 0,
     staff: 0,
   })
+  const [openNotes, setOpenNotes] = useState<boolean>(false)
+  const [isDeletingNotes, setIsDeletingNotes] = useState<boolean>(false)
 
   useEffect(() => {
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
+    setIsDeletingNotes(false)
     if (notes?.count)
       setCountDetails((item) => {
         return { ...item, notes: notes?.count }
@@ -75,36 +84,22 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
-      const items: ClientNoteDetails[] = [
-        {
-          content: note,
-          date: dayjs().format('YYYY-MM-DD hh:mm A'),
-          User: {
-            contact: client?.fullName || '',
-            avatar: client?.avatar || '',
-          },
-        },
-        ...noteItems,
-      ]
-      setNoteItems(items)
       setNote('')
+      handleAddNewClientNote?.(note)
     }
   }
 
-  const handleEditClientNote = () => {
-    const notes = [...noteItems]
-    if (currentNote) notes[currentClientNote].content = currentNote
-    setNoteItems(notes)
+  const handleEditClientNote = (id) => {
+    handleEditNote?.(id, currentNote)
     setCurrentNote('')
     setCurrentClientNote(-1)
   }
 
-  const handleDeleteClientNote = (index) => {
-    const notes = [...noteItems]
-    notes.splice(index, 1)
-    setNoteItems(notes)
+  const handleDeleteClientNote = (id) => {
+    handleDeleteNote?.(id)
     setCurrentNote('')
     setCurrentClientNote(-1)
+    setIsDeletingNotes(true)
   }
 
   const medicalHistoryPopover = (
@@ -243,7 +238,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               icon={<DeleteOutlined />}
                               shape="circle"
                               size="small"
-                              onClick={() => handleDeleteClientNote(index)}
+                              onClick={() => handleDeleteClientNote(item.ID)}
                             />
                           </div>
                         </div>
@@ -261,7 +256,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               shape="circle"
                               size="small"
                               icon={<SaveOutlined />}
-                              onClick={() => handleEditClientNote()}
+                              onClick={() => handleEditClientNote(item.ID)}
                             />
                             <Button
                               icon={<UndoOutlined />}
@@ -359,6 +354,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           trigger="click"
           content={clientNotesPopover}
           overlayClassName={styles.clientCardHeaderPopover}
+          visible={openNotes}
+          onVisibleChange={(val) => {
+            !isDeletingNotes && setOpenNotes(val)
+          }}
         >
           <div
             onClick={() => {
