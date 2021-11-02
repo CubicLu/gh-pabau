@@ -1,4 +1,4 @@
-import { Context } from 'apps/bridge-api/src/context'
+import { Context } from '../../../context'
 import { extendType } from 'nexus'
 import { prepareMessage } from '../../email/merge-tags.service'
 
