@@ -13,7 +13,7 @@ export const ContactCommunicationExtended = extendType({
         }
 
         return await prepareMessage(parent.Content.body, ctx, {
-          contact_id: parent.Recipient.recipient_id,
+          contact_id: parent.CommunicationRecipient.recipient_id,
           booking_id:
             parent.related_type === 'APPOINTMENT' && parent.related_id
               ? parent.related_id
