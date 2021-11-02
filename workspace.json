@@ -536,7 +536,8 @@
           "builder": "@nrwl/next:server",
           "options": {
             "buildTarget": "connect:build",
-            "dev": true
+            "dev": true,
+            "port": 4300
           },
           "configurations": {
             "production": {

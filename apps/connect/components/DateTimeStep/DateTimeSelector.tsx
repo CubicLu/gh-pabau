@@ -32,7 +32,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
   const [selectedDate, setSelectedDate] = useState(moment())
   const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const settings = useContext(SettingsContext)
-
+  console.log('employee', selectedData.employee)
   const {
     loading: loadingShifts,
     error: errorShifts,
@@ -54,7 +54,9 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       start_date: Number.parseInt(moment().format('YYYYMMDD000000')),
       end_date: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
       company_id: settings.id,
-      user_id: selectedData.employee.Public_User.id,
+      user_id: selectedData.employee
+        ? selectedData.employee.Public_User.id
+        : null,
     },
   })
 
@@ -226,7 +228,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
         mdisplay && (
           <div className={Styles.content}>
             <h4 className={Styles.headTitle}>
-              {selectedData.employee.ID === 0
+              {!selectedData.employee
                 ? t('connect.onlinebooking.date&time.chooseanyone')
                 : `${t('connect.onlinebooking.date&time.d&tfor')} ${
                     selectedData.employee.Public_User.full_name
@@ -267,7 +269,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       ) : (
         <div className={Styles.content}>
           <h4 className={Styles.headTitle}>
-            {selectedData.employee.ID === 0
+            {!selectedData.employee
               ? t('connect.onlinebooking.date&time.chooseanyone')
               : `${t('connect.onlinebooking.date&time.d&tfor')} ${
                   selectedData.employee.Public_User.full_name

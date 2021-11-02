@@ -8,6 +8,8 @@ import useServices from '../../hooks/useServices'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import EmployeeModal from './EmployeeModal'
 import useStaffPermissions from '../../hooks/useStaffPermissions'
+import DefaultAvatar from '../../assets/images/default-avatar.png'
+
 export interface P {
   onSelected: () => void
 }
@@ -37,9 +39,35 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
   if (errorStaff) return <div>Error!</div>
   if (loadingStaff) return <div>Loading...</div>
 
+  if (staffResult.Public_Staff.length === 0) {
+    return <div className={Styles.mainBox}>No staff available</div>
+  }
   return (
     <div className={Styles.mainBox}>
       <h4>{t('connect.onlinebooking.employes.title')}</h4>
+      <div
+        key={0}
+        onClick={() => {
+          setSelectedData(actionTypes.SET_EMPLOYEE, null)
+          onSelected()
+        }}
+        className={Styles.oldBox}
+      >
+        <div className={Styles.contentBox}>
+          <img
+            src={DefaultAvatar}
+            className={Styles.userImage}
+            alt={'Default Avatar'}
+          />
+          <div className={Styles.userDetailWrapper}>
+            <div className={Styles.userDetail}>
+              <div className={Styles.userdetailInner}>
+                <p className={Styles.userName}>Choose anyone</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {staffResult.Public_Staff.map((val) => {
         if (
           !canStaffPerformInLocation(val) ||
