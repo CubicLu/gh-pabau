@@ -51,7 +51,7 @@ export const setupMenuTranslation = {
   helpcenter: 'setup.menu.help',
 }
 
-const SetupMenu: SetupMenuItem[] = [
+export const setupMenu: SetupMenuItem[] = [
   {
     menuName: 'Dashboard',
     icon: <DashboardOutlined />,
@@ -180,5 +180,3 @@ export const SetupBottomMenu: SetupMenuItem[] = [
     path: '',
   },
 ]
-
-export default SetupMenu

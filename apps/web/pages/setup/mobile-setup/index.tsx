@@ -3,7 +3,8 @@ import { Layout, Menu as AntMenu } from 'antd'
 import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
 import styles from './index.module.less'
-import SetupMenu, {
+import {
+  setupMenu,
   SetupBottomMenu,
   setupMenuTranslation,
   SetupMiddleMenu,
@@ -63,7 +64,7 @@ const Index: FC = () => {
       }}
     >
       <AntMenu>
-        {SetupMenu?.map((item, index) => {
+        {setupMenu?.map((item, index) => {
           return item?.children?.length > 0
             ? renderSubMenu(item, index)
             : renderMenuItem(item, index)
