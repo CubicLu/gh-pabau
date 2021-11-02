@@ -20,9 +20,29 @@ query getVouchers($contactID: Int!) {
   }
 }
 
-query getSoldVouchers($contactID: Int!, $skip: Int = 0, $take: Int = 50) {
+query getSoldVouchers(
+  $contactID: Int!
+  $status: String!
+  $skip: Int = 0
+  $take: Int = 50
+) {
+  activeCount: findManyVoucherCount(
+    where: {
+      Contact: { ID: { equals: $contactID } }
+      status: { equals: "Active" }
+    }
+  )
+  expiredCount: findManyVoucherCount(
+    where: {
+      Contact: { ID: { equals: $contactID } }
+      status: { not: { equals: "Active" } }
+    }
+  )
   vouchers: findManyVoucher(
-    where: { Contact: { ID: { equals: $contactID } } }
+    where: {
+      Contact: { ID: { equals: $contactID } }
+      status: { equals: $status }
+    }
     skip: $skip
     take: $take
   ) {
