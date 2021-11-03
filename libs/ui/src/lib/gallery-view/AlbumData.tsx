@@ -898,7 +898,6 @@ export const AlbumData: FC<AlbumDataProps> = ({
                 )}
               </div>
             </div>
-
             {isMobile && showMenu && (
               <div className={styles.bottomBar}>
                 <ToTopOutlined onClick={() => setMenuDrawer(true)} />

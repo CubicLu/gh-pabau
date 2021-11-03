@@ -51,15 +51,15 @@ select_permissions:
   role: user
 update_permissions:
 - permission:
-    check: {}
+    check: null
     columns:
-    - id
-    - createdAt
-    - title
-    - message
-    - type
-    - created_by
     - company_id
+    - created_by
+    - id
+    - type
+    - message
+    - title
+    - createdAt
     filter: {}
   role: public
 - permission:

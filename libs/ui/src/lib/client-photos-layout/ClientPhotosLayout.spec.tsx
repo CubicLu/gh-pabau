@@ -8,7 +8,24 @@ describe('ClientPhotosLayout', () => {
     const { baseElement } = render(
       <ClientPhotosLayout
         images={[] as ImageProps[]}
-        albumList={{} as AlbumProps}
+        albumList={
+          {
+            album: [],
+            albumImage: [],
+            albumTitle: '',
+            id: 0,
+            imageCount: 0,
+            modifiedDate: '',
+          } as AlbumProps
+        }
+        paginateData={{
+          pageSize: 10,
+          currentPage: 1,
+          onPageChange: () => false,
+          onPageSizeChange: () => false,
+        }}
+        uploadingImages={[]}
+        setUploadingImages={() => false}
       />
     )
     expect(baseElement).toBeTruthy()
