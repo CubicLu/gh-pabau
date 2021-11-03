@@ -26,7 +26,6 @@ import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   SenderItem,
-  senderItems,
   masterCriteriaOptions,
   subCriteriaOptions,
   mergeTagTypeOptions,
@@ -75,10 +74,6 @@ export const CreateSender: React.FC = () => {
       initialValues={initialValues}
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
-        senderItems.push({
-          ...values,
-          id: String(senderItems.length + 1),
-        })
         router.push('/setup/senders')
       }}
       render={({ values, errors, touched, handleChange, handleSubmit }) => (
@@ -310,26 +305,6 @@ export const CreateSender: React.FC = () => {
                         />
                       </div>
                     )}
-
-                    {/*<div className={styles.formElement}>*/}
-                    {/*  <Space className={styles.switchItem} size={8}>*/}
-                    {/*    <Switch*/}
-                    {/*      checked={values.isAutoUploadReplies}*/}
-                    {/*      onChange={(value) =>*/}
-                    {/*        handleChange({*/}
-                    {/*          target: { value, name: 'isAutoUploadReplies' },*/}
-                    {/*        })*/}
-                    {/*      }*/}
-                    {/*    />*/}
-                    {/*    <div>*/}
-                    {/*      {t('setup.senders.create.form.field.autoupload')}*/}
-                    {/*    </div>*/}
-                    {/*    <PabauPlus*/}
-                    {/*      label={t('common-label-plus')}*/}
-                    {/*      modalType="Marketing"*/}
-                    {/*    />*/}
-                    {/*  </Space>*/}
-                    {/*</div>*/}
                   </>
                 )}
               </div>

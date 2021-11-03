@@ -5675,4 +5675,7 @@ en:
   create.filter.modal.open.lead.status: 'Open'
   create.filter.modal.won.lead.status: 'Won'
   create.filter.modal.lost.lead.status: 'Lost'
-
+  setup.senders.update.detail.success: 'Sender details updated successfully'
+  setup.senders.update.detail.error: 'Error! while updating senders details '
+  setup.senders.delete.detail.success: 'Sender details deleted successfully'
+  setup.senders.delete.detail.error: 'Error! while deleting senders details '
