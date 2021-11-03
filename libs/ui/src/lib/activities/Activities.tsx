@@ -6,9 +6,9 @@ import {
 import confetti from 'canvas-confetti'
 import { FilterOutlined } from '@ant-design/icons'
 import styles from './Activities.module.less'
-import { groupByDay } from './utils'
+import { groupAcitvitiesByDay } from './utils'
 import dayjs, { Dayjs } from 'dayjs'
-import { Pagination } from 'antd'
+import { Pagination, Button, Popover, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as AppointmentIcon } from '../../assets/images/timeline/appointment.svg'
 import { ReactComponent as LetterIcon } from '../../assets/images/timeline/letter-icon.svg'
@@ -19,16 +19,43 @@ import { ReactComponent as LostMailIcon } from '../../assets/images/timeline/los
 import { ReactComponent as RadioUnchecked } from '../../assets/images/timeline/radio-button-unchecked.svg'
 import { ReactComponent as RadioChecked } from '../../assets/images/circle-check.svg'
 import { ReactComponent as UserIcon } from '../../assets/images/timeline/filled-user.svg'
-
 import TimeLineFilterPopover from './FilterPopover'
 import TimelineSkeleton from './ActivitySkeleton'
 import calendar from 'dayjs/plugin/calendar'
-dayjs.extend(calendar)
+import isoWeek from 'dayjs/plugin/isoWeek'
+import classNames from 'classnames'
+import {
+  EditOutlined,
+  DeleteOutlined,
+  ShareAltOutlined,
+  MoreOutlined,
+  TeamOutlined,
+} from '@ant-design/icons'
 
+dayjs.extend(calendar)
+dayjs.extend(isoWeek)
+
+const calendarFormat = {
+  lastDay: `[Yesterday]`,
+  sameDay: `[Today]`,
+  nextDay: `[Tomorrow]`,
+  sameWeek: `dddd`,
+  nextWeek: `[Next] dddd`,
+}
+export interface PaginationType {
+  total?: number
+  limit?: number
+  offSet?: number
+  currentPage?: number
+}
 export interface ActivitiesProps {
   eventsData: ActivitiesDataProps[]
   eventDateFormat: string
   isLoading?: boolean
+  setPagination?: (e: PaginationType) => void
+  pagination?: PaginationType
+  handleMenuClick?: (name: string, id: number) => void
+  DisplayDate?: (date: Date) => string
 }
 
 export interface ActivitiesDataProps {
@@ -40,6 +67,8 @@ export interface ActivitiesDataProps {
   dateTime: string
   taskChecked?: boolean
   taskUserName?: string
+  typeIcon?: JSX.Element
+  dateColor?: string
 }
 
 export const activityTypes = {
@@ -54,6 +83,10 @@ export const Activities: FC<ActivitiesProps> = ({
   eventsData = [],
   eventDateFormat,
   isLoading,
+  pagination,
+  setPagination,
+  handleMenuClick,
+  DisplayDate,
 }) => {
   const { t } = useTranslation('common')
   const [events, setEvents] = useState<ActivitiesDataProps[]>([])
@@ -63,19 +96,57 @@ export const Activities: FC<ActivitiesProps> = ({
   const [visibleFilterPopUp, setVisibleFilterPopUp] = useState(false)
   const [selectedFilterKey, setSelectedFilterKey] = useState<string[]>([])
   const [dateRange, setDateRange] = useState<Dayjs[]>([])
-
   const [paginateData, setPaginateData] = useState({
-    total: 0,
-    offset: 0,
-    pageSize: 6,
-    currentPage: 1,
+    total: pagination?.total ?? 0,
+    offset: pagination?.offSet ?? 0,
+    pageSize: pagination?.limit ?? 50,
+    currentPage: pagination?.currentPage ?? 1,
   })
+  const menuItems = {
+    edit: {
+      key: 1,
+      icon: <EditOutlined />,
+      label: t('timeline.dotMenu.edit'),
+    },
+    markedAsToDo: {
+      key: 2,
+      icon: <ShareAltOutlined />,
+      label: t('timeline.dotMenu.markedAsToDo'),
+    },
+    markedAsDone: {
+      key: 3,
+      icon: <ShareAltOutlined />,
+      label: t('timeline.dotMenu.markedAsDone'),
+    },
+    delete: {
+      key: 4,
+      icon: <DeleteOutlined />,
+      label: t('timeline.dotMenu.delete'),
+    },
+  }
+  const contentMenuItems = (menus: string[] = []) => {
+    const menuList = menus.map((menu) => {
+      return menuItems[menu]
+    })
+    return menuList
+  }
+  const renderMenu = (event) => {
+    return {
+      menuList: contentMenuItems([
+        'edit',
+        event.taskChecked ? 'markedAsToDo' : 'markedAsDone',
+        'delete',
+      ]),
+    }
+  }
 
-  const { days = [], eventsByDay } = groupByDay(
-    filteredEvents.slice(
-      paginateData.offset,
-      paginateData.currentPage * paginateData.pageSize
-    ),
+  const { days = [], eventsByDay } = groupAcitvitiesByDay(
+    !pagination
+      ? filteredEvents.slice(
+          paginateData.offset,
+          paginateData.currentPage * paginateData.pageSize
+        )
+      : filteredEvents,
     eventDateFormat,
     t
   )
@@ -112,11 +183,11 @@ export const Activities: FC<ActivitiesProps> = ({
     setFilteredEvents(filteredData)
     setPaginateData((d) => ({
       ...d,
-      currentPage: 1,
-      offset: 0,
-      total: filteredData?.length,
+      currentPage: pagination?.currentPage ?? 1,
+      offset: pagination?.offSet ?? 0,
+      total: pagination?.total ?? filteredData?.length,
     }))
-  }, [selectedFilterKey, dateRange, events, eventDateFormat])
+  }, [selectedFilterKey, dateRange, events, eventDateFormat, pagination])
 
   const randomInRange = (min, max) => {
     return Math.random() * (max - min) + min
@@ -144,22 +215,83 @@ export const Activities: FC<ActivitiesProps> = ({
   }
 
   const timeFormat = (date) => {
-    const standardDateFormat = dayjs(date, eventDateFormat)
-    if (
-      dayjs(standardDateFormat) < dayjs().subtract(6, 'days') ||
-      dayjs(standardDateFormat) > dayjs().add(6, 'days')
-    ) {
-      return dayjs(date, eventDateFormat).format('DD MMM [at] h:mm a')
+    const standardDateFormat = dayjs(date, eventDateFormat).startOf('day')
+    const now = dayjs().startOf('day')
+    let diff
+    const isCurrentYear = standardDateFormat.year() === now.year()
+    if (now < date) {
+      diff = now.diff(standardDateFormat, 'days')
+    } else {
+      diff = standardDateFormat.diff(now, 'days')
     }
-    return dayjs(date, eventDateFormat).calendar()
+    let weekDiff = -1
+    if (diff <= 14 && diff > 1) {
+      if (now < date) {
+        weekDiff = now.isoWeek() - standardDateFormat.isoWeek()
+      } else {
+        weekDiff = standardDateFormat.isoWeek() - now.isoWeek()
+      }
+    }
+    const retVal =
+      diff === -1
+        ? 'lastDay'
+        : diff === 0
+        ? 'sameDay'
+        : diff === 1
+        ? 'nextDay'
+        : weekDiff === 0
+        ? 'sameWeek'
+        : weekDiff === 1
+        ? 'nextWeek'
+        : ''
+    if (retVal) {
+      return (
+        <Tooltip
+          title={
+            isCurrentYear
+              ? dayjs(date, eventDateFormat).format('MM-DD h:mm')
+              : DisplayDate?.(date)
+          }
+          placement={'topRight'}
+        >
+          {dayjs(date, eventDateFormat).format(calendarFormat[retVal])}
+        </Tooltip>
+      )
+    } else if (!isCurrentYear) {
+      return <div>{DisplayDate?.(date)}</div>
+    } else {
+      return <div>{dayjs(date, eventDateFormat).format('MM-DD h:mm')}</div>
+    }
   }
 
   const onPageChange = (currentPage) => {
     const offset = paginateData.pageSize * (currentPage - 1)
+    setPagination?.({ ...pagination, offSet: offset, currentPage: currentPage })
     setPaginateData((d) => ({ ...d, offset, currentPage }))
   }
-
+  const renderItem = (key, icon, label, onClick, id) => {
+    return (
+      <div
+        className={styles.dotList}
+        key={`three-dot-menu-content-${key}`}
+        onClick={(e) => handleMenuClick?.(label, id)}
+      >
+        {icon}
+        <p>{label}</p>
+      </div>
+    )
+  }
+  const prepareContent = (menuList, id) => {
+    return (
+      <div className={classNames(styles.dotWrapper)}>
+        {menuList?.map(({ key, icon, label, onClick }) =>
+          renderItem(key, icon, label, onClick, id)
+        )}
+      </div>
+    )
+  }
   const renderEvent = (event) => {
+    const { menuList = [] } = renderMenu(event)
     return (
       <div className={styles.followContent}>
         <div className={styles.boxText}>
@@ -172,24 +304,51 @@ export const Activities: FC<ActivitiesProps> = ({
             </span>
             <h4>{event.eventName}</h4>
           </div>
+          <div className={styles.timeWrap}>
+            <div className={styles.popOverContainer}>
+              {menuList.length > 0 && (
+                <Popover
+                  content={prepareContent(menuList, event.id)}
+                  placement="left"
+                  trigger="click"
+                  overlayClassName={styles.customPopover}
+                >
+                  <Tooltip
+                    title={
+                      event.taskChecked
+                        ? t('clients.activities.markAsDone')
+                        : t('clients.activities.markAsNotDone')
+                    }
+                    placement={'topRight'}
+                  >
+                    <Button
+                      className={styles.btnCircle}
+                      shape="circle"
+                      icon={<MoreOutlined />}
+                    />
+                  </Tooltip>
+                </Popover>
+              )}
+            </div>
+          </div>
         </div>
         <div className={styles.clientTimeWrap}>
           <div
-            style={
-              event.type === activityTypes.lostEmail
-                ? event.taskChecked
-                  ? { color: '#9292A3' }
-                  : { color: '#FF5B64' }
-                : { color: '#65CD98' }
-            }
-            className={styles.time}
+            // style={
+            //   event.type === activityTypes.lostEmail
+            //     ? event.taskChecked
+            //       ? { color: '#9292A3' }
+            //       : { color: '#FF5B64' }
+            //     : { color: '#65CD98' }
+            // }
+            className={classNames(styles.time, event.dateColor ?? '')}
           >
             {timeFormat(event.dateTime)}
           </div>
           <div className={styles.clientNameWrap}>
             <div className={styles.clientNameText}>{event.clientName}</div>
             <div className={styles.clientNameText}>
-              <UserIcon /> &nbsp;
+              <TeamOutlined /> &nbsp;
               {event.taskUserName}
             </div>
           </div>
@@ -280,14 +439,16 @@ export const Activities: FC<ActivitiesProps> = ({
                             )
                           })
                           .map((event, index) => {
-                            const { icon, color } = renderIcon(event.type)
+                            const { icon, color } = renderIcon(
+                              event.type.toLocaleLowerCase()
+                            )
                             return (
                               <VerticalTimelineElement
                                 key={index}
                                 className={'vertical-timeline-element--work'}
-                                icon={icon}
+                                icon={event.typeIcon ?? icon}
                                 iconStyle={{
-                                  background: color,
+                                  background: '#54B2D3',
                                   color: '#fff',
                                 }}
                               >
