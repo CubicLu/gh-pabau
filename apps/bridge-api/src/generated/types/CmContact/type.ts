@@ -542,6 +542,20 @@ export const CmContact = objectType({
         return root.PathwayStepsTaken
       },
     })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
+      },
+    })
     t.list.field('MedicalFormContact', {
       type: 'MedicalFormContact',
       args: {

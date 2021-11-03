@@ -147,6 +147,7 @@ export interface ClientNotes {
 interface P {
   client: ClientData
   notes?: ClientNotes
+  medicalHistoryIconStatus?: string
   getContactDetails?: () => void
   handleAddNewClientNote?: (e: string) => void
   handleEditNote?: (id: number | string, e: string) => void
@@ -173,6 +174,7 @@ const ClientCardModal: FC<P> = ({
   client,
   cssClass,
   notes,
+  medicalHistoryIconStatus,
   getContactDetails,
   handleAddNewClientNote,
   handleEditNote,
@@ -944,6 +946,7 @@ const ClientCardModal: FC<P> = ({
               {!isMobile && (
                 <ClientHeaderDetails
                   notes={notes}
+                  medicalHistoryIconStatus={medicalHistoryIconStatus}
                   getContactDetails={getContactDetails}
                   client={client}
                   handleAddNewClientNote={handleAddNewClientNote}

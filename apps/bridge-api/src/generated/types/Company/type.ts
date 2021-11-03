@@ -1799,6 +1799,20 @@ export const Company = objectType({
         return root.InsurerContract
       },
     })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
+      },
+    })
     t.list.field('Voucher', {
       type: 'Voucher',
       args: {
