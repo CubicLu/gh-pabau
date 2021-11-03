@@ -1,0 +1,13 @@
+query getConsent($formType : String!){
+  findManyMedicalForm(
+    where:{
+      form_type:{
+        equals:$formType
+      }
+    }
+  ){
+    id
+    name
+    form_type
+  }
+}
