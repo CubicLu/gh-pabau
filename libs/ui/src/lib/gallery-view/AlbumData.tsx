@@ -145,6 +145,7 @@ export interface AlbumDataProps {
   }
   onAlbumRename?: (id: number) => void
   onAlbumDelete: (id: number) => void
+  openImageStudio?: (album, image) => void
   onSingleImageMove?: (
     albumId: number,
     imageId: number,
@@ -175,6 +176,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
   setCurrentData,
   paginateData,
   onAlbumRename,
+  openImageStudio,
   onSingleImageMove,
 }) => {
   const { t } = useTranslation('common')
@@ -244,7 +246,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             onClick={() => onFolderClick(value[1])}
           >
             <div className={styles.gridAlbum}>{showAlbumImages(value[0])}</div>
-            <p>{value[0].albumTitle}</p>
+            <p>{value[0].albumTitle?.substring(0, 40)}</p>
           </div>
         )
       },
@@ -324,21 +326,20 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <Checkbox
               checked={selectedImages.includes(value?.[0] as never)}
               onChange={(e) =>
-                handleImageSelection(e.target.checked, value?.[0])
+                handleImageSelection?.(e.target.checked, value?.[0])
               }
-            >
-              <Card bordered={false}>
-                <ImageItem
-                  isDirectPath
-                  origin={value?.[0]?.img || ''}
-                  alt={'none'}
-                  className={styles.tableImage}
-                />
-              </Card>
-              <div>
-                <p>{filename[filename.length - 1]}</p>
-              </div>
-            </Checkbox>
+            />
+            <Card bordered={false}>
+              <ImageItem
+                origin={value?.[0]?.img || ''}
+                alt={'none'}
+                className={styles.tableImage}
+                onClick={() => openImageStudio?.(data?.id, value?.[0]?.id)}
+              />
+            </Card>
+            <div>
+              <p>{filename?.[filename.length - 1]?.substring(0, 40)}</p>
+            </div>
           </div>
         )
       },
@@ -814,40 +815,46 @@ export const AlbumData: FC<AlbumDataProps> = ({
                   data.albumImage?.length > 0 &&
                   data.albumImage.map((x: ImageProps, i) => {
                     return (
-                      <div key={x?.id} className={styles.imagePreview}>
-                        <Checkbox
-                          checked={selectedImages.includes(x as never)}
+                      <div
+                        className={
+                          selectedImages.includes(x as never)
+                            ? classNames(styles.imagePreview, styles.showCheck)
+                            : styles.imagePreview
+                        }
+                        key={i}
+                      >
+                        <div
+                          className={styles.imageAlbum}
                           key={i}
-                          onChange={(value) =>
-                            handleImageSelection(value.target.checked, x)
-                          }
-                          className={
-                            selectedImages.includes(x as never)
-                              ? classNames(styles.checked, styles.showCheck)
-                              : ''
-                          }
+                          onClick={() => openImageStudio?.(data?.id, x?.id)}
                         >
-                          <div className={styles.imageAlbum} key={i}>
-                            <ImageItem
-                              origin={x.img}
-                              className={`img${i}`}
-                              alt={x.img}
-                              id={x.id}
-                              key={i}
-                              draggable={true}
-                              onDragStart={(event) => dragImage(event)}
-                            />
-                            {x.isSensitive ? (
-                              <div className={styles.sensitiveClass}>
-                                <EyeInvisibleOutlined />
-                                {!isMobile && <p>Sensitive Content</p>}
-                                <span onClick={() => (x.isSensitive = false)}>
-                                  {t('galley.list.image.show')}
-                                </span>
-                              </div>
-                            ) : null}
-                          </div>
-                        </Checkbox>
+                          <ImageItem
+                            origin={x.img}
+                            className={`img${i}`}
+                            alt={x.img}
+                            id={x.id}
+                            key={i}
+                            draggable={true}
+                            onDragStart={(event) => dragImage(event)}
+                          />
+                          {x.isSensitive ? (
+                            <div className={styles.sensitiveClass}>
+                              <EyeInvisibleOutlined />
+                              {!isMobile && <p>Sensitive Content</p>}
+                              <span onClick={() => (x.isSensitive = false)}>
+                                {t('galley.list.image.show')}
+                              </span>
+                            </div>
+                          ) : null}
+                        </div>
+                        <div className={styles.checkWrappers}>
+                          <Checkbox
+                            checked={selectedImages.includes(x as never)}
+                            onChange={(value) =>
+                              handleImageSelection?.(value.target.checked, x)
+                            }
+                          />
+                        </div>
                         <div className={styles.checkWrappers}>
                           {!isMobile ? (
                             <Popover
