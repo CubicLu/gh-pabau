@@ -154,7 +154,7 @@ interface P {
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
-  activeTab?: string
+  activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
   customFields?: FieldOrderItem[]
