@@ -123,6 +123,7 @@ export const permissions = shield(
       public_createOnlineBooking: allow,
 
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
+      updateOneCmContact: rules.authentication.isAuthenticated,
       // Pathway
       upsertOnePathwayStepsTaken: allow,
       // Default fallback

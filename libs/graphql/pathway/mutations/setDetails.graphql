@@ -1,0 +1,45 @@
+mutation setDetails(
+  $contactId : Int!,
+  $salutation : StringFieldUpdateOperationsInput,
+  $firstName : StringFieldUpdateOperationsInput,
+  $lastName : StringFieldUpdateOperationsInput,
+  $phone : StringFieldUpdateOperationsInput,
+  $gender : NullableStringFieldUpdateOperationsInput,
+  $email : StringFieldUpdateOperationsInput,
+  $mobile : StringFieldUpdateOperationsInput,
+  $dob : NullableDateTimeFieldUpdateOperationsInput,
+  $street : StringFieldUpdateOperationsInput,
+  $country : StringFieldUpdateOperationsInput,
+  $city : StringFieldUpdateOperationsInput
+){
+  setDetailsStep: updateOneCmContact(
+    where:{
+      ID:$contactId
+    }
+    data:{
+      Salutation:$salutation
+      Fname:$firstName
+      Lname:$lastName
+      Phone:$phone
+      gender:$gender
+      Email:$email
+      Mobile:$mobile
+      DOB:$dob
+      MailingStreet:$street
+      MailingCountry:$country
+      MailingCity:$city
+    }
+  ){
+    ID
+    Fname
+    Lname
+    Phone
+    gender
+    Email
+    Mobile
+    DOB
+    MailingStreet
+    MailingCountry
+    MailingCity
+  }
+}
