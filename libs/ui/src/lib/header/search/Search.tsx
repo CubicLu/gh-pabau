@@ -35,6 +35,7 @@ interface P {
   advancedSearchHandler?: (searchData: []) => void
   children?: ReactNode
   placeHolder?: string
+  isHideLead?: boolean
 }
 
 enum SearchMode {
@@ -50,6 +51,7 @@ export const Search: FC<P> = ({
   placeHolder,
   changeSearchMode,
   resultSelectedHandler,
+  isHideLead = false,
 }) => {
   const [searchDrawer, setSearchDrawer] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -150,15 +152,17 @@ export const Search: FC<P> = ({
           >
             {t('search.client.label')}
           </button>
-          <button
-            className={classNames(
-              styles.cusTabDesign,
-              searchTab === 'Leads' && styles.activeTabs
-            )}
-            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
-          >
-            {t('search.lead.label')}
-          </button>
+          {!isHideLead && (
+            <button
+              className={classNames(
+                styles.cusTabDesign,
+                searchTab === 'Leads' && styles.activeTabs
+              )}
+              onClick={() => searchTabChangeHandler(SearchMode.Leads)}
+            >
+              {t('search.lead.label')}
+            </button>
+          )}
         </div>
         <div className={styles.clientsList}>
           {searchResults && searchResults.length > 0 && (
@@ -253,15 +257,17 @@ export const Search: FC<P> = ({
           >
             {t('search.client.label')}
           </button>
-          <button
-            className={classNames(
-              styles.cusTabDesign,
-              searchTab === 'Leads' && styles.activeTabs
-            )}
-            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
-          >
-            {t('search.lead.label')}
-          </button>
+          {!isHideLead && (
+            <button
+              className={classNames(
+                styles.cusTabDesign,
+                searchTab === 'Leads' && styles.activeTabs
+              )}
+              onClick={() => searchTabChangeHandler(SearchMode.Leads)}
+            >
+              {t('search.lead.label')}
+            </button>
+          )}
         </div>
         <Form
           form={form}
