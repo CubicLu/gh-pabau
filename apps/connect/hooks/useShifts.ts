@@ -55,8 +55,9 @@ export default function useShifts(shiftsResult, bookingsResult) {
       evening: false,
     }
 
-    for (const t of timeslots) {
-      const start_num = t.substr(0, 2)
+    for (const t in timeslots) {
+      const start_num = Number.parseInt(t.substr(0, 2))
+
       if (start_num < 12) {
         availability.morning = true
       }
@@ -77,42 +78,48 @@ export default function useShifts(shiftsResult, bookingsResult) {
       return []
     }
 
-    const shift = shiftsByDate[shiftsIndex][0]
-    const shiftStart = moment(decimalToISO8601(shift.start))
-    const shiftEnd = moment(decimalToISO8601(shift.end))
-    const shiftMinusDuration = moment(shiftEnd).subtract(duration, 'minutes')
-    console.log('SHIFT', shift)
+    const timeslots = {}
+    const shifts = shiftsByDate[shiftsIndex]
+    for (const shift of shifts) {
+      const shiftStart = moment(decimalToISO8601(shift.start))
+      const shiftEnd = moment(decimalToISO8601(shift.end))
+      const shiftMinusDuration = moment(shiftEnd).subtract(duration, 'minutes')
 
-    const timeslots = []
-    for (
-      let date = moment(shiftStart);
-      date.isSameOrBefore(shiftMinusDuration);
-      date.add(settings.BookitProGeneral.interval, 'minutes')
-    ) {
-      const startDateASDecimal = Number.parseInt(
-        moment(date).format('YYYYMMDDHHmmss')
-      )
-      const endDateASDecimal = Number.parseInt(
-        moment(date).add(duration, 'minutes').format('YYYYMMDDHHmmss')
-      )
+      for (
+        let date = moment(shiftStart);
+        date.isSameOrBefore(shiftMinusDuration);
+        date.add(settings.BookitProGeneral.interval, 'minutes')
+      ) {
+        const startDateASDecimal = Number.parseInt(
+          moment(date).format('YYYYMMDDHHmmss')
+        )
+        const endDateASDecimal = Number.parseInt(
+          moment(date).add(duration, 'minutes').format('YYYYMMDDHHmmss')
+        )
 
-      let allGood = true
-      for (const b of bookingsResult.Public_BookedAppointments?.filter(
-        (b) =>
-          b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
-      )) {
-        if (
-          endDateASDecimal > b.start_date &&
-          startDateASDecimal < b.end_date
-        ) {
-          allGood = false
+        let allGood = true
+        for (const b of bookingsResult.Public_BookedAppointments?.filter(
+          (b) =>
+            b.start_date.toString().substr(0, 8) ===
+            shiftStart.format('YYYYMMDD')
+        )) {
+          if (
+            endDateASDecimal > b.start_date &&
+            startDateASDecimal < b.end_date
+          ) {
+            allGood = false
+          }
+        }
+
+        if (allGood) {
+          if (timeslots[date.format('HH:mm')]) {
+            timeslots[date.format('HH:mm')].push(shift.uid)
+          } else {
+            timeslots[date.format('HH:mm')] = [shift.uid]
+          }
         }
       }
-      if (allGood) {
-        timeslots.push(date.format('HH:mm'))
-      }
     }
-
     return timeslots
   }
 

@@ -128,8 +128,8 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.mor} />{' '}
               {t('connect.onlinebooking.date&time.morning')}
             </p>
-            {timeslots.map((val) => {
-              if (val.substr(0, 2) > 11) {
+            {Object.keys(timeslots).map((val) => {
+              if (Number.parseInt(val.substr(0, 2)) > 11) {
                 return null
               }
               return (
@@ -156,8 +156,11 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.after} />
               {t('connect.onlinebooking.date&time.afternoon')}
             </p>
-            {timeslots.map((val) => {
-              if (val.substr(0, 2) < 12 || val.substr(0, 2) > 16) {
+            {Object.keys(timeslots).map((val) => {
+              if (
+                Number.parseInt(val.substr(0, 2)) < 12 ||
+                Number.parseInt(val.substr(0, 2)) > 16
+              ) {
                 return null
               }
               return (
@@ -172,8 +175,8 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.night} />
               {t('connect.onlinebooking.date&time.evening')}
             </p>
-            {timeslots.map((val) => {
-              if (val.substr(0, 2) < 17) {
+            {Object.keys(timeslots).map((val) => {
+              if (Number.parseInt(val.substr(0, 2)) < 17) {
                 return null
               }
               return (
