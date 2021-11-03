@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, memo } from 'react'
+import React, { FC, ReactNode } from 'react'
 import { Tabs } from 'antd'
 import { TabsProps } from 'antd/lib/tabs'
 import classNames from 'classnames'
@@ -55,4 +55,4 @@ export const TabMenu: FC<P> = ({
   )
 }
 
-export default memo(TabMenu)
+export default TabMenu

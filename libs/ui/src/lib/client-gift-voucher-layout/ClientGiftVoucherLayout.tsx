@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState, memo } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { MyLottie as Lottie, TabMenu, VoucherCard } from '@pabau/ui'
 import { CloseOutlined, EditOutlined, StarOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
@@ -144,4 +144,4 @@ export const ClientGiftVoucherLayout: FC<ClientGiftVoucherLayoutProps> = ({
   )
 }
 
-export default memo(ClientGiftVoucherLayout)
+export default ClientGiftVoucherLayout
