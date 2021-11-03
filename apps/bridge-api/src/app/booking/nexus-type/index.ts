@@ -1,4 +1,4 @@
-import { inputObjectType, objectType } from 'nexus'
+import { objectType } from 'nexus'
 
 export const PublicBookingResponse = objectType({
   name: 'Public_Booking',
@@ -11,46 +11,12 @@ export const PublicBookingResponse = objectType({
     t.int('location_id')
   },
 })
-
-export const DashboardInputType = inputObjectType({
-  name: 'DashboardInputType',
-  definition(t) {
-    t.float('start_date')
-    t.float('end_date')
-    t.int('location_id')
-    t.int('user_id')
-    t.float('prev_start_date')
-    t.float('prev_end_date')
-  },
-})
 const CountDetails = objectType({
   name: 'CountDetails',
   definition(t) {
     t.string('label')
     t.int('count')
     t.string('per')
-  },
-})
-
-const BookingStatusDetails = objectType({
-  name: 'bookingStatusCount',
-  definition(t) {
-    t.int('totalBooking')
-    t.string('totalBookingPer')
-    t.int('totalOnlineBooking')
-    t.string('totalOnlineBookingPer')
-    t.list.field('appointmentList', { type: CountDetails })
-    t.list.field('onlineAppointmentList', { type: CountDetails })
-  },
-})
-
-const SalesCount = objectType({
-  name: 'salesCount',
-  definition(t) {
-    t.string('totalAvailableCategoryTypePer')
-    t.int('totalAvailableCategoryTypeCount')
-    t.float('totalAvailableCategoryTypeAmount')
-    t.list.field('salesList', { type: CountDetails })
   },
 })
 
@@ -70,80 +36,26 @@ const ChartData = objectType({
   },
 })
 
-const SaleChartData = objectType({
-  name: 'salesByProductCategoryType',
+export const BookingCountResponseType = objectType({
+  name: 'getBookingStatusCount',
   definition(t) {
-    t.string('status')
-    t.list.field('chartDataSet', { type: ChartValue })
+    t.field('onlineBookingCounts', { type: BookingCounts })
+    t.field('allBookingCounts', { type: BookingCounts })
   },
 })
 
-const bookingsByStatus = objectType({
-  name: 'allbooking',
+export const BookingDetailResponseType = objectType({
+  name: 'getBookingChartDetail',
   definition(t) {
     t.list.field('bookingsByStatus', { type: ChartData })
   },
 })
 
-const salesByProductCategoryType = objectType({
-  name: 'allSales',
+const BookingCounts = objectType({
+  name: 'allBookingCounts',
   definition(t) {
-    t.list.field('salesByProductCategoryType', { type: SaleChartData })
-  },
-})
-
-const retailColumns = objectType({
-  name: 'retailSalesDetails',
-  definition(t) {
-    t.string('name')
-    t.int('units')
-    t.float('value')
-    t.string('per')
-  },
-})
-
-const serviceColumns = objectType({
-  name: 'serviceSalesDetails',
-  definition(t) {
-    t.string('name')
-    t.int('units')
-    t.float('value')
-    t.string('per')
-  },
-})
-
-const retailSalesData = objectType({
-  name: 'retailSales',
-  definition(t) {
-    t.list.field('retailSalesDetails', { type: retailColumns })
-  },
-})
-
-const serviceSalesData = objectType({
-  name: 'serviceSales',
-  definition(t) {
-    t.list.field('serviceSalesDetails', { type: serviceColumns })
-  },
-})
-
-const otherDashboardDetails = objectType({
-  name: 'otherSalesDetails',
-  definition(t) {
-    t.int('newClientCount')
-    t.string('avgBiller')
-    t.string('RevPerhour')
-  },
-})
-
-export const DashboardResponseType = objectType({
-  name: 'dashboardData',
-  definition(t) {
-    t.field('bookingStatusCount', { type: BookingStatusDetails })
-    t.field('salesCount', { type: SalesCount })
-    t.field('allbooking', { type: bookingsByStatus })
-    t.field('allSales', { type: salesByProductCategoryType })
-    t.field('retailSales', { type: retailSalesData })
-    t.field('serviceSales', { type: serviceSalesData })
-    t.field('otherSalesDetails', { type: otherDashboardDetails })
+    t.int('totalBooking')
+    t.string('totalBookingPer')
+    t.list.field('bookingList', { type: CountDetails })
   },
 })

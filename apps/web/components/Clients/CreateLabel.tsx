@@ -8,10 +8,12 @@ import {
   Button,
   CustomIcon,
 } from '@pabau/ui'
+import { AddLabelMutation, Exact } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { differenceBy } from 'lodash'
+import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 
 interface CreateLabelsProps {
   children?: ReactNode
@@ -23,6 +25,20 @@ interface CreateLabelsProps {
   defaultSelectedLabels?: Labels[]
   setDefaultSelectedLabels?: (val: Labels[]) => void
   handleApplyLabel?: (val) => void
+  labelsList?: any
+  selectedRowKeys?: any
+  setLabelsList?: (val) => void
+  sourceData?: any
+  insertContactsLabelsMutaton?: (val) => void
+  contactsLabels?: any
+  addLabelMutation?: (
+    options?: MutationFunctionOptions<
+      AddLabelMutation,
+      Exact<{ name?: string; color?: string }>
+    >
+  ) => Promise<
+    FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
+  >
 }
 
 const customColorData = [
@@ -71,11 +87,20 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   fromHeader = false,
   defaultSelectedLabels = [],
   handleApplyLabel,
+  labelsList,
+  selectedRowKeys,
+  setLabelsList,
+  sourceData,
+  addLabelMutation,
+  insertContactsLabelsMutaton,
+  contactsLabels,
+  setDefaultSelectedLabels,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
-  const [newLabel, setNewLabel] = useState<Labels>({
-    label: '',
+
+  const [newLabel, setNewLabel] = useState({
+    text: '',
     color: '',
     count: 0,
   })
@@ -83,28 +108,29 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   const [displayColorPicker, setDisplayColorPicker] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [editIndex, setEditIndex] = useState<number>()
-  const [selectedEditData, setSelectedEditData] = useState<Labels>({
-    label: '',
+  const [selectedEditData, setSelectedEditData] = useState({
+    text: '',
     color: '',
     count: 0,
   })
+
   const editLabelData = (valueObject) => {
-    const labelData = [...labels]
+    const labelData = [...labelsList]
     const labelIndex = labelData.findIndex(
-      (label) => label.label === selectedEditData.label
+      (label) => label.text === selectedEditData.text
     )
     labelIndex !== -1 && labelData.splice(labelIndex, 1, valueObject)
     const selectedLabelData = [...selectedLabels]
     const selectedLabelIndex = selectedLabelData.findIndex(
-      (label) => label.label === selectedEditData.label
+      (label) => label.text === selectedEditData.text
     )
     selectedLabelIndex !== -1 &&
       selectedLabelData.splice(selectedLabelIndex, 1, valueObject)
     const index = labelData.findIndex(
-      (label) => label.label === valueObject.label
+      (label) => label.text === valueObject.text
     )
     if (index === -1 || index === editIndex) {
-      setLabels([...labelData])
+      setLabelsList([...labelData])
       setSelectedLabels([...selectedLabelData])
       fromHeader && handleApplyLabel([...selectedLabelData])
     } else {
@@ -113,14 +139,20 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         t('clients.content.button.sameLabelExist')
       )
     }
+
     setIsEdit(false)
   }
 
   const addLabelData = (valueObject) => {
-    if (!labels.some((item) => item.label === valueObject.label)) {
-      setLabels([...labels, valueObject])
+    if (!labelsList?.some((item) => item.text === valueObject.text)) {
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
+      addLabelMutation({
+        variables: {
+          name: newLabel.text,
+          color: selectedColor,
+        },
+      })
     } else {
       Notification(
         NotificationType.error,
@@ -136,11 +168,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     } = e
     if (key === 'Enter' && value) {
       if (isEdit) {
-        editLabelData({ label: value, color: selectedColor, count: 0 })
+        editLabelData({ text: value, color: selectedColor, count: 0 })
       } else {
-        addLabelData({ label: value, color: selectedColor, count: 0 })
+        addLabelData({ text: value, color: selectedColor, count: 0 })
       }
-      setNewLabel({ label: '', color: '', count: 0 })
+      setNewLabel({ text: '', color: '', count: 0 })
       setVisible(false)
       setDisplayColorPicker(false)
       setSelectedColor('')
@@ -149,11 +181,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleVisible = (value) => {
     if (isEdit) {
-      editLabelData({ label: newLabel.label, color: selectedColor, count: 0 })
-    } else if (!value && newLabel.label) {
-      addLabelData({ label: newLabel.label, color: selectedColor, count: 0 })
+      editLabelData({ text: newLabel.text, color: selectedColor, count: 0 })
+    } else if (!value && newLabel.text) {
+      addLabelData({ text: newLabel.text, color: selectedColor, count: 0 })
     }
-    setNewLabel({ label: '', color: '', count: 0 })
+    setNewLabel({ text: '', color: '', count: 0 })
     setVisible(value)
     setDisplayColorPicker(false)
     setSelectedColor('')
@@ -162,9 +194,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
-    if (selectedData.some((item) => item.label === label.label)) {
-      const selectedIndex = selectedLabels.findIndex(
-        (selectedLabel) => selectedLabel.label === labels[index].label
+    if (selectedData.some((item) => item.text === label.text)) {
+      const selectedIndex = selectedLabels?.findIndex(
+        (selectedLabel) => selectedLabel.text === labelsList[index].text
       )
       selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
       setSelectedLabels(selectedData)
@@ -189,16 +221,25 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       return false
     }
     const diff1 =
-      differenceBy(selectedLabels, defaultSelectedLabels, (obj) => {
-        return obj.label + obj.color
-      }) || []
+      differenceBy(
+        selectedLabels,
+        defaultSelectedLabels,
+        (obj: Record<string, string>) => {
+          return obj.label + obj.color
+        }
+      ) || []
     const diff2 =
-      differenceBy(defaultSelectedLabels, selectedLabels, (obj) => {
-        return obj.label + obj.color
-      }) || []
+      differenceBy(
+        defaultSelectedLabels,
+        selectedLabels,
+        (obj: Record<string, string>) => {
+          return obj.label + obj.color
+        }
+      ) || []
     return diff1.length === 0 && diff2.length === 0
   }
 
+  // TO DO onApplyLabel
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
     setVisible(false)
@@ -208,33 +249,39 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     return (
       <div>
         <div className={styles.scrollerTag}>
-          {labels?.map((label, index) => {
+          {labelsList?.map((label, index) => {
             return (
-              <div key={index}>
-                {label?.label && (
+              <div key={`m-${label.id}`}>
+                {label?.text && (
                   <span
                     style={{ display: 'flex', flexDirection: 'row' }}
-                    key={index}
+                    key={`s-${label.id}`}
                     onClick={() => handleSelect(label, index)}
                     className={styles.tagWrap}
                   >
-                    <div className={styles.tagLayout}>
+                    <div className={styles.tagLayout} key={`d-${label.id}`}>
                       {label.color ? (
-                        <TagFilled style={{ color: label.color }} />
+                        <TagFilled
+                          style={{ color: label.color }}
+                          key={`t-${label.id}`}
+                        />
                       ) : (
-                        <TagOutlined />
+                        <TagOutlined key={`t1-${label.id}`} />
                       )}
                       <div
                         className={styles.dropLayout}
                         style={{ backgroundColor: label.color }}
-                        onClick={(e) => handleDropletClick(e, label, index)}
+                        key={`d1-${label.id}`}
+                        onClick={(e) => handleDropletClick(e, label, label.id)}
                       >
-                        <CustomIcon name={'droplet'} />
+                        <CustomIcon name={'droplet'} key={`c-${label.id}`} />
                       </div>
                     </div>
-                    <div className={styles.tagName}>{label.label}</div>
+                    <div className={styles.tagName} key={`d3-${label.id}`}>
+                      {label.text}
+                    </div>
                     {selectedLabels.some(
-                      (item) => item.label === label.label
+                      (item) => (item.text || item.label) === label.text
                     ) && <CheckOutlined />}
                   </span>
                 )}
@@ -257,10 +304,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                 autoComplete={'off'}
                 size="middle"
                 name={'label'}
-                value={newLabel?.label}
+                value={newLabel?.text}
                 onChange={(e) =>
                   setNewLabel({
-                    label: e.target.value,
+                    text: e.target.value,
                     color: selectedColor,
                     count: 0,
                   })

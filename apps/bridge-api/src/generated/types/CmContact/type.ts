@@ -466,6 +466,12 @@ export const CmContact = objectType({
         return root.MarketingSourceData
       },
     })
+    t.nullable.field('User', {
+      type: 'User',
+      resolve(root: any) {
+        return root.User
+      },
+    })
     t.list.field('Voucher', {
       type: 'Voucher',
       args: {
@@ -494,6 +500,20 @@ export const CmContact = objectType({
         return root.PurchasedVoucher
       },
     })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
+      },
+    })
     t.list.field('PathwaysTaken', {
       type: 'PathwaysTaken',
       args: {
@@ -520,6 +540,20 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.PathwayStepsTaken
+      },
+    })
+    t.list.field('MedicalFormContact', {
+      type: 'MedicalFormContact',
+      args: {
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContact
       },
     })
     t.nullable.field('_count', {

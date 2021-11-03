@@ -1,50 +1,22 @@
-query getDashboardData(
-  $start_date: Float
-  $end_date: Float
-  $user_id: Int
-  $location_id: Int
-) {
-  dashboardData(
-    data: {
-      start_date: $start_date
-      end_date: $end_date
-      user_id: $user_id
-      location_id: $location_id
-    }
-  ) {
-    bookingStatusCount {
-      totalBooking
-      totalBookingPer
-      totalOnlineBooking
-      totalOnlineBookingPer
-      appointmentList {
-        label
-        count
-        per
-      }
-      onlineAppointmentList {
-        label
-        count
-        per
-      }
-    }
-    salesCount {
+query getFinanceDetails(
+  $start_date: Decimal,
+  $end_date: Decimal,
+  $location_id: Int,
+	$user_id: Int){
+  getFinanceDetails(data:{
+    start_date: $start_date
+    end_date: $end_date
+    location_id: $location_id
+    user_id: $user_id
+  }){
+    salesCount{
       totalAvailableCategoryTypePer
       totalAvailableCategoryTypeCount
       totalAvailableCategoryTypeAmount
-      salesList {
+      salesList{
         label
         count
         per
-      }
-    }
-    allbooking {
-      bookingsByStatus {
-        status
-        chartDataSet {
-          label
-          value
-        }
       }
     }
     allSales {
@@ -79,3 +51,60 @@ query getDashboardData(
     }
   }
 }
+
+query getBookingStatusCount(
+  $start_date: Decimal,
+  $end_date: Decimal,
+  $location_id: Int,
+	$user_id: Int){
+  getBookingStatusCount(
+    data:{
+    start_date: $start_date,
+    end_date: $end_date,
+    location_id: $location_id,
+    user_id: $user_id
+    }
+  ){
+    allBookingCounts{
+      totalBooking
+      totalBookingPer
+      bookingList{
+        label
+        count
+        per
+      }
+    }
+    onlineBookingCounts{
+      totalBooking
+      totalBookingPer
+      bookingList{
+        label
+        count
+        per
+      }
+    }
+  }
+}
+
+query getBookingChartDetail(
+  $start_date: Decimal,
+  $end_date: Decimal,
+  $location_id: Int,
+	$user_id: Int){
+    getBookingChartDetail(data:{
+      start_date: $start_date,
+      end_date: $end_date,
+      location_id: $location_id,
+      user_id: $user_id
+    })
+    {
+      bookingsByStatus{
+        status
+        chartDataSet{
+          label
+          value
+        }
+      }
+    }
+  }
+

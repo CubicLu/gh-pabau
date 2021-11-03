@@ -27,6 +27,7 @@
     }
   }
   .journyCalenderDate {
+    user-select: none;
     padding: 0 3px;
     text-align: center;
     @media only screen and (max-width: 991px) {
@@ -49,6 +50,9 @@
       font-size: 17px;
       line-height: 22px;
       letter-spacing: -0.408px;
+    }
+    @media only screen and (max-width: 767px) {
+      font-size: 14px;
     }
   }
   .journyCalenderColWrap {
@@ -97,6 +101,10 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
   .nextArrow {
     display: block;
@@ -110,7 +118,10 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transform: rotate(180deg);
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
   .activeDate {
     .journyCalenderDateWrap {
@@ -137,6 +148,9 @@
       text-align: center;
       color: #333333;
       flex: 1;
+      @media only screen and (max-width: 767px) {
+        font-size: 14px;
+      }
     }
     .todayText {
       font-size: 17px;
@@ -146,6 +160,9 @@
       color: #54b2d3;
       text-align: right;
       flex: 1;
+      @media only screen and (max-width: 767px) {
+        font-size: 14px;
+      }
     }
   }
 }
