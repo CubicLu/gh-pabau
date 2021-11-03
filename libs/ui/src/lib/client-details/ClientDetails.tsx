@@ -128,7 +128,7 @@ interface Appointment {
 export interface ClientDetailsProps {
   clientData: ClientData
   referredByOptions?: ReferredByOption[]
-  customFields?: FieldOrderItem[]
+  generalCustomFields?: FieldOrderItem[]
   loading?: boolean
   onCreateEmail: () => void
   onCreateCall: () => void
@@ -169,6 +169,11 @@ export interface FieldOrderItem {
   selectOptions?: string[] | selectOptionType[]
 }
 
+export interface customFieldType {
+  category: string
+  customField: FieldOrderItem[]
+}
+
 const FieldName = {
   firstName: 'Fname',
   lastName: 'Lname',
@@ -195,7 +200,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   appointments,
   referredByOptions,
   loading,
-  customFields,
+  generalCustomFields,
   dateFormat,
   handleEditAll,
   updatebasicContactMutation,
@@ -383,8 +388,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         home: clientData.phone.home,
       }
       fields[6].value = clientData.email
-      if (customFields?.length) {
-        fields = [...fields, ...customFields]
+      if (generalCustomFields?.length) {
+        fields = [...fields, ...generalCustomFields]
       }
       if (referredByOptions?.length) {
         fields[1].selectOptions = referredByOptions
@@ -392,7 +397,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       setFieldsOrder(fields)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientData, customFields, referredByOptions])
+  }, [clientData, generalCustomFields, referredByOptions])
 
   const handleOpenAddModal = (type: RelationshipType) => {
     setType(type)
@@ -462,6 +467,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   }
 
   const handleChangeDetailsCard = (val) => {
+    console.log("val", val)
     if (!!ref && ref.current) {
       ref.current.goTo(val)
       setDetailsCard(val)
@@ -831,6 +837,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       {!isMobile && (
         <div className={styles.detailsContent}>
           <Carousel autoplay={false} dots={false} ref={ref}>
+            <>
             <div className={styles.detailsOne}>
               {loading ? (
                 <div className={styles.detailsOne}>
@@ -896,7 +903,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className={styles.detailsOneContent}>
+               <div className={styles.detailsOneContent}>
                   <div className={styles.detailsAvatar}>
                     <div className={styles.avatarContent}>
                       <Avatar
@@ -1341,6 +1348,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                         )}
                       </React.Fragment>
                     ))}
+
                   {customizingFields && (
                     <CustomizeFields
                       defaultOrder={fieldsOrder}
@@ -1352,8 +1360,15 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                     />
                   )}
                 </div>
-              )}
+               )}
             </div>
+            <div className={styles.detailsOne}>
+              <div className={styles.detailsOneContent}>
+                test
+              </div>
+            </div>
+            </>
+           
             <div className={styles.detailsTwo}>
               <div className={styles.section}>
                 <div className={styles.titleWrapper}>

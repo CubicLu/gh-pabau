@@ -156,7 +156,7 @@ interface P {
   activeTab?: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
-  customFields?: FieldOrderItem[]
+  generalCustomFields?: FieldOrderItem[]
   dateFormat?: string
   handleEditAll?: () => void
   updatebasicContactMutation?: MutationFunction
@@ -180,7 +180,7 @@ const ClientCardModal: FC<P> = ({
   onTabChanged,
   referredByOptions,
   loading,
-  customFields,
+  generalCustomFields,
   dateFormat,
   handleEditAll,
   updatebasicContactMutation,
@@ -942,7 +942,7 @@ const ClientCardModal: FC<P> = ({
                 appointments={appointments}
                 referredByOptions={referredByOptions}
                 loading={loading}
-                customFields={customFields}
+                generalCustomFields={generalCustomFields}
                 dateFormat={dateFormat}
                 handleEditAll={handleEditAll}
                 updatebasicContactMutation={updatebasicContactMutation}

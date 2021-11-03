@@ -23,6 +23,7 @@ import {
 } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
 import dayjs from 'dayjs'
+import { __await } from 'tslib'
 
 export interface Label {
   label?: string
@@ -146,7 +147,18 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const [
     getLabels,
     { data: labelsQueryData, loading: labelLoading },
-  ] = useGetCmLabelsLazyQuery()
+  ] = useGetCmLabelsLazyQuery({
+    fetchPolicy:"no-cache"
+  })
+
+  useEffect(() => {
+     get()
+     async function get() {
+       await [1,2,3,4].map((item)=>{
+          getLabels()
+        })
+      }
+  },[])
 
   const [
     getContact,

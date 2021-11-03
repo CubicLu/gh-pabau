@@ -17,6 +17,7 @@ import {
   Notification,
   NotificationType,
   BasicModal as Modal,
+  customFieldType,
 } from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
@@ -50,6 +51,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
+  const [generalCustomField, setGeneralCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
     count: 0,
@@ -157,6 +159,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
 
       if (customFieldData.generalCustom.length > 0) {
         for (const general of customFieldData.generalCustom) {
+
           if (
             general.field_type === 'bool' ||
             general.field_type === 'multiple' ||
@@ -165,7 +168,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
             if (general?.ManageCustomFieldItem?.length > 0) {
               customFields.push(general)
             }
-          } else {
+          } else { 
             customFields.push(general)
           }
         }
@@ -354,7 +357,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         }
         referredByOptions={referredByOptions?.findManyMarketingSource}
         loading={loading || customFieldLoading || !router.query['id']}
-        customFields={customField}
+        generalCustomFields={customField}
         dateFormat={GetFormat()}
         handleEditAll={handleEditAll}
         updatebasicContactMutation={updatebasicContactMutation}

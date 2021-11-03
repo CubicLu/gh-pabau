@@ -121,12 +121,16 @@ query getContactCustomFields {
   custom: findManyManageCustomFieldCategory {
     id
     name
-    ManageCustomField(where:{field_for: { in: [CONTACT, CONTACTLEAD] }}) {
+    ManageCustomField(
+      where: { field_for: { in: [CONTACT, CONTACTLEAD] } }
+      orderBy: { field_order: asc }
+    ) {
       id
       field_label
       field_type
       is_required
       is_active
+      field_order
       ManageCustomFieldItem {
         id
         item_label
@@ -139,6 +143,7 @@ query getContactCustomFields {
       is_active: { equals: true }
       field_for: { in: [CONTACT, CONTACTLEAD] }
     }
+    orderBy: { field_order: asc }
   ) {
     id
     field_label
@@ -146,6 +151,7 @@ query getContactCustomFields {
     category_id
     is_required
     is_active
+    field_order
     ManageCustomFieldItem {
       id
       item_label
