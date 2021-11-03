@@ -180,3 +180,5 @@ export const SetupBottomMenu: SetupMenuItem[] = [
     path: '',
   },
 ]
+
+export default setupMenu
