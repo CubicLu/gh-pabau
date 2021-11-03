@@ -4,13 +4,16 @@ import { useTranslation } from 'react-i18next'
 import { Skeleton } from 'antd'
 import styles from '../clients.module.less'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
-import { useGetSoldVouchersQuery } from '@pabau/graphql'
+import {
+  useGetSoldVouchersQuery,
+  useCountVouchersByStatusQuery,
+} from '@pabau/graphql'
 import { ClientGiftVoucherLayout, Pagination } from '@pabau/ui'
 import dayjs from 'dayjs'
 import { useUser } from '../../../context/UserContext'
 import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
-const Appointments = () => {
+const Vouchers = () => {
   const { t } = useTranslation('common')
   const router = useRouter()
   const user = useUser()
@@ -23,21 +26,35 @@ const Appointments = () => {
     currentPage: 1,
     showingRecords: 0,
   })
+
+  const contactID = Number(router.query['id'])
+  const { data: count } = useCountVouchersByStatusQuery({
+    variables: {
+      contactID: contactID,
+    },
+  })
   const { data, loading } = useGetSoldVouchersQuery({
     variables: {
-      contactID: Number(router.query['id']),
-      status: status === '1' ? 'Expired' : 'Active',
+      where: {
+        Contact: {
+          ID: {
+            equals: contactID,
+          },
+        },
+        status: {
+          equals: status === '1' ? 'Expired' : 'Active',
+        },
+      },
       take: paginateData.limit,
       skip: paginateData.offset,
     },
   })
 
   useEffect(() => {
-    if (data) {
-      console.log('data', data)
+    if (data && count) {
       setVouchers(data.vouchers)
     }
-  }, [data])
+  }, [data, count])
 
   const onPaginationChange = (currentPage, limit) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -107,16 +124,16 @@ const Appointments = () => {
           <ClientGiftVoucherLayout
             activeKey={status}
             onChangeTab={(val) => setStatus(val)}
-            isEmpty={data?.activeCount || data?.expiredCount ? false : true}
-            activeVouchersCount={data?.activeCount}
+            isEmpty={count?.activeCount || count?.expiredCount ? false : true}
+            activeVouchersCount={count?.activeCount}
             activeVouchers={voucherData(vouchers) || []}
-            expiredVouchersCount={data?.expiredCount}
+            expiredVouchersCount={count?.expiredCount}
             expiredVouchers={voucherData(vouchers) || []}
             onCardSelect={(e) => Promise.resolve(true)}
           />
         )}
         <Pagination
-          total={status === '0' ? data?.activeCount : data?.expiredCount}
+          total={status === '0' ? count?.activeCount : count?.expiredCount}
           defaultPageSize={50}
           showSizeChanger={false}
           onChange={onPaginationChange}
@@ -138,4 +155,4 @@ const Appointments = () => {
   )
 }
 
-export default Appointments
+export default Vouchers
