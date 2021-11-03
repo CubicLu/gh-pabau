@@ -2,6 +2,7 @@ fragment ActivityFields on Activity {
   id
   created_by
   assigned_to
+  completed_by
   contact_id
   lead_id
   subject
@@ -35,6 +36,9 @@ fragment Activity on Activity {
     ...ActivityTypeFields
   }
   AssignedUser {
+    ...UserFields
+  }
+  CompletedBy {
     ...UserFields
   }
 }

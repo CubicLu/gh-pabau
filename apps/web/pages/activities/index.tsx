@@ -14,10 +14,10 @@ import {
 } from '../../components/Activities/CreateFilterModal'
 import ActivitiesTable from '../../components/Activities/ActivitiesTable'
 import { OptionList } from '../../components/Activities/FilterMenu'
-import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
+import { ActivityTypeFilter, CreateActivity } from '../../components/Activities/CreateActivity'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tabs, Tooltip, Popover, Skeleton } from 'antd'
-import { CreateActivity, RangePicker } from '@pabau/ui'
+import { RangePicker } from '@pabau/ui'
 import styles from './index.module.less'
 import dayjs, { Dayjs } from 'dayjs'
 import classNames from 'classnames'
@@ -38,10 +38,13 @@ import {
   useGetLeadStatusQuery,
   useRetrievePipelineQuery,
   useGetActiveLocationQuery,
+  useFindManyLeadsLazyQuery,
+  useFindManyContactsLazyQuery
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
 import { PlusSquareFilled } from '@ant-design/icons'
+import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 dayjs.extend(utc)
 
 const { TabPane } = Tabs
@@ -167,13 +170,13 @@ export interface Labels {
   color?: string
 }
 
-export interface ActivityTypeFilter {
-  id: number
-  name: string
-  isSelected: boolean
-  hasIcon?: boolean
-  icon?: string
-}
+// export interface ActivityTypeFilter {
+//   id: number
+//   name: string
+//   isSelected: boolean
+//   hasIcon?: boolean
+//   icon?: string
+// }
 
 export interface OrderValue {
   field: string
@@ -212,7 +215,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [filterActivityType, setFilterActivityType] = useState<
     ActivityTypeFilter[]
   >([])
-  const [activityTypeOption, setActivityTypeOption] = useState<OptionList[]>([])
+  const [activityTypeOption, setActivityTypeOption] = useState<ActivityTypeFilter[]>([])
   const [selectedActivityType, setSelectedActivityType] = useState<string[]>([
     'Email',
     'Call',
@@ -256,7 +259,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
         limit: paginateData.limit,
         startDate: filterDates?.[0],
         endDate: filterDates?.[1],
-        status: ['Reopened', 'Pending', 'Working on', 'Awaiting'],
+        status: ['reopened', 'pending', 'working_on', 'awaiting'],
         activityType: selectedActivityType,
         userId: selectFilterUser,
         activeColumns: selectedColumn,
@@ -285,7 +288,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     if (tabValue === 'Completed') {
       delete queryOptions.variables.startDate
       delete queryOptions.variables.endDate
-      queryOptions.variables.status = ['Done']
+      queryOptions.variables.status = ['done']
     }
     return queryOptions
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -327,6 +330,11 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const { data: leadStatusResponse } = useGetLeadStatusQuery()
   const { data: pipelineResponse } = useRetrievePipelineQuery()
   const { data: locationResponse } = useGetActiveLocationQuery()
+  const [fetchLead, { data, loading }] = useFindManyLeadsLazyQuery()
+  const [
+    fetchContact,
+    { data: contactData, loading: contactLoading },
+  ] = useFindManyContactsLazyQuery()
 
   useEffect(() => {
     if (leadSourceResponse?.findManyMarketingSource) {
@@ -467,6 +475,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
         return {
           id: item.id,
           name: item.name,
+          hasIcon: !!item.badge,
+          icon: item.badge,
+          isSelected: false,
         }
       })
       setActivityTypeOption(item)
@@ -1172,6 +1183,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     }
   }
 
+  console.log('-loggedUser?.me--------', loggedUser?.me)
   return (
     <div className={styles.activityWrapper} ref={activityRef}>
       <Layout badgeCountList={{ activities: paginateData?.total }}>
@@ -1473,10 +1485,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
           events={events}
           handleSave={handleActivitySave}
           isEdit={isEdit}
+          activityTypeOption={activityTypeOption}
           editData={editData}
-          leadOptions={leadOptions}
-          clientOptions={clientOptions}
-          userOptions={userOptions}
+          userOptions={personsList}
+          loggedUser={{ id: loggedUser?.me?.user, name: loggedUser?.me?.fullName, image: loggedUser?.me?.imageUrl && getImage(loggedUser?.me?.imageUrl)}}
         />
       )}
     </div>

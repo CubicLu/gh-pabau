@@ -9,13 +9,14 @@ export const Activity = objectType({
   definition(t) {
     t.int('id')
     t.int('created_by')
-    t.int('assigned_to')
-    t.int('contact_id')
-    t.int('lead_id')
+    t.nullable.int('assigned_to')
+    t.nullable.int('completed_by')
+    t.nullable.int('contact_id')
+    t.nullable.int('lead_id')
     t.string('subject')
     t.nullable.string('note')
     t.boolean('available')
-    t.string('status')
+    t.field('status', { type: 'activity_status' })
     t.nullable.field('due_start_date', { type: 'DateTime' })
     t.nullable.field('due_end_date', { type: 'DateTime' })
     t.nullable.field('created_at', { type: 'DateTime' })
@@ -35,13 +36,13 @@ export const Activity = objectType({
         return root.User
       },
     })
-    t.field('CmContact', {
+    t.nullable.field('CmContact', {
       type: 'CmContact',
       resolve(root: any) {
         return root.CmContact
       },
     })
-    t.field('CmLead', {
+    t.nullable.field('CmLead', {
       type: 'CmLead',
       resolve(root: any) {
         return root.CmLead
@@ -53,10 +54,16 @@ export const Activity = objectType({
         return root.ActivityType
       },
     })
-    t.field('AssignedUser', {
+    t.nullable.field('AssignedUser', {
       type: 'User',
       resolve(root: any) {
         return root.AssignedUser
+      },
+    })
+    t.nullable.field('CompletedBy', {
+      type: 'User',
+      resolve(root: any) {
+        return root.CompletedBy
       },
     })
   },

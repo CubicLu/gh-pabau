@@ -53,13 +53,13 @@ export const retrieveActivityGraphData = async (
   })
 
   return {
-    reopened: graphQuery?.find((item) => item.status === 'Reopened')?._count
+    reopened: graphQuery?.find((item) => item.status === 'reopened')?._count
       ?.id,
-    awaiting: graphQuery?.find((item) => item.status === 'Awaiting')?._count
+    awaiting: graphQuery?.find((item) => item.status === 'awaiting')?._count
       ?.id,
-    done: graphQuery?.find((item) => item.status === 'Done')?._count?.id,
-    pending: graphQuery?.find((item) => item.status === 'Pending')?._count?.id,
-    working: graphQuery?.find((item) => item.status === 'Working on')?._count
+    done: graphQuery?.find((item) => item.status === 'done')?._count?.id,
+    pending: graphQuery?.find((item) => item.status === 'pending')?._count?.id,
+    working: graphQuery?.find((item) => item.status === 'working_on')?._count
       ?.id,
   }
 }
@@ -1207,7 +1207,7 @@ export const prepareActivityDataWithCustomField = async (
       // })
       const leadLastActivityDate = [...leadAllActivity]
         .reverse()
-        .find((item) => item?.status === 'Done')?.finished_at
+        .find((item) => item?.status === 'done')?.finished_at
       return {
         ...item,
         duration: dayjs(item.due_end_date).diff(
@@ -1217,20 +1217,20 @@ export const prepareActivityDataWithCustomField = async (
         CmLead: {
           ...item.CmLead,
           leadDoneActivities: leadAllActivity.filter(
-            (item) => item?.status === 'Done'
+            (item) => item?.status === 'done'
           )?.length,
           firstActivityTime: leadAllActivity.find(
-            (item) => item?.status === 'Done'
+            (item) => item?.status === 'done'
           )?.finished_at,
           leadLastActivityDate: leadLastActivityDate,
           leadLastActivityDays:
             leadLastActivityDate && dayjs().diff(leadLastActivityDate, 'days'),
           leadTotalActivities: leadAllActivity.length,
           leadActivitesToDo: leadAllActivity.filter(
-            (item) => item?.status !== 'Done'
+            (item) => item?.status !== 'done'
           )?.length,
           leadNextActivityDate: leadAllActivity.find(
-            (item) => item?.status !== 'Done'
+            (item) => item?.status !== 'done'
           ).due_start_date,
           leadLostTime: leadLost?.lostTime,
           leadLastEmailReceived: leadLastEmailReceived,

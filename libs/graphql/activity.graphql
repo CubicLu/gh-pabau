@@ -23,7 +23,7 @@ query findManyActivityData(
   $endDate: DateTime
   $startDate: DateTime
   $activityType: [String]
-  $status: [String]
+  $status: [activity_status]
   $userId: [Int]
   $search: String
   $skip: Int

@@ -5677,4 +5677,8 @@ en:
   create.filter.modal.open.lead.status: 'Open'
   create.filter.modal.won.lead.status: 'Won'
   create.filter.modal.lost.lead.status: 'Lost'
+  create.activity.user.name: '{{name}} (You)'
+  create.activity.modal.subject.required: 'Subject is required'
+  create.activity.modal.subject.max.validation.message: 'Subject should be 50 character maximum'
+  create.activity.modal.free.busy.tooltip: 'This option will control if you are shown as available or booked out in your Pabau calendar.'
 

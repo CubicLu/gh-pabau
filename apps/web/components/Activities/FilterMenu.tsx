@@ -1,17 +1,12 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Select, Radio, Spin, InputNumber } from 'antd'
+import { Select, Radio, InputNumber } from 'antd'
 import { getData } from './FilterOptionData'
 import { UserOutlined, CheckOutlined, AimOutlined } from '@ant-design/icons'
 import { Input as FormikInput } from 'formik-antd'
 import styles from './CreateFilterModal.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { TFunction } from 'react-i18next'
-import {
-  useFindManyLeadsLazyQuery,
-  useFindManyContactsLazyQuery,
-  useFindContactNameLazyQuery,
-  useFindLeadNameLazyQuery,
-} from '@pabau/graphql'
+import { ClientLeadSelect } from './ClientLeadSelectMenu'
 
 export interface PersonList {
   id: number
@@ -109,82 +104,6 @@ const SelectMenu: FC<SelectMenuProps> = ({
   )
 }
 
-const ClientLeadMenu = ({
-  name,
-  isEdit,
-  value,
-  onChange,
-  fetchOption,
-  fetching,
-  icon,
-  disabled,
-  options,
-}) => {
-  const [
-    fetchContactName,
-    { data: contactData },
-  ] = useFindContactNameLazyQuery()
-  const [fetchLeadName, { data: leadData }] = useFindLeadNameLazyQuery()
-  const [clientName, setClientName] = useState<string>()
-  const [leadName, setLeadName] = useState<string>()
-
-  useEffect(() => {
-    if (contactData?.findFirstCmContact) {
-      setClientName(
-        contactData?.findFirstCmContact?.Fname +
-          contactData?.findFirstCmContact?.Lname
-      )
-    }
-    if (leadData?.findFirstCmLead) {
-      setLeadName(
-        leadData?.findFirstCmLead?.Fname + leadData?.findFirstCmLead?.Lname
-      )
-    }
-  }, [contactData, leadData])
-
-  useEffect(() => {
-    if (isEdit) {
-      if (name === 'client' && value) {
-        fetchContactName({
-          variables: {
-            contactID: Number.parseInt(value),
-          },
-        })
-      } else if (name === 'lead' && value) {
-        fetchLeadName({
-          variables: {
-            leadID: Number.parseInt(value),
-          },
-        })
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit])
-  return (
-    <div className={styles.clientWrapper}>
-      <div className={styles.icon}>{icon}</div>
-      <Select
-        showSearch
-        allowClear
-        disabled={disabled}
-        filterOption={false}
-        onSearch={fetchOption}
-        value={(name === 'client' ? clientName : leadName) ?? value}
-        onChange={(data) => onChange(data)}
-        notFoundContent={fetching ? <Spin size="small" /> : null}
-        menuItemSelectedIcon={<CheckOutlined />}
-        dropdownClassName={styles.customDropdown}
-      >
-        {options.map((data) => (
-          <Option key={data.value} value={data.value?.toString()}>
-            {data.label}
-          </Option>
-        ))}
-      </Select>
-    </div>
-  )
-}
-
 const SubjectMenu: FC<SubjectMenuProps> = ({ value, onChange, disabled }) => {
   return (
     <div className={styles.subjectInput}>
@@ -264,19 +183,11 @@ export const FilterMenu: FC<FilterMenuProps> = ({
 }) => {
   const { t } = useTranslationI18()
   const [userList, setUserList] = useState<PersonList[]>([])
-  const [leadOption, setLeadOption] = useState([])
-  const [leadLoading, setLeadLoading] = useState(false)
-  const [clientOption, setClientOption] = useState([])
-  const [clientLoading, setClientLoading] = useState(false)
 
   const { statusMenu, freeBusyOption, doneOption, leadStatusOption } = getData(
     t
   )
-  const [fetchLead, { data, loading }] = useFindManyLeadsLazyQuery()
-  const [
-    fetchContact,
-    { data: contactData, loading: contactLoading },
-  ] = useFindManyContactsLazyQuery()
+
   useEffect(() => {
     if (personsList.length > 0) {
       setUserList([
@@ -288,54 +199,6 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       ])
     }
   }, [personsList, userId])
-
-  useEffect(() => {
-    if (loading) {
-      setLeadLoading(true)
-    }
-    if (data?.findManyCmLead) {
-      const item = data.findManyCmLead.map((item) => {
-        return {
-          label: `${item.Fname} ${item.Lname}`,
-          value: item.id,
-        }
-      })
-      setLeadOption(item)
-      setLeadLoading(false)
-    }
-  }, [data, loading])
-
-  useEffect(() => {
-    if (contactLoading) {
-      setClientLoading(true)
-    }
-    if (contactData?.findManyCmContact) {
-      const item = contactData.findManyCmContact.map((item) => {
-        return {
-          label: `${item.Fname} ${item.Lname}`,
-          value: item.id,
-        }
-      })
-      setClientOption(item)
-      setClientLoading(false)
-    }
-  }, [contactData, contactLoading])
-
-  const fetchLeadOption = (value: string) => {
-    fetchLead({
-      variables: {
-        searchTerm: value,
-      },
-    })
-  }
-
-  const fetchClientOption = (value: string) => {
-    fetchContact({
-      variables: {
-        searchTerm: value,
-      },
-    })
-  }
 
   const renderMenu = () => {
     switch (columnName) {
@@ -378,16 +241,13 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       }
       case 'Client name': {
         return (
-          <ClientLeadMenu
+          <ClientLeadSelect
             name="client"
             isEdit={isEdit}
-            options={clientOption}
             value={value}
             onChange={onChange}
-            fetching={clientLoading}
             icon={<UserOutlined />}
             disabled={disabled}
-            fetchOption={fetchClientOption}
           />
         )
         break
@@ -395,16 +255,13 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       case 'Lead name':
       case 'Title': {
         return (
-          <ClientLeadMenu
+          <ClientLeadSelect
             name="lead"
             isEdit={isEdit}
-            options={leadOption}
             value={value}
             onChange={onChange}
-            fetching={leadLoading}
             icon={<AimOutlined />}
             disabled={disabled}
-            fetchOption={fetchLeadOption}
           />
         )
         break

@@ -153,7 +153,7 @@ export const ActivityWhereInputType = inputObjectType({
     t.field('startDate', { type: 'DateTime' })
     t.field('endDate', { type: 'DateTime' })
     t.list.field('activityType', { type: 'String' })
-    t.list.field('status', { type: 'String' })
+    t.list.field('status', { type: 'activity_status' })
     t.list.field('userId', { type: 'Int' })
     t.string('search')
     t.list.string('activeColumns')
@@ -230,6 +230,7 @@ export const ActivityQuery = extendType({
         )
 
         const where = input.where
+        console.log('where--------------', where)
         const filterColumns = []
         if (
           where?.filterOption?.andFilterOption &&
@@ -289,6 +290,7 @@ export const ActivityQuery = extendType({
               andQuery,
               orQuery
             )
+            console.log('graphData--------------', graphData)
             const activityData = await retrieveActivityData(
               where,
               ctx,
@@ -300,6 +302,7 @@ export const ActivityQuery = extendType({
               prepareOrderQuery,
               activitySelect
             )
+            console.log('activityData--------------', activityData)
             const finalActivityResponse = await prepareActivityDataWithCustomField(
               ctx,
               activityData

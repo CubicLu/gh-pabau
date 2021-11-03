@@ -143,6 +143,14 @@ export const defaultColumns = [
   columnNames.assignedToUser.label,
   columnNames.status.label,
 ]
+
+const statusMapper = {
+  'awaiting': 'Awaiting',
+  'done': 'Done',
+  'pending': 'Pending',
+  'reopened': 'Reopened',
+  'working_on': 'Working on'
+}
 export const ActivityTable: FC<ActivityTableProps> = React.memo(
   ({
     filteredData,
@@ -226,7 +234,8 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     }, [paginateData])
 
     const RenderStatus = (data) => {
-      const { status, id } = data
+      let { status, id } = data
+      status = statusMapper[status]
       const [visible, setVisible] = useState(false)
       const { backgroundColor, borderColor } = renderStatus(status)
       const toggleVisible = () => {

@@ -609,6 +609,20 @@ export const User = objectType({
         return root.AssignedActivity
       },
     })
+    t.list.field('CompletedBy', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CompletedBy
+      },
+    })
     t.list.field('PasswordResetAuth', {
       type: 'PasswordResetAuth',
       args: {

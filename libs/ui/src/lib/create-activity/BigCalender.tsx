@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import dayjs from 'dayjs'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
-import styles from './CreateActivity.module.less'
+import styles from './BigCalendar.module.less'
 import { EventsData } from '@pabau/ui'
 import { filterTabsObj } from './CreateActivity'
 import format from 'date-fns/format'
@@ -36,11 +36,13 @@ export const navigateConstants = {
 interface BigCalendarProps {
   data?: EventsData[]
   defaultDate?: Date
+  height?: string
 }
 
 export const BigCalender: FC<BigCalendarProps> = ({
   data = [],
   defaultDate,
+  height,
 }) => {
   const [events, setEvents] = useState([])
 
@@ -99,7 +101,7 @@ export const BigCalender: FC<BigCalendarProps> = ({
   }
 
   return (
-    <div style={{ height: 490 }}>
+    <div style={{ height: height }}>
       <Calendar
         localizer={localize}
         defaultDate={defaultDate}
