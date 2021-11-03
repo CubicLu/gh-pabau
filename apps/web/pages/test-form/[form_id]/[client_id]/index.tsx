@@ -257,7 +257,7 @@ export const TestForm = () => {
     const medical_attr_custom_contact_name = ''
     let creatMedicalContactAttrVariables = []
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [index, item] of draggedForms.entries()) {
+    for (const [, item] of draggedForms.entries()) {
       creatMedicalContactAttrVariables = [
         ...creatMedicalContactAttrVariables,
         {
@@ -318,7 +318,7 @@ export const TestForm = () => {
 
   const saveMedicalAttr = async (draggedForms: MedicalFormTypes[]) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [index, item] of draggedForms.entries()) {
+    for (const [, item] of draggedForms.entries()) {
       const creatMedicalAttrVariables = {
         name: item.attrName,
         description: '',
@@ -333,11 +333,9 @@ export const TestForm = () => {
   }
 
   const saveMedicalFormHistory = (draggedForms: MedicalFormTypes[]) => {
-    console.log('draggedForms111 =', draggedForms)
     let attrNameIndex = 0
     let newDraggedForms: MedicalFormTypes[] = []
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [index, item] of draggedForms.entries()) {
+    for (const [, item] of draggedForms.entries()) {
       const cssClassArr = previewMapping.filter(
         (mappingItem) => Object.values(mappingItem)[0] === item.formName
       )
@@ -389,7 +387,6 @@ export const TestForm = () => {
       newDraggedForms = [...newDraggedForms, item]
       attrNameIndex++
     }
-    console.log('newDraggedForms =', newDraggedForms)
     saveMedicalAttr(newDraggedForms)
   }
 
