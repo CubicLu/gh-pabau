@@ -79,6 +79,8 @@ mutation createContactPhoto(
   ) {
     id
     linkref
+    album_id
+    date
   }
 }
 
@@ -103,6 +105,8 @@ mutation createContactPhotoWithoutAlbum(
   ) {
     id
     linkref
+    album_id
+    date
   }
 }
 
@@ -111,6 +115,13 @@ mutation deleteContactPhoto($id: Int!) {
     success
     error
     photo
+  }
+}
+
+mutation deleteManyContactPhoto($ids: [Int]!) {
+  deleteManyContactAttachmentPhoto(ids: $ids) {
+    success
+    count
   }
 }
 

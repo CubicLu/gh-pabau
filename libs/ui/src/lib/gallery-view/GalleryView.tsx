@@ -8,7 +8,7 @@ import {
   EnterOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-  FilterOutlined,
+  // FilterOutlined,
   FolderOutlined,
   MinusOutlined,
   PlusOutlined,
@@ -24,7 +24,7 @@ import {
   CamUploaderModal,
   UploadingImageProps,
 } from '@pabau/ui'
-import AlbumData, { ImageProps, AlbumProps } from './AlbumData'
+import { AlbumData, ImageProps, AlbumProps } from '@pabau/ui'
 import {
   Breadcrumb,
   Drawer,
@@ -69,13 +69,16 @@ export interface GalleryProps {
   onAlbumUpdate?: (data: AlbumProps) => void
   albumUpdateLoading?: boolean
   onAlbumDelete?: (data: AlbumProps) => void
+  openImageStudio?: (album: number, image: number) => void
   albumDeleteLoading?: boolean
 
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (data: UploadingImageProps[]) => void
   onImageUpload?: (data: UploadingImageProps) => void
-  onImageRemove?: (imageId: number) => void
+  onImageRemove?: (imageId: number[]) => void
   onUploadCancel?: (data: UploadingImageProps) => void
+  imagesDeleteLoading?: boolean
+  singleImgDelLoading?: boolean
 
   onImagesMove?: (album, images) => void
 }
@@ -91,12 +94,15 @@ export const GalleryView: FC<GalleryProps> = ({
   onAlbumUpdate,
   albumUpdateLoading,
   onAlbumDelete,
+  openImageStudio,
   albumDeleteLoading,
   uploadingImages,
   setUploadingImages,
   onImageUpload,
   onImageRemove,
   onUploadCancel,
+  imagesDeleteLoading,
+  singleImgDelLoading,
   onImagesMove,
 }) => {
   const { t } = useTranslation('common')
@@ -124,7 +130,7 @@ export const GalleryView: FC<GalleryProps> = ({
   const [selectAll, setSelectAll] = useState(false)
   const [selectedImages, setSelectedImages] = useState<ImageProps[]>([])
   const [singleImageMoveId, setSingleImageMoveId] = useState<number>()
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const [imageDeleteModal, setImageDeleteModal] = useState(false)
   const [status, setStatus] = useState(true)
   const [imagesList, setImagesList] = useState(images)
   const [sensitiveImg, setSensitiveImg] = useState([])
@@ -137,6 +143,7 @@ export const GalleryView: FC<GalleryProps> = ({
     setImagesList(images)
     setShowMenu(false)
     setSelectedImages([])
+    setImageDeleteModal(false)
   }, [images])
 
   useEffect(() => {
@@ -257,19 +264,24 @@ export const GalleryView: FC<GalleryProps> = ({
 
   const CreateContent = () => (
     <div className={styles.createContent}>
+      {currentData?.id === 0 && (
+        <div
+          className={styles.contentItem}
+          onClick={() => {
+            setCreateAlbumModal(true)
+            setCreatePopover(false)
+            setCreateAlbumDrawer(false)
+          }}
+        >
+          <FolderOutlined /> {t('galley.view.album.create.new.album')}
+        </div>
+      )}
       <div
         className={styles.contentItem}
         onClick={() => {
-          setCreateAlbumModal(true)
-          setCreatePopover(false)
+          setUploadModal((e) => !e)
           setCreateAlbumDrawer(false)
         }}
-      >
-        <FolderOutlined /> {t('galley.view.album.create.new.album')}
-      </div>
-      <div
-        className={styles.contentItem}
-        onClick={() => setUploadModal((e) => !e)}
       >
         <UploadOutlined /> {t('galley.view.album.create.photo.upload')}
       </div>
@@ -379,22 +391,11 @@ export const GalleryView: FC<GalleryProps> = ({
     saveNudityData({ ...newData, albumImage: alterImg })
   }
 
-  const handleDelete = () => {
-    const moveAlbum = { ...currentData }
-    selectedImages.map((img: ImageProps) => {
-      const idx = moveAlbum.albumImage.findIndex((i) => i.img === img.img)
-      return moveAlbum.albumImage.splice(idx, 1)
-    })
-    setCurrentData(moveAlbum)
-    setSelectedImages([])
-    setShowMenu(false)
-    setOpenDeleteModal(false)
-  }
-
-  const handleImageStudio = () => {
-    console.log('SELECTED IMAGES:', selectedImages)
-    console.log('C:', currentData)
-    // setShowStudio(() => true)
+  const handleImagesDelete = () => {
+    if (selectedImages?.length > 0) {
+      const deleteImages = selectedImages?.map((el) => el?.id || 0)
+      onImageRemove?.(deleteImages)
+    }
   }
 
   const handleDownload = () => {
@@ -534,7 +535,7 @@ export const GalleryView: FC<GalleryProps> = ({
             <div className={styles.rightSide}>
               {!isMobile && (
                 <>
-                  <Popover
+                  {/* <Popover
                     placement="bottomRight"
                     title={<Text />}
                     content={<Content />}
@@ -543,8 +544,8 @@ export const GalleryView: FC<GalleryProps> = ({
                     <Button type="ghost" className={styles.filterButton}>
                       <FilterOutlined />
                     </Button>
-                  </Popover>
-                  <Popover
+                  </Popover> */}
+                  {/* <Popover
                     placement="bottomRight"
                     title={<AlbumText />}
                     content={<AlbumContent />}
@@ -554,7 +555,8 @@ export const GalleryView: FC<GalleryProps> = ({
                     <Button type="ghost" className={styles.downloadBtn}>
                       {t('galley.view.album.view.album')} <DownOutlined />
                     </Button>
-                  </Popover>
+                  </Popover> */}
+
                   <Popover
                     placement="bottomRight"
                     content={<CreateContent />}
@@ -612,21 +614,20 @@ export const GalleryView: FC<GalleryProps> = ({
                       </div>
                     </div>
                   </Drawer>
-                  <Button
+                  {/* <Button
                     type="ghost"
                     onClick={() => setFilterDrawer(true)}
                     className={styles.filterButton}
                   >
                     <FilterOutlined />
-                  </Button>
-                  <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
+                  </Button> */}
+                  {/* <Button type="ghost" onClick={() => setAlbumDrawer(true)}>
                     {t('galley.view.album.view.album')} <DownOutlined />
-                  </Button>
+                  </Button> */}
                   <Button
                     type="primary"
                     className={styles.btnCreate}
                     onClick={() => setCreateAlbumDrawer((e) => !e)}
-                    onBlur={() => setCreateAlbumDrawer(() => false)}
                   >
                     <PlusOutlined />
                     {t('galley.view.album.create')}
@@ -756,10 +757,6 @@ export const GalleryView: FC<GalleryProps> = ({
               </span>
               {!isMobile && (
                 <div className={styles.rightSide}>
-                  <Button type="ghost" onClick={() => handleImageStudio()}>
-                    <EyeOutlined />
-                    Studio {`(${selectedImages.length})`}
-                  </Button>
                   <Button type="ghost" onClick={() => handleDownload()}>
                     <DownloadOutlined />
                     {t('galley.list.album.download.button')}{' '}
@@ -791,7 +788,7 @@ export const GalleryView: FC<GalleryProps> = ({
                   <Button
                     type="ghost"
                     onClick={() => {
-                      setOpenDeleteModal(!openDeleteModal)
+                      setImageDeleteModal(!imageDeleteModal)
                     }}
                   >
                     <DeleteOutlined />
@@ -840,9 +837,9 @@ export const GalleryView: FC<GalleryProps> = ({
                     </Tooltip>
                   )}
                 </button>
-                <button className={styles.btnFilter}>
+                {/* <button className={styles.btnFilter}>
                   <FilterOutlined />
-                </button>
+                </button> */}
                 <Drawer
                   placement={'bottom'}
                   closable={false}
@@ -874,7 +871,6 @@ export const GalleryView: FC<GalleryProps> = ({
                     type="primary"
                     className={styles.btnCreate}
                     onClick={() => setCreateAlbumDrawer((e) => !e)}
-                    onBlur={() => setCreateAlbumDrawer(() => false)}
                   >
                     <PlusOutlined />
                     {t('galley.view.album.create')}
@@ -915,8 +911,8 @@ export const GalleryView: FC<GalleryProps> = ({
           loading={loading}
           setSelectedImages={setSelectedImages}
           showMenu={showMenu}
-          setOpenDeleteModal={setOpenDeleteModal}
-          openDeleteModal={openDeleteModal}
+          setOpenDeleteModal={setImageDeleteModal}
+          openDeleteModal={imageDeleteModal}
           handleImageMove={(album, images) => onImagesMove?.(album, images)}
           drop={drop}
           allowDrop={allowDrop}
@@ -942,6 +938,16 @@ export const GalleryView: FC<GalleryProps> = ({
               setCreateAlbumModal((e) => !e)
             }
           }}
+          openImageStudio={openImageStudio}
+          onImageDelete={(imageId: number) => {
+            if (imageId !== 0) {
+              onImageRemove?.([imageId])
+            } else if (selectedImages?.length > 0) {
+              const deleteImages = selectedImages?.map((el) => el?.id || 0)
+              onImageRemove?.(deleteImages)
+            }
+          }}
+          singleImgDelLoading={singleImgDelLoading}
           onSingleImageMove={(album, image, isCreateAlbum) => {
             if (image) {
               if ((album || album === 0) && !isCreateAlbum) {
@@ -950,6 +956,17 @@ export const GalleryView: FC<GalleryProps> = ({
               if (!album && isCreateAlbum) {
                 setAlbumName('')
                 setSingleImageMoveId(image)
+                setCreateAlbumModal(() => true)
+              }
+            } else if (selectedImages?.length > 0 && (album || album === 0)) {
+              if ((album || album === 0) && !isCreateAlbum) {
+                onImagesMove?.(
+                  album,
+                  selectedImages?.map((el) => el?.id)
+                )
+              }
+              if (!album && isCreateAlbum) {
+                setAlbumName('')
                 setCreateAlbumModal(() => true)
               }
             }
@@ -969,7 +986,7 @@ export const GalleryView: FC<GalleryProps> = ({
           }
         }}
         uploadImage={onImageUpload}
-        removeImage={onImageRemove}
+        removeImage={(imageId: number) => onImageRemove?.([imageId])}
         onCancelUpload={onUploadCancel}
       />
 
@@ -1030,12 +1047,15 @@ export const GalleryView: FC<GalleryProps> = ({
 
       <Modal
         centered={true}
-        onCancel={() => setOpenDeleteModal(false)}
-        onOk={handleDelete}
-        visible={openDeleteModal}
+        onCancel={() => {
+          setImageDeleteModal(false)
+        }}
+        onOk={handleImagesDelete}
+        visible={imageDeleteModal}
         title={t('galley.list.view.delete.modal.title')}
         cancelText={t('common-label-cancel')}
         okText={t('galley.list.view.delete.ok.button')}
+        confirmLoading={imagesDeleteLoading}
       >
         <div>
           <p>
