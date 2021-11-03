@@ -15,7 +15,7 @@ export const MedicalFormContact = objectType({
     t.nullable.field('deleted_at', { type: 'DateTime' })
     t.int('complete')
     t.int('locked')
-    t.int('user_created')
+    t.nullable.int('user_created')
     t.int('user_updated')
     t.int('related_to')
     t.string('custom_user_name')
@@ -36,6 +36,18 @@ export const MedicalFormContact = objectType({
       type: 'MedicalForm',
       resolve(root: any) {
         return root.Form
+      },
+    })
+    t.nullable.field('Contact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.Contact
+      },
+    })
+    t.nullable.field('CreatedBy', {
+      type: 'User',
+      resolve(root: any) {
+        return root.CreatedBy
       },
     })
     t.list.field('MedicalFormContactHistory', {

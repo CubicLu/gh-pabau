@@ -6,6 +6,7 @@ en:
   marketingsource-header-edit: 'Edit Marketing Source'
   KEY: Text
   search.placeholder: 'Search clients or leads'
+  search.client.placeholder: 'Search clients'
   avatar.balance: Balance
   avatar.account.settings: 'Account Settings'
   avatar.tasks: Tasks
@@ -5271,6 +5272,7 @@ en:
   activityList.column.leadName: 'Lead name'
   activityList.column.leadStage: 'Lead stage'
   activityList.column.leadDescription: 'Lead description'
+  activityList.column.leadDescription.editName: 'lead description'
   activityList.column.leadLocation: 'Lead location'
   activityList.column.leadActivityToDo: 'Activities to do'
   activityList.column.leadCreator: 'Lead creator'
@@ -5282,7 +5284,6 @@ en:
   activityList.column.leadPipeline: 'Pipeline'
   activityList.column.leadUpdateTime: 'Update time'
   activityList.column.leadTitle: 'Title'
-  activityList.column.leadDescription.editName: 'lead description'
   activityList.column.clientCountry.editName: 'client country'
   activityList.column.edit.tooltip: Edit
   activityList.column.address.details: 'Address Details'
@@ -5676,4 +5677,9 @@ en:
   create.filter.modal.open.lead.status: 'Open'
   create.filter.modal.won.lead.status: 'Won'
   create.filter.modal.lost.lead.status: 'Lost'
+  clients.activities.markAsDone: 'Mark as done'
+  clients.activities.markAsNotDone: 'Mark as not done'
+  clients.activities.delete.message: 'Activity deleted Successfully'
+  clients.activities.delete.error.message: 'An error occured while deleting activity'
+  clients.activities.delete.modal.message: 'Do you really want to delete these records? This process cannot be undone.'
 

@@ -78,7 +78,14 @@ export const CustomTabMenu: FC<P> = ({
                   )}
                   onClick={() => onActiveChanged?.(tab.key)}
                 >
-                  {tab.name}
+                  <div className={styles.titleCountWrapper}>
+                    {tab.name}
+                    {Object.keys(tab).includes('count') && (
+                      <div className={styles.countWrapper}>
+                        <div className={styles.countContainer}>{tab.count}</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               {tab.childTabs && tab.childTabs.length > 0 && (
