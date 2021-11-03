@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  createRef,
+} from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { Tooltip } from 'antd'
 import { KanbanCard } from '@pabau/ui'
@@ -73,6 +79,8 @@ const LeadsStagesComponent = () => {
     queryCompleted: false,
     stageWithLeads: [],
   })
+  const stageNameRef = useRef([])
+  const stageNameContent = useRef({})
 
   const [
     getAllKanbanStages,
@@ -171,6 +179,29 @@ const LeadsStagesComponent = () => {
           return 'activity due today'
         } else return 'future activity scheduled'
       }
+    }
+  }
+
+  const stageNameContentHandler = (stageIndex, stageName, shouldTooltip) => {
+    if (!stageNameContent.current[stageIndex]) {
+      stageNameContent.current[stageIndex] = shouldTooltip ? (
+        <Tooltip
+          title={stageName}
+          placement={'top'}
+          overlayClassName={styles.overlay}
+        >
+          {
+            <div
+              className={styles.leadStageName}
+              style={{ overflow: 'hidden' }}
+            >
+              {stageName}
+            </div>
+          }
+        </Tooltip>
+      ) : (
+        <div className={styles.leadStageName}>{stageName}</div>
+      )
     }
   }
 
@@ -309,6 +340,27 @@ const LeadsStagesComponent = () => {
               {allStages?.map((stage, stageIndex) => {
                 const { name, id, _count } = stage
                 const leadParStage = _count?.CmLead ? _count.CmLead : 0
+                if (!stageNameRef.current[stageIndex]) {
+                  stageNameRef.current[stageIndex] = createRef()
+                } else if (
+                  stageNameRef.current[stageIndex] &&
+                  Object.keys(leadsState).length === allStages.length
+                ) {
+                  const {
+                    offsetHeight,
+                    offsetWidth,
+                    scrollHeight,
+                    scrollWidth,
+                  } = stageNameRef.current[stageIndex].current
+
+                  if (
+                    offsetHeight < scrollHeight ||
+                    offsetWidth < scrollWidth
+                  ) {
+                    stageNameContentHandler(stageIndex, name, true)
+                  }
+                }
+
                 return (
                   <Droppable key={Math.random()} droppableId={`${id}`}>
                     {(provided, snapshot) => (
@@ -317,17 +369,16 @@ const LeadsStagesComponent = () => {
                           <div
                             key={`stage ${id}`}
                             className={styles.leadStageTitlemain}
+                            ref={stageNameRef.current[stageIndex]}
                           >
                             <div className={styles.leadStageTitle}>
-                              <Tooltip
-                                title={name}
-                                placement={'top'}
-                                overlayClassName={styles.overlay}
-                              >
+                              {stageNameContent?.current[stageIndex] ? (
+                                stageNameContent?.current[stageIndex]
+                              ) : (
                                 <div className={styles.leadStageName}>
                                   {name}
                                 </div>
-                              </Tooltip>
+                              )}
                               <div
                                 className={styles.leadCount}
                               >{`£0 . ${leadParStage} Leads`}</div>
