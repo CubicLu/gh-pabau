@@ -1,5 +1,4 @@
 import { Button } from '@pabau/ui'
-import { Pathway } from '../../pages/pathway/[pathway-id]' //TODO: importing from pages feels dirty
 import { Consent } from './Steps/Consent'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
@@ -12,10 +11,11 @@ import { useRouter } from 'next/router'
 import { useUser } from '../../context/UserContext'
 import { ContractSelection } from './ContractSelection'
 import { HandToPatientSplash } from './HandToPatientSplash'
+import { GetPathwayQueryResult } from '@pabau/graphql'
 
 interface P {
   client: any //TODO: set this to the graphql type
-  pathway: Pathway
+  pathway: GetPathwayQueryResult['data']['Pathway']
 }
 
 /**
@@ -38,7 +38,7 @@ const hydratables: Record<string, ({ onSubmit, data }: any) => JSX.Element> = {
  */
 const prependScreens = [{ name: 'contract-selection' }] as const
 
-export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
+export const PathwayLayout = ({ pathway }: P) => {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [stepState, setStepState] = useState<any>({})
@@ -55,7 +55,7 @@ export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
   const HydratedScreen = useMemo(() => {
     const currentStep =
       step >= prependScreens.length
-        ? pathway.steps[step - prependScreens.length]
+        ? pathway.Steps[step - prependScreens.length]
         : prependScreens[step]
     if (!currentStep) return <FinishScreen />
     if (!(currentStep.name in hydratables)) throw new Error('step not found')
@@ -64,7 +64,7 @@ export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
     if (step === prependScreens.length)
       return <HandToPatientSplash>{HydratedJsx}</HandToPatientSplash>
     return HydratedJsx
-  }, [pathway.steps, step])
+  }, [pathway, step])
 
   const { me } = useUser()
 
@@ -89,12 +89,12 @@ export const PathwayLayout: React.FC<P> = ({ children, client, pathway }) => {
           onClick={() =>
             step === 0 ? window.history.back() : setStep((e) => e - 1)
           }
-          disabled={isCustomerOnFirstStep || pathway.steps.length <= step}
+          disabled={isCustomerOnFirstStep || pathway.Steps.length <= step}
         >
           &lt;
         </Button>
         <p>
-          Current step: {step + 1} - {JSON.stringify(pathway.steps[step])}
+          Current step: {step + 1} - {JSON.stringify(pathway.Steps[step])}
         </p>
         <p>
           pathway_id={router.query['pathway-id']} - client_id=
