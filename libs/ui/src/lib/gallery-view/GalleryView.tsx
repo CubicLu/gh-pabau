@@ -624,7 +624,6 @@ export const GalleryView: FC<GalleryProps> = ({
                     type="primary"
                     className={styles.btnCreate}
                     onClick={() => setCreateAlbumDrawer((e) => !e)}
-                    onBlur={() => setCreateAlbumDrawer(() => false)}
                   >
                     <PlusOutlined />
                     {t('galley.view.album.create')}
@@ -869,7 +868,6 @@ export const GalleryView: FC<GalleryProps> = ({
                       type="primary"
                       className={styles.btnCreate}
                       onClick={() => setCreateAlbumDrawer((e) => !e)}
-                      onBlur={() => setCreateAlbumDrawer(() => false)}
                     >
                       <PlusOutlined />
                       {t('galley.view.album.create')}
@@ -938,7 +936,14 @@ export const GalleryView: FC<GalleryProps> = ({
             }
           }}
           openImageStudio={openImageStudio}
-          onImageDelete={(imageId: number) => onImageRemove?.([imageId])}
+          onImageDelete={(imageId: number) => {
+            if (imageId !== 0) {
+              onImageRemove?.([imageId])
+            } else if (selectedImages?.length > 0) {
+              const deleteImages = selectedImages?.map((el) => el?.id || 0)
+              onImageRemove?.(deleteImages)
+            }
+          }}
           singleImgDelLoading={singleImgDelLoading}
           onSingleImageMove={(album, image, isCreateAlbum) => {
             if (image) {
@@ -948,6 +953,17 @@ export const GalleryView: FC<GalleryProps> = ({
               if (!album && isCreateAlbum) {
                 setAlbumName('')
                 setSingleImageMoveId(image)
+                setCreateAlbumModal(() => true)
+              }
+            } else if (selectedImages?.length > 0 && (album || album === 0)) {
+              if ((album || album === 0) && !isCreateAlbum) {
+                onImagesMove?.(
+                  album,
+                  selectedImages?.map((el) => el?.id)
+                )
+              }
+              if (!album && isCreateAlbum) {
+                setAlbumName('')
                 setCreateAlbumModal(() => true)
               }
             }
