@@ -99,7 +99,7 @@ export const Activities: FC<ActivitiesProps> = ({
   const [paginateData, setPaginateData] = useState({
     total: pagination?.total ?? 0,
     offset: pagination?.offSet ?? 0,
-    pageSize: pagination?.limit ?? 6,
+    pageSize: pagination?.limit ?? 50,
     currentPage: pagination?.currentPage ?? 1,
   })
   const menuItems = {

@@ -109,27 +109,25 @@ const ActivitiesTab = () => {
     }
   }
   useEffect(() => {
-    if (activityData?.findManyActivity) {
-      const activity: ActivitiesDataProps[] = []
-      if (activityData?.findManyActivity) {
-        for (const d of activityData?.findManyActivity) {
-          activity.push({
-            id: d.id,
-            dateTime: dayjs(d.due_start_date).format('DD-MM-YYYY, h:mm a'),
-            eventName: d.subject,
-            type: d.ActivityType.name,
-            taskUserName: d.Assigned.full_name,
-            description: d.note,
-            taskChecked: d.status.toLocaleLowerCase() === 'done',
-            typeIcon: renderTooltip({
-              title: '',
-              icon: React.createElement(Icon?.[d.ActivityType.badge]),
-            }),
-            dateColor: handleColorClass(d.due_start_date, d.status),
-          })
-        }
-        setActivityDetails(activity)
+    const activity: ActivitiesDataProps[] = []
+    if (activityData?.activities) {
+      for (const d of activityData?.activities) {
+        activity.push({
+          id: d.id,
+          dateTime: dayjs(d.due_start_date).format('DD-MM-YYYY, h:mm a'),
+          eventName: d.subject,
+          type: d.ActivityType.name,
+          taskUserName: d.Assigned.full_name,
+          description: d.note,
+          taskChecked: d.status.toLocaleLowerCase() === 'done',
+          typeIcon: renderTooltip({
+            title: '',
+            icon: React.createElement(Icon?.[d.ActivityType.badge]),
+          }),
+          dateColor: handleColorClass(d.due_start_date, d.status),
+        })
       }
+      setActivityDetails(activity)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityData])
