@@ -30,6 +30,7 @@ import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
+import Search from '../Search'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
 import dayjs from 'dayjs'
@@ -99,6 +100,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     skip: !router.query['id'],
     ssr: false,
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
     ...getQueryVariables,
   })
 
@@ -366,7 +368,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   .join(', '),
                 relationships: [],
                 labels:
-                  data.findFirstCmContact?.labelData?.map((data) => {
+                  data?.findFirstCmContact?.labelData?.map((data) => {
                     return {
                       label: data?.labelDetail?.label,
                       color: data?.labelDetail?.color,
@@ -381,6 +383,12 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         handleEditNote={handleEditNote}
         handleDeleteNote={handleDeleteNote}
         setBasicContactData={setBasicContactData}
+        searchRender={() => (
+          <Search
+            isHideLead={true}
+            placeHolder={t('search.client.placeholder')}
+          />
+        )}
       >
         {children}
       </ClientCard>
