@@ -7,6 +7,7 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
+  useCountClientActivityQuery,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
 } from '@pabau/graphql'
@@ -42,11 +43,21 @@ dayjs.extend(timezone)
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
+  cssClass?: string
 }
 
-export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
+export const ClientCardLayout: FC<P> = ({
+  clientId,
+  children,
+  activeTab,
+  cssClass,
+}) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { data: countActivities } = useCountClientActivityQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
   const { t } = useTranslationI18()
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
@@ -234,7 +245,11 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
     { key: 'loyalty', name: 'Loyalty' },
-    { key: 'activities', name: 'Activities' },
+    {
+      key: 'activities',
+      name: 'Activities',
+      count: countActivities?.findManyActivityCount,
+    },
 
     // {
     //   key: 2,
@@ -329,6 +344,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   return (
     <Layout>
       <ClientCard
+        cssClass={cssClass}
         onClose={() => router.push('/clients')}
         tabs={tabItems}
         activeTab={activeTab}

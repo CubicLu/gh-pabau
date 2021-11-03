@@ -160,6 +160,7 @@ interface P {
   customFields?: FieldOrderItem[]
   dateFormat?: string
   handleEditAll?: () => void
+  cssClass?: string
   updatebasicContactMutation?: MutationFunction
   updateContactCustomMutation?: MutationFunction
   clientId?: number
@@ -170,6 +171,7 @@ interface P {
 
 const ClientCardModal: FC<P> = ({
   client,
+  cssClass,
   notes,
   getContactDetails,
   handleAddNewClientNote,
@@ -980,8 +982,13 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px', height: '100%' }}>
-                  <ClientDashboardLayout>{children}</ClientDashboardLayout>
+                <div
+                  className={styles.clientCode}
+                  style={{ padding: cssClass ? '0px' : '12px', height: '100%' }}
+                >
+                  <ClientDashboardLayout cssClass={cssClass}>
+                    {children}
+                  </ClientDashboardLayout>
                 </div>
                 {/*<div>*/}
                 {/*  <ClientAppointmentsLayout isEmpty={true} />*/}

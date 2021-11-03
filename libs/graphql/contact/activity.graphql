@@ -1,0 +1,31 @@
+query getActivity(
+  $contactID: Int!
+  $skip: Int = 0
+  $take: Int = 50
+) {
+  activities: findManyActivity(
+    where: { contact_id: { equals: $contactID } }
+    orderBy: { due_start_date: desc }
+    skip: $skip
+    take: $take
+  ) {
+    id
+    due_start_date
+    subject
+    status
+    note
+    ActivityType {
+      id
+      name
+      badge
+    }
+    Assigned: AssignedUser {
+      id
+      full_name
+    }
+    Creator: User {
+      id
+      full_name
+    }
+  }
+}
