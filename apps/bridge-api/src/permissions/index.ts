@@ -140,8 +140,10 @@ export const permissions = shield(
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      //Pathway
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
+      findFirstPathwaysTaken: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,

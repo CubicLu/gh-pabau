@@ -7,6 +7,7 @@ query getJourney($journey_id: Int!) {
     }
   ){
     id
+    contact_id
     Pathway{
       id
       pathway_name
