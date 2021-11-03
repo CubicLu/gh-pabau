@@ -5703,3 +5703,4 @@ notifications.documnetshared.standardMessage: 'The email you will send when you 
 clients.clientcard.notes.clientnote.create.errormessage: 'Error occured while creating note'
 clients.clientcard.notes.clientnote.edit.errormessage: 'Error occured while updating note'
 clients.clientcard.notes.clientnote.delete.errormessage: 'Error occured while deleting note'
+search.client.placeholder: 'Search clients'
