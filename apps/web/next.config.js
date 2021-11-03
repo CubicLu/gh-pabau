@@ -26,9 +26,16 @@ module.exports = withPlugins([
     withLess,
     {
       lessLoaderOptions: {
-        localsConvention: 'camelCase', // Not Working
+        localsConvention: 'camelcase', // Not Working
         javascriptEnabled: true,
         modifyVars: { '@primary-color': '#ff0000' },
+        exportLocalsConvention: 'camelCase',
+        lessOptions: {
+          localsConvention: 'camelcase', // Not Working
+          javascriptEnabled: true,
+          modifyVars: { '@primary-color': '#ff0000' },
+          exportLocalsConvention: 'camelCase',
+        },
       },
     },
   ],

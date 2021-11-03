@@ -4,7 +4,7 @@ import { Card, Typography } from 'antd'
 import Link from 'next/link'
 import React from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import styles from './DefaultTax.modul.less'
+import styles from './DefaultTax.module.less'
 
 const cardBodyStyle = {
   padding: '20px 24px',
