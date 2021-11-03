@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Tooltip, Modal } from 'antd'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import styles from './clientCardLayout.module.less'
 import {
-  useGetActivityQuery,
-  useCountClientActivityQuery,
+  useGetActivityLazyQuery,
+  useCountClientActivityLazyQuery,
   useDeleteManyActivityMutation,
+  useGetActivityTypesQuery,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
@@ -15,15 +16,23 @@ import {
   Activities,
   ActivitiesDataProps,
   Notification as ResNotification,
+  ActivityTypeFilter,
   NotificationType,
   PaginationType,
 } from '@pabau/ui'
 import { DisplayDate } from '../../../hooks/displayDate'
+
 const ActivitiesTab = () => {
   const router = useRouter()
+  let count
   const contactID = Number(router.query['id'])
   const [isActivityDelete, setIsActivityDelete] = useState(false)
   const [activityId, setActivityId] = useState<number>(0)
+  const [activityTypeFilter, setActivityTypeFilter] = useState<number[]>([])
+  const [activityTypes, setActivityTypes] = useState<number[]>([])
+  const [activityFilterType, setActivityFilterType] = useState<
+    ActivityTypeFilter[]
+  >([])
   const { t } = useTranslation('common')
   const [activityDetails, setActivityDetails] = useState<ActivitiesDataProps[]>(
     []
@@ -31,35 +40,33 @@ const ActivitiesTab = () => {
   const [pagination, setPagination] = useState<PaginationType>({
     total: 0,
     offSet: 0,
-    limit: 50,
+    limit: 10,
     currentPage: 1,
   })
-  const queryVariable = useMemo(() => {
-    return {
-      contactID: contactID,
-      skip: pagination.offSet,
-      take: pagination.limit,
-    }
-  }, [contactID, pagination.offSet, pagination.limit])
-  const {
-    loading,
-    data: activityData,
-    refetch: reFetchActivity,
-  } = useGetActivityQuery({
-    variables: queryVariable,
-    skip: !contactID,
+  const resetPagionation = () => {
+    setPagination({
+      total: count,
+      offSet: 0,
+      limit: 10,
+      currentPage: 1,
+    })
+  }
+
+  const [
+    getActivities,
+    { loading, data: activityData, refetch: reFetchActivity },
+  ] = useGetActivityLazyQuery({
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
   })
-
   const {
-    data: countData,
-    loading: countLoading,
-    refetch: reFetchCountActivity,
-  } = useCountClientActivityQuery({
-    variables: { contactID },
-    skip: !contactID,
-  })
+    loading: filterLoading,
+    data: filterData,
+  } = useGetActivityTypesQuery()
+  const [
+    getCountActivity,
+    { data: countData, loading: countLoading, refetch: reFetchCountActivity },
+  ] = useCountClientActivityLazyQuery()
   const [
     deleteActivityMutation,
     { loading: isDeleteLoading },
@@ -80,6 +87,47 @@ const ActivitiesTab = () => {
       )
     },
   })
+  useEffect(() => {
+    getActivities({
+      variables: {
+        contactID: contactID,
+        skip: pagination.offSet,
+        take: pagination.limit,
+        activityType: activityTypeFilter,
+      },
+    })
+    getCountActivity({
+      variables: {
+        contactID: contactID,
+      },
+    })
+  }, [contactID, pagination.offSet, pagination.limit, activityTypeFilter])
+  useEffect(() => {
+    if (filterData?.findManyActivityType) {
+      const activityTypeId = []
+      const tempData: ActivityTypeFilter[] = [
+        {
+          id: 0,
+          name: 'All',
+          isSelected: true,
+          hasIcon: false,
+        },
+      ]
+      for (const item of filterData?.findManyActivityType) {
+        activityTypeId.push(item.id)
+        tempData.push({
+          id: item.id,
+          name: item.name,
+          hasIcon: !!item.badge,
+          isSelected: true,
+          icon: item.badge,
+        })
+      }
+      setActivityTypeFilter(activityTypeId)
+      setActivityTypes(activityTypeId)
+      setActivityFilterType(tempData)
+    }
+  }, [filterData])
   const renderTooltip = ({ title, icon }) => {
     return <Tooltip title={title}>{icon}</Tooltip>
   }
@@ -144,6 +192,30 @@ const ActivitiesTab = () => {
       },
     })
   }
+  const onActivityFilterChange = (id, isSelected) => {
+    if (id !== 0) {
+      resetPagionation()
+      let filterObj = [...activityFilterType]
+      filterObj = filterObj.map((d) => {
+        if (d.id === id) {
+          d.isSelected = true
+        } else {
+          d.isSelected = false
+        }
+        return d
+      })
+      setActivityFilterType(filterObj)
+      setActivityTypeFilter([id])
+    } else {
+      let filterObj = [...activityFilterType]
+      filterObj = filterObj.map((d) => {
+        d.isSelected = true
+        return d
+      })
+      setActivityFilterType(filterObj)
+      setActivityTypeFilter(activityTypes)
+    }
+  }
   return (
     <div className={styles.wrapper}>
       <ClientCardLayout
@@ -168,11 +240,14 @@ const ActivitiesTab = () => {
         <Activities
           eventsData={activityDetails}
           eventDateFormat={'DD-MM-YYYY, h:mm a'}
-          isLoading={loading || countLoading}
+          isLoading={loading || countLoading || filterLoading}
           pagination={pagination}
           setPagination={setPagination}
           handleMenuClick={handleMenuClick}
           DisplayDate={DisplayDate}
+          activityTypeFilterList={activityFilterType}
+          activityTypeLoading={filterLoading}
+          onActivityFilterChange={onActivityFilterChange}
         />
       </ClientCardLayout>
     </div>

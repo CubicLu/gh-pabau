@@ -2,9 +2,10 @@ query getActivity(
   $contactID: Int!
   $skip: Int = 0
   $take: Int = 50
+  $activityType: [Int]
 ) {
   activities: findManyActivity(
-    where: { contact_id: { equals: $contactID } }
+    where: { contact_id: { equals: $contactID }, type: { in: $activityType } }
     orderBy: { due_start_date: desc }
     skip: $skip
     take: $take
