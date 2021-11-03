@@ -1,0 +1,19 @@
+query getJourney($journey_id: Int!) {
+  Journey: findManyPathwaysTaken(
+    where:{
+      id:{
+        equals:$journey_id
+      }
+    }
+  ){
+    id
+    Pathway{
+      id
+      pathway_name
+      steps: PathwayStep{
+        id
+        step
+      }
+    }
+  }
+}
