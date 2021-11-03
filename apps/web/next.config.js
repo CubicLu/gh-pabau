@@ -5,48 +5,68 @@ const withLess = require('next-with-less')
 const withYaml = require('next-plugin-yaml')
 const removeImports = require('next-remove-imports')
 const withBundleAnalyzer = require('@next/bundle-analyzer')
+// const path = require('path')
 
-module.exports = withPlugins([
-  // https://www.npmjs.com/package/@next/bundle-analyzer
+// const pathToLessFileWithVariables = path.resolve('libs/ui/src/styles/antd.less')
+module.exports = withPlugins(
   [
-    withBundleAnalyzer,
-    {
-      enabled: process.env.ANALYZE === 'true',
-    },
-  ],
+    // https://www.npmjs.com/package/@next/bundle-analyzer
+    [
+      withBundleAnalyzer,
+      {
+        enabled: process.env.ANALYZE === 'true',
+      },
+    ],
 
-  [
-    removeImports,
-    {
-      experimental: { esmExternals: true },
-    },
-  ],
-  [withYaml],
-  [
-    withLess,
-    {
-      lessLoaderOptions: {
-        localsConvention: 'camelcase', // Not Working
-        javascriptEnabled: true,
-        modifyVars: { '@primary-color': '#ff0000' },
-        exportLocalsConvention: 'camelCase',
-        lessOptions: {
-          localsConvention: 'camelcase', // Not Working
-          javascriptEnabled: true,
-          modifyVars: { '@primary-color': '#ff0000' },
-          exportLocalsConvention: 'camelCase',
+    [
+      removeImports,
+      {
+        experimental: { esmExternals: true },
+      },
+    ],
+    [withYaml],
+    [
+      withLess,
+      {
+        lessLoaderOptions: {
+          lessOptions: {
+            javascriptEnabled: true,
+            modifyVars: { '@primary-color': '#ff' },
+            localsConvention: 'camelCase',
+            exportLocalsConvention: 'camelCase',
+          },
+        },
+        cssLoaderOptions: {
+          sourceMap: true,
+          esModule: true,
+          modules: {
+            localsConvention: 'camelCase',
+            // exportOnlyLocals: false,
+            mode: 'local',
+          },
         },
       },
-    },
-  ],
-  [
-    withNx,
-    {
-      nx: {
-        svgr: true,
+    ],
+    [
+      withNx,
+      {
+        nx: {
+          svgr: true,
+        },
+        cssModules: true,
+        webpack5: true,
       },
-      cssModules: true,
-      webpack5: true,
-    },
+    ],
   ],
-])
+  {
+    cssLoaderOptions: {
+      sourceMap: true,
+      esModule: true,
+      modules: {
+        localsConvention: 'camelCase',
+        // exportOnlyLocals: false,
+        mode: 'local',
+      },
+    },
+  }
+)
