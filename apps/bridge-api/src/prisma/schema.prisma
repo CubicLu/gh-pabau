@@ -6525,6 +6525,24 @@ model InvCategory {
   @@map("inv_categories")
 }
 
+model Invoice {
+  id              Int      @id
+  customer_id     Int
+  guid            String?
+  date            DateTime
+  amount          Float?
+  paid_amount     Float?
+  discount_amount Float?
+  inv_total       Float?
+  tip             Float?
+  status          String?
+  location_name   String?
+  billers         String?
+  issue_to        String?
+
+  @@map("invoices")
+}
+
 //
 //model inv_container {
 //  id             Int       @id @default(autoincrement())
@@ -6630,7 +6648,7 @@ model InvPayment {
   insurer_id          Int
   is_credit_note      Int
   CmContact           CmContact? @relation(fields: [contact_id], references: [ID])
-  User                User       @relation(fields: [uid], references: [id])
+  User                User?      @relation(fields: [uid], references: [id])
   Company             Company    @relation(fields: [company_id], references: [id])
   InvSale             InvSale?   @relation(fields: [invoice], references: [id])
 
