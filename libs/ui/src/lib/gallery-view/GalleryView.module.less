@@ -28,12 +28,6 @@
     flex-wrap: wrap;
     align-items: center;
 
-    @media screen and (max-width: 479px) {
-      button:first-child {
-        padding: unset;
-      }
-    }
-
     .filterButton {
       border: none;
       padding: 0px;
@@ -486,10 +480,22 @@
       }
 
       &:first-child {
-        left: 0px;
+        left: 0;
       }
       &:last-child {
         right: 0;
+      }
+
+      @media screen and (max-width: 375px) {
+        padding: 5px;
+
+        &:last-child {
+          button {
+            height: 24px;
+            width: 24px;
+            vertical-align: -0.05em;
+          }
+        }
       }
     }
     &:hover {
@@ -525,7 +531,15 @@
     @media only screen and (max-width: 767px) {
       width: 90px;
       height: 90px;
-      margin: 0 4px 8px 4px;
+      margin: 0px;
+    }
+    @media screen and (max-width: 425px) {
+      width: 88px;
+      height: 88px;
+    }
+    @media screen and (max-width: 375px) {
+      width: 75px;
+      height: 75px;
     }
     img {
       width: 100%;

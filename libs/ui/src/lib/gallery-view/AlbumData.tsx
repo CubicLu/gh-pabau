@@ -18,7 +18,7 @@ import {
   MoreOutlined,
   CloseOutlined,
 } from '@ant-design/icons'
-import { Pagination } from '@pabau/ui'
+import { Pagination, Notification, NotificationType } from '@pabau/ui'
 import { ColumnsType } from 'antd/es/table'
 import {
   Table,
@@ -267,7 +267,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
     {
       width: '15%',
       visible: true,
-      title: t('galley.list.view.photo.files'),
+      title: t('galley.list.view.photo.photos'),
       dataIndex: 'files',
       render: function renderTableSource(value) {
         return value[0]
@@ -339,7 +339,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                 onClick={() => openImageStudio?.(data?.id, value?.[0]?.id)}
               />
             </Card>
-            <div>
+            <div onClick={() => openImageStudio?.(data?.id, value?.[0]?.id)}>
               <p>
                 {filename?.[filename.length - 1]?.substring(
                   0,
@@ -405,7 +405,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
             />
           )
         ) : (
-          ''
+          <div style={{ minWidth: '64px' }} />
         )
       },
     },
@@ -459,6 +459,47 @@ export const AlbumData: FC<AlbumDataProps> = ({
 
   const DotButtonMenu = ({ img, imageId, albumMenu = false }) => {
     const [albumDropdown, setAlbumDropdown] = useState(albumMenu)
+    const [downloadPerc, setDownloadPerc] = useState(0)
+    const [downloadStarted, setDownloadStarted] = useState(false)
+
+    const downloadSingleImage = (url: string) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', url, true)
+      xhr.responseType = 'blob'
+      xhr.addEventListener('progress', (event) => {
+        let contentLength: number
+        let perc = 0
+        if (event.lengthComputable) {
+          contentLength = event.total
+          perc = (event.loaded / contentLength) * 100
+          setDownloadPerc(perc)
+        }
+
+        if (perc >= 100) {
+          setDownloadStarted(() => false)
+          Notification(NotificationType?.success, 'Downloading...')
+        }
+      })
+      xhr.addEventListener('error', function () {
+        Notification(NotificationType?.error, 'Failed')
+      })
+      xhr.addEventListener('load', function () {
+        const urlCreator = window.URL || window.webkitURL
+        const imageUrl = urlCreator.createObjectURL(this.response)
+        const tag = document.createElement('a')
+        tag.href = imageUrl
+        tag.download = url
+        document.body.append(tag)
+        tag.click()
+        tag.remove()
+        setDownloadStarted(() => false)
+        Notification(NotificationType?.success, 'Downloaded')
+      })
+      xhr.send()
+      setDownloadStarted(() => true)
+      Notification(NotificationType?.success, 'Downloading...')
+    }
+
     useEffect(() => {
       setAlbumDropdown(albumMenu)
     }, [albumMenu])
@@ -476,14 +517,16 @@ export const AlbumData: FC<AlbumDataProps> = ({
           <div
             className={styles.menuItem}
             onClick={() => {
-              selectedImages.push(img as never)
-              setAlbumListDrawer(() => false)
-              setSelectedImages([...selectedImages])
-              imgDownload(img)
+              if (!downloadStarted) downloadSingleImage?.(img)
             }}
           >
             <DownloadOutlined />
-            &nbsp;&nbsp;&nbsp;{t('galley.list.album.download.button')}
+            &nbsp;&nbsp;&nbsp;
+            {downloadStarted
+              ? downloadPerc > 0
+                ? downloadPerc + '% downloaded'
+                : 'Donwloading...'
+              : t('galley.list.album.download.button')}
           </div>
           <div
             className={styles.menuItem}
@@ -790,7 +833,6 @@ export const AlbumData: FC<AlbumDataProps> = ({
                     ? '1px solid #ecedf0'
                     : '',
               }}
-              className={styles.albumImagesDiv}
             >
               <div className={styles.galleryAlbumImage}>
                 {!loading &&
