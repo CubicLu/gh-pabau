@@ -9462,7 +9462,7 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
-clone@^2.1.1:
+clone@^2.1.1, clone@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
   integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
@@ -17435,7 +17435,16 @@ less-loader@5.0.0:
   dependencies:
     klona "^2.0.4"
 
-less@*:
+less-loader@^7:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-7.3.0.tgz#f9d6d36d18739d642067a05fb5bd70c8c61317e5"
+  integrity sha512-Mi8915g7NMaLlgi77mgTTQvK022xKRQBIVDSyfl3ErTuBhmZBQab0mjeJjNNqGbdR+qrfTleKXqbGI4uEFavxg==
+  dependencies:
+    klona "^2.0.4"
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
+
+less@*, less@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/less/-/less-4.1.2.tgz#6099ee584999750c2624b65f80145f8674e4b4b0"
   integrity sha512-EoQp/Et7OSOVu0aJknJOtlXZsnr8XE8KwuzTHOLeVSEx8pVWUICc8Q0VYRHgzyjX78nMEyC/oztWFbgyhtNfDA==
@@ -18896,6 +18905,16 @@ next-page-tester@0.29.0:
     stealthy-require "^1.1.1"
     tiny-glob "^0.2.9"
 
+next-plugin-antd-less@1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/next-plugin-antd-less/-/next-plugin-antd-less-1.5.2.tgz#8c73d2a9f5db991a6420ca272f71a58fba2db2e6"
+  integrity sha512-zszb/enAq5icB+M0JUMhrFyE+8V2nakD0Cw8FC9zltlri4fuIPRmoh36vhol5OJKlEpFc8g5D/adyuJv4M7OUg==
+  dependencies:
+    clone "^2.1.2"
+    less "^4.1.2"
+    less-loader "^7"
+    null-loader "^4.0.1"
+
 next-plugin-yaml@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/next-plugin-yaml/-/next-plugin-yaml-1.0.1.tgz#90e96637dfa445806fc44d1df3506c0f1446246a"
@@ -18911,13 +18930,6 @@ next-remove-imports@1.0.6:
     "@babel/core" "^7.14.3"
     babel-loader "^8.2.2"
     babel-plugin-transform-remove-imports "^1.5.4"
-
-next-with-less@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/next-with-less/-/next-with-less-2.0.2.tgz#391f88ff6c16e680e89c709a0c62cd08fe84219f"
-  integrity sha512-ARPjT6jNwSlGc8RRAhEiOMGfr4HuvvJ2k26WXmEVkpsuSXUe0h4KTb/ML67zxZy1EoBaH3r9Eos0f+SnWTZ1pA==
-  dependencies:
-    clone-deep "^4.0.1"
 
 next@11.1.2:
   version "11.1.2"
@@ -19363,6 +19375,14 @@ nth-check@^2.0.0:
   integrity sha512-it1vE95zF6dTT9lBsYbxvqh0Soy4SPowchj0UBGj/V6cTPnXXtQOPUbhZ6CmGzAD/rW22LQK6E96pcdJXk4A4w==
   dependencies:
     boolbase "^1.0.0"
+
+null-loader@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/null-loader/-/null-loader-4.0.1.tgz#8e63bd3a2dd3c64236a4679428632edd0a6dbc6a"
+  integrity sha512-pxqVbi4U6N26lq+LmgIbB5XATP0VdZKOG25DhHi8btMmJJefGArFyDg1yc4U3hWCJbMqSrw0qyrz1UQX+qYXqg==
+  dependencies:
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
 
 nullthrows@^1.1.1:
   version "1.1.1"

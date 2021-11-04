@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const withPlugins = require('next-compose-plugins')
 const withNx = require('@nrwl/next/plugins/with-nx')
-const withLess = require('next-with-less')
+const withLess = require('next-plugin-antd-less')
 const withYaml = require('next-plugin-yaml')
 const removeImports = require('next-remove-imports')
 const withBundleAnalyzer = require('@next/bundle-analyzer')
+const withImages = require('next-images')
 // const path = require('path')
 
 // const pathToLessFileWithVariables = path.resolve('libs/ui/src/styles/antd.less')
@@ -26,23 +27,40 @@ module.exports = withPlugins(
     ],
     [withYaml],
     [
+      withImages,
+      {
+        fileExtensions: [
+          'jpg',
+          'jpeg',
+          'png',
+          'gif',
+          'ico',
+          'webp',
+          'jp2',
+          'avif',
+          'woff',
+          'woff2',
+          'otf',
+        ],
+        inlineImageLimit: 8192,
+      },
+    ],
+    [
       withLess,
       {
-        lessLoaderOptions: {
-          lessOptions: {
-            javascriptEnabled: true,
-            modifyVars: { '@primary-color': '#ff' },
-            localsConvention: 'camelCase',
-            exportLocalsConvention: 'camelCase',
-          },
-        },
         cssLoaderOptions: {
           sourceMap: true,
           esModule: true,
           modules: {
-            localsConvention: 'camelCase',
+            exportLocalsConvention: 'camelCase',
             // exportOnlyLocals: false,
             mode: 'local',
+          },
+        },
+        lessLoaderOptions: {
+          lessOptions: {
+            javascriptEnabled: true,
+            modifyVars: { '@primary-color': '#fff' },
           },
         },
       },
@@ -59,14 +77,8 @@ module.exports = withPlugins(
     ],
   ],
   {
-    cssLoaderOptions: {
-      sourceMap: true,
-      esModule: true,
-      modules: {
-        localsConvention: 'camelCase',
-        // exportOnlyLocals: false,
-        mode: 'local',
-      },
+    images: {
+      disableStaticImages: true,
     },
   }
 )
