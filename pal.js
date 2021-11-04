@@ -85,13 +85,7 @@ module.exports = {
       CompanyMeta: ['upsertOne'],
       CmContact: ['createOne'],
       CmLead: ['createOne'],
-      Invoice: [
-        'createOne',
-        'updateOne',
-        'deleteOne',
-        'updateMany',
-        'upsertOne',
-      ],
+      Invoice: ['updateOne', 'deleteOne', 'updateMany', 'upsertOne'],
     },
   },
 }
