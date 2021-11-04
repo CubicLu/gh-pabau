@@ -9,9 +9,9 @@ interface P {
   data?: Record<string, any> // This must be present for each Step
 }
 
-export const TreatmentFormStep = ({ onSubmit, data }: P) => (
+export const TreatmentStep = ({ onSubmit, data }: P) => (
   <>
-    <h2>Patient screen 2.. (you can click back once..)</h2>
+    <h2>Treatment</h2>
     <h3>{JSON.stringify(data)}</h3>
     <Formik
       initialValues={{ consent: false }}

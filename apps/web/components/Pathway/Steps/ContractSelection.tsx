@@ -6,7 +6,7 @@ interface P {
   onSubmit(): void
 }
 
-export const ContractSelection = ({ onSubmit, data }: P) => {
+export const ContractSelectionStep = ({ onSubmit, data }: P) => {
   const router = useRouter()
   return (
     <>

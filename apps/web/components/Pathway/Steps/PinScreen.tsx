@@ -9,9 +9,9 @@ interface P {
   data?: Record<string, any>
 }
 
-export const PinScreen = ({ onSubmit, data }: P) => (
+export const PinScreenStep = ({ onSubmit, data }: P) => (
   <>
-    <h2>Lock Screen</h2>
+    <h2>Thank you! Please hand me back.</h2>
     <h3>{JSON.stringify(data)}</h3>
     <Formik
       initialValues={{ pin: '' }}

@@ -9,9 +9,9 @@ interface P {
   data?: Record<string, any> // This must be present for each Step
 }
 
-export const PhotosStep = ({ onSubmit, data }: P) => (
+export const PhotoStep = ({ onSubmit, data }: P) => (
   <div style={{ backgroundColor: data.pin_user_id ? 'red' : 'white' }}>
-    <h2>Photos (you can't click back now)</h2>
+    <h2>Photos</h2>
     <h3>{JSON.stringify(data)}</h3>
     <Formik
       initialValues={{ consent: false }}

@@ -1,20 +1,22 @@
-import { Field, Form, Formik } from 'formik'
+import { GetDetailsQueryResult } from '@pabau/graphql'
+import { Formik, Form, Field } from 'formik'
 
 interface FormProps {
-  someValue: string
+  testString?: string
 }
 
 interface P {
   onSubmit(data: FormProps & P['data']): void // This must be present for each Step
-  data?: Record<string, any> // This must be present for each Step
+  //data?: Record<string, any> // This must be present for each Step
+  data: GetDetailsQueryResult['data']['details'] // @@@
 }
 
-export const DetailsStep = ({ onSubmit, data }: P) => (
+export const QuestionnaireStep = ({ onSubmit, data }: P) => (
   <>
-    <h2>Check Details</h2>
+    <h2>Questionnaire</h2>
     <h3>{JSON.stringify(data)}</h3>
     <Formik
-      initialValues={data}
+      initialValues={data} // Only because data is flat we can do this. Otherwise we'd need to construct a flat object.
       validate={(values) => {
         const errors = {} as any
         if (!values.Fname) {

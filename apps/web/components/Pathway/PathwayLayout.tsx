@@ -1,50 +1,46 @@
-import { Button } from '@pabau/ui'
-import { Consent } from './Steps/Consent'
 import * as React from 'react'
-import { useMemo, useState } from 'react'
-import { PinScreen } from './PinScreen'
-import { Details } from './Steps/Details'
-import { PhotosStep } from './Steps/Photo'
-import { TreatmentFormStep } from './Steps/Treatment'
+import { Button } from '@pabau/ui'
+import { useEffect, useMemo, useState } from 'react'
 import { FinishScreen } from './FinishScreen'
-import { useRouter } from 'next/router'
-import { useUser } from '../../context/UserContext'
-import { ContractSelection } from './ContractSelection'
 import { HandToPatientSplash } from './HandToPatientSplash'
-import { GetPathwayQueryResult } from '@pabau/graphql'
+import { GetJourneyQueryResult } from '@pabau/graphql'
+import { default as steps } from './Steps'
+import { useUser } from '../../context/UserContext'
 
 interface P {
-  client: any //TODO: set this to the graphql type
-  pathway: GetPathwayQueryResult['data']['Pathway']
+  journey: GetJourneyQueryResult['data']['Journey']
 }
-
-/**
- * Here we map the names to the component
- */
-const hydratables: Record<string, ({ onSubmit, data }: any) => JSX.Element> = {
-  details: Details,
-  consent: Consent,
-  // 'medical-history': MedicalHistoryStep, //TODO
-  photo: PhotosStep,
-  treatment: TreatmentFormStep,
-  pinscreen: PinScreen,
-  'contract-selection': ContractSelection,
-} as const
 
 /**
  * Place any screens that go before the main customer steps here. After these screens, a splash screen will show
  * prompting the staff user to hand control of the device to the patient. This splash isn't a discrete step as it will
  * timeout.
  */
-const prependScreens = [{ name: 'contract-selection' }] as const
+const prependScreens = ['contract-selection'] as const
 
-export const PathwayLayout = ({ pathway }: P) => {
-  const router = useRouter()
+export const PathwayLayout = ({ journey }: P) => {
   const [step, setStep] = useState(0)
-  const [stepState, setStepState] = useState<any>({})
+  const [stepState, setStepState] = useState<any>({
+    contact_id: journey[0].contact_id,
+  })
+
+  const { query } = useUser()
+  useEffect(() => {
+    const f = async () => {
+      const ret = {}
+      for (const [name, step] of Object.entries(steps)) {
+        if (!('load' in step)) continue
+        console.log('ABOUT TO FETCH STEP DATA')
+        const result = await step.load({ query }, stepState)
+        ret[name] = result.data.details
+        console.log('GOT STEP DATA!!', result)
+      }
+      setStepState((e) => ({ ...e, ...ret }))
+    }
+    f()
+  }, [journey])
 
   const customerFirstStep = prependScreens.length
-
   const isCustomerOnFirstStep = step === customerFirstStep
 
   const submitCallback = (data) => {
@@ -52,22 +48,40 @@ export const PathwayLayout = ({ pathway }: P) => {
     setStepState((e) => ({ ...e, ...data }))
   }
 
-  const HydratedScreen = useMemo(() => {
-    const currentStep =
-      step >= prependScreens.length
-        ? pathway.Steps[step - prependScreens.length]
-        : prependScreens[step]
-    if (!currentStep) return <FinishScreen />
-    if (!(currentStep.name in hydratables)) throw new Error('step not found')
-    const Hydrated = hydratables[currentStep.name]
-    const HydratedJsx = <Hydrated onSubmit={submitCallback} data={stepState} />
-    if (step === prependScreens.length)
-      return <HandToPatientSplash>{HydratedJsx}</HandToPatientSplash>
-    return HydratedJsx
-  }, [pathway, step])
+  const { hydratedScreen, currentScreenNumber, totalScreens } = useMemo(() => {
+    const isInPrepended = () => step < prependScreens.length
+    const currentStep = !isInPrepended()
+      ? { ...journey[0].Pathway.steps[step - prependScreens.length] } //TODO: unspread this (shows a weird TS error)
+      : { id: prependScreens[step], name: prependScreens[step] }
+    if (!currentStep || !currentStep.id)
+      return { hydratedScreen: <FinishScreen /> }
+    if (!(currentStep.name in steps))
+      return {
+        hydratedScreen: (
+          <div>ERROR: Step &quot;{currentStep.name}&quot; not found</div>
+        ),
+      }
+    const Hydrated = steps[currentStep.name].component
+    const HydratedJsx = (
+      <Hydrated onSubmit={submitCallback} data={stepState[currentStep.name]} />
+    )
 
-  const { me } = useUser()
+    return {
+      hydratedScreen:
+        step === prependScreens.length ? (
+          <HandToPatientSplash>{HydratedJsx}</HandToPatientSplash>
+        ) : (
+          HydratedJsx
+        ),
+      currentScreenNumber:
+        (isInPrepended() ? step : step - prependScreens.length) + 1,
+      totalScreens: isInPrepended()
+        ? prependScreens.length
+        : journey?.[0]?.Pathway.steps.length,
+    }
+  }, [journey, step, stepState])
 
+  console.log('rendering hydrated screen', hydratedScreen)
   return (
     <div
       style={{
@@ -89,17 +103,13 @@ export const PathwayLayout = ({ pathway }: P) => {
           onClick={() =>
             step === 0 ? window.history.back() : setStep((e) => e - 1)
           }
-          disabled={isCustomerOnFirstStep || pathway.Steps.length <= step}
+          disabled={
+            isCustomerOnFirstStep || journey?.[0]?.Pathway.steps.length <= step
+          }
         >
           &lt;
         </Button>
-        <p>
-          Current step: {step + 1} - {JSON.stringify(pathway.Steps[step])}
-        </p>
-        <p>
-          pathway_id={router.query['pathway-id']} - client_id=
-          {router.query['client-id']} - logged_in_id={me.user}
-        </p>
+        <p>Current step: {`${currentScreenNumber} of ${totalScreens}`}</p>
       </div>
       <div
         style={{
@@ -107,7 +117,7 @@ export const PathwayLayout = ({ pathway }: P) => {
           margin: '1em',
         }}
       >
-        {HydratedScreen}
+        {hydratedScreen}
       </div>
     </div>
   )
