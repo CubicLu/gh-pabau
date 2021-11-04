@@ -138,6 +138,8 @@ export const permissions = shield(
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      findManyInvoice: rules.authentication.isAuthenticated,
+      aggregateInvoice: rules.authentication.isAuthenticated,
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
       //StaffMeta
