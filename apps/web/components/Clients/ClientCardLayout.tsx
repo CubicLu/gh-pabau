@@ -7,6 +7,7 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
+  useCountClientActivityQuery,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
 } from '@pabau/graphql'
@@ -30,6 +31,7 @@ import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
+import Search from '../Search'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
 import dayjs from 'dayjs'
@@ -41,11 +43,21 @@ dayjs.extend(timezone)
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
+  cssClass?: string
 }
 
-export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
+export const ClientCardLayout: FC<P> = ({
+  clientId,
+  children,
+  activeTab,
+  cssClass,
+}) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { data: countActivities } = useCountClientActivityQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
   const { t } = useTranslationI18()
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
@@ -99,6 +111,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     skip: !router.query['id'],
     ssr: false,
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
     ...getQueryVariables,
   })
 
@@ -228,11 +241,18 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     {
       key: 'emr',
       name: 'EMR',
-      childTabs: [{ key: 'photos', name: 'Photos' }],
+      childTabs: [
+        { key: 'photos', name: 'Photos' },
+        { key: 'prescription', name: 'Prescription' },
+      ],
     },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
     { key: 'loyalty', name: 'Loyalty' },
-    { key: 'activities', name: 'Activities' },
+    {
+      key: 'activities',
+      name: 'Activities',
+      count: countActivities?.findManyActivityCount,
+    },
 
     // {
     //   key: 2,
@@ -327,6 +347,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   return (
     <Layout>
       <ClientCard
+        cssClass={cssClass}
         onClose={() => router.push('/clients')}
         tabs={tabItems}
         activeTab={activeTab}
@@ -366,7 +387,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
                   .join(', '),
                 relationships: [],
                 labels:
-                  data.findFirstCmContact?.labelData?.map((data) => {
+                  data?.findFirstCmContact?.labelData?.map((data) => {
                     return {
                       label: data?.labelDetail?.label,
                       color: data?.labelDetail?.color,
@@ -381,6 +402,12 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
         handleEditNote={handleEditNote}
         handleDeleteNote={handleDeleteNote}
         setBasicContactData={setBasicContactData}
+        searchRender={() => (
+          <Search
+            isHideLead={true}
+            placeHolder={t('search.client.placeholder')}
+          />
+        )}
       >
         {children}
       </ClientCard>
