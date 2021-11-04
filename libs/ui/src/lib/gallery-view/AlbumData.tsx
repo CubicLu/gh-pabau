@@ -833,6 +833,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
                     ? '1px solid #ecedf0'
                     : '',
               }}
+              className={styles.albumImagesDiv}
             >
               <div className={styles.galleryAlbumImage}>
                 {!loading &&
@@ -872,6 +873,12 @@ export const AlbumData: FC<AlbumDataProps> = ({
                               </span>
                             </div>
                           ) : null}
+                          <span className={styles.createdDate}>
+                            <CalendarOutlined />{' '}
+                            {dayjs(new Date((x?.date || 0) * 1000)).format(
+                              'DD/MM/YYYY'
+                            )}
+                          </span>
                         </div>
                         <div className={styles.checkWrappers}>
                           <Checkbox

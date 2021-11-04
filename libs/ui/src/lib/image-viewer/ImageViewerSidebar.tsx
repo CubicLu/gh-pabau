@@ -348,7 +348,9 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
       const elem = document?.querySelector(
         `#sidebarimage${defaultSelectedPhoto}`
       )
+      console.log('EL')
       if (elem) {
+        console.log('HEL')
         elem.scrollIntoView()
       }
       setOnceLoaded(() => true)
