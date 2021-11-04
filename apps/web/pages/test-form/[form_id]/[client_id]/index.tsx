@@ -256,7 +256,6 @@ export const TestForm = () => {
     const medical_attr_custom_contact_id = 0
     const medical_attr_custom_contact_name = ''
     let creatMedicalContactAttrVariables = []
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [, item] of draggedForms.entries()) {
       creatMedicalContactAttrVariables = [
         ...creatMedicalContactAttrVariables,
@@ -317,7 +316,6 @@ export const TestForm = () => {
   }
 
   const saveMedicalAttr = async (draggedForms: MedicalFormTypes[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [, item] of draggedForms.entries()) {
       const creatMedicalAttrVariables = {
         name: item.attrName,
