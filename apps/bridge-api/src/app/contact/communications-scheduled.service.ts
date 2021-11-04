@@ -32,6 +32,7 @@ const getScheduledBookingReminders = async (
 
   const bookings = await ctx.prisma.booking.findMany({
     where: {
+      company_id: ctx.authenticated.company,
       contact_id: { equals: contactId },
       start_date: {
         gte: Number.parseInt(moment().format('YYYYMMDDHHmmss')),
@@ -129,6 +130,7 @@ const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
 
   const bookings = await ctx.prisma.booking.findMany({
     where: {
+      company_id: ctx.authenticated.company,
       contact_id: { equals: contactId },
       start_date: {
         gte: Number.parseInt(moment().format('YYYYMMDDHHmmss')),
@@ -215,6 +217,7 @@ const getScheduledRecalls = async (contactId: number, ctx: Context) => {
   const recalls = []
   const scheduledRecalls = await ctx.prisma.recallSchedule.findMany({
     where: {
+      company_id: ctx.authenticated.company,
       contact_id: { equals: contactId },
       scheduled_date: { gte: new Date() },
       AND: {
