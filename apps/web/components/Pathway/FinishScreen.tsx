@@ -12,7 +12,7 @@ export const FinishScreen = ({ data }: P) => {
       <h2>Thank you! We&quot;re all done</h2>
       <h3>{JSON.stringify(data)}</h3>
 
-      <Button onClick={() => router.push('/')}></Button>
+      <Button onClick={() => router.push('/')}>BACK</Button>
     </>
   )
 }

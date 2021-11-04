@@ -6,9 +6,9 @@ interface FormProps {
 }
 
 interface P {
-  onSubmit(data: FormProps & P['data']): void // This must be present for each Step
+  onSubmit(data: FormProps): void // This must be present for each Step
   //data?: Record<string, any> // This must be present for each Step
-  data: GetDetailsQueryResult['data']['details'] // @@@
+  // data: GetDetailsQueryResult['data']['questionnaire'] // @@@
 }
 
 export const QuestionnaireStep = ({ onSubmit, data }: P) => (
@@ -16,18 +16,18 @@ export const QuestionnaireStep = ({ onSubmit, data }: P) => (
     <h2>Questionnaire</h2>
     <h3>{JSON.stringify(data)}</h3>
     <Formik
-      initialValues={data} // Only because data is flat we can do this. Otherwise we'd need to construct a flat object.
+      initialValues={{}}
       validate={(values) => {
         const errors = {} as any
-        if (!values.Fname) {
-          errors.Fname = 'First Name is Required'
-        }
-        if (!values.Lname) {
-          errors.Lname = 'Last Name is Required'
-        }
+        // if (!values.Fname) {
+        //   errors.Fname = 'First Name is Required'
+        // }
+        // if (!values.Lname) {
+        //   errors.Lname = 'Last Name is Required'
+        // }
         return errors
       }}
-      onSubmit={(values) => onSubmit?.({ ...data, ...values })}
+      onSubmit={(values) => onSubmit?.(values)}
     >
       {({ errors, touched }) => (
         <Form>
@@ -38,8 +38,7 @@ export const QuestionnaireStep = ({ onSubmit, data }: P) => (
               ))}
             </ul>
           )}
-          <Field name="Fname" placeholder="First Name" />
-          <Field name="Lname" placeholder="Last Name" />
+          <h2>Questionnaire goes here</h2>
           <input type="submit" disabled={!touched} />
         </Form>
       )}
