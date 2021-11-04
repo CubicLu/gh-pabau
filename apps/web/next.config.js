@@ -3,7 +3,6 @@ const withPlugins = require('next-compose-plugins')
 const withNx = require('@nrwl/next/plugins/with-nx')
 const withLess = require('next-plugin-antd-less')
 const withYaml = require('next-plugin-yaml')
-const removeImports = require('next-remove-imports')
 const withBundleAnalyzer = require('@next/bundle-analyzer')
 const withImages = require('next-images')
 // const path = require('path')
@@ -16,13 +15,6 @@ module.exports = withPlugins(
       withBundleAnalyzer,
       {
         enabled: process.env.ANALYZE === 'true',
-      },
-    ],
-
-    [
-      removeImports,
-      {
-        experimental: { esmExternals: true },
       },
     ],
     [withYaml],
