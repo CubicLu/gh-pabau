@@ -1,5 +1,5 @@
 query getJourney($journey_id: Int!) {
-  Journey: findManyPathwaysTaken(
+  Journey: findFirstPathwaysTaken(
     where:{
       id:{
         equals:$journey_id
