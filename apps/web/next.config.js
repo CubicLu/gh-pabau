@@ -52,7 +52,33 @@ module.exports = withPlugins(
         lessLoaderOptions: {
           lessOptions: {
             javascriptEnabled: true,
-            modifyVars: { '@primary-color': '#fff' },
+            modifyVars: {
+              '@primary-color': '#54b2d3', // primary color for all components
+              '@link-color': '#1890ff', // link color
+              '@primary-info-color': ' #e2f6f5',
+              '@success-color': '#52c41a', // success stat
+              '@warning-color': '#faad14',
+              '@error-color': '#f5222d',
+              '@red-color-text': '#ff5b64',
+              '@blue-color-text': '#6383f1',
+              '@font-size-base': '14px',
+              '@heading-color': 'rgba(0, 0, 0, 0.85)',
+              '@text-color': 'rgba(0, 0, 0, 0.65)',
+              '@text-color-secondary': 'rgba(0, 0, 0, 0.45)',
+              '@disabled-color': 'rgba(0, 0, 0, 0.25)',
+              '@light-color': '#ffffff',
+              '@red-focused-color': '#df562b',
+              '@green-primary-color': '#65cd98',
+              '@blue-focused-color': '#eef7fb',
+              '@border-color-base': '#ecedf0',
+              '@gray-background-color': '#ecedf070',
+              '@gray-background-light-color': '#fcfcfc',
+              '@box-shadow-base':
+                '0 3px 6px -4px rgba(0, 0, 0, 0.12),0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+              '@font-variant-base': 'normal',
+              '@font-feature-settings-base': 'normal',
+              '@font-family': 'Circular-Std-Book, -apple-system, sans-serif,',
+            },
           },
         },
       },
