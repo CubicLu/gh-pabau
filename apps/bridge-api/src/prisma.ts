@@ -69,18 +69,18 @@ export const prisma = (remote_url: string) => {
       : [],
   })
 
-  // if (LOGGING)
-  instance.$on('query', (e) => {
-    console.log(
-      '[' +
-        remote_url +
-        '] Query: ' +
-        e.query +
-        ' --- Duration: ' +
-        e.duration +
-        'ms'
-    )
-  })
+  if (LOGGING)
+    instance.$on('query', (e) => {
+      console.log(
+        '[' +
+          remote_url +
+          '] Query: ' +
+          e.query +
+          ' --- Duration: ' +
+          e.duration +
+          'ms'
+      )
+    })
 
   // store this instance into memory cache
   instances[remote_url] = instance
