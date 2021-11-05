@@ -5,12 +5,9 @@ const withLess = require('next-plugin-antd-less')
 const withYaml = require('next-plugin-yaml')
 const withBundleAnalyzer = require('@next/bundle-analyzer')
 const withImages = require('next-images')
-// const path = require('path')
 
-// const pathToLessFileWithVariables = path.resolve('libs/ui/src/styles/antd.less')
 module.exports = withPlugins(
   [
-    // https://www.npmjs.com/package/@next/bundle-analyzer
     [
       withBundleAnalyzer,
       {
@@ -34,7 +31,7 @@ module.exports = withPlugins(
           'woff2',
           'otf',
         ],
-        inlineImageLimit: 8192,
+        inlineImageLimit: 9000,
       },
     ],
     [
@@ -45,7 +42,6 @@ module.exports = withPlugins(
           esModule: true,
           modules: {
             exportLocalsConvention: 'camelCase',
-            // exportOnlyLocals: false,
             mode: 'local',
           },
         },
@@ -53,10 +49,10 @@ module.exports = withPlugins(
           lessOptions: {
             javascriptEnabled: true,
             modifyVars: {
-              '@primary-color': '#54b2d3', // primary color for all components
-              '@link-color': '#1890ff', // link color
+              '@primary-color': '#54b2d3',
+              '@link-color': '#1890ff',
               '@primary-info-color': ' #e2f6f5',
-              '@success-color': '#52c41a', // success stat
+              '@success-color': '#52c41a',
               '@warning-color': '#faad14',
               '@error-color': '#f5222d',
               '@red-color-text': '#ff5b64',
