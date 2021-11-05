@@ -94,6 +94,7 @@ export const permissions = shield(
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
       deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      deleteManyContactAttachmentPhoto: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
@@ -117,7 +118,6 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
-      deleteOneContactAttachment: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
@@ -138,6 +138,8 @@ export const permissions = shield(
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      findManyInvoice: rules.authentication.isAuthenticated,
+      aggregateInvoice: rules.authentication.isAuthenticated,
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
       //StaffMeta
