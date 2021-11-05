@@ -4,6 +4,10 @@ export const getData = (t) => {
       key: 'Activity',
       label: t('create.filter.modal.activity.option.label'),
     },
+    {
+      key: 'Lead',
+      label: t('create.filter.modal.lead.option.label'),
+    },
   ]
 
   const activityItemNames = [
@@ -52,6 +56,138 @@ export const getData = (t) => {
       label: t('create.filter.modal.activity.column.status'),
     },
   ]
+
+  const leadItemNames = [
+    {
+      key: 'Lead name',
+      label: t('create.filter.modal.lead.column.lead.name'),
+    },
+    {
+      key: 'Lead email',
+      label: t('create.filter.modal.lead.column.lead.email'),
+    },
+    {
+      key: 'Lead phone',
+      label: t('create.filter.modal.lead.column.lead.phone'),
+    },
+    {
+      key: 'Lead created date',
+      label: t('create.filter.modal.lead.column.lead.createdDate'),
+    },
+    {
+      key: 'Won time',
+      label: t('create.filter.modal.lead.column.lead.won.time'),
+    },
+    {
+      key: 'Lead owner',
+      label: t('create.filter.modal.lead.column.lead.owner'),
+    },
+    {
+      key: 'Lead closed on',
+      label: t('create.filter.modal.lead.column.lead.closed.on'),
+    },
+    {
+      key: 'Lead done activities',
+      label: t('create.filter.modal.lead.column.lead.done.activities'),
+    },
+    {
+      key: 'First activity time',
+      label: t('create.filter.modal.lead.column.lead.first.activity.time'),
+    },
+    {
+      key: 'Lead last activity date',
+      label: t('create.filter.modal.lead.column.lead.last.activity.date'),
+    },
+    {
+      key: 'Lead last activity (days)',
+      label: t('create.filter.modal.lead.column.lead.last.activity.days'),
+    },
+    {
+      key: 'Lead lost reason',
+      label: t('create.filter.modal.lead.column.lead.lost.reason'),
+    },
+    {
+      key: 'Lead total activities',
+      label: t('create.filter.modal.lead.column.lead.total.activities'),
+    },
+    {
+      key: 'Lead lost time',
+      label: t('create.filter.modal.lead.column.lead.lost.time'),
+    },
+    {
+      key: 'Lead source',
+      label: t('create.filter.modal.lead.column.lead.source'),
+    },
+    {
+      key: 'Won by',
+      label: t('create.filter.modal.lead.column.lead.won.by'),
+    },
+    {
+      key: 'Lead stage',
+      label: t('create.filter.modal.lead.column.lead.stage'),
+    },
+    {
+      key: 'Lead descriptions',
+      label: t('create.filter.modal.lead.column.lead.descriptions'),
+    },
+    {
+      key: 'Lead status',
+      label: t('create.filter.modal.lead.column.lead.status'),
+    },
+    {
+      key: 'Activities to do',
+      label: t('create.filter.modal.lead.column.lead.activity.to.do'),
+    },
+    {
+      key: 'Lead creator',
+      label: t('create.filter.modal.lead.column.lead.creator'),
+    },
+    {
+      key: 'Date of entering stage',
+      label: t('create.filter.modal.lead.column.lead.date.entring.stage'),
+    },
+    {
+      key: 'Email messages count',
+      label: t('create.filter.modal.lead.column.lead.email.messages.stage'),
+    },
+    {
+      key: 'Last email received',
+      label: t(
+        'create.filter.modal.lead.column.lead.last.email.received.stage'
+      ),
+    },
+    {
+      key: 'Last email sent',
+      label: t('create.filter.modal.lead.column.lead.last.email.sent'),
+      disable: true,
+      tag: t('create.filter.modal.lead.column.soon.feature.tag'),
+    },
+    {
+      key: 'Next activity date',
+      label: t('create.filter.modal.lead.column.lead.next.activity.date'),
+    },
+    {
+      key: 'Pipeline',
+      label: t('create.filter.modal.lead.column.lead.pipeline'),
+    },
+    {
+      key: 'Title',
+      label: t('create.filter.modal.lead.column.lead.title'),
+    },
+    {
+      key: 'Update time',
+      label: t('create.filter.modal.lead.column.lead.update.time'),
+    },
+    {
+      key: 'Location',
+      label: t('create.filter.modal.lead.column.lead.location'),
+    },
+  ]
+
+  const activityTypeMapper = {
+    Activity: activityItemNames,
+    Lead: leadItemNames,
+  }
 
   const basicOperands = [
     {
@@ -143,6 +279,26 @@ export const getData = (t) => {
     },
   ]
 
+  const numberOperands = [
+    ...basicOperands,
+    {
+      key: 'is more than',
+      label: t('create.filter.modal.date.is.more.than.operand'),
+    },
+    {
+      key: 'is less than',
+      label: t('create.filter.modal.date.is.less.than.operand'),
+    },
+    {
+      key: 'is more or equal to',
+      label: t('create.filter.modal.date.is.more.or.equal.to.operand'),
+    },
+    {
+      key: 'is less or equal to',
+      label: t('create.filter.modal.date.is.less.or.equal.to.operand'),
+    },
+  ]
+
   const manageOperandBasedOnColumn = {
     'Add time': dateOperands,
     'Assigned to user': userOperands,
@@ -155,6 +311,35 @@ export const getData = (t) => {
     'Due date': dateOperands,
     'Free/busy': basicOperands,
     Status: basicOperands,
+    'Lead email': stringOperands,
+    'Lead phone': stringOperands,
+    'Lead created date': dateOperands,
+    'Won time': dateOperands,
+    'Lead owner': userOperands,
+    'Lead closed on': dateOperands,
+    'Lead done activities': numberOperands,
+    'First activity time': dateOperands,
+    'Lead last activity date': dateOperands,
+    'Lead last activity (days)': numberOperands,
+    'Lead lost reason': stringOperands,
+    'Lead total activities': numberOperands,
+    'Lead lost time': dateOperands,
+    'Lead source': basicOperands,
+    'Won by': userOperands,
+    'Lead stage': basicOperands,
+    'Lead descriptions': stringOperands,
+    'Lead status': basicOperands,
+    'Date of entering stage': dateOperands,
+    'Lead creator': userOperands,
+    Pipeline: basicOperands,
+    Title: basicOperands,
+    'Update time': dateOperands,
+    'Activities to do': numberOperands,
+    'Next activity date': dateOperands,
+    'Last email received': dateOperands,
+    'Last email sent': dateOperands,
+    'Email messages count': numberOperands,
+    Location: basicOperands,
   }
 
   const dateMenu = [
@@ -432,6 +617,21 @@ export const getData = (t) => {
     },
   ]
 
+  const leadStatusOption = [
+    {
+      id: 'Open',
+      name: t('create.filter.modal.open.lead.status'),
+    },
+    {
+      id: 'Converted',
+      name: t('create.filter.modal.won.lead.status'),
+    },
+    {
+      id: 'Junk',
+      name: t('create.filter.modal.lost.lead.status'),
+    },
+  ]
+
   const doneOption = [
     {
       id: 'To do',
@@ -452,5 +652,7 @@ export const getData = (t) => {
     activity,
     freeBusyOption,
     doneOption,
+    activityTypeMapper,
+    leadStatusOption,
   }
 }
