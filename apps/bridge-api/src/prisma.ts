@@ -20,7 +20,8 @@ if (!PABAU1_MYSQL_USERNAME_PODS || !PABAU1_MYSQL_PASSWORD_PODS) {
 }
 
 function getPodDbUrl(urlOrHostname) {
-  if (!urlOrHostname) return DATABASE_URL
+  // if (!urlOrHostname)
+  return DATABASE_URL
 
   let url
   try {
@@ -68,18 +69,18 @@ export const prisma = (remote_url: string) => {
       : [],
   })
 
-  if (LOGGING)
-    instance.$on('query', (e) => {
-      console.log(
-        '[' +
-          remote_url +
-          '] Query: ' +
-          e.query +
-          ' --- Duration: ' +
-          e.duration +
-          'ms'
-      )
-    })
+  // if (LOGGING)
+  instance.$on('query', (e) => {
+    console.log(
+      '[' +
+        remote_url +
+        '] Query: ' +
+        e.query +
+        ' --- Duration: ' +
+        e.duration +
+        'ms'
+    )
+  })
 
   // store this instance into memory cache
   instances[remote_url] = instance

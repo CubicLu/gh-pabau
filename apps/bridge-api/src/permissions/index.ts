@@ -139,6 +139,7 @@ export const permissions = shield(
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
       findManyInvoice: rules.authentication.isAuthenticated,
+      findManyInvoiceTest: rules.authentication.isAuthenticated,
       aggregateInvoice: rules.authentication.isAuthenticated,
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
