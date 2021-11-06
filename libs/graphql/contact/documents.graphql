@@ -17,7 +17,7 @@ query getAttachmentById($id: Int!) {
   }
 }
 
-mutation createOneDocument(
+mutation createOneDocumentFolder(
   $name: String!
   $company: Int!
   $contact: Int!
