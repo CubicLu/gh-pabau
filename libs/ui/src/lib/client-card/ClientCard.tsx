@@ -195,7 +195,6 @@ const ClientCardModal: FC<P> = ({
   searchRender,
 }) => {
   const { t } = useTranslation('common')
-  // const { push } = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [search, setSearch] = useState(false)
@@ -324,7 +323,6 @@ const ClientCardModal: FC<P> = ({
 
   const onBackToMainMenu = () => {
     //TODO: review this. Prefer <Link />
-    // push?.('..')
   }
 
   const menuItems = [
