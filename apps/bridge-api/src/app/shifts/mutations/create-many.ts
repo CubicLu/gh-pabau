@@ -2,8 +2,8 @@ import { mutationField, nonNull, inputObjectType } from 'nexus'
 import { Context } from '../../../context'
 import dayjs from 'dayjs'
 
-export const ShiftCreateInput = inputObjectType({
-  name: 'ShiftCreateInput',
+export const CreateShiftInput = inputObjectType({
+  name: 'CreateShiftInput',
   definition(t) {
     t.nonNull.date('date')
     t.nonNull.string('start_time')
@@ -16,10 +16,10 @@ export const ShiftCreateInput = inputObjectType({
   },
 })
 
-export const createShiftMutation = mutationField('createShift', {
+export const CreateShiftMutation = mutationField('createShift', {
   type: 'Int',
   args: {
-    data: nonNull('ShiftCreateInput'),
+    data: nonNull('CreateShiftInput'),
   },
   async resolve(_parent, { data }, ctx: Context) {
     const start_time_arr = data.start_time.split(':').map(function (item) {
@@ -39,14 +39,6 @@ export const createShiftMutation = mutationField('createShift', {
       .add(end_time_arr[0], 'hours')
       .add(end_time_arr[1], 'minutes')
       .format('YYYYMMDDHHmmss')
-
-    console.info(
-      'test:',
-      dayjs(`${data.date}`)
-        .add(end_time_arr[0], 'hours')
-        .add(end_time_arr[1], 'minutes')
-        .format('YYYYMMDDHHmmss')
-    )
 
     const shift = {
       // CmStaffGeneral: { connect: { ID: data.user_ids[0] } },
