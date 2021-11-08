@@ -91,7 +91,7 @@ const Financial = () => {
         minHeight={'0vh'}
         tabPosition="top"
         menuItems={[
-          `Invoices (${totalInvoices?.aggregateInvoice?.count?.id ?? 0})`,
+          `Invoices (${totalInvoices?.total ?? 0})`,
           `Payments (${
             totalPaymentCounts?.aggregateInvPayment?.count?.id ?? 0
           })`,
@@ -108,7 +108,7 @@ const Financial = () => {
           invoiceEmployeeOptions={[]}
           locationOptions={[]}
           onChangePagination={handlePagination}
-          totalInvoiceCount={totalInvoices?.aggregateInvoice?.count?.id ?? 0}
+          totalInvoiceCount={totalInvoices?.total ?? 0}
           onExpand={handleExpandsionClick}
         />
         <Payments
