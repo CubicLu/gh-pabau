@@ -118,13 +118,14 @@ export const Invoices: FC<P> = (props) => {
         location: item.location_name,
         employee: item.billers,
         issuedTo: item.issue_to,
-        paid: item.status === 'paid' ? true : false,
+        paid: item.paid_amount === item.inv_total ? true : false,
         items: saleItems,
         totalVat: totalVat,
         amountPaid: expandedInvoice[0]?.paid_amount,
         subtotal: discount !== 0 ? inv_total + discount : inv_total,
-        tips: expandedInvoice[0]?.tip,
-        grandTotal: item.amount,
+        // tips: expandedInvoice[0]?.tip, TODO: still not implemented tips
+        tips: 0,
+        grandTotal: item.inv_total,
         guid: item.guid,
       })
       return invoicesDetails
@@ -169,12 +170,12 @@ export const Invoices: FC<P> = (props) => {
     setTotalOutstanding(
       salesDetails
         ? expandedInvoice[0]?.paid_amount
-        : invoice?.invoices[0]?.amount ?? 0
+        : invoice?.invoices[0]?.inv_total ?? 0
     )
     setTotalInvoiced(
       salesDetails
         ? expandedInvoice[0]?.inv_total
-        : invoice?.invoices[0]?.amount ?? 0
+        : invoice?.invoices[0]?.inv_total ?? 0
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesDetails, invoice])
