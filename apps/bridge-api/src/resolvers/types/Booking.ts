@@ -17,17 +17,6 @@ import {
   BookingDetailResponseType,
   CancelBookingType,
 } from '../../app/booking/nexus-type'
-import {
-  CreateCompanyBranchInputType,
-  CreateCompanyBranchResponse,
-  UpdateCompanyBranchInputType,
-  UpdateCompanyBranchResponse,
-} from '../../app/company-branch/nexus-type'
-import {
-  CreateBranchInputType,
-  UpdateBranchInputType,
-} from '../../app/company-branch/dto'
-import LocationService from '../../app/company-branch/LocationService'
 
 const BookingInputTypes = inputObjectType({
   name: 'BookingInputTypes',
@@ -116,7 +105,7 @@ export const CancelAppointment = extendType({
   type: 'Mutation',
   definition: function (t) {
     t.field('CancelAppointment', {
-      type: 'cancelAppointment',
+      type: CancelBookingType,
       args: {
         booking_id: intArg(),
         type: stringArg(),
@@ -166,6 +155,12 @@ export const CancelAppointment = extendType({
             cancel_reason_id: reason_id,
           },
         })
+        const returnData = {
+          cancalBooking,
+          changeStatus,
+          cancalBookingStatus,
+        }
+        console.log(returnData)
         return cancalBookingStatus
       },
     })
