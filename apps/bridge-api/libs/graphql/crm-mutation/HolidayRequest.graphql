@@ -1,0 +1,50 @@
+fragment HolidayRequestFields on HolidayRequest {
+  id
+  company_id
+  staff_id
+  request_id
+  holiday_from
+  holiday_to
+  status
+  leave_type
+  approved_by
+  staff_comments
+  seen
+  rejected_by
+  approve_comments
+  reject_comments
+}
+
+fragment HolidayRequest on HolidayRequest {
+  ...HolidayRequestFields
+  Company {
+    ...CompanyFields
+  }
+  CmStaffGeneral {
+    ...CmStaffGeneralFields
+  }
+}
+
+mutation createOneHolidayRequest($data: HolidayRequestCreateInput!) {
+  createOneHolidayRequest(data: $data) {
+    ...HolidayRequest
+  }
+}
+
+mutation updateOneHolidayRequest($where: HolidayRequestWhereUniqueInput!, $data: HolidayRequestUpdateInput!) {
+  updateOneHolidayRequest(where: $where, data: $data) {
+    ...HolidayRequest
+  }
+}
+
+mutation deleteOneHolidayRequest($where: HolidayRequestWhereUniqueInput!) {
+  deleteOneHolidayRequest(where: $where) {
+    ...HolidayRequest
+  }
+}
+
+mutation updateManyHolidayRequest($where: HolidayRequestWhereInput, $data: HolidayRequestUpdateManyMutationInput!) {
+  updateManyHolidayRequest(where: $where, data: $data) {
+    count
+  }
+}

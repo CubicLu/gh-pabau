@@ -1,0 +1,6 @@
+mutation createShift($data: CreateShiftInput!){
+    createShift(data: $data){
+      ...RotaShift
+    }
+  }
+  

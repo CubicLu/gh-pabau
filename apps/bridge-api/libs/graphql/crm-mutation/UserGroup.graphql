@@ -1,0 +1,40 @@
+fragment UserGroupFields on UserGroup {
+  id
+  company_id
+  group_name
+  group_description
+  restrict_clients
+  restrict_locations
+  restrict_calendar
+  restrict_data
+  limit_contacts
+  permission_id
+}
+
+fragment UserGroup on UserGroup {
+  ...UserGroupFields
+  Company {
+    ...CompanyFields
+  }
+  Permission {
+    ...PermissionTemplateFields
+  }
+}
+
+mutation createOneUserGroup($data: UserGroupCreateInput!) {
+  createOneUserGroup(data: $data) {
+    ...UserGroup
+  }
+}
+
+mutation updateOneUserGroup($where: UserGroupWhereUniqueInput!, $data: UserGroupUpdateInput!) {
+  updateOneUserGroup(where: $where, data: $data) {
+    ...UserGroup
+  }
+}
+
+mutation deleteOneUserGroup($where: UserGroupWhereUniqueInput!) {
+  deleteOneUserGroup(where: $where) {
+    ...UserGroup
+  }
+}

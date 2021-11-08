@@ -113,9 +113,32 @@ query findManyActivityData(
         lastName: Lname
         email: Email
         phone: Phone
+        location_id
+        LastUpdated
+        Location {
+          id
+          name
+        }
+        Contact {
+          User {
+            full_name
+          }
+        }
+        PipelineStage {
+          id
+          pipeline_id
+          Pipeline {
+            name
+          }
+        }
+        leadActivitesToDo
+        emailMessagesCount
+        leadLastEmailSend
+        leadLastEmailReceived
+        leadNextActivityDate
         description: Description
         createdDate: CreatedDate
-        wonTime: ConvertDate
+        wonTime
         owner: User {
           full_name
         }
@@ -157,18 +180,13 @@ query findFirstActivityUserState {
 }
 
 mutation upsertOneActivityUserState(
- $userId: Int!
- $companyId: Int!
- $update: ActivityUserStateUpdateInput! 
- $create: ActivityUserStateCreateInput!
-){
+  $userId: Int!
+  $companyId: Int!
+  $update: ActivityUserStateUpdateInput!
+  $create: ActivityUserStateCreateInput!
+) {
   upsertOneActivityUserState(
-    where: {
-      company_id_user_id: {
-        user_id: $userId
-        company_id: $companyId
-     }
-    }
+    where: { company_id_user_id: { user_id: $userId, company_id: $companyId } }
     update: $update
     create: $create
   ) {
@@ -193,12 +211,11 @@ query userGroupForActivity {
 }
 
 query filterOptionForActivity($userId: Int!) {
-  filterOption: findManyActivityUserFilter(where: {
-    OR: [
-      {user_id: {equals: $userId}},
-      {shared: {equals: true}}
-    ]
-  }) {
+  filterOption: findManyActivityUserFilter(
+    where: {
+      OR: [{ user_id: { equals: $userId } }, { shared: { equals: true } }]
+    }
+  ) {
     id
     user_id
     User {
@@ -213,9 +230,7 @@ query filterOptionForActivity($userId: Int!) {
 }
 
 mutation deleteActivityUserFilter($id: Int) {
-  deleteOneActivityUserFilter(where: {
-    id: $id
-  }) {
+  deleteOneActivityUserFilter(where: { id: $id }) {
     id
   }
 }
@@ -253,40 +268,40 @@ query findManyContacts($searchTerm: String) {
 }
 
 mutation createActivityFilter(
-  $data: String,
-  $columns: String,
-  $name: String!,
+  $data: String
+  $columns: String
+  $name: String!
   $shared: Boolean!
 ) {
-  createOneActivityUserFilter(data: {
-    data: $data
-    columns: $columns
-    name: $name
-    shared: $shared
-    User: {}
-    Company: {}
-  }) {
+  createOneActivityUserFilter(
+    data: {
+      data: $data
+      columns: $columns
+      name: $name
+      shared: $shared
+      User: {}
+      Company: {}
+    }
+  ) {
     id
     user_id
   }
 }
 
 mutation updateActivityFilter(
-  $id: Int!,
-  $data: String,
-  $columns: String,
-  $name: String!,
+  $id: Int!
+  $data: String
+  $columns: String
+  $name: String!
   $shared: Boolean!
 ) {
   updateOneActivityUserFilter(
-    where: {
-      id: $id
-    }
+    where: { id: $id }
     data: {
-      data: {set: $data}
-      columns: {set: $columns}
-      name: {set: $name}
-      shared: {set: $shared}
+      data: { set: $data }
+      columns: { set: $columns }
+      name: { set: $name }
+      shared: { set: $shared }
     }
   ) {
     id
@@ -311,7 +326,22 @@ query findLeadName($leadID: Int!) {
 }
 
 mutation deleteManyActivity($ids: [Int]!) {
-  deleteManyActivity(where: {ids: $ids}) {
+  deleteManyActivity(where: { ids: $ids }) {
     affected_rows
+  }
+}
+
+query countClientActivity($contactID: Int!){
+  findManyActivityCount(where:{contact_id:{equals: $contactID}})
+}
+query retrievePipeline {
+  findManyPipeline(where: {
+    status: {equals: 1}
+  },
+  orderBy: {
+    name: asc
+  }) {
+    id
+    name
   }
 }

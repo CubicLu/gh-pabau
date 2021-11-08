@@ -1,0 +1,36 @@
+fragment BookmarkedPageFields on BookmarkedPage {
+  id
+  uid
+  link
+  companyid
+  title
+  icon
+}
+
+fragment BookmarkedPage on BookmarkedPage {
+  ...BookmarkedPageFields
+}
+
+mutation createOneBookmarkedPage($data: BookmarkedPageCreateInput!) {
+  createOneBookmarkedPage(data: $data) {
+    ...BookmarkedPage
+  }
+}
+
+mutation updateOneBookmarkedPage($where: BookmarkedPageWhereUniqueInput!, $data: BookmarkedPageUpdateInput!) {
+  updateOneBookmarkedPage(where: $where, data: $data) {
+    ...BookmarkedPage
+  }
+}
+
+mutation deleteOneBookmarkedPage($where: BookmarkedPageWhereUniqueInput!) {
+  deleteOneBookmarkedPage(where: $where) {
+    ...BookmarkedPage
+  }
+}
+
+mutation updateManyBookmarkedPage($where: BookmarkedPageWhereInput, $data: BookmarkedPageUpdateManyMutationInput!) {
+  updateManyBookmarkedPage(where: $where, data: $data) {
+    count
+  }
+}

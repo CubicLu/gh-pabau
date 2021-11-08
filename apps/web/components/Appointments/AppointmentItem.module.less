@@ -1,0 +1,198 @@
+.appointmentItem:nth-child(1) {
+  .content {
+    .divider {
+      border-top-left-radius: 4px;
+    }
+  }
+}
+.appointmentItem:nth-last-child(1) {
+  .content {
+    .divider {
+      border-bottom-left-radius: 4px;
+    }
+  }
+}
+
+.appointmentItem {
+  width: 100%;
+  min-width: 768px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #ffffff;
+  .content {
+    align-items: center;
+    height: 92px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  .divider {
+    width: 7px;
+    height: 92px;
+  }
+
+  .timeTextStyle {
+    span {
+      font-size: 14px;
+      line-height: 18px;
+      color: #3d3d46;
+    }
+  }
+  .clientContainer {
+    display: flex;
+    align-items: center;
+
+    .avatarContainer {
+      position: relative;
+      p {
+        font-size: 14px;
+        border-radius: 4px;
+        background: #54b2d3;
+        color: #fff;
+        position: absolute;
+        z-index: 1;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        text-align: center;
+        right: 0;
+        bottom: 0;
+        margin-bottom: 0;
+
+        box-shadow: 0 0 0 0 rgba(84, 178, 211, 1);
+        transform: scale(1);
+        animation: pulse 2s infinite;
+      }
+    }
+
+    .clientInfo {
+      margin-left: 13px;
+
+      .appointementStatus {
+        display: flex;
+        align-items: center;
+        text-transform: capitalize;
+        div {
+          margin-left: 8px;
+          display: flex;
+          align-items: center;
+          span {
+            color: #ff5b64;
+            font-size: 12px;
+            margin-left: 2px;
+          }
+        }
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 18px;
+        color: #3d3d46;
+        margin-bottom: 2px;
+      }
+      span {
+        font-size: 14px;
+        line-height: 18px;
+        color: #3d3d46;
+        display: block;
+      }
+      div {
+        display: block;
+        font-size: 12px;
+        line-height: 16px;
+        color: #54b2d3;
+      }
+    }
+  }
+
+  .textAlignment {
+    display: flex;
+    align-items: center;
+    span {
+      font-size: 14px;
+      line-height: 18px;
+      color: #3d3d46;
+      display: block;
+      padding-left: 11px;
+    }
+    .iconSize {
+      color: #54b2d3;
+      font-size: 17px;
+    }
+  }
+  .statusLabel {
+    display: flex;
+    justify-content: center;
+    button {
+      font-size: 14px;
+      min-width: 60px;
+    }
+  }
+  .counterButtonStyle {
+    display: flex;
+    justify-content: center;
+    button {
+      padding: 0 5px;
+      min-width: 37px;
+      height: 24px;
+      font-size: 14px;
+      border-radius: 4px;
+      background: #54b2d3;
+      border: 1px solid #54b2d3;
+      color: #fff;
+      transition: all 0.2s ease-in-out;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .appointmentItem:nth-child(1) {
+    .content {
+      .divider {
+        border-top-left-radius: 0px;
+      }
+    }
+  }
+  .appointmentItem:nth-last-child(1) {
+    .content {
+      .divider {
+        border-bottom-left-radius: 0px;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(84, 178, 211, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(84, 178, 211, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(84, 178, 211, 0);
+  }
+}
+
+@media (min-width: 0px) and (max-width: 767px) {
+  .mobileViewHidden {
+    display: none;
+  }
+  .appointmentItem {
+    min-width: 100%;
+    width: 100%;
+
+    .clientContainer {
+      display: flex;
+      align-items: center;
+      .clientInfo {
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

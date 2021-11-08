@@ -1,0 +1,21 @@
+fragment ServicesMasterCategoryFields on ServicesMasterCategory {
+  id
+  name
+  company_id
+  ord
+  type
+  image
+}
+
+fragment ServicesMasterCategory on ServicesMasterCategory {
+  ...ServicesMasterCategoryFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation deleteOneServicesMasterCategory($where: ServicesMasterCategoryWhereUniqueInput!) {
+  deleteOneServicesMasterCategory(where: $where) {
+    ...ServicesMasterCategory
+  }
+}
