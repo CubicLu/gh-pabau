@@ -484,35 +484,33 @@
       }
     }
   }
+  :global {
+    label {
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 22px;
+      color: #9292a3;
+    }
+    input {
+      font-size: 14px !important;
+
+      &::placeholder {
+        font-size: 14px !important;
+      }
+    }
+    .ant-select-selector {
+      font-size: 14px !important;
+    }
+    .servicesModal {
+      padding-bottom: 0px;
+
+      .ant-modal-close {
+        top: 10px;
+        right: 20px;
+      }
+    }
+  }
 }
-
-//TODO: make this pure!
-// :global {
-//   label {
-//     font-weight: normal;
-//     font-size: 14px;
-//     line-height: 22px;
-//     color: #9292a3;
-//   }
-//   input {
-//     font-size: 14px !important;
-
-//     &::placeholder {
-//       font-size: 14px !important;
-//     }
-//   }
-//   .ant-select-selector {
-//     font-size: 14px !important;
-//   }
-//   .servicesModal {
-//     padding-bottom: 0px;
-
-//     .ant-modal-close {
-//       top: 10px;
-//       right: 20px;
-//     }
-//   }
-// }
 
 .hidden {
   display: none;

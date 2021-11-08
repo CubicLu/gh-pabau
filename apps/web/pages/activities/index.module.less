@@ -112,6 +112,18 @@
       }
     }
   }
+  :global
+    .statusBtnMenu.ant-popover
+    .ant-popover-inner
+    > .ant-popover-inner-content
+    > div {
+    color: red;
+    & > div {
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+    }
+  }
 }
 .activity-wrapper {
   .activities-circle {
@@ -791,19 +803,7 @@
     }
   }
 }
-//TODO: make this pure!
-// :global
-//   .statusBtnMenu.ant-popover
-//   .ant-popover-inner
-//   > .ant-popover-inner-content
-//   > div {
-//   color: red;
-//   & > div {
-//     &:not(:last-child) {
-//       margin-bottom: 10px;
-//     }
-//   }
-// }
+
 .choose-column-wrapper {
   background: #ffffff;
   border-radius: 2px;
