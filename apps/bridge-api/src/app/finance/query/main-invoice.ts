@@ -76,7 +76,7 @@ export const MainInvoice = extendType({
               AND a.guid!='' AND a.guid IS NOT NULL
               AND a.reference_no!='**CREDIT NOTE**' AND a.reference_no!='**REFUND**'
           GROUP BY IFNULL(a.guid, a.id)
-          ORDER BY ${input.orderBy ? input.orderBy.join(',') : 'id'} 
+          ORDER BY a.date desc
           LIMIT ${input.take} 
           OFFSET ${input.skip}
         `
