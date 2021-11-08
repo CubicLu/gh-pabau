@@ -5,13 +5,20 @@ import ClientDocuments from './ClientDocuments'
 
 const folderList = {
   folder: [],
-  id: '1',
+  id: 1,
   folderContent: [],
   folderTitle: 'Folders',
 }
 describe('ClientDocuments', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ClientDocuments folderList={folderList} />)
+    const { baseElement } = render(
+      <ClientDocuments
+        folderList={folderList}
+        folderDocuments={[]}
+        setUploadingDocs={() => false}
+        uploadingDocs={[]}
+      />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

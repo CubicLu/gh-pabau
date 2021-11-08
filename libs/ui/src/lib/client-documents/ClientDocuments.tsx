@@ -18,10 +18,11 @@ import { ReactComponent as GridIcon } from '../../assets/images/icons/grid.svg'
 import empty from '../../assets/images/empty-doc.png'
 import {
   Button,
-  FormikInput,
   Notification,
   NotificationType,
   BasicModal,
+  CamUploaderModal as FileUploadModal,
+  UploadingImageProps as UploadingFilesProps,
 } from '@pabau/ui'
 import FolderData from './FolderData'
 import { ReactComponent as Share } from '../../assets/images/share-folder.svg'
@@ -80,6 +81,14 @@ export interface ClientDocumentsProps {
   folderUpdateLoading?: boolean
   onFolderDelete?: (data: FolderProps) => void
   folderDeleteLoading?: boolean
+
+  uploadingDocs: UploadingFilesProps[]
+  setUploadingDocs: (data: UploadingFilesProps[]) => void
+  onDocUpload?: (data: UploadingFilesProps) => void
+  onDocRemove?: (imageId: number[]) => void
+  onUploadCancel?: (data: UploadingFilesProps) => void
+  docsDeleteLoading?: boolean
+  singleDocDelLoading?: boolean
 }
 
 export const ClientDocuments: FC<ClientDocumentsProps> = ({
@@ -94,6 +103,14 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
   folderUpdateLoading = false,
   onFolderDelete,
   folderDeleteLoading = false,
+
+  uploadingDocs,
+  setUploadingDocs,
+  onDocUpload,
+  onDocRemove,
+  onUploadCancel,
+  docsDeleteLoading,
+  singleDocDelLoading,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -120,6 +137,8 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
   const [tempData, setTempData] = useState([])
   const [recentActionData, setRecentActionData] = useState([] as SelectProps[])
   const [visibleCreatePopover, setVisibleCreatePopover] = useState(false)
+
+  const [uploadModal, setUploadModal] = useState(false)
 
   useEffect(() => {
     setFolderContent(folderDocuments)
@@ -606,6 +625,22 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
           />
         </div>
       )}
+
+      <FileUploadModal
+        albumId={currentData?.id || 0}
+        uploadingImages={uploadingDocs}
+        visible={uploadModal}
+        setUploadingImages={setUploadingDocs}
+        onClose={(done?: boolean) => {
+          setUploadModal((e) => !e)
+          if (done) {
+            setUploadingDocs?.([])
+          }
+        }}
+        uploadImage={onDocUpload}
+        removeImage={(fileId: number) => onDocRemove?.([fileId])}
+        onCancelUpload={onUploadCancel}
+      />
 
       <BasicModal
         modalWidth={600}

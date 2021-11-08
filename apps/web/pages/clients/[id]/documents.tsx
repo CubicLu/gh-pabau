@@ -9,7 +9,7 @@ import {
   FolderProps,
   FolderContentProps,
   ClientDocumentsLayout,
-  // UploadingImageProps,
+  UploadingImageProps as UploadingFileProps,
   Notification,
   NotificationType,
 } from '@pabau/ui'
@@ -91,9 +91,7 @@ const Photos: FC = () => {
   // const [showPhotoStudio, setShowPhotoStudio] = useState(false)
   // const [studioAlbumId, setStudioAlbumId] = useState<number>(0)
   // const [studioImageId, setStudioImageId] = useState<number>(0)
-  // const [uploadingFiles, setUploadingFiles] = useState<UploadingImageProps[]>(
-  //   []
-  // )
+  const [uploadingFiles, setUploadingFiles] = useState<UploadingFileProps[]>([])
   const [paginatedData, setPaginatedData] = useState({
     perPage: 50,
     currentPage: 1,
@@ -837,6 +835,8 @@ const Photos: FC = () => {
           folderUpdateLoading={folderUpdateLoading}
           onFolderDelete={onFolderDelete}
           folderDeleteLoading={folderDeleteLoading}
+          uploadingDocs={uploadingFiles}
+          setUploadingDocs={setUploadingFiles}
         />
         {/* <ClientPhotosLayout
           onImageUpload={onDocumentUpload}
