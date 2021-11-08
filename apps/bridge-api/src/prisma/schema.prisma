@@ -9876,6 +9876,7 @@ model PhotoAlbum {
   album_name    String
   contact_id    Int
   company_id    Int       @map("occupier")
+  album_type    String?   @default("photos")
   creation_date DateTime?
   modified_date DateTime?
 
