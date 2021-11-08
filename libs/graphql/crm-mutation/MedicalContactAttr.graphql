@@ -19,6 +19,9 @@ fragment MedicalContactAttr on MedicalContactAttr {
   MedicalFormContact {
     ...MedicalFormContactFields
   }
+  MedicalAttr {
+    ...MedicalAttrFields
+  }
 }
 
 mutation createOneMedicalContactAttr($data: MedicalContactAttrCreateInput!) {

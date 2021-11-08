@@ -26,5 +26,11 @@ export const MedicalContactAttr = objectType({
         return root.MedicalFormContact
       },
     })
+    t.field('MedicalAttr', {
+      type: 'MedicalAttr',
+      resolve(root: any) {
+        return root.MedicalAttr
+      },
+    })
   },
 })

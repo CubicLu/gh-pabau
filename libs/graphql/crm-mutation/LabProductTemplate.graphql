@@ -1,0 +1,41 @@
+fragment LabProductTemplateFields on LabProductTemplate {
+  id
+  test_name
+  code
+  sample_reqs
+  tat
+}
+
+fragment LabProductTemplate on LabProductTemplate {
+  ...LabProductTemplateFields
+}
+
+mutation createOneLabProductTemplate($data: LabProductTemplateCreateInput!) {
+  createOneLabProductTemplate(data: $data) {
+    ...LabProductTemplate
+  }
+}
+
+mutation updateOneLabProductTemplate(
+  $where: LabProductTemplateWhereUniqueInput!
+  $data: LabProductTemplateUpdateInput!
+) {
+  updateOneLabProductTemplate(where: $where, data: $data) {
+    ...LabProductTemplate
+  }
+}
+
+mutation deleteOneLabProductTemplate($where: LabProductTemplateWhereUniqueInput!) {
+  deleteOneLabProductTemplate(where: $where) {
+    ...LabProductTemplate
+  }
+}
+
+mutation updateManyLabProductTemplate(
+  $where: LabProductTemplateWhereInput
+  $data: LabProductTemplateUpdateManyMutationInput!
+) {
+  updateManyLabProductTemplate(where: $where, data: $data) {
+    count
+  }
+}

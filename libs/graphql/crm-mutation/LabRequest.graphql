@@ -1,0 +1,67 @@
+fragment LabRequestFields on LabRequest {
+  id
+  contact_id
+  company_id
+  request_date
+  last_update
+  request_by_id
+  request_status
+  request_lab_id
+  lab_id
+  request_id
+  received_id
+  communication_id
+  send_result
+  receive_result
+  receive_raw
+  receive_date
+  sent_date
+  assigned_to
+  report_viewed
+}
+
+fragment LabRequest on LabRequest {
+  ...LabRequestFields
+  Company {
+    ...CompanyFields
+  }
+  Contact {
+    ...CmContactFields
+  }
+  RequestUser {
+    ...UserFields
+  }
+  AssignedUser {
+    ...UserFields
+  }
+  Lab {
+    ...LabFields
+  }
+  MedicalFormContact {
+    ...MedicalFormContactFields
+  }
+}
+
+mutation createOneLabRequest($data: LabRequestCreateInput!) {
+  createOneLabRequest(data: $data) {
+    ...LabRequest
+  }
+}
+
+mutation updateOneLabRequest($where: LabRequestWhereUniqueInput!, $data: LabRequestUpdateInput!) {
+  updateOneLabRequest(where: $where, data: $data) {
+    ...LabRequest
+  }
+}
+
+mutation deleteOneLabRequest($where: LabRequestWhereUniqueInput!) {
+  deleteOneLabRequest(where: $where) {
+    ...LabRequest
+  }
+}
+
+mutation updateManyLabRequest($where: LabRequestWhereInput, $data: LabRequestUpdateManyMutationInput!) {
+  updateManyLabRequest(where: $where, data: $data) {
+    count
+  }
+}
