@@ -1,4 +1,6 @@
 mutation createShift($data: CreateShiftInput!){
-    createShift(data: $data)
+    createShift(data: $data){
+      ...RotaShift
+    }
   }
   
