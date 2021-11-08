@@ -10605,37 +10605,38 @@ model ReportCategory {
 //}
 //
 model RotaShift {
-  id             Int             @id @default(autoincrement())
-  uid            Int
-  start          Float
-  end            Float
-  company_id     Int             @map("occupier")
-  notes          String?
-  last_seen      DateTime?
-  last_modified  DateTime?
-  last_notified  DateTime?
-  last_published DateTime?
-  first_created  DateTime        @default(now())
-  user_created   Int
-  repeat_id      Int?
-  reason_code    String?         @default("")
-  reason_data    String?
-  holiday_id     Int             @default(0)
-  cal_id         Int?
-  is_cal         Int             @default(0)
-  note_color     String          @default("")
-  location_id    Int             @default(0)
-  request        Int?            @default(0)
-  sickness       Int?            @default(0)
-  imported       Int             @default(0)
-  tag_name       String          @default("")
-  room_id        Int             @default(0)
-  force_created  Boolean         @default(false)
-  Company        Company         @relation(fields: [company_id], references: [id])
-  Location       CompanyBranch?  @relation(fields: [location_id], references: [id])
-  CompanyRoom    CompanyRoom?    @relation(fields: [room_id], references: [id])
-  HolidayRequest HolidayRequest? @relation(fields: [holiday_id], references: [id])
-  CmStaffGeneral CmStaffGeneral  @relation(fields: [uid], references: [ID])
+  id               Int             @id @default(autoincrement())
+  uid              Int
+  start            Float
+  end              Float
+  company_id       Int             @map("occupier")
+  notes            String?
+  last_seen        DateTime?
+  last_modified    DateTime?
+  last_notified    DateTime?
+  last_published   DateTime?
+  first_created    DateTime        @default(now())
+  user_created     Int
+  repeat_id        Int?
+  reason_code      String?         @default("")
+  reason_data      String?
+  holiday_id       Int             @default(0)
+  cal_id           Int?
+  is_cal           Int             @default(0)
+  note_color       String          @default("")
+  location_id      Int             @default(0)
+  request          Int?            @default(0)
+  sickness         Int?            @default(0)
+  imported         Int             @default(0)
+  tag_name         String          @default("")
+  room_id          Int             @default(0)
+  force_created    Boolean         @default(false)
+  allowed_services String?
+  Company          Company         @relation(fields: [company_id], references: [id])
+  Location         CompanyBranch?  @relation(fields: [location_id], references: [id])
+  CompanyRoom      CompanyRoom?    @relation(fields: [room_id], references: [id])
+  HolidayRequest   HolidayRequest? @relation(fields: [holiday_id], references: [id])
+  CmStaffGeneral   CmStaffGeneral  @relation(fields: [uid], references: [ID])
 
   @@index([end], name: "end")
   @@index([holiday_id], name: "holiday_id")
