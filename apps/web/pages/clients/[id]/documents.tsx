@@ -147,15 +147,15 @@ const Photos: FC = () => {
   })
 
   const [
-    getAlbumPhotosManually,
-    { data: manualAlbumPhotos, loading: manualAlbumPhotosLoading },
+    getFolderDocsManually,
+    { data: manualFolderDocs, loading: manualFolderDocsLoading },
   ] = useGetFolderDocumentsLazyQuery({
     fetchPolicy: 'network-only',
   })
 
   const [
-    getPhotoAlbumsManually,
-    { data: manualPhotoAlbums, loading: manualPhotoAlbumsLoading },
+    getFoldersManually,
+    { data: manualFolders, loading: manualFoldersLoading },
   ] = useGetFoldersLazyQuery({
     fetchPolicy: 'network-only',
   })
@@ -180,7 +180,7 @@ const Photos: FC = () => {
 
       if (movingDocsOnFolderCreate?.length > 0) {
         const moveImages = [...movingDocsOnFolderCreate]
-        onImagesMove(data?.id, moveImages)
+        onDocumentsMove(data?.id, moveImages)
         setMovingDocsOnFolderCreate([])
       }
     },
@@ -252,7 +252,7 @@ const Photos: FC = () => {
   })
 
   const [
-    createAttachmentOutOfAlbum,
+    createUncategorizedDocument,
   ] = useCreateContactPhotoWithoutAlbumMutation({
     onCompleted({ createOneContactAttachment: data }) {
       const path = data?.linkref
@@ -269,7 +269,7 @@ const Photos: FC = () => {
     },
   })
 
-  const [deleteOneAttachment] = useDeleteContactPhotoMutation({
+  const [deleteOneDocument] = useDeleteContactPhotoMutation({
     onCompleted({ deleteContactAttachmentPhoto: data }) {
       setSingleDocDelLoading(() => false)
       if (data?.success) {
@@ -311,7 +311,7 @@ const Photos: FC = () => {
     },
   })
 
-  const [deleteManyAttachments] = useDeleteManyContactPhotoMutation({
+  const [deleteManyDocuments] = useDeleteManyContactPhotoMutation({
     onCompleted({ deleteManyContactAttachmentPhoto: data }) {
       if (data.success && data.count === multipeDelDocs) {
         Notification(
@@ -355,7 +355,7 @@ const Photos: FC = () => {
     },
   })
 
-  const [moveImageToAlbum] = useMoveContactAttachmentsMutation({
+  const [moveDocumentToFolder] = useMoveContactAttachmentsMutation({
     onCompleted({ moveAttachments: data }) {
       if (data?.success && data?.album !== 0) {
         if (document.querySelector(`#tar${data?.album}`)) {
@@ -385,7 +385,7 @@ const Photos: FC = () => {
 
   useEffect(() => {
     if (foldersData?.findManyPhotoAlbum && !foldersLoading) {
-      const innerAlbums = iterateTo(foldersData?.findManyPhotoAlbum)
+      const innerFolders = iterateTo(foldersData?.findManyPhotoAlbum)
       const cFolders = {
         id: 0,
         folderTitle:
@@ -396,11 +396,10 @@ const Photos: FC = () => {
           unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
         folderContent: [],
         modifiedDate: '',
-        folder: innerAlbums,
+        folder: innerFolders,
       }
       setFolders(cFolders)
       setMultipleDelDocs(0)
-      console.log('FOLDERS:', cFolders)
     }
   }, [foldersData, foldersLoading, unCatImagesCount])
 
@@ -424,12 +423,12 @@ const Photos: FC = () => {
 
   useEffect(() => {
     if (
-      manualAlbumPhotos?.findManyContactAttachment &&
-      !manualAlbumPhotosLoading
+      manualFolderDocs?.findManyContactAttachment &&
+      !manualFolderDocsLoading
     ) {
       setCurrFolderDocuments(null)
       setTimeout(() => {
-        const docs = manualAlbumPhotos?.findManyContactAttachment?.map((el) => {
+        const docs = manualFolderDocs?.findManyContactAttachment?.map((el) => {
           return {
             id: el?.id,
             folderData: getDocument?.(el?.url),
@@ -440,11 +439,11 @@ const Photos: FC = () => {
         setCurrFolderDocuments(docs)
       }, 0)
     }
-  }, [manualAlbumPhotos, manualAlbumPhotosLoading])
+  }, [manualFolderDocs, manualFolderDocsLoading])
 
   useEffect(() => {
-    if (manualPhotoAlbums?.findManyPhotoAlbum && !manualPhotoAlbumsLoading) {
-      const innerAlbums = iterateTo(manualPhotoAlbums?.findManyPhotoAlbum)
+    if (manualFolders?.findManyPhotoAlbum && !manualFoldersLoading) {
+      const innerAlbums = iterateTo(manualFolders?.findManyPhotoAlbum)
       const cFolders = {
         id: 0,
         folderTitle:
@@ -459,14 +458,14 @@ const Photos: FC = () => {
       }
       setFolders(cFolders)
     }
-  }, [manualPhotoAlbums, manualPhotoAlbumsLoading, unCatImagesCount])
+  }, [manualFolders, manualFoldersLoading, unCatImagesCount])
 
   const onFolderCreate = (
     folder: string,
-    moveImages: FolderContentProps[] = []
+    moveDocs: FolderContentProps[] = []
   ) => {
-    if (moveImages?.length > 0) {
-      setMovingDocsOnFolderCreate(moveImages?.map((el) => Number(el?.id)))
+    if (moveDocs?.length > 0) {
+      setMovingDocsOnFolderCreate(moveDocs?.map((el) => Number(el?.id)))
     }
     setFolderCreateLoading(true)
     createFolder({
@@ -545,7 +544,7 @@ const Photos: FC = () => {
     }
   }
 
-  const onImageUpload = async (fileData: UploadingImageProps) => {
+  const onDocumentUpload = async (fileData: UploadingImageProps) => {
     const cAddedFiles = [...uploadingFiles]
     const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
     if (idx !== -1) {
@@ -628,7 +627,7 @@ const Photos: FC = () => {
                 })
               }
               if (fileData?.albumId === 0) {
-                createAttachmentOutOfAlbum({
+                createUncategorizedDocument({
                   variables: {
                     attachment_type: 'contact',
                     contact_id: contactId,
@@ -693,11 +692,11 @@ const Photos: FC = () => {
     }
   }
 
-  const onImageRemove = (imageIds: number[]) => {
-    if (imageIds?.length > 0) {
-      if (imageIds?.length === 1) {
+  const onDocumentRemove = (docIds: number[]) => {
+    if (docIds?.length > 0) {
+      if (docIds?.length === 1) {
         const cAddedFiles = [...uploadingFiles]
-        const idx = cAddedFiles?.findIndex((el) => el?.id === imageIds[0])
+        const idx = cAddedFiles?.findIndex((el) => el?.id === docIds[0])
         if (idx !== -1) {
           const cFile = cAddedFiles[idx]
           cFile.loading = true
@@ -706,12 +705,12 @@ const Photos: FC = () => {
         }
         const cCurrAlbumImages = [...currFolderDocuments]
         const cImageIndex = cCurrAlbumImages?.findIndex(
-          (el) => el?.id === imageIds[0]
+          (el) => el?.id === docIds[0]
         )
         setSingleDocDelLoading(() => true)
-        deleteOneAttachment({
+        deleteOneDocument({
           variables: {
-            id: imageIds[0],
+            id: docIds[0],
           },
           refetchQueries: [
             {
@@ -734,11 +733,11 @@ const Photos: FC = () => {
           ],
         })
       } else {
-        setMultipleDelDocs(imageIds?.filter((el) => el !== 0)?.length)
+        setMultipleDelDocs(docIds?.filter((el) => el !== 0)?.length)
         setDocsDeleteLoading(() => true)
-        deleteManyAttachments({
+        deleteManyDocuments({
           variables: {
-            ids: imageIds,
+            ids: docIds,
           },
           refetchQueries: [
             {
@@ -764,9 +763,9 @@ const Photos: FC = () => {
     }
   }
 
-  const onImagesMove = (folder: number, docs: number[]) => {
+  const onDocumentsMove = (folder: number, docs: number[]) => {
     if ((folder === 0 || folder) && docs?.length > 0) {
-      moveImageToAlbum({
+      moveDocumentToFolder({
         variables: {
           album: folder,
           images: docs,
@@ -840,12 +839,12 @@ const Photos: FC = () => {
           folderDeleteLoading={folderDeleteLoading}
         />
         {/* <ClientPhotosLayout
-          onImageUpload={onImageUpload}
-          onImageRemove={onImageRemove}
+          onImageUpload={onDocumentUpload}
+          onImageRemove={onDocumentRemove}
           onUploadCancel={onUploadCancel}
           uploadingImages={uploadingFiles}
           setUploadingImages={setUploadingFiles}
-          onImagesMove={onImagesMove}
+          onImagesMove={onDocumentsMove}
           openImageStudio={openPhotoStudio}
           imagesDeleteLoading={docsDeleteLoading}
           singleImageDelLoading={singleDocDelLoading}
@@ -863,7 +862,7 @@ const Photos: FC = () => {
             setStudioImageId(0)
           }}
           fetchFunc={() => {
-            getAlbumPhotosManually({
+            getFolderDocsManually({
               variables: {
                 contactId: router.query.id ? Number(router.query.id) : 0,
                 albumId: folderId,
@@ -871,7 +870,7 @@ const Photos: FC = () => {
                 take: paginatedData?.perPage,
               },
             })
-            getPhotoAlbumsManually({
+            getFoldersManually({
               variables: {
                 contactId: router.query.id ? Number(router.query.id) : 0,
               },
