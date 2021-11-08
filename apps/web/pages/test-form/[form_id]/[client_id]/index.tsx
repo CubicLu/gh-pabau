@@ -246,7 +246,7 @@ export const TestForm = () => {
     const imported = 0
     const locked = 0
     const pharmacy_id = 0
-    const prescriber = 0
+    // const prescriber = 0
     const priority = 'pLow'
     const related_to = 0
     const user_created = loggedInUser?.me?.user
@@ -261,19 +261,24 @@ export const TestForm = () => {
         ...creatMedicalContactAttrVariables,
         {
           attachment_size: medical_attr_attachment_size,
-          attr_id: typeof item.attrId === 'undefined' ? 0 : item.attrId,
           contact_id: Number(router.query.client_id),
           custom_contact_id: medical_attr_custom_contact_id,
           custom_contact_name: medical_attr_custom_contact_name,
           group_label: formName,
           value: typeof item.attrValue === 'undefined' ? '' : item.attrValue,
+          MedicalAttr: {
+            connect: {
+              id: Number(typeof item.attrId === 'undefined' ? 0 : item.attrId),
+            },
+          },
         },
       ]
     }
 
     const creatMedicalFormContactVariables = {
       Form: { connect: { id: Number(router.query.form_id) } },
-      contact_id: Number(router.query.client_id),
+      Contact: { connect: { ID: Number(router.query.client_id) } },
+      CreatedBy: { connect: { id: Number(user_created) } },
       complete: complete,
       custom_contact_id: custom_contact_id,
       custom_contact_name: custom_contact_name,
@@ -283,10 +288,9 @@ export const TestForm = () => {
       imported: imported,
       locked: locked,
       pharmacy_id: pharmacy_id,
-      prescriber: prescriber,
+      //      prescriber: prescriber,
       priority: priority,
       related_to: related_to,
-      user_created: user_created,
       user_updated: user_updated,
       MedicalFormContactHistory: {
         create: [
@@ -334,6 +338,7 @@ export const TestForm = () => {
     let attrNameIndex = 0
     let newDraggedForms: MedicalFormTypes[] = []
     for (const [, item] of draggedForms.entries()) {
+      console.log('itemitemitem =', item)
       const cssClassArr = previewMapping.filter(
         (mappingItem) => Object.values(mappingItem)[0] === item.formName
       )
@@ -371,7 +376,11 @@ export const TestForm = () => {
         } else {
           item.attrValue = ''
         }
-      } else if (cssClass === 'radio' || cssClass === 'select') {
+      } else if (
+        cssClass === 'radio' ||
+        cssClass === 'select' ||
+        cssClass === 'slider'
+      ) {
         const val = item.arrItems.filter(
           (arrItem) => arrItem.id === Number(item.txtValue)
         )

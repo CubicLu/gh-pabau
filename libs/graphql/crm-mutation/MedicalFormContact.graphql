@@ -37,6 +37,9 @@ fragment MedicalFormContact on MedicalFormContact {
   CreatedBy {
     ...UserFields
   }
+  Prescriber {
+    ...UserFields
+  }
 }
 
 mutation createOneMedicalFormContact($data: MedicalFormContactCreateInput!) {

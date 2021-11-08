@@ -20,5 +20,25 @@ export const MedicalAttr = objectType({
         return root.Company
       },
     })
+    t.list.field('MedicalContactAttr', {
+      type: 'MedicalContactAttr',
+      args: {
+        where: 'MedicalContactAttrWhereInput',
+        orderBy: 'MedicalContactAttrOrderByWithRelationInput',
+        cursor: 'MedicalContactAttrWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalContactAttrScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalContactAttr
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'MedicalAttrCountOutputType',
+      resolve(root: any) {
+        return root._count
+      },
+    })
   },
 })
