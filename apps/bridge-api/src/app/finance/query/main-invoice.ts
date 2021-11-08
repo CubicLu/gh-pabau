@@ -1,5 +1,5 @@
 import { InvSale, Prisma } from '.prisma/client'
-import { extendType, intArg } from 'nexus'
+import { extendType, intArg, list } from 'nexus'
 import { Context } from '../../../context'
 
 export const MainInvoice = extendType({
@@ -81,47 +81,84 @@ export const MainInvoice = extendType({
       type: 'InvSale',
       description: 'Get invoice per contact with Raw',
       args: {
+        // where: 'InvSaleWhereInput',
+        // skip: intArg({
+        //   default: 0,
+        // }),
+        // take: intArg({
+        //   default: 50,
+        // }),
         where: 'InvSaleWhereInput',
-        skip: intArg({
-          default: 0,
-        }),
-        take: intArg({
-          default: 50,
-        }),
+        orderBy: list('InvSaleOrderByWithRelationInput'),
+        cursor: 'InvSaleWhereUniqueInput',
+        distinct: 'InvSaleScalarFieldEnum',
+        skip: 'Int',
+        take: 'Int',
       },
       async resolve(_root, input, ctx: Context) {
-        const start = Date.now()
+        // const start = Date.now()
         // console.info('where', input.where.customer_id.equals)
-        const invoices = await ctx.prisma.$queryRaw<
-          InvSale[]
-        >`SELECT sales.id, sales.date,sales.customer_id, sales.customer_name
-        FROM inv_sales AS sales
-        LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
-        LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
-        WHERE sales.occupier = ${ctx.authenticated.company}
-        ${
-          input.where.customer_id.equals
-            ? Prisma.sql`AND sales.customer_id = ${input.where.customer_id.equals}`
-            : Prisma.empty
-        }
-        AND sales.guid!='' AND sales.guid IS NOT NULL
-        AND sales.reference_no!='**CREDIT NOTE**' AND sales.reference_no!='**REFUND**'
-        GROUP BY IFNULL(sales.guid, sales.id)
-        LIMIT ${input.take} OFFSET ${input.skip} 
+        // const invoices2 = await ctx.prisma.$queryRaw<
+        //   InvSale[]
+        // >`SELECT sales.id, sales.date,sales.customer_id, sales.customer_name
+        // FROM inv_sales AS sales
+        // LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
+        // LEFT JOIN cm_contacts AS cmContact ON cmContact.id = sales.customer_id
+        // WHERE sales.occupier = ${ctx.authenticated.company}
+        // ${
+        //   input.where.customer_id.equals
+        //     ? Prisma.sql`AND sales.customer_id = ${input.where.customer_id.equals}`
+        //     : Prisma.empty
+        // }
+        // AND sales.guid!='' AND sales.guid IS NOT NULL
+        // AND sales.reference_no!='**CREDIT NOTE**' AND sales.reference_no!='**REFUND**'
+        // GROUP BY IFNULL(sales.guid, sales.id)
+        // LIMIT ${input.take} OFFSET ${input.skip}
+        // `
+
+        const invoices = await ctx.prisma.$queryRaw<InvSale[]>`SELECT 
+              max(a.id) as id, 
+              a.guid, 
+              a.date,
+              a.customer_id, 
+              a.customer_name,
+              sum(a.total) as amount,
+              sum(a.paid_amount) as paid_amount,
+              sum(a.discount_amount) as discount_amount,
+              sum(a.inv_total) as inv_total,
+              b.name as location_name,
+              group_concat(Distinct b.name) as billers,
+              if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
+          FROM inv_sales a
+              LEFT JOIN company_branches b on b.id = a.location_id
+              LEFT JOIN cm_contacts c on c.id = a.customer_id
+              LEFT JOIN inv_billers d ON a.biller_id=d.id
+              LEFT JOIN insurance_details e ON a.insurer_contract_id=e.id
+          WHERE a.occupier = 8254
+              AND a.customer_id = 24587193
+              AND a.guid!='' AND a.guid IS NOT NULL
+              AND a.reference_no!='**CREDIT NOTE**' AND a.reference_no!='**REFUND**'
+              AND a.id>28030990
+          GROUP BY IFNULL(a.guid, a.id)
+          order by id
+              LIMIT 10 
+              OFFSET 0
         `
-        console.info(
-          'Resolver with raw:',
-          'contact',
-          input.where.customer_id.equals,
-          'skip:',
-          input.skip,
-          'take:',
-          input.take,
-          'length:',
-          invoices.length,
-          'time:',
-          (Date.now() - start) / 1000
-        )
+
+        console.info('input', input, invoices)
+        // console.info(
+        //   'Resolver with raw:',
+        //   'contact',
+        //   input.where.customer_id.equals,
+        //   'skip:',
+        //   input.skip,
+        //   'take:',
+        //   input.take,
+        //   'length:',
+        //   invoices.length,
+        //   'time:',
+        //   (Date.now() - start) / 1000
+        // )
 
         return invoices
       },
