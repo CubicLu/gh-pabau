@@ -80,6 +80,7 @@ export const MainInvoice = extendType({
           LIMIT ${input.take} 
           OFFSET ${input.skip}
         `
+
         return invoices
       },
     })
