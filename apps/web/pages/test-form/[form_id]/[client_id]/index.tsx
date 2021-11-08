@@ -237,7 +237,7 @@ export const TestForm = () => {
   }, [businessDetails])
 
   const saveMedicalFormContact = async (draggedForms: MedicalFormTypes[]) => {
-    const complete = 0
+    const complete = 1
     const custom_contact_id = 0
     const custom_contact_name = ''
     const custom_user_name = ''
@@ -256,8 +256,7 @@ export const TestForm = () => {
     const medical_attr_custom_contact_id = 0
     const medical_attr_custom_contact_name = ''
     let creatMedicalContactAttrVariables = []
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [index, item] of draggedForms.entries()) {
+    for (const [, item] of draggedForms.entries()) {
       creatMedicalContactAttrVariables = [
         ...creatMedicalContactAttrVariables,
         {
@@ -306,19 +305,24 @@ export const TestForm = () => {
       },
     }
 
+    console.log(
+      'creatMedicalFormContactVariables =',
+      creatMedicalFormContactVariables
+    )
+
     await addMedicalFormContactMutation({
       variables: { data: { ...creatMedicalFormContactVariables } },
     })
   }
 
   const saveMedicalAttr = async (draggedForms: MedicalFormTypes[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [index, item] of draggedForms.entries()) {
+    for (const [, item] of draggedForms.entries()) {
       const creatMedicalAttrVariables = {
         name: item.attrName,
         description: '',
         Company: {},
       }
+      console.log('creatMedicalAttrVariables =', creatMedicalAttrVariables)
       await addMedicalAttrMutation({
         variables: { data: { ...creatMedicalAttrVariables } },
       }).then((e) => (item.attrId = e.data.createOneMedicalAttr.id))
@@ -327,37 +331,43 @@ export const TestForm = () => {
   }
 
   const saveMedicalFormHistory = (draggedForms: MedicalFormTypes[]) => {
-    for (const [index, item] of draggedForms.entries()) {
-      let attr_name = ''
+    let attrNameIndex = 0
+    let newDraggedForms: MedicalFormTypes[] = []
+    for (const [, item] of draggedForms.entries()) {
       const cssClassArr = previewMapping.filter(
         (mappingItem) => Object.values(mappingItem)[0] === item.formName
       )
       let cssClass = ''
       if (cssClassArr.length > 0) cssClass = Object.keys(cssClassArr[0])[0]
-
+      if (cssClass === '' || cssClass === 'heading') {
+        continue
+      }
+      let attr_name = ''
       if (item.txtQuestion !== '') {
-        attr_name = index + item.txtQuestion.trim()
+        attr_name = attrNameIndex + item.txtQuestion.trim()
       } else if (item.txtValue !== '') {
-        attr_name = index + item.txtValue.trim()
+        attr_name = attrNameIndex + item.txtValue.trim()
       } else if (item.arrItems.length > 0) {
-        attr_name = index + item.arrItems[0].name.trim()
+        attr_name = attrNameIndex + item.arrItems[0].name.trim()
       } else {
-        attr_name = index + 'nothing'
+        attr_name = attrNameIndex + 'nothing'
       }
       if (cssClass === 'labs_tests') {
-        attr_name = index + 'labs_tests[]'
+        attr_name = attrNameIndex + 'labs_tests[]'
       }
-      item.attrName = attr_name.replace(' ', '_').toLowerCase()
+      item.attrName = attr_name.replace('_', ' ').toLowerCase()
 
       if (cssClass === 'input_text' || cssClass === 'textarea')
         item.attrValue = item.txtValue
       else if (cssClass === 'checkbox') {
-        const vals = item.arrItems.filter((arrItem) =>
-          item.arrValue.indexOf(arrItem.id.toString())
+        const vals = item.arrItems.filter(
+          (arrItem) => item.arrValue.indexOf(arrItem.id.toString()) >= 0
         )
         if (vals.length > 0) {
-          const val = vals.map((val) => btoa(val.name))
-          item.attrValue = val.join(',')
+          const val1 = vals.map((val) =>
+            btoa(unescape(encodeURIComponent(val.name)))
+          )
+          item.attrValue = val1.join(',')
         } else {
           item.attrValue = ''
         }
@@ -369,9 +379,13 @@ export const TestForm = () => {
         else item.attrValue = ''
       } else if (cssClass === 'labs_tests') {
         item.attrValue = item.arrValue.join(',')
+      } else {
+        item.attrName = ''
       }
+      newDraggedForms = [...newDraggedForms, item]
+      attrNameIndex++
     }
-    saveMedicalAttr(draggedForms)
+    saveMedicalAttr(newDraggedForms)
   }
 
   const loggedInUser = useUser()
