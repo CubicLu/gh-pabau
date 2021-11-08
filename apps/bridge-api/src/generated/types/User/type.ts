@@ -707,6 +707,20 @@ export const User = objectType({
         return root.MedicalFormContact
       },
     })
+    t.list.field('BookingCancel', {
+      type: 'BookingCancel',
+      args: {
+        where: 'BookingCancelWhereInput',
+        orderBy: 'BookingCancelOrderByWithRelationInput',
+        cursor: 'BookingCancelWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingCancelScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookingCancel
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {

@@ -1122,6 +1122,7 @@ model CancelReason {
   modified_at               DateTime? @updatedAt
 
 
+  BookingCancel BookingCancel[]
   @@index([company_id], name: "occupier")
   @@map("cancel_reason")
 }
@@ -10764,6 +10765,8 @@ model Booking {
   CompanyService                CompanyService? @relation(fields: [service_id], references: [id])
   PathwaysTaken                 PathwaysTaken[]
 
+  BookingCancel    BookingCancel[]
+  BookingChangeLog BookingChangeLog[]
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
   @@index([contact_id], name: "contact_id")
@@ -10787,26 +10790,40 @@ model Booking {
   @@map("salon_bookings")
 }
 
-//model salon_bookings_apt_cancel {
-//  id                Int       @id @default(autoincrement())
-//  appointment_id    Int?
-//  type              String?
-//  reason_type       String?
-//  reason            String?
-//  created_date      DateTime?
-//  last_updated_date DateTime?
-//  cancel_by         Int
-//  cancel_reason_id  Int
-//
-//  @@index([appointment_id], name: "appointment_id")
-//}
-//
-//model salon_bookings_changelog {
-//  id         Int    @id @default(autoincrement())
-//  booking_id Int    @unique
-//  changelog  String
-//}
-//
+model BookingCancel {
+  id                Int          @id @default(autoincrement())
+  appointment_id    Int
+  type              String?
+  reason_type       String?
+  reason            String?
+  created_date      DateTime?
+  last_updated_date DateTime?
+  cancel_by         Int
+  cancel_reason_id  Int
+  Booking           Booking      @relation(fields: [appointment_id], references: [id])
+  CancelReason      CancelReason @relation(fields: [cancel_reason_id], references: [id])
+  User              User         @relation(fields: [cancel_by], references: [id])
+
+
+  @@index([id], name: "id")
+  @@index([appointment_id], name: "appointment_id")
+  @@map("salon_bookings_apt_cancel")
+}
+
+model BookingChangeLog {
+  id             Int    @id @default(autoincrement())
+  appointment_id Int    @map("booking_id")
+  changelog      String
+
+  Booking Booking @relation(fields: [appointment_id], references: [id])
+
+
+  @@unique([appointment_id], name: "booking_id")
+  @@index([id], name: "id")
+  @@index([appointment_id], name: "booking_id")
+  @@map("salon_bookings_changelog")
+}
+
 //model salon_bookings_clinics_settings {
 //  id        Int @id @default(autoincrement())
 //  occupier  Int
@@ -12873,6 +12890,7 @@ model User {
   MedicalForm        MedicalForm[]
   CmContact          CmContact[]
   MedicalFormContact MedicalFormContact[]
+  BookingCancel      BookingCancel[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

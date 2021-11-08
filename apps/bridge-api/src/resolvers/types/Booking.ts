@@ -1,4 +1,12 @@
-import { extendType, list, nonNull, arg, inputObjectType } from 'nexus'
+import {
+  extendType,
+  list,
+  nonNull,
+  arg,
+  inputObjectType,
+  intArg,
+  stringArg,
+} from 'nexus'
 import { Context } from '../../context'
 import {
   retrieveAllBookingStatusCount,
@@ -7,7 +15,19 @@ import {
 import {
   BookingCountResponseType,
   BookingDetailResponseType,
+  CancelBookingType,
 } from '../../app/booking/nexus-type'
+import {
+  CreateCompanyBranchInputType,
+  CreateCompanyBranchResponse,
+  UpdateCompanyBranchInputType,
+  UpdateCompanyBranchResponse,
+} from '../../app/company-branch/nexus-type'
+import {
+  CreateBranchInputType,
+  UpdateBranchInputType,
+} from '../../app/company-branch/dto'
+import LocationService from '../../app/company-branch/LocationService'
 
 const BookingInputTypes = inputObjectType({
   name: 'BookingInputTypes',
@@ -87,6 +107,66 @@ export const BookingStatus = extendType({
       },
       async resolve(_root, { data }, ctx: Context) {
         return await retrieveAllBookingChartData(ctx, data)
+      },
+    })
+  },
+})
+
+export const CancelAppointment = extendType({
+  type: 'Mutation',
+  definition: function (t) {
+    t.field('CancelAppointment', {
+      type: 'cancelAppointment',
+      args: {
+        booking_id: intArg(),
+        type: stringArg(),
+        reason: stringArg(),
+        reason_id: intArg(),
+      },
+      resolve: async function (
+        parent,
+        { booking_id, reason, reason_id, type },
+        ctx: Context
+      ) {
+        const cancalBookingStatus = await ctx.prisma.booking.update({
+          where: {
+            id: booking_id,
+          },
+          data: {
+            status: 'Cancelled',
+          },
+        })
+        const newChangeLogData = []
+        const getChangeLogData = await ctx.prisma.bookingChangeLog.findFirst({
+          where: {
+            appointment_id: booking_id,
+          },
+        })
+        newChangeLogData.push(JSON.parse(getChangeLogData.changelog)[0])
+        const changelogData = {
+          mode: 'Update',
+          status: 'Cancelled',
+        }
+        newChangeLogData.push(changelogData)
+        const changeStatus = await ctx.prisma.bookingChangeLog.update({
+          where: {
+            appointment_id: booking_id,
+          },
+          data: {
+            changelog: JSON.stringify(newChangeLogData),
+          },
+        })
+
+        const cancalBooking = await ctx.prisma.bookingCancel.create({
+          data: {
+            appointment_id: booking_id,
+            type: type,
+            reason: reason,
+            cancel_by: ctx.authenticated.user,
+            cancel_reason_id: reason_id,
+          },
+        })
+        return cancalBookingStatus
       },
     })
   },

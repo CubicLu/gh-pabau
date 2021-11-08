@@ -97,6 +97,7 @@ export const permissions = shield(
       deleteManyContactAttachmentPhoto: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
 
+      CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin

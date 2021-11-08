@@ -131,6 +131,34 @@ export const Booking = objectType({
         return root.PathwaysTaken
       },
     })
+    t.list.field('BookingCancel', {
+      type: 'BookingCancel',
+      args: {
+        where: 'BookingCancelWhereInput',
+        orderBy: 'BookingCancelOrderByWithRelationInput',
+        cursor: 'BookingCancelWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingCancelScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookingCancel
+      },
+    })
+    t.list.field('BookingChangeLog', {
+      type: 'BookingChangeLog',
+      args: {
+        where: 'BookingChangeLogWhereInput',
+        orderBy: 'BookingChangeLogOrderByWithRelationInput',
+        cursor: 'BookingChangeLogWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingChangeLogScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookingChangeLog
+      },
+    })
     t.nullable.field('_count', {
       type: 'BookingCountOutputType',
       resolve(root: any) {

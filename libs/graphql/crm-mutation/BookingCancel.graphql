@@ -1,0 +1,48 @@
+fragment BookingCancelFields on BookingCancel {
+  id
+  appointment_id
+  type
+  reason_type
+  reason
+  created_date
+  last_updated_date
+  cancel_by
+  cancel_reason_id
+}
+
+fragment BookingCancel on BookingCancel {
+  ...BookingCancelFields
+  Booking {
+    ...BookingFields
+  }
+  CancelReason {
+    ...CancelReasonFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneBookingCancel($data: BookingCancelCreateInput!) {
+  createOneBookingCancel(data: $data) {
+    ...BookingCancel
+  }
+}
+
+mutation updateOneBookingCancel($where: BookingCancelWhereUniqueInput!, $data: BookingCancelUpdateInput!) {
+  updateOneBookingCancel(where: $where, data: $data) {
+    ...BookingCancel
+  }
+}
+
+mutation deleteOneBookingCancel($where: BookingCancelWhereUniqueInput!) {
+  deleteOneBookingCancel(where: $where) {
+    ...BookingCancel
+  }
+}
+
+mutation updateManyBookingCancel($where: BookingCancelWhereInput, $data: BookingCancelUpdateManyMutationInput!) {
+  updateManyBookingCancel(where: $where, data: $data) {
+    count
+  }
+}

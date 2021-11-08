@@ -1,0 +1,39 @@
+fragment BookingChangeLogFields on BookingChangeLog {
+  id
+  appointment_id
+  changelog
+}
+
+fragment BookingChangeLog on BookingChangeLog {
+  ...BookingChangeLogFields
+  Booking {
+    ...BookingFields
+  }
+}
+
+mutation createOneBookingChangeLog($data: BookingChangeLogCreateInput!) {
+  createOneBookingChangeLog(data: $data) {
+    ...BookingChangeLog
+  }
+}
+
+mutation updateOneBookingChangeLog($where: BookingChangeLogWhereUniqueInput!, $data: BookingChangeLogUpdateInput!) {
+  updateOneBookingChangeLog(where: $where, data: $data) {
+    ...BookingChangeLog
+  }
+}
+
+mutation deleteOneBookingChangeLog($where: BookingChangeLogWhereUniqueInput!) {
+  deleteOneBookingChangeLog(where: $where) {
+    ...BookingChangeLog
+  }
+}
+
+mutation updateManyBookingChangeLog(
+  $where: BookingChangeLogWhereInput
+  $data: BookingChangeLogUpdateManyMutationInput!
+) {
+  updateManyBookingChangeLog(where: $where, data: $data) {
+    count
+  }
+}

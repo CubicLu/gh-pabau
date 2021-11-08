@@ -59,3 +59,10 @@ const BookingCounts = objectType({
     t.list.field('bookingList', { type: CountDetails })
   },
 })
+
+export const CancelBookingType = objectType({
+  name: 'cancelAppointment',
+  definition(t) {
+    t.int('id')
+  },
+})
