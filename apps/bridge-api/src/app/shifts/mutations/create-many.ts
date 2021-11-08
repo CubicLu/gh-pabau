@@ -1,4 +1,4 @@
-import { mutationField, nonNull, inputObjectType } from 'nexus'
+import { mutationField, nonNull, inputObjectType, list } from 'nexus'
 import { Context } from '../../../context'
 import dayjs from 'dayjs'
 
@@ -17,7 +17,7 @@ export const CreateShiftInput = inputObjectType({
 })
 
 export const CreateShiftMutation = mutationField('createShift', {
-  type: 'Int',
+  type: nonNull(list('RotaShift')),
   args: {
     data: nonNull('CreateShiftInput'),
   },
@@ -41,10 +41,8 @@ export const CreateShiftMutation = mutationField('createShift', {
       .format('YYYYMMDDHHmmss')
 
     const shift = {
-      // CmStaffGeneral: { connect: { ID: data.user_ids[0] } },
-      // Company: { connect: { id: ctx.authenticated.company } },
+      Company: { connect: { id: ctx.authenticated.company } },
       user_created: ctx.authenticated.user,
-      company_id: ctx.authenticated.company,
       notes: data.note ?? '',
       start: Number.parseFloat(start),
       end: Number.parseFloat(end),
@@ -54,24 +52,29 @@ export const CreateShiftMutation = mutationField('createShift', {
     }
 
     if (data.location_id) {
-      shift.Location = { Location: { connect: { id: data.location_id } } }
+      shift.Location = { connect: { id: data.location_id } }
     }
     if (data.room_id) {
-      shift.CompanyRoom = { CompanyRoom: { connect: { id: data.room_id } } }
+      shift.CompanyRoom = { connect: { id: data.room_id } }
     }
 
-    const shifts = []
+    const response = []
     for (const uid of data.user_ids) {
-      shifts.push({
-        ...shift,
-        uid: uid,
-      })
+      response.push(
+        await ctx.prisma.rotaShift.create({
+          data: {
+            ...shift,
+            CmStaffGeneral: { connect: { ID: uid } },
+          },
+          include: {
+            Company: true,
+            CompanyRoom: true,
+            Location: true,
+          },
+        })
+      )
     }
 
-    const response = await ctx.prisma.rotaShift.createMany({
-      data: shifts,
-    })
-
-    return response?.count ?? 0
+    return response
   },
 })
