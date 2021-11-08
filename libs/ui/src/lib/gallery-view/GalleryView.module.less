@@ -139,16 +139,14 @@
           min-width: 170px;
         }
       }
-      span:last-child {
-        margin-left: 8px;
-      }
     }
   }
 }
 .create-content {
+  padding: 10px;
   .content-item {
     cursor: pointer;
-    padding: 5px 20px;
+    padding: 5px !important;
 
     > span {
       margin-right: 5px;
@@ -355,6 +353,10 @@
       .albumTitle {
         font-size: 14px;
         color: var(--grey-text-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
         margin: 0;
       }
       .albumCount {
@@ -964,14 +966,7 @@
     }
   }
 }
-:global {
-  .create-content {
-    padding: 10px !important;
-    .content-item {
-      padding: 5px !important;
-    }
-  }
-}
+
 .modalContent {
   margin-bottom: 10px;
 }

@@ -816,7 +816,9 @@ export const AlbumData: FC<AlbumDataProps> = ({
                   </div>
                 </div>
                 <div className={styles.albumInfo}>
-                  <h2 className={styles.albumTitle}>{x.albumTitle}</h2>
+                  <h2 className={styles.albumTitle}>
+                    {x?.albumTitle?.substr(0, 15)}
+                  </h2>
                   <span className={styles.albumCount}>
                     {calculateAlbumLength(x) as number}
                   </span>
