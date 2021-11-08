@@ -383,6 +383,18 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
     }, 100)
   }
 
+  useEffect(() => {
+    const elems = document?.querySelectorAll(
+      "div[class^='ant-modal CamUploaderModal_uppyModal']"
+    )
+    if (elems?.length > 0 && mobile) {
+      const elem = elems?.[0]?.parentElement
+      if (elem) {
+        elem.style.overflow = 'hidden'
+      }
+    }
+  })
+
   return (
     <div>
       <input

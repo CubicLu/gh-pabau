@@ -1,7 +1,8 @@
-import React, { FC, useState, useCallback } from 'react'
+import React, { FC, useEffect, useState, useCallback } from 'react'
 import styles from './ClientDocuments.module.less'
 import { useMedia } from 'react-use'
-import { Drawer, Popover, Breadcrumb, Menu, Dropdown, Modal } from 'antd'
+import { useTranslation } from 'react-i18next'
+import { Drawer, Popover, Breadcrumb, Menu, Dropdown, Modal, Input } from 'antd'
 import {
   FolderOutlined,
   PlusOutlined,
@@ -15,11 +16,27 @@ import {
 import { ReactComponent as ListIcon } from '../../assets/images/icons/list.svg'
 import { ReactComponent as GridIcon } from '../../assets/images/icons/grid.svg'
 import empty from '../../assets/images/empty-doc.png'
-import { Button, FormikInput, Notification, NotificationType } from '@pabau/ui'
+import {
+  Button,
+  Notification,
+  NotificationType,
+  BasicModal,
+  CamUploaderModal as FileUploadModal,
+  UploadingImageProps as UploadingFilesProps,
+} from '@pabau/ui'
 import FolderData from './FolderData'
-import { BasicModal } from '../modal/BasicModal'
 import { ReactComponent as Share } from '../../assets/images/share-folder.svg'
 import dayjs from 'dayjs'
+
+const folderFinder = (folders, folderId) => {
+  const folder = folders?.find((el) => {
+    if (el?.id === folderId) {
+      return el
+    } else if (el?.folder) folderFinder?.(el?.folder, folderId)
+    return null
+  })
+  return folder
+}
 
 interface OpenByProps {
   firstName: string
@@ -27,52 +44,129 @@ interface OpenByProps {
 }
 
 export interface FolderContentProps {
-  id: string
+  id: number
   folderData: string
-  dateTime: string
+  dateTime: number
   sharedWith?: OpenByProps[]
 }
 
-export interface folderProps {
-  folder: folderProps[]
-  id: string
+export interface FolderProps {
+  folder: FolderProps[]
+  id: number
   folderTitle: string
+  modifiedDate?: string
+  contentCount?: number
   folderContent?: FolderContentProps[]
 }
 
-export interface selectProps {
-  folderData?: folderProps[]
+export interface SelectProps {
+  folderData?: FolderProps[]
   folderTitle?: string
 }
 
 export interface ClientDocumentsProps {
-  folderList: folderProps
+  folderList: FolderProps
+  folderDocuments: FolderContentProps[]
+  onFolderClick?: (folderId: number) => void
+  loading?: boolean
+  paginateData?: {
+    pageSize: number
+    onPageChange: (page: number) => void
+    onPageSizeChange: (size: number) => void
+    currentPage: number
+  }
+  onFolderCreate?: (name: string, moveImages?: FolderContentProps[]) => void
+  folderCreateLoading?: boolean
+  onFolderUpdate?: (data: FolderProps) => void
+  folderUpdateLoading?: boolean
+  onFolderDelete?: (data: FolderProps) => void
+  folderDeleteLoading?: boolean
+
+  uploadingDocs: UploadingFilesProps[]
+  setUploadingDocs: (data: UploadingFilesProps[]) => void
+  onDocUpload?: (data: UploadingFilesProps) => void
+  onDocRemove?: (imageId: number[]) => void
+  onUploadCancel?: (data: UploadingFilesProps) => void
+  docsDeleteLoading?: boolean
+  singleDocDelLoading?: boolean
 }
 
-export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
+export const ClientDocuments: FC<ClientDocumentsProps> = ({
+  folderList,
+  folderDocuments,
+  onFolderClick,
+  loading = false,
+  paginateData,
+  onFolderCreate,
+  folderCreateLoading = false,
+  onFolderUpdate,
+  folderUpdateLoading = false,
+  onFolderDelete,
+  folderDeleteLoading = false,
+
+  uploadingDocs,
+  setUploadingDocs,
+  onDocUpload,
+  onDocRemove,
+  onUploadCancel,
+  docsDeleteLoading,
+  singleDocDelLoading,
+}) => {
+  const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
   const [data, setData] = useState(folderList)
   const [currentData, setCurrentData] = useState(folderList)
+  const [folderContent, setFolderContent] = useState(folderDocuments)
+  const [singleDocumentMoveId, setSingleImageMoveId] = useState<number>()
   const [breadcrumbs, setBreadcrumbs] = useState([
     { title: 'Folders', index: -1 },
   ])
-  const [createAlbumDrawer, setCreateAlbumDrawer] = useState(false)
-  const [createFolder, setCreateFolder] = useState(false)
-  const [newFolderName, setNewFolderName] = useState('')
+  const [createFolderDrawer, setCreateFolderDrawer] = useState(false)
+  const [folderName, setFolderName] = useState('')
+  const [createFolderModal, setCreateFolderModal] = useState(false)
+  const [editFolderId, setEditFolderId] = useState<number | null>(null)
+  const [deleteFolderId, setDeleteFolderId] = useState<number | null>(null)
+  const [deleteFolderModal, setDeleteFolderModal] = useState(false)
+
   const [listView, setListView] = useState(false)
   const [checkedData, setCheckedData] = useState([])
   const [showMenu, setShowMenu] = useState(false)
   const [recentData, setRecentData] = useState([])
   const [selectAll, setSelectAll] = useState(false)
-  const [selectFolderData, setSelectFolderData] = useState([])
-  const [deleteModal, setDeleteModal] = useState(false)
+  const [selectedDocuments, setSelectedDocuments] = useState([])
   const [tempData, setTempData] = useState([])
-  const [recentActionData, setRecentActionData] = useState([] as selectProps[])
-  const [errorMessage, setErrorMessage] = useState('')
+  const [recentActionData, setRecentActionData] = useState([] as SelectProps[])
   const [visibleCreatePopover, setVisibleCreatePopover] = useState(false)
 
-  const onFolderClick = useCallback(
-    (index: number) => {
+  const [uploadModal, setUploadModal] = useState(false)
+
+  useEffect(() => {
+    setFolderContent(folderDocuments)
+    setShowMenu(false)
+    setSelectedDocuments([])
+    // setImageDeleteModal(false)
+  }, [folderDocuments])
+
+  useEffect(() => {
+    setData(folderList)
+    setFolderName('')
+    setEditFolderId(null)
+    setDeleteFolderId(null)
+    setCreateFolderModal(false)
+    setDeleteFolderModal(false)
+    if (!currentData || currentData?.id === 0) {
+      setCurrentData(folderList)
+    } else {
+      const currAlbum = folderFinder(folderList?.folder, currentData?.id)
+      if (currAlbum) {
+        setCurrentData(currAlbum)
+      }
+    }
+  }, [folderList, currentData])
+
+  const onDocumentFolderClick = useCallback(
+    (id: number) => {
+      const index = currentData?.folder?.findIndex((el) => el?.id === id)
       let temp = [...breadcrumbs]
       temp = [
         ...temp,
@@ -80,10 +174,12 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
       ]
       setBreadcrumbs(temp)
       setCurrentData(currentData.folder[index])
-      setSelectFolderData([])
+      onFolderClick?.(currentData.folder[index]?.id)
+
+      setSelectedDocuments([])
       setCheckedData([])
     },
-    [breadcrumbs, currentData.folder]
+    [breadcrumbs, currentData.folder, onFolderClick]
   )
 
   const onBreadCrumbsClick = (index) => {
@@ -99,47 +195,29 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
     setBreadcrumbs(breadcrumbs.slice(0, index + 1))
   }
 
-  const createContent = (
+  const CreateContent = () => (
     <div className={styles.createContent}>
+      {currentData?.id === 0 && (
+        <div
+          className={styles.contentItem}
+          style={{ padding: '10px', cursor: 'pointer' }}
+          onClick={() => {
+            setCreateFolderModal(() => true)
+            setVisibleCreatePopover(() => false)
+            setCreateFolderDrawer(() => false)
+          }}
+        >
+          <FolderOutlined /> New Folder
+        </div>
+      )}
       <div
         className={styles.contentItem}
         style={{ padding: '10px', cursor: 'pointer' }}
-        onClick={() => {
-          setCreateFolder(true)
-          setVisibleCreatePopover((e) => !e)
-        }}
       >
-        <FolderOutlined /> Folder
-      </div>
-      <div
-        className={styles.contentItem}
-        style={{ padding: '10px', cursor: 'pointer' }}
-      >
-        <UploadOutlined /> File upload
+        <UploadOutlined /> File Upload
       </div>
     </div>
   )
-  const handleCreateAlbum = () => {
-    const newFolder = { ...currentData }
-    if (newFolderName !== '') {
-      if (newFolderName.length > 30) {
-        setErrorMessage('Folder max chars should be 30')
-      } else {
-        newFolder.folder.push({
-          folder: [],
-          id: newFolderName,
-          folderTitle: newFolderName,
-          folderContent: [],
-        })
-        setErrorMessage('')
-        setCurrentData(newFolder)
-        setCreateFolder(false)
-        setNewFolderName('')
-      }
-    } else {
-      setErrorMessage('Name is required')
-    }
-  }
 
   const menu = (
     <Menu className={styles.menuItemList}>
@@ -155,7 +233,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
           <FolderOutlined /> {folderValue.folderTitle}
         </Menu.Item>
       ))}
-      <Menu.Item key="New" onClick={() => setCreateFolder((e) => !e)}>
+      <Menu.Item key="New" onClick={() => setCreateFolderModal((e) => !e)}>
         <PlusOutlined />
         <span>New folder</span>
       </Menu.Item>
@@ -186,7 +264,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
   const handleMoveData = (x) => {
     const moveData = currentData
     moveData.folderContent?.map((val) => {
-      if (selectFolderData.includes(val.folderData as never)) {
+      if (selectedDocuments.includes(val.folderData as never)) {
         moveData.folder.map((folderValue) => {
           return (
             folderValue.folderTitle === x.folderTitle &&
@@ -200,7 +278,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
     handlefolderDataDelete()
     Notification(
       NotificationType.success,
-      `${selectFolderData.length} items has been moved from ${moveData.folderTitle} to ${x.folderTitle}`
+      `${selectedDocuments.length} items has been moved from ${moveData.folderTitle} to ${x.folderTitle}`
     )
     setShowMenu(false)
   }
@@ -220,14 +298,14 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
     if (selectAll) {
       setSelectAll(false)
       setShowMenu(false)
-      setSelectFolderData([])
+      setSelectedDocuments([])
     } else {
       setSelectAll(true)
       const x = []
       currentData.folderContent?.map((folderValue) => {
         return x.push(folderValue.folderData as never)
       })
-      setSelectFolderData(x as never)
+      setSelectedDocuments(x as never)
     }
   }
 
@@ -235,7 +313,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
     let deleteData = currentData
     const updateFolderContent = []
     deleteData.folderContent?.map((x) => {
-      if (!selectFolderData.includes(x.folderData as never)) {
+      if (!selectedDocuments.includes(x.folderData as never)) {
         updateFolderContent.push({
           ...x,
         } as never)
@@ -247,7 +325,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
       folderContent: updateFolderContent,
     }
     setCurrentData(deleteData)
-    setSelectFolderData([])
+    setSelectedDocuments([])
     setShowMenu(false)
   }
 
@@ -288,7 +366,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
     setCurrentData(val)
   }
 
-  const handleBulkDownload = () => selectFolderData.map((x) => dataDownload(x))
+  const handleBulkDownload = () => selectedDocuments.map((x) => dataDownload(x))
 
   const dataDownload = (val) => {
     const link = document.createElement('a')
@@ -337,13 +415,14 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
             {!isMobile ? (
               <Popover
                 placement="bottomRight"
-                content={createContent}
+                content={<CreateContent />}
                 trigger="click"
                 visible={visibleCreatePopover}
               >
                 <button
                   className={styles.btnCreate}
                   onClick={() => setVisibleCreatePopover((e) => !e)}
+                  onBlur={() => setVisibleCreatePopover(() => false)}
                 >
                   <PlusOutlined /> Create
                 </button>
@@ -352,18 +431,18 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
               <>
                 <button
                   className={styles.btnCreate}
-                  onClick={() => setCreateAlbumDrawer((e) => !e)}
+                  onClick={() => setCreateFolderDrawer((e) => !e)}
                 >
                   <PlusOutlined /> Create
                 </button>
                 <Drawer
                   placement={'bottom'}
-                  closable={false}
-                  onClose={() => setCreateAlbumDrawer((e) => !e)}
-                  visible={createAlbumDrawer}
+                  closable={true}
+                  onClose={() => setCreateFolderDrawer((e) => !e)}
+                  visible={createFolderDrawer}
                   className={styles.createContentMobile}
                 >
-                  {createContent}
+                  <CreateContent />
                 </Drawer>
               </>
             )}
@@ -420,11 +499,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
                     <Share /> Share {`(${checkedData.length})`}
                   </span>
                 </Button>
-                <Button type="ghost">
-                  <EditOutlined />
-                  Rename {`(${checkedData.length})`}
-                </Button>
-                <Button type="ghost" onClick={() => setDeleteModal(true)}>
+                <Button type="ghost" onClick={() => setDeleteFolderModal(true)}>
                   <DeleteOutlined />
                   Delete
                   {`(${checkedData.length})`}
@@ -435,7 +510,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
         </div>
       )}
 
-      {showMenu && selectFolderData.length > 0 && (
+      {showMenu && selectedDocuments.length > 0 && (
         <div>
           <div className={styles.headerText}>
             <button
@@ -450,34 +525,30 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
               <div className={styles.rightSide}>
                 <Button type="ghost" onClick={() => handleBulkDownload()}>
                   <DownloadOutlined />
-                  Download {`(${selectFolderData.length})`}
+                  Download {`(${selectedDocuments.length})`}
                 </Button>
                 <Dropdown overlay={menu} placement="bottomRight">
                   <Button type="ghost">
                     <EnterOutlined />
-                    Move to {`(${selectFolderData.length})`}
+                    Move to {`(${selectedDocuments.length})`}
                   </Button>
                 </Dropdown>
                 <Button className={styles.shareTextBtn} type="ghost">
                   <span>
-                    <Share /> Share {`(${selectFolderData.length})`}
+                    <Share /> Share {`(${selectedDocuments.length})`}
                   </span>
                 </Button>
-                <Button type="ghost">
-                  <EditOutlined />
-                  Rename {`(${selectFolderData.length})`}
-                </Button>
-                <Button type="ghost" onClick={() => setDeleteModal(true)}>
+                <Button type="ghost" onClick={() => setDeleteFolderModal(true)}>
                   <DeleteOutlined />
                   Delete
-                  {`(${selectFolderData.length})`}
+                  {`(${selectedDocuments.length})`}
                 </Button>
               </div>
             )}
           </div>
         </div>
       )}
-      {data.folder.length === 0 ? (
+      {data.folder.length === 0 && data.contentCount === 0 ? (
         <div className={styles.emptyDocument}>
           <img src={empty} alt={'empty'} />
           <div className={styles.emptyDocumentTitle}>
@@ -491,25 +562,38 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
           </div>
         </div>
       ) : (
-        <div>
-          <FolderData
-            data={currentData}
-            onFolderClick={onFolderClick}
-            listView={listView}
-            setCheckedData={setCheckedData}
-            checkedData={checkedData}
-            setShowMenu={setShowMenu}
-            setRecentData={setRecentData}
-            setSelectFolderData={setSelectFolderData}
-            selectFolderData={selectFolderData}
-            setTempData={setTempData}
-            tempData={tempData}
-            handleDelete={handleDelete}
-            setRecentActionData={setRecentActionData}
-            recentActionData={recentActionData as []}
-            setCurrentData={setCurrentData}
-          />
-        </div>
+        <FolderData
+          data={{ ...currentData, ...folderContent }}
+          onFolderClick={onDocumentFolderClick}
+          listView={listView}
+          setCheckedData={setCheckedData}
+          checkedData={checkedData}
+          setShowMenu={setShowMenu}
+          setRecentData={setRecentData}
+          setSelectedDocuments={setSelectedDocuments}
+          selectedDocuments={selectedDocuments}
+          setTempData={setTempData}
+          tempData={tempData}
+          handleDelete={handleDelete}
+          setRecentActionData={setRecentActionData}
+          recentActionData={recentActionData as []}
+          setCurrentData={setCurrentData}
+          onFolderRename={(id) => {
+            const editFolder = currentData?.folder?.find((dt) => dt?.id === id)
+            if (editFolder) {
+              setEditFolderId(editFolder?.id)
+              setFolderName(editFolder?.folderTitle)
+              setCreateFolderModal((e) => !e)
+            }
+          }}
+          onFolderDelete={(id) => {
+            const delFolder = currentData?.folder?.find((dt) => dt?.id === id)
+            if (delFolder) {
+              setDeleteFolderId(delFolder?.id)
+              setDeleteFolderModal((e) => !e)
+            }
+          }}
+        />
       )}
       {isMobile && showMenu && (
         <div className={styles.bottomBar}>
@@ -541,56 +625,93 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({ folderList }) => {
           />
         </div>
       )}
+
+      <FileUploadModal
+        albumId={currentData?.id || 0}
+        uploadingImages={uploadingDocs}
+        visible={uploadModal}
+        setUploadingImages={setUploadingDocs}
+        onClose={(done?: boolean) => {
+          setUploadModal((e) => !e)
+          if (done) {
+            setUploadingDocs?.([])
+          }
+        }}
+        uploadImage={onDocUpload}
+        removeImage={(fileId: number) => onDocRemove?.([fileId])}
+        onCancelUpload={onUploadCancel}
+      />
+
       <BasicModal
         modalWidth={600}
-        onCancel={() => setCreateFolder((e) => !e)}
-        onDelete={() => console.log()}
-        onOk={() => {
-          handleCreateAlbum()
+        onCancel={() => {
+          setFolderName('')
+          setEditFolderId(null)
+          setCreateFolderModal((e) => !e)
         }}
-        onSpecialBooleanClick={() => console.log()}
-        title={'Create folder'}
-        visible={createFolder}
-        newButtonText={'Create'}
+        onOk={() => {
+          if (folderName) {
+            if (editFolderId) {
+              const editedFolder = data?.folder?.find(
+                (el) => el?.id === editFolderId
+              )
+              onFolderUpdate?.({
+                ...editedFolder,
+                folderTitle: folderName,
+              } as FolderProps)
+            } else {
+              if (singleDocumentMoveId) {
+                const doc = folderContent?.find(
+                  (el) => el?.id === singleDocumentMoveId
+                )
+                if (doc) onFolderCreate?.(folderName, [doc])
+              } else {
+                onFolderCreate?.(folderName, selectedDocuments)
+              }
+            }
+          }
+        }}
+        title={editFolderId ? 'Edit Folder' : 'Create Folder'}
+        visible={createFolderModal}
+        newButtonText={editFolderId ? 'Update' : 'Create'}
+        loading={folderCreateLoading || folderUpdateLoading}
       >
         <div className={styles.modalContent}>
           <label>Name</label>
-          <FormikInput
+          <Input
+            autoFocus
             name="name"
             placeholder={'Create new folder'}
-            value={newFolderName}
-            required={true}
-            onChange={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setNewFolderName(e.target.value)
-            }}
+            value={folderName}
+            onChange={(e) => setFolderName(e.target.value)}
           />
-          <p style={{ color: 'red' }}>{errorMessage}</p>
         </div>
       </BasicModal>
+
       <Modal
-        title={'Delete forever ?'}
+        title={'Delete forever?'}
         onCancel={() => {
-          setDeleteModal((e) => !e)
+          setDeleteFolderId(null)
+          setDeleteFolderModal((e) => !e)
         }}
         onOk={() => {
-          checkedData.length > 0
-            ? handleDeleteRecent()
-            : handlefolderDataDelete()
-          setDeleteModal((e) => !e)
+          const deleteFolder = currentData?.folder?.find(
+            (el) => el?.id === deleteFolderId
+          )
+          if (deleteFolder) onFolderDelete?.(deleteFolder)
         }}
-        visible={deleteModal}
+        visible={deleteFolderModal}
         className={styles.deleteModal}
         cancelText={'Cancel'}
         okText={'Delete forever'}
+        confirmLoading={folderDeleteLoading}
       >
         <div className={styles.modalContent}>
           <p>
-            {checkedData.length > 0
-              ? checkedData.length
-              : selectFolderData.length}{' '}
-            {`items will be deleted forever and you won't be able to restore them.`}
+            {selectedDocuments.length > 1 ? selectedDocuments.length : 1}{' '}
+            {`item${
+              selectedDocuments.length > 1 ? 's' : ''
+            } will be deleted forever and you won't be able to restore them.`}
           </p>
         </div>
       </Modal>
