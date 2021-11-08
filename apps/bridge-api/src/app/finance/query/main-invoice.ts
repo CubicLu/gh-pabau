@@ -1,4 +1,4 @@
-import { InvSale, Prisma } from '.prisma/client'
+import { InvSale } from '.prisma/client'
 import { extendType, intArg, list } from 'nexus'
 import { Context } from '../../../context'
 
