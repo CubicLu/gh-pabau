@@ -154,7 +154,7 @@ interface P {
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
-  activeTab?: string
+  activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
   customFields?: FieldOrderItem[]
@@ -179,7 +179,7 @@ const ClientCardModal: FC<P> = ({
   handleDeleteNote,
   onClose,
   tabs,
-  activeTab,
+  activeTab = 'dashboard',
   children,
   onTabChanged,
   referredByOptions,
@@ -837,6 +837,8 @@ const ClientCardModal: FC<P> = ({
     </div>
   )
 
+  const haveSubTabs = ['financial', 'gift-vouchers']
+
   //TODO: remove the Modal from top level (it'll break css:( )
   return (
     <Modal
@@ -983,12 +985,13 @@ const ClientCardModal: FC<P> = ({
                 minHeight={isMobile ? '1px' : '750px'}
               >
                 <div
-                  className={styles.clientCode}
-                  style={{ padding: cssClass ? '0px' : '12px', height: '100%' }}
+                  className={
+                    haveSubTabs.includes(activeTab)
+                      ? styles.customTabs
+                      : styles.tab
+                  }
                 >
-                  <ClientDashboardLayout cssClass={cssClass}>
-                    {children}
-                  </ClientDashboardLayout>
+                  <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}
                 {/*  <ClientAppointmentsLayout isEmpty={true} />*/}

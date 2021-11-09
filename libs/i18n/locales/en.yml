@@ -708,6 +708,8 @@ en:
   setup.senders.create.advanced.tagvalue.placeholder: 'Merge tag value'
   setup.senders.create.addnew: 'Add new'
   setup.senders.edit: 'Edit a sender'
+  setup.senders.create.senders.notification.success: 'You have successfully created senders'
+  setup.senders.create.senders.notification.error: 'Error! While creating a senders'
   setup.issuing.title: 'Issuing Company'
   setup.issuing.title.lower: 'issuing company'
   setup.issuing.title.short: 'issuing company'
@@ -4972,6 +4974,8 @@ en:
   ui.clientcard-prescriptions.options.edit: Edit
   ui.clientcard-prescriptions.options.repeat: Repeat
   ui.clientcard-prescriptions.options.delete: Delete
+  ui.clientcard.photos.notification.delete.success: 'Successfully! {{count}} image{{suffix}} were deleted'
+  ui.clientcard.photos.notification.delete.error: 'Error! {{count}} image{{suffix}} were not deleted'
   ui.client.giftvoucher.tab.active: Active
   ui.client.giftvoucher.tab.expired: Expired
   ui.vouchercard.back.title: 'Terms & Conditions'
@@ -5175,7 +5179,7 @@ en:
   ui.client.giftvoucher.pricelabel: 'Voucher Value'
   ui.client.giftvoucher.soldpricelabel: 'Sold 5'
   ui.client.giftvoucher.relationlabel: 'Redeem on all services'
-  ui.vouchercard.back.subtitle: 'lorem ipsum, quia dolor sit, amet, consectetur, adipiscivelit, sed quia non numquam eius modi tempora incidunt, utlabore et dolore magnam aliquam quaerat voluptatem.'
+  ui.vouchercard.back.subtitle: 'This voucher is non-refundable and cannot be exchanged for cash in part or full. It is valid until the date mentioned on the voucher.'
   client.appointments.layout.tab.all.bookings: 'All bookings'
   client.appointments.layout.tab.classes: Classes
   client.appointments.layout.tab.cancelled: Cancelled

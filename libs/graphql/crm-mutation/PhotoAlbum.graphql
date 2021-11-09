@@ -3,6 +3,7 @@ fragment PhotoAlbumFields on PhotoAlbum {
   album_name
   contact_id
   company_id
+  album_type
   creation_date
   modified_date
 }
