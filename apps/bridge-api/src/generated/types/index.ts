@@ -1,3 +1,4 @@
+export * from './CustomFieldDisplay'
 export * from './MedicalFormAdvancedSetting'
 export * from './GroupPermission'
 export * from './XeroIntegration'
