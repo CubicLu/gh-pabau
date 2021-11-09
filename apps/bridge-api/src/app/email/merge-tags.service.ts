@@ -15,8 +15,8 @@ export async function prepareMessage(
         },
         include: {
           Insurance: true,
-          ContactInsurance: true,
-          LoyaltyPoint: true,
+          InsuranceCompany: true,
+          LoyaltyPoints: true,
           Booking: {
             where: { id: relation.booking_id },
           },

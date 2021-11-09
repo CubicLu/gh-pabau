@@ -17,6 +17,7 @@ import {
   BookingDetailResponseType,
   CancelBookingType,
 } from '../../app/booking/nexus-type'
+import { sendEmailWithTags } from '../../app/email/email-service'
 
 const BookingInputTypes = inputObjectType({
   name: 'BookingInputTypes',
@@ -45,18 +46,6 @@ export const BookingExtended = extendType({
         return await ctx.prisma.user.findMany({
           where: {
             id: { in: ids },
-          },
-        })
-      },
-    })
-    t.field('BookedBy', {
-      type: nonNull(list('User')),
-      async resolve(parent: any, args, ctx: Context) {
-        return await ctx.prisma.user.findMany({
-          where: {
-            id: {
-              equals: parent.created_by_uid,
-            },
           },
         })
       },
@@ -117,7 +106,15 @@ export const CancelAppointment = extendType({
         { booking_id, reason, reason_id, type },
         ctx: Context
       ) {
-        const cancalBookingStatus = await ctx.prisma.booking.update({
+        const responseData = {
+          status: 'Success',
+          appointment_status: 'Cancelled',
+          send_sms: false,
+          num_message_send: 0,
+          email_send: false,
+        }
+
+        const updateBooking = await ctx.prisma.booking.update({
           where: {
             id: booking_id,
           },
@@ -125,6 +122,7 @@ export const CancelAppointment = extendType({
             status: 'Cancelled',
           },
         })
+        console.log(updateBooking.contact_id)
         const newChangeLogData = []
         const getChangeLogData = await ctx.prisma.bookingChangeLog.findFirst({
           where: {
@@ -137,7 +135,7 @@ export const CancelAppointment = extendType({
           status: 'Cancelled',
         }
         newChangeLogData.push(changelogData)
-        const changeStatus = await ctx.prisma.bookingChangeLog.update({
+        await ctx.prisma.bookingChangeLog.update({
           where: {
             appointment_id: booking_id,
           },
@@ -145,8 +143,7 @@ export const CancelAppointment = extendType({
             changelog: JSON.stringify(newChangeLogData),
           },
         })
-
-        const cancalBooking = await ctx.prisma.bookingCancel.create({
+        await ctx.prisma.bookingCancel.create({
           data: {
             appointment_id: booking_id,
             type: type,
@@ -155,13 +152,49 @@ export const CancelAppointment = extendType({
             cancel_reason_id: reason_id,
           },
         })
-        const returnData = {
-          cancalBooking,
-          changeStatus,
-          cancalBookingStatus,
+
+        const settings = await ctx.prisma.bookingSetting.findFirst()
+        if (settings.send_sms > 0 && settings.cancel_sms_tmpl > 0) {
+          const getCancelSMSMessage = await ctx.prisma.messageTemplate.findFirst(
+            {
+              where: {
+                template_id: settings.cancel_sms_tmpl,
+                template_type: 'sms',
+              },
+            }
+          )
+          // TO DO sendSMS
+          if (getCancelSMSMessage) {
+            responseData.send_email = true
+          }
         }
-        console.log(returnData)
-        return cancalBookingStatus
+        if (settings.send_email > 0 && settings.cancel_email_tmpl > 0) {
+          const getCancelEmailMessage = await ctx.prisma.messageTemplate.findFirst(
+            {
+              where: {
+                template_id: settings.cancel_email_tmpl,
+                template_type: 'email',
+              },
+            }
+          )
+          const send_email = false
+          const emailArgs = {
+            to: 'branko@pabau.com',
+            subject: getCancelEmailMessage.subject,
+            html: getCancelEmailMessage.message,
+            relations: {
+              contact_id: updateBooking.contact_id,
+              staff_id: ctx.authenticated.user,
+              booking_id: booking_id,
+            },
+          }
+          const sendEmail = await sendEmailWithTags(emailArgs, ctx)
+          if (sendEmail) {
+            responseData.send_email = true
+          }
+        }
+
+        return responseData
       },
     })
   },

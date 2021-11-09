@@ -63,6 +63,10 @@ const BookingCounts = objectType({
 export const CancelBookingType = objectType({
   name: 'cancelAppointment',
   definition(t) {
-    t.int('id')
+    t.string('appointment_status')
+    t.string('status')
+    t.boolean('send_sms')
+    t.int('num_message_send')
+    t.boolean('email_send')
   },
 })

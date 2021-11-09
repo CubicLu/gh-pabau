@@ -44,5 +44,7 @@ export const sendEmailWithTags = async (
       return true
     })
     .catch((error) => {
+      console.log(error)
+      console.log(error.response.body)
       return false
     })
