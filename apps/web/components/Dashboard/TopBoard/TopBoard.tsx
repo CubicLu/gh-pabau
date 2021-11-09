@@ -65,7 +65,7 @@ export const TopBoard: FC<ITopBoard> = ({
                 </div>
                 <div className={styles.cardContent}>
                   {!loading ? (
-                    <div className={styles.title}>{newClientCount}</div>
+                    <div className={styles.title}>{newClientCount ?? 0}</div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
                   )}
@@ -99,7 +99,12 @@ export const TopBoard: FC<ITopBoard> = ({
                   {!loading ? (
                     <div className={styles.title}>
                       {stringToCurrencySignConverter(user.me?.currency)}
-                      {avgBill}
+                      {Number.parseInt(avgBill ?? '0').toLocaleString(
+                        undefined,
+                        {
+                          maximumFractionDigits: 2,
+                        }
+                      )}
                     </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
@@ -136,7 +141,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   {!loading ? (
                     <div className={styles.title}>
                       {stringToCurrencySignConverter(user.me?.currency)}
-                      {revPerHour}
+                      {Number.parseFloat(revPerHour).toLocaleString()}
                     </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
@@ -177,7 +182,8 @@ export const TopBoard: FC<ITopBoard> = ({
                     <div className={styles.description}>
                       {t('dashboard.utilization', {
                         fallbackLng: 'en',
-                      })}
+                      })}{' '}
+                      (Coming soon)
                     </div>
                   ) : (
                     <Skeleton.Input active className={styles.descSkeleton} />
@@ -197,7 +203,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   <div className={styles.topheader}>
                     <div className={styles.title}>
                       {!loading ? (
-                        totalBooking.count
+                        totalBooking.count ?? 0
                       ) : (
                         <Skeleton.Input
                           active
@@ -221,7 +227,7 @@ export const TopBoard: FC<ITopBoard> = ({
 
                     <div className={styles.description}>
                       {!loading ? (
-                        totalBooking.per + ' ' + filterRange
+                        (totalBooking.per ?? '0%') + ' ' + filterRange
                       ) : (
                         <Skeleton.Input
                           active
@@ -231,32 +237,34 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                   </div>
                 </Row>
-                {appointment?.map((item, index) => (
-                  <Row className={styles.record} key={index}>
-                    <div className={styles.content}>
-                      <div className={`${styles.text} ${styles.label}`}>
-                        {!loading ? (
-                          item.label
-                        ) : (
-                          <Skeleton.Input
-                            active
-                            className={styles.countSkeleton}
-                          />
-                        )}
+                <div className={styles.apptContant}>
+                  {appointment?.map((item, index) => (
+                    <Row className={styles.record} key={index}>
+                      <div className={styles.content}>
+                        <div className={`${styles.text} ${styles.label}`}>
+                          {!loading ? (
+                            item.label
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.text}>
+                          {!loading ? (
+                            item.count + ` (${item.per})`
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
                       </div>
-                      <div className={styles.text}>
-                        {!loading ? (
-                          item.count + ` (${item.per})`
-                        ) : (
-                          <Skeleton.Input
-                            active
-                            className={styles.countSkeleton}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </Row>
-                ))}
+                    </Row>
+                  ))}
+                </div>
               </Col>
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
@@ -264,7 +272,9 @@ export const TopBoard: FC<ITopBoard> = ({
                     <div className={styles.title}>
                       {!loading ? (
                         stringToCurrencySignConverter(user.me?.currency) +
-                        (totalSalesCount.count ?? 0).toFixed(2)
+                        (totalSalesCount.count ?? 0).toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                        })
                       ) : (
                         <Skeleton.Input
                           active
@@ -286,7 +296,7 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                     <div className={styles.description}>
                       {!loading ? (
-                        totalSalesCount.per + ' ' + filterRange
+                        (totalSalesCount.per ?? '0%') + ' ' + filterRange
                       ) : (
                         <Skeleton.Input
                           active
@@ -296,40 +306,42 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                   </div>
                 </Row>
-                {sales?.map((item, index) => (
-                  <Row className={styles.record} key={index}>
-                    <div className={styles.content}>
-                      <div className={`${styles.text} ${styles.label}`}>
-                        {!loading ? (
-                          item.label
-                        ) : (
-                          <Skeleton.Input
-                            active
-                            className={styles.countSkeleton}
-                          />
-                        )}
+                <div className={styles.apptContant}>
+                  {sales?.map((item, index) => (
+                    <Row className={styles.record} key={index}>
+                      <div className={styles.content}>
+                        <div className={`${styles.text} ${styles.label}`}>
+                          {!loading ? (
+                            item.label
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.text}>
+                          {!loading ? (
+                            item.count + ` (${item.per})`
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
                       </div>
-                      <div className={styles.text}>
-                        {!loading ? (
-                          item.count + ` (${item.per})`
-                        ) : (
-                          <Skeleton.Input
-                            active
-                            className={styles.countSkeleton}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </Row>
-                ))}
+                    </Row>
+                  ))}
+                </div>
               </Col>
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
                   <div className={styles.topheader}>
                     <div className={styles.title}>
                       {!loading ? (
-                        totalOnlineBooking.count +
-                        ` (${totalOnlineBooking.per})`
+                        (totalOnlineBooking.count ?? 0) +
+                        ` (${totalOnlineBooking.per ?? '0%'})`
                       ) : (
                         <Skeleton.Input
                           active
@@ -351,7 +363,7 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                     <div className={styles.description}>
                       {!loading ? (
-                        totalOnlineBooking.per + ' ' + filterRange
+                        (totalOnlineBooking.per ?? '0%') + ' ' + filterRange
                       ) : (
                         <Skeleton.Input
                           active
@@ -361,32 +373,34 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                   </div>
                 </Row>
-                {onlineAppointment?.map((item, index) => (
-                  <Row className={styles.record} key={index}>
-                    <div className={styles.content}>
-                      <div className={`${styles.text} ${styles.label}`}>
-                        {!loading ? (
-                          item.label
-                        ) : (
-                          <Skeleton.Input
-                            active
-                            className={styles.countSkeleton}
-                          />
-                        )}
+                <div className={styles.apptContant}>
+                  {onlineAppointment?.map((item, index) => (
+                    <Row className={styles.record} key={index}>
+                      <div className={styles.content}>
+                        <div className={`${styles.text} ${styles.label}`}>
+                          {!loading ? (
+                            item.label
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.text}>
+                          {!loading ? (
+                            item.count + ` (${item.per})`
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
                       </div>
-                      <div className={styles.text}>
-                        {!loading ? (
-                          item.count + ` (${item.per})`
-                        ) : (
-                          <Skeleton.Input
-                            active
-                            className={styles.countSkeleton}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </Row>
-                ))}
+                    </Row>
+                  ))}
+                </div>
               </Col>
             </Row>
           </Col>

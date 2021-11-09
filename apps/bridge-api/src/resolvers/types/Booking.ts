@@ -1,5 +1,23 @@
-import { extendType, list, nonNull } from 'nexus'
+import { extendType, list, nonNull, arg, inputObjectType } from 'nexus'
 import { Context } from '../../context'
+import {
+  retrieveAllBookingStatusCount,
+  retrieveAllBookingChartData,
+} from '../../app/booking/statuses'
+import {
+  BookingCountResponseType,
+  BookingDetailResponseType,
+} from '../../app/booking/nexus-type'
+
+const BookingInputTypes = inputObjectType({
+  name: 'BookingInputTypes',
+  definition(t) {
+    t.decimal('start_date')
+    t.decimal('end_date')
+    t.int('location_id')
+    t.int('user_id')
+  },
+})
 
 export const BookingExtended = extendType({
   type: 'Booking',
@@ -32,6 +50,43 @@ export const BookingExtended = extendType({
             },
           },
         })
+      },
+    })
+  },
+})
+
+export const BookingStatus = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('getBookingStatusCount', {
+      type: BookingCountResponseType,
+      args: {
+        data: arg({ type: BookingInputTypes }),
+      },
+      async resolve(_root, { data }, ctx: Context) {
+        const allBookingCounts = await retrieveAllBookingStatusCount(
+          ctx,
+          data,
+          false
+        )
+        const onlineBookingCounts = await retrieveAllBookingStatusCount(
+          ctx,
+          data,
+          true
+        )
+        return {
+          allBookingCounts: allBookingCounts,
+          onlineBookingCounts: onlineBookingCounts,
+        }
+      },
+    })
+    t.field('getBookingChartDetail', {
+      type: BookingDetailResponseType,
+      args: {
+        data: arg({ type: BookingInputTypes }),
+      },
+      async resolve(_root, { data }, ctx: Context) {
+        return await retrieveAllBookingChartData(ctx, data)
       },
     })
   },

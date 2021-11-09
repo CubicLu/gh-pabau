@@ -173,3 +173,99 @@ export const StatementSaleData = objectType({
     t.field('payments', { type: PaymentsDetail })
   },
 })
+
+const CountDetail = objectType({
+  name: 'salesList',
+  definition(t) {
+    t.string('label')
+    t.int('count')
+    t.string('per')
+  },
+})
+
+const SalesCount = objectType({
+  name: 'salesCount',
+  definition(t) {
+    t.string('totalAvailableCategoryTypePer')
+    t.int('totalAvailableCategoryTypeCount')
+    t.float('totalAvailableCategoryTypeAmount')
+    t.list.field('salesList', { type: CountDetail })
+  },
+})
+
+const ChartValue = objectType({
+  name: 'chartData',
+  definition(t) {
+    t.string('label')
+    t.int('value')
+  },
+})
+
+const SaleChartData = objectType({
+  name: 'salesByProductCategoryType',
+  definition(t) {
+    t.string('status')
+    t.list.field('chartDataSet', { type: ChartValue })
+  },
+})
+
+const salesByProductCategoryType = objectType({
+  name: 'allSales',
+  definition(t) {
+    t.list.field('salesByProductCategoryType', { type: SaleChartData })
+  },
+})
+
+const retailColumns = objectType({
+  name: 'retailSalesDetails',
+  definition(t) {
+    t.string('name')
+    t.int('units')
+    t.float('value')
+    t.string('per')
+  },
+})
+
+const retailSalesData = objectType({
+  name: 'retailSales',
+  definition(t) {
+    t.list.field('retailSalesDetails', { type: retailColumns })
+  },
+})
+
+const serviceColumns = objectType({
+  name: 'serviceSalesDetails',
+  definition(t) {
+    t.string('name')
+    t.int('units')
+    t.float('value')
+    t.string('per')
+  },
+})
+
+const serviceSalesData = objectType({
+  name: 'serviceSales',
+  definition(t) {
+    t.list.field('serviceSalesDetails', { type: serviceColumns })
+  },
+})
+
+const otherSalesDetail = objectType({
+  name: 'otherSalesDetails',
+  definition(t) {
+    t.int('newClientCount')
+    t.string('avgBiller')
+    t.string('RevPerhour')
+  },
+})
+
+export const FinanceResponseType = objectType({
+  name: 'financeDetails',
+  definition(t) {
+    t.field('salesCount', { type: SalesCount })
+    t.field('allSales', { type: salesByProductCategoryType })
+    t.field('retailSales', { type: retailSalesData })
+    t.field('serviceSales', { type: serviceSalesData })
+    t.field('otherSalesDetails', { type: otherSalesDetail })
+  },
+})

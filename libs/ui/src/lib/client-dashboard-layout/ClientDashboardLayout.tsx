@@ -1,10 +1,18 @@
 import React, { FC } from 'react'
 import styles from './ClientDashboardLayout.module.less'
 
-export const ClientDashboardLayout: FC = ({ children }) => (
+interface P {
+  cssClass?: string
+}
+
+export const ClientDashboardLayout: FC<P> = ({ children, cssClass }) => (
   <div className={styles.clientDashboardLayout}>
     {/* ticker tiles */}
-    <div>{children}</div>
+    <div
+      className={cssClass ? styles.cardCoustomWrapper : styles.childernWrapper}
+    >
+      {children}
+    </div>
     {/* acitivity part */}
     <div></div>
   </div>

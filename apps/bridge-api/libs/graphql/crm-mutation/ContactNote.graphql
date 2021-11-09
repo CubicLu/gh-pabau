@@ -1,0 +1,44 @@
+fragment ContactNoteFields on ContactNote {
+  ID
+  OwnerID
+  ContactID
+  Note
+  Status
+  CreatedDate
+  IpAddress
+  imported
+}
+
+fragment ContactNote on ContactNote {
+  ...ContactNoteFields
+  User {
+    ...UserFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneContactNote($data: ContactNoteCreateInput!) {
+  createOneContactNote(data: $data) {
+    ...ContactNote
+  }
+}
+
+mutation updateOneContactNote($where: ContactNoteWhereUniqueInput!, $data: ContactNoteUpdateInput!) {
+  updateOneContactNote(where: $where, data: $data) {
+    ...ContactNote
+  }
+}
+
+mutation deleteOneContactNote($where: ContactNoteWhereUniqueInput!) {
+  deleteOneContactNote(where: $where) {
+    ...ContactNote
+  }
+}
+
+mutation updateManyContactNote($where: ContactNoteWhereInput, $data: ContactNoteUpdateManyMutationInput!) {
+  updateManyContactNote(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,44 @@
+fragment ServiceUserTierFields on ServiceUserTier {
+  id
+  service_id
+  user_id
+  company_id
+  price
+  duration
+  staff_commission
+  participant_commission
+}
+
+fragment ServiceUserTier on ServiceUserTier {
+  ...ServiceUserTierFields
+  CompanyService {
+    ...CompanyServiceFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneServiceUserTier($data: ServiceUserTierCreateInput!) {
+  createOneServiceUserTier(data: $data) {
+    ...ServiceUserTier
+  }
+}
+
+mutation updateOneServiceUserTier($where: ServiceUserTierWhereUniqueInput!, $data: ServiceUserTierUpdateInput!) {
+  updateOneServiceUserTier(where: $where, data: $data) {
+    ...ServiceUserTier
+  }
+}
+
+mutation deleteOneServiceUserTier($where: ServiceUserTierWhereUniqueInput!) {
+  deleteOneServiceUserTier(where: $where) {
+    ...ServiceUserTier
+  }
+}
+
+mutation updateManyServiceUserTier($where: ServiceUserTierWhereInput, $data: ServiceUserTierUpdateManyMutationInput!) {
+  updateManyServiceUserTier(where: $where, data: $data) {
+    count
+  }
+}

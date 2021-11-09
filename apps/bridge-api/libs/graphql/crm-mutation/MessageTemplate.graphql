@@ -1,0 +1,62 @@
+fragment MessageTemplateFields on MessageTemplate {
+  template_id
+  company_id
+  template_name
+  subject
+  message
+  created_by
+  template_type
+  created_at
+  date_changed_at
+  template_sub_type
+  template_sub_type_service
+  parent_id
+  header
+  footer
+  exclude_margins
+  template_group
+  subtype_letter
+  word_template
+  is_default
+  folder_id
+}
+
+fragment MessageTemplate on MessageTemplate {
+  ...MessageTemplateFields
+  Company {
+    ...CompanyFields
+  }
+  TemplateFolder {
+    ...TemplateFolderFields
+  }
+  User {
+    ...UserFields
+  }
+  ParrentTemplate {
+    ...MessageTemplateFields
+  }
+}
+
+mutation createOneMessageTemplate($data: MessageTemplateCreateInput!) {
+  createOneMessageTemplate(data: $data) {
+    ...MessageTemplate
+  }
+}
+
+mutation updateOneMessageTemplate($where: MessageTemplateWhereUniqueInput!, $data: MessageTemplateUpdateInput!) {
+  updateOneMessageTemplate(where: $where, data: $data) {
+    ...MessageTemplate
+  }
+}
+
+mutation deleteOneMessageTemplate($where: MessageTemplateWhereUniqueInput!) {
+  deleteOneMessageTemplate(where: $where) {
+    ...MessageTemplate
+  }
+}
+
+mutation updateManyMessageTemplate($where: MessageTemplateWhereInput, $data: MessageTemplateUpdateManyMutationInput!) {
+  updateManyMessageTemplate(where: $where, data: $data) {
+    count
+  }
+}

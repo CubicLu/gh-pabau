@@ -1,0 +1,47 @@
+fragment RecallFields on Recall {
+  id
+  recall_name
+  recall_mode
+  recall_period
+  company_id
+  send_sms
+  recall_category_id
+  send_email
+  auto_recall
+  auto_recall_products_ids
+  auto_recall_trigger
+  auto_recall_services_ids
+  email_from
+  sms_from
+}
+
+fragment Recall on Recall {
+  ...RecallFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneRecall($data: RecallCreateInput!) {
+  createOneRecall(data: $data) {
+    ...Recall
+  }
+}
+
+mutation updateOneRecall($where: RecallWhereUniqueInput!, $data: RecallUpdateInput!) {
+  updateOneRecall(where: $where, data: $data) {
+    ...Recall
+  }
+}
+
+mutation deleteOneRecall($where: RecallWhereUniqueInput!) {
+  deleteOneRecall(where: $where) {
+    ...Recall
+  }
+}
+
+mutation updateManyRecall($where: RecallWhereInput, $data: RecallUpdateManyMutationInput!) {
+  updateManyRecall(where: $where, data: $data) {
+    count
+  }
+}

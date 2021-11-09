@@ -1533,6 +1533,34 @@ export const Company = objectType({
         return root.MedicalFormAdvancedSetting
       },
     })
+    t.list.field('MedicalFormContactHistory', {
+      type: 'MedicalFormContactHistory',
+      args: {
+        where: 'MedicalFormContactHistoryWhereInput',
+        orderBy: 'MedicalFormContactHistoryOrderByWithRelationInput',
+        cursor: 'MedicalFormContactHistoryWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactHistoryScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContactHistory
+      },
+    })
+    t.list.field('MedicalAttr', {
+      type: 'MedicalAttr',
+      args: {
+        where: 'MedicalAttrWhereInput',
+        orderBy: 'MedicalAttrOrderByWithRelationInput',
+        cursor: 'MedicalAttrWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalAttrScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalAttr
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {
@@ -1839,6 +1867,62 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.SmsSender
+      },
+    })
+    t.list.field('Pathway', {
+      type: 'Pathway',
+      args: {
+        where: 'PathwayWhereInput',
+        orderBy: 'PathwayOrderByWithRelationInput',
+        cursor: 'PathwayWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Pathway
+      },
+    })
+    t.list.field('PathwayStep', {
+      type: 'PathwayStep',
+      args: {
+        where: 'PathwayStepWhereInput',
+        orderBy: 'PathwayStepOrderByWithRelationInput',
+        cursor: 'PathwayStepWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStep
+      },
+    })
+    t.list.field('CommunicationAttachment', {
+      type: 'CommunicationAttachment',
+      args: {
+        where: 'CommunicationAttachmentWhereInput',
+        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
+        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationAttachment
+      },
+    })
+    t.list.field('Recall', {
+      type: 'Recall',
+      args: {
+        where: 'RecallWhereInput',
+        orderBy: 'RecallOrderByWithRelationInput',
+        cursor: 'RecallWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RecallScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Recall
       },
     })
     t.nullable.field('_count', {

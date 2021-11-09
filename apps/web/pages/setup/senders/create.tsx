@@ -36,12 +36,12 @@ import { Form } from 'formik-antd'
 import {
   CreateOneCompanyEmailDocument,
   CreateOneSmsSenderDocument,
+  GetComSendersDocument,
 } from '@pabau/graphql'
 import { useMutation } from '@apollo/client'
 
 const { Panel } = Collapse
 const { Option } = Select
-
 export const CreateSender: React.FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
@@ -61,7 +61,7 @@ export const CreateSender: React.FC = () => {
         value: '',
       },
     ],
-    visibility: '0',
+    visibility: 0,
   }
   const validation = Yup.object({
     type: Yup.string().required(
@@ -92,6 +92,7 @@ export const CreateSender: React.FC = () => {
         t('setup.senders.create.senders.notification.error')
       )
     },
+    refetchQueries: [{ query: GetComSendersDocument }],
   })
 
   const [addSmsSenders] = useMutation(CreateOneSmsSenderDocument, {
@@ -108,6 +109,7 @@ export const CreateSender: React.FC = () => {
         t('setup.senders.create.senders.notification.error')
       )
     },
+    refetchQueries: [{ query: GetComSendersDocument }],
   })
 
   return (
@@ -129,7 +131,7 @@ export const CreateSender: React.FC = () => {
               default_email: values.isDefaultSender ? 1 : 0,
               enterprise_email: 0,
               merge_tags: '',
-              visibility: Number.parseInt(values.visibility),
+              visibility: Number.parseInt(String(values.visibility)),
             },
           }
           await addEmailSenders({
@@ -144,7 +146,7 @@ export const CreateSender: React.FC = () => {
               smsd_delete: 0,
               is_default: values.isDefaultSender,
               merge_tags: '',
-              enable_replies: values.isEnableReplies ? 1 : 0,
+              // enable_replies: values.isEnableReplies ? 1 : 0,
             },
           }
           await addSmsSenders({
@@ -256,6 +258,7 @@ export const CreateSender: React.FC = () => {
                       handleChange({ target: { value, name: 'fromName' } })
                     }
                   />
+
                   {values.type === 'email' && values.fromName.length > 50 && (
                     <span className={styles.error}>
                       {t(
@@ -387,6 +390,7 @@ export const CreateSender: React.FC = () => {
                         />
                       </div>
                     )}
+
                     {/*<div className={styles.formElement}>*/}
                     {/*  <Space className={styles.switchItem} size={8}>*/}
                     {/*    <Switch*/}
