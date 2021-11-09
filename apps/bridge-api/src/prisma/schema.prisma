@@ -314,6 +314,7 @@ model Company {
   LeadStatus                       LeadStatus[]
   Activity                         Activity[]
   ContactPreference                ContactPreference[]
+  CreditBalance                    CreditBalance[]
 
   ActivityUserState  ActivityUserState[]
   ActivityUserFilter ActivityUserFilter[]
@@ -4982,16 +4983,18 @@ model PathwayStepsTaken {
   @@map("cp_steps_taken")
 }
 
-//model credit_balance {
-//  credit_balance_id Int    @id @default(autoincrement())
-//  company           String
-//  balance           Float  @default(5.00)
-//  balance_currency  Float
-//  auto              Int
-//
-//  @@index([company], name: "company")
-//}
-//
+model CreditBalance {
+  credit_balance_id Int   @id @default(autoincrement())
+  company_id        Int?  @map("company")
+  balance           Float @default(5.00)
+  balance_currency  Float
+  auto              Int
+
+  Company Company? @relation(fields: [company_id], references: [id])
+  @@index([company_id], name: "company_id")
+  @@map("credit_balance")
+}
+
 model CreditNoteType {
   id               Int      @id @default(autoincrement())
   company_id       Int?
