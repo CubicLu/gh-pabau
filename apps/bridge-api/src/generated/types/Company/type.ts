@@ -1939,6 +1939,20 @@ export const Company = objectType({
         return root.Recall
       },
     })
+    t.list.field('CustomFieldDisplay', {
+      type: 'CustomFieldDisplay',
+      args: {
+        where: 'CustomFieldDisplayWhereInput',
+        orderBy: 'CustomFieldDisplayOrderByWithRelationInput',
+        cursor: 'CustomFieldDisplayWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CustomFieldDisplayScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CustomFieldDisplay
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {
