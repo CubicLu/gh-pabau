@@ -1,9 +1,11 @@
-query getServiceCategories{
-  ServiceCategories: findManyServiceCategory{
+query getServiceCategories {
+  ServiceCategories: findManyServiceCategory {
     id
     name
-    _count {CompanyService}
-    Services :CompanyService{
+    _count {
+      CompanyService
+    }
+    Services: CompanyService(where: { availability: { notIn: SELL } }) {
       id
       name
     }
