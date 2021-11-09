@@ -1,18 +1,39 @@
 query getAttachmentById($id: Int!) {
-    data: findFirstContactAttachment(where: {id: {equals: $id}}) {
-        id
-        name: attachment_title
-        shared: connect_public
-        created_date: date
-        url:linkref
-        contact_id
-        Contact {
-            Fname
-            Lname
-        }
-        Practitioner{
-            id
-            full_name
-        }
+  data: findFirstContactAttachment(where: { id: { equals: $id } }) {
+    id
+    name: attachment_title
+    shared: connect_public
+    created_date: date
+    url: linkref
+    contact_id
+    Contact {
+      Fname
+      Lname
     }
+    Practitioner {
+      id
+      full_name
+    }
+  }
+}
+
+mutation createOneDocumentFolder(
+  $name: String!
+  $company: Int!
+  $contact: Int!
+  $creationDate: DateTime!
+  $modificationdate: DateTime!
+) {
+  createOnePhotoAlbum(
+    data: {
+      album_name: $name
+      album_type: "documents"
+      Company: { connect: { id: $company } }
+      Contact: { connect: { ID: $contact } }
+      creation_date: $creationDate
+      modified_date: $modificationdate
+    }
+  ) {
+    id
+  }
 }
