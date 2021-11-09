@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { TextLocalResponse } from './dto'
 
 export const SendTextLocalSMS = async (args) => {
   const tlClient = axios.create({
@@ -12,8 +13,16 @@ export const SendTextLocalSMS = async (args) => {
   })
   return tlClient
     .post('/send')
-    .then(function (response) {
-      return response.data
+    .then((response: TextLocalResponse) => {
+      const responseData = {
+        success: false,
+        message_count: 0,
+      }
+      if (response.data.status === 'success') {
+        responseData.success = true
+      }
+      responseData.message_count = response.data.num_messages
+      return responseData
     })
     .catch(function (error) {
       return error

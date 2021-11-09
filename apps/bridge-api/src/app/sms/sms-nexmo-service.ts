@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { NexmoResponse } from './dto'
 
 export const SendNexmoSMS = async (args) => {
   const tlClient = axios.create({
@@ -14,8 +15,18 @@ export const SendNexmoSMS = async (args) => {
   })
   return tlClient
     .get('/sms/json?')
-    .then(function (response) {
-      return response.data
+    .then((response: NexmoResponse) => {
+      const responseData = {
+        success: false,
+        message_count: 0,
+      }
+      if (response.data.messages[0].status === '0') {
+        responseData.success = true
+      }
+      responseData.message_count = Number.parseInt(
+        response.data['message-count']
+      )
+      return responseData
     })
     .catch(function (error) {
       return error

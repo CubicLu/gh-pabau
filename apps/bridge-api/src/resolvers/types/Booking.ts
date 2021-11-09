@@ -18,6 +18,7 @@ import {
   CancelBookingType,
 } from '../../app/booking/nexus-type'
 import { sendEmailWithTags } from '../../app/email/email-service'
+import { sendSmsWithTags } from '../../app/sms/send-sms-service'
 
 const BookingInputTypes = inputObjectType({
   name: 'BookingInputTypes',
@@ -122,7 +123,6 @@ export const CancelAppointment = extendType({
             status: 'Cancelled',
           },
         })
-        console.log(updateBooking.contact_id)
         const newChangeLogData = []
         const getChangeLogData = await ctx.prisma.bookingChangeLog.findFirst({
           where: {
@@ -154,6 +154,11 @@ export const CancelAppointment = extendType({
         })
 
         const settings = await ctx.prisma.bookingSetting.findFirst()
+        const contact = await ctx.prisma.cmContact.findFirst({
+          where: {
+            ID: updateBooking.contact_id,
+          },
+        })
         if (settings.send_sms > 0 && settings.cancel_sms_tmpl > 0) {
           const getCancelSMSMessage = await ctx.prisma.messageTemplate.findFirst(
             {
@@ -163,8 +168,17 @@ export const CancelAppointment = extendType({
               },
             }
           )
-          // TO DO sendSMS
-          if (getCancelSMSMessage) {
+
+          const sendSmsArgs = {
+            from: '',
+            to: contact.Mobile,
+            message: getCancelSMSMessage.message,
+            contact_id: updateBooking.contact_id,
+            booking_id: booking_id,
+          }
+          const sendSMS = await sendSmsWithTags(sendSmsArgs, ctx)
+
+          if (sendSMS) {
             responseData.send_sms = true
           }
         }
@@ -178,7 +192,7 @@ export const CancelAppointment = extendType({
             }
           )
           const emailArgs = {
-            to: 'branko@pabau.com',
+            to: contact.Email,
             subject: getCancelEmailMessage.subject,
             html: getCancelEmailMessage.message,
             relations: {

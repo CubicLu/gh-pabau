@@ -1,12 +1,20 @@
+import { boolean } from 'yup'
+
 export interface TextLocalResponse {
-  status?: string
-  num_messages?: number
+  data?: any
+  status?: any
+  num_messages?: any
 }
 
 export interface NexmoResponse {
+  data?: any
   messages?: any
 }
 
+export interface smsResponse {
+  success?: any
+  message_count?: any
+}
 export interface SmsInput {
   to: Array<string> | string
   from?: string
