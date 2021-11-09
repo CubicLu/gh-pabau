@@ -50,7 +50,7 @@ export const MainInvoice = extendType({
               sum(a.discount_amount) as discount_amount,
               sum(a.inv_total) as inv_total,
               b.name as location_name,
-              group_concat(Distinct b.name) as billers,
+              group_concat(Distinct d.name) as billers,
               if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
           FROM inv_sales a
               LEFT JOIN company_branches b on b.id = a.location_id
@@ -76,10 +76,11 @@ export const MainInvoice = extendType({
               AND a.guid!='' AND a.guid IS NOT NULL
               AND a.reference_no!='**CREDIT NOTE**' AND a.reference_no!='**REFUND**'
           GROUP BY IFNULL(a.guid, a.id)
-          ORDER BY ${input.orderBy ? input.orderBy.join(',') : 'id'} 
+          ORDER BY a.date desc
           LIMIT ${input.take} 
           OFFSET ${input.skip}
         `
+
         return invoices
       },
     })

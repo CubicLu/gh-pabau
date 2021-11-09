@@ -1729,6 +1729,20 @@ export const Company = objectType({
         return root.ContactPreference
       },
     })
+    t.list.field('CreditBalance', {
+      type: 'CreditBalance',
+      args: {
+        where: 'CreditBalanceWhereInput',
+        orderBy: 'CreditBalanceOrderByWithRelationInput',
+        cursor: 'CreditBalanceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CreditBalanceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CreditBalance
+      },
+    })
     t.list.field('ActivityUserState', {
       type: 'ActivityUserState',
       args: {
