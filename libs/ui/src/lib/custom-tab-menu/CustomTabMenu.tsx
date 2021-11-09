@@ -18,7 +18,7 @@ interface P {
   tabPosition: 'top' | 'left'
   tabWidth: string
   tabs: Readonly<TabItem[]>
-  activeTab?: string
+  activeTab: string
   onActiveChanged?(key: string): void
   minHeight?: string
 }
@@ -41,6 +41,24 @@ export const CustomTabMenu: FC<P> = ({
     return ''
   }
 
+  const findParentActiveKey = (
+    obj: Readonly<TabItem[]>,
+    val: string
+  ): string => {
+    let final = ''
+    for (const ob of obj) {
+      if (val === ob.key) {
+        final = ob.key
+      } else if (ob.childTabs && ob.childTabs.length > 0) {
+        const index = ob.childTabs.findIndex((el) => el.key === val)
+        if (index !== -1) {
+          final = ob.key
+        }
+      }
+    }
+    return final
+  }
+
   const LeftPositionTabs = (
     <div
       className={styles.leftPositionTabs}
@@ -60,7 +78,14 @@ export const CustomTabMenu: FC<P> = ({
                   )}
                   onClick={() => onActiveChanged?.(tab.key)}
                 >
-                  {tab.name}
+                  <div className={styles.titleCountWrapper}>
+                    {tab.name}
+                    {Object.keys(tab).includes('count') && (
+                      <div className={styles.countWrapper}>
+                        <div className={styles.countContainer}>{tab.count}</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               {tab.childTabs && tab.childTabs.length > 0 && (
@@ -117,6 +142,7 @@ export const CustomTabMenu: FC<P> = ({
               onActiveChanged?.(clickedTab?.key)
             }
           }}
+          defaultActiveKey={findParentActiveKey(tabs, activeTab || 'dashboard')}
         >
           {tabs?.map((tab) => {
             const { childTabs, name, key } = tab
@@ -124,8 +150,20 @@ export const CustomTabMenu: FC<P> = ({
               <TabPane tab={<span>{name}</span>} key={key}>
                 {childTabs && childTabs.length > 0 && (
                   <Tabs
+                    defaultActiveKey={findParentActiveKey(
+                      childTabs,
+                      activeTab || 'dashboard'
+                    )}
                     tabPosition={tabPosition}
-                    onChange={() => onActiveChanged?.(key)}
+                    onChange={(ky) => {
+                      const clickedTab = tabs?.find((el) => el?.name === name)
+                      const clickedTabChild = clickedTab?.childTabs?.find(
+                        (el) => el.key === ky
+                      )
+                      if (clickedTabChild?.key) {
+                        onActiveChanged?.(ky)
+                      }
+                    }}
                   >
                     {childTabs.map(({ key, name }) => (
                       <TabPane tab={<span>{name}</span>} key={key} />
@@ -138,7 +176,7 @@ export const CustomTabMenu: FC<P> = ({
         </Tabs>
       </div>
       <div className={styles.tabPaneItems}>
-        <div className={classNames(styles.tabPaneItem)}>{children}</div>
+        <div className={styles.tabPaneItem}>{children}</div>
       </div>
     </div>
   )

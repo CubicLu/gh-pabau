@@ -918,6 +918,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             uploadImage={uploadImage}
             removeImage={removeImage}
             albumId={currentAlbum?.id || 0}
+            cancelFunctionality={false}
           />
         )}
       </AntModal>
