@@ -13,18 +13,22 @@ export const MedicalFormContactExtended = extendType({
     t.field('status', {
       type: 'String',
       async resolve(parent: MedicalFormContactData, args, ctx: Context) {
-        const communication = await ctx.prisma.communicationsRequestedForms.findMany(
-          {
-            where: {
-              contact_id: { equals: parent?.contact_id },
-              form_ids: { contains: parent?.Form?.id?.toString() },
-            },
-          }
-        )
+        let communication = []
+        if (parent?.Form?.id) {
+          communication = await ctx.prisma.communicationsRequestedForms.findMany(
+            {
+              where: {
+                contact_id: { equals: parent?.contact_id },
+                form_ids: { contains: parent?.Form?.id?.toString() },
+              },
+            }
+          )
 
-        if (communication?.length > 0) {
-          return 'to_be_completed'
-        } else {
+          if (communication?.length > 0) {
+            return 'to_be_completed'
+          }
+        }
+        if (communication?.length === 0) {
           return parent?.complete ? 'completed' : 'not_completed'
         }
       },
