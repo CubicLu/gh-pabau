@@ -24,12 +24,13 @@ import { DisplayDate } from '../../../hooks/displayDate'
 
 const ActivitiesTab = () => {
   const router = useRouter()
-  let count
   const contactID = Number(router.query['id'])
   const [isActivityDelete, setIsActivityDelete] = useState(false)
   const [activityId, setActivityId] = useState<number>(0)
-  const [activityTypeFilter, setActivityTypeFilter] = useState<number[]>([])
-  const [activityTypes, setActivityTypes] = useState<number[]>([])
+  const [currentSeletedActivityType, setCurrentSeletedActivityType] = useState<
+    number[]
+  >([])
+  const [allActivityType, setAllActivityType] = useState<number[]>([])
   const [activityFilterType, setActivityFilterType] = useState<
     ActivityTypeFilter[]
   >([])
@@ -40,16 +41,11 @@ const ActivitiesTab = () => {
   const [pagination, setPagination] = useState<PaginationType>({
     total: 0,
     offSet: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
   })
   const resetPagionation = () => {
-    setPagination({
-      total: count,
-      offSet: 0,
-      limit: 10,
-      currentPage: 1,
-    })
+    setPagination({ ...pagination, offSet: 0, limit: 50, currentPage: 1 })
   }
 
   const [
@@ -66,7 +62,9 @@ const ActivitiesTab = () => {
   const [
     getCountActivity,
     { data: countData, loading: countLoading, refetch: reFetchCountActivity },
-  ] = useCountClientActivityLazyQuery()
+  ] = useCountClientActivityLazyQuery({
+    fetchPolicy: 'no-cache',
+  })
   const [
     deleteActivityMutation,
     { loading: isDeleteLoading },
@@ -93,15 +91,23 @@ const ActivitiesTab = () => {
         contactID: contactID,
         skip: pagination.offSet,
         take: pagination.limit,
-        activityType: activityTypeFilter,
+        activityType: currentSeletedActivityType,
       },
     })
     getCountActivity({
       variables: {
         contactID: contactID,
+        activityType: currentSeletedActivityType,
       },
     })
-  }, [contactID, pagination.offSet, pagination.limit, activityTypeFilter])
+  }, [
+    contactID,
+    getActivities,
+    getCountActivity,
+    pagination.offSet,
+    pagination.limit,
+    currentSeletedActivityType,
+  ])
   useEffect(() => {
     if (filterData?.findManyActivityType) {
       const activityTypeId = []
@@ -123,8 +129,8 @@ const ActivitiesTab = () => {
           icon: item.badge,
         })
       }
-      setActivityTypeFilter(activityTypeId)
-      setActivityTypes(activityTypeId)
+      setCurrentSeletedActivityType(activityTypeId)
+      setAllActivityType(activityTypeId)
       setActivityFilterType(tempData)
     }
   }, [filterData])
@@ -205,7 +211,7 @@ const ActivitiesTab = () => {
         return d
       })
       setActivityFilterType(filterObj)
-      setActivityTypeFilter([id])
+      setCurrentSeletedActivityType([id])
     } else {
       let filterObj = [...activityFilterType]
       filterObj = filterObj.map((d) => {
@@ -213,7 +219,7 @@ const ActivitiesTab = () => {
         return d
       })
       setActivityFilterType(filterObj)
-      setActivityTypeFilter(activityTypes)
+      setCurrentSeletedActivityType(allActivityType)
     }
   }
   return (
@@ -222,6 +228,7 @@ const ActivitiesTab = () => {
         cssClass={'cardCoustomWrapper'}
         clientId={Number(router.query['id'])}
         activeTab="activities"
+        activitiesCount={pagination.total}
       >
         <Modal
           centered={true}

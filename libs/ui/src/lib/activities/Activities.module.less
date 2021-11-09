@@ -6,7 +6,12 @@
     padding: 15px 56px 15px 18px;
     background: #ffffff;
     border-bottom: 1px solid #f1f1f1;
-    .sub-header-left > div {
+    .sub-header-left  {
+      display: flex;
+      :global .ant-skeleton {
+        margin-right: 24px;
+      }
+    > div {
       display: flex;
       align-items: center;
       & > div{
@@ -30,6 +35,7 @@
         }
       }
     }
+  }
   }  
   .header {
     display: flex;

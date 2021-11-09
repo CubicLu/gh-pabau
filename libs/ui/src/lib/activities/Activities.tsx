@@ -107,7 +107,7 @@ export const Activities: FC<ActivitiesProps> = ({
     []
   )
   const [visibleFilterPopUp, setVisibleFilterPopUp] = useState(false)
-  const [selectedFilterKey, setSelectedFilterKey] = useState<number[]>([])
+  const [selectedFilterKey, setSelectedFilterKey] = useState<string[]>([])
   const [dateRange, setDateRange] = useState<Dayjs[]>([])
   const [paginateData, setPaginateData] = useState({
     total: pagination?.total ?? 0,
@@ -396,61 +396,67 @@ export const Activities: FC<ActivitiesProps> = ({
 
   return (
     <div className={styles.followWrapper}>
-      <div className={styles.subHeader}>
-        <div className={styles.subHeaderLeft}>
-          {activityTypeLoading ? (
-            ['1', '2', '3', '4', '5'].map((item, index) => (
-              <Skeleton.Input
-                key={index}
-                active={true}
-                size={'small'}
-                //key={index}
-                style={{ width: 25, height: 20 }}
-              />
-            ))
-          ) : (
-            <div>
-              {activityTypeFilterList?.map((item) => (
-                <div
-                  onClick={() =>
-                    onActivityFilterChange(item.id, item.isSelected)
-                  }
-                  className={classNames({
-                    [styles.active]: item.isSelected,
-                  })}
-                  key={item.id}
-                >
-                  {item.hasIcon
-                    ? renderTooltip({
-                        title: item.name,
-                        icon: React.createElement(Icon?.[item?.icon]),
-                      })
-                    : item.name}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className={styles.iconGroup}>
-          <div
-            className={`${styles.headerIconWrap} ${
-              visibleFilterPopUp && styles.active
-            }`}
-          >
-            {/* <TimeLineFilterPopover
-              visible={visibleFilterPopUp}
-              setVisible={setVisibleFilterPopUp}
-              selectedFilterKey={selectedFilterKey}
-              setSelectedFilterKey={setSelectedFilterKey}
-              dateRange={dateRange}
-              setDateRange={setDateRange}
-              eventDateFormat={eventDateFormat}
-            >
-              <FilterOutlined />
-            </TimeLineFilterPopover> */}
+      {activityTypeFilterList ? (
+        <div className={styles.subHeader}>
+          <div className={styles.subHeaderLeft}>
+            {activityTypeLoading ? (
+              ['1', '2', '3', '4', '5'].map((item, index) => (
+                <Skeleton.Input
+                  key={index}
+                  active={true}
+                  size={'small'}
+                  //key={index}
+                  style={{ width: 25, height: 20 }}
+                />
+              ))
+            ) : (
+              <div>
+                {activityTypeFilterList?.map((item) => (
+                  <div
+                    onClick={() =>
+                      onActivityFilterChange(item.id, item.isSelected)
+                    }
+                    className={classNames({
+                      [styles.active]: item.isSelected,
+                    })}
+                    key={item.id}
+                  >
+                    {item.hasIcon
+                      ? renderTooltip({
+                          title: item.name,
+                          icon:
+                            item.icon && React.createElement(Icon[item.icon]),
+                        })
+                      : item.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      ) : (
+        <div className={styles.header}>
+          <div className={styles.iconGroup}>
+            <div
+              className={`${styles.headerIconWrap} ${
+                visibleFilterPopUp && styles.active
+              }`}
+            >
+              <TimeLineFilterPopover
+                visible={visibleFilterPopUp}
+                setVisible={setVisibleFilterPopUp}
+                selectedFilterKey={selectedFilterKey}
+                setSelectedFilterKey={setSelectedFilterKey}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                eventDateFormat={eventDateFormat}
+              >
+                <FilterOutlined />
+              </TimeLineFilterPopover>
+            </div>
+          </div>
+        </div>
+      )}
       <div className={styles.timelineWrap}>
         <div className="vertical-timeline-element--work">
           {isLoading ? (
