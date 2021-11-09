@@ -314,6 +314,7 @@ model Company {
   LeadStatus                       LeadStatus[]
   Activity                         Activity[]
   ContactPreference                ContactPreference[]
+  CreditBalance                    CreditBalance[]
 
   ActivityUserState  ActivityUserState[]
   ActivityUserFilter ActivityUserFilter[]
@@ -4983,16 +4984,18 @@ model PathwayStepsTaken {
   @@map("cp_steps_taken")
 }
 
-//model credit_balance {
-//  credit_balance_id Int    @id @default(autoincrement())
-//  company           String
-//  balance           Float  @default(5.00)
-//  balance_currency  Float
-//  auto              Int
-//
-//  @@index([company], name: "company")
-//}
-//
+model CreditBalance {
+  credit_balance_id Int   @id @default(autoincrement())
+  company_id        Int?  @map("company")
+  balance           Float @default(5.00)
+  balance_currency  Float
+  auto              Int
+
+  Company Company? @relation(fields: [company_id], references: [id])
+  @@index([company_id], name: "company_id")
+  @@map("credit_balance")
+}
+
 model CreditNoteType {
   id               Int      @id @default(autoincrement())
   company_id       Int?
@@ -6526,25 +6529,6 @@ model InvCategory {
   @@map("inv_categories")
 }
 
-model Invoice {
-  id              Int      @id
-  customer_id     Int
-  guid            String?
-  date            DateTime
-  amount          Float?
-  paid_amount     Float?
-  discount_amount Float?
-  inv_total       Float?
-  tip             Float?
-  status          String?
-  location_name   String?
-  billers         String?
-  issue_to        String?
-
-  @@map("invoices")
-}
-
-//
 //model inv_container {
 //  id             Int       @id @default(autoincrement())
 //  reference_no   String
@@ -9896,6 +9880,7 @@ model PhotoAlbum {
   album_name    String
   contact_id    Int
   company_id    Int       @map("occupier")
+  album_type    String?   @default("photos")
   creation_date DateTime?
   modified_date DateTime?
 

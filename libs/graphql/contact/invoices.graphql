@@ -1,24 +1,19 @@
 query getFinancialInvoices($contactID: Int!, $take: Int = 50, $skip: Int = 0){
   invoices: findManyInvoice(where:{customer_id:{equals:$contactID}},take: $take, skip: $skip){
     id
-    amount
     billers
     date
     issue_to
     location_name
-    status
+    # status
     guid
     paid_amount
     discount_amount
     inv_total
-    tip
+    # tip
   }
 }
 
 query totalInvoiceCount($contactID: Int!){
-  aggregateInvoice(where:{customer_id:{equals:$contactID}}){
-    count{
-      id
-    }
-  }
+  total: countInvoice(where:{customer_id:{equals:$contactID}})
 }
