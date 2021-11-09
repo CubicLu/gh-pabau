@@ -29,11 +29,7 @@
     display: flex;
     flex-wrap: wrap;
     margin-right: 15px;
-    //@media screen and (max-width: 479px) {
-    //  button:first-child {
-    //    padding: unset;
-    //  }
-    //}
+
     button {
       margin: 0px 10px;
       @media screen and (max-width: 479px) {
@@ -70,6 +66,48 @@
         }
       }
     }
+
+    .folderDropdownBtn {
+      :global {
+        .ant-dropdown {
+          padding: 4px 0px;
+          min-width: 200px !important;
+
+          ul {
+            width: 100%;
+            border: 1px solid #f0f0f0;
+            box-shadow: 3px 3px 10px #f0f0f0;
+          }
+
+          .ant-menu-item {
+            display: flex;
+            align-items: center;
+            margin: 0px !important;
+            padding: 0px 8px 0px 4px !important;
+            line-height: 0px;
+
+            > span,
+            > svg {
+              width: 20%;
+              line-height: 0px;
+              margin: 0px;
+            }
+
+            div {
+              width: 80%;
+              padding-right: 4px;
+            }
+
+            &:hover {
+              background-color: #88d2ec29;
+              path {
+                fill: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
+    }
   }
   .breadcrumbs {
     cursor: pointer;
@@ -91,6 +129,64 @@
     }
   }
 }
+
+.docPopoutFolderDropdown {
+  min-height: 220px;
+  min-width: 250px;
+  overflow: auto;
+
+  @media screen and (max-width: 767px) {
+    height: fit-content;
+  }
+
+  > span {
+    font-size: 12px;
+    cursor: pointer;
+    padding-bottom: 6px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    svg {
+      fill: gray;
+      width: fit-content !important;
+    }
+  }
+  > ul {
+    border: 0px;
+
+    > li {
+      min-height: 35px;
+      display: flex;
+      align-items: center;
+      padding: 0px 16px !important;
+      margin: 0px !important;
+
+      svg {
+        width: fit-content !important;
+      }
+
+      > div {
+        padding-left: 12px;
+      }
+
+      > span {
+        margin: 0px;
+      }
+
+      &:hover {
+        background-color: #88d2ec29 !important;
+
+        svg path {
+          fill: var(--primary-color);
+        }
+        div {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+}
+
 .createContentMobile {
   :global {
     .ant-drawer-content-wrapper {
@@ -106,15 +202,49 @@
         }
       }
     }
+
+    ul {
+      width: 100%;
+      border: 1px solid #f0f0f0;
+      box-shadow: 3px 3px 10px #f0f0f0;
+    }
+
+    .ant-menu-item {
+      display: flex;
+      align-items: center;
+      margin: 0px !important;
+      padding: 0px 8px 0px 4px !important;
+      line-height: 0px;
+
+      > span,
+      > svg {
+        width: 10%;
+        line-height: 0px;
+        margin: 0px;
+      }
+
+      div {
+        width: 90%;
+        padding-right: 4px;
+      }
+
+      &:hover {
+        background-color: #88d2ec29;
+        path {
+          fill: var(--primary-color);
+        }
+      }
+    }
   }
 }
 .check-wrappers {
+  margin-bottom: 32px;
   :global {
     .ant-popover {
       width: 292px;
       .ant-popover-inner {
         .ant-popover-inner-content {
-          padding: 12px 10px;
+          padding: 0px;
           div {
             span {
               div {
@@ -151,6 +281,7 @@
   overflow: auto;
   margin: 10px;
   height: 100%;
+  padding-bottom: 112px;
   .folderListWrap {
     width: 100%;
     display: block;
@@ -163,6 +294,7 @@
       flex-wrap: wrap;
       padding-bottom: 15px;
       .folderDataWrap {
+        position: relative;
         @media only screen and (max-width: 767px) {
           min-width: 185px;
         }
@@ -234,12 +366,51 @@
               right: 5px;
               top: 4px;
               display: none;
-              z-index: 3;
+              z-index: 2;
 
               > button {
                 box-shadow: 3px 3px 7.5px #eeeeee;
               }
             }
+          }
+
+          &:hover + .dropable {
+            z-index: -1 !important;
+          }
+        }
+        &:hover .dropable {
+          z-index: -1 !important;
+        }
+
+        .dropable {
+          position: absolute;
+          background-color: transparent;
+          border: 2px solid transparent;
+          height: 100%;
+          width: 100%;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          border-radius: 0px;
+          cursor: pointer;
+          transition: border 0.5s;
+
+          &:hover {
+            z-index: -1 !important;
+          }
+        }
+        :global {
+          .dropEffect {
+            background-color: rgba(135, 206, 235, 0.29);
+            border-color: var(--primary-color);
+          }
+          .movedSuccessEffect {
+            background-color: #52c41a29;
+            border-color: var(--success-color);
+          }
+          .movedErrorEffect {
+            background-color: #f5222d36;
+            border-color: var(--error-color);
           }
         }
       }
@@ -282,6 +453,15 @@
             border-radius: 5px;
             border: 1px solid lightgray;
             height: 100%;
+          }
+
+          @media screen and (max-width: 767px) {
+            width: 130px;
+            height: 140px;
+          }
+          @media screen and (max-width: 425px) {
+            width: 110px;
+            height: 120px;
           }
         }
         .ant-checkbox-wrapper {
@@ -365,6 +545,7 @@
           top: 0px;
           left: 0px;
           z-index: 1;
+          transition: all 0.25s;
         }
         > div {
           display: flex;
@@ -477,11 +658,11 @@
                   text-align: center;
                 }
                 &:nth-child(3) {
-                  width: 25%;
+                  width: 30%;
                   text-align: end;
                 }
                 &:nth-child(4) {
-                  width: 10%;
+                  width: 5%;
                   text-align: end;
                 }
               }
@@ -502,14 +683,26 @@
                     text-align: center;
                   }
                   &:nth-child(3) {
-                    width: 25%;
+                    width: 30%;
                     text-align: end;
                   }
                   &:nth-child(4) {
-                    width: 10%;
+                    width: 5%;
                     text-align: end;
                   }
                 }
+              }
+            }
+          }
+
+          .contentTablePopover {
+            > div {
+              width: 100%;
+              display: flex;
+              justify-content: flex-end;
+
+              .ant-popover {
+                min-width: 250px;
               }
             }
           }
@@ -518,6 +711,11 @@
           .ant-table-content {
             min-height: 400px;
             padding-bottom: 96px;
+            overflow: hidden !important;
+
+            @media screen and (max-width: 767px) {
+              overflow: auto hidden !important;
+            }
           }
         }
       }
@@ -585,12 +783,13 @@
 }
 .folderContentFirst {
   display: flex;
-  flex-wrap: wrap;
   :global {
     .ant-checkbox-wrapper {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      padding-right: 15px;
+      padding-top: 5px;
       .ant-checkbox {
         height: 17px;
       }
@@ -679,6 +878,24 @@
     }
   }
 }
+
+.pagination {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 10px;
+  @media screen and (max-width: 767px) {
+    padding-bottom: 30px;
+  }
+  > div {
+    padding: 0px;
+
+    > ul {
+      padding-right: 0px;
+    }
+  }
+}
+
 .mobileHeader {
   width: 100%;
   .handler {
@@ -893,6 +1110,9 @@
             padding: 0 !important;
           }
         }
+        h1 {
+          display: none;
+        }
       }
       .modal-content {
         padding: 0 !important;
@@ -952,8 +1172,45 @@
   display: flex;
   align-items: center;
 }
-.draGhost {
-  background-color: #00a1e1;
-  width: 200px;
-  color: #0e0917;
+
+.gridViewItemSkeleton {
+  margin-top: 0px;
+  padding: 0px;
+
+  @media only screen and (max-width: 767px) {
+    max-width: 414px;
+  }
+  .boxItemImage {
+    display: flex;
+    flex-wrap: wrap;
+    .image-preview {
+      @media only screen and (max-width: 767px) {
+        width: 66px;
+        height: 70px;
+        margin-left: 4px;
+        :global .ant-skeleton-element .ant-skeleton-image {
+          height: 66px;
+          width: 70px;
+        }
+      }
+      width: 127px;
+      height: 130px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+      margin: 0 5px 10px 5px;
+      border: 1px solid #eee;
+    }
+  }
+}
+
+.column-loader {
+  > div {
+    width: 100%;
+
+    > span {
+      width: 100%;
+    }
+  }
 }

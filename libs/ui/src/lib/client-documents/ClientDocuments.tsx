@@ -11,15 +11,13 @@ import {
   DeleteOutlined,
   DownloadOutlined,
   EnterOutlined,
-  EditOutlined,
 } from '@ant-design/icons'
 import { ReactComponent as ListIcon } from '../../assets/images/icons/list.svg'
 import { ReactComponent as GridIcon } from '../../assets/images/icons/grid.svg'
+import { ReactComponent as ImageFolder } from '../../assets/images/image-album.svg'
 import empty from '../../assets/images/empty-doc.png'
 import {
   Button,
-  Notification,
-  NotificationType,
   BasicModal,
   CamUploaderModal as FileUploadModal,
   UploadingImageProps as UploadingFilesProps,
@@ -45,8 +43,9 @@ interface OpenByProps {
 
 export interface FolderContentProps {
   id: number
-  folderData: string
   dateTime: number
+  folderData: string
+  documentName?: string
   sharedWith?: OpenByProps[]
 }
 
@@ -54,9 +53,9 @@ export interface FolderProps {
   folder: FolderProps[]
   id: number
   folderTitle: string
+  contentCount: number
   modifiedDate?: string
-  contentCount?: number
-  folderContent?: FolderContentProps[]
+  folderContent: FolderContentProps[]
 }
 
 export interface SelectProps {
@@ -69,7 +68,7 @@ export interface ClientDocumentsProps {
   folderDocuments: FolderContentProps[]
   onFolderClick?: (folderId: number) => void
   loading?: boolean
-  paginateData?: {
+  paginateData: {
     pageSize: number
     onPageChange: (page: number) => void
     onPageSizeChange: (size: number) => void
@@ -89,6 +88,7 @@ export interface ClientDocumentsProps {
   onUploadCancel?: (data: UploadingFilesProps) => void
   docsDeleteLoading?: boolean
   singleDocDelLoading?: boolean
+  onDocumentsMove?: (folder, documents) => void
 }
 
 export const ClientDocuments: FC<ClientDocumentsProps> = ({
@@ -111,16 +111,19 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
   onUploadCancel,
   docsDeleteLoading,
   singleDocDelLoading,
+
+  onDocumentsMove,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
   const [data, setData] = useState(folderList)
   const [currentData, setCurrentData] = useState(folderList)
   const [folderContent, setFolderContent] = useState(folderDocuments)
-  const [singleDocumentMoveId, setSingleImageMoveId] = useState<number>()
+  const [singleDocumentMoveId, setSingleDocumentMoveId] = useState<number>()
   const [breadcrumbs, setBreadcrumbs] = useState([
     { title: 'Folders', index: -1 },
   ])
+  const [folderMenuDrawer, setFolderMenuDrawer] = useState(false)
   const [createFolderDrawer, setCreateFolderDrawer] = useState(false)
   const [folderName, setFolderName] = useState('')
   const [createFolderModal, setCreateFolderModal] = useState(false)
@@ -152,6 +155,8 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
     setDeleteFolderId(null)
     setCreateFolderModal(false)
     setDeleteFolderModal(false)
+    setFolderMenuDrawer(() => false)
+    setCreateFolderDrawer(() => false)
     if (!currentData || currentData?.id === 0) {
       setCurrentData(folderList)
     } else {
@@ -217,39 +222,52 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
     </div>
   )
 
-  const MenuData = () => (
-    <Menu className={styles.menuItemList}>
-      {currentData?.folder?.map((folderValue) => (
-        <Menu.Item key={folderValue.folderTitle.toString()}>
-          <FolderOutlined /> {folderValue.folderTitle}
-        </Menu.Item>
-      ))}
-      <Menu.Item key="New" onClick={() => setCreateFolderModal((e) => !e)}>
-        <PlusOutlined />
-        <span>New folder</span>
-      </Menu.Item>
-    </Menu>
-  )
-
-  const handleMoveData = (x) => {
-    const moveData = currentData
-    moveData.folderContent?.map((val) => {
-      if (selectedDocuments.includes(val.folderData as never)) {
-        moveData.folder.map((folderValue) => {
-          return (
-            folderValue.folderTitle === x.folderTitle &&
-            folderValue.folderContent?.push(val)
-          )
-        })
+  const FolderDropdownMenu = () => {
+    const filtered: { id: number; name: string }[] = []
+    const iterateToFolders = (folders) => {
+      for (const el of folders) {
+        if (el?.id !== currentData?.id) {
+          filtered.push({
+            id: el?.id,
+            name: el?.folderTitle,
+          })
+          if (el?.folder?.length) iterateToFolders(el?.folder)
+        }
       }
-      return 1
-    })
-    setCurrentData(moveData)
-    Notification(
-      NotificationType.success,
-      `${selectedDocuments.length} items has been moved from ${moveData.folderTitle} to ${x.folderTitle}`
+    }
+    iterateToFolders(data?.folder)
+    if (currentData?.id !== 0) {
+      filtered.unshift({ id: 0, name: 'Uncategorized' })
+    }
+
+    return (
+      <Menu className={styles.menuItemList}>
+        {filtered?.map((folder) => (
+          <Menu.Item
+            key={folder.id.toString()}
+            onClick={() =>
+              onDocumentsMove?.(
+                folder.id,
+                selectedDocuments?.map((el) => el?.id)
+              )
+            }
+          >
+            <ImageFolder />
+            <div>{folder.name}</div>
+          </Menu.Item>
+        ))}
+        <Menu.Item
+          key="New"
+          onClick={() => {
+            setSingleDocumentMoveId(0)
+            setCreateFolderModal((e) => !e)
+          }}
+        >
+          <PlusOutlined />
+          <div>New folder</div>
+        </Menu.Item>
+      </Menu>
     )
-    setShowMenu(false)
   }
 
   const handleSelectAllData = () => {
@@ -257,24 +275,92 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
     setSelectedDocuments([])
   }
 
-  const handleImagesDelete = () => {
+  const handleDocumentsDelete = () => {
     if (selectedDocuments?.length > 0) {
       const deleteDocs = selectedDocuments?.map((el) => el?.id || 0)
       onDocRemove?.(deleteDocs)
     }
   }
 
-  const handleBulkDownload = () => selectedDocuments.map((x) => dataDownload(x))
-
-  const dataDownload = (val) => {
-    const link = document.createElement('a')
-    link.href = val
-    link.download = val
-    document.body.append(link)
-    link.target = '_blank'
-    link.click()
-    link.remove()
+  const handleBulkDownload = () => {
+    for (const doc of selectedDocuments) {
+      dataDownload(doc?.folderData)
+    }
   }
+
+  const dataDownload = (url: string) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('GET', url, true)
+    xhr.responseType = 'blob'
+    xhr.addEventListener('load', function () {
+      const urlCreator = window.URL || window.webkitURL
+      const imageUrl = urlCreator.createObjectURL(this.response)
+      const tag = document.createElement('a')
+      tag.href = imageUrl
+      tag.download = url
+      document.body.append(tag)
+      tag.click()
+      tag.remove()
+    })
+    xhr.send()
+  }
+
+  const drop = (ev) => {
+    ev.preventDefault()
+    if (ev.dataTransfer.getData('documentId')) {
+      const draggedDocId = Number(ev.dataTransfer.getData('documentId'))
+      const tarFolderId = Number(ev.target.id.replace('tar', ''))
+      onDocumentsMove?.(tarFolderId, [draggedDocId])
+    }
+    if (ev.dataTransfer.getData('folderId')) {
+      // This block will be used when folder can be dragged and dropped in other albums
+      const tarFolderId = Number(ev.target.id.replace('tar', ''))
+      const draggedFolder = Number(ev.dataTransfer.getData('folderId'))
+      document
+        ?.querySelector(`#${ev.target.id}`)
+        ?.classList.remove('dropEffect')
+    }
+  }
+
+  const allowDrop = (ev) => {
+    ev.preventDefault()
+    document?.querySelector(`#${ev.target.id}`)?.classList.add('dropEffect')
+  }
+
+  const dragDocument = (ev) => {
+    const draggedDoc = folderContent?.find(
+      (el) => el?.id === Number(ev?.target?.id)
+    )
+
+    if (draggedDoc) {
+      ev.dataTransfer.setData('documentId', ev?.target?.id)
+      const img = new Image()
+      img.src = draggedDoc?.folderData
+
+      const moveItemName = draggedDoc?.folderData?.split('/') || []
+      const ghostEle = document.createElement('div')
+      ghostEle.id = 'draGhost'
+      ghostEle.innerHTML = draggedDoc?.documentName
+        ? draggedDoc?.documentName
+        : moveItemName[moveItemName.length - 1]
+      ghostEle.style.opacity = '1'
+      ghostEle.style.height = '45px'
+      ghostEle.style.color = 'white'
+      ghostEle.style.border = 'none'
+      ghostEle.style.display = 'flex'
+      ghostEle.style.padding = '0px 20px'
+      ghostEle.style.textAlign = 'center'
+      ghostEle.style.position = 'absolute'
+      ghostEle.style.width = 'fit-content'
+      ghostEle.style.alignItems = 'center'
+      ghostEle.style.justifyContent = 'center'
+      ghostEle.style.borderRadius = '5px'
+      ghostEle.style.backgroundColor = 'var(--primary-color)'
+      document.body.append(ghostEle)
+      ev.dataTransfer.setDragImage(ghostEle, 10, 10)
+    }
+  }
+
   return (
     <div>
       {!showMenu && (
@@ -369,49 +455,15 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
             </button>
             {!isMobile && (
               <div className={styles.rightSide}>
-                <Button type="ghost">
-                  <DownloadOutlined />
-                  Download {`(${selectedDocuments.length})`}
-                </Button>
-                <Dropdown overlay={<MenuData />} placement="bottomRight">
-                  <Button type="ghost">
-                    <EnterOutlined />
-                    Move to {`(${selectedDocuments.length})`}
-                  </Button>
-                </Dropdown>
-                <Button className={styles.shareTextBtn} type="ghost">
-                  <span>
-                    <Share /> Share {`(${selectedDocuments.length})`}
-                  </span>
-                </Button>
-                <Button type="ghost" onClick={() => setDeleteFolderModal(true)}>
-                  <DeleteOutlined />
-                  Delete
-                  {`(${selectedDocuments.length})`}
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {showMenu && selectedDocuments.length > 0 && (
-        <div>
-          <div className={styles.headerText}>
-            <button
-              className={styles.selectButton}
-              onClick={() => handleSelectAllData()}
-            >
-              <MinusOutlined />
-            </button>
-            {!isMobile && (
-              <div className={styles.rightSide}>
                 <Button type="ghost" onClick={() => handleBulkDownload()}>
                   <DownloadOutlined />
                   Download {`(${selectedDocuments.length})`}
                 </Button>
-                <Dropdown overlay={<MenuData />} placement="bottomRight">
-                  <Button type="ghost">
+                <Dropdown
+                  overlay={<FolderDropdownMenu />}
+                  placement="bottomRight"
+                >
+                  <Button type="ghost" className={styles.folderDropdownBtn}>
                     <EnterOutlined />
                     Move to {`(${selectedDocuments.length})`}
                   </Button>
@@ -423,17 +475,17 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
                 </Button>
                 <Button
                   type="ghost"
-                  onClick={() => setDocumentDeleteModal(() => true)}
+                  onClick={() => setDocumentDeleteModal(true)}
                 >
                   <DeleteOutlined />
-                  Delete
-                  {`(${selectedDocuments.length})`}
+                  Delete {`(${selectedDocuments.length})`}
                 </Button>
               </div>
             )}
           </div>
         </div>
       )}
+
       {currentData.folder.length === 0 && currentData.contentCount === 0 ? (
         <div className={styles.emptyDocument}>
           <img src={empty} alt={'empty'} />
@@ -454,12 +506,14 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
       ) : (
         <FolderData
           data={{ ...currentData, folderContent: folderContent }}
+          allFolders={data?.folder}
           onFolderClick={onDocumentFolderClick}
           listView={listView}
           setShowMenu={setShowMenu}
           setSelectedDocuments={setSelectedDocuments}
           selectedDocuments={selectedDocuments}
-          setCurrentData={setCurrentData}
+          paginateData={paginateData}
+          loading={loading}
           onFolderRename={(id) => {
             const editFolder = currentData?.folder?.find((dt) => dt?.id === id)
             if (editFolder) {
@@ -484,19 +538,50 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
             }
           }}
           singleDocDelLoading={singleDocDelLoading}
+          onSingleDocumentMove={(folder, document, isCreateFolder) => {
+            if (document) {
+              if ((folder || folder === 0) && !isCreateFolder) {
+                onDocumentsMove?.(folder, [document])
+              }
+              if (!folder && isCreateFolder) {
+                setFolderName('')
+                setSingleDocumentMoveId(document)
+                setCreateFolderModal(() => true)
+              }
+            } else if (
+              selectedDocuments?.length > 0 &&
+              (folder || folder === 0)
+            ) {
+              if ((folder || folder === 0) && !isCreateFolder) {
+                onDocumentsMove?.(
+                  folder,
+                  selectedDocuments?.map((el) => el?.id)
+                )
+              }
+              if (!folder && isCreateFolder) {
+                setFolderName('')
+                setCreateFolderModal(() => true)
+              }
+            }
+          }}
+          drop={drop}
+          allowDrop={allowDrop}
+          dragDocument={dragDocument}
         />
       )}
-      {isMobile && showMenu && (
+      {isMobile && showMenu && selectedDocuments?.length > 0 && (
         <div className={styles.bottomBar}>
           <Button
             className={styles.btnCircle}
             shape="circle"
             icon={<DownloadOutlined />}
+            onClick={() => handleBulkDownload()}
           />
           <Button
             className={styles.btnCircle}
             shape="circle"
             icon={<EnterOutlined />}
+            onClick={() => setFolderMenuDrawer(() => true)}
           />
           <Button
             className={styles.btnCircle}
@@ -506,14 +591,21 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
           <Button
             className={styles.btnCircle}
             shape="circle"
-            icon={<EditOutlined />}
-          />
-          <Button
-            className={styles.btnCircle}
-            shape="circle"
             icon={<DeleteOutlined />}
             style={{ color: 'red' }}
+            onClick={() => setDocumentDeleteModal(() => true)}
           />
+          <div className={styles.folderDropdownBtn}>
+            <Drawer
+              placement={'bottom'}
+              closable={true}
+              onClose={() => setFolderMenuDrawer((e) => !e)}
+              visible={folderMenuDrawer}
+              className={styles.createContentMobile}
+            >
+              <FolderDropdownMenu />
+            </Drawer>
+          </div>
         </div>
       )}
 
@@ -622,7 +714,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
         onCancel={() => {
           setDocumentDeleteModal(() => false)
         }}
-        onOk={handleImagesDelete}
+        onOk={handleDocumentsDelete}
         visible={documentDeleteModal}
         title={t('galley.list.view.delete.modal.title')}
         cancelText={t('common-label-cancel')}

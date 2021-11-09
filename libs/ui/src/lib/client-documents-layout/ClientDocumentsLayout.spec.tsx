@@ -6,6 +6,7 @@ const folderList = {
   folder: [],
   id: 1,
   folderContent: [],
+  contentCount: 0,
   folderTitle: 'Folders',
 }
 describe('ClientDocumentsLayout', () => {
@@ -16,6 +17,12 @@ describe('ClientDocumentsLayout', () => {
         folderDocuments={[]}
         setUploadingDocs={() => false}
         uploadingDocs={[]}
+        paginateData={{
+          currentPage: 0,
+          onPageChange: () => false,
+          onPageSizeChange: () => false,
+          pageSize: 0,
+        }}
       />
     )
     expect(baseElement).toBeTruthy()

@@ -17,19 +17,17 @@ import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import { getDocument } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 import {
-  GetFolderDocumentsDocument,
-  useGetFolderDocumentsQuery,
-  // useGetFolderDocumentsLazyQuery,
-  CountFolderDocumentsDocument,
-  useCountFolderDocumentsQuery,
   GetFoldersDocument,
   useGetFoldersQuery,
-  // useGetFoldersLazyQuery,
+  GetFolderDocumentsDocument,
+  useGetFolderDocumentsQuery,
+  CountFolderDocumentsDocument,
+  useCountFolderDocumentsQuery,
   useCreateContactPhotoMutation as useCreateDocumentMutation,
   useCreateOnePhotoAlbumMutation as useCreateFolderMutation,
   useUpdateOnePhotoAlbumMutation as useUpdateFolderMutation,
   useDeleteOnePhotoAlbumMutation as useDeleteFolderMutation,
-  // useMoveContactAttachmentsMutation,
+  useMoveContactAttachmentsMutation as useMoveDocumentsMutation,
   useCreateContactPhotoWithoutAlbumMutation as useCreateUncatDocumentMutation,
   useDeleteManyContactPhotoMutation as useDeleteManyDocumentsMutation,
   useDeleteContactPhotoMutation as useDeleteDocumentMutation,
@@ -37,8 +35,6 @@ import {
 
 // const baseURL = `${cdnURL}/v2/api/contact/`
 const baseURL = `http://localhost:5000/`
-// const attachmentsBaseUrl = `${cdnURL}/cdn/documents/`
-const attachmentsBaseUrl = `http://localhost:5000/`
 
 const iterateTo = (dataArr) => {
   return dataArr?.map((item) => {
@@ -47,30 +43,20 @@ const iterateTo = (dataArr) => {
       folderTitle: item?.name,
       modifiedDate: item?.modified_date || item?.creation_date,
       contentCount: item?.documentCount?.documentList,
-      folderImage: item?.Photos?.map((el) => {
-        return {
-          id: el?.id,
-          date: el?.date,
-          img: !el?.linkref?.includes('http')
-            ? attachmentsBaseUrl + el?.linkref
-            : el?.linkref,
-          isSensitive: false,
-        }
-      }),
       folder: item?.folders ? iterateTo(item?.folders) : [],
     }
   })
 }
 
-// const folderFinder = (folders, folderId) => {
-//   const folder = folders?.find((el) => {
-//     if (el?.id === folderId) {
-//       return el
-//     } else if (el?.folder) folderFinder?.(el?.folder, folderId)
-//     return null
-//   })
-//   return folder
-// }
+const folderFinder = (folders, folderId) => {
+  const folder = folders?.find((el) => {
+    if (el?.id === folderId) {
+      return el
+    } else if (el?.folder) folderFinder?.(el?.folder, folderId)
+    return null
+  })
+  return folder
+}
 
 const Photos: FC = () => {
   const api = axios.create({
@@ -90,9 +76,7 @@ const Photos: FC = () => {
   const [currFolderDocuments, setCurrFolderDocuments] = useState<
     FolderContentProps[]
   >(null)
-  // const [showPhotoStudio, setShowPhotoStudio] = useState(false)
-  // const [studioAlbumId, setStudioAlbumId] = useState<number>(0)
-  // const [studioImageId, setStudioImageId] = useState<number>(0)
+
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFileProps[]>([])
   const [paginatedData, setPaginatedData] = useState({
     perPage: 50,
@@ -146,20 +130,6 @@ const Photos: FC = () => {
     },
   })
 
-  // const [
-  //   getFolderDocsManually,
-  //   { data: manualFolderDocs, loading: manualFolderDocsLoading },
-  // ] = useGetFolderDocumentsLazyQuery({
-  //   fetchPolicy: 'network-only',
-  // })
-
-  // const [
-  //   getFoldersManually,
-  //   { data: manualFolders, loading: manualFoldersLoading },
-  // ] = useGetFoldersLazyQuery({
-  //   fetchPolicy: 'network-only',
-  // })
-
   const [createFolder] = useCreateFolderMutation({
     onCompleted({ createOnePhotoAlbum: data }) {
       const cFolders = { ...folders }
@@ -179,8 +149,8 @@ const Photos: FC = () => {
       )
 
       if (movingDocsOnFolderCreate?.length > 0) {
-        // const moveImages = [...movingDocsOnFolderCreate]
-        // onDocumentsMove(data?.id, moveImages)
+        const moveDocuments = [...movingDocsOnFolderCreate]
+        onDocumentsMove(data?.id, moveDocuments)
         setMovingDocsOnFolderCreate([])
       }
     },
@@ -353,33 +323,44 @@ const Photos: FC = () => {
     },
   })
 
-  // const [moveDocumentToFolder] = useMoveContactAttachmentsMutation({
-  //   onCompleted({ moveAttachments: data }) {
-  //     if (data?.success && data?.album !== 0) {
-  //       if (document.querySelector(`#tar${data?.album}`)) {
-  //         document
-  //           ?.querySelector(`#tar${data?.album}`)
-  //           ?.classList?.remove('dropEffect')
-  //       }
+  const [moveDocumentToFolder] = useMoveDocumentsMutation({
+    onCompleted({ moveAttachments: data }) {
+      if (data?.success && data?.album !== 0) {
+        if (document.querySelector(`#tar${data?.album}`)) {
+          const elem = document?.querySelector(`#tar${data?.album}`)
+          elem?.classList?.remove('dropEffect')
+          elem?.classList?.add('movedSuccessEffect')
+          setTimeout(() => {
+            elem?.classList?.remove('movedSuccessEffect')
+          }, 3000)
+        }
 
-  //       const tarAlbum = folderFinder?.(folders?.folder, data?.album)
-  //       Notification(
-  //         NotificationType?.success,
-  //         `Image moved and ${
-  //           tarAlbum?.folderTitle || 'album'
-  //         } updated succesfully!`
-  //       )
-  //     } else {
-  //       Notification(
-  //         NotificationType?.success,
-  //         `Image moved and uncategorized folder updated succesfully!`
-  //       )
-  //     }
-  //   },
-  //   onError(error) {
-  //     Notification(NotificationType?.error, error?.message)
-  //   },
-  // })
+        const tarAlbum = folderFinder?.(folders?.folder, data?.album)
+        Notification(
+          NotificationType?.success,
+          `Document moved and ${
+            tarAlbum?.folderTitle || 'folder'
+          } updated succesfully!`
+        )
+      } else {
+        Notification(
+          NotificationType?.success,
+          `Document moved and uncategorized folder updated succesfully!`
+        )
+        if (document.querySelector(`#tar${data?.album}`)) {
+          const elem = document?.querySelector(`#tar${data?.album}`)
+          elem?.classList?.remove('dropEffect')
+          elem?.classList?.add('movedErrorEffect')
+          setTimeout(() => {
+            elem?.classList?.remove('movedErrorEffect')
+          }, 3000)
+        }
+      }
+    },
+    onError(error) {
+      Notification(NotificationType?.error, error?.message)
+    },
+  })
 
   useEffect(() => {
     if (foldersData?.findManyPhotoAlbum && !foldersLoading) {
@@ -397,7 +378,7 @@ const Photos: FC = () => {
         folder: innerFolders,
       }
       setFolders(cFolders)
-      // setMultipleDelDocs(0)
+      setMultipleDelDocs(0)
     }
   }, [foldersData, foldersLoading, unCatImagesCount])
 
@@ -408,6 +389,7 @@ const Photos: FC = () => {
         return {
           id: el?.id,
           folderData: getDocument?.(el?.url),
+          documentName: el?.attach_name,
           dateTime: el?.date,
           isSensitive: false,
         }
@@ -415,48 +397,9 @@ const Photos: FC = () => {
       setTimeout(() => {
         setCurrFolderDocuments(docs)
       }, 0)
-      // setMultipleDelDocs(0)
+      setMultipleDelDocs(0)
     }
   }, [folderDocuments, folderDocsLoading])
-
-  // useEffect(() => {
-  //   if (
-  //     manualFolderDocs?.findManyContactAttachment &&
-  //     !manualFolderDocsLoading
-  //   ) {
-  //     setCurrFolderDocuments(null)
-  //     setTimeout(() => {
-  //       const docs = manualFolderDocs?.findManyContactAttachment?.map((el) => {
-  //         return {
-  //           id: el?.id,
-  //           folderData: getDocument?.(el?.url),
-  //           dateTime: el?.date,
-  //           isSensitive: false,
-  //         }
-  //       })
-  //       setCurrFolderDocuments(docs)
-  //     }, 0)
-  //   }
-  // }, [manualFolderDocs, manualFolderDocsLoading])
-
-  // useEffect(() => {
-  //   if (manualFolders?.findManyPhotoAlbum && !manualFoldersLoading) {
-  //     const innerAlbums = iterateTo(manualFolders?.findManyPhotoAlbum)
-  //     const cFolders = {
-  //       id: 0,
-  //       folderTitle:
-  //         unCatImagesCount?.aggregateContactAttachment?.count?._all > 0
-  //           ? 'Uncategorized'
-  //           : '',
-  //       contentCount:
-  //         unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
-  //       folderContent: [],
-  //       modifiedDate: '',
-  //       folder: innerAlbums,
-  //     }
-  //     setFolders(cFolders)
-  //   }
-  // }, [manualFolders, manualFoldersLoading, unCatImagesCount])
 
   const onFolderCreate = (
     folder: string,
@@ -585,7 +528,7 @@ const Photos: FC = () => {
       }
 
       await api
-        .post('upload-photo', data, config)
+        .post('upload-document', data, config)
         .then((res) => {
           const data = JSON.parse(JSON.stringify(res.data))
           if (data?.success) {
@@ -680,15 +623,15 @@ const Photos: FC = () => {
     }
   }
 
-  // const onUploadCancel = async (fileData: UploadingImageProps) => {
-  //   const cAddedFiles = [...uploadingFiles]
-  //   const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
-  //   if (idx !== -1) {
-  //     await fileData?.cancelToken?.cancel()
-  //     cAddedFiles.splice(idx, 1)
-  //     setUploadingFiles(cAddedFiles)
-  //   }
-  // }
+  const onUploadCancel = async (fileData: UploadingFileProps) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
+    if (idx !== -1) {
+      await fileData?.cancelToken?.cancel()
+      cAddedFiles.splice(idx, 1)
+      setUploadingFiles(cAddedFiles)
+    }
+  }
 
   const onDocumentRemove = (docIds: number[]) => {
     if (docIds?.length > 0) {
@@ -761,128 +704,80 @@ const Photos: FC = () => {
     }
   }
 
-  // const onDocumentsMove = (folder: number, docs: number[]) => {
-  //   if ((folder === 0 || folder) && docs?.length > 0) {
-  //     moveDocumentToFolder({
-  //       variables: {
-  //         album: folder,
-  //         images: docs,
-  //       },
-  //       refetchQueries: [
-  //         {
-  //           query: GetFoldersDocument,
-  //           variables: {
-  //             contactId: contactId,
-  //           },
-  //         },
-  //         {
-  //           query: GetFolderDocumentsDocument,
-  //           variables: variables,
-  //         },
-  //         folderId === 0 && {
-  //           query: CountFolderDocumentsDocument,
-  //           variables: {
-  //             contactId: contactId,
-  //             folderId: 0,
-  //           },
-  //         },
-  //       ],
-  //     })
-  //   }
-  // }
-
-  // const openPhotoStudio = (folder: number, image: number) => {
-  //   setStudioAlbumId(folder)
-  //   setStudioImageId(image)
-  //   setShowPhotoStudio((e) => !e)
-  // }
+  const onDocumentsMove = (folder: number, docs: number[]) => {
+    if ((folder === 0 || folder) && docs?.length > 0) {
+      moveDocumentToFolder({
+        variables: {
+          album: folder,
+          images: docs,
+        },
+        refetchQueries: [
+          {
+            query: GetFoldersDocument,
+            variables: {
+              contactId: contactId,
+            },
+          },
+          {
+            query: GetFolderDocumentsDocument,
+            variables: variables,
+          },
+          folderId === 0 && {
+            query: CountFolderDocumentsDocument,
+            variables: {
+              contactId: contactId,
+              folderId: 0,
+            },
+          },
+        ],
+      })
+    }
+  }
 
   return (
-    <>
-      <ClientCardLayout
-        clientId={Number(router.query.id)}
-        activeTab="documents"
-      >
-        <ClientDocumentsLayout
-          folderList={folders}
-          folderDocuments={currFolderDocuments}
-          onFolderClick={(id) => {
-            if (id !== folderId) {
-              setFolderId(id)
-              setPaginatedData({
-                ...paginatedData,
-                currentPage: 1,
-              })
-            }
-          }}
-          loading={folderDocsLoading}
-          paginateData={{
-            currentPage: paginatedData?.currentPage,
-            pageSize: paginatedData?.perPage,
-            onPageChange: (page) => {
-              setPaginatedData({ ...paginatedData, currentPage: page })
-            },
-            onPageSizeChange: (size) => {
-              setPaginatedData({
-                ...paginatedData,
-                perPage: size,
-              })
-            },
-          }}
-          onFolderCreate={onFolderCreate}
-          folderCreateLoading={folderCreateLoading}
-          onFolderUpdate={onFolderUpdate}
-          folderUpdateLoading={folderUpdateLoading}
-          onFolderDelete={onFolderDelete}
-          folderDeleteLoading={folderDeleteLoading}
-          uploadingDocs={uploadingFiles}
-          setUploadingDocs={setUploadingFiles}
-          onDocUpload={onDocumentUpload}
-          onDocRemove={onDocumentRemove}
-          docsDeleteLoading={docsDeleteLoading}
-          singleDocDelLoading={singleDocDelLoading}
-        />
-        {/* <ClientPhotosLayout
-          onImageUpload={onDocumentUpload}
-          onImageRemove={onDocumentRemove}
-          onUploadCancel={onUploadCancel}
-          uploadingImages={uploadingFiles}
-          setUploadingImages={setUploadingFiles}
-          onImagesMove={onDocumentsMove}
-          openImageStudio={openPhotoStudio}
-          imagesDeleteLoading={docsDeleteLoading}
-          singleImageDelLoading={singleDocDelLoading}
-        /> */}
-      </ClientCardLayout>
-      {/* {router.query.id && showPhotoStudio && (
-        <PhotoStudio
-          visible={showPhotoStudio}
-          contactId={Number(router.query.id)}
-          albumId={studioAlbumId}
-          photoId={studioImageId}
-          setVisible={() => {
-            setShowPhotoStudio((e) => !e)
-            setStudioAlbumId(0)
-            setStudioImageId(0)
-          }}
-          fetchFunc={() => {
-            getFolderDocsManually({
-              variables: {
-                contactId: router.query.id ? Number(router.query.id) : 0,
-                albumId: folderId,
-                skip: (paginatedData?.currentPage - 1) * paginatedData?.perPage,
-                take: paginatedData?.perPage,
-              },
+    <ClientCardLayout clientId={Number(router.query.id)} activeTab="documents">
+      <ClientDocumentsLayout
+        folderList={folders}
+        folderDocuments={currFolderDocuments}
+        onFolderClick={(id) => {
+          if (id !== folderId) {
+            setFolderId(id)
+            setPaginatedData({
+              ...paginatedData,
+              currentPage: 1,
             })
-            getFoldersManually({
-              variables: {
-                contactId: router.query.id ? Number(router.query.id) : 0,
-              },
+          }
+        }}
+        loading={folderDocsLoading}
+        paginateData={{
+          currentPage: paginatedData?.currentPage,
+          pageSize: paginatedData?.perPage,
+          onPageChange: (page) => {
+            setPaginatedData({ ...paginatedData, currentPage: page })
+          },
+          onPageSizeChange: (size) => {
+            setPaginatedData({
+              ...paginatedData,
+              perPage: size,
             })
-          }}
-        />
-      )} */}
-    </>
+          },
+        }}
+        onFolderCreate={onFolderCreate}
+        folderCreateLoading={folderCreateLoading}
+        onFolderUpdate={onFolderUpdate}
+        folderUpdateLoading={folderUpdateLoading}
+        onFolderDelete={onFolderDelete}
+        folderDeleteLoading={folderDeleteLoading}
+        uploadingDocs={uploadingFiles}
+        setUploadingDocs={setUploadingFiles}
+        onDocUpload={onDocumentUpload}
+        onDocRemove={onDocumentRemove}
+        onUploadCancel={onUploadCancel}
+        docsDeleteLoading={docsDeleteLoading}
+        singleDocDelLoading={singleDocDelLoading}
+        onDocumentsMove={onDocumentsMove}
+      />
+    </ClientCardLayout>
   )
 }
 

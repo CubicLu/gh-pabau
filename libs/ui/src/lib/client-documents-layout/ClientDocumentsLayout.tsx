@@ -7,6 +7,7 @@ export const ClientDocumentsLayout: FC<ClientDocumentsProps> = ({
     folder: [],
     folderTitle: 'Folders',
     folderContent: [],
+    contentCount: 0,
     id: 0,
   },
   folderDocuments = [],
