@@ -71,7 +71,7 @@ export interface ActivitiesDataProps {
   dateTime: string
   taskChecked?: boolean
   taskUserName?: string
-  typeIcon?: JSX.Element
+  typeIcon?: string
   dateColor?: string
 }
 export interface ActivityTypeFilter {
@@ -499,7 +499,16 @@ export const Activities: FC<ActivitiesProps> = ({
                               <VerticalTimelineElement
                                 key={index}
                                 className={'vertical-timeline-element--work'}
-                                icon={event.typeIcon ?? icon}
+                                icon={
+                                  event.typeIcon
+                                    ? renderTooltip({
+                                        title: '',
+                                        icon: React.createElement(
+                                          Icon[event.typeIcon]
+                                        ),
+                                      })
+                                    : icon
+                                }
                                 iconStyle={{
                                   background: '#54B2D3',
                                   color: '#fff',

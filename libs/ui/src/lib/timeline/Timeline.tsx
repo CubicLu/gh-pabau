@@ -94,7 +94,7 @@ interface callDetailProps {
 }
 
 export interface EventsProps {
-  typeIcon?: JSX.Element
+  typeIcon?: string
   id: number
   type: string
   eventName?: string

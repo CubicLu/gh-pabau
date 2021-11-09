@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Tooltip, Modal } from 'antd'
+import { Modal } from 'antd'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import styles from './clientCardLayout.module.less'
 import {
@@ -11,7 +11,6 @@ import {
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import * as Icon from '@ant-design/icons'
 import {
   Activities,
   ActivitiesDataProps,
@@ -134,9 +133,6 @@ const ActivitiesTab = () => {
       setActivityFilterType(tempData)
     }
   }, [filterData])
-  const renderTooltip = ({ title, icon }) => {
-    return <Tooltip title={title}>{icon}</Tooltip>
-  }
   const handleColorClass = (date, status) => {
     const dueDate = dayjs(date)
     const now = dayjs()
@@ -174,10 +170,7 @@ const ActivitiesTab = () => {
           taskUserName: d.Assigned.full_name,
           description: d.note,
           taskChecked: d.status.toLocaleLowerCase() === 'done',
-          typeIcon: renderTooltip({
-            title: '',
-            icon: React.createElement(Icon?.[d.ActivityType.badge]),
-          }),
+          typeIcon: d.ActivityType.badge,
           dateColor: handleColorClass(d.due_start_date, d.status),
         })
       }
