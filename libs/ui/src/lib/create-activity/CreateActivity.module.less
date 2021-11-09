@@ -377,37 +377,37 @@
       }
     }
   }
-  // .customHeader {
-  //   display: flex;
-  //   justify-content: space-between;
-  //   align-items: center;
-  //   position: relative;
-  //   padding-bottom: 8px;
-  //   &:after {
-  //         position: absolute;
-  //         bottom: 0;
-  //         content: '';
-  //         background: #ECEDF0;
-  //         width: 331px;
-  //         height: 1px;
-  //         left: -28px;
-  //       }  border-bottom: 1px solid #ECEDF0;
-  //   h5 {
-  //     font-size: 16px;
-  //     line-height: 24px;
-  //     color: #3D3D46;
+  .customHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding-bottom: 8px;
+    &:after {
+          position: absolute;
+          bottom: 0;
+          content: '';
+          background: #ECEDF0;
+          width: 331px;
+          height: 1px;
+          left: -28px;
+        }  border-bottom: 1px solid #ECEDF0;
+    h5 {
+      font-size: 16px;
+      line-height: 24px;
+      color: #3D3D46;
 
-  //   }
-  //   .customBtnGroup {
-  //     display: flex;
-  //     align-items: center;
-  //     :global .anticon {
-  //       color: #9292A3;
-  //       margin-left: 28px;
-  //     }
-  //   }
+    }
+    .customBtnGroup {
+      display: flex;
+      align-items: center;
+      :global .anticon {
+        color: #9292A3;
+        margin-left: 28px;
+      }
+    }
 
-  // }
+  }
 }
 :global {
 .rbc-today {
@@ -451,7 +451,15 @@
 
   }
 }
-
+.calTimeEle {
+  display: flex;
+  align-items: center;
+  svg {
+    width: 13px;
+    height: 13px;
+    margin-right: 5px;
+  }
+}
 
 .modal-body-class {
   padding-left: 0 !important;

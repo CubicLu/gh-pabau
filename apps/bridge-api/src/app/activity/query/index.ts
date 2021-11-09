@@ -230,7 +230,6 @@ export const ActivityQuery = extendType({
         )
 
         const where = input.where
-        console.log('where--------------', where)
         const filterColumns = []
         if (
           where?.filterOption?.andFilterOption &&
@@ -290,7 +289,6 @@ export const ActivityQuery = extendType({
               andQuery,
               orQuery
             )
-            console.log('graphData--------------', graphData)
             const activityData = await retrieveActivityData(
               where,
               ctx,
@@ -302,7 +300,6 @@ export const ActivityQuery = extendType({
               prepareOrderQuery,
               activitySelect
             )
-            console.log('activityData--------------', activityData)
             const finalActivityResponse = await prepareActivityDataWithCustomField(
               ctx,
               activityData

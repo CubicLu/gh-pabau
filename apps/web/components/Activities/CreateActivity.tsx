@@ -245,8 +245,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
               ),
           })}
           onSubmit={async (values, { resetForm }) => {
-            // await handleSave?.(values)
-            console.log('Hello submit', values)
             const data = {
               ActivityType: {
                 connect: {
@@ -288,7 +286,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
             if (!values.user) {
               delete data.AssignedUser
             }
-            console.log('data----------------', data)
             await addMutation({
               variables: {
                 data,
@@ -523,7 +520,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                       </div>
                     </div>
                   </div>
-                  {console.log('values----------', values)}
                   <div className={styles.footerActions}>
                     <div className={styles.checkName}>
                       <Checkbox

@@ -1188,7 +1188,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
     }
   }
 
-  console.log('-loggedUser?.me--------', loggedUser?.me)
   return (
     <div className={styles.activityWrapper} ref={activityRef}>
       <Layout badgeCountList={{ activities: paginateData?.total }}>
