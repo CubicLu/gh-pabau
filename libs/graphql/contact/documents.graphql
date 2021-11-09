@@ -18,7 +18,7 @@ query getFolderDocuments(
     id
     date
     url: linkref
-    attach_name
+    attachment_title
     attachment_size
   }
 }

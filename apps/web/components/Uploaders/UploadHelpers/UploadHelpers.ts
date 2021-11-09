@@ -37,7 +37,6 @@ export type ImgBlock = {
 export const getImage = (url: string): string => `${cdnURL}${url}`
 
 export const getDocument = (url: string): string =>
-  // `${cdnURL}/cdn/documents/${url}`
-  `http://localhost:5000/${url}`
+  `${cdnURL}/cdn/documents/${url}`
 
 export default postData

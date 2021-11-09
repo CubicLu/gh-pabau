@@ -33,8 +33,7 @@ import {
   useDeleteContactPhotoMutation as useDeleteDocumentMutation,
 } from '@pabau/graphql'
 
-// const baseURL = `${cdnURL}/v2/api/contact/`
-const baseURL = `http://localhost:5000/`
+const baseURL = `${cdnURL}/v2/api/contact/`
 
 const iterateTo = (dataArr) => {
   return dataArr?.map((item) => {
@@ -389,7 +388,7 @@ const Photos: FC = () => {
         return {
           id: el?.id,
           folderData: getDocument?.(el?.url),
-          documentName: el?.attach_name,
+          documentName: el?.attachment_title,
           dateTime: el?.date,
           isSensitive: false,
         }
