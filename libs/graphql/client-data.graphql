@@ -20,6 +20,7 @@ query ClientsData($active: Int = 1, $searchTerm: String, $cursor: CmContactWhere
     }
   ) {
     id: ID
+    avatar: Avatar
     firstName: Fname
     lastName: Lname
     is_active
