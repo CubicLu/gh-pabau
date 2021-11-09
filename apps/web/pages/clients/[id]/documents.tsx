@@ -3,8 +3,8 @@ import { useRouter } from 'next/router'
 import { cdnURL } from '../../../baseUrl'
 import dayjs from 'dayjs'
 import { useUser } from '../../../context/UserContext'
-// import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-// import axios from 'axios'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import axios from 'axios'
 import {
   FolderProps,
   FolderContentProps,
@@ -17,26 +17,28 @@ import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import { getDocument } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 import {
-  // GetFolderDocumentsDocument,
+  GetFolderDocumentsDocument,
   useGetFolderDocumentsQuery,
   // useGetFolderDocumentsLazyQuery,
-  // CountFolderDocumentsDocument,
+  CountFolderDocumentsDocument,
   useCountFolderDocumentsQuery,
   GetFoldersDocument,
   useGetFoldersQuery,
   // useGetFoldersLazyQuery,
-  // useCreateContactPhotoMutation,
+  useCreateContactPhotoMutation as useCreateDocumentMutation,
   useCreateOnePhotoAlbumMutation as useCreateFolderMutation,
   useUpdateOnePhotoAlbumMutation as useUpdateFolderMutation,
   useDeleteOnePhotoAlbumMutation as useDeleteFolderMutation,
   // useMoveContactAttachmentsMutation,
-  // useCreateContactPhotoWithoutAlbumMutation,
-  // useDeleteManyContactPhotoMutation,
-  // useDeleteContactPhotoMutation,
+  useCreateContactPhotoWithoutAlbumMutation as useCreateUncatDocumentMutation,
+  useDeleteManyContactPhotoMutation as useDeleteManyDocumentsMutation,
+  useDeleteContactPhotoMutation as useDeleteDocumentMutation,
 } from '@pabau/graphql'
 
 // const baseURL = `${cdnURL}/v2/api/contact/`
-const attachmentsBaseUrl = `${cdnURL}/cdn/attachments/`
+const baseURL = `http://localhost:5000/`
+// const attachmentsBaseUrl = `${cdnURL}/cdn/documents/`
+const attachmentsBaseUrl = `http://localhost:5000/`
 
 const iterateTo = (dataArr) => {
   return dataArr?.map((item) => {
@@ -71,16 +73,16 @@ const iterateTo = (dataArr) => {
 // }
 
 const Photos: FC = () => {
-  // const api = axios.create({
-  //   baseURL: baseURL,
-  //   headers: {
-  //     Authorization:
-  //       localStorage?.getItem('token') &&
-  //       `Bearer ${localStorage?.getItem('token')?.replaceAll('"', '')}`,
-  //   },
-  // })
+  const api = axios.create({
+    baseURL: baseURL,
+    headers: {
+      Authorization:
+        localStorage?.getItem('token') &&
+        `Bearer ${localStorage?.getItem('token')?.replaceAll('"', '')}`,
+    },
+  })
 
-  // const { t } = useTranslationI18()
+  const { t } = useTranslationI18()
   const router = useRouter()
   const { me } = useUser()
   const [folders, setFolders] = useState<FolderProps>()
@@ -97,9 +99,9 @@ const Photos: FC = () => {
     currentPage: 1,
   })
 
-  // const [multipeDelDocs, setMultipleDelDocs] = useState(0)
-  // const [singleDocDelLoading, setSingleDocDelLoading] = useState(false)
-  // const [docsDeleteLoading, setDocsDeleteLoading] = useState(false)
+  const [multipeDelDocs, setMultipleDelDocs] = useState(0)
+  const [singleDocDelLoading, setSingleDocDelLoading] = useState(false)
+  const [docsDeleteLoading, setDocsDeleteLoading] = useState(false)
   const [movingDocsOnFolderCreate, setMovingDocsOnFolderCreate] = useState<
     number[]
   >([])
@@ -233,125 +235,123 @@ const Photos: FC = () => {
     },
   })
 
-  // const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
-  //   onCompleted({ createOneContactAttachment: data }) {
-  //     const path = data?.linkref
-  //     const cAddedFiles = [...uploadingFiles]
-  //     const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
-  //     if (idx !== -1) {
-  //       const cFile = cAddedFiles[idx]
-  //       cFile.id = data?.id
-  //       cFile.loading = false
-  //       cFile.isUploadCompleted = true
-  //       cAddedFiles.splice(idx, 1, cFile)
-  //       setUploadingFiles(cAddedFiles)
-  //     }
-  //   },
-  // })
+  const [createDocument] = useCreateDocumentMutation({
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
+      const cAddedFiles = [...uploadingFiles]
+      const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
+      if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
+        cFile.id = data?.id
+        cFile.loading = false
+        cFile.isUploadCompleted = true
+        cAddedFiles.splice(idx, 1, cFile)
+        setUploadingFiles(cAddedFiles)
+      }
+    },
+  })
 
-  // const [
-  //   createUncategorizedDocument,
-  // ] = useCreateContactPhotoWithoutAlbumMutation({
-  //   onCompleted({ createOneContactAttachment: data }) {
-  //     const path = data?.linkref
-  //     const cAddedFiles = [...uploadingFiles]
-  //     const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
-  //     if (idx !== -1) {
-  //       const cFile = cAddedFiles[idx]
-  //       cFile.id = data?.id
-  //       cFile.loading = false
-  //       cFile.isUploadCompleted = true
-  //       cAddedFiles.splice(idx, 1, cFile)
-  //       setUploadingFiles(cAddedFiles)
-  //     }
-  //   },
-  // })
+  const [createUncategorizedDocument] = useCreateUncatDocumentMutation({
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
+      const cAddedFiles = [...uploadingFiles]
+      const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
+      if (idx !== -1) {
+        const cFile = cAddedFiles[idx]
+        cFile.id = data?.id
+        cFile.loading = false
+        cFile.isUploadCompleted = true
+        cAddedFiles.splice(idx, 1, cFile)
+        setUploadingFiles(cAddedFiles)
+      }
+    },
+  })
 
-  // const [deleteOneDocument] = useDeleteContactPhotoMutation({
-  //   onCompleted({ deleteContactAttachmentPhoto: data }) {
-  //     setSingleDocDelLoading(() => false)
-  //     if (data?.success) {
-  //       const id = data?.photo
-  //       const cAddedFiles = [...uploadingFiles]
-  //       const idx = cAddedFiles?.findIndex((el) => el?.id === id)
-  //       if (idx !== -1) {
-  //         cAddedFiles.splice(idx, 1)
-  //         setUploadingFiles(cAddedFiles)
-  //       }
-  //     } else {
-  //       const id = data?.photo
-  //       const cAddedFiles = [...uploadingFiles]
-  //       const idx = cAddedFiles?.findIndex((el) => el?.id === id)
-  //       if (idx !== -1) {
-  //         const cFile = cAddedFiles[idx]
-  //         cFile.loading = false
-  //         cAddedFiles.splice(idx, 1, cFile)
-  //         setUploadingFiles(cAddedFiles)
-  //       }
-  //     }
-  //     Notification(
-  //       NotificationType.success,
-  //       t('ui.clientcard.photos.notification.delete.success', {
-  //         count: 1,
-  //         suffix: '',
-  //       })
-  //     )
-  //   },
-  //   onError() {
-  //     setSingleDocDelLoading(() => false)
-  //     Notification(
-  //       NotificationType.error,
-  //       t('ui.clientcard.photos.notification.delete.error', {
-  //         count: 1,
-  //         suffix: '',
-  //       })
-  //     )
-  //   },
-  // })
+  const [deleteOneDocument] = useDeleteDocumentMutation({
+    onCompleted({ deleteContactAttachmentPhoto: data }) {
+      setSingleDocDelLoading(() => false)
+      if (data?.success) {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          cAddedFiles.splice(idx, 1)
+          setUploadingFiles(cAddedFiles)
+        }
+      } else {
+        const id = data?.photo
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === id)
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = false
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingFiles(cAddedFiles)
+        }
+      }
+      Notification(
+        NotificationType.success,
+        t('ui.clientcard.photos.notification.delete.success', {
+          count: 1,
+          suffix: '',
+        })
+      )
+    },
+    onError() {
+      setSingleDocDelLoading(() => false)
+      Notification(
+        NotificationType.error,
+        t('ui.clientcard.photos.notification.delete.error', {
+          count: 1,
+          suffix: '',
+        })
+      )
+    },
+  })
 
-  // const [deleteManyDocuments] = useDeleteManyContactPhotoMutation({
-  //   onCompleted({ deleteManyContactAttachmentPhoto: data }) {
-  //     if (data.success && data.count === multipeDelDocs) {
-  //       Notification(
-  //         NotificationType.success,
-  //         t('ui.clientcard.photos.notification.delete.success', {
-  //           count: data?.count,
-  //           suffix: data?.count > 1 ? 's' : '',
-  //         })
-  //       )
-  //       setDocsDeleteLoading(() => false)
-  //     } else {
-  //       if (data.count > 0) {
-  //         Notification(
-  //           NotificationType.success,
-  //           t('ui.clientcard.photos.notification.delete.success', {
-  //             count: data?.count,
-  //             suffix: data?.count > 1 ? 's' : '',
-  //           })
-  //         )
-  //       }
-  //       setDocsDeleteLoading(() => false)
-  //       const leftCount = multipeDelDocs - data.count
-  //       Notification(
-  //         NotificationType.error,
-  //         t('ui.clientcard.photos.notification.delete.error', {
-  //           count: leftCount,
-  //           suffix: leftCount > 1 ? 's' : '',
-  //         })
-  //       )
-  //     }
-  //   },
-  //   onError() {
-  //     setDocsDeleteLoading(() => false)
-  //     Notification(
-  //       NotificationType.error,
-  //       t('ui.clientcard.photos.notification.delete.error', {
-  //         count: multipeDelDocs,
-  //         suffix: multipeDelDocs > 1 ? 's' : '',
-  //       })
-  //     )
-  //   },
-  // })
+  const [deleteManyDocuments] = useDeleteManyDocumentsMutation({
+    onCompleted({ deleteManyContactAttachmentPhoto: data }) {
+      if (data.success && data.count === multipeDelDocs) {
+        Notification(
+          NotificationType.success,
+          t('ui.clientcard.photos.notification.delete.success', {
+            count: data?.count,
+            suffix: data?.count > 1 ? 's' : '',
+          })
+        )
+        setDocsDeleteLoading(() => false)
+      } else {
+        if (data.count > 0) {
+          Notification(
+            NotificationType.success,
+            t('ui.clientcard.photos.notification.delete.success', {
+              count: data?.count,
+              suffix: data?.count > 1 ? 's' : '',
+            })
+          )
+        }
+        setDocsDeleteLoading(() => false)
+        const leftCount = multipeDelDocs - data.count
+        Notification(
+          NotificationType.error,
+          t('ui.clientcard.photos.notification.delete.error', {
+            count: leftCount,
+            suffix: leftCount > 1 ? 's' : '',
+          })
+        )
+      }
+    },
+    onError() {
+      setDocsDeleteLoading(() => false)
+      Notification(
+        NotificationType.error,
+        t('ui.clientcard.photos.notification.delete.error', {
+          count: multipeDelDocs,
+          suffix: multipeDelDocs > 1 ? 's' : '',
+        })
+      )
+    },
+  })
 
   // const [moveDocumentToFolder] = useMoveContactAttachmentsMutation({
   //   onCompleted({ moveAttachments: data }) {
@@ -542,143 +542,143 @@ const Photos: FC = () => {
     }
   }
 
-  // const onDocumentUpload = async (fileData: UploadingImageProps) => {
-  //   const cAddedFiles = [...uploadingFiles]
-  //   const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
-  //   if (idx !== -1) {
-  //     const CancelToken = axios.CancelToken
-  //     const source = CancelToken.source()
+  const onDocumentUpload = async (fileData: UploadingFileProps) => {
+    const cAddedFiles = [...uploadingFiles]
+    const idx = cAddedFiles?.findIndex((el) => el?.id === fileData?.id)
+    if (idx !== -1) {
+      const CancelToken = axios.CancelToken
+      const source = CancelToken.source()
 
-  //     const config = {
-  //       onUploadProgress: function (progressEvent) {
-  //         const percentCompleted = Math.round(
-  //           (progressEvent.loaded * 100) / progressEvent.total
-  //         )
-  //         const percAddedFiles = [...uploadingFiles]
-  //         const percIdx = percAddedFiles?.findIndex(
-  //           (el) => el?.id === fileData?.id
-  //         )
-  //         if (percIdx !== -1) {
-  //           const percFile = percAddedFiles[percIdx]
-  //           percFile.uploadPercentage = percentCompleted
-  //           percAddedFiles.splice(percIdx, 1, percFile)
-  //           setUploadingFiles(percAddedFiles)
-  //         }
-  //       },
-  //       cancelToken: source.token,
-  //     }
-  //     const data = new FormData()
-  //     data.append('File', fileData?.file)
+      const config = {
+        onUploadProgress: function (progressEvent) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+          const percAddedFiles = [...uploadingFiles]
+          const percIdx = percAddedFiles?.findIndex(
+            (el) => el?.id === fileData?.id
+          )
+          if (percIdx !== -1) {
+            const percFile = percAddedFiles[percIdx]
+            percFile.uploadPercentage = percentCompleted
+            percAddedFiles.splice(percIdx, 1, percFile)
+            setUploadingFiles(percAddedFiles)
+          }
+        },
+        cancelToken: source.token,
+      }
+      const data = new FormData()
+      data.append('File', fileData?.file)
 
-  //     const upStartFiles = [...uploadingFiles]
-  //     const upStartIdx = upStartFiles?.findIndex(
-  //       (el) => el?.id === fileData?.id
-  //     )
-  //     if (upStartIdx !== -1) {
-  //       const uppFile = upStartFiles[upStartIdx]
-  //       uppFile.isUploadStarted = true
-  //       uppFile.uploadPercentage = 0
-  //       uppFile.cancelToken = source
-  //       uppFile.isFailed = false
-  //       upStartFiles.splice(upStartIdx, 1, uppFile)
-  //       setUploadingFiles(upStartFiles)
-  //     }
+      const upStartFiles = [...uploadingFiles]
+      const upStartIdx = upStartFiles?.findIndex(
+        (el) => el?.id === fileData?.id
+      )
+      if (upStartIdx !== -1) {
+        const uppFile = upStartFiles[upStartIdx]
+        uppFile.isUploadStarted = true
+        uppFile.uploadPercentage = 0
+        uppFile.cancelToken = source
+        uppFile.isFailed = false
+        upStartFiles.splice(upStartIdx, 1, uppFile)
+        setUploadingFiles(upStartFiles)
+      }
 
-  //     await api
-  //       .post('upload-photo', data, config)
-  //       .then((res) => {
-  //         const data = JSON.parse(JSON.stringify(res.data))
-  //         if (data?.success) {
-  //           const upCompFiles = [...uploadingFiles]
-  //           const upCompIdx = upCompFiles?.findIndex(
-  //             (el) => el?.id === fileData?.id
-  //           )
-  //           if (upCompIdx !== -1) {
-  //             const uppCompFile = upCompFiles[upCompIdx]
-  //             uppCompFile.uploadedPath = data?.path
-  //             uppCompFile.loading = true
-  //             upCompFiles.splice(upCompIdx, 1, uppCompFile)
-  //             setUploadingFiles(upCompFiles)
-  //             if (fileData?.albumId > 0) {
-  //               createAttachmentInAlbum({
-  //                 variables: {
-  //                   album_id: folderId,
-  //                   attachment_type: 'contact',
-  //                   contact_id: contactId,
-  //                   date: dayjs().unix(),
-  //                   image_url: data?.path,
-  //                   uploaded_by: me?.user,
-  //                   company_id: me?.company,
-  //                 },
-  //                 refetchQueries: [
-  //                   {
-  //                     query: GetFoldersDocument,
-  //                     variables: {
-  //                       contactId: contactId,
-  //                     },
-  //                   },
-  //                   {
-  //                     query: GetFolderDocumentsDocument,
-  //                     variables: variables,
-  //                   },
-  //                 ],
-  //               })
-  //             }
-  //             if (fileData?.albumId === 0) {
-  //               createUncategorizedDocument({
-  //                 variables: {
-  //                   attachment_type: 'contact',
-  //                   contact_id: contactId,
-  //                   date: dayjs().unix(),
-  //                   image_url: data?.path,
-  //                   uploaded_by: me?.user,
-  //                   company_id: me?.company,
-  //                 },
-  //                 refetchQueries: [
-  //                   {
-  //                     query: GetFoldersDocument,
-  //                     variables: {
-  //                       contactId: contactId,
-  //                     },
-  //                   },
-  //                   {
-  //                     query: GetFolderDocumentsDocument,
-  //                     variables: variables,
-  //                   },
-  //                   {
-  //                     query: CountFolderDocumentsDocument,
-  //                     variables: {
-  //                       contactId: contactId,
-  //                       folderId: 0,
-  //                     },
-  //                   },
-  //                 ],
-  //               })
-  //             }
-  //           }
-  //         } else {
-  //           const files = [...uploadingFiles]
-  //           const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
-  //           if (fileIdx !== -1) {
-  //             const file = files[fileIdx]
-  //             file.isFailed = true
-  //             files.splice(fileIdx, 1, file)
-  //             setUploadingFiles(files)
-  //           }
-  //         }
-  //       })
-  //       .catch(() => {
-  //         const files = [...uploadingFiles]
-  //         const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
-  //         if (fileIdx !== -1) {
-  //           const file = files[fileIdx]
-  //           file.isFailed = true
-  //           files.splice(fileIdx, 1, file)
-  //           setUploadingFiles(files)
-  //         }
-  //       })
-  //   }
-  // }
+      await api
+        .post('upload-photo', data, config)
+        .then((res) => {
+          const data = JSON.parse(JSON.stringify(res.data))
+          if (data?.success) {
+            const upCompFiles = [...uploadingFiles]
+            const upCompIdx = upCompFiles?.findIndex(
+              (el) => el?.id === fileData?.id
+            )
+            if (upCompIdx !== -1) {
+              const uppCompFile = upCompFiles[upCompIdx]
+              uppCompFile.uploadedPath = data?.path
+              uppCompFile.loading = true
+              upCompFiles.splice(upCompIdx, 1, uppCompFile)
+              setUploadingFiles(upCompFiles)
+              if (fileData?.albumId > 0) {
+                createDocument({
+                  variables: {
+                    album_id: folderId,
+                    attachment_type: 'document',
+                    contact_id: contactId,
+                    date: dayjs().unix(),
+                    image_url: data?.path,
+                    uploaded_by: me?.user,
+                    company_id: me?.company,
+                  },
+                  refetchQueries: [
+                    {
+                      query: GetFoldersDocument,
+                      variables: {
+                        contactId: contactId,
+                      },
+                    },
+                    {
+                      query: GetFolderDocumentsDocument,
+                      variables: variables,
+                    },
+                  ],
+                })
+              }
+              if (fileData?.albumId === 0) {
+                createUncategorizedDocument({
+                  variables: {
+                    attachment_type: 'document',
+                    contact_id: contactId,
+                    date: dayjs().unix(),
+                    image_url: data?.path,
+                    uploaded_by: me?.user,
+                    company_id: me?.company,
+                  },
+                  refetchQueries: [
+                    {
+                      query: GetFoldersDocument,
+                      variables: {
+                        contactId: contactId,
+                      },
+                    },
+                    {
+                      query: GetFolderDocumentsDocument,
+                      variables: variables,
+                    },
+                    {
+                      query: CountFolderDocumentsDocument,
+                      variables: {
+                        contactId: contactId,
+                        folderId: 0,
+                      },
+                    },
+                  ],
+                })
+              }
+            }
+          } else {
+            const files = [...uploadingFiles]
+            const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
+            if (fileIdx !== -1) {
+              const file = files[fileIdx]
+              file.isFailed = true
+              files.splice(fileIdx, 1, file)
+              setUploadingFiles(files)
+            }
+          }
+        })
+        .catch(() => {
+          const files = [...uploadingFiles]
+          const fileIdx = files?.findIndex((el) => el?.id === fileData?.id)
+          if (fileIdx !== -1) {
+            const file = files[fileIdx]
+            file.isFailed = true
+            files.splice(fileIdx, 1, file)
+            setUploadingFiles(files)
+          }
+        })
+    }
+  }
 
   // const onUploadCancel = async (fileData: UploadingImageProps) => {
   //   const cAddedFiles = [...uploadingFiles]
@@ -690,76 +690,76 @@ const Photos: FC = () => {
   //   }
   // }
 
-  // const onDocumentRemove = (docIds: number[]) => {
-  //   if (docIds?.length > 0) {
-  //     if (docIds?.length === 1) {
-  //       const cAddedFiles = [...uploadingFiles]
-  //       const idx = cAddedFiles?.findIndex((el) => el?.id === docIds[0])
-  //       if (idx !== -1) {
-  //         const cFile = cAddedFiles[idx]
-  //         cFile.loading = true
-  //         cAddedFiles.splice(idx, 1, cFile)
-  //         setUploadingFiles(cAddedFiles)
-  //       }
-  //       const cCurrAlbumImages = [...currFolderDocuments]
-  //       const cImageIndex = cCurrAlbumImages?.findIndex(
-  //         (el) => el?.id === docIds[0]
-  //       )
-  //       setSingleDocDelLoading(() => true)
-  //       deleteOneDocument({
-  //         variables: {
-  //           id: docIds[0],
-  //         },
-  //         refetchQueries: [
-  //           {
-  //             query: GetFoldersDocument,
-  //             variables: {
-  //               contactId: contactId,
-  //             },
-  //           },
-  //           cImageIndex !== -1 && {
-  //             query: GetFolderDocumentsDocument,
-  //             variables: variables,
-  //           },
-  //           folderId === 0 && {
-  //             query: CountFolderDocumentsDocument,
-  //             variables: {
-  //               contactId: contactId,
-  //               folderId: 0,
-  //             },
-  //           },
-  //         ],
-  //       })
-  //     } else {
-  //       setMultipleDelDocs(docIds?.filter((el) => el !== 0)?.length)
-  //       setDocsDeleteLoading(() => true)
-  //       deleteManyDocuments({
-  //         variables: {
-  //           ids: docIds,
-  //         },
-  //         refetchQueries: [
-  //           {
-  //             query: GetFoldersDocument,
-  //             variables: {
-  //               contactId: contactId,
-  //             },
-  //           },
-  //           {
-  //             query: GetFolderDocumentsDocument,
-  //             variables: variables,
-  //           },
-  //           folderId === 0 && {
-  //             query: CountFolderDocumentsDocument,
-  //             variables: {
-  //               contactId: contactId,
-  //               folderId: 0,
-  //             },
-  //           },
-  //         ],
-  //       })
-  //     }
-  //   }
-  // }
+  const onDocumentRemove = (docIds: number[]) => {
+    if (docIds?.length > 0) {
+      if (docIds?.length === 1) {
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === docIds[0])
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = true
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingFiles(cAddedFiles)
+        }
+        const cCurrAlbumImages = [...currFolderDocuments]
+        const cImageIndex = cCurrAlbumImages?.findIndex(
+          (el) => el?.id === docIds[0]
+        )
+        setSingleDocDelLoading(() => true)
+        deleteOneDocument({
+          variables: {
+            id: docIds[0],
+          },
+          refetchQueries: [
+            {
+              query: GetFoldersDocument,
+              variables: {
+                contactId: contactId,
+              },
+            },
+            cImageIndex !== -1 && {
+              query: GetFolderDocumentsDocument,
+              variables: variables,
+            },
+            folderId === 0 && {
+              query: CountFolderDocumentsDocument,
+              variables: {
+                contactId: contactId,
+                folderId: 0,
+              },
+            },
+          ],
+        })
+      } else {
+        setMultipleDelDocs(docIds?.filter((el) => el !== 0)?.length)
+        setDocsDeleteLoading(() => true)
+        deleteManyDocuments({
+          variables: {
+            ids: docIds,
+          },
+          refetchQueries: [
+            {
+              query: GetFoldersDocument,
+              variables: {
+                contactId: contactId,
+              },
+            },
+            {
+              query: GetFolderDocumentsDocument,
+              variables: variables,
+            },
+            folderId === 0 && {
+              query: CountFolderDocumentsDocument,
+              variables: {
+                contactId: contactId,
+                folderId: 0,
+              },
+            },
+          ],
+        })
+      }
+    }
+  }
 
   // const onDocumentsMove = (folder: number, docs: number[]) => {
   //   if ((folder === 0 || folder) && docs?.length > 0) {
@@ -837,6 +837,10 @@ const Photos: FC = () => {
           folderDeleteLoading={folderDeleteLoading}
           uploadingDocs={uploadingFiles}
           setUploadingDocs={setUploadingFiles}
+          onDocUpload={onDocumentUpload}
+          onDocRemove={onDocumentRemove}
+          docsDeleteLoading={docsDeleteLoading}
+          singleDocDelLoading={singleDocDelLoading}
         />
         {/* <ClientPhotosLayout
           onImageUpload={onDocumentUpload}

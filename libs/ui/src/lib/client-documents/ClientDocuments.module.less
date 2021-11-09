@@ -18,7 +18,6 @@
   }
   .selectButton {
     background: #54b2d3;
-    margin-left: 20px;
     border: none;
     border-radius: 4px;
     padding: 2px 7px;
@@ -143,6 +142,10 @@
   }
 }
 
+.displayNone {
+  display: none !important;
+}
+
 .folderListContainer {
   display: flex;
   overflow: auto;
@@ -231,7 +234,7 @@
               right: 5px;
               top: 4px;
               display: none;
-              z-index: 1;
+              z-index: 3;
 
               > button {
                 box-shadow: 3px 3px 7.5px #eeeeee;
@@ -343,17 +346,15 @@
         width: 100%;
         text-align: center;
         position: relative;
+
         svg {
           width: 100%;
         }
         img {
-          @media screen and (max-width: 479px) {
-            width: 155px;
-          }
-          width: 138px;
-          height: 93px;
+          width: 100%;
+          height: 100%;
           object-fit: fill;
-          border-radius: 5px;
+          border-radius: 15px;
           margin: 30px 0;
         }
         .hoverOverlay {
@@ -366,9 +367,24 @@
           z-index: 1;
         }
         > div {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           position: relative;
           height: 100%;
           width: 100%;
+
+          div {
+            width: 100%;
+            height: 100%;
+          }
+
+          :global .ant-skeleton-image {
+            margin: 0px;
+            border-radius: 15px;
+            width: 100%;
+            height: 100%;
+          }
 
           > svg {
             height: 100%;
@@ -399,14 +415,20 @@
           .ant-table-thead {
             th {
               background-color: #ecedf0;
-              width: 33%;
               &:first-child {
                 text-align: left;
+                width: 50%;
               }
               &:nth-child(2) {
+                width: 15%;
                 text-align: center;
               }
               &:nth-child(3) {
+                width: 30%;
+                text-align: end;
+              }
+              &:nth-child(4) {
+                width: 5%;
                 text-align: end;
               }
             }
@@ -417,14 +439,20 @@
 
               td {
                 background: unset;
-                width: 33%;
                 &:first-child {
+                  width: 50%;
                   text-align: left;
                 }
                 &:nth-child(2) {
+                  width: 15%;
                   text-align: center;
                 }
                 &:nth-child(3) {
+                  width: 30%;
+                  text-align: end;
+                }
+                &:nth-child(4) {
+                  width: 5%;
                   text-align: end;
                 }
               }
@@ -439,12 +467,21 @@
           .ant-table-container {
             .ant-table-thead {
               th {
-                width: 50%;
                 background-color: #ecedf0;
                 &:first-child {
+                  width: 50%;
                   text-align: left;
                 }
                 &:nth-child(2) {
+                  width: 15%;
+                  text-align: center;
+                }
+                &:nth-child(3) {
+                  width: 25%;
+                  text-align: end;
+                }
+                &:nth-child(4) {
+                  width: 10%;
                   text-align: end;
                 }
               }
@@ -457,9 +494,19 @@
                 td {
                   background: unset;
                   &:first-child {
+                    width: 50%;
                     text-align: left;
                   }
                   &:nth-child(2) {
+                    width: 15%;
+                    text-align: center;
+                  }
+                  &:nth-child(3) {
+                    width: 25%;
+                    text-align: end;
+                  }
+                  &:nth-child(4) {
+                    width: 10%;
                     text-align: end;
                   }
                 }
@@ -467,43 +514,10 @@
             }
           }
         }
-      }
-    }
-  }
-  .folderContentDataList {
-    :global {
-      .ant-table {
-        .ant-table-container {
-          .ant-table-thead {
-            th {
-              background-color: #ecedf0;
-              &:first-child {
-                text-align: left;
-              }
-              &:nth-child(2) {
-                text-align: center;
-              }
-              &:nth-child(3) {
-                text-align: end;
-              }
-            }
-          }
-          .ant-table-tbody {
-            tr {
-              cursor: pointer;
-              td {
-                background: unset;
-                &:first-child {
-                  text-align: left;
-                }
-                &:nth-child(2) {
-                  text-align: center;
-                }
-                &:nth-child(3) {
-                  text-align: end;
-                }
-              }
-            }
+        .ant-table-wrapper {
+          .ant-table-content {
+            min-height: 400px;
+            padding-bottom: 96px;
           }
         }
       }
@@ -591,6 +605,12 @@
         padding: 0;
         width: 100%;
         height: 100%;
+
+        > img {
+          height: 100%;
+          width: 100%;
+          margin: 0px;
+        }
       }
     }
   }
@@ -600,6 +620,28 @@
   }
   img {
     margin-top: 12px;
+  }
+  .tableImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > div {
+      width: 100%;
+      height: 100%;
+
+      > div {
+        width: 100%;
+        height: 100%;
+
+        > svg {
+          width: 30px;
+          height: 48px;
+        }
+      }
+    }
   }
 }
 .btnCircle {
@@ -617,13 +659,13 @@
   }
 }
 .menuContentMobileBody {
-  //padding: 0 0 0 10px;
   .menuContentList {
     position: relative;
+    padding: 6px 0px;
     .menuItem {
       display: flex;
       cursor: pointer;
-      padding: 6px;
+      padding: 6px 12px;
       color: #9292a3;
       span {
         margin: 4px 5px 0 0;
