@@ -1729,6 +1729,20 @@ export const Company = objectType({
         return root.ContactPreference
       },
     })
+    t.list.field('CreditBalance', {
+      type: 'CreditBalance',
+      args: {
+        where: 'CreditBalanceWhereInput',
+        orderBy: 'CreditBalanceOrderByWithRelationInput',
+        cursor: 'CreditBalanceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CreditBalanceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CreditBalance
+      },
+    })
     t.list.field('ActivityUserState', {
       type: 'ActivityUserState',
       args: {
@@ -1895,6 +1909,34 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.PathwayStep
+      },
+    })
+    t.list.field('CommunicationAttachment', {
+      type: 'CommunicationAttachment',
+      args: {
+        where: 'CommunicationAttachmentWhereInput',
+        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
+        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationAttachment
+      },
+    })
+    t.list.field('Recall', {
+      type: 'Recall',
+      args: {
+        where: 'RecallWhereInput',
+        orderBy: 'RecallOrderByWithRelationInput',
+        cursor: 'RecallWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RecallScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Recall
       },
     })
     t.nullable.field('_count', {

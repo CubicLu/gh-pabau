@@ -542,6 +542,34 @@ export const CmContact = objectType({
         return root.PathwayStepsTaken
       },
     })
+    t.list.field('CommunicationAttachment', {
+      type: 'CommunicationAttachment',
+      args: {
+        where: 'CommunicationAttachmentWhereInput',
+        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
+        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationAttachment
+      },
+    })
+    t.list.field('RecallSchedule', {
+      type: 'RecallSchedule',
+      args: {
+        where: 'RecallScheduleWhereInput',
+        orderBy: 'RecallScheduleOrderByWithRelationInput',
+        cursor: 'RecallScheduleWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RecallScheduleScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.RecallSchedule
+      },
+    })
     t.list.field('MedicalFormContact', {
       type: 'MedicalFormContact',
       args: {

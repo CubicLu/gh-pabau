@@ -33,6 +33,7 @@ export const RotaShift = objectType({
     t.string('tag_name')
     t.int('room_id')
     t.boolean('force_created')
+    t.nullable.string('allowed_services')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
