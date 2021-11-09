@@ -1,5 +1,3 @@
-import { boolean } from 'yup'
-
 export interface TextLocalResponse {
   data?: any
   status?: any
