@@ -65,8 +65,8 @@ const LeadsStagesComponent = () => {
   const [leadsDefaultParams, setLeadsDefaultParams] = useState({
     limit: 30,
     skip: 0,
-    company_id: 8119,
-    pipeline_id: 1,
+    company_id: 8254,
+    pipeline_id: 116,
   })
   const [leadsState, setLeadsState] = useState({})
   const [queryIsCalled, setQueryIsCalled] = useState(false)
