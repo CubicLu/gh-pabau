@@ -5097,6 +5097,14 @@ en:
   ui.clientdetails.more.merge: Merge
   ui.clientdetails.deactive.confirm: 'Are you sure?'
   ui.clientdetails.delete.card.tooltop: 'Delete card?'
+  ui.pinscreen.input.label: 'Passcode'
+  ui.pinscreen.title: 'Enter passcode'
+  ui.pinscreen.title.mobile: 'Enter pincode'
+  ui.pinscreen.forgot.pin: 'Forgot pin?'
+  ui.pinscreen.cancel: 'Cancel'
+  ui.pinscreen.done: 'Done'
+  ui.pinscreen.delete: 'Delete'
+  ui.pinscreen.incorrect.alert.message: 'Pin code incorrect - please try again'
   dashboard.create.menu.item.activity.description: 'Log a call, email or anything else'
   dashboard.create.menu.item.dictation.description: Dictation
   dashboard.create.menu.item.dictation.title: Dictation
@@ -5680,4 +5688,3 @@ en:
   clients.activities.delete.message: 'Activity deleted Successfully'
   clients.activities.delete.error.message: 'An error occured while deleting activity'
   clients.activities.delete.modal.message: 'Do you really want to delete these records? This process cannot be undone.'
-

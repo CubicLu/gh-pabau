@@ -8,10 +8,10 @@ export default {
 }
 
 const PinScreenStory = (args) => {
-  return <PinScreen {...args} />
+  return <PinScreen {...args} onSubmit={val => console.log(val)} />
 }
 
 export const Pin = PinScreenStory.bind({})
 Pin.args = {
-
+  onSubmit: (val) => console.log(val)
 }

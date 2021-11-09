@@ -1,20 +1,70 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
+import { Input, Alert } from 'antd'
 import { useTranslation } from 'react-i18next'
 import styles from './PinScreen.module.less'
 import { useMedia } from 'react-use'
-import { Button } from '@pabau/ui'
+import { Button, Notification, NotificationType } from '@pabau/ui'
 
-// export interface Props {}
+export interface Props {
+  onSubmit: (val: boolean) => void
+}
 
-export const PinScreen: FC = () => {
+export const PinScreen: FC<Props> = ({ onSubmit }) => {
   const { t } = useTranslation('common')
+  const reg = /^\d*(\d*)?$/
   const [password, setPassword] = useState('')
+  const [alert, setAlert] = useState(false)
+  const isMobile = useMedia('(max-width: 767px)', false)
 
+  const checkPin = (value) => {
+    if (value.length === 4 && value !== '1122') {
+      setAlert(true)
+      setPassword('')
+      onSubmit(false)
+      !isMobile &&
+        Notification(
+          NotificationType.error,
+          t('ui.pinscreen.incorrect.alert.message')
+        )
+    } else {
+      setAlert(false)
+      onSubmit(true)
+    }
+  }
   const handleChange = (e) => {
-    setPassword(e.target.value)
+    const { value } = e.target
+    if (!Number.isNaN(value) && reg.test(value) && value.length <= 4) {
+      setAlert(false)
+      setPassword(value)
+    }
   }
 
-  const isMobile = useMedia('(max-width: 767px)', false)
+  const buttonHandle = (e, val) => {
+    const value = password + val
+    if (!Number.isNaN(value) && reg.test(value) && value.length <= 4) {
+      setAlert(false)
+      setPassword(value)
+      if (value.length === 4) {
+        checkPin(value)
+      }
+    }
+    if (e.target.className === `${styles.number} ${styles.active}`) {
+      e.target.className = `${styles.number}`
+    } else {
+      setTimeout(function () {
+        e.target.className = `${styles.number} ${styles.active}`
+      })
+    }
+    setTimeout(function () {
+      e.target.className = `${styles.number} ${styles.active}`
+    })
+  }
+
+  const handleRemove = () => {
+    password.length === 4 && setAlert(false)
+    setPassword(password.slice(0, -1))
+  }
+
   return (
     <div className={styles.pincodeMainWrapper}>
       {isMobile ? (
@@ -35,35 +85,66 @@ export const PinScreen: FC = () => {
               </svg>
             </div>
             <div className={styles.passwordHeading}>
-              <h4>Enter pincode</h4>
+              <h4>{t('ui.pinscreen.title.mobile')}</h4>
             </div>
+            {alert && (
+              <>
+                <Alert
+                  message={t('ui.pinscreen.incorrect.alert.message')}
+                  type="error"
+                />
+                <br />
+              </>
+            )}
             <div className={styles.passwordNumDots}>
-              <div className={styles.dots}>
-                <span className={`${styles.dot}`}></span>
-                <span className={`${styles.dot}`}></span>
-                <span className={`${styles.dot}`}></span>
-                <span className={`${styles.dot}`}></span>
+              <div className={`${styles.dots} ${alert && styles.wrongpw}`}>
+                {Array.from({ length: 4 })
+                  .fill('')
+                  .map((val, key) => {
+                    return (
+                      <span
+                        key={key}
+                        className={`${styles.dot} ${
+                          password.length > key && styles.active
+                        }`}
+                      ></span>
+                    )
+                  })}
               </div>
               <div className={styles.numbers}>
-                <button className={styles.number}>1</button>
-                <button className={styles.number}>2</button>
-                <button className={styles.number}>3</button>
-                <button className={styles.number}>4</button>
-                <button className={styles.number}>5</button>
-                <button className={styles.number}>6</button>
-                <button className={styles.number}>7</button>
-                <button className={styles.number}>8</button>
-                <button className={styles.number}>9</button>
-                <button className={styles.number}>0</button>
+                {Array.from({ length: 10 })
+                  .fill('')
+                  .map((val, key) => {
+                    const num = key === 9 ? 0 : key + 1
+                    return (
+                      <span
+                        key={key}
+                        className={`${styles.number}`}
+                        onClick={(e) => buttonHandle(e, num)}
+                      >
+                        {num}
+                      </span>
+                    )
+                  })}
               </div>
             </div>
             <div className={styles.buttonsWrapper}>
-              <a href="/" className={styles.buttonLink}>
-                Forgot pin?
-              </a>
-              <a href="/" className={styles.buttonLink}>
-                Cancel
-              </a>
+              <Button type="link" className={styles.buttonLink}>
+                {t('ui.pinscreen.forgot.pin')}
+              </Button>
+              {password.length > 0 ? (
+                <Button
+                  type="link"
+                  className={styles.buttonLink}
+                  onClick={handleRemove}
+                >
+                  {t('ui.pinscreen.delete')}
+                </Button>
+              ) : (
+                <Button type="link" className={styles.buttonLink}>
+                  {t('ui.pinscreen.cancel')}
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -85,25 +166,30 @@ export const PinScreen: FC = () => {
               </svg>
             </div>
             <div className={styles.passcodeHeading}>
-              <h4>Enter passcode</h4>
+              <h4>{t('ui.pinscreen.title')}</h4>
             </div>
             <form>
               <div className={styles.passcodeForm}>
                 <div className={styles.passcodeInput}>
-                  <input
+                  <Input
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder={t('ui.pinscreen.input.label')}
                     value={password}
                     onChange={handleChange}
                   />
                 </div>
                 <div className={styles.passcodeButton}>
                   <Button className={styles.cancelButton} disabled={false}>
-                    Cancel
+                    {t('ui.pinscreen.cancel')}
                   </Button>
-                  <Button className={styles.submitButton} disabled={true}>
-                    Done
+                  <Button
+                    className={styles.submitButton}
+                    type={'primary'}
+                    disabled={password.length === 4 ? false : true}
+                    onClick={() => checkPin(password)}
+                  >
+                    {t('ui.pinscreen.done')}
                   </Button>
                 </div>
               </div>
