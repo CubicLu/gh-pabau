@@ -148,20 +148,20 @@
       span:last-child {
         margin-left: 8px;
       }
-      .create-content {
-        .content-item {
-          cursor: pointer;
-          padding: 5px 20px;
+    }
+  }
+}
+.create-content {
+  .content-item {
+    cursor: pointer;
+    padding: 5px 20px;
 
-          > span {
-            margin-right: 5px;
-          }
+    > span {
+      margin-right: 5px;
+    }
 
-          &:hover {
-            background-color: #eeeeee;
-          }
-        }
-      }
+    &:hover {
+      background-color: #eeeeee;
     }
   }
 }
@@ -387,6 +387,10 @@
   height: 260px;
   min-width: 250px;
   overflow: auto;
+
+  @media screen and (max-width: 767px) {
+    height: 239px;
+  }
 
   > span {
     font-size: 12px;
@@ -748,6 +752,9 @@
 }
 .createContentMobile {
   :global {
+    .ant-drawer-mask {
+      background-color: rgba(0, 0, 0, 0.15) !important;
+    }
     .ant-drawer-content-wrapper {
       height: unset !important;
       .ant-drawer-content {
@@ -987,10 +994,43 @@
         }
       }
     }
+
+    > ul {
+      border: 0px;
+
+      > li {
+        min-height: 35px;
+        display: flex;
+        align-items: center;
+        padding: 0px 8px !important;
+
+        > div {
+          padding-left: 12px;
+        }
+
+        > span {
+          margin: 0px;
+        }
+
+        &:hover {
+          background-color: #88d2ec29 !important;
+
+          svg path {
+            fill: var(--primary-color);
+          }
+          div {
+            color: var(--primary-color);
+          }
+        }
+      }
+    }
   }
 }
 .menuContentMobile {
   :global {
+    .ant-drawer-mask {
+      background-color: rgba(0, 0, 0, 0.15) !important;
+    }
     .ant-drawer-content-wrapper {
       height: unset !important;
       .ant-drawer-content {
@@ -1215,7 +1255,6 @@
   p {
     margin: 0;
     font-size: 14px;
-    max-width: 500px;
   }
   .gridAlbum {
     position: relative;
@@ -1309,11 +1348,9 @@
   }
   p {
     margin: 0px;
-    max-width: 600px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 500px;
   }
   img {
     margin-top: 12px;

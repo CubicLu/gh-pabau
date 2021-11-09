@@ -173,7 +173,7 @@
   flex-direction: column;
   .mainTabMenuItems {
     width: 100%;
-    margin-top: 60px;
+    margin-top: 0px;
     position: fixed;
     height: 40px;
     z-index: 1;
@@ -233,11 +233,12 @@
     margin-top: 100px;
     background-color: white;
     // z-index: 20;
-    .tabPaneItem {
-      display: none;
-    }
     .active {
       display: block;
+    }
+
+    @media screen and (max-width: 767px) {
+      margin-top: 75px;
     }
   }
 }

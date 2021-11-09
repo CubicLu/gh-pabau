@@ -30,6 +30,20 @@ export const Communication = objectType({
         return root.Company
       },
     })
+    t.list.field('CommunicationAttachment', {
+      type: 'CommunicationAttachment',
+      args: {
+        where: 'CommunicationAttachmentWhereInput',
+        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
+        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationAttachment
+      },
+    })
     t.list.field('CommunicationRecipient', {
       type: 'CommunicationRecipient',
       args: {
