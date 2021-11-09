@@ -132,6 +132,8 @@ export interface FolderDataProps {
   drop: (e) => void
   allowDrop: (e) => void
   dragDocument: (e) => void
+  onRenameFile?: (file: number, name: string) => void
+  renameFileLoading?: boolean
 }
 
 export const FolderData: FC<FolderDataProps> = ({
@@ -152,6 +154,8 @@ export const FolderData: FC<FolderDataProps> = ({
   drop,
   allowDrop,
   dragDocument,
+  onRenameFile,
+  renameFileLoading,
 }) => {
   const isMobile = useMedia('(max-width: 767px)', false)
 
@@ -168,6 +172,12 @@ export const FolderData: FC<FolderDataProps> = ({
   const [selectedFolder, setSelectedFolder] = useState<number>(0)
   const [selectedDocument, setSelectedDocument] = useState<number>(0)
 
+  const [renamingFile, setRenamingFile] = useState<{
+    id: number
+    name: string
+  }>({ id: 0, name: '' })
+  const [renameFileModal, setRenameFileModal] = useState(false)
+
   useEffect(() => {
     setNumPages(0)
     setPageNumber(1)
@@ -176,6 +186,8 @@ export const FolderData: FC<FolderDataProps> = ({
   useEffect(() => {
     setDocDelModal(() => false)
     setDocumentDrawer(() => false)
+    setRenameFileModal(() => false)
+    setRenamingFile({ id: 0, name: '' })
   }, [data])
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -210,8 +222,8 @@ export const FolderData: FC<FolderDataProps> = ({
     },
   }
 
-  const handlePreview = (pdf) => {
-    setPdfName(pdf)
+  const handlePreview = (pdf, name = '') => {
+    setPdfName(name || pdf)
     setPdfData(pdf)
     setPageNumber(1)
     setPreviewModal((e) => !e)
@@ -377,6 +389,21 @@ export const FolderData: FC<FolderDataProps> = ({
           </div>
           <div
             className={styles.menuItem}
+            onClick={() => {
+              const cFile = data?.folderContent?.find((el) => el?.id === record)
+              if (cFile) {
+                setRenamingFile({
+                  id: cFile?.id,
+                  name: cFile?.documentName || '',
+                })
+                setRenameFileModal((e) => !e)
+              }
+            }}
+          >
+            <EditOutlined /> Rename
+          </div>
+          <div
+            className={styles.menuItem}
             style={{ justifyContent: 'space-between', display: 'flex' }}
             onClick={() => {
               setFolderDropdown((e) => !e)
@@ -494,7 +521,12 @@ export const FolderData: FC<FolderDataProps> = ({
               }
               onChange={(e) => handleSelect(e.target.checked, record)}
             />
-            <Card bordered={false} onClick={() => handlePreview(record?.name)}>
+            <Card
+              bordered={false}
+              onClick={() =>
+                handlePreview(record?.folderData, record?.documentName)
+              }
+            >
               {fileArray.has(fileData[fileData?.length - 1]) ? (
                 <FileIcon
                   foldColor="lightgray"
@@ -513,7 +545,11 @@ export const FolderData: FC<FolderDataProps> = ({
                 />
               )}
             </Card>
-            <div onClick={() => handlePreview(record?.name)}>
+            <div
+              onClick={() =>
+                handlePreview(record?.folderData, record?.documentName)
+              }
+            >
               <p>
                 {record?.documentName
                   ? record?.documentName
@@ -849,7 +885,12 @@ export const FolderData: FC<FolderDataProps> = ({
                         ))}
                       <div
                         className={styles.hoverOverlay}
-                        onClick={() => handlePreview(folderValue?.folderData)}
+                        onClick={() =>
+                          handlePreview(
+                            folderValue?.folderData,
+                            folderValue?.documentName
+                          )
+                        }
                         draggable={true}
                         id={folderValue?.id?.toString()}
                         onDragStart={(event) => dragDocument(event)}
@@ -1059,6 +1100,34 @@ export const FolderData: FC<FolderDataProps> = ({
           </p>
         </div>
       </Modal>
+      <BasicModal
+        modalWidth={600}
+        onCancel={() => {
+          setRenamingFile({ id: 0, name: '' })
+          setRenameFileModal((e) => !e)
+        }}
+        onOk={() => {
+          if (renamingFile?.id && renamingFile?.name)
+            onRenameFile?.(renamingFile?.id, renamingFile?.name)
+        }}
+        title="Rename File"
+        visible={renameFileModal}
+        newButtonText="Save"
+        loading={renameFileLoading}
+      >
+        <div className={styles.modalContent}>
+          <label>Name</label>
+          <Input
+            autoFocus
+            name="name"
+            placeholder={'Create new folder'}
+            value={renamingFile?.name}
+            onChange={(e) => {
+              setRenamingFile({ ...renamingFile, name: e.target.value })
+            }}
+          />
+        </div>
+      </BasicModal>
     </div>
   )
 }

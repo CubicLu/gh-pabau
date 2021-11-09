@@ -89,6 +89,8 @@ export interface ClientDocumentsProps {
   docsDeleteLoading?: boolean
   singleDocDelLoading?: boolean
   onDocumentsMove?: (folder, documents) => void
+  onRenameFile?: (file: number, name: string) => void
+  renameFileLoading?: boolean
 }
 
 export const ClientDocuments: FC<ClientDocumentsProps> = ({
@@ -111,8 +113,9 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
   onUploadCancel,
   docsDeleteLoading,
   singleDocDelLoading,
-
   onDocumentsMove,
+  onRenameFile,
+  renameFileLoading,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -567,6 +570,8 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
           drop={drop}
           allowDrop={allowDrop}
           dragDocument={dragDocument}
+          onRenameFile={onRenameFile}
+          renameFileLoading={renameFileLoading}
         />
       )}
       {isMobile && showMenu && selectedDocuments?.length > 0 && (

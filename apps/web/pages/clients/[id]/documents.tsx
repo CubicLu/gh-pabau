@@ -31,6 +31,7 @@ import {
   useCreateContactPhotoWithoutAlbumMutation as useCreateUncatDocumentMutation,
   useDeleteManyContactPhotoMutation as useDeleteManyDocumentsMutation,
   useDeleteContactPhotoMutation as useDeleteDocumentMutation,
+  useUpdateOneContactAttachmentMutation as useUpdateDocumentMutation,
 } from '@pabau/graphql'
 
 const baseURL = `${cdnURL}/v2/api/contact/`
@@ -92,6 +93,8 @@ const Photos: FC = () => {
   const [folderCreateLoading, setFolderCreateLoading] = useState(false)
   const [folderUpdateLoading, setFolderUpdateLoading] = useState(false)
   const [folderDeleteLoading, setFolderDeleteLoading] = useState(false)
+
+  const [renameFileLoading, setRenameFileLoading] = useState(false)
 
   const contactId = useMemo(() => {
     return router.query.id ? Number(router.query.id) : 0
@@ -358,6 +361,15 @@ const Photos: FC = () => {
     },
     onError(error) {
       Notification(NotificationType?.error, error?.message)
+    },
+  })
+
+  const [renameDocument] = useUpdateDocumentMutation({
+    onCompleted() {
+      setRenameFileLoading(() => false)
+    },
+    onError() {
+      setRenameFileLoading(() => false)
     },
   })
 
@@ -733,6 +745,35 @@ const Photos: FC = () => {
     }
   }
 
+  const onRenameFile = (file: number, name: string) => {
+    setRenameFileLoading(() => true)
+    renameDocument({
+      variables: {
+        where: {
+          id: file,
+        },
+        data: {
+          attachment_title: {
+            set: name,
+          },
+        },
+      },
+      refetchQueries: [
+        {
+          query: GetFolderDocumentsDocument,
+          variables: variables,
+        },
+        folderId === 0 && {
+          query: CountFolderDocumentsDocument,
+          variables: {
+            contactId: contactId,
+            folderId: 0,
+          },
+        },
+      ],
+    })
+  }
+
   return (
     <ClientCardLayout clientId={Number(router.query.id)} activeTab="documents">
       <ClientDocumentsLayout
@@ -775,6 +816,8 @@ const Photos: FC = () => {
         docsDeleteLoading={docsDeleteLoading}
         singleDocDelLoading={singleDocDelLoading}
         onDocumentsMove={onDocumentsMove}
+        onRenameFile={onRenameFile}
+        renameFileLoading={renameFileLoading}
       />
     </ClientCardLayout>
   )
