@@ -117,9 +117,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
   const [selectedClient, setSelectedClient] = useState<string>('')
   const [isDone, setIsDone] = useState(false)
   const [visibleDrawer, setVisibleDrawer] = useState(false)
-  const [defaultCalenderDate, setDefaultCalenderDate] = useState<Date>(
-    new Date()
-  )
+  const [defaultCalenderDate, setDefaultCalenderDate] = useState<Dayjs>(dayjs())
 
   useEffect(() => {
     if (isEdit && editData) {
@@ -141,7 +139,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
         freeBusy,
         notes,
       })
-      setDefaultCalenderDate(dayjs(startDate, 'D MMMM YYYY hh:mm').toDate())
+      setDefaultCalenderDate(dayjs(startDate, 'D MMMM YYYY hh:mm'))
       editData.client && setSelectedClient(editData.client as never)
       editData?.user && setSelectedUser(editData.user as never)
       editData?.lead && setSelectedLead(editData.lead as never)

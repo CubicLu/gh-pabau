@@ -122,6 +122,7 @@
           display: flex;
           width: 100%;
           flex-wrap: nowrap;
+          align-items: center;
           :global {
             .ant-picker {
               height: 40px;
@@ -228,8 +229,13 @@
             width: 100% !important;
             .ant-select-selector {
               height: 40px;
+              .ant-select-selection-search {
+                .ant-select-selection-search-input {
+                  height: 40px;
+                }
+              }
               .ant-select-selection-item {
-                line-height: 40px;
+                line-height: 40px; 
               }
             }
            

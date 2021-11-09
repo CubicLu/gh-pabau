@@ -145,11 +145,11 @@ export const defaultColumns = [
 ]
 
 const statusMapper = {
-  'awaiting': 'Awaiting',
-  'done': 'Done',
-  'pending': 'Pending',
-  'reopened': 'Reopened',
-  'working_on': 'Working on'
+  awaiting: 'Awaiting',
+  done: 'Done',
+  pending: 'Pending',
+  reopened: 'Reopened',
+  working_on: 'Working on',
 }
 export const ActivityTable: FC<ActivityTableProps> = React.memo(
   ({
@@ -234,10 +234,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     }, [paginateData])
 
     const RenderStatus = (data) => {
-      let { status, id } = data
-      status = statusMapper[status]
+      const { status, id } = data
+      const statusName = statusMapper[status]
       const [visible, setVisible] = useState(false)
-      const { backgroundColor, borderColor } = renderStatus(status)
+      const { backgroundColor, borderColor } = renderStatus(statusName)
       const toggleVisible = () => {
         setVisible((e) => !e)
       }
@@ -259,7 +259,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               }}
               backgroundColor={backgroundColor}
             >
-              {status}
+              {statusName}
             </Button>
           </Popover>
           {isMobile && (
@@ -343,13 +343,14 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: (data) => {
-          const { firstName = '', lastName = '' } = data
+        render: ({ firstName, lastName }) => {
           return (
             <span className={styles.cellFormater}>
-              <a href="/" className={styles.link}>
-                {`${firstName} ${lastName}` || ''}
-              </a>
+              {(firstName || lastName) && (
+                <a href="/" className={styles.link}>
+                  {`${firstName} ${lastName}` || ''}
+                </a>
+              )}
             </span>
           )
         },
@@ -402,13 +403,14 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        render: (data) => {
-          const { firstName = '', lastName = '' } = data
+        render: ({ firstName, lastName }) => {
           return (
             <span className={styles.cellFormater}>
-              <a href="/" className={styles.link}>
-                {`${firstName} ${lastName}` || ''}
-              </a>
+              {(firstName || lastName) && (
+                <a href="/" className={styles.link}>
+                  {`${firstName} ${lastName}` || ''}
+                </a>
+              )}
             </span>
           )
         },
@@ -665,9 +667,11 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              <a href="/" className={styles.link}>
-                {`${firstName} ${lastName}` || ''}
-              </a>
+              {(firstName || lastName) && (
+                <a href="/" className={styles.link}>
+                  {`${firstName} ${lastName}` || ''}
+                </a>
+              )}
             </span>
           )
         },
@@ -1208,7 +1212,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         render: ({ label = [] }) => {
           return (
             <div>
-              {label.map((item, index) => {
+              {label?.map((item, index) => {
                 const data = item?.CmLabel
                 return (
                   <div className={styles.labelWrapper} key={index}>

@@ -1165,13 +1165,13 @@ export const prepareActivityDataWithCustomField = async (
       const contactAllActivity = item?.CmContact?.Activity ?? []
       const leadNote = item?.CmLead?.CmLeadNote
 
-      leadAllActivity.sort((a, b) => {
+      leadAllActivity?.sort((a, b) => {
         return (
           new Date(a.finished_at).getTime() - new Date(b.finished_at).getTime()
         )
       })
 
-      leadNote.sort((a, b) => {
+      leadNote?.sort((a, b) => {
         return (
           new Date(b.CreatedDate).getTime() - new Date(a.CreatedDate).getTime()
         )
@@ -1186,7 +1186,7 @@ export const prepareActivityDataWithCustomField = async (
         }
       ).filter((item) => item)
 
-      const leadLastEmailReceived = leadEmailReceived.sort((a, b) => {
+      const leadLastEmailReceived = leadEmailReceived?.sort((a, b) => {
         return new Date(b).getTime() - new Date(a).getTime()
       })?.[0]
 
@@ -1231,7 +1231,7 @@ export const prepareActivityDataWithCustomField = async (
           )?.length,
           leadNextActivityDate: leadAllActivity.find(
             (item) => item?.status !== 'done'
-          ).due_start_date,
+          )?.due_start_date,
           leadLostTime: leadLost?.lostTime,
           leadLastEmailReceived: leadLastEmailReceived,
           emailMessagesCount: item?.CmLead?.CommunicationRecipient?.length,

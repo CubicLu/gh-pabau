@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import styles from './BigCalendar.module.less'
 import { EventsData } from '@pabau/ui'
@@ -9,6 +9,8 @@ import format from 'date-fns/format'
 import parse from 'date-fns/parse'
 import startOfWeek from 'date-fns/startOfWeek'
 import getDay from 'date-fns/getDay'
+import { Tooltip } from 'antd'
+import { useTranslation } from 'react-i18next'
 import {
   SendOutlined,
   PhoneOutlined,
@@ -35,7 +37,7 @@ export const navigateConstants = {
 
 interface BigCalendarProps {
   data?: EventsData[]
-  defaultDate?: Date
+  defaultDate?: Dayjs
   height?: string
 }
 
@@ -44,6 +46,7 @@ export const BigCalender: FC<BigCalendarProps> = ({
   defaultDate,
   height,
 }) => {
+  const { t } = useTranslation('common')
   const [events, setEvents] = useState([])
 
   useEffect(() => {
@@ -68,10 +71,14 @@ export const BigCalender: FC<BigCalendarProps> = ({
         <h5>{props.label}</h5>
         <span className={styles.customBtnGroup}>
           <div onClick={navigate.bind(null, navigateConstants.PREVIOUS)}>
-            <LeftOutlined />
+            <Tooltip title={t('create.activity.big.calendar.previous.title')}>
+              <LeftOutlined />
+            </Tooltip>
           </div>
           <div onClick={navigate.bind(null, navigateConstants.NEXT)}>
-            <RightOutlined />
+            <Tooltip title={t('create.activity.big.calendar.next.title')}>
+              <RightOutlined />
+            </Tooltip>
           </div>
         </span>
       </div>
@@ -104,7 +111,7 @@ export const BigCalender: FC<BigCalendarProps> = ({
     <div style={{ height: height }}>
       <Calendar
         localizer={localize}
-        defaultDate={defaultDate}
+        date={defaultDate}
         events={events}
         step={30}
         views={{

@@ -29,7 +29,7 @@ export const CmContactCustomType = objectType({
   definition(t) {
     t.string('Fname')
     t.string('Lname')
-    t.nonNull.list.field('CmContactLabel', { type: 'CmContactLabel' })
+    t.list.field('CmContactLabel', { type: 'CmContactLabel' })
     t.string('Email')
     t.string('Phone')
     t.string('MailingStreet')
