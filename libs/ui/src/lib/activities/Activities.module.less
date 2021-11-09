@@ -2,13 +2,13 @@
   .sub-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 15px 56px 15px 18px;
+    justify-content: flex-end;
+    padding: 15px 15px 15px 18px;
     background: #ffffff;
     border-bottom: 1px solid #f1f1f1;
     .sub-header-left  {
       display: flex;
-      :global .ant-skeleton {
+      :global .ant-skeleton:not(:last-child) {
         margin-right: 24px;
       }
     > div {

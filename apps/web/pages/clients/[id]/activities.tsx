@@ -198,7 +198,7 @@ const ActivitiesTab = () => {
       },
     })
   }
-  const onActivityFilterChange = (id, isSelected) => {
+  const onActivityFilterChange = (id) => {
     if (id !== 0) {
       resetPagionation()
       let filterObj = [...activityFilterType]
