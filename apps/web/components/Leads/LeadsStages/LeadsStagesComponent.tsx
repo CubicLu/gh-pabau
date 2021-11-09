@@ -6,7 +6,8 @@ import React, {
   createRef,
 } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { Tooltip } from 'antd'
+import { Tooltip, Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import { KanbanCard } from '@pabau/ui'
 import {
   useGetKanbanLeadsLazyQuery,
@@ -242,8 +243,8 @@ const LeadsStagesComponent = () => {
       const stageIndex = Number.parseInt(
         stageQuery.stageWithLeads[stageQuery.queryCalled]
       )
-
       if (stageQuery.queryCalled === 0) setQueryIsCalled(true)
+
       getAllKanbanLeadsDetails({
         variables: {
           ...leadsDefaultParams,
@@ -477,6 +478,13 @@ const LeadsStagesComponent = () => {
               })}
             </div>
           </DragDropContext>
+        )}
+        {queryIsCalled && allStages.length > 0 && (
+          <div className={styles.preLoader}>
+            <Spin
+              indicator={<LoadingOutlined style={{ fontSize: 30 }} spin />}
+            />
+          </div>
         )}
       </div>
     </div>
