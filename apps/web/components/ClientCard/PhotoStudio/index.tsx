@@ -3,12 +3,11 @@ import { ImageViewer, ImageViewerAlbum, UploadingImageProps } from '@pabau/ui'
 import { useUser } from '../../../context/UserContext'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import postData from '../../Uploaders/UploadHelpers/UploadHelpers'
 import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
   useGetPhotoAlbumLazyQuery,
-  useGetAlbumPhotosLazyQuery,
+  useGetAllAlbumPhotosLazyQuery,
   useCreateContactPhotoMutation,
   useCreateContactPhotoWithoutAlbumMutation,
   useDeleteContactPhotoMutation,
@@ -21,6 +20,7 @@ export interface PhotoStudioProps {
   photoId?: number
   albumId?: number
   contactId: number
+  fetchFunc?: () => void
 }
 
 export const PhotoStudio: FC<PhotoStudioProps> = ({
@@ -30,6 +30,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   photoId,
   albumId,
   contactId,
+  fetchFunc,
 }) => {
   const cdn = `${cdnURL}/cdn/attachments/`
   const baseURL = `${cdnURL}/v2/api/contact/`
@@ -51,13 +52,13 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   >()
 
   const [createAttachmentInAlbum] = useCreateContactPhotoMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
@@ -69,19 +70,20 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
           },
         })
       }
+      if (data?.album_id === albumId) fetchFunc?.()
     },
   })
 
   const [
     createAttachmentOutOfAlbum,
   ] = useCreateContactPhotoWithoutAlbumMutation({
-    onCompleted(data) {
-      const path = data?.createOneContactAttachment?.linkref
+    onCompleted({ createOneContactAttachment: data }) {
+      const path = data?.linkref
       const cAddedFiles = [...uploadingImages]
       const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === path)
       if (idx !== -1) {
         const cFile = cAddedFiles[idx]
-        cFile.id = data?.createOneContactAttachment?.id
+        cFile.id = data?.id
         cFile.loading = false
         cFile.isUploadCompleted = true
         cAddedFiles.splice(idx, 1, cFile)
@@ -93,6 +95,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
           },
         })
       }
+      if (data?.album_id === albumId) fetchFunc?.()
     },
   })
 
@@ -135,7 +138,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const [
     getUncatAlbumPhotos,
     { data: dUnCatPhotos },
-  ] = useGetAlbumPhotosLazyQuery({
+  ] = useGetAllAlbumPhotosLazyQuery({
     fetchPolicy: 'network-only',
   })
 
@@ -355,30 +358,20 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
     }
   }
 
-  const removeImage = async (imagePath) => {
+  const removeImage = async (imageId: number) => {
     const cAddedFiles = [...uploadingImages]
-    const idx = cAddedFiles?.findIndex((el) => el?.uploadedPath === imagePath)
+    const idx = cAddedFiles?.findIndex((el) => el?.id === imageId)
     if (idx !== -1) {
-      const data = new FormData()
-      data.append('file_path', imagePath)
       const cFile = cAddedFiles[idx]
       cFile.loading = true
       cAddedFiles.splice(idx, 1, cFile)
       setUploadingImages(cAddedFiles)
 
-      const res = await postData(
-        `${baseURL}delete-photo`,
-        { file_path: imagePath },
-        null
-      )
-      if (res.success) {
-        const cFile = cAddedFiles[idx]
-        deleteAttachmentInAlbum({
-          variables: {
-            id: cFile?.id,
-          },
-        })
-      }
+      deleteAttachmentInAlbum({
+        variables: {
+          id: imageId,
+        },
+      })
     }
   }
 
@@ -395,6 +388,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
       setUploadingImages={setUploadingImages}
       uploadImage={uploadImage}
       removeImage={removeImage}
+      loading={dAlbumsLoading || dCurrentAlbumloading}
     />
   )
 }

@@ -141,7 +141,7 @@ export const TopBoard: FC<ITopBoard> = ({
                   {!loading ? (
                     <div className={styles.title}>
                       {stringToCurrencySignConverter(user.me?.currency)}
-                      {Number.parseInt(revPerHour ?? '0').toLocaleString()}
+                      {Number.parseFloat(revPerHour).toLocaleString()}
                     </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
