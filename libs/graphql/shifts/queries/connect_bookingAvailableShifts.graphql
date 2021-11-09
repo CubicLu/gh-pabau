@@ -16,5 +16,8 @@ query bookingAvailableShifts(
     start
     room_id
     location_id
+    Public_User {
+      id
+    }
   }
 }

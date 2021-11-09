@@ -21,6 +21,24 @@ export default function useShifts(shiftsResult, bookingsResult) {
     }
   }
 
+  const employeeNumBookings = []
+  if (bookingsResult) {
+    for (const b of bookingsResult.Public_BookedAppointments) {
+      const dateIndex = Number.parseInt(
+        moment(decimalToISO8601(b.start_date)).format('YYYYMMDD')
+      )
+      if (!employeeNumBookings[dateIndex]) {
+        employeeNumBookings[dateIndex] = []
+      }
+
+      if (employeeNumBookings[dateIndex][b.UID]) {
+        employeeNumBookings[dateIndex][b.UID]++
+      } else {
+        employeeNumBookings[dateIndex][b.UID] = 1
+      }
+    }
+  }
+
   const getShiftsOnDate = (date, duration = 60) => {
     const shiftsIndex = date.format('YYYYMMDD')
     if (shiftsByDate[shiftsIndex]?.length > 0) {
@@ -72,13 +90,20 @@ export default function useShifts(shiftsResult, bookingsResult) {
     return availability
   }
 
+  const betterEmployeeForTimeslot = (dateIndex, employee1ID, employee2ID) => {
+    return employeeNumBookings[dateIndex][employee1ID] >
+      employeeNumBookings[dateIndex][employee2ID]
+      ? employee1ID
+      : employee2ID
+  }
+
   const getDateTimeslots = (date, duration = 60) => {
     const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
     if (!shiftsByDate[shiftsIndex]) {
       return []
     }
 
-    const timeslots = {}
+    const timeslots = []
     const shifts = shiftsByDate[shiftsIndex]
     for (const shift of shifts) {
       const shiftStart = moment(decimalToISO8601(shift.start))
@@ -96,12 +121,13 @@ export default function useShifts(shiftsResult, bookingsResult) {
         const endDateASDecimal = Number.parseInt(
           moment(date).add(duration, 'minutes').format('YYYYMMDDHHmmss')
         )
+        const timeslotIndex = Number.parseInt(date.format('Hmm'))
 
         let allGood = true
         for (const b of bookingsResult.Public_BookedAppointments?.filter(
           (b) =>
             b.start_date.toString().substr(0, 8) ===
-            shiftStart.format('YYYYMMDD')
+              shiftStart.format('YYYYMMDD') && shift.Public_User.id === b.UID
         )) {
           if (
             endDateASDecimal > b.start_date &&
@@ -112,14 +138,22 @@ export default function useShifts(shiftsResult, bookingsResult) {
         }
 
         if (allGood) {
-          if (timeslots[date.format('HH:mm')]) {
-            timeslots[date.format('HH:mm')].push(shift.uid)
+          if (timeslots[timeslotIndex]) {
+            timeslots[timeslotIndex].user_id = betterEmployeeForTimeslot(
+              shiftsIndex,
+              timeslots[timeslotIndex].user_id,
+              shift.Public_User.id
+            )
           } else {
-            timeslots[date.format('HH:mm')] = [shift.uid]
+            timeslots[timeslotIndex] = {
+              slot: date.format('HH:mm'),
+              user_id: shift.Public_User.id,
+            }
           }
         }
       }
     }
+
     return timeslots
   }
 

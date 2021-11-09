@@ -35,5 +35,5 @@
     "suppressImplicitAnyIndexErrors": false,
     "suppressExcessPropertyErrors": false
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp", "artifacts", "coverage"]
 }

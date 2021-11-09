@@ -128,17 +128,17 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.mor} />{' '}
               {t('connect.onlinebooking.date&time.morning')}
             </p>
-            {Object.keys(timeslots).map((val) => {
-              if (Number.parseInt(val.substr(0, 2)) > 11) {
+            {timeslots.map((t) => {
+              if (Number.parseInt(t.slot.substr(0, 2)) > 11) {
                 return null
               }
               return (
                 <div
                   className={Styles.green}
-                  key={val}
+                  key={t.slot}
                   onClick={() => {
-                    const hour = Number.parseInt(val.substring(0, 2))
-                    const minute = Number.parseInt(val.substring(3, 5))
+                    const hour = Number.parseInt(t.slot.substring(0, 2))
+                    const minute = Number.parseInt(t.slot.substring(3, 5))
                     setSelectedData(
                       actionTypes.SET_DATETIME,
                       moment(selectedDate).set({ hour: hour, minute: minute })
@@ -146,7 +146,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
                     onSelected()
                   }}
                 >
-                  <p>{val}</p>
+                  <p>{t.slot}</p>
                 </div>
               )
             })}
@@ -156,16 +156,16 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.after} />
               {t('connect.onlinebooking.date&time.afternoon')}
             </p>
-            {Object.keys(timeslots).map((val) => {
+            {timeslots.map((t) => {
               if (
-                Number.parseInt(val.substr(0, 2)) < 12 ||
-                Number.parseInt(val.substr(0, 2)) > 16
+                Number.parseInt(t.slot.substr(0, 2)) < 12 ||
+                Number.parseInt(t.slot.substr(0, 2)) > 16
               ) {
                 return null
               }
               return (
-                <div className={Styles.green} key={val}>
-                  <p>{val}</p>
+                <div className={Styles.green} key={t.slot}>
+                  <p>{t.slot}</p>
                 </div>
               )
             })}
@@ -175,13 +175,13 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.night} />
               {t('connect.onlinebooking.date&time.evening')}
             </p>
-            {Object.keys(timeslots).map((val) => {
-              if (Number.parseInt(val.substr(0, 2)) < 17) {
+            {timeslots.map((t) => {
+              if (Number.parseInt(t.slot.substr(0, 2)) < 17) {
                 return null
               }
               return (
-                <div className={Styles.green} key={val}>
-                  <p>{val}</p>
+                <div className={Styles.green} key={t.slot}>
+                  <p>{t.slot}</p>
                 </div>
               )
             })}
