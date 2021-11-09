@@ -348,7 +348,7 @@ export const ClientCardLayout: FC<P> = ({
     <Layout>
       <ClientCard
         cssClass={cssClass}
-        onClose={() => router.push('/clients')}
+        onClose={() => router.back()}
         tabs={tabItems}
         activeTab={activeTab}
         onTabChanged={(key) =>
