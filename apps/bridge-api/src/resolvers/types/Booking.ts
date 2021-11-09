@@ -165,7 +165,7 @@ export const CancelAppointment = extendType({
           )
           // TO DO sendSMS
           if (getCancelSMSMessage) {
-            responseData.send_email = true
+            responseData.send_sms = true
           }
         }
         if (settings.send_email > 0 && settings.cancel_email_tmpl > 0) {
@@ -177,7 +177,6 @@ export const CancelAppointment = extendType({
               },
             }
           )
-          const send_email = false
           const emailArgs = {
             to: 'branko@pabau.com',
             subject: getCancelEmailMessage.subject,
@@ -190,10 +189,9 @@ export const CancelAppointment = extendType({
           }
           const sendEmail = await sendEmailWithTags(emailArgs, ctx)
           if (sendEmail) {
-            responseData.send_email = true
+            responseData.email_send = true
           }
         }
-
         return responseData
       },
     })
