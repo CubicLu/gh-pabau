@@ -223,7 +223,14 @@ export const FolderData: FC<FolderDataProps> = ({
   }
 
   const handlePreview = (pdf, name = '') => {
-    setPdfName(name || pdf)
+    let cName = name
+    if (!cName) {
+      const cNameArr = pdf?.split('.')
+      const ext = cNameArr[cNameArr?.length - 1]
+      delete cNameArr[cNameArr?.length - 1]
+      cName = cNameArr?.join('')?.substring(0, 20) + '.' + ext
+    }
+    setPdfName(cName)
     setPdfData(pdf)
     setPageNumber(1)
     setPreviewModal((e) => !e)
@@ -1120,7 +1127,7 @@ export const FolderData: FC<FolderDataProps> = ({
           <Input
             autoFocus
             name="name"
-            placeholder={'Create new folder'}
+            placeholder="Enter a name"
             value={renamingFile?.name}
             onChange={(e) => {
               setRenamingFile({ ...renamingFile, name: e.target.value })
