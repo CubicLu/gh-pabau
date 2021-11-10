@@ -10,6 +10,7 @@ import {
   SaveOutlined,
   UndoOutlined,
   PlusOutlined,
+  CloseCircleFilled,
 } from '@ant-design/icons'
 import { TabMenu, Avatar, Button, ClientData } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -32,6 +33,7 @@ const { TextArea } = Input
 
 export interface ClientHeaderDetailsProps {
   notes?: ClientNotes
+  medicalHistoryIconStatus?: string
   getContactDetails?: () => void
   client?: ClientData
   handleAddNewClientNote?: (e: string) => void
@@ -46,6 +48,7 @@ interface ClientCountDetails {
 
 export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   notes = { notes: [], count: 0, notesCountLoading: false, appointments: [] },
+  medicalHistoryIconStatus,
   getContactDetails,
   client,
   handleAddNewClientNote,
@@ -100,6 +103,21 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     setCurrentNote('')
     setCurrentClientNote(-1)
     setIsDeletingNotes(true)
+  }
+
+  const getMedicalhistoryIcon = () => {
+    switch (medicalHistoryIconStatus) {
+      case 'not_completed':
+        return <CloseCircleFilled style={{ color: '#ec6669' }} />
+      case 'completed':
+        return <CheckCircleFilled style={{ color: '#65cd98' }} />
+      case 'to_be_completed':
+        return (
+          <div className={styles.toBeCompletedIcon}>
+            <HistoryOutlined style={{ color: '#fff' }} />
+          </div>
+        )
+    }
   }
 
   const medicalHistoryPopover = (
@@ -337,11 +355,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           overlayClassName={styles.clientCardHeaderPopover}
         >
           <Tooltip title="Medical history">
-            <Badge
-              count={<CheckCircleFilled />}
-              offset={[0, 18]}
-              style={{ color: '#65cd98' }}
-            >
+            <Badge count={getMedicalhistoryIcon()} offset={[0, 18]}>
               <MedicalHistory className={styles.headerOpsIcon} />
             </Badge>
           </Tooltip>
