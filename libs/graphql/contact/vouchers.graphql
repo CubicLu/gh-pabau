@@ -1,5 +1,8 @@
 query getVouchers($contactID: Int!) {
-  vouchers: findManyVoucher(where: {Contact: {ID: {equals: $contactID}}}, orderBy: {purchase_date: desc}) {
+  vouchers: findManyVoucher(
+    where: { Contact: { ID: { equals: $contactID } } }
+    orderBy: { purchase_date: desc }
+  ) {
     code
     amount
     remaining_balance
@@ -17,6 +20,54 @@ query getVouchers($contactID: Int!) {
   }
 }
 
+query getSoldVouchers(
+  $where: VoucherWhereInput
+  $skip: Int = 0
+  $take: Int = 50
+) {
+  vouchers: findManyVoucher(where: $where, skip: $skip, take: $take) {
+    id
+    code
+    amount
+    remaining_balance
+    date_from
+    expiry_date
+    description
+    status
+    Contact {
+      ID
+      Lname
+      Fname
+    }
+    Purchaser {
+      ID
+      Lname
+      Fname
+    }
+    Invoice {
+      id
+      custom_id
+    }
+  }
+}
+
 query countVouchers($contactID: Int) {
-  total: findManyVoucherCount(where: {Contact: {ID: {equals: $contactID}}})
+  total: findManyVoucherCount(
+    where: { Contact: { ID: { equals: $contactID } } }
+  )
+}
+
+query countVouchersByStatus($contactID: Int) {
+  activeCount: findManyVoucherCount(
+    where: {
+      Contact: { ID: { equals: $contactID } }
+      status: { equals: "Active" }
+    }
+  )
+  expiredCount: findManyVoucherCount(
+    where: {
+      Contact: { ID: { equals: $contactID } }
+      status: { not: { equals: "Active" } }
+    }
+  )
 }

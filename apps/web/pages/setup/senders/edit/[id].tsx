@@ -25,7 +25,6 @@ import { Select, Space } from 'antd'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
-import { SenderItem } from '../../senders'
 import {
   useGetCompanyEmailQuery,
   useGetCompanySmsQuery,
@@ -34,12 +33,10 @@ import {
   GetComSendersDocument,
   useDeleteOneCompanyEmailMutation,
   useDeleteOneSmsSenderMutation,
-} from '@pabau/graphql'
-import {
   CreateOneCompanyEmailDocument,
   CreateOneSmsSenderDocument,
 } from '@pabau/graphql'
-
+import { SenderItem } from '../../senders'
 import { useMutation } from '@apollo/client'
 import { Form } from 'formik-antd'
 const { Option } = Select
@@ -47,9 +44,11 @@ const { Option } = Select
 export const EditSender: React.FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
-  const [active, setActive] = useState(true)
   const { id } = router.query
+  const [active, setActive] = useState(true)
   const [initialValues, setInitialValues] = useState<SenderItem>(null)
+  const [showDeleteNotification, setShowDeleteNotification] = useState(false)
+
   const { data: getSendersData } = useGetCompanyEmailQuery({
     skip: !id,
     variables: {
@@ -102,15 +101,30 @@ export const EditSender: React.FC = () => {
   })
 
   const [deleteEmailSender] = useDeleteOneCompanyEmailMutation({
+    onCompleted(data) {
+      if (data && showDeleteNotification) {
+        Notification(NotificationType.success, 'Delete')
+        setShowDeleteNotification(false)
+      }
+    },
     onError() {
       Notification(
         NotificationType.error,
-        t('setup.senders.delete.detail.error')
+        t('setup.senders.delete.detail.success')
       )
     },
     refetchQueries: [{ query: GetComSendersDocument }],
   })
   const [deleteSmsSender] = useDeleteOneSmsSenderMutation({
+    onCompleted(data) {
+      if (data && showDeleteNotification) {
+        Notification(
+          NotificationType.success,
+          t('setup.senders.delete.detail.success')
+        )
+        setShowDeleteNotification(false)
+      }
+    },
     onError() {
       Notification(
         NotificationType.error,
@@ -133,7 +147,6 @@ export const EditSender: React.FC = () => {
       })
     }
     if (getSendersSmsData?.findFirstSmsSender) {
-      console.log(getSendersSmsData?.findFirstSmsSender)
       const item = getSendersSmsData?.findFirstSmsSender
       setInitialValues({
         id: item.smsd_id,
@@ -171,7 +184,6 @@ export const EditSender: React.FC = () => {
     onError(err) {
       Notification(
         NotificationType.error,
-
         t('setup.senders.create.senders.notification.error')
       )
     },
@@ -199,13 +211,17 @@ export const EditSender: React.FC = () => {
 
   if (!initialValues) return null
 
+  // console.log('intal valv::', initialValues)
+  console.log('init  val:::', initialValues)
   return (
     <Formik<SenderItem>
       initialValues={initialValues}
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
+        console.log('init first val:::', values)
         if (values.type !== initialValues.type) {
           if (values.type === 'email') {
+            console.log('val::', values)
             await addEmailSenders({
               variables: {
                 data: {
@@ -220,7 +236,9 @@ export const EditSender: React.FC = () => {
                   default_email: values.isDefaultSender ? 1 : 0,
                   enterprise_email: 0,
                   merge_tags: '',
-                  visibility: values.visibility,
+                  visibility: values.visibility
+                    ? Number.parseInt(String(values.visibility))
+                    : 1,
                 },
               },
               optimisticResponse: {},
@@ -290,6 +308,7 @@ export const EditSender: React.FC = () => {
           }
           router.push('/setup/senders').then()
         }
+        router.push('/setup/senders').then()
       }}
       render={({ values, errors, touched, handleChange, handleSubmit }) => (
         <Form>
@@ -322,19 +341,21 @@ export const EditSender: React.FC = () => {
             onBackClick={() => router.push('/setup/senders')}
             onDelete={() => {
               if (initialValues.type === 'email') {
+                setShowDeleteNotification(true)
                 deleteEmailSender({
                   variables: {
                     where: {
-                      email_id: values.id as number,
+                      email_id: initialValues.id as number,
                     },
                   },
                 })
                 router.push('/setup/senders').then()
               } else {
+                setShowDeleteNotification(true)
                 deleteSmsSender({
                   variables: {
                     where: {
-                      smsd_id: values.id as number,
+                      smsd_id: initialValues.id as number,
                     },
                   },
                 })
@@ -342,14 +363,6 @@ export const EditSender: React.FC = () => {
               }
             }}
             onCreate={() => {
-              // Remove last tag element
-              // const lastTag =
-              //   values.mergeTags.length > 0
-              //     ? values.mergeTags[values.mergeTags.length - 1]
-              //     : null
-              // if (!lastTag?.type && !lastTag?.value) {
-              //   values.mergeTags.splice(-1, 1)
-              // }
               handleSubmit()
             }}
           >
@@ -486,13 +499,12 @@ export const EditSender: React.FC = () => {
                           handleChange({ target: { value, name: 'fromEmail' } })
                         }
                       />
-                      <p className={styles.visibilityLabel}>Visibility</p>
+                      <p className={styles.visibilityLabel}>
+                        {t('setup.senders.visibility')}
+                      </p>
                       <Select
-                        defaultValue={
-                          values?.visibility
-                            ? values.visibility.toString()
-                            : '0'
-                        }
+                        defaultValue={'1'}
+                        value={values?.visibility?.toString()}
                         defaultActiveFirstOption={true}
                         style={{ width: '100%' }}
                         onChange={(e) =>
@@ -502,12 +514,14 @@ export const EditSender: React.FC = () => {
                         }
                         menuItemSelectedIcon={<CheckOutlined />}
                       >
-                        <Option value="0">
-                          <LockOutlined /> Private
+                        <Option value="1">
+                          <LockOutlined />{' '}
+                          {t('setup.senders.visibility.private')}
                         </Option>
 
-                        <Option value="1">
-                          <UnlockOutlined /> Shared
+                        <Option value="0">
+                          <UnlockOutlined />{' '}
+                          {t('setup.senders.visibility.shared')}
                         </Option>
                       </Select>
                     </div>

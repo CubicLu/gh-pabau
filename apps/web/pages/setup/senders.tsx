@@ -27,7 +27,6 @@ import { ReactComponent as Sender } from '../../assets/images/sender-message.svg
 import { ReactComponent as Office } from '../../assets/images/office365.svg'
 import Login from '../../components/Email/login'
 import { useUser } from '../../context/UserContext'
-
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
@@ -178,7 +177,7 @@ export const Communications: React.FC = () => {
     onCompleted() {
       Notification(
         NotificationType.success,
-        'Google connection removed successfully'
+        t('setup.senders.gmail.connection.remove')
       )
     },
     onError(e) {
@@ -221,18 +220,17 @@ export const Communications: React.FC = () => {
   }
   const showConfirm = () => {
     confirm({
-      title: 'Unlink your Google account',
+      title: t('setup.senders.gmail.connection.modal.title'),
       icon: <ExclamationCircleOutlined />,
-      content: 'Are you sure you wish to unlink your Google account?',
+      content: t('setup.senders.gmail.connection.modal.content'),
       onOk() {
-        console.log('Remove link', userData)
         removeGmailConnection().then(() => {
           setIsLoggedIn(false)
           setUserData('')
         })
       },
       onCancel() {
-        console.log('Close popup')
+        console.log('Close')
       },
     })
   }
@@ -241,26 +239,41 @@ export const Communications: React.FC = () => {
     return (
       <div className={styles.mailOptionContent}>
         <div className={styles.mailOptionItem}>
-          <Sender /> <p>Create SMS</p>
+          <Sender />{' '}
+          <p>{t('setup.senders.gmail.connection.content.menu.create.sms')}</p>
         </div>
         <div
           className={styles.mailOptionItem}
           style={userData ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
           onClick={() => handleShowLogin()}
         >
-          <GoogleOutlined /> <p>Connect Google</p>
+          <GoogleOutlined />{' '}
+          <p>
+            {t('setup.senders.gmail.connection.content.menu.connect.google')}
+          </p>
         </div>
         <div className={styles.mailOptionItem}>
-          <Office /> <p>Connect Office 365</p>
+          <Office />{' '}
+          <p>
+            {t('setup.senders.gmail.connection.content.menu.connect.office')}
+          </p>
         </div>
         <div
           className={styles.mailOptionItem}
           onClick={() => router.push('senders/create')}
         >
-          <MailOutlined /> <p>Connect other email</p>
+          <MailOutlined />{' '}
+          <p>
+            {t(
+              'setup.senders.gmail.connection.content.menu.connect.other.email'
+            )}
+          </p>
         </div>
         <div className={styles.mailOptionItem}>
-          <PhoneOutlined /> <p>Add phone number</p>
+          <PhoneOutlined />{' '}
+          <p>
+            {t('setup.senders.gmail.connection.content.menu.add.phone.number')}
+          </p>
         </div>
       </div>
     )
@@ -268,7 +281,6 @@ export const Communications: React.FC = () => {
   return (
     <Layout {...user} active={'setup'}>
       {showLogin && <Login handleGoogleLogin={handleGoogleLogin} />}
-
       <CommonHeader
         isLeftOutlined
         reversePath="/setup"
@@ -382,7 +394,9 @@ export const Communications: React.FC = () => {
                         className={styles.defaultText}
                         onClick={() => handleRemoveLink()}
                       >
-                        <Tag color="red">Stop syncing</Tag>
+                        <Tag color="red">
+                          {t('setup.senders.gmail.connection.stop.syncing')}
+                        </Tag>
                       </div>
                     </div>
                   </div>

@@ -9,6 +9,8 @@ import {
   SimpleDropdown,
   PabauPlus,
   HelpTooltip,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import styles from './create.module.less'
@@ -31,6 +33,12 @@ import {
   mergeTagTypeOptions,
 } from '../senders'
 import { Form } from 'formik-antd'
+import {
+  CreateOneCompanyEmailDocument,
+  CreateOneSmsSenderDocument,
+  GetComSendersDocument,
+} from '@pabau/graphql'
+import { useMutation } from '@apollo/client'
 
 const { Panel } = Collapse
 const { Option } = Select
@@ -53,6 +61,7 @@ export const CreateSender: React.FC = () => {
         value: '',
       },
     ],
+    visibility: 1,
   }
   const validation = Yup.object({
     type: Yup.string().required(
@@ -69,12 +78,80 @@ export const CreateSender: React.FC = () => {
     ),
   })
 
+  const [addEmailSenders] = useMutation(CreateOneCompanyEmailDocument, {
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.senders.create.senders.notification.success')
+      )
+      router.push('/setup/senders').then()
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
+  const [addSmsSenders] = useMutation(CreateOneSmsSenderDocument, {
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.senders.create.senders.notification.success')
+      )
+      router.push('/setup/senders').then()
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
   return (
     <Formik<SenderItem>
       initialValues={initialValues}
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
-        router.push('/setup/senders')
+        if (values.type === 'email') {
+          await addEmailSenders({
+            variables: {
+              data: {
+                Company: {},
+                company_email: values.isUseCompanyEmail
+                  ? values.fromCompanyEmail
+                  : values.fromEmail,
+                added_by: '',
+                senders_name: values.fromName,
+                confirmed: 1,
+                hash: '',
+                default_email: values.isDefaultSender ? 1 : 0,
+                enterprise_email: 0,
+                merge_tags: '',
+                visibility: Number.parseInt(String(values.visibility)),
+              },
+            },
+            optimisticResponse: {},
+          })
+        } else {
+          await addSmsSenders({
+            variables: {
+              data: {
+                Company: {},
+                smsd_name: values.fromName,
+                smsd_delete: 0,
+                is_default: values.isDefaultSender,
+                merge_tags: '',
+                // enable_replies: values.isEnableReplies ? 1 : 0,
+              },
+            },
+            optimisticResponse: {},
+          })
+        }
       }}
       render={({ values, errors, touched, handleChange, handleSubmit }) => (
         <Form>
@@ -247,19 +324,29 @@ export const CreateSender: React.FC = () => {
                           handleChange({ target: { value, name: 'fromEmail' } })
                         }
                       />
-                      <p className={styles.visibilityLabel}>Visibility</p>
+                      <p className={styles.visibilityLabel}>
+                        {t('setup.senders.visibility')}
+                      </p>
+
                       <Select
-                        defaultValue={'Private'}
+                        defaultValue={'1'}
                         defaultActiveFirstOption={true}
                         style={{ width: '100%' }}
-                        onChange={handleChange}
+                        onChange={(e) =>
+                          handleChange({
+                            target: { name: 'visibility', value: e },
+                          })
+                        }
                         menuItemSelectedIcon={<CheckOutlined />}
                       >
-                        <Option value="private" selected>
-                          <LockOutlined /> Private
+                        <Option value="1" selected>
+                          <LockOutlined />{' '}
+                          {t('setup.senders.visibility.private')}
                         </Option>
-                        <Option value="shared">
-                          <UnlockOutlined /> Shared
+
+                        <Option value="0">
+                          <UnlockOutlined />{' '}
+                          {t('setup.senders.visibility.shared')}
                         </Option>
                       </Select>
                     </div>
