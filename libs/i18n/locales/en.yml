@@ -708,6 +708,8 @@ en:
   setup.senders.create.advanced.tagvalue.placeholder: 'Merge tag value'
   setup.senders.create.addnew: 'Add new'
   setup.senders.edit: 'Edit a sender'
+  setup.senders.create.senders.notification.success: 'You have successfully created senders'
+  setup.senders.create.senders.notification.error: 'Error! While creating a senders'
   setup.issuing.title: 'Issuing Company'
   setup.issuing.title.lower: 'issuing company'
   setup.issuing.title.short: 'issuing company'
@@ -2530,6 +2532,8 @@ en:
   setup.online-booking.promote.instagram: Instagram
   setup.online-booking.promote.facebook: Facebook
   setup.online-booking.promote: Promote
+  setup.online-booking.activity.appointment.booked.title: '{{fname}} Booked Online'
+  setup.online-booking.activity.appointment.booked.text: '{{time}} for {{serviceCount}} with {{staffname}} by '
   iframe-incompatible: 'Unable to load content. Please update your browser.'
   avatar.task_manager: 'Task Manager'
   team.user.title: Users

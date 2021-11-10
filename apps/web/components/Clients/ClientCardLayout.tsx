@@ -11,6 +11,7 @@ import {
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
   useTotalInvoiceCountQuery,
+  useCheckMedicalHistoryQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -144,6 +145,14 @@ export const ClientCardLayout: FC<P> = ({
     skip: !router.query['id'],
   })
 
+  const { data: medicalHistoryData } = useCheckMedicalHistoryQuery({
+    ssr: false,
+    skip: !router.query['id'],
+    variables: {
+      contactID: clientId,
+    },
+  })
+  console.log('medicalHistoryData:', medicalHistoryData)
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
@@ -357,7 +366,7 @@ export const ClientCardLayout: FC<P> = ({
     <Layout>
       <ClientCard
         cssClass={cssClass}
-        onClose={() => router.push('/clients')}
+        onClose={() => router.back()}
         tabs={tabItems}
         activeTab={activeTab}
         onTabChanged={(key) =>
@@ -406,6 +415,7 @@ export const ClientCardLayout: FC<P> = ({
             : undefined
         }
         notes={contactData}
+        medicalHistoryIconStatus={medicalHistoryData?.form?.status}
         getContactDetails={getContactDetails}
         handleAddNewClientNote={handleAddNewClientNote}
         handleEditNote={handleEditNote}

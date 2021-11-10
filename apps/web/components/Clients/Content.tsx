@@ -8,13 +8,14 @@ import {
 } from '@ant-design/icons'
 import { Button, Avatar, Table, Checkbox, Pagination } from '@pabau/ui'
 import { Popover, Tooltip, Skeleton } from 'antd'
-import { useMedia } from 'react-use'
+import useWindowSize from '../../hooks/useWindowSize'
 import { Labels } from '../../pages/clients'
 import CreateLabel from './CreateLabel'
 import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
+import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 import {
   AddLabelMutation,
   Exact,
@@ -60,6 +61,8 @@ interface P {
   insertContactsLabelsMutaton?: (val) => void
   selectedTab?: string
   filterLabelIds?: number[]
+  appVersion?: string | string[]
+  version?: string
 }
 
 export const ClientsContent = ({
@@ -88,9 +91,11 @@ export const ClientsContent = ({
   insertContactsLabelsMutaton,
   selectedTab,
   filterLabelIds,
+  appVersion,
+  version,
 }: P) => {
   const { t } = useTranslationI18()
-  const isMobile = useMedia('(max-width: 768px)', false)
+  const size = useWindowSize()
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
@@ -281,11 +286,11 @@ export const ClientsContent = ({
       visible: visiblePrimaryColumns('Avatar'),
       columnType: 'avatar',
       render: function renderAvatar(data) {
-        const { firstName } = data
+        const { avatar, firstName } = data
         return (
           <div>
             <span className={styles.avatarWrapper}>
-              <Avatar name={firstName} />
+              <Avatar src={avatar && getImage(avatar)} name={firstName} />
             </span>
           </div>
         )
@@ -474,73 +479,83 @@ export const ClientsContent = ({
   }
 
   return (
-    <div className={styles.tableContent}>
-      {!isMobile && selectedRowKeys.length > 0 && (
-        <div className={styles.headerContent}>
-          <Checkbox
-            indeterminate={
-              selectedRowKeys.length > 0 &&
-              selectedRowKeys.length !== data.findManyCmContact.length
-            }
-            //@@@TODO
-            // onChange={onCheckAllChange}
-            checked={selectedRowKeys.length === data.findManyCmContact.length}
-          ></Checkbox>
-          <CreateLabel
-            selectedLabels={selectedLabels}
-            setSelectedLabels={setSelectedLabels}
-            labels={labels}
-            setLabels={setLabels}
-            fromHeader={true}
-            defaultSelectedLabels={defaultSelectedLabels}
-            setDefaultSelectedLabels={setDefaultSelectedLabels}
-            handleApplyLabel={handleApplyLabel}
-            labelsList={labelsList}
-            selectedRowKeys={selectedRowKeys}
-            setLabelsList={setLabelsList}
-            addLabelMutation={addLabelMutation}
-            // sourceData={sourceData}
-            insertContactsLabelsMutaton={insertContactsLabelsMutaton}
-            // contactsLabels={contactsLabels}
-          >
-            {renderTooltip({
-              title: t('clients.leftSidebar.createLabels'),
-              icon: <TagOutlined />,
+    <div
+      className={
+        size.width > 767
+          ? appVersion === version
+            ? styles.appViewContentWrapper
+            : styles.tableContent
+          : styles.tableContent
+      }
+    >
+      {size.width > 767 &&
+        appVersion !== version &&
+        selectedRowKeys.length > 0 && (
+          <div className={styles.headerContent}>
+            <Checkbox
+              indeterminate={
+                selectedRowKeys.length > 0 &&
+                selectedRowKeys.length !== data.findManyCmContact.length
+              }
+              //@@@TODO
+              // onChange={onCheckAllChange}
+              checked={selectedRowKeys.length === data.findManyCmContact.length}
+            ></Checkbox>
+            <CreateLabel
+              selectedLabels={selectedLabels}
+              setSelectedLabels={setSelectedLabels}
+              labels={labels}
+              setLabels={setLabels}
+              fromHeader={true}
+              defaultSelectedLabels={defaultSelectedLabels}
+              setDefaultSelectedLabels={setDefaultSelectedLabels}
+              handleApplyLabel={handleApplyLabel}
+              labelsList={labelsList}
+              selectedRowKeys={selectedRowKeys}
+              setLabelsList={setLabelsList}
+              addLabelMutation={addLabelMutation}
+              // sourceData={sourceData}
+              insertContactsLabelsMutaton={insertContactsLabelsMutaton}
+              // contactsLabels={contactsLabels}
+            >
+              {renderTooltip({
+                title: t('clients.leftSidebar.createLabels'),
+                icon: <TagOutlined />,
+              })}
+            </CreateLabel>
+            {[
+              {
+                title: t('clients.leftSidebar.import'),
+                icon: <ImportOutlined />,
+              },
+              {
+                title: t('clients.leftSidebar.export'),
+                icon: <CloudDownloadOutlined />,
+              },
+              {
+                title: t('clients.content.button.delete'),
+                icon: <DeleteOutlined onClick={handleDeleteClick} />,
+              },
+            ].map((data) => {
+              return renderTooltip({
+                title: data.title,
+                icon: data.icon,
+              })
             })}
-          </CreateLabel>
-          {[
-            {
-              title: t('clients.leftSidebar.import'),
-              icon: <ImportOutlined />,
-            },
-            {
-              title: t('clients.leftSidebar.export'),
-              icon: <CloudDownloadOutlined />,
-            },
-            {
-              title: t('clients.content.button.delete'),
-              icon: <DeleteOutlined onClick={handleDeleteClick} />,
-            },
-          ].map((data) => {
-            return renderTooltip({
-              title: data.title,
-              icon: data.icon,
-            })
-          })}
-          <ManageColumnsPopover
-            selectedPrimaryColumn={selectedPrimaryColumn}
-            setSelectedPrimaryColumn={setSelectedPrimaryColumn}
-            selectedSecondaryColumn={selectedSecondaryColumn}
-            setSelectedSecondaryColumn={setSelectedSecondaryColumn}
-          >
-            {renderTooltip({
-              title: t('clients.content.button.manageColumns'),
-              icon: <AppstoreOutlined />,
-            })}
-          </ManageColumnsPopover>
-        </div>
-      )}
-      {!isMobile ? (
+            <ManageColumnsPopover
+              selectedPrimaryColumn={selectedPrimaryColumn}
+              setSelectedPrimaryColumn={setSelectedPrimaryColumn}
+              selectedSecondaryColumn={selectedSecondaryColumn}
+              setSelectedSecondaryColumn={setSelectedSecondaryColumn}
+            >
+              {renderTooltip({
+                title: t('clients.content.button.manageColumns'),
+                icon: <AppstoreOutlined />,
+              })}
+            </ManageColumnsPopover>
+          </div>
+        )}
+      {size.width > 767 && appVersion !== version ? (
         <div>
           <Table
             dataSource={clientsData}
@@ -634,7 +649,11 @@ export const ClientsContent = ({
                     onClick={() => handleMobileSelectRow(data?.id)}
                   >
                     <div className={styles.avatarClientIcon}>
-                      <Avatar name={data.firstName} size={40} />
+                      <Avatar
+                        src={data?.avatar && getImage(data?.avatar)}
+                        name={data?.firstName}
+                        size={40}
+                      />
                     </div>
                     <div className={styles.clientContent}>
                       <h5>{`${data.firstName} ${data.lastName}`}</h5>
