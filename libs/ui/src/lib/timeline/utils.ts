@@ -25,6 +25,7 @@ export const groupByDay = (
   eventDateFormat: string,
   t: TFunction
 ): ResultantProps => {
+  // eslint-disable-next-line unicorn/prefer-object-from-entries
   const groups = events.reduce((days, event) => {
     const day = getDayForEvent(event, eventDateFormat, t)
     if (!days[day]) {

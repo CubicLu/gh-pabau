@@ -203,6 +203,7 @@ export const StickyPopout: FC = () => {
     }
 
     window.addEventListener('storage', () => handleStorageChange())
+    // eslint-disable-next-line unicorn/no-invalid-remove-event-listener
     return window.removeEventListener('storage', () => handleStorageChange())
   }, [])
 
