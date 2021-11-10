@@ -1,12 +1,14 @@
 import { extendType, list } from 'nexus'
 import { Context } from '../../../context'
 import { LabRequest } from '@prisma/client'
+import { LabRequestTests } from '../nexus-type'
+import { checkAbnormalTests } from '../lab-request-service'
 
 export const LabRequestExtended = extendType({
   type: 'LabRequest',
   definition(t) {
     t.field('tests', {
-      type: list('LabProductTemplate'),
+      type: list(LabRequestTests),
       async resolve(parent: LabRequest, args, ctx: Context) {
         let productCodes = []
         const medForm = await ctx.prisma.medicalFormContact.findUnique({
@@ -49,13 +51,16 @@ export const LabRequestExtended = extendType({
             },
           })
         }
-        return await ctx.prisma.labProductTemplate.findMany({
-          where: {
-            code: {
-              in: productCodes.map((elem) => elem.code),
+        return checkAbnormalTests(
+          await ctx.prisma.labProductTemplate.findMany({
+            where: {
+              code: {
+                in: productCodes.map((elem) => elem.code),
+              },
             },
-          },
-        })
+          }),
+          parent.receive_result ? JSON.parse(parent.receive_result) : []
+        )
       },
     })
     t.field('resultUrl', {
