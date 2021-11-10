@@ -1,6 +1,7 @@
 query getDetails($contactId: Int!) {
   details: findFirstCmContact(where: { ID: { equals: $contactId } }) {
     ID
+    Salutation
     Fname
     Lname
     Phone

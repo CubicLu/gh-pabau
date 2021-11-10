@@ -9,6 +9,8 @@ import {
   SimpleDropdown,
   PabauPlus,
   HelpTooltip,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import styles from './create.module.less'
@@ -26,12 +28,17 @@ import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   SenderItem,
-  senderItems,
   masterCriteriaOptions,
   subCriteriaOptions,
   mergeTagTypeOptions,
 } from '../senders'
 import { Form } from 'formik-antd'
+import {
+  CreateOneCompanyEmailDocument,
+  CreateOneSmsSenderDocument,
+  GetComSendersDocument,
+} from '@pabau/graphql'
+import { useMutation } from '@apollo/client'
 
 const { Panel } = Collapse
 const { Option } = Select
@@ -54,6 +61,7 @@ export const CreateSender: React.FC = () => {
         value: '',
       },
     ],
+    visibility: 0,
   }
   const validation = Yup.object({
     type: Yup.string().required(
@@ -70,16 +78,82 @@ export const CreateSender: React.FC = () => {
     ),
   })
 
+  const [addEmailSenders] = useMutation(CreateOneCompanyEmailDocument, {
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.senders.create.senders.notification.success')
+      )
+      router.push('/setup/senders').then()
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
+  const [addSmsSenders] = useMutation(CreateOneSmsSenderDocument, {
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.senders.create.senders.notification.success')
+      )
+      router.push('/setup/senders').then()
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
   return (
     <Formik<SenderItem>
       initialValues={initialValues}
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
-        senderItems.push({
-          ...values,
-          id: String(senderItems.length + 1),
-        })
-        router.push('/setup/senders')
+        if (values.type === 'email') {
+          const senders = {
+            data: {
+              Company: {},
+              company_email: values.isUseCompanyEmail
+                ? values.fromCompanyEmail
+                : values.fromEmail,
+              added_by: '',
+              senders_name: values.fromName,
+              confirmed: 1,
+              hash: '',
+              default_email: values.isDefaultSender ? 1 : 0,
+              enterprise_email: 0,
+              merge_tags: '',
+              visibility: Number.parseInt(String(values.visibility)),
+            },
+          }
+          await addEmailSenders({
+            variables: senders,
+            optimisticResponse: {},
+          })
+        } else {
+          const senders = {
+            data: {
+              Company: {},
+              smsd_name: values.fromName,
+              smsd_delete: 0,
+              is_default: values.isDefaultSender,
+              merge_tags: '',
+              // enable_replies: values.isEnableReplies ? 1 : 0,
+            },
+          }
+          await addSmsSenders({
+            variables: senders,
+            optimisticResponse: {},
+          })
+        }
       }}
       render={({ values, errors, touched, handleChange, handleSubmit }) => (
         <Form>
@@ -253,17 +327,23 @@ export const CreateSender: React.FC = () => {
                         }
                       />
                       <p className={styles.visibilityLabel}>Visibility</p>
+
                       <Select
-                        defaultValue={'Private'}
+                        defaultValue={'0'}
                         defaultActiveFirstOption={true}
                         style={{ width: '100%' }}
-                        onChange={handleChange}
+                        onChange={(e) =>
+                          handleChange({
+                            target: { name: 'visibility', value: e },
+                          })
+                        }
                         menuItemSelectedIcon={<CheckOutlined />}
                       >
-                        <Option value="private" selected>
+                        <Option value="0" selected>
                           <LockOutlined /> Private
                         </Option>
-                        <Option value="shared">
+
+                        <Option value="1">
                           <UnlockOutlined /> Shared
                         </Option>
                       </Select>

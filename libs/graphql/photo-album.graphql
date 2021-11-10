@@ -22,6 +22,23 @@ query getAlbumPhotos(
   }
 }
 
+query getAllAlbumPhotos($contactId: Int!, $albumId: Int!) {
+  findManyContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "contact" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: $albumId }
+    }
+    orderBy: { date: desc }
+  ) {
+    id
+    origin: linkref
+    date
+    tags
+  }
+}
+
 query getPhotoAlbum($albumId: Int!, $contactId: Int!) {
   findFirstPhotoAlbum(
     where: { id: { equals: $albumId }, contact_id: { equals: $contactId } }
