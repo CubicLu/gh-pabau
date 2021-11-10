@@ -132,30 +132,10 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
 
   useEffect(() => {
     if (forms?.length) {
-      console.log('forms =', forms)
       setFormState(forms)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forms])
-
-  // useEffect(() => {
-  // const data = [...formFilterButtons]
-  // const formType = data.map((item) => {
-  //   if (item.id !== 0 && item.selected) {
-  //     return item.type
-  //   }
-  //   return undefined
-  // })
-  // const filterList = formType.filter((item) => item)
-  // onButtonFilterClick(filterList)
-  // const selectedType = new Set(filterList)
-  // const formList = [...forms]
-  // const formListData: MedicalFormContact[] = formList.filter((item) =>
-  //   selectedType.has(item.type)
-  // )
-  // setFormState(formListData)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [formFilterButtons])
 
   const callBack = (key, id) => {
     const formList = [...accordionState]

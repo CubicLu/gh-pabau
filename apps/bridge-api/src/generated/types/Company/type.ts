@@ -1729,6 +1729,20 @@ export const Company = objectType({
         return root.ContactPreference
       },
     })
+    t.list.field('CreditBalance', {
+      type: 'CreditBalance',
+      args: {
+        where: 'CreditBalanceWhereInput',
+        orderBy: 'CreditBalanceOrderByWithRelationInput',
+        cursor: 'CreditBalanceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CreditBalanceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CreditBalance
+      },
+    })
     t.list.field('ActivityUserState', {
       type: 'ActivityUserState',
       args: {
@@ -1797,6 +1811,20 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.InsurerContract
+      },
+    })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
       },
     })
     t.list.field('Voucher', {
@@ -1923,6 +1951,20 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.Recall
+      },
+    })
+    t.list.field('CustomFieldDisplay', {
+      type: 'CustomFieldDisplay',
+      args: {
+        where: 'CustomFieldDisplayWhereInput',
+        orderBy: 'CustomFieldDisplayOrderByWithRelationInput',
+        cursor: 'CustomFieldDisplayWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CustomFieldDisplayScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CustomFieldDisplay
       },
     })
     t.nullable.field('_count', {

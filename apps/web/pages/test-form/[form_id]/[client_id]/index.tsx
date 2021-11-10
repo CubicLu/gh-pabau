@@ -246,7 +246,6 @@ export const TestForm = () => {
     const imported = 0
     const locked = 0
     const pharmacy_id = 0
-    // const prescriber = 0
     const priority = 'pLow'
     const related_to = 0
     const user_created = loggedInUser?.me?.user
@@ -288,7 +287,6 @@ export const TestForm = () => {
       imported: imported,
       locked: locked,
       pharmacy_id: pharmacy_id,
-      //      prescriber: prescriber,
       priority: priority,
       related_to: related_to,
       user_updated: user_updated,
@@ -326,7 +324,6 @@ export const TestForm = () => {
         description: '',
         Company: {},
       }
-      console.log('creatMedicalAttrVariables =', creatMedicalAttrVariables)
       await addMedicalAttrMutation({
         variables: { data: { ...creatMedicalAttrVariables } },
       }).then((e) => (item.attrId = e.data.createOneMedicalAttr.id))
@@ -338,7 +335,6 @@ export const TestForm = () => {
     let attrNameIndex = 0
     let newDraggedForms: MedicalFormTypes[] = []
     for (const [, item] of draggedForms.entries()) {
-      console.log('itemitemitem =', item)
       const cssClassArr = previewMapping.filter(
         (mappingItem) => Object.values(mappingItem)[0] === item.formName
       )
@@ -443,7 +439,6 @@ export const TestForm = () => {
   }, [macros, companyDateFormat])
 
   useEffect(() => {
-    console.log('invProducts', invProducts)
     if (invProducts?.findManyInvProduct) {
       const invProductsList = invProducts?.findManyInvProduct.map(
         (invProduct) => ({
