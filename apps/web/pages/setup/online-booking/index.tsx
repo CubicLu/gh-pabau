@@ -19,11 +19,14 @@ import {
   Button,
   FullScreenReportModal,
   OperationType,
+  Pagination,
+  Avatar,
 } from '@pabau/ui'
-import { Avatar, Col, Row, Typography } from 'antd'
+import { Col, Row, Typography, Skeleton } from 'antd'
 import classNames from 'classnames'
 import Highcharts from 'highcharts'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useMemo, useRef } from 'react'
+import dayjs from 'dayjs'
 import {
   Chart,
   HighchartsChart,
@@ -42,8 +45,10 @@ import {
   PromoteTab,
 } from '../../../components/Setup/OnlineBooking'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import Link from 'next/link'
 import styles from './index.module.less'
-
+import { useGetClientsAllAppointmentsQuery } from '@pabau/graphql'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 const { Title } = Typography
 export interface OnlineBookingProps {
   builderSetting: OnlineBookingBuilder
@@ -59,82 +64,81 @@ export const Index: FC<OnlineBookingProps> = ({
     defaultBuilderData
   )
 
+  const [bookingActivities, setBookingActivities] = useState([])
+  const [paginateData, setPaginateData] = useState({
+    total: 0,
+    offset: 0,
+    limit: 10,
+    currentPage: 1,
+    showingRecords: 0,
+  })
+
+  const onPaginationChange = (currentPage) => {
+    const offset = paginateData.limit * (currentPage - 1)
+    setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+  }
+
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        skip: paginateData.offset,
+        take: paginateData.limit,
+      },
+    }
+    return queryOptions
+  }, [paginateData.offset, paginateData.limit])
+
+  const { data, loading } = useGetClientsAllAppointmentsQuery(getQueryVariables)
+
+  useEffect(() => {
+    if (data?.findManyBooking) {
+      const bookingData = data?.findManyBooking.map((booking) => {
+        return {
+          id: booking.id,
+          status: t('setup.online-booking.activity.appointment.booked.title', {
+            fname: `${booking?.Contact?.Fname}`,
+          }),
+          time: dayjs(booking.create_date.toString()).format('hh:mm A'),
+          details: t('setup.online-booking.activity.appointment.booked.text', {
+            time: `${dayjs(booking.start_date.toString()).format(
+              'ddd D MMM hh:mm A'
+            )}`,
+            serviceCount: `${booking.service}`,
+            staffname: `${booking?.CmStaffGeneral?.Fname} ${booking?.CmStaffGeneral?.Lname}`,
+          }),
+          userImage: booking?.CmStaffGeneral?.User?.image
+            ? getImage(booking?.CmStaffGeneral?.User?.image)
+            : '',
+          contact_id: booking?.contact_id,
+          contact: { ...booking?.Contact },
+          CmStaffGeneral: { ...booking?.CmStaffGeneral },
+        }
+      })
+      setBookingActivities(bookingData)
+      setPaginateData({
+        ...paginateData,
+        total: data?.totalCount,
+        showingRecords: data?.findManyBooking?.length,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
   useEffect(() => {
     setBuilder(builderSetting)
   }, [builderSetting])
 
+  useEffect(() => {
+    if (bookingsLayoutRef.current) {
+      bookingsLayoutRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.currentPage, paginateData.limit])
   const onPressPromote = () => {
     console.log('onPressPromote')
   }
 
-  const bookingActivities = [
-    {
-      id: 1,
-      status: 'Appointment Booked',
-      time: '3:00 PM',
-      details:
-        'Sat 1st May 11:30 for 2 services for john by <a href="/">Jim Smith</a>',
-      userImage: '',
-    },
-    {
-      id: 2,
-      status: 'Appointment Recheduled',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was recheduled',
-      userImage: '',
-    },
-    {
-      id: 3,
-      status: 'Cancelled Appointment',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was cancelled',
-    },
-    {
-      id: 4,
-      status: 'Appointment Booked',
-      time: '3:00 PM',
-      details:
-        'Sat 1st May 11:30 for 2 services for john by <a href="/">Jim Smith</a>',
-      userImage: '',
-    },
-    {
-      id: 5,
-      status: 'Appointment Recheduled',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was recheduled',
-      userImage: '',
-    },
-    {
-      id: 6,
-      status: 'Cancelled Appointment',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was cancelled',
-      userImage: '',
-    },
-    {
-      id: 4,
-      status: 'Appointment Booked',
-      time: '3:00 PM',
-      details:
-        'Sat 1st May 11:30 for 2 services for john by <a href="/">Jim Smith</a>',
-      userImage: '',
-    },
-    {
-      id: 5,
-      status: 'Appointment Recheduled',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was recheduled',
-      userImage: '',
-    },
-    {
-      id: 6,
-      status: 'Cancelled Appointment',
-      time: '3:00 PM',
-      details: 'Your Appointment at 17:00 with john Smith was cancelled',
-      userImage: '',
-    },
-  ]
-
+  const bookingsLayoutRef = useRef(null)
   const trends = [
     {
       id: 1,
@@ -251,7 +255,12 @@ export const Index: FC<OnlineBookingProps> = ({
               </HighchartsProvider>
             </div>
           </Col>
-          <Col span={15} className={styles.screenColumn}>
+
+          <Col
+            span={15}
+            className={styles.screenColumn}
+            ref={bookingsLayoutRef}
+          >
             <div className={styles.campaignContainer}>
               <div>
                 <div className={styles.icon}>
@@ -273,27 +282,89 @@ export const Index: FC<OnlineBookingProps> = ({
               <Title level={5}>
                 {t('setup.online-booking.booking-activity')}
               </Title>
-              {bookingActivities.map((e, i) => {
-                return (
-                  <div className={styles.item} key={i}>
-                    <div className={styles.image}>
-                      <Avatar src={e.userImage} size="large" />
-                    </div>
-                    <div className={styles.content}>
-                      <div>
-                        <span className={styles.status}>{e.status}</span>
-                        <span className={styles.time}>{e.time}</span>
+              {!loading
+                ? bookingActivities.map((e, i) => {
+                    return (
+                      <div className={styles.item} key={i}>
+                        <div className={styles.image}>
+                          <Avatar
+                            src={e.userImage}
+                            name={`${e?.CmStaffGeneral?.Fname} ${e?.CmStaffGeneral?.Lname}`}
+                            size="large"
+                          />
+                        </div>
+                        <div className={styles.content}>
+                          <div>
+                            <span className={styles.status}>{e.status}</span>
+                            <span className={styles.time}>{e.time}</span>
+                          </div>
+                          <div>
+                            <span className={styles.description}>
+                              {e.details}{' '}
+                              <Link href={'/clients/' + e?.contact_id}>
+                                <a>
+                                  {e.contact.Fname} {e.contact.Lname}
+                                </a>
+                              </Link>
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <span
-                          className={styles.description}
-                          dangerouslySetInnerHTML={{ __html: e.details || '' }}
-                        ></span>
+                    )
+                  })
+                : [...Array.from({ length: 10 })].map((e, i) => {
+                    return (
+                      <div className={styles.item} key={i}>
+                        <div className={styles.image}>
+                          <Skeleton.Avatar size="large" active />
+                        </div>
+                        <div className={styles.content}>
+                          <div className={styles.skeletonTitle}>
+                            <Skeleton
+                              className={styles.status}
+                              paragraph={false}
+                              active
+                            />
+
+                            <Skeleton
+                              className={styles.time}
+                              paragraph={false}
+                              active
+                            />
+                          </div>
+                          <div>
+                            <Skeleton
+                              className={styles.description}
+                              paragraph={false}
+                              active
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                )
-              })}
+                    )
+                  })}
+            </div>
+            <div className={styles.pagination}>
+              <Pagination
+                total={paginateData.total}
+                defaultPageSize={10}
+                customClass={styles.paginationWrap}
+                showSizeChanger={false}
+                className={styles.paginationNav}
+                onChange={onPaginationChange}
+                pageSizeOptions={['10', '25', '50', '100']}
+                onPageSizeChange={(pageSize) => {
+                  setPaginateData({
+                    ...paginateData,
+                    limit: pageSize,
+                    offset: 0,
+                    currentPage: 1,
+                  })
+                }}
+                pageSize={paginateData.limit}
+                current={paginateData.currentPage}
+                showingRecords={paginateData.showingRecords}
+              />
             </div>
           </Col>
           <Col span={8} className={styles.screenColumn}>
