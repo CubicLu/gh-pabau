@@ -6,6 +6,7 @@ en:
   marketingsource-header-edit: 'Edit Marketing Source'
   KEY: Text
   search.placeholder: 'Search clients or leads'
+  search.client.placeholder: 'Search clients'
   avatar.balance: Balance
   avatar.account.settings: 'Account Settings'
   avatar.tasks: Tasks
@@ -707,6 +708,8 @@ en:
   setup.senders.create.advanced.tagvalue.placeholder: 'Merge tag value'
   setup.senders.create.addnew: 'Add new'
   setup.senders.edit: 'Edit a sender'
+  setup.senders.create.senders.notification.success: 'You have successfully created senders'
+  setup.senders.create.senders.notification.error: 'Error! While creating a senders'
   setup.issuing.title: 'Issuing Company'
   setup.issuing.title.lower: 'issuing company'
   setup.issuing.title.short: 'issuing company'
@@ -2529,6 +2532,8 @@ en:
   setup.online-booking.promote.instagram: Instagram
   setup.online-booking.promote.facebook: Facebook
   setup.online-booking.promote: Promote
+  setup.online-booking.activity.appointment.booked.title: '{{fname}} Booked Online'
+  setup.online-booking.activity.appointment.booked.text: '{{time}} for {{serviceCount}} with {{staffname}} by '
   iframe-incompatible: 'Unable to load content. Please update your browser.'
   avatar.task_manager: 'Task Manager'
   team.user.title: Users
@@ -4971,6 +4976,8 @@ en:
   ui.clientcard-prescriptions.options.edit: Edit
   ui.clientcard-prescriptions.options.repeat: Repeat
   ui.clientcard-prescriptions.options.delete: Delete
+  ui.clientcard.photos.notification.delete.success: 'Successfully! {{count}} image{{suffix}} were deleted'
+  ui.clientcard.photos.notification.delete.error: 'Error! {{count}} image{{suffix}} were not deleted'
   ui.client.giftvoucher.tab.active: Active
   ui.client.giftvoucher.tab.expired: Expired
   ui.vouchercard.back.title: 'Terms & Conditions'
@@ -5166,7 +5173,7 @@ en:
   ui.client.giftvoucher.pricelabel: 'Voucher Value'
   ui.client.giftvoucher.soldpricelabel: 'Sold 5'
   ui.client.giftvoucher.relationlabel: 'Redeem on all services'
-  ui.vouchercard.back.subtitle: 'lorem ipsum, quia dolor sit, amet, consectetur, adipiscivelit, sed quia non numquam eius modi tempora incidunt, utlabore et dolore magnam aliquam quaerat voluptatem.'
+  ui.vouchercard.back.subtitle: 'This voucher is non-refundable and cannot be exchanged for cash in part or full. It is valid until the date mentioned on the voucher.'
   client.appointments.layout.tab.all.bookings: 'All bookings'
   client.appointments.layout.tab.classes: Classes
   client.appointments.layout.tab.cancelled: Cancelled
@@ -5269,6 +5276,7 @@ en:
   activityList.column.leadName: 'Lead name'
   activityList.column.leadStage: 'Lead stage'
   activityList.column.leadDescription: 'Lead description'
+  activityList.column.leadDescription.editName: 'lead description'
   activityList.column.leadLocation: 'Lead location'
   activityList.column.leadActivityToDo: 'Activities to do'
   activityList.column.leadCreator: 'Lead creator'
@@ -5280,7 +5288,6 @@ en:
   activityList.column.leadPipeline: 'Pipeline'
   activityList.column.leadUpdateTime: 'Update time'
   activityList.column.leadTitle: 'Title'
-  activityList.column.leadDescription.editName: 'lead description'
   activityList.column.clientCountry.editName: 'client country'
   activityList.column.edit.tooltip: Edit
   activityList.column.address.details: 'Address Details'
@@ -5633,11 +5640,8 @@ en:
   client.label.create.message: 'Success! You have successfully created a label'
   client.label.create.error.message: 'Error! While creating a label'
   clients.clientcard.notes.clientnote.create: 'Successfully created the note'
-  clients.clientcard.notes.clientnote.create.errormessage: 'Error occured while creating note'
   clients.clientcard.notes.clientnote.edit: 'Successfully updated the note'
-  clients.clientcard.notes.clientnote.edit.errormessage: 'Error occured while updating note'
   clients.clientcard.notes.clientnote.delete: 'Successfully deleted the note'
-  clients.clientcard.notes.clientnote.delete.errormessage: 'Error occured while deleting note'
   clients.clientcard.notes.clientnote.deletemodal.title: 'Delete client Note'
   clients.clientcard.notes.clientnote.deletemodal.content: 'This note will be deleted. This action is irreversible'
   journey.modal.appointments.dr.name: 'Dr. {{drName}}'
@@ -5677,4 +5681,8 @@ en:
   create.filter.modal.open.lead.status: 'Open'
   create.filter.modal.won.lead.status: 'Won'
   create.filter.modal.lost.lead.status: 'Lost'
-
+  clients.activities.markAsDone: 'Mark as done'
+  clients.activities.markAsNotDone: 'Mark as not done'
+  clients.activities.delete.message: 'Activity deleted Successfully'
+  clients.activities.delete.error.message: 'An error occured while deleting activity'
+  clients.activities.delete.modal.message: 'Do you really want to delete these records? This process cannot be undone.'

@@ -1,1 +1,1 @@
-export * from './queries/letters'
+export * from './queries'
