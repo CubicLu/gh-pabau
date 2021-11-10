@@ -1,13 +1,12 @@
-import { GetDetailsDocument, useSetDetailsMutation } from '@pabau/graphql'
+import {
+  GetDetailsDocument,
+  SetDetailsMutationOptions,
+  useSetDetailsMutation,
+} from '@pabau/graphql'
 import { Field, Form, Formik } from 'formik'
 
-interface FormProps {
-  Fname: string
-  Lname: string
-}
-
 interface P {
-  onSubmit(data: FormProps): void // This must be present for each Step
+  onSubmit(data: SetDetailsMutationOptions['variables']): void // This must be present for each Step
   data?: Record<string, any> // This must be present for each Step
 }
 
@@ -30,9 +29,36 @@ export const DetailsStep = ({ onSubmit, data }: P) => {
           }
           return errors
         }}
-        onSubmit={(values) => {
-          mutation()
-          onSubmit?.(values)
+        onSubmit={async ({
+          Fname,
+          Lname,
+          Phone,
+          gender,
+          Email,
+          Mobile,
+          DOB,
+          MailingStreet,
+          MailingCountry,
+          MailingCity,
+        }) => {
+          const variables: SetDetailsMutationOptions['variables'] = {
+            contactId: data['contactId'],
+            city: MailingCity,
+            country: MailingCountry,
+            dob: DOB,
+            email: Email,
+            firstName: Fname,
+            gender: gender,
+            lastName: Lname,
+            mobile: Mobile,
+            phone: Phone,
+            // salutation: '', //TODO
+            street: MailingStreet,
+          }
+          await mutation({
+            variables,
+          })
+          onSubmit?.(variables)
         }}
       >
         {({ errors, touched }) => (

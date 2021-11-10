@@ -12,14 +12,14 @@ interface P {
 export const ConsentStep = ({ onSubmit, data }: P) => (
   <>
     <h2>Consent Forms</h2>
-    <h3>{JSON.stringify(data)}</h3>
+    <h3>{JSON.stringify(data.selectedConsentIds)}</h3>
     <Formik
-      initialValues={data}
+      initialValues={{ consents: data.selectedConsentIds }}
       validate={(values) => {
         const errors = {} as any
-        if (!values.testString) {
-          errors.testString = 'Required'
-        }
+        // if (!values.testString) {
+        //   errors.testString = 'Required'
+        // }
         return errors
       }}
       onSubmit={(values) => onSubmit?.({ ...data, ...values })}

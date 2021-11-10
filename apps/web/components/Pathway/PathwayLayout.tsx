@@ -23,10 +23,7 @@ interface P {
 const prependScreens = ['contract-selection'] as const
 
 export const PathwayLayout = ({ journey }: P) => {
-  const [
-    saveStepMutation,
-    { error: saveStepMutationError },
-  ] = useSaveStepMutation()
+  const [saveStepMutation] = useSaveStepMutation()
 
   const [step, setStep] = useState(0)
   const [stepState, setStepState] = useState<any>({
@@ -52,17 +49,22 @@ export const PathwayLayout = ({ journey }: P) => {
   const customerFirstStep = prependScreens.length
   const isCustomerOnFirstStep = step === customerFirstStep
 
-  const submitCallback = (data) => {
-    // if ('id' in currentStep)
-    //   saveStepMutation({
-    //     variables: {
-    //       clientId: journey[0].contact_id,
-    //       journeyId: journey[0].id,
-    //       recordId: currentStep.name === 'medical-record' ? data.id : 0,
-    //       status: Cp_Steps_Taken_Status.Completed,
-    //       stepId: currentStep.id,
-    //     },
-    //   })
+  const submitCallback = async (data) => {
+    if ('id' in currentStep) {
+      await saveStepMutation({
+        variables: {
+          clientId: journey[0].contact_id,
+          journeyId: journey[0].id,
+          recordId: currentStep.name === 'medical-record' ? data.id : 0,
+          status: Cp_Steps_Taken_Status.Completed,
+          stepId: currentStep.id,
+        },
+        onError: () => console.log('Error saving step (onError)!'),
+      }).catch((error) => console.log('Error saving step (catch)', error))
+      // if (errors) {
+      //   console.log('Error saving step (errors)!', errors)
+      // }
+    }
     setStepState((e) => ({ ...e, [currentStep.name]: data }))
     setStep((e) => e + 1)
   }
@@ -71,7 +73,6 @@ export const PathwayLayout = ({ journey }: P) => {
   const currentStep = !isInPrepended()
     ? { ...journey[0].Pathway.steps[step - prependScreens.length] } //TODO: unspread this (shows a weird TS error)
     : { name: prependScreens[step] }
-  console.log('Current step', currentStep)
 
   const Hydrated = steps[currentStep.name]
   const HydratedJsx = <Hydrated onSubmit={submitCallback} data={stepState} />
@@ -80,12 +81,18 @@ export const PathwayLayout = ({ journey }: P) => {
     const f = async () => {
       if (!loadData) return
       const data = await loadData?.()
+      console.log('GOT STEP DATA', data)
       if (!data) return
       console.log('FIRST KEY', Object.keys(data)[0])
-      console.log('Layout got step data', data.data[Object.keys(data.data)[0]])
+      console.log('FIRST KEY', Object.keys(data.data)[0])
+      const data2 =
+        Object.keys(data.data).length === 1
+          ? data.data[Object.keys(data.data)[0]]
+          : data.data
+      console.log('Layout got step data', data2)
       setStepState((e) => ({
         ...e,
-        [currentStep.name]: data.data[Object.keys(data.data)[0]],
+        [currentStep.name]: data2,
       }))
     }
     f()
@@ -123,7 +130,7 @@ export const PathwayLayout = ({ journey }: P) => {
         padding: '1em',
         display: 'grid',
         gridTemplateColumns: '1fr',
-        gridTemplateRows: '1fr 1fr',
+        gridTemplateRows: 'auto 1fr',
       }}
     >
       <div
@@ -143,6 +150,7 @@ export const PathwayLayout = ({ journey }: P) => {
           &lt;
         </Button>
         <p>Current step: {`${currentScreenNumber} of ${totalScreens}`}</p>
+        <p>Is For Customer's Eyes: {`${!(step < prependScreens.length)}`}</p>
       </div>
       <div
         style={{
