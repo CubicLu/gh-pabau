@@ -222,6 +222,7 @@ const ActivitiesTab = () => {
         clientId={Number(router.query['id'])}
         activeTab="activities"
         activitiesCount={pagination.total}
+        currentActivityType={currentSeletedActivityType}
       >
         <Modal
           centered={true}

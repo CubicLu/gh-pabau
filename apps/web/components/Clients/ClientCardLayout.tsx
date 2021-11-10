@@ -5,6 +5,7 @@ import {
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
   useCreateOneContactNoteMutation,
+  useCountClientActivityLazyQuery,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
   useUpdateOneCmContactMutation,
@@ -43,6 +44,7 @@ interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
   cssClass?: string
+  currentActivityType?: number[]
   activitiesCount?: number
 }
 
@@ -51,9 +53,16 @@ export const ClientCardLayout: FC<P> = ({
   children,
   activeTab,
   cssClass,
+  currentActivityType,
   activitiesCount,
 }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
+  const [
+    getCountActivity,
+    { data: countData },
+  ] = useCountClientActivityLazyQuery({
+    fetchPolicy: 'no-cache',
+  })
   const router = useRouter()
   const { t } = useTranslationI18()
   const { me } = useUser()
@@ -65,6 +74,7 @@ export const ClientCardLayout: FC<P> = ({
     loading: true,
     appointments: [],
   })
+  const [totalActivities, setTotalActivities] = useState<number>()
   const [basicContactData, setBasicContactData] = useState(null)
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
   const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
@@ -137,7 +147,28 @@ export const ClientCardLayout: FC<P> = ({
 
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
-
+  useEffect(() => {
+    if (activeTab !== 'activities') {
+      getCountActivity({
+        variables: {
+          contactID: clientId,
+          activityType: currentActivityType,
+        },
+      })
+      if (countData?.findManyActivityCount) {
+        setTotalActivities(countData?.findManyActivityCount)
+      }
+    } else {
+      setTotalActivities(activitiesCount)
+    }
+  }, [
+    currentActivityType,
+    clientId,
+    activeTab,
+    getCountActivity,
+    countData?.findManyActivityCount,
+    activitiesCount,
+  ])
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
       const customFields = customFieldData.custom
@@ -248,7 +279,7 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'activities',
       name: 'Activities',
-      count: activitiesCount,
+      count: totalActivities,
     },
 
     // {
