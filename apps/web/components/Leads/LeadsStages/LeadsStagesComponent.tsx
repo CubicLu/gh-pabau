@@ -219,9 +219,11 @@ const LeadsStagesComponent = () => {
   useEffect(() => {
     if (allStages.length > 0 && !queryIsCalled) {
       let stageWithNoLeads = []
-      if (Object.keys(leadsState).length > 0) {
-        stageWithNoLeads = Object.keys(leadsState).filter(
-          (i) => leadsState[i].length >= leadsLenghtRef.current.leadsLength
+      const leadsArray = leadsArrayRef.current
+      if (Object.keys(leadsArray.leadsObj).length > 0) {
+        stageWithNoLeads = Object.keys(leadsArray.leadsObj).filter(
+          (i) =>
+            leadsArray.leadsObj[i].length >= leadsLenghtRef.current.leadsLength
         )
       } else {
         for (const stage of allStages) {
@@ -230,7 +232,7 @@ const LeadsStagesComponent = () => {
       }
       stageQueryRef.current.stageWithLeads = stageWithNoLeads
     }
-  }, [allStages, queryIsCalled, leadsState, stageQueryRef])
+  }, [allStages, queryIsCalled, stageQueryRef, leadsArrayRef])
 
   useEffect(() => {
     const stageQuery = stageQueryRef.current
