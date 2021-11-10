@@ -39,49 +39,9 @@ export const MainInvoice = extendType({
         }),
       },
       async resolve(_root, input, ctx: Context) {
-        const invoices = await ctx.prisma.$queryRaw`SELECT 
-              max(a.id) as id,
-              a.guid, 
-              a.date,
-              a.customer_id, 
-              a.customer_name,
-              a.custom_id,
-              sum(a.paid_amount) as paid_amount,
-              sum(a.discount_amount) as discount_amount,
-              sum(a.inv_total) as inv_total,
-              b.name as location_name,
-              group_concat(Distinct d.name) as billers,
-              if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
-          FROM inv_sales a
-              LEFT JOIN company_branches b on b.id = a.location_id
-              LEFT JOIN cm_contacts c on c.id = a.customer_id
-              LEFT JOIN inv_billers d ON a.biller_id=d.id
-              LEFT JOIN insurance_details e ON a.insurer_contract_id=e.id
-          WHERE a.occupier = ${ctx.authenticated.company}
-              ${
-                input?.where?.customer_id?.equals
-                  ? Prisma.sql`AND a.customer_id = ${input.where.customer_id.equals}`
-                  : Prisma.empty
-              }
-              ${
-                input?.where?.custom_id?.equals
-                  ? Prisma.sql`AND a.custom_id = ${input.where.custom_id.equals}`
-                  : Prisma.empty
-              }
-              ${
-                input?.cursor
-                  ? Prisma.sql`AND a.id > ${input?.cursor}`
-                  : Prisma.empty
-              }
-              AND a.guid!='' AND a.guid IS NOT NULL
-              AND a.reference_no!='**CREDIT NOTE**' AND a.reference_no!='**REFUND**'
-          GROUP BY IFNULL(a.guid, a.id)
-          ORDER BY a.date desc
-          LIMIT ${input.take} 
-          OFFSET ${input.skip}
-        `
-
-        return invoices
+        const query = generateInvoiceQuery(ctx, input)
+        // console.info('query:', query)
+        return await ctx.prisma.$queryRaw(query)
       },
     })
     t.field('countInvoice', {
@@ -97,9 +57,8 @@ export const MainInvoice = extendType({
           FROM inv_sales a
           WHERE a.occupier = ${ctx.authenticated.company}
               ${
-                input?.where?.customer_id?.equals
-                  ? Prisma.sql`AND a.customer_id = ${input.where.customer_id.equals}`
-                  : Prisma.empty
+                input?.where?.customer_id?.equals ??
+                Prisma.sql`AND a.customer_id = ${input.where.customer_id.equals}`
               }
               ${
                 input?.where?.custom_id?.equals
@@ -182,3 +141,41 @@ export const MainInvoice = extendType({
     // })
   },
 })
+
+const generateInvoiceQuery = (ctx: Context, input: any) => {
+  const whereClause = []
+  if (input?.where?.customer_id?.equals)
+    whereClause.push(`AND a.customer_id = ${input.where.customer_id.equals}`)
+  if (input?.where?.custom_id?.equals)
+    whereClause.push(`AND a.custom_id = ${input.where.custom_id.equals}`)
+  if (input?.cursor) whereClause.push(`AND a.id > ${input?.cursor}`)
+
+  const query = `SELECT 
+              max(a.id) as id,
+              a.guid, 
+              a.date,
+              a.customer_id, 
+              a.customer_name,
+              a.custom_id,
+              sum(a.paid_amount) as paid_amount,
+              sum(a.discount_amount) as discount_amount,
+              sum(a.inv_total) as inv_total,
+              b.name as location_name,
+              group_concat(Distinct d.name) as billers,
+              if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
+          FROM inv_sales a
+              LEFT JOIN company_branches b on b.id = a.location_id
+              LEFT JOIN cm_contacts c on c.id = a.customer_id
+              LEFT JOIN inv_billers d ON a.biller_id=d.id
+              LEFT JOIN insurance_details e ON a.insurer_contract_id=e.id
+          WHERE a.occupier = ${ctx.authenticated.company}
+              ${whereClause.join(' ')}
+              AND a.guid!='' AND a.guid IS NOT NULL
+              AND a.reference_no!='**CREDIT NOTE**' AND a.reference_no!='**REFUND**'
+          GROUP BY IFNULL(a.guid, a.id)
+          ORDER BY a.date desc
+          LIMIT ${input.take} 
+          OFFSET ${input.skip}`
+
+  return query
+}
