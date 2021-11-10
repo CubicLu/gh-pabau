@@ -24,6 +24,9 @@ fragment CommunicationRecipient on CommunicationRecipient {
   Lead {
     ...CmLeadFields
   }
+  Communication {
+    ...CommunicationFields
+  }
 }
 
 mutation createOneCommunicationRecipient($data: CommunicationRecipientCreateInput!) {

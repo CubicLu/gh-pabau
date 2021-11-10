@@ -30,6 +30,8 @@ import {
   InlineEdit,
   AddAddress,
   AddressValueProp,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import {
   Carousel,
@@ -60,6 +62,7 @@ import { ReactComponent as ConnectionImg } from '../../assets/images/client-card
 import { ReactComponent as DeleteImg } from '../../assets/images/client-card/delete.svg'
 import { ReactComponent as PlusImg } from '../../assets/images/client-card/plus.svg'
 import styles from './ClientDetails.module.less'
+import { MutationFunction } from '@apollo/client'
 
 interface Labels {
   label?: string
@@ -88,7 +91,7 @@ export interface ClientData extends AddressValueProp {
   onAccount: number
   outStanding: number
   patientID: string
-  referredBy: string
+  referredBy: number
   dob: string
   gender: string
   address: string
@@ -133,6 +136,11 @@ export interface ClientDetailsProps {
   appointments: Appointment[]
   handleEditAll?: () => void
   dateFormat?: string
+  updatebasicContactMutation?: MutationFunction
+  updateContactCustomMutation?: MutationFunction
+  clientId?: number
+  companyId?: number
+  setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
 }
 
 enum FieldType {
@@ -147,13 +155,36 @@ enum FieldType {
   membershipNumber,
 }
 
+export interface selectOptionType {
+  id: number
+  name: string
+}
+
 export interface FieldOrderItem {
   title: string
   fieldName: string
   type: string
   field: FieldType
-  value: string | PhoneProp
-  selectOptions?: string[]
+  value: number | string | PhoneProp
+  selectOptions?: string[] | selectOptionType[]
+}
+
+const FieldName = {
+  firstName: 'Fname',
+  lastName: 'Lname',
+  isActive: 'is_active',
+  custom_id: 'patientID',
+  referredBy: 'MarketingSourceData',
+  dob: 'DOB',
+  gender: 'gender',
+  street: 'MailingStreet',
+  city: 'MailingCity',
+  county: 'MailingProvince',
+  postCode: 'MailingPostal',
+  country: 'MailingCountry',
+  mobile: 'Mobile',
+  home: 'Phone',
+  email: 'Email',
 }
 
 export const ClientDetails: FC<ClientDetailsProps> = ({
@@ -167,6 +198,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   customFields,
   dateFormat,
   handleEditAll,
+  updatebasicContactMutation,
+  updateContactCustomMutation,
+  clientId,
+  companyId,
+  setBasicContactData,
 }) => {
   const { t } = useTranslation('common')
   const defaultFieldOrder: FieldOrderItem[] = [
@@ -182,7 +218,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       field: FieldType.referredBy,
       fieldName: 'referredBy',
       title: t('ui.clientdetails.referredby'),
-      value: '',
+      value: 0,
       selectOptions: [],
     },
     {
@@ -285,7 +321,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     onAccount: 0,
     outStanding: 0,
     patientID: '123',
-    referredBy: '',
+    referredBy: 0,
     dob: '1969-11-28',
     gender: '',
     address: '',
@@ -309,7 +345,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     allocatedAuthorisations: '',
   })
   const [initialized, setInitialized] = useState(false)
-  const [activeClient, setActiveClient] = useState(true)
   const [hoverClientDetails, setHoverClientDetails] = useState(false)
   const [detailsCard, setDetailsCard] = useState(0)
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
@@ -332,6 +367,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   )
   const [showDeleteClientModal, setShowDeleteClientModal] = useState(false)
   const [showAddressModal, setShowAddressModal] = useState(false)
+  const [isAddressLoading, setIsAddressLoading] = useState(false)
+  const [isActiveLoading, setIsActiveLoading] = useState(false)
 
   useEffect(() => {
     if (clientData) {
@@ -346,27 +383,16 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         home: clientData.phone.home,
       }
       fields[6].value = clientData.email
-      setActiveClient(clientData.isActive)
       if (customFields?.length) {
         fields = [...fields, ...customFields]
+      }
+      if (referredByOptions?.length) {
+        fields[1].selectOptions = referredByOptions
       }
       setFieldsOrder(fields)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientData, customFields])
-
-  useEffect(() => {
-    const result = fieldsOrder.map((item) => {
-      if (item.fieldName === 'referredBy') {
-        item.selectOptions = referredByOptions?.map((option) => {
-          return option.name
-        })
-      }
-      return item
-    })
-    setFieldsOrder([...result])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [referredByOptions])
+  }, [clientData, customFields, referredByOptions])
 
   const handleOpenAddModal = (type: RelationshipType) => {
     setType(type)
@@ -430,7 +456,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       return false
     })
     if (findIndex < 0) {
-      data.relationships.push(relationship)
+      data.relationships?.push(relationship)
     }
     setClient(data)
   }
@@ -485,59 +511,140 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setClientLabels([...val])
   }
 
-  const handleUpdateFieldValue = (index: number, value: string | PhoneProp) => {
-    const result = fieldsOrder.map((item, id) => {
-      if (id === index) {
-        item.value = value
+  const handleUpdateFieldValue = async (
+    index: number,
+    value: string | PhoneProp | number
+  ) => {
+    const fieldsOrderData = [...fieldsOrder]
+    const data = fieldsOrderData.find((item, id) => id === index)
+    if (data && clientId) {
+      const response = await handleUpdate(data.fieldName, value, data.title)
+      if (response?.data) {
+        if (!data.fieldName.includes('customField_')) {
+          setBasicContactData?.({
+            ...clientData,
+            [data.fieldName]: value,
+          })
+        } else {
+          data.value = value
+          fieldsOrderData[index] = data
+          setFieldsOrder([...fieldsOrderData])
+        }
+        Notification(
+          NotificationType.success,
+          `${data.title} updated to ${
+            data.fieldName === 'referredBy'
+              ? referredByOptions?.find((option) => option.id === value)?.name
+              : value
+          }`
+        )
       }
-      return item
-    })
-
-    setFieldsOrder(result)
+    }
   }
 
-  const handleUpdatePhoneFieldValue = (
+  const handleUpdate = async (field: string, value, label?: string) => {
+    let data
+    if (field.includes('customField_')) {
+      const id = Number.parseInt(field.split('_')[1])
+      return await updateContactCustomMutation?.({
+        variables: {
+          contactId: clientId,
+          companyId,
+          customId: id,
+          customLabel: label,
+          customValue: value,
+        },
+      })
+    } else {
+      if (field === 'referredBy') {
+        data = {
+          [FieldName[field]]: {
+            connect: {
+              id: value,
+            },
+          },
+        }
+      } else if (field === 'address') {
+        data = {}
+        for (const key of Object.keys(value)) {
+          data = {
+            ...data,
+            [FieldName[key]]: { set: value[key] },
+          }
+        }
+      } else {
+        data = {
+          [FieldName[field]]: { set: value },
+        }
+      }
+      return await updatebasicContactMutation?.({
+        variables: {
+          where: { ID: clientId },
+          data,
+        },
+      })
+    }
+  }
+
+  const handleUpdatePhoneFieldValue = async (
     index: number,
     value: string,
     type: string
   ) => {
-    const phone = {
-      ...client.phone,
-      [type]: value,
+    const response = await handleUpdate(type, value)
+    if (response?.data) {
+      const fieldsOrderData = [...fieldsOrder]
+      const data = fieldsOrderData.find((item, id) => id === index)
+      if (data) {
+        setBasicContactData?.({
+          ...clientData,
+          [type]: value,
+        })
+        Notification(
+          NotificationType.success,
+          `${data.title} updated to ${value}`
+        )
+      }
     }
-    setClient({
-      ...client,
-      phone,
-    })
-    handleUpdateFieldValue(index, phone)
   }
 
-  const handleAddAddress = (value: AddressValueProp) => {
+  const handleAddAddress = async (value: AddressValueProp) => {
+    setIsAddressLoading(true)
     const { street, city, county, postCode, country } = value
     const addressJoin = [street, city, county, postCode, country]
       .filter((val) => val?.trim())
       .join(', ')
-    setClient({
-      ...client,
-      street,
-      city,
-      county,
-      postCode,
-      country,
-      address: addressJoin,
-    })
-    const result = fieldsOrder.map((item) => {
-      if (item.fieldName === 'address') {
-        item.value = addressJoin
-      }
-      return item
-    })
 
-    setFieldsOrder([...result])
+    const response = await handleUpdate('address', value)
+    setShowAddressModal(false)
+    setIsAddressLoading(false)
+
+    if (response?.data) {
+      setBasicContactData?.({
+        ...clientData,
+        street,
+        city,
+        county,
+        postCode,
+        country,
+        address: addressJoin,
+      })
+    }
   }
 
-  const handleUpdateClientInfo = (key: string, value: string) => {
-    setClient({ ...client, [key]: value })
+  const handleUpdateClientInfo = async (
+    key: string,
+    value: string,
+    title?: string
+  ) => {
+    const response = await handleUpdate(key, value)
+    if (response?.data) {
+      setBasicContactData?.({
+        ...clientData,
+        [key]: value,
+      })
+      Notification(NotificationType.success, `${title} updated to ${value}`)
+    }
   }
 
   const getFieldName = (fieldTitle: string) => {
@@ -564,7 +671,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       setInitialized(true)
     }
     if (clientData && initialized) {
-      setClient(clientData)
+      setClient({ ...clientData })
       setClientLabels([...clientData?.labels])
     }
   }, [clientData, initialized])
@@ -648,6 +755,22 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       </p>
     </div>
   )
+
+  const handleActiveClient = async (active: boolean) => {
+    setIsActiveLoading(true)
+    const response = await handleUpdate('isActive', active ? 1 : 0)
+    if (response?.data) {
+      setBasicContactData?.({
+        ...clientData,
+        isActive: active,
+      })
+    }
+    setIsActiveLoading(false)
+  }
+
+  const getReferredByValue = (value) => {
+    return referredByOptions?.find((option) => option.id === value)?.name
+  }
 
   return (
     <div
@@ -866,7 +989,9 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                     </div>
                   </div>
                   <div className={styles.detailsClientName}>
-                    <div className={!activeClient ? styles.inactiveName : ''}>
+                    <div
+                      className={!client.isActive ? styles.inactiveName : ''}
+                    >
                       <ClientInfoInlineEdit
                         fieldTitle="First Name"
                         keyValue="firstName"
@@ -890,11 +1015,20 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                       <EditOutlined />
                     </div>
                   </div>
-                  {activeClient && (
+                  {isActiveLoading ? (
+                    <div className={styles.detailsActiveStatus}>
+                      <Skeleton
+                        className={styles.skeletonStatus}
+                        paragraph={false}
+                        active
+                        round
+                      />
+                    </div>
+                  ) : client.isActive ? (
                     <div className={styles.detailsActiveStatus}>
                       <Popconfirm
                         title={t('ui.clientdetails.deactive.confirm')}
-                        onConfirm={() => setActiveClient(false)}
+                        onConfirm={() => handleActiveClient(false)}
                       >
                         <Tooltip title="Inactive">
                           <div className={styles.active}>
@@ -904,13 +1038,12 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                         </Tooltip>
                       </Popconfirm>
                     </div>
-                  )}
-                  {!activeClient && (
+                  ) : (
                     <div className={styles.detailsActiveStatus}>
                       <Tooltip title="Activate">
                         <div
                           className={styles.deactivate}
-                          onClick={() => setActiveClient(true)}
+                          onClick={() => handleActiveClient(true)}
                         >
                           {t('ui.clientdetails.deactivate')}
                         </div>
@@ -1079,9 +1212,12 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                           !isMobile && (
                             <div
                               className={
-                                field.value
-                                  ? styles.clientDetailsItem
-                                  : styles.emptyClientDetailsItem
+                                !field.value
+                                  ? styles.emptyClientDetailsItem
+                                  : field.fieldName === 'referredBy' &&
+                                    !getReferredByValue(field.value)
+                                  ? styles.emptyClientDetailsItem
+                                  : styles.clientDetailsItem
                               }
                             >
                               <div>
@@ -1091,51 +1227,74 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                 <div
                                   className={cn(
                                     styles.content,
-                                    field.value ? '' : styles.emptyContent
+                                    !field.value
+                                      ? styles.emptyContent
+                                      : field.fieldName === 'referredBy' &&
+                                        !getReferredByValue(field.value)
+                                      ? styles.emptyContent
+                                      : ''
                                   )}
                                 >
-                                  {field.type !== 'date' && (
-                                    <InlineEdit
-                                      fieldTitle={field.title}
-                                      orderIndex={getFieldName(field.title)}
-                                      type={field.type}
-                                      initialValue={field.value}
-                                      onUpdateValue={handleUpdateFieldValue}
-                                      selectOptions={field.selectOptions}
-                                    >
-                                      {!field.value ? (
-                                        <span className={styles.emptyValue}>
-                                          {' '}
-                                          {t('ui.clientdetails.empty')}{' '}
-                                        </span>
-                                      ) : field.type === 'email' ? (
-                                        <div className={styles.leftContent}>
-                                          <div
-                                            className={cn(
-                                              styles.leftContentTitle,
-                                              styles.emailContent
-                                            )}
-                                          >
-                                            {field.value}
-                                          </div>
-                                          {field.value && (
-                                            <div className={styles.boxContent}>
-                                              <div
-                                                className={styles.iconContent}
-                                                onClick={(e) => {
-                                                  e.stopPropagation()
-                                                  onCreateEmail()
-                                                }}
-                                              >
-                                                <MailFilled />
-                                              </div>
+                                  {field.fieldName === 'patientID' &&
+                                  field.value ? (
+                                    <span>{field.value}</span>
+                                  ) : (
+                                    field.type !== 'date' && (
+                                      <InlineEdit
+                                        fieldTitle={field.title}
+                                        orderIndex={getFieldName(field.title)}
+                                        type={field.type}
+                                        initialValue={
+                                          field.fieldName === 'referredBy' &&
+                                          !getReferredByValue(field.value)
+                                            ? ''
+                                            : field.value
+                                        }
+                                        onUpdateValue={handleUpdateFieldValue}
+                                        selectOptions={field.selectOptions}
+                                      >
+                                        {!field.value ? (
+                                          <span className={styles.emptyValue}>
+                                            {t('ui.clientdetails.empty')}
+                                          </span>
+                                        ) : field.type === 'email' ? (
+                                          <div className={styles.leftContent}>
+                                            <div
+                                              className={cn(
+                                                styles.leftContentTitle,
+                                                styles.emailContent
+                                              )}
+                                            >
+                                              {field.value}
                                             </div>
-                                          )}
-                                        </div>
-                                      ) : (
-                                        field.value
-                                      )}
-                                    </InlineEdit>
+                                            {field.value && (
+                                              <div
+                                                className={styles.boxContent}
+                                              >
+                                                <div
+                                                  className={styles.iconContent}
+                                                  onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    onCreateEmail()
+                                                  }}
+                                                >
+                                                  <MailFilled />
+                                                </div>
+                                              </div>
+                                            )}
+                                          </div>
+                                        ) : field.type === 'list' &&
+                                          field.fieldName === 'referredBy' ? (
+                                          getReferredByValue(field.value) || (
+                                            <span className={styles.emptyValue}>
+                                              {t('ui.clientdetails.empty')}
+                                            </span>
+                                          )
+                                        ) : (
+                                          field.value
+                                        )}
+                                      </InlineEdit>
+                                    )
                                   )}
                                   {field.type === 'date' && (
                                     <InlineEdit
@@ -1171,9 +1330,12 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                   )}
                                 </div>
                               </div>
-                              <div className={styles.edit}>
-                                <EditOutlined />
-                              </div>
+                              {field.fieldName === 'patientID' &&
+                              field.value ? null : (
+                                <div className={styles.edit}>
+                                  <EditOutlined />
+                                </div>
+                              )}
                             </div>
                           )
                         )}
@@ -1390,10 +1552,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
           </Carousel>
         </div>
       )}
-      {isMobile && (
+      {isMobile && clientLabels?.length > 0 && (
         <div className={styles.detailsLabelContainer}>
           <div className={styles.detailsLabelsMobile}>
-            {clientLabels.map((label, index) => (
+            {clientLabels?.map((label, index) => (
               <div
                 className={styles.detailsLabel}
                 key={`client-label-mobile-${index}`}
@@ -1417,25 +1579,26 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         imageURL={client.avatar}
         onCancel={() => setShowAvatarUploader(false)}
       />
-
-      <AddAddress
-        visible={showAddressModal}
-        title={
-          client.address
-            ? t('ui.clientdetails.edit.address')
-            : t('ui.clientdetails.add.address')
-        }
-        onClose={() => setShowAddressModal(false)}
-        onAdd={handleAddAddress}
-        values={{
-          street: client.street,
-          city: client.city,
-          county: client.county,
-          postCode: client.postCode,
-          country: client.country,
-        }}
-      />
-
+      {showAddressModal && (
+        <AddAddress
+          visible={showAddressModal}
+          title={
+            client.address
+              ? t('ui.clientdetails.edit.address')
+              : t('ui.clientdetails.add.address')
+          }
+          onClose={() => setShowAddressModal(false)}
+          onAdd={handleAddAddress}
+          values={{
+            street: client.street,
+            city: client.city,
+            county: client.county,
+            postCode: client.postCode,
+            country: client.country,
+          }}
+          isLoading={isAddressLoading}
+        />
+      )}
       {addRelationship && (
         <AddRelationship
           visible={addRelationship}

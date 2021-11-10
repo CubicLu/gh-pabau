@@ -1196,9 +1196,14 @@
             .ant-form-item-control-input-content {
               .ant-checkbox-group, .ant-radio-group {
                 display: flex;
+                flex-direction: column;
                 .ant-checkbox-wrapper, .ant-radio-wrapper {
                   display: flex;
-                  align-items: center;
+                  align-items: flex-start;
+                  margin-bottom: 8px;
+                  span {
+                    line-height: 17px;
+                  }
                 }
               }
             }
@@ -1223,6 +1228,8 @@
     padding: 16px 16px 20px;
     button {
       margin-right: 12px;
+      display: flex;
+      align-items: center;
       border-radius: 4px;
       height: 24px;
       line-height: 24px;
