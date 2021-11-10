@@ -1,36 +1,37 @@
 mutation setDetails(
   $contactId : Int!,
-  $salutation : StringFieldUpdateOperationsInput,
-  $firstName : StringFieldUpdateOperationsInput,
-  $lastName : StringFieldUpdateOperationsInput,
-  $phone : StringFieldUpdateOperationsInput,
+  $Salutation : StringFieldUpdateOperationsInput,
+  $Fname : StringFieldUpdateOperationsInput,
+  $Lname : StringFieldUpdateOperationsInput,
+  $Phone : StringFieldUpdateOperationsInput,
   $gender : NullableStringFieldUpdateOperationsInput,
-  $email : StringFieldUpdateOperationsInput,
-  $mobile : StringFieldUpdateOperationsInput,
-  $dob : NullableDateTimeFieldUpdateOperationsInput,
-  $street : StringFieldUpdateOperationsInput,
-  $country : StringFieldUpdateOperationsInput,
-  $city : StringFieldUpdateOperationsInput
+  $Email : StringFieldUpdateOperationsInput,
+  $Mobile : StringFieldUpdateOperationsInput,
+  $DOB : NullableDateTimeFieldUpdateOperationsInput,
+  $MailingStreet : StringFieldUpdateOperationsInput,
+  $MailingCountry : StringFieldUpdateOperationsInput,
+  $MailingCity : StringFieldUpdateOperationsInput
 ){
   setDetailsStep: updateOneCmContact(
     where:{
       ID:$contactId
     }
     data:{
-      Salutation:$salutation
-      Fname:$firstName
-      Lname:$lastName
-      Phone:$phone
+      Salutation:$Salutation
+      Fname:$Fname
+      Lname:$Lname
+      Phone:$Phone
       gender:$gender
-      Email:$email
-      Mobile:$mobile
-      DOB:$dob
-      MailingStreet:$street
-      MailingCountry:$country
-      MailingCity:$city
+      Email:$Email
+      Mobile:$Mobile
+      DOB:$DOB
+      MailingStreet:$MailingStreet
+      MailingCountry:$MailingCountry
+      MailingCity:$MailingCity
     }
   ){
     ID
+    Salutation
     Fname
     Lname
     Phone

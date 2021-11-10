@@ -5,6 +5,7 @@ query getDetails($contactId : IntFilter!){
     }
   ){
     ID
+    Salutation
     Fname
     Lname
     Phone
