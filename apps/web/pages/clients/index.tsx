@@ -753,7 +753,6 @@ export const Clients = () => {
           handleSearch={(searchTerm) => setSearchText(searchTerm)}
           title={t('clients.commonHeader')}
           searchValue={searchText}
-          isShowMenuDrawer={appVersion === version ? false : true}
           // displayCreateButton={true}
           // handleCreate={toggleCreateClientModal}
         >
