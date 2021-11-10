@@ -336,6 +336,7 @@ export const Invoices: FC<P> = (props) => {
   ]
 
   const expandedRowRender = (record) => {
+    const payBtnValue = record.grandTotal - record.amountPaid
     return (
       <div className={styles.rowExpand}>
         {!salesDetaillLoading ? (
@@ -516,9 +517,11 @@ export const Invoices: FC<P> = (props) => {
             {!record.paid && (
               <Button type="primary">{`${t(
                 'ui.client-card-financial.pay'
-              )} ${stringToCurrencySignConverter(user.me?.currency)}${(
-                record.grandTotal - record.amountPaid
-              ).toFixed(2)}`}</Button>
+              )} ${stringToCurrencySignConverter(
+                user.me?.currency
+              )}${(Number.isFinite(payBtnValue) ? payBtnValue : 0).toFixed(
+                2
+              )}`}</Button>
             )}
           </div>
         </div>

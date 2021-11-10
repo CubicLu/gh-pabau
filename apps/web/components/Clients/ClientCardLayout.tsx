@@ -12,6 +12,7 @@ import {
   useUpsertOneCmContactCustomMutation,
   useTotalInvoiceCountQuery,
   useCheckMedicalHistoryQuery,
+  useAggregateAccountPaymentsQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -65,6 +66,12 @@ export const ClientCardLayout: FC<P> = ({
     variables: { contactID: clientId },
     skip: !clientId,
   })
+
+  const { data: invAmount } = useAggregateAccountPaymentsQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
   const { t } = useTranslationI18()
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
@@ -152,7 +159,6 @@ export const ClientCardLayout: FC<P> = ({
       contactID: clientId,
     },
   })
-  console.log('medicalHistoryData:', medicalHistoryData)
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
@@ -252,7 +258,13 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'financial',
       name: 'Financials',
-      count: countInvoice?.total,
+      count: countInvoice?.total ?? 0,
+      tags: [
+        {
+          tag: invAmount?.totalInv?.total_amount?.inv_total,
+          color: 'green',
+        },
+      ],
     },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
