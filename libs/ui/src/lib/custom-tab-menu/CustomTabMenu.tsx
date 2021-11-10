@@ -153,10 +153,17 @@ export const CustomTabMenu: FC<P> = ({
       <div className={styles.mainTabMenuItems}>
         <Tabs
           tabPosition={tabPosition}
-          onChange={(name) => {
-            const clickedTab = tabs?.find((el) => el?.name === name)
-            if (clickedTab?.childTabs?.length === 0) {
-              onActiveChanged?.(clickedTab?.key)
+          onChange={(key) => {
+            const clickedTab = tabs?.find((el) => el?.key === key)
+            if (!clickedTab?.childTabs || clickedTab?.childTabs?.length === 0) {
+              onActiveChanged?.(key)
+            } else if (clickedTab?.childTabs?.length > 0) {
+              const existedInd = clickedTab?.childTabs?.findIndex(
+                (el) => el?.key === activeTab
+              )
+              if (existedInd === -1) {
+                onActiveChanged?.(clickedTab?.childTabs?.[0]?.key)
+              }
             }
           }}
           defaultActiveKey={findParentActiveKey(tabs, activeTab || 'dashboard')}
