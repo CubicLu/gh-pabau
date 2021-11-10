@@ -5,7 +5,7 @@ import {
   useGetContactCustomFieldsQuery,
   useGetContactHeaderLazyQuery,
   useCreateOneContactNoteMutation,
-  useCountClientActivityLazyQuery,
+  useCountClientActivityQuery,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
   useUpdateOneCmContactMutation,
@@ -45,7 +45,6 @@ interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
   cssClass?: string
-  currentActivityType?: number[]
   activitiesCount?: number
 }
 
@@ -54,15 +53,13 @@ export const ClientCardLayout: FC<P> = ({
   children,
   activeTab,
   cssClass,
-  currentActivityType,
   activitiesCount,
 }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
-  const [
-    getCountActivity,
-    { data: countData },
-  ] = useCountClientActivityLazyQuery({
-    fetchPolicy: 'no-cache',
+  const { data: countData } = useCountClientActivityQuery({
+    variables: {
+      contactID: clientId,
+    },
   })
   const router = useRouter()
   const { t } = useTranslationI18()
@@ -158,26 +155,13 @@ export const ClientCardLayout: FC<P> = ({
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
   useEffect(() => {
     if (activeTab !== 'activities') {
-      getCountActivity({
-        variables: {
-          contactID: clientId,
-          activityType: currentActivityType,
-        },
-      })
       if (countData?.findManyActivityCount) {
         setTotalActivities(countData?.findManyActivityCount)
       }
     } else {
       setTotalActivities(activitiesCount)
     }
-  }, [
-    currentActivityType,
-    clientId,
-    activeTab,
-    getCountActivity,
-    countData?.findManyActivityCount,
-    activitiesCount,
-  ])
+  }, [clientId, activeTab, countData?.findManyActivityCount, activitiesCount])
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
       const customFields = customFieldData.custom

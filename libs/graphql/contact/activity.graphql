@@ -31,8 +31,12 @@ query getActivity(
   }
 }
 
-query countClientActivity($contactID: Int!, $activityType: [Int]) {
+query countClientActivityWithType($contactID: Int!, $activityType: [Int]) {
   findManyActivityCount(
     where: { contact_id: { equals: $contactID }, type: { in: $activityType } }
   )
+}
+
+query countClientActivity($contactID: Int!) {
+  findManyActivityCount(where: { contact_id: { equals: $contactID } })
 }

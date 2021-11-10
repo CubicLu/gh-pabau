@@ -5,7 +5,7 @@ import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import styles from './clientCardLayout.module.less'
 import {
   useGetActivityLazyQuery,
-  useCountClientActivityLazyQuery,
+  useCountClientActivityWithTypeLazyQuery,
   useDeleteManyActivityMutation,
   useGetActivityTypesQuery,
 } from '@pabau/graphql'
@@ -15,10 +15,10 @@ import {
   Activities,
   ActivitiesDataProps,
   Notification as ResNotification,
-  ActivityTypeFilter,
   NotificationType,
   PaginationType,
 } from '@pabau/ui'
+import { ActivityTypeFilter } from '../../activities'
 import { DisplayDate } from '../../../hooks/displayDate'
 
 const ActivitiesTab = () => {
@@ -61,7 +61,7 @@ const ActivitiesTab = () => {
   const [
     getCountActivity,
     { data: countData, loading: countLoading, refetch: reFetchCountActivity },
-  ] = useCountClientActivityLazyQuery({
+  ] = useCountClientActivityWithTypeLazyQuery({
     fetchPolicy: 'no-cache',
   })
   const [
@@ -85,20 +85,22 @@ const ActivitiesTab = () => {
     },
   })
   useEffect(() => {
-    getActivities({
-      variables: {
-        contactID: contactID,
-        skip: pagination.offSet,
-        take: pagination.limit,
-        activityType: currentSeletedActivityType,
-      },
-    })
-    getCountActivity({
-      variables: {
-        contactID: contactID,
-        activityType: currentSeletedActivityType,
-      },
-    })
+    if (currentSeletedActivityType && currentSeletedActivityType.length > 0) {
+      getActivities({
+        variables: {
+          contactID: contactID,
+          skip: pagination.offSet,
+          take: pagination.limit,
+          activityType: currentSeletedActivityType,
+        },
+      })
+      getCountActivity({
+        variables: {
+          contactID: contactID,
+          activityType: currentSeletedActivityType,
+        },
+      })
+    }
   }, [
     contactID,
     getActivities,
@@ -222,7 +224,6 @@ const ActivitiesTab = () => {
         clientId={Number(router.query['id'])}
         activeTab="activities"
         activitiesCount={pagination.total}
-        currentActivityType={currentSeletedActivityType}
       >
         <Modal
           centered={true}
