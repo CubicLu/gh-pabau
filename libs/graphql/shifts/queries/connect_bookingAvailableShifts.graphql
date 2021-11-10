@@ -18,6 +18,8 @@ query bookingAvailableShifts(
     location_id
     Public_User {
       id
+      full_name
+      image
     }
   }
 }

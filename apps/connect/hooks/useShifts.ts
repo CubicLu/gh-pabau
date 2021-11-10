@@ -139,15 +139,23 @@ export default function useShifts(shiftsResult, bookingsResult) {
 
         if (allGood) {
           if (timeslots[timeslotIndex]) {
-            timeslots[timeslotIndex].user_id = betterEmployeeForTimeslot(
+            const betterUserID = betterEmployeeForTimeslot(
               shiftsIndex,
               timeslots[timeslotIndex].user_id,
               shift.Public_User.id
             )
+            if (betterUserID !== timeslots[timeslotIndex].user_id) {
+              timeslots[timeslotIndex].user_id = shift.Public_User.id
+              timeslots[timeslotIndex].image = shift.Public_User.image
+              timeslots[timeslotIndex].full_name = shift.Public_User.full_name
+            }
           } else {
             timeslots[timeslotIndex] = {
               slot: date.format('HH:mm'),
+              staff_id: shift.uid,
               user_id: shift.Public_User.id,
+              image: shift.Public_User.image,
+              full_name: shift.Public_User.full_name,
             }
           }
         }
