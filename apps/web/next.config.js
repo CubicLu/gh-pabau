@@ -31,12 +31,13 @@ module.exports = withPlugins(
           'woff2',
           'otf',
         ],
-        inlineImageLimit: 9000,
+        inlineImageLimit: false,
       },
     ],
     [
       withLess,
       {
+        importLoaders: 3,
         cssLoaderOptions: {
           sourceMap: true,
           esModule: true,
