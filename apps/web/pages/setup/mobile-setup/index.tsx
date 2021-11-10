@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Layout, Menu as AntMenu } from 'antd'
 import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
@@ -9,6 +9,7 @@ import {
   setupMenuTranslation,
   SetupMiddleMenu,
 } from '../../../components/Setup/MobileSetup/SetupMenu'
+import { Avatar } from '@pabau/ui'
 import Flag from '../../../assets/images/united-kingdom.png'
 
 const { SubMenu } = AntMenu
@@ -16,6 +17,7 @@ const { Sider } = Layout
 
 const Index: FC = () => {
   const { t } = useTranslation('common')
+  const [user] = useState('William Brandham')
 
   const renderMenuItem = (item, index) => {
     return (
@@ -63,46 +65,62 @@ const Index: FC = () => {
         overflowX: 'hidden',
       }}
     >
-      <AntMenu>
-        {setupMenu?.map((item, index) => {
-          return item?.children?.length > 0
-            ? renderSubMenu(item, index)
-            : renderMenuItem(item, index)
-        })}
-      </AntMenu>
-      <div className={styles.antMenuitem}>SETUP</div>
-      <AntMenu style={{ borderTop: '1px solid #ecedf0', paddingTop: '0' }}>
-        {SetupMiddleMenu?.map((item, index) => {
-          return item?.children?.length > 0
-            ? renderSubMenu(item, index)
-            : renderMenuItem(item, index)
-        })}
-      </AntMenu>
-      <AntMenu
-        style={{
-          margin: '40px 0',
-          borderTop: '1px solid #ecedf0',
-          paddingTop: '0',
-        }}
-      >
-        <AntMenu.Item key={'language'} className={'divider-item'}>
-          <span>
-            <img src={Flag} alt={'language'} style={{ marginRight: '8px' }} />{' '}
-            English
-            <i className={'ant-menu-submenu-arrow'} />
+      <div className={styles.header}>
+        <div
+          className={styles.block}
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span className={styles.avatarWrapper}>
+            <Avatar name={user} />
           </span>
-        </AntMenu.Item>
-        {SetupBottomMenu?.map((item, index) => {
-          return item?.children?.length > 0
-            ? renderSubMenu(item, index)
-            : renderMenuItem(item, index)
-        })}
-        <AntMenu.Item key={'logout'} style={{ color: 'red' }}>
-          <span>
-            Logout <i className={'ant-menu-submenu-arrow'} />
-          </span>
-        </AntMenu.Item>
-      </AntMenu>
+        </div>
+        <div className={styles.block}>
+          <div>{user}</div>
+          <div>Pabau</div>
+        </div>
+      </div>
+      <div style={{ padding: '0px 16px' }}>
+        <AntMenu>
+          {setupMenu?.map((item, index) => {
+            return item?.children?.length > 0
+              ? renderSubMenu(item, index)
+              : renderMenuItem(item, index)
+          })}
+        </AntMenu>
+        <div className={styles.antMenuitem}>SETUP</div>
+        <AntMenu style={{ borderTop: '1px solid #ecedf0', paddingTop: '0' }}>
+          {SetupMiddleMenu?.map((item, index) => {
+            return item?.children?.length > 0
+              ? renderSubMenu(item, index)
+              : renderMenuItem(item, index)
+          })}
+        </AntMenu>
+        <AntMenu
+          style={{
+            margin: '40px 0',
+            borderTop: '1px solid #ecedf0',
+            paddingTop: '0',
+          }}
+        >
+          <AntMenu.Item key={'language'} className={'divider-item'}>
+            <span>
+              <img src={Flag} alt={'language'} style={{ marginRight: '8px' }} />{' '}
+              English
+              <i className={'ant-menu-submenu-arrow'} />
+            </span>
+          </AntMenu.Item>
+          {SetupBottomMenu?.map((item, index) => {
+            return item?.children?.length > 0
+              ? renderSubMenu(item, index)
+              : renderMenuItem(item, index)
+          })}
+          <AntMenu.Item key={'logout'} style={{ color: 'red' }}>
+            <span>
+              Logout <i className={'ant-menu-submenu-arrow'} />
+            </span>
+          </AntMenu.Item>
+        </AntMenu>
+      </div>
     </Sider>
   )
 }
