@@ -103,7 +103,10 @@ export const EditSender: React.FC = () => {
   const [deleteEmailSender] = useDeleteOneCompanyEmailMutation({
     onCompleted(data) {
       if (data && showDeleteNotification) {
-        Notification(NotificationType.success, 'Delete')
+        Notification(
+          NotificationType.success,
+          t('setup.senders.delete.detail.success')
+        )
         setShowDeleteNotification(false)
       }
     },
@@ -211,17 +214,13 @@ export const EditSender: React.FC = () => {
 
   if (!initialValues) return null
 
-  // console.log('intal valv::', initialValues)
-  console.log('init  val:::', initialValues)
   return (
     <Formik<SenderItem>
       initialValues={initialValues}
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
-        console.log('init first val:::', values)
         if (values.type !== initialValues.type) {
           if (values.type === 'email') {
-            console.log('val::', values)
             await addEmailSenders({
               variables: {
                 data: {
