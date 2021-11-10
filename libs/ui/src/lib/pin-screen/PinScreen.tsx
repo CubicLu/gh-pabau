@@ -5,11 +5,11 @@ import styles from './PinScreen.module.less'
 import { useMedia } from 'react-use'
 import { Button, Notification, NotificationType } from '@pabau/ui'
 
-export interface Props {
+export interface PinScreenProps {
   onSubmit: (val: boolean) => void
 }
 
-export const PinScreen: FC<Props> = ({ onSubmit }) => {
+export const PinScreen: FC<PinScreenProps> = ({ onSubmit }) => {
   const { t } = useTranslation('common')
   const reg = /^\d*(\d*)?$/
   const [password, setPassword] = useState('')
