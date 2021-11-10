@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import { Tabs } from 'antd'
 import { TabsProps } from 'antd/lib/tabs'
 import classNames from 'classnames'
@@ -26,9 +26,11 @@ export const TabMenu: FC<P> = ({
   activeDefaultKey = '0',
   ...props
 }) => {
+  const [keyActive, setKeyActive] = useState(activeKey)
   const { onChange } = props
   const tabClick = (active: string) => {
     onChange?.(active)
+    setKeyActive(active)
   }
   return (
     <div className={classNames(styles.calendarSettings, props.className)}>
@@ -37,7 +39,7 @@ export const TabMenu: FC<P> = ({
         tabPosition={tabPosition}
         style={{ minHeight }}
         onChange={tabClick}
-        activeKey={activeKey}
+        activeKey={keyActive}
         defaultActiveKey={activeDefaultKey}
       >
         {Array.isArray(children) &&
