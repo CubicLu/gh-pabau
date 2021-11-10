@@ -220,7 +220,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
                 <Select
                   allowClear
                   placeholder={t('activityList.select.placeholder')}
-                  onChange={(val) => {
+                  onChange={(val: string) => {
                     setPhoneType(val.toString().toLowerCase())
                     form.setFieldsValue({
                       [fieldTitle]:
