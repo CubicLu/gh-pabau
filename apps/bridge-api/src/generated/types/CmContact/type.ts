@@ -598,6 +598,20 @@ export const CmContact = objectType({
         return root.MedicalFormContact
       },
     })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmContactCountOutputType',
       resolve(root: any) {

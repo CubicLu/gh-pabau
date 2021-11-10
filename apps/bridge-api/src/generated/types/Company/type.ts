@@ -1827,6 +1827,20 @@ export const Company = objectType({
         return root.InsurerContract
       },
     })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
+      },
+    })
     t.list.field('Voucher', {
       type: 'Voucher',
       args: {
@@ -1953,18 +1967,18 @@ export const Company = objectType({
         return root.Recall
       },
     })
-    t.list.field('LabRequest', {
-      type: 'LabRequest',
+    t.list.field('CustomFieldDisplay', {
+      type: 'CustomFieldDisplay',
       args: {
-        where: 'LabRequestWhereInput',
-        orderBy: 'LabRequestOrderByWithRelationInput',
-        cursor: 'LabRequestWhereUniqueInput',
+        where: 'CustomFieldDisplayWhereInput',
+        orderBy: 'CustomFieldDisplayOrderByWithRelationInput',
+        cursor: 'CustomFieldDisplayWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'LabRequestScalarFieldEnum',
+        distinct: 'CustomFieldDisplayScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.LabRequest
+        return root.CustomFieldDisplay
       },
     })
     t.nullable.field('_count', {
