@@ -40,6 +40,10 @@ module.exports = {
         destination:
           '/test-form/[form_id]/[client_id]?form_id=:form_id&client_id=:client_id',
       },
+      {
+        source: '/clients/:id/financial',
+        destination: '/clients/[id]/financial?id=:id',
+      },
     ]
   },
   typescript: {
