@@ -69,6 +69,7 @@ export const permissions = shield(
         rules.authentication.isAdmin
       ),
       createOneLead: rules.authentication.isAuthenticated,
+      createShift: rules.authentication.isAuthenticated,
       //Country
       createOneCountry: rules.authentication.isAuthenticated,
       //MedicalFormContact
@@ -94,6 +95,7 @@ export const permissions = shield(
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
       deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      deleteManyContactAttachmentPhoto: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
@@ -117,7 +119,6 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
-      deleteOneContactAttachment: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
@@ -134,10 +135,11 @@ export const permissions = shield(
       //DuplicateContacts
       // duplicateContacts: rules.authentication.isAuthenticated,
       findManyContactPackage: allow,
-      findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      findManyInvoice: rules.authentication.isAuthenticated,
+      countInvoice: rules.authentication.isAuthenticated,
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
       //StaffMeta

@@ -67,6 +67,7 @@ interface ImageThumbnailProps {
   uploadImage?: (image: UploadingImageProps) => void
   cancelUpload?: (image: UploadingImageProps) => void
   removeFile?: (id: number) => void
+  canCancel?: boolean
 }
 
 const ImageThumbnail: FC<ImageThumbnailProps> = ({
@@ -74,6 +75,7 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
   uploadImage,
   cancelUpload,
   removeFile,
+  canCancel = false,
 }) => {
   const [showCancelIcon, setShowCancelIcon] = useState(false)
 
@@ -94,7 +96,8 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
           <span
             className={styles.progressIndicator}
             onMouseEnter={() => {
-              if (!data?.isUploadCompleted) setShowCancelIcon(() => true)
+              if (!data?.isUploadCompleted && canCancel)
+                setShowCancelIcon(() => true)
             }}
           >
             <Tooltip
@@ -160,21 +163,24 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
           </Tooltip>
         </div>
       )}
-      {showCancelIcon && data?.isUploadStarted && !data?.isUploadCompleted && (
-        <div className={styles.imgLoading}>
-          <span
-            className={styles.cancelIcon}
-            onMouseLeave={() => setShowCancelIcon(() => false)}
-            onClick={() => {
-              if (!data?.isFailed) cancelUpload?.(data)
-              if (data?.isFailed) uploadImage?.(data)
-            }}
-          >
-            {!data?.isFailed && <CloseCircleFilled />}
-            {data?.isFailed && <PlayCircleFilled />}
-          </span>
-        </div>
-      )}
+      {showCancelIcon &&
+        canCancel &&
+        data?.isUploadStarted &&
+        !data?.isUploadCompleted && (
+          <div className={styles.imgLoading}>
+            <span
+              className={styles.cancelIcon}
+              onMouseLeave={() => setShowCancelIcon(() => false)}
+              onClick={() => {
+                if (!data?.isFailed) cancelUpload?.(data)
+                if (data?.isFailed) uploadImage?.(data)
+              }}
+            >
+              {!data?.isFailed && <CloseCircleFilled />}
+              {data?.isFailed && <PlayCircleFilled />}
+            </span>
+          </div>
+        )}
     </div>
   )
 }
@@ -314,6 +320,7 @@ export interface CamUploaderProps {
   removeImage?: (imageId: number) => void
   onCancelUpload?: (image: UploadingImageProps) => void
   albumId?: number
+  cancelFunctionality?: boolean
 }
 
 export const CamUploaderModal: FC<CamUploaderProps> = ({
@@ -326,6 +333,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   removeImage,
   onCancelUpload,
   albumId = 0,
+  cancelFunctionality = true,
 }) => {
   const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
   const inputFileRef = useRef<HTMLInputElement>(null)
@@ -462,6 +470,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
                   uploadImage={uploadImage}
                   removeFile={removeImage}
                   cancelUpload={onCancelUpload}
+                  canCancel={cancelFunctionality}
                 />
               ))}
             </div>

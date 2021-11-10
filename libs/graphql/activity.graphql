@@ -331,6 +331,9 @@ mutation deleteManyActivity($ids: [Int]!) {
   }
 }
 
+query countClientActivity($contactID: Int!){
+  findManyActivityCount(where:{contact_id:{equals: $contactID}})
+}
 query retrievePipeline {
   findManyPipeline(where: {
     status: {equals: 1}

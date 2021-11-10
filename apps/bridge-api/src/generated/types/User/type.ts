@@ -707,6 +707,20 @@ export const User = objectType({
         return root.CmContact
       },
     })
+    t.list.field('MedicalFormContact', {
+      type: 'MedicalFormContact',
+      args: {
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContact
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {
