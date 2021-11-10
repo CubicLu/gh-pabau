@@ -221,6 +221,16 @@ export const CreateActivity: FC<CreateActivityProps> = ({
     return <Tooltip title={title}>{icon}</Tooltip>
   }
 
+  const calculateDueTime = (date, time) => {
+    return dayjs()
+      .year(dayjs(date).year())
+      .month(dayjs(date).month())
+      .date(dayjs(date).date())
+      .hour(dayjs(time).hour())
+      .minute(dayjs(time).minute())
+      .second(dayjs(time).second())
+  }
+
   return (
     <div>
       <BasicModal
@@ -245,6 +255,11 @@ export const CreateActivity: FC<CreateActivityProps> = ({
               ),
           })}
           onSubmit={async (values, { resetForm }) => {
+            const dueStartDate = calculateDueTime(
+              values.startDate,
+              values.startTime
+            )
+            const dueEndDate = calculateDueTime(values.endDate, values.endTime)
             const data = {
               ActivityType: {
                 connect: {
@@ -257,8 +272,8 @@ export const CreateActivity: FC<CreateActivityProps> = ({
               status: values.isDone
                 ? Activity_Status.Done
                 : Activity_Status.Pending,
-              due_start_date: values.startTime,
-              due_end_date: values.endTime,
+              due_start_date: dueStartDate,
+              due_end_date: dueEndDate,
               Company: {},
               User: {},
               AssignedUser: {
@@ -348,8 +363,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                       <FormikInput
                         name="subject"
                         autoFocus={true}
-                        // value={data.subject}
-                        // onChange={(e) => handleDataChange('subject', e.target.value)}
                         placeholder={
                           activityTypes?.find(
                             (item) => item.id === values.activityType
@@ -408,7 +421,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     </div>
                   </div>
                   <div className={styles.widgetTool}>
-                    <BlockOutlined />
+                    <BlockOutlined className={styles.blockIcon} />
                     <Select
                       style={{ width: 200 }}
                       value={values?.freeBusy}
@@ -466,24 +479,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     </span>
                     <div className={styles.innerContent}>
                       <div className={styles.customInputText}>
-                        {/* <DebounceSelect
-                    allowClear
-                    style={{ width: '100%' }}
-                    size={'small'}
-                    showArrow={false}
-                    value={(selectedLead || undefined) as never}
-                    placeholder={t('createActivity.select.lead.placeholder')}
-                    disabled={!!selectedClient}
-                    onChange={(val) => setSelectedLead(val as never)}
-                    showSearch
-                    fetchOptions={leadOptions}
-                    isPrefixIcon={true}
-                    prefixIcon={
-                      <div className={styles.leadIcon}>
-                        <AimOutlined />
-                      </div>
-                    }
-                  /> */}
                         <ClientLeadSelect
                           name="lead"
                           isEdit={isEdit}

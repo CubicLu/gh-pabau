@@ -87,7 +87,6 @@
         display: flex;
         margin-bottom: 20px;
         width: 100%;
-        align-items: center;
         :global {
           .ant-form-item {
             margin-bottom: 0;
@@ -96,6 +95,9 @@
         }
         :global .anticon {
           margin-right: 14px;
+          height: 40px;
+          display: flex;
+          align-items: center;
           svg {
           fill: #9292A3 ;
             width: 16px;
@@ -143,12 +145,14 @@
           margin-right: 10px;
           color: #000;
         }
+        .block-icon {
+          margin-right: 14px;
+        }
         :global{
           .ant-select {
             color: #B8B8C0;
           }
           .anticon {
-            margin-right: 14px;
             &.anticon-block {
               svg {
                 width: 16px;
@@ -617,9 +621,11 @@
         .input-text {
           display: flex;
           margin-bottom: 20px;
-          align-items: center;
           :global .anticon {
             margin-right: 14px;
+            height: 40px;
+            display: flex;
+            align-items: center;
             svg {
               fill: #9292A3 ;
               width: 16px;

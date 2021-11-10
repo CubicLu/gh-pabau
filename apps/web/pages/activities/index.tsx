@@ -610,13 +610,13 @@ export const Index: FC<IndexProps> = ({ client }) => {
     const labelsWithColor = sourceData.reduce((p, c) => {
       if (c.client.label) {
         for (const label of c.client.label) {
-          const name = label.label
-          if (!Object.prototype.hasOwnProperty.call(p, name)) {
-            p[name] = { color: label.color }
+          const labelValue = label.CmLabel
+          if (!Object.prototype.hasOwnProperty.call(p, labelValue.name)) {
+            p[labelValue.name] = { color: labelValue.color }
           }
         }
-        return p
       }
+      return p
     }, {})
     const formatLabels = Object.keys(labelsWithColor ?? {}).map((k) => {
       return {
