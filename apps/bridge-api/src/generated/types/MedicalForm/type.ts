@@ -74,6 +74,20 @@ export const MedicalForm = objectType({
         return root.MedicalFormContact
       },
     })
+    t.list.field('PathwayStep', {
+      type: 'PathwayStep',
+      args: {
+        where: 'PathwayStepWhereInput',
+        orderBy: 'PathwayStepOrderByWithRelationInput',
+        cursor: 'PathwayStepWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStep
+      },
+    })
     t.nullable.field('_count', {
       type: 'MedicalFormCountOutputType',
       resolve(root: any) {

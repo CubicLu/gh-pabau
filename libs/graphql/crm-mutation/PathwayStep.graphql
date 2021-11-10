@@ -22,6 +22,9 @@ fragment PathwayStep on PathwayStep {
   Company {
     ...CompanyFields
   }
+  MedicalForm {
+    ...MedicalFormFields
+  }
 }
 
 mutation createOnePathwayStep($data: PathwayStepCreateInput!) {

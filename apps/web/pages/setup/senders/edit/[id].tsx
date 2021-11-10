@@ -23,7 +23,6 @@ import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import {
   SenderItem,
-  senderItems,
   subCriteriaOptions,
   masterCriteriaOptions,
   mergeTagTypeOptions,
@@ -31,7 +30,32 @@ import {
 import { Form } from 'formik-antd'
 
 const { Panel } = Collapse
-
+export const senderItems: SenderItem[] = [
+  {
+    id: '001',
+    type: 'email',
+    fromName: 'Clinic Bookings',
+    fromEmail: 'william@pabau.com',
+    isEnableReplies: true,
+    isDefaultSender: false,
+    mergeTags: [],
+  },
+  {
+    id: '002',
+    type: 'sms',
+    fromName: 'The Health Clinic',
+    isDefaultSender: true,
+    isEnableReplies: true,
+    mergeTags: [],
+  },
+  {
+    id: '003',
+    type: 'sms',
+    fromName: 'Surgical Clinic',
+    isDefaultSender: false,
+    mergeTags: [],
+  },
+]
 export const EditSender: React.FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
@@ -62,8 +86,6 @@ export const EditSender: React.FC = () => {
 
   if (!initialValues) return null
 
-  console.log(initialValues)
-
   return (
     <Formik<SenderItem>
       initialValues={initialValues}
@@ -73,7 +95,7 @@ export const EditSender: React.FC = () => {
         if (index !== -1) {
           senderItems[index] = { ...values }
         }
-        router.push('/setup/senders')
+        router.push('/setup/senders').then()
       }}
       render={({ values, errors, touched, handleChange, handleSubmit }) => (
         <Form>
@@ -94,12 +116,8 @@ export const EditSender: React.FC = () => {
               !!(
                 values.type &&
                 values.fromName &&
-                (values.type === 'sms' && values.fromName.length > 11
-                  ? false
-                  : true) &&
-                (values.type === 'email' && values.fromName.length > 50
-                  ? false
-                  : true) &&
+                !(values.type === 'sms' && values.fromName.length > 11) &&
+                !(values.type === 'email' && values.fromName.length > 50) &&
                 (values.type !== 'email' || values.fromEmail) &&
                 (!values.isUseCompanyEmail || values.fromCompanyEmail) &&
                 (!values.isEnterpriseEmail || values.replyTo)
