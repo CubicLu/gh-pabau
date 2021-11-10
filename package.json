@@ -2,7 +2,6 @@
   "name": "pabau",
   "version": "2.0.742",
   "private": true,
-  "type": "commonjs",
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
     "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=16384\" nx",
