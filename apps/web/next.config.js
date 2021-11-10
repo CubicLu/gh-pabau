@@ -16,22 +16,13 @@ module.exports = withPlugins(
     ],
     [withYaml],
     [
-      withImages,
+      withNx,
       {
-        fileExtensions: [
-          'jpg',
-          'jpeg',
-          'png',
-          'gif',
-          'ico',
-          'webp',
-          'jp2',
-          'avif',
-          'woff',
-          'woff2',
-          'otf',
-        ],
-        inlineImageLimit: false,
+        nx: {
+          svgr: true,
+        },
+        cssModules: true,
+        webpack5: true,
       },
     ],
     [
@@ -81,13 +72,22 @@ module.exports = withPlugins(
       },
     ],
     [
-      withNx,
+      withImages,
       {
-        nx: {
-          svgr: true,
-        },
-        cssModules: true,
-        webpack5: true,
+        fileExtensions: [
+          'jpg',
+          'jpeg',
+          'png',
+          'gif',
+          'ico',
+          'webp',
+          'jp2',
+          'avif',
+          'woff',
+          'woff2',
+          'otf',
+        ],
+        inlineImageLimit: false,
       },
     ],
   ],
