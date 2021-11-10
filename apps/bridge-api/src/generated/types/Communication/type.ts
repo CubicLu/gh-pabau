@@ -24,16 +24,58 @@ export const Communication = objectType({
         return root.Content
       },
     })
-    t.field('Recipient', {
-      type: 'CommunicationRecipient',
-      resolve(root: any) {
-        return root.Recipient
-      },
-    })
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company
+      },
+    })
+    t.list.field('CommunicationAttachment', {
+      type: 'CommunicationAttachment',
+      args: {
+        where: 'CommunicationAttachmentWhereInput',
+        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
+        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationAttachment
+      },
+    })
+    t.list.field('CommunicationRecipient', {
+      type: 'CommunicationRecipient',
+      args: {
+        where: 'CommunicationRecipientWhereInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
+        cursor: 'CommunicationRecipientWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationRecipientScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationRecipient
+      },
+    })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CommunicationCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

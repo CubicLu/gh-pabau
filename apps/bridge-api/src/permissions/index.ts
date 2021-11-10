@@ -69,12 +69,15 @@ export const permissions = shield(
         rules.authentication.isAdmin
       ),
       createOneLead: rules.authentication.isAuthenticated,
+      createShift: rules.authentication.isAuthenticated,
       //Country
       createOneCountry: rules.authentication.isAuthenticated,
       //MedicalFormContact
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
       createOneContactNote: rules.authentication.isAuthenticated,
+      updateOneContactNote: rules.authentication.isAuthenticated,
+      deleteOneContactNote: rules.authentication.isAuthenticated,
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -91,7 +94,9 @@ export const permissions = shield(
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
-      deleteOneContactAttachment: rules.authentication.isAuthenticated,
+      deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      deleteManyContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      moveAttachments: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -114,7 +119,6 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
-      deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
@@ -128,11 +132,14 @@ export const permissions = shield(
       ),
     },
     Query: {
+      //DuplicateContacts
+      // duplicateContacts: rules.authentication.isAuthenticated,
       findManyContactPackage: allow,
-      findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      findManyInvoice: rules.authentication.isAuthenticated,
+      countInvoice: rules.authentication.isAuthenticated,
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
       //StaffMeta

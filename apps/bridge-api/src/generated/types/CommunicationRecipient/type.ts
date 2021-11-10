@@ -21,20 +21,6 @@ export const CommunicationRecipient = objectType({
     t.int('provider_id')
     t.nullable.field('status', { type: 'communications_recipients_status' })
     t.string('merge_values')
-    t.list.field('Communication', {
-      type: 'Communication',
-      args: {
-        where: 'CommunicationWhereInput',
-        orderBy: 'CommunicationOrderByWithRelationInput',
-        cursor: 'CommunicationWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'CommunicationScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.Communication
-      },
-    })
     t.field('Provider', {
       type: 'CommunicationProvider',
       resolve(root: any) {
@@ -65,6 +51,12 @@ export const CommunicationRecipient = objectType({
       type: 'CmLead',
       resolve(root: any) {
         return root.Lead
+      },
+    })
+    t.nullable.field('Communication', {
+      type: 'Communication',
+      resolve(root: any) {
+        return root.Communication
       },
     })
     t.nullable.field('_count', {

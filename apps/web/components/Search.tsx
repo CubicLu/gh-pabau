@@ -146,7 +146,12 @@ enum SearchMode {
   Leads = 'Leads',
 }
 
-const Search: FC = () => {
+interface P {
+  isHideLead?: boolean
+  placeHolder?: string
+}
+
+const Search: FC<P> = ({ isHideLead = false, placeHolder }) => {
   const router = useRouter()
   const [searchFor, setSearchFor] = useState(SearchMode.Clients)
   const [searchTerms, setSearchTerms] = useState([])
@@ -266,6 +271,8 @@ const Search: FC = () => {
         setSearchTerms([...wordBits])
         loadContacts()
       }}
+      isHideLead={isHideLead}
+      placeHolder={placeHolder}
     />
   )
 }

@@ -7,23 +7,26 @@ import AppointmentItem, { AppointmentItemP } from './AppointmentItem'
 import styles from './Appointments.module.less'
 
 interface P {
-  date?: Date | string
   appointments?: AppointmentItemP[]
+  addInProgressAppt?: (appt: number) => void
 }
 
-export const Appointments: FC<P> = ({ date, appointments }) => {
+export const Appointments: FC<P> = ({ appointments, addInProgressAppt }) => {
   return (
-    <div
-      className={styles.appointmentContainer}
-      style={{
-        border: appointments?.length > 0 ? '1px solid #f4f5f7' : 'none',
-      }}
-    >
-      {appointments &&
-        appointments?.length > 0 &&
-        appointments.map((appt) => {
-          return <AppointmentItem key={appt.key} {...appt} />
-        })}
+    <div>
+      {appointments && appointments?.length > 0 && (
+        <div className={styles.appointmentContainer}>
+          {appointments.map((appt) => {
+            return (
+              <AppointmentItem
+                key={appt.key}
+                {...appt}
+                addInProgressAppt={addInProgressAppt}
+              />
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

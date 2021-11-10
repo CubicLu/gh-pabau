@@ -16,20 +16,6 @@ export const Pipeline = objectType({
     t.string('note')
     t.boolean('restrict_stages')
     t.nullable.string('reference')
-    t.list.field('LeadStatus', {
-      type: 'LeadStatus',
-      args: {
-        where: 'LeadStatusWhereInput',
-        orderBy: 'LeadStatusOrderByWithRelationInput',
-        cursor: 'LeadStatusWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'LeadStatusScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.LeadStatus
-      },
-    })
     t.list.field('PipelineStage', {
       type: 'PipelineStage',
       args: {

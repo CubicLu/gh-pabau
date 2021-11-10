@@ -22,6 +22,9 @@ query retrieveAuthenticatedUser {
         language
         currency
         date_format
+        timezone {
+          php_format
+        }
       }
     }
     companies: companies {

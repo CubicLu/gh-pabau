@@ -10,7 +10,11 @@ export interface ClientGiftVoucherLayoutProps {
   isEmpty?: boolean
   activeVouchers: VoucherListProps[]
   expiredVouchers: VoucherListProps[]
+  activeVouchersCount: number
+  expiredVouchersCount: number
+  activeKey?: string
   onCardSelect: (e: VoucherListProps) => Promise<boolean>
+  onChangeTab: (key: string) => void
 }
 
 export interface VoucherListProps {
@@ -23,7 +27,11 @@ export const ClientGiftVoucherLayout: FC<ClientGiftVoucherLayoutProps> = ({
   isEmpty,
   activeVouchers,
   expiredVouchers,
+  activeVouchersCount,
+  expiredVouchersCount,
+  activeKey,
   onCardSelect,
+  onChangeTab,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('common')
@@ -33,6 +41,8 @@ export const ClientGiftVoucherLayout: FC<ClientGiftVoucherLayoutProps> = ({
   const [expiredVoucherList, setExpiredVoucherList] = useState<
     VoucherListProps[]
   >([])
+  const [activeVoucherCount, setActiveVoucherCount] = useState<number>(0)
+  const [expiredVoucherCount, setExpiredVoucherCount] = useState<number>(0)
 
   const DotMenuOptions = [
     {
@@ -50,8 +60,15 @@ export const ClientGiftVoucherLayout: FC<ClientGiftVoucherLayoutProps> = ({
   useEffect(() => {
     setActiveVoucherList(activeVouchers)
     setExpiredVoucherList(expiredVouchers)
+    setActiveVoucherCount(activeVouchersCount)
+    setExpiredVoucherCount(expiredVouchersCount)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeVouchers, expiredVouchers])
+  }, [
+    activeVouchers,
+    expiredVouchers,
+    activeVouchersCount,
+    expiredVouchersCount,
+  ])
 
   return (
     <div>
@@ -71,13 +88,15 @@ export const ClientGiftVoucherLayout: FC<ClientGiftVoucherLayoutProps> = ({
       ) : (
         <div style={{ background: '#fff' }}>
           <TabMenu
+            activeKey={activeKey}
+            onChange={(val) => onChangeTab(val)}
             menuItems={[
-              `${t('ui.client.giftvoucher.tab.active')} (${
-                activeVoucherList.length
-              })`,
-              `${t('ui.client.giftvoucher.tab.expired')} (${
-                expiredVoucherList.length
-              })`,
+              `${t(
+                'ui.client.giftvoucher.tab.active'
+              )} (${activeVoucherCount})`,
+              `${t(
+                'ui.client.giftvoucher.tab.expired'
+              )} (${expiredVoucherCount})`,
             ]}
             tabPosition="top"
           >
