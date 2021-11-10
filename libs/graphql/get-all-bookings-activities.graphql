@@ -1,0 +1,62 @@
+query GetClientsAllAppointments($take: Int, $skip: Int) {
+  findManyBooking(
+    take: $take
+    skip: $skip
+    orderBy: { create_date: desc }
+    where: {
+      Online: { equals: 1 }
+      status: { equals: "Waiting" }
+      Contact: { ID: { not: { equals: 0 } } }
+    }
+  ) {
+    id
+    Online
+    status
+    contact_id
+    create_date
+    Contact {
+      Fname
+      Lname
+    }
+    CmStaffGeneral {
+      Fname
+      Lname
+      Avatar
+      User {
+        image
+      }
+    }
+    service
+    start_date
+    end_date
+    Location: CompanyBranch {
+      id
+      name
+    }
+    Service: CompanyService {
+      iscVirtual: online_only_service
+    }
+    appt_note: title
+    appt_status: status
+    FeedbackSurveyScheduled: sent_survey
+    SmsReminderScheduled: sent_sms
+    EmailConfirmationSent: sent_email
+    participant_slave_uids
+    created_by_uid
+    Participants {
+      id
+      full_name
+    }
+    BookedBy {
+      id
+      full_name
+    }
+  }
+  totalCount: findManyBookingCount(
+    where: {
+      Online: { equals: 1 }
+      status: { equals: "Waiting" }
+      Contact: { ID: { not: { equals: 0 } } }
+    }
+  )
+}

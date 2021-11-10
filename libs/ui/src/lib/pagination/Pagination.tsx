@@ -4,16 +4,19 @@ import { DownOutlined } from '@ant-design/icons'
 import { PaginationProps as AntPaginationProps } from 'antd/es/pagination'
 import styles from './Pagination.module.less'
 import { useTranslation } from 'react-i18next'
+import classNames from 'classnames'
 
 interface PaginationProps {
   showingRecords: number
   pageSizeOptions?: string[]
   onPageSizeChange?: (pageSize?: number) => void
+  customClass?: string
 }
 export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
   showingRecords,
   pageSizeOptions,
   onPageSizeChange,
+  customClass = '',
   ...props
 }) => {
   const { t } = useTranslation('common')
@@ -31,7 +34,7 @@ export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
   )
 
   return (
-    <div className={styles.tableFooter}>
+    <div className={classNames(styles.tableFooter, customClass)}>
       <div className={styles.showWrapper}>
         <p className={styles.paginationText}>
           {t('crud-table-pagination-text-showing')}{' '}
