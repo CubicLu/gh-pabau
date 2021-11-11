@@ -26,7 +26,7 @@ import {
   ActivitiesProps,
   AvatarUploader,
   ReferredByOption,
-  FieldOrderItem,
+  CustomFieldType,
   ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
@@ -158,7 +158,7 @@ interface P {
   activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
-  generalCustomFields?: FieldOrderItem[]
+  customFields?: CustomFieldType[]
   dateFormat?: string
   handleEditAll?: () => void
   cssClass?: string
@@ -186,7 +186,7 @@ const ClientCardModal: FC<P> = ({
   onTabChanged,
   referredByOptions,
   loading,
-  generalCustomFields,
+  customFields,
   dateFormat,
   handleEditAll,
   updatebasicContactMutation,
@@ -968,7 +968,7 @@ const ClientCardModal: FC<P> = ({
                 appointments={appointments}
                 referredByOptions={referredByOptions}
                 loading={loading}
-                generalCustomFields={generalCustomFields}
+                customFields={customFields}
                 dateFormat={dateFormat}
                 handleEditAll={handleEditAll}
                 updatebasicContactMutation={updatebasicContactMutation}

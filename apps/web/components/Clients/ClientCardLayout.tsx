@@ -19,7 +19,6 @@ import {
   Notification,
   NotificationType,
   BasicModal as Modal,
-  customFieldType,
 } from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
@@ -64,7 +63,6 @@ export const ClientCardLayout: FC<P> = ({
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
   const [customField, setCustomField] = useState([])
-  const [generalCustomField, setGeneralCustomField] = useState([])
   const [contactData, setContactData] = useState<ClientNotes>({
     notes: [],
     count: 0,
@@ -155,44 +153,61 @@ export const ClientCardLayout: FC<P> = ({
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
       const customFields = customFieldData.custom
-        .flatMap((thread) =>
-          thread?.ManageCustomField?.filter((thread) => thread.is_active)
-        )
-        .filter((thread) => thread)
+        .map((thread) => {
+          return {
+            id: thread.id,
+            category: thread.name,
+            customField: thread.ManageCustomField.filter(
+              (thread) => thread.is_active
+            ),
+          }
+        })
+        .filter((thread) => thread.customField.length > 0)
 
       if (customFieldData.generalCustom.length > 0) {
+        const generalCmFields = []
         for (const general of customFieldData.generalCustom) {
-
           if (
             general.field_type === 'bool' ||
             general.field_type === 'multiple' ||
             general.field_type === 'list'
           ) {
-            if (general?.ManageCustomFieldItem?.length > 0) {
-              customFields.push(general)
+            if (general.ManageCustomFieldItem.length > 0) {
+              generalCmFields.push(general)
             }
-          } else { 
-            customFields.push(general)
+          } else {
+            generalCmFields.push(general)
           }
         }
+        customFields.push({
+          id: 0,
+          category: 'general',
+          customField: generalCmFields,
+        })
       }
 
       if (customFields.length > 0) {
-        const final = customFields.map((fields) => {
+        const customFieldData = customFields.map((cmField) => {
           return {
-            title: fields.field_label,
-            value:
-              data?.findFirstCmContact?.customField?.find(
-                (contactField) => contactField.id === fields.id
-              )?.value || '',
-            fieldName: `customField_${fields.id}`,
-            type: fields.field_type,
-            selectOptions: fields.ManageCustomFieldItem.map(
-              (option) => option.item_label
-            ),
+            ...cmField,
+            customField: cmField.customField.map((field) => {
+              return {
+                title: field.field_label,
+                value:
+                  data?.findFirstCmContact?.customField?.find(
+                    (contactField) => contactField.id === field.id
+                  )?.value || '',
+                fieldName: `customField_${field.id}`,
+                type: field.field_type,
+                selectOptions: field.ManageCustomFieldItem.map(
+                  (option) => option.item_label
+                ),
+                order: field.field_order,
+              }
+            }),
           }
         })
-        setCustomField(final)
+        setCustomField(customFieldData)
       }
     }
     if (data?.findFirstCmContact) {
@@ -368,7 +383,7 @@ export const ClientCardLayout: FC<P> = ({
         }
         referredByOptions={referredByOptions?.findManyMarketingSource}
         loading={loading || customFieldLoading || !router.query['id']}
-        generalCustomFields={customField}
+        customFields={customField}
         dateFormat={GetFormat()}
         handleEditAll={handleEditAll}
         updatebasicContactMutation={updatebasicContactMutation}

@@ -122,8 +122,10 @@ query getContactCustomFields {
     id
     name
     ManageCustomField(
-      where: { field_for: { in: [CONTACT, CONTACTLEAD] } }
-      orderBy: { field_order: asc }
+      where: { 
+        field_for: { in: [CONTACT, CONTACTLEAD] } 
+        field_type: { not: { equals: "localized_message" } }     
+      }
     ) {
       id
       field_label
@@ -142,8 +144,8 @@ query getContactCustomFields {
       category_id: { equals: 0 }
       is_active: { equals: true }
       field_for: { in: [CONTACT, CONTACTLEAD] }
+      field_type: { not: { equals: "localized_message" } }
     }
-    orderBy: { field_order: asc }
   ) {
     id
     field_label
