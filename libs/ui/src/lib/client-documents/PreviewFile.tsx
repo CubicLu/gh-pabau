@@ -92,7 +92,6 @@ export const PreviewFile: FC<EPaperProps> = ({
             </div>
           </div>
           <div className={styles.ePaperContent}>
-            <h1>pdf</h1>
             {pdfURL && (
               <PdfPreview
                 pdfURL={pdfURL}

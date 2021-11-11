@@ -225,10 +225,8 @@ export const FolderData: FC<FolderDataProps> = ({
   const handlePreview = (pdf, name = '') => {
     let cName = name
     if (!cName) {
-      const cNameArr = pdf?.split('.')
-      const ext = cNameArr[cNameArr?.length - 1]
-      delete cNameArr[cNameArr?.length - 1]
-      cName = cNameArr?.join('')?.substring(0, 20) + '.' + ext
+      const cNameArr = pdf?.split('/')
+      cName = displayDocName(cNameArr[cNameArr?.length - 1])
     }
     setPdfName(cName)
     setPdfData(pdf)
@@ -660,15 +658,13 @@ export const FolderData: FC<FolderDataProps> = ({
   }
 
   const displayDocName = (name: string, len = 10) => {
-    let cName = name
-    if (cName?.includes('.')) {
-      const cNameArr = cName?.split('.')
+    if (name?.includes('.')) {
+      const cNameArr = name?.split('.')
       const ext = cNameArr[cNameArr?.length - 1]
-      delete cNameArr[cNameArr?.length - 1]
-      cName = cNameArr?.join('')
-      return cName?.substring(0, len) + `.${ext}`
+      const nmArr = cNameArr[0]?.split('_$')?.[0]
+      return nmArr + `.${ext}`
     }
-    return ''
+    return name
   }
 
   const LoadingTable = ({ columns }) => {
@@ -793,7 +789,9 @@ export const FolderData: FC<FolderDataProps> = ({
           </div>
         )}
         <div className={styles.folderContent}>
-          {data?.folderContent &&
+          {data?.folder &&
+            data?.folder?.length > 0 &&
+            data?.folderContent &&
             data?.folderContent?.length > 0 &&
             data.folderTitle === 'Uncategorized' && (
               <h3 style={{ width: '100%', marginLeft: '7px' }}>Files</h3>
@@ -919,7 +917,6 @@ export const FolderData: FC<FolderDataProps> = ({
                         ) : (
                           <ImageItem
                             origin={folderValue?.folderData}
-                            className={`img${i}`}
                             alt={folderValue?.folderData}
                             id={folderValue?.id}
                             key={i}
@@ -1063,8 +1060,7 @@ export const FolderData: FC<FolderDataProps> = ({
           />
         </div>
       )}
-      <BasicModal
-        modalWidth={isMobile ? 375 : 1000}
+      <Modal
         onCancel={() => {
           setPageNumber(1)
           setPreviewModal((e) => !e)
@@ -1072,21 +1068,20 @@ export const FolderData: FC<FolderDataProps> = ({
         visible={previewModal}
         className={styles.previewModal}
         footer={false}
+        width="100%"
       >
         <div className={styles.modalContent}>
-          {
-            <PreviewFile
-              title={pdfName}
-              numPages={numPages}
-              pageNumber={pageNumber}
-              pdfURL={pdfData}
-              onDocumentLoadSuccess={onDocumentLoadSuccess}
-              onSetNumPages={onSetNumPages}
-              setPreviewModal={setPreviewModal}
-            />
-          }
+          <PreviewFile
+            title={pdfName}
+            numPages={numPages}
+            pageNumber={pageNumber}
+            pdfURL={pdfData}
+            onDocumentLoadSuccess={onDocumentLoadSuccess}
+            onSetNumPages={onSetNumPages}
+            setPreviewModal={setPreviewModal}
+          />
         </div>
-      </BasicModal>
+      </Modal>
       <Modal
         centered={true}
         onCancel={() => {
@@ -1114,8 +1109,9 @@ export const FolderData: FC<FolderDataProps> = ({
           setRenameFileModal((e) => !e)
         }}
         onOk={() => {
-          if (renamingFile?.id && renamingFile?.name)
-            onRenameFile?.(renamingFile?.id, renamingFile?.name)
+          if (renamingFile?.id && renamingFile?.name) {
+            onRenameFile?.(renamingFile?.id, renamingFile?.name?.trim())
+          }
         }}
         title="Rename File"
         visible={renameFileModal}

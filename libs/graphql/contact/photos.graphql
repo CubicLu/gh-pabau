@@ -65,6 +65,7 @@ mutation createContactPhoto(
   $attachment_type: String!
   $date: Int!
   $company_id: Int!
+  $attachment_title: String!
 ) {
   createOneContactAttachment(
     data: {
@@ -72,6 +73,7 @@ mutation createContactPhoto(
       Contact: { connect: { ID: $contact_id } }
       Album: { connect: { id: $album_id } }
       attachment_type: $attachment_type
+      attachment_title: $attachment_title
       date: $date
       linkref: $image_url
       user_id: $uploaded_by
@@ -91,6 +93,7 @@ mutation createContactPhotoWithoutAlbum(
   $attachment_type: String!
   $date: Int!
   $company_id: Int!
+  $attachment_title: String!
 ) {
   createOneContactAttachment(
     data: {
@@ -98,6 +101,7 @@ mutation createContactPhotoWithoutAlbum(
       Contact: { connect: { ID: $contact_id } }
       Album: {}
       attachment_type: $attachment_type
+      attachment_title: $attachment_title
       date: $date
       linkref: $image_url
       user_id: $uploaded_by
