@@ -3,19 +3,9 @@
   "compilerOptions": {
     "outDir": "../dist/out-tsc/tools",
     "rootDir": ".",
-    "module": "ESNext",
-    "target": "ES2021",
-    "types": ["node"],
-    "lib": [
-      "ESNext",
-      "DOM"
-    ]
+    "module": "ES2020",
+    "target": "es5",
+    "types": ["node"]
   },
-  "include": ["**/*.ts"],
-  "ts-node": {
-    "transpileOnly": true,
-    "compilerOptions": {
-      "importHelpers": true
-    }
-  }
+  "include": ["**/*.ts"]
 }

@@ -1,12 +1,15 @@
+
 module.exports = {
   "presets": [
     [
-      "@nrwl/react/babel",
+      "@nrwl/next/babel",
       {
         "runtime": "automatic",
-        "useBuiltIns": "usage"
+        "useBuiltIns": "usage",
+        'preset-env': {},
+        'styled-jsx': {},
       }
-    ]
+    ],
   ],
   "plugins": []
 }
