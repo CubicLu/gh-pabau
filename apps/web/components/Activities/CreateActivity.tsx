@@ -34,6 +34,8 @@ import * as Icon from '@ant-design/icons'
 import { ClientLeadSelect } from './ClientLeadSelectMenu'
 import styles from './CreateActivity.module.less'
 import { useCreateOneActivityMutation, Activity_Status } from '@pabau/graphql'
+import { useUser } from '../../context/UserContext'
+import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 
 interface UserDetail {
   id: number
@@ -49,10 +51,8 @@ export interface CreateActivityProps {
   handleSave?: () => void
   isEdit?: boolean
   editData?: EditedData
-  refetch?: () => void
   userOptions: UserDetail[]
   activityTypeOption: ActivityTypeFilter[]
-  loggedUser: UserDetail
 }
 
 export interface ActivityTypeFilter {
@@ -139,16 +139,17 @@ export const CreateActivity: FC<CreateActivityProps> = ({
   editData,
   userOptions = [],
   activityTypeOption = [],
-  loggedUser,
-  refetch,
 }) => {
   const { t } = useTranslation('common')
+  const loggedUser = useUser()
   const [activityTypes, setActivityTypes] = useState<ActivityTypeFilter[]>()
   const [initialValue, setInitialValue] = useState<DataProps>(defaultValue)
   const isMobile = useMedia('(max-width: 768px)', false)
 
   const [visibleDrawer, setVisibleDrawer] = useState(false)
-  const [defaultCalenderDate, setDefaultCalenderDate] = useState<Dayjs>(dayjs())
+  const [defaultCalenderDate, setDefaultCalenderDate] = useState<Date>(
+    dayjs().toDate()
+  )
 
   const [addMutation] = useCreateOneActivityMutation({
     onCompleted() {
@@ -186,7 +187,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
         notes,
         isDone: false,
       })
-      setDefaultCalenderDate(dayjs(startDate, 'D MMMM YYYY hh:mm'))
+      setDefaultCalenderDate(dayjs(startDate, 'D MMMM YYYY hh:mm').toDate())
       // editData.client && setSelectedClient(editData.client as never)
       // editData?.user && setSelectedUser(editData.user as never)
       // editData?.lead && setSelectedLead(editData.lead as never)
@@ -200,13 +201,13 @@ export const CreateActivity: FC<CreateActivityProps> = ({
         freeBusy: 1,
         notes: '',
         activityType: activityTypeOption?.[0]?.id,
-        user: loggedUser?.id,
+        user: loggedUser?.me?.user,
         isDone: false,
         client: undefined,
         lead: undefined,
       })
     }
-  }, [editData, isEdit, activityTypeOption, loggedUser?.id])
+  }, [editData, isEdit, activityTypeOption, loggedUser?.me?.user])
 
   const toggleDrawer = () => {
     setVisibleDrawer((e) => !e)
@@ -306,7 +307,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                 data,
               },
             })
-            refetch?.()
             handleSave()
             resetForm()
           }}
@@ -346,10 +346,16 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                 </div>
                 {!isMobile && (
                   <div className={styles.userName}>
-                    <Avatar name={loggedUser?.name} src={loggedUser?.image} />
+                    <Avatar
+                      name={loggedUser?.me?.fullName}
+                      src={
+                        loggedUser?.me?.imageUrl &&
+                        getImage(loggedUser?.me?.imageUrl)
+                      }
+                    />
                     <span className={styles.userText}>
                       {t('create.activity.user.name', {
-                        name: loggedUser?.name,
+                        name: loggedUser?.me?.fullName,
                       })}
                     </span>
                   </div>
@@ -380,11 +386,13 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     <ClockCircleOutlined />
                     <div className={styles.dateGroup}>
                       <DatePicker
-                        format={dateFormatMapper[loggedUser?.format]}
+                        format={
+                          dateFormatMapper[loggedUser?.me?.companyDateFormat]
+                        }
                         value={values?.startDate || null}
                         onChange={(date) => {
                           setFieldValue('startDate', date)
-                          setDefaultCalenderDate(date)
+                          setDefaultCalenderDate(date.toDate())
                         }}
                         allowClear={false}
                       />
@@ -413,7 +421,9 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                         />
                       </div>
                       <DatePicker
-                        format={dateFormatMapper[loggedUser?.format]}
+                        format={
+                          dateFormatMapper[loggedUser?.me?.companyDateFormat]
+                        }
                         value={values?.endDate || null}
                         onChange={(date) => setFieldValue('endDate', date)}
                         allowClear={false}
@@ -423,7 +433,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                   <div className={styles.widgetTool}>
                     <BlockOutlined className={styles.blockIcon} />
                     <Select
-                      style={{ width: 200 }}
+                      className={styles.freeSelect}
                       value={values?.freeBusy}
                       onChange={(val) => setFieldValue('freeBusy', val)}
                     >
@@ -457,7 +467,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                   <div className={styles.userSelect}>
                     <TeamOutlined />
                     <Select
-                      style={{ width: 200 }}
                       showSearch
                       allowClear
                       value={values.user}
@@ -541,6 +550,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     <BigCalender
                       data={events}
                       defaultDate={defaultCalenderDate}
+                      setDate={setDefaultCalenderDate}
                       height={'525px'}
                     />
                   ) : (
@@ -548,13 +558,16 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                       title={
                         <div className={styles.userName}>
                           <Avatar
-                            name={loggedUser?.name}
-                            src={loggedUser?.image}
+                            name={loggedUser?.me?.fullName}
+                            src={
+                              loggedUser?.me?.imageUrl &&
+                              getImage(loggedUser?.me?.imageUrl)
+                            }
                           />
                           <span className={styles.userText}>
                             &nbsp;{' '}
                             {t('create.activity.user.name', {
-                              name: loggedUser?.name,
+                              name: loggedUser?.me?.fullName,
                             })}
                           </span>
                         </div>
@@ -571,6 +584,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                         <BigCalender
                           data={events}
                           defaultDate={defaultCalenderDate}
+                          setDate={setDefaultCalenderDate}
                           height={'100%'}
                         />
                       </div>

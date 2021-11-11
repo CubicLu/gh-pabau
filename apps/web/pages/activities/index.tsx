@@ -46,7 +46,6 @@ import {
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
 import { PlusSquareFilled } from '@ant-design/icons'
-import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 dayjs.extend(utc)
 
 const { TabPane } = Tabs
@@ -1025,7 +1024,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     //   }
     //   setSourceData((e) => [...e, newData])
     // }
-
+    activityRefetch()
     toggleCreateActivityModal()
   }
 
@@ -1492,14 +1491,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
           activityTypeOption={activityTypeOption}
           // editData={editData}
           userOptions={personsList}
-          loggedUser={{
-            id: loggedUser?.me?.user,
-            name: loggedUser?.me?.fullName,
-            image:
-              loggedUser?.me?.imageUrl && getImage(loggedUser?.me?.imageUrl),
-            format: loggedUser?.me?.companyDateFormat,
-          }}
-          refetch={activityRefetch}
         />
       )}
     </div>

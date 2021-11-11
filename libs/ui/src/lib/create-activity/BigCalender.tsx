@@ -37,13 +37,15 @@ export const navigateConstants = {
 
 interface BigCalendarProps {
   data?: EventsData[]
-  defaultDate?: Dayjs
+  defaultDate?: Date
+  setDate?: (value: Date) => void
   height?: string
 }
 
 export const BigCalender: FC<BigCalendarProps> = ({
   data = [],
   defaultDate,
+  setDate,
   height,
 }) => {
   const { t } = useTranslation('common')
@@ -116,6 +118,9 @@ export const BigCalender: FC<BigCalendarProps> = ({
         step={30}
         views={{
           day: true,
+        }}
+        onNavigate={(date) => {
+          setDate?.(date)
         }}
         defaultView={'day'}
         components={{
