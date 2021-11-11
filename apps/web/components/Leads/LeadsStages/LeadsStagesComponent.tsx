@@ -11,7 +11,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { KanbanCard } from '@pabau/ui'
 import {
   useGetKanbanLeadsLazyQuery,
-  useGetStagesLazyQuery,
+  useGetPipelineStagesLazyQuery,
 } from '@pabau/graphql'
 import styles from './LeadsStages.module.less'
 import LeadsSkeleton from './LeadsSkeleton'
@@ -64,7 +64,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 const LeadsStagesComponent = () => {
   const [allStages, setAllStages] = useState([])
   const [leadsDefaultParams, setLeadsDefaultParams] = useState({
-    limit: 30,
+    limit: 10,
     skip: 0,
     company_id: 8254,
     pipeline_id: 116,
@@ -91,7 +91,7 @@ const LeadsStagesComponent = () => {
       data: getAllStagesData,
       error: getAllStagesError,
     },
-  ] = useGetStagesLazyQuery()
+  ] = useGetPipelineStagesLazyQuery()
 
   const [
     getAllKanbanLeadsDetails,
@@ -250,7 +250,7 @@ const LeadsStagesComponent = () => {
       getAllKanbanLeadsDetails({
         variables: {
           ...leadsDefaultParams,
-          leadStatus_id: stageIndex,
+          pipeline_stage_id: stageIndex,
         },
       })
     }

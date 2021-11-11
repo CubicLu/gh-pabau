@@ -1,17 +1,8 @@
-query getStages($company_id: Int, $pipeline_id: Int) {
-  stages: findManyLeadStatus(
-    where: {
-      company_id: { equals: $company_id }
-      # pipeline_id: { equals: $pipeline_id }
-    }
-  ) {
+query getStages($company_id: Int) {
+  stages: findManyLeadStatus(where: { company_id: { equals: $company_id } }) {
     id
     name: status_name
     order: status_order
-    # Pipeline {
-    #   id
-    #   name
-    # }
     _count {
       CmLead
     }
