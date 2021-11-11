@@ -641,6 +641,16 @@
           }
         }
       }
+      .ant-table-wrapper {
+        .ant-table-content {
+          min-height: 150px;
+          overflow: hidden !important;
+
+          @media screen and (max-width: 767px) {
+            overflow: auto hidden !important;
+          }
+        }
+      }
     }
     .listViewWrapData {
       :global {
@@ -1105,6 +1115,9 @@
       }
       .ant-modal-body {
         background-color: #3d3d46;
+        > div {
+          min-height: 600px;
+        }
         div {
           &:first-child {
             padding: 0 !important;
@@ -1127,7 +1140,7 @@
   }
 }
 @media screen and (max-width: 767px) {
-  :global .ant-modal-wrap {
+  .ant-modal-wrap {
     overflow: unset;
   }
   .previewModal {

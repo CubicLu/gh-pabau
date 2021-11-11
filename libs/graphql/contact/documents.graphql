@@ -128,3 +128,12 @@ mutation createOneDocumentFolder(
     id
   }
 }
+
+mutation renameDocument($documentId: Int!, $title: String!) {
+  updateOneContactAttachment(
+    where: { id: $documentId }
+    data: { attachment_title: { set: $title } }
+  ) {
+    id
+  }
+}

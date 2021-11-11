@@ -2532,6 +2532,8 @@ en:
   setup.online-booking.promote.instagram: Instagram
   setup.online-booking.promote.facebook: Facebook
   setup.online-booking.promote: Promote
+  setup.online-booking.activity.appointment.booked.title: '{{fname}} Booked Online'
+  setup.online-booking.activity.appointment.booked.text: '{{time}} for {{serviceCount}} with {{staffname}} by '
   iframe-incompatible: 'Unable to load content. Please update your browser.'
   avatar.task_manager: 'Task Manager'
   team.user.title: Users

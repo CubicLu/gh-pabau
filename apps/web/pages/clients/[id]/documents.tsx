@@ -31,7 +31,7 @@ import {
   useCreateContactPhotoWithoutAlbumMutation as useCreateUncatDocumentMutation,
   useDeleteManyContactPhotoMutation as useDeleteManyDocumentsMutation,
   useDeleteContactPhotoMutation as useDeleteDocumentMutation,
-  useUpdateOneContactAttachmentMutation as useUpdateDocumentMutation,
+  useRenameDocumentMutation,
 } from '@pabau/graphql'
 
 const baseURL = `${cdnURL}/v2/api/contact/`
@@ -364,7 +364,7 @@ const Photos: FC = () => {
     },
   })
 
-  const [renameDocument] = useUpdateDocumentMutation({
+  const [renameDocument] = useRenameDocumentMutation({
     onCompleted() {
       setRenameFileLoading(() => false)
     },
@@ -749,14 +749,8 @@ const Photos: FC = () => {
     setRenameFileLoading(() => true)
     renameDocument({
       variables: {
-        where: {
-          id: file,
-        },
-        data: {
-          attachment_title: {
-            set: name,
-          },
-        },
+        documentId: file,
+        title: name,
       },
       refetchQueries: [
         {

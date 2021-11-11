@@ -5,7 +5,7 @@ import { Skeleton } from 'antd'
 import { useTranslation } from 'react-i18next'
 import styles from './Service.module.less'
 import {
-  useGetServiceCategoriesQuery,
+  useGetActiveServiceCategoriesQuery,
   useGetStaffServicesQuery,
 } from '@pabau/graphql'
 
@@ -20,7 +20,7 @@ const Service: FC = () => {
   const {
     data: serviceCategoryData,
     loading: serviceCategoryLoading,
-  } = useGetServiceCategoriesQuery()
+  } = useGetActiveServiceCategoriesQuery()
   const {
     data: staffServiceData,
     loading: staffServiceLoading,
@@ -44,7 +44,7 @@ const Service: FC = () => {
           const subObj = {
             title: d.name,
             key: d.id.toString(),
-            count: d._count?.CompanyService ?? 0,
+            count: d.Services.length ?? 0,
           }
           if (d.Services.length > 0) {
             subObj['children'] = []
