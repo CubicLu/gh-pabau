@@ -9,9 +9,11 @@ query checkMedicalHistory($contactID: Int!) {
     created_at
     complete
     priority
+    contact_id
     Form {
       id
       name
     }
+    status
   }
 }

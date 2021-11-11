@@ -136,7 +136,6 @@ export const permissions = shield(
       //DuplicateContacts
       // duplicateContacts: rules.authentication.isAuthenticated,
       findManyContactPackage: allow,
-      findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
