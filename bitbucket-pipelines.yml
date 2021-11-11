@@ -91,7 +91,7 @@ pipelines:
                 - yarn bridge:start2 &
                 - |
                   echo "Waiting for bridge-api to boot..."
-                  yarn wait-on -t 300000 -d 120000 http-get://localhost:4000
+                  yarn wait-on -t 400000 -d 120000 http-get://localhost:4000
                   yarn wait-on -t 30000 -d 12000 http-get://localhost:4000
                   yarn wait-on -t 3000 -d 1200 http-get://localhost:4000
                 - |
@@ -335,7 +335,9 @@ pipelines:
                 - yarn bridge:start2 &
                 - |
                   echo "Waiting for bridge-api to boot..."
-                  yarn wait-on -t 300000 -d 120000 http-get://localhost:4000
+                  yarn wait-on -t 400000 -d 120000 http-get://localhost:4000
+                  yarn wait-on -t 30000 -d 12000 http-get://localhost:4000
+                  yarn wait-on -t 3000 -d 1200 http-get://localhost:4000
                 - |
                   echo "Waiting for postgres to boot..."
                   docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -d 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
