@@ -79,7 +79,7 @@ pipelines:
               services:
                 - docker
               script:
-                #                - while true; do ps -aux && sleep 30; done &
+                - while true; do ps -aux && sleep 30; done &
                 - |
                   echo "Testing Hasura database is consistent with schema.graphql..."
                   echo "============================================================"
@@ -91,7 +91,7 @@ pipelines:
                 - yarn bridge:start2 &
                 - |
                   echo "Waiting for bridge-api to boot..."
-                  yarn wait-on -t 260000 -w 20000 http-get://localhost:4000
+                  yarn wait-on -t 300000 -w 20000 http-get://localhost:4000
                 - |
                   echo "Waiting for postgres to boot..."
                   docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -d 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
@@ -321,7 +321,7 @@ pipelines:
               services:
                 - docker
               script:
-                #                - while true; do ps -aux && sleep 30; done &
+                - while true; do ps -aux && sleep 30; done &
                 - |
                   echo "Testing Hasura database is consistent with schema.graphql..."
                   echo "============================================================"
@@ -333,7 +333,7 @@ pipelines:
                 - yarn bridge:start2 &
                 - |
                   echo "Waiting for bridge-api to boot..."
-                  yarn wait-on -t 260000 -w 20000 http-get://localhost:4000
+                  yarn wait-on -t 300000 -w 20000 http-get://localhost:4000
                 - |
                   echo "Waiting for postgres to boot..."
                   docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -d 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
