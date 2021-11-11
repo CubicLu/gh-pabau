@@ -36,7 +36,7 @@ import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './Custom.module.less'
 import { medicalFormPreviewProps } from './mock'
-
+import Icon1 from './tretment-icon.png'
 interface Paginate {
   total: number
   skip: number
@@ -218,6 +218,7 @@ const Custom: FC<CustomProps> = ({
           style={{ display: 'flex', alignItems: 'center' }}
           data-acceptclicking={true}
         >
+          <img src={Icon1} alt="icopn" className={styles.bgIcon} />
           <img
             src={treatmentType}
             height="16px"
