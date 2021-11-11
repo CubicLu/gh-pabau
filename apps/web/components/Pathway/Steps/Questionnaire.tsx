@@ -1,5 +1,4 @@
-import { GetDetailsQueryResult } from '@pabau/graphql'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form } from 'formik'
 
 interface FormProps {
   testString?: string
@@ -9,6 +8,7 @@ interface P {
   onSubmit(data: FormProps): void // This must be present for each Step
   //data?: Record<string, any> // This must be present for each Step
   // data: GetDetailsQueryResult['data']['questionnaire'] // @@@
+  data?: any
 }
 
 export const QuestionnaireStep = ({ onSubmit, data }: P) => (
@@ -17,15 +17,15 @@ export const QuestionnaireStep = ({ onSubmit, data }: P) => (
     <h3>{JSON.stringify(data)}</h3>
     <Formik
       initialValues={{}}
-      validate={(values) => {
-        const errors = {} as any
+      validate={() => {
+        // const errors = {} as any
         // if (!values.Fname) {
         //   errors.Fname = 'First Name is Required'
         // }
         // if (!values.Lname) {
         //   errors.Lname = 'Last Name is Required'
         // }
-        return errors
+        // return errors
       }}
       onSubmit={(values) => onSubmit?.(values)}
     >

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button } from '@pabau/ui'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FinishScreen } from './FinishScreen'
 import { HandToPatientSplash } from './HandToPatientSplash'
 import {
@@ -55,7 +55,7 @@ export const PathwayLayout = ({ journey }: P) => {
         variables: {
           clientId: journey[0].contact_id,
           journeyId: journey[0].id,
-          recordId: currentStep.name === 'medical-record' ? data.id : 0,
+          recordId: currentStep.name === 'questionnaire' ? data.id : 0,
           status: Cp_Steps_Taken_Status.Completed,
           stepId: currentStep.id,
         },
@@ -69,13 +69,39 @@ export const PathwayLayout = ({ journey }: P) => {
     setStep((e) => e + 1)
   }
 
-  const isInPrepended = () => step < prependScreens.length
-  const currentStep = !isInPrepended()
-    ? { ...journey[0].Pathway.steps[step - prependScreens.length] } //TODO: unspread this (shows a weird TS error)
-    : { name: prependScreens[step] }
+  const { currentStep, currentScreenNumber, totalScreens } = useMemo(() => {
+    const isInPrepended = () => step < prependScreens.length
+    const currentScreenNumber =
+      (isInPrepended() ? step : step - prependScreens.length) + 1
+    const totalScreens = isInPrepended()
+      ? prependScreens.length
+      : journey?.[0]?.Pathway.steps.length
+    return {
+      currentStep: !isInPrepended()
+        ? { ...journey[0].Pathway.steps[step - prependScreens.length] } //TODO: unspread this (shows a weird TS error)
+        : { name: prependScreens[step] },
+      currentScreenNumber,
+      totalScreens,
+    }
+  }, [journey, step])
 
   const Hydrated = steps[currentStep.name]
   const HydratedJsx = <Hydrated onSubmit={submitCallback} data={stepState} />
+
+  // if (saveStepMutationError)
+  //   return <div>ERROR SAVING STEP: {JSON.stringify(saveStepMutationError)}</div>
+
+  const loadData = useCallback(async () => {
+    console.log('loadDAta!')
+    if (!Hydrated.loadData) {
+      console.log('none found')
+      return
+    }
+    return query({
+      query: Hydrated.loadData.document,
+      variables: Hydrated.loadData.variables(stepState),
+    })
+  }, [query, stepState, Hydrated])
 
   useEffect(() => {
     const f = async () => {
@@ -96,31 +122,11 @@ export const PathwayLayout = ({ journey }: P) => {
       }))
     }
     f()
-  }, [journey, step])
-
-  // if (saveStepMutationError)
-  //   return <div>ERROR SAVING STEP: {JSON.stringify(saveStepMutationError)}</div>
+  }, [loadData, currentStep, journey, step])
 
   if (!currentStep || !('name' in currentStep)) return <FinishScreen />
   if (!(currentStep.name in steps))
     return <div>ERROR: Step &quot;{currentStep.name}&quot; not found</div>
-
-  const currentScreenNumber =
-    (isInPrepended() ? step : step - prependScreens.length) + 1
-  const totalScreens = isInPrepended()
-    ? prependScreens.length
-    : journey?.[0]?.Pathway.steps.length
-  const loadData = async () => {
-    console.log('loadDAta!')
-    if (!Hydrated.loadData) {
-      console.log('none found')
-      return
-    }
-    return query({
-      query: Hydrated.loadData.document,
-      variables: Hydrated.loadData.variables(stepState),
-    })
-  }
 
   return (
     <div
@@ -150,7 +156,7 @@ export const PathwayLayout = ({ journey }: P) => {
           &lt;
         </Button>
         <p>Current step: {`${currentScreenNumber} of ${totalScreens}`}</p>
-        <p>Is For Customer's Eyes: {`${!(step < prependScreens.length)}`}</p>
+        <p>Is For Customer Eyes: {`${!(step < prependScreens.length)}`}</p>
       </div>
       <div
         style={{

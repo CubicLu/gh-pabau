@@ -33,6 +33,7 @@ export const DetailsStep = ({ onSubmit, data }: P) => {
           Fname,
           Lname,
           Phone,
+          Salutation,
           gender,
           Email,
           Mobile,
@@ -43,17 +44,17 @@ export const DetailsStep = ({ onSubmit, data }: P) => {
         }) => {
           const variables: SetDetailsMutationOptions['variables'] = {
             contactId: data['contactId'],
-            city: MailingCity,
-            country: MailingCountry,
-            dob: DOB,
-            email: Email,
-            firstName: Fname,
-            gender: gender,
-            lastName: Lname,
-            mobile: Mobile,
-            phone: Phone,
-            // salutation: '', //TODO
-            street: MailingStreet,
+            MailingCity,
+            MailingCountry,
+            DOB,
+            Email,
+            Fname,
+            gender,
+            Lname,
+            Mobile,
+            Phone,
+            Salutation,
+            MailingStreet,
           }
           await mutation({
             variables,

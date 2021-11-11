@@ -6,7 +6,7 @@ export const HandToPatientSplash: FC = ({ children }) => {
   const [isReady] = useTimeout(5000)
   const [skipped, setSkipped] = useState(false)
   return skipped || isReady() ? (
-    <>{children}</>
+    <div>{children}</div>
   ) : (
     <>
       <h2 style={{ color: 'red' }}>Hand to customer now</h2>
