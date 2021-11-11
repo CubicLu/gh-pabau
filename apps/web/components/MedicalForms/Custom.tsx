@@ -31,7 +31,7 @@ import {
 import { Input } from 'antd'
 import { useMedia } from 'react-use'
 // import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useRef } from 'react'
 import treatmentType from '../../assets/images/form-type/treatment.svg'
 import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -92,6 +92,7 @@ const Custom: FC<CustomProps> = ({
   const [editFormModal, setEditFormModal] = React.useState(false)
   const [selectedItem, setSelectedItem] = useState<MedicalFormItem>()
   const [popoverVisible, setPopoverVisible] = useState(false)
+  const [popoverVisibleMobile, setPopoverVisibleMobile] = useState(null)
   const [paginateData, setPaginateData] = useState<Paginate>(pagenateParams)
   const isMobile = useMedia('(max-width: 768px)', false)
 
@@ -153,6 +154,7 @@ const Custom: FC<CustomProps> = ({
       onClick: () => {
         setShareModal(true)
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
     {
@@ -160,8 +162,10 @@ const Custom: FC<CustomProps> = ({
       icon: <EditOutlined />,
       label: t('setup.medical.forms.menuList.edit'),
       onClick: () => {
+        console.log('click on edit')
         handleIdEditClick()
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
     {
@@ -171,6 +175,7 @@ const Custom: FC<CustomProps> = ({
       onClick: () => {
         setDeleteModal(true)
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
     {
@@ -181,6 +186,7 @@ const Custom: FC<CustomProps> = ({
       onClick: () => {
         handleDefault()
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
   ]
@@ -314,7 +320,10 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       render: (val, item) => (
-        <div className={styles.tableOperations}>
+        <div
+          className={styles.tableOperations}
+          onClick={(e) => e.stopPropagation()}
+        >
           {isMobile ? (
             <div data-acceptclicking={true}>
               <DotButton
@@ -324,8 +333,12 @@ const Custom: FC<CustomProps> = ({
                   target: 'Questionnaire',
                   type: item.formType,
                 }}
-                popoverVisible={popoverVisible}
-                setPopoverVisible={setPopoverVisible}
+                popoverVisible={
+                  item.key === popoverVisibleMobile ? true : false
+                }
+                setPopoverVisible={(val) =>
+                  setPopoverVisibleMobile(val ? item.key : null)
+                }
               />
             </div>
           ) : (
@@ -442,6 +455,7 @@ const Custom: FC<CustomProps> = ({
           ) {
             setEditFormModal(true)
           }
+          setPopoverVisibleMobile(null)
         }}
         needEvent={true}
       />
