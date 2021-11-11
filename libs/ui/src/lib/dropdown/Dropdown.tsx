@@ -73,8 +73,8 @@ export const Dropdown: FC<DropDownInterface> = ({
           <span className={styles.headerText}>
             {userData?.companyName || '<no name>'}
           </span>
+          <RightOutlined className={styles.dropdownIcon} />
         </div>
-        <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
         <div className={styles.userName}>
@@ -135,8 +135,8 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <NotificationOutlined className={styles.dropdownIcon} />
           <span className={styles.headerText}>{t('avatar.give.feedback')}</span>
+          <RightOutlined className={styles.dropdownIcon} />
         </div>
-        <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item
         key="help"
@@ -146,8 +146,8 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <QuestionCircleOutlined className={styles.dropdownIcon} />
           <span className={styles.headerText}>{t('avatar.help.support')}</span>
+          <RightOutlined className={styles.dropdownIcon} />
         </div>
-        <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       {/* TODO Temp commenting it out due to translation not being part of the MVP
        <Menu.Item
