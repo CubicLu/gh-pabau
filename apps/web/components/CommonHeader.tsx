@@ -15,6 +15,7 @@ import Chat from '../components/Chat/Chat'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './CommonHeader.module.less'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import classNames from 'classnames'
 const AntHeader = AntLayout.Header
 
@@ -31,7 +32,6 @@ interface P {
   leadCreateRender?: (handleClose?: () => void) => JSX.Element
   displayActivity?: boolean
   renderActivity?: ReactNode
-  isShowMenuDrawer?: boolean
 }
 
 const CommonHeader: FC<P> = ({
@@ -47,9 +47,10 @@ const CommonHeader: FC<P> = ({
   leadCreateRender,
   displayActivity = false,
   renderActivity,
-  isShowMenuDrawer = true,
 }) => {
   const user = useUser()
+  const urlRouter = useRouter()
+  const appVersion = urlRouter?.query['app']
   const [showChat, setShowChat] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -65,7 +66,13 @@ const CommonHeader: FC<P> = ({
 
   return (
     <div>
-      <div className={isShowMenuDrawer && styles.desktopViewNone}>
+      <div
+        className={
+          urlRouter?.pathname?.includes('clients')
+            ? appVersion !== '1' && styles.desktopViewNone
+            : styles.desktopViewNone
+        }
+      >
         <AntHeader className={styles.pabauCommonHeader}>
           <div className={styles.mobileViewAlign}>
             {!showSearch && (
@@ -80,7 +87,7 @@ const CommonHeader: FC<P> = ({
                     <LeftOutlined />
                   </Link>
                 ) : (
-                  isShowMenuDrawer && (
+                  appVersion !== '1' && (
                     <MenuOutlined
                       className={styles.menuHeaderIconColor}
                       onClick={() => {
@@ -124,7 +131,7 @@ const CommonHeader: FC<P> = ({
                             <LeftOutlined />
                           </Link>
                         ) : (
-                          isShowMenuDrawer && (
+                          appVersion !== '1' && (
                             <MenuOutlined
                               className={styles.menuHeaderIconColor}
                               onClick={() => {

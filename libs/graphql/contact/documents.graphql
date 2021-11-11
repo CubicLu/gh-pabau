@@ -1,3 +1,94 @@
+query getFolderDocuments(
+  $contactId: Int!
+  $folderId: Int!
+  $skip: Int = 0
+  $take: Int = 25
+) {
+  findManyContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "document" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: $folderId }
+    }
+    orderBy: { date: desc }
+    skip: $skip
+    take: $take
+  ) {
+    id
+    date
+    url: linkref
+    attachment_title
+    attachment_size
+  }
+}
+
+query getFolderAllDocuments($contactId: Int!, $folderId: Int!) {
+  findManyContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "document" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: $folderId }
+    }
+    orderBy: { date: desc }
+  ) {
+    id
+    origin: linkref
+    date
+    tags
+  }
+}
+
+query countFolderDocuments($contactId: Int!, $folderId: Int!) {
+  aggregateContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "document" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: $folderId }
+    }
+  ) {
+    count {
+      _all
+    }
+  }
+}
+
+query getFolder($folderId: Int!, $contactId: Int!) {
+  findFirstPhotoAlbum(
+    where: {
+      id: { equals: $folderId }
+      contact_id: { equals: $contactId }
+      album_type: { equals: "documents" }
+    }
+  ) {
+    id
+    name: album_name
+    contact_id
+    documentCount: _count {
+      documentList: Photos
+    }
+  }
+}
+
+query getFolders($contactId: Int!) {
+  findManyPhotoAlbum(
+    where: {
+      contact_id: { equals: $contactId }
+      album_type: { equals: "documents" }
+    }
+  ) {
+    id
+    name: album_name
+    modified_date
+    creation_date
+    documentCount: _count {
+      documentList: Photos
+    }
+  }
+}
+
 query getAttachmentById($id: Int!) {
   data: findFirstContactAttachment(where: { id: { equals: $id } }) {
     id
@@ -33,6 +124,15 @@ mutation createOneDocumentFolder(
       creation_date: $creationDate
       modified_date: $modificationdate
     }
+  ) {
+    id
+  }
+}
+
+mutation renameDocument($documentId: Int!, $title: String!) {
+  updateOneContactAttachment(
+    where: { id: $documentId }
+    data: { attachment_title: { set: $title } }
   ) {
     id
   }

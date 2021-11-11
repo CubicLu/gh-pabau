@@ -223,7 +223,6 @@ const ActivitiesTab = () => {
         cssClass={'cardCoustomWrapper'}
         clientId={Number(router.query['id'])}
         activeTab="activities"
-        activitiesCount={pagination.total}
       >
         <Modal
           centered={true}

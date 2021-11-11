@@ -159,7 +159,7 @@ export const Invoices: FC<P> = (props) => {
       total_vat += vat_value
       return items
     })
-    setTotalVat(total_vat)
+    setTotalVat(Number.isFinite(total_vat) ? total_vat : 0)
     setSaleItem(items)
   }, [salesDetails])
 
@@ -167,11 +167,21 @@ export const Invoices: FC<P> = (props) => {
     const expandedInvoice = invoice?.invoices?.filter(
       (item) => item.guid === expansionKey
     )
-    setTotalOutstanding(
-      salesDetails
-        ? expandedInvoice[0]?.paid_amount
-        : invoice?.invoices[0]?.inv_total ?? 0
-    )
+    const sumTotalInv = 0
+    const sumTotalPaidInv = 0
+    const totalInvoice = invoice?.invoices
+      ?.map((item) => sumTotalInv + item.inv_total)
+      .reduce((a, b) => {
+        return a + b
+      }, 0)
+
+    const totalPaid = invoice?.invoices
+      ?.map((item) => sumTotalPaidInv + item.paid_amount)
+      .reduce((a, b) => {
+        return a + b
+      }, 0)
+    const outstanding = totalInvoice - totalPaid
+    setTotalOutstanding(outstanding)
     setTotalInvoiced(
       salesDetails
         ? expandedInvoice[0]?.inv_total
@@ -179,7 +189,6 @@ export const Invoices: FC<P> = (props) => {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesDetails, invoice])
-
   useEffect(() => {
     setPaginateData({
       ...paginateData,
@@ -327,6 +336,7 @@ export const Invoices: FC<P> = (props) => {
   ]
 
   const expandedRowRender = (record) => {
+    const payBtnValue = record.grandTotal - record.amountPaid
     return (
       <div className={styles.rowExpand}>
         {!salesDetaillLoading ? (
@@ -509,7 +519,9 @@ export const Invoices: FC<P> = (props) => {
                 'ui.client-card-financial.pay'
               )} ${stringToCurrencySignConverter(
                 user.me?.currency
-              )}${record.grandTotal.toFixed(2)}`}</Button>
+              )}${(Number.isFinite(payBtnValue) ? payBtnValue : 0).toFixed(
+                2
+              )}`}</Button>
             )}
           </div>
         </div>
