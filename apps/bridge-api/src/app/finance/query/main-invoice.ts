@@ -40,7 +40,6 @@ export const MainInvoice = extendType({
       },
       async resolve(_root, input, ctx: Context) {
         const query = generateInvoiceQuery(ctx, input, [
-          "a.reference_no!='**CREDIT NOTE**'",
           "a.reference_no!='**REFUND**' ",
         ])
         return await ctx.prisma.$queryRaw(query)
@@ -77,7 +76,6 @@ export const MainInvoice = extendType({
       },
       async resolve(_root, input, ctx: Context) {
         const query = generateInvoiceCountQuery(ctx, input, [
-          "a.reference_no!='**CREDIT NOTE**'",
           "a.reference_no!='**REFUND**' ",
         ])
         const invoices = await ctx.prisma.$queryRaw(query)
