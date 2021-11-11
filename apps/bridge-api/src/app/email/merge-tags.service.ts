@@ -16,7 +16,7 @@ export async function prepareMessage(
         include: {
           Insurance: true,
           ContactInsurance: true,
-          LoyaltyPoint: true,
+          LoyaltyPoints: true,
           Booking: {
             where: { id: relation.booking_id },
           },
@@ -79,7 +79,7 @@ export async function prepareMessage(
     CLIENTCOUNTY: Contact?.MailingProvince,
     CLIENTCOUNTRY: Contact?.MailingCountry,
     CLIENTMAILINGCOUNTRY: Contact?.MailingCountry,
-    CLIENTLOYALTY: Contact?.LoyaltyPoint?.points,
+    CLIENTLOYALTY: Contact?.LoyaltyPoints?.points,
     FULLADDRESS: function () {
       return [
         Contact?.MailingStreet,
