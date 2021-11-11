@@ -4,7 +4,7 @@ import {
   CheckOutlined,
   DeleteOutlined,
   DownloadOutlined,
-  DownOutlined,
+  // DownOutlined,
   EnterOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
@@ -23,8 +23,10 @@ import {
   BasicModal,
   CamUploaderModal,
   UploadingImageProps,
+  AlbumData,
+  ImageProps,
+  AlbumProps,
 } from '@pabau/ui'
-import { AlbumData, ImageProps, AlbumProps } from '@pabau/ui'
 import {
   Breadcrumb,
   Drawer,
@@ -997,7 +999,6 @@ export const GalleryView: FC<GalleryProps> = ({
           setEditAlbumId(null)
           setCreateAlbumModal((e) => !e)
         }}
-        onDelete={() => console.log()}
         onOk={() => {
           if (albumName) {
             if (editAlbumId) {
