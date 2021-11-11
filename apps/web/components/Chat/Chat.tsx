@@ -66,6 +66,7 @@ export const Chat = (props: P): JSX.Element => {
               `,
             })
 
+            // eslint-disable-next-line unicorn/prefer-object-from-entries
             ;[...existingItems, newItemRef].reduce((a, c) => {
               if (c.__ref in a) console.error('Found a dupe!')
               return {

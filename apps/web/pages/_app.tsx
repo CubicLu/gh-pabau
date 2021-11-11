@@ -25,6 +25,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'react-vertical-timeline-component/style.min.css'
 
 require('../../../libs/ui/src/styles/antd.less')
+require('../styles/global.less')
 import { UserProvider } from '../context/UserContext'
 import TranslationWrapper from '../components/TranslationWrapper'
 

@@ -605,7 +605,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [activityActiveResponse])
 
   const uniqLabels = useCallback(() => {
-    // eslint-disable-next-line array-callback-return
+    // eslint-disable-next-line array-callback-return,unicorn/prefer-object-from-entries
     const labelsWithColor = sourceData.reduce((p, c) => {
       if (c.client.label) {
         for (const label of c.client.label) {
