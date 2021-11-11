@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons'
 import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
 import { Popover, Tooltip } from 'antd'
-import useKeyboardShortcut from './../../helper/useKeyboardShortCut/useKeyboardShortcut'
+import { useKeyboardShortcut } from '../../hooks/useKeyboardShortcut'
 import { Button } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
