@@ -13,7 +13,7 @@ export const ContactNote = objectType({
     t.string('Note')
     t.field('Status', { type: 'cm_contact_notes_Status' })
     t.field('CreatedDate', { type: 'DateTime' })
-    t.string('IpAddress')
+    t.nullable.string('IpAddress')
     t.boolean('imported')
     t.field('User', {
       type: 'User',

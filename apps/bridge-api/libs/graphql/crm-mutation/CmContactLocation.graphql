@@ -1,0 +1,37 @@
+fragment CmContactLocationFields on CmContactLocation {
+  id
+  company_id
+  contact_id
+  location_id
+}
+
+fragment CmContactLocation on CmContactLocation {
+  ...CmContactLocationFields
+  Company {
+    ...CompanyFields
+  }
+  Location {
+    ...CompanyBranchFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneCmContactLocation($data: CmContactLocationCreateInput!) {
+  createOneCmContactLocation(data: $data) {
+    ...CmContactLocation
+  }
+}
+
+mutation updateOneCmContactLocation($where: CmContactLocationWhereUniqueInput!, $data: CmContactLocationUpdateInput!) {
+  updateOneCmContactLocation(where: $where, data: $data) {
+    ...CmContactLocation
+  }
+}
+
+mutation deleteOneCmContactLocation($where: CmContactLocationWhereUniqueInput!) {
+  deleteOneCmContactLocation(where: $where) {
+    ...CmContactLocation
+  }
+}

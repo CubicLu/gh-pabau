@@ -1,0 +1,47 @@
+fragment AdvertCampaignFields on AdvertCampaign {
+  id
+  advert_name
+  advert_type
+  campaign_budget
+  campaign_interval
+  campaign_audience
+  campaign_id
+  cid
+  attach_id
+  engagement
+  advert_reach
+  Clicks
+  start
+  end
+  url
+  attached_by
+  attach_time
+}
+
+fragment AdvertCampaign on AdvertCampaign {
+  ...AdvertCampaignFields
+}
+
+mutation createOneAdvertCampaign($data: AdvertCampaignCreateInput!) {
+  createOneAdvertCampaign(data: $data) {
+    ...AdvertCampaign
+  }
+}
+
+mutation updateOneAdvertCampaign($where: AdvertCampaignWhereUniqueInput!, $data: AdvertCampaignUpdateInput!) {
+  updateOneAdvertCampaign(where: $where, data: $data) {
+    ...AdvertCampaign
+  }
+}
+
+mutation deleteOneAdvertCampaign($where: AdvertCampaignWhereUniqueInput!) {
+  deleteOneAdvertCampaign(where: $where) {
+    ...AdvertCampaign
+  }
+}
+
+mutation updateManyAdvertCampaign($where: AdvertCampaignWhereInput, $data: AdvertCampaignUpdateManyMutationInput!) {
+  updateManyAdvertCampaign(where: $where, data: $data) {
+    count
+  }
+}

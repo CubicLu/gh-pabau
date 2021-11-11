@@ -1,0 +1,70 @@
+fragment VoucherFields on Voucher {
+  id
+  code
+  type
+  description
+  amount
+  valid
+  date_from
+  date_to
+  time_from
+  time_to
+  expiry_date
+  every
+  company_id
+  purchased_for
+  purchased_by
+  status
+  remaining_balance
+  lead_id
+  voucher_contact_email
+  voucher_contact_mobile
+  purchase_date
+  purchaser_contact_id
+  purchased_for_id
+  imported
+  voucher_type
+  sales_id
+  sms_campaign_id
+  template_id
+}
+
+fragment Voucher on Voucher {
+  ...VoucherFields
+  Company {
+    ...CompanyFields
+  }
+  Contact {
+    ...CmContactFields
+  }
+  Purchaser {
+    ...CmContactFields
+  }
+  Invoice {
+    ...InvSaleFields
+  }
+}
+
+mutation createOneVoucher($data: VoucherCreateInput!) {
+  createOneVoucher(data: $data) {
+    ...Voucher
+  }
+}
+
+mutation updateOneVoucher($where: VoucherWhereUniqueInput!, $data: VoucherUpdateInput!) {
+  updateOneVoucher(where: $where, data: $data) {
+    ...Voucher
+  }
+}
+
+mutation deleteOneVoucher($where: VoucherWhereUniqueInput!) {
+  deleteOneVoucher(where: $where) {
+    ...Voucher
+  }
+}
+
+mutation updateManyVoucher($where: VoucherWhereInput, $data: VoucherUpdateManyMutationInput!) {
+  updateManyVoucher(where: $where, data: $data) {
+    count
+  }
+}

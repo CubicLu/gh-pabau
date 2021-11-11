@@ -1,0 +1,47 @@
+fragment CmAppointmentsCustomImportHelperFields on CmAppointmentsCustomImportHelper {
+  id
+  company_id
+  custom_appointment_id
+  custom_contact_name
+  custom_field_name
+  custom_field_value
+  added
+  appointment_id
+}
+
+fragment CmAppointmentsCustomImportHelper on CmAppointmentsCustomImportHelper {
+  ...CmAppointmentsCustomImportHelperFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCmAppointmentsCustomImportHelper($data: CmAppointmentsCustomImportHelperCreateInput!) {
+  createOneCmAppointmentsCustomImportHelper(data: $data) {
+    ...CmAppointmentsCustomImportHelper
+  }
+}
+
+mutation updateOneCmAppointmentsCustomImportHelper(
+  $where: CmAppointmentsCustomImportHelperWhereUniqueInput!
+  $data: CmAppointmentsCustomImportHelperUpdateInput!
+) {
+  updateOneCmAppointmentsCustomImportHelper(where: $where, data: $data) {
+    ...CmAppointmentsCustomImportHelper
+  }
+}
+
+mutation deleteOneCmAppointmentsCustomImportHelper($where: CmAppointmentsCustomImportHelperWhereUniqueInput!) {
+  deleteOneCmAppointmentsCustomImportHelper(where: $where) {
+    ...CmAppointmentsCustomImportHelper
+  }
+}
+
+mutation updateManyCmAppointmentsCustomImportHelper(
+  $where: CmAppointmentsCustomImportHelperWhereInput
+  $data: CmAppointmentsCustomImportHelperUpdateManyMutationInput!
+) {
+  updateManyCmAppointmentsCustomImportHelper(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,50 @@
+fragment CmProductCustomFieldFields on CmProductCustomField {
+  id
+  product_id
+  company_id
+  custom_field_id
+  custom_field_value
+}
+
+fragment CmProductCustomField on CmProductCustomField {
+  ...CmProductCustomFieldFields
+  Company {
+    ...CompanyFields
+  }
+  Product {
+    ...InvProductFields
+  }
+  CustomField {
+    ...ManageCustomFieldFields
+  }
+}
+
+mutation createOneCmProductCustomField($data: CmProductCustomFieldCreateInput!) {
+  createOneCmProductCustomField(data: $data) {
+    ...CmProductCustomField
+  }
+}
+
+mutation updateOneCmProductCustomField(
+  $where: CmProductCustomFieldWhereUniqueInput!
+  $data: CmProductCustomFieldUpdateInput!
+) {
+  updateOneCmProductCustomField(where: $where, data: $data) {
+    ...CmProductCustomField
+  }
+}
+
+mutation deleteOneCmProductCustomField($where: CmProductCustomFieldWhereUniqueInput!) {
+  deleteOneCmProductCustomField(where: $where) {
+    ...CmProductCustomField
+  }
+}
+
+mutation updateManyCmProductCustomField(
+  $where: CmProductCustomFieldWhereInput
+  $data: CmProductCustomFieldUpdateManyMutationInput!
+) {
+  updateManyCmProductCustomField(where: $where, data: $data) {
+    count
+  }
+}

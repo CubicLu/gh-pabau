@@ -1,0 +1,42 @@
+fragment CompanyNoteFields on CompanyNote {
+  id
+  company_id
+  user_id
+  note
+  created_date
+  is_alert
+}
+
+fragment CompanyNote on CompanyNote {
+  ...CompanyNoteFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneCompanyNote($data: CompanyNoteCreateInput!) {
+  createOneCompanyNote(data: $data) {
+    ...CompanyNote
+  }
+}
+
+mutation updateOneCompanyNote($where: CompanyNoteWhereUniqueInput!, $data: CompanyNoteUpdateInput!) {
+  updateOneCompanyNote(where: $where, data: $data) {
+    ...CompanyNote
+  }
+}
+
+mutation deleteOneCompanyNote($where: CompanyNoteWhereUniqueInput!) {
+  deleteOneCompanyNote(where: $where) {
+    ...CompanyNote
+  }
+}
+
+mutation updateManyCompanyNote($where: CompanyNoteWhereInput, $data: CompanyNoteUpdateManyMutationInput!) {
+  updateManyCompanyNote(where: $where, data: $data) {
+    count
+  }
+}

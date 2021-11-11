@@ -23,6 +23,9 @@ export interface MedicalFormTypes {
   required: boolean
   txtValue: string
   arrValue: string[]
+  attrName: string
+  attrValue: string
+  attrId: number
 }
 
 export interface MedicalForms {
@@ -74,6 +77,9 @@ export const defaultFormValue: MedicalFormTypes = {
   required: false,
   txtValue: '',
   arrValue: [],
+  attrName: '',
+  attrValue: '',
+  attrId: 0,
 }
 
 export interface MedicalFormVersion {
@@ -152,6 +158,7 @@ export const defaultMedicaFormAdvanceSettingData: MedicaFormAdvanceSettingData =
 export interface MedicalFormItem {
   name: string
   formType: string
+  serviceId: string
   createdAt: string
   version: MedicalFormVersion
   status: string
@@ -161,3 +168,75 @@ export interface MedicalFormItem {
   rules: RuleProp[]
   advSetting: MedicaFormAdvanceSettingData
 }
+
+export interface SNOMED {
+  id: string
+  term: string
+  conceptId: string
+  fsn: string
+}
+
+export interface MacroItem {
+  id: number
+  title: string
+  message: string
+  type: number
+  createdAt: string
+}
+
+export interface UserGroupListItem {
+  id: number
+  group_name: string
+}
+
+export interface CompanyListItem {
+  id: number
+  name: string
+}
+
+export interface LabTestsListItem {
+  id: number
+  name: string
+}
+
+export interface InvProductsListItem {
+  id: number
+  name: string
+  category_id: number
+}
+
+export interface MedicalConditionsListItem {
+  id: number
+  name: string
+}
+
+export const previewMapping = [
+  { heading: 'form_statictext' },
+  { staticText: 'form_statictext' },
+  { input_text: 'form_textfield' },
+  { team: 'empty' },
+  { textarea: 'form_textarea' },
+  { checkbox: 'form_checkbox' },
+  { radio: 'form_singlechoice' },
+  { select: 'form_dropdown' },
+  { image: 'form_drawing' },
+  { staticImage: 'form_image' },
+  { diagram_mini: 'form_drawing' },
+  { signature: 'form_signature' },
+  { cl_drugs: 'form_drugs' },
+  { labs_tests: 'form_labtests' },
+  { snomed: 'form_snomed' },
+  { slider: 'form_slider' },
+  { vaccine_scheduler: 'empty' },
+  { vaccine_history: 'empty' },
+  { travel_destination: 'form_travel' },
+  { btn_medical_condition: 'form_medicalcondition' },
+  { diagram: 'empty' },
+  { facediagram: 'empty' },
+  { diagram_mini: 'empty' },
+  { photo_and_drawer: 'form_photoupload' },
+  { epaper: 'empty' },
+  { custom_photo_and_drawer: 'empty' },
+  { cl_services: 'empty' },
+  { history_data: 'empty' },
+]

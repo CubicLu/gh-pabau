@@ -1,0 +1,35 @@
+fragment CalRangeRequestFields on CalRangeRequest {
+  id
+  minutes
+  company_id
+  start_date
+  end_date
+}
+
+fragment CalRangeRequest on CalRangeRequest {
+  ...CalRangeRequestFields
+}
+
+mutation createOneCalRangeRequest($data: CalRangeRequestCreateInput!) {
+  createOneCalRangeRequest(data: $data) {
+    ...CalRangeRequest
+  }
+}
+
+mutation updateOneCalRangeRequest($where: CalRangeRequestWhereUniqueInput!, $data: CalRangeRequestUpdateInput!) {
+  updateOneCalRangeRequest(where: $where, data: $data) {
+    ...CalRangeRequest
+  }
+}
+
+mutation deleteOneCalRangeRequest($where: CalRangeRequestWhereUniqueInput!) {
+  deleteOneCalRangeRequest(where: $where) {
+    ...CalRangeRequest
+  }
+}
+
+mutation updateManyCalRangeRequest($where: CalRangeRequestWhereInput, $data: CalRangeRequestUpdateManyMutationInput!) {
+  updateManyCalRangeRequest(where: $where, data: $data) {
+    count
+  }
+}

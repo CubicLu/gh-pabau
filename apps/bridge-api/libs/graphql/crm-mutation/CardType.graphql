@@ -1,0 +1,42 @@
+fragment CardTypeFields on CardType {
+  id
+  company_id
+  mastercard
+  visa
+  amex
+  visa_credit
+  maestro
+  worldpay
+  visa_credit_charge
+  amex_credit_charge
+  mastercard_credit_charge
+  enable_reference
+}
+
+fragment CardType on CardType {
+  ...CardTypeFields
+}
+
+mutation createOneCardType($data: CardTypeCreateInput!) {
+  createOneCardType(data: $data) {
+    ...CardType
+  }
+}
+
+mutation updateOneCardType($where: CardTypeWhereUniqueInput!, $data: CardTypeUpdateInput!) {
+  updateOneCardType(where: $where, data: $data) {
+    ...CardType
+  }
+}
+
+mutation deleteOneCardType($where: CardTypeWhereUniqueInput!) {
+  deleteOneCardType(where: $where) {
+    ...CardType
+  }
+}
+
+mutation updateManyCardType($where: CardTypeWhereInput, $data: CardTypeUpdateManyMutationInput!) {
+  updateManyCardType(where: $where, data: $data) {
+    count
+  }
+}

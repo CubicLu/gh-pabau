@@ -1,0 +1,42 @@
+fragment CmPurchaseItemFields on CmPurchaseItem {
+  id
+  order_id
+  product_id
+  quantity
+  cost_price
+  amount_received
+}
+
+fragment CmPurchaseItem on CmPurchaseItem {
+  ...CmPurchaseItemFields
+  Order {
+    ...CmPurchaseOrderFields
+  }
+  Product {
+    ...InvProductFields
+  }
+}
+
+mutation createOneCmPurchaseItem($data: CmPurchaseItemCreateInput!) {
+  createOneCmPurchaseItem(data: $data) {
+    ...CmPurchaseItem
+  }
+}
+
+mutation updateOneCmPurchaseItem($where: CmPurchaseItemWhereUniqueInput!, $data: CmPurchaseItemUpdateInput!) {
+  updateOneCmPurchaseItem(where: $where, data: $data) {
+    ...CmPurchaseItem
+  }
+}
+
+mutation deleteOneCmPurchaseItem($where: CmPurchaseItemWhereUniqueInput!) {
+  deleteOneCmPurchaseItem(where: $where) {
+    ...CmPurchaseItem
+  }
+}
+
+mutation updateManyCmPurchaseItem($where: CmPurchaseItemWhereInput, $data: CmPurchaseItemUpdateManyMutationInput!) {
+  updateManyCmPurchaseItem(where: $where, data: $data) {
+    count
+  }
+}

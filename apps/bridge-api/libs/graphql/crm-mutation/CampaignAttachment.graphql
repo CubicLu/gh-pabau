@@ -1,0 +1,46 @@
+fragment CampaignAttachmentFields on CampaignAttachment {
+  id
+  campaign_id
+  company_id
+  attach_time
+  attach_user_name
+  attachment_type
+  attach_id
+}
+
+fragment CampaignAttachment on CampaignAttachment {
+  ...CampaignAttachmentFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCampaignAttachment($data: CampaignAttachmentCreateInput!) {
+  createOneCampaignAttachment(data: $data) {
+    ...CampaignAttachment
+  }
+}
+
+mutation updateOneCampaignAttachment(
+  $where: CampaignAttachmentWhereUniqueInput!
+  $data: CampaignAttachmentUpdateInput!
+) {
+  updateOneCampaignAttachment(where: $where, data: $data) {
+    ...CampaignAttachment
+  }
+}
+
+mutation deleteOneCampaignAttachment($where: CampaignAttachmentWhereUniqueInput!) {
+  deleteOneCampaignAttachment(where: $where) {
+    ...CampaignAttachment
+  }
+}
+
+mutation updateManyCampaignAttachment(
+  $where: CampaignAttachmentWhereInput
+  $data: CampaignAttachmentUpdateManyMutationInput!
+) {
+  updateManyCampaignAttachment(where: $where, data: $data) {
+    count
+  }
+}

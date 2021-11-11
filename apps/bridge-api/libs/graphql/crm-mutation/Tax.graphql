@@ -1,0 +1,41 @@
+fragment TaxFields on Tax {
+  id
+  name
+  value
+  rate
+  hidden
+  default
+  company_id
+  custom_id
+}
+
+fragment Tax on Tax {
+  ...TaxFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneTax($data: TaxCreateInput!) {
+  createOneTax(data: $data) {
+    ...Tax
+  }
+}
+
+mutation updateOneTax($where: TaxWhereUniqueInput!, $data: TaxUpdateInput!) {
+  updateOneTax(where: $where, data: $data) {
+    ...Tax
+  }
+}
+
+mutation deleteOneTax($where: TaxWhereUniqueInput!) {
+  deleteOneTax(where: $where) {
+    ...Tax
+  }
+}
+
+mutation updateManyTax($where: TaxWhereInput, $data: TaxUpdateManyMutationInput!) {
+  updateManyTax(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,39 @@
+fragment AtQuizTakeFields on AtQuizTake {
+  id
+  company_id
+  name
+  email
+  take_date
+  answers
+  concerns
+  answers2
+  products
+}
+
+fragment AtQuizTake on AtQuizTake {
+  ...AtQuizTakeFields
+}
+
+mutation createOneAtQuizTake($data: AtQuizTakeCreateInput!) {
+  createOneAtQuizTake(data: $data) {
+    ...AtQuizTake
+  }
+}
+
+mutation updateOneAtQuizTake($where: AtQuizTakeWhereUniqueInput!, $data: AtQuizTakeUpdateInput!) {
+  updateOneAtQuizTake(where: $where, data: $data) {
+    ...AtQuizTake
+  }
+}
+
+mutation deleteOneAtQuizTake($where: AtQuizTakeWhereUniqueInput!) {
+  deleteOneAtQuizTake(where: $where) {
+    ...AtQuizTake
+  }
+}
+
+mutation updateManyAtQuizTake($where: AtQuizTakeWhereInput, $data: AtQuizTakeUpdateManyMutationInput!) {
+  updateManyAtQuizTake(where: $where, data: $data) {
+    count
+  }
+}

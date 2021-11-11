@@ -1,0 +1,50 @@
+fragment CmLeadCustomFieldFields on CmLeadCustomField {
+  id
+  lead_id
+  company_id
+  custom_field_id
+  custom_field_label
+  custom_field_value
+  imported
+  old_value
+}
+
+fragment CmLeadCustomField on CmLeadCustomField {
+  ...CmLeadCustomFieldFields
+  Company {
+    ...CompanyFields
+  }
+  CustomField {
+    ...ManageCustomFieldFields
+  }
+  Lead {
+    ...CmLeadFields
+  }
+}
+
+mutation createOneCmLeadCustomField($data: CmLeadCustomFieldCreateInput!) {
+  createOneCmLeadCustomField(data: $data) {
+    ...CmLeadCustomField
+  }
+}
+
+mutation updateOneCmLeadCustomField($where: CmLeadCustomFieldWhereUniqueInput!, $data: CmLeadCustomFieldUpdateInput!) {
+  updateOneCmLeadCustomField(where: $where, data: $data) {
+    ...CmLeadCustomField
+  }
+}
+
+mutation deleteOneCmLeadCustomField($where: CmLeadCustomFieldWhereUniqueInput!) {
+  deleteOneCmLeadCustomField(where: $where) {
+    ...CmLeadCustomField
+  }
+}
+
+mutation updateManyCmLeadCustomField(
+  $where: CmLeadCustomFieldWhereInput
+  $data: CmLeadCustomFieldUpdateManyMutationInput!
+) {
+  updateManyCmLeadCustomField(where: $where, data: $data) {
+    count
+  }
+}

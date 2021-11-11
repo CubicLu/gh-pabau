@@ -22,13 +22,25 @@ query basicContactDetails($id: Int!) {
         color
       }
     }
-    marketingSource:MarketingSourceData{
-      name
-    }
+    marketingSource: MarketingSource
     customField: CmContactCustom{
       title: custom_field_label
       id: custom_field_id
       value: custom_field_value
+    }
+    contactNotes: ContactNote(
+      where: { Note: { not: { equals: "" } } }
+      orderBy: { CreatedDate: desc }
+    ) {
+      ID
+    }
+    bookingNotes: Booking(orderBy: { create_date: desc }) {
+      id
+    }
+    Company {
+      details {
+        country
+      }
     }
   }
 }
@@ -167,6 +179,9 @@ query getSalutations {
   findManyUserSalutation {
     id
     name
+  }
+  findFirstCompanyDetails {
+    country
   }
 }
 
@@ -360,5 +375,33 @@ mutation updateOneContact
     labels: $labels
   ){
     ID
+  }
+}
+
+mutation upsertOneCmContactCustom(
+  $contactId: Int!
+  $companyId: Int!
+  $customId: Int!
+  $customLabel: String!
+  $customValue: String!
+) {
+  upsertOneCmContactCustom(
+    where: {
+      unique_company_id_contact_id_custom_field_id: {
+        company_id: $companyId
+        contact_id: $contactId
+        custom_field_id: $customId
+      }
+    }
+    create: {
+      Company: { connect: { id: $companyId } }
+      CmContact: { connect: { ID: $contactId } }
+      ManageCustomField: { connect: { id: $customId } }
+      custom_field_label: $customLabel
+      custom_field_value: $customValue
+    }
+    update: { custom_field_value: { set: $customValue } }
+  ) {
+    id
   }
 }

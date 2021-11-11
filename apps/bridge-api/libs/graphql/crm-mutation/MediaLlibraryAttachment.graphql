@@ -1,0 +1,46 @@
+fragment MediaLlibraryAttachmentFields on MediaLlibraryAttachment {
+  id
+  file_url
+  company_id
+  contact_id
+  communication_id
+  medical_form_contact_id
+  contact_attachment_id
+  sales_id
+  statement_id
+  creation_date
+}
+
+fragment MediaLlibraryAttachment on MediaLlibraryAttachment {
+  ...MediaLlibraryAttachmentFields
+}
+
+mutation createOneMediaLlibraryAttachment($data: MediaLlibraryAttachmentCreateInput!) {
+  createOneMediaLlibraryAttachment(data: $data) {
+    ...MediaLlibraryAttachment
+  }
+}
+
+mutation updateOneMediaLlibraryAttachment(
+  $where: MediaLlibraryAttachmentWhereUniqueInput!
+  $data: MediaLlibraryAttachmentUpdateInput!
+) {
+  updateOneMediaLlibraryAttachment(where: $where, data: $data) {
+    ...MediaLlibraryAttachment
+  }
+}
+
+mutation deleteOneMediaLlibraryAttachment($where: MediaLlibraryAttachmentWhereUniqueInput!) {
+  deleteOneMediaLlibraryAttachment(where: $where) {
+    ...MediaLlibraryAttachment
+  }
+}
+
+mutation updateManyMediaLlibraryAttachment(
+  $where: MediaLlibraryAttachmentWhereInput
+  $data: MediaLlibraryAttachmentUpdateManyMutationInput!
+) {
+  updateManyMediaLlibraryAttachment(where: $where, data: $data) {
+    count
+  }
+}

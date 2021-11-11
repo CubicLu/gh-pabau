@@ -1,0 +1,52 @@
+fragment UserMobilePermissionFields on UserMobilePermission {
+  id
+  uid
+  company_id
+  cal
+  reviews
+  reports
+  contacts
+  journey
+  register
+  dashboard
+}
+
+fragment UserMobilePermission on UserMobilePermission {
+  ...UserMobilePermissionFields
+  User {
+    ...UserFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneUserMobilePermission($data: UserMobilePermissionCreateInput!) {
+  createOneUserMobilePermission(data: $data) {
+    ...UserMobilePermission
+  }
+}
+
+mutation updateOneUserMobilePermission(
+  $where: UserMobilePermissionWhereUniqueInput!
+  $data: UserMobilePermissionUpdateInput!
+) {
+  updateOneUserMobilePermission(where: $where, data: $data) {
+    ...UserMobilePermission
+  }
+}
+
+mutation deleteOneUserMobilePermission($where: UserMobilePermissionWhereUniqueInput!) {
+  deleteOneUserMobilePermission(where: $where) {
+    ...UserMobilePermission
+  }
+}
+
+mutation updateManyUserMobilePermission(
+  $where: UserMobilePermissionWhereInput
+  $data: UserMobilePermissionUpdateManyMutationInput!
+) {
+  updateManyUserMobilePermission(where: $where, data: $data) {
+    count
+  }
+}

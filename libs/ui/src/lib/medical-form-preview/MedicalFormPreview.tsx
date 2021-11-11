@@ -2,9 +2,14 @@ import {
   Avatar,
   BasicModal,
   FormComponentBuilder,
+  FullScreenReportModal,
   Stepper,
   StepperItem,
   TabMenu,
+  MacroItem,
+  UserGroupListItem,
+  InvProductsListItem,
+  MedicalConditionsListItem,
 } from '@pabau/ui'
 import { Divider, Tag } from 'antd'
 import React, { FC } from 'react'
@@ -28,6 +33,11 @@ export interface MedicalFormPreviewProps {
   stepData: StepperItem[]
   visible: boolean
   closePreviewDialog?: () => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
+  medicalFormMacros?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
+  userGroupListItems?: UserGroupListItem[]
 }
 
 export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
@@ -41,6 +51,11 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
   stepData,
   visible,
   closePreviewDialog,
+  onHandleMacro,
+  medicalFormMacros = [],
+  invProductsListItems = [],
+  medicalConditionsListItems = [],
+  userGroupListItems = [],
 }) => {
   const onCancel = () => {
     closePreviewDialog?.()
@@ -48,16 +63,23 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
   return (
     <div>
       {visible && (
-        <BasicModal
-          wrapClassName={styles.tempPreviewContainer}
-          title={formName === '' ? 'Template Preview' : formName + ' Preview'}
-          visible={visible}
-          newButtonText="Test As Client"
-          width="50%"
-          onCancel={onCancel}
-        >
-          <div className={styles.tempPreviewTabMenuContainer}>
-            <TabMenu tabPosition="top" menuItems={['Desktop', 'App']}>
+        // <BasicModal
+        //   wrapClassName={styles.tempPreviewContainer}
+        //   title={formName === '' ? 'Template Preview' : formName + ' Preview'}
+        //   visible={visible}
+        //   newButtonText="Test As Client"
+        //   width="50%"
+        //   onCancel={onCancel}
+        // >
+        <div className={styles.tempPreviewTabMenuContainer}>
+          <div className={styles.hello}>
+            <FullScreenReportModal
+              title={
+                formName === '' ? 'Template Preview' : formName + ' Preview'
+              }
+              visible={true}
+              onBackClick={onCancel}
+            >
               <div className={styles.tempPreviewTabContainer}>
                 {formData === '' ? (
                   <iframe title="Desktop" src={desktopTemp} />
@@ -65,10 +87,15 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
                   <FormComponentBuilder
                     previewData={formData}
                     formSaveLabel={formSaveLabel}
+                    onHandleMacro={onHandleMacro}
+                    medicalFormMacros={medicalFormMacros}
+                    userGroupListItems={userGroupListItems}
+                    invProductsListItems={invProductsListItems}
+                    medicalConditionsListItems={medicalConditionsListItems}
                   />
                 )}
               </div>
-              <div className={styles.tempPreviewTabContainer}>
+              {/* <div className={styles.tempPreviewTabContainer}>
                 <div className={styles.tempAppPreviewHeader}>
                   <div>
                     <Avatar src={user.src} name={user.name} size={50} />
@@ -87,10 +114,11 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
                 <Stepper datasource={stepData} step={step} />
                 <Divider style={{ margin: 0 }} />
                 <iframe title="App" src={appTemp} />
-              </div>
-            </TabMenu>
+              </div> */}
+            </FullScreenReportModal>
           </div>
-        </BasicModal>
+        </div>
+        // </BasicModal>
       )}
     </div>
   )

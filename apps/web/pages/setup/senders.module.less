@@ -88,6 +88,10 @@
   min-height: calc(100vh - 230px);
   padding: 24px;
   border-top: 1px solid #ecedf0;
+  .cardLoading{
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .sender-item {
@@ -104,7 +108,14 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-
+    :global{
+      .ant-skeleton{
+        .ant-skeleton-input{
+          height: 15px;
+          border-radius: 5px;
+        }
+      }
+    }
     .item-icon {
       font-size: 20px;
       color: #9292a3;
@@ -131,9 +142,42 @@
     color: #3d3d46;
     font-weight: normal;
     text-align: left;
-
+    :global{
+      .ant-skeleton{
+        .ant-skeleton-input{
+          height: 15px;
+          border-radius: 5px;
+        }
+      }
+    }
+    .emails{
+      margin-bottom: 5px;
+    }
     .email {
       color: #9292a3;
+    }
+  }
+
+}
+
+:global {
+  .ant-popover-inner-content {
+    padding: 4px 0 10px 0;
+    width: 180px;
+  }
+}
+.mailOptionContent {
+  font-size: 14px;
+  color: #9292a3;
+  .mailOptionItem {
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 0 0px 10px;
+    p {
+      margin-bottom: 0;
+      margin-left: 10px;
     }
   }
 }

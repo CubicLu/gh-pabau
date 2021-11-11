@@ -1,0 +1,38 @@
+fragment UserAlertFields on UserAlert {
+  id
+  title
+  description
+  image
+  email_template_id
+  ios_message
+  sms_message
+  pabau_message
+}
+
+fragment UserAlert on UserAlert {
+  ...UserAlertFields
+}
+
+mutation createOneUserAlert($data: UserAlertCreateInput!) {
+  createOneUserAlert(data: $data) {
+    ...UserAlert
+  }
+}
+
+mutation updateOneUserAlert($where: UserAlertWhereUniqueInput!, $data: UserAlertUpdateInput!) {
+  updateOneUserAlert(where: $where, data: $data) {
+    ...UserAlert
+  }
+}
+
+mutation deleteOneUserAlert($where: UserAlertWhereUniqueInput!) {
+  deleteOneUserAlert(where: $where) {
+    ...UserAlert
+  }
+}
+
+mutation updateManyUserAlert($where: UserAlertWhereInput, $data: UserAlertUpdateManyMutationInput!) {
+  updateManyUserAlert(where: $where, data: $data) {
+    count
+  }
+}

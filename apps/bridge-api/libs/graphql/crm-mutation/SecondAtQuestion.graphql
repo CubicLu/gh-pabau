@@ -1,0 +1,37 @@
+fragment SecondAtQuestionFields on SecondAtQuestion {
+  id
+  company_id
+  name
+  type
+}
+
+fragment SecondAtQuestion on SecondAtQuestion {
+  ...SecondAtQuestionFields
+}
+
+mutation createOneSecondAtQuestion($data: SecondAtQuestionCreateInput!) {
+  createOneSecondAtQuestion(data: $data) {
+    ...SecondAtQuestion
+  }
+}
+
+mutation updateOneSecondAtQuestion($where: SecondAtQuestionWhereUniqueInput!, $data: SecondAtQuestionUpdateInput!) {
+  updateOneSecondAtQuestion(where: $where, data: $data) {
+    ...SecondAtQuestion
+  }
+}
+
+mutation deleteOneSecondAtQuestion($where: SecondAtQuestionWhereUniqueInput!) {
+  deleteOneSecondAtQuestion(where: $where) {
+    ...SecondAtQuestion
+  }
+}
+
+mutation updateManySecondAtQuestion(
+  $where: SecondAtQuestionWhereInput
+  $data: SecondAtQuestionUpdateManyMutationInput!
+) {
+  updateManySecondAtQuestion(where: $where, data: $data) {
+    count
+  }
+}

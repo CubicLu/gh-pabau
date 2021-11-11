@@ -1,0 +1,83 @@
+table:
+  name: medical_form_macro
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - createdAt
+    - title
+    - message
+    - type
+    - created_by
+    - company_id
+  role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - company_id
+    - created_by
+    - id
+    - type
+    - message
+    - title
+    - createdAt
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - company_id
+    - created_by
+    - id
+    - type
+    - message
+    - title
+    - createdAt
+    filter: {}
+  role: public
+- permission:
+    columns:
+    - company_id
+    - created_by
+    - id
+    - type
+    - message
+    - title
+    - createdAt
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - company_id
+    - created_by
+    - id
+    - type
+    - message
+    - title
+    - createdAt
+    filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - company_id
+    - created_by
+    - id
+    - type
+    - message
+    - title
+    - createdAt
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: public
+- permission:
+    filter: {}
+  role: user

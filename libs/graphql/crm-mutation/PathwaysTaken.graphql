@@ -1,0 +1,46 @@
+fragment PathwaysTakenFields on PathwaysTaken {
+  id
+  pathway_id
+  contact_id
+  booking_id
+  started_on
+  status
+  comment
+}
+
+fragment PathwaysTaken on PathwaysTaken {
+  ...PathwaysTakenFields
+  Pathway {
+    ...PathwayFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+  Booking {
+    ...BookingFields
+  }
+}
+
+mutation createOnePathwaysTaken($data: PathwaysTakenCreateInput!) {
+  createOnePathwaysTaken(data: $data) {
+    ...PathwaysTaken
+  }
+}
+
+mutation updateOnePathwaysTaken($where: PathwaysTakenWhereUniqueInput!, $data: PathwaysTakenUpdateInput!) {
+  updateOnePathwaysTaken(where: $where, data: $data) {
+    ...PathwaysTaken
+  }
+}
+
+mutation deleteOnePathwaysTaken($where: PathwaysTakenWhereUniqueInput!) {
+  deleteOnePathwaysTaken(where: $where) {
+    ...PathwaysTaken
+  }
+}
+
+mutation updateManyPathwaysTaken($where: PathwaysTakenWhereInput, $data: PathwaysTakenUpdateManyMutationInput!) {
+  updateManyPathwaysTaken(where: $where, data: $data) {
+    count
+  }
+}

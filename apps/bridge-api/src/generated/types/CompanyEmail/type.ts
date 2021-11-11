@@ -17,6 +17,7 @@ export const CompanyEmail = objectType({
     t.int('default_email')
     t.int('enterprise_email')
     t.string('merge_tags')
+    t.int('visibility')
     t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {

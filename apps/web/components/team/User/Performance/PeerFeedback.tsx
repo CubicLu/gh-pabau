@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { performancePeerFeedback as performance } from '../../../../mocks/UserDetail'
+import { userDetail } from '../../../../mocks/UserDetail'
 import {
   ReportProps,
   PeerFeedback,
@@ -9,8 +9,11 @@ import {
   Employee,
 } from '@pabau/ui'
 import styles from './Performance.module.less'
+import { useTranslation } from 'react-i18next'
 
 const PeerFeedbackTab = () => {
+  const { t } = useTranslation('common')
+  const { performancePeerFeedback: performance } = userDetail(t)
   const [reports, setReports] = useState<ReportProps[]>(performance.reports)
   const [showRemindModal, setShowRemindModal] = useState<boolean>(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

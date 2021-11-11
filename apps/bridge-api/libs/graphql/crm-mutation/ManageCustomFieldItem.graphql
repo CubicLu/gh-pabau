@@ -1,0 +1,48 @@
+fragment ManageCustomFieldItemFields on ManageCustomFieldItem {
+  id
+  field_id
+  company_id
+  item_label
+  item_value
+  item_order
+}
+
+fragment ManageCustomFieldItem on ManageCustomFieldItem {
+  ...ManageCustomFieldItemFields
+  CustomField {
+    ...ManageCustomFieldFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneManageCustomFieldItem($data: ManageCustomFieldItemCreateInput!) {
+  createOneManageCustomFieldItem(data: $data) {
+    ...ManageCustomFieldItem
+  }
+}
+
+mutation updateOneManageCustomFieldItem(
+  $where: ManageCustomFieldItemWhereUniqueInput!
+  $data: ManageCustomFieldItemUpdateInput!
+) {
+  updateOneManageCustomFieldItem(where: $where, data: $data) {
+    ...ManageCustomFieldItem
+  }
+}
+
+mutation deleteOneManageCustomFieldItem($where: ManageCustomFieldItemWhereUniqueInput!) {
+  deleteOneManageCustomFieldItem(where: $where) {
+    ...ManageCustomFieldItem
+  }
+}
+
+mutation updateManyManageCustomFieldItem(
+  $where: ManageCustomFieldItemWhereInput
+  $data: ManageCustomFieldItemUpdateManyMutationInput!
+) {
+  updateManyManageCustomFieldItem(where: $where, data: $data) {
+    count
+  }
+}

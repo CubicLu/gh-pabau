@@ -1,0 +1,119 @@
+fragment InvSaleFields on InvSale {
+  id
+  reference_no
+  warehouse_id
+  biller_id
+  biller_name
+  customer_id
+  customer_name
+  date
+  note
+  inv_total
+  total_tax
+  total
+  paid_amount
+  store_discount
+  discount_amount
+  account_amount
+  loyalty_card_num
+  loyalty_card_amount
+  voucher_no
+  voucher_amount
+  invoice_type
+  in_type
+  total_tax2
+  tax_rate2_id
+  shipping_rate
+  shipping_rate_id
+  delivery
+  delivery_date
+  by_email
+  by_sms
+  tip
+  company_id
+  uid
+  created_date
+  modified_date
+  paid_by
+  booking_id
+  quaser_booking_id
+  invoice_bit
+  custom_id
+  contact_custom_id
+  Practitioner_id
+  User_id
+  Treatment_id
+  imported
+  VAT_drop
+  order_id
+  void
+  guid
+  old_paid_by
+  loyalty_points
+  xero_invoice_id
+  xero_updated_date
+  split_count
+  split_guid
+  insurer_contract_id
+  lock_sale
+  location_id
+  contract_id
+  is_ok
+  refund_to
+  credit_ref_id
+  credit_amount
+  credit_type
+  issuer_id
+}
+
+fragment InvSale on InvSale {
+  ...InvSaleFields
+  Company {
+    ...CompanyFields
+  }
+  Location {
+    ...CompanyBranchFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+  User {
+    ...UserFields
+  }
+  InsuranceDetail {
+    ...InsuranceDetailFields
+  }
+  IssuingCompany {
+    ...IssuingCompanyFields
+  }
+  InvBiller {
+    ...InvBillerFields
+  }
+  package {
+    ...ContactPackageFields
+  }
+}
+
+mutation createOneInvSale($data: InvSaleCreateInput!) {
+  createOneInvSale(data: $data) {
+    ...InvSale
+  }
+}
+
+mutation updateOneInvSale($where: InvSaleWhereUniqueInput!, $data: InvSaleUpdateInput!) {
+  updateOneInvSale(where: $where, data: $data) {
+    ...InvSale
+  }
+}
+
+mutation deleteOneInvSale($where: InvSaleWhereUniqueInput!) {
+  deleteOneInvSale(where: $where) {
+    ...InvSale
+  }
+}
+
+mutation updateManyInvSale($where: InvSaleWhereInput, $data: InvSaleUpdateManyMutationInput!) {
+  updateManyInvSale(where: $where, data: $data) {
+    count
+  }
+}

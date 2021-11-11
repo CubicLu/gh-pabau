@@ -1,0 +1,40 @@
+fragment CmLeadNoteFields on CmLeadNote {
+  ID
+  OwnerID
+  LeadID
+  Note
+  Status
+  CreatedDate
+  IpAddress
+}
+
+fragment CmLeadNote on CmLeadNote {
+  ...CmLeadNoteFields
+  CmLead {
+    ...CmLeadFields
+  }
+}
+
+mutation createOneCmLeadNote($data: CmLeadNoteCreateInput!) {
+  createOneCmLeadNote(data: $data) {
+    ...CmLeadNote
+  }
+}
+
+mutation updateOneCmLeadNote($where: CmLeadNoteWhereUniqueInput!, $data: CmLeadNoteUpdateInput!) {
+  updateOneCmLeadNote(where: $where, data: $data) {
+    ...CmLeadNote
+  }
+}
+
+mutation deleteOneCmLeadNote($where: CmLeadNoteWhereUniqueInput!) {
+  deleteOneCmLeadNote(where: $where) {
+    ...CmLeadNote
+  }
+}
+
+mutation updateManyCmLeadNote($where: CmLeadNoteWhereInput, $data: CmLeadNoteUpdateManyMutationInput!) {
+  updateManyCmLeadNote(where: $where, data: $data) {
+    count
+  }
+}

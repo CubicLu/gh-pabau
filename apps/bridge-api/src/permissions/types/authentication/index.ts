@@ -23,7 +23,7 @@ export const authentication = {
     async (_root, _args, ctx: Context) => {
       const record = await ctx.prisma.staffMeta.findUnique({
         where: {
-          staff_id: {
+          staff_id_meta_name: {
             staff_id: ctx.authenticated.user,
             meta_name: 'can_edit_stock_level',
           },

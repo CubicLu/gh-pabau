@@ -1,0 +1,43 @@
+fragment PackageUsedFields on PackageUsed {
+  id
+  contact_package_id
+  date_created
+  booking_id
+  status
+  book_take
+  cancel_take
+  company_id
+  booking_master_id
+  old_booking_id
+}
+
+fragment PackageUsed on PackageUsed {
+  ...PackageUsedFields
+  contact_package {
+    ...ContactPackageFields
+  }
+}
+
+mutation createOnePackageUsed($data: PackageUsedCreateInput!) {
+  createOnePackageUsed(data: $data) {
+    ...PackageUsed
+  }
+}
+
+mutation updateOnePackageUsed($where: PackageUsedWhereUniqueInput!, $data: PackageUsedUpdateInput!) {
+  updateOnePackageUsed(where: $where, data: $data) {
+    ...PackageUsed
+  }
+}
+
+mutation deleteOnePackageUsed($where: PackageUsedWhereUniqueInput!) {
+  deleteOnePackageUsed(where: $where) {
+    ...PackageUsed
+  }
+}
+
+mutation updateManyPackageUsed($where: PackageUsedWhereInput, $data: PackageUsedUpdateManyMutationInput!) {
+  updateManyPackageUsed(where: $where, data: $data) {
+    count
+  }
+}

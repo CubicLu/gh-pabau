@@ -1,0 +1,43 @@
+fragment BookingMasterFields on BookingMaster {
+  id
+  class_id
+  user_id
+  booking_date
+  payment_status
+  cancel_status
+  cancel_date
+  company_id
+  class_currency
+  class_price
+  checked_in
+  payed_by
+  waiting
+}
+
+fragment BookingMaster on BookingMaster {
+  ...BookingMasterFields
+}
+
+mutation createOneBookingMaster($data: BookingMasterCreateInput!) {
+  createOneBookingMaster(data: $data) {
+    ...BookingMaster
+  }
+}
+
+mutation updateOneBookingMaster($where: BookingMasterWhereUniqueInput!, $data: BookingMasterUpdateInput!) {
+  updateOneBookingMaster(where: $where, data: $data) {
+    ...BookingMaster
+  }
+}
+
+mutation deleteOneBookingMaster($where: BookingMasterWhereUniqueInput!) {
+  deleteOneBookingMaster(where: $where) {
+    ...BookingMaster
+  }
+}
+
+mutation updateManyBookingMaster($where: BookingMasterWhereInput, $data: BookingMasterUpdateManyMutationInput!) {
+  updateManyBookingMaster(where: $where, data: $data) {
+    count
+  }
+}

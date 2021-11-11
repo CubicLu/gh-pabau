@@ -1,0 +1,36 @@
+fragment CompanyPositionFields on CompanyPosition {
+  id
+  company_id
+  position
+}
+
+fragment CompanyPosition on CompanyPosition {
+  ...CompanyPositionFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCompanyPosition($data: CompanyPositionCreateInput!) {
+  createOneCompanyPosition(data: $data) {
+    ...CompanyPosition
+  }
+}
+
+mutation updateOneCompanyPosition($where: CompanyPositionWhereUniqueInput!, $data: CompanyPositionUpdateInput!) {
+  updateOneCompanyPosition(where: $where, data: $data) {
+    ...CompanyPosition
+  }
+}
+
+mutation deleteOneCompanyPosition($where: CompanyPositionWhereUniqueInput!) {
+  deleteOneCompanyPosition(where: $where) {
+    ...CompanyPosition
+  }
+}
+
+mutation updateManyCompanyPosition($where: CompanyPositionWhereInput, $data: CompanyPositionUpdateManyMutationInput!) {
+  updateManyCompanyPosition(where: $where, data: $data) {
+    count
+  }
+}

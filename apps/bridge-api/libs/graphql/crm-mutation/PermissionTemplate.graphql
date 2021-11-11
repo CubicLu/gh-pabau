@@ -1,0 +1,51 @@
+fragment PermissionTemplateFields on PermissionTemplate {
+  id
+  name
+  company_id
+  app_permissions
+  user_permissions
+  mobile_permissions
+  mobile_widgets
+  disabled_services
+  alerts
+  is_admin
+  enabled_reports
+  all_reports
+}
+
+fragment PermissionTemplate on PermissionTemplate {
+  ...PermissionTemplateFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOnePermissionTemplate($data: PermissionTemplateCreateInput!) {
+  createOnePermissionTemplate(data: $data) {
+    ...PermissionTemplate
+  }
+}
+
+mutation updateOnePermissionTemplate(
+  $where: PermissionTemplateWhereUniqueInput!
+  $data: PermissionTemplateUpdateInput!
+) {
+  updateOnePermissionTemplate(where: $where, data: $data) {
+    ...PermissionTemplate
+  }
+}
+
+mutation deleteOnePermissionTemplate($where: PermissionTemplateWhereUniqueInput!) {
+  deleteOnePermissionTemplate(where: $where) {
+    ...PermissionTemplate
+  }
+}
+
+mutation updateManyPermissionTemplate(
+  $where: PermissionTemplateWhereInput
+  $data: PermissionTemplateUpdateManyMutationInput!
+) {
+  updateManyPermissionTemplate(where: $where, data: $data) {
+    count
+  }
+}

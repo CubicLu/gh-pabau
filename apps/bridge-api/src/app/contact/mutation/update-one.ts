@@ -117,7 +117,7 @@ export const updateContact = mutationField('updateOneContact', {
         ContactMeta: {
           upsert: {
             where: {
-              unique_contact_id_meta_name: {
+              contact_id_meta_name: {
                 contact_id: input.contactId,
                 meta_name: 'preferred_language',
               },

@@ -1,0 +1,38 @@
+fragment JobStatusFields on JobStatus {
+  id
+  company_id
+  name
+  status
+  order
+}
+
+fragment JobStatus on JobStatus {
+  ...JobStatusFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneJobStatus($data: JobStatusCreateInput!) {
+  createOneJobStatus(data: $data) {
+    ...JobStatus
+  }
+}
+
+mutation updateOneJobStatus($where: JobStatusWhereUniqueInput!, $data: JobStatusUpdateInput!) {
+  updateOneJobStatus(where: $where, data: $data) {
+    ...JobStatus
+  }
+}
+
+mutation deleteOneJobStatus($where: JobStatusWhereUniqueInput!) {
+  deleteOneJobStatus(where: $where) {
+    ...JobStatus
+  }
+}
+
+mutation updateManyJobStatus($where: JobStatusWhereInput, $data: JobStatusUpdateManyMutationInput!) {
+  updateManyJobStatus(where: $where, data: $data) {
+    count
+  }
+}

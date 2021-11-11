@@ -9,8 +9,8 @@ export const Booking = objectType({
   definition(t) {
     t.int('id')
     t.string('title')
-    t.decimal('start_date')
-    t.decimal('end_date')
+    t.float('start_date')
+    t.float('end_date')
     t.nullable.int('start_time')
     t.nullable.int('end_time')
     t.nullable.string('service')
@@ -18,8 +18,8 @@ export const Booking = objectType({
     t.int('UID')
     t.int('company_id')
     t.nullable.string('backgroudcolor')
-    t.nullable.int('create_date')
-    t.nullable.int('update_date')
+    t.nullable.float('create_date')
+    t.nullable.float('update_date')
     t.string('status')
     t.nullable.float('estimated_cost')
     t.nullable.float('tips')
@@ -109,6 +109,46 @@ export const Booking = objectType({
       type: 'CompanyBranch',
       resolve(root: any) {
         return root.CompanyBranch
+      },
+    })
+    t.nullable.field('CompanyService', {
+      type: 'CompanyService',
+      resolve(root: any) {
+        return root.CompanyService
+      },
+    })
+    t.list.field('PathwaysTaken', {
+      type: 'PathwaysTaken',
+      args: {
+        where: 'PathwaysTakenWhereInput',
+        orderBy: 'PathwaysTakenOrderByWithRelationInput',
+        cursor: 'PathwaysTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwaysTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwaysTaken
+      },
+    })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'BookingCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

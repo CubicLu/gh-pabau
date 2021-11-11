@@ -1343,7 +1343,7 @@ export const vouchers = (): Record<string, VoucherListProps[]> => {
     voucherRelation: 'Family',
     voucherRelationLabel: 'Redeem on all services',
     currencyType: '£',
-    dotMenuShow: true,
+    showMenu: true,
     buttonLabel: '',
     voucherType: '',
     termsConditions:

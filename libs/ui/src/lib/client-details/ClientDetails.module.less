@@ -494,7 +494,11 @@
           font-size: 14px;
           line-height: 22px;
           color: var(--grey-text-color);
-          .skeletonContent{
+          span {
+            word-break: break-word;
+            white-space: normal;
+          }
+          .skeletonContent{ 
             width: 150px;
             :global{
               .ant-skeleton-title {
@@ -625,7 +629,7 @@
       > div {
         &:nth-child(1) {
       .content {
-        &.emptyContent {
+        &.emptyContent, &.phoneContent {
           .emptyValue {
             display: block;
           }
@@ -688,7 +692,7 @@
           &.phoneContent {
             cursor: pointer;
           }
-          &.emptyContent {
+          &.emptyContent, &.phoneContent {
             cursor: pointer;
             .emptyValue {
               display: none;

@@ -1,0 +1,47 @@
+fragment CandidateFields on Candidate {
+  id
+  contact_id
+  created_date
+  opening_id
+  rating
+  candidate_status
+  job_references
+  how_heard
+  referred_by
+  cover_letter
+  resume
+  date_available
+  linkedin
+  company_id
+}
+
+fragment Candidate on Candidate {
+  ...CandidateFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCandidate($data: CandidateCreateInput!) {
+  createOneCandidate(data: $data) {
+    ...Candidate
+  }
+}
+
+mutation updateOneCandidate($where: CandidateWhereUniqueInput!, $data: CandidateUpdateInput!) {
+  updateOneCandidate(where: $where, data: $data) {
+    ...Candidate
+  }
+}
+
+mutation deleteOneCandidate($where: CandidateWhereUniqueInput!) {
+  deleteOneCandidate(where: $where) {
+    ...Candidate
+  }
+}
+
+mutation updateManyCandidate($where: CandidateWhereInput, $data: CandidateUpdateManyMutationInput!) {
+  updateManyCandidate(where: $where, data: $data) {
+    count
+  }
+}

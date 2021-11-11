@@ -1,0 +1,36 @@
+fragment AppBeforeAfterFields on AppBeforeAfter {
+  id
+  company_id
+  contact_id
+  before_img
+  after_img
+  pass_key
+}
+
+fragment AppBeforeAfter on AppBeforeAfter {
+  ...AppBeforeAfterFields
+}
+
+mutation createOneAppBeforeAfter($data: AppBeforeAfterCreateInput!) {
+  createOneAppBeforeAfter(data: $data) {
+    ...AppBeforeAfter
+  }
+}
+
+mutation updateOneAppBeforeAfter($where: AppBeforeAfterWhereUniqueInput!, $data: AppBeforeAfterUpdateInput!) {
+  updateOneAppBeforeAfter(where: $where, data: $data) {
+    ...AppBeforeAfter
+  }
+}
+
+mutation deleteOneAppBeforeAfter($where: AppBeforeAfterWhereUniqueInput!) {
+  deleteOneAppBeforeAfter(where: $where) {
+    ...AppBeforeAfter
+  }
+}
+
+mutation updateManyAppBeforeAfter($where: AppBeforeAfterWhereInput, $data: AppBeforeAfterUpdateManyMutationInput!) {
+  updateManyAppBeforeAfter(where: $where, data: $data) {
+    count
+  }
+}

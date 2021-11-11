@@ -1,0 +1,48 @@
+fragment ContactAlertFields on ContactAlert {
+  ID
+  OwnerID
+  ContactID
+  Note
+  Status
+  CreatedDate
+  IpAddress
+  Critical
+  medical_conditions_id
+}
+
+fragment ContactAlert on ContactAlert {
+  ...ContactAlertFields
+  User {
+    ...UserFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+  MedicalCondition {
+    ...MedicalConditionFields
+  }
+}
+
+mutation createOneContactAlert($data: ContactAlertCreateInput!) {
+  createOneContactAlert(data: $data) {
+    ...ContactAlert
+  }
+}
+
+mutation updateOneContactAlert($where: ContactAlertWhereUniqueInput!, $data: ContactAlertUpdateInput!) {
+  updateOneContactAlert(where: $where, data: $data) {
+    ...ContactAlert
+  }
+}
+
+mutation deleteOneContactAlert($where: ContactAlertWhereUniqueInput!) {
+  deleteOneContactAlert(where: $where) {
+    ...ContactAlert
+  }
+}
+
+mutation updateManyContactAlert($where: ContactAlertWhereInput, $data: ContactAlertUpdateManyMutationInput!) {
+  updateManyContactAlert(where: $where, data: $data) {
+    count
+  }
+}

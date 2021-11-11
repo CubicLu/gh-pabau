@@ -1,0 +1,115 @@
+fragment CmContactFields on CmContact {
+  ID
+  Avatar
+  OwnerID
+  Salutation
+  Fname
+  company_id
+  location_id
+  Email
+  Phone
+  OtherPhone
+  Mobile
+  Assistant
+  ReportsTo
+  LeadSource
+  Lname
+  Title
+  Department
+  HomePhone
+  Fax
+  DOB
+  AsstPhone
+  EmailOptOut
+  SkypeId
+  AddToQuickBooks
+  SecondaryEmail
+  Twitter
+  MailingStreet
+  OtherStreet
+  MailingCity
+  OtherCity
+  MailingProvince
+  OtherProvince
+  MailingPostal
+  OtherPostal
+  MailingCountry
+  OtherCountry
+  Description
+  Status
+  CreatedDate
+  IpAddress
+  fbimg
+  MarketingSource
+  RefferalSource
+  LeadID
+  group_tag
+  polite_notice
+  custom_id
+  gender
+  MarketingOptInAll
+  MarketingOptInEmail
+  MarketingOptInPhone
+  MarketingOptInPost
+  MarketingOptInText
+  notes_drop
+  imported
+  alerts_drop
+  MarketingSourceRelated
+  customer_reference
+  MarketingOptInNewsletter
+  custom_marketing_source
+  insurer_id
+  is_active
+  xero_contact_id
+  is_ambassador
+  UpdatedDate
+  xero_updated_date
+  discount_type
+  custom_clinic_id
+  ambassador_id
+  contract_id
+  privacy_policy
+  need_to_knows
+  contact_type
+}
+
+fragment CmContact on CmContact {
+  ...CmContactFields
+  Company {
+    ...CompanyFields
+  }
+  SocialSurveyFeedback {
+    ...SocialSurveyFeedbackFields
+  }
+  LoyaltyPoints {
+    ...LoyaltyPointsFields
+  }
+  Insurance {
+    ...InsuranceDetailFields
+  }
+  ContactPreference {
+    ...ContactPreferenceFields
+  }
+  MarketingSourceData {
+    ...MarketingSourceFields
+  }
+}
+
+mutation updateOneCmContact($where: CmContactWhereUniqueInput!, $data: CmContactUpdateInput!) {
+  updateOneCmContact(where: $where, data: $data) {
+    ...CmContact
+  }
+}
+
+mutation deleteOneCmContact($where: CmContactWhereUniqueInput!) {
+  deleteOneCmContact(where: $where) {
+    ...CmContact
+  }
+}
+
+mutation updateManyCmContact($where: CmContactWhereInput, $data: CmContactUpdateManyMutationInput!) {
+  updateManyCmContact(where: $where, data: $data) {
+    count
+  }
+}

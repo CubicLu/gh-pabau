@@ -1,0 +1,38 @@
+fragment PipelineFields on Pipeline {
+  id
+  company_id
+  name
+  description
+  status
+  services_ids
+  note
+  restrict_stages
+}
+
+fragment Pipeline on Pipeline {
+  ...PipelineFields
+}
+
+mutation createOnePipeline($data: PipelineCreateInput!) {
+  createOnePipeline(data: $data) {
+    ...Pipeline
+  }
+}
+
+mutation updateOnePipeline($where: PipelineWhereUniqueInput!, $data: PipelineUpdateInput!) {
+  updateOnePipeline(where: $where, data: $data) {
+    ...Pipeline
+  }
+}
+
+mutation deleteOnePipeline($where: PipelineWhereUniqueInput!) {
+  deleteOnePipeline(where: $where) {
+    ...Pipeline
+  }
+}
+
+mutation updateManyPipeline($where: PipelineWhereInput, $data: PipelineUpdateManyMutationInput!) {
+  updateManyPipeline(where: $where, data: $data) {
+    count
+  }
+}

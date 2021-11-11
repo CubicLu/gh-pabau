@@ -1,0 +1,67 @@
+fragment ManageCustomFieldFields on ManageCustomField {
+  id
+  field_label
+  field_type
+  company_id
+  user_id
+  location_id
+  created_date
+  modified_date
+  treatment_interest
+  show_in_leads
+  field_for
+  flagged
+  is_required
+  disable_app
+  is_active
+  field_order
+  display_in_invoice
+  default_in_reports
+  category_id
+  in_cc_toolbar
+  favorite
+  show_in_cal
+}
+
+fragment ManageCustomField on ManageCustomField {
+  ...ManageCustomFieldFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+  Location {
+    ...CompanyBranchFields
+  }
+  Category {
+    ...ManageCustomFieldCategoryFields
+  }
+}
+
+mutation createOneManageCustomField($data: ManageCustomFieldCreateInput!) {
+  createOneManageCustomField(data: $data) {
+    ...ManageCustomField
+  }
+}
+
+mutation updateOneManageCustomField($where: ManageCustomFieldWhereUniqueInput!, $data: ManageCustomFieldUpdateInput!) {
+  updateOneManageCustomField(where: $where, data: $data) {
+    ...ManageCustomField
+  }
+}
+
+mutation deleteOneManageCustomField($where: ManageCustomFieldWhereUniqueInput!) {
+  deleteOneManageCustomField(where: $where) {
+    ...ManageCustomField
+  }
+}
+
+mutation updateManyManageCustomField(
+  $where: ManageCustomFieldWhereInput
+  $data: ManageCustomFieldUpdateManyMutationInput!
+) {
+  updateManyManageCustomField(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,39 @@
+fragment CommunicationProviderFields on CommunicationProvider {
+  id
+  code
+  name
+}
+
+fragment CommunicationProvider on CommunicationProvider {
+  ...CommunicationProviderFields
+}
+
+mutation createOneCommunicationProvider($data: CommunicationProviderCreateInput!) {
+  createOneCommunicationProvider(data: $data) {
+    ...CommunicationProvider
+  }
+}
+
+mutation updateOneCommunicationProvider(
+  $where: CommunicationProviderWhereUniqueInput!
+  $data: CommunicationProviderUpdateInput!
+) {
+  updateOneCommunicationProvider(where: $where, data: $data) {
+    ...CommunicationProvider
+  }
+}
+
+mutation deleteOneCommunicationProvider($where: CommunicationProviderWhereUniqueInput!) {
+  deleteOneCommunicationProvider(where: $where) {
+    ...CommunicationProvider
+  }
+}
+
+mutation updateManyCommunicationProvider(
+  $where: CommunicationProviderWhereInput
+  $data: CommunicationProviderUpdateManyMutationInput!
+) {
+  updateManyCommunicationProvider(where: $where, data: $data) {
+    count
+  }
+}

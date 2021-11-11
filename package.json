@@ -1,10 +1,10 @@
 {
   "name": "pabau",
-  "version": "2.0.659",
+  "version": "2.0.747",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
-    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543\" nx",
+    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=16384\" nx",
     "serve": "yarn nx serve",
     "build:bridge-api": "yarn nx export bridge-api",
     "hasura:cli": "ts-node tools/cli/hasura.ts",
@@ -19,7 +19,7 @@
     "dev:connect": "concurrently -m 16 --kill-others-on-fail -n HASURA,HASURA-SEED,PRISMA,WEB,WEB-PRELOADER,LAUNCH-BROWSER,BACKEND -c red,red,green,blue,grey,grey,magenta \"delay 5 && yarn hasura:stop && docker-compose -f hasura/docker-compose.yml up -d postgres && wait-on -w 1200 http-get://localhost:4000 && yarn hasura:start\" \"delay 22 && wait-on -w 1200 http-get://localhost:8080/console && (yarn hasura:cli seeds apply --database-name default || echo 'Seed apply failed') && open-cli 'http://localhost:8080' && wait-on http://localhost:4200 && open-cli 'http://localhost:4200'\" \"yarn bridge:start\" \"delay 25 && yarn connect:start\" \"delay 15 && wait-on tcp:4000 && wait-on http://localhost:4200\" \"delay 20 && wait-on http://localhost:4200\" \"yarn nx serve backend\"",
     "dev:light": "concurrently \"yarn nx serve web\" \"yarn nx serve bridge-api\"",
     "bridge:start": "yarn nx serve bridge-api",
-    "bridge:start2": "node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/main.cjs",
+    "bridge:start2": "cross-env NODE_OPTIONS=\"--max-old-space-size=16384\" node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/main.cjs",
     "mysql:start": "docker-compose -f tools/pabau1/docker-compose.yml up -d || (docker-compose -f tools/pabau1/docker-compose.yml down && docker-compose -f tools/pabau1/docker-compose.yml up -d)",
     "postgres:start": "docker-compose -f hasura/docker-compose.yml up -d postgres",
     "hasura:start": "run-script-os",
@@ -102,9 +102,9 @@
     "@sendgrid/mail": "7.4.6",
     "@sentry/react": "6.11.0",
     "@sentry/tracing": "6.11.0",
-    "@zeit/next-less": "1.0.1",
     "antd": "4.10.3",
     "apollo-server": "2.24.0",
+    "axios": "0.22.0",
     "canvas-confetti": "1.4.0",
     "classnames": "2.3.1",
     "cross-env": "7.0.3",
@@ -121,6 +121,7 @@
     "gapi-script": "^1.2.0",
     "gocardless-nodejs": "2.2.0",
     "google-libphonenumber": "3.2.22",
+    "googleapis": "89.0.0",
     "graphql": "15.5.3",
     "graphql-middleware": "6.1.6",
     "graphql-scalars": "1.10.1",
@@ -133,6 +134,7 @@
     "i18next-browser-languagedetector": "6.1.2",
     "i18next-xhr-backend": "3.2.2",
     "inflected": "2.1.0",
+    "js-base64": "3.7.2",
     "jsonwebtoken": "8.5.1",
     "less": "3.13.1",
     "less-loader": "7.3.0",
@@ -173,6 +175,7 @@
     "react-grid-layout": "1.2.4",
     "react-highlight-words": "0.17.0",
     "react-html-parser": "2.0.2",
+    "react-html5-camera-photo": "1.5.5",
     "react-i18next": "11.8.13",
     "react-image-crop": "8.6.9",
     "react-image-magnifiers": "1.4.0",
@@ -323,7 +326,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 75,
+  "bump-rebuild-all": 126,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }

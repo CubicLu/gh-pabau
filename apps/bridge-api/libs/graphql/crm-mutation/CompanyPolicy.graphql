@@ -1,0 +1,36 @@
+fragment CompanyPolicyFields on CompanyPolicy {
+  id
+  company_id
+  privacy_policy
+}
+
+fragment CompanyPolicy on CompanyPolicy {
+  ...CompanyPolicyFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCompanyPolicy($data: CompanyPolicyCreateInput!) {
+  createOneCompanyPolicy(data: $data) {
+    ...CompanyPolicy
+  }
+}
+
+mutation updateOneCompanyPolicy($where: CompanyPolicyWhereUniqueInput!, $data: CompanyPolicyUpdateInput!) {
+  updateOneCompanyPolicy(where: $where, data: $data) {
+    ...CompanyPolicy
+  }
+}
+
+mutation deleteOneCompanyPolicy($where: CompanyPolicyWhereUniqueInput!) {
+  deleteOneCompanyPolicy(where: $where) {
+    ...CompanyPolicy
+  }
+}
+
+mutation updateManyCompanyPolicy($where: CompanyPolicyWhereInput, $data: CompanyPolicyUpdateManyMutationInput!) {
+  updateManyCompanyPolicy(where: $where, data: $data) {
+    count
+  }
+}

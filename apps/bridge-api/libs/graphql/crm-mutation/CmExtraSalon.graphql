@@ -1,0 +1,43 @@
+fragment CmExtraSalonFields on CmExtraSalon {
+  id
+  contact_id
+  primary_service
+  hair_length
+  hair_texture
+  company_id
+  skin_type
+}
+
+fragment CmExtraSalon on CmExtraSalon {
+  ...CmExtraSalonFields
+  CmContact {
+    ...CmContactFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCmExtraSalon($data: CmExtraSalonCreateInput!) {
+  createOneCmExtraSalon(data: $data) {
+    ...CmExtraSalon
+  }
+}
+
+mutation updateOneCmExtraSalon($where: CmExtraSalonWhereUniqueInput!, $data: CmExtraSalonUpdateInput!) {
+  updateOneCmExtraSalon(where: $where, data: $data) {
+    ...CmExtraSalon
+  }
+}
+
+mutation deleteOneCmExtraSalon($where: CmExtraSalonWhereUniqueInput!) {
+  deleteOneCmExtraSalon(where: $where) {
+    ...CmExtraSalon
+  }
+}
+
+mutation updateManyCmExtraSalon($where: CmExtraSalonWhereInput, $data: CmExtraSalonUpdateManyMutationInput!) {
+  updateManyCmExtraSalon(where: $where, data: $data) {
+    count
+  }
+}

@@ -11,13 +11,13 @@ export interface Context {
    * The Prisma Client
    */
   prisma: PrismaClient
-
   /**
    * For Authentication module to resolve pod user.id, we have this emergency hatch that returns a PrismaClient instance
    * for the specified pod.
    *
    * @param remote_url - The `remote_url` from the database
    */
+
   prismaArray(remote_url: string): PrismaClient
 
   /**
@@ -29,6 +29,11 @@ export interface Context {
    * The package.json version for this app
    */
   version: string
+
+  /**
+   * requested JWT to forward via Third Party services (eg. CDN)
+   */
+  authJwt: string
 
   /**
    * Required for PrismaSelect plugin to operate
@@ -55,6 +60,7 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
       console.log('invalid jwt found')
     }
   }
+  ret.authJwt = authorizationRaw
   ret.prisma = prisma(ret.authenticated?.remote_url || undefined)
   ret.prismaArray = (remote_url) => prisma(remote_url)
 

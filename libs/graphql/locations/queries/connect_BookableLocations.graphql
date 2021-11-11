@@ -1,0 +1,22 @@
+query onlineBookableLocations($company_id: Int!) {
+  Public_Locations(where: {company_id: $company_id}) {
+    address
+    city
+    color
+    county
+    email
+    id
+    is_default
+    lng
+    lat
+    loc_order
+    name
+    notice
+    phone
+    postcode
+    region
+    send_conf_email
+    street
+    website
+  }
+}

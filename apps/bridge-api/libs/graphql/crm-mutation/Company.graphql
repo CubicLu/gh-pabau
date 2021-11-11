@@ -1,0 +1,37 @@
+fragment CompanyFields on Company {
+  id
+  user
+  digit8
+  admin
+  creation_date
+  image
+  slug
+  remote_url
+  remote_connect
+  cron_enabled
+}
+
+fragment Company on Company {
+  ...CompanyFields
+  details {
+    ...CompanyDetailsFields
+  }
+  subscription {
+    ...CompanySubscriptionFields
+  }
+  owner {
+    ...UserFields
+  }
+}
+
+mutation updateOneCompany($where: CompanyWhereUniqueInput!, $data: CompanyUpdateInput!) {
+  updateOneCompany(where: $where, data: $data) {
+    ...Company
+  }
+}
+
+mutation updateManyCompany($where: CompanyWhereInput, $data: CompanyUpdateManyMutationInput!) {
+  updateManyCompany(where: $where, data: $data) {
+    count
+  }
+}

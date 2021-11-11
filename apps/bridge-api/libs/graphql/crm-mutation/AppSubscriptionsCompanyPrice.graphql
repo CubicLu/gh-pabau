@@ -1,0 +1,43 @@
+fragment AppSubscriptionsCompanyPriceFields on AppSubscriptionsCompanyPrice {
+  id
+  company_id
+  app_key_value
+  price
+}
+
+fragment AppSubscriptionsCompanyPrice on AppSubscriptionsCompanyPrice {
+  ...AppSubscriptionsCompanyPriceFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneAppSubscriptionsCompanyPrice($data: AppSubscriptionsCompanyPriceCreateInput!) {
+  createOneAppSubscriptionsCompanyPrice(data: $data) {
+    ...AppSubscriptionsCompanyPrice
+  }
+}
+
+mutation updateOneAppSubscriptionsCompanyPrice(
+  $where: AppSubscriptionsCompanyPriceWhereUniqueInput!
+  $data: AppSubscriptionsCompanyPriceUpdateInput!
+) {
+  updateOneAppSubscriptionsCompanyPrice(where: $where, data: $data) {
+    ...AppSubscriptionsCompanyPrice
+  }
+}
+
+mutation deleteOneAppSubscriptionsCompanyPrice($where: AppSubscriptionsCompanyPriceWhereUniqueInput!) {
+  deleteOneAppSubscriptionsCompanyPrice(where: $where) {
+    ...AppSubscriptionsCompanyPrice
+  }
+}
+
+mutation updateManyAppSubscriptionsCompanyPrice(
+  $where: AppSubscriptionsCompanyPriceWhereInput
+  $data: AppSubscriptionsCompanyPriceUpdateManyMutationInput!
+) {
+  updateManyAppSubscriptionsCompanyPrice(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,38 @@
+fragment MedicalConditionFields on MedicalCondition {
+  id
+  name
+  company_id
+  custom_id
+  is_common
+}
+
+fragment MedicalCondition on MedicalCondition {
+  ...MedicalConditionFields
+}
+
+mutation createOneMedicalCondition($data: MedicalConditionCreateInput!) {
+  createOneMedicalCondition(data: $data) {
+    ...MedicalCondition
+  }
+}
+
+mutation updateOneMedicalCondition($where: MedicalConditionWhereUniqueInput!, $data: MedicalConditionUpdateInput!) {
+  updateOneMedicalCondition(where: $where, data: $data) {
+    ...MedicalCondition
+  }
+}
+
+mutation deleteOneMedicalCondition($where: MedicalConditionWhereUniqueInput!) {
+  deleteOneMedicalCondition(where: $where) {
+    ...MedicalCondition
+  }
+}
+
+mutation updateManyMedicalCondition(
+  $where: MedicalConditionWhereInput
+  $data: MedicalConditionUpdateManyMutationInput!
+) {
+  updateManyMedicalCondition(where: $where, data: $data) {
+    count
+  }
+}

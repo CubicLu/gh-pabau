@@ -1,0 +1,42 @@
+fragment InvWarehouseFields on InvWarehouse {
+  id
+  code
+  name
+  address
+  city
+  company_id
+  uid
+  created_date
+  modified_date
+}
+
+fragment InvWarehouse on InvWarehouse {
+  ...InvWarehouseFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneInvWarehouse($data: InvWarehouseCreateInput!) {
+  createOneInvWarehouse(data: $data) {
+    ...InvWarehouse
+  }
+}
+
+mutation updateOneInvWarehouse($where: InvWarehouseWhereUniqueInput!, $data: InvWarehouseUpdateInput!) {
+  updateOneInvWarehouse(where: $where, data: $data) {
+    ...InvWarehouse
+  }
+}
+
+mutation deleteOneInvWarehouse($where: InvWarehouseWhereUniqueInput!) {
+  deleteOneInvWarehouse(where: $where) {
+    ...InvWarehouse
+  }
+}
+
+mutation updateManyInvWarehouse($where: InvWarehouseWhereInput, $data: InvWarehouseUpdateManyMutationInput!) {
+  updateManyInvWarehouse(where: $where, data: $data) {
+    count
+  }
+}

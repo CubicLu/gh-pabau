@@ -1,0 +1,38 @@
+fragment ClasstypeMasterFields on ClasstypeMaster {
+  ctype_id
+  ctype_name
+  ctype_compid
+  ctype_date
+  ctype_color
+  ctype_description
+  payment_option_disabled
+  credit_option_disabled
+}
+
+fragment ClasstypeMaster on ClasstypeMaster {
+  ...ClasstypeMasterFields
+}
+
+mutation createOneClasstypeMaster($data: ClasstypeMasterCreateInput!) {
+  createOneClasstypeMaster(data: $data) {
+    ...ClasstypeMaster
+  }
+}
+
+mutation updateOneClasstypeMaster($where: ClasstypeMasterWhereUniqueInput!, $data: ClasstypeMasterUpdateInput!) {
+  updateOneClasstypeMaster(where: $where, data: $data) {
+    ...ClasstypeMaster
+  }
+}
+
+mutation deleteOneClasstypeMaster($where: ClasstypeMasterWhereUniqueInput!) {
+  deleteOneClasstypeMaster(where: $where) {
+    ...ClasstypeMaster
+  }
+}
+
+mutation updateManyClasstypeMaster($where: ClasstypeMasterWhereInput, $data: ClasstypeMasterUpdateManyMutationInput!) {
+  updateManyClasstypeMaster(where: $where, data: $data) {
+    count
+  }
+}

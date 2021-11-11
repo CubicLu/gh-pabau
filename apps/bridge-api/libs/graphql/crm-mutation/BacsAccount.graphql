@@ -1,0 +1,37 @@
+fragment BacsAccountFields on BacsAccount {
+  id
+  bank_tag
+  comp_id
+  branch_name
+  account_holder
+  account_no
+  sort_code
+}
+
+fragment BacsAccount on BacsAccount {
+  ...BacsAccountFields
+}
+
+mutation createOneBacsAccount($data: BacsAccountCreateInput!) {
+  createOneBacsAccount(data: $data) {
+    ...BacsAccount
+  }
+}
+
+mutation updateOneBacsAccount($where: BacsAccountWhereUniqueInput!, $data: BacsAccountUpdateInput!) {
+  updateOneBacsAccount(where: $where, data: $data) {
+    ...BacsAccount
+  }
+}
+
+mutation deleteOneBacsAccount($where: BacsAccountWhereUniqueInput!) {
+  deleteOneBacsAccount(where: $where) {
+    ...BacsAccount
+  }
+}
+
+mutation updateManyBacsAccount($where: BacsAccountWhereInput, $data: BacsAccountUpdateManyMutationInput!) {
+  updateManyBacsAccount(where: $where, data: $data) {
+    count
+  }
+}

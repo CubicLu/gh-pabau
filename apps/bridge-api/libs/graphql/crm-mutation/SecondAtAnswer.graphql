@@ -1,0 +1,33 @@
+fragment SecondAtAnswerFields on SecondAtAnswer {
+  id
+  question_id
+  name
+}
+
+fragment SecondAtAnswer on SecondAtAnswer {
+  ...SecondAtAnswerFields
+}
+
+mutation createOneSecondAtAnswer($data: SecondAtAnswerCreateInput!) {
+  createOneSecondAtAnswer(data: $data) {
+    ...SecondAtAnswer
+  }
+}
+
+mutation updateOneSecondAtAnswer($where: SecondAtAnswerWhereUniqueInput!, $data: SecondAtAnswerUpdateInput!) {
+  updateOneSecondAtAnswer(where: $where, data: $data) {
+    ...SecondAtAnswer
+  }
+}
+
+mutation deleteOneSecondAtAnswer($where: SecondAtAnswerWhereUniqueInput!) {
+  deleteOneSecondAtAnswer(where: $where) {
+    ...SecondAtAnswer
+  }
+}
+
+mutation updateManySecondAtAnswer($where: SecondAtAnswerWhereInput, $data: SecondAtAnswerUpdateManyMutationInput!) {
+  updateManySecondAtAnswer(where: $where, data: $data) {
+    count
+  }
+}

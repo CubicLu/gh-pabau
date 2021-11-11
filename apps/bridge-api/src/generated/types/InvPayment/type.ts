@@ -43,7 +43,7 @@ export const InvPayment = objectType({
         return root.CmContact
       },
     })
-    t.field('User', {
+    t.nullable.field('User', {
       type: 'User',
       resolve(root: any) {
         return root.User

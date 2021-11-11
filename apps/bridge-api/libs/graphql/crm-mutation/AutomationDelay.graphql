@@ -1,0 +1,38 @@
+fragment AutomationDelayFields on AutomationDelay {
+  id
+  action_rows
+  data_array
+  code
+  company
+  delay
+  date_queued
+  appointment_id
+}
+
+fragment AutomationDelay on AutomationDelay {
+  ...AutomationDelayFields
+}
+
+mutation createOneAutomationDelay($data: AutomationDelayCreateInput!) {
+  createOneAutomationDelay(data: $data) {
+    ...AutomationDelay
+  }
+}
+
+mutation updateOneAutomationDelay($where: AutomationDelayWhereUniqueInput!, $data: AutomationDelayUpdateInput!) {
+  updateOneAutomationDelay(where: $where, data: $data) {
+    ...AutomationDelay
+  }
+}
+
+mutation deleteOneAutomationDelay($where: AutomationDelayWhereUniqueInput!) {
+  deleteOneAutomationDelay(where: $where) {
+    ...AutomationDelay
+  }
+}
+
+mutation updateManyAutomationDelay($where: AutomationDelayWhereInput, $data: AutomationDelayUpdateManyMutationInput!) {
+  updateManyAutomationDelay(where: $where, data: $data) {
+    count
+  }
+}

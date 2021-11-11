@@ -82,32 +82,60 @@ export const CompanyService = objectType({
         return root.ServiceCategory
       },
     })
-    t.list.field('ServiceUserPrice', {
-      type: 'ServiceUserPrice',
+    t.list.field('SocialSurveyFeedback', {
+      type: 'SocialSurveyFeedback',
       args: {
-        where: 'ServiceUserPriceWhereInput',
-        orderBy: 'ServiceUserPriceOrderByWithRelationInput',
-        cursor: 'ServiceUserPriceWhereUniqueInput',
+        where: 'SocialSurveyFeedbackWhereInput',
+        orderBy: 'SocialSurveyFeedbackOrderByWithRelationInput',
+        cursor: 'SocialSurveyFeedbackWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ServiceUserPriceScalarFieldEnum',
+        distinct: 'SocialSurveyFeedbackScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ServiceUserPrice
+        return root.SocialSurveyFeedback
       },
     })
-    t.list.field('ServiceLocationPrice', {
-      type: 'ServiceLocationPrice',
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
       args: {
-        where: 'ServiceLocationPriceWhereInput',
-        orderBy: 'ServiceLocationPriceOrderByWithRelationInput',
-        cursor: 'ServiceLocationPriceWhereUniqueInput',
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ServiceLocationPriceScalarFieldEnum',
+        distinct: 'ServiceUserTierScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ServiceLocationPrice
+        return root.ServiceUserTier
+      },
+    })
+    t.list.field('ServiceLocationTier', {
+      type: 'ServiceLocationTier',
+      args: {
+        where: 'ServiceLocationTierWhereInput',
+        orderBy: 'ServiceLocationTierOrderByWithRelationInput',
+        cursor: 'ServiceLocationTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceLocationTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceLocationTier
+      },
+    })
+    t.list.field('Booking', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByWithRelationInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Booking
       },
     })
     t.nullable.field('_count', {

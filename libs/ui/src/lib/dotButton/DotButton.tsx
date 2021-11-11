@@ -21,6 +21,7 @@ interface P {
   ignoreOption?: IgnoreOption
   popoverVisible?: boolean
   setPopoverVisible?(x): void
+  onMenuClick?: (data) => void
   customClass?: string
 }
 
@@ -42,7 +43,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
         <div
           className={styles.dotList}
           key={`three-dot-menu-content-${key}`}
-          onClick={() => onClick?.()}
+          onClick={() => onClick?.() || props?.onMenuClick?.(key)}
         >
           {icon}
           <p>{label}</p>
@@ -54,7 +55,7 @@ export const DotButton: FC<P> = ({ ...props }) => {
       <div
         className={styles.dotList}
         key={`three-dot-menu-content-${key}`}
-        onClick={() => onClick?.()}
+        onClick={() => onClick?.() || props?.onMenuClick?.(key)}
       >
         {icon}
         <p>{label}</p>
@@ -93,11 +94,13 @@ export const DotButton: FC<P> = ({ ...props }) => {
             content={prepareContent()}
             placement="leftTop"
             trigger="click"
+            visible={popoverVisible}
           >
             <Button
               className={styles.btnCircle}
               shape="circle"
               icon={<MoreOutlined />}
+              onClick={() => setPopoverVisible?.(!popoverVisible)}
             />
           </Popover>
         )

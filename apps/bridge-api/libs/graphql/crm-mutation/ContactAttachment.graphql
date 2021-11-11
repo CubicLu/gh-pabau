@@ -1,0 +1,69 @@
+fragment ContactAttachmentFields on ContactAttachment {
+  id
+  linkref
+  contact_id
+  company_id
+  date
+  attach_name
+  user_id
+  attachment_type
+  connect_public
+  website_public
+  attachment_title
+  cloud
+  custom_id
+  original_path
+  imported
+  booking_id
+  photo_type
+  attachment_size
+  broken
+  broken_check
+  old_linkref
+  in_folder
+  custom_contact_id
+  album_id
+  medical_form_id
+  tags
+  medical_uniqid
+}
+
+fragment ContactAttachment on ContactAttachment {
+  ...ContactAttachmentFields
+  Contact {
+    ...CmContactFields
+  }
+  Practitioner {
+    ...UserFields
+  }
+  Album {
+    ...PhotoAlbumFields
+  }
+}
+
+mutation createOneContactAttachment($data: ContactAttachmentCreateInput!) {
+  createOneContactAttachment(data: $data) {
+    ...ContactAttachment
+  }
+}
+
+mutation updateOneContactAttachment($where: ContactAttachmentWhereUniqueInput!, $data: ContactAttachmentUpdateInput!) {
+  updateOneContactAttachment(where: $where, data: $data) {
+    ...ContactAttachment
+  }
+}
+
+mutation deleteOneContactAttachment($where: ContactAttachmentWhereUniqueInput!) {
+  deleteOneContactAttachment(where: $where) {
+    ...ContactAttachment
+  }
+}
+
+mutation updateManyContactAttachment(
+  $where: ContactAttachmentWhereInput
+  $data: ContactAttachmentUpdateManyMutationInput!
+) {
+  updateManyContactAttachment(where: $where, data: $data) {
+    count
+  }
+}

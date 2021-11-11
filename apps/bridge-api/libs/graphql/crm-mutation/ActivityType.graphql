@@ -1,0 +1,39 @@
+fragment ActivityTypeFields on ActivityType {
+  id
+  name
+  action
+  badge
+  order
+  company_id
+}
+
+fragment ActivityType on ActivityType {
+  ...ActivityTypeFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneActivityType($data: ActivityTypeCreateInput!) {
+  createOneActivityType(data: $data) {
+    ...ActivityType
+  }
+}
+
+mutation updateOneActivityType($where: ActivityTypeWhereUniqueInput!, $data: ActivityTypeUpdateInput!) {
+  updateOneActivityType(where: $where, data: $data) {
+    ...ActivityType
+  }
+}
+
+mutation deleteOneActivityType($where: ActivityTypeWhereUniqueInput!) {
+  deleteOneActivityType(where: $where) {
+    ...ActivityType
+  }
+}
+
+mutation updateManyActivityType($where: ActivityTypeWhereInput, $data: ActivityTypeUpdateManyMutationInput!) {
+  updateManyActivityType(where: $where, data: $data) {
+    count
+  }
+}

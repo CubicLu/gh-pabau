@@ -1,0 +1,50 @@
+fragment IssuingCompanyFields on IssuingCompany {
+  id
+  company_id
+  is_active
+  name
+  abbreviation
+  address
+  address2
+  city
+  postcode
+  website
+  email
+  phone
+  vat_registered
+  invoice_template_id
+  custom_id
+  invoice_prefix
+  invoice_starting_number
+}
+
+fragment IssuingCompany on IssuingCompany {
+  ...IssuingCompanyFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneIssuingCompany($data: IssuingCompanyCreateInput!) {
+  createOneIssuingCompany(data: $data) {
+    ...IssuingCompany
+  }
+}
+
+mutation updateOneIssuingCompany($where: IssuingCompanyWhereUniqueInput!, $data: IssuingCompanyUpdateInput!) {
+  updateOneIssuingCompany(where: $where, data: $data) {
+    ...IssuingCompany
+  }
+}
+
+mutation deleteOneIssuingCompany($where: IssuingCompanyWhereUniqueInput!) {
+  deleteOneIssuingCompany(where: $where) {
+    ...IssuingCompany
+  }
+}
+
+mutation updateManyIssuingCompany($where: IssuingCompanyWhereInput, $data: IssuingCompanyUpdateManyMutationInput!) {
+  updateManyIssuingCompany(where: $where, data: $data) {
+    count
+  }
+}

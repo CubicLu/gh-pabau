@@ -1,0 +1,66 @@
+fragment InsurerContractFields on InsurerContract {
+  id
+  name
+  insurer_id
+  company_id
+  folder_id
+  contract_type
+  active
+  show_bank_details
+  bank_account
+  bank_number
+  sort_code
+  bank_name
+  iban
+  swift
+  vat_number
+  imported
+  private_contract
+  employee_id
+  full_address
+  registered_company_address
+  default_address_to
+  invoice_template_id
+  location_id
+  last_update
+  mp_rule_name
+  rule_type
+  second_service
+  further_service
+  action_tax_id
+  custom_id_template
+  invoice_prefix
+  invoice_starting_num
+  custom_id
+}
+
+fragment InsurerContract on InsurerContract {
+  ...InsurerContractFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneInsurerContract($data: InsurerContractCreateInput!) {
+  createOneInsurerContract(data: $data) {
+    ...InsurerContract
+  }
+}
+
+mutation updateOneInsurerContract($where: InsurerContractWhereUniqueInput!, $data: InsurerContractUpdateInput!) {
+  updateOneInsurerContract(where: $where, data: $data) {
+    ...InsurerContract
+  }
+}
+
+mutation deleteOneInsurerContract($where: InsurerContractWhereUniqueInput!) {
+  deleteOneInsurerContract(where: $where) {
+    ...InsurerContract
+  }
+}
+
+mutation updateManyInsurerContract($where: InsurerContractWhereInput, $data: InsurerContractUpdateManyMutationInput!) {
+  updateManyInsurerContract(where: $where, data: $data) {
+    count
+  }
+}

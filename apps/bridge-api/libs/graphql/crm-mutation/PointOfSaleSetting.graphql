@@ -1,0 +1,84 @@
+fragment PointOfSaleSettingFields on PointOfSaleSetting {
+  id
+  company_id
+  disable_service
+  disable_products
+  disable_packages
+  disable_giftcards
+  disable_account
+  disable_price_override
+  print_mode
+  disable_discount
+  email_receipt_text
+  theme_col
+  bank_account
+  bank_number
+  sort_code
+  bank_name
+  iban
+  swift
+  cashup_settings
+  default_payment_type
+  disable_loyalty
+  email_receipt_template
+  enable_bank_details
+  vat
+  enable_biller_settings
+  display_taxes
+  use_pabau_id
+  starting_invoice_number
+  enable_next_appointment
+  show_paid_label
+  paid_label
+  display_quantity
+  display_unit_cost
+  logo_position
+  force_discount_reason
+  automatic_booking
+  gift_msg_template_id
+  gift_sms_template_id
+  package_use_by_date
+  locked
+  cron_day
+  lock_sale_date
+  stock_mode
+  inv_template
+  lock_invoice_edit
+}
+
+fragment PointOfSaleSetting on PointOfSaleSetting {
+  ...PointOfSaleSettingFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOnePointOfSaleSetting($data: PointOfSaleSettingCreateInput!) {
+  createOnePointOfSaleSetting(data: $data) {
+    ...PointOfSaleSetting
+  }
+}
+
+mutation updateOnePointOfSaleSetting(
+  $where: PointOfSaleSettingWhereUniqueInput!
+  $data: PointOfSaleSettingUpdateInput!
+) {
+  updateOnePointOfSaleSetting(where: $where, data: $data) {
+    ...PointOfSaleSetting
+  }
+}
+
+mutation deleteOnePointOfSaleSetting($where: PointOfSaleSettingWhereUniqueInput!) {
+  deleteOnePointOfSaleSetting(where: $where) {
+    ...PointOfSaleSetting
+  }
+}
+
+mutation updateManyPointOfSaleSetting(
+  $where: PointOfSaleSettingWhereInput
+  $data: PointOfSaleSettingUpdateManyMutationInput!
+) {
+  updateManyPointOfSaleSetting(where: $where, data: $data) {
+    count
+  }
+}

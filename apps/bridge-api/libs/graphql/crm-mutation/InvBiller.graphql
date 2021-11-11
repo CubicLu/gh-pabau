@@ -1,0 +1,62 @@
+fragment InvBillerFields on InvBiller {
+  id
+  name
+  company
+  cui
+  reg
+  cnp
+  serie
+  account_no
+  bank
+  address
+  city
+  state
+  postal_code
+  country
+  phone
+  email
+  logo
+  invoice_footer
+  company_id
+  uid
+  created_date
+  modified_date
+  custom_id
+  imported
+  qualification
+  is_disabled
+}
+
+fragment InvBiller on InvBiller {
+  ...InvBillerFields
+  User {
+    ...UserFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneInvBiller($data: InvBillerCreateInput!) {
+  createOneInvBiller(data: $data) {
+    ...InvBiller
+  }
+}
+
+mutation updateOneInvBiller($where: InvBillerWhereUniqueInput!, $data: InvBillerUpdateInput!) {
+  updateOneInvBiller(where: $where, data: $data) {
+    ...InvBiller
+  }
+}
+
+mutation deleteOneInvBiller($where: InvBillerWhereUniqueInput!) {
+  deleteOneInvBiller(where: $where) {
+    ...InvBiller
+  }
+}
+
+mutation updateManyInvBiller($where: InvBillerWhereInput, $data: InvBillerUpdateManyMutationInput!) {
+  updateManyInvBiller(where: $where, data: $data) {
+    count
+  }
+}

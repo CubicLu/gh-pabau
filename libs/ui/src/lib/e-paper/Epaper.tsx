@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import dynamic from 'next/dynamic'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 import styles from './Epaper.module.less'
 
 export interface EPaperProps {
@@ -26,6 +27,7 @@ export const Epaper: FC<EPaperProps> = ({
   onSetNumPages,
   onDocumentLoadSuccess,
 }) => {
+  const { t } = useTranslation('common')
   return (
     <div className={styles.ePaper}>
       {(pdfURL || images?.length) && (
@@ -33,7 +35,7 @@ export const Epaper: FC<EPaperProps> = ({
           <div className={styles.ePaperHeader}>
             <span className={styles.ePaperTitle}>{title}</span>
             <div className={styles.ePaperPage}>
-              <span>Page</span>
+              <span>{t('ui.epaper.page')}</span>
               <div className={styles.ePaperPageNumber}>
                 <span>{pageNumber}</span>
               </div>
@@ -45,7 +47,7 @@ export const Epaper: FC<EPaperProps> = ({
                 className={styles.navigation}
               >
                 <LeftOutlined className={styles.prevPage} />
-                Prev Page
+                {t('ui.epaper.prevpage')}
               </span>
               <span
                 onClick={() =>
@@ -53,7 +55,7 @@ export const Epaper: FC<EPaperProps> = ({
                 }
                 className={styles.navigation}
               >
-                Next Page
+                {t('ui.epaper.nextpage')}
                 <RightOutlined className={styles.nextPage} />
               </span>
             </div>

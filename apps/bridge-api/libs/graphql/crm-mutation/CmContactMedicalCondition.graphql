@@ -1,0 +1,51 @@
+fragment CmContactMedicalConditionFields on CmContactMedicalCondition {
+  id
+  company_id
+  contact_id
+  medical_condition_id
+  medical_record_id
+  is_active
+}
+
+fragment CmContactMedicalCondition on CmContactMedicalCondition {
+  ...CmContactMedicalConditionFields
+  CmContact {
+    ...CmContactFields
+  }
+  Company {
+    ...CompanyFields
+  }
+  MedicalCondition {
+    ...MedicalConditionFields
+  }
+}
+
+mutation createOneCmContactMedicalCondition($data: CmContactMedicalConditionCreateInput!) {
+  createOneCmContactMedicalCondition(data: $data) {
+    ...CmContactMedicalCondition
+  }
+}
+
+mutation updateOneCmContactMedicalCondition(
+  $where: CmContactMedicalConditionWhereUniqueInput!
+  $data: CmContactMedicalConditionUpdateInput!
+) {
+  updateOneCmContactMedicalCondition(where: $where, data: $data) {
+    ...CmContactMedicalCondition
+  }
+}
+
+mutation deleteOneCmContactMedicalCondition($where: CmContactMedicalConditionWhereUniqueInput!) {
+  deleteOneCmContactMedicalCondition(where: $where) {
+    ...CmContactMedicalCondition
+  }
+}
+
+mutation updateManyCmContactMedicalCondition(
+  $where: CmContactMedicalConditionWhereInput
+  $data: CmContactMedicalConditionUpdateManyMutationInput!
+) {
+  updateManyCmContactMedicalCondition(where: $where, data: $data) {
+    count
+  }
+}

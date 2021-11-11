@@ -1,0 +1,51 @@
+fragment InvTaxRateFields on InvTaxRate {
+  id
+  name
+  rate
+  type
+  company_id
+  user_id
+  created_date
+  modified_date
+  is_active
+  description
+  date_constrained
+  start_date
+  end_date
+  show_on_receipt
+  custom_id
+}
+
+fragment InvTaxRate on InvTaxRate {
+  ...InvTaxRateFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneInvTaxRate($data: InvTaxRateCreateInput!) {
+  createOneInvTaxRate(data: $data) {
+    ...InvTaxRate
+  }
+}
+
+mutation updateOneInvTaxRate($where: InvTaxRateWhereUniqueInput!, $data: InvTaxRateUpdateInput!) {
+  updateOneInvTaxRate(where: $where, data: $data) {
+    ...InvTaxRate
+  }
+}
+
+mutation deleteOneInvTaxRate($where: InvTaxRateWhereUniqueInput!) {
+  deleteOneInvTaxRate(where: $where) {
+    ...InvTaxRate
+  }
+}
+
+mutation updateManyInvTaxRate($where: InvTaxRateWhereInput, $data: InvTaxRateUpdateManyMutationInput!) {
+  updateManyInvTaxRate(where: $where, data: $data) {
+    count
+  }
+}

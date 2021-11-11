@@ -59,6 +59,10 @@ interface ClientsHeaderProps {
   isMobile?: boolean
   loggedUser?: Partial<AuthenticatedUser> & JwtUser
   activityTypeOption?: OptionList[]
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  pipelineData: OptionList[]
+  locationData: OptionList[]
 }
 
 interface UserWithIconProps {
@@ -135,6 +139,10 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     setFilterDataObject,
     userColumns,
     setUserActiveColumn,
+    leadSourceData,
+    leadStageData,
+    pipelineData,
+    locationData,
   }) => {
     const { t } = useTranslationI18()
     const [visible, setVisible] = useState(false)
@@ -537,7 +545,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               className={styles.iconWrapper}
               onClick={() => onEditIconClick(item)}
             >
-              {item.userId === loggedUser.user ? (
+              {item.userId === loggedUser.user || loggedUser.admin ? (
                 <EditOutlined />
               ) : (
                 <div className={styles.strikeWrapper}>
@@ -683,6 +691,10 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             filterData={filterData}
             setFilterDataObject={setFilterDataObject}
             setFilterOption={setFilterOption}
+            leadSourceData={leadSourceData}
+            leadStageData={leadStageData}
+            pipelineData={pipelineData}
+            locationData={locationData}
           />
         </div>
       )

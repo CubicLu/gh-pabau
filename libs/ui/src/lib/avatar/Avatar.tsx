@@ -49,35 +49,21 @@ export const Avatar: FC<AvatarProps> = ({
   const [shortName, setShortName] = useState('')
   const [selectAvatar, setSelectAvatar] = useState(false)
   const [firstName, setFirstName] = useState('')
-  const avatarNameDisplay = name.split(' ')
 
   const bookingBadge = (
     <div className={styles.bookingBadgeContainer}>
       <LaptopOutlined />
     </div>
   )
-  function nameNullValue(val) {
-    return val !== ''
-  }
 
   useEffect(() => {
-    if (avatarNameDisplay[1] === '') {
-      setShortName(
-        avatarNameDisplay
-          .filter((element) => nameNullValue(element))
-          .slice(0, 2)
-          .map((item) => item.charAt(0))
-          .join('')
-      )
-    } else {
-      setShortName(
-        name
-          .toUpperCase()
-          .split(' ', 2)
-          .map((item) => item.charAt(0))
-          .join('')
-      )
-    }
+    setShortName(
+      name
+        .toUpperCase()
+        .split(' ')
+        .map((item) => item.charAt(0))
+        .join('')
+    )
     setFirstName(
       name
         .split(' ')
@@ -94,7 +80,7 @@ export const Avatar: FC<AvatarProps> = ({
     } else if (!checkList?.includes(name)) {
       setSelectAvatar(false)
     }
-  }, [name, checkList, avatarNameDisplay])
+  }, [name, checkList])
 
   return active !== AvatarStatus.booking ? (
     <div className={styles.avatarContainer} style={{ zIndex, marginLeft }}>

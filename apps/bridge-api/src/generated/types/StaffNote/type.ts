@@ -15,7 +15,7 @@ export const StaffNote = objectType({
     t.string('Training')
     t.string('Volunteer')
     t.string('Prescription')
-    t.field('CmStaffGeneral', {
+    t.nullable.field('CmStaffGeneral', {
       type: 'CmStaffGeneral',
       resolve(root: any) {
         return root.CmStaffGeneral

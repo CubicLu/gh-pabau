@@ -1,0 +1,37 @@
+fragment CmAccountNoteFields on CmAccountNote {
+  ID
+  OwnerID
+  AccountID
+  Note
+  Status
+  CreatedDate
+  IpAddress
+}
+
+fragment CmAccountNote on CmAccountNote {
+  ...CmAccountNoteFields
+}
+
+mutation createOneCmAccountNote($data: CmAccountNoteCreateInput!) {
+  createOneCmAccountNote(data: $data) {
+    ...CmAccountNote
+  }
+}
+
+mutation updateOneCmAccountNote($where: CmAccountNoteWhereUniqueInput!, $data: CmAccountNoteUpdateInput!) {
+  updateOneCmAccountNote(where: $where, data: $data) {
+    ...CmAccountNote
+  }
+}
+
+mutation deleteOneCmAccountNote($where: CmAccountNoteWhereUniqueInput!) {
+  deleteOneCmAccountNote(where: $where) {
+    ...CmAccountNote
+  }
+}
+
+mutation updateManyCmAccountNote($where: CmAccountNoteWhereInput, $data: CmAccountNoteUpdateManyMutationInput!) {
+  updateManyCmAccountNote(where: $where, data: $data) {
+    count
+  }
+}

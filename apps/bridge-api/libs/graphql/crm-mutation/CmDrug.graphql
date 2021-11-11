@@ -1,0 +1,56 @@
+fragment CmDrugFields on CmDrug {
+  id
+  name
+  company_id
+  dosage
+  units
+  frequency
+  route
+  comment
+  is_active
+  product_id
+  lot_number
+  expiry_date
+  field_order
+  is_vaccine
+  is_required
+  custom_id
+  max_age
+  min_age
+  nathnac_link
+  travax_link
+}
+
+fragment CmDrug on CmDrug {
+  ...CmDrugFields
+  Company {
+    ...CompanyFields
+  }
+  InvProduct {
+    ...InvProductFields
+  }
+}
+
+mutation createOneCmDrug($data: CmDrugCreateInput!) {
+  createOneCmDrug(data: $data) {
+    ...CmDrug
+  }
+}
+
+mutation updateOneCmDrug($where: CmDrugWhereUniqueInput!, $data: CmDrugUpdateInput!) {
+  updateOneCmDrug(where: $where, data: $data) {
+    ...CmDrug
+  }
+}
+
+mutation deleteOneCmDrug($where: CmDrugWhereUniqueInput!) {
+  deleteOneCmDrug(where: $where) {
+    ...CmDrug
+  }
+}
+
+mutation updateManyCmDrug($where: CmDrugWhereInput, $data: CmDrugUpdateManyMutationInput!) {
+  updateManyCmDrug(where: $where, data: $data) {
+    count
+  }
+}

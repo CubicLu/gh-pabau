@@ -27,6 +27,7 @@ import {
   AvatarUploader,
   ReferredByOption,
   FieldOrderItem,
+  ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -40,6 +41,7 @@ import {
   Tag,
   ConfigProvider,
   Tooltip,
+  Skeleton,
 } from 'antd'
 import {
   RightOutlined,
@@ -57,7 +59,7 @@ import {
   SaveOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useRef } from 'react'
+import React, { FC, useState, useRef, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -96,6 +98,7 @@ import {
   // testList,
 } from './mock'
 import { useRouter } from 'next/router'
+import { MutationFunction } from '@apollo/client'
 
 const { TextArea } = Input
 interface PopoutProps {
@@ -109,31 +112,76 @@ interface PopoutProps {
   title: string
 }
 
-interface ClientNote {
+export interface ClientNote {
   avatar: string
   content: string
   client: string
   date: string
 }
 
+interface StaffDetails {
+  contact?: string
+  avatar?: string
+}
+
+export interface ClientNoteDetails {
+  ID?: number | string
+  content: string
+  date: string
+  User: StaffDetails
+}
+
+export interface ClientAppointmentDetails {
+  title: string
+  date?: number
+  User?: StaffDetails
+}
+
+export interface ClientNotes {
+  notes: ClientNoteDetails[]
+  count: number
+  loading: boolean
+  appointments: ClientAppointmentDetails[]
+}
+
 interface P {
   client: ClientData
+  notes?: ClientNotes
+  medicalHistoryIconStatus?: string
+  getContactDetails?: () => void
+  handleAddNewClientNote?: (e: string) => void
+  handleEditNote?: (id: number | string, e: string) => void
+  handleDeleteNote?: (id: number | string) => void
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
-  activeTab?: string
+  activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
   customFields?: FieldOrderItem[]
   dateFormat?: string
   handleEditAll?: () => void
+  cssClass?: string
+  updatebasicContactMutation?: MutationFunction
+  updateContactCustomMutation?: MutationFunction
+  clientId?: number
+  companyId?: number
+  setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
+  searchRender?: () => JSX.Element
 }
 
 const ClientCardModal: FC<P> = ({
   client,
+  cssClass,
+  notes,
+  medicalHistoryIconStatus,
+  getContactDetails,
+  handleAddNewClientNote,
+  handleEditNote,
+  handleDeleteNote,
   onClose,
   tabs,
-  activeTab,
+  activeTab = 'dashboard',
   children,
   onTabChanged,
   referredByOptions,
@@ -141,9 +189,14 @@ const ClientCardModal: FC<P> = ({
   customFields,
   dateFormat,
   handleEditAll,
+  updatebasicContactMutation,
+  updateContactCustomMutation,
+  clientId,
+  companyId,
+  setBasicContactData,
+  searchRender,
 }) => {
   const { t } = useTranslation('common')
-  const { push } = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [search, setSearch] = useState(false)
@@ -241,6 +294,12 @@ const ClientCardModal: FC<P> = ({
   const [isSubMenu, setIsSubMenu] = useState(false)
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
+  useEffect(() => {
+    if (loading) {
+      setSearch(false)
+    }
+  }, [loading])
+
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
@@ -255,6 +314,7 @@ const ClientCardModal: FC<P> = ({
       ]
       setNoteItems(items)
       setNote('')
+      handleAddNewClientNote?.(note)
     }
   }
 
@@ -265,7 +325,6 @@ const ClientCardModal: FC<P> = ({
 
   const onBackToMainMenu = () => {
     //TODO: review this. Prefer <Link />
-    push('..')
   }
 
   const menuItems = [
@@ -552,7 +611,7 @@ const ClientCardModal: FC<P> = ({
     >
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
-          {alertItems.map((item, index) => (
+          {alertItems?.map((item, index) => (
             <div className={styles.staffAlert} key={`staff-alert-${index}`}>
               {item}
             </div>
@@ -596,7 +655,7 @@ const ClientCardModal: FC<P> = ({
             className={styles.clientNotesContainer}
             ref={clientNotePopoverRef}
           >
-            {noteItems.map((item, index) => (
+            {noteItems?.map((item, index) => (
               <div key={`client-${index}`} className={styles.clientNote}>
                 {index !== currentClientNote && (
                   <div className={styles.clientNoteItem}>
@@ -778,6 +837,8 @@ const ClientCardModal: FC<P> = ({
     </div>
   )
 
+  const haveSubTabs = ['financial', 'gift-vouchers']
+
   //TODO: remove the Modal from top level (it'll break css:( )
   return (
     <Modal
@@ -835,7 +896,17 @@ const ClientCardModal: FC<P> = ({
                 className={styles.clientFullName}
                 onClick={() => !search && setSearch(true)}
               >
-                {client?.fullName}
+                {loading ? (
+                  <Skeleton
+                    className={styles.skeletonName}
+                    paragraph={false}
+                    active
+                  />
+                ) : !search && client?.fullName ? (
+                  client?.fullName
+                ) : (
+                  search && (searchRender ? searchRender() : <Search />)
+                )}
               </div>
             </div>
             <div className={styles.clientCardHeaderOps}>
@@ -873,67 +944,15 @@ const ClientCardModal: FC<P> = ({
                 </div>
               )}
               {!isMobile && (
-                <>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Medical history'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={medicalHistoryPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Medical history">
-                        <Badge
-                          count={<CheckCircleFilled />}
-                          offset={[0, 18]}
-                          style={{ color: '#65cd98' }}
-                        >
-                          <MedicalHistory className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Notes'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientNotesPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Notes">
-                        <Badge
-                          count={noteItems.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Note className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                  <div className={styles.clientCardHeaderOp}>
-                    <Popover
-                      title={'Staff alerts'}
-                      placement="bottomRight"
-                      trigger="click"
-                      content={clientAlertsPopover}
-                      overlayClassName={styles.clientCardHeaderPopover}
-                    >
-                      <Tooltip title="Staff alerts" placement="bottomRight">
-                        <Badge
-                          count={alertItems.length}
-                          overflowCount={9}
-                          size="small"
-                          style={{ backgroundColor: 'var(--primary-color)' }}
-                        >
-                          <Alert className={styles.headerOpsIcon} />
-                        </Badge>
-                      </Tooltip>
-                    </Popover>
-                  </div>
-                </>
+                <ClientHeaderDetails
+                  notes={notes}
+                  medicalHistoryIconStatus={medicalHistoryIconStatus}
+                  getContactDetails={getContactDetails}
+                  client={client}
+                  handleAddNewClientNote={handleAddNewClientNote}
+                  handleEditNote={handleEditNote}
+                  handleDeleteNote={handleDeleteNote}
+                />
               )}
             </div>
           </div>
@@ -950,6 +969,11 @@ const ClientCardModal: FC<P> = ({
                 customFields={customFields}
                 dateFormat={dateFormat}
                 handleEditAll={handleEditAll}
+                updatebasicContactMutation={updatebasicContactMutation}
+                updateContactCustomMutation={updateContactCustomMutation}
+                clientId={clientId}
+                companyId={companyId}
+                setBasicContactData={setBasicContactData}
               />
             </div>
             <div className={styles.clientCardContent}>
@@ -961,7 +985,13 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div>
+                <div
+                  className={
+                    haveSubTabs.includes(activeTab)
+                      ? styles.customTabs
+                      : styles.tab
+                  }
+                >
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}

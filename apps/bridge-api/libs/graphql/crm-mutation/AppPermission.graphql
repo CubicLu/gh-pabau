@@ -1,0 +1,33 @@
+fragment AppPermissionFields on AppPermission {
+  id
+  company
+  appid
+}
+
+fragment AppPermission on AppPermission {
+  ...AppPermissionFields
+}
+
+mutation createOneAppPermission($data: AppPermissionCreateInput!) {
+  createOneAppPermission(data: $data) {
+    ...AppPermission
+  }
+}
+
+mutation updateOneAppPermission($where: AppPermissionWhereUniqueInput!, $data: AppPermissionUpdateInput!) {
+  updateOneAppPermission(where: $where, data: $data) {
+    ...AppPermission
+  }
+}
+
+mutation deleteOneAppPermission($where: AppPermissionWhereUniqueInput!) {
+  deleteOneAppPermission(where: $where) {
+    ...AppPermission
+  }
+}
+
+mutation updateManyAppPermission($where: AppPermissionWhereInput, $data: AppPermissionUpdateManyMutationInput!) {
+  updateManyAppPermission(where: $where, data: $data) {
+    count
+  }
+}

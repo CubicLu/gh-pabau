@@ -1,0 +1,46 @@
+fragment ServiceLocationTierFields on ServiceLocationTier {
+  id
+  location_id
+  service_id
+  price
+}
+
+fragment ServiceLocationTier on ServiceLocationTier {
+  ...ServiceLocationTierFields
+  CompanyService {
+    ...CompanyServiceFields
+  }
+  Location {
+    ...CompanyBranchFields
+  }
+}
+
+mutation createOneServiceLocationTier($data: ServiceLocationTierCreateInput!) {
+  createOneServiceLocationTier(data: $data) {
+    ...ServiceLocationTier
+  }
+}
+
+mutation updateOneServiceLocationTier(
+  $where: ServiceLocationTierWhereUniqueInput!
+  $data: ServiceLocationTierUpdateInput!
+) {
+  updateOneServiceLocationTier(where: $where, data: $data) {
+    ...ServiceLocationTier
+  }
+}
+
+mutation deleteOneServiceLocationTier($where: ServiceLocationTierWhereUniqueInput!) {
+  deleteOneServiceLocationTier(where: $where) {
+    ...ServiceLocationTier
+  }
+}
+
+mutation updateManyServiceLocationTier(
+  $where: ServiceLocationTierWhereInput
+  $data: ServiceLocationTierUpdateManyMutationInput!
+) {
+  updateManyServiceLocationTier(where: $where, data: $data) {
+    count
+  }
+}

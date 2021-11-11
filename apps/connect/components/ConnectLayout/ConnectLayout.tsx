@@ -11,6 +11,7 @@ const { Content } = AntLayout
 
 interface ConnectLayoutProps {
   onChangeLanguage?: (lang) => void
+  clientContext?
 }
 
 const ConnectLayout: FC<ConnectLayoutProps> = ({

@@ -1,0 +1,49 @@
+fragment CountryFields on Country {
+  country_id
+  CountryCode
+  country_name
+  Currency
+  Continent
+  phone_prefix
+  sms_base_rate
+  date_format
+  tax_name
+  sms_multiplier
+  general_information
+  vaccine_recommendations
+  other_risks
+  outbreaks
+  malaria
+  nathnac_url
+  travax_url
+  gmaps_url
+  custom_id
+}
+
+fragment Country on Country {
+  ...CountryFields
+}
+
+mutation createOneCountry($data: CountryCreateInput!) {
+  createOneCountry(data: $data) {
+    ...Country
+  }
+}
+
+mutation updateOneCountry($where: CountryWhereUniqueInput!, $data: CountryUpdateInput!) {
+  updateOneCountry(where: $where, data: $data) {
+    ...Country
+  }
+}
+
+mutation deleteOneCountry($where: CountryWhereUniqueInput!) {
+  deleteOneCountry(where: $where) {
+    ...Country
+  }
+}
+
+mutation updateManyCountry($where: CountryWhereInput, $data: CountryUpdateManyMutationInput!) {
+  updateManyCountry(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,41 @@
+fragment CommunicationContentFields on CommunicationContent {
+  id
+  company_id
+  hash
+  subject
+  body
+}
+
+fragment CommunicationContent on CommunicationContent {
+  ...CommunicationContentFields
+}
+
+mutation createOneCommunicationContent($data: CommunicationContentCreateInput!) {
+  createOneCommunicationContent(data: $data) {
+    ...CommunicationContent
+  }
+}
+
+mutation updateOneCommunicationContent(
+  $where: CommunicationContentWhereUniqueInput!
+  $data: CommunicationContentUpdateInput!
+) {
+  updateOneCommunicationContent(where: $where, data: $data) {
+    ...CommunicationContent
+  }
+}
+
+mutation deleteOneCommunicationContent($where: CommunicationContentWhereUniqueInput!) {
+  deleteOneCommunicationContent(where: $where) {
+    ...CommunicationContent
+  }
+}
+
+mutation updateManyCommunicationContent(
+  $where: CommunicationContentWhereInput
+  $data: CommunicationContentUpdateManyMutationInput!
+) {
+  updateManyCommunicationContent(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,48 @@
+fragment CmLeadCustomFieldOrderFields on CmLeadCustomFieldOrder {
+  id
+  field_id
+  field_name
+  company_id
+  order_id
+  is_more
+}
+
+fragment CmLeadCustomFieldOrder on CmLeadCustomFieldOrder {
+  ...CmLeadCustomFieldOrderFields
+  Company {
+    ...CompanyFields
+  }
+  CmLeadCustomField {
+    ...CmLeadCustomFieldFields
+  }
+}
+
+mutation createOneCmLeadCustomFieldOrder($data: CmLeadCustomFieldOrderCreateInput!) {
+  createOneCmLeadCustomFieldOrder(data: $data) {
+    ...CmLeadCustomFieldOrder
+  }
+}
+
+mutation updateOneCmLeadCustomFieldOrder(
+  $where: CmLeadCustomFieldOrderWhereUniqueInput!
+  $data: CmLeadCustomFieldOrderUpdateInput!
+) {
+  updateOneCmLeadCustomFieldOrder(where: $where, data: $data) {
+    ...CmLeadCustomFieldOrder
+  }
+}
+
+mutation deleteOneCmLeadCustomFieldOrder($where: CmLeadCustomFieldOrderWhereUniqueInput!) {
+  deleteOneCmLeadCustomFieldOrder(where: $where) {
+    ...CmLeadCustomFieldOrder
+  }
+}
+
+mutation updateManyCmLeadCustomFieldOrder(
+  $where: CmLeadCustomFieldOrderWhereInput
+  $data: CmLeadCustomFieldOrderUpdateManyMutationInput!
+) {
+  updateManyCmLeadCustomFieldOrder(where: $where, data: $data) {
+    count
+  }
+}

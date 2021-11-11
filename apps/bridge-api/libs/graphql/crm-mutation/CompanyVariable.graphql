@@ -1,0 +1,35 @@
+fragment CompanyVariableFields on CompanyVariable {
+  id
+  company_id
+  key
+  value
+  date_created
+}
+
+fragment CompanyVariable on CompanyVariable {
+  ...CompanyVariableFields
+}
+
+mutation createOneCompanyVariable($data: CompanyVariableCreateInput!) {
+  createOneCompanyVariable(data: $data) {
+    ...CompanyVariable
+  }
+}
+
+mutation updateOneCompanyVariable($where: CompanyVariableWhereUniqueInput!, $data: CompanyVariableUpdateInput!) {
+  updateOneCompanyVariable(where: $where, data: $data) {
+    ...CompanyVariable
+  }
+}
+
+mutation deleteOneCompanyVariable($where: CompanyVariableWhereUniqueInput!) {
+  deleteOneCompanyVariable(where: $where) {
+    ...CompanyVariable
+  }
+}
+
+mutation updateManyCompanyVariable($where: CompanyVariableWhereInput, $data: CompanyVariableUpdateManyMutationInput!) {
+  updateManyCompanyVariable(where: $where, data: $data) {
+    count
+  }
+}

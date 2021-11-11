@@ -1,0 +1,42 @@
+fragment HealthcodeInsurerFields on HealthcodeInsurer {
+  id
+  company_id
+  code
+  name
+  edi
+  me
+}
+
+fragment HealthcodeInsurer on HealthcodeInsurer {
+  ...HealthcodeInsurerFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneHealthcodeInsurer($data: HealthcodeInsurerCreateInput!) {
+  createOneHealthcodeInsurer(data: $data) {
+    ...HealthcodeInsurer
+  }
+}
+
+mutation updateOneHealthcodeInsurer($where: HealthcodeInsurerWhereUniqueInput!, $data: HealthcodeInsurerUpdateInput!) {
+  updateOneHealthcodeInsurer(where: $where, data: $data) {
+    ...HealthcodeInsurer
+  }
+}
+
+mutation deleteOneHealthcodeInsurer($where: HealthcodeInsurerWhereUniqueInput!) {
+  deleteOneHealthcodeInsurer(where: $where) {
+    ...HealthcodeInsurer
+  }
+}
+
+mutation updateManyHealthcodeInsurer(
+  $where: HealthcodeInsurerWhereInput
+  $data: HealthcodeInsurerUpdateManyMutationInput!
+) {
+  updateManyHealthcodeInsurer(where: $where, data: $data) {
+    count
+  }
+}

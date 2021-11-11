@@ -1,0 +1,16 @@
+query getActiveServiceCategories {
+  ServiceCategories: findManyServiceCategory(where: {InvCategory: {disabled: {equals: false}}}) {
+    id
+    name
+    Services: CompanyService(where: {availability: {notIn: SELL}, Product: {is_active: {equals: 1}}}) {
+      id
+      name
+    }
+  }
+}
+
+query getStaffServices($userID: Int!) {
+  getStaffServices(staffId: $userID) {
+    id
+  }
+}

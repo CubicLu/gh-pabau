@@ -623,6 +623,20 @@ export const User = objectType({
         return root.PasswordResetAuth
       },
     })
+    t.list.field('ServiceUserTier', {
+      type: 'ServiceUserTier',
+      args: {
+        where: 'ServiceUserTierWhereInput',
+        orderBy: 'ServiceUserTierOrderByWithRelationInput',
+        cursor: 'ServiceUserTierWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceUserTierScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceUserTier
+      },
+    })
     t.list.field('ActivityUserState', {
       type: 'ActivityUserState',
       args: {
@@ -651,18 +665,46 @@ export const User = objectType({
         return root.ActivityUserFilter
       },
     })
-    t.list.field('ServiceUserPrice', {
-      type: 'ServiceUserPrice',
+    t.list.field('MedicalForm', {
+      type: 'MedicalForm',
       args: {
-        where: 'ServiceUserPriceWhereInput',
-        orderBy: 'ServiceUserPriceOrderByWithRelationInput',
-        cursor: 'ServiceUserPriceWhereUniqueInput',
+        where: 'MedicalFormWhereInput',
+        orderBy: 'MedicalFormOrderByWithRelationInput',
+        cursor: 'MedicalFormWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'ServiceUserPriceScalarFieldEnum',
+        distinct: 'MedicalFormScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.ServiceUserPrice
+        return root.MedicalForm
+      },
+    })
+    t.list.field('CmContact', {
+      type: 'CmContact',
+      args: {
+        where: 'CmContactWhereInput',
+        orderBy: 'CmContactOrderByWithRelationInput',
+        cursor: 'CmContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmContact
+      },
+    })
+    t.list.field('MedicalFormContact', {
+      type: 'MedicalFormContact',
+      args: {
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContact
       },
     })
     t.nullable.field('_count', {

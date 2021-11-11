@@ -1,0 +1,78 @@
+fragment SaleItemFields on SaleItem {
+  id
+  sale_id
+  product_id
+  product_code
+  product_name
+  product_unit
+  tax_rate_id
+  tax
+  quantity
+  unit_price
+  gross_total
+  val_tax
+  company_id
+  uid
+  staff_purchase
+  created_date
+  modified_date
+  custom_id
+  sale_custom_id
+  contact_custom_id
+  product_custom_id
+  Practitioner_id
+  Threatment_id
+  User_id
+  VAT_id
+  LineDiscount
+  imported
+  UnitDiscount
+  discount_reason
+  product_category_id
+  product_category_name
+  product_category_type
+  from_pos
+  tax_total
+  custom_product_name
+  booking_id
+}
+
+fragment SaleItem on SaleItem {
+  ...SaleItemFields
+  Tax {
+    ...TaxFields
+  }
+  Product {
+    ...InvProductFields
+  }
+  InvSale {
+    ...InvSaleFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneSaleItem($data: SaleItemCreateInput!) {
+  createOneSaleItem(data: $data) {
+    ...SaleItem
+  }
+}
+
+mutation updateOneSaleItem($where: SaleItemWhereUniqueInput!, $data: SaleItemUpdateInput!) {
+  updateOneSaleItem(where: $where, data: $data) {
+    ...SaleItem
+  }
+}
+
+mutation deleteOneSaleItem($where: SaleItemWhereUniqueInput!) {
+  deleteOneSaleItem(where: $where) {
+    ...SaleItem
+  }
+}
+
+mutation updateManySaleItem($where: SaleItemWhereInput, $data: SaleItemUpdateManyMutationInput!) {
+  updateManySaleItem(where: $where, data: $data) {
+    count
+  }
+}

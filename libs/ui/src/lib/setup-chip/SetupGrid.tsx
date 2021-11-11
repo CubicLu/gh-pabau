@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { RightOutlined } from '@ant-design/icons'
 import { Collapse } from 'antd'
 import Link from 'next/link'
+import classNames from 'classnames'
 
 import styles from './SetupChip.module.less'
 
@@ -55,7 +56,9 @@ export function SetupGrid(props: SetupGridProps): JSX.Element {
         <img src={image} alt={title} />
       </div>
       <div className={styles.listDetails}>
-        <div className={styles.listItem}>{title}</div>
+        <div className={classNames(styles.listItem, styles.listTitle)}>
+          <span className={styles.listTitle}>{title}</span>
+        </div>
         {data.length > 0 &&
           data.map((subTitle, index) => {
             return subTitle.data.length > 0 ? (

@@ -40,6 +40,12 @@ export const MedicalForm = objectType({
         return root.Company
       },
     })
+    t.nullable.field('CreatedBy', {
+      type: 'User',
+      resolve(root: any) {
+        return root.CreatedBy
+      },
+    })
     t.list.field('MedicalFormAdvancedSetting', {
       type: 'MedicalFormAdvancedSetting',
       args: {

@@ -18,6 +18,7 @@ import {
   RulesContainer,
   SmsMessageTemplateItem,
   UserListItem,
+  UserGroupListItem,
 } from '@pabau/ui'
 import { Tabs } from 'antd'
 import React, { FC, useEffect, useState } from 'react'

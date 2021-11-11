@@ -86,7 +86,10 @@ export function Account() {
     dayjs().startOf('month'),
     dayjs(),
   ])
-  const [isPopOverVisible, setIsPopOverVisible] = useState(false)
+  const [isPopOverVisible, setIsPopOverVisible] = useState({
+    desktop: false,
+    mobile: false,
+  })
   const [locationList, setLocationList] = useState<FilterList[]>([])
   const [issuingCompanyList, setIssuingCompanyList] = useState<FilterList[]>([])
   const [creditNoteTypesList, setCreditNoteTypesList] = useState<FilterList[]>(
@@ -262,7 +265,9 @@ export function Account() {
             return current > dayjs().endOf('day')
           }}
           disabled={selectedRange.toString() !== 'custom'}
-          onChange={(val) => setSelectedDates(val)}
+          onChange={(val, dateStrings) =>
+            setSelectedDates([dayjs(dateStrings[0]), dayjs(dateStrings[1])])
+          }
         />
       )}
       <div className={styles.footer}>
@@ -373,7 +378,7 @@ export function Account() {
           value.creditNoteType = ''
         }
         setFilterValues(value)
-        setIsPopOverVisible(false)
+        setIsPopOverVisible({ desktop: false, mobile: false })
       }}
     >
       {({ setFieldValue, handleReset, values, handleSubmit }) => (
@@ -502,8 +507,10 @@ export function Account() {
             content={renderFilter}
             placement="bottomRight"
             overlayClassName={styles.filterPopOver}
-            visible={isPopOverVisible}
-            onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+            visible={isPopOverVisible.mobile}
+            onVisibleChange={(visible) =>
+              setIsPopOverVisible({ desktop: false, mobile: visible })
+            }
           >
             <FilterOutlined className={styles.marketingIconStyle} />
           </Popover>
@@ -576,8 +583,10 @@ export function Account() {
               content={renderFilter}
               placement="bottomRight"
               overlayClassName={styles.filterPopOver}
-              visible={isPopOverVisible}
-              onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+              visible={isPopOverVisible.desktop}
+              onVisibleChange={(visible) =>
+                setIsPopOverVisible({ desktop: visible, mobile: false })
+              }
             >
               <Button type="ghost">
                 <FilterOutlined />

@@ -1,0 +1,37 @@
+fragment CompanyMetaFields on CompanyMeta {
+  id
+  company_id
+  meta_name
+  meta_value
+}
+
+fragment CompanyMeta on CompanyMeta {
+  ...CompanyMetaFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCompanyMeta($data: CompanyMetaCreateInput!) {
+  createOneCompanyMeta(data: $data) {
+    ...CompanyMeta
+  }
+}
+
+mutation updateOneCompanyMeta($where: CompanyMetaWhereUniqueInput!, $data: CompanyMetaUpdateInput!) {
+  updateOneCompanyMeta(where: $where, data: $data) {
+    ...CompanyMeta
+  }
+}
+
+mutation deleteOneCompanyMeta($where: CompanyMetaWhereUniqueInput!) {
+  deleteOneCompanyMeta(where: $where) {
+    ...CompanyMeta
+  }
+}
+
+mutation updateManyCompanyMeta($where: CompanyMetaWhereInput, $data: CompanyMetaUpdateManyMutationInput!) {
+  updateManyCompanyMeta(where: $where, data: $data) {
+    count
+  }
+}

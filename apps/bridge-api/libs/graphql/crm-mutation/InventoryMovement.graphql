@@ -1,0 +1,61 @@
+fragment InventoryMovementFields on InventoryMovement {
+  id
+  company_id
+  location_id
+  date
+  type
+  quantity
+  new_quantity
+  entered_by
+  product_id
+  description
+  room_id
+  sale_item_id
+  contact_id
+}
+
+fragment InventoryMovement on InventoryMovement {
+  ...InventoryMovementFields
+  Contact {
+    ...CmContactFields
+  }
+  Company {
+    ...CompanyFields
+  }
+  Location {
+    ...CompanyBranchFields
+  }
+  Product {
+    ...InvProductFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneInventoryMovement($data: InventoryMovementCreateInput!) {
+  createOneInventoryMovement(data: $data) {
+    ...InventoryMovement
+  }
+}
+
+mutation updateOneInventoryMovement($where: InventoryMovementWhereUniqueInput!, $data: InventoryMovementUpdateInput!) {
+  updateOneInventoryMovement(where: $where, data: $data) {
+    ...InventoryMovement
+  }
+}
+
+mutation deleteOneInventoryMovement($where: InventoryMovementWhereUniqueInput!) {
+  deleteOneInventoryMovement(where: $where) {
+    ...InventoryMovement
+  }
+}
+
+mutation updateManyInventoryMovement(
+  $where: InventoryMovementWhereInput
+  $data: InventoryMovementUpdateManyMutationInput!
+) {
+  updateManyInventoryMovement(where: $where, data: $data) {
+    count
+  }
+}

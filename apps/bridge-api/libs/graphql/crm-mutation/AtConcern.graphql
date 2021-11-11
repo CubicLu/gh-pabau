@@ -1,0 +1,34 @@
+fragment AtConcernFields on AtConcern {
+  id
+  name
+  image
+  region
+}
+
+fragment AtConcern on AtConcern {
+  ...AtConcernFields
+}
+
+mutation createOneAtConcern($data: AtConcernCreateInput!) {
+  createOneAtConcern(data: $data) {
+    ...AtConcern
+  }
+}
+
+mutation updateOneAtConcern($where: AtConcernWhereUniqueInput!, $data: AtConcernUpdateInput!) {
+  updateOneAtConcern(where: $where, data: $data) {
+    ...AtConcern
+  }
+}
+
+mutation deleteOneAtConcern($where: AtConcernWhereUniqueInput!) {
+  deleteOneAtConcern(where: $where) {
+    ...AtConcern
+  }
+}
+
+mutation updateManyAtConcern($where: AtConcernWhereInput, $data: AtConcernUpdateManyMutationInput!) {
+  updateManyAtConcern(where: $where, data: $data) {
+    count
+  }
+}

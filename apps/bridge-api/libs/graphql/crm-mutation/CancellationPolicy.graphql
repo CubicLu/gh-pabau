@@ -1,0 +1,53 @@
+fragment CancellationPolicyFields on CancellationPolicy {
+  id
+  is_active
+  policy_type
+  policy_action
+  policy_value
+  policy_notice
+  policy_message
+  policy_override
+  payment_protection
+  advanced_cancellation_fee
+  no_show_fee
+  company_id
+  creation_date
+  modified_date
+}
+
+fragment CancellationPolicy on CancellationPolicy {
+  ...CancellationPolicyFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCancellationPolicy($data: CancellationPolicyCreateInput!) {
+  createOneCancellationPolicy(data: $data) {
+    ...CancellationPolicy
+  }
+}
+
+mutation updateOneCancellationPolicy(
+  $where: CancellationPolicyWhereUniqueInput!
+  $data: CancellationPolicyUpdateInput!
+) {
+  updateOneCancellationPolicy(where: $where, data: $data) {
+    ...CancellationPolicy
+  }
+}
+
+mutation deleteOneCancellationPolicy($where: CancellationPolicyWhereUniqueInput!) {
+  deleteOneCancellationPolicy(where: $where) {
+    ...CancellationPolicy
+  }
+}
+
+mutation updateManyCancellationPolicy(
+  $where: CancellationPolicyWhereInput
+  $data: CancellationPolicyUpdateManyMutationInput!
+) {
+  updateManyCancellationPolicy(where: $where, data: $data) {
+    count
+  }
+}

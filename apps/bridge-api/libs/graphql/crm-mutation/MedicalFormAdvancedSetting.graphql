@@ -1,0 +1,48 @@
+fragment MedicalFormAdvancedSettingFields on MedicalFormAdvancedSetting {
+  id
+  medical_form
+  company_id
+  share_to_client
+  reminder
+  data
+}
+
+fragment MedicalFormAdvancedSetting on MedicalFormAdvancedSetting {
+  ...MedicalFormAdvancedSettingFields
+  Company {
+    ...CompanyFields
+  }
+  MedicalForm {
+    ...MedicalFormFields
+  }
+}
+
+mutation createOneMedicalFormAdvancedSetting($data: MedicalFormAdvancedSettingCreateInput!) {
+  createOneMedicalFormAdvancedSetting(data: $data) {
+    ...MedicalFormAdvancedSetting
+  }
+}
+
+mutation updateOneMedicalFormAdvancedSetting(
+  $where: MedicalFormAdvancedSettingWhereUniqueInput!
+  $data: MedicalFormAdvancedSettingUpdateInput!
+) {
+  updateOneMedicalFormAdvancedSetting(where: $where, data: $data) {
+    ...MedicalFormAdvancedSetting
+  }
+}
+
+mutation deleteOneMedicalFormAdvancedSetting($where: MedicalFormAdvancedSettingWhereUniqueInput!) {
+  deleteOneMedicalFormAdvancedSetting(where: $where) {
+    ...MedicalFormAdvancedSetting
+  }
+}
+
+mutation updateManyMedicalFormAdvancedSetting(
+  $where: MedicalFormAdvancedSettingWhereInput
+  $data: MedicalFormAdvancedSettingUpdateManyMutationInput!
+) {
+  updateManyMedicalFormAdvancedSetting(where: $where, data: $data) {
+    count
+  }
+}

@@ -2,7 +2,7 @@ query findMedicalForms(
   $take: Int = 0
   $skip: Int = 0
   $where: MedicalFormWhereInput
-  $orderBy: [MedicalFormOrderByWithRelationInput!]
+  $orderBy: [MedicalFormOrderByWithRelationInput]
 ) {
   findManyMedicalForm(
     take: $take
@@ -15,6 +15,7 @@ query findMedicalForms(
     created_at
     form_type
     company_id
+    service_id
     data
     MedicalFormAdvancedSetting {
       id
@@ -24,19 +25,24 @@ query findMedicalForms(
     }
   }
 }
+
 query findMedicalFormsCount($where: MedicalFormWhereInput) {
   findManyMedicalFormCount(where: $where)
 }
+
 query findMessageTemplate(
   $where: MessageTemplateWhereInput
-  $orderBy: [MessageTemplateOrderByWithRelationInput!]
+  $orderBy: [MessageTemplateOrderByWithRelationInput]
 ) {
   findManyMessageTemplate(orderBy: $orderBy, where: $where) {
     template_id
     template_name
   }
 }
-query findUser($where: UserWhereInput, $orderBy: [UserOrderByWithRelationInput!]) {
+query findUser(
+  $where: UserWhereInput
+  $orderBy: [UserOrderByWithRelationInput]
+) {
   findManyUser(orderBy: $orderBy, where: $where) {
     id
     full_name
@@ -49,6 +55,7 @@ query getMedicalFormDetails($medicalFormId: Int!) {
     name
     created_at
     form_type
+    service_id
     company_id
     data
     MedicalFormAdvancedSetting {
@@ -57,5 +64,44 @@ query getMedicalFormDetails($medicalFormId: Int!) {
       reminder
       data
     }
+  }
+}
+
+query findManyCompanyServices {
+  findManyCompanyService {
+    id
+    name
+  }
+}
+
+query findManyLabTests {
+  findManyInvCategory(
+    where: {
+      category_type: { equals: "service" }
+      disabled: { equals: false }
+      name: { not: { equals: "" } }
+    }
+    orderBy: { name: asc }
+  ) {
+    id
+    name
+  }
+}
+
+query findInvProducts {
+  findManyInvProduct(where: { is_active: { equals: 1 } }) {
+    id
+    name
+    category_id
+  }
+}
+
+query findManyMedicalCondtions {
+  findManyMedicalCondition {
+    id
+    name
+    company_id
+    custom_id
+    is_common
   }
 }

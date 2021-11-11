@@ -1,0 +1,33 @@
+fragment CheckinApptFields on CheckinAppt {
+  id
+  appt_id
+  spotify_uri
+}
+
+fragment CheckinAppt on CheckinAppt {
+  ...CheckinApptFields
+}
+
+mutation createOneCheckinAppt($data: CheckinApptCreateInput!) {
+  createOneCheckinAppt(data: $data) {
+    ...CheckinAppt
+  }
+}
+
+mutation updateOneCheckinAppt($where: CheckinApptWhereUniqueInput!, $data: CheckinApptUpdateInput!) {
+  updateOneCheckinAppt(where: $where, data: $data) {
+    ...CheckinAppt
+  }
+}
+
+mutation deleteOneCheckinAppt($where: CheckinApptWhereUniqueInput!) {
+  deleteOneCheckinAppt(where: $where) {
+    ...CheckinAppt
+  }
+}
+
+mutation updateManyCheckinAppt($where: CheckinApptWhereInput, $data: CheckinApptUpdateManyMutationInput!) {
+  updateManyCheckinAppt(where: $where, data: $data) {
+    count
+  }
+}

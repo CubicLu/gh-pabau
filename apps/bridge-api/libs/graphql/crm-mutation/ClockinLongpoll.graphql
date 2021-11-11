@@ -1,0 +1,37 @@
+fragment ClockinLongpollFields on ClockinLongpoll {
+  id
+  clocked_out
+  uid
+  company_id
+}
+
+fragment ClockinLongpoll on ClockinLongpoll {
+  ...ClockinLongpollFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneClockinLongpoll($data: ClockinLongpollCreateInput!) {
+  createOneClockinLongpoll(data: $data) {
+    ...ClockinLongpoll
+  }
+}
+
+mutation updateOneClockinLongpoll($where: ClockinLongpollWhereUniqueInput!, $data: ClockinLongpollUpdateInput!) {
+  updateOneClockinLongpoll(where: $where, data: $data) {
+    ...ClockinLongpoll
+  }
+}
+
+mutation deleteOneClockinLongpoll($where: ClockinLongpollWhereUniqueInput!) {
+  deleteOneClockinLongpoll(where: $where) {
+    ...ClockinLongpoll
+  }
+}
+
+mutation updateManyClockinLongpoll($where: ClockinLongpollWhereInput, $data: ClockinLongpollUpdateManyMutationInput!) {
+  updateManyClockinLongpoll(where: $where, data: $data) {
+    count
+  }
+}

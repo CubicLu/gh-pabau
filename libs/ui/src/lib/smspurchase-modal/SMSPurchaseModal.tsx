@@ -469,7 +469,7 @@ export function SMSPurchaseModal({
             active={!autoTopUp && step === 2 ? 1 : step}
             allSteps={maxSteps}
             disableNextStep={!nextStepEnabled}
-            allowDisablePrevious={false}
+            disablePrevStep={false}
             onNext={() => {
               if (step === 0) {
                 if (autoTopUp) {
@@ -505,7 +505,7 @@ export function SMSPurchaseModal({
               </span>
             }
             nextButtonContent={nextButtonContent}
-            previousButtonContent={
+            prevButtonContent={
               <span>
                 {isMobile
                   ? t('ui.sms-purchase-modal.previous_step_mobile')

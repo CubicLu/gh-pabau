@@ -1,0 +1,38 @@
+fragment UserReportFields on UserReport {
+  id
+  company_id
+  user_id
+  report_id
+  favorite
+}
+
+fragment UserReport on UserReport {
+  ...UserReportFields
+  User {
+    ...UserFields
+  }
+  Company {
+    ...CompanyFields
+  }
+  Report {
+    ...ReportFields
+  }
+}
+
+mutation createOneUserReport($data: UserReportCreateInput!) {
+  createOneUserReport(data: $data) {
+    ...UserReport
+  }
+}
+
+mutation updateOneUserReport($where: UserReportWhereUniqueInput!, $data: UserReportUpdateInput!) {
+  updateOneUserReport(where: $where, data: $data) {
+    ...UserReport
+  }
+}
+
+mutation deleteOneUserReport($where: UserReportWhereUniqueInput!) {
+  deleteOneUserReport(where: $where) {
+    ...UserReport
+  }
+}

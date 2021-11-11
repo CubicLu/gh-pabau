@@ -1,0 +1,116 @@
+fragment BookingFields on Booking {
+  id
+  title
+  start_date
+  end_date
+  start_time
+  end_time
+  service
+  contact_id
+  UID
+  company_id
+  backgroudcolor
+  create_date
+  update_date
+  status
+  estimated_cost
+  tips
+  discounts
+  where
+  room_id
+  unique_id
+  reason
+  invoice_id
+  booking_id
+  Online
+  package_id
+  cancel_take
+  book_take
+  class_master_id
+  unavailable
+  coupon_claim_id
+  related_id
+  service_id
+  rebook
+  repeat_id
+  requested
+  sent_sms
+  sent_email
+  sent_survey
+  custom_contact_id
+  custom_contact_name
+  custom_user_id
+  custom_user_name
+  custom_service_id
+  imported
+  client_confirmed
+  hold_guid
+  created_by_uid
+  marketing_source
+  resource_id
+  custom_room_name
+  custom_created_by_user_name
+  location_id
+  modified_by_uid
+  sent_email_reminder
+  disable_locations
+  participant_master_uid
+  participant_master_booking_id
+  participant_slave_uids
+  participant_slave_booking_ids
+  private
+  external_guest_ids
+  description
+  issued_to
+  contract_id
+  all_day
+  interlinked_master_uid
+  all_day_start_date
+  all_day_end_date
+}
+
+fragment Booking on Booking {
+  ...BookingFields
+  InvSale {
+    ...InvSaleFields
+  }
+  User {
+    ...UserFields
+  }
+  Contact {
+    ...CmContactFields
+  }
+  UserMaster {
+    ...UserMasterFields
+  }
+  CmStaffGeneral {
+    ...CmStaffGeneralFields
+  }
+  CompanyBranch {
+    ...CompanyBranchFields
+  }
+}
+
+mutation createOneBooking($data: BookingCreateInput!) {
+  createOneBooking(data: $data) {
+    ...Booking
+  }
+}
+
+mutation updateOneBooking($where: BookingWhereUniqueInput!, $data: BookingUpdateInput!) {
+  updateOneBooking(where: $where, data: $data) {
+    ...Booking
+  }
+}
+
+mutation deleteOneBooking($where: BookingWhereUniqueInput!) {
+  deleteOneBooking(where: $where) {
+    ...Booking
+  }
+}
+
+mutation updateManyBooking($where: BookingWhereInput, $data: BookingUpdateManyMutationInput!) {
+  updateManyBooking(where: $where, data: $data) {
+    count
+  }
+}

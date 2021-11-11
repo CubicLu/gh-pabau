@@ -13,7 +13,11 @@ import {
   InvoiceArgs,
   StatementArgs,
   StatementOutput,
+  DateRangeInput,
 } from './types'
+import dayjs from 'dayjs'
+import { statusDataByDayMonth } from '../booking/statuses.service'
+import { getPreviousDateRange } from './dateRange.service'
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -1239,5 +1243,473 @@ export const getStatementData = async (
     },
     items: data,
     payments: details,
+  }
+}
+
+export const retrieveSalesCount = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  const start_date = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DDTHH:mm:ssZ'
+  )
+  const end_date = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DDTHH:mm:ssZ'
+  )
+  const prev_data = getPreviousDateRange(data.start_date, data.end_date)
+  let prevSales = []
+  prevSales = await ctx.prisma
+    .$queryRaw`select SUM(b.total) from inv_sale_items a
+  inner join inv_sales b on b.id=a.sale_id
+  WHERE ${
+    prev_data.prevStartDate && prev_data.prevEndDate
+      ? Prisma.sql`b.date BETWEEN ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
+      : Prisma.empty
+  } sale_id>0 and product_category_type not in ('') and b.occupier = ${
+    ctx.authenticated.company
+  } ${
+    data.location_id
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}`
+
+  const SalesList = []
+  let sale = []
+  sale = await ctx.prisma
+    .$queryRaw`select product_category_type, count(sale_id), SUM(b.total) from inv_sale_items a
+    inner join inv_sales b on b.id=a.sale_id
+    WHERE ${
+      data.start_date && data.end_date
+        ? Prisma.sql`b.date BETWEEN ${start_date} and ${end_date} and`
+        : Prisma.empty
+    } sale_id>0 and product_category_type not in ('') and b.occupier = ${
+    ctx.authenticated.company
+  } ${
+    data.location_id
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}
+    group by product_category_type`
+  sale?.map((item) => {
+    if (item.product_category_type !== '') {
+      SalesList.push({
+        label: item.product_category_type,
+        count: item['count(sale_id)'],
+        per:
+          (
+            ((item['count(sale_id)'] ?? 0) * 100) /
+            sale?.reduce((prev, cur) => {
+              return prev + cur['count(sale_id)'] ?? 0
+            }, 0)
+          ).toFixed(2) + '%',
+      })
+    }
+    return item
+  })
+  const totalAvailableCategoryTypePer = (sale?.length > 0 &&
+  prev_data.prevStartDate &&
+  prev_data.prevEndDate
+    ? (sale?.reduce((prev, cur) => {
+        return prev + cur['SUM(b.total)'] ?? 0
+      }, 0) *
+        100) /
+        prevSales[0]['SUM(b.total)'] ?? 0
+    : 0
+  ).toFixed(2)
+
+  return {
+    totalAvailableCategoryTypeCount: sale?.reduce((prev, cur) => {
+      return prev + cur['count(sale_id)'] ?? 0
+    }, 0),
+    totalAvailableCategoryTypeAmount: sale
+      ?.reduce((prev, cur) => {
+        return prev + cur['SUM(b.total)'] ?? 0
+      }, 0)
+      .toFixed(2),
+    totalAvailableCategoryTypePer:
+      (Number.isFinite(+totalAvailableCategoryTypePer)
+        ? totalAvailableCategoryTypePer
+        : '0.00') + '%',
+    salesList: SalesList.length > 0 ? SalesList : null,
+  }
+}
+
+export const retrieveSalesChartData = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  let final = []
+  let sale
+  let saleDataSet = []
+  const start_date = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DDTHH:mm:ssZ'
+  )
+  const end_date = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DDTHH:mm:ssZ'
+  )
+  const endDate = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DD'
+  )
+  const startDate = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DD'
+  )
+  const month = dayjs(endDate).diff(startDate, 'month')
+  const year = dayjs(endDate).diff(startDate, 'year')
+  const week = dayjs(endDate).diff(startDate, 'week')
+  const day = dayjs(endDate).diff(startDate, 'day')
+
+  const getSalesDataSet = (saleSet) => {
+    const dataset = []
+    saleSet.map((record) => {
+      const index = dataset.findIndex(
+        (item) => item.product_category_type === record.product_category_type
+      )
+      if (index === -1) {
+        const filter = saleSet.filter(
+          (item) => item.product_category_type === record.product_category_type
+        )
+        const result = []
+        dataset.push({
+          status: record.product_category_type,
+          dateRange: filter.map((i) => {
+            result.push({
+              label: i.grouping,
+              value: i['count(sale_id)'],
+            })
+            return result
+          }),
+        })
+      }
+      return dataset
+    })
+    return dataset
+  }
+
+  switch (true) {
+    case year > 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
+        data.location_id
+          ? Prisma.sql`and b.location_id=${data.location_id}`
+          : Prisma.empty
+      }${
+        data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty
+      }
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('All records', saleDataSet, startDate)
+      break
+    case month > 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        MONTHNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
+        data.location_id
+          ? Prisma.sql`and b.location_id=${data.location_id}`
+          : Prisma.empty
+      }${
+        data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty
+      }
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('This Year', saleDataSet, startDate)
+      break
+    case week > 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        DATE(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
+        data.location_id
+          ? Prisma.sql`and b.location_id=${data.location_id}`
+          : Prisma.empty
+      }${
+        data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty
+      }
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('This Month', saleDataSet, startDate)
+      break
+    case day >= 0:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        DAYNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
+        ctx.authenticated.company
+      } ${
+        data.location_id
+          ? Prisma.sql`and b.location_id=${data.location_id}`
+          : Prisma.empty
+      }${
+        data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty
+      }
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('This Week', saleDataSet, startDate)
+      break
+    default:
+      sale = await ctx.prisma.$queryRaw`select product_category_type,
+        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        inner join inv_sales b on b.id=a.sale_id
+        WHERE product_category_type not in ('') and b.occupier = ${
+          ctx.authenticated.company
+        } ${
+        data.location_id
+          ? Prisma.sql`and b.location_id=${data.location_id}`
+          : Prisma.empty
+      }${
+        data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty
+      }
+        group by product_category_type, GROUPING
+        ORDER by product_category_type`
+      saleDataSet = await getSalesDataSet(sale)
+      final = statusDataByDayMonth('All records', saleDataSet, startDate)
+      break
+  }
+  return {
+    salesByProductCategoryType: final ?? null,
+  }
+}
+
+export const retrieveRetailSalesData = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  const ratailData = await ctx.prisma
+    .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
+    INNER JOIN inv_sales b on a.sale_id=b.id
+    where ${
+      data.start_date && data.end_date
+        ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date} and`
+        : Prisma.empty
+    } a.product_category_type="retail" and product_category_type not in ('') and a.product_id>0 and b.occupier = ${
+    ctx.authenticated.company
+  } ${
+    data.location_id
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}
+    GROUP BY a.product_category_name`
+
+  const total = ratailData?.reduce((prev, cur) => {
+    return prev + cur['SUM(b.total)'] ?? 0
+  }, 0)
+  const Details = []
+  if (ratailData) {
+    ratailData.map((item) => {
+      if (item.product_category_name) {
+        Details.push({
+          name: item.product_category_name,
+          units: item['SUM(a.quantity)'],
+          value: item['SUM(b.total)'].toFixed(2),
+          per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
+        })
+      }
+      return Details
+    })
+    if (ratailData.length > 0) {
+      Details.push({
+        name: 'Total',
+        units: ratailData?.reduce((prev, cur) => {
+          return prev + cur['SUM(a.quantity)'] ?? 0
+        }, 0),
+        value: total.toFixed(2),
+        per: `${((total * 100) / total).toFixed(2)}%`,
+      })
+    }
+  }
+  return {
+    retailSalesDetails: Details ?? [],
+  }
+}
+
+export const retrieveServiceSalesData = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  const serviceData = await ctx.prisma
+    .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
+    INNER JOIN inv_sales b on a.sale_id=b.id
+    where ${
+      data.start_date && data.end_date
+        ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date} and`
+        : Prisma.empty
+    } a.product_category_type="service" and product_category_type not in ('') and a.product_id>0 and b.occupier = ${
+    ctx.authenticated.company
+  } ${
+    data.location_id
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}
+    GROUP BY a.product_category_name`
+  const total = serviceData?.reduce((prev, cur) => {
+    return prev + cur['SUM(b.total)'] ?? 0
+  }, 0)
+  const Details = []
+  if (serviceData) {
+    serviceData.map((item) => {
+      if (item.product_category_name) {
+        Details.push({
+          name: item.product_category_name,
+          units: item['SUM(a.quantity)'],
+          value: item['SUM(b.total)'].toFixed(2),
+          per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
+        })
+      }
+      return Details
+    })
+    if (serviceData.length > 0) {
+      Details.push({
+        name: 'Total',
+        units: serviceData?.reduce((prev, cur) => {
+          return prev + cur['SUM(a.quantity)'] ?? 0
+        }, 0),
+        value: total.toFixed(2),
+        per: `${((total * 100) / total).toFixed(2)}%`,
+      })
+    }
+  }
+  return {
+    serviceSalesDetails: Details ?? [],
+  }
+}
+export const retriveOtherDetails = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  let year = 0
+  let month = 0
+  let week = 0
+  let day = 0
+  if (data.start_date && data.end_date) {
+    const endDate = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+      'YYYY-MM-DD'
+    )
+    const startDate = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+      'YYYY-MM-DD'
+    )
+    month = dayjs(endDate).diff(startDate, 'month')
+    year = dayjs(endDate).diff(startDate, 'year')
+    week = dayjs(endDate).diff(startDate, 'week')
+    day = dayjs(endDate).diff(startDate, 'day')
+  } else {
+    const allRecordDates = await ctx.prisma
+      .$queryRaw`SELECT MIN(b.created_date),MAX(b.created_date) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${ctx.authenticated.company}`
+    const startDate = dayjs(
+      `${allRecordDates[0]['MIN(b.created_date)']}` as 'YYYY-MM-DDTHH:mm:ssZ'
+    ).format('YYYY-MM-DD')
+    const endDate = dayjs(
+      `${allRecordDates[0]['MAX(b.created_date)']}` as 'YYYY-MM-DDTHH:mm:ssZ'
+    ).format('YYYY-MM-DD')
+    month = dayjs(endDate).diff(startDate, 'month')
+    year = dayjs(endDate).diff(startDate, 'year')
+    week = dayjs(endDate).diff(startDate, 'week')
+    day = dayjs(endDate).diff(startDate, 'day')
+  }
+
+  const newClientCount = await ctx.prisma
+    .$queryRaw`SELECT count(CreatedDate) from cm_contacts where Occupier = ${
+    ctx.authenticated.company
+  } ${
+    (data.start_date && data.end_date) || data.location_id || data.user_id
+      ? Prisma.sql`and`
+      : Prisma.empty
+  } ${
+    data.start_date && data.end_date
+      ? Prisma.sql`CreatedDate BETWEEN ${data.start_date} and ${data.end_date}`
+      : Prisma.empty
+  } ${
+    data.location_id && data.start_date && data.end_date
+      ? Prisma.sql`and location_id=${data.location_id}`
+      : data.location_id && !data.start_date && !data.end_date
+      ? Prisma.sql`location_id=${data.location_id}`
+      : Prisma.empty
+  }${
+    data.user_id && data.start_date && data.end_date
+      ? Prisma.sql`and OwnerID=${data.user_id}`
+      : data.user_id && !data.start_date && !data.end_date
+      ? Prisma.sql`OwnerID=${data.user_id}`
+      : Prisma.empty
+  }`
+
+  const avgBiller = await ctx.prisma
+    .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${
+    ctx.authenticated.company
+  } ${
+    (data.start_date && data.end_date) || data.location_id || data.user_id
+      ? Prisma.sql`and`
+      : Prisma.empty
+  } ${
+    data.start_date && data.end_date
+      ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date}`
+      : Prisma.empty
+  } ${
+    data.location_id && data.start_date && data.end_date
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : data.location_id && !data.start_date && !data.end_date
+      ? Prisma.sql`b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${
+    data.user_id && data.start_date && data.end_date
+      ? Prisma.sql`and b.User_id=${data.user_id}`
+      : data.user_id && !data.start_date && !data.end_date
+      ? Prisma.sql`b.User_id=${data.user_id}`
+      : Prisma.empty
+  }`
+
+  const total = await ctx.prisma
+    .$queryRaw`SELECT SUM(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${
+    ctx.authenticated.company
+  } ${
+    (data.start_date && data.end_date) || data.location_id || data.user_id
+      ? Prisma.sql`and`
+      : Prisma.empty
+  } ${
+    data.start_date && data.end_date
+      ? Prisma.sql`b.date BETWEEN ${data.start_date} and ${data.end_date}`
+      : Prisma.empty
+  } ${
+    data.location_id && data.start_date && data.end_date
+      ? Prisma.sql`and b.location_id=${data.location_id}`
+      : data.location_id && !data.start_date && !data.end_date
+      ? Prisma.sql`b.location_id=${data.location_id}`
+      : Prisma.empty
+  }${
+    data.user_id && data.start_date && data.end_date
+      ? Prisma.sql`and b.User_id=${data.user_id}`
+      : data.user_id && !data.start_date && !data.end_date
+      ? Prisma.sql`b.User_id=${data.user_id}`
+      : Prisma.empty
+  }`
+  let RevPerhour = 0
+  switch (true) {
+    case year > 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (year * month * week * day * 24)
+      break
+    case month > 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (month * week * day * 24)
+      break
+    case week > 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (week * day * 24)
+      break
+    case day >= 0:
+      RevPerhour = total[0]['SUM(b.total)'] / (day * 24)
+      break
+  }
+  return {
+    newClientCount: newClientCount[0]['count(CreatedDate)'] ?? 0,
+    avgBiller: (avgBiller[0]['AVG(b.total)'] ?? 0).toFixed(2),
+    RevPerhour: (Number.isFinite(RevPerhour) ? RevPerhour : 0).toFixed(2),
   }
 }

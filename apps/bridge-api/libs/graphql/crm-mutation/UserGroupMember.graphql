@@ -1,0 +1,33 @@
+fragment UserGroupMemberFields on UserGroupMember {
+  id
+  user_id
+  group_id
+}
+
+fragment UserGroupMember on UserGroupMember {
+  ...UserGroupMemberFields
+  User {
+    ...UserFields
+  }
+  UserGroup {
+    ...UserGroupFields
+  }
+}
+
+mutation createOneUserGroupMember($data: UserGroupMemberCreateInput!) {
+  createOneUserGroupMember(data: $data) {
+    ...UserGroupMember
+  }
+}
+
+mutation updateOneUserGroupMember($where: UserGroupMemberWhereUniqueInput!, $data: UserGroupMemberUpdateInput!) {
+  updateOneUserGroupMember(where: $where, data: $data) {
+    ...UserGroupMember
+  }
+}
+
+mutation deleteOneUserGroupMember($where: UserGroupMemberWhereUniqueInput!) {
+  deleteOneUserGroupMember(where: $where) {
+    ...UserGroupMember
+  }
+}

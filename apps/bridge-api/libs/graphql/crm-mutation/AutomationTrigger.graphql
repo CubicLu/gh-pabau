@@ -1,0 +1,40 @@
+fragment AutomationTriggerFields on AutomationTrigger {
+  id
+  rule_id
+  name
+  company
+  code
+  trigger_data
+  order
+}
+
+fragment AutomationTrigger on AutomationTrigger {
+  ...AutomationTriggerFields
+}
+
+mutation createOneAutomationTrigger($data: AutomationTriggerCreateInput!) {
+  createOneAutomationTrigger(data: $data) {
+    ...AutomationTrigger
+  }
+}
+
+mutation updateOneAutomationTrigger($where: AutomationTriggerWhereUniqueInput!, $data: AutomationTriggerUpdateInput!) {
+  updateOneAutomationTrigger(where: $where, data: $data) {
+    ...AutomationTrigger
+  }
+}
+
+mutation deleteOneAutomationTrigger($where: AutomationTriggerWhereUniqueInput!) {
+  deleteOneAutomationTrigger(where: $where) {
+    ...AutomationTrigger
+  }
+}
+
+mutation updateManyAutomationTrigger(
+  $where: AutomationTriggerWhereInput
+  $data: AutomationTriggerUpdateManyMutationInput!
+) {
+  updateManyAutomationTrigger(where: $where, data: $data) {
+    count
+  }
+}

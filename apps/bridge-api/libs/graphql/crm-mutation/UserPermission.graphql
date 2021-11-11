@@ -1,0 +1,33 @@
+fragment UserPermissionFields on UserPermission {
+  id
+  user
+  page
+}
+
+fragment UserPermission on UserPermission {
+  ...UserPermissionFields
+  User {
+    ...UserFields
+  }
+  Page {
+    ...PageFields
+  }
+}
+
+mutation createOneUserPermission($data: UserPermissionCreateInput!) {
+  createOneUserPermission(data: $data) {
+    ...UserPermission
+  }
+}
+
+mutation updateOneUserPermission($where: UserPermissionWhereUniqueInput!, $data: UserPermissionUpdateInput!) {
+  updateOneUserPermission(where: $where, data: $data) {
+    ...UserPermission
+  }
+}
+
+mutation deleteOneUserPermission($where: UserPermissionWhereUniqueInput!) {
+  deleteOneUserPermission(where: $where) {
+    ...UserPermission
+  }
+}
