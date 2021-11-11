@@ -5263,7 +5263,7 @@ en:
   galley.list.create.album.blank.error: 'Name is required'
   galley.list.filter.all.value: All
   galley.list.view.photo.last.modified: 'Last modified'
-  galley.list.view.photo.files: Files
+  galley.list.view.photo.photos: Photos
   galley.list.view.photo.name: Name
   galley.list.view.delete.ok.button: 'Delete forever'
   galley.list.view.delete.modal.title: 'Delete forever ?'

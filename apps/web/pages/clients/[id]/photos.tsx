@@ -277,6 +277,13 @@ const Photos: FC = () => {
           cAddedFiles.splice(idx, 1)
           setUploadingFiles(cAddedFiles)
         }
+        Notification(
+          NotificationType.success,
+          t('ui.clientcard.photos.notification.delete.success', {
+            count: 1,
+            suffix: '',
+          })
+        )
       } else {
         const id = data?.photo
         const cAddedFiles = [...uploadingFiles]
@@ -287,14 +294,14 @@ const Photos: FC = () => {
           cAddedFiles.splice(idx, 1, cFile)
           setUploadingFiles(cAddedFiles)
         }
+        Notification(
+          NotificationType.error,
+          t('ui.clientcard.photos.notification.delete.error', {
+            count: 1,
+            suffix: '',
+          })
+        )
       }
-      Notification(
-        NotificationType.success,
-        t('ui.clientcard.photos.notification.delete.success', {
-          count: 1,
-          suffix: '',
-        })
-      )
     },
     onError() {
       setSingleImgDelLoading(() => false)
