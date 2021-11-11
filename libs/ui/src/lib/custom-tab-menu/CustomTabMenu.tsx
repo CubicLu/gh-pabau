@@ -1,4 +1,4 @@
-import { Collapse, Tabs } from 'antd'
+import { Collapse, Tabs, Tag } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './CustomTabMenu.module.less'
@@ -6,11 +6,15 @@ import styles from './CustomTabMenu.module.less'
 const { Panel } = Collapse
 const { TabPane } = Tabs
 
+interface TagValue {
+  color: string
+  tag: string | number
+}
 export interface TabItem {
   key: string
   name: string
   count?: number
-  tags?: readonly string[]
+  tags?: readonly TagValue[]
   childTabs?: readonly TabItem[]
 }
 
@@ -67,7 +71,6 @@ export const CustomTabMenu: FC<P> = ({
       <div className={styles.tabMenuItems} style={{ width: tabWidth }}>
         {tabs?.map((tab) => {
           //TODO: add count and tags to ui
-
           return (
             <React.Fragment key={tab.name}>
               {(!tab.childTabs || tab.childTabs.length === 0) && (
@@ -85,6 +88,20 @@ export const CustomTabMenu: FC<P> = ({
                         <div className={styles.countContainer}>{tab.count}</div>
                       </div>
                     )}
+
+                    {tab.tags !== undefined &&
+                      tab.tags.length > 0 &&
+                      tab.tags.map((tag, key) => {
+                        return (
+                          <Tag
+                            style={{ marginLeft: 10 }}
+                            key={key}
+                            color={tag.color}
+                          >
+                            {tag.tag}
+                          </Tag>
+                        )
+                      })}
                   </div>
                 </div>
               )}
@@ -136,10 +153,17 @@ export const CustomTabMenu: FC<P> = ({
       <div className={styles.mainTabMenuItems}>
         <Tabs
           tabPosition={tabPosition}
-          onChange={(name) => {
-            const clickedTab = tabs?.find((el) => el?.name === name)
-            if (clickedTab?.childTabs?.length === 0) {
-              onActiveChanged?.(clickedTab?.key)
+          onChange={(key) => {
+            const clickedTab = tabs?.find((el) => el?.key === key)
+            if (!clickedTab?.childTabs || clickedTab?.childTabs?.length === 0) {
+              onActiveChanged?.(key)
+            } else if (clickedTab?.childTabs?.length > 0) {
+              const existedInd = clickedTab?.childTabs?.findIndex(
+                (el) => el?.key === activeTab
+              )
+              if (existedInd === -1) {
+                onActiveChanged?.(clickedTab?.childTabs?.[0]?.key)
+              }
             }
           }}
           defaultActiveKey={findParentActiveKey(tabs, activeTab || 'dashboard')}
