@@ -6,7 +6,7 @@ import PinScreen from './PinScreen'
 describe('PinScreen', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
-      <PinScreen onSubmit={(val) => console.log(val)} />
+      <PinScreen pin="1122" onSubmit={(result) => result} />
     )
     expect(baseElement).toBeTruthy()
   })

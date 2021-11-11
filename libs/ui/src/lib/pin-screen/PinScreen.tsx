@@ -6,10 +6,11 @@ import { useMedia } from 'react-use'
 import { Button, Notification, NotificationType } from '@pabau/ui'
 
 export interface PinScreenProps {
-  onSubmit: (val: boolean) => void
+  onSubmit: (result: boolean) => void
+  pin: string
 }
 
-export const PinScreen: FC<PinScreenProps> = ({ onSubmit }) => {
+export const PinScreen: FC<PinScreenProps> = ({ onSubmit, pin }) => {
   const { t } = useTranslation('common')
   const reg = /^\d*(\d*)?$/
   const [password, setPassword] = useState('')
@@ -17,7 +18,7 @@ export const PinScreen: FC<PinScreenProps> = ({ onSubmit }) => {
   const isMobile = useMedia('(max-width: 767px)', false)
 
   const checkPin = (value) => {
-    if (value.length === 4 && value !== '1122') {
+    if (value.length === 4 && value !== pin) {
       setAlert(true)
       setPassword('')
       onSubmit(false)
