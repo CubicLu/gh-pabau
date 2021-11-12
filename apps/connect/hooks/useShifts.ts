@@ -91,6 +91,9 @@ export default function useShifts(shiftsResult, bookingsResult) {
   }
 
   const betterEmployeeForTimeslot = (dateIndex, employee1ID, employee2ID) => {
+    if (!employeeNumBookings[dateIndex]) {
+      return employee1ID
+    }
     return employeeNumBookings[dateIndex][employee1ID] >
       employeeNumBookings[dateIndex][employee2ID]
       ? employee1ID
