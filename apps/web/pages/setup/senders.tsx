@@ -66,7 +66,6 @@ export const Communications: React.FC = () => {
 
   const router = useRouter()
   const { t } = useTranslationI18()
-  const [isLoading, setIsLoading] = useState(true)
   const [senderDetails, setSenderDetails] = useState([{} as SenderItem])
 
   const { loading, data: getSendersData } = useGetComSendersQuery()
@@ -75,24 +74,19 @@ export const Communications: React.FC = () => {
   useEffect(() => {
     if (getSendersData?.getSenders.length > 0) {
       const temp = []
-      getSendersData.getSenders.map((sender) => {
-        if (user.me.company === sender.company_id) {
+      for (const sender of getSendersData.getSenders) {
+        user.me.company === sender.company_id &&
           temp.push({
-            id: sender.id,
+            id: sender.type === 'email' ? sender.emailId : sender.smsId,
             fromName: sender.senders_name,
             fromEmail: sender.data,
             isDefaultSender: sender.is_default === 1,
             type: sender.type,
           })
-        }
-        return 1
-      })
+      }
       setSenderDetails(temp)
-      setIsLoading(false)
-    } else {
-      setIsLoading(true)
     }
-  }, [getSendersData, loading, isLoading, user.me.company])
+  }, [getSendersData, user.me.company])
 
   const [showLogin, setShowLogin] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -303,6 +297,7 @@ export const Communications: React.FC = () => {
             />
             <Title>{t('setup.senders.title')}</Title>
           </div>
+
           <div className={styles.actions}>
             <Button>
               <FilterOutlined />
@@ -318,7 +313,7 @@ export const Communications: React.FC = () => {
         </div>
         <div className={styles.cardContent}>
           <Row gutter={16}>
-            {!isLoading ? (
+            {!loading ? (
               senderDetails.map((item, index) => (
                 <Col span={4} xs={24} sm={12} md={6} key={index}>
                   <Button
@@ -360,7 +355,7 @@ export const Communications: React.FC = () => {
                         <div className={styles.itemHeader}>
                           <Skeleton.Input
                             style={{ width: 200 }}
-                            active={isLoading}
+                            active={loading}
                             size={'default'}
                           />
                         </div>
@@ -369,13 +364,13 @@ export const Communications: React.FC = () => {
                             {' '}
                             <Skeleton.Input
                               style={{ width: 120 }}
-                              active={isLoading}
+                              active={loading}
                               size={'default'}
                             />
                           </div>
                           <Skeleton.Input
                             style={{ width: 75 }}
-                            active={isLoading}
+                            active={loading}
                             size={'default'}
                           />
                         </div>

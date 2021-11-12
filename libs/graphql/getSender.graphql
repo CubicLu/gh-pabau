@@ -7,6 +7,8 @@ query getComSenders {
     is_default
     enterprise_email
     senders_name
+    emailId
+    smsId
   }
 }
 
