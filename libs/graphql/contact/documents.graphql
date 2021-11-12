@@ -135,5 +135,6 @@ mutation renameDocument($documentId: Int!, $title: String!) {
     data: { attachment_title: { set: $title } }
   ) {
     id
+    attachment_title
   }
 }

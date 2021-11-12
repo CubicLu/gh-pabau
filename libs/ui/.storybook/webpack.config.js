@@ -3,21 +3,21 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const rootWebpackConfig = require('../../../.storybook/webpack.config')
 
-const lessToJs = require('less-vars-to-js')
-const fs = require('fs')
-const path = require('path')
+// const lessToJs = require('less-vars-to-js')
+// const fs = require('fs')
+// const path = require('path')
 
 // Read the less file in as string
-const paletteLess = fs.readFileSync(
-  path.resolve(__dirname, '../src/styles/antd.less'),
-  'utf8'
-)
+// const paletteLess = fs.readFileSync(
+//   path.resolve(__dirname, '../src/styles/antd.less'),
+//   'utf8'
+// )
 
 // Pass in file contents
-const lessVars = lessToJs(paletteLess, {
-  resolveVariables: true,
-  stripPrefix: true,
-})
+// const lessVars = lessToJs(paletteLess, {
+//   resolveVariables: true,
+//   stripPrefix: true,
+// })
 
 /**
  * Export a function. Accept the base config as the only param.
@@ -68,7 +68,33 @@ module.exports = async ({ config, mode }) => {
         options: {
           lessOptions: {
             javascriptEnabled: true,
-            modifyVars: lessVars,
+            modifyVars: {
+              '@primary-color': '#54b2d3',
+              '@link-color': '#1890ff',
+              '@primary-info-color': ' #e2f6f5',
+              '@success-color': '#52c41a',
+              '@warning-color': '#faad14',
+              '@error-color': '#f5222d',
+              '@red-color-text': '#ff5b64',
+              '@blue-color-text': '#6383f1',
+              '@font-size-base': '14px',
+              '@heading-color': 'rgba(0, 0, 0, 0.85)',
+              '@text-color': 'rgba(0, 0, 0, 0.65)',
+              '@text-color-secondary': 'rgba(0, 0, 0, 0.45)',
+              '@disabled-color': 'rgba(0, 0, 0, 0.25)',
+              '@light-color': '#ffffff',
+              '@red-focused-color': '#df562b',
+              '@green-primary-color': '#65cd98',
+              '@blue-focused-color': '#eef7fb',
+              '@border-color-base': '#ecedf0',
+              '@gray-background-color': '#ecedf070',
+              '@gray-background-light-color': '#fcfcfc',
+              '@box-shadow-base':
+                '0 3px 6px -4px rgba(0, 0, 0, 0.12),0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+              '@font-variant-base': 'normal',
+              '@font-feature-settings-base': 'normal',
+              '@font-family': 'Circular-Std-Book, -apple-system, sans-serif,',
+            },
           },
         },
       },
@@ -92,7 +118,7 @@ module.exports = async ({ config, mode }) => {
         options: {
           lessOptions: {
             javascriptEnabled: true,
-            modifyVars: lessVars,
+            // modifyVars: lessVars,
           },
         },
       },

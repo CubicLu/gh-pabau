@@ -1,0 +1,209 @@
+.pincodeMainWrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: #bbe0ed;
+  .passcode {
+    position: absolute;
+    width: 360px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #54b2d3;
+    box-shadow: 0px 4px 15px rgba(84, 85, 100, 0.08);
+    border-radius: 16px;
+    background-color: #fff;
+    padding: 47px 40px 37px;
+    .lockIcon {
+      margin-bottom: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .passcodeHeading {
+      margin-bottom: 22px;
+      h4 {
+        font-size: 22px;
+        line-height: 28px;
+        text-align: center;
+        color: #3d3d46;
+        margin: 0;
+      }
+    }
+    .passcodeForm {
+      .passcodeInput {
+        margin-bottom: 32px;
+        input {
+          font-size: 16px;
+          line-height: 24px;
+          background: #ffffff;
+          border-radius: 4px;
+          padding: 8px 12px;
+          width: 100%;
+          outline: none;
+          border: 1px solid #ecedf0;
+          // padding: 4px 1px;
+          &::placeholder {
+            font-size: 16px;
+            line-height: 24px;
+            color: #b8b8c0;
+          }
+        }
+      }
+      .passcodeButton {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        button {
+          height: 40px;
+          padding: 8px 15px;
+          &:not(:last-child) {
+            margin-right: 16px;
+          }
+        }
+      }
+    }
+  }
+  .password {
+    position: absolute;
+    max-width: 430px;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    .passwordWraper {
+      border: 1px solid #54b2d3;
+      box-shadow: 0px 4px 15px rgba(84, 85, 100, 0.08);
+      border-radius: 16px;
+      background-color: #fff;
+      padding: 48px 32px 28px;
+    }
+    .lockIcon {
+      margin-bottom: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .passwordHeading {
+      margin-bottom: 20px;
+      h4 {
+        font-size: 20px;
+        line-height: 24px;
+        font-weight: 600;
+        letter-spacing: 0.75px;
+        color: #000000;
+        text-align: center;
+        margin: 0;
+      }
+    }
+    .passwordNumDots {
+      .dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        animation-duration: 500ms;
+        &.wrongpw {
+          animation-name: WrongPw;
+        }
+        .dot {
+          width: 12px;
+          height: 12px;
+          border: 1px solid #9292a3;
+          border-radius: 100%;
+          margin: 0 10px;
+          &.active {
+            background-color: #9292a3;
+          }
+        }
+      }
+      .numbers {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+        .number {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 28px;
+          line-height: 33px;
+          letter-spacing: 0.87px;
+          text-align: center;
+          color: #000000;
+          padding: 15px 35px;
+          margin-bottom: 5px;
+          border: 0;
+          background-color: transparent;
+          outline: none;
+          height: auto;
+          position: relative;
+          overflow: hidden;
+          user-select: none;
+          @media only screen and (max-width: 360px) {
+            padding: 15px 28px;
+          }
+          &:after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 65px;
+            height: 65px;
+            background-color: #000000;
+            opacity: 0.5;
+            border-radius: 100%;
+            transition: all 0.3s ease-in-out;
+          }
+          &.active {
+            &:after {
+              animation-name: buttonEffect;
+              animation-duration: 500ms;
+            }
+          }
+        }
+      }
+    }
+    .buttonsWrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .buttonLink {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 17px;
+        line-height: 22px;
+        letter-spacing: -0.408px;
+        color: #54b2d3;
+      }
+    }
+  }
+}
+
+@keyframes buttonEffect {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes WrongPw {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-10px);
+  }
+  40% {
+    transform: translateX(10px);
+  }
+  60% {
+    transform: translateX(-10px);
+  }
+  80% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
