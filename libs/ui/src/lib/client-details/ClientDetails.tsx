@@ -1552,10 +1552,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
           </Carousel>
         </div>
       )}
-      {isMobile && (
+      {isMobile && clientLabels?.length > 0 && (
         <div className={styles.detailsLabelContainer}>
           <div className={styles.detailsLabelsMobile}>
-            {clientLabels.map((label, index) => (
+            {clientLabels?.map((label, index) => (
               <div
                 className={styles.detailsLabel}
                 key={`client-label-mobile-${index}`}

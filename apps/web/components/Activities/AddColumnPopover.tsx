@@ -67,6 +67,29 @@ export const columnNames = {
   wonBy: { label: 'Won by', id: 'lead.wonBy' },
   leadStage: { label: 'Lead stage', id: 'lead.leadStage' },
   leadStatus: { label: 'Lead status', id: 'lead.leadStatus' },
+  leadLocation: { label: 'Lead location', id: 'lead.location ' },
+  leadActivityToDo: { label: 'Activities to do', id: 'lead.activityToDo' },
+  leadCreator: { label: 'Lead creator', id: 'lead.creator' },
+  leadDateEnteringStage: {
+    label: 'Date of entering stage',
+    id: 'lead.dateEnteringStage',
+  },
+  leadEmailMessagesCount: {
+    label: 'Email messages count',
+    id: 'lead.emailMessageCount',
+  },
+  leadLastEmailReceived: {
+    label: 'Last email received',
+    id: 'lead.lastEmailReceived',
+  },
+  leadLastEmailSent: { label: 'Last email sent', id: 'lead.lastEmailSent' },
+  leadNextActivityDate: {
+    label: 'Next activity date',
+    id: 'lead.nextActivityDate',
+  },
+  leadPipeline: { label: 'Pipeline', id: 'lead.pipeline' },
+  leadUpdateTime: { label: 'Update time', id: 'lead.updateTime' },
+  leadTitle: { label: 'Title', id: 'lead.title' },
   clientName: { label: 'Client name', id: 'client.firstName' },
   label: { label: 'Label', id: 'client.label' },
   clientEmail: { label: 'Client email', id: 'client.email' },
@@ -258,6 +281,50 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
         {
           label: t('activityList.column.leadDescription'),
           value: columnNames.leadDescription.label,
+        },
+        {
+          label: t('activityList.column.leadLocation'),
+          value: columnNames.leadLocation.label,
+        },
+        {
+          label: t('activityList.column.leadActivityToDo'),
+          value: columnNames.leadActivityToDo.label,
+        },
+        {
+          label: t('activityList.column.leadCreator'),
+          value: columnNames.leadCreator.label,
+        },
+        {
+          label: t('activityList.column.leadDateEnteringStage'),
+          value: columnNames.leadDateEnteringStage.label,
+        },
+        {
+          label: t('activityList.column.leadEmailMessagesCount'),
+          value: columnNames.leadEmailMessagesCount.label,
+        },
+        {
+          label: t('activityList.column.leadLastEmailReceived'),
+          value: columnNames.leadLastEmailReceived.label,
+        },
+        {
+          label: t('activityList.column.leadLastEmailSent'),
+          value: columnNames.leadLastEmailSent.label,
+        },
+        {
+          label: t('activityList.column.leadNextActivityDate'),
+          value: columnNames.leadNextActivityDate.label,
+        },
+        {
+          label: t('activityList.column.leadPipeline'),
+          value: columnNames.leadPipeline.label,
+        },
+        {
+          label: t('activityList.column.leadUpdateTime'),
+          value: columnNames.leadUpdateTime.label,
+        },
+        {
+          label: t('activityList.column.leadTitle'),
+          value: columnNames.leadTitle.label,
         },
       ],
       [t]

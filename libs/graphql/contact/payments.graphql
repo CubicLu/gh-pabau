@@ -1,0 +1,44 @@
+query getPayments($contactID: Int!, $take: Int = 50, $skip: Int = 0) {
+  payments: findManyInvPayment(
+    take: $take
+    skip: $skip
+    where: { contact_id: { equals: $contactID } }
+  ) {
+    id
+    date
+    pmethod
+    amount
+    contact: CmContact {
+      AccountBalance {
+        balance
+      }
+    }
+    sales: InvSale {
+      custom_id
+      location: Location {
+        name
+      }
+      biller: InvBiller {
+        name
+      }
+    }
+    user: User {
+      full_name
+    }
+  }
+}
+
+query totalPaymentsCount($ContactID: Int!){
+  aggregateInvPayment(
+    where:{
+      contact_id:{equals:$ContactID}
+    }
+  ){
+    count{
+      id
+    }
+    sum{
+      amount
+    }
+  }
+}

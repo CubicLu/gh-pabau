@@ -6,7 +6,10 @@ import NextAppointments from '../../../components/ClientCard/dashboard/NextAppoi
 const Appointments = () => {
   const router = useRouter()
   return (
-    <ClientCardLayout clientId={Number(router.query['id'])}>
+    <ClientCardLayout
+      clientId={Number(router.query['id'])}
+      activeTab="dashboard"
+    >
       <NextAppointments />
     </ClientCardLayout>
   )

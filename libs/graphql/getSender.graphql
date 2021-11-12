@@ -1,0 +1,11 @@
+query getComSenders {
+  getSenders {
+    id
+    company_id
+    data
+    type
+    is_default
+    enterprise_email
+    senders_name
+  }
+}

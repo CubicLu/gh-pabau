@@ -303,7 +303,8 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label + `, ${location.date ?? ''}`
+                  location.label +
+                  `${location.date ? `${',' + location.date}` : ''}`
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}
@@ -341,7 +342,8 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label + `, ${location.date ?? ''}`
+                  location.label +
+                  `${location.date ? `${',' + location.date}` : ''}`
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}

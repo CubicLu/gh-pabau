@@ -83,14 +83,8 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
         actionTypes.SET_CATEGORY_ID,
         servicesByCategory.Public_ServiceCategories[0].id
       )
-    }
-  }, [
-    loadingServicesByCategory,
-    servicesByCategory,
-    hasMasterCategories,
-    actionTypes.SET_CATEGORY_ID,
-    setSelectedData,
-  ])
+    } // eslint-disable-next-line
+  }, [loadingServicesByCategory, hasMasterCategories])
 
   if (errorServices || errorServicesByCategory) return <div>Error!</div>
   if (loadingServices || loadingServicesByCategory) return <div>Loading...</div>
@@ -415,6 +409,7 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
           return renderCategoryItem(val)
         })
   }
+
   const renderCategoryItem = (category: Category) => {
     const isCurrentCategory = category.id === selectedData.categoryID
     return (
@@ -423,6 +418,7 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
           style={{ margin: '12px 0', cursor: 'pointer' }}
           key={category.id}
           onClick={() => {
+            console.log('selecting', category.id)
             setSelectedData(actionTypes.SET_CATEGORY_ID, category.id)
           }}
         >

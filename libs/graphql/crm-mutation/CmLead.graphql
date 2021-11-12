@@ -78,6 +78,9 @@ fragment CmLead on CmLead {
   Contact {
     ...CmContactFields
   }
+  Location {
+    ...CompanyBranchFields
+  }
 }
 
 mutation updateOneCmLead($where: CmLeadWhereUniqueInput!, $data: CmLeadUpdateInput!) {

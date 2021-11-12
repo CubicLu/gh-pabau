@@ -1,0 +1,50 @@
+fragment CommunicationAttachmentFields on CommunicationAttachment {
+  id
+  communication_id
+  company_id
+  contact_id
+  file_url
+}
+
+fragment CommunicationAttachment on CommunicationAttachment {
+  ...CommunicationAttachmentFields
+  Communication {
+    ...CommunicationFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCommunicationAttachment($data: CommunicationAttachmentCreateInput!) {
+  createOneCommunicationAttachment(data: $data) {
+    ...CommunicationAttachment
+  }
+}
+
+mutation updateOneCommunicationAttachment(
+  $where: CommunicationAttachmentWhereUniqueInput!
+  $data: CommunicationAttachmentUpdateInput!
+) {
+  updateOneCommunicationAttachment(where: $where, data: $data) {
+    ...CommunicationAttachment
+  }
+}
+
+mutation deleteOneCommunicationAttachment($where: CommunicationAttachmentWhereUniqueInput!) {
+  deleteOneCommunicationAttachment(where: $where) {
+    ...CommunicationAttachment
+  }
+}
+
+mutation updateManyCommunicationAttachment(
+  $where: CommunicationAttachmentWhereInput
+  $data: CommunicationAttachmentUpdateManyMutationInput!
+) {
+  updateManyCommunicationAttachment(where: $where, data: $data) {
+    count
+  }
+}

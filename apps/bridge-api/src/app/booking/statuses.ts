@@ -148,19 +148,22 @@ export const retrieveAllBookingChartData = async (
 
 export const retrieveAllBookingStatusCount = async (
   ctx: Context,
-  data: DateRangeInput
+  data: DateRangeInput,
+  isOnline: boolean
 ) => {
   const appointment = []
   const prev_data = getPreviousDateRange(data.start_date, data.end_date)
   const bookingStatusCount = await ctx.prisma.booking.groupBy({
     by: ['status'],
     where: {
-      NOT: [{ Contact: null }],
+      Contact: { ID: { not: { equals: 0 } } },
       start_date: { gte: data.start_date || undefined },
       status: { not: '' },
       end_date: { lte: data.end_date || undefined },
       location_id: { equals: data.location_id || undefined },
       UID: { equals: data.user_id || undefined },
+      company_id: { equals: ctx.authenticated.company },
+      Online: isOnline ? { equals: 1 } : {},
     },
     _count: {
       id: true,
@@ -172,9 +175,9 @@ export const retrieveAllBookingStatusCount = async (
         prev_data.prevStartDate && prev_data.prevEndDate
           ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
           : Prisma.empty
-      } contact_id>0 and status not in ('') and a.occupier=${
-    ctx.authenticated.company
-  } ${
+      } contact_id>0 and status not in ('') ${
+    isOnline ? Prisma.sql`and Online=1` : Prisma.empty
+  } and a.occupier=${ctx.authenticated.company} ${
     data.location_id
       ? Prisma.sql`and location_id=${data.location_id}`
       : Prisma.empty
@@ -213,78 +216,5 @@ export const retrieveAllBookingStatusCount = async (
     totalBookingPer:
       (Number.isFinite(+totalBookingPer) ? totalBookingPer : '0.00') + '%',
     bookingList: appointment.length > 0 ? appointment : null,
-  }
-}
-
-export const retrieveOnlineBookingStatusCount = async (
-  ctx: Context,
-  data: DateRangeInput
-) => {
-  const onlineAppointment = []
-  const prev_data = getPreviousDateRange(data.start_date, data.end_date)
-  const onlineBookingStatusCount = await ctx.prisma.booking.groupBy({
-    by: ['status'],
-    where: {
-      NOT: [{ Contact: null }],
-      start_date: { gte: data.start_date || undefined },
-      status: { not: '' },
-      end_date: { lte: data.end_date || undefined },
-      location_id: { equals: data.location_id || undefined },
-      UID: { equals: data.user_id || undefined },
-      Online: { equals: 1 },
-    },
-    _count: {
-      id: true,
-    },
-  })
-  const prevBookingOnline = await ctx.prisma.$queryRaw`SELECT count(id)
-  FROM salon_bookings a
-  where ${
-    prev_data.prevStartDate && prev_data.prevEndDate
-      ? Prisma.sql`start_date between ${prev_data.prevStartDate} and ${prev_data.prevEndDate} and`
-      : Prisma.empty
-  } contact_id>0 and Online=1 and status not in ('') and a.occupier = ${
-    ctx.authenticated.company
-  } ${
-    data.location_id
-      ? Prisma.sql`and location_id=${data.location_id}`
-      : Prisma.empty
-  }${data.user_id ? Prisma.sql`and UID=${data.user_id}` : Prisma.empty}`
-
-  onlineBookingStatusCount?.map((item) => {
-    onlineAppointment.push({
-      label: item.status,
-      count: item._count.id,
-      per:
-        (
-          ((item._count.id ?? 0) * 100) /
-          onlineBookingStatusCount?.reduce((prev, cur) => {
-            return prev + cur._count.id ?? 0
-          }, 0)
-        ).toFixed(2) + '%',
-    })
-    return item
-  })
-
-  const totalOnlineBookingPer = (onlineBookingStatusCount?.length > 0 &&
-  prev_data.prevStartDate &&
-  prev_data.prevStartDate
-    ? (onlineBookingStatusCount?.reduce((prev, cur) => {
-        return prev + cur._count.id ?? 0
-      }, 0) *
-        100) /
-        prevBookingOnline[0]['count(id)'] ?? 0
-    : 0
-  ).toFixed(2)
-
-  return {
-    totalOnlineBooking: onlineBookingStatusCount?.reduce((prev, cur) => {
-      return prev + cur._count.id ?? 0
-    }, 0), // total online bookings for only required status
-    totalOnlineBookingPer:
-      (Number.isFinite(+totalOnlineBookingPer)
-        ? totalOnlineBookingPer
-        : '0.00') + '%',
-    onlineBookingList: onlineAppointment.length > 0 ? onlineAppointment : null,
   }
 }

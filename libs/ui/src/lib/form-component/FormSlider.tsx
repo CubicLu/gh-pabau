@@ -30,7 +30,7 @@ export const FormSlider: FC<P> = ({
   }
 
   return (
-    <div className={`${styles.formSingleChoice} ${styles.formComponet}`}>
+    <div className={`${styles.formSlider} ${styles.formComponet}`}>
       {title.length > 0 && (
         <div className={styles.formComponentTitle}>
           {title}
@@ -41,7 +41,7 @@ export const FormSlider: FC<P> = ({
         <div className={styles.formComponentChoiceDescription}>{desc}</div>
       )}
       {items.length > 0 && (
-        <div className={styles.formSingleOptions}>
+        <div className={styles.formSliderOptions}>
           <SliderCustom
             data={items?.map((item) => {
               return {
