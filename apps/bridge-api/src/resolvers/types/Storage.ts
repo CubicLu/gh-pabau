@@ -225,11 +225,7 @@ export const DeleteManyContactAttachment = extendType({
             files.push(attachment['linkref'])
           }
 
-          console.log(files)
-
           const postData: BulkDeleteJsonInput = { files: files }
-
-          console.log(JSON.stringify(postData))
 
           const response = await fetch(
             'https://cdn.pabau.com/v2/api/contact/bulk-delete-attachment',
@@ -331,7 +327,8 @@ export const DeleteContactAlbum = extendType({
           } else {
             return { success: false, album: id } as DeleteOutput
           }
-        } catch {
+        } catch (error) {
+          throw new Error(error)
           return { success: false, album: id } as DeleteOutput
         }
       },
