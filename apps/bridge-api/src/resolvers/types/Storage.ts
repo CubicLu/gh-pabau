@@ -3,8 +3,8 @@ import { Context } from '../../context'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
 
-const DeleteContactPhotoResponse = objectType({
-  name: 'deleteContactPhotoResponse',
+const DeleteContactAttachmentResponse = objectType({
+  name: 'deleteContactAttachmentResponse',
   definition(t) {
     t.boolean('success')
     t.string('code')
@@ -14,8 +14,19 @@ const DeleteContactPhotoResponse = objectType({
   },
 })
 
-const DeleteManyContactPhotoResponse = objectType({
-  name: 'deleteManyContactPhotoResponse',
+const DeleteContactAlbumResponse = objectType({
+  name: 'deleteContactAlbumResponse',
+  definition(t) {
+    t.boolean('success')
+    t.string('code')
+    t.string('message')
+    t.string('error')
+    t.int('album')
+  },
+})
+
+const DeleteManyContactAttachmentResponse = objectType({
+  name: 'deleteManyContactAttachmentResponse',
   definition(t) {
     t.boolean('success')
     t.int('count')
@@ -30,16 +41,20 @@ export interface DeleteOutput {
   photo?: number
 }
 
+export interface BulkDeleteJsonInput {
+  files: string[]
+}
+
 export interface DeleteManyOutput {
   success?: boolean
   count?: number
 }
 
-export interface DeleteContactPhotoInput {
+export interface DeleteContactAttachmentInput {
   id: number
 }
 
-export interface DeleteManyContactPhotoInput {
+export interface DeleteManyContactAttachmentInput {
   ids: number[]
 }
 
@@ -118,15 +133,19 @@ export const MoveAttachments = extendType({
   },
 })
 
-export const DeleteContactAttachmentPhoto = extendType({
+export const DeleteContactAttachment = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('deleteContactAttachmentPhoto', {
-      type: DeleteContactPhotoResponse,
+    t.field('deleteContactAttachment', {
+      type: DeleteContactAttachmentResponse,
       args: {
         id: intArg(),
       },
-      resolve: async function (_, args: DeleteContactPhotoInput, ctx: Context) {
+      resolve: async function (
+        _,
+        args: DeleteContactAttachmentInput,
+        ctx: Context
+      ) {
         const { id } = args
 
         try {
@@ -144,7 +163,7 @@ export const DeleteContactAttachmentPhoto = extendType({
           postData.append('file_path', attachment.linkref)
 
           const response = await fetch(
-            'https://cdn.pabau.com/v2/api/contact/delete-photo',
+            'https://cdn.pabau.com/v2/api/contact/delete-attachment',
             {
               method: 'POST',
               headers: {
@@ -174,70 +193,148 @@ export const DeleteContactAttachmentPhoto = extendType({
   },
 })
 
-export const DeleteManyContactAttachmentPhoto = extendType({
+export const DeleteManyContactAttachment = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('deleteManyContactAttachmentPhoto', {
-      type: DeleteManyContactPhotoResponse,
+    t.field('deleteManyContactAttachment', {
+      type: DeleteManyContactAttachmentResponse,
       args: {
         ids: nonNull(list(intArg())),
       },
       resolve: async function (
         _,
-        args: DeleteManyContactPhotoInput,
+        args: DeleteManyContactAttachmentInput,
         ctx: Context
       ) {
         const { ids } = args
-        let deleted = []
+
         try {
-          for (const id of ids) {
-            const attachment = await ctx.prisma.contactAttachment.findFirst({
-              where: {
-                id: { equals: id },
-                company_id: { equals: ctx.authenticated.company },
-              },
-              select: {
-                linkref: true,
-              },
-            })
+          const attachments = await ctx.prisma.contactAttachment.findMany({
+            where: {
+              id: { in: ids },
+              company_id: { equals: ctx.authenticated.company },
+            },
+            select: {
+              linkref: true,
+            },
+          })
 
-            const postData = new FormData()
-            postData.append('file_path', attachment.linkref)
+          const files = []
 
-            const response = await fetch(
-              'https://cdn.pabau.com/v2/api/contact/delete-photo',
-              {
-                method: 'POST',
-                headers: {
-                  Authorization: `Bearer ${ctx.authJwt}`,
-                },
-                redirect: 'follow',
-                body: postData,
-              }
-            )
-
-            const res: DeleteOutput = await response.json()
-            if (res.success === true) {
-              deleted.push(id)
-            }
+          for (const attachment of attachments.values()) {
+            files.push(attachment['linkref'])
           }
 
-          if (deleted?.length > 0) {
-            deleted = deleted?.map((el) => {
-              return {
-                id: { equals: el },
-              }
-            })
+          console.log(files)
+
+          const postData: BulkDeleteJsonInput = { files: files }
+
+          console.log(JSON.stringify(postData))
+
+          const response = await fetch(
+            'https://cdn.pabau.com/v2/api/contact/bulk-delete-attachment',
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${ctx.authJwt}`,
+                'Content-Type': 'application/json',
+              },
+              redirect: 'follow',
+              body: JSON.stringify(postData),
+            }
+          )
+
+          const res: DeleteOutput = await response.json()
+
+          if (res.success === true) {
             await ctx.prisma.contactAttachment.deleteMany({
               where: {
-                OR: deleted,
+                id: { in: ids },
               },
             })
+            return { success: true, count: ids?.length } as DeleteManyOutput
+          } else {
+            return { success: false, count: 0 } as DeleteManyOutput
           }
-
-          return { success: true, count: deleted?.length } as DeleteManyOutput
         } catch {
           return { success: false, count: 0 } as DeleteManyOutput
+        }
+      },
+    })
+  },
+})
+
+export const DeleteContactAlbum = extendType({
+  type: 'Mutation',
+
+  definition(t) {
+    t.field('deleteContactAlbum', {
+      type: DeleteContactAlbumResponse,
+
+      args: {
+        id: nonNull(intArg()),
+      },
+
+      resolve: async function (
+        _,
+        args: DeleteContactAttachmentInput,
+        ctx: Context
+      ) {
+        const { id } = args
+
+        try {
+          const attachments = await ctx.prisma.contactAttachment.findMany({
+            where: {
+              album_id: { equals: id },
+              company_id: { equals: ctx.authenticated.company },
+            },
+            select: {
+              linkref: true,
+            },
+          })
+
+          const files = []
+
+          for (const [attachment] of attachments.entries()) {
+            files.push(attachment['linkref'])
+          }
+
+          const postData: BulkDeleteJsonInput = { files: files }
+
+          const response = await fetch(
+            'https://cdn.pabau.com/v2/api/contact/bulk-delete-attachment',
+
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${ctx.authJwt}`,
+                'Content-Type': 'application/json',
+              },
+              redirect: 'follow',
+              body: JSON.stringify(postData),
+            }
+          )
+
+          const res: DeleteOutput = await response.json()
+
+          if (res.success === true) {
+            await ctx.prisma.photoAlbum.delete({
+              where: {
+                id: id,
+              },
+            })
+
+            await ctx.prisma.contactAttachment.deleteMany({
+              where: {
+                album_id: id,
+              },
+            })
+            return { ...res, album: id } as DeleteOutput
+          } else {
+            return { success: false, album: id } as DeleteOutput
+          }
+        } catch {
+          return { success: false, album: id } as DeleteOutput
         }
       },
     })

@@ -13,11 +13,13 @@ import ClassNames from 'classnames'
 import {
   useBookingAvailableShiftsQuery,
   useGetBookingsBetweenDatesByUidQuery,
+  useOnlineBookableStaffQuery,
 } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
 import useShifts from '../../hooks/useShifts'
+import DefaultAvatar from '../../assets/images/default-avatar.png'
 export interface P {
   onSelected: () => void
 }
@@ -54,7 +56,19 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       start_date: Number.parseInt(moment().format('YYYYMMDD000000')),
       end_date: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
       company_id: settings.id,
-      user_id: selectedData.employee.Public_User.id,
+      user_id: selectedData.employee
+        ? selectedData.employee.Public_User.id
+        : null,
+    },
+  })
+
+  const {
+    loading: loadingStaff,
+    error: errorStaff,
+    data: staffResult,
+  } = useOnlineBookableStaffQuery({
+    variables: {
+      company_id: settings.id,
     },
   })
 
@@ -63,8 +77,9 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
     bookingsResult
   )
 
-  if (errorShifts || errorBookings) return <div>Error!</div>
-  if (loadingShifts || loadingBookings) return <div>Loading...</div>
+  if (errorShifts || errorBookings || errorStaff) return <div>Error!</div>
+  if (loadingShifts || loadingBookings || loadingStaff)
+    return <div>Loading...</div>
 
   const dateCellRender = (value) => {
     const shifts = getShiftsOnDate(value)
@@ -102,6 +117,20 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
     setSelectedDate(date)
   }
 
+  const timeslotSelectedHandler = (t) => {
+    const hour = Number.parseInt(t.slot.substring(0, 2))
+    const minute = Number.parseInt(t.slot.substring(3, 5))
+    setSelectedData(
+      actionTypes.SET_DATETIME,
+      moment(selectedDate).set({ hour: hour, minute: minute })
+    )
+    setSelectedData(
+      actionTypes.SET_EMPLOYEE,
+      staffResult.Public_Staff.find((s) => s.ID === t.staff_id)
+    )
+    onSelected()
+  }
+
   const renderTimeslots = () => {
     const timeslots = getDateTimeslots(selectedDate)
     return (
@@ -126,25 +155,31 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.mor} />{' '}
               {t('connect.onlinebooking.date&time.morning')}
             </p>
-            {timeslots.map((val) => {
-              if (val.substr(0, 2) > 11) {
+            {timeslots.map((t, i) => {
+              if (Number.parseInt(t.slot.substr(0, 2)) > 11) {
                 return null
               }
               return (
                 <div
                   className={Styles.green}
-                  key={val}
-                  onClick={() => {
-                    const hour = Number.parseInt(val.substring(0, 2))
-                    const minute = Number.parseInt(val.substring(3, 5))
-                    setSelectedData(
-                      actionTypes.SET_DATETIME,
-                      moment(selectedDate).set({ hour: hour, minute: minute })
-                    )
-                    onSelected()
-                  }}
+                  key={i}
+                  onClick={() => timeslotSelectedHandler(t)}
                 >
-                  <p>{val}</p>
+                  <p>
+                    {!selectedData.employee && (
+                      <img
+                        className={Styles.imgIcon}
+                        src={
+                          t.image !== ''
+                            ? settings.pod_url + t.image
+                            : DefaultAvatar
+                        }
+                        title={t.full_name}
+                        alt={t.full_name}
+                      />
+                    )}
+                    {t.slot}
+                  </p>
                 </div>
               )
             })}
@@ -154,13 +189,34 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.after} />
               {t('connect.onlinebooking.date&time.afternoon')}
             </p>
-            {timeslots.map((val) => {
-              if (val.substr(0, 2) < 12 || val.substr(0, 2) > 16) {
+            {timeslots.map((t, i) => {
+              if (
+                Number.parseInt(t.slot.substr(0, 2)) < 12 ||
+                Number.parseInt(t.slot.substr(0, 2)) > 16
+              ) {
                 return null
               }
               return (
-                <div className={Styles.green} key={val}>
-                  <p>{val}</p>
+                <div
+                  className={Styles.green}
+                  key={i}
+                  onClick={() => timeslotSelectedHandler(t)}
+                >
+                  <p>
+                    {!selectedData.employee && (
+                      <img
+                        className={Styles.imgIcon}
+                        src={
+                          t.image !== ''
+                            ? settings.pod_url + t.image
+                            : DefaultAvatar
+                        }
+                        title={t.full_name}
+                        alt={t.full_name}
+                      />
+                    )}
+                    {t.slot}
+                  </p>
                 </div>
               )
             })}
@@ -170,13 +226,31 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.night} />
               {t('connect.onlinebooking.date&time.evening')}
             </p>
-            {timeslots.map((val) => {
-              if (val.substr(0, 2) < 17) {
+            {timeslots.map((t, i) => {
+              if (Number.parseInt(t.slot.substr(0, 2)) < 17) {
                 return null
               }
               return (
-                <div className={Styles.green} key={val}>
-                  <p>{val}</p>
+                <div
+                  className={Styles.green}
+                  key={i}
+                  onClick={() => timeslotSelectedHandler(t)}
+                >
+                  <p>
+                    {!selectedData.employee && (
+                      <img
+                        className={Styles.imgIcon}
+                        src={
+                          t.image !== ''
+                            ? settings.pod_url + t.image
+                            : DefaultAvatar
+                        }
+                        title={t.full_name}
+                        alt={t.full_name}
+                      />
+                    )}
+                    {t.slot}
+                  </p>
                 </div>
               )
             })}
@@ -226,7 +300,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
         mdisplay && (
           <div className={Styles.content}>
             <h4 className={Styles.headTitle}>
-              {selectedData.employee.ID === 0
+              {!selectedData.employee
                 ? t('connect.onlinebooking.date&time.chooseanyone')
                 : `${t('connect.onlinebooking.date&time.d&tfor')} ${
                     selectedData.employee.Public_User.full_name
@@ -267,7 +341,7 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
       ) : (
         <div className={Styles.content}>
           <h4 className={Styles.headTitle}>
-            {selectedData.employee.ID === 0
+            {!selectedData.employee
               ? t('connect.onlinebooking.date&time.chooseanyone')
               : `${t('connect.onlinebooking.date&time.d&tfor')} ${
                   selectedData.employee.Public_User.full_name
