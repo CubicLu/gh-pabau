@@ -27,7 +27,7 @@ import {
   useCreateContactPhotoMutation,
   useCreateOnePhotoAlbumMutation,
   useUpdateOnePhotoAlbumMutation,
-  useDeleteOnePhotoAlbumMutation,
+  useDeleteContactAlbumMutation,
   useMoveContactAttachmentsMutation,
   useCreateContactPhotoWithoutAlbumMutation,
   useDeleteManyContactPhotoMutation,
@@ -212,19 +212,20 @@ const Photos: FC = () => {
       Notification(NotificationType?.error, error?.message)
     },
   })
-  const [deleteAlbum] = useDeleteOnePhotoAlbumMutation({
-    onCompleted({ deleteOnePhotoAlbum: data }) {
+  const [deleteAlbum] = useDeleteContactAlbumMutation({
+    onCompleted({ deleteContactAlbum: data }) {
       const cAlbums = { ...albums }
-      const idx = cAlbums?.album?.findIndex((el) => el?.id === data?.id)
+      const idx = cAlbums?.album?.findIndex((el) => el?.id === data?.album)
       if (idx !== -1) {
+        const cAlbum = cAlbums[idx]
         cAlbums?.album?.splice(idx, 1)
         setAlbums(cAlbums)
+        Notification(
+          NotificationType?.success,
+          `${cAlbum?.albumTitle} deleted successfully!`
+        )
       }
       setAlbumDeleteLoading(false)
-      Notification(
-        NotificationType?.success,
-        `${data?.album_name} deleted successfully!`
-      )
     },
     onError(error) {
       setAlbumDeleteLoading(false)
@@ -513,17 +514,11 @@ const Photos: FC = () => {
 
   const onAlbumDelete = (album: AlbumProps) => {
     setAlbumDeleteLoading(true)
-    if (album.imageCount <= 0) {
-      deleteAlbum({
-        variables: {
-          where: {
-            id: album?.id,
-          },
-        },
-      })
-    } else {
-      // This block will be used when we get delete whole album along with its nested albums and images by Martin
-    }
+    deleteAlbum({
+      variables: {
+        id: album?.id,
+      },
+    })
   }
 
   const onImageUpload = async (fileData: UploadingImageProps) => {
@@ -588,6 +583,7 @@ const Photos: FC = () => {
                   variables: {
                     album_id: albumId,
                     attachment_type: 'contact',
+                    attachment_title: uppCompFile.name,
                     contact_id: contactId,
                     date: dayjs().unix(),
                     image_url: data?.path,
@@ -612,6 +608,7 @@ const Photos: FC = () => {
                 createAttachmentOutOfAlbum({
                   variables: {
                     attachment_type: 'contact',
+                    attachment_title: uppCompFile.name,
                     contact_id: contactId,
                     date: dayjs().unix(),
                     image_url: data?.path,

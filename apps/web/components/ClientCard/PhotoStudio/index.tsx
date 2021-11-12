@@ -332,6 +332,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
                 variables: {
                   album_id: currentAlbumData?.id,
                   attachment_type: 'contact',
+                  attachment_title: '',
                   contact_id: contactId,
                   date: dayjs().unix(),
                   image_url: data?.path,
@@ -344,6 +345,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
               createAttachmentOutOfAlbum({
                 variables: {
                   attachment_type: 'contact',
+                  attachment_title: '',
                   contact_id: contactId,
                   date: dayjs().unix(),
                   image_url: data?.path,
