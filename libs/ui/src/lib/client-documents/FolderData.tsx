@@ -549,7 +549,7 @@ export const FolderData: FC<FolderDataProps> = ({
                 handlePreview(record?.folderData, record?.documentName)
               }
             >
-              {fileArray.has(fileData[fileData?.length - 1]) ? (
+              {!record?.folderData?.match(/\.(jpeg|jpg|gif|png)$/) ? (
                 <FileIcon
                   foldColor="lightgray"
                   labelColor="var(--primary-color)"
