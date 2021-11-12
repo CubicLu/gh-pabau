@@ -846,6 +846,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             sidebarOpen={sidebarOpen}
             setIsDragging={setIsDragging}
             setSidebarOpen={setSidebarOpen}
+            defaultSelectedPhoto={selectedPhotoId}
             loading={loading}
           />
           {isMobile && (

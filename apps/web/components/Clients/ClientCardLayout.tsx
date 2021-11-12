@@ -275,6 +275,7 @@ export const ClientCardLayout: FC<P> = ({
         { key: 'forms', name: 'Forms' },
         { key: 'photos', name: 'Photos' },
         { key: 'prescription', name: 'Prescription' },
+        { key: 'documents', name: 'Documents' },
       ],
     },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
