@@ -1,0 +1,46 @@
+fragment CustomFieldDisplayFields on CustomFieldDisplay {
+  field_id
+  depends_on
+  value
+  company_id
+}
+
+fragment CustomFieldDisplay on CustomFieldDisplay {
+  ...CustomFieldDisplayFields
+  Company {
+    ...CompanyFields
+  }
+  ManageCustomField {
+    ...ManageCustomFieldFields
+  }
+}
+
+mutation createOneCustomFieldDisplay($data: CustomFieldDisplayCreateInput!) {
+  createOneCustomFieldDisplay(data: $data) {
+    ...CustomFieldDisplay
+  }
+}
+
+mutation updateOneCustomFieldDisplay(
+  $where: CustomFieldDisplayWhereUniqueInput!
+  $data: CustomFieldDisplayUpdateInput!
+) {
+  updateOneCustomFieldDisplay(where: $where, data: $data) {
+    ...CustomFieldDisplay
+  }
+}
+
+mutation deleteOneCustomFieldDisplay($where: CustomFieldDisplayWhereUniqueInput!) {
+  deleteOneCustomFieldDisplay(where: $where) {
+    ...CustomFieldDisplay
+  }
+}
+
+mutation updateManyCustomFieldDisplay(
+  $where: CustomFieldDisplayWhereInput
+  $data: CustomFieldDisplayUpdateManyMutationInput!
+) {
+  updateManyCustomFieldDisplay(where: $where, data: $data) {
+    count
+  }
+}

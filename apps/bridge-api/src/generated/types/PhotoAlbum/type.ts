@@ -11,6 +11,7 @@ export const PhotoAlbum = objectType({
     t.string('album_name')
     t.int('contact_id')
     t.int('company_id')
+    t.nullable.string('album_type')
     t.nullable.field('creation_date', { type: 'DateTime' })
     t.nullable.field('modified_date', { type: 'DateTime' })
     t.field('Company', {

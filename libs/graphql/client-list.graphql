@@ -25,6 +25,7 @@ query GetContacts(
     }
   ) {
     id: ID
+    avatar: Avatar
     firstName: Fname
     lastName: Lname
     is_active
@@ -73,6 +74,7 @@ query GetContactsByLabel(
     }
   ) {
     id: ID
+    avatar: Avatar
     firstName: Fname
     lastName: Lname
     is_active

@@ -29,6 +29,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from '../../style.module.less'
 import { gql, useMutation } from '@apollo/client'
+
 const { Title } = Typography
 
 const defaultData = {
@@ -255,8 +256,7 @@ export const TestForm = () => {
     const medical_attr_custom_contact_id = 0
     const medical_attr_custom_contact_name = ''
     let creatMedicalContactAttrVariables = []
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [index, item] of draggedForms.entries()) {
+    for (const [, item] of draggedForms.entries()) {
       creatMedicalContactAttrVariables = [
         ...creatMedicalContactAttrVariables,
         {
@@ -316,8 +316,7 @@ export const TestForm = () => {
   }
 
   const saveMedicalAttr = async (draggedForms: MedicalFormTypes[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [index, item] of draggedForms.entries()) {
+    for (const [, item] of draggedForms.entries()) {
       const creatMedicalAttrVariables = {
         name: item.attrName,
         description: '',
@@ -332,25 +331,29 @@ export const TestForm = () => {
   }
 
   const saveMedicalFormHistory = (draggedForms: MedicalFormTypes[]) => {
-    for (const [index, item] of draggedForms.entries()) {
-      let attr_name = ''
+    let attrNameIndex = 0
+    let newDraggedForms: MedicalFormTypes[] = []
+    for (const [, item] of draggedForms.entries()) {
       const cssClassArr = previewMapping.filter(
         (mappingItem) => Object.values(mappingItem)[0] === item.formName
       )
       let cssClass = ''
       if (cssClassArr.length > 0) cssClass = Object.keys(cssClassArr[0])[0]
-
+      if (cssClass === '' || cssClass === 'heading') {
+        continue
+      }
+      let attr_name = ''
       if (item.txtQuestion !== '') {
-        attr_name = index + item.txtQuestion.trim()
+        attr_name = attrNameIndex + item.txtQuestion.trim()
       } else if (item.txtValue !== '') {
-        attr_name = index + item.txtValue.trim()
+        attr_name = attrNameIndex + item.txtValue.trim()
       } else if (item.arrItems.length > 0) {
-        attr_name = index + item.arrItems[0].name.trim()
+        attr_name = attrNameIndex + item.arrItems[0].name.trim()
       } else {
-        attr_name = index + 'nothing'
+        attr_name = attrNameIndex + 'nothing'
       }
       if (cssClass === 'labs_tests') {
-        attr_name = index + 'labs_tests[]'
+        attr_name = attrNameIndex + 'labs_tests[]'
       }
       item.attrName = attr_name.replace('_', ' ').toLowerCase()
 
@@ -361,7 +364,9 @@ export const TestForm = () => {
           (arrItem) => item.arrValue.indexOf(arrItem.id.toString()) >= 0
         )
         if (vals.length > 0) {
-          const val1 = vals.map((val) => btoa(val.name))
+          const val1 = vals.map((val) =>
+            btoa(unescape(encodeURIComponent(val.name)))
+          )
           item.attrValue = val1.join(',')
         } else {
           item.attrValue = ''
@@ -374,9 +379,13 @@ export const TestForm = () => {
         else item.attrValue = ''
       } else if (cssClass === 'labs_tests') {
         item.attrValue = item.arrValue.join(',')
+      } else {
+        item.attrName = ''
       }
+      newDraggedForms = [...newDraggedForms, item]
+      attrNameIndex++
     }
-    saveMedicalAttr(draggedForms)
+    saveMedicalAttr(newDraggedForms)
   }
 
   const loggedInUser = useUser()

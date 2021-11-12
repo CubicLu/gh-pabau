@@ -55,6 +55,8 @@ export const tab = {
 
 export const Clients = () => {
   const urlRouter = useRouter()
+  const appVersion = urlRouter?.query['app']
+  const version = '1'
   const [searchText, setSearchText] = useState('')
   const [labelsList, setLabelsList] = useState([])
   // const [isLoading, setIsLoading] = useState(true)
@@ -723,6 +725,8 @@ export const Clients = () => {
       addLabelMutation={addLabelMutation}
       selectedTab={selectedTab}
       filterLabelIds={filterIds}
+      appVersion={appVersion}
+      version={version}
       // contactsLabels={contactsLabels}
       // getContactsLabelsQuery={getContactsLabelsQuery}
       // getLabelsQuery={getLabelsQuery}
@@ -740,16 +744,15 @@ export const Clients = () => {
     />
   )
 
-  return (
-    <div>
-      <LayoutComponent active={'clients'} isDisplayingFooter={false} {...user}>
+  const clientPageContent = () => {
+    return (
+      <>
         <CommonHeader
           isShowSearch
           searchInputPlaceHolder={t('clients.header.search.placeHolder')}
           handleSearch={(searchTerm) => setSearchText(searchTerm)}
           title={t('clients.commonHeader')}
           searchValue={searchText}
-          isShowMenuDrawer={urlRouter?.query['app'] === '1' ? false : true}
           // displayCreateButton={true}
           // handleCreate={toggleCreateClientModal}
         >
@@ -762,10 +765,15 @@ export const Clients = () => {
             }}
             tableSearch={false}
             needTranslation={true}
+            showMobHeaderOnDesktop={appVersion === version ? true : false}
           />
         </CommonHeader>
-        <div>
-          {size.width < 768 && (
+        <div
+          className={
+            appVersion === version ? styles.appViewContentDesktop : null
+          }
+        >
+          {(size.width < 768 || appVersion === version) && (
             <Tabs
               style={{ minHeight: '0vh' }}
               className={styles.tabContentWrap}
@@ -802,7 +810,7 @@ export const Clients = () => {
               </TabPane>
             </Tabs>
           )}
-          {size.width > 767 && (
+          {size.width > 767 && appVersion !== version && (
             <div>
               <ClientsHeader
                 searchText={searchText}
@@ -849,7 +857,23 @@ export const Clients = () => {
             </div>
           )}
         </div>
-      </LayoutComponent>
+      </>
+    )
+  }
+
+  return (
+    <div>
+      {appVersion !== version || size.width < 768 ? (
+        <LayoutComponent
+          active={'clients'}
+          isDisplayingFooter={false}
+          {...user}
+        >
+          {clientPageContent()}
+        </LayoutComponent>
+      ) : (
+        clientPageContent()
+      )}
       {(createClientModalVisible || isEdit) && (
         <ClientCreate
           modalVisible={createClientModalVisible || isEdit}

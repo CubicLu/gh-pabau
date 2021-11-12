@@ -15,6 +15,7 @@ import Chat from '../components/Chat/Chat'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './CommonHeader.module.less'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import classNames from 'classnames'
 const AntHeader = AntLayout.Header
 
@@ -31,7 +32,6 @@ interface P {
   leadCreateRender?: (handleClose?: () => void) => JSX.Element
   displayActivity?: boolean
   renderActivity?: ReactNode
-  isShowMenuDrawer?: boolean
 }
 
 const CommonHeader: FC<P> = ({
@@ -47,9 +47,10 @@ const CommonHeader: FC<P> = ({
   leadCreateRender,
   displayActivity = false,
   renderActivity,
-  isShowMenuDrawer = true,
 }) => {
   const user = useUser()
+  const urlRouter = useRouter()
+  const appVersion = urlRouter?.query['app']
   const [showChat, setShowChat] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -64,138 +65,148 @@ const CommonHeader: FC<P> = ({
   }, [searchValue])
 
   return (
-    <div className={styles.desktopViewNone}>
-      <AntHeader className={styles.pabauCommonHeader}>
-        <div className={styles.mobileViewAlign}>
-          {!showSearch && (
-            <div
-              className={classNames(
-                styles.commonHeaderHeading,
-                !isShowSearch && !children ? styles.w100 : styles.w50
-              )}
-            >
-              {isLeftOutlined ? (
-                <Link href={reversePath}>
-                  <LeftOutlined />
-                </Link>
-              ) : (
-                isShowMenuDrawer && (
-                  <MenuOutlined
-                    className={styles.menuHeaderIconColor}
-                    onClick={() => {
-                      setMenuDrawer(() => !openMenuDrawer)
-                    }}
-                  />
-                )
-              )}
-              <p className={!isShowSearch && !children && styles.centeredTitle}>
-                {title}
-              </p>
-            </div>
-          )}
-          {(isShowSearch || children) && (
-            <div
-              className={classNames(
-                styles.rightContentWrapper,
-                (!isShowSearch && !children) || showSearch
-                  ? styles.w100
-                  : styles.w50
-              )}
-            >
-              {isShowSearch && (
-                <div className={styles.searchInput}>
-                  {!showSearch ? (
-                    <SearchOutlined
+    <div>
+      <div
+        className={
+          urlRouter?.pathname?.includes('clients')
+            ? appVersion !== '1' && styles.desktopViewNone
+            : styles.desktopViewNone
+        }
+      >
+        <AntHeader className={styles.pabauCommonHeader}>
+          <div className={styles.mobileViewAlign}>
+            {!showSearch && (
+              <div
+                className={classNames(
+                  styles.commonHeaderHeading,
+                  !isShowSearch && !children ? styles.w100 : styles.w50
+                )}
+              >
+                {isLeftOutlined ? (
+                  <Link href={reversePath}>
+                    <LeftOutlined />
+                  </Link>
+                ) : (
+                  appVersion !== '1' && (
+                    <MenuOutlined
+                      className={styles.menuHeaderIconColor}
                       onClick={() => {
-                        setShowSearch(() => true)
+                        setMenuDrawer(() => !openMenuDrawer)
                       }}
-                      className={classNames(
-                        styles.marketingIconStyle,
-                        children && styles.paddingRight
-                      )}
                     />
-                  ) : (
-                    <div className={styles.searchInput}>
-                      {isLeftOutlined ? (
-                        <Link href={reversePath}>
-                          <LeftOutlined />
-                        </Link>
-                      ) : (
-                        isShowMenuDrawer && (
-                          <MenuOutlined
-                            className={styles.menuHeaderIconColor}
-                            onClick={() => {
-                              setMenuDrawer(() => !openMenuDrawer)
-                            }}
-                          />
-                        )
-                      )}
-                      <Input
-                        value={searchTerm}
-                        className={styles.searchStyle}
-                        placeholder={
-                          searchInputPlaceHolder ||
-                          t('basic-crud-table-input-search-placeholder')
-                        }
-                        onChange={(e) => {
-                          setSearchTerm(e.target.value)
-                          handleSearch?.(e.target.value)
+                  )
+                )}
+                <p
+                  className={!isShowSearch && !children && styles.centeredTitle}
+                >
+                  {title}
+                </p>
+              </div>
+            )}
+            {(isShowSearch || children) && (
+              <div
+                className={classNames(
+                  styles.rightContentWrapper,
+                  (!isShowSearch && !children) || showSearch
+                    ? styles.w100
+                    : styles.w50
+                )}
+              >
+                {isShowSearch && (
+                  <div className={styles.searchInput}>
+                    {!showSearch ? (
+                      <SearchOutlined
+                        onClick={() => {
+                          setShowSearch(() => true)
                         }}
-                        suffix={
-                          searchTerm ? (
-                            <CloseCircleFilled
-                              className={styles.closeIcon}
+                        className={classNames(
+                          styles.marketingIconStyle,
+                          children && styles.paddingRight
+                        )}
+                      />
+                    ) : (
+                      <div className={styles.searchInput}>
+                        {isLeftOutlined ? (
+                          <Link href={reversePath}>
+                            <LeftOutlined />
+                          </Link>
+                        ) : (
+                          appVersion !== '1' && (
+                            <MenuOutlined
+                              className={styles.menuHeaderIconColor}
                               onClick={() => {
-                                setSearchTerm('')
-                                handleSearch?.('')
-                              }}
-                            />
-                          ) : (
-                            <CloseIcon
-                              onClick={() => {
-                                setShowSearch(() => false)
+                                setMenuDrawer(() => !openMenuDrawer)
                               }}
                             />
                           )
-                        }
-                        autoFocus
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-              {!showSearch && children}
-              {displayActivity && <div>{renderActivity}</div>}
-            </div>
-          )}
-        </div>
-      </AntHeader>
-      {openMenuDrawer && (
-        <MobileSidebar
-          searchRender={() => <Search />}
-          onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
-          onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
-          onClickChatDrawer={() => setShowChat(() => true)}
-          clientCreateRender={clientCreateRender}
-          leadCreateRender={leadCreateRender}
-          onLogout={user?.logout}
-          userData={{
-            company: user?.me?.company,
-            user: user?.me?.user,
-            fullName: user?.me?.full_name,
-            companyName: user?.me?.companyName,
-            imageUrl: getImage(user?.me?.imageUrl),
-            ...user?.me,
-          }}
-        />
-      )}
-      {openNotificationDrawer && (
-        <NotificationDrawer
-          openDrawer={openNotificationDrawer}
-          closeDrawer={() => setNotificationDrawer((e) => !e)}
-        />
-      )}
-      <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
+                        )}
+                        <Input
+                          value={searchTerm}
+                          className={styles.searchStyle}
+                          placeholder={
+                            searchInputPlaceHolder ||
+                            t('basic-crud-table-input-search-placeholder')
+                          }
+                          onChange={(e) => {
+                            setSearchTerm(e.target.value)
+                            handleSearch?.(e.target.value)
+                          }}
+                          suffix={
+                            searchTerm ? (
+                              <CloseCircleFilled
+                                className={styles.closeIcon}
+                                onClick={() => {
+                                  setSearchTerm('')
+                                  handleSearch?.('')
+                                }}
+                              />
+                            ) : (
+                              <CloseIcon
+                                onClick={() => {
+                                  setShowSearch(() => false)
+                                }}
+                              />
+                            )
+                          }
+                          autoFocus
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+                {!showSearch && children}
+                {displayActivity && <div>{renderActivity}</div>}
+              </div>
+            )}
+          </div>
+        </AntHeader>
+        {openMenuDrawer && (
+          <MobileSidebar
+            searchRender={() => <Search />}
+            onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
+            onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
+            onClickChatDrawer={() => setShowChat(() => true)}
+            clientCreateRender={clientCreateRender}
+            leadCreateRender={leadCreateRender}
+            onLogout={user?.logout}
+            userData={{
+              company: user?.me?.company,
+              user: user?.me?.user,
+              fullName: user?.me?.full_name,
+              companyName: user?.me?.companyName,
+              imageUrl: getImage(user?.me?.imageUrl),
+              ...user?.me,
+            }}
+          />
+        )}
+        {openNotificationDrawer && (
+          <NotificationDrawer
+            openDrawer={openNotificationDrawer}
+            closeDrawer={() => setNotificationDrawer((e) => !e)}
+          />
+        )}
+        <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
+      </div>
     </div>
   )
 }

@@ -1,15 +1,16 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, Pagination } from '@pabau/ui'
 import styles from './Payments.module.less'
-import {
-  ClientFinancialsLayoutProps,
-  InvoiceProp,
-} from './../ClientFinancialsLayout'
-import { Typography, Button, Popover, Radio, Space } from 'antd'
+import { FinancialPayment } from './../ClientFinancialsLayout'
+import { Typography, Button, Popover, Radio, Space, Skeleton } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
-import EditInvoice from './../invoices/EditInvoice'
+import { GetPaymentsDocument, TotalPaymentsCountQuery } from '@pabau/graphql'
+import { useQuery } from '@apollo/client'
+import dayjs from 'dayjs'
+import { useUser } from '../../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../../helper/stringToCurrencySignConverter'
 
 const getInvoicePaymentValues = () => {
   return {
@@ -17,58 +18,113 @@ const getInvoicePaymentValues = () => {
   }
 }
 
-export const Payments: FC<ClientFinancialsLayoutProps> = ({
-  payments,
-  accountCredit,
-  totalPayments,
-  invoices,
+interface IPaymentsProps {
+  clientId?: number
+  totalPaymentCounts?: TotalPaymentsCountQuery
+}
+
+export const Payments: FC<IPaymentsProps> = ({
+  clientId,
+  totalPaymentCounts,
 }) => {
   const { t } = useTranslation('common')
   const { Text } = Typography
+  const user = useUser()
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
-  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceProp>()
-  const [showEditInvoice, setShowEditInvoice] = useState(false)
   const [paymentFilter, setPaymentFilter] = useState(getInvoicePaymentValues())
+  const [paymentData, setPayment] = useState<FinancialPayment[]>([])
 
-  const onPressInvNo = (e) => {
-    const invoice = invoices.find((x) => x.id === e.toString())
-    setSelectedInvoice(invoice)
-    setShowEditInvoice(true)
-  }
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      skip: !clientId,
+      variables: {
+        contactID: clientId,
+        take: paginateData.limit,
+        skip: paginateData.offset,
+      },
+    }
+    return queryOptions
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.limit, paginateData.offset, clientId])
+
+  const { data: payment, loading } = useQuery(
+    GetPaymentsDocument,
+    getQueryVariables
+  )
+
+  useEffect(() => {
+    const paymentsDetails = []
+    payment?.payments?.map((item, index) => {
+      paymentsDetails.push({
+        id: index,
+        date: dayjs.unix(item?.date).format('DD/MM/YYYY'),
+        invoiceNo: item?.sales?.custom_id,
+        paymentNo: item?.id,
+        location: item?.sales?.location?.name,
+        employee: item?.sales?.biller?.name,
+        paidBy: item?.user?.full_name,
+        method: item?.pmethod,
+        amount: item?.amount,
+      })
+      return paymentsDetails
+    })
+    setPayment(paymentsDetails)
+  }, [payment])
+
+  useEffect(() => {
+    setPaginateData({
+      ...paginateData,
+      total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalPaymentCounts])
+
+  useEffect(() => {
+    if (payment) {
+      setPaginateData((d) => ({
+        ...d,
+        total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
+        showingRecords: payment?.payments?.length,
+      }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payment])
 
   const columns = [
     {
-      title: t('ui.client-card-financial.payments.payment-no'),
-      dataIndex: 'paymentNo',
+      title: t('ui.client-card-financial.payments.date'),
+      dataIndex: 'date',
       visible: true,
-      width: 40,
-      render: function renderItem(value, row) {
+    },
+    {
+      title: t('ui.client-card-financial.payments.invoice-no'),
+      dataIndex: 'invoiceNo',
+      visible: true,
+      render: function renderItem(value) {
         return (
-          <span className={styles.paymentNo}>
-            <span>{row.date}</span>
-            <span>#{value}</span>
+          <span
+            className={styles.primaryText}
+            onClick={() => console.log('inv')}
+          >
+            #{value}
           </span>
         )
       },
     },
     {
-      title: t('ui.client-card-financial.payments.against'),
-      dataIndex: 'invoiceNo',
+      title: t('ui.client-card-financial.payments.payment-no'),
+      dataIndex: 'paymentNo',
       visible: true,
-      width: 80,
       render: function renderItem(value) {
         return (
-          <span
-            className={styles.primaryText}
-            onClick={() => onPressInvNo(value)}
-          >
-            INV-{value}
+          <span className={styles.primaryText}>
+            <span>#{value}</span>
           </span>
         )
       },
@@ -77,33 +133,33 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
       title: t('ui.client-card-financial.payments.location'),
       dataIndex: 'location',
       visible: true,
-      width: 150,
     },
     {
       title: t('ui.client-card-financial.payments.employee'),
       dataIndex: 'employee',
       visible: true,
-      width: 100,
     },
     {
       title: t('ui.client-card-financial.payments.paid-by'),
       dataIndex: 'paidBy',
       visible: true,
-      width: 100,
     },
     {
       title: t('ui.client-card-financial.payments.method'),
       dataIndex: 'method',
       visible: true,
-      width: 80,
     },
     {
       title: t('ui.client-card-financial.payments.amount'),
       dataIndex: 'amount',
       visible: true,
-      width: 80,
       render: function renderItem(value) {
-        return <span>£{value.toFixed(2)}</span>
+        return (
+          <span>
+            {stringToCurrencySignConverter(user.me?.currency)}
+            {value.toFixed(2)}
+          </span>
+        )
       },
     },
   ]
@@ -147,15 +203,9 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
   }
 
   return (
-    <>
-      {showEditInvoice && (
-        <EditInvoice
-          invoice={selectedInvoice}
-          onModalBackPress={() => setShowEditInvoice(false)}
-        />
-      )}
-      <div className={styles.payments}>
-        <div className={styles.filterRow}>
+    <div className={styles.payments}>
+      <div className={styles.filterRow}>
+        {!loading ? (
           <Popover
             content={filterContent}
             title={t('ui.client-card-financial.invoices.filter-by')}
@@ -166,44 +216,153 @@ export const Payments: FC<ClientFinancialsLayoutProps> = ({
               <FilterOutlined />
             </div>
           </Popover>
-        </div>
+        ) : (
+          <Skeleton.Input
+            active={true}
+            size="default"
+            className={styles.filterSkeleton}
+          />
+        )}
+      </div>
+      {!loading ? (
         <Table
           loading={false}
           draggable={false}
           scroll={{ x: true }}
-          dataSource={payments?.map((e: { id }) => ({
+          dataSource={paymentData?.map((e: { id }) => ({
             key: e.id,
             ...e,
           }))}
           columns={columns}
           noDataText={t('ui.client-card-financial.payments')}
         />
-        <div className={styles.pagination}>
-          <Pagination
-            total={paginateData.total}
-            defaultPageSize={10}
-            showSizeChanger={false}
-            onChange={onPaginationChange}
-            pageSize={paginateData.limit}
-            current={paginateData.currentPage}
-            showingRecords={paginateData.showingRecords}
+      ) : (
+        <Table
+          rowKey="key"
+          pagination={false}
+          dataSource={[...Array.from({ length: 10 })].map((_, index) => (
+            <div key={index}>
+              <Skeleton.Input
+                active={true}
+                size="small"
+                className={styles.columnSkeleton}
+              />
+            </div>
+          ))}
+          columns={columns.map((column) => {
+            return {
+              ...column,
+              render: function renderPlaceholder() {
+                switch (column.dataIndex) {
+                  case 'date':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'invoiceNo':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'paymentNo':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'location':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.locationSkeleton}
+                      />
+                    )
+                  case 'employee':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'paidBy':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'method':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'amount':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                }
+              },
+            }
+          })}
+        />
+      )}
+      {!loading && (
+        <div>
+          <div className={styles.pagination}>
+            <Pagination
+              total={paginateData.total}
+              defaultPageSize={50}
+              pageSizeOptions={['10', '25', '50', '100']}
+              showSizeChanger={false}
+              onChange={onPaginationChange}
+              pageSize={paginateData.limit}
+              current={paginateData.currentPage}
+              showingRecords={paginateData.showingRecords}
+              onPageSizeChange={(pageSize) => {
+                setPaginateData({
+                  ...paginateData,
+                  limit: pageSize,
+                })
+              }}
+            />
+          </div>
+          <InvoiceFooter
+            buttons={[
+              {
+                text: t('ui.client-card-financial.payments.account-credit'),
+                value:
+                  payment?.payments[0]?.contact?.AccountBalance[0]?.balance ??
+                  0,
+                valueColor: '#65CD98',
+              },
+              {
+                text: t('ui.client-card-financial.payments.total-payments'),
+                value:
+                  totalPaymentCounts?.aggregateInvPayment?.sum?.amount ?? 0,
+              },
+            ]}
+            loading={loading}
           />
         </div>
-
-        <InvoiceFooter
-          buttons={[
-            {
-              text: t('ui.client-card-financial.payments.account-credit'),
-              value: accountCredit,
-              valueColor: '#65CD98',
-            },
-            {
-              text: t('ui.client-card-financial.payments.total-payments'),
-              value: totalPayments,
-            },
-          ]}
-        />
-      </div>
-    </>
+      )}
+    </div>
   )
 }

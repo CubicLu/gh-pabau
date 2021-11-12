@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { cdnURL } from '../../../baseUrl'
 import dayjs from 'dayjs'
 import { useUser } from '../../../context/UserContext'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import axios from 'axios'
 import {
   AlbumProps,
@@ -29,6 +30,7 @@ import {
   useDeleteOnePhotoAlbumMutation,
   useMoveContactAttachmentsMutation,
   useCreateContactPhotoWithoutAlbumMutation,
+  useDeleteManyContactPhotoMutation,
   useDeleteContactPhotoMutation,
 } from '@pabau/graphql'
 
@@ -77,6 +79,7 @@ const Photos: FC = () => {
     },
   })
 
+  const { t } = useTranslationI18()
   const router = useRouter()
   const { me } = useUser()
   const [albums, setAlbums] = useState<AlbumProps>()
@@ -93,6 +96,9 @@ const Photos: FC = () => {
     currentPage: 1,
   })
 
+  const [multipleDelImages, setMultipleDelImages] = useState(0)
+  const [singleImgDelLoading, setSingleImgDelLoading] = useState(false)
+  const [imagesDeleteLoading, setImagesDeleteLoading] = useState(false)
   const [movingImagesOnAlbumCreate, setMovingImagesOnAlbumCreate] = useState<
     number[]
   >([])
@@ -260,8 +266,9 @@ const Photos: FC = () => {
     },
   })
 
-  const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
+  const [deleteOneAttachment] = useDeleteContactPhotoMutation({
     onCompleted({ deleteContactAttachmentPhoto: data }) {
+      setSingleImgDelLoading(() => false)
       if (data?.success) {
         const id = data?.photo
         const cAddedFiles = [...uploadingFiles]
@@ -270,6 +277,13 @@ const Photos: FC = () => {
           cAddedFiles.splice(idx, 1)
           setUploadingFiles(cAddedFiles)
         }
+        Notification(
+          NotificationType.success,
+          t('ui.clientcard.photos.notification.delete.success', {
+            count: 1,
+            suffix: '',
+          })
+        )
       } else {
         const id = data?.photo
         const cAddedFiles = [...uploadingFiles]
@@ -280,7 +294,68 @@ const Photos: FC = () => {
           cAddedFiles.splice(idx, 1, cFile)
           setUploadingFiles(cAddedFiles)
         }
+        Notification(
+          NotificationType.error,
+          t('ui.clientcard.photos.notification.delete.error', {
+            count: 1,
+            suffix: '',
+          })
+        )
       }
+    },
+    onError() {
+      setSingleImgDelLoading(() => false)
+      Notification(
+        NotificationType.error,
+        t('ui.clientcard.photos.notification.delete.error', {
+          count: 1,
+          suffix: '',
+        })
+      )
+    },
+  })
+
+  const [deleteManyAttachments] = useDeleteManyContactPhotoMutation({
+    onCompleted({ deleteManyContactAttachmentPhoto: data }) {
+      if (data.success && data.count === multipleDelImages) {
+        Notification(
+          NotificationType.success,
+          t('ui.clientcard.photos.notification.delete.success', {
+            count: data?.count,
+            suffix: data?.count > 1 ? 's' : '',
+          })
+        )
+        setImagesDeleteLoading(() => false)
+      } else {
+        if (data.count > 0) {
+          Notification(
+            NotificationType.success,
+            t('ui.clientcard.photos.notification.delete.success', {
+              count: data?.count,
+              suffix: data?.count > 1 ? 's' : '',
+            })
+          )
+        }
+        setImagesDeleteLoading(() => false)
+        const leftCount = multipleDelImages - data.count
+        Notification(
+          NotificationType.error,
+          t('ui.clientcard.photos.notification.delete.error', {
+            count: leftCount,
+            suffix: leftCount > 1 ? 's' : '',
+          })
+        )
+      }
+    },
+    onError() {
+      setImagesDeleteLoading(() => false)
+      Notification(
+        NotificationType.error,
+        t('ui.clientcard.photos.notification.delete.error', {
+          count: multipleDelImages,
+          suffix: multipleDelImages > 1 ? 's' : '',
+        })
+      )
     },
   })
 
@@ -328,6 +403,7 @@ const Photos: FC = () => {
         album: innerAlbums,
       }
       setAlbums(cAlbums)
+      setMultipleDelImages(0)
     }
   }, [albumsData, albumsLoading, unCatImagesCount])
 
@@ -347,6 +423,7 @@ const Photos: FC = () => {
       setTimeout(() => {
         setCurrAlbumImages(images)
       }, 0)
+      setMultipleDelImages(0)
     }
   }, [albumImages, albumImagesLoading])
 
@@ -597,40 +674,74 @@ const Photos: FC = () => {
     }
   }
 
-  const onImageRemove = (imageId: number) => {
-    const cAddedFiles = [...uploadingFiles]
-    const idx = cAddedFiles?.findIndex((el) => el?.id === imageId)
-    if (idx !== -1) {
-      const cFile = cAddedFiles[idx]
-      cFile.loading = true
-      cAddedFiles.splice(idx, 1, cFile)
-      setUploadingFiles(cAddedFiles)
-    }
-    if (imageId) {
-      deleteAttachmentInAlbum({
-        variables: {
-          id: imageId,
-        },
-        refetchQueries: [
-          {
-            query: GetPhotoAlbumsDocument,
-            variables: {
-              contactId: contactId,
+  const onImageRemove = (imageIds: number[]) => {
+    if (imageIds?.length > 0) {
+      if (imageIds?.length === 1) {
+        const cAddedFiles = [...uploadingFiles]
+        const idx = cAddedFiles?.findIndex((el) => el?.id === imageIds[0])
+        if (idx !== -1) {
+          const cFile = cAddedFiles[idx]
+          cFile.loading = true
+          cAddedFiles.splice(idx, 1, cFile)
+          setUploadingFiles(cAddedFiles)
+        }
+        const cCurrAlbumImages = [...currAlbumImages]
+        const cImageIndex = cCurrAlbumImages?.findIndex(
+          (el) => el?.id === imageIds[0]
+        )
+        setSingleImgDelLoading(() => true)
+        deleteOneAttachment({
+          variables: {
+            id: imageIds[0],
+          },
+          refetchQueries: [
+            {
+              query: GetPhotoAlbumsDocument,
+              variables: {
+                contactId: contactId,
+              },
             },
-          },
-          {
-            query: GetAlbumPhotosDocument,
-            variables: variables,
-          },
-          albumId === 0 && {
-            query: CountAlbumPhotosDocument,
-            variables: {
-              contactId: contactId,
-              albumId: 0,
+            cImageIndex !== -1 && {
+              query: GetAlbumPhotosDocument,
+              variables: variables,
             },
+            albumId === 0 && {
+              query: CountAlbumPhotosDocument,
+              variables: {
+                contactId: contactId,
+                albumId: 0,
+              },
+            },
+          ],
+        })
+      } else {
+        setMultipleDelImages(imageIds?.filter((el) => el !== 0)?.length)
+        setImagesDeleteLoading(() => true)
+        deleteManyAttachments({
+          variables: {
+            ids: imageIds,
           },
-        ],
-      })
+          refetchQueries: [
+            {
+              query: GetPhotoAlbumsDocument,
+              variables: {
+                contactId: contactId,
+              },
+            },
+            {
+              query: GetAlbumPhotosDocument,
+              variables: variables,
+            },
+            albumId === 0 && {
+              query: CountAlbumPhotosDocument,
+              variables: {
+                contactId: contactId,
+                albumId: 0,
+              },
+            },
+          ],
+        })
+      }
     }
   }
 
@@ -699,7 +810,6 @@ const Photos: FC = () => {
               })
             },
           }}
-          openImageStudio={openPhotoStudio}
           onAlbumCreate={onAlbumCreate}
           albumCreateLoading={albumCreateLoading}
           onAlbumUpdate={onAlbumUpdate}
@@ -712,6 +822,9 @@ const Photos: FC = () => {
           uploadingImages={uploadingFiles}
           setUploadingImages={setUploadingFiles}
           onImagesMove={onImagesMove}
+          openImageStudio={openPhotoStudio}
+          imagesDeleteLoading={imagesDeleteLoading}
+          singleImgDelLoading={singleImgDelLoading}
         />
       </ClientCardLayout>
       {router.query.id && showPhotoStudio && (

@@ -1,11 +1,14 @@
 query getInvoice($id: Int!) {
-  invoice: findFirstInvSale(where: {id: { equals: $id }}) {
+  invoice: findFirstInvSale(where: { id: { equals: $id } }) {
     id
     number: custom_id
     date
     note
     total
     paid_amount
+    discount_amount
+    inv_total
+    tip
     Customer: CmContact {
       ID
       Fname
