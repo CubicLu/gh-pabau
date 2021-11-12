@@ -8565,8 +8565,8 @@ model MedicalFormContact {
   diagnosis_code      String
   Form                MedicalForm @relation(fields: [form_id], references: [id])
   Contact             CmContact   @relation(fields: [contact_id], references: [ID])
-  CreatedBy           User?       @relation("CreatedByToCreatedBy", fields: [user_created], references: [id])
-  Prescriber          User?       @relation("PrescriberToPrescriber", fields: [prescriber], references: [id])
+  CreatedBy           User?       @relation("MedicalContactFormCreated", fields: [user_created], references: [id])
+  Prescriber          User?       @relation("MedicalContactFormPrescribed", fields: [prescriber], references: [id])
 
   MedicalFormContactHistory MedicalFormContactHistory[]
   MedicalContactAttr        MedicalContactAttr[]
@@ -12896,8 +12896,8 @@ model User {
 
   MedicalForm                  MedicalForm[]
   CmContact                    CmContact[]
-  CreatedByMedicalFormContact  MedicalFormContact[] @relation("CreatedByToCreatedBy")
-  PrescriberMedicalFormContact MedicalFormContact[] @relation("PrescriberToPrescriber")
+  CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
+  PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
 
 
   @@unique([id, company_id], name: "primary")
