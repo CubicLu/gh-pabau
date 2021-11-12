@@ -1710,6 +1710,6 @@ export const retriveOtherDetails = async (
   return {
     newClientCount: newClientCount[0]['count(CreatedDate)'] ?? 0,
     avgBiller: (avgBiller[0]['AVG(b.total)'] ?? 0).toFixed(2),
-    RevPerhour: (RevPerhour ?? 0).toFixed(2),
+    RevPerhour: (Number.isFinite(RevPerhour) ? RevPerhour : 0).toFixed(2),
   }
 }

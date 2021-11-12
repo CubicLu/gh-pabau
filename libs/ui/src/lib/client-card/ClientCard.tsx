@@ -41,6 +41,7 @@ import {
   Tag,
   ConfigProvider,
   Tooltip,
+  Skeleton,
 } from 'antd'
 import {
   RightOutlined,
@@ -58,7 +59,7 @@ import {
   SaveOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useRef } from 'react'
+import React, { FC, useState, useRef, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -146,6 +147,7 @@ export interface ClientNotes {
 interface P {
   client: ClientData
   notes?: ClientNotes
+  medicalHistoryIconStatus?: string
   getContactDetails?: () => void
   handleAddNewClientNote?: (e: string) => void
   handleEditNote?: (id: number | string, e: string) => void
@@ -153,29 +155,33 @@ interface P {
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
-  activeTab?: string
+  activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
   customFields?: FieldOrderItem[]
   dateFormat?: string
   handleEditAll?: () => void
+  cssClass?: string
   updatebasicContactMutation?: MutationFunction
   updateContactCustomMutation?: MutationFunction
   clientId?: number
   companyId?: number
   setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
+  searchRender?: () => JSX.Element
 }
 
 const ClientCardModal: FC<P> = ({
   client,
+  cssClass,
   notes,
+  medicalHistoryIconStatus,
   getContactDetails,
   handleAddNewClientNote,
   handleEditNote,
   handleDeleteNote,
   onClose,
   tabs,
-  activeTab,
+  activeTab = 'dashboard',
   children,
   onTabChanged,
   referredByOptions,
@@ -188,9 +194,9 @@ const ClientCardModal: FC<P> = ({
   clientId,
   companyId,
   setBasicContactData,
+  searchRender,
 }) => {
   const { t } = useTranslation('common')
-  // const { push } = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [search, setSearch] = useState(false)
@@ -288,6 +294,12 @@ const ClientCardModal: FC<P> = ({
   const [isSubMenu, setIsSubMenu] = useState(false)
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
+  useEffect(() => {
+    if (loading) {
+      setSearch(false)
+    }
+  }, [loading])
+
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
@@ -313,7 +325,6 @@ const ClientCardModal: FC<P> = ({
 
   const onBackToMainMenu = () => {
     //TODO: review this. Prefer <Link />
-    // push?.('..')
   }
 
   const menuItems = [
@@ -826,6 +837,8 @@ const ClientCardModal: FC<P> = ({
     </div>
   )
 
+  const haveSubTabs = ['financial', 'gift-vouchers']
+
   //TODO: remove the Modal from top level (it'll break css:( )
   return (
     <Modal
@@ -883,7 +896,17 @@ const ClientCardModal: FC<P> = ({
                 className={styles.clientFullName}
                 onClick={() => !search && setSearch(true)}
               >
-                {client?.fullName}
+                {loading ? (
+                  <Skeleton
+                    className={styles.skeletonName}
+                    paragraph={false}
+                    active
+                  />
+                ) : !search && client?.fullName ? (
+                  client?.fullName
+                ) : (
+                  search && (searchRender ? searchRender() : <Search />)
+                )}
               </div>
             </div>
             <div className={styles.clientCardHeaderOps}>
@@ -923,6 +946,7 @@ const ClientCardModal: FC<P> = ({
               {!isMobile && (
                 <ClientHeaderDetails
                   notes={notes}
+                  medicalHistoryIconStatus={medicalHistoryIconStatus}
                   getContactDetails={getContactDetails}
                   client={client}
                   handleAddNewClientNote={handleAddNewClientNote}
@@ -961,7 +985,13 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px', height: '100%' }}>
+                <div
+                  className={
+                    haveSubTabs.includes(activeTab)
+                      ? styles.customTabs
+                      : styles.tab
+                  }
+                >
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}

@@ -2,14 +2,26 @@ import React, { FC, useEffect, useState } from 'react'
 import styles from './ClientDocuments.module.less'
 import {
   BasicModal,
-  folderProps,
+  FolderProps,
   NotificationType,
   Notification,
+  FolderContentProps,
+  Pagination,
 } from '@pabau/ui'
-import { Card, Tooltip, Table, Popover, Button, Drawer, Modal } from 'antd'
+import {
+  Input,
+  Card,
+  Tooltip,
+  Table,
+  Popover,
+  Button,
+  Drawer,
+  Modal,
+  Skeleton,
+  Menu,
+} from 'antd'
 import {
   EyeOutlined,
-  FileOutlined,
   FolderFilled,
   MoreOutlined,
   RightOutlined,
@@ -19,9 +31,12 @@ import {
   DeleteOutlined,
   PrinterOutlined,
   FolderOutlined,
+  PlusOutlined,
+  CloseOutlined,
 } from '@ant-design/icons'
+import { ColumnsType } from 'antd/es/table'
 import { FileIcon, defaultStyles } from 'react-file-icon'
-import dynamic from 'next/dynamic'
+import { ReactComponent as ImageFolder } from '../../assets/images/image-album.svg'
 import stc from 'string-to-color'
 import dayjs from 'dayjs'
 import { Checkbox } from '../checkbox/Checkbox'
@@ -29,898 +44,833 @@ import { useMedia } from 'react-use'
 import classNames from 'classnames'
 import PreviewFile from './PreviewFile'
 
-const DocumentPdf = dynamic(() => import('./DocumentViewer'), {
-  ssr: false,
-})
+const getThumb = (src: string) => {
+  if (src.includes('photos/')) {
+    const pathArr = src.split('photos/')
+    pathArr[1] = `thumb_${pathArr[1]}`
+    return pathArr.join('photos/')
+  } else {
+    return src
+  }
+}
 
-export interface selectProps {
-  folderData?: folderProps[]
-  folderTitle?: string
+const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
+  const [source, setSource] = useState('')
+
+  useEffect(() => {
+    if (source === '' && origin !== '') {
+      const path = getThumb(origin)
+      const img = new Image()
+      img.crossOrigin = 'Anonymous'
+      img.addEventListener('load', () => {
+        //draw origin image
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        canvas.width = img.width
+        canvas.height = img.height
+        ctx?.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          img.height,
+          0,
+          0,
+          img.width,
+          img.height
+        )
+        setSource(canvas.toDataURL())
+      })
+      img.addEventListener('error', () => {
+        setSource('')
+      })
+      img.src = path
+    }
+  }, [isDirectPath, origin, source])
+
+  return source ? (
+    <img
+      src={!isDirectPath ? source : getThumb(origin)}
+      alt="content"
+      {...props}
+    />
+  ) : (
+    <div {...props}>
+      <Skeleton.Image />
+    </div>
+  )
+}
+
+interface DataSourceType {
+  [key: string]: string | number
 }
 
 export interface FolderDataProps {
-  data: folderProps
-  onFolderClick: (index) => void
+  data: FolderProps
+  allFolders: FolderProps[]
+  onFolderClick: (id: number) => void
   listView: boolean
-  checkedData: Array<string>
-  setCheckedData: (e) => void
+  loading: boolean
   setShowMenu: (e) => void
-  setRecentData: (e) => void
-  setSelectFolderData: (e) => void
-  selectFolderData: Array<string>
-  setTempData: (e) => void
-  tempData: Array<string>
-  handleDelete: () => void
-  setRecentActionData: (e) => void
-  recentActionData: Array<selectProps>
-  setCurrentData: (e) => void
+  setSelectedDocuments: (e) => void
+  selectedDocuments: FolderContentProps[]
+  paginateData: {
+    pageSize: number
+    onPageChange: (page: number) => void
+    onPageSizeChange: (size: number) => void
+    currentPage: number
+  }
+  onFolderRename?: (id: number) => void
+  onFolderDelete?: (id: number) => void
+  onDocumentDelete?: (id: number) => void
+  singleDocDelLoading?: boolean
+  onSingleDocumentMove?: (
+    albumId: number,
+    imageId: number,
+    createAlbum?: boolean
+  ) => void
+  drop: (e) => void
+  allowDrop: (e) => void
+  dragDocument: (e) => void
+  onRenameFile?: (file: number, name: string) => void
+  renameFileLoading?: boolean
 }
 
-export const FolderData: FC<FolderDataProps> = React.memo(
-  ({
-    data,
-    onFolderClick,
-    listView,
-    checkedData,
-    setCheckedData,
-    setShowMenu,
-    setCurrentData,
-    selectFolderData,
-    setSelectFolderData,
-    setTempData,
-    tempData,
-    handleDelete,
-    setRecentActionData,
-    recentActionData,
-  }) => {
-    const isMobile = useMedia('(max-width: 767px)', false)
-    const [tableData, setTableData] = useState([])
-    const [folderContentData, setFolderContentData] = useState([])
-    const [folderContentValue, setFolderContentValue] = useState([])
-    const [folderDrawer, setFolderDrawer] = useState(false)
-    const [folderDataDrawer, setFolderDataDrawer] = useState(false)
-    const [previewModal, setPreviewModal] = useState(false)
-    const [pdfData, setPdfData] = useState('')
-    const [deleteModal, setDeleteModal] = useState(false)
-    const [deleteItemModal, setDeleteItemModal] = useState(false)
+export const FolderData: FC<FolderDataProps> = ({
+  data,
+  allFolders,
+  onFolderClick,
+  listView,
+  loading,
+  paginateData,
+  setShowMenu,
+  selectedDocuments,
+  setSelectedDocuments,
+  onFolderRename,
+  onFolderDelete,
+  onDocumentDelete,
+  singleDocDelLoading,
+  onSingleDocumentMove,
+  drop,
+  allowDrop,
+  dragDocument,
+  onRenameFile,
+  renameFileLoading,
+}) => {
+  const isMobile = useMedia('(max-width: 767px)', false)
 
-    const [numPages, setNumPages] = useState<number>(0)
-    const [pageNumber, setPageNumber] = useState(1)
-    const [pdfName, setPdfName] = useState('')
+  const [folderDrawer, setFolderDrawer] = useState(false)
+  const [documentDrawer, setDocumentDrawer] = useState(false)
+  const [previewModal, setPreviewModal] = useState(false)
+  const [pdfData, setPdfData] = useState('')
+  const [docDeleteModal, setDocDelModal] = useState(false)
 
-    const [dropFolderTitle, setDropFolderTitle] = useState('')
-    const [deleteData, setDeleteData] = useState('')
-    const [dragFolderTitle, setDragFolderTitle] = useState('')
-    useEffect(() => {
-      setNumPages(0)
-      setPageNumber(1)
-    }, [pdfData])
+  const [numPages, setNumPages] = useState<number>(0)
+  const [pageNumber, setPageNumber] = useState(1)
+  const [pdfName, setPdfName] = useState('')
 
-    const onDocumentLoadSuccess = ({ numPages }) => {
-      setPageNumber(1)
-      setNumPages(numPages)
+  const [selectedFolder, setSelectedFolder] = useState<number>(0)
+  const [selectedDocument, setSelectedDocument] = useState<number>(0)
+
+  const [renamingFile, setRenamingFile] = useState<{
+    id: number
+    name: string
+  }>({ id: 0, name: '' })
+  const [renameFileModal, setRenameFileModal] = useState(false)
+
+  useEffect(() => {
+    setNumPages(0)
+    setPageNumber(1)
+  }, [pdfData])
+
+  useEffect(() => {
+    setDocDelModal(() => false)
+    setDocumentDrawer(() => false)
+    setRenameFileModal(() => false)
+    setRenamingFile({ id: 0, name: '' })
+  }, [data])
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setPageNumber(1)
+    setNumPages(numPages)
+  }
+
+  const onSetNumPages = (page: number) => {
+    setPageNumber(page)
+  }
+
+  const fileArray = new Set(['html', 'docx', 'pdf', 'doc'])
+  const fileIconStyle = {
+    ...defaultStyles,
+    pdf: {
+      type: 'acrobat',
+      extension: '',
+    },
+    html: {
+      type: 'code2',
+      extension: '',
+    },
+    docx: {
+      glyphColor: '#cfcfcf',
+      type: 'document',
+      extension: '',
+    },
+    doc: {
+      glyphColor: '#cfcfcf',
+      type: 'document',
+      extension: '',
+    },
+  }
+
+  const handlePreview = (pdf, name = '') => {
+    let cName = name
+    if (!cName) {
+      const cNameArr = pdf?.split('.')
+      const ext = cNameArr[cNameArr?.length - 1]
+      delete cNameArr[cNameArr?.length - 1]
+      cName = cNameArr?.join('')?.substring(0, 20) + '.' + ext
     }
+    setPdfName(cName)
+    setPdfData(pdf)
+    setPageNumber(1)
+    setPreviewModal((e) => !e)
+  }
 
-    const onSetNumPages = (page: number) => {
-      setPageNumber(page)
-    }
-    useEffect(() => {
-      const alterTable = []
-      const content = []
-      const recentValue = []
-
-      if (listView) {
-        data.folder?.map((folderData, index) =>
-          alterTable.push({
-            name: [folderData.folderTitle, index],
-            files: folderData.folderContent?.length,
-            lastModified: folderData.folderContent?.length
-              ? (folderData.folderContent[folderData.folderContent?.length - 1]
-                  ?.dateTime as never)
-              : (dayjs().format('DD.MM.YYYY') as string),
-          } as never)
-        )
-
-        data.folderTitle === 'Folders' &&
-          data.folderContent?.map((folder, index) => {
-            const fileData = folder?.folderData
-            recentValue.push(fileData as never)
-            return content.push({
-              name: [fileData, index],
-              lastModified: folder?.dateTime
-                ? folder?.dateTime
-                : (dayjs().format('DD.MM.YYYY') as string),
-            } as never)
-          })
-      }
-      listView && setTableData(alterTable)
-      listView && setFolderContentData(content)
-      // setRecentData(recentValue)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data, listView])
-
-    const fileArray = new Set(['html', 'docx', 'pdf', 'doc'])
-    const fileIconStyle = {
-      ...defaultStyles,
-      pdf: {
-        type: 'acrobat',
-        extension: '',
-      },
-      html: {
-        type: 'code2',
-        extension: '',
-      },
-      docx: {
-        glyphColor: '#cfcfcf',
-        type: 'document',
-        extension: '',
-      },
-      doc: {
-        glyphColor: '#cfcfcf',
-        type: 'document',
-        extension: '',
-      },
-    }
-
-    const handlePreview = (pdf) => {
-      setPdfName(pdf)
-      setPdfData(pdf)
-      setPageNumber(1)
-      setPreviewModal((e) => !e)
-    }
-    const handleMobilePreviewModal = (x) => {
-      setDeleteData(x.folders)
-      const fileName = x.name[0].split('/')
-      setPdfName(fileName[fileName.length - 1])
-      setPdfData(x.name[0])
-      setPageNumber(1)
-      setFolderDrawer((e) => !e)
-    }
-
-    const handlePre = () => {
-      setPreviewModal((e) => !e)
-      setFolderDrawer(false)
-    }
-    const handleRecentDelete = (record) => {
-      const val = { ...data }
-      val.folderContent?.map((x, index) => {
-        x.folderData === record && val.folderContent?.splice(index, 1)
-        return 1
-      })
-      setCurrentData(val)
-    }
-    const handleMobileDelete = () => {
-      const val = { ...data }
-      val.folder.map((x) => {
-        if (deleteData === x.folderTitle) {
-          x.folderContent?.pop()
-        }
-        return 1
-      })
-      setCurrentData(val)
-    }
-    const content = (record) => {
-      return (
-        <div className={styles.menuContentMobileBody}>
-          <div className={styles.menuContentList}>
-            <div
-              className={styles.menuItem}
-              onClick={() =>
-                isMobile ? handlePre() : handlePreview(record.name[0])
-              }
-            >
-              <EyeOutlined /> Preview
-            </div>
-            <div className={styles.menuItem}>
-              <EditOutlined /> Rename
-            </div>
-            <div
-              className={styles.menuItem}
-              style={{ justifyContent: 'space-between', display: 'flex' }}
-            >
-              <div>
-                <FolderOutlined /> Move to
-              </div>
-              <RightOutlined />
-            </div>
-            <div className={styles.menuItem}>
-              <FileOutlined /> Show file location
-            </div>
-            <div className={styles.menuItem}>
-              <PrinterOutlined /> Print
-            </div>
-            <div className={styles.menuItem}>
-              <ShareAltOutlined /> Share
-            </div>
-            <div
-              className={styles.menuItem}
-              style={{ borderBottom: '1px solid #ECEDF0' }}
-            >
-              <DownloadOutlined /> Download
-            </div>
-            <div
-              className={styles.menuItem}
-              style={{ color: 'red' }}
-              onClick={() => setDeleteItemModal(true)}
-            >
-              <DeleteOutlined /> Delete
-            </div>
-          </div>
-
-          <Modal
-            title={'Delete forever ?'}
-            onCancel={() => {
-              setDeleteItemModal((e) => !e)
+  const FolderPopupContent = ({ record }) => {
+    return (
+      <div className={styles.menuContentMobileBody}>
+        <div className={styles.menuContentList}>
+          <div
+            className={styles.menuItem}
+            onClick={() => {
+              setFolderDrawer(() => false)
+              onFolderRename?.(record)
             }}
-            onOk={() => {
-              isMobile ? handleMobileDelete() : handleRecentDelete(record)
-              setDeleteItemModal((e) => !e)
-            }}
-            visible={deleteItemModal}
-            className={styles.deleteModal}
-            cancelText={'Cancel'}
-            okText={'Delete forever'}
           >
-            <div className={styles.modalContent}>
-              <p>
-                {`items will be deleted forever and you won't be able to restore them.`}
-              </p>
-            </div>
-          </Modal>
-        </div>
-      )
-    }
-
-    const handleSingleDelete = (record) => {
-      const deleteValue = []
-      deleteValue.push(record as never)
-      setTempData(deleteValue)
-      setDeleteModal(true)
-    }
-
-    const folderDataContent = (record) => {
-      return (
-        <div className={styles.menuContentMobileBody}>
-          <div className={styles.menuContentList}>
-            <div
-              className={styles.menuItem}
-              onClick={() => (isMobile ? handlePre() : handlePreview(record))}
-            >
-              <EyeOutlined /> Preview
-            </div>
-            <div className={styles.menuItem}>
-              <EditOutlined /> Rename
-            </div>
-            <div
-              className={styles.menuItem}
-              style={{ justifyContent: 'space-between', display: 'flex' }}
-            >
-              <div>
-                <FolderOutlined /> Move to
-              </div>
-              <RightOutlined />
-            </div>
-            <div className={styles.menuItem}>
-              <PrinterOutlined /> Print
-            </div>
-            <div className={styles.menuItem}>
-              <ShareAltOutlined /> Share
-            </div>
-            <div
-              className={styles.menuItem}
-              style={{ borderBottom: '1px solid #ECEDF0' }}
-            >
-              <DownloadOutlined /> Download
-            </div>
-            <div
-              className={styles.menuItem}
-              style={{ color: 'red' }}
-              onClick={() => handleSingleDelete(record)}
-            >
-              <DeleteOutlined /> Delete
-            </div>
+            <EditOutlined /> Rename
+          </div>
+          <div className={styles.menuItem}>
+            <ShareAltOutlined /> Share
+          </div>
+          <div
+            className={styles.menuItem}
+            style={{ borderBottom: '1px solid #ECEDF0' }}
+          >
+            <DownloadOutlined /> Download
+          </div>
+          <div
+            className={styles.menuItem}
+            style={{ color: 'red' }}
+            onClick={() => {
+              setFolderDrawer(() => false)
+              setSelectedFolder(record)
+              onFolderDelete?.(record)
+            }}
+          >
+            <DeleteOutlined /> Delete
           </div>
         </div>
-      )
-    }
-    const handleOnChange = (checked, folderContent) => {
-      const temp = recentActionData
-      const storeData = [...checkedData]
-      const idx = storeData.indexOf(folderContent[0] as never)
-      checked
-        ? storeData.push(folderContent[0] as never)
-        : storeData.splice(idx, 1)
-      checked &&
-        temp.push({
-          folderTitle: folderContent[1],
-          folderData: folderContent[0],
-        } as never)
-      if (!checked) {
-        let tempIndex
-        temp.map((x, i) => {
-          if (x.folderData === folderContent[0]) {
-            tempIndex = i
-          }
-          return 1
-        })
-        temp.splice(tempIndex, 1)
-      }
-      setCheckedData([...storeData])
-      setRecentActionData(temp)
-      storeData.length > 0 ? setShowMenu(true) : setShowMenu(false)
-    }
+      </div>
+    )
+  }
 
-    const columns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        // eslint-disable-next-line react/display-name
-        render: (value) => (
-          <div className={styles.tableFirstCol}>
-            <FolderFilled />
-            <p>{value[0]}</p>
-          </div>
-        ),
-      },
-      {
-        title: 'Files',
-        dataIndex: 'files',
-      },
-      {
-        title: 'Last Modified',
-        dataIndex: 'lastModified',
-      },
-    ]
-    const folderContentColumns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        classNames: 'maxWidth',
-        // eslint-disable-next-line react/display-name
-        render: (value) => {
-          const filename = value[0] ? value[0].split('/') : []
-          const fileData = value[0] ? value[0].split('.') : []
-          return (
-            <div
-              className={styles.folderContentFirst}
-              style={{ border: '1px solid red' }}
-            >
-              <Checkbox
-                checked={checkedData.includes(value[0] as never)}
-                onChange={(e) => handleOnChange(e.target.checked, value)}
-              >
-                <Card bordered={false}>
-                  {fileArray.has(fileData[fileData?.length - 1]) ? (
-                    fileData[fileData.length - 1] === 'pdf' ? (
-                      <div className={styles.pdfViewWrap}>
-                        <DocumentPdf pageNumber={1} pdfURL={value[0]} />
-                      </div>
-                    ) : (
-                      <FileIcon
-                        extension={fileData[fileData.length - 1]}
-                        {...fileIconStyle[fileData[fileData.length - 1]]}
-                      />
-                    )
-                  ) : (
-                    <img src={value[0]} alt={'none'} height={35} width={50} />
-                  )}
-                </Card>
-                <div>
-                  <p>{filename[filename.length - 1]}</p>
-                </div>
-              </Checkbox>
-            </div>
-          )
-        },
-      },
-      {
-        title: 'Last Modified',
-        dataIndex: 'lastModified',
-      },
-      {
-        title: '',
-        key: 'action',
-        // text,record
-        // eslint-disable-next-line react/display-name
-        render: (text, record) =>
-          !isMobile ? (
-            <Popover
-              placement="left"
-              content={content(record.name[0])}
-              trigger="click"
-            >
-              <Button
-                className={styles.btnCircle}
-                shape="circle"
-                icon={<MoreOutlined />}
-                onClick={() => content(record.name[0])}
-              />
-            </Popover>
-          ) : (
-            <>
-              <Button
-                className={styles.btnCircle}
-                shape="circle"
-                icon={<MoreOutlined />}
-                onClick={() => handleMobilePreviewModal(record)}
-              />
-              <Drawer
-                placement={'bottom'}
-                closable={false}
-                onClose={() => setFolderDrawer((e) => !e)}
-                visible={folderDrawer}
-                className={styles.createContentMobile}
-              >
-                <div className={styles.mobileHeader}>
-                  <div className={styles.handler} />
-                  {content(record)}
-                </div>
-              </Drawer>
-            </>
-          ),
-      },
-    ]
-
-    useEffect(() => {
-      const x = []
-      if (listView) {
-        data.folderTitle !== 'Folders' &&
-          data.folderContent?.map((contentValue, index) => {
-            return x.push({
-              name: [
-                contentValue.folderData,
-                contentValue.sharedWith ? contentValue.sharedWith : [],
-                index,
-              ],
-              owner: 'me',
-              date: contentValue.dateTime,
-            } as never)
+  const FolderDropdownMenu = ({ docId = 0, closePopover }) => {
+    const filtered: { id: number; name: string }[] = []
+    const iterateToAlbms = (folders) => {
+      for (const el of folders) {
+        if (el?.id !== data?.id) {
+          filtered.push({
+            id: el?.id,
+            name: el?.folderTitle,
           })
-        setFolderContentValue(x)
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [listView, data])
-
-    const folderContentDataColumns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        // eslint-disable-next-line react/display-name
-        render: (value) => {
-          const filename = value[0] ? value[0].split('/') : []
-          const fileData = value[0] ? value[0].split('.') : []
-          return (
-            <div className={styles.folderContentFirst}>
-              <Checkbox
-                checked={selectFolderData.includes(value[0] as never)}
-                onChange={(e) => handleSelect(e.target.checked, value[0])}
-              >
-                <Card bordered={false}>
-                  {fileArray.has(fileData[fileData?.length - 1]) ? (
-                    fileData[fileData.length - 1] === 'pdf' ? (
-                      <div className={styles.pdfViewWrap}>
-                        <DocumentPdf pageNumber={1} pdfURL={value[0]} />
-                      </div>
-                    ) : (
-                      <FileIcon
-                        extension={fileData[fileData.length - 1]}
-                        {...fileIconStyle[fileData[fileData.length - 1]]}
-                      />
-                    )
-                  ) : (
-                    <img src={value[0]} alt={'none'} height={35} width={50} />
-                  )}
-                </Card>
-                <div>
-                  <p>{filename[filename.length - 1]}</p>
-                </div>
-                {value[1].length > 0 && (
-                  <div
-                    className={styles.shareView}
-                    style={{ marginLeft: '10px' }}
-                  >
-                    <Tooltip
-                      trigger={'click'}
-                      arrowPointAtCenter
-                      title={
-                        <div>
-                          <p style={{ margin: '0' }}>Shared with</p>
-                          <div className={styles.eyeWrap}>
-                            {value[1].map((data, index) => {
-                              const { firstName } = data
-                              return (
-                                <div
-                                  className={styles.circle}
-                                  style={{
-                                    backgroundColor: stc(firstName),
-                                  }}
-                                  key={index}
-                                >
-                                  {firstName[0]}
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                      }
-                    >
-                      <EyeOutlined />
-                    </Tooltip>
-                  </div>
-                )}
-              </Checkbox>
-            </div>
-          )
-        },
-      },
-      {
-        title: 'Owner',
-        dataIndex: 'owner',
-      },
-      {
-        title: 'Last modified',
-        dataIndex: 'date',
-      },
-      {
-        title: '',
-        key: 'action',
-        // text,record
-        // eslint-disable-next-line react/display-name
-        render: (text, record) =>
-          !isMobile ? (
-            <Popover
-              placement="left"
-              content={folderDataContent(record.name[0])}
-              trigger="click"
-            >
-              <Button
-                className={styles.btnCircle}
-                shape="circle"
-                icon={<MoreOutlined />}
-              />
-            </Popover>
-          ) : (
-            <>
-              <Button
-                className={styles.btnCircle}
-                shape="circle"
-                icon={<MoreOutlined />}
-                onClick={() => setFolderDataDrawer(true)}
-              />
-
-              <Drawer
-                placement={'bottom'}
-                closable={false}
-                onClose={() => setFolderDataDrawer((e) => !e)}
-                visible={folderDataDrawer}
-                className={styles.createContentMobile}
-              >
-                <div className={styles.mobileHeader}>
-                  <div className={styles.handler} />
-                  {folderDataContent(record.name[0])}
-                </div>
-              </Drawer>
-            </>
-          ),
-      },
-    ]
-
-    const handleSelect = (checked, folderContent) => {
-      const storeData = [...selectFolderData]
-      const idx = storeData.indexOf(folderContent as never)
-      checked
-        ? storeData.push(folderContent as never)
-        : storeData.splice(idx, 1)
-      setSelectFolderData([...storeData])
-      storeData.length > 0 ? setShowMenu(true) : setShowMenu(false)
-    }
-
-    const dragFolder = (ev) => {
-      ev.dataTransfer.setData('folderTitle', ev.target.id)
-      setDragFolderTitle(ev.target.id)
-    }
-    const allowDrop = (ev) => {
-      ev.preventDefault()
-
-      if (dragFolderTitle !== ev.target.id) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        document.querySelector(`#${ev.target.id}`).style.backgroundColor =
-          'skyblue'
-      }
-      setDropFolderTitle(
-        ev.target.id === '' ? ev.target.lastChild.id : ev.target.id
-      )
-    }
-    const drop = (ev) => {
-      ev.preventDefault()
-      const folderTitle = ev.dataTransfer.getData('folderTitle')
-      const folderDragItem = ev.dataTransfer.getData('folderItem')
-      if (folderTitle !== '') {
-        const dropData = { ...data }
-        let transferFolder = {}
-        dropData.folder.map((folderData) => {
-          if (folderData.folderTitle === folderTitle) {
-            transferFolder = folderData
-          }
-          return 1
-        })
-
-        dropData.folder.map((folderData) => {
-          if (
-            folderData.folderTitle === dropFolderTitle &&
-            folderData.folderTitle !== folderTitle
-          ) {
-            folderData.folder.push(transferFolder as folderProps)
-            dropData.folder.map((dropVal, i) => {
-              if (dropVal.folderTitle === folderTitle) {
-                dropData.folder.splice(i, 1)
-              }
-              return 1
-            })
-          }
-          return 1
-        })
-        setCurrentData(dropData)
-        dropFolderTitle !== folderTitle &&
-          Notification(
-            NotificationType.success,
-            `${folderTitle} has been moved into ${dropFolderTitle}`
-          )
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        document.querySelector(`#${dropFolderTitle}`).style.backgroundColor =
-          'white'
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        document.querySelector(`#${folderTitle}`).style.backgroundColor =
-          'white'
-        setDragFolderTitle('')
-      }
-      if (folderDragItem !== '') {
-        const moveItemName = folderDragItem.split('/')
-        const dropData = { ...data }
-        dropData.folder.map((val) => {
-          return (
-            val.folderTitle === dropFolderTitle &&
-            val.folderContent?.push({
-              id: 'folderItem',
-              folderData: folderDragItem,
-              dateTime: dayjs().format('DD.MM.YYYY') as string,
-            } as never)
-          )
-        })
-        dropData.folderContent?.map((x, index) => {
-          if (x.folderData === folderDragItem) {
-            dropData.folderContent?.splice(index, 1)
-          }
-          return 1
-        })
-        setCurrentData(dropData)
-        Notification(
-          NotificationType.success,
-          `${
-            moveItemName[moveItemName.length - 1]
-          } has been moved into ${dropFolderTitle}`
-        )
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        document.querySelector(`#${dropFolderTitle}`).style.backgroundColor =
-          'white'
-
-        const ghost = document.querySelector('#draGhost')
-        if (ghost?.parentNode) {
-          ghost.remove()
+          if (el?.folder?.length) iterateToAlbms(el?.folder)
         }
       }
     }
-
-    const dragItem = (ev) => {
-      ev.dataTransfer.setData('folderItem', ev.target.id)
-      const img = new Image()
-      img.src = ev.target.id
-
-      const moveItemName = ev.target.id.split('/')
-      const ghostEle = document.createElement('div')
-      ghostEle.id = 'draGhost'
-      ghostEle.innerHTML = moveItemName[moveItemName.length - 1]
-      ghostEle.style.color = 'skyBlue'
-      ghostEle.style.backgroundColor = '#f6f6f6'
-      ghostEle.style.position = 'absolute'
-      ghostEle.style.top = '-900px'
-      ghostEle.style.width = '160px'
-      ghostEle.style.height = '45px'
-      ghostEle.style.textAlign = 'center'
-      document.body.append(ghostEle)
-      ev.dataTransfer.setDragImage(ghostEle, 10, 10)
-    }
+    iterateToAlbms(allFolders)
+    if (data?.id !== 0) filtered.unshift({ id: 0, name: 'Uncategorized' })
 
     return (
-      <div className={styles.folderListContainer}>
-        {!listView && (
-          <div className={styles.folderListWrap}>
-            {data.folder.length > 0 && (
-              <div className={styles.folderData}>
-                {data.folder?.map((x, i) => (
-                  <div className={styles.folderDataWrap} key={i}>
-                    <div
-                      className={styles.folderContainer}
-                      id={x.folderTitle}
-                      onDrop={(ev) => drop(ev)}
-                      onDragOver={(ev) => allowDrop(ev)}
-                    >
-                      <div
-                        className={styles.gridContainer}
-                        onClick={() => onFolderClick(i)}
-                        onDragStart={(event) => dragFolder(event)}
-                        draggable={true}
-                        id={x.folderTitle}
-                      >
-                        <Card id={x.folderTitle}>
-                          <FolderFilled />{' '}
-                          <p className={styles.folderTitle} id={x.folderTitle}>
-                            {x.folderTitle}
-                          </p>
-                        </Card>
-                      </div>
+      <Menu className={styles.menuItemList}>
+        {filtered?.map((folder) => (
+          <Menu.Item
+            key={folder.id.toString()}
+            onClick={() => {
+              onSingleDocumentMove?.(folder.id, docId, false)
+              closePopover?.()
+            }}
+          >
+            <ImageFolder />
+            <div>{folder.name}</div>
+          </Menu.Item>
+        ))}
+        <Menu.Item
+          key="New"
+          onClick={() => {
+            onSingleDocumentMove?.(0, docId, true)
+            closePopover?.()
+          }}
+        >
+          <PlusOutlined />
+          <div>New Folder</div>
+        </Menu.Item>
+      </Menu>
+    )
+  }
+
+  const DocumentPopupContent = ({ record, showFolderMenu = false }) => {
+    const [folderDropdown, setFolderDropdown] = useState(showFolderMenu)
+    const [downloadPerc, setDownloadPerc] = useState(0)
+    const [downloadStarted, setDownloadStarted] = useState(false)
+
+    const downloadSingleDoc = (url: string) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', url, true)
+      xhr.responseType = 'blob'
+      xhr.addEventListener('progress', (event) => {
+        let contentLength: number
+        let perc = 0
+        if (event.lengthComputable) {
+          contentLength = event.total
+          perc = (event.loaded / contentLength) * 100
+          setDownloadPerc(perc)
+        }
+
+        if (perc >= 100 && downloadStarted) {
+          setDownloadStarted(() => false)
+          Notification(NotificationType?.success, 'Downloading...')
+        }
+      })
+      xhr.addEventListener('error', function () {
+        Notification(NotificationType?.error, 'Failed')
+      })
+      xhr.addEventListener('load', function () {
+        const urlCreator = window.URL || window.webkitURL
+        const imageUrl = urlCreator.createObjectURL(this.response)
+        const tag = document.createElement('a')
+        tag.href = imageUrl
+        tag.download = url
+        document.body.append(tag)
+        tag.click()
+        tag.remove()
+        if (downloadStarted)
+          Notification(NotificationType?.success, 'Downloaded')
+        setDownloadStarted(() => false)
+      })
+      xhr.send()
+      setDownloadStarted(() => true)
+      Notification(NotificationType?.success, 'Downloading...')
+    }
+
+    useEffect(() => {
+      setFolderDropdown(showFolderMenu)
+    }, [showFolderMenu])
+
+    return folderDropdown ? (
+      <div className={styles.docPopoutFolderDropdown}>
+        <CloseOutlined onClick={() => setFolderDropdown(() => false)} />
+        <FolderDropdownMenu
+          docId={record}
+          closePopover={() => setFolderDropdown(() => false)}
+        />
+      </div>
+    ) : (
+      <div className={styles.menuContentMobileBody}>
+        <div className={styles.menuContentList}>
+          <div
+            className={styles.menuItem}
+            style={{ borderBottom: '1px solid #ECEDF0' }}
+            onClick={() => {
+              const cFolderContent = data?.folderContent
+              const url = cFolderContent?.find((el) => el?.id === record)
+                ?.folderData
+              if (url && !downloadStarted) downloadSingleDoc?.(url || '')
+            }}
+          >
+            <DownloadOutlined />
+            {downloadStarted
+              ? downloadPerc > 0
+                ? downloadPerc + '% downloaded'
+                : 'Donwloading...'
+              : 'Donwload'}
+          </div>
+          <div
+            className={styles.menuItem}
+            onClick={() => {
+              const cFile = data?.folderContent?.find((el) => el?.id === record)
+              if (cFile) {
+                setRenamingFile({
+                  id: cFile?.id,
+                  name: cFile?.documentName || '',
+                })
+                setRenameFileModal((e) => !e)
+              }
+            }}
+          >
+            <EditOutlined /> Rename
+          </div>
+          <div
+            className={styles.menuItem}
+            style={{ justifyContent: 'space-between', display: 'flex' }}
+            onClick={() => {
+              setFolderDropdown((e) => !e)
+            }}
+          >
+            <div>
+              <FolderOutlined /> Move to
+            </div>
+            <RightOutlined />
+          </div>
+          <div className={styles.menuItem}>
+            <PrinterOutlined /> Print
+          </div>
+          <div className={styles.menuItem}>
+            <ShareAltOutlined /> Share
+          </div>
+          <div
+            className={styles.menuItem}
+            style={{ color: 'red' }}
+            onClick={() => {
+              setSelectedDocument(record)
+              setDocumentDrawer(() => false)
+              setDocDelModal(() => true)
+            }}
+          >
+            <DeleteOutlined /> Delete
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const foldersTableColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      width: '50%',
+      render: function renderTableSource(value, record) {
+        return (
+          <div
+            className={styles.tableFirstCol}
+            onClick={() => {
+              onFolderClick(record?.id)
+            }}
+          >
+            <FolderFilled />
+            <p>{value?.substring(0, 40)}</p>
+          </div>
+        )
+      },
+    },
+    {
+      title: 'Files',
+      dataIndex: 'files',
+      width: '15%',
+      render: function renderTableSource(value) {
+        return value
+      },
+    },
+    {
+      title: 'Last Modified',
+      dataIndex: 'lastModified',
+      width: '25%',
+    },
+    {
+      title: '',
+      key: 'action',
+      width: '10%',
+      render: function renderTableSource(text, record) {
+        return (
+          selectedDocuments?.length <= 0 &&
+          (!isMobile ? (
+            <Popover
+              placement="left"
+              content={<FolderPopupContent record={record?.id} />}
+              trigger="click"
+            >
+              <Button
+                className={styles.btnCircle}
+                shape="circle"
+                icon={<MoreOutlined />}
+              />
+            </Popover>
+          ) : (
+            <Button
+              className={styles.btnCircle}
+              shape="circle"
+              icon={<MoreOutlined />}
+              onClick={() => {
+                setSelectedFolder(record?.id)
+                setFolderDrawer(() => true)
+              }}
+            />
+          ))
+        )
+      },
+    },
+  ]
+
+  const documentsTableColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      width: '50%',
+      render: function renderTableSource(value, record) {
+        const fileName = value ? value.split('/') : []
+        const fileData = value ? value.split('.') : []
+        return (
+          <div className={styles.folderContentFirst}>
+            <Checkbox
+              checked={
+                selectedDocuments.find((el) => el?.id === record?.id)
+                  ? true
+                  : false
+              }
+              onChange={(e) => handleSelect(e.target.checked, record)}
+            />
+            <Card
+              bordered={false}
+              onClick={() =>
+                handlePreview(record?.folderData, record?.documentName)
+              }
+            >
+              {fileArray.has(fileData[fileData?.length - 1]) ? (
+                <FileIcon
+                  foldColor="lightgray"
+                  labelColor="var(--primary-color)"
+                  glyphColor="var(--primary-color)"
+                  extension={fileData[fileData.length - 1]}
+                  {...fileIconStyle[fileData[fileData.length - 1]]}
+                />
+              ) : (
+                <ImageItem
+                  origin={value}
+                  className={styles.tableImage}
+                  alt={record?.folderData}
+                  id={record?.id}
+                  key={record?.id}
+                />
+              )}
+            </Card>
+            <div
+              onClick={() =>
+                handlePreview(record?.folderData, record?.documentName)
+              }
+            >
+              <p>
+                {record?.documentName
+                  ? record?.documentName
+                  : displayDocName(fileName[fileName.length - 1], 20)}
+              </p>
+            </div>
+            {value?.[1]?.length > 0 && (
+              <div className={styles.shareView} style={{ marginLeft: '10px' }}>
+                <Tooltip
+                  trigger={'click'}
+                  arrowPointAtCenter
+                  title={
+                    <div>
+                      <p style={{ margin: '0' }}>Shared with</p>
+                      {/* <div className={styles.eyeWrap}>
+                          {value[1].map((data, index) => {
+                            const { firstName } = data
+                            return (
+                              <div
+                                className={styles.circle}
+                                style={{
+                                  backgroundColor: stc(firstName),
+                                }}
+                                key={index}
+                              >
+                                {firstName[0]}
+                              </div>
+                            )
+                          })}
+                        </div> */}
                     </div>
-                  </div>
-                ))}
+                  }
+                >
+                  <EyeOutlined />
+                </Tooltip>
               </div>
             )}
-            <div className={styles.folderContent}>
-              {data.folderTitle === 'Folders' && (
-                <h3 style={{ width: '100%', marginLeft: '7px' }}>Files</h3>
-              )}
-              {data.folderTitle === 'Folders' &&
-                data?.folderContent?.map((folderItem) => {
-                  const fileData = folderItem?.folderData?.split('.')
-                  const fileName = folderItem?.folderData?.split('/')
-                  return (
-                    folderItem && (
-                      <div
-                        className={classNames(styles.checked, styles.showCheck)}
-                        style={{ position: 'relative' }}
+          </div>
+        )
+      },
+    },
+    {
+      title: 'Owner',
+      dataIndex: 'owner',
+      width: '15%',
+    },
+    {
+      title: 'Last modified',
+      dataIndex: 'date',
+      width: '25%',
+    },
+    {
+      title: '',
+      key: 'action',
+      width: '10%',
+      className: 'contentTablePopover',
+      render: function renderTableSource(text, record) {
+        return (
+          <div>
+            {selectedDocuments?.length <= 0 &&
+              (!isMobile ? (
+                <Popover
+                  placement="left"
+                  content={
+                    <DocumentPopupContent
+                      record={record?.id}
+                      showFolderMenu={false}
+                    />
+                  }
+                  trigger="click"
+                >
+                  <Button
+                    className={styles.btnCircle}
+                    shape="circle"
+                    icon={<MoreOutlined />}
+                  />
+                </Popover>
+              ) : (
+                <Button
+                  className={styles.btnCircle}
+                  shape="circle"
+                  icon={<MoreOutlined />}
+                  onClick={() => {
+                    setSelectedDocument(record?.id)
+                    setDocumentDrawer(true)
+                  }}
+                />
+              ))}
+          </div>
+        )
+      },
+    },
+  ]
+
+  const handleSelect = (checked: boolean, folderContent) => {
+    const storeData = [...selectedDocuments]
+    const idx = storeData.findIndex((el) => el?.id === folderContent?.id)
+    checked ? storeData.push(folderContent) : storeData.splice(idx, 1)
+    setSelectedDocuments([...storeData])
+    storeData.length > 0 ? setShowMenu(true) : setShowMenu(false)
+  }
+
+  const displayDocName = (name: string, len = 10) => {
+    let cName = name
+    if (cName?.includes('.')) {
+      const cNameArr = cName?.split('.')
+      const ext = cNameArr[cNameArr?.length - 1]
+      delete cNameArr[cNameArr?.length - 1]
+      cName = cNameArr?.join('')
+      return cName?.substring(0, len) + `.${ext}`
+    }
+    return ''
+  }
+
+  const LoadingTable = ({ columns }) => {
+    const cColumns: ColumnsType = []
+    const dataSource: DataSourceType[] = []
+    for (const key of columns) {
+      const { visible = true } = key
+      if (visible) {
+        cColumns.push({
+          ...key,
+          render: function render() {
+            const width = key.skeletonWidth ?? '200px'
+            return (
+              <div className={styles.columnLoader} style={{ width: width }}>
+                <Skeleton.Input active={true} size="small" />
+              </div>
+            )
+          },
+        })
+      }
+    }
+    for (
+      let i = 0;
+      i <
+      (data?.contentCount < paginateData?.pageSize
+        ? data?.contentCount
+        : paginateData?.pageSize || 10);
+      i = i + 1
+    ) {
+      let data
+      for (const key of columns) {
+        data = { ...data, id: i, key: i, [key.dataIndex]: '' }
+      }
+      dataSource.push(data)
+    }
+    return (
+      <Table
+        dataSource={dataSource}
+        columns={cColumns}
+        rowKey="key"
+        pagination={false}
+      />
+    )
+  }
+
+  return (
+    <div className={styles.folderListContainer}>
+      <div
+        className={classNames(
+          styles.folderListWrap,
+          listView && styles.displayNone
+        )}
+      >
+        {data.folder.length > 0 && (
+          <div
+            className={styles.folderData}
+            style={
+              data?.folderContent && data?.folderContent?.length > 0
+                ? {
+                    borderBottom: '1px solid #ecedf0',
+                  }
+                : { borderBottom: '1px solid transparent' }
+            }
+          >
+            {data.folder?.map((x, i) => (
+              <div className={styles.folderDataWrap} key={i}>
+                <div className={styles.folderContainer}>
+                  <div className={styles.gridContainer}>
+                    <Card onClick={() => onFolderClick(x?.id)}>
+                      <FolderFilled />{' '}
+                      <p className={styles.folderTitle}>{x.folderTitle}</p>
+                    </Card>
+                    {!isMobile ? (
+                      <Popover
+                        placement="bottomRight"
+                        content={() => <FolderPopupContent record={x?.id} />}
+                        trigger="click"
+                        className={styles.imageDotButton}
                       >
-                        <div
-                          className={styles.checkWrappers}
-                          style={{ zIndex: -1 }}
-                        >
-                          {!isMobile ? (
-                            <Popover
-                              placement="bottom"
-                              content={content(folderItem.folderData)}
-                              trigger="click"
-                            >
-                              <Button
-                                className={styles.btnCircle}
-                                shape="circle"
-                                icon={<MoreOutlined />}
-                              />
-                            </Popover>
-                          ) : (
+                        {selectedDocuments?.length <= 0 && (
+                          <div className={styles.dotBtn}>
                             <Button
                               className={styles.btnCircle}
                               shape="circle"
                               icon={<MoreOutlined />}
-                              onClick={() => setFolderDataDrawer(true)}
                             />
-                          )}
-                          <Card bordered={false}>
-                            {fileArray.has(fileData[fileData?.length - 1]) &&
-                              (folderItem.sharedWith as never) && (
-                                <div className={styles.customEye}>
-                                  <Tooltip
-                                    trigger={'click'}
-                                    arrowPointAtCenter
-                                    title={
-                                      <div>
-                                        <p style={{ margin: '0' }}>
-                                          Shared with
-                                        </p>
-                                        <div className={styles.eyeWrap}>
-                                          {folderItem.sharedWith?.map(
-                                            (data, index) => {
-                                              const { firstName } = data
-                                              return (
-                                                <div
-                                                  className={styles.circle}
-                                                  style={{
-                                                    backgroundColor: stc(
-                                                      firstName
-                                                    ),
-                                                  }}
-                                                  key={index}
-                                                >
-                                                  {firstName[0]}
-                                                </div>
-                                              )
-                                            }
-                                          )}
-                                        </div>
-                                      </div>
-                                    }
-                                  >
-                                    <EyeOutlined />
-                                  </Tooltip>
-                                </div>
-                              )}
-                            <div className={styles.folderContentData}>
-                              <div
-                                draggable={true}
-                                onDragStart={(event) => dragItem(event)}
-                                id={folderItem.folderData}
-                              >
-                                {fileArray.has(
-                                  fileData[fileData.length - 1]
-                                ) ? (
-                                  fileData[fileData.length - 1] === 'pdf' ? (
-                                    <div className={styles.pdfViewWrap}>
-                                      <DocumentPdf
-                                        pageNumber={1}
-                                        pdfURL={folderItem.folderData}
-                                      />
-                                      {/*<FilePreviewerThumbnail*/}
-                                      {/*  file={{*/}
-                                      {/*    url: folderItem.folderData,*/}
-                                      {/*    // mimeType: 'application/pdf',*/}
-                                      {/*  }}*/}
-                                      {/*/>*/}
-                                    </div>
-                                  ) : (
-                                    <FileIcon
-                                      draggable={true}
-                                      extension={fileData[fileData.length - 1]}
-                                      {...fileIconStyle[
-                                        fileData[fileData.length - 1]
-                                      ]}
-                                    />
-                                  )
-                                ) : (
-                                  folderItem.folderData.length > 0 && (
-                                    <img
-                                      src={folderItem.folderData}
-                                      draggable={false}
-                                      alt={folderItem.folderData}
-                                    />
-                                  )
-                                )}
-                              </div>
-                              <p>{fileName[fileName.length - 1]}</p>
-                            </div>
-                          </Card>
-                        </div>
+                          </div>
+                        )}
+                      </Popover>
+                    ) : (
+                      <div
+                        className={styles.dotBtn}
+                        onClick={() => {
+                          setFolderDrawer((e) => !e)
+                          setSelectedFolder(x?.id)
+                        }}
+                      >
+                        {selectedDocuments?.length <= 0 && (
+                          <Button
+                            className={styles.btnCircle}
+                            shape="circle"
+                            icon={<MoreOutlined />}
+                          />
+                        )}
                       </div>
-                    )
-                  )
-                })}
-              {data.folderTitle !== 'Folders' &&
-                data.folderContent?.map((folderValue) => {
-                  const fileData = folderValue?.folderData?.split('.')
-                  const fileName = folderValue?.folderData?.split('/')
-                  return (
-                    <Checkbox
-                      checked={selectFolderData.includes(
-                        folderValue.folderData as never
+                    )}
+                  </div>
+                </div>
+                <div
+                  className={styles.dropable}
+                  id={`tar${x?.id}`}
+                  onDrop={(ev) => drop(ev)}
+                  onDragOver={(ev) => allowDrop(ev)}
+                  onDragLeave={() => {
+                    document
+                      ?.querySelector(`#tar${x.id}`)
+                      ?.classList?.remove('dropEffect')
+                  }}
+                ></div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className={styles.folderContent}>
+          {data?.folderContent &&
+            data?.folderContent?.length > 0 &&
+            data.folderTitle === 'Uncategorized' && (
+              <h3 style={{ width: '100%', marginLeft: '7px' }}>Files</h3>
+            )}
+          {!loading &&
+            data?.folderContent &&
+            data?.folderContent?.length > 0 &&
+            data?.folderContent?.map((folderValue, i) => {
+              const fileData = folderValue?.folderData?.split('.')
+              const fileName = folderValue?.folderData?.split('/')
+              return (
+                <div className={styles.checkWrappers} key={folderValue?.id}>
+                  <Card
+                    bordered={false}
+                    key={folderValue.id}
+                    className={
+                      selectedDocuments.includes(folderValue)
+                        ? styles.selectStyle
+                        : ''
+                    }
+                  >
+                    {fileArray.has(fileData[fileData?.length - 1]) &&
+                      (folderValue?.sharedWith as never) && (
+                        <div className={styles.customEye}>
+                          <Tooltip
+                            trigger={'click'}
+                            arrowPointAtCenter
+                            title={
+                              <div>
+                                <p style={{ margin: '0' }}>Shared with</p>
+                                <div className={styles.eyeWrap}>
+                                  {folderValue?.sharedWith?.map(
+                                    (data, index) => {
+                                      const { firstName } = data
+                                      return (
+                                        <div
+                                          className={styles.circle}
+                                          style={{
+                                            backgroundColor: stc(firstName),
+                                          }}
+                                          key={index}
+                                        >
+                                          {firstName[0]}
+                                        </div>
+                                      )
+                                    }
+                                  )}
+                                </div>
+                              </div>
+                            }
+                          >
+                            <EyeOutlined />
+                          </Tooltip>
+                        </div>
                       )}
-                      className={
-                        selectFolderData.includes(
-                          folderValue.folderData as never
-                        )
-                          ? classNames(styles.checked, styles.showCheck)
-                          : ''
-                      }
-                      onChange={(e) =>
-                        handleSelect(e.target.checked, folderValue.folderData)
-                      }
-                      key={folderValue.id}
-                    >
-                      <div className={styles.checkWrappers}>
-                        {!isMobile ? (
+                    <div className={styles.folderContentData}>
+                      <Checkbox
+                        checked={selectedDocuments.includes(folderValue)}
+                        className={
+                          selectedDocuments.includes(folderValue)
+                            ? classNames(styles.checked, styles.showCheck)
+                            : ''
+                        }
+                        onChange={(e) =>
+                          handleSelect(e.target.checked, folderValue)
+                        }
+                      />
+                      {selectedDocuments?.length <= 0 &&
+                        (!isMobile ? (
                           <Popover
                             placement="bottom"
-                            content={folderDataContent(folderValue.folderData)}
+                            content={
+                              <DocumentPopupContent
+                                record={folderValue?.id}
+                                showFolderMenu={false}
+                              />
+                            }
                             trigger="click"
                           >
                             <Button
@@ -934,195 +884,259 @@ export const FolderData: FC<FolderDataProps> = React.memo(
                             className={styles.btnCircle}
                             shape="circle"
                             icon={<MoreOutlined />}
-                            onClick={() => setFolderDataDrawer(true)}
+                            onClick={() => {
+                              setSelectedDocument(folderValue?.id)
+                              setDocumentDrawer(() => true)
+                            }}
+                          />
+                        ))}
+                      <div
+                        className={styles.hoverOverlay}
+                        onClick={() =>
+                          handlePreview(
+                            folderValue?.folderData,
+                            folderValue?.documentName
+                          )
+                        }
+                        draggable={true}
+                        id={folderValue?.id?.toString()}
+                        onDragStart={(event) => dragDocument(event)}
+                        onDragLeave={() => {
+                          const elem = document.querySelector('#draGhost')
+                          elem?.remove()
+                        }}
+                        data-type={fileData[fileData.length - 1]}
+                      />
+                      <div>
+                        {fileArray.has(fileData[fileData.length - 1]) ? (
+                          <FileIcon
+                            foldColor="lightgray"
+                            labelColor="var(--primary-color)"
+                            glyphColor="var(--primary-color)"
+                            extension={fileData[fileData.length - 1]}
+                            {...fileIconStyle[fileData[fileData.length - 1]]}
+                          />
+                        ) : (
+                          <ImageItem
+                            origin={folderValue?.folderData}
+                            className={`img${i}`}
+                            alt={folderValue?.folderData}
+                            id={folderValue?.id}
+                            key={i}
                           />
                         )}
-                        <Card
-                          bordered={false}
-                          key={folderValue.id}
-                          className={
-                            selectFolderData.includes(
-                              folderValue.folderData as never
-                            )
-                              ? styles.selectStyle
-                              : ''
-                          }
-                        >
-                          {fileArray.has(fileData[fileData?.length - 1]) &&
-                            (folderValue?.sharedWith as never) && (
-                              <div className={styles.customEye}>
-                                <Tooltip
-                                  trigger={'click'}
-                                  arrowPointAtCenter
-                                  title={
-                                    <div>
-                                      <p style={{ margin: '0' }}>Shared with</p>
-                                      <div className={styles.eyeWrap}>
-                                        {folderValue?.sharedWith?.map(
-                                          (data, index) => {
-                                            const { firstName } = data
-                                            return (
-                                              <div
-                                                className={styles.circle}
-                                                style={{
-                                                  backgroundColor: stc(
-                                                    firstName
-                                                  ),
-                                                }}
-                                                key={index}
-                                              >
-                                                {firstName[0]}
-                                              </div>
-                                            )
-                                          }
-                                        )}
-                                      </div>
-                                    </div>
-                                  }
-                                >
-                                  <EyeOutlined />
-                                </Tooltip>
-                              </div>
-                            )}
-                          <div className={styles.folderContentData}>
-                            <div
-                              draggable={true}
-                              onDragStart={(event) => dragItem(event)}
-                              id={folderValue?.folderData}
-                            >
-                              {fileArray.has(fileData[fileData.length - 1]) ? (
-                                fileData[fileData.length - 1] === 'pdf' ? (
-                                  <div className={styles.pdfViewWrap}>
-                                    <DocumentPdf
-                                      pageNumber={1}
-                                      pdfURL={folderValue?.folderData}
-                                    />
-                                  </div>
-                                ) : (
-                                  <FileIcon
-                                    extension={fileData[fileData.length - 1]}
-                                    {...fileIconStyle[
-                                      fileData[fileData.length - 1]
-                                    ]}
-                                  />
-                                )
-                              ) : (
-                                <img
-                                  src={folderValue?.folderData}
-                                  alt={'none'}
-                                  draggable={false}
-                                />
-                              )}
-                            </div>
-                            <p
-                              style={
-                                selectFolderData.includes(
-                                  folderValue.folderData as never
-                                )
-                                  ? { color: 'skyblue' }
-                                  : {}
-                              }
-                            >
-                              {fileName[fileName.length - 1]}
-                            </p>
-                          </div>
-                        </Card>
                       </div>
-                    </Checkbox>
-                  )
-                })}
+                    </div>
+                    <p
+                      style={
+                        selectedDocuments.includes(folderValue)
+                          ? { color: 'skyblue' }
+                          : {}
+                      }
+                    >
+                      {folderValue?.documentName
+                        ? folderValue?.documentName
+                        : displayDocName(fileName[fileName.length - 1])}
+                    </p>
+                  </Card>
+                </div>
+              )
+            })}
+          {loading && data.folderContent?.length > 0 && (
+            <div className={styles.gridViewItemSkeleton}>
+              <div className={styles.boxItemImage}>
+                {Array.from({
+                  length:
+                    data?.contentCount < paginateData?.pageSize
+                      ? data?.contentCount
+                      : paginateData?.pageSize || 10,
+                })
+                  .fill(null)
+                  .map((_, i) => i)
+                  .map((img) => {
+                    return (
+                      <ImageItem
+                        origin=""
+                        className={styles.imagePreview}
+                        key={img}
+                      />
+                    )
+                  })}
+              </div>
             </div>
-          </div>
+          )}
+        </div>
+      </div>
+
+      <Drawer
+        placement={'bottom'}
+        closable={false}
+        onClose={() => setFolderDrawer((e) => !e)}
+        visible={folderDrawer}
+        className={styles.createContentMobile}
+      >
+        <div className={styles.mobileHeader}>
+          <div className={styles.handler} />
+          <FolderPopupContent record={selectedFolder} />
+        </div>
+      </Drawer>
+
+      <Drawer
+        placement={'bottom'}
+        closable={false}
+        onClose={() => setDocumentDrawer((e) => !e)}
+        visible={documentDrawer}
+        className={styles.createContentMobile}
+      >
+        <div className={styles.mobileHeader}>
+          <div className={styles.handler} />
+          <DocumentPopupContent
+            record={selectedDocument}
+            showFolderMenu={false}
+          />
+        </div>
+      </Drawer>
+
+      <div
+        className={classNames(
+          styles.listViewWrap,
+          !listView && styles.displayNone
         )}
-        {listView && (
-          <div className={styles.listViewWrap}>
-            {data.folder.length > 0 && (
-              <Table
-                columns={columns}
-                dataSource={tableData}
-                pagination={false}
-                onRow={(record) => ({
-                  onClick: () => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    onFolderClick(record.name[1])
-                  },
-                })}
-              />
-            )}
-            {data.folderTitle === 'Folders' && (
-              <div className={styles.listViewWrapData}>
-                <Table
-                  columns={folderContentColumns}
-                  dataSource={folderContentData}
-                  pagination={false}
-                  scroll={{ x: 600 }}
-                />
-              </div>
-            )}
-            {data.folderTitle !== 'Folders' && (
-              <div className={styles.folderContentDataList}>
-                <Table
-                  columns={folderContentDataColumns}
-                  dataSource={folderContentValue}
-                  pagination={false}
-                  scroll={{ x: 600 }}
-                />
-              </div>
-            )}
-          </div>
+      >
+        {data.folder.length > 0 && (
+          <Table
+            columns={foldersTableColumns}
+            dataSource={data.folder?.map((item) => {
+              return {
+                id: item?.id,
+                name: item.folderTitle,
+                files: item.contentCount || 0,
+                lastModified: dayjs(item?.modifiedDate).format('DD-MM-YYYY'),
+              }
+            })}
+            pagination={false}
+            scroll={{ x: 600 }}
+          />
         )}
 
-        <BasicModal
-          modalWidth={isMobile ? 375 : 1000}
-          onCancel={() => {
-            setPageNumber(1)
-            setPreviewModal((e) => !e)
-          }}
-          onDelete={() => console.log()}
-          onSpecialBooleanClick={() => console.log()}
-          visible={previewModal}
-          className={styles.previewModal}
-          footer={false}
-        >
-          <div className={styles.modalContent}>
-            {
-              <PreviewFile
-                title={pdfName}
-                numPages={numPages}
-                pageNumber={pageNumber}
-                pdfURL={pdfData}
-                onDocumentLoadSuccess={onDocumentLoadSuccess}
-                onSetNumPages={onSetNumPages}
-                setPreviewModal={setPreviewModal}
+        <div className={styles.listViewWrapData}>
+          {data?.folderContent?.length > 0 &&
+            (loading ? (
+              <LoadingTable columns={documentsTableColumns} />
+            ) : (
+              <Table
+                columns={documentsTableColumns}
+                dataSource={data?.folderContent?.map((item) => {
+                  return {
+                    id: item?.id,
+                    name: item.folderData,
+                    owner: 'me',
+                    folderData: item.folderData,
+                    documentName: item?.documentName,
+                    date: dayjs(new Date(item.dateTime * 1000)).format(
+                      'DD-MM-YYYY'
+                    ),
+                  }
+                })}
+                pagination={false}
+                scroll={{ x: 600 }}
               />
-            }
-          </div>
-        </BasicModal>
-        <Modal
-          title={'Delete forever ?'}
-          onCancel={() => {
-            setDeleteModal((e) => !e)
-          }}
-          onOk={() => {
-            handleDelete()
-            setDeleteModal((e) => !e)
-          }}
-          visible={deleteModal}
-          className={styles.deleteModal}
-          cancelText={'Cancel'}
-          okText={'Delete forever'}
-        >
-          <div className={styles.modalContent}>
-            <p>
-              {tempData.length}{' '}
-              {`items will be deleted forever and you won't be able to restore them.`}
-            </p>
-          </div>
-        </Modal>
+            ))}
+        </div>
       </div>
-    )
-  }
-)
+
+      {(data?.contentCount || 0) > 0 && (
+        <div className={styles.pagination}>
+          <Pagination
+            total={data?.contentCount}
+            defaultPageSize={50}
+            showSizeChanger={false}
+            onChange={paginateData?.onPageChange}
+            pageSizeOptions={['10', '25', '50', '100']}
+            onPageSizeChange={paginateData?.onPageSizeChange}
+            pageSize={paginateData?.pageSize}
+            current={paginateData?.currentPage}
+            showingRecords={
+              (paginateData?.currentPage - 1) * paginateData?.pageSize +
+                data?.folderContent?.length || 0
+            }
+          />
+        </div>
+      )}
+      <BasicModal
+        modalWidth={isMobile ? 375 : 1000}
+        onCancel={() => {
+          setPageNumber(1)
+          setPreviewModal((e) => !e)
+        }}
+        visible={previewModal}
+        className={styles.previewModal}
+        footer={false}
+      >
+        <div className={styles.modalContent}>
+          {
+            <PreviewFile
+              title={pdfName}
+              numPages={numPages}
+              pageNumber={pageNumber}
+              pdfURL={pdfData}
+              onDocumentLoadSuccess={onDocumentLoadSuccess}
+              onSetNumPages={onSetNumPages}
+              setPreviewModal={setPreviewModal}
+            />
+          }
+        </div>
+      </BasicModal>
+      <Modal
+        centered={true}
+        onCancel={() => {
+          setSelectedDocument(0)
+          setDocDelModal(() => false)
+        }}
+        onOk={() => onDocumentDelete?.(selectedDocument || 0)}
+        visible={docDeleteModal}
+        title={'Delete Forever?'}
+        cancelText={'Cancel'}
+        okText={'Delete Forever'}
+        confirmLoading={singleDocDelLoading}
+      >
+        <div>
+          <p>
+            {`1 item will be deleted forever and you won't be able to restore
+            them.`}
+          </p>
+        </div>
+      </Modal>
+      <BasicModal
+        modalWidth={600}
+        onCancel={() => {
+          setRenamingFile({ id: 0, name: '' })
+          setRenameFileModal((e) => !e)
+        }}
+        onOk={() => {
+          if (renamingFile?.id && renamingFile?.name)
+            onRenameFile?.(renamingFile?.id, renamingFile?.name)
+        }}
+        title="Rename File"
+        visible={renameFileModal}
+        newButtonText="Save"
+        loading={renameFileLoading}
+      >
+        <div className={styles.modalContent}>
+          <label>Name</label>
+          <Input
+            autoFocus
+            name="name"
+            placeholder="Enter a name"
+            value={renamingFile?.name}
+            onChange={(e) => {
+              setRenamingFile({ ...renamingFile, name: e.target.value })
+            }}
+          />
+        </div>
+      </BasicModal>
+    </div>
+  )
+}
 
 export default FolderData

@@ -22,9 +22,45 @@ query getAlbumPhotos(
   }
 }
 
+query getAllAlbumPhotos($contactId: Int!, $albumId: Int!) {
+  findManyContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "contact" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: $albumId }
+    }
+    orderBy: { date: desc }
+  ) {
+    id
+    origin: linkref
+    date
+    tags
+  }
+}
+
+query countAlbumPhotos($contactId: Int!, $albumId: Int!) {
+  aggregateContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "contact" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: $albumId }
+    }
+  ) {
+    count {
+      _all
+    }
+  }
+}
+
 query getPhotoAlbum($albumId: Int!, $contactId: Int!) {
   findFirstPhotoAlbum(
-    where: { id: { equals: $albumId }, contact_id: { equals: $contactId } }
+    where: {
+      id: { equals: $albumId }
+      contact_id: { equals: $contactId }
+      album_type: { equals: "photos" }
+    }
   ) {
     id
     name: album_name
@@ -42,7 +78,12 @@ query getPhotoAlbum($albumId: Int!, $contactId: Int!) {
 }
 
 query getPhotoAlbums($contactId: Int!) {
-  findManyPhotoAlbum(where: { contact_id: { equals: $contactId } }) {
+  findManyPhotoAlbum(
+    where: {
+      contact_id: { equals: $contactId }
+      album_type: { equals: "photos" }
+    }
+  ) {
     id
     name: album_name
     modified_date
@@ -53,21 +94,6 @@ query getPhotoAlbums($contactId: Int!) {
     Photos(skip: 0, take: 4) {
       id
       linkref
-    }
-  }
-}
-
-query countAlbumPhotos($contactId: Int!, $albumId: Int!) {
-  aggregateContactAttachment(
-    where: {
-      contact_id: { equals: $contactId }
-      attachment_type: { equals: "contact" }
-      photo_type: { notIn: "consent,treatment" }
-      album_id: { equals: $albumId }
-    }
-  ) {
-    count {
-      _all
     }
   }
 }

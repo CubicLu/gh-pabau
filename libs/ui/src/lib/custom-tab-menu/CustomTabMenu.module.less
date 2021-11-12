@@ -13,6 +13,41 @@
   .tabMenuItems {
     height: 100%;
     border-right: 1px solid var(--border-color-base);
+    .titleCountWrapper {
+      display: flex;
+      padding-top: 3px;
+      .count-wrapper {
+        .count-container {
+          &:before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-right: 5px solid #eef7fb;
+            border-bottom: 5px solid transparent;
+            transform: translateY(-50%);
+          }
+          width: auto;
+          min-width: 23px;
+          height: 20px;
+          border-radius: 2px;
+          background-position: center;
+          background-repeat: no-repeat;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 8px;
+          font-family: var(--font-family);
+          font-size: 12px;
+          color: var(--primary-color);
+          background: #eef7fb;
+          position: relative;
+        }
+      }
+    }
     .tabMenuItem {
       cursor: pointer;
       width: 100%;
@@ -138,10 +173,10 @@
   flex-direction: column;
   .mainTabMenuItems {
     width: 100%;
-    margin-top: 60px;
+    margin-top: 0px;
     position: fixed;
     height: 40px;
-    z-index: 1;
+    z-index: 3;
     :global {
       .ant-tabs {
         width: 100%;
@@ -198,11 +233,12 @@
     margin-top: 100px;
     background-color: white;
     // z-index: 20;
-    .tabPaneItem {
-      display: none;
-    }
     .active {
       display: block;
+    }
+
+    @media screen and (max-width: 767px) {
+      margin-top: 75px;
     }
   }
 }

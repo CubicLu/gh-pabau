@@ -12,6 +12,7 @@ import { CancelTokenSource } from 'axios'
 import { Progress, Spin, Tooltip } from 'antd'
 import { isMobile as mobile } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
+import { FileIcon, defaultStyles } from 'react-file-icon'
 import { ReactComponent as ImagesIcon } from '../../assets//images/image-viewer/image-gallery.svg'
 import { ReactComponent as CameraCircleFilled } from '../../assets/images/image-viewer/camera-circle-filled.svg'
 import { ReactComponent as PhotoCircleFilled } from '../../assets/images/image-viewer/photo-circle-filled.svg'
@@ -21,6 +22,27 @@ import 'react-html5-camera-photo/build/css/index.css'
 import classNames from 'classnames'
 
 const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
+const fileIconStyle = {
+  ...defaultStyles,
+  pdf: {
+    type: 'acrobat',
+    extension: '',
+  },
+  html: {
+    type: 'code2',
+    extension: '',
+  },
+  docx: {
+    glyphColor: '#cfcfcf',
+    type: 'document',
+    extension: '',
+  },
+  doc: {
+    glyphColor: '#cfcfcf',
+    type: 'document',
+    extension: '',
+  },
+}
 
 const dataURLtoFile = (dataurl, filename) => {
   const arr = dataurl.split(','),
@@ -50,6 +72,7 @@ export interface UploadingImageProps {
   id: number
   albumId: number
   preview: string
+  type?: string
   file?: File
   size?: number
   uploadedPath?: string
@@ -67,6 +90,7 @@ interface ImageThumbnailProps {
   uploadImage?: (image: UploadingImageProps) => void
   cancelUpload?: (image: UploadingImageProps) => void
   removeFile?: (id: number) => void
+  canCancel?: boolean
 }
 
 const ImageThumbnail: FC<ImageThumbnailProps> = ({
@@ -74,6 +98,7 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
   uploadImage,
   cancelUpload,
   removeFile,
+  canCancel = false,
 }) => {
   const [showCancelIcon, setShowCancelIcon] = useState(false)
 
@@ -88,13 +113,36 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
   }, [data?.isFailed])
 
   return (
-    <div key={data?.id} style={{ backgroundImage: `url(${data?.preview})` }}>
+    <div
+      key={data?.id}
+      style={
+        data?.type?.includes('image')
+          ? {
+              backgroundImage: `url(${data?.preview})`,
+              boxShadow:
+                '0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%)',
+            }
+          : { border: '1px solid lightgray' }
+      }
+    >
+      {!data?.type?.includes('image') && (
+        <div className={styles.otherFiles}>
+          <FileIcon
+            extension={data?.type?.split('/')?.[1]}
+            foldColor="lightgray"
+            labelColor="var(--primary-color)"
+            glyphColor="var(--primary-color)"
+            {...fileIconStyle[data?.type?.split('/')?.[1] || '']}
+          />
+        </div>
+      )}
       {data?.isUploadStarted && !data?.loading && !showCancelIcon && (
         <div className={styles.imgLoading}>
           <span
             className={styles.progressIndicator}
             onMouseEnter={() => {
-              if (!data?.isUploadCompleted) setShowCancelIcon(() => true)
+              if (!data?.isUploadCompleted && canCancel)
+                setShowCancelIcon(() => true)
             }}
           >
             <Tooltip
@@ -160,21 +208,24 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
           </Tooltip>
         </div>
       )}
-      {showCancelIcon && data?.isUploadStarted && !data?.isUploadCompleted && (
-        <div className={styles.imgLoading}>
-          <span
-            className={styles.cancelIcon}
-            onMouseLeave={() => setShowCancelIcon(() => false)}
-            onClick={() => {
-              if (!data?.isFailed) cancelUpload?.(data)
-              if (data?.isFailed) uploadImage?.(data)
-            }}
-          >
-            {!data?.isFailed && <CloseCircleFilled />}
-            {data?.isFailed && <PlayCircleFilled />}
-          </span>
-        </div>
-      )}
+      {showCancelIcon &&
+        canCancel &&
+        data?.isUploadStarted &&
+        !data?.isUploadCompleted && (
+          <div className={styles.imgLoading}>
+            <span
+              className={styles.cancelIcon}
+              onMouseLeave={() => setShowCancelIcon(() => false)}
+              onClick={() => {
+                if (!data?.isFailed) cancelUpload?.(data)
+                if (data?.isFailed) uploadImage?.(data)
+              }}
+            >
+              {!data?.isFailed && <CloseCircleFilled />}
+              {data?.isFailed && <PlayCircleFilled />}
+            </span>
+          </div>
+        )}
     </div>
   )
 }
@@ -314,6 +365,11 @@ export interface CamUploaderProps {
   removeImage?: (imageId: number) => void
   onCancelUpload?: (image: UploadingImageProps) => void
   albumId?: number
+  cancelFunctionality?: boolean
+  acceptFiles?: string[]
+  modalTitle?: string
+  descTitle?: string
+  descSubTitle?: string
 }
 
 export const CamUploaderModal: FC<CamUploaderProps> = ({
@@ -326,6 +382,11 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   removeImage,
   onCancelUpload,
   albumId = 0,
+  cancelFunctionality = true,
+  acceptFiles = validTypes,
+  modalTitle,
+  descTitle,
+  descSubTitle,
 }) => {
   const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
   const inputFileRef = useRef<HTMLInputElement>(null)
@@ -343,6 +404,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       id: makeId(20),
       preview: URL.createObjectURL(file),
       file: file,
+      type: file?.type,
       size: file?.size,
       albumId: albumId || 0,
     }
@@ -354,11 +416,13 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   const handleAddFiles = (files: File[]) => {
     if (files?.length > 0) {
       const cFiles: UploadingImageProps[] = files.map((file) => {
+        console.log('TYPE:', file?.type)
         return {
           id: makeId(12),
           preview: URL.createObjectURL(file),
           file,
           size: file?.size,
+          type: file?.type,
           albumId: albumId || 0,
         }
       })
@@ -375,6 +439,18 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
     }, 100)
   }
 
+  useEffect(() => {
+    const elems = document?.querySelectorAll(
+      "div[class^='ant-modal CamUploaderModal_uppyModal']"
+    )
+    if (elems?.length > 0 && mobile) {
+      const elem = elems?.[0]?.parentElement
+      if (elem) {
+        elem.style.overflow = 'hidden'
+      }
+    }
+  })
+
   return (
     <div>
       <input
@@ -382,7 +458,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         type="file"
         name="File"
         multiple
-        accept={validTypes?.join(', ')}
+        accept={acceptFiles?.join(', ')}
         className={styles.fileInput}
         onChange={(e) => {
           const cFiles = (e.target.files as unknown) as File[]
@@ -407,7 +483,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             <span>
               <ImagesIcon />
             </span>
-            <span>Take a photo</span>
+            <span>{modalTitle || 'Take a photo'}</span>
           </div>
           {!mobile && (
             <div>
@@ -436,8 +512,9 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           {!showCamera && (
             <Dropzone
               multiple
-              fileTypes={validTypes}
-              descSubtitle="Only Images are acceptable"
+              fileTypes={acceptFiles}
+              descSubtitle={descSubTitle || 'Only Images are acceptable'}
+              descTitle={descTitle}
               onChange={handleAddFiles}
             />
           )}
@@ -462,6 +539,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
                   uploadImage={uploadImage}
                   removeFile={removeImage}
                   cancelUpload={onCancelUpload}
+                  canCancel={cancelFunctionality}
                 />
               ))}
             </div>
@@ -470,7 +548,10 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         <div className={styles.uppyModalFooter}>
           <div>
             <span>
-              {uploadingImages?.length || 0} photo
+              {uploadingImages?.length || 0}{' '}
+              {acceptFiles?.find((el) => !el?.includes('image'))
+                ? 'file'
+                : 'photo'}
               {uploadingImages?.length === 0 ||
                 (uploadingImages?.length > 1 && 's')}
             </span>

@@ -14,6 +14,7 @@ import {
   FindGmailConnectionDocument,
   GoogleTokenDocument,
   DeleteGmailConnectionDocument,
+  useGetComSendersQuery,
 } from '@pabau/graphql'
 import { Col, Modal, Popover, Row, Tag, Typography, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
@@ -29,7 +30,6 @@ import { useUser } from '../../context/UserContext'
 
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { GetComSendersDocument } from '@pabau/graphql'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 
 const { confirm } = Modal
@@ -54,34 +54,9 @@ export interface SenderItem {
   isEnterpriseEmail?: string
   masterCriteria?: string
   subCriteria?: string
-  mergeTags: MergeTagItem[]
+  mergeTags?: MergeTagItem[]
+  visibility?: number
 }
-
-export const senderItems: SenderItem[] = [
-  {
-    id: '19837',
-    type: 'email',
-    fromName: 'Clinic Bookings',
-    fromEmail: 'william@pabau.com',
-    isDefaultSender: false,
-    mergeTags: [],
-  },
-  {
-    id: '002',
-    type: 'sms',
-    fromName: 'The Health Clinic',
-    fromEmail: 'william@pabau.com',
-    isDefaultSender: true,
-    mergeTags: [],
-  },
-  {
-    id: '003',
-    type: 'sms',
-    fromName: 'Surgical Clinic',
-    isDefaultSender: false,
-    mergeTags: [],
-  },
-]
 
 export const masterCriteriaOptions = ['Master category', 'Master category 2']
 export const subCriteriaOptions = ['Sub category', 'Sub category 2']
@@ -89,43 +64,44 @@ export const mergeTagTypeOptions = ['Tag Type 1', 'Tag Type 2']
 
 export const Communications: React.FC = () => {
   const user = useUser()
+
   const router = useRouter()
   const { t } = useTranslationI18()
   const [isLoading, setIsLoading] = useState(true)
   const [senderDetails, setSenderDetails] = useState([{} as SenderItem])
 
-  const [getSender] = useLazyQuery(GetComSendersDocument, {
-    onCompleted: (comSenders) => {
-      const temp = []
-
-      comSenders.getSenders.map((sender) =>
-        temp.push({
-          id: sender.id,
-          fromName: sender.senders_name,
-          fromEmail: sender.data,
-          isDefaultSender: sender.is_default === 1,
-          type: sender.type,
-        })
-      )
-      setSenderDetails(temp)
-      setIsLoading(false)
-    },
-  })
+  const { loading, data: getSendersData } = useGetComSendersQuery()
+  const { me } = useUser()
 
   useEffect(() => {
-    if (isLoading) {
-      getSender()
-    } else {
+    if (getSendersData?.getSenders.length > 0) {
+      const temp = []
+      getSendersData.getSenders.map((sender) => {
+        if (user.me.company === sender.company_id) {
+          console.log('sender data:::', sender)
+          temp.push({
+            id: sender.id,
+            fromName: sender.senders_name,
+            fromEmail: sender.data,
+            isDefaultSender: sender.is_default === 1,
+            type: sender.type,
+          })
+        }
+        return 1
+      })
+      console.log('temp data:::', temp)
+      setSenderDetails(temp)
       setIsLoading(false)
+    } else {
+      setIsLoading(true)
     }
-  }, [getSender, isLoading])
+  }, [getSendersData, loading, isLoading, user.me.company])
 
   const [showLogin, setShowLogin] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const [userData, setUserData] = useState('')
 
-  const { me } = useUser()
   const url = new URL(window.location.href)
 
   const [loadConnection, { data: gmailConnection }] = useLazyQuery(
@@ -291,7 +267,6 @@ export const Communications: React.FC = () => {
       </div>
     )
   }
-
   return (
     <Layout {...user} active={'setup'}>
       {showLogin && <Login handleGoogleLogin={handleGoogleLogin} />}
