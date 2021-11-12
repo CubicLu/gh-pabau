@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
+import {
+  ClientCardLayout,
+  ClientContext,
+} from '../../../components/Clients/ClientCardLayout'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   ClientAppointments,
@@ -18,6 +21,7 @@ import {
   useUpdateAppointmentStatusMutation,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 const Appointments = () => {
   const router = useRouter()
@@ -114,7 +118,9 @@ const Appointments = () => {
       const appointments = clientAppointmentData?.findManyBooking?.map(
         (appt) => {
           const employee = {
-            avatar: appt?.CmStaffGeneral?.Avatar,
+            avatar:
+              appt?.CmStaffGeneral?.Avatar &&
+              getImage(appt?.CmStaffGeneral?.Avatar),
             name: `${appt?.CmStaffGeneral?.Fname} ${appt?.CmStaffGeneral?.Lname}`,
           }
           return {
@@ -125,7 +131,7 @@ const Appointments = () => {
               appt.status &&
               getAppointmentStatus(appt?.status?.toLocaleLowerCase()),
             locationName: appt?.CompanyBranch?.name,
-            createdDate: '2021-06-25T20:15:01Z',
+            createdDate: dayjs(appt?.create_date?.toString()).format(),
             apptDate: dayjs(appt?.start_date?.toString()).format(),
             isVirtual: true,
             feedbackSurvey: appt?.feedback_survey_scheduled,
@@ -134,14 +140,14 @@ const Appointments = () => {
             remindersSent: appt?.email_confirmation_sent === 1 ? true : false,
             notes: appt?.note,
             isVideoCall: 1,
-            bookedBy: 'William Brandham',
+            isOnline: appt?.is_online,
+            bookedBy: appt?.BookedBy?.[0]?.full_name,
             isCourse: appt?.where === 'course',
           }
         }
       )
       setClientAppointments(appointments)
     }
-    console.log('clientAppointmentData', clientAppointmentData)
   }, [clientAppointmentData])
 
   // DONT DO THIS! Move to libs/graphql
@@ -167,6 +173,7 @@ const Appointments = () => {
     >
       <ClientAppointments
         appointments={clientAppointments}
+        clientContext={ClientContext}
         loading={loading}
         updateApptNoteMutation={updateApptNoteMutation}
         adjustApptNotificationsMutation={adjustApptNotificationsMutation}

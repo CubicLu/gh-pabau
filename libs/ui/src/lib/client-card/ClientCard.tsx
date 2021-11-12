@@ -837,7 +837,7 @@ const ClientCardModal: FC<P> = ({
     </div>
   )
 
-  const haveSubTabs = ['financial', 'gift-vouchers']
+  const haveSubTabs = ['financial', 'gift-vouchers', 'appointments']
 
   //TODO: remove the Modal from top level (it'll break css:( )
   return (

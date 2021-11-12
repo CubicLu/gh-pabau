@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext, useEffect } from 'react'
 import {
   TabMenu,
   ClientAppointmentCard,
@@ -62,11 +62,18 @@ export interface ClientAppointmentItem {
   isVideoCall: number
   bookedBy: string
   isCourse: boolean
+  isOnline: number
+}
+
+export interface ClientInfo {
+  fullName?: string
 }
 
 interface P {
   appointments?: ClientAppointmentItem[]
   loading?: boolean
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  clientContext: React.Context<any>
   updateApptNoteMutation?: MutationFunction
   adjustApptNotificationsMutation?: MutationFunction
   updateAppointmentStatusMutation?: MutationFunction
@@ -86,12 +93,23 @@ const handleCancelAppointment = (
 
 export const ClientAppointments = ({
   appointments,
+  clientContext,
   loading,
   updateApptNoteMutation,
   adjustApptNotificationsMutation,
   updateAppointmentStatusMutation,
 }: P) => {
   const ref = useRef<HTMLDivElement>(null)
+  const clientData = useContext(clientContext)
+  const [clientInfo, setClientInfo] = useState<ClientInfo>()
+
+  useEffect(() => {
+    if (clientData) {
+      setClientInfo({
+        fullName: `${clientData?.firstName} ${clientData?.lastName}`,
+      })
+    }
+  }, [clientData])
 
   const editNote = (id: number, note?: string) => {
     updateApptNoteMutation?.({
@@ -586,6 +604,7 @@ export const ClientAppointments = ({
                               return (
                                 <ClientAppointmentCard
                                   {...item}
+                                  {...clientInfo}
                                   index={index}
                                   key={`all-bookings-${index}`}
                                   handleDelete={() => deleteAppointment(index)}
@@ -635,6 +654,7 @@ export const ClientAppointments = ({
                           return (
                             <ClientAppointmentCard
                               {...item}
+                              {...clientInfo}
                               index={index}
                               key={`all-bookings-${index}`}
                               handleDelete={() => deleteAppointment(index)}
@@ -690,6 +710,7 @@ export const ClientAppointments = ({
                     return (
                       <ClientAppointmentCard
                         {...item}
+                        {...clientInfo}
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
@@ -713,6 +734,7 @@ export const ClientAppointments = ({
                     return (
                       <ClientAppointmentCard
                         {...item}
+                        {...clientInfo}
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
@@ -735,6 +757,7 @@ export const ClientAppointments = ({
                     return (
                       <ClientAppointmentCard
                         {...item}
+                        {...clientInfo}
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
@@ -759,6 +782,7 @@ export const ClientAppointments = ({
                     return (
                       <ClientAppointmentCard
                         {...item}
+                        {...clientInfo}
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
@@ -783,6 +807,7 @@ export const ClientAppointments = ({
                     return (
                       <ClientAppointmentCard
                         {...item}
+                        {...clientInfo}
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
@@ -806,6 +831,7 @@ export const ClientAppointments = ({
                     return (
                       <ClientAppointmentCard
                         {...item}
+                        {...clientInfo}
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
@@ -830,6 +856,7 @@ export const ClientAppointments = ({
                     return (
                       <ClientAppointmentCard
                         {...item}
+                        {...clientInfo}
                         index={index}
                         key={`all-bookings-${index}`}
                         handleDelete={() => deleteAppointment(index)}
@@ -1001,6 +1028,7 @@ export const ClientAppointments = ({
                           return (
                             <ClientAppointmentCard
                               {...item}
+                              {...clientInfo}
                               index={index}
                               key={`all-bookings-${index}`}
                               handleDelete={() => deleteAppointment(index)}
@@ -1383,6 +1411,7 @@ export const ClientAppointments = ({
                           return (
                             <ClientAppointmentCard
                               {...item}
+                              {...clientInfo}
                               index={index}
                               key={`all-bookings-${index}`}
                               handleDelete={() => deleteAppointment(index)}
@@ -1768,6 +1797,7 @@ export const ClientAppointments = ({
                           return (
                             <ClientAppointmentCard
                               {...item}
+                              {...clientInfo}
                               index={index}
                               key={`all-bookings-${index}`}
                               handleDelete={() => deleteAppointment(index)}

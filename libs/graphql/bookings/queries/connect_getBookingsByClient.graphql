@@ -13,14 +13,21 @@ query GetClientAppointments(
     id
     status
     location_id
+    is_online: Online
     CmStaffGeneral {
       Fname
       Lname
       Avatar
     }
+    created_by_uid
+    BookedBy {
+      id
+      full_name
+    }
     service
     start_date
     end_date
+    create_date
     feedback_survey_scheduled: sent_survey
     sms_reminder_scheduled: sent_sms
     email_reminder_scheduled: sent_email_reminder

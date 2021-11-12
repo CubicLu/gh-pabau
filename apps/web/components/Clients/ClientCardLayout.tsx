@@ -28,6 +28,7 @@ import React, {
   useEffect,
   useState,
   useMemo,
+  createContext,
 } from 'react'
 import Layout from '../Layout/Layout'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
@@ -42,6 +43,8 @@ import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 dayjs.extend(utc)
 dayjs.extend(timezone)
+
+export const ClientContext = createContext(null)
 
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
@@ -441,7 +444,9 @@ export const ClientCardLayout: FC<P> = ({
           />
         )}
       >
-        {children}
+        <ClientContext.Provider value={basicContactData}>
+          {children}
+        </ClientContext.Provider>
       </ClientCard>
       {openEditModal && (
         <ClientCreate

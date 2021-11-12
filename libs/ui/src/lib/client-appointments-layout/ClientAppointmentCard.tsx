@@ -46,6 +46,7 @@ import { AvatarStatus } from '../avatar/Avatar'
 import { ReactComponent as ReinstateIcon } from '../../assets/images/client-card/reinstate-icon.svg'
 import { ReactComponent as MedicalHistory } from '../../assets/images/client-card-ops/medical-history.svg'
 import { ReactComponent as CheckIcon } from '../../assets/images/client-card/check-badge.svg'
+import { ClientInfo } from './ClientAppointments'
 import dayjs from 'dayjs'
 
 const { Option } = Select
@@ -75,10 +76,12 @@ interface AppointmentHandler {
 }
 
 export const ClientAppointmentCard: FC<
-  ClientAppointmentItem & AppointmentHandler
+  ClientAppointmentItem & AppointmentHandler & ClientInfo
 > = (props) => {
   const {
     id,
+    fullName,
+    isOnline,
     serviceName,
     employee,
     otherEmployees,
@@ -396,7 +399,7 @@ export const ClientAppointmentCard: FC<
             <Tooltip
               placement="topLeft"
               title={t('client.appointment.card.booked.by.message', {
-                bookedBy,
+                bookedBy: isOnline ? fullName : bookedBy,
                 date: dayjs(createdDate).format('ddd, DD MMM YYYY'),
                 time: dayjs(createdDate).format('h:mma'),
               })}
