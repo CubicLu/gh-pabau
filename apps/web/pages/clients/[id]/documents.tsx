@@ -483,6 +483,14 @@ const Documents: FC = () => {
       variables: {
         id: Number(folder?.id),
       },
+      refetchQueries: [
+        {
+          query: GetFoldersDocument,
+          variables: {
+            contactId: contactId,
+          },
+        },
+      ],
     })
   }
 

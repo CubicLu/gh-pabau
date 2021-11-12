@@ -524,6 +524,14 @@ const Photos: FC = () => {
       variables: {
         id: album?.id,
       },
+      refetchQueries: [
+        {
+          query: GetPhotoAlbumsDocument,
+          variables: {
+            contactId: contactId,
+          },
+        },
+      ],
     })
   }
 
