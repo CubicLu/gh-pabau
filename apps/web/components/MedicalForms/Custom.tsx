@@ -37,9 +37,9 @@ import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './Custom.module.less'
 import { medicalFormPreviewProps } from './mock'
-import Icon1 from '../../assets/images/tretment-icon.png'
-import Icon2 from '../../assets/images/consent-icon.png'
-import Icon3 from '../../assets/images/prescription-icon.png'
+import Icon1 from '../../assets/images/form-type/treatment-icon.png'
+import Icon2 from '../../assets/images/form-type/consent-icon.png'
+import Icon3 from '../../assets/images/form-type/prescription-icon.png'
 interface Paginate {
   total: number
   skip: number
