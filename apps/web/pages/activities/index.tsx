@@ -136,7 +136,7 @@ export const filterTabsObj = {
 }
 
 export const statuses = {
-  workingOn: 'Working on',
+  working_on: 'Working on',
   reopened: 'Reopened',
   pending: 'Pending',
   done: 'Done',
@@ -400,6 +400,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             temp['type_name'] = data?.type?.name
             temp['type_badge'] = data?.type?.badge
           }
+          temp['status'] = statuses[temp?.status]
           return temp
         })
         setSourceData(resultData)
@@ -413,7 +414,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
           { status: statuses.done, color: '#65CD98', key: 'done' },
           { status: statuses.reopened, color: '#FF5B64', key: 'reopened' },
           { status: statuses.pending, color: '#54B2D3', key: 'pending' },
-          { status: statuses.workingOn, color: '#FAAD14', key: 'working' },
+          { status: statuses.working_on, color: '#FAAD14', key: 'working' },
           { status: statuses.awaiting, color: '#BABABA', key: 'awaiting' },
         ].map((item) => {
           const count = records[`${item.key}`] || 0

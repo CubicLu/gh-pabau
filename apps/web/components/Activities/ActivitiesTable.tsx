@@ -41,7 +41,10 @@ import {
 import dayjs from 'dayjs'
 import * as Icon from '@ant-design/icons'
 import searchEmpty from '../../assets/images/empty.png'
-import { useUpsertOneActivityUserStateMutation } from '@pabau/graphql'
+import {
+  useUpsertOneActivityUserStateMutation,
+  Activity_Status,
+} from '@pabau/graphql'
 import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
 import { DisplayDateTime, DisplayDate } from '../../hooks/displayDate'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
@@ -144,13 +147,6 @@ export const defaultColumns = [
   columnNames.status.label,
 ]
 
-const statusMapper = {
-  awaiting: 'Awaiting',
-  done: 'Done',
-  pending: 'Pending',
-  reopened: 'Reopened',
-  working_on: 'Working on',
-}
 export const ActivityTable: FC<ActivityTableProps> = React.memo(
   ({
     filteredData,
@@ -235,9 +231,8 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
 
     const RenderStatus = (data) => {
       const { status, id } = data
-      const statusName = statusMapper[status]
       const [visible, setVisible] = useState(false)
-      const { backgroundColor, borderColor } = renderStatus(statusName)
+      const { backgroundColor, borderColor } = renderStatus(status)
       const toggleVisible = () => {
         setVisible((e) => !e)
       }
@@ -259,7 +254,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               }}
               backgroundColor={backgroundColor}
             >
-              {statusName}
+              {status}
             </Button>
           </Popover>
           {isMobile && (
@@ -1566,7 +1561,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
 
     const renderStatus = (status) => {
       switch (status) {
-        case statuses.workingOn:
+        case statuses.working_on:
           return {
             borderColor: '#FAAD14',
             backgroundColor: 'rgba(250, 173, 20, 0.05)',
@@ -1915,7 +1910,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           rowClassName={(record: ActivitiesDataProps) => {
             const dueDate = dayjs(record.dueDate)
             const now = dayjs()
-            if (record?.status === statuses.done) {
+            if (record?.status === Activity_Status.Done) {
               return styles.doneRow
             } else if (now > dueDate) {
               return styles.overdueRow

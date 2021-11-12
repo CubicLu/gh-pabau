@@ -292,6 +292,12 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                   ID: values.lead,
                 },
               },
+              CompletedBy: {
+                connect: {
+                  id: loggedUser?.me?.user,
+                },
+              },
+              finished_at: dayjs(),
             }
             if (!values.lead) {
               delete data.CmLead
@@ -301,6 +307,10 @@ export const CreateActivity: FC<CreateActivityProps> = ({
             }
             if (!values.user) {
               delete data.AssignedUser
+            }
+            if (!values.isDone) {
+              delete data.CompletedBy
+              delete data.finished_at
             }
             await addMutation({
               variables: {
