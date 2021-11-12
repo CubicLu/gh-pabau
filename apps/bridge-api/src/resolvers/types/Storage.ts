@@ -327,8 +327,7 @@ export const DeleteContactAlbum = extendType({
           } else {
             return { success: false, album: id } as DeleteOutput
           }
-        } catch (error) {
-          throw new Error(error)
+        } catch {
           return { success: false, album: id } as DeleteOutput
         }
       },
