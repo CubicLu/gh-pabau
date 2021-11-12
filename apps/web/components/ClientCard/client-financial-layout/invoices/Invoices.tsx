@@ -111,11 +111,11 @@ export const Invoices: FC<P> = (props) => {
       const discount = expandedInvoice[0]?.discount_amount
       const inv_total = expandedInvoice[0]?.inv_total
       invoicesDetails.push({
-        id: `${item.id}`,
+        id: `${item.custom_id}`,
         date: dayjs(`${item.date}`).format(
           user?.me?.companyDateFormat === 'd/m/Y' ? 'DD/MM/YYYY' : 'MM/DD/YYYY'
         ),
-        location: item.location_name,
+        location: item.location_name ?? user?.me?.companyName,
         employee: item.billers,
         issuedTo: item.issue_to,
         paid: item.paid_amount === item.inv_total ? true : false,
@@ -164,9 +164,6 @@ export const Invoices: FC<P> = (props) => {
   }, [salesDetails])
 
   useEffect(() => {
-    const expandedInvoice = invoice?.invoices?.filter(
-      (item) => item.guid === expansionKey
-    )
     const sumTotalInv = 0
     const sumTotalPaidInv = 0
     const totalInvoice = invoice?.invoices
@@ -182,11 +179,7 @@ export const Invoices: FC<P> = (props) => {
       }, 0)
     const outstanding = totalInvoice - totalPaid
     setTotalOutstanding(outstanding)
-    setTotalInvoiced(
-      salesDetails
-        ? expandedInvoice[0]?.inv_total
-        : invoice?.invoices[0]?.inv_total ?? 0
-    )
+    setTotalInvoiced(totalPaid)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesDetails, invoice])
   useEffect(() => {

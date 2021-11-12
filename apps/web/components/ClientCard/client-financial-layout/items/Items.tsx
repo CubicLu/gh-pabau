@@ -15,7 +15,10 @@ import {
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
 import { useQuery } from '@apollo/client'
-import { GetContactSaleItemDocument } from '@pabau/graphql'
+import {
+  GetContactSaleItemDocument,
+  AggregateItemTotalDocument,
+} from '@pabau/graphql'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 
@@ -70,6 +73,15 @@ export const Items: FC<P> = (props) => {
     getQueryVariables
   )
 
+  const { data: itemTotal, loading: itemTotalLoading } = useQuery(
+    AggregateItemTotalDocument,
+    {
+      skip: !router.query.id,
+      variables: {
+        contactID: Number.parseInt(`${router.query.id}`),
+      },
+    }
+  )
   useEffect(() => {
     const itemsDetails = []
     itemsData?.items?.map((item) => {
@@ -355,12 +367,10 @@ export const Items: FC<P> = (props) => {
             buttons={[
               {
                 text: t('ui.client-card-financial.items.total-sales'),
-                value: itemsData?.items?.reduce((prev, cur) => {
-                  return prev + cur.InvSale?.total ?? 0
-                }, 0),
+                value: itemTotal?.itemTotal?.totalSum?.total ?? 0,
               },
             ]}
-            loading={itemsLoading}
+            loading={itemTotalLoading}
           />
         </>
       )}

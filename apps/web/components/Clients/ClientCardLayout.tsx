@@ -40,6 +40,7 @@ import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+import stringToCurrencySignConverter from '../../helper/stringToCurrencySignConverter'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
@@ -259,12 +260,16 @@ export const ClientCardLayout: FC<P> = ({
       key: 'financial',
       name: 'Financials',
       count: countInvoice?.total ?? 0,
-      tags: [
-        {
-          tag: invAmount?.totalInv?.total_amount?.inv_total,
-          color: 'green',
-        },
-      ],
+      tags: invAmount?.totalInv?.total_amount?.inv_total
+        ? [
+            {
+              tag:
+                stringToCurrencySignConverter(user.me?.currency) +
+                invAmount?.totalInv?.total_amount?.inv_total,
+              color: 'green',
+            },
+          ]
+        : [],
     },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },

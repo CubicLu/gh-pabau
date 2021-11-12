@@ -60,3 +60,11 @@ query countContactSaleItem($customer_id: Int!){
     }
   }
 }
+
+query aggregateItemTotal($contactID: Int) {
+  itemTotal: aggregateInvSale(where: { customer_id: { equals: $contactID } }) {
+    totalSum: _sum {
+      total
+    }
+  }
+}

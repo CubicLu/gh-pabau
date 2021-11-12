@@ -6,6 +6,7 @@ export const InvoiceData = objectType({
   description: 'Invoice data simple response',
   definition(t) {
     t.int('id')
+    t.string('custom_id')
     t.string('guid')
     t.field('date', { type: 'DateTime' })
     t.int('customer_id')
@@ -114,11 +115,11 @@ const generateInvoiceQuery = (
     whereClause.push(`a.custom_id = ${input.where.custom_id.equals}`)
   if (input?.cursor) whereClause.push(` a.id > ${input?.cursor}`)
 
-  const query = `SELECT 
+  const query = `SELECT
               max(a.id) as id,
-              a.guid, 
+              a.guid,
               a.date,
-              a.customer_id, 
+              a.customer_id,
               a.customer_name,
               a.custom_id,
               sum(a.paid_amount) as paid_amount,
@@ -133,12 +134,12 @@ const generateInvoiceQuery = (
               LEFT JOIN cm_contacts c on c.id = a.customer_id
               LEFT JOIN inv_billers d ON a.biller_id=d.id
               LEFT JOIN insurance_details e ON a.insurer_contract_id=e.id
-          WHERE 
+          WHERE
               ${whereClause.join(' AND ')}
               AND a.guid!='' AND a.guid IS NOT NULL
           GROUP BY IFNULL(a.guid, a.id)
           ORDER BY a.date desc
-          LIMIT ${input.take} 
+          LIMIT ${input.take}
           OFFSET ${input.skip}`
   return query
 }
@@ -157,7 +158,7 @@ const generateInvoiceCountQuery = (
 
   const query = `SELECT count(DISTINCT a.guid) as count
           from inv_sales a
-          WHERE  
+          WHERE
           ${whereClause.join(' AND ')}
           AND a.guid!='' AND a.guid IS NOT NULL`
 

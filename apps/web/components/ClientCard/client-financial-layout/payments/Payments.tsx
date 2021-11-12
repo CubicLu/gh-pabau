@@ -66,15 +66,16 @@ export const Payments: FC<IPaymentsProps> = ({
         date: dayjs.unix(item?.date).format('DD/MM/YYYY'),
         invoiceNo: item?.sales?.custom_id,
         paymentNo: item?.id,
-        location: item?.sales?.location?.name,
+        location: item?.sales?.location?.name ?? user?.me?.companyName,
         employee: item?.sales?.biller?.name,
         paidBy: item?.user?.full_name,
-        method: item?.pmethod,
+        method: item?.pmethod.charAt(0).toUpperCase() + item?.pmethod.slice(1),
         amount: item?.amount,
       })
       return paymentsDetails
     })
     setPayment(paymentsDetails)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payment])
 
   useEffect(() => {
