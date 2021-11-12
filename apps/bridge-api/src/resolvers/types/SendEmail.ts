@@ -5,6 +5,7 @@ import {
   list,
   arg,
   inputObjectType,
+  intArg,
 } from 'nexus'
 import {
   EmailInput,
@@ -17,8 +18,13 @@ import {
 } from '../../app/email/nexus-type'
 import { User } from '@prisma/client'
 import { Context } from '../../context'
-import { sendEmail, sendEmailWithTags } from '../../app/email/email-service'
+import {
+  sendEmail,
+  sendEmailWithTags,
+  sendEmailWithTemplate,
+} from '../../app/email/email-service'
 import { validateEmail } from '@pabau/yup'
+import { BookingConfirmationEmailType } from '../../app/communication/nexus-type'
 
 export const SendEmail = extendType({
   type: 'Mutation',
@@ -104,6 +110,42 @@ export const SendEmail = extendType({
       },
       async resolve(_root, args: EmailWithTagsInput, ctx: Context) {
         return sendEmailWithTags(args, ctx)
+      },
+    })
+  },
+})
+
+export const sendBookingConfirmationMail = extendType({
+  type: 'Mutation',
+  definition: function (t) {
+    t.field('SendAppointmentConfirmationMail', {
+      type: BookingConfirmationEmailType,
+      args: {
+        booking_id: intArg(),
+      },
+      resolve: async function (parent, { booking_id }, ctx: Context) {
+        const responseData = {
+          status: 'Success',
+          email_send: false,
+        }
+        const getBookingData = await ctx.prisma.booking.findFirst({
+          where: {
+            id: booking_id,
+          },
+        })
+        const settings = await ctx.prisma.bookingSetting.findFirst()
+        if (settings.send_email > 0) {
+          const emailArgs = {
+            contact_id: getBookingData.contact_id,
+            template_id: settings.email_confirm_id,
+            booking_id: booking_id,
+          }
+          const sendEmail = await sendEmailWithTemplate(emailArgs, ctx)
+          if (sendEmail) {
+            responseData.email_send = true
+          }
+        }
+        return responseData
       },
     })
   },
