@@ -484,31 +484,30 @@
       }
     }
   }
-}
+  :global {
+    label {
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 22px;
+      color: #9292a3;
+    }
+    input {
+      font-size: 14px !important;
 
-:global {
-  label {
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 22px;
-    color: #9292a3;
-  }
-  input {
-    font-size: 14px !important;
-
-    &::placeholder {
+      &::placeholder {
+        font-size: 14px !important;
+      }
+    }
+    .ant-select-selector {
       font-size: 14px !important;
     }
-  }
-  .ant-select-selector {
-    font-size: 14px !important;
-  }
-  .servicesModal {
-    padding-bottom: 0px;
+    .servicesModal {
+      padding-bottom: 0px;
 
-    .ant-modal-close {
-      top: 10px;
-      right: 20px;
+      .ant-modal-close {
+        top: 10px;
+        right: 20px;
+      }
     }
   }
 }
