@@ -29,6 +29,7 @@ export interface ImageViewerSidebarProps {
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
   onAlbumSelect?: (album) => void
+  defaultSelectedPhoto?: number
   loading?: boolean
 }
 
@@ -202,6 +203,7 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
   setIsDragging,
   setSidebarOpen,
   onAlbumSelect,
+  defaultSelectedPhoto,
   loading = false,
 }) => {
   const [imageItems, setImageItems] = useState<AlbumImageItem[]>([])
@@ -209,6 +211,7 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
     null
   )
   const [openAlbumDrop, setOpenAlbumDrop] = useState(false)
+  const [onceLoaded, setOnceLoaded] = useState(false)
 
   const albumsDropdown = (
     <div className={styles.albumsDropdown}>
@@ -226,11 +229,13 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
             )}
             key={item?.id}
             onClick={() => {
-              onAlbumSelect?.(item)
-              setImageItems(item?.imageList as AlbumImageItem[])
-              setCurrentAlbum(item)
-              setOpenAlbumDrop(false)
-              setSelectedIndex?.()
+              if (currentAlbum?.id !== item?.id) {
+                onAlbumSelect?.(item)
+                setImageItems(item?.imageList as AlbumImageItem[])
+                setCurrentAlbum(item)
+                setOpenAlbumDrop(false)
+                setSelectedIndex?.()
+              }
             }}
           >
             <div>{item.name}</div>
@@ -338,6 +343,18 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
     }
   }, [albums, selectedAlbum])
 
+  useEffect(() => {
+    if (!onceLoaded && !loading) {
+      const elem = document?.querySelector(
+        `#sidebarimage${defaultSelectedPhoto}`
+      )
+      if (elem) {
+        elem.scrollIntoView()
+      }
+      setOnceLoaded(() => true)
+    }
+  }, [defaultSelectedPhoto, onceLoaded, loading, selectedIndex])
+
   return (
     <div
       className={
@@ -413,7 +430,7 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div id={`sidebarimage${item?.id}`}>
                     <React.Fragment key={item?.id}>
                       <ImageViewerSidebarItem
                         comparingMode={comparingMode}

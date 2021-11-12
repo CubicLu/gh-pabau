@@ -10,7 +10,9 @@ import {
   useCountClientActivityQuery,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
+  useTotalInvoiceCountQuery,
   useCheckMedicalHistoryQuery,
+  useAggregateAccountPaymentsQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -59,6 +61,17 @@ export const ClientCardLayout: FC<P> = ({
     variables: { contactID: clientId },
     skip: !clientId,
   })
+
+  const { data: countInvoice } = useTotalInvoiceCountQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
+  const { data: invAmount } = useAggregateAccountPaymentsQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
   const { t } = useTranslationI18()
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
@@ -146,7 +159,6 @@ export const ClientCardLayout: FC<P> = ({
       contactID: clientId,
     },
   })
-
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
@@ -246,7 +258,6 @@ export const ClientCardLayout: FC<P> = ({
     })
     getContactHeaderRefetch()
   }
-
   const handleEditNote = async (id, note) => {
     await editMutation({
       variables: { where: { ID: id }, data: { Note: { set: note } } },
@@ -262,7 +273,17 @@ export const ClientCardLayout: FC<P> = ({
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
     { key: 'appointments', name: 'Appointments' },
-    { key: 'financial', name: 'Financials' },
+    {
+      key: 'financial',
+      name: 'Financials',
+      count: countInvoice?.total ?? 0,
+      tags: [
+        {
+          tag: invAmount?.totalInv?.total_amount?.inv_total,
+          color: 'green',
+        },
+      ],
+    },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
     {
@@ -271,6 +292,7 @@ export const ClientCardLayout: FC<P> = ({
       childTabs: [
         { key: 'photos', name: 'Photos' },
         { key: 'prescription', name: 'Prescription' },
+        { key: 'documents', name: 'Documents' },
       ],
     },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
