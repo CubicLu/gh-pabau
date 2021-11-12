@@ -295,15 +295,13 @@ export const DeleteContactAlbum = extendType({
 
           const files = []
 
-          for (const [attachment] of attachments.entries()) {
+          for (const attachment of attachments.values()) {
             files.push(attachment['linkref'])
           }
-
           const postData: BulkDeleteJsonInput = { files: files }
 
           const response = await fetch(
             'https://cdn.pabau.com/v2/api/contact/bulk-delete-attachment',
-
             {
               method: 'POST',
               headers: {
