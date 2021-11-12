@@ -240,7 +240,7 @@ const Photos: FC = () => {
   })
 
   const [deleteOneDocument] = useDeleteDocumentMutation({
-    onCompleted({ deleteContactAttachmentPhoto: data }) {
+    onCompleted({ deleteContactAttachment: data }) {
       setSingleDocDelLoading(() => false)
       if (data?.success) {
         const id = data?.photo
@@ -282,7 +282,7 @@ const Photos: FC = () => {
   })
 
   const [deleteManyDocuments] = useDeleteManyDocumentsMutation({
-    onCompleted({ deleteManyContactAttachmentPhoto: data }) {
+    onCompleted({ deleteManyContactAttachment: data }) {
       if (data.success && data.count === multipeDelDocs) {
         Notification(
           NotificationType.success,

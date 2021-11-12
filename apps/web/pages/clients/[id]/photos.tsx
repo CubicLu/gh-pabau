@@ -267,7 +267,7 @@ const Photos: FC = () => {
   })
 
   const [deleteOneAttachment] = useDeleteContactPhotoMutation({
-    onCompleted({ deleteContactAttachmentPhoto: data }) {
+    onCompleted({ deleteContactAttachment: data }) {
       setSingleImgDelLoading(() => false)
       if (data?.success) {
         const id = data?.photo
@@ -316,7 +316,7 @@ const Photos: FC = () => {
   })
 
   const [deleteManyAttachments] = useDeleteManyContactPhotoMutation({
-    onCompleted({ deleteManyContactAttachmentPhoto: data }) {
+    onCompleted({ deleteManyContactAttachment: data }) {
       if (data.success && data.count === multipleDelImages) {
         Notification(
           NotificationType.success,

@@ -100,7 +100,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   })
 
   const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
-    onCompleted({ deleteContactAttachmentPhoto: data }) {
+    onCompleted({ deleteContactAttachment: data }) {
       if (data.success) {
         const id = data?.photo
         const cAddedFiles = [...uploadingImages]
