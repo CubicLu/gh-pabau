@@ -128,7 +128,7 @@ interface Appointment {
 export interface ClientDetailsProps {
   clientData: ClientData
   referredByOptions?: ReferredByOption[]
-  customFields?: CustomFieldType[]
+  customFields?: CategoryFieldType[]
   loading?: boolean
   onCreateEmail: () => void
   onCreateCall: () => void
@@ -170,10 +170,10 @@ export interface FieldOrderItem {
   order?: number
 }
 
-export interface CustomFieldType {
+export interface CategoryFieldType {
   id: number
   category: string
-  customField: FieldOrderItem[]
+  fields: FieldOrderItem[]
 }
 
 const FieldName = {
@@ -361,9 +361,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const [type, setType] = useState<RelationshipType>('family-member')
   const [customizingFields, setCustomizingFields] = useState(false)
   const [hoverDetails, setHoverDetails] = useState(false)
-  const [fieldsOrder, setFieldsOrder] = useState<FieldOrderItem[]>(
-    defaultFieldOrder
-  )
+  const [fieldsOrder, setFieldsOrder] = useState<CategoryFieldType[]>()
   const [form] = Form.useForm()
   const [clientLabels, setClientLabels] = useState<Labels[]>([])
   const [cardBadgeUpdate, setCardBadgeUpdate] = useState(
@@ -379,6 +377,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
 
   useEffect(() => {
     if (clientData) {
+      let categoryCustom
       let fields = [...defaultFieldOrder]
       fields[0].value = clientData.patientID
       fields[1].value = clientData.referredBy
@@ -390,18 +389,33 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         home: clientData.phone.home,
       }
       fields[6].value = clientData.email
-      if (customFields?.length) {
-        const generalCustom = customFields?.find(
-          (data) => data.category === 'general'
-        )
-        if (generalCustom) {
-          fields = [...fields, ...generalCustom.customField]
-        }
-      }
       if (referredByOptions?.length) {
         fields[1].selectOptions = referredByOptions
       }
-      setFieldsOrder(fields)
+      if (customFields?.length) {
+        const generalCustom = customFields.find(
+          (data) => data.category === 'detail'
+        )
+        categoryCustom = customFields.filter(
+          (data) => data.category !== 'detail'
+        )
+        if (generalCustom) {
+          fields = [...fields, ...generalCustom.fields]
+        }
+      }
+      let data = [
+        {
+          id: 0,
+          category: 'detail',
+          fields,
+        },
+      ]
+
+      if (categoryCustom?.length) {
+        data = [...data, ...categoryCustom]
+      }
+
+      setFieldsOrder(data)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientData, customFields, referredByOptions])
@@ -525,31 +539,41 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
 
   const handleUpdateFieldValue = async (
     index: number,
-    value: string | PhoneProp | number
+    value: string | PhoneProp | number,
+    type?: string,
+    category?: number
   ) => {
-    const fieldsOrderData = [...fieldsOrder]
-    const data = fieldsOrderData.find((item, id) => id === index)
-    if (data && clientId) {
-      const response = await handleUpdate(data.fieldName, value, data.title)
-      if (response?.data) {
-        if (!data.fieldName.includes('customField_')) {
-          setBasicContactData?.({
-            ...clientData,
-            [data.fieldName]: value,
-          })
-        } else {
-          data.value = value
-          fieldsOrderData[index] = data
-          setFieldsOrder([...fieldsOrderData])
+    if (fieldsOrder) {
+      const fieldsOrderData = [...fieldsOrder]
+      const fieldOrderIndex = fieldsOrderData.findIndex(
+        (fields) => fields.id === category
+      )
+      const data = fieldsOrderData[fieldOrderIndex]?.fields.find(
+        (item, id) => id === index
+      )
+
+      if (data && clientId) {
+        const response = await handleUpdate(data.fieldName, value, data.title)
+        if (response?.data) {
+          if (!data.fieldName.includes('customField_')) {
+            setBasicContactData?.({
+              ...clientData,
+              [data.fieldName]: value,
+            })
+          } else {
+            data.value = value
+            fieldsOrderData[fieldOrderIndex].fields[index] = data
+            setFieldsOrder([...fieldsOrderData])
+          }
+          Notification(
+            NotificationType.success,
+            `${data.title} updated to ${
+              data.fieldName === 'referredBy'
+                ? referredByOptions?.find((option) => option.id === value)?.name
+                : value
+            }`
+          )
         }
-        Notification(
-          NotificationType.success,
-          `${data.title} updated to ${
-            data.fieldName === 'referredBy'
-              ? referredByOptions?.find((option) => option.id === value)?.name
-              : value
-          }`
-        )
       }
     }
   }
@@ -601,12 +625,19 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const handleUpdatePhoneFieldValue = async (
     index: number,
     value: string,
-    type: string
+    type: string,
+    category: number
   ) => {
     const response = await handleUpdate(type, value)
-    if (response?.data) {
+    if (response?.data && fieldsOrder) {
       const fieldsOrderData = [...fieldsOrder]
-      const data = fieldsOrderData.find((item, id) => id === index)
+      const fieldOrderIndex = fieldsOrderData.findIndex(
+        (fields) => fields.id === category
+      )
+      const data = fieldsOrderData[fieldOrderIndex]?.fields.find(
+        (item, id) => id === index
+      )
+      console.log('data', data, category)
       if (data) {
         setBasicContactData?.({
           ...clientData,
@@ -659,10 +690,12 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     }
   }
 
-  const getFieldName = (fieldTitle: string) => {
+  const getFieldName = (category: number, fieldTitle: string) => {
     let result = 0
+
+    const fieldsData = fieldsOrder?.find((item) => item.id === category)
     // eslint-disable-next-line unicorn/no-array-for-each
-    fieldsOrder.forEach((item, index) => {
+    fieldsData?.fields.forEach((item, index) => {
       // eslint-disable-next-line unicorn/no-array-for-each
       Object.values(item).forEach((el, ind) => {
         if (el === fieldTitle) {
@@ -782,241 +815,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
 
   const getReferredByValue = (value) => {
     return referredByOptions?.find((option) => option.id === value)?.name
-  }
-
-  const FieldInLine = ({ field, index }) => {
-    return (
-      <React.Fragment key={`client-details-item-${index}`}>
-        {field.type === InlineEditDataTypes.address ? (
-          <div
-            className={
-              field.value
-                ? styles.clientDetailsItem
-                : styles.emptyClientDetailsItem
-            }
-          >
-            <div>
-              <div className={styles.title}>{field.title}</div>
-              <div
-                className={cn(
-                  styles.content,
-                  field.value ? '' : styles.emptyContent
-                )}
-                onClick={() => {
-                  field.value && setShowAddressModal(true)
-                }}
-              >
-                {field.value}
-              </div>
-            </div>
-            <div
-              className={styles.addAddress}
-              onClick={() => {
-                setShowAddressModal(true)
-              }}
-            >
-              {field.value ? (
-                <div className={styles.edit}>
-                  <EditOutlined />
-                </div>
-              ) : (
-                <div className={styles.addAddressContent}>
-                  <PlusCircleOutlined />{' '}
-                  <h5>{t('ui.clientdetails.add.address')}</h5>{' '}
-                </div>
-              )}
-            </div>
-          </div>
-        ) : field.type === InlineEditDataTypes.basicPhone ? (
-          <div
-            className={
-              field.value['mobile'] || field.value['home']
-                ? styles.clientDetailsItem
-                : styles.emptyClientDetailsItem
-            }
-          >
-            <div className={styles.emptyHoverTag}>
-              <div className={styles.title}>{field.title}</div>
-              <div
-                className={cn(
-                  styles.content,
-                  styles.phoneContent,
-                  field.value ? '' : styles.emptyContent
-                )}
-              >
-                {/* {
-                  console.log(getFieldName(field.title), index)
-                } */}
-                <InlineEdit
-                  fieldTitle={field.title}
-                  orderIndex={getFieldName(field.title)}
-                  type={field.type}
-                  initialValue={field.value}
-                  onUpdateValue={handleUpdatePhoneFieldValue}
-                  selectOptions={field.selectOptions}
-                >
-                  {!field.value['mobile'] && !field.value['home'] ? (
-                    <span className={styles.emptyValue}>
-                      {t('ui.clientdetails.empty')}
-                    </span>
-                  ) : (
-                    <div className={styles.leftContent}>
-                      <div className={styles.leftContentTitle}>
-                        {field.value['mobile'] && (
-                          <span>{`${field.value['mobile']} (Mobile)`}</span>
-                        )}
-                        {field.value['home'] && (
-                          <span>{`${field.value['home']} (Home)`}</span>
-                        )}
-                      </div>
-                      <div className={styles.boxContent}>
-                        <Tooltip placement="top" title="Call with Caller">
-                          <div
-                            className={styles.iconContent}
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              if (client[field.fieldName]) onCreateCall()
-                            }}
-                          >
-                            <PhoneFilled />
-                          </div>
-                        </Tooltip>
-                        <div className={styles.iconContent}>
-                          <DownOutlined />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </InlineEdit>
-              </div>
-            </div>
-            <div className={styles.edit}>
-              <EditOutlined />
-            </div>
-          </div>
-        ) : (
-          !isMobile && (
-            <div
-              className={
-                !field.value
-                  ? styles.emptyClientDetailsItem
-                  : field.fieldName === 'referredBy' &&
-                    !getReferredByValue(field.value)
-                  ? styles.emptyClientDetailsItem
-                  : styles.clientDetailsItem
-              }
-            >
-              <div>
-                <div className={styles.title}>{field.title}</div>
-                <div
-                  className={cn(
-                    styles.content,
-                    !field.value
-                      ? styles.emptyContent
-                      : field.fieldName === 'referredBy' &&
-                        !getReferredByValue(field.value)
-                      ? styles.emptyContent
-                      : ''
-                  )}
-                >
-                  {field.fieldName === 'patientID' && field.value ? (
-                    <span>{field.value}</span>
-                  ) : (
-                    field.type !== 'date' && (
-                      <InlineEdit
-                        fieldTitle={field.title}
-                        orderIndex={getFieldName(field.title)}
-                        type={field.type}
-                        initialValue={
-                          field.fieldName === 'referredBy' &&
-                          !getReferredByValue(field.value)
-                            ? ''
-                            : field.value
-                        }
-                        onUpdateValue={handleUpdateFieldValue}
-                        selectOptions={field.selectOptions}
-                      >
-                        {!field.value ? (
-                          <span className={styles.emptyValue}>
-                            {t('ui.clientdetails.empty')}
-                          </span>
-                        ) : field.type === 'email' ? (
-                          <div className={styles.leftContent}>
-                            <div
-                              className={cn(
-                                styles.leftContentTitle,
-                                styles.emailContent
-                              )}
-                            >
-                              {field.value}
-                            </div>
-                            {field.value && (
-                              <div className={styles.boxContent}>
-                                <div
-                                  className={styles.iconContent}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    onCreateEmail()
-                                  }}
-                                >
-                                  <MailFilled />
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        ) : field.type === 'list' &&
-                          field.fieldName === 'referredBy' ? (
-                          getReferredByValue(field.value) || (
-                            <span className={styles.emptyValue}>
-                              {t('ui.clientdetails.empty')}
-                            </span>
-                          )
-                        ) : (
-                          field.value
-                        )}
-                      </InlineEdit>
-                    )
-                  )}
-                  {field.type === 'date' && (
-                    <InlineEdit
-                      fieldTitle={field.title}
-                      orderIndex={getFieldName(field.title)}
-                      type={field.type}
-                      initialValue={
-                        field.value &&
-                        dateFormat &&
-                        typeof field.value === 'string'
-                          ? dayjs(field.value).format(dateFormat)
-                          : ''
-                      }
-                      dateFormat={dateFormat}
-                      onUpdateValue={handleUpdateFieldValue}
-                    >
-                      {field.value &&
-                      dateFormat &&
-                      typeof field.value === 'string' ? (
-                        `${dayjs(field.value).format(dateFormat)} (${moment(
-                          field.value
-                        ).fromNow(true)})`
-                      ) : (
-                        <span className={styles.emptyValue}>
-                          {t('ui.clientdetails.empty')}
-                        </span>
-                      )}
-                    </InlineEdit>
-                  )}
-                </div>
-              </div>
-              {field.fieldName === 'patientID' && field.value ? null : (
-                <div className={styles.edit}>
-                  <EditOutlined />
-                </div>
-              )}
-            </div>
-          )
-        )}
-      </React.Fragment>
-    )
   }
 
   return (
@@ -1326,63 +1124,322 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                       </div>
                     </div>
                   </div>
-                  {!customizingFields && (
-                    <div className={styles.detailBottom}>
-                      <div className={styles.detailsContainer}>
-                        <div className={styles.title}>
-                          {t('ui.clientdetails.details')}
-                        </div>
-                        <div className={styles.customizeFields}>
-                          <div onClick={() => setCustomizingFields(true)}>
-                            {t('ui.clientdetails.customise')}
-                          </div>
-                          <Tooltip
-                            title={t('ui.clientdetails.customise.edit')}
-                            overlayStyle={{ width: '100px' }}
-                          >
-                            <div
-                              className={styles.editCustomizeFields}
-                              onClick={() => handleEditAll?.()}
-                            >
-                              <EditOutlined />
-                            </div>
-                          </Tooltip>
-                        </div>
-                      </div>
-                      {fieldsOrder.map((field, index) => (
-                        <FieldInLine key={index} field={field} index={index} />
-                      ))}
-                    </div>
-                  )}
                   {!customizingFields &&
-                    customFields
-                      ?.filter((data) => data.category !== 'general')
-                      .map((field) => {
-                        return (
-                          <div key={field.id} className={styles.detailBottom}>
-                            <div className={styles.detailsContainer}>
-                              <div className={styles.title}>
-                                {field.category}
-                              </div>
-                            </div>
-                            {field.customField.map((field, index) => (
-                              <FieldInLine
-                                key={index}
-                                field={field}
-                                index={index}
-                              />
-                            ))}
+                    fieldsOrder?.map((item, index) => (
+                      <div className={styles.detailBottom}>
+                        <div className={styles.detailsContainer}>
+                          <div className={styles.title}>
+                            {index === 0
+                              ? t('ui.clientdetails.details')
+                              : item.category}
                           </div>
-                        )
-                      })}
+                          {index === 0 && (
+                            <div className={styles.customizeFields}>
+                              <div onClick={() => setCustomizingFields(true)}>
+                                {t('ui.clientdetails.customise')}
+                              </div>
+                              <Tooltip
+                                title={t('ui.clientdetails.customise.edit')}
+                                overlayStyle={{ width: '100px' }}
+                              >
+                                <div
+                                  className={styles.editCustomizeFields}
+                                  onClick={() => handleEditAll?.()}
+                                >
+                                  <EditOutlined />
+                                </div>
+                              </Tooltip>
+                            </div>
+                          )}
+                        </div>
+                        {item.fields.map((field, index) => (
+                          <React.Fragment key={`client-details-item-${index}`}>
+                            {field.type === InlineEditDataTypes.address ? (
+                              <div
+                                className={
+                                  field.value
+                                    ? styles.clientDetailsItem
+                                    : styles.emptyClientDetailsItem
+                                }
+                              >
+                                <div>
+                                  <div className={styles.title}>
+                                    {field.title}
+                                  </div>
+                                  <div
+                                    className={cn(
+                                      styles.content,
+                                      field.value ? '' : styles.emptyContent
+                                    )}
+                                    onClick={() => {
+                                      field.value && setShowAddressModal(true)
+                                    }}
+                                  >
+                                    {field.value}
+                                  </div>
+                                </div>
+                                <div
+                                  className={styles.addAddress}
+                                  onClick={() => {
+                                    setShowAddressModal(true)
+                                  }}
+                                >
+                                  {field.value ? (
+                                    <div className={styles.edit}>
+                                      <EditOutlined />
+                                    </div>
+                                  ) : (
+                                    <div className={styles.addAddressContent}>
+                                      <PlusCircleOutlined />{' '}
+                                      <h5>
+                                        {t('ui.clientdetails.add.address')}
+                                      </h5>{' '}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ) : field.type ===
+                              InlineEditDataTypes.basicPhone ? (
+                              <div
+                                className={
+                                  field.value['mobile'] || field.value['home']
+                                    ? styles.clientDetailsItem
+                                    : styles.emptyClientDetailsItem
+                                }
+                              >
+                                <div className={styles.emptyHoverTag}>
+                                  <div className={styles.title}>
+                                    {field.title}
+                                  </div>
+                                  <div
+                                    className={cn(
+                                      styles.content,
+                                      styles.phoneContent,
+                                      field.value ? '' : styles.emptyContent
+                                    )}
+                                  >
+                                    <InlineEdit
+                                      fieldTitle={field.title}
+                                      orderIndex={getFieldName(
+                                        item.id,
+                                        field.title
+                                      )}
+                                      type={field.type}
+                                      initialValue={field.value}
+                                      category={item.id}
+                                      onUpdateValue={
+                                        handleUpdatePhoneFieldValue
+                                      }
+                                      selectOptions={field.selectOptions}
+                                    >
+                                      {!field.value['mobile'] &&
+                                      !field.value['home'] ? (
+                                        <span className={styles.emptyValue}>
+                                          {t('ui.clientdetails.empty')}
+                                        </span>
+                                      ) : (
+                                        <div className={styles.leftContent}>
+                                          <div
+                                            className={styles.leftContentTitle}
+                                          >
+                                            {field.value['mobile'] && (
+                                              <span>{`${field.value['mobile']} (Mobile)`}</span>
+                                            )}
+                                            {field.value['home'] && (
+                                              <span>{`${field.value['home']} (Home)`}</span>
+                                            )}
+                                          </div>
+                                          <div className={styles.boxContent}>
+                                            <Tooltip
+                                              placement="top"
+                                              title="Call with Caller"
+                                            >
+                                              <div
+                                                className={styles.iconContent}
+                                                onClick={(e) => {
+                                                  e.stopPropagation()
+                                                  if (client[field.fieldName])
+                                                    onCreateCall()
+                                                }}
+                                              >
+                                                <PhoneFilled />
+                                              </div>
+                                            </Tooltip>
+                                            <div className={styles.iconContent}>
+                                              <DownOutlined />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </InlineEdit>
+                                  </div>
+                                </div>
+                                <div className={styles.edit}>
+                                  <EditOutlined />
+                                </div>
+                              </div>
+                            ) : (
+                              !isMobile && (
+                                <div
+                                  className={
+                                    !field.value
+                                      ? styles.emptyClientDetailsItem
+                                      : field.fieldName === 'referredBy' &&
+                                        !getReferredByValue(field.value)
+                                      ? styles.emptyClientDetailsItem
+                                      : styles.clientDetailsItem
+                                  }
+                                >
+                                  <div>
+                                    <div className={styles.title}>
+                                      {field.title}
+                                    </div>
+                                    <div
+                                      className={cn(
+                                        styles.content,
+                                        !field.value
+                                          ? styles.emptyContent
+                                          : field.fieldName === 'referredBy' &&
+                                            !getReferredByValue(field.value)
+                                          ? styles.emptyContent
+                                          : ''
+                                      )}
+                                    >
+                                      {field.fieldName === 'patientID' &&
+                                      field.value ? (
+                                        <span>{field.value}</span>
+                                      ) : (
+                                        field.type !== 'date' && (
+                                          <InlineEdit
+                                            fieldTitle={field.title}
+                                            orderIndex={getFieldName(
+                                              item.id,
+                                              field.title
+                                            )}
+                                            type={field.type}
+                                            initialValue={
+                                              field.fieldName ===
+                                                'referredBy' &&
+                                              !getReferredByValue(field.value)
+                                                ? ''
+                                                : field.value
+                                            }
+                                            category={item.id}
+                                            onUpdateValue={
+                                              handleUpdateFieldValue
+                                            }
+                                            selectOptions={field.selectOptions}
+                                          >
+                                            {!field.value ? (
+                                              <span
+                                                className={styles.emptyValue}
+                                              >
+                                                {t('ui.clientdetails.empty')}
+                                              </span>
+                                            ) : field.type === 'email' ? (
+                                              <div
+                                                className={styles.leftContent}
+                                              >
+                                                <div
+                                                  className={cn(
+                                                    styles.leftContentTitle,
+                                                    styles.emailContent
+                                                  )}
+                                                >
+                                                  {field.value}
+                                                </div>
+                                                {field.value && (
+                                                  <div
+                                                    className={
+                                                      styles.boxContent
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.iconContent
+                                                      }
+                                                      onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        onCreateEmail()
+                                                      }}
+                                                    >
+                                                      <MailFilled />
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            ) : field.type === 'list' &&
+                                              field.fieldName ===
+                                                'referredBy' ? (
+                                              getReferredByValue(
+                                                field.value
+                                              ) || (
+                                                <span
+                                                  className={styles.emptyValue}
+                                                >
+                                                  {t('ui.clientdetails.empty')}
+                                                </span>
+                                              )
+                                            ) : (
+                                              field.value
+                                            )}
+                                          </InlineEdit>
+                                        )
+                                      )}
+                                      {field.type === 'date' && (
+                                        <InlineEdit
+                                          fieldTitle={field.title}
+                                          orderIndex={getFieldName(
+                                            item.id,
+                                            field.title
+                                          )}
+                                          type={field.type}
+                                          initialValue={
+                                            field.value &&
+                                            dateFormat &&
+                                            typeof field.value === 'string'
+                                              ? dayjs(field.value).format(
+                                                  dateFormat
+                                                )
+                                              : ''
+                                          }
+                                          dateFormat={dateFormat}
+                                          category={item.id}
+                                          onUpdateValue={handleUpdateFieldValue}
+                                        >
+                                          {field.value &&
+                                          dateFormat &&
+                                          typeof field.value === 'string' ? (
+                                            `${dayjs(field.value).format(
+                                              dateFormat
+                                            )} (${moment(field.value).fromNow(
+                                              true
+                                            )})`
+                                          ) : (
+                                            <span className={styles.emptyValue}>
+                                              {t('ui.clientdetails.empty')}
+                                            </span>
+                                          )}
+                                        </InlineEdit>
+                                      )}
+                                    </div>
+                                  </div>
+                                  {field.fieldName === 'patientID' &&
+                                  field.value ? null : (
+                                    <div className={styles.edit}>
+                                      <EditOutlined />
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    ))}
                   {customizingFields && (
                     <CustomizeFields
-                      defaultOrder={fieldsOrder}
-                      customFields={
-                        customFields?.filter(
-                          (data) => data.category !== 'general'
-                        ) || []
-                      }
+                      defaultOrder={fieldsOrder || []}
                       onCancel={() => setCustomizingFields(false)}
                       onChange={(order) => {
                         // setFieldsOrder(order)
@@ -1535,7 +1592,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                           >
                             <InlineEdit
                               fieldTitle={priceList.title}
-                              orderIndex={getFieldName(priceList.title)}
+                              orderIndex={getFieldName(0, priceList.title)}
                               type={priceList.type}
                               initialValue={
                                 client[priceList.fieldName] ||
@@ -1554,7 +1611,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                           >
                             <InlineEdit
                               fieldTitle={membershipNumber.title}
-                              orderIndex={getFieldName(membershipNumber.title)}
+                              orderIndex={getFieldName(
+                                0,
+                                membershipNumber.title
+                              )}
                               type={membershipNumber.type}
                               initialValue={
                                 client[membershipNumber.fieldName] ||

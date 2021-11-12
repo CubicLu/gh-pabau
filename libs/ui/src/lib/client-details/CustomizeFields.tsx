@@ -16,12 +16,7 @@ import {
   MessageOutlined,
 } from '@ant-design/icons'
 import { Tooltip, Popover } from 'antd'
-import {
-  Button,
-  InlineEditDataTypes,
-  FieldOrderItem,
-  CustomFieldType,
-} from '@pabau/ui'
+import { Button, InlineEditDataTypes, CategoryFieldType } from '@pabau/ui'
 import { ReactComponent as CustomDateOutlined } from '../../assets/images/custom-date.svg'
 import { ReactComponent as DragAreaOutlined } from '../../assets/images/drag-area.svg'
 import { ReactComponent as SingleLine } from '../../assets/images/single-line.svg'
@@ -44,20 +39,18 @@ enum FieldType {
 }
 
 export interface CustomizeFieldsProps {
-  defaultOrder: FieldOrderItem[]
-  customFields: CustomFieldType[]
+  defaultOrder: CategoryFieldType[]
   onChange: (order) => void
   onCancel: () => void
 }
 
 export const CustomizeFields: FC<CustomizeFieldsProps> = ({
   defaultOrder,
-  customFields,
   onCancel,
   onChange,
 }) => {
   const { t } = useTranslation('common')
-  const [fieldOrder, setFieldOrder] = useState<CustomFieldType[]>([])
+  const [fieldOrder, setFieldOrder] = useState<CategoryFieldType[]>([])
   const optionalPortal = (styles, element) => {
     if (styles.position === 'fixed' && dragEl) {
       return createPortal(element, dragEl)
@@ -66,16 +59,8 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
   }
 
   useEffect(() => {
-    const customizeFields = [
-      {
-        id: 0,
-        category: t('ui.clientdetails.details'),
-        customField: defaultOrder,
-      },
-    ]
-    setFieldOrder([...customizeFields, ...customFields])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultOrder, customFields])
+    setFieldOrder(defaultOrder)
+  }, [defaultOrder])
 
   const reorder = (list, startIndex, endIndex) => {
     const result = [...list]
@@ -136,7 +121,7 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                       ref={provided.innerRef}
                       className={styles.draggingItemList}
                     >
-                      {data.customField.map((item, index) => (
+                      {data.fields.map((item, index) => (
                         <Draggable
                           key={`draggable-item-${index}`}
                           draggableId={`draggable-item-${index}`}

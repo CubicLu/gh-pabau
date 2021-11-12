@@ -164,17 +164,17 @@ export const ClientCardLayout: FC<P> = ({
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
-      const customFields = customFieldData.custom
+      let customFields = customFieldData.custom
         .map((thread) => {
           return {
             id: thread.id,
             category: thread.name,
-            customField: thread.ManageCustomField.filter(
+            fields: thread.ManageCustomField.filter(
               (thread) => thread.is_active
             ),
           }
         })
-        .filter((thread) => thread.customField.length > 0)
+        .filter((thread) => thread.fields.length > 0)
 
       if (customFieldData.generalCustom.length > 0) {
         const generalCmFields = []
@@ -191,18 +191,21 @@ export const ClientCardLayout: FC<P> = ({
             generalCmFields.push(general)
           }
         }
-        customFields.push({
-          id: 0,
-          category: 'general',
-          customField: generalCmFields,
-        })
+        customFields = [
+          {
+            id: 0,
+            category: 'detail',
+            fields: generalCmFields,
+          },
+          ...customFields,
+        ]
       }
 
       if (customFields.length > 0) {
         const customFieldData = customFields.map((cmField) => {
           return {
             ...cmField,
-            customField: cmField.customField.map((field) => {
+            fields: cmField.fields.map((field) => {
               return {
                 title: field.field_label,
                 value:
