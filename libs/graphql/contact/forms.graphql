@@ -7,6 +7,7 @@ query checkMedicalHistory($contactID: Int!) {
   ) {
     id
     created_at
+    updated_at
     complete
     priority
     contact_id
@@ -15,5 +16,10 @@ query checkMedicalHistory($contactID: Int!) {
       name
     }
     status
+    Contact {
+      CommunicationsRequestedForms(orderBy: { created_date: desc }) {
+        created_date
+      }
+    }
   }
 }
