@@ -3413,38 +3413,11 @@ en:
   employees.load.more.button.label: 'Load More'
   employees.show.less.button.label: 'Show Less'
   employees.search.label: 'Search an employee'
-  setup.location.badge.doctor.onsite: 'Doctor Onsite'
-  setup.location.badge.24/7.clinic: '24/7 Clinic'
-  setup.location.badge.parking.onsite: 'Parking onsite'
-  setup.location.badge.arabic.speaking: 'Arabic Speaking'
-  setup.location.badge.covid.safe: 'COVID-19 Safe'
-  setup.location.badge.dog.friendly: 'Dog Friendly'
-  setup.location.badge.disabled.access: 'Disabled Access'
-  setup.location.badge.weekends: Weekends
-  setup.location.badge.online.bookings: 'Online Bookings'
-  setup.location.badge.booking.only: 'Bookings Only'
-  setup.location.badge.walk: 'Walk Ins'
-  setup.location.badge.fack.mask: 'Face Mask Required'
   ui.medicalformbuilder.main.title: 'Start building your form with components'
   ui.medicalformbuilder.main.description: 'Drag and drop components from the left menu here'
   ui.medicalformbuilder.main.edit.description: 'Place your first component here'
   ui.medicalform.setting.component.photo.title: 'Add Photo'
   ui.medicalform.setting.component.photo.description: 'Allow a photo upload'
-  setup.jobtitle.schema.title: 'Job Title'
-  setup.jobtitle.schema.title.lowercase: 'job title'
-  setup.jobtitle.schema.create.job.title: 'Create Job Title'
-  setup.jobtitle.schema.created.job.message: 'You have successfully created a job title'
-  setup.jobtitle.schema.create.job.error.message: 'While creating a job title'
-  setup.jobtitle.schema.updated.job.message: 'You have successfully updated a job title'
-  setup.jobtitle.schema.update.job.error.message: 'While updating a job title'
-  setup.jobtitle.schema.deleted.job.message: 'You have successfully deleted a job title'
-  setup.jobtitle.schema.delete.job.error.message: 'While deleting a job title'
-  setup.jobtitle.schema.jobname: 'Job Name'
-  setup.jobtitle.schema.friendlyname: 'friendly name'
-  setup.jobtitle.schema.header.create: 'Create Job Title'
-  setup.jobtitle.schema.header.edit: 'Edit Job Title'
-  setup.jobtitle.schema.header.delete: 'Delete Job Title?'
-  setup.jobtitle.schema.delete.button.label: 'Yes, Delete'
   settings.calendar.advanced.input.noshowcount.err1: 'Minimum value can be 0.'
   account.finance.title: Accounts
   account.finance.search.placeholder: 'Search by Invoice or clients'
@@ -3518,90 +3491,6 @@ en:
   account.finance.debt.send.reminder.days.secound: 14-30
   account.finance.debt.send.reminder.days.last: '>30'
   account.finance.debt.send.notification: 'Debt email successfully sent'
-  setup.medical.forms.shareModal.label: 'Please enter the email address of the user you wish to share your form to'
-  setup.medical.forms.shareModal.input.label: Email
-  setup.medical.forms.shareModal.input.placeholder: 'Enter Email'
-  setup.medical.forms.shareModal.title: Share
-  setup.medical.forms.shareModal.btnText: ' Share'
-  setup.medical.forms.shareModal.success.message: 'Form Shared'
-  setup.medical.forms.shareModal.success.message.addition: 'If they have a Pabau account, we have emailed them the details on installing this form'
-  setup.medical.forms.shareModal.error.message: 'We could not find an associated user or company with this email address.'
-  setup.medical.forms.deleteModal.title: 'Delete Patient Form'
-  setup.medical.forms.deleteModal.btnText: 'Yes, Delete Form'
-  setup.medical.forms.columns.name: Name
-  setup.medical.forms.columns.type: Type
-  setup.medical.forms.columns.createdDate: 'Created Date'
-  setup.medical.forms.columns.version: Version
-  setup.medical.forms.columns.status: Status
-  setup.medical.forms.statusValues.active: Active
-  setup.medical.forms.statusValues.inactive: Inactive
-  setup.medical.forms.statusValues.requireSetup: 'Require Setup'
-  setup.medical.forms.menuList.clone: Clone
-  setup.medical.forms.menuList.share: Share
-  setup.medical.forms.menuList.edit: Edit
-  setup.medical.forms.menuList.delete: Delete
-  setup.medical.forms.menuList.default: Default
-  setup.medical.forms.menuItems.myForms: 'My forms'
-  setup.medical.forms.menuItems.library: Library
-  setup.medical.forms.notificationBanner.title: 'Enable client notifications'
-  setup.medical.forms.notificationBanner.desc: 'We recommend enabling your confirmation email so that Pabau will automatically send out your questionnaire to a client at the point of booking an appointment.'
-  setup.medical.forms.notificationBanner.enableClientForms: 'Enable client forms'
-  setup.medical.forms.searchLibrary: 'Search in Library'
-  setup.medical.forms.searchMyForms: 'Search in My Forms'
-  setup.medical.forms.filter.formType.name: 'Form type'
-  setup.medical.forms.filter.formType.medicalHistory.label: 'Medical History'
-  setup.medical.forms.filter.formType.medicalHistory.desc: 'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information     '
-  setup.medical.forms.filter.formType.consent.label: Consent
-  setup.medical.forms.filter.formType.consent.desc: 'A consent form requires a signature as part of the care pathway'
-  setup.medical.forms.filter.formType.treatmentForm.label: 'Treatment Form'
-  setup.medical.forms.filter.formType.treatmentForm.desc: 'A treatment form is usually completed at the end of a pathway'
-  setup.medical.forms.filter.formType.ePaper.label: ePaper
-  setup.medical.forms.filter.formType.ePaper.desc: 'ePaper allows you to either scan in a document or upload a PDF to draw directly onto the screen using a stylus or apple pencil'
-  setup.medical.forms.filter.formType.presciption.label: Presciption
-  setup.medical.forms.filter.formType.presciption.desc: Presciption
-  setup.medical.forms.filter.formType.labForm.label: 'Lab Form'
-  setup.medical.forms.filter.formType.labForm.desc: 'Lab Form'
-  setup.medical.forms.filter.formType.warning.title: Warning
-  setup.medical.forms.filter.formType.warning.content: 'You are about to change the type of form. This will reset your data'
-  setup.medical.forms.filter.name: Filter
-  setup.medical.forms.filter.active: Active
-  setup.medical.forms.filter.inactive: Inactive
-  setup.medical.forms.filter.requireSetup: 'Require Setup'
-  setup.medical.forms.filter.reset: Reset
-  setup.medical.forms.filter.filterBy: 'Filter By'
-  setup.medical.forms.filter.status: Status
-  setup.medical.forms.filter.apply: Apply
-  setup.medical.forms.filter.language: Language
-  setup.medical.forms.patientFormName: 'Patient Form Templates'
-  setup.medical.forms.createForm.text: 'Create Form'
-  setup.medical.forms.previewButton.text: Preview
-  setup.activity.types: 'Activity Types'
-  setup.activity.types.lower-case: 'activity types'
-  setup.activity.types.create: 'Create Activity Type'
-  setup.activity.types.name: Name
-  setup.activity.types.name.lower-case: name
-  setup.activity.types.subject: Subject
-  setup.activity.types.subject.lower-case: subject
-  setup.activity-types.send: Send
-  setup.activity-types.phone: Phone
-  setup.activity-types.chat: Chat
-  setup.activity-types.team: Team
-  setup.activity-types.medical: Medical
-  setup.activity-types.customer: Customer
-  setup.activity-types.emergency: Emergency
-  setup.activity-types.reward: Reward
-  setup.activity-types.shopping: Shopping
-  setup.activity-types.time: Time
-  setup.activity-types.camera: Camera
-  setup.activity-types.location: Location
-  setup.activity-types.create.success: 'You have successfully created a activity type'
-  setup.activity-types.create.error: 'While creating a activity type'
-  setup.activity-types.update.success: 'You have successfully updated a activity type'
-  setup.activity-types.update.error: 'While updating a activity type'
-  setup.activity-types.delete.success: 'You have successfully deleted a activity type'
-  setup.activity-types.delete.error: 'While deleting a activity type'
-  setup.jobtitle.schema.noDataBtnText: 'Create Job Title'
-  setup.jobtitle.schema.noDataText: 'No job titles'
   clients.commonHeader: Clients
   clients.editClient: 'Edit Client'
   clients.noDataText: Client
@@ -4142,8 +4031,6 @@ en:
   ui.medicalformbuilder.advanced.payment.cardnumber: 'Card number'
   ui.medicalformbuilder.advanced.payment.addcard: 'Add Card'
   ui.medicalformbuilder.advanced.payment.detail: 'Your details are securely stored with our payment processing partner using bank-grade encryption.'
-  setup.medical.forms.create.text: 'successfully created'
-  setup.medical.forms.save.text: 'successfully saved'
   peer.feedback.remind.modal.button: Remind
   peer.feedback.preview.button: Preview
   peer.feedback.remind.modal.title: 'Quarterly Appraisal'
@@ -4191,6 +4078,148 @@ en:
   setup.locations.allowed.location.label: 'Allowed Locations'
   setup.locations.active.location.label: 'Total Active Locations'
   setup.locations.allowed.location.tooltip.label: 'This is the number of locations you are allowed on your subscription'
+  setup.locations.noDataText: 'No Location'
+  setup.location.badge.doctor.onsite: 'Doctor Onsite'
+  setup.location.badge.24/7.clinic: '24/7 Clinic'
+  setup.location.badge.parking.onsite: 'Parking onsite'
+  setup.location.badge.arabic.speaking: 'Arabic Speaking'
+  setup.location.badge.covid.safe: 'COVID-19 Safe'
+  setup.location.badge.dog.friendly: 'Dog Friendly'
+  setup.location.badge.disabled.access: 'Disabled Access'
+  setup.location.badge.weekends: 'Weekends'
+  setup.location.badge.online.bookings: 'Online Bookings'
+  setup.location.badge.booking.only: 'Bookings Only'
+  setup.location.badge.walk: 'Walk Ins'
+  setup.location.badge.fack.mask: 'Face Mask Required'
+  setup.jobtitle.schema.title: 'Job Title'
+  setup.jobtitle.schema.title.lowercase: 'job title'
+  setup.jobtitle.schema.create.job.title: 'Create Job Title'
+  setup.jobtitle.schema.created.job.message: 'You have successfully created a job title'
+  setup.jobtitle.schema.create.job.error.message: 'While creating a job title'
+  setup.jobtitle.schema.updated.job.message: 'You have successfully updated a job title'
+  setup.jobtitle.schema.update.job.error.message: 'While updating a job title'
+  setup.jobtitle.schema.deleted.job.message: 'You have successfully deleted a job title'
+  setup.jobtitle.schema.delete.job.error.message: 'While deleting a job title'
+  setup.jobtitle.schema.jobname: 'Job Name'
+  setup.jobtitle.schema.friendlyname: 'friendly name'
+  setup.jobtitle.schema.header.create: 'Create Job Title'
+  setup.jobtitle.schema.header.edit: 'Edit Job Title'
+  setup.jobtitle.schema.header.delete: 'Delete Job Title?'
+  setup.jobtitle.schema.delete.button.label: 'Yes, Delete'
+  setup.jobtitle.schema.noDataBtnText: 'Create Job Title'
+  setup.jobtitle.schema.noDataText: 'No job titles'
+  setup.medical.forms.shareModal.label: 'Please enter the email address of the user you wish to share your form to'
+  setup.medical.forms.shareModal.input.label: 'Email'
+  setup.medical.forms.shareModal.input.placeholder: 'Enter Email'
+  setup.medical.forms.shareModal.title: 'Share'
+  setup.medical.forms.shareModal.btnText: ' Share'
+  setup.medical.forms.shareModal.success.message: 'Form Shared'
+  setup.medical.forms.shareModal.success.message.addition: 'If they have a Pabau account, we have emailed them the details on installing this form'
+  setup.medical.forms.shareModal.error.message: 'We could not find an associated user or company with this email address.'
+  setup.medical.forms.deleteModal.title: 'Delete Patient Form'
+  setup.medical.forms.deleteModal.btnText: 'Yes, Delete Form'
+  setup.medical.forms.columns.name: 'Name'
+  setup.medical.forms.columns.type: 'Type'
+  setup.medical.forms.columns.createdDate: 'Created Date'
+  setup.medical.forms.columns.version: 'Version'
+  setup.medical.forms.columns.status: 'Status'
+  setup.medical.forms.statusValues.active: 'Active'
+  setup.medical.forms.statusValues.inactive: 'Inactive'
+  setup.medical.forms.statusValues.requireSetup: 'Require Setup'
+  setup.medical.forms.menuList.clone: 'Clone'
+  setup.medical.forms.menuList.share: 'Share'
+  setup.medical.forms.menuList.edit: 'Edit'
+  setup.medical.forms.menuList.delete: 'Delete'
+  setup.medical.forms.menuList.default: 'Default'
+  setup.medical.forms.menuItems.myForms: 'My forms'
+  setup.medical.forms.menuItems.library: 'Library'
+  setup.medical.forms.notificationBanner.title: 'Enable client notifications'
+  setup.medical.forms.notificationBanner.desc: 'We recommend enabling your confirmation email so that Pabau will automatically send out your questionnaire to a client at the point of booking an appointment.'
+  setup.medical.forms.notificationBanner.enableClientForms: 'Enable client forms'
+  setup.medical.forms.searchLibrary: 'Search in Library'
+  setup.medical.forms.searchMyForms: 'Search in My Forms'
+  setup.medical.forms.filter.formType.name: 'Form type'
+  setup.medical.forms.filter.formType.medicalHistory.label: 'Medical History'
+  setup.medical.forms.filter.formType.medicalHistory.desc: 'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information     '
+  setup.medical.forms.filter.formType.consent.label: 'Consent'
+  setup.medical.forms.filter.formType.consent.desc: 'A consent form requires a signature as part of the care pathway'
+  setup.medical.forms.filter.formType.treatment.label: 'Treatment Form'
+  setup.medical.forms.filter.formType.treatment.desc: 'A treatment form is usually completed at the end of a pathway'
+  setup.medical.forms.filter.formType.ePaper.label: 'ePaper'
+  setup.medical.forms.filter.formType.ePaper.desc: 'ePaper allows you to either scan in a document or upload a PDF to draw directly onto the screen using a stylus or apple pencil'
+  setup.medical.forms.filter.formType.prescription.label: 'Prescription'
+  setup.medical.forms.filter.formType.prescription.desc: 'Prescription'
+  setup.medical.forms.filter.formType.lab.label: 'Lab Form'
+  setup.medical.forms.filter.formType.lab.desc: 'Lab Form'
+  setup.medical.forms.filter.formType.warning.title: 'Warning'
+  setup.medical.forms.filter.formType.warning.content: 'You are about to change the type of form. This will reset your data'
+  setup.medical.forms.filter.name: 'Filter'
+  setup.medical.forms.filter.active: 'Active'
+  setup.medical.forms.filter.inactive: 'Inactive'
+  setup.medical.forms.filter.requireSetup: 'Require Setup'
+  setup.medical.forms.filter.reset: 'Reset'
+  setup.medical.forms.filter.filterBy: 'Filter By'
+  setup.medical.forms.filter.status: 'Status'
+  setup.medical.forms.filter.apply: 'Apply'
+  setup.medical.forms.filter.language: 'Language'
+  setup.medical.forms.patientFormName: 'Patient Form Templates'
+  setup.medical.forms.createForm.text: 'Create Form'
+  setup.medical.forms.previewButton.text: 'Preview'
+  setup.medical.forms.create.text: 'successfully created'
+  setup.medical.forms.create.err.text: 'Error! While creating the medical form'
+  setup.medical.forms.save.text: 'successfully saved'
+  setup.medical.forms.save.err.text: 'Error! While saving the medical form'
+  setup.medical.forms.search.asc: 'Ascending'
+  setup.medical.forms.search.desc: 'Descending'
+  setup.medical.forms.macro.create.text: 'Macro has been added successfully'
+  setup.medical.forms.macro.create.err.text: 'Error! While creating the macro'
+  setup.medical.forms.macro.del.text: 'Macro has been deleted successfully'
+  setup.medical.forms.macro.del.err.text: 'Error! While deleting the macro'
+  setup.activity.types: 'Activity Types'
+  setup.activity.types.lower-case: 'activity types'
+  setup.activity.types.create: 'Create Activity Type'
+  setup.activity.types.name: 'Name'
+  setup.activity.types.name.lower-case: 'name'
+  setup.activity.types.subject: 'Subject'
+  setup.activity.types.subject.lower-case: 'subject'
+  setup.activity-types.send: 'Send'
+  setup.activity-types.phone: 'Phone'
+  setup.activity-types.chat: 'Chat'
+  setup.activity-types.team: 'Team'
+  setup.activity-types.medical: 'Medical'
+  setup.activity-types.customer: 'Customer'
+  setup.activity-types.emergency: 'Emergency'
+  setup.activity-types.reward: 'Reward'
+  setup.activity-types.shopping: 'Shopping'
+  setup.activity-types.time: 'Time'
+  setup.activity-types.camera: 'Camera'
+  setup.activity-types.location: 'Location'
+  setup.activity-types.create.success: 'You have successfully created a activity type'
+  setup.activity-types.create.error: 'While creating a activity type'
+  setup.activity-types.update.success: 'You have successfully updated a activity type'
+  setup.activity-types.update.error: 'While updating a activity type'
+  setup.activity-types.delete.success: 'You have successfully deleted a activity type'
+  setup.activity-types.delete.error: 'While deleting a activity type'
+  setup.care-pathways.breadcrum.pathname: 'Care Pathways'
+  setup.care-pathways.page.title: 'Care Pathways'
+  setup.care-pathways.tabs.pathways: 'Pathways'
+  setup.care-pathways.tabs.library: 'Library'
+  setup.care-pathways.search.placeholder: 'Search in Care Pathways'
+  setup.care-pathways.create-pathway.button: 'Create Pathway'
+  ui.attachdlg.title: 'Attach Files'
+  ui.attachdlg.photogallery: 'Open Photo Gallery'
+  ui.attachdlg.uploadfiles: 'Upload Files'
+  ui.photogallery.title: 'Attach Image from the Photo Gallery'
+  ui.photogallery.assigntogroup: 'Assign an image to group'
+  ui.photogallery.backtoalbum: 'Back to Albums'
+  ui.photogallery.attach: Attach
+  ui.photogallery.attachphoto: 'Attach {{count}} {{unit}}'
+  ui.medicalformbuilder.form.type.prescription: Prescription
+  ui.medicalformbuilder.form.type.prescription.description: Prescription
+  account.finance.payments.empty.data.text: "There aren't any payments, yet"
+  account.finance.invoice.empty.data.text: "There aren't any invoices, yet"
+  account.finance.debt.empty.data.text: "There isn't any debt, yet"
+  account.finance.credit.not.empty.data.text: "There aren't any credit notes, yet"
   account.finance.search.placeholder.invoice: 'Search by Invoice or clients'
   account.finance.search.placeholder.payment: 'Search by payment, invoice or customer'
   account.finance.search.placeholder.credit.note: 'Search by credit note or clients'
@@ -4358,30 +4387,6 @@ en:
   dashboard.create.menu.item.sale.description: 'Create a transaction'
   dashboard.create.menu.item.activity.title: Activity
   dashboard.create.modal.create.prescript.title: 'Create a prescription'
-  ui.attachdlg.title: 'Attach Files'
-  ui.attachdlg.photogallery: 'Open Photo Gallery'
-  ui.attachdlg.uploadfiles: 'Upload Files'
-  ui.photogallery.title: 'Attach Image from the Photo Gallery'
-  ui.photogallery.assigntogroup: 'Assign an image to group'
-  ui.photogallery.backtoalbum: 'Back to Albums'
-  ui.photogallery.attach: Attach
-  ui.photogallery.attachphoto: 'Attach {{count}} {{unit}}'
-  ui.medicalformbuilder.form.type.prescription: Prescription
-  ui.medicalformbuilder.form.type.prescription.description: Prescription
-  setup.medical.forms.filter.formType.treatment.label: 'Treatment Form'
-  setup.medical.forms.filter.formType.treatment.desc: 'A treatment form is usually completed at the end of a pathway'
-  setup.medical.forms.filter.formType.prescription.label: Prescription
-  setup.medical.forms.filter.formType.prescription.desc: Prescription
-  setup.medical.forms.filter.formType.lab.label: 'Lab Form'
-  setup.medical.forms.filter.formType.lab.desc: 'Lab Form'
-  setup.medical.forms.create.err.text: 'Error! While creating the medical form'
-  setup.medical.forms.save.err.text: 'Error! While saving the medical form'
-  setup.medical.forms.search.asc: Ascending
-  setup.medical.forms.search.desc: Descending
-  account.finance.payments.empty.data.text: "There aren't any payments, yet"
-  account.finance.invoice.empty.data.text: "There aren't any invoices, yet"
-  account.finance.debt.empty.data.text: "There isn't any debt, yet"
-  account.finance.credit.not.empty.data.text: "There aren't any credit notes, yet"
   ui.client-card-financial.invoices: Invoices
   ui.client-card-financial.invoices.all: All
   ui.client-card-financial.invoices.date: Date
@@ -5103,6 +5108,14 @@ en:
   ui.clientdetails.more.merge: Merge
   ui.clientdetails.deactive.confirm: 'Are you sure?'
   ui.clientdetails.delete.card.tooltop: 'Delete card?'
+  ui.pinscreen.input.label: 'Passcode'
+  ui.pinscreen.title: 'Enter passcode'
+  ui.pinscreen.title.mobile: 'Enter pincode'
+  ui.pinscreen.forgot.pin: 'Forgot pin?'
+  ui.pinscreen.cancel: 'Cancel'
+  ui.pinscreen.done: 'Done'
+  ui.pinscreen.delete: 'Delete'
+  ui.pinscreen.incorrect.alert.message: 'Pin code incorrect - please try again'
   dashboard.create.menu.item.activity.description: 'Log a call, email or anything else'
   dashboard.create.menu.item.dictation.description: Dictation
   dashboard.create.menu.item.dictation.title: Dictation
@@ -5300,7 +5313,6 @@ en:
   activityList.column.clientID: 'Client ID'
   activityList.column.clientDOB: 'Client DOB'
   activityList.column.clientStatus: 'Client status'
-  setup.locations.noDataText: 'No Location'
   ui.gp-search.yourPractice: 'Your practice'
   ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are currently registered as a patient'
   ui.gp-search.searchInput.placeholder: 'Enter a postcode or search by the name'
@@ -5633,10 +5645,6 @@ en:
   ui.macro.modal.create.add.success: 'Macro has been added successfully'
   ui.macro.modal.create.del.success: 'Macro has been deleted successfully'
   ui.macro.modal.manage.title: 'Manage macros'
-  setup.medical.forms.macro.create.text: 'Macro has been added successfully'
-  setup.medical.forms.macro.create.err.text: 'Error! While creating the macro'
-  setup.medical.forms.macro.del.text: 'Macro has been deleted successfully'
-  setup.medical.forms.macro.del.err.text: 'Error! While deleting the macro'
   client.label.create.message: 'Success! You have successfully created a label'
   client.label.create.error.message: 'Error! While creating a label'
   clients.clientcard.notes.clientnote.create: 'Successfully created the note'
