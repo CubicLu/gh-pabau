@@ -45,13 +45,13 @@ import classNames from 'classnames'
 import PreviewFile from './PreviewFile'
 
 const getThumb = (src: string) => {
-  if (src.includes('photos/')) {
-    const pathArr = src.split('photos/')
-    pathArr[1] = `thumb_${pathArr[1]}`
-    return pathArr.join('photos/')
-  } else {
-    return src
-  }
+  // if (src.includes('/')) {
+  //   const pathArr = src.split('/')
+  //   pathArr[pathArr?.length - 1] = `${pathArr[pathArr?.length - 1]}`
+  //   return pathArr.join('/')
+  // } else {
+  return src
+  // }
 }
 
 const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
@@ -231,13 +231,15 @@ export const FolderData: FC<FolderDataProps> = ({
     }
     setPreviewName(cName)
     setPreviewUrl(url)
-    setPreviewType(checkUrlIfImage(url) ? 'image' : 'document')
+    setPreviewType(checkUrlForType(url))
     setPageNumber(1)
     setPreviewModal((e) => !e)
+    console.log(checkUrlForType(url))
   }
 
-  const checkUrlIfImage = (url: string) => {
-    return url.match(/\.(jpeg|jpg|gif|png)$/) != null
+  const checkUrlForType = (url: string) => {
+    const urlArr = url?.split('.') || []
+    return urlArr?.[urlArr?.length - 1]
   }
 
   const FolderPopupContent = ({ record }) => {
@@ -921,7 +923,9 @@ export const FolderData: FC<FolderDataProps> = ({
                         data-type={fileData[fileData.length - 1]}
                       />
                       <div>
-                        {!checkUrlIfImage?.(folderValue?.folderData) ? (
+                        {!folderValue?.folderData?.match(
+                          /\.(jpeg|jpg|gif|png)$/
+                        ) ? (
                           <FileIcon
                             foldColor="lightgray"
                             labelColor="var(--primary-color)"

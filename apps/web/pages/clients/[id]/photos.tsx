@@ -216,13 +216,19 @@ const Photos: FC = () => {
     onCompleted({ deleteContactAlbum: data }) {
       const cAlbums = { ...albums }
       const idx = cAlbums?.album?.findIndex((el) => el?.id === data?.album)
-      if (idx !== -1) {
-        const cAlbum = cAlbums[idx]
+      if (idx !== -1 && data?.success) {
+        const cAlbum = cAlbums?.album?.[idx]
         cAlbums?.album?.splice(idx, 1)
         setAlbums(cAlbums)
         Notification(
           NotificationType?.success,
           `${cAlbum?.albumTitle} deleted successfully!`
+        )
+      } else {
+        const cAlbum = cAlbums?.album?.[idx]
+        Notification(
+          NotificationType?.error,
+          `${cAlbum?.albumTitle} couldn't deleted!`
         )
       }
       setAlbumDeleteLoading(false)
