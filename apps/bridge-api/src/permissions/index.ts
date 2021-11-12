@@ -1,5 +1,6 @@
 import { allow, and, or, shield } from 'graphql-shield'
 import * as rules from './types'
+import { sendBookingConfirmationMail } from '../resolvers'
 
 console.log('Creating shield...')
 
@@ -122,6 +123,9 @@ export const permissions = shield(
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
+
+      //communication
+      SendAppointmentConfirmationMail: rules.authentication.isAuthenticated,
 
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       // Default fallback
