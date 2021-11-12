@@ -1932,12 +1932,14 @@ model CmContact {
   Albums                    PhotoAlbum[]
   ContactPreference         ContactPreference?
   MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
+  User                      User?                       @relation(fields: [OwnerID], references: [id])
   Voucher                   Voucher[]                   @relation("Voucher")
   PurchasedVoucher          Voucher[]                   @relation("PurchasedVoucher")
   CmLead                    CmLead[]
   PathwaysTaken             PathwaysTaken[]
   PathwayStepsTaken         PathwayStepsTaken[]
 
+  MedicalFormContact MedicalFormContact[]
   @@unique([ID, company_id], name: "primary")
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Fname], name: "Fname")
@@ -2429,7 +2431,7 @@ model ContactNote {
   Note        String
   Status      cm_contact_notes_Status @default(Enable)
   CreatedDate DateTime
-  IpAddress   String
+  IpAddress   String?
   imported    Boolean                 @default(false)
   User        User                    @relation(fields: [OwnerID], references: [id])
   CmContact   CmContact               @relation(fields: [ContactID], references: [ID])
@@ -2653,6 +2655,7 @@ model CmLead {
   LeadStatusData           LeadStatus?              @relation(fields: [LeadStatus], references: [id])
   PipelineStage            PipelineStage?           @relation(fields: [pipeline_stage_id], references: [id])
   Contact                  CmContact?               @relation(fields: [ContactID], references: [ID])
+  Location                 CompanyBranch?           @relation(fields: [location_id], references: [id])
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
   @@index([LeadStatus], name: "LeadStatus")
@@ -3559,8 +3562,8 @@ model Communication {
   related_id                Int?
   related_type              communications_related_type?
   Content                   CommunicationContent         @relation(fields: [communications_content_id], references: [id])
-  Recipient                 CommunicationRecipient       @relation(fields: [id], references: [communications_id])
   Company                   Company                      @relation(fields: [company_id], references: [id])
+  CommunicationRecipient    CommunicationRecipient[]
 
   @@index([communications_content_id], name: "communications_content_id")
   @@index([company_id, uid], name: "company_id")
@@ -3613,11 +3616,11 @@ model CommunicationRecipient {
   provider_id       Int
   status            communications_recipients_status?
   merge_values      String
-  Communication     Communication[]
   Provider          CommunicationProvider                    @relation(fields: [provider_id], references: [id])
   Hash              CommunicationHash[]
   Contact           CmContact?                               @relation(fields: [recipient_id], references: [ID])
   Lead              CmLead?                                  @relation(fields: [recipient_id], references: [ID])
+  Communication     Communication?                           @relation(fields: [communications_id], references: [id])
 
   @@index([communications_id], name: "communications_id")
   @@index([provider_id], name: "communications_provider_id")
@@ -3804,6 +3807,7 @@ model CompanyBranch {
   InvSale                 InvSale[]
 
   ServiceLocationTier ServiceLocationTier[]
+  CmLead              CmLead[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -7915,7 +7919,7 @@ model JobStatus {
 //}
 
 model LeadStatus {
-  id                  Int       @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   company_id          Int?
   status_name         String
   status_order        Int
@@ -7923,12 +7927,9 @@ model LeadStatus {
   email_template_from String
   is_default          Int
   is_convert          Int
-  pipeline_id         Int?
-  Company             Company?  @relation(fields: [company_id], references: [id])
-  Pipeline            Pipeline? @relation(fields: [pipeline_id], references: [id])
+  Company             Company? @relation(fields: [company_id], references: [id])
 
   CmLead CmLead[]
-  @@index([pipeline_id], name: "pipeline_id")
   @@map("lead_status")
 }
 
@@ -8516,7 +8517,7 @@ model MedicalFormContact {
   deleted_at                DateTime?
   complete                  Int
   locked                    Int
-  user_created              Int
+  user_created              Int?
   user_updated              Int
   related_to                Int
   custom_user_name          String
@@ -8534,6 +8535,8 @@ model MedicalFormContact {
   form_contact_number       Int                         @default(0)
   diagnosis_code            String
   Form                      MedicalForm                 @relation(fields: [form_id], references: [id])
+  Contact                   CmContact?                  @relation(fields: [contact_id], references: [ID])
+  CreatedBy                 User?                       @relation(fields: [user_created], references: [id])
   MedicalFormContactHistory MedicalFormContactHistory[]
   MedicalContactAttr        MedicalContactAttr[]
 
@@ -9916,7 +9919,6 @@ model Pipeline {
   restrict_stages Boolean @default(false)
   reference       String?
 
-  LeadStatus    LeadStatus[]
   PipelineStage PipelineStage[]
   @@index([company_id], name: "company_id")
   @@map("pipeline")
@@ -12832,7 +12834,9 @@ model User {
   ActivityUserState            ActivityUserState[]
   ActivityUserFilter           ActivityUserFilter[]
 
-  MedicalForm MedicalForm[]
+  MedicalForm        MedicalForm[]
+  CmContact          CmContact[]
+  MedicalFormContact MedicalFormContact[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

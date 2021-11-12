@@ -432,6 +432,241 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         type: cellTypes.email,
       },
       {
+        id: columnNames.leadLocation.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadLocation')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ Location }) => {
+          return <span className={styles.cellFormater}>{Location?.name}</span>
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadLocation.label),
+        columnName: columnNames.leadLocation.label,
+      },
+      {
+        id: columnNames.leadActivityToDo.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadActivityToDo')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        sorter: false,
+        skeletonWidth: '80px',
+        render: ({ leadActivitesToDo }) => {
+          return (
+            <span className={styles.cellFormater}>{leadActivitesToDo}</span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadActivityToDo.label),
+        columnName: columnNames.leadActivityToDo.label,
+      },
+      {
+        id: columnNames.leadCreator.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadCreator')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ Contact }) => {
+          return (
+            Contact?.User && (
+              <div className={styles.avtarMargin}>
+                <span className={styles.avatarWrapper}>
+                  <Avatar name={Contact?.User?.full_name} />
+                </span>
+              </div>
+            )
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadCreator.label),
+        columnName: columnNames.leadCreator.label,
+      },
+      {
+        id: columnNames.leadDateEnteringStage.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadDateEnteringStage')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ leadClosedOn }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {leadClosedOn && DisplayDateTime(leadClosedOn)}
+            </span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadDateEnteringStage.label),
+        columnName: columnNames.leadDateEnteringStage.label,
+      },
+      {
+        id: columnNames.leadEmailMessagesCount.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadEmailMessagesCount')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        sorter: false,
+        skeletonWidth: '80px',
+        render: ({ emailMessagesCount }) => {
+          return (
+            <span className={styles.cellFormater}>{emailMessagesCount}</span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadEmailMessagesCount.label),
+        columnName: columnNames.leadEmailMessagesCount.label,
+      },
+      {
+        id: columnNames.leadLastEmailReceived.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadLastEmailReceived')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        sorter: false,
+        skeletonWidth: '80px',
+        render: ({ leadLastEmailReceived }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {leadLastEmailReceived && DisplayDateTime(leadLastEmailReceived)}
+            </span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadLastEmailReceived.label),
+        columnName: columnNames.leadLastEmailReceived.label,
+      },
+      {
+        id: columnNames.leadLastEmailSent.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadLastEmailSent')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        sorter: false,
+        skeletonWidth: '80px',
+        render: ({ leadLastEmailSend }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {leadLastEmailSend && DisplayDateTime(leadLastEmailSend)}
+            </span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadLastEmailSent.label),
+        columnName: columnNames.leadLastEmailSent.label,
+      },
+      {
+        id: columnNames.leadNextActivityDate.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadNextActivityDate')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        sorter: false,
+        render: ({ leadNextActivityDate }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {leadNextActivityDate && DisplayDateTime(leadNextActivityDate)}
+            </span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadNextActivityDate.label),
+        columnName: columnNames.leadNextActivityDate.label,
+      },
+      {
+        id: columnNames.leadPipeline.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadPipeline')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ PipelineStage }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {PipelineStage?.Pipeline?.name}
+            </span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadPipeline.label),
+        columnName: columnNames.leadPipeline.label,
+      },
+      {
+        id: columnNames.leadUpdateTime.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadUpdateTime')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: ({ LastUpdated }) => {
+          return (
+            <span className={styles.cellFormater}>
+              {LastUpdated && DisplayDateTime(LastUpdated)}
+            </span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadUpdateTime.label),
+        columnName: columnNames.leadUpdateTime.label,
+      },
+      {
+        id: columnNames.leadTitle.id,
+        title: (
+          <span className="dragHandler">
+            <AimOutlined />
+            {t('activityList.column.leadTitle')}
+          </span>
+        ),
+        dataIndex: 'lead',
+        skeletonWidth: '80px',
+        render: (data) => {
+          const { firstName = '', lastName = '' } = data
+          return (
+            <span className={styles.cellFormater}>
+              <a href="/" className={styles.link}>
+                {`${firstName} ${lastName}` || ''}
+              </a>
+            </span>
+          )
+        },
+        width: 120,
+        visible: visibleColumn(columnNames.leadTitle.label),
+        columnName: columnNames.leadTitle.label,
+      },
+      {
         id: columnNames.leadPhone.id,
         title: (
           <span className="dragHandler">
@@ -1673,7 +1908,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               return styles.overdueRow
             } else if (
               now <= dueDate &&
-              now.format('DD') === dueDate.format('DD')
+              now.format('DDMMYY') === dueDate.format('DDMMYY')
             ) {
               return styles.todayRow
             }

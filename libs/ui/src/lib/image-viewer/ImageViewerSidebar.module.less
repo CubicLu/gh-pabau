@@ -86,6 +86,16 @@
         font-size: 12px;
         line-height: 14px;
         color: var(--grey-text-color);
+
+        :global {
+          .ant-skeleton {
+            width: 100%;
+            .ant-skeleton-input {
+              width: 40%;
+              height: 15px;
+            }
+          }
+        }
       }
       .imageItem {
         display: grid;
@@ -125,6 +135,13 @@
                 border-radius: 50%;
                 &.selected {
                   border: 3px solid var(--primary-color);
+                }
+              }
+
+              :global {
+                .ant-skeleton-avatar {
+                  width: 25px;
+                  height: 25px;
                 }
               }
             }
@@ -240,6 +257,19 @@
   @media (max-width: 767px) {
     height: calc(100vh - 120px);
     top: 60px;
+  }
+
+  .albumLoader {
+    width: 100%;
+    padding: 5px 16px;
+
+    > div {
+      width: 100%;
+
+      > span {
+        height: 22px;
+      }
+    }
   }
 }
 

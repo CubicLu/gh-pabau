@@ -1,11 +1,19 @@
-query getUncatPhotos($contactId: Int!) {
+query getAlbumPhotos(
+  $contactId: Int!
+  $albumId: Int!
+  $skip: Int = 0
+  $take: Int = 25
+) {
   findManyContactAttachment(
     where: {
       contact_id: { equals: $contactId }
       attachment_type: { equals: "contact" }
       photo_type: { notIn: "consent,treatment" }
-      album_id: { equals: 0 }
+      album_id: { equals: $albumId }
     }
+    orderBy: { date: desc }
+    skip: $skip
+    take: $take
   ) {
     id
     origin: linkref
@@ -37,8 +45,29 @@ query getPhotoAlbums($contactId: Int!) {
   findManyPhotoAlbum(where: { contact_id: { equals: $contactId } }) {
     id
     name: album_name
+    modified_date
+    creation_date
     imageCount: _count {
       imageList: Photos
+    }
+    Photos(skip: 0, take: 4) {
+      id
+      linkref
+    }
+  }
+}
+
+query countAlbumPhotos($contactId: Int!, $albumId: Int!) {
+  aggregateContactAttachment(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { equals: "contact" }
+      photo_type: { notIn: "consent,treatment" }
+      album_id: { equals: $albumId }
+    }
+  ) {
+    count {
+      _all
     }
   }
 }
