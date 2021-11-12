@@ -1,6 +1,5 @@
 import { allow, and, or, shield } from 'graphql-shield'
 import * as rules from './types'
-import { sendBookingConfirmationMail } from '../resolvers'
 
 console.log('Creating shield...')
 

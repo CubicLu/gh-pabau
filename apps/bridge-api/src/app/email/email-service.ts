@@ -55,10 +55,7 @@ export const sendEmailWithTemplate = async (args, ctx: Context) => {
   })
 
   if (contact.Email) {
-    const {
-      company_email,
-      senders_name,
-    } = await ctx.prisma.companyEmail.findFirst({
+    const { senders_name } = await ctx.prisma.companyEmail.findFirst({
       where: {
         company_id: ctx.authenticated.company,
         default_email: 1,
