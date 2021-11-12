@@ -159,6 +159,7 @@
   }
   > ul {
     border: 0px;
+    margin-top: 0px !important;
 
     > li {
       min-height: 35px;
@@ -216,6 +217,10 @@
       width: 100%;
       border: 1px solid transparent;
       box-shadow: 3px 3px 10px transparent;
+
+      @media screen and (max-width: 767px) {
+        margin-top: 25px;
+      }
     }
 
     .ant-menu-item {
@@ -782,8 +787,9 @@
   :global .react-pdf__Document {
     .react-pdf__Page {
       canvas {
-        width: 100% !important;
+        width: 95% !important;
         height: 100% !important;
+        margin: 0px auto;
       }
     }
   }
@@ -958,6 +964,7 @@
   color: #0e0917;
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
   justify-content: space-around;
+  z-index: 2;
   button {
     color: #9292a3;
   }
@@ -970,12 +977,14 @@
 
   .e-paper-header {
     background-color: #fff;
+    border-bottom: 1px solid rgba(61, 61, 70, 1);
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 56px;
     position: fixed;
     width: 100%;
+    z-index: 1;
 
     .e-paper-title {
       line-height: 22px;
@@ -1097,8 +1106,9 @@
     height: calc(100vh - 78px);
     :global {
       canvas {
-        width: 375px !important;
-        height: 675px !important;
+        width: 96% !important;
+        height: 100% !important;
+        margin: 0px auto;
       }
     }
     .bottomBar {

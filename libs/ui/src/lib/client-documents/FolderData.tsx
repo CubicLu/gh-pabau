@@ -162,12 +162,13 @@ export const FolderData: FC<FolderDataProps> = ({
   const [folderDrawer, setFolderDrawer] = useState(false)
   const [documentDrawer, setDocumentDrawer] = useState(false)
   const [previewModal, setPreviewModal] = useState(false)
-  const [pdfData, setPdfData] = useState('')
+  const [previewType, setPreviewType] = useState('')
+  const [previewUrl, setPreviewUrl] = useState('')
   const [docDeleteModal, setDocDelModal] = useState(false)
 
   const [numPages, setNumPages] = useState<number>(0)
   const [pageNumber, setPageNumber] = useState(1)
-  const [pdfName, setPdfName] = useState('')
+  const [previewName, setPreviewName] = useState('')
 
   const [selectedFolder, setSelectedFolder] = useState<number>(0)
   const [selectedDocument, setSelectedDocument] = useState<number>(0)
@@ -181,7 +182,7 @@ export const FolderData: FC<FolderDataProps> = ({
   useEffect(() => {
     setNumPages(0)
     setPageNumber(1)
-  }, [pdfData])
+  }, [previewUrl])
 
   useEffect(() => {
     setDocDelModal(() => false)
@@ -222,16 +223,21 @@ export const FolderData: FC<FolderDataProps> = ({
     },
   }
 
-  const handlePreview = (pdf, name = '') => {
+  const handlePreview = (url, name = '') => {
     let cName = name
     if (!cName) {
-      const cNameArr = pdf?.split('/')
+      const cNameArr = url?.split('/')
       cName = displayDocName(cNameArr[cNameArr?.length - 1])
     }
-    setPdfName(cName)
-    setPdfData(pdf)
+    setPreviewName(cName)
+    setPreviewUrl(url)
+    setPreviewType(checkUrlIfImage(url) ? 'image' : 'document')
     setPageNumber(1)
     setPreviewModal((e) => !e)
+  }
+
+  const checkUrlIfImage = (url: string) => {
+    return url.match(/\.(jpeg|jpg|gif|png)$/) != null
   }
 
   const FolderPopupContent = ({ record }) => {
@@ -321,7 +327,8 @@ export const FolderData: FC<FolderDataProps> = ({
     const [downloadPerc, setDownloadPerc] = useState(0)
     const [downloadStarted, setDownloadStarted] = useState(false)
 
-    const downloadSingleDoc = (url: string) => {
+    const downloadSingleDoc = (url: string, name = '') => {
+      console.log('NAME:', name)
       const xhr = new XMLHttpRequest()
       xhr.open('GET', url, true)
       xhr.responseType = 'blob'
@@ -347,7 +354,8 @@ export const FolderData: FC<FolderDataProps> = ({
         const imageUrl = urlCreator.createObjectURL(this.response)
         const tag = document.createElement('a')
         tag.href = imageUrl
-        tag.download = url
+        tag.target = '_blank'
+        tag.download = name
         document.body.append(tag)
         tag.click()
         tag.remove()
@@ -380,9 +388,16 @@ export const FolderData: FC<FolderDataProps> = ({
             style={{ borderBottom: '1px solid #ECEDF0' }}
             onClick={() => {
               const cFolderContent = data?.folderContent
-              const url = cFolderContent?.find((el) => el?.id === record)
-                ?.folderData
-              if (url && !downloadStarted) downloadSingleDoc?.(url || '')
+              const cFile = cFolderContent?.find((el) => el?.id === record)
+              if (cFile?.folderData && !downloadStarted) {
+                const cFileName = cFile?.folderData?.split('/') || []
+                downloadSingleDoc?.(
+                  cFile?.folderData || '',
+                  cFile?.documentName
+                    ? cFile?.documentName
+                    : displayDocName(cFileName?.[cFileName?.length - 1])
+                )
+              }
             }}
           >
             <DownloadOutlined />
@@ -558,7 +573,7 @@ export const FolderData: FC<FolderDataProps> = ({
               <p>
                 {record?.documentName
                   ? record?.documentName
-                  : displayDocName(fileName[fileName.length - 1], 20)}
+                  : displayDocName(fileName[fileName.length - 1])}
               </p>
             </div>
             {value?.[1]?.length > 0 && (
@@ -657,7 +672,7 @@ export const FolderData: FC<FolderDataProps> = ({
     storeData.length > 0 ? setShowMenu(true) : setShowMenu(false)
   }
 
-  const displayDocName = (name: string, len = 10) => {
+  const displayDocName = (name: string) => {
     if (name?.includes('.')) {
       const cNameArr = name?.split('.')
       const ext = cNameArr[cNameArr?.length - 1]
@@ -906,7 +921,7 @@ export const FolderData: FC<FolderDataProps> = ({
                         data-type={fileData[fileData.length - 1]}
                       />
                       <div>
-                        {fileArray.has(fileData[fileData.length - 1]) ? (
+                        {!checkUrlIfImage?.(folderValue?.folderData) ? (
                           <FileIcon
                             foldColor="lightgray"
                             labelColor="var(--primary-color)"
@@ -1072,10 +1087,11 @@ export const FolderData: FC<FolderDataProps> = ({
       >
         <div className={styles.modalContent}>
           <PreviewFile
-            title={pdfName}
+            title={previewName}
             numPages={numPages}
             pageNumber={pageNumber}
-            pdfURL={pdfData}
+            previewURL={previewUrl}
+            previewType={previewType}
             onDocumentLoadSuccess={onDocumentLoadSuccess}
             onSetNumPages={onSetNumPages}
             setPreviewModal={setPreviewModal}

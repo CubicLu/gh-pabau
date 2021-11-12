@@ -25,7 +25,7 @@ import {
   useCreateContactPhotoMutation as useCreateDocumentMutation,
   useCreateOnePhotoAlbumMutation as useCreateFolderMutation,
   useUpdateOnePhotoAlbumMutation as useUpdateFolderMutation,
-  useDeleteOnePhotoAlbumMutation as useDeleteFolderMutation,
+  useDeleteContactAlbumMutation as useDeleteFolderMutation,
   useMoveContactAttachmentsMutation as useMoveDocumentsMutation,
   useCreateContactPhotoWithoutAlbumMutation as useCreateUncatDocumentMutation,
   useDeleteManyContactPhotoMutation as useDeleteManyDocumentsMutation,
@@ -57,7 +57,7 @@ const folderFinder = (folders, folderId) => {
   return folder
 }
 
-const Photos: FC = () => {
+const Documents: FC = () => {
   const api = axios.create({
     baseURL: baseURL,
     headers: {
@@ -186,18 +186,19 @@ const Photos: FC = () => {
     },
   })
   const [deleteFolder] = useDeleteFolderMutation({
-    onCompleted({ deleteOnePhotoAlbum: data }) {
+    onCompleted({ deleteContactAlbum: data }) {
       const cFolders = { ...folders }
-      const idx = cFolders?.folder?.findIndex((el) => el?.id === data?.id)
+      const idx = cFolders?.folder?.findIndex((el) => el?.id === data?.album)
       if (idx !== -1) {
+        const cFolder = cFolders[idx]
         cFolders?.folder?.splice(idx, 1)
         setFolders(cFolders)
+        Notification(
+          NotificationType?.success,
+          `${cFolder?.folderTitle} deleted successfully!`
+        )
       }
       setFolderDeleteLoading(false)
-      Notification(
-        NotificationType?.success,
-        `${data?.album_name} deleted successfully!`
-      )
     },
     onError(error) {
       setFolderDeleteLoading(false)
@@ -238,7 +239,7 @@ const Photos: FC = () => {
   })
 
   const [deleteOneDocument] = useDeleteDocumentMutation({
-    onCompleted({ deleteContactAttachmentPhoto: data }) {
+    onCompleted({ deleteContactAttachment: data }) {
       setSingleDocDelLoading(() => false)
       if (data?.success) {
         const id = data?.photo
@@ -277,7 +278,7 @@ const Photos: FC = () => {
   })
 
   const [deleteManyDocuments] = useDeleteManyDocumentsMutation({
-    onCompleted({ deleteManyContactAttachmentPhoto: data }) {
+    onCompleted({ deleteManyContactAttachment: data }) {
       if (data.success && data.count === multipeDelDocs) {
         Notification(
           NotificationType.success,
@@ -472,25 +473,19 @@ const Photos: FC = () => {
 
   const onFolderDelete = (folder: FolderProps) => {
     setFolderDeleteLoading(true)
-    if (folder.contentCount <= 0) {
-      deleteFolder({
-        variables: {
-          where: {
-            id: Number(folder?.id),
+    deleteFolder({
+      variables: {
+        id: Number(folder?.id),
+      },
+      refetchQueries: [
+        {
+          query: GetFoldersDocument,
+          variables: {
+            contactId: contactId,
           },
         },
-        refetchQueries: [
-          {
-            query: GetFoldersDocument,
-            variables: {
-              contactId: contactId,
-            },
-          },
-        ],
-      })
-    } else {
-      // This block will be used when we get delete whole folder along with its nested folders and docs by Martin
-    }
+      ],
+    })
   }
 
   const onDocumentUpload = async (fileData: UploadingFileProps) => {
@@ -803,4 +798,4 @@ const Photos: FC = () => {
   )
 }
 
-export default Photos
+export default Documents
