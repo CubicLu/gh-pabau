@@ -31,7 +31,7 @@ import {
 import { Input } from 'antd'
 import { useMedia } from 'react-use'
 // import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState, useRef } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import treatmentType from '../../assets/images/form-type/treatment.svg'
 import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
