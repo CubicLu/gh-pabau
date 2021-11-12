@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.749",
+  "version": "2.0.753",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
@@ -309,7 +309,7 @@
     "eslint-plugin-unicorn": "36.0.0",
     "eslint-plugin-you-dont-need-lodash-underscore": "6.12.0",
     "graphql-request": "3.5.0",
-    "hasura-cli": "2.0.8",
+    "hasura-cli": "2.0.9",
     "husky": "7.0.2",
     "jest": "27.0.6",
     "jest-fail-on-console-reporter": "0.1.0",
@@ -335,7 +335,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 126,
+  "bump-rebuild-all": 129,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }
