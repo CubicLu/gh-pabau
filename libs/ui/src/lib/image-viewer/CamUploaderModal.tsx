@@ -72,6 +72,7 @@ export interface UploadingImageProps {
   id: number
   albumId: number
   preview: string
+  name: string
   type?: string
   file?: File
   size?: number
@@ -406,6 +407,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       file: file,
       type: file?.type,
       size: file?.size,
+      name: file?.name,
       albumId: albumId || 0,
     }
     cAddedFiles.push(newFile)
@@ -416,7 +418,6 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   const handleAddFiles = (files: File[]) => {
     if (files?.length > 0) {
       const cFiles: UploadingImageProps[] = files.map((file) => {
-        console.log('TYPE:', file?.type)
         return {
           id: makeId(12),
           preview: URL.createObjectURL(file),
@@ -424,6 +425,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           size: file?.size,
           type: file?.type,
           albumId: albumId || 0,
+          name: file?.name,
         }
       })
       const cAddedFiles = [...uploadingImages, ...cFiles]

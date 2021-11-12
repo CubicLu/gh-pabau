@@ -334,6 +334,8 @@ model Company {
   CommunicationAttachment CommunicationAttachment[]
   Recall                  Recall[]
   CustomFieldDisplay      CustomFieldDisplay[]
+  Pipeline                Pipeline[]
+  PipelineStage           PipelineStage[]
   @@map("admin")
 }
 
@@ -9958,7 +9960,7 @@ model PhotoAlbum {
 //
 model Pipeline {
   id              Int     @id @default(autoincrement())
-  company_id      Int?
+  company_id      Int
   name            String
   description     String
   status          Int     @default(0)
@@ -9968,13 +9970,14 @@ model Pipeline {
   reference       String?
 
   PipelineStage PipelineStage[]
+  Company       Company         @relation(fields: [company_id], references: [id])
   @@index([company_id], name: "company_id")
   @@map("pipeline")
 }
 
 model PipelineStage {
   id               Int      @id @default(autoincrement())
-  company_id       Int?
+  company_id       Int
   pipeline_id      Int?
   name             String
   stage_order      Int      @default(0)
@@ -9984,6 +9987,7 @@ model PipelineStage {
   updated_date     DateTime @default(now())
 
   Pipeline Pipeline? @relation(fields: [pipeline_id], references: [id])
+  Company  Company   @relation(fields: [company_id], references: [id])
   CmLead   CmLead[]
   @@index([company_id], name: "company_id")
   @@map("pipeline_stages")
