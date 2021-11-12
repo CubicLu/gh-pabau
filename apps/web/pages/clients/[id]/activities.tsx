@@ -103,7 +103,10 @@ const ActivitiesTab = () => {
     return style
   }
   const handleMenuClick = (name, id) => {
-    if (name === t('timeline.dotMenu.delete')) {
+    if (
+      name === t('timeline.dotMenu.delete') ||
+      name.toLocaleLowerCase() === 'delete'
+    ) {
       setActivityId(id)
       setIsActivityDelete(true)
     }
@@ -150,6 +153,7 @@ const ActivitiesTab = () => {
         cssClass={'cardCoustomWrapper'}
         clientId={Number(router.query['id'])}
         activeTab="activities"
+        deleteActivityId={activityId}
       >
         <Modal
           centered={true}

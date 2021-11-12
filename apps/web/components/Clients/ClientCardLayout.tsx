@@ -7,7 +7,7 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
-  useCountClientActivityQuery,
+  useCountClientActivityLazyQuery,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
   useTotalInvoiceCountQuery,
@@ -47,6 +47,7 @@ interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
   cssClass?: string
+  deleteActivityId?: number
 }
 
 export const ClientCardLayout: FC<P> = ({
@@ -54,14 +55,14 @@ export const ClientCardLayout: FC<P> = ({
   children,
   activeTab,
   cssClass,
+  deleteActivityId,
 }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
-  const { data: countActivities } = useCountClientActivityQuery({
-    variables: { contactID: clientId },
-    skip: !clientId,
-  })
-
+  const [
+    getActivityCount,
+    { data: countActivities },
+  ] = useCountClientActivityLazyQuery()
   const { data: countInvoice } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
@@ -114,7 +115,11 @@ export const ClientCardLayout: FC<P> = ({
       )
     },
   })
-
+  useEffect(() => {
+    getActivityCount({
+      variables: { contactID: clientId },
+    })
+  }, [clientId, getActivityCount, deleteActivityId])
   const getQueryVariables = useMemo(() => {
     return {
       variables: { id: clientId },
@@ -281,7 +286,7 @@ export const ClientCardLayout: FC<P> = ({
     { key: 'loyalty', name: 'Loyalty' },
     {
       key: 'activities',
-      name: 'Activities',
+      name: t('clients.activities.title'),
       count: countActivities?.findManyActivityCount,
     },
 

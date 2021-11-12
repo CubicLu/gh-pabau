@@ -5686,3 +5686,4 @@ en:
   clients.activities.delete.message: 'Activity deleted Successfully'
   clients.activities.delete.error.message: 'An error occured while deleting activity'
   clients.activities.delete.modal.message: 'Do you really want to delete these records? This process cannot be undone.'
+  clients.activities.title : 'Activities'
