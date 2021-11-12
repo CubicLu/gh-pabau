@@ -13,6 +13,7 @@ import {
   CloseCircleFilled,
   BellOutlined,
   InfoCircleFilled,
+  InfoOutlined,
 } from '@ant-design/icons'
 import { TabMenu, Avatar, Button, ClientData, MyLottie } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -64,10 +65,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
-  const formLastUpdated = dayjs().diff(
-    medicalHistoryDetails?.formLastUpdatedDate,
-    'day'
-  )
+  const formLastUpdated = medicalHistoryDetails?.formLastUpdatedDate
+    ? dayjs().diff(medicalHistoryDetails?.formLastUpdatedDate, 'day')
+    : 0
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [noteItems, setNoteItems] = useState<ClientNoteDetails[]>([])
   const [appointmentItems, setAppointmentItems] = useState<
@@ -121,7 +121,14 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
       case 'not_completed':
         return <CloseCircleFilled style={{ color: '#ec6669' }} />
       case 'completed':
-        return <CheckCircleFilled style={{ color: '#65cd98' }} />
+        return formLastUpdated > 180 ? (
+          <div className={styles.toBeCompletedIcon}>
+            <InfoOutlined style={{ color: '#fff' }} />
+          </div>
+        ) : (
+          <CheckCircleFilled style={{ color: '#65cd98' }} />
+        )
+
       case 'to_be_completed':
         return (
           <div className={styles.toBeCompletedIcon}>
