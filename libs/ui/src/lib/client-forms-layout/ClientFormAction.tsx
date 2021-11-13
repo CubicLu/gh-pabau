@@ -8,7 +8,7 @@ import {
   ShareAltOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
-import { Button } from '@pabau/ui'
+import { Button, MedicalFormContact } from '@pabau/ui'
 import { Popover, Drawer, Collapse } from 'antd'
 import classNames from 'classnames'
 import { useMedia } from 'react-use'
@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 
 const { Panel } = Collapse
 interface FormActionProps {
-  form: FormListProps
+  form: MedicalFormContact
   popOverState: PopOverStateProps
   setPopOverState: (e) => void
   handlePinForm: () => void
