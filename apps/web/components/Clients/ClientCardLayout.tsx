@@ -293,6 +293,7 @@ export const ClientCardLayout: FC<P> = ({
       key: 'emr',
       name: 'EMR',
       childTabs: [
+        { key: 'forms', name: 'Forms' },
         { key: 'photos', name: 'Photos' },
         { key: 'prescription', name: 'Prescription' },
         { key: 'documents', name: 'Documents' },

@@ -1,0 +1,118 @@
+.care-pathways-container {
+  background-color: white;
+  width: 100%;
+
+  :global {
+    .ant-tabs-content .ant-tabs-content-top {
+      height: 100vh;
+    }
+  }
+}
+
+.care-pathways-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-color-base);
+  :global {
+    .ant-typography,
+    .ant-breadcrumb {
+      padding: 0;
+    }
+    .ant-breadcrumb {
+      margin-bottom: 8px;
+    }
+  }
+  .care-pathways-ops {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    > div {
+      margin-left: 1rem;
+    }
+    .care-pathways-search {
+      padding-left: 40%;
+      > div {
+        margin-left: 1rem;
+      }
+      .care-path-search-field {
+        position: relative;
+        :global .anticon-search {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+  }
+  @media (max-width: 991px) {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 200px) and (max-width: 767px) {
+  .care-pathways-header {
+    display: none;
+  }
+}
+
+.mobile-header {
+  background-color: #fff;
+  top: 0;
+}
+
+.all-content-align-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mobile-header-icon {
+  display: flex;
+  align-items: center;
+}
+.mobile-header-text-style {
+  display: flex;
+  align-items: center;
+  p {
+    margin-bottom: 0px;
+    font-family: Circular-Std-Medium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 22px;
+    text-transform: capitalize;
+    color: var(--grey-text-color);
+    padding-left: 10px;
+  }
+}
+
+.mobile-header-ops-style {
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon-style {
+  font-size: 19px;
+  color: var(--light-grey-color);
+  padding-right: 25px;
+}
+
+.plus-icon-style {
+  color: var(--primary-color);
+  font-size: 25px;
+  border-radius: 4px;
+}
+
+.container {
+  padding: 24px;
+  .containerData {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .customCardWrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
