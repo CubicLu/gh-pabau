@@ -4,7 +4,7 @@ import { LeadsNavigation } from '@pabau/ui'
 import { useGetCmLeadCountLazyQuery } from '@pabau/graphql'
 
 export interface LeadsNavigationComponentProps {
-  pipelineId: number
+  pipelineId: number | null
 }
 
 export const LeadsNavigationComponent: FC<LeadsNavigationComponentProps> = ({

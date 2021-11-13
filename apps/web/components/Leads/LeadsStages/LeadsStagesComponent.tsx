@@ -22,7 +22,7 @@ import noUser from '../../../assets/images/no-user-icon.svg'
 import austin from '../../../assets/images/users/austin.png'
 
 export interface leadsStagesComponentProps {
-  pipelineId: number
+  pipelineId: number | null
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -249,14 +249,15 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
         stageQuery.stageWithLeads[stageQuery.queryCalled]
       )
       if (stageQuery.queryCalled === 0) setQueryIsCalled(true)
-
-      getAllKanbanLeadsDetails({
-        variables: {
-          ...leadsDefaultParams,
-          pipeline_id: pipelineId,
-          pipeline_stage_id: stageIndex,
-        },
-      })
+      if (pipelineId) {
+        getAllKanbanLeadsDetails({
+          variables: {
+            ...leadsDefaultParams,
+            pipeline_id: pipelineId,
+            pipeline_stage_id: stageIndex,
+          },
+        })
+      }
     }
   }, [
     leadsDefaultParams,

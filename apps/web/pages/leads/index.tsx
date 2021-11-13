@@ -36,7 +36,7 @@ export function Index(props: IndexProps) {
       !defaultPipelineError
     ) {
       const { findFirstPipeline } = defaultPipeline
-      if (findFirstPipeline.id !== defaultPipelineId) {
+      if (findFirstPipeline && findFirstPipeline.id !== defaultPipelineId) {
         setDefaultPipelineId(findFirstPipeline.id)
       }
     }
