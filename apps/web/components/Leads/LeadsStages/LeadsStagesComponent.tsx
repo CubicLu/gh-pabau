@@ -67,7 +67,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
 }) => {
   const [allStages, setAllStages] = useState([])
   const [leadsDefaultParams, setLeadsDefaultParams] = useState({
-    limit: 10,
+    limit: 30,
     skip: 0,
   })
   const [leadsState, setLeadsState] = useState({})
