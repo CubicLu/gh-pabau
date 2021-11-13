@@ -69,18 +69,21 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
     return result
   }
 
-  const handleDragEnd = (result) => {
+  const handleDragEnd = (result, categoryId) => {
     if (!result.destination) {
       return
     }
 
-    const items = reorder(
-      fieldOrder,
-      result.source.index,
-      result.destination.index
+    const fieldsOrderData = [...fieldOrder]
+    const fieldOrderIndex = fieldsOrderData.findIndex(
+      (fields) => fields.id === categoryId
     )
+    const list = [...fieldsOrderData[fieldOrderIndex].fields]
+    const items = reorder(list, result.source.index, result.destination.index)
 
-    // setFieldOrder(items)
+    fieldsOrderData[fieldOrderIndex].fields = items
+
+    setFieldOrder(fieldsOrderData)
   }
 
   const addFieldPop = (
@@ -113,7 +116,9 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
               )}
             </div>
             <div className={styles.body}>
-              <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
+              <DragDropContext
+                onDragEnd={(result) => handleDragEnd(result, data.id)}
+              >
                 <Droppable droppableId="droppable">
                   {(provided, snapshot) => (
                     <div

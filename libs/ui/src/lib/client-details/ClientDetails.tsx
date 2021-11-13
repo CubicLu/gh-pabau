@@ -1126,7 +1126,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                   </div>
                   {!customizingFields &&
                     fieldsOrder?.map((item, index) => (
-                      <div className={styles.detailBottom}>
+                      <div key={item.id} className={styles.detailBottom}>
                         <div className={styles.detailsContainer}>
                           <div className={styles.title}>
                             {index === 0
