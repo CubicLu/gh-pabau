@@ -3,7 +3,13 @@ import { action } from '@storybook/addon-actions'
 import { LeadsNavigation } from '@pabau/ui'
 import { useGetCmLeadCountLazyQuery } from '@pabau/graphql'
 
-export const LeadsNavigationComponent: FC = () => {
+export interface LeadsNavigationComponentProps {
+  pipelineId: number
+}
+
+export const LeadsNavigationComponent: FC<LeadsNavigationComponentProps> = ({
+  pipelineId,
+}) => {
   const [leadCount, setLeadCount] = useState(0)
   const leadsItems = [
     {
@@ -66,15 +72,14 @@ export const LeadsNavigationComponent: FC = () => {
   ])
 
   useEffect(() => {
-    const companyId = 8119
-    const pipelineId = 1
-    getCmLeadCount({
-      variables: {
-        pipeline_id: pipelineId,
-        company_id: companyId,
-      },
-    })
-  }, [getCmLeadCount])
+    if (pipelineId) {
+      getCmLeadCount({
+        variables: {
+          pipeline_id: pipelineId,
+        },
+      })
+    }
+  }, [getCmLeadCount, pipelineId])
 
   return (
     <LeadsNavigation

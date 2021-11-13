@@ -1,7 +1,6 @@
 query getKanbanLeads(
   $limit: Int = 10
   $skip: Int = 0
-  $company_id: Int
   $pipeline_id: Int
   $pipeline_stage_id: Int
 ) {
@@ -9,7 +8,6 @@ query getKanbanLeads(
     take: $limit
     skip: $skip
     where: {
-      company_id: { equals: $company_id }
       PipelineStage: {
         id: { equals: $pipeline_stage_id }
         pipeline_id: { equals: $pipeline_id }
@@ -61,12 +59,10 @@ query getKanbanLeads(
   }
 }
 
-query getLeadPipelines {
-  findManyPipeline(where: { reference: { equals: "leads" } }) {
+query getFirstPipeline {
+  findFirstPipeline {
     name
-    description
-    status
-    note
+    id
     PipelineStage {
       id
       name
@@ -75,13 +71,8 @@ query getLeadPipelines {
   }
 }
 
-query getCmLeadCount($company_id: Int, $pipeline_id: Int) {
+query getCmLeadCount($pipeline_id: Int) {
   findManyCmLeadCount(
-    where: {
-      PipelineStage: {
-        pipeline_id: { equals: $pipeline_id }
-        company_id: { equals: $company_id }
-      }
-    }
+    where: { PipelineStage: { pipeline_id: { equals: $pipeline_id } } }
   )
 }

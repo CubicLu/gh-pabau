@@ -1,4 +1,5 @@
 import React, {
+  FC,
   useState,
   useEffect,
   useRef,
@@ -21,7 +22,7 @@ import noUser from '../../../assets/images/no-user-icon.svg'
 import austin from '../../../assets/images/users/austin.png'
 
 export interface leadsStagesComponentProps {
-  isLoading: boolean
+  pipelineId: number
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -61,13 +62,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 })
 
-const LeadsStagesComponent = () => {
+const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
+  pipelineId,
+}) => {
   const [allStages, setAllStages] = useState([])
   const [leadsDefaultParams, setLeadsDefaultParams] = useState({
     limit: 10,
     skip: 0,
-    company_id: 8254,
-    pipeline_id: 116,
   })
   const [leadsState, setLeadsState] = useState({})
   const [queryIsCalled, setQueryIsCalled] = useState(false)
@@ -147,6 +148,7 @@ const LeadsStagesComponent = () => {
         event.target.clientHeight
       if (bottom) {
         const { limit, skip } = leadsDefaultParams
+
         if (
           !queryIsCalled &&
           limit + skip === leadsLenghtRef.current.leadsLength
@@ -207,30 +209,31 @@ const LeadsStagesComponent = () => {
   }
 
   useEffect(() => {
-    if (allStages.length === 0)
+    if (allStages.length === 0 && pipelineId) {
       getAllKanbanStages({
         variables: {
-          company_id: leadsDefaultParams.company_id,
-          pipeline_id: leadsDefaultParams.pipeline_id,
+          pipeline_id: pipelineId,
         },
       })
-  }, [allStages, getAllKanbanStages, leadsDefaultParams])
+    }
+  }, [allStages, getAllKanbanStages, leadsDefaultParams, pipelineId])
 
   useEffect(() => {
     if (allStages.length > 0 && !queryIsCalled) {
-      let stageWithNoLeads = []
+      let stageWithMoreLeads = []
       const leadsArray = leadsArrayRef.current
+
       if (Object.keys(leadsArray.leadsObj).length > 0) {
-        stageWithNoLeads = Object.keys(leadsArray.leadsObj).filter(
+        stageWithMoreLeads = Object.keys(leadsArray.leadsObj).filter(
           (i) =>
             leadsArray.leadsObj[i].length >= leadsLenghtRef.current.leadsLength
         )
       } else {
         for (const stage of allStages) {
-          stageWithNoLeads.push(stage['id'])
+          stageWithMoreLeads.push(stage['id'])
         }
       }
-      stageQueryRef.current.stageWithLeads = stageWithNoLeads
+      stageQueryRef.current.stageWithLeads = stageWithMoreLeads
     }
   }, [allStages, queryIsCalled, stageQueryRef, leadsArrayRef])
 
@@ -250,6 +253,7 @@ const LeadsStagesComponent = () => {
       getAllKanbanLeadsDetails({
         variables: {
           ...leadsDefaultParams,
+          pipeline_id: pipelineId,
           pipeline_stage_id: stageIndex,
         },
       })
@@ -261,6 +265,7 @@ const LeadsStagesComponent = () => {
     stageQueryRef,
     leadsState,
     queryIsCalled,
+    pipelineId,
   ])
 
   useEffect(() => {
@@ -306,7 +311,12 @@ const LeadsStagesComponent = () => {
             ]
           : getAllLeadsDetailData.findManyCmLead,
       }
-      leadsArray.leadsObj[indexOfStages] = getAllLeadsDetailData.findManyCmLead
+      leadsArray.leadsObj[indexOfStages] = leadsArray.leadsObj[indexOfStages]
+        ? (leadsArray.leadsObj[indexOfStages] = [
+            ...leadsArray.leadsObj[indexOfStages],
+            ...getAllLeadsDetailData.findManyCmLead,
+          ])
+        : getAllLeadsDetailData.findManyCmLead
       setLeadsState(localLeadState)
       stageQuery.queryCompleted = false
       if (stageQuery.queryCalled === stageQuery.stageWithLeads.length) {

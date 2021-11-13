@@ -1,9 +1,6 @@
-query getPipelineStages($company_id: Int, $pipeline_id: Int) {
+query getPipelineStages($pipeline_id: Int) {
   stages: findManyPipelineStage(
-    where: {
-      company_id: { equals: $company_id }
-      pipeline_id: { equals: $pipeline_id }
-    }
+    where: { pipeline_id: { equals: $pipeline_id } }
   ) {
     id
     company_id
