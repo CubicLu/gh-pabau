@@ -1967,6 +1967,34 @@ export const Company = objectType({
         return root.CustomFieldDisplay
       },
     })
+    t.list.field('Pipeline', {
+      type: 'Pipeline',
+      args: {
+        where: 'PipelineWhereInput',
+        orderBy: 'PipelineOrderByWithRelationInput',
+        cursor: 'PipelineWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PipelineScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Pipeline
+      },
+    })
+    t.list.field('PipelineStage', {
+      type: 'PipelineStage',
+      args: {
+        where: 'PipelineStageWhereInput',
+        orderBy: 'PipelineStageOrderByWithRelationInput',
+        cursor: 'PipelineStageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PipelineStageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PipelineStage
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {
