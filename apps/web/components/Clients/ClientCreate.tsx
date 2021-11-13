@@ -146,9 +146,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   const [
     getLabels,
     { data: labelsQueryData, loading: labelLoading },
-  ] = useGetCmLabelsLazyQuery({
-    fetchPolicy: 'no-cache',
-  })
+  ] = useGetCmLabelsLazyQuery()
 
   const [
     getContact,

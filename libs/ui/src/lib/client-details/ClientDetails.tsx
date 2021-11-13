@@ -637,7 +637,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       const data = fieldsOrderData[fieldOrderIndex]?.fields.find(
         (item, id) => id === index
       )
-      console.log('data', data, category)
       if (data) {
         setBasicContactData?.({
           ...clientData,
