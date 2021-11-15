@@ -17,14 +17,14 @@ export const InvoiceExtended = extendType({
         })
         return name ?? ''
       },
-    }),
-      t.field('issue_to', {
-        type: 'String',
-        async resolve(parent: any, args, ctx: Context) {
-          //if (!parent.location_id) return ''
+    })
+    t.field('issue_to', {
+      type: 'String',
+      async resolve(parent: any, args, ctx: Context) {
+        //if (!parent.location_id) return ''
 
-          return parent.customer_name ?? ''
-        },
-      })
+        return parent.customer_name ?? ''
+      },
+    })
   },
 })
