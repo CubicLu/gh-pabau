@@ -132,22 +132,6 @@ export const MainInvoice = extendType({
         return invoices[0]?.count ?? 0
       },
     })
-    t.field('countCreditNote', {
-      type: 'Int',
-      description: 'Real count of creditNotes',
-      args: {
-        where: 'InvSaleWhereInput',
-        cursor: 'InvSaleWhereUniqueInput',
-      },
-      async resolve(_root, input, ctx: Context) {
-        const query = generateInvoiceCountQuery(ctx, input, [
-          "a.reference_no='**CREDIT NOTE**'",
-        ])
-        const invoices = await ctx.prisma.$queryRaw(query)
-
-        return invoices[0]?.count ?? 0
-      },
-    })
   },
 })
 
