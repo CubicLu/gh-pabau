@@ -335,7 +335,13 @@ FormTravelComponent.args = {
 }
 
 const FormSignatureStory = ({ title, desc }) => (
-  <FormSignature title={title} desc={desc} required={false} signData={'test'} />
+  <FormSignature
+    title={title}
+    desc={desc}
+    required={false}
+    txtInputType={'client'}
+    signData={'test'}
+  />
 )
 export const FormSignatureComponent = FormSignatureStory.bind({})
 FormSignatureComponent.args = {

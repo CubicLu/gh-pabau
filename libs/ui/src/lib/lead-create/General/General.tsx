@@ -229,7 +229,9 @@ export const General: FC<GeneralProps> = ({
               name={'DOB'}
             >
               <DatePicker
-                onChange={(date) => setFieldValue('DOB', date)}
+                onChange={(date, dateString) =>
+                  setFieldValue('DOB', dayjs(dateString))
+                }
                 name={'DOB'}
                 value={values?.DOB}
                 disabledDate={(current) => {

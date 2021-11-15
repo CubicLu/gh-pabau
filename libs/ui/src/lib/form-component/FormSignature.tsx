@@ -12,6 +12,7 @@ enum DrawingButtonType {
 interface P {
   title: string
   desc: string
+  txtInputType: string
   signData: string
   required: boolean
   onChangeTextValue?: (value: string) => void
@@ -20,6 +21,7 @@ export const FormSignature: FC<P> = ({
   title = '',
   desc = '',
   signData = '',
+  txtInputType = 'client',
   required = false,
   onChangeTextValue,
 }) => {

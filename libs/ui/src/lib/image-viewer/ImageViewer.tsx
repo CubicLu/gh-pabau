@@ -188,7 +188,8 @@ export interface ImageViewerProps {
   uploadingImages?: UploadingImageProps[]
   setUploadingImages?: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
-  removeImage?: (imagePath: string) => void
+  removeImage?: (imageId: number) => void
+  loading?: boolean
 }
 
 const ImageViewerModal: FC<ImageViewerProps> = ({
@@ -203,6 +204,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
   setUploadingImages,
   uploadImage,
   removeImage,
+  loading = false,
 }) => {
   const { t } = useTranslation('common')
   const [viewerTitle, setViewerTitle] = useState('')
@@ -844,6 +846,8 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             sidebarOpen={sidebarOpen}
             setIsDragging={setIsDragging}
             setSidebarOpen={setSidebarOpen}
+            defaultSelectedPhoto={selectedPhotoId}
+            loading={loading}
           />
           {isMobile && (
             <div className={styles.imageViewerModalFooter}>
@@ -902,9 +906,12 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
         {showCamUploader && (
           <CamUploader
             visible={showCamUploader}
-            onClose={() => {
+            onClose={(done?: boolean) => {
               setShowCamera(false)
               setShowCamUploader(() => false)
+              if (done) {
+                setUploadingImages?.([])
+              }
             }}
             uploadingImages={uploadingImages as UploadingImageProps[]}
             setUploadingImages={(images) => setUploadingImages?.(images)}
@@ -912,6 +919,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             uploadImage={uploadImage}
             removeImage={removeImage}
             albumId={currentAlbum?.id || 0}
+            cancelFunctionality={false}
           />
         )}
       </AntModal>

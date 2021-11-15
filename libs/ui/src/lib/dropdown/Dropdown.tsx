@@ -11,6 +11,7 @@ import {
   QuestionCircleOutlined,
   RightOutlined,
   UserOutlined,
+  MailOutlined,
 } from '@ant-design/icons'
 import {
   Avatar,
@@ -72,8 +73,8 @@ export const Dropdown: FC<DropDownInterface> = ({
           <span className={styles.headerText}>
             {userData?.companyName || '<no name>'}
           </span>
+          <RightOutlined className={styles.dropdownIcon} />
         </div>
-        <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
         <div className={styles.userName}>
@@ -101,6 +102,19 @@ export const Dropdown: FC<DropDownInterface> = ({
         {/* <LaunchSVG className={styles.launchLogo} /> */}
       </Menu.Item>
       <Menu.Item
+        key="Email"
+        className={classNames(styles.dropdownMenu, styles.avatarSpaceTop)}
+      >
+        <div className={styles.dropdownHeader}>
+          <MailOutlined style={{ color: '#9292A3' }} />
+          <Link href="/setup/gmail/inbox">
+            <span className={styles.headerText}>
+              {t('avatar.account.mail')}
+            </span>
+          </Link>
+        </div>
+      </Menu.Item>
+      <Menu.Item
         key="task"
         className={styles.dropdownMenu}
         style={{ borderBottom: '1px solid #F1F1F1' }}
@@ -121,8 +135,8 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <NotificationOutlined className={styles.dropdownIcon} />
           <span className={styles.headerText}>{t('avatar.give.feedback')}</span>
+          <RightOutlined className={styles.dropdownIcon} />
         </div>
-        <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item
         key="help"
@@ -132,8 +146,8 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <QuestionCircleOutlined className={styles.dropdownIcon} />
           <span className={styles.headerText}>{t('avatar.help.support')}</span>
+          <RightOutlined className={styles.dropdownIcon} />
         </div>
-        <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       {/* TODO Temp commenting it out due to translation not being part of the MVP
        <Menu.Item

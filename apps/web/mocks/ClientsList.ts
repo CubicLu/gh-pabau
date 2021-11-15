@@ -133,6 +133,25 @@ export const clientsList = [
     is_active: 0,
     date_archived: '04-05-2021, 2:02:05 am',
   },
+  {
+    id: 9,
+    firstName: 'William',
+    lastName: 'Brandham',
+    email: 'William123@pabau.com',
+    mobileNumber: '+44 879 111 222',
+    label: [
+      { label: 'Big 2', color: '#faca00' },
+      { label: 'abc', color: '#2a5193' },
+    ],
+    dob: '25-11-1997',
+    postal: '395006',
+    city: 'Surat',
+    priceQuote: '1234',
+    orderNotes: 'Order Notes',
+    setupFee: '500',
+    is_active: 1,
+    date_archived: '',
+  },
 ]
 
 export const duplicateData = [

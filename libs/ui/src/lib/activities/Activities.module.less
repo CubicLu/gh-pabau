@@ -1,4 +1,42 @@
 .follow-wrapper {
+  .sub-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 15px 15px 15px 18px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f1f1;
+    .sub-header-left  {
+      display: flex;
+      :global .ant-skeleton:not(:last-child) {
+        margin-right: 24px;
+      }
+    > div {
+      display: flex;
+      align-items: center;
+      & > div{
+        width: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        &:not(:last-child) {
+          margin-right: 24px;
+        }
+        &.active {
+          color: #54b2d3;
+          :global {
+            svg {
+              path {
+                fill: #54b2d3 !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  }  
   .header {
     display: flex;
     justify-content: flex-end;
@@ -88,8 +126,24 @@
               width: 24px;
               height: 24px;
               padding: 0;
-              display: block;
+              display: flex;
+              justify-content: center;
+              align-items: center;
               transition: 0.5s ease;
+            }
+            .dotList {
+              display: flex;
+              align-items: center;
+              margin-bottom: 10px;
+              cursor: pointer;
+              &:last-child {
+                margin-bottom: 0;
+              }
+              p {
+                margin: 0 0 0 10px;
+                line-height: 14px;
+                font-size: 14px;
+              }
             }
           }
         }
@@ -160,20 +214,6 @@
           margin-left: 12px;
           @media screen and (max-width: 767px) {
             margin-left: 0;
-          }
-          &:before {
-            content: '';
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            background: #9292a3;
-            top: 50%;
-            transform: translateY(-50%);
-            left: -10px;
-              @media screen and (max-width: 767px) {
-                display: none;
-              }
           }
           .client-name-text {
             margin-right: 9px;
@@ -445,6 +485,18 @@
       display: flex;
       justify-content: flex-end;
       padding: 0 16px 16px;
+    }
+  }
+}
+.custom-popover {
+  width: 200px;
+  z-index: 2;
+  :global {
+    .ant-popover-inner {
+      border-radius: 4px;
+      .ant-popover-inner-content {
+        padding: 8px 12px;
+      }
     }
   }
 }

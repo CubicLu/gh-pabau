@@ -166,4 +166,15 @@ export const interceptors = {
       }
     }
   ),
+  injectContact: rule('injectContact')((_root, args, ctx: Context) => {
+    if (args?.data?.CmContact) {
+      args.data = {
+        ...args.data,
+        CmContact: {
+          connect: { company_id: ctx.authenticated.company },
+        },
+      }
+    }
+    return true
+  }),
 }

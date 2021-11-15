@@ -1,0 +1,23 @@
+query getCarePathways {
+  findManyPathway(orderBy: { order: asc }) {
+    id
+    pathway_name
+    description
+    order
+    _count {
+      PathwayStep
+    }
+    Steps: PathwayStep {
+      id
+      name
+      step
+      order
+    }
+  }
+}
+
+mutation updateCarePathwaysOrder($id: Int!, $order: Int) {
+  updateOnePathway(where: { id: $id }, data: { order: { set: $order } }) {
+    id
+  }
+}

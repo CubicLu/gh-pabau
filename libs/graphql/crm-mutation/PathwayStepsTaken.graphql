@@ -17,6 +17,9 @@ fragment PathwayStepsTaken on PathwayStepsTaken {
   PathwayStep {
     ...PathwayStepFields
   }
+  CmContact {
+    ...CmContactFields
+  }
 }
 
 mutation createOnePathwayStepsTaken($data: PathwayStepsTakenCreateInput!) {

@@ -1,43 +1,14 @@
 .voucherCardMain {
-  width: 100%;
-  :global {
-    .flip-card {
-      background-color: transparent;
-      perspective: 1000px;
-      border-radius: 5px;
+  &.w100,
+  .w100 {
+    width: 100%;
+  }
+  .flipCard {
+    background-color: transparent;
+    perspective: 1000px;
+    border-radius: 5px;
 
-      @media screen and (max-width: 1440px) {
-        max-width: 400px;
-      }
-      @media screen and (max-width: 1024px) {
-        max-width: 275px;
-      }
-      @media screen and (max-width: 991px) {
-        max-width: 405px;
-        max-height: 220px;
-      }
-      @media screen and (max-width: 768px) {
-        max-width: 295px;
-        max-height: 250px;
-      }
-      @media screen and (max-width: 767px) and (min-width: 560px) {
-        max-width: 350px;
-      }
-      @media screen and (max-width: 550px) {
-        max-width: 500px;
-      }
-      @media screen and (max-width: 425px) {
-        max-width: 380px;
-      }
-      @media screen and (max-width: 375px) {
-        max-width: 330px;
-      }
-      @media screen and (max-width: 320px) {
-        max-width: 280px;
-      }
-    }
-
-    .flip-card-inner {
+    .flipCardInner {
       position: relative;
       width: 100%;
       height: 100%;
@@ -45,18 +16,15 @@
       transition: transform 0.6s;
       transform-style: preserve-3d;
       border-radius: 5px;
-    }
-
-    .flip-card:hover .flip-card-inner {
       cursor: pointer;
     }
 
-    .flip-card .flip {
+    :global .flip {
       transform: rotateY(180deg);
     }
 
-    .flip-card-front,
-    .flip-card-back {
+    .flipCardFront,
+    .flipCardBack {
       position: absolute;
       width: 100%;
       height: 100%;
@@ -65,142 +33,94 @@
       border-radius: 5px;
     }
 
-    .flip-card-front {
+    .flipCardFront {
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       border-color: transparent !important;
       border-radius: 10px;
 
-      .dot1,
-      .dot2 {
+      .leftClipper,
+      .rightClipper {
         border-color: transparent !important;
       }
     }
 
-    .flip-card-back {
+    :global {
+      .valentine {
+        // background-image: url('./assets/valentine.png');
+        background-blend-mode: lighten;
+
+        h1,
+        h2,
+        p,
+        span {
+          color: #d12c28 !important;
+        }
+        button.ant-btn-default {
+          border-color: #d12c28 !important;
+        }
+      }
+
+      .birthday {
+        // background-image: url('./assets/birthday.png');
+        background-blend-mode: lighten;
+      }
+
+      .flowers {
+        // background-image: url('./assets/flowers.png');
+        background-blend-mode: lighten;
+      }
+    }
+
+    .flipCardBack {
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
       background: #ffffff !important;
       border-style: solid;
       border-width: 2px;
-      transform: rotateY(180deg);
-    }
-
-    .scene {
-      min-width: 250px;
-      min-height: 125px;
-      perspective: 1000px;
-    }
-
-    .card {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.6s;
-      border-radius: 5px;
-    }
-
-    .card:hover.is-flipped {
-      transform: rotateY(180deg);
-    }
-
-    .card__face {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 5px;
-      border-width: 2px;
-      border-style: solid;
-    }
-
-    .card__face--front {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      border-color: transparent !important;
-      border-radius: 10px;
-
-      .dot1,
-      .dot2 {
-        border-color: transparent !important;
-      }
-    }
-    .flip-card-front.valentine {
-      background-image: url('./assets/valentine.png');
-      background-blend-mode: lighten;
-
-      h1,
-      h2,
-      p,
-      span {
-        color: #d12c28 !important;
-      }
-      button.ant-btn-default {
-        border-color: #d12c28 !important;
-      }
-    }
-
-    .flip-card-front.birthday {
-      background-image: url('./assets/birthday.png');
-      background-blend-mode: lighten;
-    }
-
-    .flip-card-front.flowers {
-      background-image: url('./assets/flowers.png');
-      background-blend-mode: lighten;
-    }
-
-    .card__face--back {
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-      background: #ffffff !important;
       transform: rotateY(180deg);
     }
   }
 
-  .dots {
+  .sideClippers {
     position: absolute;
     height: 100%;
     width: 100%;
 
-    &.bg-opacity {
+    &.bgOpacity {
       background-color: rgba(0, 0, 0, 0.25);
       border-radius: 10px;
     }
 
-    :global {
-      .dotsInner {
-        position: relative;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .clippersInner {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-        .dot1,
-        .dot2 {
-          min-height: 10px;
-          min-width: 5px;
-          border-style: solid;
-          border-width: 2px;
-          background-color: #ffffff;
-        }
+      .leftClipper,
+      .rightClipper {
+        min-height: 10px;
+        min-width: 5px;
+        border-style: solid;
+        border-width: 2px;
+        background-color: #ffffff;
+      }
 
-        .dot1 {
-          border-top-right-radius: 100px;
-          border-bottom-right-radius: 100px;
-          margin-left: -1.75px;
-          border-left: none;
-        }
-        .dot2 {
-          border-top-left-radius: 100px;
-          border-bottom-left-radius: 100px;
-          margin-right: -1.5px;
-          border-right: none;
-        }
+      .leftClipper {
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
+        margin-left: -1.75px;
+        border-left: none;
+      }
+      .rightClipper {
+        border-top-left-radius: 100px;
+        border-bottom-left-radius: 100px;
+        margin-right: -1.5px;
+        border-right: none;
       }
     }
   }
@@ -302,7 +222,7 @@
     .lastRow {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: flex-end;
       position: absolute;
       bottom: 0;
       width: 100%;
@@ -320,6 +240,7 @@
             line-height: 24px;
             color: #ffffff;
             margin: 5px 0px 5px 0px;
+            text-align: left;
           }
           p {
             font-weight: 600;
@@ -368,7 +289,7 @@
     :global {
       div {
         display: flex;
-        justify-content: space-evenly;
+        justify-content: flex-start;
         align-items: center;
         flex-direction: column;
         height: 100%;
@@ -396,6 +317,64 @@
 
           &::-webkit-scrollbar {
             width: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.voucherDrawer {
+  :global {
+    .ant-drawer-content {
+      border-top-right-radius: 24px;
+      border-top-left-radius: 24px;
+
+      .ant-drawer-wrapper-body {
+        .ant-drawer-header {
+          border-bottom: none;
+          button {
+            display: none;
+          }
+          .ant-drawer-title {
+            display: flex;
+            justify-content: center;
+            > div {
+              height: 4px;
+              width: 40px;
+              background-color: #e3e3e5;
+            }
+          }
+        }
+
+        .ant-drawer-body {
+          padding: 0px 0px 10px 0px;
+
+          > div {
+            cursor: pointer;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            > span:first-child {
+              color: #9292a3;
+              font-size: 17.5px;
+            }
+            > span:last-child {
+              font-style: normal;
+              font-weight: normal;
+              font-size: 16px;
+              line-height: 20px;
+              color: #9292a3;
+              padding-left: 10px;
+            }
+            &:hover {
+              background-color: #eef7fb;
+              > span {
+                color: var(--primary-color);
+              }
+            }
           }
         }
       }

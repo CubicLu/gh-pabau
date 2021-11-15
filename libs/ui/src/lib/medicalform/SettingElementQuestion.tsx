@@ -42,6 +42,7 @@ const SettingElementQuestion: FC<P> = ({
       componentName === 'basic_shortanswer' ||
       componentName === 'basic_longanswer' ||
       componentName === 'basic_singlechoice' ||
+      componentName === 'basic_slider' ||
       componentName === 'basic_multiplechoice' ? (
         <div className={styles.defaultField}>
           <InputWithTags

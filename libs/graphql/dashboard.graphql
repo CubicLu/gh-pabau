@@ -1,44 +1,103 @@
-query getDashboardData(
-    $start_date: Decimal
-    $end_date: Decimal
-    $user_id: Int
-    $location_id: Int
-  ) {
-    dashboardData(
-      data: {
-        start_date: $start_date
-        end_date: $end_date
-        user_id: $user_id
-        location_id: $location_id
+query getFinanceDetails(
+  $start_date: Decimal,
+  $end_date: Decimal,
+  $location_id: Int,
+	$user_id: Int){
+  getFinanceDetails(data:{
+    start_date: $start_date
+    end_date: $end_date
+    location_id: $location_id
+    user_id: $user_id
+  }){
+    salesCount{
+      totalAvailableCategoryTypePer
+      totalAvailableCategoryTypeCount
+      totalAvailableCategoryTypeAmount
+      salesList{
+        label
+        count
+        per
       }
-    ){
-      bookingStatusCount{
-        totalBooking
-        totalBookingPer
-        totalOnlineBooking
-        totalOnlineBookingPer
-        appointmentList{
+    }
+    allSales {
+      salesByProductCategoryType {
+        status
+        chartDataSet {
           label
-          count
-          per
-        }
-        onlineAppointmentList{
-					label
-          count
-          per
+          value
         }
       }
-      salesCount{
-        totalAvailableCategoryTypePer
-        totalAvailableCategoryTypeCount
-        totalAvailableCategoryTypeAmount
-        salesList{
-          label
-          count
-          per
-        }
+    }
+    retailSales {
+      retailSalesDetails {
+        name
+        units
+        value
+        per
       }
-     allbooking{
+    }
+    serviceSales {
+      serviceSalesDetails {
+        name
+        units
+        value
+        per
+      }
+    }
+    otherSalesDetails {
+      newClientCount
+      avgBiller
+      RevPerhour
+    }
+  }
+}
+
+query getBookingStatusCount(
+  $start_date: Decimal,
+  $end_date: Decimal,
+  $location_id: Int,
+	$user_id: Int){
+  getBookingStatusCount(
+    data:{
+    start_date: $start_date,
+    end_date: $end_date,
+    location_id: $location_id,
+    user_id: $user_id
+    }
+  ){
+    allBookingCounts{
+      totalBooking
+      totalBookingPer
+      bookingList{
+        label
+        count
+        per
+      }
+    }
+    onlineBookingCounts{
+      totalBooking
+      totalBookingPer
+      bookingList{
+        label
+        count
+        per
+      }
+    }
+  }
+}
+
+query getBookingChartDetail(
+  $start_date: Decimal,
+  $end_date: Decimal,
+  $location_id: Int,
+	$user_id: Int){
+    getBookingChartDetail(data:{
+      start_date: $start_date,
+      end_date: $end_date,
+      location_id: $location_id,
+      user_id: $user_id
+    })
+    {
       bookingsByStatus{
         status
         chartDataSet{
@@ -47,35 +106,5 @@ query getDashboardData(
         }
       }
     }
-    allSales{
-      salesByProductCategoryType{
-        status
-        chartDataSet{
-          label
-          value
-        }
-      }
-    }
-    retailSales{
-      retailSalesDetails{
-        name
-        units
-        value
-        per
-      }
-    }
-    serviceSales{
-      serviceSalesDetails{
-        name
-        units
-        value
-        per
-      }
-    }
-    otherSalesDetails{
-      newClientCount
-      avgBiller
-      RevPerhour
-    }
   }
-}
+

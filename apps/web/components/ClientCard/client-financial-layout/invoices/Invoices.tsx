@@ -1,12 +1,10 @@
-import React, { FC, useState, useEffect, ReactNode } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, Pagination, Avatar } from '@pabau/ui'
 import classNames from 'classnames'
 import moment from 'moment'
-import {
-  ClientFinancialsLayoutProps,
-  InvoiceProp,
-} from './../ClientFinancialsLayout'
+import { InvoiceProp } from './../ClientFinancialsLayout'
+import { Formik } from 'formik'
 import { ReactComponent as CollapseIcon } from '../../../../assets/images/collapse-icon.svg'
 import styles from './Invoices.module.less'
 import {
@@ -19,45 +17,72 @@ import {
   DatePicker,
   Tag,
   Tooltip,
+  Skeleton,
 } from 'antd'
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
+import { GetFinancialInvoicesQuery, SaleItemsQuery } from '@pabau/graphql'
 import EditInvoice from './EditInvoice'
 import InvoiceFooter from './invoice-footer/InvoiceFooter'
+import dayjs from 'dayjs'
+import { useUser } from '../../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../../helper/stringToCurrencySignConverter'
 
-const getInvoiceFilterValues = () => {
-  return {
-    type: 'all',
-    employee: 'all',
-    location: 'all',
-    dateStart: '',
-    dateEnd: '',
-  }
+export interface InitialFilterValue {
+  type: string
+  employee: string
+  location: string
+  dateStart: string
+  dateEnd: string
 }
 
-interface InvoiceEmployeeOptionProp {
-  label: string
-  icon: ReactNode
-}
-
-interface LocationOptionProp {
-  key: number
-  value: string
+export interface ISalesItemProps {
+  employee: string
+  id: number
+  name: string
+  quantity: number
+  price: number
+  tax: number
+  discount: number
+  totalPrice: number
 }
 
 interface P {
-  dataProps: ClientFinancialsLayoutProps
-  invoiceEmployeeOptions: InvoiceEmployeeOptionProp[]
-  locationOptions: LocationOptionProp[]
+  invoice: GetFinancialInvoicesQuery
+  salesDetails: SaleItemsQuery
+  salesDetaillLoading: boolean
+  loading: boolean
+  invoiceEmployeeOptions: string[]
+  locationOptions: string[]
+  onChangePagination?(take: number, skip: number): void
+  onExpand?(id: string): void
+  onFilterSubmit?(
+    type: string,
+    employee: string,
+    location: string,
+    dateStart: string,
+    dateEnd: string
+  ): void
+  totalInvoiceCount: number
 }
 
 export const Invoices: FC<P> = (props) => {
-  const { dataProps, invoiceEmployeeOptions, locationOptions } = props
-  const { totalInvoiced, totalOutstanding } = dataProps
-  const [invoices, setInvoices] = useState(dataProps.invoices)
+  const {
+    invoice,
+    salesDetails,
+    salesDetaillLoading,
+    loading,
+    totalInvoiceCount,
+    invoiceEmployeeOptions = [],
+    locationOptions = [],
+    onChangePagination,
+    onFilterSubmit,
+    onExpand,
+  } = props
+  const [invoices, setInvoices] = useState(invoice?.invoices)
   const { Text, Title } = Typography
   const { Option } = Select
+  const user = useUser()
   const { RangePicker } = DatePicker
-  const [isLoading] = useState(false)
   const { t } = useTranslation('common')
   const [expandedRow, setExpandedRow] = useState(0)
   const [showEditInvoice, setShowEditInvoice] = useState(false)
@@ -65,58 +90,137 @@ export const Invoices: FC<P> = (props) => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
-  const [invoiceFilter, setInvoiceFilter] = useState(getInvoiceFilterValues())
+  const [totalOutstanding, setTotalOutstanding] = useState(0)
+  const [totalInvoiced, setTotalInvoiced] = useState(0)
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [isClear, setIsClear] = useState(true)
+  const [saleItems, setSaleItem] = useState<ISalesItemProps[]>()
+  const [totalVat, setTotalVat] = useState(0)
+  const [expansionKey, setExpansionKey] = useState('')
 
-  const updateInvoiceFilter = (e) => {
-    let tempInvoices = dataProps.invoices
-
-    if (e.type !== 'all' && e.type !== '') {
-      tempInvoices = tempInvoices.filter((i) => i.status === e.type)
-    }
-
-    if (e.employee !== 'all' && e.employee !== '') {
-      tempInvoices = tempInvoices.filter((i) => i.employee === e.employee)
-    }
-
-    if (e.location !== 'all' && e.location !== '') {
-      tempInvoices = tempInvoices.filter((i) => i.location === e.location)
-    }
-
-    if (e.dateStart) {
-      tempInvoices = tempInvoices.filter((i) => {
-        const invDate = moment(i.date, 'DD/MM/YYYY')
-        const startDate = e.dateStart
-        const endDate = e.dateEnd
-        return invDate.isBetween(startDate, endDate)
+  useEffect(() => {
+    const invoicesDetails = []
+    const expandedInvoice = invoice?.invoices?.filter(
+      (item) => item.guid === expansionKey
+    )
+    invoice?.invoices?.map((item) => {
+      const discount = expandedInvoice[0]?.discount_amount
+      const inv_total = expandedInvoice[0]?.inv_total
+      invoicesDetails.push({
+        id: `${item.id}`,
+        date: dayjs(`${item.date}`).format(
+          user?.me?.companyDateFormat === 'd/m/Y' ? 'DD/MM/YYYY' : 'MM/DD/YYYY'
+        ),
+        location: item.location_name,
+        employee: item.billers,
+        issuedTo: item.issue_to,
+        paid: item.paid_amount === item.inv_total ? true : false,
+        items: saleItems,
+        totalVat: totalVat,
+        amountPaid: expandedInvoice[0]?.paid_amount,
+        subtotal: discount !== 0 ? inv_total + discount : inv_total,
+        // tips: expandedInvoice[0]?.tip, TODO: still not implemented tips
+        tips: 0,
+        grandTotal: item.inv_total,
+        guid: item.guid,
       })
-    }
+      return invoicesDetails
+    })
+    setInvoices(invoicesDetails)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoice, saleItems, totalVat])
 
-    setInvoices(tempInvoices)
-    setInvoiceFilter(e)
-  }
+  useEffect(() => {
+    const items: ISalesItemProps[] = []
+    let total_vat = 0
+    salesDetails?.items?.map((item, index) => {
+      items.push({
+        employee: '',
+        id: index,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.unit_price + item.discount,
+        tax: item.tax_total,
+        discount: item.UnitDiscount,
+        totalPrice:
+          item.quantity *
+          (item.unit_price - item.UnitDiscount + item.tax_total),
+      })
+      const unit_price = item.quantity * item.unit_price - item.discount
+      const vat_multiplier = item.Tax?.rate / 100 + 1
+      const vat_value =
+        item.quantity > 1
+          ? unit_price - unit_price / vat_multiplier
+          : item.tax_total
+      total_vat += vat_value
+      return items
+    })
+    setTotalVat(Number.isFinite(total_vat) ? total_vat : 0)
+    setSaleItem(items)
+  }, [salesDetails])
+
+  useEffect(() => {
+    const expandedInvoice = invoice?.invoices?.filter(
+      (item) => item.guid === expansionKey
+    )
+    const sumTotalInv = 0
+    const sumTotalPaidInv = 0
+    const totalInvoice = invoice?.invoices
+      ?.map((item) => sumTotalInv + item.inv_total)
+      .reduce((a, b) => {
+        return a + b
+      }, 0)
+
+    const totalPaid = invoice?.invoices
+      ?.map((item) => sumTotalPaidInv + item.paid_amount)
+      .reduce((a, b) => {
+        return a + b
+      }, 0)
+    const outstanding = totalInvoice - totalPaid
+    setTotalOutstanding(outstanding)
+    setTotalInvoiced(
+      salesDetails
+        ? expandedInvoice[0]?.inv_total
+        : invoice?.invoices[0]?.inv_total ?? 0
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salesDetails, invoice])
+  useEffect(() => {
+    setPaginateData({
+      ...paginateData,
+      total: totalInvoiceCount,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalInvoiceCount])
 
   useEffect(() => {
     if (invoices) {
       setPaginateData((d) => ({
         ...d,
-        total: invoices?.length,
+        total: totalInvoiceCount,
         showingRecords: invoices?.length,
       }))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoices])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
     setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+    onChangePagination?.(paginateData.limit, offset)
   }
 
   const onPressEditInvoice = (invoice) => {
     setShowEditInvoice(true)
     setSelectedInvoice(invoice)
+  }
+
+  const handleFilterMenu = () => {
+    setFilterOpen(!filterOpen)
   }
 
   const columns = [
@@ -168,14 +272,14 @@ export const Invoices: FC<P> = (props) => {
             ) : (
               <Tag color="red">{t('ui.client-card-financial.unpaid')}</Tag>
             )}
-            {invoices[0].id === row.id && (
+            {invoices[0]?.id === row.id && (
               <div className={styles.shareIcon}>
                 <Tooltip
                   trigger={'click'}
                   arrowPointAtCenter
                   title={
                     <div>
-                      <p style={{ margin: 5 }}>
+                      <p className={styles.shareTootip}>
                         {t('ui.client-card-financial.shared-with')}
                       </p>
                       {[row.employee].map((x, index) => {
@@ -204,11 +308,15 @@ export const Invoices: FC<P> = (props) => {
       render: function renderItem(value, row) {
         return (
           <div className={styles.collapseIconContainer}>
-            <span>£{value.toFixed(2)}</span>
+            <span>
+              {stringToCurrencySignConverter(user.me?.currency)}
+              {(value ?? 0).toFixed(2)}
+            </span>
             <span
               onClick={() => {
+                setExpansionKey(row['guid'])
+                onExpand?.(row['guid'])
                 if (expandedRow === row['key']) return setExpandedRow(0)
-
                 setExpandedRow(row['key'])
               }}
             >
@@ -228,59 +336,192 @@ export const Invoices: FC<P> = (props) => {
   ]
 
   const expandedRowRender = (record) => {
+    const payBtnValue = record.grandTotal - record.amountPaid
     return (
       <div className={styles.rowExpand}>
-        <div className={styles.items}>
-          {record.items.map((item, i) => (
-            <div className={styles.item} key={i}>
+        {!salesDetaillLoading ? (
+          <div className={styles.items}>
+            {record?.items?.map((item, i) => (
+              <div className={styles.item} key={i}>
+                <div>
+                  <Text>{item.name}</Text>
+                </div>
+                <div>
+                  <Text>{item.quantity}</Text>
+                </div>
+                <div>
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(item.quantity * item.price).toFixed(2)}
+                  </Text>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.items}>
+            <div className={styles.item}>
               <div>
-                <Text>{item.name}</Text>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.columnSkeleton}
+                />
               </div>
               <div>
-                <Text>{item.quantity}</Text>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.valueSkeleton}
+                />
               </div>
               <div>
-                <Text>£{(item.quantity * item.price).toFixed(2)}</Text>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.columnSkeleton}
+                />
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
         <div className={styles.content}>
           <div className={styles.left}>
             <div className={styles.left}>
               <div>
-                <Title level={5}>
-                  {t('ui.client-card-financial.total-vat')}
-                </Title>
-                <Text>£{record.totalVat.toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.total-vat')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.totalVat ?? 0).toFixed(2)}
+                  </Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
               <div>
-                <Title level={5}>
-                  {t('ui.client-card-financial.sub-total-amount')}
-                </Title>
-                <Text>£{record.grandTotal.toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.sub-total-amount')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.grandTotal ?? 0).toFixed(2)}
+                  </Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
             </div>
             <div className={styles.right}>
               <div>
-                <Title level={5}>
-                  {t('ui.client-card-financial.amount-paid')}
-                </Title>
-                <Text>£{record.amountPaid.toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.amount-paid')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.amountPaid ?? 0).toFixed(2)}
+                  </Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
               <div>
-                <Title level={5}>{t('ui.client-card-financial.tips')}</Title>
-                <Text>£{record.tips.toFixed(2)}</Text>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>{t('ui.client-card-financial.tips')}</Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Text>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {(record?.tips ?? 0).toFixed(2)}
+                  </Text>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalSkeleton}
+                  />
+                )}
               </div>
             </div>
           </div>
           <div className={styles.right}>
-            <Title level={5}>{t('ui.client-card-financial.grand-total')}</Title>
-            <Title level={4}>£{record.grandTotal.toFixed(2)}</Title>
+            {!salesDetaillLoading ? (
+              <Title level={5}>
+                {t('ui.client-card-financial.grand-total')}
+              </Title>
+            ) : (
+              <Skeleton.Input
+                active={true}
+                size="default"
+                className={styles.grandTotalSkeleton}
+              />
+            )}
+            {!salesDetaillLoading ? (
+              <Title level={4}>
+                {stringToCurrencySignConverter(user.me?.currency)}
+                {record?.grandTotal.toFixed(2)}
+              </Title>
+            ) : (
+              <Skeleton.Input
+                active={true}
+                size="small"
+                className={styles.totalValueSkeleton}
+              />
+            )}
             {!record.paid && (
-              <Button onClick={() => console.log('Pay')} type="primary">{`${t(
+              <Button type="primary">{`${t(
                 'ui.client-card-financial.pay'
-              )} £${record.grandTotal.toFixed(2)}`}</Button>
+              )} ${stringToCurrencySignConverter(
+                user.me?.currency
+              )}${(Number.isFinite(payBtnValue) ? payBtnValue : 0).toFixed(
+                2
+              )}`}</Button>
             )}
           </div>
         </div>
@@ -290,96 +531,134 @@ export const Invoices: FC<P> = (props) => {
 
   const filterContent = () => {
     return (
-      <div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.invoices')}</Text>
-          <div>
-            <Radio.Group
-              onChange={(e) =>
-                updateInvoiceFilter({ ...invoiceFilter, type: e.target.value })
-              }
-              value={invoiceFilter.type}
-            >
-              <Space direction="vertical">
-                <Radio value={'all'}>
-                  {t('ui.client-card-financial.invoices.all')}
-                </Radio>
-                <Radio value={'outstanding_invoices'}>
-                  {t('ui.client-card-financial.invoices.outstanding-invoices')}
-                </Radio>
-                <Radio value={'paid_invoice'}>
-                  {t('ui.client-card-financial.invoices.paid-invoice')}
-                </Radio>
-                <Radio value={'unsent_invoices'}>
-                  {t('ui.client-card-financial.invoices.unsent-invoices')}
-                </Radio>
-                <Radio value={'sent_invoices'}>
-                  {t('ui.client-card-financial.invoices.sent-invoices')}
-                </Radio>
-              </Space>
-            </Radio.Group>
-          </div>
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.employee')}</Text>
-          <Select
-            style={{ width: '100%' }}
-            onChange={(e) =>
-              updateInvoiceFilter({ ...invoiceFilter, employee: e })
-            }
-            defaultValue={invoiceFilter.employee}
-          >
-            <Option value="all">
-              {t('ui.client-card-financial.invoices.all')}
-            </Option>
-            {invoiceEmployeeOptions.map((e, i) => {
-              return (
-                <Option value={e.label} key={i}>
-                  {e.label}
-                </Option>
-              )
-            })}
-          </Select>
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.location')}</Text>
-          <Select
-            style={{ width: '100%' }}
-            onChange={(e) =>
-              updateInvoiceFilter({ ...invoiceFilter, location: e })
-            }
-            defaultValue={invoiceFilter.location}
-          >
-            <Option value="all">
-              {t('ui.client-card-financial.invoices.all')}
-            </Option>
-            {locationOptions.map((e, i) => {
-              return (
-                <Option value={e.value} key={i}>
-                  {e.value}
-                </Option>
-              )
-            })}
-          </Select>
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Text>{t('ui.client-card-financial.invoices.date')}</Text>
-          <RangePicker
-            onChange={(e) =>
-              updateInvoiceFilter({
-                ...invoiceFilter,
-                dateStart: e[0],
-                dateEnd: e[1],
-              })
-            }
-          />
-        </div>
-        <div className={styles.invoicesFilCont}>
-          <Button onClick={() => updateInvoiceFilter(getInvoiceFilterValues())}>
-            {t('ui.client-card-financial.invoices.clear-all')}
-          </Button>
-        </div>
-      </div>
+      <Formik
+        initialValues={{
+          type: 'all',
+          employee: 'all',
+          location: 'all',
+          dateStart: '',
+          dateEnd: '',
+        }}
+        enableReinitialize={true}
+        onSubmit={(values) => {
+          setFilterOpen(false)
+          onFilterSubmit?.(
+            values.type,
+            values.employee,
+            values.location,
+            values.dateStart,
+            values.dateEnd
+          )
+        }}
+      >
+        {({ setFieldValue, values, resetForm, submitForm }) => {
+          return (
+            <div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.invoices')}</Text>
+                <div>
+                  <Radio.Group
+                    value={values.type}
+                    onChange={(e) => setFieldValue('type', e.target.value)}
+                  >
+                    <Space direction="vertical">
+                      <Radio value={'all'}>
+                        {t('ui.client-card-financial.invoices.all')}
+                      </Radio>
+                      <Radio value={'outstanding_invoices'}>
+                        {t(
+                          'ui.client-card-financial.invoices.outstanding-invoices'
+                        )}
+                      </Radio>
+                      <Radio value={'paid'}>
+                        {t('ui.client-card-financial.invoices.paid-invoice')}
+                      </Radio>
+                      <Radio value={'unsent_invoices'}>
+                        {t('ui.client-card-financial.invoices.unsent-invoices')}
+                      </Radio>
+                      <Radio value={'sent_invoices'}>
+                        {t('ui.client-card-financial.invoices.sent-invoices')}
+                      </Radio>
+                    </Space>
+                  </Radio.Group>
+                </div>
+              </div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.employee')}</Text>
+                <Select
+                  className={styles.invoiceFilter}
+                  onChange={(e) => setFieldValue('employee', e)}
+                  value={values.employee}
+                >
+                  <Option value="all">
+                    {t('ui.client-card-financial.invoices.all')}
+                  </Option>
+                  {invoiceEmployeeOptions.map((e, i) => {
+                    return (
+                      <Option value={e} key={i}>
+                        {e}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.location')}</Text>
+                <Select
+                  className={styles.invoiceFilter}
+                  onChange={(e) => setFieldValue('location', e)}
+                  value={values.location}
+                >
+                  <Option value="all">
+                    {t('ui.client-card-financial.invoices.all')}
+                  </Option>
+                  {locationOptions.map((e, i) => {
+                    return (
+                      <Option value={e} key={i}>
+                        {e}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </div>
+              <div className={styles.invoicesFilCont}>
+                <Text>{t('ui.client-card-financial.invoices.date')}</Text>
+                <RangePicker
+                  onChange={(e) => {
+                    setIsClear(false)
+                    setFieldValue('dateStart', e[0] ?? null)
+                    setFieldValue('dateEnd', e[1] ?? null)
+                  }}
+                  allowClear
+                  value={
+                    isClear
+                      ? null
+                      : [moment(values.dateStart), moment(values.dateEnd)]
+                  }
+                />
+              </div>
+              <div className={styles.buttons}>
+                <Button
+                  onClick={() => {
+                    setIsClear(true)
+                    resetForm()
+                  }}
+                >
+                  {t('ui.client-card-financial.invoices.clear-all')}
+                </Button>
+                <Button
+                  htmlType="submit"
+                  className={styles.applyButton}
+                  type={'primary'}
+                  onClick={() => submitForm()}
+                >
+                  {t('ui.client-card-financial.invoices.apply')}
+                </Button>
+              </div>
+            </div>
+          )
+        }}
+      </Formik>
     )
   }
 
@@ -393,56 +672,164 @@ export const Invoices: FC<P> = (props) => {
       )}
       <div className={styles.invoices}>
         <div className={styles.filterRow}>
-          <Popover
-            content={filterContent}
-            title={t('ui.client-card-financial.invoices.filter-by')}
-            placement="bottomRight"
-            overlayClassName={styles.invoicesFilter}
-          >
-            <div className={styles.filter}>
-              <FilterOutlined />
-            </div>
-          </Popover>
+          {!loading && invoice ? (
+            <Popover
+              content={filterContent}
+              title={t('ui.client-card-financial.invoices.filter-by')}
+              placement="bottomRight"
+              overlayClassName={styles.invoicesFilter}
+              visible={filterOpen}
+            >
+              <div className={styles.filter} onClick={handleFilterMenu}>
+                <FilterOutlined />
+              </div>
+            </Popover>
+          ) : (
+            <Skeleton.Input
+              active={true}
+              size="default"
+              className={styles.filterSkeleton}
+            />
+          )}
         </div>
-        <Table
-          loading={isLoading}
-          draggable={false}
-          scroll={{ x: true }}
-          dataSource={invoices?.map((e: { id }) => ({
-            key: e.id,
-            ...e,
-          }))}
-          columns={columns}
-          noDataText={t('ui.client-card-financial.invoices')}
-          expandedRowRender={expandedRowRender}
-          expandedRowKeys={[expandedRow]}
-          expandIcon={() => <span></span>}
-        />
-        <div className={styles.pagination}>
-          <Pagination
-            total={paginateData.total}
-            defaultPageSize={10}
-            showSizeChanger={false}
-            onChange={onPaginationChange}
-            pageSize={paginateData.limit}
-            current={paginateData.currentPage}
-            showingRecords={paginateData.showingRecords}
+        {!loading && invoice ? (
+          <Table
+            draggable={false}
+            scroll={{ x: true }}
+            dataSource={invoices?.map((e: { id }) => ({
+              key: e.id,
+              ...e,
+            }))}
+            columns={columns}
+            noDataText={t('ui.client-card-financial.invoices')}
+            expandedRowRender={expandedRowRender}
+            expandedRowKeys={[expandedRow]}
+            expandIcon={() => <span></span>}
           />
-        </div>
-
-        <InvoiceFooter
-          buttons={[
-            {
-              text: t('ui.client-card-financial.outstanding'),
-              value: totalOutstanding,
-              valueColor: '#FF5B64',
-            },
-            {
-              text: t('ui.client-card-financial.total-invoiced'),
-              value: totalInvoiced,
-            },
-          ]}
-        />
+        ) : (
+          <Table
+            rowKey="key"
+            pagination={false}
+            dataSource={[...Array.from({ length: 6 })].map((_, index) => (
+              <div key={index}>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.columnSkeleton}
+                />
+              </div>
+            ))}
+            columns={columns.map((column) => {
+              return {
+                ...column,
+                render: function renderPlaceholder() {
+                  switch (column.dataIndex) {
+                    case 'id':
+                      return (
+                        <span className={styles.invoiceNo}>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idSkeleton}
+                            />
+                          </span>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idValueSkeleton}
+                            />
+                          </span>
+                        </span>
+                      )
+                    case 'location':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.locationSkeleton}
+                        />
+                      )
+                    case 'employee':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'issuedTo':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'paid':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'grandTotal':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                  }
+                },
+              }
+            })}
+          />
+        )}
+        {!loading && invoice && (
+          <>
+            <div className={styles.pagination}>
+              <Pagination
+                total={paginateData.total}
+                defaultPageSize={50}
+                pageSizeOptions={['10', '25', '50', '100']}
+                showSizeChanger={false}
+                onChange={onPaginationChange}
+                pageSize={paginateData.limit}
+                current={paginateData.currentPage}
+                showingRecords={paginateData.showingRecords}
+                onPageSizeChange={(pageSize) => {
+                  const offset =
+                    paginateData.limit * (paginateData.currentPage - 1)
+                  setPaginateData({
+                    ...paginateData,
+                    offset,
+                    currentPage: paginateData.currentPage,
+                    limit: pageSize,
+                  })
+                  onChangePagination?.(pageSize, offset)
+                }}
+              />
+            </div>
+            <InvoiceFooter
+              buttons={[
+                {
+                  text: t('ui.client-card-financial.outstanding'),
+                  value: totalOutstanding,
+                  valueColor: '#FF5B64',
+                },
+                {
+                  text: t('ui.client-card-financial.total-invoiced'),
+                  value: totalInvoiced,
+                },
+              ]}
+              loading={salesDetaillLoading}
+            />
+          </>
+        )}
       </div>
     </>
   )

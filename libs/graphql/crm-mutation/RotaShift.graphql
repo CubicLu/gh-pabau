@@ -25,6 +25,7 @@ fragment RotaShiftFields on RotaShift {
   tag_name
   room_id
   force_created
+  allowed_services
 }
 
 fragment RotaShift on RotaShift {

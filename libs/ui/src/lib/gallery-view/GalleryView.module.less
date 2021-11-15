@@ -1,6 +1,6 @@
 .headerText {
   padding: 0 0 24px 0;
-  margin-bottom: 24px;
+  margin-bottom: 0px;
   border-bottom: 1px solid #ecedf0;
   display: flex;
   justify-content: space-between;
@@ -27,21 +27,74 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    @media screen and (max-width: 479px) {
-      button:first-child {
-        padding: unset;
+
+    .filterButton {
+      border: none;
+      padding: 0px;
+    }
+
+    .downloadBtn {
+      margin: 0px;
+    }
+
+    .albumDropdownBtn {
+      :global {
+        .ant-dropdown {
+          padding: 4px 0px;
+          min-width: 200px !important;
+
+          ul {
+            width: 100%;
+            border: 1px solid #f0f0f0;
+            box-shadow: 3px 3px 10px #f0f0f0;
+          }
+
+          .ant-menu-item {
+            display: flex;
+            align-items: center;
+            margin: 0px !important;
+            padding: 0px !important;
+            line-height: 0px;
+
+            > span {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              padding: 0px 10px !important;
+              > svg,
+              > span {
+                width: 10% !important;
+                line-height: 0px;
+                margin: 0px;
+              }
+
+              > div {
+                width: 90% !important;
+                padding-left: 4px;
+              }
+            }
+
+            &:hover {
+              background-color: #88d2ec29;
+              path {
+                fill: var(--primary-color);
+              }
+            }
+          }
+        }
       }
     }
+
     button {
       margin: 0px 10px;
       @media screen and (max-width: 479px) {
         margin: 0px 8px;
       }
     }
-    .viewContainer{
+    .viewContainer {
       display: flex;
       flex-wrap: wrap;
-      .viewItem{
+      .viewItem {
         margin: 5px;
         cursor: pointer;
         svg {
@@ -79,17 +132,34 @@
       background: #54b2d3;
       border: none;
       border-radius: 4px;
-      padding: 2px 7px;
+      padding: 4px 7px;
+      height: fit-content;
       font-size: 14px;
       line-height: 22px;
       color: #fff;
       cursor: pointer;
-    }
-    .create-content {
-      padding: 10px !important;
-      .content-item {
-        padding: 5px !important;
+      :global {
+        .ant-popover-inner-content {
+          padding: 10px 0px;
+          width: fit-content;
+          min-width: 170px;
+        }
       }
+    }
+  }
+}
+.create-content {
+  padding: 10px;
+  .content-item {
+    cursor: pointer;
+    padding: 5px !important;
+
+    > span {
+      margin-right: 5px;
+    }
+
+    &:hover {
+      background-color: #eeeeee;
     }
   }
 }
@@ -109,16 +179,23 @@
   }
 }
 
+.displayNone {
+  display: none !important;
+}
+
 .galleryImgBox {
   display: flex;
   //flex-wrap: wrap;
   overflow: auto;
   margin-bottom: 20px;
+  height: 100%;
+  width: 100%;
+
   .galleryWrap {
-    display: contents;
-    justify-content: center;
-    flex-direction: row;
-    align-items: center;
+    // display: contents;
+    // justify-content: center;
+    // flex-direction: row;
+    // align-items: center;
     position: relative;
     //flex-wrap: wrap;
     :global {
@@ -150,124 +227,142 @@
     }
     .check-wrapper {
       position: absolute;
-      right: 25px;
-      top: 10px;
-      visibility: visible;
-      svg {
-        fill: #000000a6;
-      }
-    }
-    &:hover {
-      .check-wrapper {
-        position: absolute;
-        right: 25px;
-        top: 10px;
-        visibility: visible;
-        svg {
-          fill: #000000a6;
-        }
-      }
-    }
-    .albumContainer{
-    position: relative;
-    margin: 0 12px 0 12px;
-    .check-wrapper {
-      position: absolute;
-      right: 25px;
+      right: 15px;
       top: 10px;
       z-index: 1;
       visibility: hidden;
       svg {
         fill: #000000a6;
       }
-      .dotBtn {
-        cursor: pointer;
-        padding: 3px 10px 0 10px;
-        background-color: white;
-        border-radius: 50%;
-        height: 100%;
-        width: 100%;
-      }
     }
-    &:hover {
+    &:hover .check-wrapper {
+      visibility: visible;
+    }
+
+    .albumContainer {
+      position: relative;
+      margin: 0 12px 0 12px;
       .check-wrapper {
-        position: absolute;
-        right: 25px;
-        top: 10px;
-        visibility: visible;
-        svg {
-          fill: #000000a6;
+        visibility: hidden;
+        .dotBtn {
+          cursor: pointer;
+          padding: 3px 11px 0 11px;
+          box-shadow: 3px 3px 5px lightgray;
+          background-color: white;
+          border-radius: 50%;
+          height: 100%;
+          width: 100%;
         }
       }
-    }
-    .grid-container {
-      display: grid;
-      grid-row-gap: 2px;
-      grid-template-columns: auto auto;
-      border: 1px solid transparent;
-      cursor: pointer;
-      position: relative;
-      &:hover {
-        border: 1px solid deepskyblue;
-        border-radius: 6px;
-        .check-wrapper {
-          position: absolute;
-          right: 25px;
-          top: 10px;
-          visibility: visible;
-          svg {
-            fill: #000000a6;
+      &:hover .check-wrapper {
+        visibility: visible;
+      }
+      .grid-container {
+        display: grid;
+        grid-row-gap: 2px;
+        grid-template-columns: auto auto;
+        border: 1px solid transparent;
+        cursor: pointer;
+        position: relative;
+        height: 145px;
+        width: 145px;
+
+        &:hover {
+          border: 1px solid deepskyblue;
+          border-radius: 6px;
+          .check-wrapper {
+            visibility: visible;
+            svg {
+              fill: #000000a6;
+            }
           }
         }
+        .check-wrapper {
+          visibility: hidden;
+        }
+        .grid-item {
+          width: 70px;
+          max-width: 100%;
+          height: 70px;
+          object-fit: cover;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid lightgray;
+          //padding: 2px;
+          &:first-child {
+            border-radius: 6px 0 0 0;
+          }
+          &:nth-child(2) {
+            border-radius: 0 6px 0 0;
+          }
+          &:nth-child(3) {
+            border-radius: 0 0 0 6px;
+          }
+          &:nth-child(4) {
+            border-radius: 0 0 6px 0;
+          }
+
+          :global {
+            .ant-skeleton-image {
+              width: 55px;
+              height: 55px;
+
+              svg {
+                width: 30px;
+                height: 30px;
+              }
+            }
+          }
+          @media only screen and (min-width: 360px) and (max-width: 420px) {
+            width: 69px;
+          }
+        }
+        .blankAlbum {
+          height: 145px;
+          width: 141.5px;
+          border-radius: 4px;
+          border: 1px solid lightgray;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          :global .ant-skeleton-image {
+            width: 115px;
+            height: 120px;
+          }
+        }
+        h2 {
+          font-size: 14px;
+          line-height: 18px;
+          color: #3d3d46;
+        }
       }
-      .check-wrapper {
+      .dropable {
         position: absolute;
-        right: 25px;
-        top: 10px;
-        visibility: hidden;
-        svg {
-          fill: #000000a6;
-        }
+        background-color: transparent;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        border-radius: 6px;
+        cursor: pointer;
       }
-      .grid-item {
-        width: 70px;
-        max-width: 100%;
-        height: 70px;
-        object-fit: cover;
-        //padding: 2px;
-        &:first-child {
-          border-radius: 6px 0 0 0;
-        }
-        &:nth-child(2) {
-          border-radius: 0 6px 0 0;
-        }
-        &:nth-child(3) {
-          border-radius: 0 0 0 6px;
-        }
-        &:nth-child(4) {
-          border-radius: 0 0 6px 0;
-        }
-        @media only screen and (min-width: 360px) and (max-width: 420px) {
-          width: 69px;
-        }
+      :global .dropEffect {
+        background-color: rgba(135, 206, 235, 0.29);
       }
-      .blankAlbum {
-        height: 145px;
-        width: 140px;
-        border-radius: 4px;
-        background-color: #f4f4f4;
-      }
-      h2 {
-        font-size: 14px;
-        line-height: 18px;
-        color: #3d3d46;
-      }
-    }
     }
     .albumInfo {
       text-align: center;
+      padding-top: 5px;
       .albumTitle {
-        font-size: 16px;
+        font-size: 14px;
+        color: var(--grey-text-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
         margin: 0;
       }
       .albumCount {
@@ -275,108 +370,234 @@
       }
     }
   }
+
+  .albumImagesDiv {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    > div {
+      min-width: 170px;
+      margin-top: 24px;
+    }
+  }
 }
 .boxItem {
   display: flex;
 }
+
+.dotBtnAlbumDropdown {
+  height: 260px;
+  min-width: 250px;
+  overflow: auto;
+
+  @media screen and (max-width: 767px) {
+    height: 239px;
+  }
+
+  > span {
+    font-size: 12px;
+    cursor: pointer;
+    padding-bottom: 6px;
+    display: flex;
+    justify-content: flex-end;
+    svg {
+      fill: gray;
+    }
+  }
+
+  > ul {
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    > li {
+      display: flex;
+      align-items: center;
+      margin: 0px !important;
+      padding: 0px !important;
+
+      > span {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        height: 40px;
+        padding: 0px 10px !important;
+        > svg,
+        > span {
+          width: 10% !important;
+          margin: 0px;
+        }
+
+        > div {
+          width: 90% !important;
+          padding-left: 4px;
+        }
+      }
+
+      &:hover {
+        background-color: #88d2ec29;
+        path {
+          fill: var(--primary-color);
+        }
+      }
+    }
+  }
+}
 .galleryAlbumImage {
   display: flex;
   flex-wrap: wrap;
-  border-top: 1px solid #ecedf0;
   padding-top: 20px;
-  margin: 0 14px 14px 14px;
+  margin: 0px 14px 14px 14px !important;
   @media only screen and (max-width: 767px) {
     margin: 0 11px 0 11px;
-    max-width: 414px;
+    max-width: 100%;
   }
   :global {
     .ant-checkbox-wrapper {
-      @media only screen and (max-width: 767px) {
-        width: unset;
-      }
       span {
         padding: unset;
       }
       position: relative;
-      margin-left: 0;
       .ant-checkbox {
-        @media only screen and (max-width: 767px) {
-          top: 10px;
-          left: 15px;
-          padding: unset;
-        }
-        top: 19px;
-        left: 10px;
+        top: 5px;
+        left: 3px;
         position: absolute;
         z-index: 2;
-        display: none;
-      }
-      &:hover .ant-checkbox {
-        display: block;
-      }
-      .showCheck {
-        display: block;
       }
     }
   }
-  .checked {
-    :global {
-      .ant-checkbox {
-        display: block;
-      }
-    }
-  }
+
   .image-preview {
+    height: fit-content;
+    margin-right: 15px;
+    margin-bottom: 15px;
+
     @media only screen and (max-width: 767px) {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    @media only screen and (max-width: 425px) {
+      margin-right: 5px;
       margin-bottom: 5px;
     }
     position: relative;
     .check-wrappers {
-      @media only screen and (max-width: 767px) {
-        top: 5px !important;
-        right: 10px !important;
-      }
+      cursor: pointer;
       position: absolute;
-      right: 15px;
-      top: 15px;
-      visibility: hidden;
+      width: fit-content;
+      top: 0;
+      padding: 10px;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
       svg {
         fill: #000000a6;
       }
-      .imageDotButton {
-        color: red;
-        background-color: red;
-      }
+
       .dotBtn {
-        padding: 3px 10px 0 10px;
+        padding: 3px 11px 0 11px;
         background-color: white;
         border-radius: 50%;
         height: 100%;
-        width: 100%;
+      }
+
+      &:first-child {
+        left: 0;
+      }
+      &:last-child {
+        right: 0;
+      }
+
+      @media screen and (max-width: 375px) {
+        padding: 5px;
+
+        &:last-child {
+          button {
+            height: 24px;
+            width: 24px;
+            vertical-align: -0.05em;
+          }
+        }
       }
     }
     &:hover {
+      .imageAlbum {
+        background-color: #000000;
+        border-radius: 5px;
+        img {
+          opacity: 0.65;
+          cursor: zoom-in;
+        }
+
+        > span {
+          display: block;
+        }
+      }
+
       .check-wrappers {
+        cursor: pointer;
         position: absolute;
-        right: 15px;
-        top: 12px;
-        visibility: visible;
+        display: flex;
         svg {
           fill: #000000a6;
         }
       }
     }
+    &.showCheck {
+      .check-wrappers {
+        display: flex;
+      }
+    }
   }
   .imageAlbum {
-    width: 130px;
-    height: 130px;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    width: 182px;
+    height: 182px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eeeeee;
+    position: relative;
+
+    > span {
+      display: none;
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      background: #ffffff;
+      border: 1px solid #ffffff;
+      box-sizing: border-box;
+      border-radius: 2px;
+      padding: 2px 8px;
+      font-size: 12px;
+    }
+
+    :global .ant-skeleton-image {
+      width: 162px;
+      height: 162px;
+    }
     cursor: pointer;
     @media only screen and (max-width: 767px) {
-      width: 90px;
-      height: 90px;
-      margin: 0 4px 8px 4px;
+      width: 112px;
+      height: 112px;
+      margin: 0px;
+
+      :global .ant-skeleton-image {
+        width: 96px;
+        height: 96px;
+      }
+    }
+    @media screen and (max-width: 425px) {
+      width: 88px;
+      height: 88px;
+
+      :global .ant-skeleton-image {
+        width: 76px;
+        height: 76px;
+      }
+    }
+    @media screen and (max-width: 375px) {
+      width: 75px;
+      height: 75px;
     }
     img {
       width: 100%;
@@ -384,10 +605,6 @@
       border-radius: 4px;
     }
     .sensitive-class {
-      @media only screen and (max-width: 767px) {
-        width: 90px;
-        height: 90px;
-      }
       display: flex;
       flex-direction: column;
       font-size: 14px;
@@ -399,10 +616,11 @@
       transform: translate(-50%, -50%);
       align-items: center;
       justify-content: center;
-      width: 130px;
-      height: 130px;
+      width: 100%;
+      height: 100%;
       z-index: 10;
       background-color: rgba(0, 0, 0, 0.9);
+      border-radius: 4px;
       :global {
         .anticon {
           margin-bottom: 8px;
@@ -418,7 +636,7 @@
   border-top: 1px solid #ecedf0;
   padding-top: 9px;
   margin: 0 14px 14px 14px;
-  .photoLabel{
+  .photoLabel {
     width: 100%;
     margin-bottom: 12px;
   }
@@ -426,19 +644,15 @@
     margin: 0 11px 0 11px;
   }
   .imageAlbum {
-    width: 130px;
-    height: 130px;
     margin-right: 5px;
     margin-bottom: 5px;
     cursor: pointer;
     position: relative;
     @media only screen and (max-width: 767px) {
-      width: 90px;
-      height: 90px;
       margin: 0 2px 4px 2px;
     }
 
-    .shareIcon{
+    .shareIcon {
       background-color: #fff;
       padding: 0;
       position: absolute;
@@ -452,25 +666,24 @@
       width: 28px;
       height: 28px;
       flex-direction: row;
-
     }
-.imageAlbumIcon{
-  background-color: #40A0C1;
-  padding: 0;
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  flex-direction: row;
-}
-    .imageAlbumIconClock{
-      background-color: #40A0C1;
+    .imageAlbumIcon {
+      background-color: #40a0c1;
+      padding: 0;
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      flex-direction: row;
+    }
+    .imageAlbumIconClock {
+      background-color: #40a0c1;
       padding: 0px 6px 0px 6px;
       position: absolute;
       bottom: 5px;
@@ -483,7 +696,7 @@
       justify-content: center;
       width: 28px;
       height: 28px;
-      svg:last-child{
+      svg:last-child {
         margin-top: 5px;
       }
     }
@@ -545,8 +758,8 @@
         }
         .ant-popover-inner-content {
           padding: 12px 10px;
-          .dotWrapper{
-            margin:1000px;
+          .dotWrapper {
+            margin: 1000px;
           }
           h5 {
             color: #3d3d46;
@@ -600,13 +813,16 @@
     }
   }
 }
-.arrowItems{
-  h5{
+.arrowItems {
+  h5 {
     cursor: pointer;
   }
 }
 .createContentMobile {
   :global {
+    .ant-drawer-mask {
+      background-color: rgba(0, 0, 0, 0.15) !important;
+    }
     .ant-drawer-content-wrapper {
       height: unset !important;
       .ant-drawer-content {
@@ -731,7 +947,16 @@
         justify-content: flex-start;
         width: 100%;
         color: #3d3d46;
-        margin:5px;
+        margin: 5px;
+
+        .active {
+          color: #54b2d3;
+        }
+
+        .inActive {
+          color: #fff;
+        }
+
         .galleryIcon {
           width: 44px;
           height: 44px;
@@ -755,22 +980,36 @@
     }
   }
 }
-:global {
-  .create-content {
-    padding: 10px !important;
-    .content-item {
-      padding: 5px !important;
-    }
-  }
-}
 .modalContent {
   margin-bottom: 10px;
 }
 .mainLayout {
   display: flex;
   flex-direction: column;
+  position: relative;
+  height: 100%;
+
+  > div:first-child {
+    margin-top: 20px;
+    height: 100%;
+    padding-bottom: 80px;
+  }
+
   .headerMenu {
-    padding: 15px 0 0 20px;
+    padding: 0px 0 0 20px;
+  }
+
+  .pagination {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    > div {
+      padding: 0px;
+
+      > ul {
+        padding-right: 0px;
+      }
+    }
   }
   /* justify-content: center; */
 }
@@ -801,11 +1040,64 @@
       .leftItem {
         float: right;
       }
+
+      &:first-child {
+        border-bottom: 1px solid #ecedf0;
+      }
+      &:last-child {
+        color: red;
+        > span {
+          color: red;
+          > svg {
+            fill: red;
+          }
+        }
+      }
+    }
+
+    > ul {
+      width: 100%;
+      border: none;
+      box-shadow: none;
+      > li {
+        display: flex;
+        align-items: center;
+        margin: 0px !important;
+        padding: 0px !important;
+
+        > span {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          height: 40px;
+          padding: 0px 10px !important;
+          > svg,
+          > span {
+            width: 10% !important;
+            margin: 0px;
+          }
+
+          > div {
+            width: 90% !important;
+            padding-left: 4px;
+          }
+        }
+
+        &:hover {
+          background-color: #88d2ec29;
+          path {
+            fill: var(--primary-color);
+          }
+        }
+      }
     }
   }
 }
 .menuContentMobile {
   :global {
+    .ant-drawer-mask {
+      background-color: rgba(0, 0, 0, 0.15) !important;
+    }
     .ant-drawer-content-wrapper {
       height: unset !important;
       .ant-drawer-content {
@@ -848,7 +1140,9 @@
   }
 }
 .gridViewItemSkeleton {
-  margin-top: 20px;
+  margin-top: 0px;
+  padding: 0px;
+
   @media only screen and (max-width: 767px) {
     max-width: 414px;
   }
@@ -871,16 +1165,16 @@
       justify-content: center;
       align-items: center;
       border-radius: 4px;
-      margin: 0 6px 10px 6px;
+      margin: 0 5px 10px 5px;
       border: 1px solid #eee;
     }
   }
 }
 
-.imageListContentWrap{
-  display:flex;
+.imageListContentWrap {
+  display: flex;
   flex-wrap: wrap;
-  :global{
+  :global {
     .ant-card {
       width: 50px;
       height: 60px;
@@ -891,23 +1185,23 @@
       }
     }
   }
-  p{
+  p {
     margin-top: 20px;
     margin-left: 10px;
   }
-  img{
-    margin-top:12px;
+  img {
+    margin-top: 12px;
   }
 }
-.imageListViewWrap{
+.imageListViewWrap {
   width: 100%;
-  margin-left:10px;
-  :global{
-    .ant-table{
-      .ant-table-container{
-        .ant-table-thead{
-          th{
-            background-color: #ECEDF0;
+  margin-left: 10px;
+  :global {
+    .ant-table {
+      .ant-table-container {
+        .ant-table-thead {
+          th {
+            background-color: #ecedf0;
             width: 33%;
             &:first-child {
               text-align: left;
@@ -920,13 +1214,13 @@
             }
           }
         }
-        .ant-table-tbody{
-          tr{
+        .ant-table-tbody {
+          tr {
             cursor: pointer;
-            &:hover{
-              //background-color: #ECEDF0 !important;
+            &:hover {
+              background-color: #ecedf0 !important;
             }
-            td{
+            td {
               background: unset;
               width: 33%;
               &:first-child {
@@ -945,16 +1239,17 @@
     }
   }
 }
-.albumListView{
+.albumListView {
+  height: 100%;
   overflow: auto;
-  margin-left:10px;
-  :global{
-    .ant-table{
+  margin-left: 10px;
+  :global {
+    .ant-table {
       min-width: 650px;
-      .ant-table-container{
-        .ant-table-thead{
-          th{
-            background-color: #ECEDF0;
+      .ant-table-container {
+        .ant-table-thead {
+          th {
+            background-color: #ecedf0;
             width: 33%;
             &:first-child {
               text-align: left;
@@ -967,13 +1262,12 @@
             }
           }
         }
-        .ant-table-tbody{
-          tr{
+
+        .ant-table-tbody {
+          tr {
             cursor: pointer;
-            &:hover{
-              //background-color: #ECEDF0 !important;
-            }
-            td{
+
+            td {
               background: unset;
               width: 33%;
               &:first-child {
@@ -991,17 +1285,45 @@
         }
       }
     }
+
+    .ant-table-wrapper:last-child {
+      .ant-table-content {
+        min-height: 400px;
+        padding-bottom: 96px;
+      }
+    }
+  }
+
+  .tableImage {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    border: 1px solid lightgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :global {
+      .ant-skeleton-image {
+        width: 45px;
+        height: 45px;
+        svg {
+          width: 22.5px;
+          height: 22.5px;
+        }
+      }
+    }
   }
 }
-.tableFirstCol{
+.tableFirstCol {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  p{
+  p {
     margin: 0;
     font-size: 14px;
   }
-  .gridAlbum{
+  .gridAlbum {
     position: relative;
     margin: 0 12px 0 12px;
     flex-wrap: wrap;
@@ -1012,10 +1334,15 @@
     border: 1px solid transparent;
     cursor: pointer;
     .grid-item {
+      border: 1px solid lightgray;
       width: 30px;
       max-width: 100%;
       height: 30px;
       object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       &:first-child {
         border-radius: 3px 0 0 0;
       }
@@ -1028,48 +1355,85 @@
       &:nth-child(4) {
         border-radius: 0 0 3px 0;
       }
-      //@media only screen and (min-width: 360px) and (max-width: 420px) {
-      //  width: 69px;
-      //}
+
+      :global .ant-skeleton-image {
+        height: 22px;
+        width: 22px;
+
+        svg {
+          width: 12px;
+          height: 12px;
+        }
+      }
     }
     .blankAlbum {
       height: 60px;
       width: 60px;
       border-radius: 4px;
-      background-color: #f4f4f4;
+      border: 1px solid lightgray;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      :global .ant-skeleton-image {
+        width: 46px;
+        height: 48px;
+
+        svg {
+          width: 25px;
+          height: 25px;
+        }
+      }
     }
   }
 }
-.folderContentFirst{
-  display:flex;
+.folderContentFirst {
+  display: flex;
   flex-wrap: wrap;
-  :global{
-    .ant-checkbox-wrapper{
+  :global {
+    .ant-checkbox-wrapper {
       display: flex;
       //flex-wrap: wrap;
       align-items: center;
-      .ant-checkbox{
+      .ant-checkbox {
         height: 17px;
       }
-      span{
+      .ant-checkbox + span {
         display: flex;
+        align-items: center;
       }
     }
     .ant-card {
-      width: 50px;
-      height: 60px;
       .ant-card-body {
-        padding: 0;
-        width: 100%;
-        height: 100%;
+        padding: 0px 10px;
+
+        img {
+          margin-top: 0px;
+        }
       }
     }
   }
-  p{
-    margin-top: 20px;
-    margin-left: 10px;
+  p {
+    margin: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  img{
-    margin-top:12px;
+  img {
+    margin-top: 12px;
+  }
+  > div:last-child {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.column-loader {
+  > div {
+    width: 100%;
+
+    > span {
+      width: 100%;
+    }
   }
 }

@@ -81,6 +81,13 @@
     line-height: 20px;
     color: var(--grey-text-color);
     cursor: pointer;
+    .skeletonName {
+      width: 150px;
+      h3 {
+        margin: 0;
+        height: 30px;
+      }
+    }
   }
 }
 
@@ -365,6 +372,22 @@
 .clientCardContent {
   width: 100%;
   padding-bottom: 28px;
+  .customTabs {
+    color: red;
+    :global
+      .ClientDashboardLayout_clientDashboardLayout__1ay60
+      > div:nth-child(1) {
+      max-width: 100%;
+      margin-right: 0;
+      .TabMenu_calendar-settings__1ImST {
+        width: 100%;
+      }
+    }
+  }
+  .tab {
+    padding: 12px;
+    height: 100%;
+  }
 }
 
 .menuItemWrapper {

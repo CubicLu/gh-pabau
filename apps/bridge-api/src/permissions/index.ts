@@ -69,12 +69,15 @@ export const permissions = shield(
         rules.authentication.isAdmin
       ),
       createOneLead: rules.authentication.isAuthenticated,
+      createShift: rules.authentication.isAuthenticated,
       //Country
       createOneCountry: rules.authentication.isAuthenticated,
       //MedicalFormContact
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
       createOneContactNote: rules.authentication.isAuthenticated,
+      updateOneContactNote: rules.authentication.isAuthenticated,
+      deleteOneContactNote: rules.authentication.isAuthenticated,
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -91,7 +94,10 @@ export const permissions = shield(
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
-      deleteOneContactAttachment: rules.authentication.isAuthenticated,
+      deleteContactAttachment: rules.authentication.isAuthenticated,
+      deleteManyContactAttachment: rules.authentication.isAuthenticated,
+      deleteContactAlbum: rules.authentication.isAuthenticated,
+      moveAttachments: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -117,6 +123,11 @@ export const permissions = shield(
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
+
+      upsertOneCmContactCustom: rules.authentication.isAuthenticated,
+      updateOneCmContact: rules.authentication.isAuthenticated,
+      // Pathway
+      upsertOnePathwayStepsTaken: rules.interceptors.injectContact,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -125,11 +136,18 @@ export const permissions = shield(
       ),
     },
     Query: {
+      //DuplicateContacts
+      // duplicateContacts: rules.authentication.isAuthenticated,
       findManyContactPackage: allow,
-      findManyBooking: allow,
       findFirstUserMaster: allow,
       findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
+      findManyInvoice: rules.authentication.isAuthenticated,
+      countInvoice: rules.authentication.isAuthenticated,
+      //Pathway
+      findManyPathwaysTaken: allow,
+      findManyPathwayStepsTaken: allow,
+      findFirstPathwaysTaken: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
@@ -199,6 +217,8 @@ export const permissions = shield(
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
+      findManyFilteredRotaShift: rules.authentication.isAuthenticated,
+
       findManyProductsWithAvailableQuantity:
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
@@ -219,7 +239,10 @@ export const permissions = shield(
         rules.interceptors.interceptAccessToCompanyData,
         rules.interceptors.interceptAccessToUserData
       ),
-      dashboardData: rules.authentication.isAuthenticated,
+      getBookingStatusCount: rules.authentication.isAuthenticated,
+      getBookingChartDetail: rules.authentication.isAuthenticated,
+      // getToken
+      getRefreshToken: rules.authentication.isAuthenticated,
       // Debug
       ping: allow,
       version: allow,

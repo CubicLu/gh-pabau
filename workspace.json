@@ -28,11 +28,7 @@
           "builder": "@nrwl/next:build",
           "options": {
             "root": "apps/web",
-            "outputPath": "dist/apps/web",
-            "maxWorkers": 8,
-            "memoryLimit": 7168,
-            "verbose": true,
-            "progress": true
+            "outputPath": "dist/apps/web"
           },
           "configurations": {
             "production": {}
@@ -54,10 +50,7 @@
         "export": {
           "builder": "@nrwl/next:export",
           "options": {
-            "buildTarget": "web:build:production",
-            "memoryLimit": 6144,
-            "verbose": true,
-            "progress": true
+            "buildTarget": "web:build:production"
           }
         },
         "lint": {
@@ -411,7 +404,7 @@
       "sourceRoot": "apps/mgmt",
       "projectType": "application",
       "schematics": {},
-      "architect": {
+      "_architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {
@@ -543,7 +536,8 @@
           "builder": "@nrwl/next:server",
           "options": {
             "buildTarget": "connect:build",
-            "dev": true
+            "dev": true,
+            "port": 4300
           },
           "configurations": {
             "production": {
@@ -663,17 +657,11 @@
               }
             ],
             "maxWorkers": 4,
-            "memoryLimit": 5120,
-            "verbose": true,
-            "progress": true,
+            "memoryLimit": 7168,
             "generatePackageJson": true
           },
           "configurations": {
             "production": {
-              "maxWorkers": 8,
-              "memoryLimit": 5120,
-              "verbose": true,
-              "progress": true,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,

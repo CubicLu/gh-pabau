@@ -10,6 +10,7 @@ import {
   SaveOutlined,
   UndoOutlined,
   PlusOutlined,
+  CloseCircleFilled,
 } from '@ant-design/icons'
 import { TabMenu, Avatar, Button, ClientData } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
@@ -24,15 +25,20 @@ import {
   ClientAppointmentDetails,
 } from '../client-card/ClientCard'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { getImage } from '../../helper/uploaders/UploadHelpers'
 import styles from './ClientHeaderDetails.module.less'
-
+dayjs.extend(utc)
 const { TextArea } = Input
 
 export interface ClientHeaderDetailsProps {
   notes?: ClientNotes
+  medicalHistoryIconStatus?: string
   getContactDetails?: () => void
   client?: ClientData
+  handleAddNewClientNote?: (e: string) => void
+  handleEditNote?: (id: number, e: string) => void
+  handleDeleteNote?: (id: number | string) => void
 }
 
 interface ClientCountDetails {
@@ -42,8 +48,12 @@ interface ClientCountDetails {
 
 export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   notes = { notes: [], count: 0, notesCountLoading: false, appointments: [] },
+  medicalHistoryIconStatus,
   getContactDetails,
   client,
+  handleAddNewClientNote,
+  handleEditNote,
+  handleDeleteNote,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -61,46 +71,53 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     notes: 0,
     staff: 0,
   })
+  const [openNotes, setOpenNotes] = useState<boolean>(false)
+  const [isDeletingNotes, setIsDeletingNotes] = useState<boolean>(false)
 
   useEffect(() => {
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    setIsDeletingNotes(false)
+    if (notes?.count)
+      setCountDetails((item) => {
+        return { ...item, notes: notes?.count }
+      })
+  }, [notes])
 
   const handleAddNote = (e) => {
     e.preventDefault()
     if (note !== '') {
-      const items: ClientNoteDetails[] = [
-        {
-          content: note,
-          date: dayjs().format('YYYY-MM-DD hh:mm A'),
-          User: {
-            contact: client?.fullName || '',
-            avatar: client?.avatar || '',
-          },
-        },
-        ...noteItems,
-      ]
-      setNoteItems(items)
       setNote('')
+      handleAddNewClientNote?.(note)
     }
   }
 
-  const handleEditClientNote = () => {
-    const notes = [...noteItems]
-    if (currentNote) notes[currentClientNote].content = currentNote
-    setNoteItems(notes)
+  const handleEditClientNote = (id) => {
+    handleEditNote?.(id, currentNote)
     setCurrentNote('')
     setCurrentClientNote(-1)
   }
 
-  const handleDeleteClientNote = (index) => {
-    const notes = [...noteItems]
-    notes.splice(index, 1)
-    setNoteItems(notes)
+  const handleDeleteClientNote = (id) => {
+    handleDeleteNote?.(id)
     setCurrentNote('')
     setCurrentClientNote(-1)
+    setIsDeletingNotes(true)
+  }
+
+  const getMedicalhistoryIcon = () => {
+    switch (medicalHistoryIconStatus) {
+      case 'not_completed':
+        return <CloseCircleFilled style={{ color: '#ec6669' }} />
+      case 'completed':
+        return <CheckCircleFilled style={{ color: '#65cd98' }} />
+      case 'to_be_completed':
+        return (
+          <div className={styles.toBeCompletedIcon}>
+            <HistoryOutlined style={{ color: '#fff' }} />
+          </div>
+        )
+    }
   }
 
   const medicalHistoryPopover = (
@@ -222,7 +239,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                             >{`By ${item?.User?.contact}`}</div>
                             <div className={styles.date}>{`On ${dayjs(
                               item?.date
-                            ).format('D MMM YYYY hh:mm A')}`}</div>
+                            )
+                              .utc()
+                              .format('D MMM YYYY hh:mm A')}`}</div>
                           </div>
                           <div>
                             <Button
@@ -237,7 +256,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               icon={<DeleteOutlined />}
                               shape="circle"
                               size="small"
-                              onClick={() => handleDeleteClientNote(index)}
+                              onClick={() => handleDeleteClientNote(item.ID)}
                             />
                           </div>
                         </div>
@@ -255,7 +274,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               shape="circle"
                               size="small"
                               icon={<SaveOutlined />}
-                              onClick={() => handleEditClientNote()}
+                              onClick={() => handleEditClientNote(item.ID)}
                             />
                             <Button
                               icon={<UndoOutlined />}
@@ -296,10 +315,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                     <div className={styles.clientNoteItem}>
                       <div>
                         <Avatar
-                          src={note?.User?.avatar}
-                          name={
-                            note?.User?.contact && getImage(note?.User?.contact)
+                          src={
+                            note?.User?.avatar && getImage(note?.User?.avatar)
                           }
+                          name={note?.User?.contact}
                           size={32}
                         />
                       </div>
@@ -308,9 +327,11 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                         <div
                           className={styles.contact}
                         >{`By ${note?.User?.contact}`}</div>
-                        <div className={styles.date}>{`On ${dayjs(
-                          note.date
-                        ).format('D MMM YYYY hh:mm A')}`}</div>
+                        {note?.date && (
+                          <div className={styles.date}>{`On ${dayjs(
+                            note?.date.toString()
+                          ).format('D MMM YYYY hh:mm A')}`}</div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -334,11 +355,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           overlayClassName={styles.clientCardHeaderPopover}
         >
           <Tooltip title="Medical history">
-            <Badge
-              count={<CheckCircleFilled />}
-              offset={[0, 18]}
-              style={{ color: '#65cd98' }}
-            >
+            <Badge count={getMedicalhistoryIcon()} offset={[0, 18]}>
               <MedicalHistory className={styles.headerOpsIcon} />
             </Badge>
           </Tooltip>
@@ -351,6 +368,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           trigger="click"
           content={clientNotesPopover}
           overlayClassName={styles.clientCardHeaderPopover}
+          visible={openNotes}
+          onVisibleChange={(val) => {
+            !isDeletingNotes && setOpenNotes(val)
+          }}
         >
           <div
             onClick={() => {

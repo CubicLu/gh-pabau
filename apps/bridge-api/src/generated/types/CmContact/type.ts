@@ -204,20 +204,6 @@ export const CmContact = objectType({
         return root.ContactNote
       },
     })
-    t.list.field('MedicalFormContact', {
-      type: 'MedicalFormContact',
-      args: {
-        where: 'MedicalFormContactWhereInput',
-        orderBy: 'MedicalFormContactOrderByWithRelationInput',
-        cursor: 'MedicalFormContactWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormContactScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.MedicalFormContact
-      },
-    })
     t.list.field('CmExtraGym', {
       type: 'CmExtraGym',
       args: {
@@ -480,6 +466,12 @@ export const CmContact = objectType({
         return root.MarketingSourceData
       },
     })
+    t.nullable.field('User', {
+      type: 'User',
+      resolve(root: any) {
+        return root.User
+      },
+    })
     t.list.field('Voucher', {
       type: 'Voucher',
       args: {
@@ -506,6 +498,118 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.PurchasedVoucher
+      },
+    })
+    t.list.field('CmLead', {
+      type: 'CmLead',
+      args: {
+        where: 'CmLeadWhereInput',
+        orderBy: 'CmLeadOrderByWithRelationInput',
+        cursor: 'CmLeadWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLeadScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLead
+      },
+    })
+    t.list.field('PathwaysTaken', {
+      type: 'PathwaysTaken',
+      args: {
+        where: 'PathwaysTakenWhereInput',
+        orderBy: 'PathwaysTakenOrderByWithRelationInput',
+        cursor: 'PathwaysTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwaysTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwaysTaken
+      },
+    })
+    t.list.field('PathwayStepsTaken', {
+      type: 'PathwayStepsTaken',
+      args: {
+        where: 'PathwayStepsTakenWhereInput',
+        orderBy: 'PathwayStepsTakenOrderByWithRelationInput',
+        cursor: 'PathwayStepsTakenWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepsTakenScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStepsTaken
+      },
+    })
+    t.list.field('CommunicationAttachment', {
+      type: 'CommunicationAttachment',
+      args: {
+        where: 'CommunicationAttachmentWhereInput',
+        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
+        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationAttachment
+      },
+    })
+    t.list.field('RecallSchedule', {
+      type: 'RecallSchedule',
+      args: {
+        where: 'RecallScheduleWhereInput',
+        orderBy: 'RecallScheduleOrderByWithRelationInput',
+        cursor: 'RecallScheduleWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RecallScheduleScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.RecallSchedule
+      },
+    })
+    t.list.field('LabRequest', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabRequest
+      },
+    })
+    t.list.field('MedicalFormContact', {
+      type: 'MedicalFormContact',
+      args: {
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContact
+      },
+    })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
       },
     })
     t.nullable.field('_count', {

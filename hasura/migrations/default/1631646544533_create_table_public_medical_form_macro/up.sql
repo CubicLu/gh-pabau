@@ -1,0 +1,1 @@
+CREATE TABLE "public"."medical_form_macro" ("id" serial NOT NULL, "createdAt" date NOT NULL, "title" text NOT NULL, "message" text NOT NULL, "type" integer NOT NULL DEFAULT 0, "created_by" integer NOT NULL DEFAULT 0, "company_id" integer NOT NULL DEFAULT 0, PRIMARY KEY ("id") );

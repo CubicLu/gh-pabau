@@ -16,7 +16,7 @@ import {
   MessageOutlined,
 } from '@ant-design/icons'
 import { Tooltip, Popover } from 'antd'
-import { Button, InlineEditDataTypes, FieldOrderItem } from '@pabau/ui'
+import { Button, InlineEditDataTypes, CategoryFieldType } from '@pabau/ui'
 import { ReactComponent as CustomDateOutlined } from '../../assets/images/custom-date.svg'
 import { ReactComponent as DragAreaOutlined } from '../../assets/images/drag-area.svg'
 import { ReactComponent as SingleLine } from '../../assets/images/single-line.svg'
@@ -39,7 +39,7 @@ enum FieldType {
 }
 
 export interface CustomizeFieldsProps {
-  defaultOrder: FieldOrderItem[]
+  defaultOrder: CategoryFieldType[]
   onChange: (order) => void
   onCancel: () => void
 }
@@ -50,7 +50,7 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
   onChange,
 }) => {
   const { t } = useTranslation('common')
-  const [fieldOrder, setFieldOrder] = useState<FieldOrderItem[]>([])
+  const [fieldOrder, setFieldOrder] = useState<CategoryFieldType[]>([])
   const optionalPortal = (styles, element) => {
     if (styles.position === 'fixed' && dragEl) {
       return createPortal(element, dragEl)
@@ -69,18 +69,21 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
     return result
   }
 
-  const handleDragEnd = (result) => {
+  const handleDragEnd = (result, categoryId) => {
     if (!result.destination) {
       return
     }
 
-    const items = reorder(
-      fieldOrder,
-      result.source.index,
-      result.destination.index
+    const fieldsOrderData = [...fieldOrder]
+    const fieldOrderIndex = fieldsOrderData.findIndex(
+      (fields) => fields.id === categoryId
     )
+    const list = [...fieldsOrderData[fieldOrderIndex].fields]
+    const items = reorder(list, result.source.index, result.destination.index)
 
-    setFieldOrder(items)
+    fieldsOrderData[fieldOrderIndex].fields = items
+
+    setFieldOrder(fieldsOrderData)
   }
 
   const addFieldPop = (
@@ -100,138 +103,164 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
   )
 
   return (
-    <div className={styles.customizeFieldsContainer}>
-      <div className={styles.header}>
-        <div className={styles.title}>{t('ui.clientdetails.details')}</div>
-        <div className={styles.customize}>
-          {t('ui.clientdetails.customise')}
-        </div>
-      </div>
-      <div className={styles.body}>
-        <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
-          <Droppable droppableId="droppable">
-            {(provided, snapshot) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className={styles.draggingItemList}
+    <>
+      {fieldOrder.map((data, index) => {
+        return (
+          <div key={data.id} className={styles.customizeFieldsContainer}>
+            <div className={styles.header}>
+              <div className={styles.title}>{data.category}</div>
+              {index === 0 && (
+                <div className={styles.customize}>
+                  {t('ui.clientdetails.customise')}
+                </div>
+              )}
+            </div>
+            <div className={styles.body}>
+              <DragDropContext
+                onDragEnd={(result) => handleDragEnd(result, data.id)}
               >
-                {fieldOrder.map((item, index) => (
-                  <Draggable
-                    key={`draggable-item-${index}`}
-                    draggableId={`draggable-item-${index}`}
-                    index={index}
-                  >
-                    {(provided, snapshot) =>
-                      optionalPortal(
-                        provided.draggableProps.style,
-                        <div
-                          className={styles.draggingItemContainer}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          style={provided.draggableProps.style}
+                <Droppable droppableId="droppable">
+                  {(provided, snapshot) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className={styles.draggingItemList}
+                    >
+                      {data.fields.map((item, index) => (
+                        <Draggable
+                          key={`draggable-item-${index}`}
+                          draggableId={`draggable-item-${index}`}
+                          index={index}
                         >
-                          <div className={styles.draggingItemBody}>
-                            <div>
-                              <div className={styles.fieldType}>
-                                {item.type === InlineEditDataTypes.string && (
-                                  <SingleLine />
-                                )}
-                                {(item.type === InlineEditDataTypes.text ||
-                                  item.type ===
-                                    InlineEditDataTypes.address) && (
-                                  <AlignLeftOutlined />
-                                )}
-                                {item.type === InlineEditDataTypes.date && (
-                                  <CustomDateOutlined />
-                                )}
-                                {(item.type === InlineEditDataTypes.phone ||
-                                  item.type ===
-                                    InlineEditDataTypes.basicPhone) && (
-                                  <PhoneOutlined />
-                                )}
-                                {item.type === InlineEditDataTypes.email && (
-                                  <MailOutlined />
-                                )}
-                                {item.type === InlineEditDataTypes.list && (
-                                  <DownOutlined />
-                                )}
-                                {item.type === InlineEditDataTypes.multiple && (
-                                  <CheckOutlined />
-                                )}
-                                {item.type === InlineEditDataTypes.bool && (
-                                  <RadioIcon />
-                                )}
-                                {item.type === InlineEditDataTypes.number && (
-                                  <FieldNumberOutlined />
-                                )}
-                                {item.type === InlineEditDataTypes.url && (
-                                  <GlobalOutlined />
-                                )}
-                                {item.type ===
-                                  InlineEditDataTypes.localizedMessage && (
-                                  <MessageOutlined />
-                                )}
-                              </div>
-                              <div className={styles.fieldTitle}>
-                                {item.title}
-                              </div>
-                            </div>
-                            <div>
-                              <div className={styles.deleteField}>
-                                <Tooltip
-                                  title={t(
-                                    'ui.clientdetails.customise.delete.message'
-                                  )}
-                                  placement="bottom"
-                                  overlayStyle={{ maxWidth: '200px' }}
-                                >
-                                  <DeleteOutlined />
-                                </Tooltip>
-                              </div>
-                              <div className={styles.editField}>
-                                <EditOutlined />
-                              </div>
+                          {(provided, snapshot) =>
+                            optionalPortal(
+                              provided.draggableProps.style,
                               <div
-                                className={styles.dragAreaContainer}
-                                {...provided.dragHandleProps}
+                                className={styles.draggingItemContainer}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                style={provided.draggableProps.style}
                               >
-                                <Tooltip
-                                  title={t('ui.clientdetails.customise.dragto')}
-                                >
-                                  <DragAreaOutlined />
-                                </Tooltip>
+                                <div className={styles.draggingItemBody}>
+                                  <div>
+                                    <div className={styles.fieldType}>
+                                      {item.type ===
+                                        InlineEditDataTypes.string && (
+                                        <SingleLine />
+                                      )}
+                                      {(item.type ===
+                                        InlineEditDataTypes.text ||
+                                        item.type ===
+                                          InlineEditDataTypes.address) && (
+                                        <AlignLeftOutlined />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.date && (
+                                        <CustomDateOutlined />
+                                      )}
+                                      {(item.type ===
+                                        InlineEditDataTypes.phone ||
+                                        item.type ===
+                                          InlineEditDataTypes.basicPhone) && (
+                                        <PhoneOutlined />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.email && (
+                                        <MailOutlined />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.list && (
+                                        <DownOutlined />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.multiple && (
+                                        <CheckOutlined />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.bool && (
+                                        <RadioIcon />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.number && (
+                                        <FieldNumberOutlined />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.url && (
+                                        <GlobalOutlined />
+                                      )}
+                                      {item.type ===
+                                        InlineEditDataTypes.localizedMessage && (
+                                        <MessageOutlined />
+                                      )}
+                                    </div>
+                                    <div className={styles.fieldTitle}>
+                                      {item.title}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    {item.fieldName.includes(
+                                      'customField_'
+                                    ) && (
+                                      <div className={styles.deleteField}>
+                                        <Tooltip
+                                          title={t(
+                                            'ui.clientdetails.customise.delete.message'
+                                          )}
+                                          placement="bottom"
+                                          overlayStyle={{ maxWidth: '200px' }}
+                                        >
+                                          <DeleteOutlined />
+                                        </Tooltip>
+                                      </div>
+                                    )}
+                                    <div className={styles.editField}>
+                                      <EditOutlined />
+                                    </div>
+                                    <div
+                                      className={styles.dragAreaContainer}
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <Tooltip
+                                        title={t(
+                                          'ui.clientdetails.customise.dragto'
+                                        )}
+                                      >
+                                        <DragAreaOutlined />
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    }
-                  </Draggable>
-                ))}
-                {provided.placeholder}
+                            )
+                          }
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            </div>
+            <div className={styles.footer}>
+              <div className={styles.addNewField}>
+                <Popover
+                  placement="right"
+                  title=""
+                  content={addFieldPop}
+                  trigger="click"
+                >
+                  <PlusOutlined /> {t('ui.clientdetails.customise.addnew')}
+                </Popover>
               </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </div>
-      <div className={styles.footer}>
-        <div className={styles.addNewField}>
-          <Popover
-            placement="right"
-            title=""
-            content={addFieldPop}
-            trigger="click"
-          >
-            <PlusOutlined /> {t('ui.clientdetails.customise.addnew')}
-          </Popover>
-        </div>
-        <div className={styles.saveButtonContainer}>
-          <Button type="primary" onClick={() => onChange(fieldOrder)}>
-            {t('ui.clientdetails.customise.done')}
-          </Button>
-        </div>
-      </div>
-    </div>
+              <div className={styles.saveButtonContainer}>
+                <Button type="primary" onClick={() => onChange(fieldOrder)}>
+                  {t('ui.clientdetails.customise.done')}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </>
   )
 }

@@ -1,7 +1,7 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { OptionType } from '@pabau/ui'
+import { OptionType, InvProductsListItem } from '@pabau/ui'
 import { Select } from 'antd'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import styles from './FormComponent.module.less'
 
 const { Option } = Select
@@ -10,21 +10,9 @@ interface P {
   desc: string
   paramItems: OptionType[]
   required: boolean
+  invProductsListItems?: InvProductsListItem[]
   onChangeArrValue?: (value: string[]) => void
 }
-
-const dataLists = [
-  {
-    id: 1,
-    name: 'DL7',
-    editing: false,
-  },
-  {
-    id: 2,
-    name: 'V5 Vitamin',
-    editing: false,
-  },
-]
 
 const FormLabTests: FC<P> = ({
   title = '',
@@ -32,14 +20,32 @@ const FormLabTests: FC<P> = ({
   paramItems,
   required = false,
   onChangeArrValue,
+  invProductsListItems = [],
 }) => {
   const [addedItems, setaddedItems] = useState<OptionType[]>([])
   const [selectedItem, setSelectedItem] = useState(0)
+  const [labTestsList, setLabTestsList] = useState<InvProductsListItem[]>([])
+
+  useEffect(() => {
+    console.log('paramItems', paramItems)
+    console.log('invProductsListItems', invProductsListItems)
+    if (paramItems.length > 0 && invProductsListItems.length > 0) {
+      const result = invProductsListItems.filter((o1) =>
+        paramItems.some((o2) => o1.category_id === o2.id)
+      )
+      setLabTestsList(result)
+    }
+  }, [paramItems, invProductsListItems])
 
   const onChange = (value) => {
-    const addedItem = dataLists.filter((item) => item.id === value)
+    const addedItem = labTestsList.filter((item) => item.id === value)
     if (addedItem.length > 0) {
-      const tempItems = [...addedItems, addedItem[0]]
+      const t = {
+        id: addedItem[0].id,
+        name: addedItem[0].name,
+        editing: false,
+      }
+      const tempItems = [...addedItems, t]
       setaddedItems(tempItems)
       const ids = tempItems.map((item) => item.id.toString())
       onChangeArrValue?.(ids)
@@ -78,7 +84,7 @@ const FormLabTests: FC<P> = ({
       {desc.length > 0 && (
         <div className={styles.formComponentChoiceDescription}>{desc}</div>
       )}
-      {dataLists.length > 0 && (
+      {labTestsList.length > 0 && (
         <div className={styles.formLabTestsOptions}>
           <Select
             showSearch
@@ -99,10 +105,10 @@ const FormLabTests: FC<P> = ({
             value={selectedItem}
           >
             <Option value={0} key={0}>
-              Select tests to order
+              Select lab tests to order
             </Option>
-            {dataLists.map((item, index) => (
-              <Option key={index + 1} value={item.id}>
+            {labTestsList.map((item, index) => (
+              <Option key={'labTestsListItems-' + index} value={item.id}>
                 {item.name}
               </Option>
             ))}
