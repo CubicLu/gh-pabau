@@ -44,22 +44,12 @@ import { useMedia } from 'react-use'
 import classNames from 'classnames'
 import PreviewFile from './PreviewFile'
 
-const getThumb = (src: string) => {
-  if (src.includes('photos/')) {
-    const pathArr = src.split('photos/')
-    pathArr[1] = `thumb_${pathArr[1]}`
-    return pathArr.join('photos/')
-  } else {
-    return src
-  }
-}
-
 const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   const [source, setSource] = useState('')
 
   useEffect(() => {
     if (source === '' && origin !== '') {
-      const path = getThumb(origin)
+      const path = origin
       const img = new Image()
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
@@ -89,11 +79,7 @@ const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   }, [isDirectPath, origin, source])
 
   return source ? (
-    <img
-      src={!isDirectPath ? source : getThumb(origin)}
-      alt="content"
-      {...props}
-    />
+    <img src={!isDirectPath ? source : origin} alt="content" {...props} />
   ) : (
     <div {...props}>
       <Skeleton.Image />
@@ -231,13 +217,15 @@ export const FolderData: FC<FolderDataProps> = ({
     }
     setPreviewName(cName)
     setPreviewUrl(url)
-    setPreviewType(checkUrlIfImage(url) ? 'image' : 'document')
+    setPreviewType(checkUrlForType(url))
     setPageNumber(1)
     setPreviewModal((e) => !e)
+    console.log(checkUrlForType(url))
   }
 
-  const checkUrlIfImage = (url: string) => {
-    return url.match(/\.(jpeg|jpg|gif|png)$/) != null
+  const checkUrlForType = (url: string) => {
+    const urlArr = url?.split('.') || []
+    return urlArr?.[urlArr?.length - 1]
   }
 
   const FolderPopupContent = ({ record }) => {
@@ -547,7 +535,7 @@ export const FolderData: FC<FolderDataProps> = ({
                 handlePreview(record?.folderData, record?.documentName)
               }
             >
-              {fileArray.has(fileData[fileData?.length - 1]) ? (
+              {!record?.folderData?.match(/\.(jpeg|jpg|gif|png)$/) ? (
                 <FileIcon
                   foldColor="lightgray"
                   labelColor="var(--primary-color)"
@@ -921,7 +909,9 @@ export const FolderData: FC<FolderDataProps> = ({
                         data-type={fileData[fileData.length - 1]}
                       />
                       <div>
-                        {!checkUrlIfImage?.(folderValue?.folderData) ? (
+                        {!folderValue?.folderData?.match(
+                          /\.(jpeg|jpg|gif|png)$/
+                        ) ? (
                           <FileIcon
                             foldColor="lightgray"
                             labelColor="var(--primary-color)"
