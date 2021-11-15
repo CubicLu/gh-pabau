@@ -149,6 +149,7 @@ export const Payments: FC<IPaymentsProps> = ({
       title: t('ui.client-card-financial.payments.method'),
       dataIndex: 'method',
       visible: true,
+      width: 75,
     },
     {
       title: t('ui.client-card-financial.payments.amount'),
@@ -229,7 +230,7 @@ export const Payments: FC<IPaymentsProps> = ({
         <Table
           loading={false}
           draggable={false}
-          scroll={{ x: true }}
+          scroll={{ x: true, y: '100vh' }}
           dataSource={paymentData?.map((e: { id }) => ({
             key: e.id,
             ...e,

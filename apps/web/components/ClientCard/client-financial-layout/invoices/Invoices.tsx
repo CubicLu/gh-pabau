@@ -688,7 +688,7 @@ export const Invoices: FC<P> = (props) => {
         {!loading && invoice ? (
           <Table
             draggable={false}
-            scroll={{ x: true }}
+            scroll={{ x: true, y: '100vh' }}
             dataSource={invoices?.map((e: { id }) => ({
               key: e.id,
               ...e,

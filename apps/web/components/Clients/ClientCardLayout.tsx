@@ -12,7 +12,7 @@ import {
   useUpsertOneCmContactCustomMutation,
   useTotalInvoiceCountQuery,
   useCheckMedicalHistoryQuery,
-  useAggregateAccountPaymentsQuery,
+  useGetContactAccountBalanceQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -68,7 +68,7 @@ export const ClientCardLayout: FC<P> = ({
     skip: !clientId,
   })
 
-  const { data: invAmount } = useAggregateAccountPaymentsQuery({
+  const { data: invAmount } = useGetContactAccountBalanceQuery({
     variables: { contactID: clientId },
     skip: !clientId,
   })
@@ -260,12 +260,12 @@ export const ClientCardLayout: FC<P> = ({
       key: 'financial',
       name: 'Financials',
       count: countInvoice?.total ?? 0,
-      tags: invAmount?.totalInv?.total_amount?.inv_total
+      tags: invAmount?.AccountBalance?.balance
         ? [
             {
               tag:
                 stringToCurrencySignConverter(user.me?.currency) +
-                invAmount?.totalInv?.total_amount?.inv_total,
+                invAmount?.AccountBalance?.balance,
               color: 'green',
             },
           ]

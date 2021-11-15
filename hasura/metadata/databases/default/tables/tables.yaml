@@ -32,6 +32,7 @@
 - "!include public_family_relationships.yaml"
 - "!include public_feature_flags.yaml"
 - "!include public_gmail_connection.yaml"
+- "!include public_invoices.yaml"
 - "!include public_issuing_company.yaml"
 - "!include public_job_candidates.yaml"
 - "!include public_job_openings.yaml"

@@ -255,7 +255,7 @@ export const Items: FC<P> = (props) => {
         <Table
           loading={false}
           draggable={false}
-          scroll={{ x: true }}
+          scroll={{ x: true, y: '100vh' }}
           dataSource={items?.map((e: { id }) => ({
             key: e.id,
             ...e,
