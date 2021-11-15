@@ -24,7 +24,13 @@ export interface InlineEditProps {
   initialValue: number | string | PhoneProp
   type: string
   dateFormat?: string
-  onUpdateValue: (orderIndex: number, value: string, type?: string) => void
+  category?: number
+  onUpdateValue: (
+    orderIndex: number,
+    value: string,
+    type?: string,
+    category?: number
+  ) => Promise<void>
 }
 
 export const InlineEditDataTypes = {
@@ -52,6 +58,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
   fieldTitle,
   orderIndex,
   dateFormat,
+  category,
   onUpdateValue,
   ...restProps
 }) => {
@@ -281,7 +288,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
           : updatedValue?.[key]
     }
     if (orderIndex) {
-      await onUpdateValue(orderIndex, value, phoneType.toLowerCase())
+      await onUpdateValue(orderIndex, value, phoneType.toLowerCase(), category)
     }
     setEditLoading(false)
     toggleVisible()

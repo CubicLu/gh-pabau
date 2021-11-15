@@ -240,3 +240,27 @@ export const previewMapping = [
   { cl_services: 'empty' },
   { history_data: 'empty' },
 ]
+
+export interface MedicalFormContactDetailData {
+  label: string
+  content: string
+}
+
+export interface MedicalFormContactData {
+  patient: string
+  lastUpdate: string
+  createdOn: string
+  createdBy: string
+  details: MedicalFormContactDetailData[]
+}
+
+export interface MedicalFormContact {
+  id: number
+  name: string
+  user: string
+  created: string
+  type: string
+  isPinned: boolean
+  isAdminForm: boolean
+  data: MedicalFormContactData
+}
