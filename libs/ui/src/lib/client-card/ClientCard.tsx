@@ -147,6 +147,7 @@ export interface ClientNotes {
 interface P {
   client: ClientData
   notes?: ClientNotes
+  medicalHistoryIconStatus?: string
   getContactDetails?: () => void
   handleAddNewClientNote?: (e: string) => void
   handleEditNote?: (id: number | string, e: string) => void
@@ -154,12 +155,13 @@ interface P {
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
-  activeTab?: string
+  activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
   customFields?: FieldOrderItem[]
   dateFormat?: string
   handleEditAll?: () => void
+  cssClass?: string
   updatebasicContactMutation?: MutationFunction
   updateContactCustomMutation?: MutationFunction
   clientId?: number
@@ -170,14 +172,16 @@ interface P {
 
 const ClientCardModal: FC<P> = ({
   client,
+  cssClass,
   notes,
+  medicalHistoryIconStatus,
   getContactDetails,
   handleAddNewClientNote,
   handleEditNote,
   handleDeleteNote,
   onClose,
   tabs,
-  activeTab,
+  activeTab = 'dashboard',
   children,
   onTabChanged,
   referredByOptions,
@@ -193,7 +197,6 @@ const ClientCardModal: FC<P> = ({
   searchRender,
 }) => {
   const { t } = useTranslation('common')
-  // const { push } = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [search, setSearch] = useState(false)
@@ -322,7 +325,6 @@ const ClientCardModal: FC<P> = ({
 
   const onBackToMainMenu = () => {
     //TODO: review this. Prefer <Link />
-    // push?.('..')
   }
 
   const menuItems = [
@@ -835,6 +837,8 @@ const ClientCardModal: FC<P> = ({
     </div>
   )
 
+  const haveSubTabs = ['financial', 'gift-vouchers']
+
   //TODO: remove the Modal from top level (it'll break css:( )
   return (
     <Modal
@@ -942,6 +946,7 @@ const ClientCardModal: FC<P> = ({
               {!isMobile && (
                 <ClientHeaderDetails
                   notes={notes}
+                  medicalHistoryIconStatus={medicalHistoryIconStatus}
                   getContactDetails={getContactDetails}
                   client={client}
                   handleAddNewClientNote={handleAddNewClientNote}
@@ -980,7 +985,13 @@ const ClientCardModal: FC<P> = ({
                 activeTab={activeTab}
                 minHeight={isMobile ? '1px' : '750px'}
               >
-                <div style={{ padding: '12px', height: '100%' }}>
+                <div
+                  className={
+                    haveSubTabs.includes(activeTab)
+                      ? styles.customTabs
+                      : styles.tab
+                  }
+                >
                   <ClientDashboardLayout>{children}</ClientDashboardLayout>
                 </div>
                 {/*<div>*/}

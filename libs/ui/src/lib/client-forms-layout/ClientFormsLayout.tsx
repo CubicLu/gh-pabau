@@ -1,5 +1,10 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
-import { MyLottie as Lottie, Button } from '@pabau/ui'
+import {
+  MyLottie as Lottie,
+  Button,
+  MedicalFormContact,
+  MedicalFormContactData,
+} from '@pabau/ui'
 import {
   FilterOutlined,
   LockFilled,
@@ -19,10 +24,11 @@ import { Formik } from 'formik'
 import { useMedia } from 'react-use'
 import FormAction from './ClientFormAction'
 import { useTranslation } from 'react-i18next'
-import FormDetails, { FormDataProps } from './ClientFormDetail'
+import FormDetails from './ClientFormDetail'
 import dayjs from 'dayjs'
 import emptyState from '../../assets/lottie/empty-state.json'
 import styles from './ClientFormsLayout.module.less'
+import { ReactComponent as MedicalHistoryIcon } from '../../assets/images/medical-history.svg'
 
 const { Panel } = Collapse
 export interface PopOverStateProps {
@@ -54,12 +60,9 @@ export interface FormListProps {
   user: string
   created: string
   type: string
-  icon: React.ComponentType<
-    CustomIconComponentProps | React.SVGProps<SVGSVGElement>
-  >
   isPinned: boolean
   isAdminForm: boolean
-  data: FormDataProps
+  data: MedicalFormContactData
 }
 
 enum FilterAll {
@@ -69,17 +72,17 @@ enum FilterAll {
 export interface ClientFormsLayoutProps {
   isEmpty?: boolean
   formFilters: FormFilterProps[]
-  forms: FormListProps[]
+  forms: MedicalFormContact[]
   onButtonFilterClick: (e: (string | undefined)[]) => Promise<boolean>
   onFilterClick: (
     e: Record<string, string | number | boolean>
   ) => Promise<boolean>
-  onPrintClick: (e: FormListProps) => Promise<boolean>
-  onShareCick: (e: FormListProps) => Promise<boolean>
+  onPrintClick: (e: MedicalFormContact) => Promise<boolean>
+  onShareCick: (e: MedicalFormContact) => Promise<boolean>
   onVersionClick: (e: string) => Promise<boolean>
-  onEditClick: (e: FormListProps) => Promise<boolean>
-  onPinClick: (e: FormListProps) => Promise<boolean>
-  onDeleteClick: (e: FormListProps) => Promise<boolean>
+  onEditClick: (e: MedicalFormContact) => Promise<boolean>
+  onPinClick: (e: MedicalFormContact) => Promise<boolean>
+  onDeleteClick: (e: MedicalFormContact) => Promise<boolean>
 }
 
 export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
@@ -102,7 +105,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
     []
   )
   const [accordionState, setAccordionState] = useState<(string | number)[]>([])
-  const [formState, setFormState] = useState<FormListProps[]>([])
+  const [formState, setFormState] = useState<MedicalFormContact[]>([])
   const [popOverState, setPopOverState] = useState<PopOverStateProps>({
     content: false,
     version: false,
@@ -121,31 +124,18 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   ]
   useEffect(() => {
     window.scrollTo(0, 0)
-    if (forms?.length && formFilters?.length) {
+    if (formFilters?.length) {
       setFormFilterButtons([...allFilter, ...formFilters])
-      setFormState(forms)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    const data = [...formFilterButtons]
-    const formType = data.map((item) => {
-      if (item.id !== 0 && item.selected) {
-        return item.type
-      }
-      return undefined
-    })
-    const filterList = formType.filter((item) => item)
-    onButtonFilterClick(filterList)
-    const selectedType = new Set(filterList)
-    const formList = [...forms]
-    const formListData: FormListProps[] = formList.filter((item) =>
-      selectedType.has(item.type)
-    )
-    setFormState(formListData)
+    if (forms?.length) {
+      setFormState(forms)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formFilterButtons])
+  }, [forms])
 
   const callBack = (key, id) => {
     const formList = [...accordionState]
@@ -229,7 +219,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   const onFilterSubmit = (values) => {
     onFilterClick(values)
     const formList = [...forms]
-    const formListData: FormListProps[] = []
+    const formListData: MedicalFormContact[] = []
     if (values.author === 'All' && values.formName === 'All')
       setFormState(forms)
     else if (values.author === 'All') {
@@ -464,7 +454,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                       background: '#3D9588',
                       color: ' #FFFFFF',
                     }}
-                    icon={indform.icon && React.createElement(indform.icon)}
+                    icon={React.createElement(MedicalHistoryIcon)}
                   >
                     <div
                       className={

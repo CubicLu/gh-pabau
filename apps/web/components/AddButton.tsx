@@ -31,6 +31,7 @@ interface P {
   mobileSearch?: boolean
   searchTerm?: string
   isCreateButtonVisible?: boolean
+  showMobHeaderOnDesktop?: boolean
 }
 
 const AddButton: FC<P> = ({
@@ -48,6 +49,7 @@ const AddButton: FC<P> = ({
   needTranslation,
   searchTerm,
   isCreateButtonVisible = true,
+  showMobHeaderOnDesktop = false,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
@@ -136,7 +138,11 @@ const AddButton: FC<P> = ({
       )}
       {!mobileSearch && (
         <div
-          className={classNames(styles.marketingIcon, styles.desktopViewNone)}
+          className={
+            showMobHeaderOnDesktop
+              ? styles.appClientIcon
+              : classNames(styles.marketingIcon, styles.desktopViewNone)
+          }
         >
           {tableSearch && (
             <SearchOutlined
@@ -194,66 +200,68 @@ const AddButton: FC<P> = ({
           {t('common-label-apply')}
         </Button>
       </Drawer>
-      <div
-        className={classNames(styles.marketingSource, styles.mobileViewNone)}
-      >
-        {tableSearch && (
-          <Input
-            className={styles.searchMarketingStyle}
-            placeholder={
-              schema.searchPlaceholder
-                ? schema.searchPlaceholder
-                : t('basic-crud-table-input-search-placeholder')
-            }
-            value={marketingSourceSearch}
-            onChange={(e) => {
-              setMarketingSourceSearch(e.target.value)
-            }}
-            suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
-            autoFocus
-          />
-        )}
-        <Popover
-          trigger="click"
-          content={isCustomFilter ? customFilter : filterContent}
-          placement="bottomRight"
-          visible={isPopOverVisible}
-          onVisibleChange={(visible) => setIsPopOverVisible(visible)}
-          overlayClassName={
-            isCustomFilter === false
-              ? styles.filterPopover
-              : styles.customFilterPopover
-          }
+      {!showMobHeaderOnDesktop && (
+        <div
+          className={classNames(styles.marketingSource, styles.mobileViewNone)}
         >
-          {addFilter && (
+          {tableSearch && (
+            <Input
+              className={styles.searchMarketingStyle}
+              placeholder={
+                schema.searchPlaceholder
+                  ? schema.searchPlaceholder
+                  : t('basic-crud-table-input-search-placeholder')
+              }
+              value={marketingSourceSearch}
+              onChange={(e) => {
+                setMarketingSourceSearch(e.target.value)
+              }}
+              suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
+              autoFocus
+            />
+          )}
+          <Popover
+            trigger="click"
+            content={isCustomFilter ? customFilter : filterContent}
+            placement="bottomRight"
+            visible={isPopOverVisible}
+            onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+            overlayClassName={
+              isCustomFilter === false
+                ? styles.filterPopover
+                : styles.customFilterPopover
+            }
+          >
+            {addFilter && (
+              <Button
+                className={styles.filterBtn}
+                onClick={() => setIsPopOverVisible(true)}
+              >
+                <FilterOutlined /> {t('basic-crud-table-button-filter')}
+              </Button>
+            )}
+          </Popover>
+          {schema.createButtonLabel && isCreateButtonVisible && (
             <Button
-              className={styles.filterBtn}
-              onClick={() => setIsPopOverVisible(true)}
+              className={styles.createSourceBtn}
+              type="primary"
+              onClick={() => onClick?.()}
             >
-              <FilterOutlined /> {t('basic-crud-table-button-filter')}
+              {t(schema.createButtonLabel)}
             </Button>
           )}
-        </Popover>
-        {schema.createButtonLabel && isCreateButtonVisible && (
-          <Button
-            className={styles.createSourceBtn}
-            type="primary"
-            onClick={() => onClick?.()}
-          >
-            {t(schema.createButtonLabel)}
-          </Button>
-        )}
-        {schema.inboxButton && (
-          <Button
-            className={styles.inboxSourceBtn}
-            type="primary"
-            onClick={() => onClick?.()}
-          >
-            <InboxOutlined /> {t(schema.createButtonLabel) ?? 'Inbox'}
-            <span className={styles.inboxMsgNum}> 3</span>
-          </Button>
-        )}
-      </div>
+          {schema.inboxButton && (
+            <Button
+              className={styles.inboxSourceBtn}
+              type="primary"
+              onClick={() => onClick?.()}
+            >
+              <InboxOutlined /> {t(schema.createButtonLabel) ?? 'Inbox'}
+              <span className={styles.inboxMsgNum}> 3</span>
+            </Button>
+          )}
+        </div>
+      )}
     </>
   )
 }

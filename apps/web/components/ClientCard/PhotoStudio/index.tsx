@@ -7,7 +7,7 @@ import { cdnURL } from '../../../baseUrl'
 import {
   useGetPhotoAlbumsQuery,
   useGetPhotoAlbumLazyQuery,
-  useGetAlbumPhotosLazyQuery,
+  useGetAllAlbumPhotosLazyQuery,
   useCreateContactPhotoMutation,
   useCreateContactPhotoWithoutAlbumMutation,
   useDeleteContactPhotoMutation,
@@ -100,7 +100,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   })
 
   const [deleteAttachmentInAlbum] = useDeleteContactPhotoMutation({
-    onCompleted({ deleteContactAttachmentPhoto: data }) {
+    onCompleted({ deleteContactAttachment: data }) {
       if (data.success) {
         const id = data?.photo
         const cAddedFiles = [...uploadingImages]
@@ -138,7 +138,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
   const [
     getUncatAlbumPhotos,
     { data: dUnCatPhotos },
-  ] = useGetAlbumPhotosLazyQuery({
+  ] = useGetAllAlbumPhotosLazyQuery({
     fetchPolicy: 'network-only',
   })
 
@@ -332,6 +332,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
                 variables: {
                   album_id: currentAlbumData?.id,
                   attachment_type: 'contact',
+                  attachment_title: '',
                   contact_id: contactId,
                   date: dayjs().unix(),
                   image_url: data?.path,
@@ -344,6 +345,7 @@ export const PhotoStudio: FC<PhotoStudioProps> = ({
               createAttachmentOutOfAlbum({
                 variables: {
                   attachment_type: 'contact',
+                  attachment_title: '',
                   contact_id: contactId,
                   date: dayjs().unix(),
                   image_url: data?.path,

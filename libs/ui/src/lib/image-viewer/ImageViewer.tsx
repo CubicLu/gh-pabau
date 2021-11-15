@@ -846,6 +846,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             sidebarOpen={sidebarOpen}
             setIsDragging={setIsDragging}
             setSidebarOpen={setSidebarOpen}
+            defaultSelectedPhoto={selectedPhotoId}
             loading={loading}
           />
           {isMobile && (
@@ -918,6 +919,7 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
             uploadImage={uploadImage}
             removeImage={removeImage}
             albumId={currentAlbum?.id || 0}
+            cancelFunctionality={false}
           />
         )}
       </AntModal>

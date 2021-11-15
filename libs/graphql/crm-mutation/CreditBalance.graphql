@@ -1,0 +1,38 @@
+fragment CreditBalanceFields on CreditBalance {
+  credit_balance_id
+  company_id
+  balance
+  balance_currency
+  auto
+}
+
+fragment CreditBalance on CreditBalance {
+  ...CreditBalanceFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCreditBalance($data: CreditBalanceCreateInput!) {
+  createOneCreditBalance(data: $data) {
+    ...CreditBalance
+  }
+}
+
+mutation updateOneCreditBalance($where: CreditBalanceWhereUniqueInput!, $data: CreditBalanceUpdateInput!) {
+  updateOneCreditBalance(where: $where, data: $data) {
+    ...CreditBalance
+  }
+}
+
+mutation deleteOneCreditBalance($where: CreditBalanceWhereUniqueInput!) {
+  deleteOneCreditBalance(where: $where) {
+    ...CreditBalance
+  }
+}
+
+mutation updateManyCreditBalance($where: CreditBalanceWhereInput, $data: CreditBalanceUpdateManyMutationInput!) {
+  updateManyCreditBalance(where: $where, data: $data) {
+    count
+  }
+}

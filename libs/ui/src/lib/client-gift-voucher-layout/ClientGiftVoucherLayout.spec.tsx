@@ -9,6 +9,10 @@ describe('ClientGiftVoucherLayout', () => {
         activeVouchers={[]}
         expiredVouchers={[]}
         onCardSelect={() => Promise.resolve(true)}
+        onChangeTab={() => Promise.resolve(true)}
+        activeVouchersCount={0}
+        expiredVouchersCount={0}
+        activeKey={'0'}
       />
     )
     expect(baseElement).toBeTruthy()

@@ -1,0 +1,55 @@
+fragment CommunicationsRequestedFormsFields on CommunicationsRequestedForms {
+  id
+  company_id
+  communications_id
+  booking_id
+  contact_id
+  created_date
+  form_ids
+}
+
+fragment CommunicationsRequestedForms on CommunicationsRequestedForms {
+  ...CommunicationsRequestedFormsFields
+  Company {
+    ...CompanyFields
+  }
+  Communication {
+    ...CommunicationFields
+  }
+  Booking {
+    ...BookingFields
+  }
+  CmContact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneCommunicationsRequestedForms($data: CommunicationsRequestedFormsCreateInput!) {
+  createOneCommunicationsRequestedForms(data: $data) {
+    ...CommunicationsRequestedForms
+  }
+}
+
+mutation updateOneCommunicationsRequestedForms(
+  $where: CommunicationsRequestedFormsWhereUniqueInput!
+  $data: CommunicationsRequestedFormsUpdateInput!
+) {
+  updateOneCommunicationsRequestedForms(where: $where, data: $data) {
+    ...CommunicationsRequestedForms
+  }
+}
+
+mutation deleteOneCommunicationsRequestedForms($where: CommunicationsRequestedFormsWhereUniqueInput!) {
+  deleteOneCommunicationsRequestedForms(where: $where) {
+    ...CommunicationsRequestedForms
+  }
+}
+
+mutation updateManyCommunicationsRequestedForms(
+  $where: CommunicationsRequestedFormsWhereInput
+  $data: CommunicationsRequestedFormsUpdateManyMutationInput!
+) {
+  updateManyCommunicationsRequestedForms(where: $where, data: $data) {
+    count
+  }
+}

@@ -7,8 +7,12 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
+  useCountClientActivityQuery,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
+  useTotalInvoiceCountQuery,
+  useCheckMedicalHistoryQuery,
+  useAggregateAccountPaymentsQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -42,11 +46,32 @@ dayjs.extend(timezone)
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
+  cssClass?: string
 }
 
-export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
+export const ClientCardLayout: FC<P> = ({
+  clientId,
+  children,
+  activeTab,
+  cssClass,
+}) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
+  const { data: countActivities } = useCountClientActivityQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
+  const { data: countInvoice } = useTotalInvoiceCountQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
+  const { data: invAmount } = useAggregateAccountPaymentsQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
   const { t } = useTranslationI18()
   const { me } = useUser()
   const { timezoneDate } = useCompanyTimezoneDate()
@@ -127,6 +152,13 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     skip: !router.query['id'],
   })
 
+  const { data: medicalHistoryData } = useCheckMedicalHistoryQuery({
+    ssr: false,
+    skip: !router.query['id'],
+    variables: {
+      contactID: clientId,
+    },
+  })
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
@@ -208,7 +240,6 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
     })
     getContactHeaderRefetch()
   }
-
   const handleEditNote = async (id, note) => {
     await editMutation({
       variables: { where: { ID: id }, data: { Note: { set: note } } },
@@ -224,17 +255,36 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
     { key: 'appointments', name: 'Appointments' },
-    { key: 'financial', name: 'Financials' },
+    {
+      key: 'financial',
+      name: 'Financials',
+      count: countInvoice?.total ?? 0,
+      tags: [
+        {
+          tag: invAmount?.totalInv?.total_amount?.inv_total,
+          color: 'green',
+        },
+      ],
+    },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
     {
       key: 'emr',
       name: 'EMR',
-      childTabs: [{ key: 'photos', name: 'Photos' }],
+      childTabs: [
+        { key: 'forms', name: 'Forms' },
+        { key: 'photos', name: 'Photos' },
+        { key: 'prescription', name: 'Prescription' },
+        { key: 'documents', name: 'Documents' },
+      ],
     },
     { key: 'gift-vouchers', name: 'Gift Vouchers' },
     { key: 'loyalty', name: 'Loyalty' },
-    { key: 'activities', name: 'Activities' },
+    {
+      key: 'activities',
+      name: 'Activities',
+      count: countActivities?.findManyActivityCount,
+    },
 
     // {
     //   key: 2,
@@ -329,7 +379,8 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
   return (
     <Layout>
       <ClientCard
-        onClose={() => router.push('/clients')}
+        cssClass={cssClass}
+        onClose={() => router.back()}
         tabs={tabItems}
         activeTab={activeTab}
         onTabChanged={(key) =>
@@ -378,6 +429,7 @@ export const ClientCardLayout: FC<P> = ({ clientId, children, activeTab }) => {
             : undefined
         }
         notes={contactData}
+        medicalHistoryIconStatus={medicalHistoryData?.form?.status}
         getContactDetails={getContactDetails}
         handleAddNewClientNote={handleAddNewClientNote}
         handleEditNote={handleEditNote}
