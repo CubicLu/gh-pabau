@@ -84,6 +84,20 @@ export const MedicalFormContact = objectType({
         return root.MedicalContactAttr
       },
     })
+    t.list.field('LabRequest', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabRequest
+      },
+    })
     t.nullable.field('_count', {
       type: 'MedicalFormContactCountOutputType',
       resolve(root: any) {
