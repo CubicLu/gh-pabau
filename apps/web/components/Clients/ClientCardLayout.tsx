@@ -48,7 +48,6 @@ interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
   cssClass?: string
-  deleteActivityId?: number
 }
 
 export const ClientCardLayout: FC<P> = ({
@@ -56,7 +55,6 @@ export const ClientCardLayout: FC<P> = ({
   children,
   activeTab,
   cssClass,
-  deleteActivityId,
 }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()

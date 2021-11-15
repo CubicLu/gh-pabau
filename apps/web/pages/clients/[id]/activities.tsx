@@ -246,7 +246,6 @@ const ActivitiesTab = () => {
         cssClass={'cardCoustomWrapper'}
         clientId={Number(router.query['id'])}
         activeTab="activities"
-        deleteActivityId={activityId}
       >
         <Modal
           centered={true}
