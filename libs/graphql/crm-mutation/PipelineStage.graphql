@@ -1,0 +1,45 @@
+fragment PipelineStageFields on PipelineStage {
+  id
+  company_id
+  pipeline_id
+  name
+  stage_order
+  custom_field_ids
+  note
+  created_date
+  updated_date
+}
+
+fragment PipelineStage on PipelineStage {
+  ...PipelineStageFields
+  Pipeline {
+    ...PipelineFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOnePipelineStage($data: PipelineStageCreateInput!) {
+  createOnePipelineStage(data: $data) {
+    ...PipelineStage
+  }
+}
+
+mutation updateOnePipelineStage($where: PipelineStageWhereUniqueInput!, $data: PipelineStageUpdateInput!) {
+  updateOnePipelineStage(where: $where, data: $data) {
+    ...PipelineStage
+  }
+}
+
+mutation deleteOnePipelineStage($where: PipelineStageWhereUniqueInput!) {
+  deleteOnePipelineStage(where: $where) {
+    ...PipelineStage
+  }
+}
+
+mutation updateManyPipelineStage($where: PipelineStageWhereInput, $data: PipelineStageUpdateManyMutationInput!) {
+  updateManyPipelineStage(where: $where, data: $data) {
+    count
+  }
+}

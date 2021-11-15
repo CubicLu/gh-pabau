@@ -7,10 +7,14 @@ fragment PipelineFields on Pipeline {
   services_ids
   note
   restrict_stages
+  reference
 }
 
 fragment Pipeline on Pipeline {
   ...PipelineFields
+  Company {
+    ...CompanyFields
+  }
 }
 
 mutation createOnePipeline($data: PipelineCreateInput!) {

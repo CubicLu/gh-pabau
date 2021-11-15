@@ -22,6 +22,7 @@ const hideFormInfos: HideForm = {
   medicalHistory: [
     'basic_labtests',
     'basic_vaccinehistory',
+    'basic_snomed',
     'basic_vaccinescheduler',
     'basic_traveldestination',
     'basic_drugs',

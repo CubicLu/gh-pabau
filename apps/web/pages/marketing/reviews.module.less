@@ -546,7 +546,7 @@
 
 .button-visible-wrap {
   justify-content: space-between;
-  opacity:0;
+  opacity: 0;
   @media screen and (max-width: 992px) {
     display: flex;
     flex-direction: column;
@@ -855,14 +855,14 @@
     .ant-table-tbody {
       tr {
         &:hover {
-        td.ant-table-cell {
-          div {
-            div.reviews_button-visible-wrap__2txN_ {
-              opacity: 1;
+          td.ant-table-cell {
+            div {
+              div.reviews_button-visible-wrap__2txN_ {
+                opacity: 1;
+              }
             }
           }
         }
-      }
         td.ant-table-cell:nth-child(6) {
           max-width: 217px;
           width: 217px;
@@ -892,8 +892,8 @@
 .filter-menu {
   .filter-menu-item {
     margin-bottom: 15px;
-    .simple-dropdown{
-      :global .ant-select-selection-item{
+    .simple-dropdown {
+      :global .ant-select-selection-item {
         color: var(--light-grey-text-color);
       }
     }
@@ -932,6 +932,9 @@
 
 .table {
   width: 1150px;
+  :global .ant-tooltip {
+    max-width: 1000px;
+  }
 }
 
 .bannerSkeleton {
@@ -945,7 +948,4 @@
   background: #e0e0de;
   margin: 18px 0;
   display: flex;
-}
-:global .ant-tooltip {
-  max-width: 1000px;
 }

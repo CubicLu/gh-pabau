@@ -5,10 +5,14 @@ import {
   LeftOutlined,
   CloudUploadOutlined,
   LoadingOutlined,
+  CloseCircleFilled,
+  PlayCircleFilled,
 } from '@ant-design/icons'
+import { CancelTokenSource } from 'axios'
 import { Progress, Spin, Tooltip } from 'antd'
 import { isMobile as mobile } from 'react-device-detect'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
+import { FileIcon, defaultStyles } from 'react-file-icon'
 import { ReactComponent as ImagesIcon } from '../../assets//images/image-viewer/image-gallery.svg'
 import { ReactComponent as CameraCircleFilled } from '../../assets/images/image-viewer/camera-circle-filled.svg'
 import { ReactComponent as PhotoCircleFilled } from '../../assets/images/image-viewer/photo-circle-filled.svg'
@@ -18,6 +22,27 @@ import 'react-html5-camera-photo/build/css/index.css'
 import classNames from 'classnames'
 
 const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
+const fileIconStyle = {
+  ...defaultStyles,
+  pdf: {
+    type: 'acrobat',
+    extension: '',
+  },
+  html: {
+    type: 'code2',
+    extension: '',
+  },
+  docx: {
+    glyphColor: '#cfcfcf',
+    type: 'document',
+    extension: '',
+  },
+  doc: {
+    glyphColor: '#cfcfcf',
+    type: 'document',
+    extension: '',
+  },
+}
 
 const dataURLtoFile = (dataurl, filename) => {
   const arr = dataurl.split(','),
@@ -47,58 +72,115 @@ export interface UploadingImageProps {
   id: number
   albumId: number
   preview: string
+  name: string
+  type?: string
   file?: File
   size?: number
   uploadedPath?: string
   isUploadStarted?: boolean
   isUploadCompleted?: boolean
   uploadPercentage?: number
+  cancelToken?: CancelTokenSource
   loading?: boolean
+  isFailed?: boolean
+  isCancelled?: boolean
 }
 
 interface ImageThumbnailProps {
   data: UploadingImageProps
   uploadImage?: (image: UploadingImageProps) => void
-  removeFile?: (path: string) => void
+  cancelUpload?: (image: UploadingImageProps) => void
+  removeFile?: (id: number) => void
+  canCancel?: boolean
 }
 
 const ImageThumbnail: FC<ImageThumbnailProps> = ({
   data,
   uploadImage,
+  cancelUpload,
   removeFile,
+  canCancel = false,
 }) => {
-  console.log(uploadImage)
-  // useEffect(() => {
-  //   if (!data?.isUploadStarted && !data?.isUploadCompleted) {
-  //     uploadImage?.(data)
-  //   }
-  // }, [data, uploadImage])
+  const [showCancelIcon, setShowCancelIcon] = useState(false)
+
+  useEffect(() => {
+    if (!data?.isUploadStarted && !data?.isUploadCompleted) {
+      uploadImage?.(data)
+    }
+  }, [data, uploadImage])
+
+  useEffect(() => {
+    setShowCancelIcon(() => false)
+  }, [data?.isFailed])
 
   return (
-    <div key={data?.id} style={{ backgroundImage: `url(${data?.preview})` }}>
-      {data?.isUploadStarted && (
-        <div className={styles.imgLoading}>
-          <Tooltip
-            placement="top"
-            title={
-              (data?.uploadPercentage || 0) < 100
-                ? `${data?.uploadPercentage}% completed`
-                : 'Uploaded!'
+    <div
+      key={data?.id}
+      style={
+        data?.type?.includes('image')
+          ? {
+              backgroundImage: `url(${data?.preview})`,
+              boxShadow:
+                '0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%)',
             }
+          : { border: '1px solid lightgray' }
+      }
+    >
+      {!data?.type?.includes('image') && (
+        <div className={styles.otherFiles}>
+          <FileIcon
+            extension={data?.type?.split('/')?.[1]}
+            foldColor="lightgray"
+            labelColor="var(--primary-color)"
+            glyphColor="var(--primary-color)"
+            {...fileIconStyle[data?.type?.split('/')?.[1] || '']}
+          />
+        </div>
+      )}
+      {data?.isUploadStarted && !data?.loading && !showCancelIcon && (
+        <div className={styles.imgLoading}>
+          <span
+            className={styles.progressIndicator}
+            onMouseEnter={() => {
+              if (!data?.isUploadCompleted && canCancel)
+                setShowCancelIcon(() => true)
+            }}
           >
-            <Progress
-              type="circle"
-              percent={!data?.loading ? data?.uploadPercentage || 0 : 0}
-              showInfo={data?.isUploadCompleted && !data.loading ? true : false}
-              strokeColor="#65CD98"
-              trailColor="#9292A3"
-              strokeWidth={10}
-              width={25}
-              status={
-                data?.isUploadCompleted && !data.loading ? 'success' : 'normal'
+            <Tooltip
+              placement="top"
+              className="tooltip-custom"
+              title={
+                data?.isFailed
+                  ? 'Failed!'
+                  : (data?.uploadPercentage || 0) < 100
+                  ? `${data?.uploadPercentage}% completed`
+                  : 'Uploaded!'
               }
-            />
-          </Tooltip>
+            >
+              <Progress
+                type="circle"
+                percent={!data?.loading ? data?.uploadPercentage || 0 : 0}
+                showInfo={
+                  data?.isFailed
+                    ? true
+                    : data?.isUploadCompleted && !data.loading
+                    ? true
+                    : false
+                }
+                strokeColor={data?.isFailed ? '#f5222d' : '#65CD98'}
+                trailColor="#9292A3"
+                strokeWidth={10}
+                width={25}
+                status={
+                  data?.isFailed
+                    ? 'exception'
+                    : data?.isUploadCompleted && !data.loading
+                    ? 'success'
+                    : 'normal'
+                }
+              />
+            </Tooltip>
+          </span>
         </div>
       )}
       {data?.isUploadCompleted && !data?.loading && (
@@ -109,7 +191,7 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
             size="small"
             className={styles.deleteImageIcon}
             onClick={() => {
-              if (data?.uploadedPath) removeFile?.(data?.uploadedPath)
+              if (data?.uploadedPath) removeFile?.(data.id)
             }}
           >
             <CloseOutlined />
@@ -118,14 +200,38 @@ const ImageThumbnail: FC<ImageThumbnailProps> = ({
       )}
       {data?.loading && (
         <div className={styles.imgLoading}>
-          <Spin spinning indicator={<LoadingOutlined />} />
+          <Tooltip placement="top" title="Uploading...">
+            <Spin
+              spinning
+              className={styles.spinner}
+              indicator={<LoadingOutlined />}
+            />
+          </Tooltip>
         </div>
       )}
+      {showCancelIcon &&
+        canCancel &&
+        data?.isUploadStarted &&
+        !data?.isUploadCompleted && (
+          <div className={styles.imgLoading}>
+            <span
+              className={styles.cancelIcon}
+              onMouseLeave={() => setShowCancelIcon(() => false)}
+              onClick={() => {
+                if (!data?.isFailed) cancelUpload?.(data)
+                if (data?.isFailed) uploadImage?.(data)
+              }}
+            >
+              {!data?.isFailed && <CloseCircleFilled />}
+              {data?.isFailed && <PlayCircleFilled />}
+            </span>
+          </div>
+        )}
     </div>
   )
 }
 
-interface DropzoneProps {
+export interface DropzoneProps {
   multiple?: boolean
   descTitle?: string
   descSubtitle?: string
@@ -138,7 +244,7 @@ interface DropzoneProps {
   onChange: (files: File[]) => void
 }
 
-const Dropzone: FC<DropzoneProps> = ({
+export const Dropzone: FC<DropzoneProps> = ({
   multiple = false,
   descTitle,
   descSubtitle,
@@ -252,13 +358,19 @@ const Dropzone: FC<DropzoneProps> = ({
 }
 export interface CamUploaderProps {
   visible: boolean
-  onClose: () => void
+  onClose: (done?: boolean) => void
   showCamera?: boolean
   uploadingImages: UploadingImageProps[]
   setUploadingImages: (images: UploadingImageProps[]) => void
   uploadImage?: (image: UploadingImageProps) => void
-  removeImage?: (imagePath: string) => void
+  removeImage?: (imageId: number) => void
+  onCancelUpload?: (image: UploadingImageProps) => void
   albumId?: number
+  cancelFunctionality?: boolean
+  acceptFiles?: string[]
+  modalTitle?: string
+  descTitle?: string
+  descSubTitle?: string
 }
 
 export const CamUploaderModal: FC<CamUploaderProps> = ({
@@ -269,7 +381,13 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   setUploadingImages,
   uploadImage,
   removeImage,
+  onCancelUpload,
   albumId = 0,
+  cancelFunctionality = true,
+  acceptFiles = validTypes,
+  modalTitle,
+  descTitle,
+  descSubTitle,
 }) => {
   const facingModes = [FACING_MODES.ENVIRONMENT, FACING_MODES.USER]
   const inputFileRef = useRef<HTMLInputElement>(null)
@@ -287,7 +405,9 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       id: makeId(20),
       preview: URL.createObjectURL(file),
       file: file,
+      type: file?.type,
       size: file?.size,
+      name: file?.name,
       albumId: albumId || 0,
     }
     cAddedFiles.push(newFile)
@@ -303,7 +423,9 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           preview: URL.createObjectURL(file),
           file,
           size: file?.size,
+          type: file?.type,
           albumId: albumId || 0,
+          name: file?.name,
         }
       })
       const cAddedFiles = [...uploadingImages, ...cFiles]
@@ -315,9 +437,21 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
   const scrollToEnd = () => {
     setTimeout(() => {
       const elem = document.querySelector('#addedImagesFixer') as HTMLElement
-      elem.scrollLeft = elem?.scrollWidth || 0
+      if (elem) elem.scrollLeft = elem?.scrollWidth || 0
     }, 100)
   }
+
+  useEffect(() => {
+    const elems = document?.querySelectorAll(
+      "div[class^='ant-modal CamUploaderModal_uppyModal']"
+    )
+    if (elems?.length > 0 && mobile) {
+      const elem = elems?.[0]?.parentElement
+      if (elem) {
+        elem.style.overflow = 'hidden'
+      }
+    }
+  })
 
   return (
     <div>
@@ -326,7 +460,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         type="file"
         name="File"
         multiple
-        accept={validTypes?.join(', ')}
+        accept={acceptFiles?.join(', ')}
         className={styles.fileInput}
         onChange={(e) => {
           const cFiles = (e.target.files as unknown) as File[]
@@ -335,7 +469,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
       />
       <Modal
         visible={visible}
-        onCancel={onClose}
+        onCancel={() => onClose?.(false)}
         width={mobile ? '100vw' : '980px'}
         className={classNames(styles.uppyModal, mobile && styles.fullScreen)}
         closable={false}
@@ -344,18 +478,18 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         <div className={styles.uppyModalHeader}>
           {mobile && (
             <span>
-              <LeftOutlined onClick={onClose} />
+              <LeftOutlined onClick={() => onClose?.(false)} />
             </span>
           )}
           <div className={styles.title}>
             <span>
               <ImagesIcon />
             </span>
-            <span>Take a photo</span>
+            <span>{modalTitle || 'Take a photo'}</span>
           </div>
           {!mobile && (
             <div>
-              <CloseOutlined onClick={onClose} />{' '}
+              <CloseOutlined onClick={() => onClose?.(false)} />{' '}
             </div>
           )}
           {mobile && showCamera && (
@@ -380,8 +514,9 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
           {!showCamera && (
             <Dropzone
               multiple
-              fileTypes={validTypes}
-              descSubtitle="Only Images are acceptable"
+              fileTypes={acceptFiles}
+              descSubtitle={descSubTitle || 'Only Images are acceptable'}
+              descTitle={descTitle}
               onChange={handleAddFiles}
             />
           )}
@@ -405,6 +540,8 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
                   key={el?.id}
                   uploadImage={uploadImage}
                   removeFile={removeImage}
+                  cancelUpload={onCancelUpload}
+                  canCancel={cancelFunctionality}
                 />
               ))}
             </div>
@@ -413,7 +550,10 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
         <div className={styles.uppyModalFooter}>
           <div>
             <span>
-              {uploadingImages?.length || 0} photo
+              {uploadingImages?.length || 0}{' '}
+              {acceptFiles?.find((el) => !el?.includes('image'))
+                ? 'file'
+                : 'photo'}
               {uploadingImages?.length === 0 ||
                 (uploadingImages?.length > 1 && 's')}
             </span>
@@ -433,7 +573,7 @@ export const CamUploaderModal: FC<CamUploaderProps> = ({
             )}
           </div>
           <div>
-            <Button type="default" ghost onClick={onClose}>
+            <Button type="default" ghost onClick={() => onClose?.(true)}>
               Done
             </Button>
           </div>

@@ -1,15 +1,17 @@
 import { extendType, objectType, inputObjectType, intArg, nonNull } from 'nexus'
 import { Context } from '../../../context'
 import { PrismaSelect } from '@paljs/plugins'
-import dayjs from 'dayjs'
-import { ActivityData } from '../types'
 import {
   retrieveActivityGraphData,
   prepareSearchObject,
   prepareSortingObject,
-  calculateLeadLostObject,
   prepareFilterQuery,
+  retrieveActivityData,
+  prepareActivityDataWithCustomField,
+  manualFilterOnAndOperandColumns,
+  manualFilterOnOrOperandColumns,
 } from '../activity'
+import { groupBy } from 'lodash'
 
 export const RetrieveActivityCount = objectType({
   name: 'RetrieveActivityCount',
@@ -56,16 +58,27 @@ export const CmLeadCustomType = objectType({
     t.string('Phone')
     t.string('Description')
     t.field('User', { type: 'User' })
+    t.field('Contact', { type: 'CmContact' })
+    t.field('PipelineStage', { type: 'PipelineStage' })
     t.field('ConvertDate', { type: 'DateTime' })
     t.field('CreatedDate', { type: 'DateTime' })
+    t.field('LastUpdated', { type: 'DateTime' })
     t.int('leadDoneActivities')
+    t.int('leadActivitesToDo')
+    t.int('emailMessagesCount')
+    t.int('location_id')
+    t.field('Location', { type: 'CompanyBranch' })
     t.field('firstActivityTime', { type: 'DateTime' })
     t.field('leadLastActivityDate', { type: 'DateTime' })
+    t.field('leadNextActivityDate', { type: 'DateTime' })
+    t.field('leadLastEmailReceived', { type: 'DateTime' })
+    t.field('leadLastEmailSend', { type: 'DateTime' })
     t.int('leadLastActivityDays')
     t.int('leadTotalActivities')
     t.string('leadLostReason')
     t.field('leadLostTime', { type: 'DateTime' })
     t.string('wonBy')
+    t.field('wonTime', { type: 'DateTime' })
     t.field('MarketingSource', { type: 'MarketingSource' })
     t.string('leadStage')
     t.string('EnumStatus')
@@ -157,8 +170,29 @@ const customFields = [
   'leadTotalActivities',
   'leadLostTime',
   'wonBy',
+  'wonTime',
   'leadLostReason',
   'leadStage',
+  'leadActivitesToDo',
+  'emailMessagesCount',
+  'leadLastEmailSend',
+  'leadLastEmailReceived',
+  'leadLastEmailReceived1',
+  'leadNextActivityDate',
+]
+
+const customFilterColumnList = [
+  'Lead done activities',
+  'First activity time',
+  'Lead last activity date',
+  'Lead last activity (days)',
+  'Lead lost reason',
+  'Lead total activities',
+  'Lead lost time',
+  'Activities to do',
+  'Last email received',
+  'Last email sent',
+  'Next activity date',
 ]
 
 export const ActivityQuery = extendType({
@@ -185,6 +219,7 @@ export const ActivityQuery = extendType({
         delete activitySelect?.select?.CmContact?.select?.clientTotalActivities
         delete activitySelect?.select?.duration
 
+        // eslint-disable-next-line unicorn/prefer-object-from-entries
         input.where = Object.entries(input.where).reduce(
           (acc, [key, value]) => {
             if (value) {
@@ -196,6 +231,24 @@ export const ActivityQuery = extendType({
         )
 
         const where = input.where
+        const filterColumns = []
+        if (
+          where?.filterOption?.andFilterOption &&
+          where?.filterOption?.orFilterOption
+        ) {
+          const andFilterOptions = where?.filterOption?.andFilterOption.map(
+            (item) => {
+              return item.filterColumn
+            }
+          )
+          const orFilterOptions = where?.filterOption?.orFilterOption.map(
+            (item) => {
+              return item.filterColumn
+            }
+          )
+          filterColumns.push(...andFilterOptions, ...orFilterOptions)
+        }
+
         try {
           const prepareSearchQuery =
             where?.search &&
@@ -210,177 +263,144 @@ export const ActivityQuery = extendType({
               where?.filterOption?.andFilterOption,
               ctx
             ))
-          const prepareOrFilterQuery =
-            where?.filterOption?.orFilterOption &&
-            (await prepareFilterQuery(where?.filterOption?.orFilterOption, ctx))
           const andQuery = []
           const orQuery = []
           if (prepareAndFilterQuery) {
             andQuery.push(...prepareAndFilterQuery)
           }
-          if (prepareOrFilterQuery) {
-            orQuery.push(...prepareOrFilterQuery)
-          }
-          const graphData = await retrieveActivityGraphData(
-            ctx,
-            where,
-            prepareSearchQuery,
-            andQuery,
-            orQuery
-          )
-          const activityData = await ctx.prisma.activity.findMany({
-            where: {
-              due_start_date: {
-                gte: where?.startDate,
-                lte: where?.endDate,
-              },
-              ActivityType: { name: { in: where?.activityType } },
-              status: { in: where?.status },
-              AssignedUser: {
-                id: { in: where?.userId },
-              },
-              AND: [
-                ...andQuery,
-                {
-                  OR: orQuery,
-                },
-                {
-                  OR: prepareSearchQuery,
-                },
-              ],
-            },
-            skip: input?.skip ?? 0,
-            take: input?.take ?? 50,
-            orderBy: prepareOrderQuery,
-            select: {
-              ...activitySelect.select,
-              CmContact: {
-                select: {
-                  ...activitySelect.select?.CmContact?.select,
-                  Activity: {
-                    select: {
-                      id: true,
-                      status: true,
-                      finished_at: true,
-                    },
-                  },
-                },
-              },
-              CmLead: {
-                select: {
-                  ...activitySelect.select?.CmLead?.select,
-                  CmLeadNote: {
-                    select: {
-                      Note: true,
-                      CreatedDate: true,
-                    },
-                  },
-                  Activity: {
-                    select: {
-                      id: true,
-                      status: true,
-                      finished_at: true,
-                    },
-                  },
-                  EnumStatus: true,
-                  LeadStatusData: {
-                    select: {
-                      status_name: true,
-                      is_convert: true,
-                    },
-                  },
-                },
-              },
-            },
-          })
+          if (
+            customFilterColumnList.filter((item) =>
+              filterColumns.includes(item)
+            )?.length === 0
+          ) {
+            const prepareOrFilterQuery =
+              where?.filterOption?.orFilterOption &&
+              (await prepareFilterQuery(
+                where?.filterOption?.orFilterOption,
+                ctx
+              ))
 
-          const finalActivityRespons = activityData.map(
-            (item: ActivityData) => {
-              const leadAllActivity = item?.CmLead?.Activity ?? []
-              const contactAllActivity = item?.CmContact?.Activity ?? []
-              const leadNote = item?.CmLead?.CmLeadNote
-
-              leadAllActivity.sort((a, b) => {
-                return (
-                  new Date(a.finished_at).getTime() -
-                  new Date(b.finished_at).getTime()
-                )
-              })
-
-              leadNote.sort((a, b) => {
-                return (
-                  new Date(b.CreatedDate).getTime() -
-                  new Date(a.CreatedDate).getTime()
-                )
-              })
-
-              const leadLost = calculateLeadLostObject(
-                item.CmLead?.EnumStatus,
-                leadNote
-              )
-              const leadLastActivityDate = [...leadAllActivity]
-                .reverse()
-                .find((item) => item?.status === 'Done')?.finished_at
-              return {
-                ...item,
-                duration: dayjs(item.due_end_date).diff(
-                  dayjs(item.due_start_date),
-                  'minutes'
-                ),
-                CmLead: {
-                  ...item.CmLead,
-                  leadDoneActivities: leadAllActivity.filter(
-                    (item) => item?.status === 'Done'
-                  )?.length,
-                  firstActivityTime: leadAllActivity.find(
-                    (item) => item?.status === 'Done'
-                  )?.finished_at,
-                  leadLastActivityDate: leadLastActivityDate,
-                  leadLastActivityDays:
-                    leadLastActivityDate &&
-                    dayjs().diff(leadLastActivityDate, 'days'),
-                  leadTotalActivities: leadAllActivity.length,
-                  leadLostTime: leadLost?.lostTime,
-                  wonBy:
-                    item.CmLead?.EnumStatus === 'Converted'
-                      ? item.CmLead?.User?.full_name
-                      : '',
-                  leadLostReason: leadLost?.lostReason,
-                  leadStage: item.CmLead?.LeadStatusData?.status_name,
-                },
-                CmContact: {
-                  ...item.CmContact,
-                  clientTotalActivities: contactAllActivity.length,
-                },
-              }
+            if (prepareOrFilterQuery) {
+              orQuery.push(...prepareOrFilterQuery)
             }
-          )
+            const graphData = await retrieveActivityGraphData(
+              ctx,
+              where,
+              prepareSearchQuery,
+              andQuery,
+              orQuery
+            )
+            const activityData = await retrieveActivityData(
+              where,
+              ctx,
+              input.skip,
+              input.take,
+              andQuery,
+              orQuery,
+              prepareSearchQuery,
+              prepareOrderQuery,
+              activitySelect
+            )
+            const finalActivityResponse = await prepareActivityDataWithCustomField(
+              ctx,
+              activityData
+            )
 
-          return {
-            retrieveActivityCount: graphData,
-            count: ctx.prisma.activity.count({
-              where: {
-                due_start_date: {
-                  gte: where?.startDate,
-                  lte: where?.endDate,
-                },
-                ActivityType: { name: { in: where?.activityType } },
-                status: { in: where?.status },
-                AssignedUser: {
-                  id: { in: where?.userId },
-                },
-                AND: [
-                  ...andQuery,
-                  {
-                    OR: orQuery,
+            return {
+              retrieveActivityCount: graphData,
+              count: ctx.prisma.activity.count({
+                where: {
+                  due_start_date: {
+                    gte: where?.startDate,
+                    lte: where?.endDate,
                   },
-                  {
-                    OR: prepareSearchQuery,
+                  ActivityType: { name: { in: where?.activityType } },
+                  status: { in: where?.status },
+                  AssignedUser: {
+                    id: { in: where?.userId },
                   },
-                ],
+                  Company: {
+                    id: { equals: ctx.authenticated.company },
+                  },
+                  AND: [
+                    ...andQuery,
+                    {
+                      OR: orQuery,
+                    },
+                    {
+                      OR: prepareSearchQuery,
+                    },
+                  ],
+                },
+              }),
+              activityData: finalActivityResponse,
+            }
+          } else {
+            const activityData = await retrieveActivityData(
+              where,
+              ctx,
+              undefined,
+              undefined,
+              andQuery,
+              orQuery,
+              prepareSearchQuery,
+              prepareOrderQuery,
+              activitySelect
+            )
+
+            const finalActivityResponse = await prepareActivityDataWithCustomField(
+              ctx,
+              activityData
+            )
+
+            const customColumns = new Set(
+              customFilterColumnList.filter((item) =>
+                filterColumns.includes(item)
+              )
+            )
+            const availableCustomColumns = where?.filterOption?.andFilterOption
+              .map((item) => {
+                if (customColumns.has(item.filterColumn)) {
+                  return item
+                }
+                return undefined
+              })
+              .filter((item) => item)
+            const activityFilterData = []
+            if (availableCustomColumns.length > 0) {
+              const response = manualFilterOnAndOperandColumns(
+                finalActivityResponse,
+                availableCustomColumns
+              )
+              activityFilterData.push(...response)
+            } else {
+              activityFilterData.push(...finalActivityResponse)
+            }
+            const activity = []
+            if (where?.filterOption?.orFilterOption?.length > 0) {
+              const response = await manualFilterOnOrOperandColumns(
+                activityFilterData,
+                where?.filterOption?.orFilterOption,
+                ctx
+              )
+              activity.push(...response)
+            } else {
+              activity.push(...activityFilterData)
+            }
+
+            const groupData = groupBy(activity, 'status')
+
+            return {
+              retrieveActivityCount: {
+                reopened: groupData?.['Reopened']?.length,
+                awaiting: groupData?.['Awaiting']?.length,
+                done: groupData?.['Done']?.length,
+                pending: groupData?.['Pending']?.length,
+                working: groupData?.['Working on']?.length,
               },
-            }),
-            activityData: finalActivityRespons,
+              count: activity.length,
+              activityData: activity.slice(input.skip, input.skip + input.take),
+            }
           }
         } catch (error) {
           return error

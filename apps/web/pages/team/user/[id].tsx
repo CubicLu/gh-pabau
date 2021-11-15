@@ -47,7 +47,11 @@ const GetUserDetails = () => {
     }
   }, [staffData])
   return (
-    <Index personalData={staffDetails} staffDataLoading={staffDataLoading} />
+    <Index
+      personalData={staffDetails}
+      userId={staffId}
+      staffDataLoading={staffDataLoading}
+    />
   )
 }
 export default GetUserDetails

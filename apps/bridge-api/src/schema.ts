@@ -2,7 +2,6 @@ import { paljs } from '@paljs/nexus'
 import { makeSchema } from 'nexus'
 import * as types from './resolvers'
 import * as generatedTypes from './generated/types'
-
 //TODO: speed this up
 console.log('Loading schema (this may take up to a minute)...')
 

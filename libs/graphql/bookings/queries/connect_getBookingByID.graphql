@@ -19,3 +19,39 @@ query GetBookingById($id: Int) {
     }
   }
 }
+
+query GetCompanyAppointmentsByDate(
+  $startDate: Float
+  $endDate: Float
+  $companyId: Int
+) {
+  findManyBooking(
+    where: {
+      start_date: { gt: $startDate, lt: $endDate }
+      company_id: { equals: $companyId }
+    }
+  ) {
+    id
+    status
+    start_date
+    start_time
+    company_id
+    service_id
+    contact_id
+    service
+    InvSale {
+      id
+      paid_amount
+    }
+    CmStaffGeneral {
+      Avatar
+      Lname
+      Fname
+    }
+    Contact {
+      Fname
+      Lname
+      Avatar
+    }
+  }
+}

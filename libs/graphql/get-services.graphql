@@ -1,9 +1,8 @@
-query getServiceCategories{
-  ServiceCategories: findManyServiceCategory{
+query getActiveServiceCategories {
+  ServiceCategories: findManyServiceCategory(where: {InvCategory: {disabled: {equals: false}}}) {
     id
     name
-    _count {CompanyService}
-    Services :CompanyService{
+    Services: CompanyService(where: {availability: {notIn: SELL}, Product: {is_active: {equals: 1}}}) {
       id
       name
     }

@@ -18,6 +18,7 @@ import {
   RulesContainer,
   SmsMessageTemplateItem,
   UserListItem,
+  UserGroupListItem,
 } from '@pabau/ui'
 import { Tabs } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
@@ -63,6 +64,7 @@ const MedicalFormAdvance: FC<P> = ({
       .map((item, index) => {
         return { [item.id]: { id: item.id, answer: item.txtQuestion } }
       })
+      // eslint-disable-next-line unicorn/prefer-object-from-entries
       .reduce(function (result, item) {
         const key = Object.keys(item)[0]
         result[key] = item[key]

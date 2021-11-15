@@ -556,7 +556,9 @@ export const General: FC<GeneralProps> = ({
                 disabledDate={(current) => {
                   return current && current > dayjs().endOf('day')
                 }}
-                onChange={(date) => setFieldValue('DOB', date)}
+                onChange={(date, dateString) =>
+                  setFieldValue('DOB', dayjs(dateString))
+                }
                 placeholder={'DD/MM/YY'}
                 getPopupContainer={(trigger) =>
                   trigger.parentElement as HTMLElement

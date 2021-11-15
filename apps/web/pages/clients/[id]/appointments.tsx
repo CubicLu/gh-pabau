@@ -20,7 +20,7 @@ const Appointments = () => {
         }
       }
     `,
-    { skip: !router.query.id, variables: { id: Number(router.query['id']) } }
+    { skip: !!router.query.id, variables: { id: Number(router.query['id']) } }
   )
 
   return (

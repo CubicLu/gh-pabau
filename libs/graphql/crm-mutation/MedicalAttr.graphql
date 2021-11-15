@@ -1,0 +1,40 @@
+fragment MedicalAttrFields on MedicalAttr {
+  id
+  name
+  created_at
+  updated_at
+  deleted_at
+  company_id
+  description
+}
+
+fragment MedicalAttr on MedicalAttr {
+  ...MedicalAttrFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneMedicalAttr($data: MedicalAttrCreateInput!) {
+  createOneMedicalAttr(data: $data) {
+    ...MedicalAttr
+  }
+}
+
+mutation updateOneMedicalAttr($where: MedicalAttrWhereUniqueInput!, $data: MedicalAttrUpdateInput!) {
+  updateOneMedicalAttr(where: $where, data: $data) {
+    ...MedicalAttr
+  }
+}
+
+mutation deleteOneMedicalAttr($where: MedicalAttrWhereUniqueInput!) {
+  deleteOneMedicalAttr(where: $where) {
+    ...MedicalAttr
+  }
+}
+
+mutation updateManyMedicalAttr($where: MedicalAttrWhereInput, $data: MedicalAttrUpdateManyMutationInput!) {
+  updateManyMedicalAttr(where: $where, data: $data) {
+    count
+  }
+}

@@ -99,7 +99,7 @@ export const MedicalFilter: FC<MedicalFilterProps> = ({
       </div>
       <p className={styles.filterViewerSubTitle}>Form type</p>
       <FormType
-        setting={filters.formtype}
+        medicalFormType=""
         onChangeSetting={(val) => handleChangeSetting(val)}
       />
       <p className={styles.filterViewerSubTitle}>Language</p>

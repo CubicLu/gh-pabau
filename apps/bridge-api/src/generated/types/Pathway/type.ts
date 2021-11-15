@@ -41,6 +41,12 @@ export const Pathway = objectType({
         return root.PathwayStep
       },
     })
+    t.nullable.field('Company', {
+      type: 'Company',
+      resolve(root: any) {
+        return root.Company
+      },
+    })
     t.nullable.field('_count', {
       type: 'PathwayCountOutputType',
       resolve(root: any) {

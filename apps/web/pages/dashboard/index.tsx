@@ -6,8 +6,10 @@ import { useUser } from '../../context/UserContext'
 import { useQuery } from '@apollo/client'
 import { useMedia } from 'react-use'
 import {
+  GetFinanceDetailsDocument,
+  GetBookingStatusCountDocument,
+  GetBookingChartDetailDocument,
   GetActiveLocationDocument,
-  GetDashboardDataDocument,
 } from '@pabau/graphql'
 import {
   DownOutlined,
@@ -43,6 +45,7 @@ export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
   const user = useUser()
   const { t } = useTranslationI18()
+  const [loading, setLoading] = useState(true)
   const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
@@ -109,46 +112,54 @@ export function Index() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardMode, filterDate, location])
 
-  const { data: appointmentStatus, loading } = useQuery(
-    GetDashboardDataDocument,
+  const { data: financeDetails, loading: financeDetailLoading } = useQuery(
+    GetFinanceDetailsDocument,
+    getAppointmentQueryVariables
+  )
+  const { data: bookingCounts, loading: bookingCountsLoading } = useQuery(
+    GetBookingStatusCountDocument,
+    getAppointmentQueryVariables
+  )
+  const { data: bookingDetails, loading: bookingDetailsLoading } = useQuery(
+    GetBookingChartDetailDocument,
     getAppointmentQueryVariables
   )
   useEffect(() => {
     setAppointment(
-      appointmentStatus?.dashboardData?.bookingStatusCount?.appointmentList ??
+      bookingCounts?.getBookingStatusCount?.allBookingCounts?.bookingList ??
         defaultAppointmentList
     )
     setOnlineAppointment(
-      appointmentStatus?.dashboardData?.bookingStatusCount
-        ?.onlineAppointmentList ?? defaultOnlineAppointmentList
+      bookingCounts?.getBookingStatusCount?.onlineBookingCounts?.bookingList ??
+        defaultOnlineAppointmentList
     )
     setSales(
-      appointmentStatus?.dashboardData?.salesCount?.salesList ??
+      financeDetails?.getFinanceDetails?.salesCount?.salesList ??
         defaultSalesList
     )
     setTotalBooking({
-      count: appointmentStatus?.dashboardData?.bookingStatusCount?.totalBooking,
+      count:
+        bookingCounts?.getBookingStatusCount?.allBookingCounts?.totalBooking,
       per:
-        appointmentStatus?.dashboardData?.bookingStatusCount?.totalBookingPer,
+        bookingCounts?.getBookingStatusCount?.allBookingCounts?.totalBookingPer,
     })
     setTotalOnlineBooking({
       count:
-        appointmentStatus?.dashboardData?.bookingStatusCount
-          ?.totalOnlineBooking,
+        bookingCounts?.getBookingStatusCount?.onlineBookingCounts?.totalBooking,
       per:
-        appointmentStatus?.dashboardData?.bookingStatusCount
-          ?.totalOnlineBookingPer,
+        bookingCounts?.getBookingStatusCount?.onlineBookingCounts
+          ?.totalBookingPer,
     })
     setTotalSalesCount({
       count:
-        appointmentStatus?.dashboardData?.salesCount
+        financeDetails?.getFinanceDetails?.salesCount
           ?.totalAvailableCategoryTypeAmount,
       per:
-        appointmentStatus?.dashboardData?.salesCount
+        financeDetails?.getFinanceDetails?.salesCount
           ?.totalAvailableCategoryTypePer,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appointmentStatus])
+  }, [financeDetails, bookingCounts, bookingDetails])
 
   useEffect(() => {
     const List = [...userListData]
@@ -171,6 +182,13 @@ export function Index() {
     setLocation(record)
   }, [userListData])
 
+  useEffect(() => {
+    if (financeDetailLoading || bookingCountsLoading || bookingDetailsLoading) {
+      setLoading(true)
+    } else {
+      setLoading(false)
+    }
+  }, [financeDetailLoading, bookingCountsLoading, bookingDetailsLoading])
   const handleSelectMenu = (selectedUser) => {
     const List = [...userListData]
     List.map((item) => {
@@ -477,14 +495,14 @@ export function Index() {
                   : previousRange
               }
               newClientCount={
-                appointmentStatus?.dashboardData?.otherSalesDetails
+                financeDetails?.getFinanceDetails?.otherSalesDetails
                   ?.newClientCount
               }
               avgBill={
-                appointmentStatus?.dashboardData?.otherSalesDetails?.avgBiller
+                financeDetails?.getFinanceDetails?.otherSalesDetails?.avgBiller
               }
               revPerHour={
-                appointmentStatus?.dashboardData?.otherSalesDetails?.RevPerhour
+                financeDetails?.getFinanceDetails?.otherSalesDetails?.RevPerhour
               }
               loading={loading}
             />
@@ -492,21 +510,21 @@ export function Index() {
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}
               BookingData={
-                appointmentStatus?.dashboardData?.allbooking?.bookingsByStatus
+                bookingDetails?.getBookingChartDetail?.bookingsByStatus
               }
               salesData={
-                appointmentStatus?.dashboardData?.allSales
+                financeDetails?.getFinanceDetails?.allSales
                   ?.salesByProductCategoryType
               }
               totalBooking={totalBooking}
               totalOnlineBooking={totalOnlineBooking}
               totalSalesCount={totalSalesCount}
               productDetails={
-                appointmentStatus?.dashboardData?.retailSales
+                financeDetails?.getFinanceDetails?.retailSales
                   ?.retailSalesDetails
               }
               serviceDetails={
-                appointmentStatus?.dashboardData?.serviceSales
+                financeDetails?.getFinanceDetails?.serviceSales
                   ?.serviceSalesDetails
               }
               loading={loading}

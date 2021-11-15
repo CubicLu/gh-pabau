@@ -1,0 +1,45 @@
+mutation saveStep (
+  $stepId : Int!,
+  $journeyId : Int!,
+  $clientId : Int!,
+  $status : cp_steps_taken_status!,
+  $recordId : Int! = 0 ){
+  upsertOnePathwayStepsTaken(
+    where:{
+      step_id_3:{
+        step_id:$stepId
+        path_taken_id:$journeyId
+      }
+    }
+    update:{
+      status:{
+        set:$status
+      }
+      record_id:{
+        set:$recordId
+      }
+    }
+    create:{
+      PathwayStep:{
+        connect:{
+          id:$stepId
+        }
+      }
+      PathwaysTaken:{
+        connect:{
+          id:$journeyId
+        }
+      }
+      CmContact:{
+        connect:{
+          ID:$clientId
+        }
+      }
+      status:$status
+      record_id:$recordId
+    }
+  ){
+    id
+    status
+  }
+}

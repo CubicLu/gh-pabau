@@ -22,9 +22,7 @@ query basicContactDetails($id: Int!) {
         color
       }
     }
-    marketingSource:MarketingSourceData{
-      name
-    }
+    marketingSource: MarketingSource
     customField: CmContactCustom{
       title: custom_field_label
       id: custom_field_id
@@ -38,6 +36,11 @@ query basicContactDetails($id: Int!) {
     }
     bookingNotes: Booking(orderBy: { create_date: desc }) {
       id
+    }
+    Company {
+      details {
+        country
+      }
     }
   }
 }
@@ -118,12 +121,18 @@ query getContactCustomFields {
   custom: findManyManageCustomFieldCategory {
     id
     name
-    ManageCustomField(where:{field_for: { in: [CONTACT, CONTACTLEAD] }}) {
+    ManageCustomField(
+      where: { 
+        field_for: { in: [CONTACT, CONTACTLEAD] } 
+        field_type: { not: { equals: "localized_message" } }     
+      }
+    ) {
       id
       field_label
       field_type
       is_required
       is_active
+      field_order
       ManageCustomFieldItem {
         id
         item_label
@@ -135,6 +144,7 @@ query getContactCustomFields {
       category_id: { equals: 0 }
       is_active: { equals: true }
       field_for: { in: [CONTACT, CONTACTLEAD] }
+      field_type: { not: { equals: "localized_message" } }
     }
   ) {
     id
@@ -143,6 +153,7 @@ query getContactCustomFields {
     category_id
     is_required
     is_active
+    field_order
     ManageCustomFieldItem {
       id
       item_label
@@ -176,6 +187,9 @@ query getSalutations {
   findManyUserSalutation {
     id
     name
+  }
+  findFirstCompanyDetails {
+    country
   }
 }
 
@@ -369,5 +383,33 @@ mutation updateOneContact
     labels: $labels
   ){
     ID
+  }
+}
+
+mutation upsertOneCmContactCustom(
+  $contactId: Int!
+  $companyId: Int!
+  $customId: Int!
+  $customLabel: String!
+  $customValue: String!
+) {
+  upsertOneCmContactCustom(
+    where: {
+      unique_company_id_contact_id_custom_field_id: {
+        company_id: $companyId
+        contact_id: $contactId
+        custom_field_id: $customId
+      }
+    }
+    create: {
+      Company: { connect: { id: $companyId } }
+      CmContact: { connect: { ID: $contactId } }
+      ManageCustomField: { connect: { id: $customId } }
+      custom_field_label: $customLabel
+      custom_field_value: $customValue
+    }
+    update: { custom_field_value: { set: $customValue } }
+  ) {
+    id
   }
 }

@@ -6,9 +6,6 @@ export const DebtManageCommunication = objectType({
     input: false,
   },
   name: 'DebtManageCommunication',
-  description: `/ The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-/ model custom_fields_display {
-/ }`,
   definition(t) {
     t.int('id')
     t.int('invoice_id')

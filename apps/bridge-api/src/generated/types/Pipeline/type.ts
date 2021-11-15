@@ -15,18 +15,25 @@ export const Pipeline = objectType({
     t.string('services_ids')
     t.string('note')
     t.boolean('restrict_stages')
-    t.list.field('LeadStatus', {
-      type: 'LeadStatus',
+    t.nullable.string('reference')
+    t.list.field('PipelineStage', {
+      type: 'PipelineStage',
       args: {
-        where: 'LeadStatusWhereInput',
-        orderBy: 'LeadStatusOrderByWithRelationInput',
-        cursor: 'LeadStatusWhereUniqueInput',
+        where: 'PipelineStageWhereInput',
+        orderBy: 'PipelineStageOrderByWithRelationInput',
+        cursor: 'PipelineStageWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'LeadStatusScalarFieldEnum',
+        distinct: 'PipelineStageScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.LeadStatus
+        return root.PipelineStage
+      },
+    })
+    t.field('Company', {
+      type: 'Company',
+      resolve(root: any) {
+        return root.Company
       },
     })
     t.nullable.field('_count', {

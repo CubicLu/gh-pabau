@@ -1,9 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { EditOutlined } from '@ant-design/icons'
 import styles from './Verification.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import useServices from '../../hooks/useServices'
+import { SettingsContext } from '../../context/settings-context'
 
 export interface P {
   backToStep?: (val: number) => void
@@ -13,6 +14,7 @@ export const Verification: FC<P> = ({ backToStep }) => {
   const { t } = useTranslationI18()
   const { selectedData } = useSelectedDataStore()
   const [getTotalServiceCost] = useServices()
+  const settings = useContext(SettingsContext)
 
   return (
     <div className={styles.appWrapper}>
@@ -57,10 +59,12 @@ export const Verification: FC<P> = ({ backToStep }) => {
             />
           </h5>
           <div className={styles.imgTag}>
-            <img
-              src={'https://crm.pabau.com' + selectedData.employee.Avatar}
-              alt={'nothing'}
-            />
+            {selectedData.employee.Avatar !== '' && (
+              <img
+                src={settings.pod_url + selectedData.employee.Avatar}
+                alt={selectedData.employee.Avatar}
+              />
+            )}
             <p>{selectedData.employee.Public_User.full_name}</p>
           </div>
         </div>

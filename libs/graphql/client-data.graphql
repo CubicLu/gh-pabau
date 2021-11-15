@@ -1,11 +1,38 @@
-query ClientsData($cursor: CmContactWhereUniqueInput) {
-  findManyCmContact(take: 10, cursor: $cursor) {
+query ClientsData($active: Int = 1, $searchTerm: String, $cursor: CmContactWhereUniqueInput) {
+  findManyCmContact(
+    take: 50,
+    cursor: $cursor,
+    where: {
+      is_active: { equals: $active }
+      AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm } }
+            { Lname: { contains: $searchTerm } }
+            { Mobile: { contains: $searchTerm } }
+            { Email: { contains: $searchTerm } }
+          ]
+        }
+      ]
+    }
+    orderBy: {
+      Fname: asc,
+    }
+  ) {
     id: ID
+    avatar: Avatar
     firstName: Fname
     lastName: Lname
     is_active
     email: Email
     mobileNumber: Mobile
+    labels: CmContactLabel {
+      id
+      label: CmLabel {
+        name
+        color
+      }
+    }
     #    label?: Labels[]
     #    is_active?: number
     #    date_archived?: string

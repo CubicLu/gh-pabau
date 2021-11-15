@@ -42,8 +42,10 @@ export const UserProvider: FC = ({ children }) => {
     }
   })()
   // End of hack
+  const jwtTokenG = typeof window !== 'undefined' ? window['token'] : null
 
   const [token, setToken] = usePersistedTokenState(null)
+
   const { resetStore, clearStore } = useApolloClient()
   const [
     retrieveAuthenticatedUser,
@@ -55,7 +57,21 @@ export const UserProvider: FC = ({ children }) => {
       console.log('Silent error:', e)
     },
   })
-
+  const loginByJWt = async (jwt) => {
+    setToken(jwt)
+    try {
+      await resetStore()
+    } catch (error) {
+      console.error('Silenced error whilst resetting the apollo store', error)
+    }
+    // setDidLogin(true)
+  }
+  useEffect(() => {
+    if (jwtTokenG) {
+      loginByJWt(jwtTokenG)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jwtTokenG])
   useEffect(() => {
     if (token) {
       retrieveAuthenticatedUser()
@@ -81,6 +97,7 @@ export const UserProvider: FC = ({ children }) => {
         imageUrl: data.me.image,
         companyDateFormat: data.me.Company.details.date_format,
         currency: data.me.Company.details.currency,
+        timezone: data.me.Company.details.timezone.php_format,
       }
     : null
 

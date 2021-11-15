@@ -1,15 +1,16 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Modal, Tabs, Drawer, Skeleton } from 'antd'
 import { useMedia } from 'react-use'
-
 import Layout from '../../Layout/Layout'
 import {
   Breadcrumb,
   Avatar,
   Button,
   PabauPlus,
-  AvatarUploader,
+  Notification as ResNotification,
+  NotificationType,
 } from '@pabau/ui'
+import AvatarUploader from '../../../../web/components/Uploaders/AvatarUploader/AvatarUploader'
 import { useTranslation } from 'react-i18next'
 import styles from './UserDetail.module.less'
 import { userDetail } from '../../../mocks/UserDetail'
@@ -21,9 +22,9 @@ import Performance from './Performance/Performance'
 import Emergency from './Emergency/Emergency'
 import CustomizeFields from './PersonalDetail/CustomizeFields'
 import CommonHeader from '../../../components/CommonHeader'
-import AvatarImage from '../../../assets/images/avatar.png'
 import { LeftOutlined } from '@ant-design/icons'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { useUpdateOneUserMutation } from '@pabau/graphql'
 const { TabPane } = Tabs
 
 export interface customFieldsProps {
@@ -59,24 +60,42 @@ export interface LocationDetails {
 interface UserDetailsProps {
   personalData?: StaffDetails
   staffDataLoading?: boolean
+  userId?: number
 }
-const Index: FC<UserDetailsProps> = ({ personalData, staffDataLoading }) => {
+const Index: FC<UserDetailsProps> = ({
+  personalData,
+  staffDataLoading,
+  userId,
+}) => {
   const { t } = useTranslation('common')
   const { fields, graphData } = userDetail(t)
   const [tabKey, setTabKey] = useState<string>('1')
   const isMobile = useMedia('(max-width: 768px)')
-  const [userImage, setUserImage] = useState<string>(AvatarImage)
+  const [userImage, setUserImage] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [fieldsData, setFieldsData] = useState<customFieldsProps[]>(fields)
+  const [personalDetails, setPersonalDetails] = useState<StaffDetails>()
   const fullName = `${personalData?.firstname ?? ''} ${
     personalData?.lastname ?? ''
   }`
-
+  const [updateProfileMutation] = useUpdateOneUserMutation({
+    onCompleted() {
+      ResNotification(
+        NotificationType.success,
+        t('account.settings.response.notification.profilesection.success')
+      )
+    },
+    onError() {
+      ResNotification(
+        NotificationType.error,
+        t('account.settings.response.notification.error')
+      )
+    },
+  })
   const handleSaveCustomFields = (field: customFieldsProps[]) => {
     setFieldsData(field)
   }
-
   const handleCloseModal = () => {
     setShowModal(false)
   }
@@ -84,14 +103,35 @@ const Index: FC<UserDetailsProps> = ({ personalData, staffDataLoading }) => {
   const handleShowAvatarUploader = () => {
     setShowAvatarUploader(true)
   }
-
-  const handleChangeImage = (image: string) => {
-    setUserImage(image)
+  const handleImage = (imageData) => {
+    const { url, path } = imageData
+    setUserImage(url)
+    handleInputChange({ image: url })
+    updateProfileMutation({
+      variables: {
+        where: { id: userId },
+        data: {
+          image: { set: path },
+        },
+      },
+    })
   }
-
+  const handleInputChange = (obj) => {
+    if (personalDetails && Object.keys(personalDetails)?.length) {
+      setPersonalDetails({ ...personalDetails, ...obj })
+    }
+  }
   const handleTabChange = (key: string) => {
     setTabKey(key)
   }
+  useEffect(() => {
+    if (personalData) {
+      setPersonalDetails(personalData)
+    }
+    if (personalData?.image) {
+      setUserImage(getImage(personalData?.image))
+    }
+  }, [personalData])
   return (
     <div className={styles.userDetailMain}>
       <Layout>
@@ -119,16 +159,13 @@ const Index: FC<UserDetailsProps> = ({ personalData, staffDataLoading }) => {
                       <Skeleton.Avatar
                         className={styles.skeletonIcon}
                         active={true}
-                        size={'large'}
+                        size={54}
                       />
                     ) : (
                       <Avatar
-                        src={
-                          personalData?.image
-                            ? getImage(personalData?.image)
-                            : userImage
-                        }
-                        size={'large'}
+                        name={fullName}
+                        src={userImage}
+                        size={54}
                         edit={true}
                       />
                     )}
@@ -181,7 +218,7 @@ const Index: FC<UserDetailsProps> = ({ personalData, staffDataLoading }) => {
               >
                 <PersonalDetail
                   t={t}
-                  personalData={personalData}
+                  personalData={personalDetails}
                   field={fieldsData}
                   graphData={graphData}
                   staffDataLoading={staffDataLoading}
@@ -266,13 +303,19 @@ const Index: FC<UserDetailsProps> = ({ personalData, staffDataLoading }) => {
           </Drawer>
         )}
 
-        <AvatarUploader
-          visible={showAvatarUploader}
-          title={'Edit Photo'}
-          imageURL={AvatarImage}
-          onCreate={handleChangeImage}
-          onCancel={() => setShowAvatarUploader(false)}
-        />
+        {showAvatarUploader && (
+          <AvatarUploader
+            visible={showAvatarUploader}
+            section={'avatar_photos'}
+            type={'file_attachments'}
+            title={t('team.user.personal.details.avtar.modal.title')}
+            imageURL={userImage}
+            width={400}
+            height={400}
+            successHandler={handleImage}
+            onCancel={() => setShowAvatarUploader(false)}
+          />
+        )}
       </Layout>
     </div>
   )

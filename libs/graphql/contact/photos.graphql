@@ -65,6 +65,7 @@ mutation createContactPhoto(
   $attachment_type: String!
   $date: Int!
   $company_id: Int!
+  $attachment_title: String!
 ) {
   createOneContactAttachment(
     data: {
@@ -72,6 +73,7 @@ mutation createContactPhoto(
       Contact: { connect: { ID: $contact_id } }
       Album: { connect: { id: $album_id } }
       attachment_type: $attachment_type
+      attachment_title: $attachment_title
       date: $date
       linkref: $image_url
       user_id: $uploaded_by
@@ -79,6 +81,8 @@ mutation createContactPhoto(
   ) {
     id
     linkref
+    album_id
+    date
   }
 }
 
@@ -89,6 +93,7 @@ mutation createContactPhotoWithoutAlbum(
   $attachment_type: String!
   $date: Int!
   $company_id: Int!
+  $attachment_title: String!
 ) {
   createOneContactAttachment(
     data: {
@@ -96,6 +101,7 @@ mutation createContactPhotoWithoutAlbum(
       Contact: { connect: { ID: $contact_id } }
       Album: {}
       attachment_type: $attachment_type
+      attachment_title: $attachment_title
       date: $date
       linkref: $image_url
       user_id: $uploaded_by
@@ -103,11 +109,37 @@ mutation createContactPhotoWithoutAlbum(
   ) {
     id
     linkref
+    album_id
+    date
   }
 }
 
 mutation deleteContactPhoto($id: Int!) {
-  deleteOneContactAttachment(where: { id: $id }) {
-    id
+  deleteContactAttachment(id: $id) {
+    success
+    error
+    photo
+  }
+}
+
+mutation deleteManyContactPhoto($ids: [Int]!) {
+  deleteManyContactAttachment(ids: $ids) {
+    success
+    count
+  }
+}
+
+mutation moveContactAttachments($album: Int!, $images: [Int]!) {
+  moveAttachments(albumId: $album, imageIds: $images) {
+    success
+    album
+  }
+}
+
+mutation deleteContactAlbum($id: Int!) {
+  deleteContactAlbum(id: $id) {
+    success
+    album
+    error
   }
 }

@@ -27,5 +27,11 @@ export const PathwayStepsTaken = objectType({
         return root.PathwayStep
       },
     })
+    t.field('CmContact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.CmContact
+      },
+    })
   },
 })

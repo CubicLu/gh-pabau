@@ -3,10 +3,9 @@ import { Input, Form, Popover, Select, Checkbox, Radio } from 'antd'
 import {
   DatePicker,
   Button,
-  Notification,
-  NotificationType,
   PhoneProp,
   PhoneNumberInput,
+  selectOptionType,
 } from '@pabau/ui'
 import dayjs from 'dayjs'
 import { useMedia } from 'react-use'
@@ -18,14 +17,20 @@ const { TextArea } = Input
 
 export interface InlineEditProps {
   children?: React.ReactNode
-  selectOptions?: string[]
+  selectOptions?: string[] | selectOptionType[]
   hideFooter?: boolean
   fieldTitle: string
   orderIndex?: number
-  initialValue: string | PhoneProp
+  initialValue: number | string | PhoneProp
   type: string
   dateFormat?: string
-  onUpdateValue: (orderIndex: number, value: string, type?: string) => void
+  category?: number
+  onUpdateValue: (
+    orderIndex: number,
+    value: string,
+    type?: string,
+    category?: number
+  ) => Promise<void>
 }
 
 export const InlineEditDataTypes = {
@@ -53,12 +58,14 @@ export const InlineEdit: FC<InlineEditProps> = ({
   fieldTitle,
   orderIndex,
   dateFormat,
+  category,
   onUpdateValue,
   ...restProps
 }) => {
   const isMobile = useMedia('(max-width: 768px)', false)
 
   const [visible, setVisible] = useState(false)
+  const [isEditLoading, setEditLoading] = useState(false)
   const [phoneType, setPhoneType] = useState('Mobile')
   const [form] = Form.useForm()
   const { t } = useTranslation('common')
@@ -132,7 +139,9 @@ export const InlineEdit: FC<InlineEditProps> = ({
                 name={fieldTitle}
                 options={
                   selectOptions && selectOptions?.length > 0
-                    ? selectOptions
+                    ? selectOptions.map((value) => {
+                        return value
+                      })
                     : []
                 }
               />
@@ -173,16 +182,26 @@ export const InlineEdit: FC<InlineEditProps> = ({
             <div className={styles.editPopup}>
               <h5>{`Edit ${fieldTitle}`}</h5>
               <div>
-                <Form.Item name={fieldTitle} initialValue={initialValue}>
+                <Form.Item name={fieldTitle} initialValue={initialValue || ''}>
                   <Select
                     allowClear
                     placeholder={t('activityList.select.placeholder')}
                   >
-                    {selectOptions?.map((item, index) => (
-                      <Option key={index} value={item}>
-                        {item}
-                      </Option>
-                    ))}
+                    {selectOptions?.map((item, index) => {
+                      if (item?.id) {
+                        return (
+                          <Option key={index} value={item.id}>
+                            {item.name}
+                          </Option>
+                        )
+                      } else {
+                        return (
+                          <Option key={index} value={item}>
+                            {item}
+                          </Option>
+                        )
+                      }
+                    })}
                   </Select>
                 </Form.Item>
               </div>
@@ -208,7 +227,7 @@ export const InlineEdit: FC<InlineEditProps> = ({
                 <Select
                   allowClear
                   placeholder={t('activityList.select.placeholder')}
-                  onChange={(val) => {
+                  onChange={(val: string) => {
                     setPhoneType(val.toString().toLowerCase())
                     form.setFieldsValue({
                       [fieldTitle]:
@@ -255,7 +274,8 @@ export const InlineEdit: FC<InlineEditProps> = ({
     }
   }
 
-  const save = (values) => {
+  const save = async (values) => {
+    setEditLoading(true)
     const [key] = Object.keys(values)
     let value = ''
     if (type === InlineEditDataTypes.date) {
@@ -268,10 +288,10 @@ export const InlineEdit: FC<InlineEditProps> = ({
           : updatedValue?.[key]
     }
     if (orderIndex) {
-      onUpdateValue(orderIndex, value, phoneType.toLowerCase())
+      await onUpdateValue(orderIndex, value, phoneType.toLowerCase(), category)
     }
+    setEditLoading(false)
     toggleVisible()
-    Notification(NotificationType.success, `${fieldTitle} updated to ${value}`)
   }
 
   const popoverContent = () => {
@@ -297,7 +317,11 @@ export const InlineEdit: FC<InlineEditProps> = ({
               <Button onClick={toggleVisible}>
                 {t('common-label-cancel')}
               </Button>
-              <Button type={'primary'} htmlType={'submit'}>
+              <Button
+                type={'primary'}
+                htmlType={'submit'}
+                loading={isEditLoading}
+              >
                 {t('common-label-save')}
               </Button>
             </div>
