@@ -13,6 +13,7 @@ import {
   useTotalInvoiceCountQuery,
   useCheckMedicalHistoryQuery,
   useAggregateAccountPaymentsQuery,
+  useCountVouchersQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -65,6 +66,10 @@ export const ClientCardLayout: FC<P> = ({
   const { data: countInvoice } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
+  })
+
+  const { data: countVouchers } = useCountVouchersQuery({
+    variables: { contactID: clientId },
   })
 
   const { data: invAmount } = useAggregateAccountPaymentsQuery({
@@ -278,7 +283,11 @@ export const ClientCardLayout: FC<P> = ({
         { key: 'documents', name: 'Documents' },
       ],
     },
-    { key: 'gift-vouchers', name: 'Gift Vouchers' },
+    {
+      key: 'gift-vouchers',
+      name: 'Gift Vouchers',
+      count: countVouchers?.total,
+    },
     { key: 'loyalty', name: 'Loyalty' },
     {
       key: 'activities',
