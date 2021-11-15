@@ -44,22 +44,12 @@ import { useMedia } from 'react-use'
 import classNames from 'classnames'
 import PreviewFile from './PreviewFile'
 
-const getThumb = (src: string) => {
-  // if (src.includes('/')) {
-  //   const pathArr = src.split('/')
-  //   pathArr[pathArr?.length - 1] = `${pathArr[pathArr?.length - 1]}`
-  //   return pathArr.join('/')
-  // } else {
-  return src
-  // }
-}
-
 const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   const [source, setSource] = useState('')
 
   useEffect(() => {
     if (source === '' && origin !== '') {
-      const path = getThumb(origin)
+      const path = origin
       const img = new Image()
       img.crossOrigin = 'Anonymous'
       img.addEventListener('load', () => {
@@ -89,11 +79,7 @@ const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   }, [isDirectPath, origin, source])
 
   return source ? (
-    <img
-      src={!isDirectPath ? source : getThumb(origin)}
-      alt="content"
-      {...props}
-    />
+    <img src={!isDirectPath ? source : origin} alt="content" {...props} />
   ) : (
     <div {...props}>
       <Skeleton.Image />
