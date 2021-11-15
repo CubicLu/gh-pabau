@@ -1,26 +1,6 @@
 import { extendType, intArg, list, objectType } from 'nexus'
 import { Context } from '../../../context'
 
-export const InvoiceData = objectType({
-  name: 'InvoiceData',
-  description: 'Invoice data simple response',
-  definition(t) {
-    t.int('id')
-    t.string('guid')
-    t.field('date', { type: 'DateTime' })
-    t.int('customer_id')
-    t.string('customer_name')
-    t.float('paid_amount')
-    t.float('discount_amount')
-    t.float('credit_amount')
-    t.float('inv_total')
-    t.string('location_name')
-    t.string('billers')
-    t.string('issue_to')
-    t.string('reference_no')
-  },
-})
-
 export const PaymentsOutput = objectType({
   name: 'PaymentsOutput',
   description: 'Payments data simple response',
@@ -37,23 +17,11 @@ export const PaymentsOutput = objectType({
   },
 })
 
-// export const InvoiceInputTypes = {
-//   where: 'InvSaleWhereInput',
-//   orderBy: list('InvSaleOrderByWithRelationInput'),
-//   cursor: 'InvSaleWhereUniqueInput',
-//   skip: intArg({
-//     default: 0,
-//   }),
-//   take: intArg({
-//     default: 50,
-//   }),
-// }
-
 export const MainInvoice = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('findManyInvoice', {
-      type: InvoiceData,
+      type: 'InvSale',
       description:
         'Get Invoices per customer or invoice no (custom_id), other field to be implemented',
       args: {
@@ -76,7 +44,7 @@ export const MainInvoice = extendType({
       },
     })
     t.list.field('findManyCreditNote', {
-      type: InvoiceData,
+      type: 'InvSale',
       description:
         'Get Invoices per customer or invoice no (custom_id), other field to be implemented',
       args: {
@@ -214,7 +182,8 @@ const generateInvoiceQuery = (
               sum(a.inv_total) as inv_total,
               sum(a.credit_amount) as credit_amount,
               b.name as location_name,
-              group_concat(Distinct d.name) as billers,
+              a.location_id,
+              group_concat(Distinct d.name) as biller_name,
               if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
           FROM inv_sales a
               LEFT JOIN company_branches b on b.id = a.location_id
