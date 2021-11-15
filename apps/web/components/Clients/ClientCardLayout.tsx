@@ -7,7 +7,7 @@ import {
   useCreateOneContactNoteMutation,
   useUpdateOneContactNoteMutation,
   useDeleteOneContactNoteMutation,
-  useCountClientActivityLazyQuery,
+  useCountClientActivityQuery,
   useUpdateOneCmContactMutation,
   useUpsertOneCmContactCustomMutation,
   useTotalInvoiceCountQuery,
@@ -60,10 +60,10 @@ export const ClientCardLayout: FC<P> = ({
 }) => {
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
-  const [
-    getActivityCount,
-    { data: countActivities },
-  ] = useCountClientActivityLazyQuery()
+  const { data: countActivities } = useCountClientActivityQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
   const { data: countInvoice } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
@@ -120,11 +120,6 @@ export const ClientCardLayout: FC<P> = ({
       )
     },
   })
-  useEffect(() => {
-    getActivityCount({
-      variables: { contactID: clientId },
-    })
-  }, [clientId, getActivityCount, deleteActivityId])
   const getQueryVariables = useMemo(() => {
     return {
       variables: { id: clientId },

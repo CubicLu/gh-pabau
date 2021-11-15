@@ -6,6 +6,7 @@ import styles from './clientCardLayout.module.less'
 import {
   useGetActivityLazyQuery,
   useCountClientActivityWithTypeLazyQuery,
+  CountClientActivityDocument,
   useDeleteManyActivityMutation,
   useGetActivityTypesQuery,
 } from '@pabau/graphql'
@@ -20,7 +21,6 @@ import {
 } from '@pabau/ui'
 import { ActivityTypeFilter } from '../../activities'
 import { DisplayDate } from '../../../hooks/displayDate'
-
 const ActivitiesTab = () => {
   const router = useRouter()
   const contactID = Number(router.query['id'])
@@ -60,7 +60,7 @@ const ActivitiesTab = () => {
   } = useGetActivityTypesQuery()
   const [
     getCountActivity,
-    { data: countData, loading: countLoading, refetch: reFetchCountActivity },
+    { data: countData, loading: countLoading },
   ] = useCountClientActivityWithTypeLazyQuery({
     fetchPolicy: 'no-cache',
   })
@@ -75,13 +75,33 @@ const ActivitiesTab = () => {
       )
       setIsActivityDelete(false)
       reFetchActivity()
-      reFetchCountActivity()
     },
     onError() {
       ResNotification(
         NotificationType.error,
         t('clients.activities.delete.error.message')
       )
+    },
+    update(cache, { data }) {
+      const ActivityCount: any = cache.readQuery({
+        query: CountClientActivityDocument,
+        variables: {
+          contactID: contactID,
+        },
+      })
+      setPagination({
+        ...pagination,
+        total: ActivityCount.findManyActivityCount - 1,
+      })
+      cache.writeQuery({
+        query: CountClientActivityDocument,
+        variables: {
+          contactID: contactID,
+        },
+        data: {
+          findManyActivityCount: ActivityCount.findManyActivityCount - 1,
+        },
+      })
     },
   })
   useEffect(() => {
