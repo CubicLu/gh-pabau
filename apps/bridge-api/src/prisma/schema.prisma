@@ -8540,34 +8540,36 @@ model MedicalForm {
 //}
 
 model MedicalFormContact {
-  id                        Int                         @id @default(autoincrement())
-  form_id                   Int
-  contact_id                Int?
-  created_at                DateTime?                   @default(now())
-  updated_at                DateTime?
-  deleted_at                DateTime?
-  complete                  Int
-  locked                    Int
-  user_created              Int?
-  user_updated              Int
-  related_to                Int
-  custom_user_name          String
-  prescriber                Int
-  priority                  String
-  pharmacy_id               Int
-  form_status               Int
-  comments                  String?
-  urgent                    Int?
-  imported                  Int
-  custom_contact_name       String
-  custom_contact_id         Int
-  approved_triggers         String?
-  actioned_by               Int?
-  form_contact_number       Int                         @default(0)
-  diagnosis_code            String
-  Form                      MedicalForm                 @relation(fields: [form_id], references: [id])
-  Contact                   CmContact?                  @relation(fields: [contact_id], references: [ID])
-  CreatedBy                 User?                       @relation(fields: [user_created], references: [id])
+  id                  Int         @id @default(autoincrement())
+  form_id             Int
+  contact_id          Int
+  created_at          DateTime?   @default(now())
+  updated_at          DateTime?
+  deleted_at          DateTime?
+  complete            Int
+  locked              Int
+  user_created        Int?
+  user_updated        Int
+  related_to          Int
+  custom_user_name    String
+  prescriber          Int?
+  priority            String
+  pharmacy_id         Int
+  form_status         Int
+  comments            String?
+  urgent              Int?
+  imported            Int
+  custom_contact_name String
+  custom_contact_id   Int
+  approved_triggers   String?
+  actioned_by         Int?
+  form_contact_number Int         @default(0)
+  diagnosis_code      String
+  Form                MedicalForm @relation(fields: [form_id], references: [id])
+  Contact             CmContact   @relation(fields: [contact_id], references: [ID])
+  CreatedBy           User?       @relation("MedicalContactFormCreated", fields: [user_created], references: [id])
+  Prescriber          User?       @relation("MedicalContactFormPrescribed", fields: [prescriber], references: [id])
+
   MedicalFormContactHistory MedicalFormContactHistory[]
   MedicalContactAttr        MedicalContactAttr[]
 
@@ -8619,7 +8621,8 @@ model MedicalAttr {
   company_id  Int?      @map("occupier")
   description String
 
-  Company Company? @relation(fields: [company_id], references: [id])
+  Company            Company?             @relation(fields: [company_id], references: [id])
+  MedicalContactAttr MedicalContactAttr[]
 
   @@unique([id, company_id], name: "primary")
   @@map("medical_attr")
@@ -8641,6 +8644,7 @@ model MedicalContactAttr {
   custom_contact_id       Int
 
   MedicalFormContact MedicalFormContact @relation(fields: [medical_form_contact_id], references: [id])
+  MedicalAttr        MedicalAttr        @relation(fields: [attr_id], references: [id])
 
   @@index([medical_form_contact_id], name: "medical_form_contact_id")
   @@map("medical_contact_attr")
@@ -12894,9 +12898,12 @@ model User {
   ActivityUserState            ActivityUserState[]
   ActivityUserFilter           ActivityUserFilter[]
 
-  MedicalForm        MedicalForm[]
-  CmContact          CmContact[]
-  MedicalFormContact MedicalFormContact[]
+  MedicalForm                  MedicalForm[]
+  CmContact                    CmContact[]
+  CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
+  PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
+
+
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
