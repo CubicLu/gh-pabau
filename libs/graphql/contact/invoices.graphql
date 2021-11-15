@@ -1,7 +1,7 @@
 query getFinancialInvoices($contactID: Int!, $take: Int = 50, $skip: Int = 0){
   invoices: findManyInvoice(where:{customer_id:{equals:$contactID}},take: $take, skip: $skip){
     id
-    biller_name
+    billers
     date
     issue_to
     location_name

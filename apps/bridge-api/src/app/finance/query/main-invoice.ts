@@ -1,27 +1,28 @@
 import { extendType, intArg, list, objectType } from 'nexus'
 import { Context } from '../../../context'
 
-export const PaymentsOutput = objectType({
-  name: 'PaymentsOutput',
-  description: 'Payments data simple response',
-  definition(t) {
-    t.int('id')
-    t.field('date', { type: 'DateTime' })
-    t.field('created_date', { type: 'DateTime' })
-    t.float('amount')
-    t.float('pmethod')
-    t.string('location')
-    t.string('biller')
-    t.string('invoice_no')
-    t.string('user')
-  },
-})
-
 export const MainInvoice = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('findManyInvoice', {
-      type: 'InvSale',
+      type: objectType({
+        name: 'InvoiceData',
+        description: 'Invoice data simple response',
+        definition(t) {
+          t.int('id')
+          t.string('guid')
+          t.field('date', { type: 'DateTime' })
+          t.int('customer_id')
+          t.string('customer_name')
+          t.float('paid_amount')
+          t.float('discount_amount')
+          t.float('inv_total')
+          t.string('location_name')
+          t.string('billers')
+          t.string('issue_to')
+          t.string('reference_no')
+        },
+      }),
       description:
         'Get Invoices per customer or invoice no (custom_id), other field to be implemented',
       args: {
@@ -43,30 +44,22 @@ export const MainInvoice = extendType({
         return await ctx.prisma.$queryRaw(query)
       },
     })
-    t.list.field('findManyCreditNote', {
-      type: 'InvSale',
-      description:
-        'Get Invoices per customer or invoice no (custom_id), other field to be implemented',
-      args: {
-        where: 'InvSaleWhereInput',
-        orderBy: list('InvSaleOrderByWithRelationInput'),
-        cursor: 'InvSaleWhereUniqueInput',
-        skip: intArg({
-          default: 0,
-        }),
-        take: intArg({
-          default: 50,
-        }),
-      },
-      async resolve(_root, input, ctx: Context) {
-        const query = generateInvoiceQuery(ctx, input, [
-          "a.reference_no='**CREDIT NOTE**'",
-        ])
-        return await ctx.prisma.$queryRaw(query)
-      },
-    })
     t.list.field('findManyPayments', {
-      type: PaymentsOutput,
+      type: objectType({
+        name: 'InvPaymentSimple',
+        description: 'Payments data simple response',
+        definition(t) {
+          t.int('id')
+          t.field('date', { type: 'DateTime' })
+          t.field('created_date', { type: 'DateTime' })
+          t.float('amount')
+          t.float('pmethod')
+          t.string('location')
+          t.string('biller')
+          t.string('invoice_no')
+          t.string('user')
+        },
+      }),
       description: 'Get Payments per customer other field to be implemented',
       args: {
         where: 'InvSaleWhereInput',
