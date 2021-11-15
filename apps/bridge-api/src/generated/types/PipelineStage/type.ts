@@ -8,7 +8,7 @@ export const PipelineStage = objectType({
   name: 'PipelineStage',
   definition(t) {
     t.int('id')
-    t.nullable.int('company_id')
+    t.int('company_id')
     t.nullable.int('pipeline_id')
     t.string('name')
     t.int('stage_order')
@@ -20,6 +20,12 @@ export const PipelineStage = objectType({
       type: 'Pipeline',
       resolve(root: any) {
         return root.Pipeline
+      },
+    })
+    t.field('Company', {
+      type: 'Company',
+      resolve(root: any) {
+        return root.Company
       },
     })
     t.list.field('CmLead', {

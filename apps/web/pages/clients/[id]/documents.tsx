@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { cdnURL } from '../../../baseUrl'
 import dayjs from 'dayjs'
 import { useUser } from '../../../context/UserContext'
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import axios from 'axios'
 import {
   FolderProps,
@@ -26,7 +25,7 @@ import {
   useCreateContactPhotoMutation as useCreateDocumentMutation,
   useCreateOnePhotoAlbumMutation as useCreateFolderMutation,
   useUpdateOnePhotoAlbumMutation as useUpdateFolderMutation,
-  useDeleteOnePhotoAlbumMutation as useDeleteFolderMutation,
+  useDeleteContactAlbumMutation as useDeleteFolderMutation,
   useMoveContactAttachmentsMutation as useMoveDocumentsMutation,
   useCreateContactPhotoWithoutAlbumMutation as useCreateUncatDocumentMutation,
   useDeleteManyContactPhotoMutation as useDeleteManyDocumentsMutation,
@@ -58,7 +57,7 @@ const folderFinder = (folders, folderId) => {
   return folder
 }
 
-const Photos: FC = () => {
+const Documents: FC = () => {
   const api = axios.create({
     baseURL: baseURL,
     headers: {
@@ -68,7 +67,6 @@ const Photos: FC = () => {
     },
   })
 
-  const { t } = useTranslationI18()
   const router = useRouter()
   const { me } = useUser()
   const [folders, setFolders] = useState<FolderProps>()
@@ -188,18 +186,25 @@ const Photos: FC = () => {
     },
   })
   const [deleteFolder] = useDeleteFolderMutation({
-    onCompleted({ deleteOnePhotoAlbum: data }) {
+    onCompleted({ deleteContactAlbum: data }) {
       const cFolders = { ...folders }
-      const idx = cFolders?.folder?.findIndex((el) => el?.id === data?.id)
-      if (idx !== -1) {
+      const idx = cFolders?.folder?.findIndex((el) => el?.id === data?.album)
+      if (idx !== -1 && data?.success) {
+        const cFolder = cFolders?.folder?.[idx]
         cFolders?.folder?.splice(idx, 1)
         setFolders(cFolders)
+        Notification(
+          NotificationType?.success,
+          `${cFolder?.folderTitle} deleted successfully!`
+        )
+      } else {
+        const cFolder = cFolders?.folder?.[idx]
+        Notification(
+          NotificationType?.error,
+          `${cFolder?.folderTitle} couldn't deleted!`
+        )
       }
       setFolderDeleteLoading(false)
-      Notification(
-        NotificationType?.success,
-        `${data?.album_name} deleted successfully!`
-      )
     },
     onError(error) {
       setFolderDeleteLoading(false)
@@ -240,7 +245,7 @@ const Photos: FC = () => {
   })
 
   const [deleteOneDocument] = useDeleteDocumentMutation({
-    onCompleted({ deleteContactAttachmentPhoto: data }) {
+    onCompleted({ deleteContactAttachment: data }) {
       setSingleDocDelLoading(() => false)
       if (data?.success) {
         const id = data?.photo
@@ -249,6 +254,12 @@ const Photos: FC = () => {
         if (idx !== -1) {
           cAddedFiles.splice(idx, 1)
           setUploadingFiles(cAddedFiles)
+        }
+        const cDocs = [...currFolderDocuments]
+        const index = cDocs?.findIndex((el) => el?.id === data?.photo)
+        if (index !== -1) {
+          cDocs?.splice(index, 1)
+          setCurrFolderDocuments(cDocs)
         }
       } else {
         const id = data?.photo
@@ -263,53 +274,41 @@ const Photos: FC = () => {
       }
       Notification(
         NotificationType.success,
-        t('ui.clientcard.photos.notification.delete.success', {
-          count: 1,
-          suffix: '',
-        })
+        `Successfully! 1 document was deleted`
       )
     },
     onError() {
       setSingleDocDelLoading(() => false)
-      Notification(
-        NotificationType.error,
-        t('ui.clientcard.photos.notification.delete.error', {
-          count: 1,
-          suffix: '',
-        })
-      )
+      Notification(NotificationType.error, `Error! 1 document was not deleted`)
     },
   })
 
   const [deleteManyDocuments] = useDeleteManyDocumentsMutation({
-    onCompleted({ deleteManyContactAttachmentPhoto: data }) {
+    onCompleted({ deleteManyContactAttachment: data }) {
       if (data.success && data.count === multipeDelDocs) {
         Notification(
           NotificationType.success,
-          t('ui.clientcard.photos.notification.delete.success', {
-            count: data?.count,
-            suffix: data?.count > 1 ? 's' : '',
-          })
+          `Successfully! ${data?.count} document${
+            data?.count > 1 ? 's were' : 'was'
+          } deleted`
         )
         setDocsDeleteLoading(() => false)
       } else {
         if (data.count > 0) {
           Notification(
             NotificationType.success,
-            t('ui.clientcard.photos.notification.delete.success', {
-              count: data?.count,
-              suffix: data?.count > 1 ? 's' : '',
-            })
+            `Successfully! ${data?.count} document${
+              data?.count > 1 ? 's were' : 'was'
+            } deleted`
           )
         }
         setDocsDeleteLoading(() => false)
         const leftCount = multipeDelDocs - data.count
         Notification(
           NotificationType.error,
-          t('ui.clientcard.photos.notification.delete.error', {
-            count: leftCount,
-            suffix: leftCount > 1 ? 's' : '',
-          })
+          `Error! ${leftCount} document${
+            leftCount > 1 ? 's were' : 'was'
+          }  not deleted`
         )
       }
     },
@@ -317,10 +316,9 @@ const Photos: FC = () => {
       setDocsDeleteLoading(() => false)
       Notification(
         NotificationType.error,
-        t('ui.clientcard.photos.notification.delete.error', {
-          count: multipeDelDocs,
-          suffix: multipeDelDocs > 1 ? 's' : '',
-        })
+        `Error! ${multipeDelDocs} document${
+          multipeDelDocs > 1 ? 's were' : 'was'
+        }  not deleted`
       )
     },
   })
@@ -365,11 +363,20 @@ const Photos: FC = () => {
   })
 
   const [renameDocument] = useRenameDocumentMutation({
-    onCompleted() {
+    onCompleted({ updateOneContactAttachment: data }) {
       setRenameFileLoading(() => false)
+      const cDocs = [...currFolderDocuments]
+      const index = cDocs?.findIndex((el) => el?.id === data?.id)
+      if (index !== -1) {
+        const cFile = cDocs[index]
+        cFile.documentName = data?.attachment_title
+        cDocs?.splice(index, 1, cFile)
+        setCurrFolderDocuments(cDocs)
+      }
     },
-    onError() {
+    onError(error) {
       setRenameFileLoading(() => false)
+      Notification(NotificationType?.error, error?.message)
     },
   })
 
@@ -395,7 +402,6 @@ const Photos: FC = () => {
 
   useEffect(() => {
     if (folderDocuments?.findManyContactAttachment && !folderDocsLoading) {
-      setCurrFolderDocuments([])
       const docs = folderDocuments?.findManyContactAttachment?.map((el) => {
         return {
           id: el?.id,
@@ -405,9 +411,7 @@ const Photos: FC = () => {
           isSensitive: false,
         }
       })
-      setTimeout(() => {
-        setCurrFolderDocuments(docs)
-      }, 0)
+      setCurrFolderDocuments(docs)
       setMultipleDelDocs(0)
     }
   }, [folderDocuments, folderDocsLoading])
@@ -475,25 +479,19 @@ const Photos: FC = () => {
 
   const onFolderDelete = (folder: FolderProps) => {
     setFolderDeleteLoading(true)
-    if (folder.contentCount <= 0) {
-      deleteFolder({
-        variables: {
-          where: {
-            id: Number(folder?.id),
+    deleteFolder({
+      variables: {
+        id: Number(folder?.id),
+      },
+      refetchQueries: [
+        {
+          query: GetFoldersDocument,
+          variables: {
+            contactId: contactId,
           },
         },
-        refetchQueries: [
-          {
-            query: GetFoldersDocument,
-            variables: {
-              contactId: contactId,
-            },
-          },
-        ],
-      })
-    } else {
-      // This block will be used when we get delete whole folder along with its nested folders and docs by Martin
-    }
+      ],
+    })
   }
 
   const onDocumentUpload = async (fileData: UploadingFileProps) => {
@@ -558,6 +556,7 @@ const Photos: FC = () => {
                   variables: {
                     album_id: folderId,
                     attachment_type: 'document',
+                    attachment_title: uppCompFile.name,
                     contact_id: contactId,
                     date: dayjs().unix(),
                     image_url: data?.path,
@@ -582,6 +581,7 @@ const Photos: FC = () => {
                 createUncategorizedDocument({
                   variables: {
                     attachment_type: 'document',
+                    attachment_title: uppCompFile.name,
                     contact_id: contactId,
                     date: dayjs().unix(),
                     image_url: data?.path,
@@ -752,19 +752,6 @@ const Photos: FC = () => {
         documentId: file,
         title: name,
       },
-      refetchQueries: [
-        {
-          query: GetFolderDocumentsDocument,
-          variables: variables,
-        },
-        folderId === 0 && {
-          query: CountFolderDocumentsDocument,
-          variables: {
-            contactId: contactId,
-            folderId: 0,
-          },
-        },
-      ],
     })
   }
 
@@ -782,7 +769,7 @@ const Photos: FC = () => {
             })
           }
         }}
-        loading={folderDocsLoading}
+        loading={foldersLoading || folderDocsLoading}
         paginateData={{
           currentPage: paginatedData?.currentPage,
           pageSize: paginatedData?.perPage,
@@ -817,4 +804,4 @@ const Photos: FC = () => {
   )
 }
 
-export default Photos
+export default Documents
