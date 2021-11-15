@@ -665,6 +665,34 @@ export const User = objectType({
         return root.ActivityUserFilter
       },
     })
+    t.list.field('LabRequestUser', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabRequestUser
+      },
+    })
+    t.list.field('LabAssignedUser', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabAssignedUser
+      },
+    })
     t.list.field('MedicalForm', {
       type: 'MedicalForm',
       args: {
@@ -693,7 +721,7 @@ export const User = objectType({
         return root.CmContact
       },
     })
-    t.list.field('MedicalFormContact', {
+    t.list.field('CreatedByMedicalFormContact', {
       type: 'MedicalFormContact',
       args: {
         where: 'MedicalFormContactWhereInput',
@@ -704,7 +732,21 @@ export const User = objectType({
         distinct: 'MedicalFormContactScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.MedicalFormContact
+        return root.CreatedByMedicalFormContact
+      },
+    })
+    t.list.field('PrescriberMedicalFormContact', {
+      type: 'MedicalFormContact',
+      args: {
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PrescriberMedicalFormContact
       },
     })
     t.nullable.field('_count', {

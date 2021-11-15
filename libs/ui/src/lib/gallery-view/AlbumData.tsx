@@ -40,10 +40,10 @@ import { ReactComponent as ImageAlbum } from '../../assets/images/image-album.sv
 import dayjs from 'dayjs'
 
 const getThumb = (src: string) => {
-  if (src.includes('photos/')) {
-    const pathArr = src.split('photos/')
-    pathArr[1] = `thumb_${pathArr[1]}`
-    return pathArr.join('photos/')
+  if (src.includes('/')) {
+    const pathArr = src.split('/')
+    pathArr[pathArr?.length - 1] = `thumb_${pathArr[pathArr?.length - 1]}`
+    return pathArr.join('/')
   } else {
     return src
   }
@@ -87,6 +87,7 @@ const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
     <img
       src={!isDirectPath ? source : getThumb(origin)}
       alt="content"
+      data-path={getThumb(origin)}
       {...props}
     />
   ) : (

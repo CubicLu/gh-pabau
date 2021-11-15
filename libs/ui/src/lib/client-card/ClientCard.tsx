@@ -26,7 +26,7 @@ import {
   ActivitiesProps,
   AvatarUploader,
   ReferredByOption,
-  FieldOrderItem,
+  CategoryFieldType,
   ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
@@ -158,7 +158,7 @@ interface P {
   activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
-  customFields?: FieldOrderItem[]
+  customFields?: CategoryFieldType[]
   dateFormat?: string
   handleEditAll?: () => void
   cssClass?: string

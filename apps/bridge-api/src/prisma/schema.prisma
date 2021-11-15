@@ -300,7 +300,7 @@ model Company {
   MedicalFormAdvancedSetting       MedicalFormAdvancedSetting[]
   MedicalFormContactHistory        MedicalFormContactHistory[]
   MedicalAttr                      MedicalAttr[]
-  // Lab                              Lab[]
+  Lab                              Lab[]
   // MedicalFormMacro                 MedicalFormMacro[]
   CmLeadCustomField                CmLeadCustomField[]
   CmLeadCustomFieldOrder           CmLeadCustomFieldOrder[]
@@ -334,6 +334,9 @@ model Company {
   CommunicationAttachment CommunicationAttachment[]
   Recall                  Recall[]
   CustomFieldDisplay      CustomFieldDisplay[]
+  Pipeline                Pipeline[]
+  PipelineStage           PipelineStage[]
+  LabRequest              LabRequest[]
   @@map("admin")
 }
 
@@ -1945,6 +1948,7 @@ model CmContact {
   PathwayStepsTaken         PathwayStepsTaken[]
   CommunicationAttachment   CommunicationAttachment[]
   RecallSchedule            RecallSchedule[]
+  LabRequest                LabRequest[]
 
   MedicalFormContact           MedicalFormContact[]
   CommunicationsRequestedForms CommunicationsRequestedForms[]
@@ -4958,6 +4962,7 @@ model PathwayStep {
 
   Pathway           Pathway             @relation(fields: [pathway_id], references: [id])
   Company           Company?            @relation(fields: [company_id], references: [id])
+  MedicalForm       MedicalForm?        @relation(fields: [item_id], references: [id])
   PathwayStepsTaken PathwayStepsTaken[]
 
 
@@ -7712,55 +7717,67 @@ model JobStatus {
 //  row_count    Int
 //}
 //
-// model Lab {
-//   id              Int      @id @default(autoincrement())
-//   company_id      Int?
-//   is_active       Int
-//   lab_name        String
-//   lab_email       String
-//   lab_street      String
-//   lab_street2     String
-//   lab_city        String
-//   lab_county      String
-//   lab_postal      String
-//   lab_phone       String
-//   lab_provider_no String
-//   // CompanyDetails  CompanyDetails @relation(fields: [company_id], references: [company_id])
-//   Company         Company? @relation(fields: [company_id], references: [id])
+model Lab {
+  id              Int    @id @default(autoincrement())
+  company_id      Int
+  is_active       Int
+  lab_name        String
+  lab_email       String
+  lab_street      String
+  lab_street2     String
+  lab_city        String
+  lab_county      String
+  lab_postal      String
+  lab_phone       String
+  lab_provider_no String
 
-//   @@unique([id, company_id], name: "primary")
-//   @@map("labs")
-// }
+  Company    Company      @relation(fields: [company_id], references: [id])
+  LabRequest LabRequest[]
 
-//
-//model lab_product_template {
-//  id          Int    @id @default(autoincrement())
-//  test_name   String
-//  code        String
-//  sample_reqs String
-//  tat         String
-//}
-//
-//model lab_requests {
-//  id               Int      @id @default(autoincrement())
-//  contact_id       Int
-//  company_id       Int
-//  request_date     DateTime
-//  last_update      DateTime
-//  request_by_id    Int
-//  request_status   Int
-//  request_lab_id   String
-//  lab_id           Int
-//  request_id       Int
-//  received_id      Int
-//  communication_id Int
-//  send_result      String?
-//  receive_result   String?
-//  receive_raw      String?
-//  receive_date     DateTime
-//  sent_date        DateTime
-//}
-//
+  @@map("labs")
+}
+
+model LabProductTemplate {
+  id          Int    @id @default(autoincrement())
+  test_name   String
+  code        String
+  sample_reqs String
+  tat         String
+
+  @@map("lab_product_template")
+}
+
+model LabRequest {
+  id               Int       @id @default(autoincrement())
+  contact_id       Int
+  company_id       Int
+  request_date     DateTime
+  last_update      DateTime
+  request_by_id    Int
+  request_status   Int
+  request_lab_id   String
+  lab_id           Int
+  request_id       Int
+  received_id      Int
+  communication_id Int
+  send_result      String?
+  receive_result   String?
+  receive_raw      String?
+  receive_date     DateTime
+  sent_date        DateTime
+  assigned_to      Int?
+  report_viewed    DateTime?
+
+  Company            Company            @relation(fields: [company_id], references: [id])
+  Contact            CmContact          @relation(fields: [contact_id], references: [ID])
+  RequestUser        User               @relation("LabRequestUser", fields: [request_by_id], references: [id])
+  AssignedUser       User?              @relation("LabAssignedUser", fields: [assigned_to], references: [id])
+  Lab                Lab                @relation(fields: [lab_id], references: [id])
+  MedicalFormContact MedicalFormContact @relation(fields: [request_id], references: [id])
+
+  @@map("lab_requests")
+}
+
 //model lab_requests_pref_delivery {
 //  id              Int       @id @default(autoincrement())
 //  lab_requests_id Int?
@@ -8490,8 +8507,9 @@ model MedicalForm {
   CreatedBy              User?     @relation(fields: [user_created], references: [id])
 
   MedicalFormAdvancedSetting MedicalFormAdvancedSetting[]
+  MedicalFormContact         MedicalFormContact[]
+  PathwayStep                PathwayStep[]
 
-  MedicalFormContact MedicalFormContact[]
   @@unique([id, company_id], name: "primary")
   @@index([deleted_at], name: "deleted_at")
   @@index([form_type], name: "form_type")
@@ -8538,36 +8556,39 @@ model MedicalForm {
 //}
 
 model MedicalFormContact {
-  id                        Int                         @id @default(autoincrement())
-  form_id                   Int
-  contact_id                Int?
-  created_at                DateTime?                   @default(now())
-  updated_at                DateTime?
-  deleted_at                DateTime?
-  complete                  Int
-  locked                    Int
-  user_created              Int?
-  user_updated              Int
-  related_to                Int
-  custom_user_name          String
-  prescriber                Int
-  priority                  String
-  pharmacy_id               Int
-  form_status               Int
-  comments                  String?
-  urgent                    Int?
-  imported                  Int
-  custom_contact_name       String
-  custom_contact_id         Int
-  approved_triggers         String?
-  actioned_by               Int?
-  form_contact_number       Int                         @default(0)
-  diagnosis_code            String
-  Form                      MedicalForm                 @relation(fields: [form_id], references: [id])
-  Contact                   CmContact?                  @relation(fields: [contact_id], references: [ID])
-  CreatedBy                 User?                       @relation(fields: [user_created], references: [id])
+  id                  Int         @id @default(autoincrement())
+  form_id             Int
+  contact_id          Int
+  created_at          DateTime?   @default(now())
+  updated_at          DateTime?
+  deleted_at          DateTime?
+  complete            Int
+  locked              Int
+  user_created        Int?
+  user_updated        Int
+  related_to          Int
+  custom_user_name    String
+  prescriber          Int?
+  priority            String
+  pharmacy_id         Int
+  form_status         Int
+  comments            String?
+  urgent              Int?
+  imported            Int
+  custom_contact_name String
+  custom_contact_id   Int
+  approved_triggers   String?
+  actioned_by         Int?
+  form_contact_number Int         @default(0)
+  diagnosis_code      String
+  Form                MedicalForm @relation(fields: [form_id], references: [id])
+  Contact             CmContact   @relation(fields: [contact_id], references: [ID])
+  CreatedBy           User?       @relation("MedicalContactFormCreated", fields: [user_created], references: [id])
+  Prescriber          User?       @relation("MedicalContactFormPrescribed", fields: [prescriber], references: [id])
+
   MedicalFormContactHistory MedicalFormContactHistory[]
   MedicalContactAttr        MedicalContactAttr[]
+  LabRequest                LabRequest[]
 
   @@unique([id], name: "primary")
   @@index([form_id], name: "form_id")
@@ -8617,7 +8638,8 @@ model MedicalAttr {
   company_id  Int?      @map("occupier")
   description String
 
-  Company Company? @relation(fields: [company_id], references: [id])
+  Company            Company?             @relation(fields: [company_id], references: [id])
+  MedicalContactAttr MedicalContactAttr[]
 
   @@unique([id, company_id], name: "primary")
   @@map("medical_attr")
@@ -8639,6 +8661,7 @@ model MedicalContactAttr {
   custom_contact_id       Int
 
   MedicalFormContact MedicalFormContact @relation(fields: [medical_form_contact_id], references: [id])
+  MedicalAttr        MedicalAttr        @relation(fields: [attr_id], references: [id])
 
   @@index([medical_form_contact_id], name: "medical_form_contact_id")
   @@map("medical_contact_attr")
@@ -9956,7 +9979,7 @@ model PhotoAlbum {
 //
 model Pipeline {
   id              Int     @id @default(autoincrement())
-  company_id      Int?
+  company_id      Int
   name            String
   description     String
   status          Int     @default(0)
@@ -9966,13 +9989,14 @@ model Pipeline {
   reference       String?
 
   PipelineStage PipelineStage[]
+  Company       Company         @relation(fields: [company_id], references: [id])
   @@index([company_id], name: "company_id")
   @@map("pipeline")
 }
 
 model PipelineStage {
   id               Int      @id @default(autoincrement())
-  company_id       Int?
+  company_id       Int
   pipeline_id      Int?
   name             String
   stage_order      Int      @default(0)
@@ -9982,6 +10006,7 @@ model PipelineStage {
   updated_date     DateTime @default(now())
 
   Pipeline Pipeline? @relation(fields: [pipeline_id], references: [id])
+  Company  Company   @relation(fields: [company_id], references: [id])
   CmLead   CmLead[]
   @@index([company_id], name: "company_id")
   @@map("pipeline_stages")
@@ -12889,10 +12914,15 @@ model User {
   ServiceUserTier              ServiceUserTier[]
   ActivityUserState            ActivityUserState[]
   ActivityUserFilter           ActivityUserFilter[]
+  LabRequestUser               LabRequest[]                   @relation("LabRequestUser")
+  LabAssignedUser              LabRequest[]                   @relation("LabAssignedUser")
 
-  MedicalForm        MedicalForm[]
-  CmContact          CmContact[]
-  MedicalFormContact MedicalFormContact[]
+  MedicalForm                  MedicalForm[]
+  CmContact                    CmContact[]
+  CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
+  PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
+
+
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
@@ -14718,6 +14748,11 @@ enum cp_steps_step {
   video
   photo
   details
+  pinscreen
+  studio
+  draw
+  payment
+  splash
 }
 
 enum cp_steps_taken_status {
