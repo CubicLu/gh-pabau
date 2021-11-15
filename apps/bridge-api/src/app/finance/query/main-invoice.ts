@@ -12,6 +12,7 @@ export const InvoiceData = objectType({
     t.string('customer_name')
     t.float('paid_amount')
     t.float('discount_amount')
+    t.float('credit_amount')
     t.float('inv_total')
     t.string('location_name')
     t.string('billers')
