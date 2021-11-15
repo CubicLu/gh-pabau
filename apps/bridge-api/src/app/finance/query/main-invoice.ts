@@ -71,6 +71,7 @@ export const MainInvoice = extendType({
         const query = generateInvoiceQuery(ctx, input, [
           "a.reference_no!='**REFUND**' ",
         ])
+        console.info('-->', query)
         return await ctx.prisma.$queryRaw(query)
       },
     })

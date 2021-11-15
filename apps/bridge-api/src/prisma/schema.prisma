@@ -7032,6 +7032,8 @@ model InvSale {
   IssuingCompany      IssuingCompany?  @relation(fields: [issuer_id], references: [id])
   InvBiller           InvBiller?       @relation(fields: [biller_id], references: [id])
   package             ContactPackage?
+  CreditRef           InvSale?         @relation(fields: [credit_ref_id], references: [id], name: "CreditRef")
+  CreditNotes         InvSale[]        @relation("CreditRef")
 
   Booking    Booking[]
   InvPayment InvPayment[]
