@@ -16,19 +16,6 @@ export function useGridData(t) {
           data: [],
           href: '/setup/business-details',
         },
-        // {
-        //   title: t('setup.clinic.user'),
-        //   data: [
-        //     {
-        //       title: t('setup.clinic.user'),
-        //       href: '/team/users',
-        //     },
-        //     {
-        //       title: t('setup.clinic.user.group'),
-        //       href: '/team/users?title=groups',
-        //     },
-        //   ],
-        // },
         {
           title: t('setup.clinic.location'),
           data: [],
@@ -102,7 +89,6 @@ export function useGridData(t) {
       keyValue: 'Services',
       subDataTitles: [
         { title: t('setup.services'), data: [], href: '/setup/services' },
-        // { title: t('setup.product'), data: [], href: '/products/list' },
         { title: t('setup.packages'), data: [], href: '/setup/packages' },
         {
           title: t('setup.resources'),
