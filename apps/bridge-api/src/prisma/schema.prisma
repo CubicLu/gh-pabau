@@ -4962,6 +4962,7 @@ model PathwayStep {
 
   Pathway           Pathway             @relation(fields: [pathway_id], references: [id])
   Company           Company?            @relation(fields: [company_id], references: [id])
+  MedicalForm       MedicalForm?        @relation(fields: [item_id], references: [id])
   PathwayStepsTaken PathwayStepsTaken[]
 
 
@@ -8506,8 +8507,9 @@ model MedicalForm {
   CreatedBy              User?     @relation(fields: [user_created], references: [id])
 
   MedicalFormAdvancedSetting MedicalFormAdvancedSetting[]
+  MedicalFormContact         MedicalFormContact[]
+  PathwayStep                PathwayStep[]
 
-  MedicalFormContact MedicalFormContact[]
   @@unique([id, company_id], name: "primary")
   @@index([deleted_at], name: "deleted_at")
   @@index([form_type], name: "form_type")
@@ -14746,6 +14748,11 @@ enum cp_steps_step {
   video
   photo
   details
+  pinscreen
+  studio
+  draw
+  payment
+  splash
 }
 
 enum cp_steps_taken_status {
