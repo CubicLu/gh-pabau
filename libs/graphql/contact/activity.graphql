@@ -2,9 +2,10 @@ query getActivity(
   $contactID: Int!
   $skip: Int = 0
   $take: Int = 50
+  $activityType: [Int]
 ) {
   activities: findManyActivity(
-    where: { contact_id: { equals: $contactID } }
+    where: { contact_id: { equals: $contactID }, type: { in: $activityType } }
     orderBy: { due_start_date: desc }
     skip: $skip
     take: $take
@@ -28,4 +29,14 @@ query getActivity(
       full_name
     }
   }
+}
+
+query countClientActivityWithType($contactID: Int!, $activityType: [Int]) {
+  findManyActivityCount(
+    where: { contact_id: { equals: $contactID }, type: { in: $activityType } }
+  )
+}
+
+query countClientActivity($contactID: Int!) {
+  findManyActivityCount(where: { contact_id: { equals: $contactID } })
 }
