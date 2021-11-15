@@ -344,8 +344,8 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
       const ghostEle = document.createElement('div')
       ghostEle.id = 'draGhost'
       ghostEle.innerHTML = draggedDoc?.documentName
-        ? draggedDoc?.documentName
-        : moveItemName[moveItemName.length - 1]
+        ? draggedDoc?.documentName?.substring(0, 15)
+        : moveItemName?.[moveItemName.length - 1]?.substring(0, 15)
       ghostEle.style.opacity = '1'
       ghostEle.style.height = '45px'
       ghostEle.style.color = 'white'
@@ -381,10 +381,10 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
                         className={styles.breadcrumbsTitle}
                         key={i}
                       >
-                        <h4 style={{ color: '#9292A3' }}>
+                        <span style={{ color: '#9292A3' }}>
                           {x.title}{' '}
                           <span style={{ margin: '0 5px 0 5px' }}>{'>'}</span>{' '}
-                        </h4>
+                        </span>
                       </p>
                     )
                   })}
@@ -465,6 +465,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
                 <Dropdown
                   overlay={<FolderDropdownMenu />}
                   placement="bottomRight"
+                  trigger={['click']}
                 >
                   <Button type="ghost" className={styles.folderDropdownBtn}>
                     <EnterOutlined />
@@ -489,7 +490,9 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
         </div>
       )}
 
-      {currentData.folder.length === 0 && currentData.contentCount === 0 ? (
+      {currentData.folder.length === 0 &&
+      currentData.contentCount === 0 &&
+      !loading ? (
         <div className={styles.emptyDocument}>
           <img src={empty} alt={'empty'} />
           <div className={styles.emptyDocumentTitle}>
