@@ -9,7 +9,9 @@ import {
   setupMenuTranslation,
   SetupMiddleMenu,
 } from '../../../components/Setup/MobileSetup/SetupMenu'
+import classNames from 'classnames'
 import { Avatar } from '@pabau/ui'
+import { RightOutlined } from '@ant-design/icons'
 import Flag from '../../../assets/images/united-kingdom.png'
 
 const { SubMenu } = AntMenu
@@ -18,10 +20,21 @@ const { Sider } = Layout
 const Index: FC = () => {
   const { t } = useTranslation('common')
   const [user] = useState('William Brandham')
+  const [activeMenu, setActive] = useState<string>('')
 
-  const renderMenuItem = (item, index) => {
+  const renderMenuItem = (item, index, isSubMenu = false) => {
     return (
-      <AntMenu.Item key={index} icon={item.icon} className={'divider-item'}>
+      <AntMenu.Item
+        key={`${item?.menuName}${index}`}
+        icon={item.icon}
+        className={classNames(
+          styles.sidebarMenu,
+          item?.path && activeMenu !== item?.path && styles.removeSelected,
+          item?.path && activeMenu === item?.path && styles.menuSelected,
+          item?.path && activeMenu === item?.path && 'ant-menu-item-selected'
+        )}
+        onClick={() => setActive(item?.path)}
+      >
         <Link href={item?.path}>
           <span>
             {t(
@@ -29,7 +42,7 @@ const Index: FC = () => {
                 item?.menuName?.toLowerCase()?.replace(' ', '')
               ]
             )}{' '}
-            <i className={'ant-menu-submenu-arrow'} />
+            {isSubMenu ? null : <i className={'ant-menu-submenu-arrow'} />}
           </span>
         </Link>
       </AntMenu.Item>
@@ -40,14 +53,26 @@ const Index: FC = () => {
     return (
       <SubMenu
         key={`${item.menuName}${index}`}
-        icon={item.icon}
-        title={t(
-          setupMenuTranslation[item?.menuName?.toLowerCase()?.replace(' ', '')]
+        icon={
+          <div className={styles.contentWrapper}>
+            {item.icon}
+            <span>
+              {t(
+                setupMenuTranslation[
+                  item?.menuName?.toLowerCase()?.replace(' ', '')
+                ]
+              )}
+            </span>
+            <RightOutlined className={styles.customIcon} />
+          </div>
+        }
+        className={classNames(
+          item.children.map((e) => e.path).indexOf(activeMenu) !== -1 &&
+            styles.subMenuActive
         )}
-        className={'divider-item'}
       >
         {item?.children?.map((subitem, subIndex) => {
-          return renderMenuItem(subitem, subIndex)
+          return renderMenuItem(subitem, subIndex, true)
         })}
       </SubMenu>
     )
@@ -56,7 +81,7 @@ const Index: FC = () => {
   return (
     <Sider
       trigger={null}
-      className={styles.pabauSidebar}
+      className={classNames(styles.pabauSidebar)}
       style={{
         overflowY: 'auto',
         height: 'calc(100vh - 80px)',
@@ -80,7 +105,7 @@ const Index: FC = () => {
         </div>
       </div>
       <div style={{ padding: '0px 16px' }}>
-        <AntMenu>
+        <AntMenu mode="inline" className={styles.sidebar}>
           {setupMenu?.map((item, index) => {
             return item?.children?.length > 0
               ? renderSubMenu(item, index)
@@ -88,7 +113,11 @@ const Index: FC = () => {
           })}
         </AntMenu>
         <div className={styles.antMenuitem}>SETUP</div>
-        <AntMenu style={{ borderTop: '1px solid #ecedf0', paddingTop: '0' }}>
+        <AntMenu
+          style={{ borderTop: '1px solid #ecedf0', paddingTop: '0' }}
+          mode="inline"
+          className={styles.sidebar}
+        >
           {SetupMiddleMenu?.map((item, index) => {
             return item?.children?.length > 0
               ? renderSubMenu(item, index)
@@ -96,13 +125,15 @@ const Index: FC = () => {
           })}
         </AntMenu>
         <AntMenu
+          mode="inline"
+          className={styles.sidebar}
           style={{
             margin: '40px 0',
             borderTop: '1px solid #ecedf0',
             paddingTop: '0',
           }}
         >
-          <AntMenu.Item key={'language'} className={'divider-item'}>
+          <AntMenu.Item key={'language'}>
             <span>
               <img src={Flag} alt={'language'} style={{ marginRight: '8px' }} />{' '}
               English

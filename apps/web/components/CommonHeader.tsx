@@ -15,6 +15,7 @@ import Chat from '../components/Chat/Chat'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './CommonHeader.module.less'
 import Link from 'next/link'
+import router from 'next/router'
 import classNames from 'classnames'
 const AntHeader = AntLayout.Header
 
@@ -75,10 +76,17 @@ const CommonHeader: FC<P> = ({
               )}
             >
               {isLeftOutlined ? (
-                <Link href={reversePath}>
+                // <Link href={reversePath}>
+                <button
+                  className={styles.btnOuterWrapper}
+                  onClick={() => {
+                    setTimeout(() => router.push(reversePath), 120)
+                  }}
+                >
                   <LeftOutlined />
-                </Link>
+                </button>
               ) : (
+                // </Link>
                 isShowMenuDrawer && (
                   <MenuOutlined
                     className={styles.menuHeaderIconColor}
