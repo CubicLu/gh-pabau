@@ -138,7 +138,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     }
   }
 
-  const handleMedicalHistoryPopverContent = () => {
+  const handleMedicalHistoryPopoverContent = () => {
     switch (medicalHistoryDetails?.status) {
       case 'not_completed':
       case 'to_be_completed':
@@ -433,7 +433,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
         <Popover
           placement="bottomRight"
           trigger="click"
-          content={handleMedicalHistoryPopverContent}
+          content={handleMedicalHistoryPopoverContent}
           overlayClassName={ClassNames(
             styles.clientCardHeaderPopover,
             medicalHistoryDetails?.status === 'not_completed' ||

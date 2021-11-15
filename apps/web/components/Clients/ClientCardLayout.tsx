@@ -91,7 +91,7 @@ export const ClientCardLayout: FC<P> = ({
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
   const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
   const [openEditModal, setOpenEditModal] = useState(false)
-  const [medicalHistoryData, setMedicalHistoryData] = useState(null)
+  const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
   const user = useUser()
 
   const [addClientNote] = useCreateOneContactNoteMutation({
@@ -158,7 +158,7 @@ export const ClientCardLayout: FC<P> = ({
     skip: !router.query['id'],
   })
 
-  const { data: getmedicalHistoryData } = useCheckMedicalHistoryQuery({
+  const { data: medicalHistoryData } = useCheckMedicalHistoryQuery({
     ssr: false,
     skip: !router.query['id'],
     variables: {
@@ -235,16 +235,15 @@ export const ClientCardLayout: FC<P> = ({
   }, [customFieldData, data])
 
   useEffect(() => {
-    if (getmedicalHistoryData?.form) {
-      setMedicalHistoryData({
-        status: getmedicalHistoryData?.form?.status,
+    if (medicalHistoryData?.form) {
+      setMedicalHistoryDetails({
+        status: medicalHistoryData?.form?.status,
         requestedDate:
-          getmedicalHistoryData?.form?.Contact?.CommunicationsRequestedForms[0]
-            ?.created_date,
-        formLastUpdatedDate: getmedicalHistoryData?.form?.updated_at,
+          medicalHistoryData?.form?.Contact?.RequestedForms[0]?.created_date,
+        formLastUpdatedDate: medicalHistoryData?.form?.updated_at,
       })
     }
-  }, [getmedicalHistoryData])
+  }, [medicalHistoryData])
 
   const handleAddNewClientNote = async (note: string) => {
     const noteBody = {
@@ -451,7 +450,7 @@ export const ClientCardLayout: FC<P> = ({
             : undefined
         }
         notes={contactData}
-        medicalHistoryDetails={medicalHistoryData}
+        medicalHistoryDetails={medicalHistoryDetails}
         getContactDetails={getContactDetails}
         handleAddNewClientNote={handleAddNewClientNote}
         handleEditNote={handleEditNote}
