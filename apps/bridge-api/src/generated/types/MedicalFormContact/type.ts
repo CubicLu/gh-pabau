@@ -9,17 +9,17 @@ export const MedicalFormContact = objectType({
   definition(t) {
     t.int('id')
     t.int('form_id')
-    t.nullable.int('contact_id')
+    t.int('contact_id')
     t.nullable.field('created_at', { type: 'DateTime' })
     t.nullable.field('updated_at', { type: 'DateTime' })
     t.nullable.field('deleted_at', { type: 'DateTime' })
     t.int('complete')
     t.int('locked')
-    t.int('user_created')
+    t.nullable.int('user_created')
     t.int('user_updated')
     t.int('related_to')
     t.string('custom_user_name')
-    t.int('prescriber')
+    t.nullable.int('prescriber')
     t.string('priority')
     t.int('pharmacy_id')
     t.int('form_status')
@@ -32,30 +32,56 @@ export const MedicalFormContact = objectType({
     t.nullable.int('actioned_by')
     t.int('form_contact_number')
     t.string('diagnosis_code')
-    t.nullable.field('Contact', {
-      type: 'CmContact',
-      resolve(root: any) {
-        return root.Contact
-      },
-    })
     t.field('Form', {
       type: 'MedicalForm',
       resolve(root: any) {
         return root.Form
       },
     })
-    t.list.field('CmContactTravel', {
-      type: 'CmContactTravel',
+    t.field('Contact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.Contact
+      },
+    })
+    t.nullable.field('CreatedBy', {
+      type: 'User',
+      resolve(root: any) {
+        return root.CreatedBy
+      },
+    })
+    t.nullable.field('Prescriber', {
+      type: 'User',
+      resolve(root: any) {
+        return root.Prescriber
+      },
+    })
+    t.list.field('MedicalFormContactHistory', {
+      type: 'MedicalFormContactHistory',
       args: {
-        where: 'CmContactTravelWhereInput',
-        orderBy: 'CmContactTravelOrderByWithRelationInput',
-        cursor: 'CmContactTravelWhereUniqueInput',
+        where: 'MedicalFormContactHistoryWhereInput',
+        orderBy: 'MedicalFormContactHistoryOrderByWithRelationInput',
+        cursor: 'MedicalFormContactHistoryWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactTravelScalarFieldEnum',
+        distinct: 'MedicalFormContactHistoryScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactTravel
+        return root.MedicalFormContactHistory
+      },
+    })
+    t.list.field('MedicalContactAttr', {
+      type: 'MedicalContactAttr',
+      args: {
+        where: 'MedicalContactAttrWhereInput',
+        orderBy: 'MedicalContactAttrOrderByWithRelationInput',
+        cursor: 'MedicalContactAttrWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalContactAttrScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalContactAttr
       },
     })
     t.nullable.field('_count', {

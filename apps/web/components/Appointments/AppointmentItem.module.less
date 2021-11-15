@@ -39,8 +39,49 @@
   .clientContainer {
     display: flex;
     align-items: center;
+
+    .avatarContainer {
+      position: relative;
+      p {
+        font-size: 14px;
+        border-radius: 4px;
+        background: #54b2d3;
+        color: #fff;
+        position: absolute;
+        z-index: 1;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        text-align: center;
+        right: 0;
+        bottom: 0;
+        margin-bottom: 0;
+
+        box-shadow: 0 0 0 0 rgba(84, 178, 211, 1);
+        transform: scale(1);
+        animation: pulse 2s infinite;
+      }
+    }
+
     .clientInfo {
       margin-left: 13px;
+
+      .appointementStatus {
+        display: flex;
+        align-items: center;
+        text-transform: capitalize;
+        div {
+          margin-left: 8px;
+          display: flex;
+          align-items: center;
+          span {
+            color: #ff5b64;
+            font-size: 12px;
+            margin-left: 2px;
+          }
+        }
+      }
+
       p {
         font-size: 16px;
         line-height: 18px;
@@ -97,6 +138,7 @@
       background: #54b2d3;
       border: 1px solid #54b2d3;
       color: #fff;
+      transition: all 0.2s ease-in-out;
     }
   }
 }
@@ -113,6 +155,43 @@
     .content {
       .divider {
         border-bottom-left-radius: 0px;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(84, 178, 211, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(84, 178, 211, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(84, 178, 211, 0);
+  }
+}
+
+@media (min-width: 0px) and (max-width: 767px) {
+  .mobileViewHidden {
+    display: none;
+  }
+  .appointmentItem {
+    min-width: 100%;
+    width: 100%;
+
+    .clientContainer {
+      display: flex;
+      align-items: center;
+      .clientInfo {
+        p {
+          font-size: 14px;
+        }
       }
     }
   }

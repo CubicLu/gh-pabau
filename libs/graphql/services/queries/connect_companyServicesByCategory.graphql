@@ -1,0 +1,37 @@
+query companyServicesByCategory($company_id: Int!) {
+  Public_ServiceCategories(where: {company_id: $company_id}) {
+    id
+    cat_order
+    group_color
+    deposit_amount
+    image
+    name
+    Public_Services {
+      id
+      name
+      friendly_name
+      duration
+      price
+      online_book
+      online_only_service
+      rating
+      max_clients
+      disabled_locations
+      disabled_users
+      Public_SocialSurveyFeedback {
+        date
+        feedback_comment
+        feedback_name
+        feedback_status
+        id
+        rating
+      }
+      Public_ServiceUserTier {
+        duration
+        price
+        service_id
+        user_id
+      }
+    }
+  }
+}

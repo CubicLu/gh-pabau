@@ -1,0 +1,158 @@
+query GetContacts(
+  $offset: Int
+  $limit: Int
+  $active: Int = 1
+  $searchTerm: String
+) {
+  findManyCmContact(
+    skip: $offset
+    take: $limit
+    where: {
+      is_active: { equals: $active }
+      AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm } }
+            { Lname: { contains: $searchTerm } }
+            { Mobile: { contains: $searchTerm } }
+            { Email: { contains: $searchTerm } }
+          ]
+        }
+      ]
+    }
+    orderBy: {
+      Fname: asc,
+    }
+  ) {
+    id: ID
+    avatar: Avatar
+    firstName: Fname
+    lastName: Lname
+    is_active
+    email: Email
+    mobileNumber: Mobile
+    labels: CmContactLabel {
+      id
+      label: CmLabel {
+        name
+        color
+      }
+    }
+  }
+}
+
+query GetContactsByLabel(
+  $offset: Int
+  $limit: Int
+  $active: Int = 1
+  $searchTerm: String
+  $labelIds: [Int]
+) {
+  findManyCmContact(
+    skip: $offset
+    take: $limit
+    where: {
+      is_active: { equals: $active }
+      AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm } }
+            { Lname: { contains: $searchTerm } }
+            { Mobile: { contains: $searchTerm } }
+            { Email: { contains: $searchTerm } }
+          ]
+        }
+      ]
+      CmContactLabel: {
+        some: {
+          label_id: { in: $labelIds }
+        }
+      }
+    }
+    orderBy: {
+      Fname: asc,
+    }
+  ) {
+    id: ID
+    avatar: Avatar
+    firstName: Fname
+    lastName: Lname
+    is_active
+    email: Email
+    mobileNumber: Mobile
+    labels: CmContactLabel {
+      id
+      label: CmLabel {
+        name
+        color
+      }
+    }
+  }
+}
+
+query clientListContactsCount($active: Int = 1, $searchTerm: String){
+  findManyCmContactCount(where: {
+    is_active: {
+      equals: $active
+    }
+    AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm } }
+            { Lname: { contains: $searchTerm } }
+            { Mobile: { contains: $searchTerm } }
+            { Email: { contains: $searchTerm } }
+          ]
+        }
+      ]
+  })
+}
+
+query getContactsByLabelCount($active: Int = 1,  $searchTerm: String, $labelIds: [Int]) {
+  findManyCmContactCount(
+    where: {
+      is_active: { equals: $active }
+      AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm } }
+            { Lname: { contains: $searchTerm } }
+            { Mobile: { contains: $searchTerm } }
+            { Email: { contains: $searchTerm } }
+          ]
+        }
+      ]
+      CmContactLabel: { some: { label_id: { in: $labelIds } } }
+    }
+  )
+}
+
+query getLabels {
+  findManyCmLabel {
+    id
+    name
+    color
+    company_id
+    CmContactLabel {
+      id
+      CmContact {
+        is_active
+      }
+    }
+  }
+}
+
+mutation addLabel($name: String!, $color: String) {
+  createOneCmLabel(data: {
+    name: $name
+    color: $color
+    Company: {}
+  }) {
+    id
+    name
+    color
+    _count {
+      CmContactLabel
+    }
+  }
+}

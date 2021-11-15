@@ -112,6 +112,7 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
 
   useEffect(() => {
     let columnData
+    console.log('user group data =', data)
     if (data?.findManyUserGroup) {
       columnData = data.findManyUserGroup?.map((group) => {
         return {

@@ -43,11 +43,5 @@ export const CmContactTravel = objectType({
         return root.User
       },
     })
-    t.field('MedicalFormContact', {
-      type: 'MedicalFormContact',
-      resolve(root: any) {
-        return root.MedicalFormContact
-      },
-    })
   },
 })

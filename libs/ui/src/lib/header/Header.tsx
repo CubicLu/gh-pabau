@@ -177,7 +177,10 @@ export const Header = ({
             </Col>
             <Col md={10} lg={6} className={styles.headerIconEnd}>
               <div className={styles.headerAlign}>
-                <div onClick={() => setJourneyModal((e) => !e)}>
+                <div
+                  className={styles.headerCalendar}
+                  onClick={() => setJourneyModal((e) => !e)}
+                >
                   <img alt="journey-calendar" src={journeyCalendar} />
                 </div>
                 <Badge

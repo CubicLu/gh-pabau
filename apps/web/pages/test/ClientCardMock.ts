@@ -275,7 +275,7 @@ export const financialInvoices = {
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
       paid: true,
-      status: 'paid_invoice',
+      status: 'paid',
       items: [
         {
           employee: 'Anika Kadir',
@@ -349,7 +349,7 @@ export const financialInvoices = {
       employee: 'Anika Kadir',
       issuedTo: 'Bruno Ballardin',
       paid: true,
-      status: 'paid_invoice',
+      status: 'paid',
       items: [
         {
           employee: 'Anika Kadir',

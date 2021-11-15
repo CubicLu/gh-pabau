@@ -1,8 +1,11 @@
 import React, { FC } from 'react'
 import styles from '../ClientCreate.module.less'
-import { Form as AntForm, Input } from 'formik-antd'
+import { Form as AntForm, Input, Select } from 'formik-antd'
 import { useTranslation } from 'react-i18next'
 import { FieldSetting } from '@pabau/ui'
+import countries from 'i18n-iso-countries'
+import english from 'i18n-iso-countries/langs/en.json'
+const { Option } = Select
 
 interface Props {
   fieldsSettings: FieldSetting[]
@@ -11,6 +14,8 @@ interface Props {
 
 export const Addresses: FC<Props> = ({ fieldsSettings, requiredLabel }) => {
   const { t } = useTranslation('common')
+  countries.registerLocale(english)
+  const countriesName = countries.getNames('en')
 
   const getLabel = (label) => {
     return fieldsSettings.find((thread) => thread.field_name === label)
@@ -101,8 +106,7 @@ export const Addresses: FC<Props> = ({ fieldsSettings, requiredLabel }) => {
             }${requiredLabel('MailingCountry')}`}
             name={'MailingCountry'}
           >
-            <Input
-              name={'MailingCountry'}
+            <Select
               placeholder={t('common-label-enter', {
                 what: getLabel('MailingCountry')
                   ? getLabel('MailingCountry')?.toLowerCase()
@@ -110,7 +114,15 @@ export const Addresses: FC<Props> = ({ fieldsSettings, requiredLabel }) => {
                       'quickCreate.client.modal.general.addresses.country'
                     ).toLowerCase(),
               })}
-            />
+              name={'MailingCountry'}
+              showSearch
+            >
+              {Object.keys(countriesName).map((c) => (
+                <Option key={c} value={countriesName[c]}>
+                  {countriesName[c]}
+                </Option>
+              ))}
+            </Select>
           </AntForm.Item>
         )}
         {fieldsSettings.find(

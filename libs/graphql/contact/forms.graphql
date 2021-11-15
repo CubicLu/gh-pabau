@@ -1,7 +1,7 @@
 query checkMedicalHistory($contactID: Int!) {
   form: findFirstMedicalFormContact(
     where: {
-      Contact: { ID: { equals: $contactID } }
+      contact_id: { equals: $contactID }
       Form: { form_type: { equals: "questionnaire" } }
     }
   ) {
@@ -9,9 +9,11 @@ query checkMedicalHistory($contactID: Int!) {
     created_at
     complete
     priority
+    contact_id
     Form {
       id
       name
     }
+    status
   }
 }

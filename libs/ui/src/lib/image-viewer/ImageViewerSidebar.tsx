@@ -29,6 +29,8 @@ export interface ImageViewerSidebarProps {
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
   onAlbumSelect?: (album) => void
+  defaultSelectedPhoto?: number
+  loading?: boolean
 }
 
 const ImageViewerSidebarItem = ({
@@ -95,8 +97,8 @@ const ImageViewerSidebarItem = ({
   useEffect(() => {
     if (source === '' && origin !== '') {
       let path = origin
-      const pathArr = path.split('photos/')
-      if (pathArr?.length) {
+      if (path?.includes('photos/')) {
+        const pathArr = path.split('photos/')
         pathArr[1] = `thumb_${pathArr[1]}`
         path = pathArr.join('photos/')
       }
@@ -201,12 +203,15 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
   setIsDragging,
   setSidebarOpen,
   onAlbumSelect,
+  defaultSelectedPhoto,
+  loading = false,
 }) => {
   const [imageItems, setImageItems] = useState<AlbumImageItem[]>([])
   const [currentAlbum, setCurrentAlbum] = useState<ImageViewerAlbum | null>(
     null
   )
   const [openAlbumDrop, setOpenAlbumDrop] = useState(false)
+  const [onceLoaded, setOnceLoaded] = useState(false)
 
   const albumsDropdown = (
     <div className={styles.albumsDropdown}>
@@ -224,11 +229,13 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
             )}
             key={item?.id}
             onClick={() => {
-              onAlbumSelect?.(item)
-              setImageItems(item?.imageList as AlbumImageItem[])
-              setCurrentAlbum(item)
-              setOpenAlbumDrop(false)
-              setSelectedIndex?.()
+              if (currentAlbum?.id !== item?.id) {
+                onAlbumSelect?.(item)
+                setImageItems(item?.imageList as AlbumImageItem[])
+                setCurrentAlbum(item)
+                setOpenAlbumDrop(false)
+                setSelectedIndex?.()
+              }
             }}
           >
             <div>{item.name}</div>
@@ -262,6 +269,55 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
     return status
   }
 
+  const DummyImagesLoader = ({ length = 10 }) => {
+    return (
+      <>
+        {Array.from({
+          length: length,
+        }).map((el, idx) => (
+          <React.Fragment key={idx}>
+            {idx === 0 && (
+              <>
+                <div className={styles.imageItemYearDivider}>
+                  <Skeleton.Input active />
+                </div>
+                <div className={styles.imageItem} style={{ height: '1rem' }}>
+                  <div />
+                  <div />
+                </div>
+              </>
+            )}
+            <div className={styles.imageItem}>
+              <div>
+                {idx === 0 && (
+                  <div className={styles.imageItemDate}>
+                    <p>
+                      <Skeleton.Avatar active />
+                    </p>
+                    <div className={styles.dot} />
+                  </div>
+                )}
+              </div>
+              <div>
+                <React.Fragment key={idx}>
+                  <ImageViewerSidebarItem
+                    comparingMode={comparingMode}
+                    currentAlbum={currentAlbum?.name || ''}
+                    origin={''}
+                    imageIndex={idx}
+                    selectedIndex={selectedIndex}
+                    setIsDragging={setIsDragging}
+                    setSidebarOpen={setSidebarOpen}
+                  />
+                </React.Fragment>
+              </div>
+            </div>
+          </React.Fragment>
+        ))}
+      </>
+    )
+  }
+
   useEffect(() => {
     const compare = (a, b) => {
       if (dayjs(a.date) > dayjs(b.date)) {
@@ -287,6 +343,18 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
     }
   }, [albums, selectedAlbum])
 
+  useEffect(() => {
+    if (!onceLoaded && !loading) {
+      const elem = document?.querySelector(
+        `#sidebarimage${defaultSelectedPhoto}`
+      )
+      if (elem) {
+        elem.scrollIntoView()
+      }
+      setOnceLoaded(() => true)
+    }
+  }, [defaultSelectedPhoto, onceLoaded, loading, selectedIndex])
+
   return (
     <div
       className={
@@ -296,73 +364,92 @@ export const ImageViewerSidebar: FC<ImageViewerSidebarProps> = ({
       }
     >
       <div>
-        <Popover
-          visible={openAlbumDrop}
-          placement="bottom"
-          trigger="click"
-          content={albumsDropdown}
-          onVisibleChange={(visible) => setOpenAlbumDrop(visible)}
-          overlayClassName={styles.albumsPopover}
-        >
-          <div className={styles.albumSelector}>
-            <div>{albums?.length > 0 ? currentAlbum?.name : 'No Album'}</div>
-            {albums?.length > 0 && (
-              <div>
-                <CaretDownOutlined />
-              </div>
-            )}
-          </div>
-        </Popover>
-        {imageItems?.map((item, index) => (
-          <React.Fragment key={item?.id}>
-            {(index === 0 ||
-              !dayjs(imageItems[index - 1].date).isSame(item.date, 'year')) && (
-              <>
-                <div className={styles.imageItemYearDivider}>
-                  {dayjs(item.date).format('YYYY')}
+        {albums?.length ? (
+          <Popover
+            visible={openAlbumDrop}
+            placement="bottom"
+            trigger="click"
+            content={albumsDropdown}
+            onVisibleChange={(visible) => setOpenAlbumDrop(visible)}
+            overlayClassName={styles.albumsPopover}
+          >
+            <div className={styles.albumSelector}>
+              <div>{albums?.length > 0 ? currentAlbum?.name : 'No Album'}</div>
+              {albums?.length > 0 && (
+                <div>
+                  <CaretDownOutlined />
                 </div>
-                <div className={styles.imageItem} style={{ height: '1rem' }}>
-                  <div />
-                  <div />
-                </div>
-              </>
-            )}
-            <div className={styles.imageItem}>
-              <div>
+              )}
+            </div>
+          </Popover>
+        ) : (
+          loading && (
+            <div className={styles.albumLoader}>
+              <Skeleton.Input active />
+            </div>
+          )
+        )}
+        {!loading
+          ? imageItems?.map((item, index) => (
+              <React.Fragment key={item?.id}>
                 {(index === 0 ||
                   !dayjs(imageItems[index - 1].date).isSame(
                     item.date,
-                    'day'
+                    'year'
                   )) && (
-                  <div className={styles.imageItemDate}>
-                    <p>{dayjs(item?.date).format('DD')}</p>
-                    <p>{dayjs(item?.date).format('MMM')}</p>
+                  <>
+                    <div className={styles.imageItemYearDivider}>
+                      {dayjs(item.date).format('YYYY')}
+                    </div>
                     <div
-                      className={
-                        checkSelectedStatusForSameDate(item.date)
-                          ? cn(styles.dot, styles.selected)
-                          : styles.dot
-                      }
-                    />
-                  </div>
+                      className={styles.imageItem}
+                      style={{ height: '1rem' }}
+                    >
+                      <div />
+                      <div />
+                    </div>
+                  </>
                 )}
-              </div>
-              <div>
-                <React.Fragment key={item?.id}>
-                  <ImageViewerSidebarItem
-                    comparingMode={comparingMode}
-                    currentAlbum={currentAlbum?.name || ''}
-                    origin={item.origin}
-                    imageIndex={index}
-                    selectedIndex={selectedIndex}
-                    setIsDragging={setIsDragging}
-                    setSidebarOpen={setSidebarOpen}
-                  />
-                </React.Fragment>
-              </div>
-            </div>
-          </React.Fragment>
-        ))}
+                <div className={styles.imageItem}>
+                  <div>
+                    {(index === 0 ||
+                      !dayjs(imageItems[index - 1].date).isSame(
+                        item.date,
+                        'day'
+                      )) && (
+                      <div className={styles.imageItemDate}>
+                        <p>{dayjs(item?.date).format('DD')}</p>
+                        <p>{dayjs(item?.date).format('MMM')}</p>
+                        <div
+                          className={
+                            checkSelectedStatusForSameDate(item.date)
+                              ? cn(styles.dot, styles.selected)
+                              : styles.dot
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div id={`sidebarimage${item?.id}`}>
+                    <React.Fragment key={item?.id}>
+                      <ImageViewerSidebarItem
+                        comparingMode={comparingMode}
+                        currentAlbum={currentAlbum?.name || ''}
+                        origin={item.origin}
+                        imageIndex={index}
+                        selectedIndex={selectedIndex}
+                        setIsDragging={setIsDragging}
+                        setSidebarOpen={setSidebarOpen}
+                      />
+                    </React.Fragment>
+                  </div>
+                </div>
+              </React.Fragment>
+            ))
+          : loading &&
+            (currentAlbum?.imageCount || 0) > 0 && (
+              <DummyImagesLoader length={currentAlbum?.imageCount || 10} />
+            )}
       </div>
       <div>
         <div

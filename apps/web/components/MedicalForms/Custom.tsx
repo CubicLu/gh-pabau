@@ -20,7 +20,13 @@ import {
   SmsMessageTemplateItem,
   Table,
   UserListItem,
+  UserGroupListItem,
+  LabTestsListItem,
+  MedicalConditionsListItem,
+  CompanyListItem,
   VersionHistory,
+  MacroItem,
+  InvProductsListItem,
 } from '@pabau/ui'
 import { Input } from 'antd'
 // import { useRouter } from 'next/router'
@@ -45,7 +51,14 @@ interface CustomProps {
   smsMessageTemplateItems: SmsMessageTemplateItem[]
   emailMessageTemplateItems: EmailMessageTemplateItem[]
   userListItems: UserListItem[]
+  userGroupListItems: UserGroupListItem[]
+  labTestsListItems: LabTestsListItem[]
+  companyServiceListItems: CompanyListItem[]
+  invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
+  medicalFormMacros: MacroItem[]
   onSaveForm?: (MedicalFormItem) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
   pagenateParams: Paginate
   updatePaginateData?: (pagenateData: Paginate) => void
 }
@@ -56,9 +69,16 @@ const Custom: FC<CustomProps> = ({
   smsMessageTemplateItems,
   emailMessageTemplateItems,
   userListItems,
+  userGroupListItems = [],
+  labTestsListItems = [],
+  companyServiceListItems = [],
+  medicalFormMacros = [],
+  invProductsListItems = [],
+  medicalConditionsListItems = [],
   onSaveForm,
   pagenateParams,
   updatePaginateData,
+  onHandleMacro,
 }) => {
   const [showVersions, setShowVersions] = useState(false)
   const [currentItem, setCurrentItem] = useState<MedicalFormItem>()
@@ -284,6 +304,11 @@ const Custom: FC<CustomProps> = ({
                   closePreviewDialog={() =>
                     setShowPreview((showPreview) => !showPreview)
                   }
+                  onHandleMacro={onHandleMacro}
+                  medicalFormMacros={medicalFormMacros}
+                  userGroupListItems={userGroupListItems}
+                  invProductsListItems={invProductsListItems}
+                  medicalConditionsListItems={medicalConditionsListItems}
                 />
               )}
               <Button
@@ -437,13 +462,22 @@ const Custom: FC<CustomProps> = ({
         visible={editFormModal}
         previewData={selectedItem?.formData}
         preFormName={selectedItem?.name}
+        preFormType={selectedItem?.formType}
+        preFormServices={selectedItem?.serviceId}
         currentForm={selectedItem}
         onHideFormBuilder={() => setEditFormModal(false)}
         onSaveForm={handleSaveForm}
+        onHandleMacro={onHandleMacro}
         create={false}
         smsMessageTemplateItems={smsMessageTemplateItems}
         emailMessageTemplateItems={emailMessageTemplateItems}
         userListItems={userListItems}
+        userGroupListItems={userGroupListItems}
+        labTestsListItems={labTestsListItems}
+        medicalFormMacros={medicalFormMacros}
+        companyServiceListItems={companyServiceListItems}
+        invProductsListItems={invProductsListItems}
+        medicalConditionsListItems={medicalConditionsListItems}
       />
       <div className={styles.paginationContainer}>
         <Pagination

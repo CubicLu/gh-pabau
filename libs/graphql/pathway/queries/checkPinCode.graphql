@@ -1,0 +1,12 @@
+query checkPinCode($pinCode : String!) {
+  findFirstUser(
+    where:{
+      passcode:{
+        equals:$pinCode
+      }
+    }
+  ){
+    id
+    pincode: passcode
+  }
+}

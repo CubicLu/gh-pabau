@@ -22,8 +22,8 @@ const MedicalFormLeftSidebarCustomPanels: FC<P> = ({ ...props }) => {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          isDragging={snapshot.isDragging}
-          className={snapshot.isDragging ? styles.dndDragging : ''}
+          isDragging={snapshot?.isDragging ? true : false}
+          className={snapshot?.isDragging ? styles.dndDragging : ''}
         >
           {draggedForm && (
             <LeftSidebarElement
@@ -68,8 +68,8 @@ const MedicalFormLeftSidebarCustomPanels: FC<P> = ({ ...props }) => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      isDragging={snapshot.isDragging}
-                      className={snapshot.isDragging ? styles.dndDragging : ''}
+                      isDragging={snapshot?.isDragging ? true : false}
+                      className={snapshot?.isDragging ? styles.dndDragging : ''}
                     >
                       <LeftSidebarElement
                         type="custom"

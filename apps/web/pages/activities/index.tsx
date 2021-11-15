@@ -34,6 +34,10 @@ import {
   useActivityUserListQuery,
   useFindManyActivityDataQuery,
   useFindFirstActivityUserStateQuery,
+  useGetMarketingSourcesQuery,
+  useGetLeadStatusQuery,
+  useRetrievePipelineQuery,
+  useGetActiveLocationQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
@@ -237,6 +241,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
     setFilterDataObject,
   ] = useState<FilterDataObjectType>()
   const [userColumns, setUserColumns] = useState<string[]>([])
+  const [leadSourceData, setLeadSourceData] = useState<OptionList[]>([])
+  const [leadStageData, setLeadStageData] = useState<OptionList[]>([])
+  const [pipelineData, setPipelineData] = useState<OptionList[]>([])
+  const [locationData, setLocationData] = useState<OptionList[]>([])
   const eventDateFormat = 'D MMMM YYYY hh:mm'
   const ref = useRef([])
 
@@ -314,6 +322,63 @@ export const Index: FC<IndexProps> = ({ client }) => {
     data: activityResponse,
     loading: activityDataLoading,
   } = useFindManyActivityDataQuery(getQueryVariables)
+
+  const { data: leadSourceResponse } = useGetMarketingSourcesQuery()
+  const { data: leadStatusResponse } = useGetLeadStatusQuery()
+  const { data: pipelineResponse } = useRetrievePipelineQuery()
+  const { data: locationResponse } = useGetActiveLocationQuery()
+
+  useEffect(() => {
+    if (leadSourceResponse?.findManyMarketingSource) {
+      const records = [...leadSourceResponse.findManyMarketingSource]?.map(
+        (item) => {
+          return {
+            id: item.id,
+            name: item.name,
+          }
+        }
+      )
+      setLeadSourceData(records)
+    }
+  }, [leadSourceResponse])
+
+  useEffect(() => {
+    if (leadStatusResponse?.findManyLeadStatus) {
+      const records = [...leadStatusResponse.findManyLeadStatus]?.map(
+        (item) => {
+          return {
+            id: item.id,
+            name: item.status_name,
+          }
+        }
+      )
+      setLeadStageData(records)
+    }
+  }, [leadStatusResponse])
+
+  useEffect(() => {
+    if (pipelineResponse?.findManyPipeline) {
+      const records = [...pipelineResponse.findManyPipeline]?.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setPipelineData(records)
+    }
+  }, [pipelineResponse])
+
+  useEffect(() => {
+    if (locationResponse?.locations) {
+      const records = [...locationResponse.locations]?.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setLocationData(records)
+    }
+  }, [locationResponse])
 
   useEffect(() => {
     const response = activityResponse?.findManyActivityData
@@ -525,7 +590,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [activityActiveResponse])
 
   const uniqLabels = useCallback(() => {
-    // eslint-disable-next-line array-callback-return
+    // eslint-disable-next-line array-callback-return,unicorn/prefer-object-from-entries
     const labelsWithColor = sourceData.reduce((p, c) => {
       if (c.client.label) {
         for (const label of c.client.label) {
@@ -976,7 +1041,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
       <RangePicker
         format={'DD MMM YYYY'}
         value={[selectedDates?.[0], selectedDates?.[1]]}
-        onChange={(val) => setSelectedDates(val)}
+        onChange={(val, dateStrings) =>
+          setSelectedDates([dayjs(dateStrings[0]), dayjs(dateStrings[1])])
+        }
       />
     )
   }
@@ -1148,6 +1215,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setFilterDataObject={setFilterDataObject}
             userColumns={userColumns}
             setUserActiveColumn={setUserActiveColumn}
+            leadSourceData={leadSourceData}
+            leadStageData={leadStageData}
+            pipelineData={pipelineData}
+            locationData={locationData}
           />
         )}
         <div>
@@ -1209,6 +1280,10 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setFilterDataObject={setFilterDataObject}
             userColumns={userColumns}
             setUserActiveColumn={setUserActiveColumn}
+            leadSourceData={leadSourceData}
+            leadStageData={leadStageData}
+            pipelineData={pipelineData}
+            locationData={locationData}
           />
         )}
         {/* <div className={styles.subHeader}>

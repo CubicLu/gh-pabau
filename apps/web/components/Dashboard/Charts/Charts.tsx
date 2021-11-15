@@ -114,6 +114,9 @@ export const Charts: FC<ICharts> = ({
       text: '',
       align: 'left',
     },
+    tooltip: {
+      valuePrefix: `${stringToCurrencySignConverter(user.me?.currency)}`,
+    },
     series: List,
     legend: {
       itemMarginTop: 15,
@@ -131,9 +134,12 @@ export const Charts: FC<ICharts> = ({
           text: '',
         },
         labels: {
-          format: `${stringToCurrencySignConverter(
-            user.me?.currency
-          )}${'{value}'}`,
+          formatter: function (value) {
+            return `${
+              stringToCurrencySignConverter(user.me?.currency) +
+              value.value.toLocaleString()
+            }`
+          },
           style: {
             fontSize: '14px',
             fontStyle: 'normal',
@@ -279,7 +285,9 @@ export const Charts: FC<ICharts> = ({
               <div className={styles.chartsHeader}>
                 {!loading ? (
                   stringToCurrencySignConverter(user.me?.currency) +
-                  (totalSalesCount.count ?? 0)
+                  (totalSalesCount.count ?? 0).toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  })
                 ) : (
                   <Skeleton.Input active className={styles.titleSkeleton} />
                 )}
@@ -295,7 +303,8 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label + `, ${location.date ?? ''}`
+                  location.label +
+                  `${location.date ? `${',' + location.date}` : ''}`
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}
@@ -333,7 +342,8 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label + `, ${location.date ?? ''}`
+                  location.label +
+                  `${location.date ? `${',' + location.date}` : ''}`
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}
@@ -358,7 +368,9 @@ export const Charts: FC<ICharts> = ({
                     ...d,
                     value:
                       stringToCurrencySignConverter(user.me?.currency) +
-                      d.value,
+                      d.value.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                      }),
                   }
                 })}
                 title={() =>
@@ -405,7 +417,9 @@ export const Charts: FC<ICharts> = ({
                     ...d,
                     value:
                       stringToCurrencySignConverter(user.me?.currency) +
-                      d.value,
+                      d.value.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                      }),
                   }
                 })}
                 title={() =>

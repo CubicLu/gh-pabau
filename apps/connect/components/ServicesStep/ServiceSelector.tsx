@@ -1,4 +1,4 @@
-import React, { useState, FC, useContext } from 'react'
+import React, { useState, useEffect, FC, useContext } from 'react'
 import {
   QuestionCircleOutlined,
   ClockCircleOutlined,
@@ -24,20 +24,24 @@ import { useSelectedDataStore } from '../../store/selectedData'
 
 import { ReactComponent as SelectAllIcon } from '../../assets/images/SelectAll.svg'
 import { ReactComponent as Promocode } from '../../assets/images/coupenCode.svg'
-import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
+import {
+  useCompanyServicesCategorisedQuery,
+  useCompanyServicesByCategoryQuery,
+} from '@pabau/graphql'
 import { SettingsContext } from '../../context/settings-context'
 import ServiceReviewsModal from '../Modals/ServiceReviewsModal'
 import ServiceInfoModal from '../Modals/ServiceInfoModal'
 export interface P {
   onSelected: () => void
+  hasMasterCategories: boolean
 }
 
-const ServiceSelector: FC<P> = ({ onSelected }) => {
+const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
   const [showReviewsModal, setShowReviewsModal] = useState(false)
   const [showServiceInfoModal, setShowServiceInfoModal] = useState(false)
   const [previewService, setPreviewService] = useState(null)
-  // CRAP
 
+  // CRAP
   const [Vcount, setVcount] = useState(0)
   const [Vprice, setVprice] = useState(0)
   const [VoucherData, setVoucherData] = useState(voucherData)
@@ -62,8 +66,28 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
     },
   })
 
-  if (errorServices) return <div>Error!</div>
-  if (loadingServices) return <div>Loading...</div>
+  const {
+    loading: loadingServicesByCategory,
+    error: errorServicesByCategory,
+    data: servicesByCategory,
+  } = useCompanyServicesByCategoryQuery({
+    variables: {
+      company_id: settings?.id,
+    },
+    skip: hasMasterCategories,
+  })
+
+  useEffect(() => {
+    if (!loadingServicesByCategory && !hasMasterCategories) {
+      setSelectedData(
+        actionTypes.SET_CATEGORY_ID,
+        servicesByCategory.Public_ServiceCategories[0].id
+      )
+    } // eslint-disable-next-line
+  }, [loadingServicesByCategory, hasMasterCategories])
+
+  if (errorServices || errorServicesByCategory) return <div>Error!</div>
+  if (loadingServices || loadingServicesByCategory) return <div>Loading...</div>
 
   // EVENT HANDLERS
 
@@ -85,6 +109,146 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
     }
   }
 
+  const rendervoucher = (voucherd) => {
+    return (
+      <div
+        className={styles.vocherList}
+        onClick={() => {
+          VoucherData.map((item) =>
+            item.id === voucherd.id ? (item.active = !item.active) : item
+          )
+          setVoucherData(VoucherData)
+          if (voucherd.active) {
+            setVcount(Vcount + 1)
+            setVprice(Vprice + voucherd.price)
+          } else {
+            setVcount(Vcount - 1)
+            setVprice(Vprice - voucherd.price)
+          }
+        }}
+      >
+        <div className={styles.voucherContainer}>
+          <div className={styles.voucherMain}>
+            <img src={voucherd.image} alt={'nothing'} />
+            <div className={styles.voucherTicket}>
+              <div className={styles.voucherVerticalMenu}>
+                <MoreOutlined />
+              </div>
+              <div className={styles.vouchervalue}>
+                <span className={styles.Vvalue}>£{voucherd.value}</span> <br />
+                <span className={styles.Vdes}>{voucherd.valueDescription}</span>
+              </div>
+              <div className={styles.voucherType}>
+                <div>
+                  <span className={styles.Vtype}>{voucherd.type}</span> <br />
+                  <span className={styles.VfamiDes}>
+                    {voucherd.description}
+                  </span>
+                </div>
+                <div>
+                  <span>£{voucherd.size}</span> <br />
+                  <span>{voucherd.sizeDescription}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.voucherbtn}>
+            <div>
+              <span style={{ color: '#65CD98', fontSize: '16px' }}>
+                £{voucherd.price}
+              </span>
+            </div>
+            {voucherd.active && (
+              <div className={styles.servicebutton}>
+                <Button>
+                  <CheckCircleFilled />
+                  Selected
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+  const renderServices = (category: Category | null) => {
+    if (!category) {
+      if (hasMasterCategories) {
+        category = servicesCategorised.Public_MasterCategories.find(
+          (item) =>
+            item.id === selectedData.masterCategoryID ||
+            !selectedData.masterCategoryID
+        )?.Public_ServiceCategories.find(
+          (item) => item.id === selectedData.categoryID
+        )
+      } else {
+        category = servicesByCategory.Public_ServiceCategories.find(
+          (item) => item.id === selectedData.categoryID
+        )
+      }
+    }
+
+    if (!category) {
+      return null
+    }
+
+    const hasOnlineConsultations =
+      typeof category?.Public_Services.find(
+        (s) => s.online_only_service === 1
+      ) !== 'undefined'
+
+    return (
+      <div>
+        <div className={styles.custCard}>
+          {!viewVouchers ? (
+            hasOnlineConsultations ? (
+              <div className={styles.treatmentTabWrapper}>
+                <div
+                  onClick={() => setVirtualServicesOnly(false)}
+                  className={ClassNames(
+                    styles.treatmentTab,
+                    !virtualServicesOnly && styles.active
+                  )}
+                >
+                  <MedicineBoxOutlined />
+                  {t('connect.onlinebooking.selector.offline')}
+                </div>
+                <div
+                  onClick={() => setVirtualServicesOnly(true)}
+                  className={ClassNames(
+                    styles.treatmentTab,
+                    virtualServicesOnly && styles.active
+                  )}
+                >
+                  <LaptopOutlined />
+                  {t('connect.onlinebooking.selector.online')}
+                </div>
+              </div>
+            ) : (
+              <div className={styles.treatmentTabWrapper}>
+                <div className={ClassNames(styles.treatmentTab, styles.active)}>
+                  <MedicineBoxOutlined />
+                  <span>In Clinic</span>
+                </div>
+              </div>
+            )
+          ) : null}
+          {!viewVouchers
+            ? category.Public_Services.map((val) => renderService(val))
+            : !isMobile &&
+              VoucherData.map((item) => (
+                <div key={item.id}>{rendervoucher(item)}</div>
+              ))}
+        </div>
+        {!isMobile && (
+          <div className={styles.servicedata}>
+            {t('connect.onlinebooking.first.description')}
+            <span>&nbsp;{settings.details.phone}</span>
+          </div>
+        )}
+      </div>
+    )
+  }
   const renderService = (val: Service) => {
     if (
       (virtualServicesOnly && val.online_only_service !== 1) ||
@@ -185,7 +349,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
                 <Rate
                   disabled
                   className={styles.consultatioRate}
-                  defaultValue={val.online_only_service ? 0 : 5}
+                  defaultValue={val.online_only_service ? 0 : val.rating}
                 />
 
                 <span
@@ -225,139 +389,25 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
       </div>
     )
   }
-  const rendervoucher = (voucherd) => {
-    return (
-      <div
-        className={styles.vocherList}
-        onClick={() => {
-          VoucherData.map((item) =>
-            item.id === voucherd.id ? (item.active = !item.active) : item
-          )
-          setVoucherData(VoucherData)
-          if (voucherd.active) {
-            setVcount(Vcount + 1)
-            setVprice(Vprice + voucherd.price)
-          } else {
-            setVcount(Vcount - 1)
-            setVprice(Vprice - voucherd.price)
-          }
-        }}
-      >
-        <div className={styles.voucherContainer}>
-          <div className={styles.voucherMain}>
-            <img src={voucherd.image} alt={'nothing'} />
-            <div className={styles.voucherTicket}>
-              <div className={styles.voucherVerticalMenu}>
-                <MoreOutlined />
-              </div>
-              <div className={styles.vouchervalue}>
-                <span className={styles.Vvalue}>£{voucherd.value}</span> <br />
-                <span className={styles.Vdes}>{voucherd.valueDescription}</span>
-              </div>
-              <div className={styles.voucherType}>
-                <div>
-                  <span className={styles.Vtype}>{voucherd.type}</span> <br />
-                  <span className={styles.VfamiDes}>
-                    {voucherd.description}
-                  </span>
-                </div>
-                <div>
-                  <span>£{voucherd.size}</span> <br />
-                  <span>{voucherd.sizeDescription}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={styles.voucherbtn}>
-            <div>
-              <span style={{ color: '#65CD98', fontSize: '16px' }}>
-                £{voucherd.price}
-              </span>
-            </div>
-            {voucherd.active && (
-              <div className={styles.servicebutton}>
-                <Button>
-                  <CheckCircleFilled />
-                  Selected
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-  const renderServices = (category: Category | null) => {
-    if (!category) {
-      category = servicesCategorised.Public_MasterCategories.find(
-        (item) =>
-          item.id === selectedData.masterCategoryID ||
-          !selectedData.masterCategoryID
-      )?.Public_ServiceCategories.find(
-        (item) => item.id === selectedData.categoryID
-      )
-    }
 
-    if (!category) {
-      return null
-    }
-
-    const hasOnlineConsultations =
-      typeof category?.Public_Services.find(
-        (s) => s.online_only_service === 1
-      ) !== 'undefined'
-
-    return (
-      <div>
-        <div className={styles.custCard}>
-          {!viewVouchers ? (
-            hasOnlineConsultations ? (
-              <div className={styles.treatmentTabWrapper}>
-                <div
-                  onClick={() => setVirtualServicesOnly(false)}
-                  className={ClassNames(
-                    styles.treatmentTab,
-                    !virtualServicesOnly && styles.active
-                  )}
-                >
-                  <MedicineBoxOutlined />
-                  {t('connect.onlinebooking.selector.offline')}
-                </div>
-                <div
-                  onClick={() => setVirtualServicesOnly(true)}
-                  className={ClassNames(
-                    styles.treatmentTab,
-                    virtualServicesOnly && styles.active
-                  )}
-                >
-                  <LaptopOutlined />
-                  {t('connect.onlinebooking.selector.online')}
-                </div>
-              </div>
-            ) : (
-              <div className={styles.treatmentTabWrapper}>
-                <div className={ClassNames(styles.treatmentTab, styles.active)}>
-                  <MedicineBoxOutlined />
-                  <span>In Clinic</span>
-                </div>
-              </div>
-            )
-          ) : null}
-          {!viewVouchers
-            ? category.Public_Services.map((val) => renderService(val))
-            : !isMobile &&
-              VoucherData.map((item) => (
-                <div key={item.id}>{rendervoucher(item)}</div>
-              ))}
-        </div>
-        {!isMobile && (
-          <div className={styles.servicedata}>
-            {t('connect.onlinebooking.first.description')}
-            <span>&nbsp;{settings.details.phone}</span>
+  const renderCategories = () => {
+    return !hasMasterCategories
+      ? servicesByCategory.Public_ServiceCategories.map((val) => {
+          return renderCategoryItem(val)
+        })
+      : !selectedData.masterCategoryID
+      ? servicesCategorised.Public_MasterCategories.map((masterCategory) => (
+          <div key={masterCategory.id}>
+            {masterCategory.Public_ServiceCategories.map((val) => {
+              return renderCategoryItem(val)
+            })}
           </div>
-        )}
-      </div>
-    )
+        ))
+      : servicesCategorised.Public_MasterCategories.find(
+          (item) => item.id === selectedData.masterCategoryID
+        ).Public_ServiceCategories.map((val) => {
+          return renderCategoryItem(val)
+        })
   }
 
   const renderCategoryItem = (category: Category) => {
@@ -368,6 +418,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
           style={{ margin: '12px 0', cursor: 'pointer' }}
           key={category.id}
           onClick={() => {
+            console.log('selecting', category.id)
             setSelectedData(actionTypes.SET_CATEGORY_ID, category.id)
           }}
         >
@@ -441,7 +492,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
               }}
             >
               <SelectAllIcon />
-              <span>All</span>
+              <span>{hasMasterCategories ? 'All' : 'Services'}</span>
             </div>
             {servicesCategorised.Public_MasterCategories.map((item) => (
               <div
@@ -490,7 +541,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
               )}
 
               <Promocode />
-              <span>Voucher</span>
+              <span>Vouchers</span>
             </div>
           </div>
         </div>
@@ -502,25 +553,7 @@ const ServiceSelector: FC<P> = ({ onSelected }) => {
             <div className={styles.serlist}>
               <div className={styles.servicelist}>
                 {!viewVouchers ? (
-                  !selectedData.masterCategoryID ? (
-                    servicesCategorised.Public_MasterCategories.map(
-                      (masterCategory) => (
-                        <div key={masterCategory.id}>
-                          {masterCategory.Public_ServiceCategories.map(
-                            (val) => {
-                              return renderCategoryItem(val)
-                            }
-                          )}
-                        </div>
-                      )
-                    )
-                  ) : (
-                    servicesCategorised.Public_MasterCategories.find(
-                      (item) => item.id === selectedData.masterCategoryID
-                    ).Public_ServiceCategories.map((val) => {
-                      return renderCategoryItem(val)
-                    })
-                  )
+                  renderCategories()
                 ) : (
                   <div>
                     <div

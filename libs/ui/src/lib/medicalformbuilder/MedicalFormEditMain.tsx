@@ -69,9 +69,9 @@ const MedicalFormEditMain: FC<P> = ({ ...props }) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    isDragging={snapshot.isDragging}
+                    isDragging={snapshot?.isDragging ? true : false}
                     className={
-                      snapshot.isDragging
+                      snapshot?.isDragging
                         ? styles.dndMainDragging
                         : styles.dndMainNoDragging
                     }
