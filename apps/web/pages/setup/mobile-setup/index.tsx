@@ -22,7 +22,7 @@ const Index: FC = () => {
   const [user] = useState('William Brandham')
   const [activeMenu, setActive] = useState<string>('')
 
-  const renderMenuItem = (item, index, isSubMenu = false) => {
+  const renderMenuItem = (item, index, length, isSubMenu = false) => {
     return (
       <AntMenu.Item
         key={`${item?.menuName}${index}`}
@@ -33,6 +33,10 @@ const Index: FC = () => {
           item?.path && activeMenu === item?.path && styles.menuSelected,
           item?.path && activeMenu === item?.path && 'ant-menu-item-selected'
         )}
+        style={{
+          borderBottom:
+            isSubMenu && length - 1 === index ? '0px' : '1px solid #ecedf0',
+        }}
         onClick={() => setActive(item?.path)}
       >
         <Link href={item?.path}>
@@ -72,7 +76,7 @@ const Index: FC = () => {
         )}
       >
         {item?.children?.map((subitem, subIndex) => {
-          return renderMenuItem(subitem, subIndex, true)
+          return renderMenuItem(subitem, subIndex, item?.children?.length, true)
         })}
       </SubMenu>
     )
@@ -109,7 +113,7 @@ const Index: FC = () => {
           {setupMenu?.map((item, index) => {
             return item?.children?.length > 0
               ? renderSubMenu(item, index)
-              : renderMenuItem(item, index)
+              : renderMenuItem(item, index, 0)
           })}
         </AntMenu>
         <div className={styles.antMenuitem}>SETUP</div>
@@ -121,7 +125,7 @@ const Index: FC = () => {
           {SetupMiddleMenu?.map((item, index) => {
             return item?.children?.length > 0
               ? renderSubMenu(item, index)
-              : renderMenuItem(item, index)
+              : renderMenuItem(item, index, 0)
           })}
         </AntMenu>
         <AntMenu
@@ -143,7 +147,7 @@ const Index: FC = () => {
           {SetupBottomMenu?.map((item, index) => {
             return item?.children?.length > 0
               ? renderSubMenu(item, index)
-              : renderMenuItem(item, index)
+              : renderMenuItem(item, index, 0)
           })}
           <AntMenu.Item key={'logout'} style={{ color: 'red' }}>
             <span>

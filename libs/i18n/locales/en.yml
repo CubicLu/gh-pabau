@@ -5689,7 +5689,6 @@ en:
   create.filter.modal.open.lead.status: 'Open'
   create.filter.modal.won.lead.status: 'Won'
   create.filter.modal.lost.lead.status: 'Lost'
-<<<<<<< HEAD
   setup.menu.dashborad: 'Dashboard'
   setup.menu.team: 'Team'
   setup.menu.staffmanager: 'Staff Manager'
@@ -5715,10 +5714,8 @@ en:
   setup.menu.medical.forms: 'Medical Forms'
   setup.menu.contact: 'Contact Support'
   setup.menu.help: 'Help Center'
-=======
   clients.activities.markAsDone: 'Mark as done'
   clients.activities.markAsNotDone: 'Mark as not done'
   clients.activities.delete.message: 'Activity deleted Successfully'
   clients.activities.delete.error.message: 'An error occured while deleting activity'
   clients.activities.delete.modal.message: 'Do you really want to delete these records? This process cannot be undone.'
->>>>>>> 95b9fb8b0310d4803653cb858021ee38c44e5220
