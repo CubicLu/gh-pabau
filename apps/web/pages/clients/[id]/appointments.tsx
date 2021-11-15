@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
 import {
   ClientCardLayout,
@@ -166,19 +166,29 @@ const Appointments = () => {
   //   { skip: !router.query.id, variables: { id: Number(router.query['id']) } }
   // )
 
-  return (
-    <ClientCardLayout
-      clientId={Number(router.query['id'])}
-      activeTab="appointments"
-    >
+  const ClientAppointmentTab = () => {
+    const clientData = useContext(ClientContext)
+
+    return (
       <ClientAppointments
         appointments={clientAppointments}
-        clientContext={ClientContext}
+        clientInfo={{
+          fullName: `${clientData?.firstName} ${clientData?.lastName}`,
+        }}
         loading={loading}
         updateApptNoteMutation={updateApptNoteMutation}
         adjustApptNotificationsMutation={adjustApptNotificationsMutation}
         updateAppointmentStatusMutation={updateAppointmentStatusMutation}
       />
+    )
+  }
+
+  return (
+    <ClientCardLayout
+      clientId={Number(router.query['id'])}
+      activeTab="appointments"
+    >
+      <ClientAppointmentTab />
     </ClientCardLayout>
   )
 }

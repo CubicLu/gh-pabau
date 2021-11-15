@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   TabMenu,
   ClientAppointmentCard,
@@ -65,15 +65,13 @@ export interface ClientAppointmentItem {
   isOnline: number
 }
 
-export interface ClientInfo {
+export interface ClientI {
   fullName?: string
 }
-
 interface P {
   appointments?: ClientAppointmentItem[]
   loading?: boolean
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  clientContext: React.Context<any>
+  clientInfo?: ClientI
   updateApptNoteMutation?: MutationFunction
   adjustApptNotificationsMutation?: MutationFunction
   updateAppointmentStatusMutation?: MutationFunction
@@ -93,23 +91,13 @@ const handleCancelAppointment = (
 
 export const ClientAppointments = ({
   appointments,
-  clientContext,
   loading,
+  clientInfo,
   updateApptNoteMutation,
   adjustApptNotificationsMutation,
   updateAppointmentStatusMutation,
 }: P) => {
   const ref = useRef<HTMLDivElement>(null)
-  const clientData = useContext(clientContext)
-  const [clientInfo, setClientInfo] = useState<ClientInfo>()
-
-  useEffect(() => {
-    if (clientData) {
-      setClientInfo({
-        fullName: `${clientData?.firstName} ${clientData?.lastName}`,
-      })
-    }
-  }, [clientData])
 
   const editNote = (id: number, note?: string) => {
     updateApptNoteMutation?.({
