@@ -94,8 +94,9 @@ export const permissions = shield(
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
-      deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
-      deleteManyContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      deleteContactAttachment: rules.authentication.isAuthenticated,
+      deleteManyContactAttachment: rules.authentication.isAuthenticated,
+      deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
