@@ -123,9 +123,11 @@ export const Invoices: FC<P> = (props) => {
         totalVat: totalVat,
         amountPaid: expandedInvoice[0]?.paid_amount,
         subtotal: discount !== 0 ? inv_total + discount : inv_total,
+        credit_ref_id: item.credit_ref_id,
+        customId: item.custom_id,
         // tips: expandedInvoice[0]?.tip, TODO: still not implemented tips
         tips: 0,
-        grandTotal: item.inv_total,
+        grandTotal: item.inv_total - item.credit_amount,
         guid: item.guid,
       })
       return invoicesDetails
@@ -167,19 +169,25 @@ export const Invoices: FC<P> = (props) => {
     const sumTotalInv = 0
     const sumTotalPaidInv = 0
     const totalInvoice = invoice?.invoices
-      ?.map((item) => sumTotalInv + item.inv_total)
+      ?.map(
+        (item) => sumTotalInv + Math.abs(item.inv_total - item.credit_amount)
+      )
       .reduce((a, b) => {
         return a + b
       }, 0)
-
+    const totalInvoices = invoice?.invoices
+      ?.map((item) => sumTotalInv + Math.abs(item.inv_total))
+      .reduce((a, b) => {
+        return a + b
+      }, 0)
     const totalPaid = invoice?.invoices
       ?.map((item) => sumTotalPaidInv + item.paid_amount)
       .reduce((a, b) => {
         return a + b
       }, 0)
-    const outstanding = totalInvoice - totalPaid
+    const outstanding = totalInvoices - totalPaid
     setTotalOutstanding(outstanding)
-    setTotalInvoiced(totalPaid)
+    setTotalInvoiced(totalInvoice)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesDetails, invoice])
   useEffect(() => {
@@ -332,189 +340,231 @@ export const Invoices: FC<P> = (props) => {
     const payBtnValue = record.grandTotal - record.amountPaid
     return (
       <div className={styles.rowExpand}>
-        {!salesDetaillLoading ? (
-          <div className={styles.items}>
-            {record?.items?.map((item, i) => (
-              <div className={styles.item} key={i}>
+        {record.credit_ref_id === 0 ? (
+          !salesDetaillLoading ? (
+            <div className={styles.items}>
+              {record?.items?.map((item, i) => (
+                <div className={styles.item} key={i}>
+                  <div>
+                    <Text>{item.name}</Text>
+                  </div>
+                  <div>
+                    <Text>{item.quantity}</Text>
+                  </div>
+                  <div>
+                    <Text>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {(item.quantity * item.price).toFixed(2)}
+                    </Text>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.items}>
+              <div className={styles.item}>
                 <div>
-                  <Text>{item.name}</Text>
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
                 </div>
                 <div>
-                  <Text>{item.quantity}</Text>
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.valueSkeleton}
+                  />
                 </div>
                 <div>
-                  <Text>
-                    {stringToCurrencySignConverter(user.me?.currency)}
-                    {(item.quantity * item.price).toFixed(2)}
-                  </Text>
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.columnSkeleton}
+                  />
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.items}>
-            <div className={styles.item}>
-              <div>
-                <Skeleton.Input
-                  active={true}
-                  size="small"
-                  className={styles.columnSkeleton}
-                />
-              </div>
-              <div>
-                <Skeleton.Input
-                  active={true}
-                  size="small"
-                  className={styles.valueSkeleton}
-                />
-              </div>
-              <div>
-                <Skeleton.Input
-                  active={true}
-                  size="small"
-                  className={styles.columnSkeleton}
-                />
               </div>
             </div>
-          </div>
-        )}
+          )
+        ) : null}
         <div className={styles.content}>
           <div className={styles.left}>
-            <div className={styles.left}>
+            {record.credit_ref_id === 0 ? (
               <div>
-                {!salesDetaillLoading ? (
-                  <Title level={5}>
-                    {t('ui.client-card-financial.total-vat')}
-                  </Title>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.columnSkeleton}
-                  />
-                )}
-                {!salesDetaillLoading ? (
-                  <Text>
-                    {stringToCurrencySignConverter(user.me?.currency)}
-                    {(record?.totalVat ?? 0).toFixed(2)}
-                  </Text>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.totalSkeleton}
-                  />
-                )}
+                <div>
+                  {!salesDetaillLoading ? (
+                    <Title level={5}>
+                      {t('ui.client-card-financial.total-vat')}
+                    </Title>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.columnSkeleton}
+                    />
+                  )}
+                  {!salesDetaillLoading ? (
+                    <Text>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {(record?.totalVat ?? 0).toFixed(2)}
+                    </Text>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.totalSkeleton}
+                    />
+                  )}
+                </div>
+                <div>
+                  {!salesDetaillLoading ? (
+                    <Title level={5}>
+                      {t('ui.client-card-financial.sub-total-amount')}
+                    </Title>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.columnSkeleton}
+                    />
+                  )}
+                  {!salesDetaillLoading ? (
+                    <Text>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {(record?.grandTotal ?? 0).toFixed(2)}
+                    </Text>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.totalSkeleton}
+                    />
+                  )}
+                </div>
               </div>
-              <div>
-                {!salesDetaillLoading ? (
-                  <Title level={5}>
-                    {t('ui.client-card-financial.sub-total-amount')}
-                  </Title>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.columnSkeleton}
-                  />
-                )}
-                {!salesDetaillLoading ? (
-                  <Text>
-                    {stringToCurrencySignConverter(user.me?.currency)}
-                    {(record?.grandTotal ?? 0).toFixed(2)}
-                  </Text>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.totalSkeleton}
-                  />
-                )}
+            ) : (
+              <div className={styles.credit}>
+                <Title level={5}>Credit Note Invoice #{record.customId}</Title>
               </div>
-            </div>
-            <div className={styles.right}>
-              <div>
-                {!salesDetaillLoading ? (
-                  <Title level={5}>
-                    {t('ui.client-card-financial.amount-paid')}
-                  </Title>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.columnSkeleton}
-                  />
-                )}
-                {!salesDetaillLoading ? (
-                  <Text>
-                    {stringToCurrencySignConverter(user.me?.currency)}
-                    {(record?.amountPaid ?? 0).toFixed(2)}
-                  </Text>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.totalSkeleton}
-                  />
-                )}
+            )}
+            {record.credit_ref_id === 0 && (
+              <div className={styles.right}>
+                <div>
+                  {!salesDetaillLoading ? (
+                    <Title level={5}>
+                      {t('ui.client-card-financial.amount-paid')}
+                    </Title>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.columnSkeleton}
+                    />
+                  )}
+                  {!salesDetaillLoading ? (
+                    <Text>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {(record?.amountPaid ?? 0).toFixed(2)}
+                    </Text>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.totalSkeleton}
+                    />
+                  )}
+                </div>
+                <div>
+                  {!salesDetaillLoading ? (
+                    <Title level={5}>
+                      {t('ui.client-card-financial.tips')}
+                    </Title>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.columnSkeleton}
+                    />
+                  )}
+                  {!salesDetaillLoading ? (
+                    <Text>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {(record?.tips ?? 0).toFixed(2)}
+                    </Text>
+                  ) : (
+                    <Skeleton.Input
+                      active={true}
+                      size="small"
+                      className={styles.totalSkeleton}
+                    />
+                  )}
+                </div>
               </div>
-              <div>
-                {!salesDetaillLoading ? (
-                  <Title level={5}>{t('ui.client-card-financial.tips')}</Title>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.columnSkeleton}
-                  />
-                )}
-                {!salesDetaillLoading ? (
-                  <Text>
-                    {stringToCurrencySignConverter(user.me?.currency)}
-                    {(record?.tips ?? 0).toFixed(2)}
-                  </Text>
-                ) : (
-                  <Skeleton.Input
-                    active={true}
-                    size="small"
-                    className={styles.totalSkeleton}
-                  />
-                )}
-              </div>
-            </div>
+            )}
           </div>
           <div className={styles.right}>
-            {!salesDetaillLoading ? (
-              <Title level={5}>
-                {t('ui.client-card-financial.grand-total')}
-              </Title>
+            {record.credit_ref_id === 0 ? (
+              <div>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.grand-total')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="default"
+                    className={styles.grandTotalSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Title level={4}>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {record?.grandTotal.toFixed(2)}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalValueSkeleton}
+                  />
+                )}
+                {!record.paid && (
+                  <Button type="primary">{`${t(
+                    'ui.client-card-financial.pay'
+                  )} ${stringToCurrencySignConverter(
+                    user.me?.currency
+                  )}${(Number.isFinite(payBtnValue) ? payBtnValue : 0).toFixed(
+                    2
+                  )}`}</Button>
+                )}
+              </div>
             ) : (
-              <Skeleton.Input
-                active={true}
-                size="default"
-                className={styles.grandTotalSkeleton}
-              />
-            )}
-            {!salesDetaillLoading ? (
-              <Title level={4}>
-                {stringToCurrencySignConverter(user.me?.currency)}
-                {record?.grandTotal.toFixed(2)}
-              </Title>
-            ) : (
-              <Skeleton.Input
-                active={true}
-                size="small"
-                className={styles.totalValueSkeleton}
-              />
-            )}
-            {!record.paid && (
-              <Button type="primary">{`${t(
-                'ui.client-card-financial.pay'
-              )} ${stringToCurrencySignConverter(
-                user.me?.currency
-              )}${(Number.isFinite(payBtnValue) ? payBtnValue : 0).toFixed(
-                2
-              )}`}</Button>
+              <div>
+                {!salesDetaillLoading ? (
+                  <Title level={5}>
+                    {t('ui.client-card-financial.grand-total')}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="default"
+                    className={styles.grandTotalSkeleton}
+                  />
+                )}
+                {!salesDetaillLoading ? (
+                  <Title level={4}>
+                    {stringToCurrencySignConverter(user.me?.currency)}
+                    {record?.grandTotal.toFixed(2)}
+                  </Title>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalValueSkeleton}
+                  />
+                )}
+              </div>
             )}
           </div>
         </div>

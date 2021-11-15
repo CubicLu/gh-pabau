@@ -18,6 +18,26 @@ export const InvoiceData = objectType({
     t.string('billers')
     t.string('issue_to')
     t.string('reference_no')
+    t.float('credit_amount')
+    t.int('credit_ref_id')
+  },
+})
+
+export const PaymentsOutput = objectType({
+  name: 'PaymentsOutput',
+
+  description: 'Payments data simple response',
+
+  definition(t) {
+    t.int('id')
+    t.field('date', { type: 'DateTime' })
+    t.field('created_date', { type: 'DateTime' })
+    t.float('amount')
+    t.string('pmethod')
+    t.string('location')
+    t.string('biller')
+    t.string('invoice_no')
+    t.string('user')
   },
 })
 
@@ -65,6 +85,62 @@ export const MainInvoice = extendType({
         const query = generateInvoiceQuery(ctx, input, [
           "a.reference_no='**CREDIT NOTE**'",
         ])
+        return await ctx.prisma.$queryRaw(query)
+      },
+    })
+    t.list.field('findManyPayments', {
+      type: PaymentsOutput,
+      description: 'Get Payments per customer other field to be implemented',
+      args: {
+        where: 'InvSaleWhereInput',
+        skip: intArg({
+          default: 0,
+        }),
+
+        take: intArg({
+          default: 50,
+        }),
+      },
+      async resolve(_root, input, ctx: Context) {
+        const query = `SELECT * from
+        (
+          SELECT
+            a.id,
+            a.amount,
+            a.pmethod,
+            FROM_UNIXTIME(a.date) as created_date,
+            datetime as date,
+            b.name as location,
+            c.name as biller,
+            s.custom_id as invoice_no,
+            d.full_name as user
+          FROM inv_payments a
+          inner join inv_sales s on s.id=a.invoice
+          left join company_branches b on b.id=s.location_id
+          left join inv_billers c on c.id=s.biller_id
+          left join users d on d.id=a.uid
+          where a.occupier = ${ctx.authenticated.company} and a.contact_id=${input?.where?.customer_id?.equals}
+          union
+          SELECT
+            a.id,
+            a.inv_total as amount,
+            concat('refund/',IFNULL(a.paid_by,'card')) as pmethod,
+            date as created_date,
+            date,
+            b.name as location,
+            c.name as biller,
+            c.custom_id as invoice_no,
+            d.full_name as user
+          from inv_sales a
+          left join company_branches b on b.id=a.location_id
+          left join inv_billers c on c.id=a.biller_id
+          left join users d on d.id=a.uid
+          where
+          a.occupier = ${ctx.authenticated.company} and reference_no="**REFUND**" and a.customer_id = ${input?.where?.customer_id?.equals}
+        )t
+        order by date desc
+        LIMIT ${input.take}
+        OFFSET ${input.skip}`
         return await ctx.prisma.$queryRaw(query)
       },
     })
@@ -122,6 +198,7 @@ const generateInvoiceQuery = (
               a.customer_id,
               a.customer_name,
               a.custom_id,
+              a.credit_ref_id,
               sum(a.paid_amount) as paid_amount,
               sum(a.discount_amount) as discount_amount,
               sum(a.inv_total) as inv_total,

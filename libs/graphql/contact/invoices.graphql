@@ -9,7 +9,9 @@ query getFinancialInvoices($contactID: Int!, $take: Int = 50, $skip: Int = 0){
     # status
     guid
     paid_amount
+    credit_amount
     discount_amount
+    credit_ref_id
     inv_total
     # tip
   }
