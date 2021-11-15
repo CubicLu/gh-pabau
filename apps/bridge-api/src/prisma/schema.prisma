@@ -334,6 +334,8 @@ model Company {
   CommunicationAttachment CommunicationAttachment[]
   Recall                  Recall[]
   CustomFieldDisplay      CustomFieldDisplay[]
+  Pipeline                Pipeline[]
+  PipelineStage           PipelineStage[]
   LabRequest              LabRequest[]
   @@map("admin")
 }
@@ -8552,34 +8554,36 @@ model MedicalForm {
 //}
 
 model MedicalFormContact {
-  id                        Int                         @id @default(autoincrement())
-  form_id                   Int
-  contact_id                Int?
-  created_at                DateTime?                   @default(now())
-  updated_at                DateTime?
-  deleted_at                DateTime?
-  complete                  Int
-  locked                    Int
-  user_created              Int?
-  user_updated              Int
-  related_to                Int
-  custom_user_name          String
-  prescriber                Int
-  priority                  String
-  pharmacy_id               Int
-  form_status               Int
-  comments                  String?
-  urgent                    Int?
-  imported                  Int
-  custom_contact_name       String
-  custom_contact_id         Int
-  approved_triggers         String?
-  actioned_by               Int?
-  form_contact_number       Int                         @default(0)
-  diagnosis_code            String
-  Form                      MedicalForm                 @relation(fields: [form_id], references: [id])
-  Contact                   CmContact?                  @relation(fields: [contact_id], references: [ID])
-  CreatedBy                 User?                       @relation(fields: [user_created], references: [id])
+  id                  Int         @id @default(autoincrement())
+  form_id             Int
+  contact_id          Int
+  created_at          DateTime?   @default(now())
+  updated_at          DateTime?
+  deleted_at          DateTime?
+  complete            Int
+  locked              Int
+  user_created        Int?
+  user_updated        Int
+  related_to          Int
+  custom_user_name    String
+  prescriber          Int?
+  priority            String
+  pharmacy_id         Int
+  form_status         Int
+  comments            String?
+  urgent              Int?
+  imported            Int
+  custom_contact_name String
+  custom_contact_id   Int
+  approved_triggers   String?
+  actioned_by         Int?
+  form_contact_number Int         @default(0)
+  diagnosis_code      String
+  Form                MedicalForm @relation(fields: [form_id], references: [id])
+  Contact             CmContact   @relation(fields: [contact_id], references: [ID])
+  CreatedBy           User?       @relation("MedicalContactFormCreated", fields: [user_created], references: [id])
+  Prescriber          User?       @relation("MedicalContactFormPrescribed", fields: [prescriber], references: [id])
+
   MedicalFormContactHistory MedicalFormContactHistory[]
   MedicalContactAttr        MedicalContactAttr[]
   LabRequest                LabRequest[]
@@ -9973,7 +9977,7 @@ model PhotoAlbum {
 //
 model Pipeline {
   id              Int     @id @default(autoincrement())
-  company_id      Int?
+  company_id      Int
   name            String
   description     String
   status          Int     @default(0)
@@ -9983,13 +9987,14 @@ model Pipeline {
   reference       String?
 
   PipelineStage PipelineStage[]
+  Company       Company         @relation(fields: [company_id], references: [id])
   @@index([company_id], name: "company_id")
   @@map("pipeline")
 }
 
 model PipelineStage {
   id               Int      @id @default(autoincrement())
-  company_id       Int?
+  company_id       Int
   pipeline_id      Int?
   name             String
   stage_order      Int      @default(0)
@@ -9999,6 +10004,7 @@ model PipelineStage {
   updated_date     DateTime @default(now())
 
   Pipeline Pipeline? @relation(fields: [pipeline_id], references: [id])
+  Company  Company   @relation(fields: [company_id], references: [id])
   CmLead   CmLead[]
   @@index([company_id], name: "company_id")
   @@map("pipeline_stages")
@@ -12909,9 +12915,12 @@ model User {
   LabRequestUser               LabRequest[]                   @relation("LabRequestUser")
   LabAssignedUser              LabRequest[]                   @relation("LabAssignedUser")
 
-  MedicalForm        MedicalForm[]
-  CmContact          CmContact[]
-  MedicalFormContact MedicalFormContact[]
+  MedicalForm                  MedicalForm[]
+  CmContact                    CmContact[]
+  CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
+  PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
+
+
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

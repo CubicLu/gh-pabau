@@ -1981,18 +1981,32 @@ export const Company = objectType({
         return root.CustomFieldDisplay
       },
     })
-    t.list.field('LabRequest', {
-      type: 'LabRequest',
+    t.list.field('Pipeline', {
+      type: 'Pipeline',
       args: {
-        where: 'LabRequestWhereInput',
-        orderBy: 'LabRequestOrderByWithRelationInput',
-        cursor: 'LabRequestWhereUniqueInput',
+        where: 'PipelineWhereInput',
+        orderBy: 'PipelineOrderByWithRelationInput',
+        cursor: 'PipelineWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'LabRequestScalarFieldEnum',
+        distinct: 'PipelineScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.LabRequest
+        return root.Pipeline
+      },
+    })
+    t.list.field('PipelineStage', {
+      type: 'PipelineStage',
+      args: {
+        where: 'PipelineStageWhereInput',
+        orderBy: 'PipelineStageOrderByWithRelationInput',
+        cursor: 'PipelineStageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PipelineStageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PipelineStage
       },
     })
     t.nullable.field('_count', {

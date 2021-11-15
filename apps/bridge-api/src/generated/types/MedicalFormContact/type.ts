@@ -9,7 +9,7 @@ export const MedicalFormContact = objectType({
   definition(t) {
     t.int('id')
     t.int('form_id')
-    t.nullable.int('contact_id')
+    t.int('contact_id')
     t.nullable.field('created_at', { type: 'DateTime' })
     t.nullable.field('updated_at', { type: 'DateTime' })
     t.nullable.field('deleted_at', { type: 'DateTime' })
@@ -19,7 +19,7 @@ export const MedicalFormContact = objectType({
     t.int('user_updated')
     t.int('related_to')
     t.string('custom_user_name')
-    t.int('prescriber')
+    t.nullable.int('prescriber')
     t.string('priority')
     t.int('pharmacy_id')
     t.int('form_status')
@@ -38,7 +38,7 @@ export const MedicalFormContact = objectType({
         return root.Form
       },
     })
-    t.nullable.field('Contact', {
+    t.field('Contact', {
       type: 'CmContact',
       resolve(root: any) {
         return root.Contact
@@ -48,6 +48,12 @@ export const MedicalFormContact = objectType({
       type: 'User',
       resolve(root: any) {
         return root.CreatedBy
+      },
+    })
+    t.nullable.field('Prescriber', {
+      type: 'User',
+      resolve(root: any) {
+        return root.Prescriber
       },
     })
     t.list.field('MedicalFormContactHistory', {

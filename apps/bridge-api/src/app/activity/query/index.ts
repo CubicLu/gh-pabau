@@ -219,6 +219,7 @@ export const ActivityQuery = extendType({
         delete activitySelect?.select?.CmContact?.select?.clientTotalActivities
         delete activitySelect?.select?.duration
 
+        // eslint-disable-next-line unicorn/prefer-object-from-entries
         input.where = Object.entries(input.where).reduce(
           (acc, [key, value]) => {
             if (value) {
