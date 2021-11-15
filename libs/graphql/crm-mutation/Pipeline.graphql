@@ -12,6 +12,9 @@ fragment PipelineFields on Pipeline {
 
 fragment Pipeline on Pipeline {
   ...PipelineFields
+  Company {
+    ...CompanyFields
+  }
 }
 
 mutation createOnePipeline($data: PipelineCreateInput!) {
