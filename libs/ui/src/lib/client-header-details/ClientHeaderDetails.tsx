@@ -2,8 +2,8 @@ import React, { FC, useState, useRef, useEffect } from 'react'
 import {
   CheckCircleFilled,
   EyeOutlined,
-  PrinterOutlined,
-  MailOutlined,
+  EditOutlined,
+  ShareAltOutlined,
   HistoryOutlined,
   FormOutlined,
   DeleteOutlined,
@@ -11,8 +11,11 @@ import {
   UndoOutlined,
   PlusOutlined,
   CloseCircleFilled,
+  BellOutlined,
+  InfoCircleFilled,
+  InfoOutlined,
 } from '@ant-design/icons'
-import { TabMenu, Avatar, Button, ClientData } from '@pabau/ui'
+import { TabMenu, Avatar, Button, ClientData, MyLottie } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { Popover, Tooltip, Badge, Input, Skeleton } from 'antd'
 import { useMedia } from 'react-use'
@@ -23,17 +26,22 @@ import {
   ClientNotes,
   ClientNoteDetails,
   ClientAppointmentDetails,
+  MedicalHistoryDetails,
 } from '../client-card/ClientCard'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { getImage } from '../../helper/uploaders/UploadHelpers'
+import medicalShield from '../../assets/lottie/medical-shield.json'
+import ClassNames from 'classnames'
 import styles from './ClientHeaderDetails.module.less'
 dayjs.extend(utc)
+dayjs.extend(relativeTime)
 const { TextArea } = Input
 
 export interface ClientHeaderDetailsProps {
   notes?: ClientNotes
-  medicalHistoryIconStatus?: string
+  medicalHistoryDetails?: MedicalHistoryDetails
   getContactDetails?: () => void
   client?: ClientData
   handleAddNewClientNote?: (e: string) => void
@@ -48,7 +56,7 @@ interface ClientCountDetails {
 
 export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   notes = { notes: [], count: 0, notesCountLoading: false, appointments: [] },
-  medicalHistoryIconStatus,
+  medicalHistoryDetails,
   getContactDetails,
   client,
   handleAddNewClientNote,
@@ -57,6 +65,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
+  const formLastUpdated = medicalHistoryDetails?.formLastUpdatedDate
+    ? dayjs().diff(medicalHistoryDetails?.formLastUpdatedDate, 'day')
+    : 0
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [noteItems, setNoteItems] = useState<ClientNoteDetails[]>([])
   const [appointmentItems, setAppointmentItems] = useState<
@@ -106,11 +117,18 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   }
 
   const getMedicalhistoryIcon = () => {
-    switch (medicalHistoryIconStatus) {
+    switch (medicalHistoryDetails?.status) {
       case 'not_completed':
         return <CloseCircleFilled style={{ color: '#ec6669' }} />
       case 'completed':
-        return <CheckCircleFilled style={{ color: '#65cd98' }} />
+        return formLastUpdated > 180 ? (
+          <div className={styles.toBeCompletedIcon}>
+            <InfoOutlined style={{ color: '#fff' }} />
+          </div>
+        ) : (
+          <CheckCircleFilled style={{ color: '#65cd98' }} />
+        )
+
       case 'to_be_completed':
         return (
           <div className={styles.toBeCompletedIcon}>
@@ -120,21 +138,82 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     }
   }
 
+  const handleMedicalHistoryPopoverContent = () => {
+    switch (medicalHistoryDetails?.status) {
+      case 'not_completed':
+      case 'to_be_completed':
+        return medicalShieldPopover
+      case 'completed':
+        return medicalHistoryPopover
+    }
+  }
+
+  const medicalShieldPopover = (
+    <div className={styles.medicalShieldWrapper}>
+      <MyLottie
+        width="121px"
+        height="110px"
+        options={{
+          loop: true,
+          autoPlay: true,
+          animationData: medicalShield,
+        }}
+      />
+      <h3>
+        {medicalHistoryDetails?.status === 'not_completed'
+          ? t('clients.clientcard.medical.history.no.medical.history')
+          : t('clients.clientcard.medical.history.requested', {
+              what: dayjs(medicalHistoryDetails?.requestedDate).fromNow(),
+            })}
+      </h3>
+      <div className={styles.medicalButtons}>
+        <Button type="primary" icon={<BellOutlined />}>
+          {medicalHistoryDetails?.status === 'not_completed'
+            ? t('clients.clientcard.medical.history.send.request')
+            : t('clients.clientcard.medical.history.send.reminder')}
+        </Button>
+        <h3>{t('clients.clientcard.medical.history.or')}</h3>
+        <Button type="primary">
+          {t('clients.clientcard.medical.history.complete')}
+        </Button>
+      </div>
+    </div>
+  )
+
   const medicalHistoryPopover = (
-    <>
-      <div className={styles.medicalHistoryItem}>
-        <EyeOutlined /> View and Edit
+    <div className={styles.medicalHistoryWrapper}>
+      <div className={styles.titleWrapper}>
+        <h3>{t('clients.clientcard.medical.history')}</h3>
+        <h4>
+          {formLastUpdated > 180 && (
+            <InfoCircleFilled
+              style={{ color: '#FAAD14', marginRight: '4px' }}
+            />
+          )}
+          {t('clients.clientcard.medical.history.last.updated', {
+            what: formLastUpdated,
+            which: formLastUpdated > 0 ? 'days' : 'day',
+          })}
+        </h4>
       </div>
       <div className={styles.medicalHistoryItem}>
-        <PrinterOutlined /> Print
+        <EyeOutlined /> {t('clients.clientcard.medical.history.view')}
       </div>
       <div className={styles.medicalHistoryItem}>
-        <MailOutlined /> Email history
+        <EditOutlined /> {t('clients.clientcard.medical.history.edit')}
       </div>
       <div className={styles.medicalHistoryItem}>
-        <HistoryOutlined /> Change log
+        <ShareAltOutlined /> {t('clients.clientcard.medical.history.share')}
       </div>
-    </>
+      <div className={styles.medicalHistoryItem}>
+        <HistoryOutlined /> {t('clients.clientcard.medical.history.change.log')}
+      </div>
+      <div className={styles.medicalHistoryBtnWrap}>
+        <Button type="primary" icon={<BellOutlined />}>
+          {t('clients.clientcard.medical.history.request.update')}
+        </Button>
+      </div>
+    </div>
   )
 
   const clientAlertsPopover = (
@@ -205,7 +284,10 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
         <TabMenu
           tabPosition="top"
           minHeight="1px"
-          menuItems={["Client's", "Appointment's"]}
+          menuItems={[
+            t('clients.clientcard.notes.clients'),
+            t('clients.clientcard.notes.appointments'),
+          ]}
         >
           <div className={styles.clientNotesTab}>
             {notes?.loading ? (
@@ -291,7 +373,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                 <div className={styles.clientNoteAdd}>
                   <TextArea
                     value={note}
-                    placeholder="Take a note, @name"
+                    placeholder={t(
+                      'clients.clientcard.notes.clientnote.input.placeholder'
+                    )}
                     autoFocus
                     onChange={(e) => setNote(e.target.value)}
                     onPressEnter={(e) => handleAddNote(e)}
@@ -306,7 +390,6 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
               skeletonContent()
             ) : (
               <div className={styles.clientNotesContainer}>
-                {/* TODO  */}
                 {appointmentItems?.map((note, index) => (
                   <div
                     key={`appointment-${index}`}
@@ -348,13 +431,18 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     <div className={styles.clientCardHeaderOps}>
       <div className={styles.clientCardHeaderOp}>
         <Popover
-          title={'Medical history'}
           placement="bottomRight"
           trigger="click"
-          content={medicalHistoryPopover}
-          overlayClassName={styles.clientCardHeaderPopover}
+          content={handleMedicalHistoryPopoverContent}
+          overlayClassName={ClassNames(
+            styles.clientCardHeaderPopover,
+            medicalHistoryDetails?.status === 'not_completed' ||
+              medicalHistoryDetails?.status === 'to_be_completed'
+              ? styles.medicalShieldPopover
+              : styles.medicalHistoryPopover
+          )}
         >
-          <Tooltip title="Medical history">
+          <Tooltip title={t('clients.clientcard.medical.history')}>
             <Badge count={getMedicalhistoryIcon()} offset={[0, 18]}>
               <MedicalHistory className={styles.headerOpsIcon} />
             </Badge>
@@ -363,7 +451,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
       </div>
       <div className={styles.clientCardHeaderOp}>
         <Popover
-          title={'Notes'}
+          title={t('clients.clientcard.notes')}
           placement="bottomRight"
           trigger="click"
           content={clientNotesPopover}
@@ -378,7 +466,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
               getContactDetails?.()
             }}
           >
-            <Tooltip title="Notes">
+            <Tooltip title={t('clients.clientcard.notes')}>
               <Badge
                 count={countDetails?.notes}
                 overflowCount={9}
