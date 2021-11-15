@@ -189,13 +189,19 @@ const Documents: FC = () => {
     onCompleted({ deleteContactAlbum: data }) {
       const cFolders = { ...folders }
       const idx = cFolders?.folder?.findIndex((el) => el?.id === data?.album)
-      if (idx !== -1) {
-        const cFolder = cFolders[idx]
+      if (idx !== -1 && data?.success) {
+        const cFolder = cFolders?.folder?.[idx]
         cFolders?.folder?.splice(idx, 1)
         setFolders(cFolders)
         Notification(
           NotificationType?.success,
           `${cFolder?.folderTitle} deleted successfully!`
+        )
+      } else {
+        const cFolder = cFolders?.folder?.[idx]
+        Notification(
+          NotificationType?.error,
+          `${cFolder?.folderTitle} couldn't deleted!`
         )
       }
       setFolderDeleteLoading(false)
