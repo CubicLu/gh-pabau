@@ -85,28 +85,16 @@ export const PathwayLayout = ({ journey }: P) => {
     }
   }, [journey, step])
 
-  const Hydrated = steps[currentStep.name]
-  const HydratedJsx = <Hydrated onSubmit={submitCallback} data={stepState} />
-
   // if (saveStepMutationError)
   //   return <div>ERROR SAVING STEP: {JSON.stringify(saveStepMutationError)}</div>
 
-  const loadData = useCallback(async () => {
-    console.log('loadDAta!')
-    if (!Hydrated.loadData) {
-      console.log('none found')
-      return
-    }
-    return query({
-      query: Hydrated.loadData.document,
-      variables: Hydrated.loadData.variables(stepState),
-    })
-  }, [query, stepState, Hydrated])
-
   useEffect(() => {
     const f = async () => {
-      if (!loadData) return
-      const data = await loadData?.()
+      console.log('loadData!')
+      const data = await query({
+        query: steps[currentStep.name].loadData.document,
+        variables: steps[currentStep.name].loadData.variables(stepState),
+      })
       console.log('GOT STEP DATA', data)
       if (!data) return
       console.log('FIRST KEY', Object.keys(data)[0])
@@ -122,7 +110,33 @@ export const PathwayLayout = ({ journey }: P) => {
       }))
     }
     f()
-  }, [loadData, currentStep, journey, step])
+  }, [query, currentStep.name])
+
+  const HydratedJsx = useMemo(() => {
+    const Hydrated = steps[currentStep.name]
+    return <Hydrated onSubmit={submitCallback} data={stepState} />
+  }, [currentStep, stepState, submitCallback])
+
+  // useEffect(() => {
+  //   const f = async () => {
+  //     if (!loadData) return
+  //     const data = await loadData?.()
+  //     console.log('GOT STEP DATA', data)
+  //     if (!data) return
+  //     console.log('FIRST KEY', Object.keys(data)[0])
+  //     console.log('FIRST KEY', Object.keys(data.data)[0])
+  //     const data2 =
+  //       Object.keys(data.data).length === 1
+  //         ? data.data[Object.keys(data.data)[0]]
+  //         : data.data
+  //     console.log('Layout got step data', data2)
+  //     setStepState((e) => ({
+  //       ...e,
+  //       [currentStep.name]: data2,
+  //     }))
+  //   }
+  //   f()
+  // }, [loadData, currentStep, journey, step])
 
   if (!currentStep || !('name' in currentStep)) return <FinishScreen />
   if (!(currentStep.name in steps))

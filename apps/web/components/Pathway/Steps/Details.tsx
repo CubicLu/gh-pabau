@@ -43,7 +43,7 @@ export const DetailsStep = ({ onSubmit, data }: P) => {
           MailingCity,
         }) => {
           const variables: SetDetailsMutationOptions['variables'] = {
-            contactId: data['contactId'],
+            contactId: data['contact_id'],
             MailingCity,
             MailingCountry,
             DOB,
