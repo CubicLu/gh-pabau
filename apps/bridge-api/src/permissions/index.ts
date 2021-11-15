@@ -125,6 +125,9 @@ export const permissions = shield(
       public_createOnlineBooking: allow,
 
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
+      updateOneCmContact: rules.authentication.isAuthenticated,
+      // Pathway
+      upsertOnePathwayStepsTaken: rules.interceptors.injectContact,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -141,8 +144,10 @@ export const permissions = shield(
       findManyTimezone: allow,
       findManyInvoice: rules.authentication.isAuthenticated,
       countInvoice: rules.authentication.isAuthenticated,
+      //Pathway
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
+      findFirstPathwaysTaken: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,

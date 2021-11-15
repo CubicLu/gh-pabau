@@ -1,0 +1,14 @@
+query getConsent($formType: String!, $form_id: Int = 0) {
+  allConsents: findManyMedicalForm(
+    where: { form_type: { equals: $formType }, id: { notIn: [$form_id] } }
+  ) {
+    id
+    name
+    form_type
+  }
+  selectedConsents: findFirstMedicalForm(where: { id: { equals: $form_id } }) {
+    id
+    name
+    form_type
+  }
+}
