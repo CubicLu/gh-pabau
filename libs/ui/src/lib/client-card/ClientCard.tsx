@@ -144,10 +144,16 @@ export interface ClientNotes {
   appointments: ClientAppointmentDetails[]
 }
 
+export interface MedicalHistoryDetails {
+  status?: string
+  requestedDate?: string
+  formLastUpdatedDate?: string
+}
+
 interface P {
   client: ClientData
   notes?: ClientNotes
-  medicalHistoryIconStatus?: string
+  medicalHistoryDetails?: MedicalHistoryDetails
   getContactDetails?: () => void
   handleAddNewClientNote?: (e: string) => void
   handleEditNote?: (id: number | string, e: string) => void
@@ -174,7 +180,7 @@ const ClientCardModal: FC<P> = ({
   client,
   cssClass,
   notes,
-  medicalHistoryIconStatus,
+  medicalHistoryDetails,
   getContactDetails,
   handleAddNewClientNote,
   handleEditNote,
@@ -946,7 +952,7 @@ const ClientCardModal: FC<P> = ({
               {!isMobile && (
                 <ClientHeaderDetails
                   notes={notes}
-                  medicalHistoryIconStatus={medicalHistoryIconStatus}
+                  medicalHistoryDetails={medicalHistoryDetails}
                   getContactDetails={getContactDetails}
                   client={client}
                   handleAddNewClientNote={handleAddNewClientNote}
