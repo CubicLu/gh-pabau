@@ -8,7 +8,6 @@ import {
   useFindManyLeadsLazyQuery,
 } from '@pabau/graphql'
 import styles from './CreateFilterModal.module.less'
-import classNames from 'classnames'
 const { Option } = Select
 
 interface ClientLeadSelectProps {
@@ -122,7 +121,7 @@ export const ClientLeadSelect: FC<ClientLeadSelectProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit])
   return (
-    <div className={classNames(styles.clientWrapper)}>
+    <div className={className ? className : styles.clientWrapper}>
       <div className={styles.icon}>{icon}</div>
       <Select
         showSearch

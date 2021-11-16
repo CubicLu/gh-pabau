@@ -171,14 +171,6 @@ export interface Labels {
   color?: string
 }
 
-// export interface ActivityTypeFilter {
-//   id: number
-//   name: string
-//   isSelected: boolean
-//   hasIcon?: boolean
-//   icon?: string
-// }
-
 export interface OrderValue {
   field: string
   order: string
