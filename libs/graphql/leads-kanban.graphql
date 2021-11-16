@@ -13,6 +13,7 @@ query getKanbanLeads(
         pipeline_id: { equals: $pipeline_id }
       }
     }
+    orderBy: { CreatedDate: desc }
   ) {
     lead_id: ID
     Name: Fname
