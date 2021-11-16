@@ -807,7 +807,7 @@ export const Index: FC = () => {
             )}
           </div>
         </div>
-        <TabMenu
+        {/* <TabMenu
           tabPosition="top"
           minHeight="1px"
           menuItems={[
@@ -834,7 +834,24 @@ export const Index: FC = () => {
             updatePaginateData={updatePaginateData}
           />
           <Library />
-        </TabMenu>
+        </TabMenu> */}
+        <Custom
+            isLoading={loadingMedicalForms}
+            medicalFormItems={medicalFormItems}
+            smsMessageTemplateItems={smsMessageTemplateItems}
+            emailMessageTemplateItems={emailMessageTemplateItems}
+            userListItems={userListItems}
+            userGroupListItems={userGroupListItems}
+            labTestsListItems={labTestsListItems}
+            invProductsListItems={invProductsListItems}
+            medicalConditionsListItems={medicalConditionsListItems}
+            companyServiceListItems={companyServiceListItems}
+            medicalFormMacros={medicalFormMacros}
+            onSaveForm={saveForm}
+            onHandleMacro={onHandleMacro}
+            pagenateParams={paginateData}
+            updatePaginateData={updatePaginateData}
+          />
       </div>
     </Layout>
   )
