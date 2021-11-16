@@ -120,6 +120,26 @@ export const InvSale = objectType({
         return root.package
       },
     })
+    t.nullable.field('CreditRef', {
+      type: 'InvSale',
+      resolve(root: any) {
+        return root.CreditRef
+      },
+    })
+    t.list.field('CreditNotes', {
+      type: 'InvSale',
+      args: {
+        where: 'InvSaleWhereInput',
+        orderBy: 'InvSaleOrderByWithRelationInput',
+        cursor: 'InvSaleWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InvSaleScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CreditNotes
+      },
+    })
     t.list.field('Booking', {
       type: 'Booking',
       args: {
