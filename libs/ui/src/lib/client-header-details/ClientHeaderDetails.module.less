@@ -25,6 +25,31 @@
   }
 }
 
+.medical-shield-popover {
+  :global {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          padding: 16px;
+        }
+      }
+    }
+  }
+}
+
+.medical-history-popover {
+  :global {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          padding: 12px;
+        }
+      }
+    }
+  }
+}
+
+
 .to-be-completed-icon {
   background: #efb041;
   border-radius: 50%;
@@ -186,21 +211,46 @@
   }
 }
 
-.medicalHistoryItem {
-  width: 200px;
-  height: 32px;
-  margin-top: 4px;
-  padding: 0 12px;
-  cursor: pointer;
-  color: var(--light-grey-color);
-  display: flex;
-  align-items: center;
-  font-family: var(--font-family);
-  font-size: 14px;
-  :global {
-    .anticon {
-      margin-right: 8px;
+.medical-history-wrapper {
+  width: 188px;
+  .title-wrapper {
+    h3 {
+      font-size: 14px;
+      line-height: 22px;
+      color: #3D3D46;
+      margin: 0;
     }
+    h4 {
+      font-size: 12px;
+      line-height: 16px;
+      color: #9292A3;
+      margin: 4px 0 12px 0;
+    }
+  }
+  .medicalHistoryItem {
+    width: 200px;
+    height: 32px;
+    margin-top: 4px;
+    cursor: pointer;
+    color: var(--light-grey-color);
+    display: flex;
+    align-items: center;
+    font-family: var(--font-family);
+    font-size: 14px;
+    :global {
+      .anticon {
+        margin-right: 8px;
+      }
+    }
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  .medical-history-btn-wrap {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 12px;
   }
 }
 
@@ -218,6 +268,34 @@
       margin-right: 8px;
       margin-bottom: 8px;
       border-radius: 4px;
+    }
+  }
+}
+
+.medical-shield-wrapper {
+  width: 184px;
+  h3 {
+    display: flex;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #3D3D46;
+    margin: 12px 0 21px 0;
+  }
+  .medical-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    h3 {
+      display: flex;
+      justify-content: center;
+      font-size: 12px;
+      line-height: 16px;
+      color: #9292A3;
+      margin: 8px 0;
+    }
+    &:last-child {
+      margin-bottom: 4px;
     }
   }
 }

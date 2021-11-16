@@ -679,6 +679,34 @@ export const User = objectType({
         return root.ActivityUserFilter
       },
     })
+    t.list.field('LabRequestUser', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabRequestUser
+      },
+    })
+    t.list.field('LabAssignedUser', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabAssignedUser
+      },
+    })
     t.list.field('MedicalForm', {
       type: 'MedicalForm',
       args: {
