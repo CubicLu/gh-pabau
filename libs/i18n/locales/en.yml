@@ -4180,7 +4180,7 @@ en:
   setup.medical.forms.filter.status: 'Status'
   setup.medical.forms.filter.apply: 'Apply'
   setup.medical.forms.filter.language: 'Language'
-  setup.medical.forms.patientFormName: 'Patient Form Templates'
+  setup.medical.forms.patientFormName: 'Form'
   setup.medical.forms.createForm.text: 'Create Form'
   setup.medical.forms.previewButton.text: 'Preview'
   setup.medical.forms.create.text: 'successfully created'

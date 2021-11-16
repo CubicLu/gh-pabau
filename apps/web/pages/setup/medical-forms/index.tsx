@@ -33,7 +33,6 @@ import {
   NotificationBanner,
   NotificationType,
   SmsMessageTemplateItem,
-  TabMenu,
   UserListItem,
   UserGroupListItem,
   CompanyListItem,
@@ -50,7 +49,6 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import notificationBannerImage from '../../../assets/images/notification-image.png'
 import Layout from '../../../components/Layout/Layout'
 import Custom from '../../../components/MedicalForms/Custom'
-import Library from '../../../components/MedicalForms/Library'
 import CommonHeader from '../../../components/CommonHeader'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { gql, useMutation } from '@apollo/client'
@@ -121,7 +119,7 @@ function isValidJSONString(str) {
 
 export const Index: FC = () => {
   const [hideBanner, setHideBanner] = useState(false)
-  const [currentTab, setCurrentTab] = useState('0')
+  const [currentTab] = useState('0')
   const [query, setQuery] = useState('')
   const [companyDateFormat, setCompanyDateFormat] = useState('d/m/Y')
   const [showCreateForm, setShowCreateForm] = useState(false)
@@ -807,7 +805,7 @@ export const Index: FC = () => {
             )}
           </div>
         </div>
-        <TabMenu
+        {/* <TabMenu
           tabPosition="top"
           minHeight="1px"
           menuItems={[
@@ -834,7 +832,24 @@ export const Index: FC = () => {
             updatePaginateData={updatePaginateData}
           />
           <Library />
-        </TabMenu>
+        </TabMenu> */}
+        <Custom
+          isLoading={loadingMedicalForms}
+          medicalFormItems={medicalFormItems}
+          smsMessageTemplateItems={smsMessageTemplateItems}
+          emailMessageTemplateItems={emailMessageTemplateItems}
+          userListItems={userListItems}
+          userGroupListItems={userGroupListItems}
+          labTestsListItems={labTestsListItems}
+          invProductsListItems={invProductsListItems}
+          medicalConditionsListItems={medicalConditionsListItems}
+          companyServiceListItems={companyServiceListItems}
+          medicalFormMacros={medicalFormMacros}
+          onSaveForm={saveForm}
+          onHandleMacro={onHandleMacro}
+          pagenateParams={paginateData}
+          updatePaginateData={updatePaginateData}
+        />
       </div>
     </Layout>
   )
