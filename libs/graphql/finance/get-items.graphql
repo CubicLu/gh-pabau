@@ -15,6 +15,9 @@ query saleItems($guid: String!) {
       inv_total
       paid_amount
       tip
+      CreditRef{
+        custom_id
+      }
     }
     Tax {
       id

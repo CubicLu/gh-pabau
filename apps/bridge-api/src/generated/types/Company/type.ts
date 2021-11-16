@@ -1561,6 +1561,20 @@ export const Company = objectType({
         return root.MedicalAttr
       },
     })
+    t.list.field('Lab', {
+      type: 'Lab',
+      args: {
+        where: 'LabWhereInput',
+        orderBy: 'LabOrderByWithRelationInput',
+        cursor: 'LabWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Lab
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {
@@ -1993,6 +2007,20 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.PipelineStage
+      },
+    })
+    t.list.field('LabRequest', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabRequest
       },
     })
     t.nullable.field('_count', {

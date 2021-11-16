@@ -26,7 +26,7 @@ import {
   ActivitiesProps,
   AvatarUploader,
   ReferredByOption,
-  FieldOrderItem,
+  CategoryFieldType,
   ClientHeaderDetails,
   // AllTemplateModal,
 } from '@pabau/ui'
@@ -144,10 +144,16 @@ export interface ClientNotes {
   appointments: ClientAppointmentDetails[]
 }
 
+export interface MedicalHistoryDetails {
+  status?: string
+  requestedDate?: string
+  formLastUpdatedDate?: string
+}
+
 interface P {
   client: ClientData
   notes?: ClientNotes
-  medicalHistoryIconStatus?: string
+  medicalHistoryDetails?: MedicalHistoryDetails
   getContactDetails?: () => void
   handleAddNewClientNote?: (e: string) => void
   handleEditNote?: (id: number | string, e: string) => void
@@ -158,7 +164,7 @@ interface P {
   activeTab: string
   referredByOptions?: ReferredByOption[]
   loading?: boolean
-  customFields?: FieldOrderItem[]
+  customFields?: CategoryFieldType[]
   dateFormat?: string
   handleEditAll?: () => void
   cssClass?: string
@@ -174,7 +180,7 @@ const ClientCardModal: FC<P> = ({
   client,
   cssClass,
   notes,
-  medicalHistoryIconStatus,
+  medicalHistoryDetails,
   getContactDetails,
   handleAddNewClientNote,
   handleEditNote,
@@ -946,7 +952,7 @@ const ClientCardModal: FC<P> = ({
               {!isMobile && (
                 <ClientHeaderDetails
                   notes={notes}
-                  medicalHistoryIconStatus={medicalHistoryIconStatus}
+                  medicalHistoryDetails={medicalHistoryDetails}
                   getContactDetails={getContactDetails}
                   client={client}
                   handleAddNewClientNote={handleAddNewClientNote}
