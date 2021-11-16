@@ -445,14 +445,19 @@ export const Invoices: FC<P> = (props) => {
               </div>
             ) : !salesDetaillLoading ? (
               <div className={styles.credit}>
-                <Title level={5}>Credit Note Invoice #{record.customId}</Title>
+                <Title level={5}>
+                  {t('ui.client-card-financial.invoices.credit-note')} #
+                  {record.customId}
+                </Title>
               </div>
             ) : (
-              <Skeleton.Input
-                active={true}
-                size="default"
-                className={styles.grandTotalSkeleton}
-              />
+              <div className={styles.credit}>
+                <Skeleton.Input
+                  active={true}
+                  size="default"
+                  className={styles.grandTotalSkeleton}
+                />
+              </div>
             )}
             {record.credit_ref_id === 0 && (
               <div className={styles.right}>
@@ -511,7 +516,7 @@ export const Invoices: FC<P> = (props) => {
           </div>
           <div className={styles.right}>
             {record.credit_ref_id === 0 ? (
-              <div>
+              <div className={styles.details}>
                 {!salesDetaillLoading ? (
                   <Title level={5}>
                     {t('ui.client-card-financial.grand-total')}
@@ -546,7 +551,7 @@ export const Invoices: FC<P> = (props) => {
                 )}
               </div>
             ) : (
-              <div>
+              <div className={styles.details}>
                 {!salesDetaillLoading ? (
                   <Title level={5}>
                     {t('ui.client-card-financial.grand-total')}

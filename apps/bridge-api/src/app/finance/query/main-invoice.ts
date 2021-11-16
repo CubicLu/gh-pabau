@@ -174,6 +174,7 @@ const generateInvoiceQuery = (
           WHERE
               ${whereClause.join(' AND ')}
               AND a.guid!='' AND a.guid IS NOT NULL
+              AND b.name!='' AND b.name IS NOT NULL
           GROUP BY IFNULL(a.guid, a.id)
           ORDER BY a.date desc
           LIMIT ${input.take}
@@ -195,9 +196,10 @@ const generateInvoiceCountQuery = (
 
   const query = `SELECT count(DISTINCT a.guid) as count
           from inv_sales a
+          LEFT JOIN company_branches b on b.id = a.location_id
           WHERE
           ${whereClause.join(' AND ')}
-          AND a.guid!='' AND a.guid IS NOT NULL`
+          AND a.guid!='' AND a.guid IS NOT NULL AND b.name!='' AND b.name IS NOT NULL`
 
   return query
 }

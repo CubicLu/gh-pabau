@@ -4410,6 +4410,8 @@ en:
   ui.client-card-financial.invoices.date: Date
   ui.client-card-financial.invoices.clear-all: 'Clear All'
   ui.client-card-financial.invoices.filter-by: 'Filter by'
+  ui.client-card-financial.invoices.credit-note: 'Credit Note Invoice'
+  ui.client-card-financial.items.total: 'Total'
   ui.client-card-financial.payments: Payments
   ui.client-card-financial.items: Items
   ui.client-card-financial.voided: Voided

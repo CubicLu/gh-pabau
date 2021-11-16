@@ -21,6 +21,8 @@ import {
 } from '@pabau/graphql'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
+import { useUser } from '../../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../../helper/stringToCurrencySignConverter'
 
 const getInvoiceItemsValues = () => {
   return {
@@ -41,6 +43,7 @@ interface P {
 
 export const Items: FC<P> = (props) => {
   const router = useRouter()
+  const user = useUser()
   const { invoiceEmployeeOptions, totalItemsCounts } = props
   const { t } = useTranslation('common')
   const { Text } = Typography
@@ -93,12 +96,16 @@ export const Items: FC<P> = (props) => {
         employee: item?.InvSale?.InvBiller?.name,
         soldBy: item?.InvSale?.biller_name,
         qty: item?.quantity,
+        total:
+          stringToCurrencySignConverter(user.me?.currency) +
+          item?.InvSale?.total,
       })
 
       return itemsDetails
     })
 
     setItems(itemsDetails)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsData])
   const columns = [
     {
@@ -144,6 +151,12 @@ export const Items: FC<P> = (props) => {
     {
       title: t('ui.client-card-financial.items.qty'),
       dataIndex: 'qty',
+      visible: true,
+      width: 50,
+    },
+    {
+      title: t('ui.client-card-financial.items.total'),
+      dataIndex: 'total',
       visible: true,
       width: 50,
     },
@@ -330,6 +343,14 @@ export const Items: FC<P> = (props) => {
                       />
                     )
                   case 'qty':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.qtySkeleton}
+                      />
+                    )
+                  case 'total':
                     return (
                       <Skeleton.Input
                         active={true}
