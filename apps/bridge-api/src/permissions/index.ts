@@ -128,6 +128,7 @@ export const permissions = shield(
       updateOneCmContact: rules.authentication.isAuthenticated,
       // Pathway
       upsertOnePathwayStepsTaken: rules.interceptors.injectContact,
+      createOnePathwaysTaken: allow,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
