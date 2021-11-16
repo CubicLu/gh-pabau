@@ -2,7 +2,7 @@ import { SendTextLocalSMS } from './sms-textlocal-service'
 import { SendNexmoSMS } from './sms-nexmo-service'
 import { Context } from '../../context'
 import { prepareMessage } from '../email/merge-tags.service'
-import { smsResponse } from './dto'
+import { SmsResponse } from './dto'
 
 export const sendSmsWithTags = async (args, ctx: Context) => {
   const international_company = await ctx.prisma.companyDetails.findFirst({
@@ -16,24 +16,7 @@ export const sendSmsWithTags = async (args, ctx: Context) => {
     booking_id: args.booking_id,
   }
   const messageWithTags = await prepareMessage(args.message, ctx, relations)
-  let messageCount = 0
-  switch (true) {
-    case messageWithTags.length <= 160:
-      messageCount = 1
-      break
-    case messageWithTags.length > 160 && messageWithTags.length <= 303:
-      messageCount = 2
-      break
-    case messageWithTags.length > 303 && messageWithTags.length <= 455:
-      messageCount = 3
-      break
-    case messageWithTags.length > 455 && messageWithTags.length <= 607:
-      messageCount = 4
-      break
-    case messageWithTags.length > 612:
-      messageCount = 5
-      break
-  }
+  const messageCount = Math.ceil(messageWithTags.length / 160)
 
   const {
     balance,
@@ -44,7 +27,10 @@ export const sendSmsWithTags = async (args, ctx: Context) => {
     },
   })
   if (messageCount > balance) {
-    return 'Clinic has no credit to send sms'
+    return {
+      success: false,
+      message: 'Clinic has no credit to send sms',
+    }
   }
   if (args.from === '') {
     const { smsd_name } = await ctx.prisma.smsSender.findFirst({
@@ -58,7 +44,7 @@ export const sendSmsWithTags = async (args, ctx: Context) => {
 
   args.message = messageWithTags
 
-  let smsResponse: smsResponse = {}
+  let smsResponse: SmsResponse = {}
   if (international_company.county === 'United States') {
     smsResponse = await SendNexmoSMS(args)
   } else {

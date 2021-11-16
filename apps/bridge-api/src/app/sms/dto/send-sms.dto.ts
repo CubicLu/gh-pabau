@@ -9,7 +9,7 @@ export interface NexmoResponse {
   messages?: any
 }
 
-export interface smsResponse {
+export interface SmsResponse {
   success?: any
   message_count?: any
 }

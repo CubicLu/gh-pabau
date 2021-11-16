@@ -178,7 +178,7 @@ export const CancelAppointment = extendType({
           }
           const sendSMS = await sendSmsWithTags(sendSmsArgs, ctx)
 
-          if (sendSMS) {
+          if (sendSMS.success) {
             responseData.send_sms = true
           }
         }
