@@ -836,22 +836,22 @@ export const Index: FC = () => {
           <Library />
         </TabMenu> */}
         <Custom
-            isLoading={loadingMedicalForms}
-            medicalFormItems={medicalFormItems}
-            smsMessageTemplateItems={smsMessageTemplateItems}
-            emailMessageTemplateItems={emailMessageTemplateItems}
-            userListItems={userListItems}
-            userGroupListItems={userGroupListItems}
-            labTestsListItems={labTestsListItems}
-            invProductsListItems={invProductsListItems}
-            medicalConditionsListItems={medicalConditionsListItems}
-            companyServiceListItems={companyServiceListItems}
-            medicalFormMacros={medicalFormMacros}
-            onSaveForm={saveForm}
-            onHandleMacro={onHandleMacro}
-            pagenateParams={paginateData}
-            updatePaginateData={updatePaginateData}
-          />
+          isLoading={loadingMedicalForms}
+          medicalFormItems={medicalFormItems}
+          smsMessageTemplateItems={smsMessageTemplateItems}
+          emailMessageTemplateItems={emailMessageTemplateItems}
+          userListItems={userListItems}
+          userGroupListItems={userGroupListItems}
+          labTestsListItems={labTestsListItems}
+          invProductsListItems={invProductsListItems}
+          medicalConditionsListItems={medicalConditionsListItems}
+          companyServiceListItems={companyServiceListItems}
+          medicalFormMacros={medicalFormMacros}
+          onSaveForm={saveForm}
+          onHandleMacro={onHandleMacro}
+          pagenateParams={paginateData}
+          updatePaginateData={updatePaginateData}
+        />
       </div>
     </Layout>
   )
