@@ -28,11 +28,10 @@ import {
   MacroItem,
   InvProductsListItem,
 } from '@pabau/ui'
-import { Input } from 'antd'
+import { Input, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
 // import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
-import treatmentType from '../../assets/images/form-type/treatment.svg'
 import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './Custom.module.less'
@@ -40,6 +39,13 @@ import { medicalFormPreviewProps } from './mock'
 import Icon1 from '../../assets/images/form-type/treatment-icon.png'
 import Icon2 from '../../assets/images/form-type/consent-icon.png'
 import Icon3 from '../../assets/images/form-type/prescription-icon.png'
+
+import treatmentIcon from '../../assets/images/form-type/treatment.svg'
+import consentIcon from '../../assets/images/form-type/consent.svg'
+import ePaperIcon from '../../assets/images/form-type/e-paper.svg'
+import presciptionIcon from '../../assets/images/form-type/presciption.svg'
+import labFormIcon from '../../assets/images/form-type/lab-form.svg'
+
 interface Paginate {
   total: number
   skip: number
@@ -224,6 +230,71 @@ const Custom: FC<CustomProps> = ({
     }
   }
 
+  const getTypeImage = (formType) => {
+    switch (formType) {
+      case 'treatment':
+        return (
+          <img
+            src={treatmentIcon}
+            height="16px"
+            alt="treatment type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'consent':
+        return (
+          <img
+            src={consentIcon}
+            height="16px"
+            alt="consent type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'lab':
+        return (
+          <img
+            src={labFormIcon}
+            height="16px"
+            alt="lab type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'prescription':
+        return (
+          <img
+            src={presciptionIcon}
+            height="16px"
+            alt="prescription type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'questionnaire':
+        return (
+          <img
+            src={treatmentIcon}
+            height="16px"
+            alt="questionnaire type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'ePaper':
+        return (
+          <img
+            src={ePaperIcon}
+            height="16px"
+            alt="ePaper type"
+            data-acceptclicking={false}
+          />
+        )
+      default:
+        return null
+        break
+    }
+  }
+  const createdDate = (createdAt) => {
+    const [date] = createdAt.split(' ')
+    return <div data-acceptclicking={true}>{date}</div>
+  }
   const columns = [
     {
       key: 'name',
@@ -232,7 +303,13 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       /* eslint-disable react/display-name */
-      render: (name, rowData) => <div data-acceptclicking={true}>{name}</div>,
+      render: (name, rowData) => (
+        <Tooltip placement="topLeft" title={name}>
+          <div data-acceptclicking={true} className={styles.name}>
+            {name}
+          </div>
+        </Tooltip>
+      ),
     },
     {
       key: 'formType',
@@ -240,18 +317,14 @@ const Custom: FC<CustomProps> = ({
       visible: true,
       className: 'drag-visible',
       dataIndex: 'formType',
+      // render: (medicalform) => getImage(medicalform),
       /* eslint-disable react/display-name */
       render: (formType, rowData) => (
         <div
           style={{ display: 'flex', alignItems: 'center' }}
           data-acceptclicking={true}
         >
-          <img
-            src={treatmentType}
-            height="16px"
-            alt="treatment type"
-            data-acceptclicking={false}
-          />
+          {getTypeImage(formType)}
           <span
             style={{ paddingLeft: '8px' }}
             onClick={handleIdEditClick}
@@ -269,9 +342,7 @@ const Custom: FC<CustomProps> = ({
       visible: true,
       dataIndex: 'createdAt',
       /* eslint-disable react/display-name */
-      render: (createdAt, rowData) => (
-        <div data-acceptclicking={true}>{createdAt}</div>
-      ),
+      render: (createdAt, rowData) => createdDate(createdAt),
     },
     {
       key: 'version',
