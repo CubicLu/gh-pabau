@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Modal } from 'antd'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
@@ -9,6 +9,7 @@ import {
   CountClientActivityDocument,
   useDeleteManyActivityMutation,
   useGetActivityTypesQuery,
+  GetActivityDocument,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
@@ -43,16 +44,29 @@ const ActivitiesTab = () => {
     limit: 50,
     currentPage: 1,
   })
+  const queryVariables = useMemo(() => {
+    return {
+      contactID: contactID,
+      skip: pagination.offSet,
+      take: pagination.limit,
+      activityType: currentSeletedActivityType,
+    }
+  }, [
+    contactID,
+    pagination.offSet,
+    pagination.limit,
+    currentSeletedActivityType,
+  ])
   const resetPagionation = () => {
     setPagination({ ...pagination, offSet: 0, limit: 50, currentPage: 1 })
   }
 
   const [
     getActivities,
-    { loading, data: activityData, refetch: reFetchActivity },
+    { loading, data: activityData },
   ] = useGetActivityLazyQuery({
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'network-only',
   })
   const {
     loading: filterLoading,
@@ -74,7 +88,6 @@ const ActivitiesTab = () => {
         t('clients.activities.delete.message')
       )
       setIsActivityDelete(false)
-      reFetchActivity()
     },
     onError() {
       ResNotification(
@@ -89,17 +102,27 @@ const ActivitiesTab = () => {
           contactID: contactID,
         },
       })
-      setPagination({
-        ...pagination,
-        total: ActivityCount.findManyActivityCount - 1,
-      })
+      const activityCountKey = Object.keys(ActivityCount)[0]
       cache.writeQuery({
         query: CountClientActivityDocument,
         variables: {
           contactID: contactID,
         },
         data: {
-          findManyActivityCount: ActivityCount.findManyActivityCount - 1,
+          [activityCountKey]: ActivityCount[activityCountKey] - 1,
+        },
+      })
+      let Activities: any = cache.readQuery({
+        query: GetActivityDocument,
+        variables: queryVariables,
+      })
+      const activityKey = Object.keys(Activities)[0]
+      Activities = Activities.activities.filter((d) => d.id !== activityId)
+      cache.writeQuery({
+        query: GetActivityDocument,
+        variables: queryVariables,
+        data: {
+          [activityKey]: Activities,
         },
       })
     },
@@ -107,12 +130,7 @@ const ActivitiesTab = () => {
   useEffect(() => {
     if (currentSeletedActivityType && currentSeletedActivityType.length > 0) {
       getActivities({
-        variables: {
-          contactID: contactID,
-          skip: pagination.offSet,
-          take: pagination.limit,
-          activityType: currentSeletedActivityType,
-        },
+        variables: queryVariables,
       })
       getCountActivity({
         variables: {
@@ -125,8 +143,7 @@ const ActivitiesTab = () => {
     contactID,
     getActivities,
     getCountActivity,
-    pagination.offSet,
-    pagination.limit,
+    queryVariables,
     currentSeletedActivityType,
   ])
   useEffect(() => {
@@ -202,7 +219,7 @@ const ActivitiesTab = () => {
       setActivityDetails(activity)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activityData])
+  }, [activityData?.activities])
   useEffect(() => {
     if (countData?.findManyActivityCount) {
       setPagination({ ...pagination, total: countData.findManyActivityCount })
