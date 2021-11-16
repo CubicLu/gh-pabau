@@ -124,28 +124,36 @@ export const sendBookingConfirmationMail = extendType({
         booking_id: intArg(),
       },
       resolve: async function (parent, { booking_id }, ctx: Context) {
-        const responseData = {
-          status: 'Success',
-          email_send: false,
-        }
         const getBookingData = await ctx.prisma.booking.findFirst({
           where: {
             id: booking_id,
           },
+          select: {
+            id: true,
+            UID: true,
+            Contact: {
+              select: {
+                ID: true,
+                Email: true,
+              },
+            },
+          },
         })
         const settings = await ctx.prisma.bookingSetting.findFirst()
-        if (settings.send_email > 0) {
-          const emailArgs = {
-            contact_id: getBookingData.contact_id,
-            template_id: settings.email_confirm_id,
-            booking_id: booking_id,
-          }
-          const sendEmail = await sendEmailWithTemplate(emailArgs, ctx)
-          if (sendEmail) {
-            responseData.email_send = true
+        if (settings.send_email < 1) {
+          return {
+            Success: false,
+            Message: 'No email permission',
           }
         }
-        return responseData
+        const emailArgs = {
+          contact_id: getBookingData.Contact.ID,
+          template_id: settings.email_confirm_id,
+          booking_id: getBookingData.id,
+          email: getBookingData.Contact.Email,
+          user_id: getBookingData.UID,
+        }
+        return await sendEmailWithTemplate(emailArgs, ctx)
       },
     })
   },

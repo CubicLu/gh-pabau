@@ -21,7 +21,7 @@ export const SendersResult = objectType({
 export const BookingConfirmationEmailType = objectType({
   name: 'BookingConfirmationEmailType',
   definition(t) {
-    t.string('status')
-    t.boolean('email_sent')
+    t.boolean('Success')
+    t.string('Message')
   },
 })
