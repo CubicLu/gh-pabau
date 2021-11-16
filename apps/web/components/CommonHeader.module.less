@@ -99,6 +99,30 @@
       font-size: 25px;
     }
   }
+  .btn-outer-wrapper {
+    position: relative;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
+    &::after {
+      content: '';
+      height: 1px;
+      width: 1px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.03);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      position: absolute;
+      transition: 0.3s;
+      z-index: -1;
+    }
+    &:focus::after {
+      transform: scale(36);
+    }
+  }
 }
 
 .menu-header-icon-color {

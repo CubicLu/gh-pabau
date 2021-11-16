@@ -15,6 +15,9 @@ fragment PipelineStage on PipelineStage {
   Pipeline {
     ...PipelineFields
   }
+  Company {
+    ...CompanyFields
+  }
 }
 
 mutation createOnePipelineStage($data: PipelineStageCreateInput!) {
