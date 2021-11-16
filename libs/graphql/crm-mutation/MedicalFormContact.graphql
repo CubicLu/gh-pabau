@@ -24,6 +24,7 @@ fragment MedicalFormContactFields on MedicalFormContact {
   actioned_by
   form_contact_number
   diagnosis_code
+  userId
 }
 
 fragment MedicalFormContact on MedicalFormContact {
@@ -35,6 +36,12 @@ fragment MedicalFormContact on MedicalFormContact {
     ...CmContactFields
   }
   CreatedBy {
+    ...UserFields
+  }
+  Prescriber {
+    ...UserFields
+  }
+  User {
     ...UserFields
   }
 }

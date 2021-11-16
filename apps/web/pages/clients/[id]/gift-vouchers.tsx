@@ -5,8 +5,8 @@ import { Skeleton } from 'antd'
 import styles from '../clients.module.less'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
 import {
-  useGetSoldVouchersQuery,
-  useCountVouchersByStatusQuery,
+  useGetSoldVouchersLazyQuery,
+  useCountVouchersByStatusLazyQuery,
 } from '@pabau/graphql'
 import { ClientGiftVoucherLayout, Pagination } from '@pabau/ui'
 import dayjs from 'dayjs'
@@ -28,33 +28,64 @@ const Vouchers = () => {
   })
 
   const contactID = Number(router.query['id'])
-  const { data: count } = useCountVouchersByStatusQuery({
-    variables: {
-      contactID: contactID,
-    },
-  })
-  const { data, loading } = useGetSoldVouchersQuery({
-    variables: {
-      where: {
-        Contact: {
-          ID: {
-            equals: contactID,
-          },
-        },
-        status: {
-          equals: status === '1' ? 'Expired' : 'Active',
-        },
-      },
-      take: paginateData.limit,
-      skip: paginateData.offset,
-    },
-  })
-
+  const [
+    countVouchersByStatus,
+    { data: count },
+  ] = useCountVouchersByStatusLazyQuery()
+  const [getSoldVouchers, { data, loading }] = useGetSoldVouchersLazyQuery()
+  console.log('count', count)
   useEffect(() => {
-    if (data && count) {
+    if (data) {
       setVouchers(data.vouchers)
     }
-  }, [data, count])
+  }, [data])
+
+  useEffect(() => {
+    countVouchersByStatus({
+      variables: {
+        contactID: contactID,
+        date: new Date().toISOString(),
+      },
+    })
+    if (status === '1') {
+      getSoldVouchers({
+        variables: {
+          where: {
+            Contact: {
+              ID: {
+                equals: contactID,
+              },
+            },
+            expiry_date: {
+              lt: new Date().toISOString(),
+            },
+          },
+          take: paginateData.limit,
+          skip: paginateData.offset,
+        },
+      })
+    } else {
+      getSoldVouchers({
+        variables: {
+          where: {
+            Contact: {
+              ID: {
+                equals: contactID,
+              },
+            },
+            status: {
+              equals: 'Active',
+            },
+            expiry_date: {
+              gte: new Date().toISOString(),
+            },
+          },
+          take: paginateData.limit,
+          skip: paginateData.offset,
+        },
+      })
+    }
+  }, [status, contactID, paginateData, countVouchersByStatus, getSoldVouchers])
 
   const onPaginationChange = (currentPage, limit) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -82,7 +113,7 @@ const Vouchers = () => {
           currencyType: stringToCurrencySignConverter(user.me?.currency),
           voucherPriceLabel: t('ui.client.giftvoucher.pricelabel'),
           voucherSoldPriceLabel: `Expires on: ${dayjs(val?.expiry_date).format(
-            'DD MMM'
+            'DD MMM YY'
           )}`,
           voucherRelation: val?.description,
           termsConditions: t('ui.vouchercard.back.subtitle'),

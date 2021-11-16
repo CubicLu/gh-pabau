@@ -94,10 +94,11 @@ export const permissions = shield(
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
       createOneContactAttachment: rules.authentication.isAuthenticated,
-      deleteContactAttachmentPhoto: rules.authentication.isAuthenticated,
-      deleteManyContactAttachmentPhoto: rules.authentication.isAuthenticated,
+      deleteContactAttachment: rules.authentication.isAuthenticated,
+      deleteManyContactAttachment: rules.authentication.isAuthenticated,
+      deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
-
+      createOnePathwaysTaken: allow,
       CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -125,6 +126,9 @@ export const permissions = shield(
       public_createOnlineBooking: allow,
 
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
+      updateOneCmContact: rules.authentication.isAuthenticated,
+      // Pathway
+      upsertOnePathwayStepsTaken: rules.interceptors.injectContact,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -141,8 +145,10 @@ export const permissions = shield(
       findManyTimezone: allow,
       findManyInvoice: rules.authentication.isAuthenticated,
       countInvoice: rules.authentication.isAuthenticated,
+      //Pathway
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
+      findFirstPathwaysTaken: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,

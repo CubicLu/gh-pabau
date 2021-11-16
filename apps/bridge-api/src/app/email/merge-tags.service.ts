@@ -79,7 +79,7 @@ export async function prepareMessage(
     CLIENTCOUNTY: Contact?.MailingProvince,
     CLIENTCOUNTRY: Contact?.MailingCountry,
     CLIENTMAILINGCOUNTRY: Contact?.MailingCountry,
-    CLIENTLOYALTY: Contact?.LoyaltyPoint?.points,
+    CLIENTLOYALTY: Contact?.LoyaltyPoints?.points,
     FULLADDRESS: function () {
       return [
         Contact?.MailingStreet,

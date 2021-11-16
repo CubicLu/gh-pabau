@@ -1,0 +1,20 @@
+query getDetails($contactId : IntFilter!){
+  details: findFirstCmContact(
+    where:{
+      ID:$contactId
+    }
+  ){
+    ID
+    Salutation
+    Fname
+    Lname
+    Phone
+    gender
+    Email
+    Mobile
+    DOB
+    MailingStreet
+    MailingCountry
+    MailingCity
+  }
+}
