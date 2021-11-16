@@ -381,7 +381,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                       <div className={styles.leadStageWrapper}>
                         <div className={styles.leadStage}>
                           <div
-                            key={`stage ${id}`}
+                            key={id}
                             className={styles.leadStageTitlemain}
                             ref={stageNameRef.current[stageIndex]}
                           >
@@ -414,6 +414,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                                 userName,
                                 userImage = ''
                               const {
+                                lead_id,
                                 Name,
                                 lastName,
                                 ContactID,
@@ -442,8 +443,8 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
 
                               return (
                                 <Draggable
-                                  key={`draggable-key-${index}`}
-                                  draggableId={`${stageIndex}-${index}`}
+                                  key={lead_id}
+                                  draggableId={`${stageIndex}-${lead_id}`}
                                   index={index}
                                 >
                                   {(provided, snapshot) => (
