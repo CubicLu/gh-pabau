@@ -1,4 +1,4 @@
-import { objectType, enumType, inputObjectType } from 'nexus'
+import { objectType, enumType } from 'nexus'
 
 const TypeEnum = enumType({
   name: 'TypeEnum',
@@ -15,22 +15,5 @@ export const SendersResult = objectType({
     t.int('is_default')
     t.int('enterprise_email')
     t.string('senders_name')
-  },
-})
-
-export const EmailPrivacyResult = objectType({
-  name: 'EmailPrivacyResult',
-  definition(t) {
-    t.string('email')
-    t.string('messageId')
-    t.int('privacySetting')
-  },
-})
-
-export const EmailMessageType = inputObjectType({
-  name: 'EmailMessageType',
-  definition(t) {
-    t.nonNull.string('email')
-    t.nonNull.string('messageId')
   },
 })

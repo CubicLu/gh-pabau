@@ -1,18 +1,20 @@
 import { Context } from '../../context'
-import { extendType, nonNull, list } from 'nexus'
+import { extendType, nonNull, list, objectType } from 'nexus'
 import { checkEmailPrivacy } from '../../app/communication/email-privacy.service'
-import {
-  EmailPrivacyResult,
-  EmailMessageType,
-} from '../../app/communication/nexus-type'
 
 export const emailPrivacy = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('checkEmailPrivacy', {
-      type: EmailPrivacyResult,
+      type: objectType({
+        name: 'EmailPrivacyResult',
+        definition(t) {
+          t.string('messageId')
+          t.int('privacySetting')
+        },
+      }),
       args: {
-        messages: nonNull(list(EmailMessageType)),
+        messages: nonNull(list('String')),
       },
       async resolve(_root, args, ctx: Context) {
         return await checkEmailPrivacy(ctx, args.messages)
