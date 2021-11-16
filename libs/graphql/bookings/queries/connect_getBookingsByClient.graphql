@@ -46,3 +46,9 @@ query GetClientAppointments(
     id
   }
 }
+
+query countClientAppointments($contactId: Int) {
+  total: findManyBooking(where: { contact_id: { equals: $contactId } }) {
+    id
+  }
+}

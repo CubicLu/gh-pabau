@@ -14,6 +14,7 @@ import {
   useCheckMedicalHistoryQuery,
   useAggregateAccountPaymentsQuery,
   useCountVouchersQuery,
+  useCountClientAppointmentsQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -73,10 +74,16 @@ export const ClientCardLayout: FC<P> = ({
 
   const { data: countVouchers } = useCountVouchersQuery({
     variables: { contactID: clientId },
+    skip: !clientId,
   })
 
   const { data: invAmount } = useAggregateAccountPaymentsQuery({
     variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
+  const { data: appointments } = useCountClientAppointmentsQuery({
+    variables: { contactId: clientId },
     skip: !clientId,
   })
 
@@ -295,7 +302,11 @@ export const ClientCardLayout: FC<P> = ({
 
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
-    { key: 'appointments', name: 'Appointments' },
+    {
+      key: 'appointments',
+      name: 'Appointments',
+      count: appointments?.total?.length ?? 0,
+    },
     {
       key: 'financial',
       name: 'Financials',

@@ -133,7 +133,7 @@ const Appointments = () => {
             locationName: appt?.CompanyBranch?.name,
             createdDate: dayjs(appt?.create_date?.toString()).format(),
             apptDate: dayjs(appt?.start_date?.toString()).format(),
-            isVirtual: true,
+            isVirtual: false,
             feedbackSurvey: appt?.feedback_survey_scheduled,
             smsReminder: appt?.sms_reminder_scheduled === 0 ? false : true,
             emailReminder: appt?.email_reminder_scheduled,
@@ -149,22 +149,6 @@ const Appointments = () => {
       setClientAppointments(appointments)
     }
   }, [clientAppointmentData])
-
-  // DONT DO THIS! Move to libs/graphql
-  // const { data } = useQuery(
-  //   gql`
-  //     query($id: Int!) {
-  //       findFirstCmContact(where: { ID: { equals: $id } }) {
-  //         Booking {
-  //           id
-  //           start_date
-  //           #@@@ TODO: add more fields here
-  //         }
-  //       }
-  //     }
-  //   `,
-  //   { skip: !router.query.id, variables: { id: Number(router.query['id']) } }
-  // )
 
   const ClientAppointmentTab = () => {
     const clientData = useContext(ClientContext)

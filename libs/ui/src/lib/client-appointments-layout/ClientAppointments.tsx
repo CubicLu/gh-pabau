@@ -531,6 +531,297 @@ export const ClientAppointments = ({
     })
   }
 
+  const renderFilteredItem = (item, index) => {
+    if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate === '' &&
+      endDate === '' &&
+      nowFilter === FilterRadioValue.upcoming &&
+      item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          {...clientInfo}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate === '' &&
+      endDate === '' &&
+      nowFilter === FilterRadioValue.past &&
+      item.apptDate < moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          {...clientInfo}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate === '' &&
+      endDate === '' &&
+      nowFilter === FilterRadioValue.none
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          {...clientInfo}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate !== '' &&
+      endDate === '' &&
+      item.apptDate >= startDate &&
+      nowFilter === FilterRadioValue.upcoming &&
+      item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          {...clientInfo}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate !== '' &&
+      endDate === '' &&
+      item.apptDate >= startDate &&
+      nowFilter === FilterRadioValue.past &&
+      item.apptDate < moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          {...clientInfo}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate !== '' &&
+      endDate === '' &&
+      item.apptDate >= startDate &&
+      nowFilter === FilterRadioValue.none
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          {...clientInfo}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate === '' &&
+      endDate !== '' &&
+      item.apptDate <= endDate &&
+      nowFilter === FilterRadioValue.upcoming &&
+      item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          {...clientInfo}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate === '' &&
+      endDate !== '' &&
+      item.apptDate <= endDate &&
+      nowFilter === FilterRadioValue.past &&
+      item.apptDate < moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate === '' &&
+      endDate !== '' &&
+      item.apptDate <= endDate &&
+      nowFilter === FilterRadioValue.none
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate !== '' &&
+      endDate !== '' &&
+      item.apptDate >= startDate &&
+      item.apptDate <= endDate &&
+      nowFilter === FilterRadioValue.upcoming &&
+      item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate !== '' &&
+      endDate !== '' &&
+      item.apptDate >= startDate &&
+      item.apptDate <= endDate &&
+      nowFilter === FilterRadioValue.past &&
+      item.apptDate < moment(new Date()).format('YYYY-MM-DD')
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(id, value) => editNote(id, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    } else if (
+      ([...serviceFilter].includes(item.serviceName) ||
+        serviceFilter.length === 0) &&
+      ([...personFilter].includes(item.employee.name) ||
+        personFilter.length === 0) &&
+      ([...statusFilter].includes(item.status) || statusFilter.length === 0) &&
+      item.status !== AppointmentStatus.cancelled &&
+      startDate !== '' &&
+      endDate !== '' &&
+      item.apptDate >= startDate &&
+      item.apptDate <= endDate &&
+      nowFilter === FilterRadioValue.none
+    ) {
+      return (
+        <ClientAppointmentCard
+          {...item}
+          index={index}
+          key={`all-bookings-${index}`}
+          handleDelete={() => deleteAppointment(index)}
+          handleEditNotes={(index, value) => editNote(index, value)}
+          handleCancel={(index) => handleCancelAppointment(index)}
+        />
+      )
+    }
+    return null
+  }
+
+  const EmptyPlaceholder = ({ message, icon }) => (
+    <div className={styles.emptyContent}>
+      <div className={styles.iconWrapper}>{icon}</div>
+      <span className={styles.emptyText}>{message}</span>
+    </div>
+  )
+
   return (
     <div className={styles.clientLayout} ref={ref}>
       {appointments && (
@@ -682,311 +973,13 @@ export const ClientAppointments = ({
                   nowFilter === FilterRadioValue.upcoming ||
                   nowFilter === FilterRadioValue.past) &&
                 appointments.map((item, index) => {
-                  if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        {...clientInfo}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        {...clientInfo}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        {...clientInfo}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        {...clientInfo}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        {...clientInfo}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        {...clientInfo}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        {...clientInfo}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(id, value) => editNote(id, value)}
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  }
-                  return null
+                  return renderFilteredItem(item, index)
                 })}
               {!loading && appointments.length === 0 && (
-                <div className={styles.emptyContent}>
-                  <div className={styles.iconWrapper}>
-                    <CalendarOutlined style={{ fontSize: '40px' }} />
-                  </div>
-                  <span>
-                    {t('client.appointments.all.booking.empty.message')}
-                  </span>
-                </div>
+                <EmptyPlaceholder
+                  icon={<CalendarOutlined style={{ fontSize: '40px' }} />}
+                  message={t('client.appointments.all.booking.empty.message')}
+                />
               )}
             </div>
             <div className={styles.appointmentTab}>
@@ -1044,6 +1037,7 @@ export const ClientAppointments = ({
                       })}
                   </div>
                 )}
+
               {appointments.length > 0 &&
                 (serviceFilter.length > 0 ||
                   personFilter.length > 0 ||
@@ -1053,327 +1047,18 @@ export const ClientAppointments = ({
                   nowFilter === FilterRadioValue.upcoming ||
                   nowFilter === FilterRadioValue.past) &&
                 appointments.map((item, index) => {
-                  if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status !== AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  }
-                  return null
+                  return renderFilteredItem(item, index)
                 })}
-              {!loading && appointments.length === 0 && (
-                <div className={styles.emptyContent}>
-                  <div className={styles.iconWrapper}>
-                    <ScheduleOutlined style={{ fontSize: '40px' }} />
-                  </div>
-                  <span className={styles.emptyText}>
-                    {t('client.appointments.classes.empty.message')}
-                  </span>
-                </div>
-              )}
+              {!loading &&
+                appointments.filter(
+                  (appt) =>
+                    appt.isCourse && appt.status !== AppointmentStatus.cancelled
+                ).length === 0 && (
+                  <EmptyPlaceholder
+                    icon={<ScheduleOutlined style={{ fontSize: '40px' }} />}
+                    message={t('client.appointments.classes.empty.message')}
+                  />
+                )}
             </div>
             <div className={styles.appointmentTab}>
               {appointments.length > 0 && appointmentTabHeader}
@@ -1439,327 +1124,17 @@ export const ClientAppointments = ({
                   nowFilter === FilterRadioValue.upcoming ||
                   nowFilter === FilterRadioValue.past) &&
                 appointments.map((item, index) => {
-                  if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.cancelled &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  }
-                  return null
+                  return renderFilteredItem(item, index)
                 })}
-              {!loading && appointments.length === 0 && (
-                <div className={styles.emptyContent}>
-                  <div className={styles.iconWrapper}>
-                    <CloseCircleOutlined style={{ fontSize: '40px' }} />
-                  </div>
-                  <span className={styles.emptyText}>
-                    {t('client.appointments.cancelled.empty.message')}
-                  </span>
-                </div>
-              )}
+              {!loading &&
+                appointments.filter(
+                  (appt) => appt.status === AppointmentStatus.cancelled
+                ).length === 0 && (
+                  <EmptyPlaceholder
+                    icon={<CloseCircleOutlined style={{ fontSize: '40px' }} />}
+                    message={t('client.appointments.cancelled.empty.message')}
+                  />
+                )}
             </div>
             <div className={styles.appointmentTab}>
               {appointments.length > 0 && appointmentTabHeader}
@@ -1822,327 +1197,17 @@ export const ClientAppointments = ({
                   nowFilter === FilterRadioValue.upcoming ||
                   nowFilter === FilterRadioValue.past) &&
                 appointments.map((item, index) => {
-                  if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate === '' &&
-                    endDate === '' &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate !== '' &&
-                    endDate === '' &&
-                    item.apptDate >= startDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate === '' &&
-                    endDate !== '' &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.upcoming &&
-                    item.apptDate >= moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.past &&
-                    item.apptDate < moment(new Date()).format('YYYY-MM-DD')
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  } else if (
-                    ([...serviceFilter].includes(item.serviceName) ||
-                      serviceFilter.length === 0) &&
-                    ([...personFilter].includes(item.employee.name) ||
-                      personFilter.length === 0) &&
-                    ([...statusFilter].includes(item.status) ||
-                      statusFilter.length === 0) &&
-                    item.status === AppointmentStatus.noShow &&
-                    startDate !== '' &&
-                    endDate !== '' &&
-                    item.apptDate >= startDate &&
-                    item.apptDate <= endDate &&
-                    nowFilter === FilterRadioValue.none
-                  ) {
-                    return (
-                      <ClientAppointmentCard
-                        {...item}
-                        index={index}
-                        key={`all-bookings-${index}`}
-                        handleDelete={() => deleteAppointment(index)}
-                        handleEditNotes={(index, value) =>
-                          editNote(index, value)
-                        }
-                        handleCancel={(index) => handleCancelAppointment(index)}
-                      />
-                    )
-                  }
-                  return null
+                  return renderFilteredItem(item, index)
                 })}
-              {!loading && appointments.length === 0 && (
-                <div className={styles.emptyContent}>
-                  <div className={styles.iconWrapper}>
-                    <UserDeleteImg />
-                  </div>
-                  <span className={styles.emptyText}>
-                    {t('client.appointments.no.show.empty.message')}
-                  </span>
-                </div>
-              )}
+              {!loading &&
+                appointments.filter(
+                  (appt) => appt.status === AppointmentStatus.noShow
+                ).length === 0 && (
+                  <EmptyPlaceholder
+                    icon={<UserDeleteImg />}
+                    message={t('client.appointments.no.show.empty.message')}
+                  />
+                )}
             </div>
           </TabMenu>
         </div>
