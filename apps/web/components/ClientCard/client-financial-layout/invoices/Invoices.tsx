@@ -443,10 +443,16 @@ export const Invoices: FC<P> = (props) => {
                   )}
                 </div>
               </div>
-            ) : (
+            ) : !salesDetaillLoading ? (
               <div className={styles.credit}>
                 <Title level={5}>Credit Note Invoice #{record.customId}</Title>
               </div>
+            ) : (
+              <Skeleton.Input
+                active={true}
+                size="default"
+                className={styles.grandTotalSkeleton}
+              />
             )}
             {record.credit_ref_id === 0 && (
               <div className={styles.right}>

@@ -43,6 +43,19 @@ export const PreviewFile: FC<EPaperProps> = ({
   }, [])
   const isMobile = useMedia('(max-width: 767px)', false)
 
+  const [text, setText] = useState('')
+
+  useEffect(() => {
+    if (previewType === 'txt') {
+      const client = new XMLHttpRequest()
+      client.open('GET', previewURL || '', true)
+      client.addEventListener('readystatechange', function () {
+        setText(client.responseText)
+      })
+      client.send()
+    }
+  }, [previewType, previewURL])
+
   return (
     <div className={styles.ePaper}>
       {previewURL && !isMobile && (
@@ -50,7 +63,7 @@ export const PreviewFile: FC<EPaperProps> = ({
           <div className={styles.ePaperHeader}>
             <span className={styles.ePaperTitle}>{title}</span>
             <div className={styles.ePaperPage}>
-              {previewType === 'document' && (
+              {previewType === 'pdf' && (
                 <>
                   <span>Page</span>
                   <FormikInput
@@ -102,14 +115,20 @@ export const PreviewFile: FC<EPaperProps> = ({
           </div>
           <div className={styles.ePaperContent}>
             {previewURL &&
-              (previewType === 'document' ? (
+              (previewType === 'pdf' ? (
                 <PdfPreview
                   pdfURL={previewURL}
                   pageNumber={numPages < showPage ? 1 : showPage}
                   onDocumentLoadSuccess={onDocumentLoadSuccess}
                 />
+              ) : previewType === 'txt' ? (
+                <div className={styles.text}>
+                  <pre>{text}</pre>
+                </div>
               ) : (
-                <img src={previewURL} alt="ims" />
+                previewURL?.match(/\.(jpeg|jpg|gif|png)$/) && (
+                  <img src={previewURL} alt="ims" />
+                )
               ))}
           </div>
         </>
@@ -134,16 +153,22 @@ export const PreviewFile: FC<EPaperProps> = ({
           </div>
           <div className={styles.ePaperMobileContent}>
             {previewURL &&
-              (previewType === 'document' ? (
+              (previewType === 'pdf' ? (
                 <PdfPreview
                   pdfURL={previewURL}
                   pageNumber={numPages < showPage ? 1 : showPage}
                   onDocumentLoadSuccess={onDocumentLoadSuccess}
                 />
+              ) : previewType === 'txt' ? (
+                <div className={styles.text}>
+                  <pre>{text}</pre>
+                </div>
               ) : (
-                <img src={previewURL} alt="ims" />
+                previewURL?.match(/\.(jpeg|jpg|gif|png)$/) && (
+                  <img src={previewURL} alt="ims" />
+                )
               ))}
-            {previewType === 'document' && (
+            {previewType === 'pdf' && (
               <div className={styles.bottomBar}>
                 <Button
                   className={styles.shareBtn}

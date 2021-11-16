@@ -15,6 +15,9 @@ query saleItems($guid: String!) {
       inv_total
       paid_amount
       tip
+      CreditRef{
+        custom_id
+      }
     }
     Tax {
       id
@@ -35,6 +38,7 @@ query saleItems($guid: String!) {
 query getContactSaleItem($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
   items:findManySaleItem(where:
     {InvSale:{customer_id:{equals: $customer_id}}}
+    orderBy:{InvSale:{date:desc}}
     take: $take,
     skip: $skip
   ){

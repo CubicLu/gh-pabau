@@ -13,6 +13,7 @@ import {
   useTotalInvoiceCountQuery,
   useCheckMedicalHistoryQuery,
   useGetContactAccountBalanceQuery,
+  useCountVouchersQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -68,6 +69,11 @@ export const ClientCardLayout: FC<P> = ({
     skip: !clientId,
   })
 
+  const { data: countVouchers } = useCountVouchersQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
   const { data: invAmount } = useGetContactAccountBalanceQuery({
     variables: { contactID: clientId },
     skip: !clientId,
@@ -87,6 +93,7 @@ export const ClientCardLayout: FC<P> = ({
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
   const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
   const [openEditModal, setOpenEditModal] = useState(false)
+  const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
   const user = useUser()
 
   const [addClientNote] = useCreateOneContactNoteMutation({
@@ -165,44 +172,65 @@ export const ClientCardLayout: FC<P> = ({
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
-      const customFields = customFieldData.custom
-        .flatMap((thread) =>
-          thread?.ManageCustomField?.filter((thread) => thread.is_active)
-        )
-        .filter((thread) => thread)
+      let customFields = customFieldData.custom
+        .map((thread) => {
+          return {
+            id: thread.id,
+            category: thread.name,
+            fields: thread.ManageCustomField.filter(
+              (thread) => thread.is_active
+            ),
+          }
+        })
+        .filter((thread) => thread.fields.length > 0)
 
       if (customFieldData.generalCustom.length > 0) {
+        const generalCmFields = []
         for (const general of customFieldData.generalCustom) {
           if (
             general.field_type === 'bool' ||
             general.field_type === 'multiple' ||
             general.field_type === 'list'
           ) {
-            if (general?.ManageCustomFieldItem?.length > 0) {
-              customFields.push(general)
+            if (general.ManageCustomFieldItem.length > 0) {
+              generalCmFields.push(general)
             }
           } else {
-            customFields.push(general)
+            generalCmFields.push(general)
           }
         }
+        customFields = [
+          {
+            id: 0,
+            category: 'detail',
+            fields: generalCmFields,
+          },
+          ...customFields,
+        ]
       }
 
       if (customFields.length > 0) {
-        const final = customFields.map((fields) => {
+        const customFieldData = customFields.map((cmField) => {
           return {
-            title: fields.field_label,
-            value:
-              data?.findFirstCmContact?.customField?.find(
-                (contactField) => contactField.id === fields.id
-              )?.value || '',
-            fieldName: `customField_${fields.id}`,
-            type: fields.field_type,
-            selectOptions: fields.ManageCustomFieldItem.map(
-              (option) => option.item_label
-            ),
+            ...cmField,
+            fields: cmField.fields.map((field) => {
+              return {
+                title: field.field_label,
+                value:
+                  data?.findFirstCmContact?.customField?.find(
+                    (contactField) => contactField.id === field.id
+                  )?.value || '',
+                fieldName: `customField_${field.id}`,
+                type: field.field_type,
+                selectOptions: field.ManageCustomFieldItem.map(
+                  (option) => option.item_label
+                ),
+                order: field.field_order,
+              }
+            }),
           }
         })
-        setCustomField(final)
+        setCustomField(customFieldData)
       }
     }
     if (data?.findFirstCmContact) {
@@ -228,6 +256,17 @@ export const ClientCardLayout: FC<P> = ({
       setBasicContactData(contactDetails)
     }
   }, [customFieldData, data])
+
+  useEffect(() => {
+    if (medicalHistoryData?.form) {
+      setMedicalHistoryDetails({
+        status: medicalHistoryData?.form?.status,
+        requestedDate:
+          medicalHistoryData?.form?.Contact?.RequestedForms[0]?.created_date,
+        formLastUpdatedDate: medicalHistoryData?.form?.updated_at,
+      })
+    }
+  }, [medicalHistoryData])
 
   const handleAddNewClientNote = async (note: string) => {
     const noteBody = {
@@ -265,11 +304,16 @@ export const ClientCardLayout: FC<P> = ({
             {
               tag:
                 stringToCurrencySignConverter(user.me?.currency) +
-                invAmount?.AccountBalance?.balance,
+                  invAmount?.AccountBalance?.balance ?? 0,
               color: 'green',
             },
           ]
-        : [],
+        : [
+            {
+              tag: stringToCurrencySignConverter(user.me?.currency) + 0,
+              color: 'green',
+            },
+          ],
     },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
@@ -283,7 +327,11 @@ export const ClientCardLayout: FC<P> = ({
         { key: 'documents', name: 'Documents' },
       ],
     },
-    { key: 'gift-vouchers', name: 'Gift Vouchers' },
+    {
+      key: 'gift-vouchers',
+      name: 'Gift Vouchers',
+      count: countVouchers?.total,
+    },
     { key: 'loyalty', name: 'Loyalty' },
     {
       key: 'activities',
@@ -434,7 +482,7 @@ export const ClientCardLayout: FC<P> = ({
             : undefined
         }
         notes={contactData}
-        medicalHistoryIconStatus={medicalHistoryData?.form?.status}
+        medicalHistoryDetails={medicalHistoryDetails}
         getContactDetails={getContactDetails}
         handleAddNewClientNote={handleAddNewClientNote}
         handleEditNote={handleEditNote}

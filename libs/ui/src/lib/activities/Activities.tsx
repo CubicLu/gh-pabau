@@ -8,7 +8,7 @@ import { FilterOutlined } from '@ant-design/icons'
 import styles from './Activities.module.less'
 import { groupAcitvitiesByDay } from './utils'
 import dayjs, { Dayjs } from 'dayjs'
-import { Pagination, Button, Popover, Tooltip } from 'antd'
+import { Pagination, Button, Popover, Tooltip, Skeleton } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as AppointmentIcon } from '../../assets/images/timeline/appointment.svg'
 import { ReactComponent as LetterIcon } from '../../assets/images/timeline/letter-icon.svg'
@@ -31,6 +31,7 @@ import {
   MoreOutlined,
   TeamOutlined,
 } from '@ant-design/icons'
+import * as Icon from '@ant-design/icons'
 
 dayjs.extend(calendar)
 dayjs.extend(isoWeek)
@@ -56,6 +57,9 @@ export interface ActivitiesProps {
   pagination?: PaginationType
   handleMenuClick?: (name: string, id: number) => void
   DisplayDate?: (date: Date) => string
+  activityTypeFilterList?: ActivityTypeFilter[]
+  activityTypeLoading?: boolean
+  onActivityFilterChange?: (id: number) => void
 }
 
 export interface ActivitiesDataProps {
@@ -67,10 +71,16 @@ export interface ActivitiesDataProps {
   dateTime: string
   taskChecked?: boolean
   taskUserName?: string
-  typeIcon?: JSX.Element
+  typeIcon?: string
   dateColor?: string
 }
-
+export interface ActivityTypeFilter {
+  id: number
+  name: string
+  isSelected: boolean
+  hasIcon?: boolean
+  icon?: string
+}
 export const activityTypes = {
   email: 'email',
   sms: 'sms',
@@ -87,6 +97,9 @@ export const Activities: FC<ActivitiesProps> = ({
   setPagination,
   handleMenuClick,
   DisplayDate,
+  activityTypeFilterList,
+  activityTypeLoading,
+  onActivityFilterChange,
 }) => {
   const { t } = useTranslation('common')
   const [events, setEvents] = useState<ActivitiesDataProps[]>([])
@@ -263,7 +276,9 @@ export const Activities: FC<ActivitiesProps> = ({
       return <div>{dayjs(date, eventDateFormat).format('MM-DD h:mm')}</div>
     }
   }
-
+  const renderTooltip = ({ title, icon }) => {
+    return <Tooltip title={title}>{icon}</Tooltip>
+  }
   const onPageChange = (currentPage) => {
     const offset = paginateData.pageSize * (currentPage - 1)
     setPagination?.({ ...pagination, offSet: offset, currentPage: currentPage })
@@ -381,27 +396,65 @@ export const Activities: FC<ActivitiesProps> = ({
 
   return (
     <div className={styles.followWrapper}>
-      <div className={styles.header}>
-        <div className={styles.iconGroup}>
-          <div
-            className={`${styles.headerIconWrap} ${
-              visibleFilterPopUp && styles.active
-            }`}
-          >
-            <TimeLineFilterPopover
-              visible={visibleFilterPopUp}
-              setVisible={setVisibleFilterPopUp}
-              selectedFilterKey={selectedFilterKey}
-              setSelectedFilterKey={setSelectedFilterKey}
-              dateRange={dateRange}
-              setDateRange={setDateRange}
-              eventDateFormat={eventDateFormat}
-            >
-              <FilterOutlined />
-            </TimeLineFilterPopover>
+      {activityTypeFilterList ? (
+        <div className={styles.subHeader}>
+          <div className={styles.subHeaderLeft}>
+            {activityTypeLoading ? (
+              ['1', '2', '3', '4', '5'].map((item, index) => (
+                <Skeleton.Input
+                  key={index}
+                  active={true}
+                  size={'small'}
+                  //key={index}
+                  style={{ width: 25, height: 20 }}
+                />
+              ))
+            ) : (
+              <div>
+                {activityTypeFilterList?.map((item) => (
+                  <div
+                    onClick={() => onActivityFilterChange?.(item.id)}
+                    className={classNames({
+                      [styles.active]: item.isSelected,
+                    })}
+                    key={item.id}
+                  >
+                    {item.hasIcon
+                      ? renderTooltip({
+                          title: item.name,
+                          icon:
+                            item.icon && React.createElement(Icon[item.icon]),
+                        })
+                      : item.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      ) : (
+        <div className={styles.header}>
+          <div className={styles.iconGroup}>
+            <div
+              className={`${styles.headerIconWrap} ${
+                visibleFilterPopUp && styles.active
+              }`}
+            >
+              <TimeLineFilterPopover
+                visible={visibleFilterPopUp}
+                setVisible={setVisibleFilterPopUp}
+                selectedFilterKey={selectedFilterKey}
+                setSelectedFilterKey={setSelectedFilterKey}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                eventDateFormat={eventDateFormat}
+              >
+                <FilterOutlined />
+              </TimeLineFilterPopover>
+            </div>
+          </div>
+        </div>
+      )}
       <div className={styles.timelineWrap}>
         <div className="vertical-timeline-element--work">
           {isLoading ? (
@@ -446,7 +499,16 @@ export const Activities: FC<ActivitiesProps> = ({
                               <VerticalTimelineElement
                                 key={index}
                                 className={'vertical-timeline-element--work'}
-                                icon={event.typeIcon ?? icon}
+                                icon={
+                                  event.typeIcon
+                                    ? renderTooltip({
+                                        title: '',
+                                        icon: React.createElement(
+                                          Icon[event.typeIcon]
+                                        ),
+                                      })
+                                    : icon
+                                }
                                 iconStyle={{
                                   background: '#54B2D3',
                                   color: '#fff',

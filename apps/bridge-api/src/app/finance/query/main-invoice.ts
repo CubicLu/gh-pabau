@@ -1,51 +1,31 @@
 import { extendType, intArg, list, objectType } from 'nexus'
 import { Context } from '../../../context'
 
-export const InvoiceData = objectType({
-  name: 'InvoiceData',
-  description: 'Invoice data simple response',
-  definition(t) {
-    t.int('id')
-    t.string('custom_id')
-    t.string('guid')
-    t.field('date', { type: 'DateTime' })
-    t.int('customer_id')
-    t.string('customer_name')
-    t.float('paid_amount')
-    t.float('discount_amount')
-    t.float('inv_total')
-    t.string('location_name')
-    t.string('billers')
-    t.string('issue_to')
-    t.string('reference_no')
-    t.float('credit_amount')
-    t.int('credit_ref_id')
-  },
-})
-
-export const PaymentsOutput = objectType({
-  name: 'PaymentsOutput',
-
-  description: 'Payments data simple response',
-
-  definition(t) {
-    t.int('id')
-    t.field('date', { type: 'DateTime' })
-    t.field('created_date', { type: 'DateTime' })
-    t.float('amount')
-    t.string('pmethod')
-    t.string('location')
-    t.string('biller')
-    t.string('invoice_no')
-    t.string('user')
-  },
-})
-
 export const MainInvoice = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('findManyInvoice', {
-      type: InvoiceData,
+      type: objectType({
+        name: 'InvoiceData',
+        description: 'Invoice data simple response',
+        definition(t) {
+          t.int('id')
+          t.string('guid')
+          t.field('date', { type: 'DateTime' })
+          t.int('customer_id')
+          t.string('customer_name')
+          t.float('paid_amount')
+          t.float('discount_amount')
+          t.float('inv_total')
+          t.string('location_name')
+          t.string('billers')
+          t.string('issue_to')
+          t.string('reference_no')
+          t.float('credit_amount')
+          t.int('credit_ref_id')
+          t.string('custom_id')
+        },
+      }),
       description:
         'Get Invoices per customer or invoice no (custom_id), other field to be implemented',
       args: {
@@ -63,40 +43,32 @@ export const MainInvoice = extendType({
         const query = generateInvoiceQuery(ctx, input, [
           "a.reference_no!='**REFUND**' ",
         ])
-        return await ctx.prisma.$queryRaw(query)
-      },
-    })
-    t.list.field('findManyCreditNote', {
-      type: InvoiceData,
-      description:
-        'Get Invoices per customer or invoice no (custom_id), other field to be implemented',
-      args: {
-        where: 'InvSaleWhereInput',
-        orderBy: list('InvSaleOrderByWithRelationInput'),
-        cursor: 'InvSaleWhereUniqueInput',
-        skip: intArg({
-          default: 0,
-        }),
-        take: intArg({
-          default: 50,
-        }),
-      },
-      async resolve(_root, input, ctx: Context) {
-        const query = generateInvoiceQuery(ctx, input, [
-          "a.reference_no='**CREDIT NOTE**'",
-        ])
+        console.info('-->', query)
         return await ctx.prisma.$queryRaw(query)
       },
     })
     t.list.field('findManyPayments', {
-      type: PaymentsOutput,
+      type: objectType({
+        name: 'InvPaymentSimple',
+        description: 'Payments data simple response',
+        definition(t) {
+          t.int('id')
+          t.field('date', { type: 'DateTime' })
+          t.field('created_date', { type: 'DateTime' })
+          t.float('amount')
+          t.float('pmethod')
+          t.string('location')
+          t.string('biller')
+          t.string('invoice_no')
+          t.string('user')
+        },
+      }),
       description: 'Get Payments per customer other field to be implemented',
       args: {
         where: 'InvSaleWhereInput',
         skip: intArg({
           default: 0,
         }),
-
         take: intArg({
           default: 50,
         }),
@@ -120,7 +92,9 @@ export const MainInvoice = extendType({
           left join inv_billers c on c.id=s.biller_id
           left join users d on d.id=a.uid
           where a.occupier = ${ctx.authenticated.company} and a.contact_id=${input?.where?.customer_id?.equals}
+
           union
+
           SELECT
             a.id,
             a.inv_total as amount,
@@ -141,6 +115,7 @@ export const MainInvoice = extendType({
         order by date desc
         LIMIT ${input.take}
         OFFSET ${input.skip}`
+
         return await ctx.prisma.$queryRaw(query)
       },
     })
@@ -154,22 +129,6 @@ export const MainInvoice = extendType({
       async resolve(_root, input, ctx: Context) {
         const query = generateInvoiceCountQuery(ctx, input, [
           "a.reference_no!='**REFUND**' ",
-        ])
-        const invoices = await ctx.prisma.$queryRaw(query)
-
-        return invoices[0]?.count ?? 0
-      },
-    })
-    t.field('countCreditNote', {
-      type: 'Int',
-      description: 'Real count of creditNotes',
-      args: {
-        where: 'InvSaleWhereInput',
-        cursor: 'InvSaleWhereUniqueInput',
-      },
-      async resolve(_root, input, ctx: Context) {
-        const query = generateInvoiceCountQuery(ctx, input, [
-          "a.reference_no='**CREDIT NOTE**'",
         ])
         const invoices = await ctx.prisma.$queryRaw(query)
 
@@ -204,6 +163,7 @@ const generateInvoiceQuery = (
               sum(a.inv_total) as inv_total,
               sum(a.credit_amount) as credit_amount,
               b.name as location_name,
+              a.location_id,
               group_concat(Distinct d.name) as billers,
               if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
           FROM inv_sales a
