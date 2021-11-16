@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { RightOutlined } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 import { Collapse } from 'antd'
 import Link from 'next/link'
 import classNames from 'classnames'
@@ -67,7 +67,7 @@ export function SetupGrid(props: SetupGridProps): JSX.Element {
                   header={
                     <div key={index} className={styles.subList}>
                       <span>{subTitle.title}</span>
-                      <RightOutlined />
+                      <DownOutlined style={{ color: '#54b2d3' }} />
                     </div>
                   }
                   key={index}
