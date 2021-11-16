@@ -8,26 +8,13 @@ import servicesImage from '../assets/images/services.png'
 export function useGridData(t) {
   const setupGridData = [
     {
-      title: t('setup.clinic'),
-      keyValue: 'Our clinic',
+      title: t('setup.business'),
+      keyValue: 'Business',
       subDataTitles: [
         {
           title: t('setup.clinic.bussiness.details'),
           data: [],
           href: '/setup/business-details',
-        },
-        {
-          title: t('setup.clinic.user'),
-          data: [
-            {
-              title: t('setup.clinic.user'),
-              href: '/team/users',
-            },
-            {
-              title: t('setup.clinic.user.group'),
-              href: '/team/users?title=groups',
-            },
-          ],
         },
         {
           title: t('setup.clinic.location'),
@@ -61,11 +48,6 @@ export function useGridData(t) {
           href: '/setup/settings',
         },
         {
-          title: t('setup.clinic.integrations'),
-          data: [],
-          href: '/setup/integration',
-        },
-        {
           title: t('setup.clinic.data'),
           data: [
             {
@@ -75,6 +57,10 @@ export function useGridData(t) {
             {
               title: t('setup.clinic.data.imports'),
               href: '/setup/import',
+            },
+            {
+              title: t('setup.clinic.data.labels'),
+              href: '',
             },
           ],
         },
@@ -103,7 +89,6 @@ export function useGridData(t) {
       keyValue: 'Services',
       subDataTitles: [
         { title: t('setup.services'), data: [], href: '/setup/services' },
-        { title: t('setup.product'), data: [], href: '/products/list' },
         { title: t('setup.packages'), data: [], href: '/setup/packages' },
         {
           title: t('setup.resources'),
@@ -260,7 +245,7 @@ export function useGridData(t) {
           href: '/setup/payment-types',
         },
         {
-          title: t('setup.financials.contract'),
+          title: t('setup.financials.pricing.rules'),
           data: [],
           href: '/setup/contracts',
         },
@@ -283,79 +268,75 @@ export function useGridData(t) {
         },
         { title: t('setup.developer.API'), data: [], href: '/setup/api' },
         {
-          title: t('setup.developer.departments'),
-          data: [],
-          href: '/setup/departments',
+          title: t('setup.clinic.integrations'),
+          data: [
+            {
+              title: t('setup.clinic.integrations.connectedApps'),
+              href: '',
+            },
+            {
+              title: t('setup.clinic.integrations.marketplace'),
+              href: '',
+            },
+            {
+              title: t('setup.clinic.integrations.apiKey'),
+              href: '',
+            },
+            {
+              title: t('setup.clinic.integrations.developerHub'),
+              href: '',
+            },
+          ],
+          href: '/setup/integration',
         },
         {
-          title: t('setup.developer.block'),
-          data: [],
-          href: '/setup/block-out-options',
-        },
-        {
-          title: t('setup.developer.appointment'),
-          data: [],
-          href: '/setup/appointment-statuses',
-        },
-        {
-          title: t('setup.activity.types'),
-          data: [],
-          href: '/setup/activity-types',
+          title: t('setup.developer.others'),
+          data: [
+            {
+              title: t('setup.developer.departments'),
+              href: '/setup/departments',
+            },
+            {
+              title: t('setup.developer.block'),
+              href: '/setup/block-out-options',
+            },
+            {
+              title: t('setup.developer.appointment'),
+              href: '/setup/appointment-statuses',
+            },
+            {
+              title: t('setup.activity.types'),
+              href: '/setup/activity-types',
+            },
+            {
+              title: t('setup.developer.credit'),
+              href: '/setup/credit-notes',
+            },
+            {
+              title: t('setup.developer.petty.cash'),
+              href: '/setup/petty-cash',
+            },
+            {
+              title: t('setup.developer.salutations'),
+              href: '/setup/salutation',
+            },
+            {
+              title: t('setup.developer.cancellation'),
+              href: '/setup/cancellation-reasons',
+            },
+            {
+              title: t('setup.developer.family'),
+              href: '/setup/family-relationships',
+            },
+            {
+              title: t('setup.developer.issuing.companies'),
+              href: '/setup/issuing-company',
+            },
+          ],
+          href: '',
         },
       ],
-      expandTitle: [
-        {
-          title: t('setup.developer.credit'),
-          data: [],
-          href: '/setup/credit-notes',
-        },
-        {
-          title: t('setup.developer.lead'),
-          data: [],
-          href: '/setup/lead-groups',
-        },
-        {
-          title: t('setup.developer.petty.cash'),
-          data: [],
-          href: '/setup/petty-cash',
-        },
-        {
-          title: t('setup.developer.salutations'),
-          data: [],
-          href: '/setup/salutation',
-        },
-        {
-          title: t('setup.developer.training'),
-          data: [],
-          href: '/setup/training-titles',
-        },
-        {
-          title: t('setup.developer.cancellation'),
-          data: [],
-          href: '/setup/cancellation-reasons',
-        },
-        {
-          title: t('setup.developer.lead.views'),
-          data: [],
-          href: '/setup/lead-views',
-        },
-        {
-          title: t('setup.developer.lead.assignment'),
-          data: [],
-          href: ' /setup/lead-assignment-rules',
-        },
-        {
-          title: t('setup.developer.family'),
-          data: [],
-          href: '/setup/family-relationships',
-        },
-        {
-          title: t('setup.developer.issuing.companies'),
-          data: [],
-          href: '/setup/issuing-company',
-        },
-      ],
-      isExpand: true,
+      isExpand: false,
       image: developerImage,
     },
   ]

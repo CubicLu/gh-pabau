@@ -170,7 +170,7 @@ pipelines:
               image: node
               runs-on:
                 - 'self.hosted'
-              max-time: 20
+              max-time: 40
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - node -v
@@ -415,7 +415,7 @@ pipelines:
 
           - step:
               name: deploy previews
-              max-time: 20
+              max-time: 40
               runs-on:
                 - 'self.hosted'
               deployment: production-serverless
