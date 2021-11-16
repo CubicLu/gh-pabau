@@ -91,6 +91,7 @@ export const ClientCardLayout: FC<P> = ({
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
   const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
   const [openEditModal, setOpenEditModal] = useState(false)
+  const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
   const user = useUser()
 
   const [addClientNote] = useCreateOneContactNoteMutation({
@@ -253,6 +254,17 @@ export const ClientCardLayout: FC<P> = ({
       setBasicContactData(contactDetails)
     }
   }, [customFieldData, data])
+
+  useEffect(() => {
+    if (medicalHistoryData?.form) {
+      setMedicalHistoryDetails({
+        status: medicalHistoryData?.form?.status,
+        requestedDate:
+          medicalHistoryData?.form?.Contact?.RequestedForms[0]?.created_date,
+        formLastUpdatedDate: medicalHistoryData?.form?.updated_at,
+      })
+    }
+  }, [medicalHistoryData])
 
   const handleAddNewClientNote = async (note: string) => {
     const noteBody = {
@@ -459,7 +471,7 @@ export const ClientCardLayout: FC<P> = ({
             : undefined
         }
         notes={contactData}
-        medicalHistoryIconStatus={medicalHistoryData?.form?.status}
+        medicalHistoryDetails={medicalHistoryDetails}
         getContactDetails={getContactDetails}
         handleAddNewClientNote={handleAddNewClientNote}
         handleEditNote={handleEditNote}
