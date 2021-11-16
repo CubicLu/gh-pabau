@@ -32,6 +32,7 @@ const PCBContact = inputObjectType({
     t.string('first_name')
     t.string('last_name')
     t.string('email')
+    t.string('mobile')
   },
 })
 
@@ -46,32 +47,13 @@ export const public_createOnlineBooking = extendType({
         contact: nullable(PCBContact),
       },
       async resolve(_, input, ctx: Context) {
+        let contact_id = undefined
         const serviceTiers = await getTier(
           input.data.service_ids,
           input.data.user_id,
           input.data.location_id,
           ctx
         )
-
-        // if (!input.contact.contact_id) {
-        //   const contact = await ctx.prisma.cmContact.findFirst({
-        //     where: {
-        //       Еmail: { equals: input.contact.email | undefined },
-        //       company_id: input.data.company_id,
-        //     },
-        //     select: {
-        //       ID: true,
-        //     },
-        //   })
-        //
-        //   console.log('CN', contact)
-        //
-        //   // const contact = createContact(ctx, {
-        //   //   Fname: input.data.first_name,
-        //   //   Lname: input.data.last_name,
-        //   //   Email: input.data.email
-        //   // })
-        // }
 
         const services = await ctx.prisma.companyService.findMany({
           where: { id: { in: input.data.service_ids } },
@@ -118,33 +100,33 @@ export const public_createOnlineBooking = extendType({
           startDateAsInt = Number.parseInt(startDate.format('YYYYMMDDHHmm00'))
         }
 
-        //   const res = await ctx.prisma.booking.create({
-        //     data: {
-        //       ...bookingData,
-        //       contact: {
-        //         connectOrCreate: {
-        //           where: {
-        //             email: 'nenad@pabau.com',
-        //             company_id: input.data.company_id,
-        //           },
-        //           create: {
-        //             email: 'nenadtest@pabau.com',
-        //             Fname: 'Nenad 2',
-        //             Lname: 'Autocreate',
-        //           },
-        //         },
-        //       },
-        //     },
-        //     include: {
-        //       Contact: true,
-        //     },
-        //   })
-        // }
-        //
-        // console.log('REsult Log', res)
+        if (!input.contact.contact_id) {
+          const contact = await ctx.prisma.cmContact.findFirst({
+            where: {
+              OR: [
+                {
+                  Email: input.contact.email ? input.contact.email : undefined,
+                },
+                {
+                  Mobile: input.contact.mobile
+                    ? input.contact.mobile
+                    : undefined,
+                },
+              ],
+            },
+          })
+
+          if (contact) {
+            contact_id = contact.ID
+          } else {
+            return { success: false }
+          }
+        } else {
+          contact_id = input.contact.contact_id
+        }
 
         const res = await ctx.prisma.cmContact.update({
-          where: { ID: input.contact.contact_id },
+          where: { ID: contact_id },
           data: {
             Booking: {
               create: insertData,
