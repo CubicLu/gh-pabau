@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.761",
+  "version": "2.0.769",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
@@ -28,7 +28,7 @@
     "hasura:stop": "docker-compose -f hasura/docker-compose.yml down -t 15",
     "hasura:clean": "docker-compose -f hasura/docker-compose.yml down -v",
     "mysql:clean": "docker-compose -f tools/pabau1/docker-compose.yml down -v",
-    "hasura:export": "yarn hasura:cli metadata export && yarn graphql-codegen --config codegen.introspect-localhost.yml && yarn graphql-codegen",
+    "hasura:export": "yarn hasura:cli metadata export && yarn graphql-codegen --config codegen.introspect-localhost.yml && yarn graphql-codegen:cached",
     "graphql-codegen:cached": "postmon --include hasura/schema.graphql apps/bridge-api/src/generated/nexus.d.ts \"libs/graphql/**/*.graphql\" -- yarn graphql-codegen",
     "graphql-codegen:watch": "graphql-codegen --watch",
     "graphql-codegen:clean": "rimraf libs/graphql/generated",
@@ -59,12 +59,12 @@
     "workspace-schematic": "yarn nx workspace-schematic",
     "dep-graph": "yarn nx dep-graph",
     "nexus:generate": "node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/bridge-api-nexus.cjs --nexus-typegen && ls -al dist/asdf/ && cp -f dist/asdf/generated/nexus.d.ts apps/bridge-api/src/generated/",
-    "bridge:generate": "prisma generate && prisma format && node tools/cli/convert-file-to-lf.js apps/bridge-api/src/prisma/schema.prisma && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen\"",
+    "bridge:generate": "prisma generate && prisma format && node tools/cli/convert-file-to-lf.js apps/bridge-api/src/prisma/schema.prisma && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen:cached\"",
     "bridge:clean": "rimraf apps/bridge-api/src/generated libs/graphql/crm-mutation",
     "bridge:prune": "yarn bridge:clean",
     "lint:graphql-inspector": "yarn graphql-inspector validate --noStrictFragments --deprecated \"{libs,apps}/**/*.graphql\" hasura/schema.graphql",
     "load-testing": "ts-node tools/cicd/load-testing",
-    "postinstall": "patch-package --patch-dir tools/patches && husky install && yarn graphql-codegen || (yarn lint:graphql-inspector && exit 1)"
+    "postinstall": "patch-package --patch-dir tools/patches && husky install && yarn graphql-codegen:cached || (yarn lint:graphql-inspector && exit 1)"
   },
   "resolutions": {
     "**/immer": ">=8.0.1",
