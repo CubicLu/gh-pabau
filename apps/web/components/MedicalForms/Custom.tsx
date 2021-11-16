@@ -293,7 +293,6 @@ const Custom: FC<CustomProps> = ({
   }
   const createdDate = (createdAt) => {
     const [date, time] = createdAt.split(' ')
-    console.log('date', date)
     return <div data-acceptclicking={true}>{date}</div>
   }
   const columns = [
