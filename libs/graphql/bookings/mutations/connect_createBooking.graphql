@@ -1,0 +1,21 @@
+mutation createOnlineBooking(
+  $company_id: Int!
+  $service_ids: [Int!]!
+  $start_date: DateTime!
+  $user_id: Int!
+  $location_id: Int!
+  $contact: [PCBContact]!
+) {
+  public_createOnlineBooking(
+    data: {
+      service_ids: $service_ids
+      start_date: $start_date
+      user_id: $user_id
+      company_id: $company_id
+      location_id: $location_id
+    }
+    contact: $contact
+  ) {
+    success
+  }
+}
