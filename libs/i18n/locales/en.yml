@@ -5770,4 +5770,4 @@ en:
   setup.senders.visibility.private: 'Private'
   setup.senders.visibility.shared: 'Shared'
   setup.senders.visibility: 'Visibility'
-
+  setup.senders.gmail.connection.error: 'Error! while connecting gmail'

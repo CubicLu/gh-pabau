@@ -159,11 +159,11 @@ export const Communications: React.FC = () => {
   }
 
   const [insertConnection] = useMutation(InsertGmailConnectionDocument, {
-    onCompleted() {
-      console.log()
-    },
     onError(e) {
-      console.log(e)
+      Notification(
+        NotificationType.error,
+        t('setup.senders.gmail.connection.error')
+      )
     },
   })
 
@@ -175,7 +175,10 @@ export const Communications: React.FC = () => {
       )
     },
     onError(e) {
-      console.log(e)
+      Notification(
+        NotificationType.error,
+        t('setup.senders.gmail.connection.error')
+      )
     },
   })
 
@@ -184,7 +187,7 @@ export const Communications: React.FC = () => {
   }
 
   const handleGoogleLogin = () => {
-    console.log()
+    return true
   }
 
   const handleShowLogin = async () => {
@@ -222,9 +225,6 @@ export const Communications: React.FC = () => {
           setIsLoggedIn(false)
           setUserData('')
         })
-      },
-      onCancel() {
-        console.log('Close')
       },
     })
   }
