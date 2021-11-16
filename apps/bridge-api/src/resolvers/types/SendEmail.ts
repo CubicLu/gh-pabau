@@ -6,6 +6,7 @@ import {
   arg,
   inputObjectType,
   intArg,
+  objectType,
 } from 'nexus'
 import {
   EmailInput,
@@ -24,7 +25,6 @@ import {
   sendEmailWithTemplate,
 } from '../../app/email/email-service'
 import { validateEmail } from '@pabau/yup'
-import { BookingConfirmationEmailType } from '../../app/communication/nexus-type'
 
 export const SendEmail = extendType({
   type: 'Mutation',
@@ -119,7 +119,13 @@ export const sendBookingConfirmationMail = extendType({
   type: 'Mutation',
   definition: function (t) {
     t.field('SendAppointmentConfirmationMail', {
-      type: BookingConfirmationEmailType,
+      type: objectType({
+        name: 'SendAppointmentConfirmationOutput',
+        definition(t) {
+          t.boolean('success')
+          t.string('message')
+        },
+      }),
       args: {
         booking_id: intArg(),
       },
@@ -142,8 +148,8 @@ export const sendBookingConfirmationMail = extendType({
         const settings = await ctx.prisma.bookingSetting.findFirst()
         if (settings.send_email < 1) {
           return {
-            Success: false,
-            Message: 'No email permission',
+            success: false,
+            message: 'No email permission',
           }
         }
         const emailArgs = {

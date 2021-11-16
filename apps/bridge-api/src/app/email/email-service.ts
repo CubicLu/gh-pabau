@@ -53,8 +53,8 @@ export const sendEmailWithTemplate = async (
 ) => {
   if (!email) {
     return {
-      Success: false,
-      Message: 'client has no E-mail address',
+      success: false,
+      message: 'client has no E-mail address',
     }
   }
   const { senders_name } = await ctx.prisma.companyEmail.findFirst({
@@ -87,14 +87,14 @@ export const sendEmailWithTemplate = async (
     })
     .then((response) => {
       return {
-        Success: true,
-        Message: '',
+        success: true,
+        message: '',
       }
     })
     .catch((error) => {
       return {
-        Success: false,
-        Message: error,
+        success: false,
+        message: error,
       }
     })
 }
