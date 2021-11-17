@@ -37,7 +37,6 @@ export const PathwayLayout = ({ journey }: P) => {
   const isCustomerOnFirstStep = step === customerFirstStep
 
   const { currentStep, currentScreenNumber, totalScreens } = useMemo(() => {
-    console.log('in memo 1')
     const isInPrepended = () => step < prependScreens.length
     const currentScreenNumber =
       (isInPrepended() ? step : step - prependScreens.length) + 1
@@ -55,7 +54,6 @@ export const PathwayLayout = ({ journey }: P) => {
 
   const submitCallback = useCallback(
     async (data) => {
-      console.log('in callback 1')
       if ('id' in currentStep) {
         await saveStepMutation({
           variables: {
@@ -76,7 +74,6 @@ export const PathwayLayout = ({ journey }: P) => {
 
   useEffect(() => {
     const f = async () => {
-      console.log('in effect 1')
       const currentStepObject = steps[currentStep.name]
       if (!('loadData' in currentStepObject)) return //loadData on a step is actually optional
       const data = await query({
@@ -94,6 +91,9 @@ export const PathwayLayout = ({ journey }: P) => {
       }))
     }
     f()
+
+    // The following line should be fixed, but I'm not sure how.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, currentStep])
 
   const Hydrated = steps[currentStep.name]
