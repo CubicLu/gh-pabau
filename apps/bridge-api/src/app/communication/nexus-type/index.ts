@@ -9,6 +9,8 @@ export const SendersResult = objectType({
   name: 'SendersResult',
   definition(t) {
     t.int('id')
+    t.nullable.int('emailId')
+    t.nullable.int('smsId')
     t.int('company_id')
     t.field('type', { type: TypeEnum })
     t.string('data')
