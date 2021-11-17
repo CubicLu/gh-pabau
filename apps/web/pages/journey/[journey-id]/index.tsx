@@ -3,16 +3,6 @@ import { useRouter } from 'next/router'
 import { PathwayLayout } from '../../../components/Pathway/PathwayLayout'
 import { useGetJourneyQuery } from '@pabau/graphql'
 
-// type PathwayStep = {
-//   name: string
-//   data?: Record<string, any>
-// }
-
-// export interface Pathway {
-//   name: string
-//   Steps: PathwayStep[]
-// }
-
 const PathwayPage = () => {
   const router = useRouter()
   const { data, loading, error } = useGetJourneyQuery({
