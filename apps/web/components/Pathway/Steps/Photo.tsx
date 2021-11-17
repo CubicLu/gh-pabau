@@ -22,7 +22,7 @@ export const PhotoStep = ({ onSubmit, data }: P) => (
         }
         return errors
       }}
-      onSubmit={(values) => onSubmit?.({ ...values, ...data })}
+      onSubmit={(values) => onSubmit?.(values)}
     >
       {({ errors, touched }) => (
         <Form>

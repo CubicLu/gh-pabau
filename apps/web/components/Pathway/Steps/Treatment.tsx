@@ -22,7 +22,7 @@ export const TreatmentStep = ({ onSubmit, data }: P) => (
         }
         return errors
       }}
-      onSubmit={(values) => onSubmit?.({ ...values, ...data })}
+      onSubmit={(values) => onSubmit?.(values)}
     >
       {({ errors, touched }) => (
         <Form>

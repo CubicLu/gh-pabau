@@ -38,5 +38,8 @@ export const ContractSelectionStep = ({ onSubmit, data }: P) => {
 }
 ContractSelectionStep.loadData = {
   document: GetConsentDocument,
-  variables: () => ({ formType: 'consent' }),
+  variables: (e) => {
+    console.log('ContractSelectionStep.loadData', e)
+    return { formType: 'consent' }
+  },
 }

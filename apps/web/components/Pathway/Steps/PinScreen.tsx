@@ -12,7 +12,7 @@ interface P {
 export const PinScreenStep = ({ onSubmit, data }: P) => (
   <>
     <h2>Thank you! Please hand me back.</h2>
-    <h3>{JSON.stringify(data)}</h3>
+    <pre>{JSON.stringify(data, null, 2)}</pre>
     <Formik
       initialValues={{ pin: '' }}
       validate={(values) => {
@@ -25,10 +25,7 @@ export const PinScreenStep = ({ onSubmit, data }: P) => (
       onSubmit={(values) => {
         //here we simluate a server hit..
         setTimeout(() => {
-          onSubmit?.({
-            data: { ...data, pin_user_id: values.pin + values.pin },
-            ...values,
-          })
+          onSubmit?.({ ...values, pin_user_id: 12344 })
         }, 1400)
       }}
     >

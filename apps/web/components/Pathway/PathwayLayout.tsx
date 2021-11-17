@@ -23,51 +23,18 @@ interface P {
 const prependScreens = ['contract-selection'] as const
 
 export const PathwayLayout = ({ journey }: P) => {
-  const [saveStepMutation] = useSaveStepMutation()
+  const { query } = useUser() //get the apollo client
+  const [saveStepMutation] = useSaveStepMutation() //upon completion of each step, we fire this
 
   const [step, setStep] = useState(0)
+
+  // Add any 'global' variables we need during steps here
   const [stepState, setStepState] = useState<any>({
     contact_id: journey[0].contact_id,
   })
 
-  const { query } = useUser()
-  // useEffect(() => {
-  //   const f = async () => {
-  //     const ret = {}
-  //     for (const [name, step] of Object.entries(steps)) {
-  //       if (!('load' in step)) continue
-  //       console.log('ABOUT TO FETCH STEP DATA')
-  //       const result = await step.load({ query }, stepState)
-  //       ret[name] = result.data.details
-  //       console.log('GOT STEP DATA!!', result)
-  //     }
-  //     setStepState((e) => ({ ...e, ...ret }))
-  //   }
-  //   f()
-  // }, [journey])
-
   const customerFirstStep = prependScreens.length
   const isCustomerOnFirstStep = step === customerFirstStep
-
-  const submitCallback = async (data) => {
-    if ('id' in currentStep) {
-      await saveStepMutation({
-        variables: {
-          clientId: journey[0].contact_id,
-          journeyId: journey[0].id,
-          recordId: currentStep.name === 'questionnaire' ? data.id : 0,
-          status: Cp_Steps_Taken_Status.Completed,
-          stepId: currentStep.id,
-        },
-        onError: () => console.log('Error saving step (onError)!'),
-      }).catch((error) => console.log('Error saving step (catch)', error))
-      // if (errors) {
-      //   console.log('Error saving step (errors)!', errors)
-      // }
-    }
-    setStepState((e) => ({ ...e, [currentStep.name]: data }))
-    setStep((e) => e + 1)
-  }
 
   const { currentStep, currentScreenNumber, totalScreens } = useMemo(() => {
     const isInPrepended = () => step < prependScreens.length
@@ -85,58 +52,50 @@ export const PathwayLayout = ({ journey }: P) => {
     }
   }, [journey, step])
 
-  // if (saveStepMutationError)
-  //   return <div>ERROR SAVING STEP: {JSON.stringify(saveStepMutationError)}</div>
+  const submitCallback = useCallback(
+    async (data) => {
+      if ('id' in currentStep) {
+        await saveStepMutation({
+          variables: {
+            clientId: journey[0].contact_id,
+            journeyId: journey[0].id,
+            recordId: currentStep.name === 'questionnaire' ? data.id : 0,
+            status: Cp_Steps_Taken_Status.Completed,
+            stepId: currentStep.id,
+          },
+          onError: () => console.log('Error saving step (onError)!'),
+        }).catch((error) => console.log('Error saving step (catch)', error))
+      }
+      setStepState((e) => ({ ...e, [currentStep.name]: data }))
+      setStep((e) => e + 1)
+    },
+    [currentStep, journey, saveStepMutation]
+  )
 
   useEffect(() => {
     const f = async () => {
-      console.log('loadData!')
+      if (!('loadData' in steps[currentStep.name])) return //loadData on a step is actually optional
       const data = await query({
         query: steps[currentStep.name].loadData.document,
         variables: steps[currentStep.name].loadData.variables(stepState),
       })
-      console.log('GOT STEP DATA', data)
       if (!data) return
-      console.log('FIRST KEY', Object.keys(data)[0])
-      console.log('FIRST KEY', Object.keys(data.data)[0])
       const data2 =
         Object.keys(data.data).length === 1
           ? data.data[Object.keys(data.data)[0]]
           : data.data
-      console.log('Layout got step data', data2)
       setStepState((e) => ({
         ...e,
         [currentStep.name]: data2,
       }))
     }
     f()
-  }, [query, currentStep.name])
+  }, [stepState, query, currentStep.name])
 
   const HydratedJsx = useMemo(() => {
     const Hydrated = steps[currentStep.name]
     return <Hydrated onSubmit={submitCallback} data={stepState} />
   }, [currentStep, stepState, submitCallback])
-
-  // useEffect(() => {
-  //   const f = async () => {
-  //     if (!loadData) return
-  //     const data = await loadData?.()
-  //     console.log('GOT STEP DATA', data)
-  //     if (!data) return
-  //     console.log('FIRST KEY', Object.keys(data)[0])
-  //     console.log('FIRST KEY', Object.keys(data.data)[0])
-  //     const data2 =
-  //       Object.keys(data.data).length === 1
-  //         ? data.data[Object.keys(data.data)[0]]
-  //         : data.data
-  //     console.log('Layout got step data', data2)
-  //     setStepState((e) => ({
-  //       ...e,
-  //       [currentStep.name]: data2,
-  //     }))
-  //   }
-  //   f()
-  // }, [loadData, currentStep, journey, step])
 
   if (!currentStep || !('name' in currentStep)) return <FinishScreen />
   if (!(currentStep.name in steps))

@@ -22,7 +22,7 @@ export const ConsentStep = ({ onSubmit, data }: P) => (
         // }
         return errors
       }}
-      onSubmit={(values) => onSubmit?.({ ...data, ...values })}
+      onSubmit={(values) => onSubmit?.(values)}
     >
       {({ errors, touched }) => (
         <Form>

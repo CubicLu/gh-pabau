@@ -22,7 +22,6 @@ const PathwayPage = () => {
     skip: !router.query['journey-id'],
   })
 
-  //if (loading || !data || !data.Journey) return <>LOADING</>
   if (error)
     return (
       <>
@@ -30,9 +29,9 @@ const PathwayPage = () => {
       </>
     )
   if (loading) return <>LOADING</>
-  if (!data) return <>NO DATA</>
-  if (!data.Journey) return <>BAD DATA 1</>
-  if (data.Journey.length === 0) return <>BAD DATA 2</>
+  if (!data) return <>SERVER HTTP ERROR</>
+  if (!data.Journey) return <>SERVER API ERROR</>
+  if (data.Journey.length === 0) return <>Error: ID not found</>
 
   return <PathwayLayout journey={data.Journey} />
 }
