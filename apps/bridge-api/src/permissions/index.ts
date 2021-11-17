@@ -124,6 +124,9 @@ export const permissions = shield(
       //Connect Public
       public_createOnlineBooking: allow,
 
+      //communication
+      SendAppointmentConfirmationMail: rules.authentication.isAuthenticated,
+
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       updateOneCmContact: rules.authentication.isAuthenticated,
       // Pathway

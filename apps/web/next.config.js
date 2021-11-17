@@ -97,6 +97,21 @@ module.exports = withPlugins(
     },
     experimential: {
       cpus: 1,
+      esmExternals: false,
+    },
+    eslint: {
+      // !! WARN !!
+      // Dangerously allow production builds to successfully complete even if
+      // your project has ESLint errors.
+      // !! WARN !!
+      build: false,
+    },
+    typescript: {
+      // !! WARN !!
+      // Dangerously allow production builds to successfully complete even if
+      // your project has type errors.
+      // !! WARN !!
+      ignoreBuildErrors: true,
     },
     async rewrites() {
       return [
@@ -131,25 +146,11 @@ module.exports = withPlugins(
         },
       ]
     },
-    typescript: {
-      // !! WARN !!
-      // Dangerously allow production builds to successfully complete even if
-      // your project has type errors.
-      // !! WARN !!
-      ignoreBuildErrors: true,
-    },
     onDemandEntries: {
       // period (in ms) where the server will keep pages in the buffer
       maxInactiveAge: 25 * 60 * 60 * 1000,
       // number of pages that should be kept simultaneously without being disposed
       pagesBufferLength: 6,
-    },
-    eslint: {
-      // !! WARN !!
-      // Dangerously allow production builds to successfully complete even if
-      // your project has ESLint errors.
-      // !! WARN !!
-      build: false,
     },
     trailingSlash: false,
   }
