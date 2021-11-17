@@ -30,7 +30,6 @@ const ActivitiesTab = () => {
   const [currentSeletedActivityType, setCurrentSeletedActivityType] = useState<
     number[]
   >([])
-  const [allActivityType, setAllActivityType] = useState<number[]>([])
   const [activityFilterType, setActivityFilterType] = useState<
     ActivityTypeFilter[]
   >([])
@@ -49,24 +48,17 @@ const ActivitiesTab = () => {
       contactID: contactID,
       skip: pagination.offSet,
       take: pagination.limit,
-      activityType: currentSeletedActivityType,
     }
-  }, [
-    contactID,
-    pagination.offSet,
-    pagination.limit,
-    currentSeletedActivityType,
-  ])
+  }, [contactID, pagination.offSet, pagination.limit])
   const resetPagionation = () => {
     setPagination({ ...pagination, offSet: 0, limit: 50, currentPage: 1 })
   }
-
   const [
     getActivities,
     { loading, data: activityData },
   ] = useGetActivityLazyQuery({
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-first',
   })
   const {
     loading: filterLoading,
@@ -76,7 +68,7 @@ const ActivitiesTab = () => {
     getCountActivity,
     { data: countData, loading: countLoading },
   ] = useCountClientActivityWithTypeLazyQuery({
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-first',
   })
   const [
     deleteActivityMutation,
@@ -114,13 +106,19 @@ const ActivitiesTab = () => {
       })
       let Activities: any = cache.readQuery({
         query: GetActivityDocument,
-        variables: queryVariables,
+        variables: {
+          ...queryVariables,
+          activityType: currentSeletedActivityType,
+        },
       })
       const activityKey = Object.keys(Activities)[0]
       Activities = Activities.activities.filter((d) => d.id !== activityId)
       cache.writeQuery({
         query: GetActivityDocument,
-        variables: queryVariables,
+        variables: {
+          ...queryVariables,
+          activityType: currentSeletedActivityType,
+        },
         data: {
           [activityKey]: Activities,
         },
@@ -128,17 +126,18 @@ const ActivitiesTab = () => {
     },
   })
   useEffect(() => {
-    if (currentSeletedActivityType && currentSeletedActivityType.length > 0) {
-      getActivities({
-        variables: queryVariables,
-      })
-      getCountActivity({
-        variables: {
-          contactID: contactID,
-          activityType: currentSeletedActivityType,
-        },
-      })
-    }
+    getActivities({
+      variables: {
+        ...queryVariables,
+        activityType: currentSeletedActivityType,
+      },
+    })
+    getCountActivity({
+      variables: {
+        contactID: contactID,
+        activityType: currentSeletedActivityType,
+      },
+    })
   }, [
     contactID,
     getActivities,
@@ -168,7 +167,6 @@ const ActivitiesTab = () => {
         })
       }
       setCurrentSeletedActivityType(activityTypeId)
-      setAllActivityType(activityTypeId)
       setActivityFilterType(tempData)
     }
   }, [filterData])
@@ -233,29 +231,30 @@ const ActivitiesTab = () => {
       },
     })
   }
-  const onActivityFilterChange = (id) => {
-    if (id !== 0) {
-      resetPagionation()
-      let filterObj = [...activityFilterType]
-      filterObj = filterObj.map((d) => {
-        if (d.id === id) {
-          d.isSelected = true
-        } else {
-          d.isSelected = false
-        }
-        return d
-      })
-      setActivityFilterType(filterObj)
-      setCurrentSeletedActivityType([id])
-    } else {
-      let filterObj = [...activityFilterType]
-      filterObj = filterObj.map((d) => {
-        d.isSelected = true
-        return d
-      })
-      setActivityFilterType(filterObj)
-      setCurrentSeletedActivityType(allActivityType)
+  const onActivityFilterChange = (id, isActive) => {
+    const typeId: number[] = []
+    const temp = [...activityFilterType]
+    const activityType = temp.map((item) => {
+      if (id !== 0 && item.id === id) {
+        item.isSelected = !isActive
+      } else if (id === 0) {
+        item.isSelected = !isActive
+      }
+      return item
+    })
+    let count = 0
+    for (const item of activityType) {
+      if (item.isSelected && item.id !== 0) {
+        typeId.push(item.id)
+        count += 1
+      }
     }
+    count === activityFilterType.length - 1
+      ? (activityType[0].isSelected = true)
+      : (activityType[0].isSelected = false)
+    setActivityFilterType(activityType)
+    setCurrentSeletedActivityType(typeId)
+    resetPagionation()
   }
   return (
     <div className={styles.wrapper}>
