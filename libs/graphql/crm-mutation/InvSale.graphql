@@ -92,6 +92,9 @@ fragment InvSale on InvSale {
   package {
     ...ContactPackageFields
   }
+  CreditRef {
+    ...InvSaleFields
+  }
 }
 
 mutation createOneInvSale($data: InvSaleCreateInput!) {
