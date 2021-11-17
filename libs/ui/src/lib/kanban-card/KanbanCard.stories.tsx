@@ -2,7 +2,6 @@ import React, { FC } from 'react'
 import { KanbanCard, KanbanCardProps } from './KanbanCard'
 
 import userImage from '../../assets/images/user.png'
-import noUser from '../../assets/images/no-user-icon.svg'
 
 export default {
   component: KanbanCard,
@@ -16,7 +15,7 @@ export default {
     leadOwnerName: 'Owner Name',
     leadOwnerImg: userImage,
     contactName: 'Contact Name',
-    contactImg: noUser,
+    contactImg: 'contactImage',
     activityStatus: 'future activity scheduled',
     leadStatus: 'Open',
   },

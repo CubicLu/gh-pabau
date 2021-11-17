@@ -6,6 +6,7 @@ import * as Icons from '@ant-design/icons'
 import { Tag, Tooltip } from 'antd'
 import { CustomButton } from '../button/Button.stories'
 import KanbanCardSkeleton from './skeleton'
+import { UserOutlined } from '@ant-design/icons'
 
 export interface KanbanCardProps {
   isLoading?: boolean
@@ -142,6 +143,7 @@ export const KanbanCard: FC<KanbanCardProps> = ({
               <Avatar
                 className={styles.avatarImg}
                 src={contactImg}
+                icon={<UserOutlined />}
                 size={`small`}
               />
             </div>
