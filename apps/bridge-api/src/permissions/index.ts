@@ -129,6 +129,8 @@ export const permissions = shield(
       // Pathway
       upsertOnePathwayStepsTaken: rules.interceptors.injectContact,
       createOnePathwaysTaken: rules.interceptors.injectContact,
+      // Communication
+      changeEmailPrivacy: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
