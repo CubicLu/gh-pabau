@@ -36,10 +36,13 @@ const PCBContact = inputObjectType({
   name: 'PCBContact',
   definition(t) {
     t.int('contact_id')
-    t.string('first_name')
-    t.string('last_name')
+    t.string('firstName')
+    t.string('lastName')
     t.string('email')
     t.string('mobile')
+    t.string('country')
+    t.string('password')
+    t.boolean('marketing')
   },
 })
 
@@ -65,18 +68,6 @@ export const public_createOnlineBooking = extendType({
         const services = await ctx.prisma.companyService.findMany({
           where: { id: { in: input.data.service_ids } },
         })
-        //
-        // input.contact[Symbol.iterator] = function* () {
-        //   const properties = Object.keys(this)
-        //   for (const i of properties) {
-        //     yield [i, this[i]]
-        //     console.log('TT', i, this[i])
-        //   }
-        // }
-
-        for (const i in Object.keys(input.contact)) {
-          console.log('TT', input.contact[i])
-        }
 
         let startDate = moment(input.data.start_date)
         let startDateAsInt = Number.parseInt(startDate.format('YYYYMMDDHHmm00'))
@@ -107,7 +98,35 @@ export const public_createOnlineBooking = extendType({
             if (contact) {
               contact_id = contact.ID
             } else {
-              // Contact is not found, we need to create it
+              const data = await ctx.prisma.$queryRaw`
+                SELECT IFNULL(MAX(CAST(a.custom_id AS INTEGER)) + 1,1) as max FROM cm_contacts a WHERE a.Occupier = ${input.data.company_id}
+              `
+              const new_custom_id = data[0].max.toString()
+
+              const contact = await ctx.prisma.cmContact.create({
+                data: {
+                  Fname: input.contact[i].firstName,
+                  Lname: input.contact[i].lastName,
+                  Email: input.contact[i].email,
+                  Mobile: input.contact[i].mobile,
+                  MarketingOptInNewsletter: 1,
+                  MailingCountry: input.contact[i].country,
+                  custom_id: new_custom_id,
+                  Phone: '',
+                  MailingStreet: '',
+                  MailingCity: '',
+                  MailingProvince: '',
+                  MailingPostal: '',
+                  OwnerID: input.data.user_id,
+                  Company: {
+                    connect: {
+                      id: input.data.company_id,
+                    },
+                  },
+                },
+              })
+
+              contact_id = contact.ID
               return { success: false }
             }
           } else {
@@ -126,7 +145,7 @@ export const public_createOnlineBooking = extendType({
 
             const endDate = moment(startDate).add(duration, 'minutes')
             const endDateAsInt = Number.parseInt(
-              endDate.format('YYYYMMDDHHmmss')
+              endDate.format('YYYYMMDDHHmm00')
             )
 
             const bookingData = {
