@@ -74,11 +74,11 @@ export const MyPackages = () => {
       const contactPackages = response?.findFirstCmContact?.Packages?.map(
         (packageObj) => {
           return {
-            name: packageObj.session_package.name,
-            invoice: packageObj.session_package.price,
+            name: 'fix ths', //packageObj.session_package.name,
+            invoice: 0, //packageObj.session_package?.price,
             session_used: `${Number(
               packageObj.contact_package_used.length
-            )} / ${Number(packageObj.session_package.session_count)}`,
+            )} / 0`, //${Number(packageObj.session_package.session_count)}
             activation_date: formatDateWithTz(packageObj.activation_date),
             expiration_date: formatDateWithTz(packageObj.expiration_date),
             code: packageObj.code,

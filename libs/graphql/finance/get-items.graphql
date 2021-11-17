@@ -9,6 +9,16 @@ query saleItems($guid: String!) {
     discount: val_tax
     tax_total
     quantity
+    UnitDiscount
+    InvSale{
+      discount_amount
+      inv_total
+      paid_amount
+      tip
+      CreditRef{
+        custom_id
+      }
+    }
     Tax {
       id
       name
@@ -19,11 +29,37 @@ query saleItems($guid: String!) {
       id
       name
       image
-      in_stock: _count {
-        InvWarehouseProduct
-      }
       alert_quantity
       allow_negative_qty
+    }
+  }
+}
+
+query getContactSaleItem($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
+  items:findManySaleItem(where:
+    {InvSale:{customer_id:{equals: $customer_id}}}
+    take: $take,
+    skip: $skip
+  ){
+    item_name:product_name
+    item_type:product_category_type
+    quantity
+  	InvSale{
+      total
+      date
+      custom_id
+      biller_name
+    	InvBiller{
+        name
+      }
+    }
+  }
+}
+
+query countContactSaleItem($customer_id: Int!){
+  aggregateSaleItem(where:{InvSale:{customer_id:{equals:$customer_id}}}){
+    _count{
+      id
     }
   }
 }

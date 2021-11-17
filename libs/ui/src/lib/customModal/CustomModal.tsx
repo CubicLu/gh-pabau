@@ -119,7 +119,7 @@ export function CustomModal(props: P) {
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
             dangerButtonText={(dangerButtonText) ? dangerButtonText : "Cancel"}
-            onDelete={onDelete}
+            onDelete={() => setSelectedData(null)}
             newButtonText={dataSource[0].isActive === true ? "Disable" : "Enable"}
             centered={true}
             onOk={()=>{

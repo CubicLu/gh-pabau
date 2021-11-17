@@ -1,0 +1,40 @@
+# Write your query or mutation here
+query getContactPrescriptions(
+  $contactID: Int!
+  $take: Int = 50
+  $skip: Int = 0
+) {
+  findManyMedicalFormContact(
+    take: $take
+    skip: $skip
+    where: {
+      Contact: {ID: { equals: $contactID }}
+      Form: { form_type: { equals: "prescription" } }
+      deleted_at: { equals: "" }
+    }
+  ) {
+    id
+    contact_id
+    date: created_at
+    CreatedBy {
+      id
+      full_name
+      image
+    }
+    Form {
+      id
+      name
+      created_at
+      data
+      Drugs {
+        id
+        name
+        dosage
+        comment
+        units
+        frequency
+        expiry_date
+      }
+    }
+  }
+}

@@ -1,17 +1,26 @@
 query checkMedicalHistory($contactID: Int!) {
   form: findFirstMedicalFormContact(
     where: {
-      Contact: { ID: { equals: $contactID } }
+      contact_id: { equals: $contactID }
       Form: { form_type: { equals: "questionnaire" } }
     }
+    orderBy: { created_at: desc }
   ) {
     id
     created_at
+    updated_at
     complete
     priority
+    contact_id
     Form {
       id
       name
+    }
+    status
+    Contact {
+      RequestedForms: CommunicationsRequestedForms(orderBy: { created_date: desc }, take: 1) {
+        created_date
+      }
     }
   }
 }

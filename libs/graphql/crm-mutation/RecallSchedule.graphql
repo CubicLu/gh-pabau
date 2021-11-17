@@ -1,0 +1,52 @@
+fragment RecallScheduleFields on RecallSchedule {
+  id
+  company_id
+  recall_id
+  contact_id
+  date
+  scheduled_date
+  notes
+  sms_sent
+  recalled_by
+  recalled_on
+  email_sent
+  deleted
+  booking_id
+  created_date
+  updated_date
+  error_code
+}
+
+fragment RecallSchedule on RecallSchedule {
+  ...RecallScheduleFields
+  Contact {
+    ...CmContactFields
+  }
+  Recall {
+    ...RecallFields
+  }
+}
+
+mutation createOneRecallSchedule($data: RecallScheduleCreateInput!) {
+  createOneRecallSchedule(data: $data) {
+    ...RecallSchedule
+  }
+}
+
+mutation updateOneRecallSchedule($where: RecallScheduleWhereUniqueInput!, $data: RecallScheduleUpdateInput!) {
+  updateOneRecallSchedule(where: $where, data: $data) {
+    ...RecallSchedule
+  }
+}
+
+mutation deleteOneRecallSchedule($where: RecallScheduleWhereUniqueInput!) {
+  deleteOneRecallSchedule(where: $where) {
+    ...RecallSchedule
+  }
+}
+
+mutation updateManyRecallSchedule($where: RecallScheduleWhereInput, $data: RecallScheduleUpdateManyMutationInput!) {
+  updateManyRecallSchedule(where: $where, data: $data) {
+    count
+  }
+}

@@ -1533,6 +1533,48 @@ export const Company = objectType({
         return root.MedicalFormAdvancedSetting
       },
     })
+    t.list.field('MedicalFormContactHistory', {
+      type: 'MedicalFormContactHistory',
+      args: {
+        where: 'MedicalFormContactHistoryWhereInput',
+        orderBy: 'MedicalFormContactHistoryOrderByWithRelationInput',
+        cursor: 'MedicalFormContactHistoryWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactHistoryScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContactHistory
+      },
+    })
+    t.list.field('MedicalAttr', {
+      type: 'MedicalAttr',
+      args: {
+        where: 'MedicalAttrWhereInput',
+        orderBy: 'MedicalAttrOrderByWithRelationInput',
+        cursor: 'MedicalAttrWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalAttrScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalAttr
+      },
+    })
+    t.list.field('Lab', {
+      type: 'Lab',
+      args: {
+        where: 'LabWhereInput',
+        orderBy: 'LabOrderByWithRelationInput',
+        cursor: 'LabWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Lab
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {
@@ -1701,6 +1743,20 @@ export const Company = objectType({
         return root.ContactPreference
       },
     })
+    t.list.field('CreditBalance', {
+      type: 'CreditBalance',
+      args: {
+        where: 'CreditBalanceWhereInput',
+        orderBy: 'CreditBalanceOrderByWithRelationInput',
+        cursor: 'CreditBalanceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CreditBalanceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CreditBalance
+      },
+    })
     t.list.field('ActivityUserState', {
       type: 'ActivityUserState',
       args: {
@@ -1771,6 +1827,20 @@ export const Company = objectType({
         return root.InsurerContract
       },
     })
+    t.list.field('CommunicationsRequestedForms', {
+      type: 'CommunicationsRequestedForms',
+      args: {
+        where: 'CommunicationsRequestedFormsWhereInput',
+        orderBy: 'CommunicationsRequestedFormsOrderByWithRelationInput',
+        cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationsRequestedForms
+      },
+    })
     t.list.field('Voucher', {
       type: 'Voucher',
       args: {
@@ -1839,6 +1909,118 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.SmsSender
+      },
+    })
+    t.list.field('Pathway', {
+      type: 'Pathway',
+      args: {
+        where: 'PathwayWhereInput',
+        orderBy: 'PathwayOrderByWithRelationInput',
+        cursor: 'PathwayWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Pathway
+      },
+    })
+    t.list.field('PathwayStep', {
+      type: 'PathwayStep',
+      args: {
+        where: 'PathwayStepWhereInput',
+        orderBy: 'PathwayStepOrderByWithRelationInput',
+        cursor: 'PathwayStepWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PathwayStepScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PathwayStep
+      },
+    })
+    t.list.field('CommunicationAttachment', {
+      type: 'CommunicationAttachment',
+      args: {
+        where: 'CommunicationAttachmentWhereInput',
+        orderBy: 'CommunicationAttachmentOrderByWithRelationInput',
+        cursor: 'CommunicationAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationAttachment
+      },
+    })
+    t.list.field('Recall', {
+      type: 'Recall',
+      args: {
+        where: 'RecallWhereInput',
+        orderBy: 'RecallOrderByWithRelationInput',
+        cursor: 'RecallWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RecallScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Recall
+      },
+    })
+    t.list.field('CustomFieldDisplay', {
+      type: 'CustomFieldDisplay',
+      args: {
+        where: 'CustomFieldDisplayWhereInput',
+        orderBy: 'CustomFieldDisplayOrderByWithRelationInput',
+        cursor: 'CustomFieldDisplayWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CustomFieldDisplayScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CustomFieldDisplay
+      },
+    })
+    t.list.field('Pipeline', {
+      type: 'Pipeline',
+      args: {
+        where: 'PipelineWhereInput',
+        orderBy: 'PipelineOrderByWithRelationInput',
+        cursor: 'PipelineWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PipelineScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Pipeline
+      },
+    })
+    t.list.field('PipelineStage', {
+      type: 'PipelineStage',
+      args: {
+        where: 'PipelineStageWhereInput',
+        orderBy: 'PipelineStageOrderByWithRelationInput',
+        cursor: 'PipelineStageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PipelineStageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PipelineStage
+      },
+    })
+    t.list.field('LabRequest', {
+      type: 'LabRequest',
+      args: {
+        where: 'LabRequestWhereInput',
+        orderBy: 'LabRequestOrderByWithRelationInput',
+        cursor: 'LabRequestWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LabRequestScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LabRequest
       },
     })
     t.nullable.field('_count', {

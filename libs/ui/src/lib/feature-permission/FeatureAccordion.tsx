@@ -1,9 +1,8 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import { Collapse } from 'antd'
 import { Button } from '@pabau/ui'
+import { DownOutlined } from '@ant-design/icons'
 import styles from './FeaturePermission.module.less'
-import DownArrowIcon from '../accordion/DownArrow.svg'
-import UpArrowIcon from '../accordion/UpArrow.svg'
 
 const { Panel } = Collapse
 
@@ -17,8 +16,6 @@ export const FeatureAccordion: FC<AccordionProps> = ({
   subTitle,
   ...rest
 }) => {
-  const [accordionState, setAccordionState] = useState(false)
-
   const customArrow = () => {
     return (
       <div>
@@ -28,11 +25,7 @@ export const FeatureAccordion: FC<AccordionProps> = ({
           shape="circle"
           className={styles.arrowIcon}
         >
-          <img
-            src={accordionState ? UpArrowIcon : DownArrowIcon}
-            alt="CaretDown"
-            width="100%"
-          />
+          <DownOutlined />
         </Button>
       </div>
     )
@@ -40,14 +33,7 @@ export const FeatureAccordion: FC<AccordionProps> = ({
 
   return (
     <div className={styles.mainCollapseDiv}>
-      <Collapse
-        defaultActiveKey={[]}
-        onChange={() => {
-          setAccordionState((accordionState) => !accordionState)
-        }}
-        expandIcon={customArrow}
-        ghost={true}
-      >
+      <Collapse defaultActiveKey={[]} expandIcon={customArrow} ghost={true}>
         <Panel
           header={
             <div className={styles.header}>

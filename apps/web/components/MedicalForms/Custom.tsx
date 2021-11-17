@@ -20,16 +20,31 @@ import {
   SmsMessageTemplateItem,
   Table,
   UserListItem,
+  UserGroupListItem,
+  LabTestsListItem,
+  MedicalConditionsListItem,
+  CompanyListItem,
   VersionHistory,
+  MacroItem,
+  InvProductsListItem,
 } from '@pabau/ui'
-import { Input } from 'antd'
+import { Input, Tooltip } from 'antd'
+import { useMedia } from 'react-use'
 // import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
-import treatmentType from '../../assets/images/form-type/treatment.svg'
 import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './Custom.module.less'
 import { medicalFormPreviewProps } from './mock'
+import Icon1 from '../../assets/images/form-type/treatment-icon.png'
+import Icon2 from '../../assets/images/form-type/consent-icon.png'
+import Icon3 from '../../assets/images/form-type/prescription-icon.png'
+
+import treatmentIcon from '../../assets/images/form-type/treatment.svg'
+import consentIcon from '../../assets/images/form-type/consent.svg'
+import ePaperIcon from '../../assets/images/form-type/e-paper.svg'
+import presciptionIcon from '../../assets/images/form-type/presciption.svg'
+import labFormIcon from '../../assets/images/form-type/lab-form.svg'
 
 interface Paginate {
   total: number
@@ -45,7 +60,14 @@ interface CustomProps {
   smsMessageTemplateItems: SmsMessageTemplateItem[]
   emailMessageTemplateItems: EmailMessageTemplateItem[]
   userListItems: UserListItem[]
+  userGroupListItems: UserGroupListItem[]
+  labTestsListItems: LabTestsListItem[]
+  companyServiceListItems: CompanyListItem[]
+  invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
+  medicalFormMacros: MacroItem[]
   onSaveForm?: (MedicalFormItem) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
   pagenateParams: Paginate
   updatePaginateData?: (pagenateData: Paginate) => void
 }
@@ -56,9 +78,16 @@ const Custom: FC<CustomProps> = ({
   smsMessageTemplateItems,
   emailMessageTemplateItems,
   userListItems,
+  userGroupListItems = [],
+  labTestsListItems = [],
+  companyServiceListItems = [],
+  medicalFormMacros = [],
+  invProductsListItems = [],
+  medicalConditionsListItems = [],
   onSaveForm,
   pagenateParams,
   updatePaginateData,
+  onHandleMacro,
 }) => {
   const [showVersions, setShowVersions] = useState(false)
   const [currentItem, setCurrentItem] = useState<MedicalFormItem>()
@@ -69,7 +98,9 @@ const Custom: FC<CustomProps> = ({
   const [editFormModal, setEditFormModal] = React.useState(false)
   const [selectedItem, setSelectedItem] = useState<MedicalFormItem>()
   const [popoverVisible, setPopoverVisible] = useState(false)
+  const [popoverVisibleMobile, setPopoverVisibleMobile] = useState(null)
   const [paginateData, setPaginateData] = useState<Paginate>(pagenateParams)
+  const isMobile = useMedia('(max-width: 768px)', false)
 
   const { t } = useTranslationI18()
 
@@ -129,6 +160,7 @@ const Custom: FC<CustomProps> = ({
       onClick: () => {
         setShareModal(true)
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
     {
@@ -136,8 +168,10 @@ const Custom: FC<CustomProps> = ({
       icon: <EditOutlined />,
       label: t('setup.medical.forms.menuList.edit'),
       onClick: () => {
+        console.log('click on edit')
         handleIdEditClick()
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
     {
@@ -147,6 +181,7 @@ const Custom: FC<CustomProps> = ({
       onClick: () => {
         setDeleteModal(true)
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
     {
@@ -157,6 +192,7 @@ const Custom: FC<CustomProps> = ({
       onClick: () => {
         handleDefault()
         setPopoverVisible(false)
+        setPopoverVisibleMobile(null)
       },
     },
   ]
@@ -176,6 +212,89 @@ const Custom: FC<CustomProps> = ({
     },
   }
 
+  const getImage = (medicalform) => {
+    switch (medicalform?.formType) {
+      case 'treatment':
+        return <img src={Icon1} alt="icon" className={styles.bgIcon} />
+      case 'consent':
+        return <img src={Icon2} alt="icon" className={styles.bgIcon} />
+      case 'lab':
+        return <img src={Icon3} alt="icon" className={styles.bgIcon} />
+      case 'prescription':
+        return <img src={Icon1} alt="icon" className={styles.bgIcon} />
+      case 'questionnaire':
+        return <img src={Icon2} alt="icon" className={styles.bgIcon} />
+      default:
+        return null
+        break
+    }
+  }
+
+  const getTypeImage = (formType) => {
+    switch (formType) {
+      case 'treatment':
+        return (
+          <img
+            src={treatmentIcon}
+            height="16px"
+            alt="treatment type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'consent':
+        return (
+          <img
+            src={consentIcon}
+            height="16px"
+            alt="consent type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'lab':
+        return (
+          <img
+            src={labFormIcon}
+            height="16px"
+            alt="lab type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'prescription':
+        return (
+          <img
+            src={presciptionIcon}
+            height="16px"
+            alt="prescription type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'questionnaire':
+        return (
+          <img
+            src={treatmentIcon}
+            height="16px"
+            alt="questionnaire type"
+            data-acceptclicking={false}
+          />
+        )
+      case 'ePaper':
+        return (
+          <img
+            src={ePaperIcon}
+            height="16px"
+            alt="ePaper type"
+            data-acceptclicking={false}
+          />
+        )
+      default:
+        return null
+        break
+    }
+  }
+  const createdDate = (createdAt) => {
+    const [date] = createdAt.split(' ')
+    return <div data-acceptclicking={true}>{date}</div>
+  }
   const columns = [
     {
       key: 'name',
@@ -184,7 +303,13 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       /* eslint-disable react/display-name */
-      render: (name, rowData) => <div data-acceptclicking={true}>{name}</div>,
+      render: (name, rowData) => (
+        <Tooltip placement="topLeft" title={name}>
+          <div data-acceptclicking={true} className={styles.name}>
+            {name}
+          </div>
+        </Tooltip>
+      ),
     },
     {
       key: 'formType',
@@ -192,18 +317,14 @@ const Custom: FC<CustomProps> = ({
       visible: true,
       className: 'drag-visible',
       dataIndex: 'formType',
+      // render: (medicalform) => getImage(medicalform),
       /* eslint-disable react/display-name */
       render: (formType, rowData) => (
         <div
           style={{ display: 'flex', alignItems: 'center' }}
           data-acceptclicking={true}
         >
-          <img
-            src={treatmentType}
-            height="16px"
-            alt="treatment type"
-            data-acceptclicking={false}
-          />
+          {getTypeImage(formType)}
           <span
             style={{ paddingLeft: '8px' }}
             onClick={handleIdEditClick}
@@ -221,9 +342,7 @@ const Custom: FC<CustomProps> = ({
       visible: true,
       dataIndex: 'createdAt',
       /* eslint-disable react/display-name */
-      render: (createdAt, rowData) => (
-        <div data-acceptclicking={true}>{createdAt}</div>
-      ),
+      render: (createdAt, rowData) => createdDate(createdAt),
     },
     {
       key: 'version',
@@ -272,27 +391,12 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       render: (val, item) => (
-        <div className={styles.tableOperations}>
-          {item.index === currentItem?.index && (
+        <div
+          className={styles.tableOperations}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {isMobile ? (
             <div data-acceptclicking={true}>
-              {showPreview && (
-                <MedicalFormPreview
-                  {...medicalFormPreviewProps}
-                  visible={showPreview}
-                  formData={item.formData ? item.formData : ''}
-                  formName={item.name ? item.name : ''}
-                  closePreviewDialog={() =>
-                    setShowPreview((showPreview) => !showPreview)
-                  }
-                />
-              )}
-              <Button
-                icon={<EyeOutlined />}
-                style={{ marginRight: '8px' }}
-                onClick={() => setShowPreview((showPreview) => !showPreview)}
-              >
-                {t('setup.medical.forms.previewButton.text')}
-              </Button>
               <DotButton
                 menuList={menuList}
                 ignoreOption={{
@@ -300,13 +404,62 @@ const Custom: FC<CustomProps> = ({
                   target: 'Questionnaire',
                   type: item.formType,
                 }}
-                popoverVisible={popoverVisible}
-                setPopoverVisible={setPopoverVisible}
+                popoverVisible={
+                  item.key === popoverVisibleMobile ? true : false
+                }
+                setPopoverVisible={(val) =>
+                  setPopoverVisibleMobile(val ? item.key : null)
+                }
               />
             </div>
+          ) : (
+            item.index === currentItem?.index && (
+              <div data-acceptclicking={true}>
+                {showPreview && (
+                  <MedicalFormPreview
+                    {...medicalFormPreviewProps}
+                    visible={showPreview}
+                    formData={item.formData ? item.formData : ''}
+                    formName={item.name ? item.name : ''}
+                    closePreviewDialog={() =>
+                      setShowPreview((showPreview) => !showPreview)
+                    }
+                    onHandleMacro={onHandleMacro}
+                    medicalFormMacros={medicalFormMacros}
+                    userGroupListItems={userGroupListItems}
+                    invProductsListItems={invProductsListItems}
+                    medicalConditionsListItems={medicalConditionsListItems}
+                  />
+                )}
+                <Button
+                  icon={<EyeOutlined />}
+                  style={{ marginRight: '8px' }}
+                  onClick={() => setShowPreview((showPreview) => !showPreview)}
+                >
+                  {t('setup.medical.forms.previewButton.text')}
+                </Button>
+                <DotButton
+                  menuList={menuList}
+                  ignoreOption={{
+                    name: 'Default',
+                    target: 'Questionnaire',
+                    type: item.formType,
+                  }}
+                  popoverVisible={popoverVisible}
+                  setPopoverVisible={setPopoverVisible}
+                />
+              </div>
+            )
           )}
         </div>
       ),
+    },
+    {
+      key: 'medicalform',
+      className: 'drag-visible icon-img-td',
+      visible: isMobile ? true : false,
+      /* eslint-disable react/display-name */
+      render: (medicalform) => getImage(medicalform),
     },
   ]
 
@@ -373,6 +526,7 @@ const Custom: FC<CustomProps> = ({
           ) {
             setEditFormModal(true)
           }
+          setPopoverVisibleMobile(null)
         }}
         needEvent={true}
       />
@@ -437,13 +591,22 @@ const Custom: FC<CustomProps> = ({
         visible={editFormModal}
         previewData={selectedItem?.formData}
         preFormName={selectedItem?.name}
+        preFormType={selectedItem?.formType}
+        preFormServices={selectedItem?.serviceId}
         currentForm={selectedItem}
         onHideFormBuilder={() => setEditFormModal(false)}
         onSaveForm={handleSaveForm}
+        onHandleMacro={onHandleMacro}
         create={false}
         smsMessageTemplateItems={smsMessageTemplateItems}
         emailMessageTemplateItems={emailMessageTemplateItems}
         userListItems={userListItems}
+        userGroupListItems={userGroupListItems}
+        labTestsListItems={labTestsListItems}
+        medicalFormMacros={medicalFormMacros}
+        companyServiceListItems={companyServiceListItems}
+        invProductsListItems={invProductsListItems}
+        medicalConditionsListItems={medicalConditionsListItems}
       />
       <div className={styles.paginationContainer}>
         <Pagination

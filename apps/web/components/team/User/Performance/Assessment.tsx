@@ -12,7 +12,8 @@ import classNames from 'classnames'
 
 import { SimpleDropdown } from '@pabau/ui'
 import styles from './Performance.module.less'
-import { performanceAssessmentData } from '../../../../mocks/UserDetail'
+import { userDetail } from '../../../../mocks/UserDetail'
+import { useTranslation } from 'react-i18next'
 
 interface selectOptionsProps {
   key: string
@@ -35,6 +36,8 @@ interface managerAssessmentProps {
 }
 
 const Assessment = () => {
+  const { t } = useTranslation('common')
+  const { performanceAssessmentData } = userDetail(t)
   const {
     assessmentPeriod,
     isManagerAssessment,

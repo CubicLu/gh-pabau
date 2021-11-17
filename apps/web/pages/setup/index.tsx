@@ -14,6 +14,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './setup.module.less'
 import { useUser } from '../../context/UserContext'
 import CommonHeader from '../../components/CommonHeader'
+import MobileSetup from './mobile-setup'
 
 export interface LoadingType {
   videoLoader: boolean
@@ -31,6 +32,7 @@ const Index: FC = () => {
   const isMobile = useMedia('(max-width: 768px)', false)
   const { setupGridData } = useGridData(t)
   const user = useUser()
+  const isFromApp = router?.asPath?.includes('?app=1')
 
   useEffect(() => {
     if (router.query?.menu && isMobile) {
@@ -111,77 +113,81 @@ const Index: FC = () => {
 
   return (
     <div>
-      <Layout active={'setup'} isDisplayingFooter={false} {...user}>
-        <CommonHeader
-          handleSearch={handleSearch}
-          searchInputPlaceHolder={t('setup.reports.search.text.placeholder')}
-          searchValue={searchValue}
-          title={
-            showSubMenu
-              ? selectedMenuData && selectedMenuData.length > 0
-                ? selectedMenuData[0].title
-                : ''
-              : t('setup.page.title')
-          }
-          isShowSearch={!showSubMenu}
-          isLeftOutlined={showSubMenu}
-          reversePath="/setup"
-        />
-        <div className={styles.cardWrapper}>
-          <div className={styles.titleWrapper}>
-            <span className={styles.title}>{title}</span>
-            <div className={styles.search}>
-              <SetupSearchInput
-                searchValue={searchValue}
-                onChange={handleSearch}
-                placeholder={t('setup.page.search.placeholder')}
-              />
-            </div>
-          </div>
-          {!searchValue ? (
-            <>
-              {showSubMenu ? (
-                <GridSubMenuMobile
-                  data={selectedMenuData}
-                  handleBack={handleBack}
-                  setSMSModalVisible={setModalVisible}
+      {isFromApp ? (
+        <MobileSetup />
+      ) : (
+        <Layout active={'setup'} isDisplayingFooter={false} {...user}>
+          <CommonHeader
+            handleSearch={handleSearch}
+            searchInputPlaceHolder={t('setup.reports.search.text.placeholder')}
+            searchValue={searchValue}
+            title={
+              showSubMenu
+                ? selectedMenuData && selectedMenuData.length > 0
+                  ? selectedMenuData[0].title
+                  : ''
+                : t('setup.page.title')
+            }
+            isShowSearch={!showSubMenu}
+            isLeftOutlined={showSubMenu}
+            reversePath="/setup"
+          />
+          <div className={styles.cardWrapper}>
+            <div className={styles.titleWrapper}>
+              <span className={styles.title}>{title}</span>
+              <div className={styles.search}>
+                <SetupSearchInput
+                  searchValue={searchValue}
+                  onChange={handleSearch}
+                  placeholder={t('setup.page.search.placeholder')}
                 />
-              ) : (
-                <GridMobile
-                  data={setupGridData}
-                  handleShowSubMenuMobile={handleShowSubMenuMobile}
-                />
-              )}
-              {!showSubMenu && <HeaderChip />}
-              <div className={styles.mainWrap}>
-                <Grid
-                  data={setupGridData}
-                  setSMSModalVisible={setModalVisible}
-                />
-                {isMobile ? (
-                  !showSubMenu ? (
-                    <WebinarCard />
-                  ) : null
-                ) : (
-                  <WebinarCard />
-                )}
               </div>
-            </>
-          ) : (
-            <SearchResults
-              data={searchData}
-              searchTerm={searchValue}
-              setSMSModalVisible={setModalVisible}
-            />
-          )}
-        </div>
-        <SMSPurchaseModal
-          visible={isSMSModalVisible}
-          onClose={() => setSMSModalVisible(false)}
-          numberFormatter={new Intl.NumberFormat('en-US')}
-          onComplete={smsModalOnComplete}
-        />
-      </Layout>
+            </div>
+            {!searchValue ? (
+              <>
+                {showSubMenu ? (
+                  <GridSubMenuMobile
+                    data={selectedMenuData}
+                    handleBack={handleBack}
+                    setSMSModalVisible={setModalVisible}
+                  />
+                ) : (
+                  <GridMobile
+                    data={setupGridData}
+                    handleShowSubMenuMobile={handleShowSubMenuMobile}
+                  />
+                )}
+                {!showSubMenu && <HeaderChip />}
+                <div className={styles.mainWrap}>
+                  <Grid
+                    data={setupGridData}
+                    setSMSModalVisible={setModalVisible}
+                  />
+                  {isMobile ? (
+                    !showSubMenu ? (
+                      <WebinarCard />
+                    ) : null
+                  ) : (
+                    <WebinarCard />
+                  )}
+                </div>
+              </>
+            ) : (
+              <SearchResults
+                data={searchData}
+                searchTerm={searchValue}
+                setSMSModalVisible={setModalVisible}
+              />
+            )}
+          </div>
+          <SMSPurchaseModal
+            visible={isSMSModalVisible}
+            onClose={() => setSMSModalVisible(false)}
+            numberFormatter={new Intl.NumberFormat('en-US')}
+            onComplete={smsModalOnComplete}
+          />
+        </Layout>
+      )}
     </div>
   )
 }

@@ -23,6 +23,7 @@
     }
     .ant-modal-close-x {
       padding-top: 1rem;
+      padding-right: 2rem;
     }
 
     .ant-checkbox {
@@ -183,6 +184,26 @@
   .btn-style {
     min-width: 76px;
     min-height: 40px;
+    transition: padding 0.5s;
+  }
+  .loading {
+    position: relative;
+    padding-left: 36px;
+    background: rgba(84, 178, 211, 0.5);
+    border-color: transparent;
+    cursor: default;
+
+    :global {
+      .ant-spin {
+        position: absolute;
+        left: 12.8px;
+
+        > span {
+          font-size: 16px;
+          color: #ffffff;
+        }
+      }
+    }
   }
 }
 

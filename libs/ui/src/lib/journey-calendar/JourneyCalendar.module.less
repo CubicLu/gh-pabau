@@ -1,0 +1,192 @@
+.JourneyCalendar {
+  margin-bottom: 33px;
+  background: #ffffff;
+  // max-width: 1000px;
+  @media only screen and (min-width: 992px) {
+    box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+    border: 1px solid #f4f5f7;
+    border-radius: 4px;
+  }
+  .jc_container {
+    padding: 0 20px;
+    @media only screen and (max-width: 991px) {
+      padding: 0;
+    }
+  }
+  .JourneyCalendarWrapper {
+    padding: 16px 0;
+    @media only screen and (max-width: 991px) {
+      padding: 0;
+    }
+  }
+  .jcLeftCol {
+    max-width: calc(100% - 87px);
+    width: 100%;
+    @media only screen and (max-width: 991px) {
+      max-width: 100%;
+    }
+  }
+  .journyCalenderDate {
+    user-select: none;
+    padding: 0 3px;
+    text-align: center;
+    @media only screen and (max-width: 991px) {
+      padding: 0 10px;
+    }
+  }
+  .journyCalenderDateWrap {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: normal;
+    color: #3d3d46;
+    text-transform: capitalize;
+    padding: 6px 10px;
+    border-radius: 29px;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    @media only screen and (max-width: 991px) {
+      font-size: 17px;
+      line-height: 22px;
+      letter-spacing: -0.408px;
+    }
+    @media only screen and (max-width: 767px) {
+      font-size: 14px;
+    }
+  }
+  .journyCalenderColWrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .JourneyCalendarSlider {
+    max-width: calc(100% - 110px);
+    width: 100%;
+    display: grid;
+    grid-template-columns: 100% 100% 100%;
+    justify-content: center;
+    overflow: hidden;
+    @media only screen and (max-width: 991px) {
+      max-width: 100%;
+    }
+    .JourneyCalendarSliderWrapper {
+      display: flex;
+      justify-content: space-between;
+      overflow: hidden;
+      @media only screen and (max-width: 991px) {
+        justify-content: space-evenly;
+      }
+    }
+  }
+  .rightAnimation {
+    animation-name: sliderRightAnimation;
+    animation-duration: 0.3s;
+    animation-direction: alternate;
+  }
+  .leftAnimation {
+    animation-name: sliderLeftAnimation;
+    animation-duration: 0.5s;
+    animation-direction: alternate;
+  }
+  .prevArrow {
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #ecedf0;
+    box-sizing: border-box;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  .nextArrow {
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #ecedf0;
+    box-sizing: border-box;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  .activeDate {
+    .journyCalenderDateWrap {
+      background: #40a0c1;
+      color: #fff;
+    }
+  }
+  .todayButton {
+    height: 40px;
+    width: 71px;
+    color: #9292a3;
+  }
+}
+.monthYear {
+  margin-bottom: 20px;
+  padding: 0 20px;
+  .monthYearWrap {
+    display: flex;
+    align-items: center;
+    .monthYearWrapText {
+      font-size: 17px;
+      line-height: 22px;
+      letter-spacing: -0.408px;
+      text-align: center;
+      color: #333333;
+      flex: 1;
+      @media only screen and (max-width: 767px) {
+        font-size: 14px;
+      }
+    }
+    .todayText {
+      font-size: 17px;
+      line-height: 22px;
+      text-align: center;
+      letter-spacing: -0.408px;
+      color: #54b2d3;
+      text-align: right;
+      flex: 1;
+      @media only screen and (max-width: 767px) {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .JourneyCalendar {
+    margin-bottom: 0px;
+  }
+}
+
+@keyframes sliderLeftAnimation {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sliderRightAnimation {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}

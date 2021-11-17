@@ -77,7 +77,8 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": []
     },
     "bridge-api": {
       "root": "apps/bridge-api",
@@ -101,12 +102,12 @@
                 "output": "/"
               }
             ],
-            "maxWorkers": 1,
+            "maxWorkers": 4,
+            "memoryLimit": 7168,
             "generatePackageJson": true
           },
           "configurations": {
             "production": {
-              "maxWorkers": 4,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -178,14 +179,15 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": []
     },
     "connect": {
       "root": "apps/connect",
       "sourceRoot": "apps/connect",
       "projectType": "application",
       "schematics": {},
-      "_architect": {
+      "architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {
@@ -200,7 +202,8 @@
           "builder": "@nrwl/next:server",
           "options": {
             "buildTarget": "connect:build",
-            "dev": true
+            "dev": true,
+            "port": 4300
           },
           "configurations": {
             "production": {
@@ -254,7 +257,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["hasura"]
     },
     "connect-e2e": {
       "root": "apps/connect-e2e",
@@ -295,7 +300,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["connect"]
     },
     "graphql": {
       "root": "libs/graphql",
@@ -325,7 +332,8 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": []
     },
     "hasura": {
       "root": "hasura",
@@ -342,7 +350,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["bridge-api", "backend"]
     },
     "i18n": {
       "root": "libs/i18n",
@@ -379,14 +389,15 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": []
     },
     "mgmt": {
       "root": "apps/mgmt",
       "sourceRoot": "apps/mgmt",
       "projectType": "application",
       "schematics": {},
-      "architect": {
+      "_architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {
@@ -455,7 +466,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["hasura"]
     },
     "mgmt-e2e": {
       "root": "apps/mgmt-e2e",
@@ -496,7 +509,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["mgmt"]
     },
     "storage": {
       "root": "apps/storage",
@@ -547,7 +562,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "ui": {
       "root": "libs/ui",
@@ -625,7 +641,8 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": []
     },
     "ui-e2e": {
       "root": "apps/ui-e2e",
@@ -666,7 +683,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["ui"]
     },
     "web": {
       "root": "apps/web",
@@ -742,7 +761,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["hasura"]
     },
     "web-e2e": {
       "root": "apps/web-e2e",
@@ -783,7 +804,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["web"]
     },
     "yup": {
       "root": "libs/yup",
@@ -820,11 +843,9 @@
             "production": {}
           }
         }
-      }
+      },
+      "tags": []
     }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/next"
   },
   "schematics": {
     "@nrwl/react": {
@@ -838,6 +859,5 @@
         "linter": "eslint"
       }
     }
-  },
-  "defaultProject": "web"
+  }
 }

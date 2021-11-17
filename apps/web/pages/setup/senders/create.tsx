@@ -9,6 +9,8 @@ import {
   SimpleDropdown,
   PabauPlus,
   HelpTooltip,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import styles from './create.module.less'
@@ -16,22 +18,30 @@ import {
   CheckCircleFilled,
   MailOutlined,
   MessageOutlined,
+  CheckOutlined,
+  LockOutlined,
+  UnlockOutlined,
 } from '@ant-design/icons'
-import { Collapse, Space } from 'antd'
+import { Collapse, Space, Select } from 'antd'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   SenderItem,
-  senderItems,
   masterCriteriaOptions,
   subCriteriaOptions,
   mergeTagTypeOptions,
 } from '../senders'
 import { Form } from 'formik-antd'
+import {
+  CreateOneCompanyEmailDocument,
+  CreateOneSmsSenderDocument,
+  GetComSendersDocument,
+} from '@pabau/graphql'
+import { useMutation } from '@apollo/client'
 
 const { Panel } = Collapse
-
+const { Option } = Select
 export const CreateSender: React.FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
@@ -51,6 +61,7 @@ export const CreateSender: React.FC = () => {
         value: '',
       },
     ],
+    visibility: 1,
   }
   const validation = Yup.object({
     type: Yup.string().required(
@@ -67,16 +78,80 @@ export const CreateSender: React.FC = () => {
     ),
   })
 
+  const [addEmailSenders] = useMutation(CreateOneCompanyEmailDocument, {
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.senders.create.senders.notification.success')
+      )
+      router.push('/setup/senders').then()
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
+  const [addSmsSenders] = useMutation(CreateOneSmsSenderDocument, {
+    onCompleted(data) {
+      Notification(
+        NotificationType.success,
+        t('setup.senders.create.senders.notification.success')
+      )
+      router.push('/setup/senders').then()
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
   return (
     <Formik<SenderItem>
       initialValues={initialValues}
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
-        senderItems.push({
-          ...values,
-          id: String(senderItems.length + 1),
-        })
-        router.push('/setup/senders')
+        if (values.type === 'email') {
+          await addEmailSenders({
+            variables: {
+              data: {
+                Company: {},
+                company_email: values.isUseCompanyEmail
+                  ? values.fromCompanyEmail
+                  : values.fromEmail,
+                added_by: '',
+                senders_name: values.fromName,
+                confirmed: 1,
+                hash: '',
+                default_email: values.isDefaultSender ? 1 : 0,
+                enterprise_email: 0,
+                merge_tags: '',
+                visibility: Number.parseInt(String(values.visibility)),
+              },
+            },
+            optimisticResponse: {},
+          })
+        } else {
+          await addSmsSenders({
+            variables: {
+              data: {
+                Company: {},
+                smsd_name: values.fromName,
+                smsd_delete: 0,
+                is_default: values.isDefaultSender,
+                merge_tags: '',
+                // enable_replies: values.isEnableReplies ? 1 : 0,
+              },
+            },
+            optimisticResponse: {},
+          })
+        }
       }}
       render={({ values, errors, touched, handleChange, handleSubmit }) => (
         <Form>
@@ -181,6 +256,7 @@ export const CreateSender: React.FC = () => {
                       handleChange({ target: { value, name: 'fromName' } })
                     }
                   />
+
                   {values.type === 'email' && values.fromName.length > 50 && (
                     <span className={styles.error}>
                       {t(
@@ -248,6 +324,31 @@ export const CreateSender: React.FC = () => {
                           handleChange({ target: { value, name: 'fromEmail' } })
                         }
                       />
+                      <p className={styles.visibilityLabel}>
+                        {t('setup.senders.visibility')}
+                      </p>
+
+                      <Select
+                        defaultValue={'1'}
+                        defaultActiveFirstOption={true}
+                        style={{ width: '100%' }}
+                        onChange={(e) =>
+                          handleChange({
+                            target: { name: 'visibility', value: e },
+                          })
+                        }
+                        menuItemSelectedIcon={<CheckOutlined />}
+                      >
+                        <Option value="1" selected>
+                          <LockOutlined />{' '}
+                          {t('setup.senders.visibility.private')}
+                        </Option>
+
+                        <Option value="0">
+                          <UnlockOutlined />{' '}
+                          {t('setup.senders.visibility.shared')}
+                        </Option>
+                      </Select>
                     </div>
                     <div className={styles.formElement}>
                       <Space className={styles.switchItem} size={8}>
@@ -291,25 +392,6 @@ export const CreateSender: React.FC = () => {
                         />
                       </div>
                     )}
-                    <div className={styles.formElement}>
-                      <Space className={styles.switchItem} size={8}>
-                        <Switch
-                          checked={values.isAutoUploadReplies}
-                          onChange={(value) =>
-                            handleChange({
-                              target: { value, name: 'isAutoUploadReplies' },
-                            })
-                          }
-                        />
-                        <div>
-                          {t('setup.senders.create.form.field.autoupload')}
-                        </div>
-                        <PabauPlus
-                          label={t('common-label-plus')}
-                          modalType="Marketing"
-                        />
-                      </Space>
-                    </div>
                   </>
                 )}
               </div>

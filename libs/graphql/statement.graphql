@@ -1,48 +1,48 @@
 query GetStatementData(
-    $locationId: Int
-    $customerId: Int!
-    $statementPeriodFrom: DateTime
-    $statementPeriodTo: DateTime
+  $locationId: Int
+  $customerId: Int!
+  $statementPeriodFrom: DateTime
+  $statementPeriodTo: DateTime
+) {
+  data: getStatementData(
+    locationId: $locationId
+    customerId: $customerId
+    statementPeriodFrom: $statementPeriodFrom
+    statementPeriodTo: $statementPeriodTo
   ) {
-    data: getStatementData(
-      locationId: $locationId
-      customerId: $customerId
-      statementPeriodFrom: $statementPeriodFrom
-      statementPeriodTo: $statementPeriodTo
-    ) {
-      details {
-        issue_to
-        issue_by
-        invoice_id
-      }
-      items {
-        key
-        after_disc
-        category
-        date
-        description
-        disc_amount
-        disc_per
-        net
-        practitioner
-        product
-        quantity
-        sku
-        total
-        unitprice
-        vat
-        vat_per
-      }
-      payments {
-        key
-        total_vat
-        amount_paid
-        sub_total_amount
-        outstanding
-        grand_total
-        refund_amount
-        paid
-        total_net
-      }
+    details {
+      issue_to
+      issue_by
+      invoice_id
+    }
+    items {
+      key
+      after_disc
+      category
+      date
+      description
+      disc_amount
+      disc_per
+      net
+      practitioner
+      product
+      quantity
+      sku
+      total
+      unitprice
+      vat
+      vat_per
+    }
+    payments {
+      key
+      total_vat
+      amount_paid
+      sub_total_amount
+      outstanding
+      grand_total
+      refund_amount
+      paid
+      total_net
     }
   }
+}

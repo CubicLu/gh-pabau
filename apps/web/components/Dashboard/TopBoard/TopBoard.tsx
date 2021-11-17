@@ -1,14 +1,51 @@
 import React, { FC } from 'react'
-import { Row, Col } from 'antd'
+import { Row, Col, Skeleton } from 'antd'
 import { Avatar } from '@pabau/ui'
 import styles from './TopBoard.module.less'
+import { useUser } from '../../../context/UserContext'
 import {
   UsergroupDeleteOutlined,
   FolderOutlined,
   FileTextOutlined,
 } from '@ant-design/icons'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
-export const TopBoard: FC = () => {
+export interface ICount {
+  label?: string
+  count: number
+  per: string
+}
+
+interface ITopBoard {
+  appointment: ICount[]
+  onlineAppointment: ICount[]
+  sales: ICount[]
+  totalBooking: ICount
+  totalOnlineBooking: ICount
+  totalSalesCount: ICount
+  filterRange: string
+  newClientCount: number
+  avgBill: string
+  revPerHour: string
+  loading: boolean
+}
+
+export const TopBoard: FC<ITopBoard> = ({
+  appointment,
+  sales,
+  onlineAppointment,
+  totalBooking,
+  totalOnlineBooking,
+  totalSalesCount,
+  filterRange,
+  newClientCount,
+  avgBill,
+  revPerHour,
+  loading,
+}) => {
+  const { t } = useTranslationI18()
+  const user = useUser()
   return (
     <div>
       <div className={styles.mainCard}>
@@ -17,14 +54,30 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.avatarIcon}>
-                  <Avatar
-                    size="large"
-                    icon={<UsergroupDeleteOutlined className={styles.user} />}
-                  />
+                  {!loading ? (
+                    <Avatar
+                      size="large"
+                      icon={<UsergroupDeleteOutlined className={styles.user} />}
+                    />
+                  ) : (
+                    <Skeleton.Avatar size={'large'} shape={'circle'} />
+                  )}
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.title}>42</div>
-                  <div className={styles.description}>New clients</div>
+                  {!loading ? (
+                    <div className={styles.title}>{newClientCount ?? 0}</div>
+                  ) : (
+                    <Skeleton.Input active className={styles.titleSkeleton} />
+                  )}
+                  {!loading ? (
+                    <div className={styles.description}>
+                      {t('dashboard.new.client', {
+                        fallbackLng: 'en',
+                      })}
+                    </div>
+                  ) : (
+                    <Skeleton.Input active className={styles.descSkeleton} />
+                  )}
                 </div>
               </div>
             </div>
@@ -33,14 +86,38 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.docsIcon}>
-                  <Avatar
-                    size="large"
-                    icon={<FileTextOutlined className={styles.file} />}
-                  />
+                  {!loading ? (
+                    <Avatar
+                      size="large"
+                      icon={<FileTextOutlined className={styles.file} />}
+                    />
+                  ) : (
+                    <Skeleton.Avatar size={'large'} shape={'circle'} />
+                  )}
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.title}>£82.50</div>
-                  <div className={styles.description}>Average bill</div>
+                  {!loading ? (
+                    <div className={styles.title}>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {Number.parseInt(avgBill ?? '0').toLocaleString(
+                        undefined,
+                        {
+                          maximumFractionDigits: 2,
+                        }
+                      )}
+                    </div>
+                  ) : (
+                    <Skeleton.Input active className={styles.titleSkeleton} />
+                  )}
+                  {!loading ? (
+                    <div className={styles.description}>
+                      {t('dashboard.average.bill', {
+                        fallbackLng: 'en',
+                      })}
+                    </div>
+                  ) : (
+                    <Skeleton.Input active className={styles.descSkeleton} />
+                  )}
                 </div>
               </div>
             </div>
@@ -49,14 +126,35 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.userIcon}>
-                  <Avatar
-                    size="large"
-                    icon={<UsergroupDeleteOutlined className={styles.users} />}
-                  />
+                  {!loading ? (
+                    <Avatar
+                      size="large"
+                      icon={
+                        <UsergroupDeleteOutlined className={styles.users} />
+                      }
+                    />
+                  ) : (
+                    <Skeleton.Avatar size={'large'} shape={'circle'} />
+                  )}
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.title}>£82.50</div>
-                  <div className={styles.description}>Rev. per hour</div>
+                  {!loading ? (
+                    <div className={styles.title}>
+                      {stringToCurrencySignConverter(user.me?.currency)}
+                      {Number.parseFloat(revPerHour).toLocaleString()}
+                    </div>
+                  ) : (
+                    <Skeleton.Input active className={styles.titleSkeleton} />
+                  )}
+                  {!loading ? (
+                    <div className={styles.description}>
+                      {t('dashboard.rev.per.hour', {
+                        fallbackLng: 'en',
+                      })}
+                    </div>
+                  ) : (
+                    <Skeleton.Input active className={styles.descSkeleton} />
+                  )}
                 </div>
               </div>
             </div>
@@ -65,14 +163,31 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.folderIcon}>
-                  <Avatar
-                    size="large"
-                    icon={<FolderOutlined className={styles.folder} />}
-                  />
+                  {!loading ? (
+                    <Avatar
+                      size="large"
+                      icon={<FolderOutlined className={styles.folder} />}
+                    />
+                  ) : (
+                    <Skeleton.Avatar size={'large'} shape={'circle'} />
+                  )}
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.title}>42%</div>
-                  <div className={styles.description}>Utilization</div>
+                  {!loading ? (
+                    <div className={styles.title}>42%</div>
+                  ) : (
+                    <Skeleton.Input active className={styles.titleSkeleton} />
+                  )}
+                  {!loading ? (
+                    <div className={styles.description}>
+                      {t('dashboard.utilization', {
+                        fallbackLng: 'en',
+                      })}{' '}
+                      (Coming soon)
+                    </div>
+                  ) : (
+                    <Skeleton.Input active className={styles.descSkeleton} />
+                  )}
                 </div>
               </div>
             </div>
@@ -86,109 +201,206 @@ export const TopBoard: FC = () => {
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
                   <div className={styles.topheader}>
-                    <div className={styles.title}>0</div>
-                    <div className={styles.subtitle}>Appointments</div>
-                    <div className={styles.description}>0% previous day</div>
+                    <div className={styles.title}>
+                      {!loading ? (
+                        totalBooking.count ?? 0
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.titleSkeleton}
+                        />
+                      )}
+                    </div>
+
+                    <div className={styles.subtitle}>
+                      {!loading ? (
+                        t('dashboard.appoinments', {
+                          fallbackLng: 'en',
+                        })
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.countSkeleton}
+                        />
+                      )}
+                    </div>
+
+                    <div className={styles.description}>
+                      {!loading ? (
+                        (totalBooking.per ?? '0%') + ' ' + filterRange
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.countSkeleton}
+                        />
+                      )}
+                    </div>
                   </div>
                 </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Completed</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Not completed</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Canceled</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>No show</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}></Row>
+                <div className={styles.apptContant}>
+                  {appointment?.map((item, index) => (
+                    <Row className={styles.record} key={index}>
+                      <div className={styles.content}>
+                        <div className={`${styles.text} ${styles.label}`}>
+                          {!loading ? (
+                            item.label
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.text}>
+                          {!loading ? (
+                            item.count + ` (${item.per})`
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </Row>
+                  ))}
+                </div>
               </Col>
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
                   <div className={styles.topheader}>
-                    <div className={styles.title}>£0</div>
-                    <div className={styles.subtitle}>Sales</div>
-                    <div className={styles.description}>0% previous day</div>
+                    <div className={styles.title}>
+                      {!loading ? (
+                        stringToCurrencySignConverter(user.me?.currency) +
+                        (totalSalesCount.count ?? 0).toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                        })
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.titleSkeleton}
+                        />
+                      )}
+                    </div>
+                    <div className={styles.subtitle}>
+                      {!loading ? (
+                        t('dashboard.sales', {
+                          fallbackLng: 'en',
+                        })
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.countSkeleton}
+                        />
+                      )}
+                    </div>
+                    <div className={styles.description}>
+                      {!loading ? (
+                        (totalSalesCount.per ?? '0%') + ' ' + filterRange
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.countSkeleton}
+                        />
+                      )}
+                    </div>
                   </div>
                 </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Services</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Products</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Packages</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Gift Vouchers</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}></Row>
+                <div className={styles.apptContant}>
+                  {sales?.map((item, index) => (
+                    <Row className={styles.record} key={index}>
+                      <div className={styles.content}>
+                        <div className={`${styles.text} ${styles.label}`}>
+                          {!loading ? (
+                            item.label
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.text}>
+                          {!loading ? (
+                            item.count + ` (${item.per})`
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </Row>
+                  ))}
+                </div>
               </Col>
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
                   <div className={styles.topheader}>
-                    <div className={styles.title}>0 (0%)</div>
-                    <div className={styles.subtitle}>Online appointments</div>
-                    <div className={styles.description}>0% previous day</div>
+                    <div className={styles.title}>
+                      {!loading ? (
+                        (totalOnlineBooking.count ?? 0) +
+                        ` (${totalOnlineBooking.per ?? '0%'})`
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.titleSkeleton}
+                        />
+                      )}
+                    </div>
+                    <div className={styles.subtitle}>
+                      {!loading ? (
+                        t('dashboard.online.appointment', {
+                          fallbackLng: 'en',
+                        })
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.countSkeleton}
+                        />
+                      )}
+                    </div>
+                    <div className={styles.description}>
+                      {!loading ? (
+                        (totalOnlineBooking.per ?? '0%') + ' ' + filterRange
+                      ) : (
+                        <Skeleton.Input
+                          active
+                          className={styles.countSkeleton}
+                        />
+                      )}
+                    </div>
                   </div>
                 </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Completed</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Not completed</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Canceled</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>No show</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
-                <Row className={styles.record}>
-                  <div className={styles.content}>
-                    <div className={styles.text}>Deposits</div>
-                    <div className={styles.text}>0 (0%)</div>
-                  </div>
-                </Row>
+                <div className={styles.apptContant}>
+                  {onlineAppointment?.map((item, index) => (
+                    <Row className={styles.record} key={index}>
+                      <div className={styles.content}>
+                        <div className={`${styles.text} ${styles.label}`}>
+                          {!loading ? (
+                            item.label
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.text}>
+                          {!loading ? (
+                            item.count + ` (${item.per})`
+                          ) : (
+                            <Skeleton.Input
+                              active
+                              className={styles.countSkeleton}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </Row>
+                  ))}
+                </div>
               </Col>
             </Row>
           </Col>

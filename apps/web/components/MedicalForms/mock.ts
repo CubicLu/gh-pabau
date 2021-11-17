@@ -3,6 +3,7 @@ export const medicalFormData = [
     key: '1',
     name: 'Botox Medical Form 0',
     formType: 'treatment',
+    serviceId: '',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -36,6 +37,7 @@ export const medicalFormData = [
     key: '2',
     name: 'Laser Hair Removal 1',
     formType: 'consent',
+    serviceId: '',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -69,6 +71,7 @@ export const medicalFormData = [
     key: '3',
     name: 'Medical Quesionaire 2',
     formType: 'medicalHistory',
+    serviceId: '',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -102,6 +105,7 @@ export const medicalFormData = [
     key: '4',
     name: 'Botox Medical Form 3',
     formType: 'epaper',
+    serviceId: '',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -135,6 +139,7 @@ export const medicalFormData = [
     key: '5',
     name: 'Botox Medical Form 4',
     formType: 'prescription',
+    serviceId: '',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -168,6 +173,7 @@ export const medicalFormData = [
     key: '6',
     name: 'Botox Medical Form 5',
     formType: 'lab',
+    serviceId: '',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -201,6 +207,7 @@ export const medicalFormData = [
     key: '7',
     name: 'Botox Medical Form 6',
     formType: 'medicalHistory',
+    serviceId: '',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',

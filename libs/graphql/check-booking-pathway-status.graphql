@@ -1,0 +1,26 @@
+query checkPathwayStatus($bookingId: Int) {
+  PathwayTaken: findManyPathwaysTaken(
+    where: { booking_id: { equals: $bookingId } }
+  ) {
+    id
+    booking_id
+    status
+    Pathway {
+      id
+      pathway_name
+      is_active
+      PathwayStep {
+        id
+        name
+        step
+        order
+        PathwayStepsTaken(
+          where: { PathwaysTaken: { booking_id: { equals: $bookingId } } }
+        ) {
+          id
+          status
+        }
+      }
+    }
+  }
+}

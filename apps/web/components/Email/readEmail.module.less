@@ -1,0 +1,306 @@
+.readEmailContainer {
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  .readEmailLeftSide {
+    width: 78%;
+    float: left;
+    min-height: 616px;
+    // margin-bottom: 30px;
+    border-left: 1px solid #ecedf0;
+    border-right: 1px solid #ecedf0;
+
+    .menuHeader {
+      display: flex;
+      background-color: #fff;
+      .menuHeaderContainer {
+        border-left: 1px solid #ecedf0;
+        border-bottom: 1px solid #ecedf0;
+        padding: 14px 16px;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        .headerLeft {
+          display: flex;
+          align-items: center;
+          h5 {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 20px;
+            color: #3d3d46;
+            margin-bottom: 0;
+          }
+        }
+        .headerRight {
+          display: flex;
+          align-items: center;
+          button {
+            margin: 0 5px;
+          }
+          h5 {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 22px;
+            display: flex;
+            align-items: center;
+            color: #9292a3;
+            margin-right: 10px;
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+    .mainBody {
+      margin: 10px 20px 0 20px;
+      .mainContainerHeader {
+        display: flex;
+        .topBar {
+          display: flex;
+          .avatarBagde {
+            :global {
+              .ant-avatar-circle {
+                background: #54b2d3 !important;
+              }
+            }
+          }
+          .emailDetailsContainer {
+            display: block;
+            margin-left: 5px;
+            .emailDetails {
+              display: flex;
+              .senderName {
+                margin: 0;
+                padding-right: 5px;
+                font-style: normal;
+                font-weight: bolder;
+                font-size: 14px;
+                line-height: 18px;
+                color: #3d3d46;
+                text-transform: capitalize;
+              }
+              .senderEmail {
+                margin: 0;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 18px;
+                color: #3d3d46;
+                text-transform: lowercase;
+              }
+            }
+            .toDetail {
+              font-style: normal;
+              font-weight: normal;
+              font-size: 12px;
+              line-height: 14px;
+              color: #9292a3;
+              padding-top: 5px;
+              p {
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+      .mailWrapper {
+        margin-left: 4px;
+        margin-top: 15px;
+        // display: flex;
+      }
+      .mailFooterWrapper {
+        margin: 20px;
+        button {
+          color: #9292a3;
+          margin-right: 10px;
+        }
+        span {
+          margin-left: 4px;
+        }
+      }
+    }
+
+    .mailFooterWrapper {
+      margin: 20px;
+      button {
+        color: #9292a3;
+        margin-right: 10px;
+      }
+      span {
+        margin-left: 4px;
+      }
+    }
+    .listEmailPoint {
+      cursor: pointer;
+      margin-top: 20px;
+      border: 1px solid #ecedf0;
+      height: 16px;
+      background-color: #f7f7f9;
+      position: relative;
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: #fff;
+        border: 1px solid #54b2d3;
+        border-radius: 50%;
+        margin-top: -17px;
+        margin-left: 20px;
+      }
+      .listEmailBreak {
+        width: 100%;
+        position: static;
+        margin-top: 6px;
+        border-top: 1px solid #ecedf0;
+        z-index: 6;
+      }
+    }
+  }
+
+  .readEmailRightSide {
+    width: 22%;
+    float: right;
+    border-left: 1px solid #ecedf0;
+    .readEmailClientSide {
+      .linkClientContainer {
+        padding: 10px 0;
+        border-bottom: 1px solid #ecedf0;
+        .topBar {
+          padding-left: 10px;
+          display: flex;
+          .avatarBagde {
+            :global {
+              .ant-avatar-circle {
+                background: #54b2d3 !important;
+              }
+            }
+          }
+          .emailDetailsContainer {
+            display: block;
+            margin-left: 5px;
+            .emailDetails {
+              display: block;
+              .senderName {
+                margin: 0;
+                padding-right: 5px;
+                font-style: normal;
+                font-weight: bolder;
+                font-size: 14px;
+                line-height: 18px;
+                color: #3d3d46;
+              }
+              .senderEmail {
+                font-style: normal;
+                font-weight: normal;
+                font-size: 12px;
+                line-height: 14px;
+                color: #9292a3;
+              }
+            }
+          }
+        }
+
+        .clientButton {
+          padding: 5px 10px;
+          button {
+            width: 100%;
+            margin-bottom: 6px;
+          }
+        }
+      }
+
+      .linkLeadContainer {
+        padding: 10px 0;
+        border-bottom: 1px solid #ecedf0;
+        .linkLeadText {
+          padding-left: 15px;
+          .linkLeadTitle {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 15px;
+            text-transform: uppercase;
+            color: #9292a3;
+            margin-bottom: 5px;
+          }
+          .linkLeadDescription {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 18px;
+            color: #3d3d46;
+            margin-bottom: 3px;
+          }
+        }
+        .clientButton {
+          padding: 5px 10px;
+          button {
+            width: 100%;
+            margin-bottom: 6px;
+          }
+        }
+      }
+
+      .mediaDetailsContainer {
+        padding: 10px 0px;
+        .mediaTitle {
+          padding-left: 15px;
+          .mediaTitleText {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 15px;
+            text-transform: uppercase;
+            color: #9292a3;
+          }
+        }
+        .mediaDetails {
+          .mediaAlbum {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            padding-left: 12px;
+            img {
+              width: 95px;
+              height: 95px;
+              margin: 5px 5px;
+              border-radius: 5px;
+            }
+          }
+          .clientButton {
+            padding: 5px 10px;
+            button {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+  :global {
+    .ant-popover-inner-content {
+      padding: 4px 0 10px 0;
+      width: 152px;
+    }
+  }
+}
+
+.mailOptionContent {
+  font-size: 14px;
+  color: #9292a3;
+  .mailOptionItem {
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    padding: 10px 0 0px 10px;
+    p {
+      margin-bottom: 0;
+      margin-left: 10px;
+    }
+  }
+}

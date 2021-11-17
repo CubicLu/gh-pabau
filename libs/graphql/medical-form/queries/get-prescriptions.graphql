@@ -1,0 +1,22 @@
+query getPrescriptions($take: Int = 50, $skip: Int = 0) {
+  findManyMedicalForm(
+    take: $take
+    skip: $skip
+    where: { form_type: { equals: "prescription" }, deleted_at: { equals: "" } }
+  ) {
+    id
+    name
+    created_at
+    CreatedBy {
+      id
+      full_name
+    }
+    data
+    Drugs {
+      id
+      name
+      dosage
+      comment
+    }
+  }
+}

@@ -9,8 +9,8 @@ const TranslationWrapper: FC = ({ children }) => {
 
   i18next.use(initReactI18next).init({
     interpolation: { escapeValue: false },
-    lng: me?.me?.Company?.details?.language?.toString().slice(0, 2),
-    fallbackLng: 'en',
+    lng: me?.me?.language?.company?.toString().slice(0, 2),
+    // fallbackLng: 'en',
     keySeparator: false,
     resources: languages,
   })

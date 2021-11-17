@@ -23,6 +23,9 @@ describe('RightSidebar', () => {
           txtValue: '',
           arrValue: [],
           required: false,
+          attrName: '',
+          attrValue: '',
+          attrId: 0,
         }}
         component={''}
         formType={''}

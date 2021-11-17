@@ -95,6 +95,10 @@ interface FilterMenuProps {
   loggedUser: Partial<AuthenticatedUser> & JwtUser
   isEdit: boolean
   t: TFunction<'common'>
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  pipelineData: OptionList[]
+  locationData: OptionList[]
 }
 
 interface CreateFilterModalProps {
@@ -118,6 +122,10 @@ interface CreateFilterModalProps {
       | ((preValue: FilterOptionItemType[]) => FilterOptionItemType[])
   ) => void
   data?: InitialValueTypes
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  pipelineData: OptionList[]
+  locationData: OptionList[]
 }
 const defaultValue: InitialValueTypes = {
   name: '',
@@ -141,8 +149,14 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
   isFilterOwner,
   isEdit,
   t,
+  leadSourceData,
+  leadStageData,
+  pipelineData,
+  locationData,
 }) => {
-  const { activityItemNames, manageOperandBasedOnColumn, activity } = getData(t)
+  const { manageOperandBasedOnColumn, activity, activityTypeMapper } = getData(
+    t
+  )
   const activityItemChange = (
     value: string | number | LabeledValue,
     index: number,
@@ -153,23 +167,72 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
     if (key === 'filterColumn') {
       data[index].operand = 'is'
       data[index].menuOption = ''
-      if (value === 'Assigned to user' || value === 'Creator') {
-        data[index].menuOption = loggedUser?.user?.toString()
+      switch (value) {
+        case 'Assigned to user':
+        case 'Creator':
+        case 'Lead owner':
+        case 'Won by':
+        case 'Lead creator': {
+          data[index].menuOption = loggedUser?.user?.toString()
+          break
+        }
+        case 'Done': {
+          data[index].menuOption = 'To do'
+          break
+        }
+        case 'Free/busy':
+        case 'Type': {
+          data[index].menuOption = '1'
+          break
+        }
+        case 'Status': {
+          data[index].menuOption = 'Pending'
+          break
+        }
+        case 'Lead source': {
+          data[index].menuOption = leadSourceData?.[0]?.id?.toString()
+          break
+        }
+        case 'Lead stage': {
+          data[index].menuOption = leadStageData?.[0]?.id?.toString()
+          break
+        }
+        case 'Lead status': {
+          data[index].menuOption = 'Open'
+          break
+        }
+        case 'Add time':
+        case 'Due date':
+        case 'Lead created date':
+        case 'Won time':
+        case 'Lead closed on':
+        case 'First activity time':
+        case 'Lead last activity date':
+        case 'Lead lost time':
+        case 'Date of entering stage':
+        case 'Update time':
+        case 'Last email received':
+        case 'Last email sent':
+        case 'Next activity date': {
+          data[index].menuOption = 'last quarter'
+          break
+        }
+        case 'Pipeline': {
+          data[index].menuOption = pipelineData?.[0]?.id?.toString()
+          break
+        }
+        case 'Location': {
+          data[index].menuOption = locationData?.[0]?.id?.toString()
+          break
+        }
       }
-      if (value === 'Done') {
-        data[index].menuOption = 'To do'
+    } else if (key === 'type') {
+      if (value === 'Activity') {
+        data[index]['filterColumn'] = 'Add time'
       }
-      if (value === 'Free/busy') {
-        data[index].menuOption = '1'
-      }
-      if (value === 'Status') {
-        data[index].menuOption = 'Pending'
-      }
-      if (value === 'Type') {
-        data[index].menuOption = '1'
-      }
-      if (value === 'Add time' || value === 'Due date') {
-        data[index].menuOption = 'last quarter'
+      if (value === 'Lead') {
+        data[index]['filterColumn'] = 'Lead name'
+        data[index].menuOption = ''
       }
     }
     setFieldValue(fieldName, data)
@@ -187,19 +250,22 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             defaultValue={'Activity'}
             dropdownItems={activity}
             value={item.type}
-            disabled={!isFilterOwner}
+            className={styles.activityDropdown}
+            disabled={!(isFilterOwner || loggedUser.admin)}
+            onSelect={(value) => activityItemChange(value, index, 'type')}
           />
           <DropdownWithCheck
             dropdownClassName={styles.filterColumnWrap}
             defaultValue={'Add time'}
             value={item.filterColumn}
+            defaultActiveFirstOption
             onSelect={(value) =>
               activityItemChange(value, index, 'filterColumn')
             }
             showSearch
             filterOption={true}
-            disabled={!isFilterOwner}
-            dropdownItems={activityItemNames}
+            disabled={!(isFilterOwner || loggedUser.admin)}
+            dropdownItems={activityTypeMapper[item.type]}
           />
           <DropdownWithCheck
             defaultValue={'is'}
@@ -210,7 +276,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
             }
             dropdownItems={manageOperandBasedOnColumn?.[item.filterColumn]}
             showSearch
-            disabled={!isFilterOwner}
+            disabled={!(isFilterOwner || loggedUser.admin)}
             filterOption={true}
           />
           <div className={styles.filterMenuWrapper}>
@@ -226,16 +292,22 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
                   activityItemChange(value, index, 'menuOption')
                 }
                 userId={loggedUser.user}
-                disabled={!isFilterOwner}
+                disabled={!(isFilterOwner || loggedUser.admin)}
                 isEdit={isEdit}
+                leadSourceData={leadSourceData}
+                leadStageData={leadStageData}
+                pipelineData={pipelineData}
+                locationData={locationData}
               />
             )}
           </div>
           <div
-            onClick={() => isFilterOwner && removeFilterMenu(index)}
+            onClick={() =>
+              (isFilterOwner || loggedUser.admin) && removeFilterMenu(index)
+            }
             className={classNames(
               styles.minusBlock,
-              !isFilterOwner && styles.disable
+              !(isFilterOwner || loggedUser.admin) && styles.disable
             )}
           >
             <MinusOutlined />
@@ -263,6 +335,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   setFilterDataObject,
   setFilterGroupValue,
   setFilterOption,
+  leadSourceData,
+  leadStageData,
+  pipelineData,
+  locationData,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
   const [initialValue, setInitialValue] = useState<InitialValueTypes>(
@@ -597,6 +673,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         <BasicModal
           className={styles.filterModalWrapper}
           visible={showModal}
+          hasScroll={true}
           centered
           title={
             values.id
@@ -609,145 +686,167 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
             setShowModal(false)
             resetForm()
           }}
-          modalWidth={926}
+          modalWidth={1000}
           isValidate={true}
           footer={false}
         >
           <Form layout="vertical">
-            <div className={styles.filterContentWrap}>
-              <h5>{t('create.filter.modal.all.condition.title')}</h5>
-              <RenderFilterMenu
-                items={values.andFilterOption}
-                setFieldValue={setFieldValue}
-                fieldName="andFilterOption"
-                userList={userList}
-                activityTypeOption={activityTypeOption}
-                loggedUser={loggedUser}
-                isFilterOwner={values.isFilterOwner}
-                isEdit={!!values.id}
-                t={t}
-              />
-              <Button
-                className={classNames(
-                  styles.btnAdd,
-                  !values.isFilterOwner && styles.disable
-                )}
-                type="default"
-                icon={<PlusOutlined />}
-                disabled={!values.isFilterOwner}
-                onClick={() =>
-                  AddConditionClick(values, setFieldValue, 'andFilterOption')
-                }
-              >
-                {t('create.filer.modal.add.condition.btn')}
-              </Button>
-            </div>
-            <div className={styles.filterContentWrap}>
-              <h5>{t('create.filter.modal.any.condition.title')}</h5>
-              <RenderFilterMenu
-                items={values.orFilterOption}
-                setFieldValue={setFieldValue}
-                fieldName="orFilterOption"
-                userList={userList}
-                activityTypeOption={activityTypeOption}
-                loggedUser={loggedUser}
-                isFilterOwner={values.isFilterOwner}
-                isEdit={!!values.id}
-                t={t}
-              />
-              <Button
-                className={classNames(
-                  styles.btnAdd,
-                  !values.isFilterOwner && styles.disable
-                )}
-                type="default"
-                icon={<PlusOutlined />}
-                disabled={!values.isFilterOwner}
-                onClick={() =>
-                  AddConditionClick(values, setFieldValue, 'orFilterOption')
-                }
-              >
-                {t('create.filer.modal.add.condition.btn')}
-              </Button>
-            </div>
-            <div className={styles.filterField}>
-              <Form.Item
-                label={t('create.filter.modal.filter.name.label')}
-                name={'name'}
-              >
-                <FormikInput
-                  name={'name'}
-                  disabled={!values.isFilterOwner}
-                  placeholder={t('create.filter.modal.filter.name.placeholder')}
+            <div className={styles.filterContentMain}>
+              <div className={styles.filterContentWrap}>
+                <h5>{t('create.filter.modal.all.condition.title')}</h5>
+                <RenderFilterMenu
+                  items={values.andFilterOption}
+                  setFieldValue={setFieldValue}
+                  fieldName="andFilterOption"
+                  userList={userList}
+                  activityTypeOption={activityTypeOption}
+                  loggedUser={loggedUser}
+                  isFilterOwner={values.isFilterOwner}
+                  isEdit={!!values.id}
+                  t={t}
+                  leadSourceData={leadSourceData}
+                  leadStageData={leadStageData}
+                  pipelineData={pipelineData}
+                  locationData={locationData}
                 />
-              </Form.Item>
-              <Form.Item
-                label={t('create.filter.modal.visibility.label')}
-                name={'visibility'}
-              >
-                <span
+                <Button
                   className={classNames(
-                    !values.isFilterOwner && styles.btnProvider
+                    styles.btnAdd,
+                    !(values.isFilterOwner || loggedUser.admin) &&
+                      styles.disable
                   )}
+                  type="default"
+                  icon={<PlusOutlined />}
+                  disabled={!(values.isFilterOwner || loggedUser.admin)}
+                  onClick={() =>
+                    AddConditionClick(values, setFieldValue, 'andFilterOption')
+                  }
                 >
-                  <Dropdown
-                    trigger={['click']}
-                    overlay={visibilityMenu(setFieldValue, values)}
-                    visible={visibilityVisible}
-                    disabled={!values.isFilterOwner}
-                    onVisibleChange={(value) => setVisibilityVisible(value)}
-                    getPopupContainer={(node) => node}
-                    overlayClassName={styles.visibilityMenu}
-                  >
-                    <Button
-                      className={classNames(
-                        !values.isFilterOwner,
-                        styles.disable
-                      )}
-                    >
-                      <span className={styles.visibilityWrapper}>
-                        {values.visibility === 'private' ? (
-                          <div className={styles.iconText}>
-                            <LockOutlined />
-                            <span>
-                              {t('create.filter.modal.visibility.private')}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className={styles.iconText}>
-                            <UnlockOutlined />
-                            <span>
-                              {t('create.filter.modal.visibility.shared')}
-                            </span>
-                          </div>
-                        )}
-                        {visibilityVisible ? <UpOutlined /> : <DownOutlined />}
-                      </span>
-                    </Button>
-                  </Dropdown>
-                </span>
-              </Form.Item>
-            </div>
-            <Checkbox name="saveFilter" disabled={!values.isFilterOwner}>
-              {t('create.filter.modal.save.filter.checkbox.label')}
-            </Checkbox>
-            {!values.isFilterOwner && (
-              <div className={styles.creatorWrapper}>
-                <span>
-                  {t('create.filter.modal.creator.name', {
-                    name: values.creatorName,
-                  })}
-                </span>
-                <div className={styles.circle} />
-                <span>
-                  {t('create.filter.modal.last.modified.label', {
-                    date: DisplayDate(values.lastUpdatedDate),
-                  })}
-                </span>
+                  {t('create.filer.modal.add.condition.btn')}
+                </Button>
               </div>
-            )}
+              <div className={styles.filterContentWrap}>
+                <h5>{t('create.filter.modal.any.condition.title')}</h5>
+                <RenderFilterMenu
+                  items={values.orFilterOption}
+                  setFieldValue={setFieldValue}
+                  fieldName="orFilterOption"
+                  userList={userList}
+                  activityTypeOption={activityTypeOption}
+                  loggedUser={loggedUser}
+                  isFilterOwner={values.isFilterOwner}
+                  isEdit={!!values.id}
+                  t={t}
+                  leadSourceData={leadSourceData}
+                  leadStageData={leadStageData}
+                  pipelineData={pipelineData}
+                  locationData={locationData}
+                />
+                <Button
+                  className={classNames(
+                    styles.btnAdd,
+                    !(values.isFilterOwner || loggedUser.admin) &&
+                      styles.disable
+                  )}
+                  type="default"
+                  icon={<PlusOutlined />}
+                  disabled={!(values.isFilterOwner || loggedUser.admin)}
+                  onClick={() =>
+                    AddConditionClick(values, setFieldValue, 'orFilterOption')
+                  }
+                >
+                  {t('create.filer.modal.add.condition.btn')}
+                </Button>
+              </div>
+              <div className={styles.filterField}>
+                <Form.Item
+                  label={t('create.filter.modal.filter.name.label')}
+                  name={'name'}
+                >
+                  <FormikInput
+                    name={'name'}
+                    disabled={!(values.isFilterOwner || loggedUser.admin)}
+                    placeholder={t(
+                      'create.filter.modal.filter.name.placeholder'
+                    )}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label={t('create.filter.modal.visibility.label')}
+                  name={'visibility'}
+                >
+                  <span
+                    className={classNames(
+                      !(values.isFilterOwner || loggedUser.admin) &&
+                        styles.btnProvider
+                    )}
+                  >
+                    <Dropdown
+                      trigger={['click']}
+                      overlay={visibilityMenu(setFieldValue, values)}
+                      visible={visibilityVisible}
+                      disabled={!(values.isFilterOwner || loggedUser.admin)}
+                      onVisibleChange={(value) => setVisibilityVisible(value)}
+                      getPopupContainer={(node) => node}
+                      overlayClassName={styles.visibilityMenu}
+                    >
+                      <Button
+                        className={classNames(
+                          !(values.isFilterOwner || loggedUser.admin),
+                          styles.disable
+                        )}
+                      >
+                        <span className={styles.visibilityWrapper}>
+                          {values.visibility === 'private' ? (
+                            <div className={styles.iconText}>
+                              <LockOutlined />
+                              <span>
+                                {t('create.filter.modal.visibility.private')}
+                              </span>
+                            </div>
+                          ) : (
+                            <div className={styles.iconText}>
+                              <UnlockOutlined />
+                              <span>
+                                {t('create.filter.modal.visibility.shared')}
+                              </span>
+                            </div>
+                          )}
+                          {visibilityVisible ? (
+                            <UpOutlined />
+                          ) : (
+                            <DownOutlined />
+                          )}
+                        </span>
+                      </Button>
+                    </Dropdown>
+                  </span>
+                </Form.Item>
+              </div>
+              <Checkbox
+                name="saveFilter"
+                disabled={!(values.isFilterOwner || loggedUser.admin)}
+              >
+                {t('create.filter.modal.save.filter.checkbox.label')}
+              </Checkbox>
+              {values.id && (
+                <div className={styles.creatorWrapper}>
+                  <span>
+                    {t('create.filter.modal.creator.name', {
+                      name: values.creatorName,
+                    })}
+                  </span>
+                  <div className={styles.circle} />
+                  <span>
+                    {t('create.filter.modal.last.modified.label', {
+                      date: DisplayDate(values.lastUpdatedDate),
+                    })}
+                  </span>
+                </div>
+              )}
+            </div>
             <div className={styles.btnWrapper}>
-              {values.isFilterOwner && values.id && (
+              {(values.isFilterOwner || loggedUser.admin) && values.id && (
                 <Button
                   className={styles.btnDanger}
                   type="primary"
@@ -760,9 +859,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               <span className={styles.previewWrapper}>
                 <Button
                   type="default"
-                  disabled={!values.isFilterOwner}
+                  disabled={!(values.isFilterOwner || loggedUser.admin)}
                   className={classNames(
-                    !values.isFilterOwner && styles.disable
+                    !(values.isFilterOwner || loggedUser.admin) &&
+                      styles.disable
                   )}
                   onClick={() => onPreview(values, resetForm)}
                 >
@@ -772,9 +872,10 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                   type="primary"
                   className={classNames(
                     styles.submitBtn,
-                    !values.isFilterOwner && styles.disable
+                    !(values.isFilterOwner || loggedUser.admin) &&
+                      styles.disable
                   )}
-                  disabled={!values.isFilterOwner}
+                  disabled={!(values.isFilterOwner || loggedUser.admin)}
                 >
                   {t('create.filter.modal.save.button.label')}
                 </SubmitButton>

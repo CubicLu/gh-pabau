@@ -1,0 +1,50 @@
+fragment MedicalFormContactHistoryFields on MedicalFormContactHistory {
+  id
+  mode
+  medical_form_contact_id
+  user_id
+  contact_id
+  company_id
+  date
+  update_changes
+}
+
+fragment MedicalFormContactHistory on MedicalFormContactHistory {
+  ...MedicalFormContactHistoryFields
+  Company {
+    ...CompanyFields
+  }
+  MedicalFormContact {
+    ...MedicalFormContactFields
+  }
+}
+
+mutation createOneMedicalFormContactHistory($data: MedicalFormContactHistoryCreateInput!) {
+  createOneMedicalFormContactHistory(data: $data) {
+    ...MedicalFormContactHistory
+  }
+}
+
+mutation updateOneMedicalFormContactHistory(
+  $where: MedicalFormContactHistoryWhereUniqueInput!
+  $data: MedicalFormContactHistoryUpdateInput!
+) {
+  updateOneMedicalFormContactHistory(where: $where, data: $data) {
+    ...MedicalFormContactHistory
+  }
+}
+
+mutation deleteOneMedicalFormContactHistory($where: MedicalFormContactHistoryWhereUniqueInput!) {
+  deleteOneMedicalFormContactHistory(where: $where) {
+    ...MedicalFormContactHistory
+  }
+}
+
+mutation updateManyMedicalFormContactHistory(
+  $where: MedicalFormContactHistoryWhereInput
+  $data: MedicalFormContactHistoryUpdateManyMutationInput!
+) {
+  updateManyMedicalFormContactHistory(where: $where, data: $data) {
+    count
+  }
+}

@@ -39,25 +39,35 @@ const SettingElementAdvanced: FC<P> = ({
     <>
       {advanced && (
         <>
-          {componentName === 'basic_shortanswer' && (
+          {(componentName === 'basic_shortanswer' ||
+            componentName === 'basic_signature') && (
             <SettingElementTypeOption
-              title={t('ui.medicalform.setting.advanced.inputtype')}
+              title={
+                componentName === 'basic_signature'
+                  ? t('ui.medicalform.setting.advanced.signatrue')
+                  : t('ui.medicalform.setting.advanced.inputtype')
+              }
               value={inputTypeValue}
               onChangeInputType={onChangeInputType}
+              componentName={componentName}
             />
           )}
-          <SettingLinkedField
-            linkedLabel={t('ui.medicalform.setting.advanced.linked')}
-            linkedFieldValue={linkedFieldValue}
-            onChangeLinkedField={onChangeLinkedField}
-          />
-          <SettingDefaultField
-            linkedLabel={t('ui.medicalform.setting.advanced.default')}
-            defaultFieldValue={defaultFieldValue}
-            defaultFieldValueWithTag={defaultFieldValueWithTag}
-            changedForm={changedForm}
-            onChangeDefaults={onChangeDefaults}
-          />
+          {componentName !== 'basic_signature' && (
+            <>
+              <SettingLinkedField
+                linkedLabel={t('ui.medicalform.setting.advanced.linked')}
+                linkedFieldValue={linkedFieldValue}
+                onChangeLinkedField={onChangeLinkedField}
+              />
+              <SettingDefaultField
+                linkedLabel={t('ui.medicalform.setting.advanced.default')}
+                defaultFieldValue={defaultFieldValue}
+                defaultFieldValueWithTag={defaultFieldValueWithTag}
+                changedForm={changedForm}
+                onChangeDefaults={onChangeDefaults}
+              />
+            </>
+          )}
         </>
       )}
       <Button

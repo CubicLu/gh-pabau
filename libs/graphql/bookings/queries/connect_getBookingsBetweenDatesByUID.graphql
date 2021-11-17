@@ -1,0 +1,21 @@
+query getBookingsBetweenDatesByUID(
+  $start_date: Float!
+  $end_date: Float!
+  $company_id: Int!
+  $user_id: Int
+) {
+  Public_BookedAppointments(
+    where: {
+      start_date: $start_date
+      end_date: $end_date
+      company_id: $company_id
+      uid: $user_id
+    }
+  ) {
+    UID
+    end_date
+    all_day
+    location_id
+    start_date
+  }
+}

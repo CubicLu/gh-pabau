@@ -19,7 +19,6 @@ interface Invoice {
   paymentBy: string
   status: boolean
 }
-
 const defaultBillingHistory: Invoice[] = [
   {
     invoiceNo: '#45645456456576',

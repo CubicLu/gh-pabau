@@ -19,6 +19,10 @@ import { ClientContext } from '../ConnectLayout/interfaces/common'
 import { useUser } from '../UserContext/UserContext'
 
 const ConnectHeader = (): JSX.Element => {
+  const clientContext = {
+    fname: 'Nenad',
+    lname: 'Jovanovski',
+  }
   const router = useRouter()
   const [openDrawer, setOpenDrawer] = useState(false)
   const { me } = useUser()
@@ -73,7 +77,7 @@ const ConnectHeader = (): JSX.Element => {
 
   const handleLogOut = () => {
     localStorage.removeItem('token')
-    setLoggedInUser(null)
+    //setLoggedInUser(null)
     router.push('/')
   }
 

@@ -6,7 +6,7 @@ export async function prepareMessage(
   ctx: Context,
   relation: EmailRelationsInput
 ): Promise<string> {
-  console.info('relation', relation)
+  //console.info('relation', relation)
 
   const Contact = relation.contact_id
     ? await ctx.prisma.cmContact.findUnique({
@@ -15,8 +15,8 @@ export async function prepareMessage(
         },
         include: {
           Insurance: true,
-          ContactInsurance: true,
-          LoyaltyPoint: true,
+          InsuranceCompany: true,
+          LoyaltyPoints: true,
           Booking: {
             where: { id: relation.booking_id },
           },
@@ -60,9 +60,9 @@ export async function prepareMessage(
     },
   })
 
-  console.info('Contact', Contact)
-  console.info('Lead', Lead)
-  console.info('User', User)
+  // console.info('Contact', Contact)
+  // console.info('Lead', Lead)
+  // console.info('User', User)
 
   const TAGS = {
     CLIENTEMAIL: Contact?.Email,
@@ -79,7 +79,7 @@ export async function prepareMessage(
     CLIENTCOUNTY: Contact?.MailingProvince,
     CLIENTCOUNTRY: Contact?.MailingCountry,
     CLIENTMAILINGCOUNTRY: Contact?.MailingCountry,
-    CLIENTLOYALTY: Contact?.LoyaltyPoint?.points,
+    CLIENTLOYALTY: Contact?.LoyaltyPoints?.points,
     FULLADDRESS: function () {
       return [
         Contact?.MailingStreet,

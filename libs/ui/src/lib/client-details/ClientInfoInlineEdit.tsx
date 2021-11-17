@@ -12,7 +12,7 @@ export interface ClientInfoInlineEditProps {
   keyValue: string
   initialValue: string
   type: string
-  onUpdateValue: (keyValue: string, value: string) => void
+  onUpdateValue: (keyValue: string, value: string, fieldTitle?: string) => void
 }
 
 export const ClientInfoInlineEditDataTypes = {
@@ -32,6 +32,7 @@ export const ClientInfoInlineEdit: FC<ClientInfoInlineEditProps> = ({
   const isMobile = useMedia('(max-width: 768px)', false)
 
   const [visible, setVisible] = useState(false)
+  const [loading, isLoading] = useState(false)
   const [form] = Form.useForm()
   const { t } = useTranslation('common')
 
@@ -57,14 +58,15 @@ export const ClientInfoInlineEdit: FC<ClientInfoInlineEditProps> = ({
     }
   }
 
-  const save = (values) => {
+  const save = async (values) => {
+    isLoading(true)
     const [key] = Object.keys(values)
     let value = ''
     const updatedValue = { ...values }
     value = updatedValue?.[key]
-    onUpdateValue(keyValue, value)
+    await onUpdateValue(keyValue, value, fieldTitle)
+    isLoading(false)
     toggleVisible()
-    Notification(NotificationType.success, `${fieldTitle} updated to ${value}`)
   }
 
   const popoverContent = () => {
@@ -90,7 +92,7 @@ export const ClientInfoInlineEdit: FC<ClientInfoInlineEditProps> = ({
               <Button onClick={toggleVisible}>
                 {t('common-label-cancel')}
               </Button>
-              <Button type={'primary'} htmlType={'submit'}>
+              <Button type={'primary'} htmlType={'submit'} loading={loading}>
                 {t('common-label-save')}
               </Button>
             </div>
@@ -108,6 +110,12 @@ export const ClientInfoInlineEdit: FC<ClientInfoInlineEditProps> = ({
       overlayClassName={styles.profileWrapper}
       visible={visible && !isMobile}
       onVisibleChange={(val) => handleClose(val)}
+      getPopupContainer={(node) => {
+        if (node) {
+          return node.parentNode as HTMLElement
+        }
+        return document.body as HTMLElement
+      }}
     >
       {children}
     </Popover>

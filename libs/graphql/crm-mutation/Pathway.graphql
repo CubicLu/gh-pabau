@@ -1,0 +1,39 @@
+fragment PathwayFields on Pathway {
+  id
+  pathway_name
+  company_id
+  description
+  is_active
+  order
+}
+
+fragment Pathway on Pathway {
+  ...PathwayFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOnePathway($data: PathwayCreateInput!) {
+  createOnePathway(data: $data) {
+    ...Pathway
+  }
+}
+
+mutation updateOnePathway($where: PathwayWhereUniqueInput!, $data: PathwayUpdateInput!) {
+  updateOnePathway(where: $where, data: $data) {
+    ...Pathway
+  }
+}
+
+mutation deleteOnePathway($where: PathwayWhereUniqueInput!) {
+  deleteOnePathway(where: $where) {
+    ...Pathway
+  }
+}
+
+mutation updateManyPathway($where: PathwayWhereInput, $data: PathwayUpdateManyMutationInput!) {
+  updateManyPathway(where: $where, data: $data) {
+    count
+  }
+}

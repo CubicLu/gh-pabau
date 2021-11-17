@@ -1,8 +1,7 @@
-import React, { FC, useState, ReactNode } from 'react'
+import React, { FC, useState, ReactNode, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, Pagination } from '@pabau/ui'
 import styles from './Items.module.less'
-import { ClientFinancialsLayoutProps } from './../ClientFinancialsLayout'
 import {
   Typography,
   Button,
@@ -11,9 +10,14 @@ import {
   Space,
   Select,
   DatePicker,
+  Skeleton,
 } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
+import { useQuery } from '@apollo/client'
+import { GetContactSaleItemDocument } from '@pabau/graphql'
+import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 
 const getInvoiceItemsValues = () => {
   return {
@@ -28,13 +32,13 @@ interface InvoiceEmployeeOptionProp {
 }
 
 interface P {
-  dataProps: ClientFinancialsLayoutProps
+  totalItemsCounts: number
   invoiceEmployeeOptions: InvoiceEmployeeOptionProp[]
 }
 
 export const Items: FC<P> = (props) => {
-  const { dataProps, invoiceEmployeeOptions } = props
-  const { items, totalSales } = dataProps
+  const router = useRouter()
+  const { invoiceEmployeeOptions, totalItemsCounts } = props
   const { t } = useTranslation('common')
   const { Text } = Typography
   const { Option } = Select
@@ -42,12 +46,48 @@ export const Items: FC<P> = (props) => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
   const [itemsFilter, setItemsFilter] = useState(getInvoiceItemsValues())
+  const [items, setItems] = useState([])
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      skip: !router.query.id,
+      variables: {
+        customer_id: Number.parseInt(`${router.query.id}`),
+        take: paginateData.limit,
+        skip: paginateData.offset,
+      },
+    }
+    return queryOptions
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.limit, paginateData.offset, router.query.id])
 
+  const { data: itemsData, loading: itemsLoading } = useQuery(
+    GetContactSaleItemDocument,
+    getQueryVariables
+  )
+
+  useEffect(() => {
+    const itemsDetails = []
+    itemsData?.items?.map((item) => {
+      itemsDetails.push({
+        date: dayjs(`${item?.InvSale?.date}`).format('DD/MM/YYYY'),
+        invoiceNo: item?.InvSale?.custom_id,
+        name: item?.item_name,
+        type: item?.item_type,
+        employee: item?.InvSale?.InvBiller?.name,
+        soldBy: item?.InvSale?.biller_name,
+        qty: item?.quantity,
+      })
+
+      return itemsDetails
+    })
+
+    setItems(itemsDetails)
+  }, [itemsData])
   const columns = [
     {
       title: t('ui.client-card-financial.items.date'),
@@ -96,6 +136,25 @@ export const Items: FC<P> = (props) => {
       width: 50,
     },
   ]
+
+  useEffect(() => {
+    setPaginateData({
+      ...paginateData,
+      total: totalItemsCounts,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalItemsCounts])
+
+  useEffect(() => {
+    if (itemsData) {
+      setPaginateData((d) => ({
+        ...d,
+        total: totalItemsCounts,
+        showingRecords: itemsData?.items?.length,
+      }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemsData])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -161,48 +220,150 @@ export const Items: FC<P> = (props) => {
   return (
     <div className={styles.financialItems}>
       <div className={styles.filterRow}>
-        <Popover
-          content={filterContent}
-          title={t('ui.client-card-financial.invoices.filter-by')}
-          placement="bottomRight"
-          overlayClassName={styles.financialItemsFilter}
-        >
-          <div className={styles.filter}>
-            <FilterOutlined />
-          </div>
-        </Popover>
+        {!itemsLoading ? (
+          <Popover
+            content={filterContent}
+            title={t('ui.client-card-financial.invoices.filter-by')}
+            placement="bottomRight"
+            overlayClassName={styles.financialItemsFilter}
+          >
+            <div className={styles.filter}>
+              <FilterOutlined />
+            </div>
+          </Popover>
+        ) : (
+          <Skeleton.Input
+            active={true}
+            size="default"
+            className={styles.filterSkeleton}
+          />
+        )}
       </div>
-      <Table
-        loading={false}
-        draggable={false}
-        scroll={{ x: true }}
-        dataSource={items?.map((e: { id }) => ({
-          key: e.id,
-          ...e,
-        }))}
-        columns={columns}
-        noDataText={t('ui.client-card-financial.items')}
-      />
-      <div className={styles.pagination}>
-        <Pagination
-          total={paginateData.total}
-          defaultPageSize={10}
-          showSizeChanger={false}
-          onChange={onPaginationChange}
-          pageSize={paginateData.limit}
-          current={paginateData.currentPage}
-          showingRecords={paginateData.showingRecords}
+      {!itemsLoading ? (
+        <Table
+          loading={false}
+          draggable={false}
+          scroll={{ x: true }}
+          dataSource={items?.map((e: { id }) => ({
+            key: e.id,
+            ...e,
+          }))}
+          columns={columns}
+          noDataText={t('ui.client-card-financial.items')}
         />
-      </div>
-
-      <InvoiceFooter
-        buttons={[
-          {
-            text: t('ui.client-card-financial.items.total-sales'),
-            value: totalSales,
-          },
-        ]}
-      />
+      ) : (
+        <Table
+          rowKey="key"
+          pagination={false}
+          dataSource={[...Array.from({ length: 10 })].map((_, index) => (
+            <div key={index}>
+              <Skeleton.Input
+                active={true}
+                size="small"
+                className={styles.columnSkeleton}
+              />
+            </div>
+          ))}
+          columns={columns.map((column) => {
+            return {
+              ...column,
+              render: function renderPlaceholder() {
+                switch (column.dataIndex) {
+                  case 'date':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'invoiceNo':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.nameSkeleton}
+                      />
+                    )
+                  case 'name':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.nameSkeleton}
+                      />
+                    )
+                  case 'type':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'employee':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'soldBy':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.columnSkeleton}
+                      />
+                    )
+                  case 'qty':
+                    return (
+                      <Skeleton.Input
+                        active={true}
+                        size="small"
+                        className={styles.qtySkeleton}
+                      />
+                    )
+                }
+              },
+            }
+          })}
+        />
+      )}
+      {!itemsLoading && (
+        <>
+          <div className={styles.pagination}>
+            <Pagination
+              total={paginateData.total}
+              defaultPageSize={50}
+              pageSizeOptions={['10', '25', '50', '100']}
+              showSizeChanger={false}
+              onChange={onPaginationChange}
+              pageSize={paginateData.limit}
+              current={paginateData.currentPage}
+              showingRecords={paginateData.showingRecords}
+              onPageSizeChange={(pageSize) => {
+                setPaginateData({
+                  ...paginateData,
+                  limit: pageSize,
+                })
+              }}
+            />
+          </div>
+          <InvoiceFooter
+            buttons={[
+              {
+                text: t('ui.client-card-financial.items.total-sales'),
+                value: itemsData?.items?.reduce((prev, cur) => {
+                  return prev + cur.InvSale?.total ?? 0
+                }, 0),
+              },
+            ]}
+            loading={itemsLoading}
+          />
+        </>
+      )}
     </div>
   )
 }

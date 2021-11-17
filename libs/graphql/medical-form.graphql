@@ -1,8 +1,8 @@
 query findMedicalForms(
   $take: Int = 0
   $skip: Int = 0
-  $where: MedicalFormWhereInput
-  $orderBy: [MedicalFormOrderByWithRelationInput!]
+  $where: MedicalFormWhereInput = { deleted_at: { equals: null } }
+  $orderBy: [MedicalFormOrderByWithRelationInput]
 ) {
   findManyMedicalForm(
     take: $take
@@ -15,6 +15,7 @@ query findMedicalForms(
     created_at
     form_type
     company_id
+    service_id
     data
     MedicalFormAdvancedSetting {
       id
@@ -24,19 +25,26 @@ query findMedicalForms(
     }
   }
 }
-query findMedicalFormsCount($where: MedicalFormWhereInput) {
+
+query findMedicalFormsCount(
+  $where: MedicalFormWhereInput = { deleted_at: { equals: null } }
+) {
   findManyMedicalFormCount(where: $where)
 }
+
 query findMessageTemplate(
   $where: MessageTemplateWhereInput
-  $orderBy: [MessageTemplateOrderByWithRelationInput!]
+  $orderBy: [MessageTemplateOrderByWithRelationInput]
 ) {
   findManyMessageTemplate(orderBy: $orderBy, where: $where) {
     template_id
     template_name
   }
 }
-query findUser($where: UserWhereInput, $orderBy: [UserOrderByWithRelationInput!]) {
+query findUser(
+  $where: UserWhereInput
+  $orderBy: [UserOrderByWithRelationInput]
+) {
   findManyUser(orderBy: $orderBy, where: $where) {
     id
     full_name
@@ -49,6 +57,7 @@ query getMedicalFormDetails($medicalFormId: Int!) {
     name
     created_at
     form_type
+    service_id
     company_id
     data
     MedicalFormAdvancedSetting {
@@ -56,6 +65,207 @@ query getMedicalFormDetails($medicalFormId: Int!) {
       share_to_client
       reminder
       data
+    }
+  }
+}
+
+query findManyCompanyServices {
+  findManyCompanyService {
+    id
+    name
+  }
+}
+
+query findManyLabTests {
+  findManyInvCategory(
+    where: {
+      category_type: { equals: "service" }
+      disabled: { equals: false }
+      name: { not: { equals: "" } }
+    }
+    orderBy: { name: asc }
+  ) {
+    id
+    name
+  }
+}
+
+query findInvProducts {
+  findManyInvProduct(where: { is_active: { equals: 1 } }) {
+    id
+    name
+    category_id
+  }
+}
+
+query findManyMedicalCondtions {
+  findManyMedicalCondition {
+    id
+    name
+    company_id
+    custom_id
+    is_common
+  }
+}
+
+query getClientForms($contactId: Int = 0) {
+  findManyMedicalFormContact(where: { contact_id: { equals: $contactId } }) {
+    id
+    form_id
+    contact_id
+    created_at
+    updated_at
+    complete
+    locked
+    user_created
+    user_updated
+    related_to
+    custom_user_name
+    prescriber
+    priority
+    pharmacy_id
+    form_status
+    comments
+    urgent
+    imported
+    custom_contact_name
+    custom_contact_id
+    approved_triggers
+    actioned_by
+    form_contact_number
+    diagnosis_code
+    Form {
+      id
+      user_deleted
+      name
+      data
+      created_at
+      nhs_locum_id
+      nhs_procedure_id
+      locked
+      printout
+      company_id
+      user_created
+      encoded
+      form_type
+      service_id
+      ipad_only
+      heading_setting
+      temp_static
+      old_data
+      form_category
+      author
+      diagnosis_code
+      is_fav
+      diagnosis_code_enabled
+      lab_id
+      is_private
+      Company {
+        details {
+          company_name
+          logo
+        }
+      }
+    }
+    Contact {
+      ID
+      Avatar
+      OwnerID
+      Salutation
+      Fname
+      company_id
+      location_id
+      Email
+      Phone
+      OtherPhone
+      Mobile
+      Assistant
+      ReportsTo
+      LeadSource
+      Lname
+      Title
+      Department
+      HomePhone
+      Fax
+      DOB
+      AsstPhone
+      EmailOptOut
+      SkypeId
+      SecondaryEmail
+      Twitter
+      MailingStreet
+      OtherStreet
+      MailingCity
+      OtherCity
+      MailingProvince
+      OtherProvince
+      MailingPostal
+      OtherPostal
+      MailingCountry
+      OtherCountry
+      Description
+      CreatedDate
+      IpAddress
+      fbimg
+      MarketingSource
+      RefferalSource
+      LeadID
+      group_tag
+      polite_notice
+      custom_id
+      gender
+      MarketingOptInAll
+      MarketingOptInEmail
+      MarketingOptInPhone
+      MarketingOptInPost
+      MarketingOptInText
+      notes_drop
+      imported
+      alerts_drop
+      MarketingSourceRelated
+      customer_reference
+      MarketingOptInNewsletter
+      custom_marketing_source
+      insurer_id
+      is_active
+      xero_contact_id
+      is_ambassador
+      UpdatedDate
+      discount_type
+      custom_clinic_id
+      ambassador_id
+      contract_id
+      privacy_policy
+      need_to_knows
+      contact_type
+      InsuranceCompany {
+        membership_number
+      }
+    }
+    CreatedBy {
+      id
+      full_name
+    }
+    Prescriber {
+      id
+      full_name
+    }
+    MedicalContactAttr {
+      id
+      attr_id
+      contact_id
+      value
+      created_at
+      nhs_locum_id
+      group_label
+      medical_form_contact_id
+      attachment_size
+      custom_contact_name
+      custom_contact_id
+      MedicalAttr {
+        id
+        name
+      }
     }
   }
 }

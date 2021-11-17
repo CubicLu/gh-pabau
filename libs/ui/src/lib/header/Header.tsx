@@ -19,6 +19,7 @@ import styles from './Header.module.less'
 import { Search } from './search/Search'
 import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
+import journeyCalendar from '../../assets/images/journey-calendar.png'
 
 const AntHeader = Layout.Header
 
@@ -49,6 +50,7 @@ interface P {
   // ) => void
   // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   taskManagerIFrameComponent?: JSX.Element
+  journeyRender?: (handleClose?: () => void) => JSX.Element
   clientCreateRender?: (handleClose?: () => void) => JSX.Element
   leadCreateRender?: (handleClose?: () => void) => JSX.Element
   sidebarCollapsed?: boolean
@@ -70,12 +72,14 @@ export const Header = ({
   leadCreateRender,
   sidebarCollapsed,
   toggleSidebar,
+  journeyRender,
 }: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
   const [sidebarcollapsed, setSidebarcollapsed] = useState(sidebarCollapsed)
   const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
+  const [openJourneyModal, setJourneyModal] = useState<boolean>(false)
   const [
     unreadNotificationCount,
     setUnreadNotificationCount,
@@ -83,6 +87,10 @@ export const Header = ({
 
   const isReadNotify = (users: number[]) => {
     return !!users?.find((user_id) => user_id === user?.user)
+  }
+
+  const toggleJourneyModal = () => {
+    setJourneyModal((e) => !e)
   }
 
   const setUnreadNotify = (notifyArray, readKey, setter) => {
@@ -169,6 +177,12 @@ export const Header = ({
             </Col>
             <Col md={10} lg={6} className={styles.headerIconEnd}>
               <div className={styles.headerAlign}>
+                <div
+                  className={styles.headerCalendar}
+                  onClick={() => setJourneyModal((e) => !e)}
+                >
+                  <img alt="journey-calendar" src={journeyCalendar} />
+                </div>
                 <Badge
                   count={unreadNewsCount + unreadNotificationCount}
                   className={styles.badgeCircle}
@@ -194,7 +208,7 @@ export const Header = ({
           </Row>
         </div>
       </AntHeader>
-
+      {journeyRender && openJourneyModal && journeyRender(toggleJourneyModal)}
       {openNotificationDrawer && (
         <NotificationDrawer
           user={user}

@@ -1,4 +1,9 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import {
+  MedicalFormTypes,
+  MacroItem,
+  InvProductsListItem,
+  MedicalConditionsListItem,
+} from '@pabau/ui'
 import { cloneDeep } from 'lodash'
 import React, { FC, useState } from 'react'
 import FormCheckBox from './FormCheckBox'
@@ -12,10 +17,13 @@ import FormMedicalConditions from './FormMedicalConditions'
 import FormPhotoUpload from './FormPhotoUpload'
 import FormSignature from './FormSignature'
 import FormSingleChoice from './FormSingleChoice'
+import FormSlider from './FormSlider'
 import FormStaticText from './FormStaticText'
 import FormTextArea from './FormTextArea'
 import FormTextField from './FormTextField'
+import FormTextFieldWithMacro from './FormTextFieldWithMacro'
 import FormTravel from './FormTravel'
+import FormSnomed from './FormSnomed'
 
 interface P {
   required: boolean
@@ -24,6 +32,11 @@ interface P {
   handleId: string
   formData: MedicalFormTypes
   handlingSaveForm?: (form: MedicalFormTypes) => void
+  onHandleMacro?: (action: string, macro: MacroItem) => void
+  macroItems?: MacroItem[]
+  invProductsListItems?: InvProductsListItem[]
+  medicalConditionsListItems?: MedicalConditionsListItem[]
+  hideMacro?: boolean
 }
 
 const FormComponentInnerElement: FC<P> = ({
@@ -33,8 +46,14 @@ const FormComponentInnerElement: FC<P> = ({
   handleId,
   formData,
   handlingSaveForm,
+  macroItems = [],
+  invProductsListItems = [],
+  medicalConditionsListItems = [],
+  onHandleMacro,
+  hideMacro = false,
 }) => {
   const [form, setForm] = useState(cloneDeep(formData))
+
   const componentInfos = [
     {
       component: 'form_drawing',
@@ -59,6 +78,12 @@ const FormComponentInnerElement: FC<P> = ({
     },
     {
       component: 'form_statictext',
+    },
+    {
+      component: 'form_snomed',
+    },
+    {
+      component: 'form_slider',
     },
     {
       component: 'form_textfield',
@@ -151,6 +176,7 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               signData={formData.signData}
               required={formData.required}
+              txtInputType={formData.txtInputType}
               onChangeTextValue={onChangeTextValue}
             />
           )}
@@ -171,23 +197,63 @@ const FormComponentInnerElement: FC<P> = ({
               required={formData.required}
             />
           )}
-          {formData && formData.formName === 'form_textfield' && (
-            <FormTextField
+          {formData &&
+            formData.formName === 'form_textfield' &&
+            (formData.txtInputType === 'text' ||
+              formData.txtInputType === '') && (
+              <FormTextFieldWithMacro
+                title={formData.txtQuestion}
+                desc={''}
+                placeHolder={''}
+                defaultValue={formData.txtDefaults}
+                required={formData.required}
+                onChangeTextValue={onChangeTextValue}
+                onHandleMacro={onHandleMacro}
+                macroItems={macroItems}
+                isTextArea={false}
+                hideMacro={hideMacro}
+              />
+            )}
+          {formData &&
+            formData.formName === 'form_textfield' &&
+            formData.txtInputType !== 'text' &&
+            formData.txtInputType !== '' && (
+              <FormTextField
+                title={formData.txtQuestion}
+                desc={''}
+                placeHolder={''}
+                defaultValue={formData.txtDefaults}
+                txtInputType={formData.txtInputType}
+                required={formData.required}
+                onChangeTextValue={onChangeTextValue}
+              />
+            )}
+          {formData && formData.formName === 'form_textarea' && (
+            <FormTextFieldWithMacro
               title={formData.txtQuestion}
               desc={''}
               placeHolder={''}
               defaultValue={formData.txtDefaults}
-              txtInputType={formData.txtInputType}
+              required={formData.required}
+              onChangeTextValue={onChangeTextValue}
+              onHandleMacro={onHandleMacro}
+              macroItems={macroItems}
+              isTextArea={true}
+            />
+          )}
+          {formData && formData.formName === 'form_snomed' && (
+            <FormSnomed
+              title={formData.txtQuestion}
+              placeHolder={''}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
             />
           )}
-          {formData && formData.formName === 'form_textarea' && (
-            <FormTextArea
+          {formData && formData.formName === 'form_slider' && (
+            <FormSlider
               title={formData.txtQuestion}
               desc={''}
-              placeHolder={''}
-              defaultValue={formData.txtDefaults}
+              paramItems={formData.arrItems}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
             />
@@ -198,6 +264,7 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               paramItems={formData.arrItems}
               required={formData.required}
+              medicalConditionsListItems={medicalConditionsListItems}
               onChangeArrValue={onChangeArrValue}
             />
           )}
@@ -225,6 +292,7 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               paramItems={formData.arrItems}
               required={formData.required}
+              invProductsListItems={invProductsListItems}
               onChangeArrValue={onChangeArrValue}
             />
           )}

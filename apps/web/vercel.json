@@ -47,12 +47,40 @@
     }
   ],
   "rewrites": [
-    {"source": "/test/demo-routing/dyn/:id", "destination": "/test/demo-routing/dyn/[id]?id=:id"},
-    {"source": "/test/demo-routing/dyn-both/:id", "destination": "/test/demo-routing/dyn-both/[id]?id=:id"},
-    {"source": "/reports/:name", "destination": "/reports/[name]?name=:name"},
-    {"source": "/clients/:id", "destination": "/clients/[id]?id=:id"},
-    {"source": "/clients/finance/invoice/:id", "destination": "/clients/finance/invoice/[id]?id=:id"},
-    {"source": "/clients/finance/receipt/:id", "destination": "/clients/finance/receipt/[id]?id=:id"},
-    {"source": "/clients/finance/statement/:id", "destination": "/clients/finance/statement/[id]?id=:id"}
+    {
+      "source": "/test/demo-routing/dyn/:id",
+      "destination": "/test/demo-routing/dyn/[id]?id=:id"
+    },
+    {
+      "source": "/test/demo-routing/dyn-both/:id",
+      "destination": "/test/demo-routing/dyn-both/[id]?id=:id"
+    },
+    { "source": "/reports/:name", "destination": "/reports/[name]?name=:name" },
+    { "source": "/clients/:id", "destination": "/clients/[id]?id=:id" },
+    {
+      "source": "/clients/finance/invoice/:id",
+      "destination": "/clients/finance/invoice/[id]?id=:id"
+    },
+    {
+      "source": "/clients/finance/receipt/:id",
+      "destination": "/clients/finance/receipt/[id]?id=:id"
+    },
+    {
+      "source": "/clients/finance/statement/:id",
+      "destination": "/clients/finance/statement/[id]?id=:id"
+    },
+    {
+      "source": "/test-form/:form_id/:client_id",
+      "destination": "/test-form/[form_id]/[client_id]?form_id=:form_id&client_id=:client_id"
+    },
+    { "source": "/team/user/:id", "destination": "/team/user/[id]?id=:id" },
+    {
+      "source": "/clients/:id/financial",
+      "destination": "/clients/[id]/financial?id=:id"
+    },
+    {
+      "source": "/setup/senders/edit/:id",
+      "destination": "/setup/senders/edit/[id]?id=:id"
+    }
   ]
 }

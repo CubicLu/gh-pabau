@@ -1,0 +1,25 @@
+query bookingAvailableShifts(
+  $company_id: Int!,
+  $shift_start: Float!,
+  $shift_end: Float!
+) {
+  Public_StaffShifts(
+    where: {
+      company_id: $company_id,
+      start: $shift_start,
+      end: $shift_end
+    }
+  ) {
+    id
+    uid
+    end
+    start
+    room_id
+    location_id
+    Public_User {
+      id
+      full_name
+      image
+    }
+  }
+}

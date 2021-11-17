@@ -87,3 +87,28 @@ export const UpdateCompanyBranchInputType = {
   employees: list(EmployeeType),
   badges: list(BadgeType),
 }
+
+export const Public_LocationsResponse = objectType({
+  name: 'Public_LocationsResponse',
+  definition(t) {
+    t.int('id')
+    t.string('address')
+    t.string('street')
+    t.string('city')
+    t.string('county')
+    t.string('name')
+    t.string('postcode')
+    t.string('phone')
+    t.string('website')
+    t.boolean('is_default')
+    t.float('lat')
+    t.float('lng')
+    t.string('email')
+    t.int('send_conf_email')
+    t.int('loc_order')
+    t.string('region')
+    t.string('color')
+    t.string('notice')
+    t.string('image')
+  },
+})

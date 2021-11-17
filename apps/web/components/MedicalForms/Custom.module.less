@@ -5,9 +5,99 @@
       background: #ffffff;
       border-top: 1px solid #f1f1f1;
     }
+    table {
+      @media only screen and (max-width: 767px) {
+        display: block;
+        width: 100% !important;
+      }
+    }
+    .ant-table-thead {
+      @media only screen and (max-width: 767px) {
+        display: none;
+      }
+    }
     .ant-table-tbody {
+      @media only screen and (max-width: 767px) {
+        display: block;
+        padding: 0 16px;
+      }
       tr {
+        position: relative;
         border-bottom: 1px solid #f1f1f1;
+        @media only screen and (max-width: 767px) {
+          background: #ffffff;
+          box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+          border-radius: 4px;
+          margin-top: 20px;
+          padding: 16px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: flex-start;
+          min-height: 124px;
+          &:first-child {
+            display: none;
+          }
+          td {
+            display: block;
+            padding: 0;
+            width: 100%;
+            border: 0;
+            margin: 0 0 4px;
+            &:first-child {
+              text-align: left;
+              order: 1;
+              max-width: 100%;
+              display: none;
+            }
+            &:nth-child(2) {
+              order: 2;
+              max-width: calc(50% - 5px);
+              font-size: 16px;
+              line-height: 20px;
+              font-weight: 600;
+              color: #3d3d46;
+              text-transform: capitalize;
+            }
+            &:nth-child(3) {
+              order: 5;
+              max-width: 100%;
+              font-size: 14px;
+              line-height: 18px;
+              color: #9292a3;
+              position: unset;
+            }
+            &:nth-child(4) {
+              order: 3;
+              max-width: calc(50% - 10px);
+              color: #9292a3;
+              text-align: right;
+              padding: 0 0 0 5px;
+            }
+            &:nth-child(5) {
+              order: 6;
+              max-width: 100%;
+              display: none;
+            }
+            &:nth-child(6) {
+              order: 7;
+              max-width: 100%;
+            }
+            &:nth-child(7) {
+              order: 4;
+              max-width: 10px;
+              width: 10px;
+              overflow: hidden;
+            }
+            &.icon-img-td {
+              order: 8;
+              width: 0;
+              height: 0;
+              margin: 0;
+              position: unset;
+            }
+          }
+        }
       }
     }
     tr:hover {
@@ -31,7 +121,22 @@
     }
   }
 }
-
+.name {
+  max-width: 350px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.bgIcon {
+  @media only screen and (max-width: 767px) {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 87px;
+    height: 87px;
+  }
+}
 .versionBtn:hover {
   color: #54b2d3;
 }
@@ -51,8 +156,33 @@
   width: 106px;
   text-transform: none;
   height: 24px;
+  @media only screen and (max-width: 767px) {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    line-height: 18px;
+    width: initial;
+    height: initial;
+    margin-left: 8px;
+    position: relative;
+  }
+  &::before {
+    @media only screen and (max-width: 767px) {
+      content: "''" !important;
+      display: block !important;
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 1;
+      overflow: hidden;
+    }
+  }
 }
-
 .inactive-btn {
   background: rgba(165, 169, 170, 0.05);
   border: 1px solid rgba(165, 169, 170, 0.5);
@@ -109,6 +239,25 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    > div {
+      > button {
+        @media only screen and (max-width: 767px) {
+          max-width: 6px;
+          width: 6px;
+          height: 16px;
+          border: 0;
+          align-items: flex-start;
+          justify-content: flex-start;
+          background-color: transparent;
+        }
+        &:hover {
+          @media only screen and (max-width: 767px) {
+            border: 0;
+            background-color: transparent;
+          }
+        }
+      }
+    }
   }
 }
 

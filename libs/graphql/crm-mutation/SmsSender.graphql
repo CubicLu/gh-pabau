@@ -5,7 +5,6 @@ fragment SmsSenderFields on SmsSender {
   smsd_delete
   is_default
   merge_tags
-  enable_replies
 }
 
 fragment SmsSender on SmsSender {

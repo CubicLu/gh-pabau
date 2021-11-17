@@ -1,0 +1,941 @@
+.custCard {
+  width: 560px;
+  // align-items: center;
+  background: #ffffff;
+  border: 1px solid #f4f5f7;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  border-radius: 4px;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  .treatmentTabWrapper {
+    box-shadow: inset -1px 0px 0px #ecedf0, inset 0px 1px 0px #ecedf0,
+      inset 0px -1px 0px #ecedf0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+    .treatmentTab {
+      border: 1px solid #ecedf0;
+      border-radius: 0px 4px 4px 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 40px;
+      font-size: 16px;
+      line-height: 24px;
+      color: #737387;
+      &.active {
+        color: #54b2d3;
+        border: 1px solid #54b2d3;
+        :global .anticon {
+          svg {
+            fill: #54b2d3;
+          }
+        }
+      }
+      &:hover {
+        cursor: pointer;
+      }
+      :global .anticon {
+        font-size: 15px;
+        margin-right: 10px;
+
+        svg {
+          fill: #737387;
+        }
+      }
+      &:first-child {
+        border-radius: 4px 0 0 4px;
+      }
+    }
+  }
+
+  .consultationCard {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #ecedf0;
+    border-radius: 4px;
+    &:hover {
+      border: 1px solid #54b2d3;
+      box-shadow: 0 4px 17px rgba(0, 0, 0, 0.13);
+      cursor: pointer;
+      .consultationLine {
+        :global .anticon-question-circle {
+          margin-right: 8px;
+        }
+        .consultationReview {
+          color: #54b2d3;
+        }
+      }
+    }
+
+    .consultationLine {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .consultationTitle {
+      font-size: 20px;
+      line-height: 24px;
+      color: #3d3d46;
+      margin-right: 5px;
+    }
+
+    .consultationPrice {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+      color: #65cd98;
+    }
+
+    .consultationReview {
+      font-size: 16px;
+      line-height: 20px;
+      color: #737387;
+      margin-left: 13px;
+    }
+
+    .consultationRate {
+      font-size: 12px;
+    }
+
+    .consultationTime {
+      font-size: 16px;
+      line-height: 20px;
+      color: #737387;
+      margin-right: 5px;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
+}
+.consultationModal {
+  height: 80vh;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 4px 4px 23px rgba(0, 34, 65, 0.15);
+  border-radius: 4px;
+
+  .modalHeader {
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 28px;
+    color: #3d3d46;
+    padding: 0 33px;
+  }
+
+  .modalSubHeader {
+    padding: 0 33px;
+    font-size: 16px;
+    line-height: 24px;
+    color: #737387;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    h5 {
+      font-size: 16px;
+      line-height: 24px;
+      color: #737387;
+      margin-bottom: 0;
+    }
+    .right-bar {
+      display: flex;
+
+      :global .dropMenu {
+      }
+
+      h6 {
+        color: #54b2d3;
+        margin-left: 8px;
+        font-size: 16px;
+        line-height: 24px;
+      }
+      p {
+        color: #3d3d46;
+        font-size: 16px;
+        line-height: 24px;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .modalBody {
+    height: calc(100vh - 260px);
+    overflow: auto;
+    padding: 0 33px;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c9c9d1;
+      border-radius: 4px;
+    }
+  }
+
+  :global {
+    .ant-modal-body {
+      padding: 24px 7px;
+    }
+  }
+
+  .cardReview {
+    padding: 16px 24px;
+    border-radius: 4px;
+    background: #f9f9fb;
+
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
+
+    .reviewDescption {
+      font-size: 16px;
+      line-height: 24px;
+      color: #3d3d46;
+    }
+
+    .reviewImg {
+      border-radius: 100%;
+      margin-right: 10px;
+    }
+
+    .reviewName {
+      font-size: 16px;
+      line-height: 24px;
+      color: #3d3d46;
+    }
+
+    .reviewRate {
+      display: flex;
+      align-items: center;
+
+      .reviewRateName {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        color: #65cd98;
+      }
+      .reviewRateValue {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        color: #ff5b64;
+      }
+      .reviewRatePrice {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        color: #faad14;
+      }
+    }
+    .reviewRateMonth {
+      font-size: 14px;
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      color: #9292a3;
+    }
+
+    .reviewHeader {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .dot {
+      margin: 0 8px 0 2px;
+
+      :global {
+        .ant-scroll-number {
+          margin-top: 3px;
+          width: 5px;
+          height: 5px;
+          min-width: 5px;
+          opacity: 0.5;
+          background: #9292a3;
+        }
+      }
+    }
+  }
+}
+.menu {
+  .list {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 22px;
+    margin-bottom: 8px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    :global .anticon {
+      visibility: hidden;
+      margin-right: 8px;
+    }
+    p {
+      margin-bottom: 0;
+      font-size: 14px;
+      line-height: 22px;
+      color: #3d3d46;
+    }
+    &.active {
+      :global .anticon {
+        visibility: visible;
+        margin-right: 8px;
+        svg {
+          fill: #54b2d3;
+        }
+      }
+      p {
+        color: #54b2d3;
+      }
+    }
+  }
+}
+.fadeLeft {
+  transition: left 5s ease-in-out;
+  left: 0;
+  position: relative;
+  &.left {
+    left: -100%;
+  }
+}
+.fadeRight {
+  transition: right 5s ease-in-out;
+  right: -100%;
+  position: relative;
+  &.right {
+    right: 0;
+  }
+}
+
+.containerWrapper {
+  overflow-x: auto;
+}
+.container {
+  width: 1032px;
+  overflow-x: auto;
+  margin: 0;
+}
+.serviceheader {
+  display: flex;
+  //flex-wrap: wrap;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #f4f5f7;
+  box-shadow: 2px 2px 17px rgb(9 20 41 / 5%);
+  border-radius: 4px;
+  padding: 24px 20px;
+
+  .serviceselectall {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 104px;
+    justify-content: center;
+    margin: 10px;
+    background: #ffffff;
+    border: 1px solid #ecedf0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    position: relative;
+    .checkfill {
+      position: absolute;
+      top: -6px;
+      right: 6px;
+      color: #54b2d3;
+    }
+    .activeicon {
+      color: #54b2d3;
+    }
+    span {
+      word-break: break-word;
+      text-align: center;
+      line-height: 16px;
+      margin-top: 13px;
+      display: flex;
+    }
+  }
+  .serviceselectallSelect {
+    border: 1px solid #54b2d3;
+    box-shadow: 0px 0px 4px #a6dcef;
+  }
+}
+.serviceselectall:hover {
+  border: 1px solid #54b2d3;
+  box-shadow: 0px 0px 4px #a6dcef;
+  cursor: pointer;
+}
+//.serviceselectall:focus{
+//  border: 1px solid #54B2D3;
+//  box-shadow: 0px 0px 4px #A6DCEF;
+//}
+//.serviceselectall:active{
+//  border: 1px solid #54B2D3;
+//  box-shadow: 0px 0px 4px #A6DCEF;
+//}
+.icontext {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.serlist {
+  padding: 32px;
+  background: #fff;
+  margin-right: 16px;
+}
+
+.servicelist {
+  max-height: 605px;
+  overflow-y: auto;
+  width: 376px;
+}
+.servicename {
+  padding: 12px 20px;
+  display: block;
+  border: 1px solid #ecedf0;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 20px;
+  position: relative;
+}
+.servicename:hover {
+  border: 1px solid #54b2d3;
+  color: #54b2d3;
+  border-radius: 4px;
+}
+.serviceactive {
+  border: 1px solid #54b2d3;
+  color: #54b2d3;
+}
+//.servicename:active{
+//  border: 1px solid #54B2D3;
+//  color: #54B2D3;
+//
+//  border-radius: 4px;
+//}
+::-webkit-scrollbar {
+  width: 0px; /* width of the entire scrollbar */
+}
+.servicefooter {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 20px;
+  align-items: center;
+  background: #fff;
+  position: fixed;
+  max-width: 1032px;
+  width: 100%;
+  bottom: 45px;
+  border-radius: 4px 4px 0 0;
+  -webkit-box-shadow: 0 0 3px 0 #00000047, 0 0 0 1px #00000014 !important;
+  box-shadow: 0 0 3px 0 #00000047, 0 0 0 1px #00000014 !important;
+}
+.servicefooter p {
+  margin: auto;
+  color: #54b2d3;
+  font-size: 20px;
+}
+.servicefooter button {
+  background: #54b2d3;
+  border-radius: 4px;
+  color: #fff;
+  display: inline-block;
+  font-size: 14px;
+  padding: 8px 8px 8px 16px;
+  font-weight: bold;
+  height: unset;
+}
+.servicedata {
+  text-align: center;
+  padding: 23px 0;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  border-radius: 4px;
+  font-size: 16px;
+  margin: 16px 0 0 16px;
+  background: #fff;
+}
+.servicedata span {
+  color: #54b2d3;
+}
+.custCard {
+  margin-top: unset;
+  //width: unset;
+  margin-left: 16px;
+}
+.cardservice {
+  margin-top: 32px;
+  margin-bottom: 100px;
+  .innercontainer {
+    display: flex;
+  }
+}
+
+.servicebutton {
+  text-align: right;
+}
+.servicebutton button {
+  background: #54b2d3;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 8px 8px 16px;
+  font-weight: bold;
+  height: unset;
+}
+.serbutton {
+  text-align: right;
+}
+.mobiledata {
+  margin-bottom: 9px;
+}
+.serbutton button {
+  background: #54b2d3;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 8px 8px 16px;
+  font-weight: bold;
+  height: unset;
+}
+.vocherList {
+  padding: 20px;
+  height: 188px;
+  border: 1px solid #ecedf0;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+.vocherList:hover {
+  border: 1px solid #54b2d3;
+}
+.voucherContainer {
+  display: flex;
+  justify-content: space-between;
+  .voucherMain {
+    position: relative;
+    color: #fff;
+    .voucherTicket {
+      width: 280px;
+      padding: 14px 20px;
+      position: absolute;
+      top: 0;
+      height: 148px;
+      .voucherVerticalMenu {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .vouchervalue {
+        text-align: center;
+      }
+      .voucherType {
+        margin-top: 18px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  .voucherbtn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    .servicebutton {
+      margin-top: auto;
+      button {
+        padding: 0 16px;
+        line-height: 32px;
+        height: 32px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .custCard {
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    margin-top: 0;
+    padding: 20px;
+    .treatmentTabWrapper {
+      box-shadow: inset -1px 0px 0px #ecedf0, inset 0px 1px 0px #ecedf0,
+        inset 0px -1px 0px #ecedf0;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 20px;
+      .treatmentTab {
+        height: 40px;
+        font-size: 14px;
+        line-height: 24px;
+        color: #737387;
+        &.active {
+          color: #54b2d3;
+          border: 1px solid #54b2d3;
+          :global .anticon {
+            svg {
+              fill: #54b2d3;
+            }
+          }
+        }
+        &:hover {
+          cursor: pointer;
+        }
+        :global .anticon {
+          svg {
+            //display: none;
+          }
+        }
+        &:first-child {
+          border-radius: 4px 0 0 4px;
+        }
+      }
+    }
+
+    .consultationCard {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid #ecedf0;
+      border-radius: 4px;
+      &:hover {
+        border: 1px solid #54b2d3;
+        box-shadow: 0 4px 17px rgba(0, 0, 0, 0.13);
+        cursor: pointer;
+        .consultationLine {
+          :global .anticon-question-circle {
+            margin-right: 8px;
+          }
+          .consultationReview {
+            color: #54b2d3;
+          }
+        }
+      }
+
+      .consultationLine {
+        :global .ant-rate {
+          font-size: 12px;
+        }
+      }
+
+      .consultationTitle {
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      .consultationPrice {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 24px;
+        color: #65cd98;
+      }
+
+      .consultationReview {
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .consultationRate {
+        font-size: 12px;
+      }
+
+      .consultationTime {
+        font-size: 14px;
+        line-height: 20px;
+        margin-right: 5px;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 16px;
+      }
+    }
+  }
+  .consultationModal {
+    height: 100vh;
+    max-width: 100% !important;
+    margin: 0 !important;
+    top: 0 !important;
+    .logoHeader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid #ecedf0;
+      height: 64px;
+    }
+    .modalHeader {
+      padding: 28px 20px 0;
+    }
+
+    .modalSubHeader {
+      padding: 0 20px;
+      margin-bottom: 16px;
+    }
+
+    .modalBody {
+      height: calc(100vh - 224px);
+      padding: 0 20px;
+    }
+
+    :global {
+      .ant-modal-body {
+        padding: 0;
+      }
+    }
+
+    .cardReview {
+      padding: 14px 16px;
+    }
+    .footerModal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      height: 44px;
+      box-shadow: 0px -1px 13px rgba(33, 37, 67, 0.05);
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
+  .container {
+    width: 900px;
+    .serviceheader {
+      display: flex;
+      justify-content: flex-start;
+      border: none;
+      padding-bottom: 0;
+      .serviceselectall {
+        width: 88px;
+        height: 88px;
+        margin: 8px;
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+  .innercontainer {
+    flex-direction: column;
+  }
+  .custCard {
+    margin-left: 0;
+    padding: 0;
+  }
+  .cardservice {
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+  .serlist {
+    padding: 0 20px 20px 20px;
+    margin-right: 0;
+    .servicelist {
+      width: 100%;
+    }
+  }
+
+  .mobiledata {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+    height: 40px;
+  }
+  .serbutton {
+    button {
+      padding: 1px 8px;
+      line-height: 24px;
+    }
+  }
+  .consultationLine {
+    margin-bottom: 4px !important;
+  }
+  .servicefooter {
+    bottom: 0;
+    z-index: 99;
+    p {
+      margin: 0;
+      color: #54b2d3;
+      font-size: 20px;
+    }
+  }
+
+  .vocherList {
+    padding: 16px;
+    height: unset;
+    margin-bottom: 0;
+    margin-top: 20px;
+    img {
+      width: 166px;
+      height: 88px;
+    }
+    .voucherContainer {
+      .voucherMain {
+        .voucherTicket {
+          width: 150px;
+          height: 70px;
+          padding: 0;
+        }
+      }
+      .voucherType {
+        margin-top: 12px;
+      }
+    }
+    .voucherContainer {
+      .voucherMain {
+        .voucherTicket {
+          width: 150px;
+          height: 70px;
+          top: 8px;
+          left: 8px;
+          font-size: 9px;
+          padding: 0 8px;
+          .voucherVerticalMenu {
+          }
+          .vouchervalue {
+            line-height: 12px;
+            .Vvalue {
+              font-size: 11px;
+            }
+            .Vdes {
+              font-size: 7px;
+            }
+          }
+          .voucherType {
+            margin-top: 12px;
+            line-height: 12px;
+            .VfamiDes {
+              font-size: 7px;
+            }
+          }
+        }
+      }
+      .voucherbtn {
+        .servicebutton {
+          button {
+            padding: 0 8px;
+            line-height: 32px;
+            height: 32px;
+            span:last-child {
+              margin-left: 4px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.moreinfo {
+  background: #e2f7f5;
+  border: 1px solid #20bab1;
+  box-sizing: border-box;
+  border-radius: 2px;
+  padding: 9px 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  .moreinfoinner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      margin: 0 10px;
+      font-size: 14px;
+      line-height: 22px;
+      color: #3d3d46;
+    }
+  }
+  p {
+    margin: 0px;
+    font-size: 14px;
+    line-height: 22px;
+    color: #20bab1;
+    cursor: pointer;
+  }
+}
+
+.mainmodal {
+  width: 520px;
+  background: #ffffff;
+  box-shadow: 4px 4px 23px rgb(0 34 65 / 15%);
+  border-radius: 4px;
+
+  .iconDiv {
+    position: absolute;
+    width: 40px;
+    height: 4.66px;
+    left: 45%;
+    top: 20px;
+    background: #e3e3e5;
+    border-radius: 16px;
+    @media only screen and (min-width: 768px) {
+      display: none;
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    position: absolute;
+    bottom: 0;
+    top: unset;
+    right: 0;
+    left: 0;
+    margin: 0;
+    width: 100% !important;
+    max-width: calc(100vw - 0px);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  :global .ant-modal-close {
+    top: 25px;
+    right: 21px;
+    @media only screen and (max-width: 767px) {
+      display: none;
+    }
+  }
+  :global .ant-modal-content {
+    position: relative;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: unset;
+    box-shadow: unset;
+    pointer-events: auto;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    :global .ant-modal-body {
+      padding: 40px;
+      @media only screen and (max-width: 767px) {
+        padding: 36px 24px 0;
+      }
+    }
+  }
+  .headerText {
+    font-size: 22px;
+    line-height: 28px;
+    color: #3d3d46;
+  }
+  .bodyText {
+    font-size: 16px;
+    line-height: 24px;
+    color: #3d3d46;
+    margin-top: 12px;
+  }
+  .footerBtn {
+    float: right;
+    @media only screen and (max-width: 767px) {
+      display: none;
+    }
+  }
+}

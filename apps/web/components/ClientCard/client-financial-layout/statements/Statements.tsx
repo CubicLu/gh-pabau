@@ -263,6 +263,7 @@ export const Statements: FC<P> = (props) => {
               value: totalBalance,
             },
           ]}
+          loading={false}
         />
       </div>
     </>
