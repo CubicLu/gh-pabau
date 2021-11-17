@@ -11,12 +11,26 @@ query getFinancialInvoices($contactID: Int!, $take: Int = 50, $skip: Int = 0){
     paid_amount
     credit_amount
     discount_amount
-    credit_ref_id
     inv_total
+    credit_note_id
     # tip
   }
 }
 
 query totalInvoiceCount($contactID: Int!){
   total: countInvoice(where:{customer_id:{equals:$contactID}})
+}
+
+query aggregateInvoiceCounts($contactID: Int!){
+	aggregateInvSale(where:{
+    customer_id:{equals: $contactID},
+    Location:{name:{not:{equals:""}}},
+    reference_no:{not:{equals:"**REFUND**"}}
+  }){
+    sum{
+      paid_amount
+      inv_total
+      credit_amount
+    }
+  }
 }

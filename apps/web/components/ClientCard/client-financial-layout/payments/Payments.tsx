@@ -285,7 +285,7 @@ export const Payments: FC<IPaymentsProps> = ({
                       <Skeleton.Input
                         active={true}
                         size="small"
-                        className={styles.locationSkeleton}
+                        className={styles.columnSkeleton}
                       />
                     )
                   case 'employee':

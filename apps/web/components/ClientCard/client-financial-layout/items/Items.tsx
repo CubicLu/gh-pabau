@@ -307,7 +307,7 @@ export const Items: FC<P> = (props) => {
                       <Skeleton.Input
                         active={true}
                         size="small"
-                        className={styles.nameSkeleton}
+                        className={styles.columnSkeleton}
                       />
                     )
                   case 'name':
@@ -315,7 +315,7 @@ export const Items: FC<P> = (props) => {
                       <Skeleton.Input
                         active={true}
                         size="small"
-                        className={styles.nameSkeleton}
+                        className={styles.columnSkeleton}
                       />
                     )
                   case 'type':

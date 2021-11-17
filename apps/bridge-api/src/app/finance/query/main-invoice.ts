@@ -22,8 +22,8 @@ export const MainInvoice = extendType({
           t.string('issue_to')
           t.string('reference_no')
           t.float('credit_amount')
-          t.int('credit_ref_id')
           t.string('custom_id')
+          t.string('credit_note_id')
         },
       }),
       description:
@@ -157,12 +157,12 @@ const generateInvoiceQuery = (
               a.customer_id,
               a.customer_name,
               a.custom_id,
-              a.credit_ref_id,
-              sum(a.paid_amount) as paid_amount,
+              sum(a.paid_amount)-sum(a.credit_amount) as paid_amount,
               sum(a.discount_amount) as discount_amount,
               sum(a.inv_total) as inv_total,
               sum(a.credit_amount) as credit_amount,
               b.name as location_name,
+              f.custom_id as credit_note_id,
               a.location_id,
               group_concat(Distinct d.name) as billers,
               if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
@@ -171,6 +171,7 @@ const generateInvoiceQuery = (
               LEFT JOIN cm_contacts c on c.id = a.customer_id
               LEFT JOIN inv_billers d ON a.biller_id=d.id
               LEFT JOIN insurance_details e ON a.insurer_contract_id=e.id
+              LEFT JOIN inv_sales f ON a.credit_ref_id = f.id
           WHERE
               ${whereClause.join(' AND ')}
               AND a.guid!='' AND a.guid IS NOT NULL
