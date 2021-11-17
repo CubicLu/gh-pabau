@@ -5,7 +5,7 @@ query getJourney($journey_id: Int!) {
     Pathway {
       id
       name: pathway_name
-      steps: PathwayStep {
+      steps: PathwayStep(orderBy: { order: asc }) {
         id
         name: step
       }

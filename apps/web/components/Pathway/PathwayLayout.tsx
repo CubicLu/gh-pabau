@@ -12,7 +12,7 @@ import { default as steps } from './Steps'
 import { useUser } from '../../context/UserContext'
 
 interface P {
-  journey: GetJourneyQueryResult['data']['Journey']
+  journey: GetJourneyQueryResult['data']['Journey'][number]
 }
 
 /**
@@ -30,22 +30,23 @@ export const PathwayLayout = ({ journey }: P) => {
 
   // Add any 'global' variables we need during steps here
   const [stepState, setStepState] = useState<any>({
-    contact_id: journey[0].contact_id,
+    contact_id: journey.contact_id,
   })
 
   const customerFirstStep = prependScreens.length
   const isCustomerOnFirstStep = step === customerFirstStep
 
   const { currentStep, currentScreenNumber, totalScreens } = useMemo(() => {
+    console.log('in memo 1')
     const isInPrepended = () => step < prependScreens.length
     const currentScreenNumber =
       (isInPrepended() ? step : step - prependScreens.length) + 1
     const totalScreens = isInPrepended()
       ? prependScreens.length
-      : journey?.[0]?.Pathway.steps.length
+      : journey?.Pathway.steps.length
     return {
       currentStep: !isInPrepended()
-        ? { ...journey[0].Pathway.steps[step - prependScreens.length] } //TODO: unspread this (shows a weird TS error)
+        ? { ...journey.Pathway.steps[step - prependScreens.length] } //TODO: unspread this (shows a weird TS error)
         : { name: prependScreens[step] },
       currentScreenNumber,
       totalScreens,
@@ -54,11 +55,12 @@ export const PathwayLayout = ({ journey }: P) => {
 
   const submitCallback = useCallback(
     async (data) => {
+      console.log('in callback 1')
       if ('id' in currentStep) {
         await saveStepMutation({
           variables: {
-            clientId: journey[0].contact_id,
-            journeyId: journey[0].id,
+            clientId: journey.contact_id,
+            journeyId: journey.id,
             recordId: currentStep.name === 'questionnaire' ? data.id : 0,
             status: Cp_Steps_Taken_Status.Completed,
             stepId: currentStep.id,
@@ -74,10 +76,12 @@ export const PathwayLayout = ({ journey }: P) => {
 
   useEffect(() => {
     const f = async () => {
-      if (!('loadData' in steps[currentStep.name])) return //loadData on a step is actually optional
+      console.log('in effect 1')
+      const currentStepObject = steps[currentStep.name]
+      if (!('loadData' in currentStepObject)) return //loadData on a step is actually optional
       const data = await query({
-        query: steps[currentStep.name].loadData.document,
-        variables: steps[currentStep.name].loadData.variables(stepState),
+        query: currentStepObject.loadData.document,
+        variables: currentStepObject.loadData.variables(stepState),
       })
       if (!data) return
       const data2 =
@@ -90,12 +94,10 @@ export const PathwayLayout = ({ journey }: P) => {
       }))
     }
     f()
-  }, [stepState, query, currentStep.name])
+  }, [query, currentStep])
 
-  const HydratedJsx = useMemo(() => {
-    const Hydrated = steps[currentStep.name]
-    return <Hydrated onSubmit={submitCallback} data={stepState} />
-  }, [currentStep, stepState, submitCallback])
+  const Hydrated = steps[currentStep.name]
+  const HydratedJsx = <Hydrated onSubmit={submitCallback} data={stepState} />
 
   if (!currentStep || !('name' in currentStep)) return <FinishScreen />
   if (!(currentStep.name in steps))
@@ -123,7 +125,7 @@ export const PathwayLayout = ({ journey }: P) => {
             step === 0 ? window.history.back() : setStep((e) => e - 1)
           }
           disabled={
-            isCustomerOnFirstStep || journey?.[0]?.Pathway.steps.length <= step
+            isCustomerOnFirstStep || journey?.Pathway.steps.length <= step
           }
         >
           &lt;

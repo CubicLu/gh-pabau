@@ -33,7 +33,7 @@ const PathwayPage = () => {
   if (!data.Journey) return <>SERVER API ERROR</>
   if (data.Journey.length === 0) return <>Error: ID not found</>
 
-  return <PathwayLayout journey={data.Journey} />
+  return <PathwayLayout journey={data.Journey[0]} />
 }
 
 export default PathwayPage
