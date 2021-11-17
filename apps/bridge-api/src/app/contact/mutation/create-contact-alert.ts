@@ -1,6 +1,6 @@
-import { mutationField, list, nonNull, intArg, inputObjectType } from 'nexus'
-import { Context } from '../../../context'
-import { create } from '../contact'
+import { mutationField, nonNull } from 'nexus'
+// import { Context } from '../../../context'
+// import { create } from '../contact'
 
 // export const CreateContactCustomFieldType = inputObjectType({
 //   name: 'createContactCustomFieldType',
