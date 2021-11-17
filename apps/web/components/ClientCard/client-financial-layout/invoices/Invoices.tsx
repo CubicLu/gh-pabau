@@ -540,14 +540,23 @@ export const Invoices: FC<P> = (props) => {
                     className={styles.totalValueSkeleton}
                   />
                 )}
-                {!record.paid && (
-                  <Button type="primary">{`${t(
-                    'ui.client-card-financial.pay'
-                  )} ${stringToCurrencySignConverter(
-                    user.me?.currency
-                  )}${(Number.isFinite(payBtnValue) ? payBtnValue : 0).toFixed(
-                    2
-                  )}`}</Button>
+                {!salesDetaillLoading ? (
+                  !record.paid && (
+                    <Button type="primary">{`${t(
+                      'ui.client-card-financial.pay'
+                    )} ${stringToCurrencySignConverter(
+                      user.me?.currency
+                    )}${(Number.isFinite(payBtnValue)
+                      ? payBtnValue
+                      : 0
+                    ).toFixed(2)}`}</Button>
+                  )
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    className={styles.totalValueSkeleton}
+                  />
                 )}
               </div>
             ) : (
