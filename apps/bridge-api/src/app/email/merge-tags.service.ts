@@ -6,7 +6,7 @@ export async function prepareMessage(
   ctx: Context,
   relation: EmailRelationsInput
 ): Promise<string> {
-  console.info('relation', relation)
+  //console.info('relation', relation)
 
   const Contact = relation.contact_id
     ? await ctx.prisma.cmContact.findUnique({
@@ -60,9 +60,9 @@ export async function prepareMessage(
     },
   })
 
-  console.info('Contact', Contact)
-  console.info('Lead', Lead)
-  console.info('User', User)
+  // console.info('Contact', Contact)
+  // console.info('Lead', Lead)
+  // console.info('User', User)
 
   const TAGS = {
     CLIENTEMAIL: Contact?.Email,

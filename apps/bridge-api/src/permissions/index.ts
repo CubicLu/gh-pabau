@@ -98,7 +98,6 @@ export const permissions = shield(
       deleteManyContactAttachment: rules.authentication.isAuthenticated,
       deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
-      createOnePathwaysTaken: allow,
       CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -124,6 +123,9 @@ export const permissions = shield(
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,
+
+      //communication
+      SendAppointmentConfirmationMail: rules.authentication.isAuthenticated,
 
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       updateOneCmContact: rules.authentication.isAuthenticated,
