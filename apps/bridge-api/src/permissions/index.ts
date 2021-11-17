@@ -7,6 +7,7 @@ export const permissions = shield(
   {
     Mutation: {
       enroll: rules.authentication.isAuthenticated,
+      createContactAlertAdvanced: rules.authentication.isAuthenticated,
       // Products
       createOneInvProduct: or(
         rules.authentication.isAdmin,
