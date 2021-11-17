@@ -5,17 +5,31 @@
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "lib": ["DOM", "ES2020", "ESNext"],
-    "typeRoots": ["./types"],
-    "moduleResolution": "node"
+    "lib": [
+      "DOM",
+      "ES2020",
+      "ESNext"
+    ],
+    "typeRoots": [
+      "./types"
+    ],
+    "moduleResolution": "node",
+    "incremental": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "**/*.js"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    "**/*.js"
+  ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
