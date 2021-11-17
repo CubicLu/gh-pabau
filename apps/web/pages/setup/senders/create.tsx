@@ -61,7 +61,7 @@ export const CreateSender: React.FC = () => {
         value: '',
       },
     ],
-    visibility: 0,
+    visibility: 1,
   }
   const validation = Yup.object({
     type: Yup.string().required(
@@ -118,39 +118,37 @@ export const CreateSender: React.FC = () => {
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
         if (values.type === 'email') {
-          const senders = {
-            data: {
-              Company: {},
-              company_email: values.isUseCompanyEmail
-                ? values.fromCompanyEmail
-                : values.fromEmail,
-              added_by: '',
-              senders_name: values.fromName,
-              confirmed: 1,
-              hash: '',
-              default_email: values.isDefaultSender ? 1 : 0,
-              enterprise_email: 0,
-              merge_tags: '',
-              visibility: Number.parseInt(String(values.visibility)),
-            },
-          }
           await addEmailSenders({
-            variables: senders,
+            variables: {
+              data: {
+                Company: {},
+                company_email: values.isUseCompanyEmail
+                  ? values.fromCompanyEmail
+                  : values.fromEmail,
+                added_by: '',
+                senders_name: values.fromName,
+                confirmed: 1,
+                hash: '',
+                default_email: values.isDefaultSender ? 1 : 0,
+                enterprise_email: 0,
+                merge_tags: '',
+                visibility: Number.parseInt(String(values.visibility)),
+              },
+            },
             optimisticResponse: {},
           })
         } else {
-          const senders = {
-            data: {
-              Company: {},
-              smsd_name: values.fromName,
-              smsd_delete: 0,
-              is_default: values.isDefaultSender,
-              merge_tags: '',
-              // enable_replies: values.isEnableReplies ? 1 : 0,
-            },
-          }
           await addSmsSenders({
-            variables: senders,
+            variables: {
+              data: {
+                Company: {},
+                smsd_name: values.fromName,
+                smsd_delete: 0,
+                is_default: values.isDefaultSender,
+                merge_tags: '',
+                // enable_replies: values.isEnableReplies ? 1 : 0,
+              },
+            },
             optimisticResponse: {},
           })
         }
@@ -326,10 +324,12 @@ export const CreateSender: React.FC = () => {
                           handleChange({ target: { value, name: 'fromEmail' } })
                         }
                       />
-                      <p className={styles.visibilityLabel}>Visibility</p>
+                      <p className={styles.visibilityLabel}>
+                        {t('setup.senders.visibility')}
+                      </p>
 
                       <Select
-                        defaultValue={'0'}
+                        defaultValue={'1'}
                         defaultActiveFirstOption={true}
                         style={{ width: '100%' }}
                         onChange={(e) =>
@@ -339,12 +339,14 @@ export const CreateSender: React.FC = () => {
                         }
                         menuItemSelectedIcon={<CheckOutlined />}
                       >
-                        <Option value="0" selected>
-                          <LockOutlined /> Private
+                        <Option value="1" selected>
+                          <LockOutlined />{' '}
+                          {t('setup.senders.visibility.private')}
                         </Option>
 
-                        <Option value="1">
-                          <UnlockOutlined /> Shared
+                        <Option value="0">
+                          <UnlockOutlined />{' '}
+                          {t('setup.senders.visibility.shared')}
                         </Option>
                       </Select>
                     </div>
@@ -390,26 +392,6 @@ export const CreateSender: React.FC = () => {
                         />
                       </div>
                     )}
-
-                    {/*<div className={styles.formElement}>*/}
-                    {/*  <Space className={styles.switchItem} size={8}>*/}
-                    {/*    <Switch*/}
-                    {/*      checked={values.isAutoUploadReplies}*/}
-                    {/*      onChange={(value) =>*/}
-                    {/*        handleChange({*/}
-                    {/*          target: { value, name: 'isAutoUploadReplies' },*/}
-                    {/*        })*/}
-                    {/*      }*/}
-                    {/*    />*/}
-                    {/*    <div>*/}
-                    {/*      {t('setup.senders.create.form.field.autoupload')}*/}
-                    {/*    </div>*/}
-                    {/*    <PabauPlus*/}
-                    {/*      label={t('common-label-plus')}*/}
-                    {/*      modalType="Marketing"*/}
-                    {/*    />*/}
-                    {/*  </Space>*/}
-                    {/*</div>*/}
                   </>
                 )}
               </div>
