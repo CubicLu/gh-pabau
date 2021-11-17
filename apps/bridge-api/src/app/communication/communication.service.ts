@@ -36,9 +36,21 @@ export const getSenders = async (ctx: Context) => {
 }
 
 const getEmails = async (ctx: Context) => {
-  return await ctx.prisma.companyEmail.findMany()
+  return await ctx.prisma.companyEmail.findMany({
+    where: {
+      company_id: {
+        equals: ctx.authenticated.company,
+      },
+    },
+  })
 }
 
 const getSmses = async (ctx: Context) => {
-  return await ctx.prisma.smsSender.findMany()
+  return await ctx.prisma.smsSender.findMany({
+    where: {
+      company_id: {
+        equals: ctx.authenticated.company,
+      },
+    },
+  })
 }
