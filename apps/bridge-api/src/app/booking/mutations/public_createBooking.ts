@@ -109,7 +109,6 @@ export const public_createOnlineBooking = extendType({
                   Lname: input.contact[i].lastName,
                   Email: input.contact[i].email,
                   Mobile: input.contact[i].mobile,
-                  MarketingOptInNewsletter: 1,
                   MailingCountry: input.contact[i].country,
                   custom_id: new_custom_id,
                   Phone: '',
@@ -117,7 +116,44 @@ export const public_createOnlineBooking = extendType({
                   MailingCity: '',
                   MailingProvince: '',
                   MailingPostal: '',
-                  OwnerID: input.data.user_id,
+                  SkypeId: '',
+                  SecondaryEmail: '',
+                  Twitter: '',
+                  OtherStreet: '',
+                  OtherProvince: '',
+                  OtherPostal: '',
+                  OtherCountry: '',
+                  Description: '',
+                  IpAddress: 0,
+                  fbimg: '',
+                  LeadID: 0,
+                  group_tag: '',
+                  polite_notice: '',
+                  gender: '',
+                  MarketingOptInAll: 1,
+                  MarketingOptInEmail: 1,
+                  MarketingOptInPhone: 1,
+                  MarketingOptInNewsletter: 1,
+                  MarketingOptInText: 1,
+                  MarketingOptInPost: 1,
+                  notes_drop: '',
+                  imported: 0,
+                  alerts_drop: '',
+                  MarketingSourceRelated: 0,
+                  customer_reference: '',
+                  custom_marketing_source: '',
+                  insurer_id: 0,
+                  is_active: 1,
+                  xero_contact_id: '',
+                  discount_type: 0,
+                  custom_clinic_id: 0,
+                  ambassador_id: 0,
+                  privacy_policy: '',
+                  User: {
+                    connect: {
+                      id: input.data.user_id,
+                    },
+                  },
                   Company: {
                     connect: {
                       id: input.data.company_id,
@@ -127,7 +163,6 @@ export const public_createOnlineBooking = extendType({
               })
 
               contact_id = contact.ID
-              return { success: false }
             }
           } else {
             contact_id = input.contact[i].contact_id
