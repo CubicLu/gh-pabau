@@ -5759,3 +5759,4 @@ en:
   clients.clientcard.medical.history.share: 'Share'
   clients.clientcard.medical.history.change.log: 'Change log'
   clients.clientcard.medical.history.request.update: 'Request Update'
+  clients.appointments.tooltip.assistant: 'Assistant'

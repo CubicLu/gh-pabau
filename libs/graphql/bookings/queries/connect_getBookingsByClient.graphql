@@ -24,6 +24,12 @@ query GetClientAppointments(
       id
       full_name
     }
+    Participants {
+      id
+      full_name
+      image
+    }
+    participant_slave_uids
     service
     start_date
     end_date

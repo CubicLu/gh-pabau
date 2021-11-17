@@ -123,10 +123,18 @@ const Appointments = () => {
               getImage(appt?.CmStaffGeneral?.Avatar),
             name: `${appt?.CmStaffGeneral?.Fname} ${appt?.CmStaffGeneral?.Lname}`,
           }
+          const otherEmployees = appt?.Participants?.map((assistant) => {
+            return {
+              avatar: assistant?.image && getImage(assistant?.image),
+              name: assistant?.full_name,
+              relationship: t('clients.appointments.tooltip.assistant'),
+            }
+          })
           return {
             id: appt?.id,
             serviceName: appt.service,
             employee,
+            otherEmployees,
             status:
               appt.status &&
               getAppointmentStatus(appt?.status?.toLocaleLowerCase()),
@@ -148,6 +156,7 @@ const Appointments = () => {
       )
       setClientAppointments(appointments)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientAppointmentData])
 
   const ClientAppointmentTab = () => {
