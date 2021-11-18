@@ -1,4 +1,11 @@
-import { extendType, inputObjectType, nullable, objectType } from 'nexus'
+import {
+  extendType,
+  inputObjectType,
+  nullable,
+  objectType,
+  list,
+  nonNull,
+} from 'nexus'
 import { Context } from '../../../context'
 import { getTier } from '../../service/service-tiers'
 import { v4 as uuidv4 } from 'uuid'
@@ -29,10 +36,13 @@ const PCBContact = inputObjectType({
   name: 'PCBContact',
   definition(t) {
     t.int('contact_id')
-    t.string('first_name')
-    t.string('last_name')
+    t.string('firstName')
+    t.string('lastName')
     t.string('email')
     t.string('mobile')
+    t.string('country')
+    t.string('password')
+    t.boolean('marketing')
   },
 })
 
@@ -44,10 +54,10 @@ export const public_createOnlineBooking = extendType({
       description: 'Create booking from public',
       args: {
         data: nullable(PCBData),
-        contact: nullable(PCBContact),
+        contact: nonNull(list(PCBContact)),
       },
       async resolve(_, input, ctx: Context) {
-        let contact_id = undefined
+        let contact_id
         const serviceTiers = await getTier(
           input.data.service_ids,
           input.data.user_id,
@@ -59,83 +69,160 @@ export const public_createOnlineBooking = extendType({
           where: { id: { in: input.data.service_ids } },
         })
 
-        const insertData = []
         let startDate = moment(input.data.start_date)
         let startDateAsInt = Number.parseInt(startDate.format('YYYYMMDDHHmm00'))
-        for (const s of input.data.service_ids) {
-          const service = services.find((serv) => serv.id === s)
-          const duration = serviceTiers[s].duration
-            ? serviceTiers[s].duration
-            : hhmmToMinutes(service.duration)
-          const cost = serviceTiers[s].cost
-            ? serviceTiers[s].cost
-            : service.price
+        let allGood = true
+        // Loop each contact sent
+        for (const i in Object.keys(input.contact)) {
+          const insertData = []
+          // We are NOT receiving an ID
+          if (!input.contact[i].contact_id) {
+            // Find contact by email or mobile
+            const contact = await ctx.prisma.cmContact.findFirst({
+              where: {
+                OR: [
+                  {
+                    Email: input.contact[i].email
+                      ? input.contact[i].email
+                      : undefined,
+                  },
+                  {
+                    Mobile: input.contact[i].mobile
+                      ? input.contact[i].mobile
+                      : undefined,
+                  },
+                ],
+              },
+            })
+            //Contact is found, set ID
+            if (contact) {
+              contact_id = contact.ID
+            } else {
+              const data = await ctx.prisma.$queryRaw`
+                SELECT IFNULL(MAX(CAST(a.custom_id AS INTEGER)) + 1,1) as max FROM cm_contacts a WHERE a.Occupier = ${input.data.company_id}
+              `
+              const new_custom_id = data[0].max.toString()
 
-          const endDate = moment(startDate).add(duration, 'minutes')
-          const endDateAsInt = Number.parseInt(endDate.format('YYYYMMDDHHmmss'))
+              const contact = await ctx.prisma.cmContact.create({
+                data: {
+                  Fname: input.contact[i].firstName,
+                  Lname: input.contact[i].lastName,
+                  Email: input.contact[i].email,
+                  Mobile: input.contact[i].mobile,
+                  MailingCountry: input.contact[i].country,
+                  custom_id: new_custom_id,
+                  Phone: '',
+                  MailingStreet: '',
+                  MailingCity: '',
+                  MailingProvince: '',
+                  MailingPostal: '',
+                  SkypeId: '',
+                  SecondaryEmail: '',
+                  Twitter: '',
+                  OtherStreet: '',
+                  OtherProvince: '',
+                  OtherPostal: '',
+                  OtherCountry: '',
+                  Description: '',
+                  IpAddress: 0,
+                  fbimg: '',
+                  LeadID: 0,
+                  group_tag: '',
+                  polite_notice: '',
+                  gender: '',
+                  MarketingOptInAll: 1,
+                  MarketingOptInEmail: 1,
+                  MarketingOptInPhone: 1,
+                  MarketingOptInNewsletter: 1,
+                  MarketingOptInText: 1,
+                  MarketingOptInPost: 1,
+                  notes_drop: '',
+                  imported: 0,
+                  alerts_drop: '',
+                  MarketingSourceRelated: 0,
+                  customer_reference: '',
+                  custom_marketing_source: '',
+                  insurer_id: 0,
+                  is_active: 1,
+                  xero_contact_id: '',
+                  discount_type: 0,
+                  custom_clinic_id: 0,
+                  ambassador_id: 0,
+                  privacy_policy: '',
+                  User: {
+                    connect: {
+                      id: input.data.user_id,
+                    },
+                  },
+                  Company: {
+                    connect: {
+                      id: input.data.company_id,
+                    },
+                  },
+                },
+              })
 
-          const bookingData = {
-            title: 'Online Booking',
-            start_date: startDateAsInt,
-            end_date: endDateAsInt,
-            service: service.name,
-            UID: input.data.user_id,
-            company_id: input.data.company_id,
-            create_date: Number.parseInt(moment().format('YYYYMMDDHHmmss')),
-            status: 'Waiting',
-            estimated_cost: cost,
-            room_id: 0,
-            unique_id: uuidv4(),
-            repeat_id: 0,
-            Online: 1,
-            service_id: s,
-            sent_sms: 1,
-            sent_email: 1,
-            location_id: input.data.location_id,
+              contact_id = contact.ID
+            }
+          } else {
+            contact_id = input.contact[i].contact_id
           }
 
-          insertData.push(bookingData)
+          // Loop each service booked
+          for (const s of input.data.service_ids) {
+            const service = services.find((serv) => serv.id === s)
+            const duration = serviceTiers[s].duration
+              ? serviceTiers[s].duration
+              : hhmmToMinutes(service.duration)
+            const cost = serviceTiers[s].cost
+              ? serviceTiers[s].cost
+              : service.price
 
-          startDate = moment(endDate)
-          startDateAsInt = Number.parseInt(startDate.format('YYYYMMDDHHmm00'))
-        }
+            const endDate = moment(startDate).add(duration, 'minutes')
+            const endDateAsInt = Number.parseInt(
+              endDate.format('YYYYMMDDHHmm00')
+            )
 
-        if (!input.contact.contact_id) {
-          const contact = await ctx.prisma.cmContact.findFirst({
-            where: {
-              OR: [
-                {
-                  Email: input.contact.email ? input.contact.email : undefined,
-                },
-                {
-                  Mobile: input.contact.mobile
-                    ? input.contact.mobile
-                    : undefined,
-                },
-              ],
+            const bookingData = {
+              title: 'Online Booking',
+              start_date: startDateAsInt,
+              end_date: endDateAsInt,
+              service: service.name,
+              UID: input.data.user_id,
+              company_id: input.data.company_id,
+              create_date: Number.parseInt(moment().format('YYYYMMDDHHmmss')),
+              status: 'Waiting',
+              estimated_cost: cost,
+              room_id: 0,
+              unique_id: uuidv4(),
+              repeat_id: 0,
+              Online: 1,
+              service_id: s,
+              sent_sms: 1,
+              sent_email: 1,
+              location_id: input.data.location_id,
+            }
+
+            insertData.push(bookingData)
+
+            startDate = moment(endDate)
+            startDateAsInt = Number.parseInt(startDate.format('YYYYMMDDHHmm00'))
+          }
+
+          const res = await ctx.prisma.cmContact.update({
+            where: { ID: contact_id },
+            data: {
+              Booking: {
+                create: insertData,
+              },
             },
           })
 
-          if (contact) {
-            contact_id = contact.ID
-          } else {
-            return { success: false }
-          }
-        } else {
-          contact_id = input.contact.contact_id
+          allGood = allGood && !!res
         }
 
-        const res = await ctx.prisma.cmContact.update({
-          where: { ID: contact_id },
-          data: {
-            Booking: {
-              create: insertData,
-            },
-          },
-        })
-
         return {
-          success: !!res,
+          success: allGood,
         }
       },
     })
