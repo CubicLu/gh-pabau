@@ -1,4 +1,5 @@
 import { Context } from '../../context'
+import { createHash } from 'crypto'
 
 export const getSenders = async (ctx: Context) => {
   const emails = await getEmails(ctx)
@@ -51,6 +52,37 @@ const getSmses = async (ctx: Context) => {
       company_id: {
         equals: ctx.authenticated.company,
       },
+    },
+  })
+}
+
+export const getContent = async (
+  ctx: Context,
+  subject: string,
+  body: string
+) => {
+  const hash = createHash('sha1').update(`${body}:${subject}`).digest('hex')
+  const content = await ctx.prisma.communicationContent.findFirst({
+    where: {
+      company_id: {
+        equals: ctx.authenticated.company,
+      },
+      hash: {
+        equals: hash,
+      },
+    },
+  })
+
+  if (content) {
+    return content
+  }
+
+  return await ctx.prisma.communicationContent.create({
+    data: {
+      company_id: ctx.authenticated.company,
+      hash,
+      subject,
+      body,
     },
   })
 }
