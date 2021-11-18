@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
 import Index from '../pages/index'
 import { MockedProvider } from '@apollo/client/testing'
+import * as React from 'react'
 
 //manual mock to handle matchMedia not found function ref: https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 Object.defineProperty(window, 'matchMedia', {
