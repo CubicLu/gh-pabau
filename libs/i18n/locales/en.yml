@@ -5621,9 +5621,13 @@ en:
   setup.email.inbox.mark.menu.unread: 'Mark as unread'
   team.user.personal.details.avtar.modal.title: 'Edit Photo'
   team.user.personal.details.avtar.cancel.button: Cancel
-  team.user.personal.details.avtar.create.button: Create
+  team.user.personal.details.avtar.save.button: Save
   team.user.personal.details.avtar.Preview.title: Preview
-  team.user.personal.details.avtar.upload.button: 'Upload file'
+  team.user.personal.details.avtar.upload.button: 'Upload photo'
+  team.user.personal.details.avtar.upload.text: 'Upload photo'
+  team.user.personal.details.avtar.remove.button: 'Remove avatar'
+  team.user.personal.details.avtar.update.success: 'Avatar updated successfully'
+  team.user.personal.details.avtar.remove.success: 'Avatar removed successfully'
   journey.modal.appointements.status.waiting: Waiting
   journey.modal.appointements.status.arrived: Arrived
   journey.modal.appointements.status.in.progress: 'In Progress'

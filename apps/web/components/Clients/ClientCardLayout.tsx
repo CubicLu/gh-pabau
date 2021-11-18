@@ -31,7 +31,10 @@ import React, {
   useMemo,
 } from 'react'
 import Layout from '../Layout/Layout'
-import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
+import {
+  getImage,
+  ImgBlock,
+} from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
@@ -41,6 +44,7 @@ import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+import AvatarUploader from '../Uploaders/AvatarUploader/AvatarUploader'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
@@ -91,6 +95,7 @@ export const ClientCardLayout: FC<P> = ({
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
   const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
   const [openEditModal, setOpenEditModal] = useState(false)
+  const [isAvatarModalOpen, setAvatarModalOpen] = useState(false)
   const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
   const user = useUser()
 
@@ -418,6 +423,42 @@ export const ClientCardLayout: FC<P> = ({
     }
   }
 
+  const handleAvatarUpload = async (
+    isDelete: boolean,
+    imageData?: ImgBlock
+  ) => {
+    if (imageData?.path === undefined && basicContactData?.avatar === '') {
+      return
+    }
+    const avatarResponse = await updatebasicContactMutation({
+      variables: {
+        where: { ID: clientId },
+        data: {
+          Avatar: { set: !isDelete ? imageData?.path : '' },
+        },
+      },
+    })
+
+    if (avatarResponse?.data) {
+      setBasicContactData((item) => {
+        return {
+          ...item,
+          avatar: !isDelete ? imageData?.path : '',
+        }
+      })
+
+      isDelete
+        ? Notification(
+            NotificationType.success,
+            t('team.user.personal.details.avtar.remove.success')
+          )
+        : Notification(
+            NotificationType.success,
+            t('team.user.personal.details.avtar.update.success')
+          )
+    }
+  }
+
   return (
     <Layout>
       <ClientCard
@@ -483,6 +524,7 @@ export const ClientCardLayout: FC<P> = ({
             placeHolder={t('search.client.placeholder')}
           />
         )}
+        showAvatarModal={() => setAvatarModalOpen(true)}
       >
         {children}
       </ClientCard>
@@ -518,6 +560,22 @@ export const ClientCardLayout: FC<P> = ({
           {t('clients.clientcard.notes.clientnote.deletemodal.content')}
         </span>
       </Modal>
+      {isAvatarModalOpen && (
+        <AvatarUploader
+          visible={isAvatarModalOpen}
+          title={t('account.settings.profile.avatarupload.title')}
+          imageURL={
+            basicContactData?.avatar ? getImage(basicContactData?.avatar) : ''
+          }
+          onCancel={() => setAvatarModalOpen(false)}
+          width={400}
+          height={400}
+          section={'avatar_photos'}
+          type={'file_attachments'}
+          successHandler={(imageData) => handleAvatarUpload(false, imageData)}
+          onDelete={() => handleAvatarUpload(true)}
+        />
+      )}
     </Layout>
   )
 }
