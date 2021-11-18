@@ -138,7 +138,6 @@ export const Invoices: FC<P> = (props) => {
         totalVat: totalVat,
         amountPaid: expandedInvoice[0]?.paid_amount,
         subtotal: discount !== 0 ? inv_total + discount : inv_total,
-        credit_note_id: item.credit_note_id,
         // tips: expandedInvoice[0]?.tip, TODO: still not implemented tips
         tips: 0,
         grandTotal: item.inv_total - item.credit_amount,
@@ -329,7 +328,7 @@ export const Invoices: FC<P> = (props) => {
     const payBtnValue = record.grandTotal - record.amountPaid
     return (
       <div className={styles.rowExpand}>
-        {!record.credit_note_id ? (
+        {!salesDetails?.items[0]?.InvSale?.CreditRef?.custom_id ? (
           !salesDetaillLoading ? (
             <div className={styles.items}>
               {record?.items?.map((item, i) => (
@@ -380,7 +379,7 @@ export const Invoices: FC<P> = (props) => {
           <div className={styles.credit}>
             <Text>
               {t('ui.client-card-financial.invoices.credit-note')} #
-              {record.credit_note_id}
+              {salesDetails?.items[0]?.InvSale?.CreditRef?.custom_id}
             </Text>
           </div>
         ) : (
@@ -498,7 +497,7 @@ export const Invoices: FC<P> = (props) => {
             </div>
           </div>
           <div className={styles.right}>
-            {!record.credit_note_id ? (
+            {!salesDetails?.items[0]?.InvSale?.CreditRef?.custom_id ? (
               <div className={styles.details}>
                 {!salesDetaillLoading ? (
                   <Title level={5}>

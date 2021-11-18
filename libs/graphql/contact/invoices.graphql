@@ -12,7 +12,6 @@ query getFinancialInvoices($contactID: Int!, $take: Int = 50, $skip: Int = 0){
     credit_amount
     discount_amount
     inv_total
-    credit_note_id
     # tip
   }
 }
