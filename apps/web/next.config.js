@@ -146,7 +146,7 @@ module.exports = withPlugins(
         },
         {
           source: '/journey/:journey-id',
-          destination: '/journey/[journey-id]/index.tsx?journey-id=:journey-id',
+          destination: '/journey/[journey-id]?journey-id=:journey-id',
         },
       ]
     },
