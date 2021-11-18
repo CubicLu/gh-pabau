@@ -281,7 +281,9 @@ export const ClientCardLayout: FC<P> = ({
         status: medicalHistoryData?.form?.status,
         requestedDate:
           medicalHistoryData?.form?.Contact?.RequestedForms[0]?.created_date,
-        formLastUpdatedDate: medicalHistoryData?.form?.updated_at,
+        formLastUpdatedDate:
+          medicalHistoryData?.form?.updated_at ??
+          medicalHistoryData?.form?.created_at,
       })
     }
   }, [medicalHistoryData])

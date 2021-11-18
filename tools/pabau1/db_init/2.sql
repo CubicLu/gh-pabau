@@ -548,7 +548,8 @@ INSERT INTO `cm_case_notes` (`ID`, `OwnerID`, `CaseID`, `Note`, `Status`, `Creat
 INSERT INTO `cm_contacts` (`ID`, `Avatar`, `OwnerID`, `Salutation`, `Fname`, `Occupier`, `location_id`, `Email`, `Phone`, `OtherPhone`, `Mobile`, `Assistant`, `ReportsTo`, `LeadSource`, `Lname`, `Title`, `Department`, `HomePhone`, `Fax`, `DOB`, `AsstPhone`, `EmailOptOut`, `SkypeId`, `AddToQuickBooks`, `SecondaryEmail`, `Twitter`, `MailingStreet`, `OtherStreet`, `MailingCity`, `OtherCity`, `MailingProvince`, `OtherProvince`, `MailingPostal`, `OtherPostal`, `MailingCountry`, `OtherCountry`, `Description`, `Status`, `CreatedDate`, `IpAddress`, `fbimg`, `MarketingSource`, `RefferalSource`, `LeadID`, `group_tag`, `polite_notice`, `custom_id`, `gender`, `MarketingOptInAll`, `MarketingOptInEmail`, `MarketingOptInPhone`, `MarketingOptInPost`, `MarketingOptInText`, `notes_drop`, `imported`, `alerts_drop`, `MarketingSourceRelated`, `customer_reference`, `MarketingOptInNewsletter`, `custom_marketing_source`, `insurer_id`, `is_active`, `xero_contact_id`, `is_ambassador`, `UpdatedDate`, `xero_updated_date`, `discount_type`, `custom_clinic_id`, `ambassador_id`, `contract_id`, `privacy_policy`, `need_to_knows`, `contact_type`) VALUES
 (22459581, '13764959781ac5a82.jpg', 72444, 'Mr.', 'Robert', 8119, 5314, 'magdalena@pabau.com', '', '', '+3897879297971', '', 'N/A', 'Pabau CRM', 'Parker', 'National Sales Director', 'Sales', '', '', '0000-00-00', '', 'No', 'robertparker', 'No', 'www.facebook.com/robert.parker', 'PabauSales', '59 Princess Road West', '', 'Leicester', '', 'Leicestershire', '', '', '', '', '', '.', 'Enable', '2013-08-20 21:06:55', 9412, '', 116595, '', 0, '', '', '', 'N/A', 0, 0, 0, 0, 0, '', 0, '', 0, '', 1, '', 49458, 1, '', 0, '2020-10-28 15:22:00', '0000-00-00 00:00:00', 0, 0, 0, 0, '', 0, 0),
 (22459582, '', 83064, 'None', 'Martin', 8119, 0, 'martin@pabau.com', '3423432', '', '1111111', '', '', '', 'Markovski', '', '', '', '', '0000-00-00', '', 'No', '', 'No', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Enable', '2020-12-15 15:53:29', 0, '', 116596, NULL, 0, '', '', '1', 'Male', 0, 0, 0, 0, 0, '', 0, '', 0, '', 1, '', 0, 1, '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 0, 0, '', 0, 0),
-(22459583, '', 83064, 'None', 'Quite', 8119, 5314, 'pa@moze.vaka', '01234567890', '', '+3899876543210', '', '', '', 'Contact', '', '', '', '', '2020-12-01', '', 'No', '', 'No', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Enable', '2020-12-15 15:57:28', 0, '', 117101, NULL, 0, '', '', '2', 'NotApplicable', 0, 0, 0, 0, 0, '', 0, '', 0, '', 1, '', 0, 1, '', 0, '2020-12-15 16:36:28', '0000-00-00 00:00:00', 0, 0, 0, 0, '', 0, 0);
+(22459583, '', 83064, 'None', 'Quite', 8119, 5314, 'pa@moze.vaka', '01234567890', '', '+3899876543210', '', '', '', 'Contact', '', '', '', '', '2020-12-01', '', 'No', '', 'No', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Enable', '2020-12-15 15:57:28', 0, '', 117101, NULL, 0, '', '', '2', 'NotApplicable', 0, 0, 0, 0, 0, '', 0, '', 0, '', 1, '', 0, 1, '', 0, '2020-12-15 16:36:28', '0000-00-00 00:00:00', 0, 0, 0, 0, '', 0, 0),
+(26033187, '', 82524, '', 'James', 8254, 0, '', '', '', '', '', '', '', 'Pathway Test', '', '', '', '', NULL, '', 'No', '', 'No', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Enable', '2021-11-03 14:47:12', 0, '', 0, NULL, 0, '', '', '100454646634370', '', 0, 0, 0, 0, 0, '', 0, '', 0, '', 1, '', 0, 1, '', 0, NULL, NULL, 0, 0, 0, 0, '', 0, 0);
 
 INSERT INTO `cm_drugs` (`id`, `name`, `occupier`, `dosage`, `units`, `frequency`, `route`, `comment`, `is_active`, `product_id`, `lot_number`, `expiry_date`, `field_order`, `is_vaccine`, `is_required`, `custom_id`, `max_age`, `min_age`, `nathnac_link`, `travax_link`) VALUES
 (79810, 'Paracetamol', 8119, '', '', '', 'PO', '', 1, 4292438, '', '0000-00-00', 0, 0, 0, '', 0, 0, '', ''),
@@ -3467,7 +3468,8 @@ INSERT INTO `cp_pathways` (`id`, `pathway_name`, `company_id`, `description`, `i
 (91, 'Stefani\'s test pathway', 8119, '', 1, 1),
 (128, 'Consensual Pathway', 8119, 'Specifically made for certain Pabau members', 1, 3),
 (129, 'Marija test Pathway', 8119, 'This is yet another test', 1, 4),
-(130, 'Quite Care Pathway', 8119, '', 1, 5);
+(130, 'Quite Care Pathway', 8119, '', 1, 5),
+(250, 'James Test', 8254, 'James Test', 1, 9);
 
 INSERT INTO `cp_pathways_taken` (`id`, `pathway_id`, `contact_id`, `booking_id`, `started_on`, `status`, `comment`) VALUES
 (1172, 91, 23518239, 71390726, '2020-04-23 15:58:44', 'ACTIVE', ''),
@@ -3485,7 +3487,8 @@ INSERT INTO `cp_pathways_taken` (`id`, `pathway_id`, `contact_id`, `booking_id`,
 (1244, 91, 24312904, 72116939, '2020-07-10 10:14:52', 'ACTIVE', ''),
 (1250, 91, 23458808, 72489873, '2020-08-10 14:05:40', 'ACTIVE', ''),
 (1292, 128, 24302879, 73356311, '2020-10-08 12:32:59', 'ACTIVE', ''),
-(1299, 129, 24643151, 73583761, '2020-10-22 13:13:29', 'ACTIVE', '');
+(1299, 129, 24643151, 73583761, '2020-10-22 13:13:29', 'ACTIVE', ''),
+(1604, 250, 26033187, 78706886, '2021-11-03 14:50:51', 'ACTIVE', '');
 
 INSERT INTO `cp_steps` (`id`, `company_id`, `name`, `created_date`, `step`, `order`, `item_id`, `pathway_id`, `can_skip`, `display_time`, `other_value`, `description`, `who_does_this`) VALUES
 (334, 8119, 'fdh', '2020-05-26 14:15:37', 'consent', 1, 0, 91, 1, 0, '', '', ''),
@@ -3503,7 +3506,13 @@ INSERT INTO `cp_steps` (`id`, `company_id`, `name`, `created_date`, `step`, `ord
 (423, 8119, 'Aftercare step', '2020-10-22 13:05:13', 'aftercare', 4, 0, 129, 1, 0, '', '', 'checks'),
 (424, 8119, 'Perscription', '2020-10-22 13:05:39', 'prescription', 5, 322734, 129, 1, 0, '', '', 'checks'),
 (425, 8119, 'Consent', '2020-10-22 13:05:57', 'consent', 6, 0, 129, 1, 0, '', '', 'checks'),
-(426, 8119, '1st Step', '2020-12-15 16:21:32', 'treatment', 1, 1, 130, 1, 0, '', '', 'Medic');
+(426, 8119, '1st Step', '2020-12-15 16:21:32', 'treatment', 1, 1, 130, 1, 0, '', '', 'Medic'),
+(685, 8254, 'Check Details', '2021-11-03 14:20:07', 'details', 1, 0, 250, 1, 0, '', '', ''),
+(686, 8254, 'Medical History', '2021-11-03 14:21:14', 'questionnaire', 2, 0, 250, 1, 0, '', '', ''),
+(688, 8254, 'Consent Form', '2021-11-03 14:22:05', 'consent', 4, 0, 250, 1, 0, '', '', ''),
+(689, 8254, 'Photo', '2021-11-03 14:22:21', 'photo', 5, 0, 250, 1, 0, '', '', ''),
+(690, 8254, 'Treatment Note', '2021-11-03 14:22:57', 'treatment', 6, 0, 250, 1, 0, '', '', ''),
+(702, 8254, 'Pinscreen', '2021-11-03 14:21:14', 'pinscreen', 3, 0, 250, 1, 0, '', '', '');
 
 INSERT INTO `cp_steps_taken` (`id`, `step_id`, `path_taken_id`, `contact_id`, `date`, `time`, `status`, `record_id`) VALUES
 (6059, 334, 1240, 24302879, '2020-07-02 17:16:55', '', 'completed', 7915865),
@@ -3525,7 +3534,8 @@ INSERT INTO `cp_steps_taken` (`id`, `step_id`, `path_taken_id`, `contact_id`, `d
 (6432, 422, 1299, 24643151, '2020-10-22 14:13:50', '', 'completed', 8660165),
 (6434, 423, 1299, 24643151, '2020-10-22 14:14:01', '', 'completed', 0),
 (6435, 424, 1299, 24643151, '2020-10-22 14:14:40', '', 'completed', 8660171),
-(6437, 425, 1299, 24643151, '2020-10-22 14:15:43', '', 'skipped', 0);
+(6437, 425, 1299, 24643151, '2020-10-22 14:15:43', '', 'skipped', 0),
+(8904, 685, 1604, 26033187, '2021-11-03 15:50:51', '', 'completed', 0);
 
 INSERT INTO `credit_balance` (`credit_balance_id`, `company`, `balance`, `balance_currency`, `auto`) VALUES
 (7783, '8119', '409.00', '-153.00', 0),
@@ -6755,7 +6765,8 @@ INSERT INTO `rota_templates` (`rota_template_id`, `is_active`, `template_name`, 
 (1, 1, 'Quite Rota Template', '07:00', '20:00', 'Monday Tuesday Wednesday Thursday Friday Saturday Sunday ', 8119);
 
 INSERT INTO `salon_bookings` (`id`, `title`, `start_date`, `end_date`, `start_time`, `end_time`, `service`, `contact_id`, `UID`, `occupier`, `backgroudcolor`, `create_date`, `update_date`, `status`, `estimated_cost`, `tips`, `discounts`, `where`, `room_id`, `unique_id`, `reason`, `invoice_id`, `booking_id`, `Online`, `package_id`, `cancel_take`, `book_take`, `class_master_id`, `unavailable`, `coupon_claim_id`, `related_id`, `service_id`, `rebook`, `repeat_id`, `requested`, `sent_sms`, `sent_email`, `sent_survey`, `custom_contact_id`, `custom_contact_name`, `custom_user_id`, `custom_user_name`, `custom_service_id`, `imported`, `client_confirmed`, `hold_guid`, `created_by_uid`, `marketing_source`, `resource_id`, `custom_room_name`, `custom_created_by_user_name`, `location_id`, `modified_by_uid`, `sent_email_reminder`, `disable_locations`, `participant_master_uid`, `participant_master_booking_id`, `participant_slave_uids`, `participant_slave_booking_ids`, `private`, `external_guest_ids`, `description`, `issued_to`, `contract_id`, `all_day`, `interlinked_master_uid`, `all_day_start_date`, `all_day_end_date`) VALUES
-(1, '', 20201215120000, 20201215121000, NULL, NULL, 'Quite Service New', 22459583, 83064, 8119, '#112233', 20201215173640, NULL, 'Waiting', '100.00', '0.00', '0.00', '', 7316, '5fd8e6188790c', NULL, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 1, 0, 0, 0, 1, 1, 1, 0, NULL, '', NULL, '', 0, 0, '', 83064, 0, 0, NULL, '', 5314, 0, 1, 0, 0, 0, '', '', 0, '', '', 0, 0, 0, 0, 0, 0);
+(1, '', 20201215120000, 20201215121000, NULL, NULL, 'Quite Service New', 22459583, 83064, 8119, '#112233', 20201215173640, NULL, 'Waiting', '100.00', '0.00', '0.00', '', 7316, '5fd8e6188790c', NULL, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 1, 0, 0, 0, 1, 1, 1, 0, NULL, '', NULL, '', 0, 0, '', 83064, 0, 0, NULL, '', 5314, 0, 1, 0, 0, 0, '', '', 0, '', '', 0, 0, 0, 0, 0, 0),
+(78706886, '', 20211103165000, 20211103182000, NULL, NULL, 'Punction RELEASE TEST', 26033187, 82524, 8254, '#512DA8', 20211103154807, NULL, 'Waiting', '50.00', '0.00', '0.00', '', 7139, '6182a12793de3', NULL, NULL, 0, 0, 0, 0, 0, 0, 0, '', 0, 2508251, 0, 0, 0, 0, 0, 0, 0, NULL, '', NULL, '', 0, 0, '', 82524, 0, 0, NULL, '', 5257, 0, 0, 0, 0, 0, '', '', 0, '', '', 0, 0, 0, 0, 0, 0);
 
 INSERT INTO `salon_bookings_changelog` (`id`, `booking_id`, `changelog`) VALUES
 (1, 1, '[{\"mode\":\"insert\",\"UID\":83064,\"modified_by_uid\":83064,\"date_changed\":20201215173640,\"start_date\":20201215120000,\"end_date\":20201215121000,\"service\":\"Quite Service New\",\"status\":\"Waiting\",\"location_id\":5314}]');

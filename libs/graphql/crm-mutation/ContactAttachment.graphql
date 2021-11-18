@@ -7,6 +7,7 @@ fragment ContactAttachmentFields on ContactAttachment {
   attach_name
   user_id
   attachment_type
+  sub_type
   connect_public
   website_public
   attachment_title
