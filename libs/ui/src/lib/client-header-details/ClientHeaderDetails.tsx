@@ -444,7 +444,16 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
               : styles.medicalHistoryPopover
           )}
         >
-          <Tooltip title={t('clients.clientcard.medical.history')}>
+          <Tooltip
+            title={
+              formLastUpdated !== 0
+                ? t('clients.clientcard.medical.history.last.updated', {
+                    what: formLastUpdated,
+                    which: formLastUpdated > 0 ? 'days' : 'day',
+                  })
+                : t('clients.clientcard.medical.history')
+            }
+          >
             <Badge count={getMedicalhistoryIcon()} offset={[0, 18]}>
               <MedicalHistory className={styles.headerOpsIcon} />
             </Badge>
