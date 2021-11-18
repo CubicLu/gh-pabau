@@ -84,7 +84,7 @@
     },
     {
       "source": "/journey/:id",
-      "destination": "/journey/[journey-id]?journey-id=:id"
+      "destination": "/journey/[journey-id]/?journey-id=:id"
     }
   ]
 }
