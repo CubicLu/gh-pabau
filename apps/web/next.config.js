@@ -145,8 +145,8 @@ module.exports = withPlugins(
           destination: '/clients/[id]/financial?id=:id',
         },
         {
-          source: '/journey/:journey-id',
-          destination: '/journey/[journey-id]?journey-id=:journey-id',
+          source: '/journey/:id',
+          destination: '/journey/[journey-id]?journey-id=:id',
         },
       ]
     },

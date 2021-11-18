@@ -83,8 +83,8 @@
       "destination": "/setup/senders/edit/[id]?id=:id"
     },
     {
-      "source": "/journey/:journey-id",
-      "destination": "/journey/[journey-id]?journey-id=:journey-id"
+      "source": "/journey/:id",
+      "destination": "/journey/[journey-id]?journey-id=:id"
     }
   ]
 }
