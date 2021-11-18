@@ -184,17 +184,19 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     <div className={styles.medicalHistoryWrapper}>
       <div className={styles.titleWrapper}>
         <h3>{t('clients.clientcard.medical.history')}</h3>
-        <h4>
-          {formLastUpdated > 180 && (
-            <InfoCircleFilled
-              style={{ color: '#FAAD14', marginRight: '4px' }}
-            />
-          )}
-          {t('clients.clientcard.medical.history.last.updated', {
-            what: formLastUpdated,
-            which: formLastUpdated > 0 ? 'days' : 'day',
-          })}
-        </h4>
+        {formLastUpdated !== 0 && (
+          <h4>
+            {formLastUpdated > 180 && (
+              <InfoCircleFilled
+                style={{ color: '#FAAD14', marginRight: '4px' }}
+              />
+            )}
+            {t('clients.clientcard.medical.history.last.updated', {
+              what: formLastUpdated,
+              which: formLastUpdated > 0 ? 'days' : 'day',
+            })}
+          </h4>
+        )}
       </div>
       <div className={styles.medicalHistoryItem}>
         <EyeOutlined /> {t('clients.clientcard.medical.history.view')}
@@ -442,7 +444,16 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
               : styles.medicalHistoryPopover
           )}
         >
-          <Tooltip title={t('clients.clientcard.medical.history')}>
+          <Tooltip
+            title={
+              formLastUpdated !== 0
+                ? t('clients.clientcard.medical.history.last.updated', {
+                    what: formLastUpdated,
+                    which: formLastUpdated > 0 ? 'days' : 'day',
+                  })
+                : t('clients.clientcard.medical.history')
+            }
+          >
             <Badge count={getMedicalhistoryIcon()} offset={[0, 18]}>
               <MedicalHistory className={styles.headerOpsIcon} />
             </Badge>
