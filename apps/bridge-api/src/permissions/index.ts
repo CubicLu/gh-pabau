@@ -124,11 +124,16 @@ export const permissions = shield(
       //Connect Public
       public_createOnlineBooking: allow,
 
+      //communication
+      SendAppointmentConfirmationMail: rules.authentication.isAuthenticated,
+
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       updateOneCmContact: rules.authentication.isAuthenticated,
       // Pathway
       upsertOnePathwayStepsTaken: rules.interceptors.injectContact,
       createOnePathwaysTaken: rules.interceptors.injectContact,
+      // Communication
+      changeEmailPrivacy: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
