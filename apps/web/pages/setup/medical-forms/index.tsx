@@ -179,7 +179,8 @@ export const Index: FC = () => {
     whereQuery.AND = []
     whereQuery.AND.push(
       { user_deleted: { equals: 0 } },
-      { name: { not: { equals: '' } } }
+      { name: { not: { equals: '' } } },
+      { deleted_at: { equals: null } },
     )
 
     if (searchData.searchValue !== '') {
