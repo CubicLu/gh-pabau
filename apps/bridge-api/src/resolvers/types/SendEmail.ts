@@ -145,7 +145,11 @@ export const sendBookingConfirmationMail = extendType({
             },
           },
         })
-        const settings = await ctx.prisma.bookingSetting.findFirst()
+        const settings = await ctx.prisma.bookingSetting.findFirst({
+          where: {
+            company_id: ctx.authenticated.company,
+          },
+        })
         if (settings.send_email < 1) {
           return {
             success: false,
