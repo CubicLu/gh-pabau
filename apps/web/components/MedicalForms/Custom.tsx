@@ -100,7 +100,7 @@ const Custom: FC<CustomProps> = ({
   const [popoverVisible, setPopoverVisible] = useState(false)
   const [popoverVisibleMobile, setPopoverVisibleMobile] = useState(null)
   const [paginateData, setPaginateData] = useState<Paginate>(pagenateParams)
-  const isMobile = useMedia('(max-width: 768px)', false)
+  const isMobile = useMedia('(max-width: 767px)', false)
 
   const { t } = useTranslationI18()
 
@@ -168,7 +168,6 @@ const Custom: FC<CustomProps> = ({
       icon: <EditOutlined />,
       label: t('setup.medical.forms.menuList.edit'),
       onClick: () => {
-        console.log('click on edit')
         handleIdEditClick()
         setPopoverVisible(false)
         setPopoverVisibleMobile(null)
@@ -295,6 +294,16 @@ const Custom: FC<CustomProps> = ({
     const [date] = createdAt.split(' ')
     return <div data-acceptclicking={true}>{date}</div>
   }
+
+  const services = {}
+  companyServiceListItems.map((val) =>
+    Object.assign(services, { [val.id]: val.name })
+  )
+  const getServices = (id: any) => {
+    const service = id?.split(',').map((val) => services[val])
+    return service.join(', ').replace(/, ([^,]*)$/, ' & $1')
+  }
+
   const columns = [
     {
       key: 'name',
@@ -374,16 +383,33 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       dataIndex: 'status',
-      render: (status) => (
-        <div data-acceptclicking={true}>
-          <Button
-            className={statusValues[status].class}
-            data-acceptclicking={false}
-          >
-            {statusValues[status].title}
-          </Button>
-        </div>
-      ),
+      render: (status, item) =>
+        item?.serviceId === '' || item?.serviceId === 'null' ? (
+          <div data-acceptclicking={true}>
+            <Tooltip
+              placement="top"
+              title="This form will be manually sent to clients."
+            >
+              <Button className={styles.manualBtn} data-acceptclicking={false}>
+                Manual
+              </Button>
+            </Tooltip>
+          </div>
+        ) : (
+          <div data-acceptclicking={true}>
+            <Button
+              className={statusValues[status].class}
+              data-acceptclicking={false}
+            >
+              {statusValues[status].title}
+              <Tooltip placement="top" title={getServices(item?.serviceId)}>
+                <span className={styles.serviceNum}>
+                  {item?.serviceId?.split(',').length}
+                </span>
+              </Tooltip>
+            </Button>
+          </div>
+        ),
     },
     {
       title: '',
