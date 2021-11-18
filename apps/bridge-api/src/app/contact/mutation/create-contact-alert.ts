@@ -8,8 +8,6 @@ export const ContactAlertCreateOneMutationCustom = mutationField(
       data: nonNull('ContactAlertCreateInput'),
     },
     async resolve(_parent, { data }, { prisma, select, authenticated }) {
-      console.info('here it is the data:', data.Note)
-
       const tags = data.Note?.split('#')
         ?.splice(1)
         ?.map((item) => {
@@ -34,7 +32,7 @@ export const ContactAlertCreateOneMutationCustom = mutationField(
           },
         })
 
-        const refCondition = await prisma.contactMedicalCondition.upsert({
+        await prisma.contactMedicalCondition.upsert({
           where: {
             unique_contact_medical_condition: {
               contact_id: data.CmContact.connect.ID,
@@ -53,7 +51,7 @@ export const ContactAlertCreateOneMutationCustom = mutationField(
           },
         })
 
-        console.info('condition', tag, id, refCondition)
+        // console.info('condition', tag, id, refCondition)
       }
 
       return prisma.contactAlert.create({

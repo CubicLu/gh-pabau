@@ -16,8 +16,6 @@ export const ContactAlertExtended = extendType({
             return item.split(' ')[0]
           })
 
-        console.info('tags', tags, parent)
-
         return await ctx.prisma.medicalCondition.findMany({
           where: {
             name: { in: tags },
