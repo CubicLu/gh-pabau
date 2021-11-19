@@ -260,7 +260,7 @@ model Company {
   CmContactLocation                CmContactLocation[]
   CmContactTravel                  CmContactTravel[]
   CmContactViewed                  CmContactViewed[]
-  CmContactMedicalCondition        CmContactMedicalCondition[]
+  ContactMedicalCondition          ContactMedicalCondition[]
   CmDrug                           CmDrug[]
   InvProduct                       InvProduct[]
   CmExtraPatient                   CmExtraPatient[]
@@ -1836,119 +1836,119 @@ model CmCampaignNote {
 }
 
 model CmContact {
-  ID                        Int                         @id @default(autoincrement())
-  Avatar                    String?                     @default("")
-  OwnerID                   Int
-  Salutation                String                      @default("None")
-  Fname                     String
-  company_id                Int                         @map("Occupier")
-  Company                   Company                     @relation(fields: [company_id], references: [id])
-  location_id               Int                         @default(0)
-  Email                     String
-  Phone                     String
-  OtherPhone                String?                     @default("")
-  Mobile                    String
-  Assistant                 String?                     @default("")
-  ReportsTo                 String?                     @default("")
-  LeadSource                String?                     @default("")
-  Lname                     String
-  Title                     String?                     @default("")
-  Department                String?                     @default("")
-  HomePhone                 String?                     @default("")
-  Fax                       String?                     @default("")
-  DOB                       DateTime?
-  AsstPhone                 String?                     @default("")
-  EmailOptOut               cm_contacts_EmailOptOut     @default(No)
-  SkypeId                   String?
-  AddToQuickBooks           cm_contacts_AddToQuickBooks @default(No)
-  SecondaryEmail            String?
-  Twitter                   String?                     @default("")
-  MailingStreet             String
-  OtherStreet               String?                     @default("")
-  MailingCity               String
-  OtherCity                 String?                     @default("")
-  MailingProvince           String
-  OtherProvince             String?                     @default("")
-  MailingPostal             String
-  OtherPostal               String?                     @default("")
-  MailingCountry            String
-  OtherCountry              String?                     @default("")
-  Description               String?                     @default("")
-  Status                    cm_contacts_Status          @default(Enable)
-  CreatedDate               DateTime?                   @default(now())
-  IpAddress                 Int?                        @default(0)
-  fbimg                     String?                     @default("")
-  MarketingSource           Int?                        @default(0)
-  RefferalSource            String?
-  LeadID                    Int?                        @default(0)
-  group_tag                 String?                     @default("")
-  polite_notice             String?                     @default("")
-  custom_id                 String
-  gender                    String?                     @default("")
-  MarketingOptInAll         Int?                        @default(0)
-  MarketingOptInEmail       Int?
-  MarketingOptInPhone       Int?
-  MarketingOptInPost        Int?
-  MarketingOptInText        Int?
-  notes_drop                String?                     @default("")
-  imported                  Int?                        @default(0)
-  alerts_drop               String?                     @default("")
-  MarketingSourceRelated    Int?                        @default(0)
-  customer_reference        String?                     @default("")
-  MarketingOptInNewsletter  Int                         @default(1)
-  custom_marketing_source   String?                     @default("")
-  insurer_id                Int?                        @default(0)
-  is_active                 Int                         @default(1)
-  xero_contact_id           String?                     @default("")
-  is_ambassador             Int                         @default(0)
-  UpdatedDate               DateTime?                   @updatedAt
-  xero_updated_date         DateTime?                   @default(now())
-  discount_type             Int?                        @default(0)
-  custom_clinic_id          Int?                        @default(0)
-  ambassador_id             Int?                        @default(0)
-  contract_id               Int?                        @default(0)
-  privacy_policy            String?                     @default("")
-  need_to_knows             Boolean?                    @default(false)
-  contact_type              Int                         @default(0)
-  SocialSurveyFeedback      SocialSurveyFeedback?
-  ContactAlert              ContactAlert[]
-  AccountBalance            AccountBalance[]
-  AccountBalanceLog         AccountBalanceLog[]
-  CmContactLocation         CmContactLocation[]
-  CmContactTravel           CmContactTravel[]
-  CmContactViewed           CmContactViewed[]
-  CmContactMedicalCondition CmContactMedicalCondition[]
-  ContactNote               ContactNote[]
-  CmExtraGym                CmExtraGym[]
-  CmExtraPatient            CmExtraPatient[]
-  CmExtraSalon              CmExtraSalon[]
-  InvPayment                InvPayment[]
-  LoyaltyLog                LoyaltyLog[]
-  LoyaltyPoints             LoyaltyPoints?
-  Attachments               ContactAttachment[]
-  Packages                  ContactPackage[]
-  Insurance                 InsuranceDetail?
-  Booking                   Booking[]
-  InvSale                   InvSale[]
-  InventoryMovement         InventoryMovement[]
-  InsuranceCompany          ContactInsurance[]
-  ContactMeta               ContactMeta[]
-  CommunicationRecipient    CommunicationRecipient[]
-  CmContactCustom           CmContactCustom[]
-  CmContactLabel            CmContactLabel[]
-  Activity                  Activity[]
-  Albums                    PhotoAlbum[]
-  ContactPreference         ContactPreference?
-  MarketingSourceData       MarketingSource?            @relation(fields: [MarketingSource], references: [id])
-  User                      User?                       @relation(fields: [OwnerID], references: [id])
-  Voucher                   Voucher[]                   @relation("Voucher")
-  PurchasedVoucher          Voucher[]                   @relation("PurchasedVoucher")
-  CmLead                    CmLead[]
-  PathwaysTaken             PathwaysTaken[]
-  PathwayStepsTaken         PathwayStepsTaken[]
-  CommunicationAttachment   CommunicationAttachment[]
-  RecallSchedule            RecallSchedule[]
-  LabRequest                LabRequest[]
+  ID                       Int                         @id @default(autoincrement())
+  Avatar                   String?                     @default("")
+  OwnerID                  Int
+  Salutation               String                      @default("None")
+  Fname                    String
+  company_id               Int                         @map("Occupier")
+  Company                  Company                     @relation(fields: [company_id], references: [id])
+  location_id              Int                         @default(0)
+  Email                    String
+  Phone                    String
+  OtherPhone               String?                     @default("")
+  Mobile                   String
+  Assistant                String?                     @default("")
+  ReportsTo                String?                     @default("")
+  LeadSource               String?                     @default("")
+  Lname                    String
+  Title                    String?                     @default("")
+  Department               String?                     @default("")
+  HomePhone                String?                     @default("")
+  Fax                      String?                     @default("")
+  DOB                      DateTime?
+  AsstPhone                String?                     @default("")
+  EmailOptOut              cm_contacts_EmailOptOut     @default(No)
+  SkypeId                  String?
+  AddToQuickBooks          cm_contacts_AddToQuickBooks @default(No)
+  SecondaryEmail           String?
+  Twitter                  String?                     @default("")
+  MailingStreet            String
+  OtherStreet              String?                     @default("")
+  MailingCity              String
+  OtherCity                String?                     @default("")
+  MailingProvince          String
+  OtherProvince            String?                     @default("")
+  MailingPostal            String
+  OtherPostal              String?                     @default("")
+  MailingCountry           String
+  OtherCountry             String?                     @default("")
+  Description              String?                     @default("")
+  Status                   cm_contacts_Status          @default(Enable)
+  CreatedDate              DateTime?                   @default(now())
+  IpAddress                Int?                        @default(0)
+  fbimg                    String?                     @default("")
+  MarketingSource          Int?                        @default(0)
+  RefferalSource           String?
+  LeadID                   Int?                        @default(0)
+  group_tag                String?                     @default("")
+  polite_notice            String?                     @default("")
+  custom_id                String
+  gender                   String?                     @default("")
+  MarketingOptInAll        Int?                        @default(0)
+  MarketingOptInEmail      Int?
+  MarketingOptInPhone      Int?
+  MarketingOptInPost       Int?
+  MarketingOptInText       Int?
+  notes_drop               String?                     @default("")
+  imported                 Int?                        @default(0)
+  alerts_drop              String?                     @default("")
+  MarketingSourceRelated   Int?                        @default(0)
+  customer_reference       String?                     @default("")
+  MarketingOptInNewsletter Int                         @default(1)
+  custom_marketing_source  String?                     @default("")
+  insurer_id               Int?                        @default(0)
+  is_active                Int                         @default(1)
+  xero_contact_id          String?                     @default("")
+  is_ambassador            Int                         @default(0)
+  UpdatedDate              DateTime?                   @updatedAt
+  xero_updated_date        DateTime?                   @default(now())
+  discount_type            Int?                        @default(0)
+  custom_clinic_id         Int?                        @default(0)
+  ambassador_id            Int?                        @default(0)
+  contract_id              Int?                        @default(0)
+  privacy_policy           String?                     @default("")
+  need_to_knows            Boolean?                    @default(false)
+  contact_type             Int                         @default(0)
+  SocialSurveyFeedback     SocialSurveyFeedback?
+  ContactAlert             ContactAlert[]
+  AccountBalance           AccountBalance[]
+  AccountBalanceLog        AccountBalanceLog[]
+  CmContactLocation        CmContactLocation[]
+  CmContactTravel          CmContactTravel[]
+  CmContactViewed          CmContactViewed[]
+  ContactMedicalCondition  ContactMedicalCondition[]
+  ContactNote              ContactNote[]
+  CmExtraGym               CmExtraGym[]
+  CmExtraPatient           CmExtraPatient[]
+  CmExtraSalon             CmExtraSalon[]
+  InvPayment               InvPayment[]
+  LoyaltyLog               LoyaltyLog[]
+  LoyaltyPoints            LoyaltyPoints?
+  Attachments              ContactAttachment[]
+  Packages                 ContactPackage[]
+  Insurance                InsuranceDetail?
+  Booking                  Booking[]
+  InvSale                  InvSale[]
+  InventoryMovement        InventoryMovement[]
+  InsuranceCompany         ContactInsurance[]
+  ContactMeta              ContactMeta[]
+  CommunicationRecipient   CommunicationRecipient[]
+  CmContactCustom          CmContactCustom[]
+  CmContactLabel           CmContactLabel[]
+  Activity                 Activity[]
+  Albums                   PhotoAlbum[]
+  ContactPreference        ContactPreference?
+  MarketingSourceData      MarketingSource?            @relation(fields: [MarketingSource], references: [id])
+  User                     User?                       @relation(fields: [OwnerID], references: [id])
+  Voucher                  Voucher[]                   @relation("Voucher")
+  PurchasedVoucher         Voucher[]                   @relation("PurchasedVoucher")
+  CmLead                   CmLead[]
+  PathwaysTaken            PathwaysTaken[]
+  PathwayStepsTaken        PathwayStepsTaken[]
+  CommunicationAttachment  CommunicationAttachment[]
+  RecallSchedule           RecallSchedule[]
+  LabRequest               LabRequest[]
 
   MedicalFormContact           MedicalFormContact[]
   CommunicationsRequestedForms CommunicationsRequestedForms[]
@@ -2420,18 +2420,18 @@ model ContactAlert {
   @@map("cm_contact_alerts")
 }
 
-model CmContactMedicalCondition {
+model ContactMedicalCondition {
   id                   Int              @id @default(autoincrement())
   company_id           Int
   contact_id           Int
-  medical_condition_id Int
-  medical_record_id    Int
+  medical_condition_id Int              @default(0)
+  medical_record_id    Int              @default(0)
   is_active            Boolean          @default(true)
   CmContact            CmContact        @relation(fields: [contact_id], references: [ID])
   Company              Company          @relation(fields: [company_id], references: [id])
   MedicalCondition     MedicalCondition @relation(fields: [medical_condition_id], references: [id])
 
-
+  @@unique([contact_id, medical_condition_id, medical_record_id], name: "unique_contact_medical_condition")
   @@map("cm_contact_medical_conditions")
 }
 
@@ -2776,20 +2776,19 @@ model CmLeadNote {
 //}
 //
 model MedicalCondition {
-  id         Int    @id @default(autoincrement())
-  name       String
-  company_id Int    @map("occupier")
-  custom_id  String
-  is_common  Int
+  id                      Int                       @id @default(autoincrement())
+  name                    String
+  company_id              Int                       @map("occupier")
+  custom_id               String?
+  is_common               Int?
+  ContactAlert            ContactAlert[]
+  ContactMedicalCondition ContactMedicalCondition[]
 
-  ContactAlert              ContactAlert[]
-  CmContactMedicalCondition CmContactMedicalCondition[]
-
+  @@unique([name, company_id], name: "unique_medical_condition_company")
   @@index([name], name: "name")
   @@map("cm_medical_conditions")
 }
 
-//
 //model cm_notes_custom {
 //  id                 Int      @id @default(autoincrement())
 //  contact_id         Int

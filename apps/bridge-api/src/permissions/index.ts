@@ -98,6 +98,7 @@ export const permissions = shield(
       deleteManyContactAttachment: rules.authentication.isAuthenticated,
       deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
+      createContactAlertAdvanced: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -134,6 +135,8 @@ export const permissions = shield(
       createOnePathwaysTaken: rules.interceptors.injectContact,
       // Communication
       changeEmailPrivacy: rules.authentication.isAuthenticated,
+      // LabRequest
+      updateOneLabRequest: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -194,6 +197,7 @@ export const permissions = shield(
       findFirstContactNote: rules.authentication.isAuthenticated,
       findManyContactNote: rules.authentication.isAuthenticated,
       findManyContactNoteCount: rules.authentication.isAuthenticated,
+      findManyContactAlert: rules.interceptors.injectContact,
       // //UserMainPermission
       findFirstUserMainPermission: rules.authentication.isAuthenticated,
       findManyUserMainPermission: rules.authentication.isAuthenticated,

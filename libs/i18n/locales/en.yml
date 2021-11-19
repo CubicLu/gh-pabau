@@ -4380,6 +4380,8 @@ en:
     ui.client-card-financial.invoices: Invoices
     ui.client-card-financial.invoices.all: All
     ui.client-card-financial.invoices.date: Date
+    ui.client-card-financial.invoices.credit-note: 'Credit Note Invoice'
+    ui.client-card-financial.items.total: 'Total'
     ui.client-card-financial.invoices.clear-all: 'Clear All'
     ui.client-card-financial.invoices.filter-by: 'Filter by'
     ui.client-card-financial.payments: Payments
@@ -5574,7 +5576,6 @@ en:
     team.user.personal.details.avtar.cancel.button: Cancel
     team.user.personal.details.avtar.create.button: Create
     team.user.personal.details.avtar.Preview.title: Preview
-    team.user.personal.details.avtar.upload.button: 'Upload file'
     journey.modal.appointements.status.waiting: Waiting
     journey.modal.appointements.status.arrived: Arrived
     journey.modal.appointements.status.in.progress: 'In Progress'
