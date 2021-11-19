@@ -2201,28 +2201,30 @@ model ActivityUserFilter {
 }
 
 model Activity {
-  id             Int          @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   created_by     Int
-  assigned_to    Int
-  contact_id     Int
-  lead_id        Int
+  assigned_to    Int?
+  completed_by   Int?
+  contact_id     Int?
+  lead_id        Int?
   subject        String
   note           String?
-  available      Boolean      @default(true)
-  status         String
+  available      Boolean         @default(true)
+  status         activity_status
   due_start_date DateTime?
   due_end_date   DateTime?
-  created_at     DateTime?    @default(now())
-  updated_at     DateTime?    @updatedAt
+  created_at     DateTime?       @default(now())
+  updated_at     DateTime?       @updatedAt
   finished_at    DateTime?
   type           Int
   company_id     Int
-  Company        Company      @relation(fields: [company_id], references: [id])
-  User           User         @relation("activityCreatedUser", fields: [created_by], references: [id])
-  CmContact      CmContact    @relation(fields: [contact_id], references: [ID])
-  CmLead         CmLead       @relation(fields: [lead_id], references: [ID])
-  ActivityType   ActivityType @relation(fields: [type], references: [id])
-  AssignedUser   User         @relation("activityAssignedUser", fields: [assigned_to], references: [id])
+  Company        Company         @relation(fields: [company_id], references: [id])
+  User           User            @relation("activityCreatedUser", fields: [created_by], references: [id])
+  CmContact      CmContact?      @relation(fields: [contact_id], references: [ID])
+  CmLead         CmLead?         @relation(fields: [lead_id], references: [ID])
+  ActivityType   ActivityType    @relation(fields: [type], references: [id])
+  AssignedUser   User?           @relation("activityAssignedUser", fields: [assigned_to], references: [id])
+  CompletedBy    User?           @relation("activityCompletedBy", fields: [completed_by], references: [id])
 
   @@index([company_id], name: "activity_company_id__index")
   @@index([company_id, due_start_date, status], name: "activity_company_id_due_start_date_status__index")
@@ -12912,6 +12914,7 @@ model User {
   Activity                     Activity[]                     @relation("activityCreatedUser")
   CmLead                       CmLead[]
   AssignedActivity             Activity[]                     @relation("activityAssignedUser")
+  CompletedBy                  Activity[]                     @relation("activityCompletedBy")
   PasswordResetAuth            PasswordResetAuth[]
   ServiceUserTier              ServiceUserTier[]
   ActivityUserState            ActivityUserState[]
@@ -14427,6 +14430,14 @@ model MedicalFormAdvancedSetting {
 
   @@unique([medical_form], name: "fk_medical_form")
   @@map("medical_form_advanced_setting")
+}
+
+enum activity_status {
+  awaiting
+  done
+  pending
+  reopened
+  working_on
 }
 
 enum booking_master_payment_status {
