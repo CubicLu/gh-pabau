@@ -14,27 +14,26 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
 
-//import { useCreateAppointmentMutation } from '@pabau/graphql'
-
-//import { BookingData } from '../../types/booking'
+import { useCreateOnlineBookingMutation } from '@pabau/graphql'
 import { SettingsContext } from '../../context/settings-context'
+import { useSelectedDataStore } from '../../store/selectedData'
 
 export function Index() {
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [hasMasterCategories, setHasMasterCategories] = useState<boolean>(true)
-  //const [selectedData, setSelectedData] = useState<BookingData>()
+  const { selectedData } = useSelectedDataStore()
   const { t } = useTranslationI18()
 
   const settings = useContext(SettingsContext)
 
-  // const [createBooking] = useCreateAppointmentMutation({
-  //   onCompleted(data) {
-  //     //I am not empty
-  //   },
-  //   onError(err) {
-  //     //I am not empty
-  //   },
-  // })
+  const [createBooking] = useCreateOnlineBookingMutation({
+    onCompleted(data) {
+      setCurrentStep(currentStep + 3)
+    },
+    onError(err) {
+      //I am not empty
+    },
+  })
 
   const goBackButton = () => {
     let buttonName = ''
@@ -159,27 +158,17 @@ export function Index() {
           )}
           {currentStep === 5 && (
             <BookingDetails
-              onConfirmed={function () {
-                // createBooking({
-                //   variables: {
-                //     user_id: selectedData.employee.ID,
-                //     company_id: settings.id,
-                //     location_id: selectedData.location.id,
-                //     service_id: 2691491,
-                //     contact_id: 22293092,
-                //     unique_id: '123',
-                //     start_date: selectedData.dateTime.format('YYYYMMDDHHmm00'),
-                //     end_date: moment(selectedData.dateTime)
-                //       .add(15, 'm')
-                //       .format('YYYYMMDDHHmm00'),
-                //     sent_sms: 0,
-                //     sent_email: 0,
-                //     sent_email_reminder: false,
-                //     sent_survey: 0,
-                //     issued_to: 22293092,
-                //   },
-                // })
-                setCurrentStep(currentStep + 3)
+              onConfirmed={function (contactsDetails) {
+                createBooking({
+                  variables: {
+                    company_id: settings.id,
+                    user_id: selectedData.employee.Public_User.id,
+                    service_ids: selectedData.services.map((s) => s.id),
+                    start_date: selectedData.dateTime._d,
+                    location_id: selectedData.location.id,
+                    contact: contactsDetails,
+                  },
+                })
               }}
               backToStep={(step: number) => {
                 setCurrentStep(step)

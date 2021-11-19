@@ -76,15 +76,10 @@ query getContactSaleItems($contactID: Int!) {
   }
 }
 
-query aggregateAccountPayments($contactID: Int) {
-  totalInv: aggregateInvSale(
-    where: {
-      reference_no: { contains: "ACCOUNT PAYMENT" }
-      CmContact: { ID: { equals: $contactID } }
-    }
+query getContactAccountBalance($contactID: Int!) {
+  AccountBalance: findFirstAccountBalance(
+    where: { CmContact: { ID: { equals: $contactID } } }
   ) {
-    total_amount: sum {
-      inv_total
-    }
+    balance
   }
 }

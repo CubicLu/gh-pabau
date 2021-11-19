@@ -101,6 +101,7 @@ const Financial = () => {
         ]}
       >
         <Invoices
+          clientId={Number.parseInt(`${router.query.id}`)}
           invoice={invoice}
           salesDetails={salesDetails}
           loading={loading}

@@ -1,11 +1,11 @@
 import { objectType } from 'nexus'
 
-export const CmContactMedicalCondition = objectType({
+export const ContactMedicalCondition = objectType({
   nonNullDefaults: {
     output: true,
     input: false,
   },
-  name: 'CmContactMedicalCondition',
+  name: 'ContactMedicalCondition',
   definition(t) {
     t.int('id')
     t.int('company_id')
