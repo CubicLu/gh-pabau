@@ -67,7 +67,7 @@ const Vouchers = () => {
                     equals: contactID,
                   },
                 },
-                amount: {
+                remaining_balance: {
                   equals: 0,
                 },
               },
@@ -92,7 +92,7 @@ const Vouchers = () => {
             expiry_date: {
               gte: new Date().toISOString(),
             },
-            amount: { gt: 0 },
+            remaining_balance: { gt: 0 },
           },
           take: paginateData.limit,
           skip: paginateData.offset,
