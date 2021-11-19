@@ -17,11 +17,17 @@ import {
   SwitcherOutlined,
   CaretDownOutlined,
 } from '@ant-design/icons'
-import { Popover, Tooltip, Drawer } from 'antd'
+import { Popover, Tooltip, Drawer, Pagination } from 'antd'
 import styles from './CommunicationTimeline.module.less'
 import { groupByDay } from './utils'
 import dayjs from 'dayjs'
-import { Button, Avatar, DotButton } from '@pabau/ui'
+import {
+  Button,
+  Avatar,
+  DotButton,
+  Epaper,
+  FullScreenReportModal,
+} from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import calendar from 'dayjs/plugin/calendar'
@@ -39,15 +45,26 @@ import { ReactComponent as ReplayIcon } from '../../assets/images/timeline/repla
 import { ReactComponent as ForwardIcon } from '../../assets/images/timeline/forward-icon.svg'
 import TimelineSkeleton from './CommunicationSkeleton'
 import dynamic from 'next/dynamic'
-
+import { getImage } from '../../helper/uploaders/UploadHelpers'
+import ReactHtmlParser, {
+  convertNodeToElement,
+  processNodes,
+} from 'react-html-parser'
 dayjs.extend(calendar)
 
 export interface CommunicationTimelineProps {
   eventsData: EventsDataProps[]
   eventDateFormat: string
   isLoading?: boolean
+  pagination?: PaginationType
+  setPagination?: (e: PaginationType) => void
 }
-
+export interface PaginationType {
+  total?: number
+  limit?: number
+  offSet?: number
+  currentPage?: number
+}
 interface ClientDetailProps {
   name?: string
   createdAt?: string
@@ -84,9 +101,10 @@ export interface EventsDataProps {
   audioFile?: string
   sharedWith?: SharedByProps[]
   authorName?: string
+  letterUrl?: string
 }
 
-interface PinItemProps {
+export interface PinItemProps {
   item?: string
 }
 
@@ -98,7 +116,7 @@ const statuses = {
 }
 
 const types = {
-  mail: 'mail',
+  mail: 'email',
   sms: 'sms',
   letter: 'letter',
   call: 'call',
@@ -119,9 +137,11 @@ const headerFilter = {
 // })
 
 export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
-  eventsData = [],
+  eventsData,
   eventDateFormat,
   isLoading,
+  pagination,
+  setPagination,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 768px)')
@@ -131,13 +151,73 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
   const [selectedFilter, setSelectedFilter] = useState(
     Object.values(headerFilter)
   )
+  const [paginateData, setPaginateData] = useState({
+    total: pagination?.total ?? 0,
+    offset: pagination?.offSet ?? 0,
+    pageSize: pagination?.limit ?? 50,
+    currentPage: pagination?.currentPage ?? 1,
+  })
+  function transform(node, index) {
+    // return null to block certain elements
+    // don't allow <span> elements
+    if (node.type === 'tag' && node.name === 'span') {
+      return null
+    }
 
+    // Transform <ul> into <ol>
+    // A node can be modified and passed to the convertNodeToElement function which will continue to render it and it's children
+    if (node.type === 'tag' && node.name === 'ul') {
+      node.name = 'ol'
+      return convertNodeToElement(node, index, transform)
+    }
+
+    // return an <i> element for every <b>
+    // a key must be included for all elements
+    if (node.type === 'tag' && node.name === 'b') {
+      return <i key={index}>{processNodes(node.children, transform)}</i>
+    }
+
+    // all links must open in a new window
+    if (node.type === 'tag' && node.name === 'a') {
+      node.attribs.target = '_blank'
+      return convertNodeToElement(node, index, transform)
+    }
+  }
+
+  const options = {
+    decodeEntities: true,
+    transform,
+  }
   const { days = [], eventsByDay } = groupByDay(
-    filteredEvents,
+    !pagination
+      ? filteredEvents.slice(
+          paginateData.offset,
+          paginateData.currentPage * paginateData.pageSize
+        )
+      : filteredEvents,
     eventDateFormat,
     t
   )
-
+  const [showDocumentViewer, setShowDocumentViewer] = useState<boolean>(false)
+  const [numPages, setNumPages] = useState<number>(0)
+  const [pageNumber, setPageNumber] = useState<number>(1)
+  const [letterUrl, setLetterUrl] = useState<string>()
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages)
+  }
+  const onSetNumPages = (page: number) => {
+    setPageNumber(page)
+  }
+  const onPageChange = (currentPage, size) => {
+    const offset = paginateData.pageSize * (currentPage - 1)
+    setPagination?.({
+      ...pagination,
+      offSet: offset,
+      currentPage: currentPage,
+      limit: size,
+    })
+    setPaginateData((d) => ({ ...d, offset, currentPage, pageSize: size }))
+  }
   useEffect(() => {
     if (eventsData) {
       setEvents(
@@ -161,7 +241,13 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       })
     }
     setFilteredEvents(filterEvents)
-  }, [events, selectedFilter])
+    setPaginateData((d) => ({
+      ...d,
+      currentPage: pagination?.currentPage ?? 1,
+      offset: pagination?.offSet ?? 0,
+      total: pagination?.total ?? filterEvents?.length,
+    }))
+  }, [events, selectedFilter, pagination])
 
   const handleCollapse = (event) => {
     setCollapseEvent((e) => ({
@@ -170,6 +256,10 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
         ? !collapseEvent?.[`event_${event.id}`]
         : true,
     }))
+    if (event.type === 'letter') {
+      setLetterUrl(event.letterUrl)
+      setShowDocumentViewer(!showDocumentViewer)
+    }
   }
 
   const timeFormat = (date) => {
@@ -281,7 +371,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
     }
 
     const openFile = (url) => {
-      window.open(url, '_blank')
+      window.open(getImage(url), '_blank')
     }
 
     const pinPopoverContent = (items = []) => {
@@ -433,7 +523,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
                 </span>
               </Tooltip>
             )}
-            {event.type === types.mail && (
+            {event.type.toLocaleLowerCase() === types.mail && (
               <div className={styles.inboundEmailWrapper}>
                 <RenderInboundEmail event={event} />
               </div>
@@ -520,7 +610,14 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
                 : styles.collapseClass
             }`}
           >
-            <h5>{event.description}</h5>
+            {/* <h5>{event.description}</h5> */}
+            {/* <div
+              //className={styles.dangerousWrapper}
+              dangerouslySetInnerHTML={{ __html: event.description }}
+            /> */}
+            <div className={styles.dangerousWrapper}>
+              {ReactHtmlParser(event.description, options)}
+            </div>
           </span>
         )}
         {event.audioFile && event.type === types.voice && (
@@ -661,6 +758,29 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
 
   return (
     <div className={styles.followWrapper}>
+      {showDocumentViewer && (
+        <FullScreenReportModal
+          className={styles.modalPreview}
+          visible={showDocumentViewer}
+          title={''}
+          footer={false}
+          onBackClick={() => setShowDocumentViewer(false)}
+          onClose={() => setShowDocumentViewer(false)}
+        >
+          <div className={styles.documentViewerWrapper}>
+            <div className={styles.documentWrapper}>
+              <Epaper
+                title={''}
+                pdfURL={letterUrl}
+                numPages={numPages}
+                pageNumber={pageNumber}
+                onDocumentLoadSuccess={onDocumentLoadSuccess}
+                onSetNumPages={onSetNumPages}
+              />
+            </div>
+          </div>
+        </FullScreenReportModal>
+      )}
       <div className={styles.headerLian}>
         <div className={styles.header}>
           <div className={styles.iconGroup}>
@@ -770,6 +890,15 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               )}
             </div>
           )}
+        </div>
+        <div className={styles.customPage}>
+          <Pagination
+            defaultCurrent={1}
+            current={paginateData.currentPage}
+            pageSize={paginateData.pageSize}
+            onChange={(page, size) => onPageChange(page, size)}
+            total={paginateData?.total}
+          />
         </div>
       </div>
     </div>

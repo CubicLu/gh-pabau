@@ -20,6 +20,9 @@ fragment Communication on Communication {
   Company {
     ...CompanyFields
   }
+  Users {
+    ...UserFields
+  }
 }
 
 mutation createOneCommunication($data: CommunicationCreateInput!) {

@@ -3561,23 +3561,24 @@ model Voucher {
 //}
 //
 model Communication {
-  id                        Int                          @id @default(autoincrement())
-  company_id                Int
-  from_address              String
-  uid                       Int
-  location_id               Int
-  type                      communications_type
-  secure                    Boolean                      @default(false)
-  date                      DateTime
-  communications_content_id Int
-  related_id                Int?
-  related_type              communications_related_type?
-  Content                   CommunicationContent         @relation(fields: [communications_content_id], references: [id])
-  Company                   Company                      @relation(fields: [company_id], references: [id])
-  CommunicationAttachment   CommunicationAttachment[]
-  CommunicationRecipient    CommunicationRecipient[]
-
+  id                           Int                            @id @default(autoincrement())
+  company_id                   Int
+  from_address                 String
+  uid                          Int
+  location_id                  Int
+  type                         communications_type
+  secure                       Boolean                        @default(false)
+  date                         DateTime
+  communications_content_id    Int
+  related_id                   Int?
+  related_type                 communications_related_type?
+  Content                      CommunicationContent?          @relation(fields: [communications_content_id], references: [id])
+  Company                      Company                        @relation(fields: [company_id], references: [id])
+  CommunicationAttachment      CommunicationAttachment[]
+  CommunicationRecipient       CommunicationRecipient[]
   CommunicationsRequestedForms CommunicationsRequestedForms[]
+  Users                        User?                          @relation(fields: [uid], references: [id])
+
   @@index([communications_content_id], name: "communications_content_id")
   @@index([company_id, uid], name: "company_id")
   @@index([date], name: "date")
@@ -3589,7 +3590,7 @@ model CommunicationContent {
   company_id     Int
   hash           String
   subject        String?
-  body           String
+  body           String?
   Communications Communication[]
 
   @@unique([company_id, hash], name: "company_id_hash")
@@ -3623,7 +3624,7 @@ model CommunicationRecipient {
   recipient_type    communications_recipients_recipient_type
   remote_key        String?
   delivered_result  String?
-  read_count        Int                                      @default(0)
+  read_count        Int?                                     @default(0)
   to_address        String
   cc                String
   provider_id       Int
@@ -12925,6 +12926,7 @@ model User {
   PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
 
 
+  Communication Communication[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

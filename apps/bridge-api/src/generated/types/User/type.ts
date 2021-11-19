@@ -749,6 +749,20 @@ export const User = objectType({
         return root.PrescriberMedicalFormContact
       },
     })
+    t.list.field('Communication', {
+      type: 'Communication',
+      args: {
+        where: 'CommunicationWhereInput',
+        orderBy: 'CommunicationOrderByWithRelationInput',
+        cursor: 'CommunicationWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Communication
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {

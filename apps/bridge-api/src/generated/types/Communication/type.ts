@@ -18,7 +18,7 @@ export const Communication = objectType({
     t.int('communications_content_id')
     t.nullable.int('related_id')
     t.nullable.field('related_type', { type: 'communications_related_type' })
-    t.field('Content', {
+    t.nullable.field('Content', {
       type: 'CommunicationContent',
       resolve(root: any) {
         return root.Content
@@ -70,6 +70,12 @@ export const Communication = objectType({
       },
       resolve(root: any) {
         return root.CommunicationsRequestedForms
+      },
+    })
+    t.nullable.field('Users', {
+      type: 'User',
+      resolve(root: any) {
+        return root.Users
       },
     })
     t.nullable.field('_count', {

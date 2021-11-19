@@ -278,6 +278,8 @@ export const permissions = shield(
       getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
+      //communicationrecipient count
+      findManyCommunicationRecipientCount: rules.authentication.isAuthenticated,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData
