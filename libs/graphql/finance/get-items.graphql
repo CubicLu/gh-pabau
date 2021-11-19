@@ -37,7 +37,7 @@ query saleItems($guid: String!) {
 
 query getContactSaleItem($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
   items:findManySaleItem(where:
-    {InvSale:{customer_id:{equals: $customer_id}}, product_category_type:{not:{equals:""}}}
+    {InvSale:{customer_id:{equals: $customer_id}}, product_category_type: {not: {equals:""}}}
     orderBy:{InvSale:{date:desc}}
     take: $take,
     skip: $skip
