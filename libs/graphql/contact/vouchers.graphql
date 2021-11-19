@@ -68,12 +68,15 @@ query countVouchersByStatus($contactID: Int, $date: DateTime) {
       Contact: { ID: { equals: $contactID } }
       status: { equals: "Active" }
       expiry_date: { gte: $date }
+      amount: { gt: 0 }
     }
   )
   expiredCount: findManyVoucherCount(
     where: {
-      Contact: { ID: { equals: $contactID } }
-      expiry_date: { lt: $date }
+      OR: [
+        { Contact: { ID: { equals: $contactID } }, expiry_date: { lt: $date } }
+        { Contact: { ID: { equals: $contactID } }, amount: { equals: 0 } }
+      ]
     }
   )
 }
