@@ -5783,3 +5783,10 @@ en:
     setup.senders.visibility.shared: Shared
     setup.senders.visibility: Visibility
     setup.senders.gmail.connection.error: 'Error! while connecting gmail'
+    create.activity.user.name: '{{name}} (You)'
+    create.activity.modal.subject.required: 'Subject is required'
+    create.activity.modal.subject.max.validation.message: 'Subject should be 50 character maximum'
+    create.activity.modal.free.busy.tooltip: 'This option will control if you are shown as available or booked out in your Pabau calendar.'
+    create.activity.big.calendar.previous.title: 'Previous Day'
+    create.activity.big.calendar.next.title: 'Next Day'
+    create.activity.modal.success.message: 'Success! You have successfully created a activity'

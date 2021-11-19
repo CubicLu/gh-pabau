@@ -18,7 +18,7 @@ import {
   NotificationType,
   PaginationType,
 } from '@pabau/ui'
-import { ActivityTypeFilter } from '../../activities'
+import { ActivityTypeFilter } from '../../../components/Activities/CreateActivity'
 import { DisplayDate } from '../../../hooks/displayDate'
 
 const ActivitiesTab = () => {
