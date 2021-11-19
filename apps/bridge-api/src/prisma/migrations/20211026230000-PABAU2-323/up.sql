@@ -38,4 +38,5 @@ ALTER TABLE `salon_bookings` CHANGE `external_guest_ids` `external_guest_ids` VA
 ALTER TABLE `salon_bookings` CHANGE `description` `description` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 ALTER TABLE `salon_bookings` CHANGE `issued_to` `issued_to` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `salon_bookings` CHANGE `contract_id` `contract_id` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `cm_contacts` CHANGE `MarketingSource` `MarketingSource` INT(11) NULL DEFAULT NULL;
 COMMIT;

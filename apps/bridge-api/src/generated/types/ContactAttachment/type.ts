@@ -15,6 +15,7 @@ export const ContactAttachment = objectType({
     t.nullable.string('attach_name')
     t.nullable.int('user_id')
     t.string('attachment_type')
+    t.nullable.string('sub_type')
     t.nullable.boolean('connect_public')
     t.nullable.boolean('website_public')
     t.nullable.string('attachment_title')

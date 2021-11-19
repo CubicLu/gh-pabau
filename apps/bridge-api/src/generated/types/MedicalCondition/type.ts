@@ -10,8 +10,8 @@ export const MedicalCondition = objectType({
     t.int('id')
     t.string('name')
     t.int('company_id')
-    t.string('custom_id')
-    t.int('is_common')
+    t.nullable.string('custom_id')
+    t.nullable.int('is_common')
     t.list.field('ContactAlert', {
       type: 'ContactAlert',
       args: {
@@ -26,18 +26,18 @@ export const MedicalCondition = objectType({
         return root.ContactAlert
       },
     })
-    t.list.field('CmContactMedicalCondition', {
-      type: 'CmContactMedicalCondition',
+    t.list.field('ContactMedicalCondition', {
+      type: 'ContactMedicalCondition',
       args: {
-        where: 'CmContactMedicalConditionWhereInput',
-        orderBy: 'CmContactMedicalConditionOrderByWithRelationInput',
-        cursor: 'CmContactMedicalConditionWhereUniqueInput',
+        where: 'ContactMedicalConditionWhereInput',
+        orderBy: 'ContactMedicalConditionOrderByWithRelationInput',
+        cursor: 'ContactMedicalConditionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactMedicalConditionScalarFieldEnum',
+        distinct: 'ContactMedicalConditionScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactMedicalCondition
+        return root.ContactMedicalCondition
       },
     })
     t.nullable.field('_count', {

@@ -2,6 +2,7 @@ query getPayments($contactID: Int!, $take: Int = 50, $skip: Int = 0) {
   payments: findManyInvPayment(
     take: $take
     skip: $skip
+    orderBy: { date: desc }
     where: { contact_id: { equals: $contactID } }
   ) {
     id

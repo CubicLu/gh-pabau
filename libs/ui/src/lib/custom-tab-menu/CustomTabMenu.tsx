@@ -89,9 +89,9 @@ export const CustomTabMenu: FC<P> = ({
                       </div>
                     )}
 
-                    {tab.tags !== undefined &&
-                      tab.tags.length > 0 &&
-                      tab.tags.map((tag, key) => {
+                    {tab?.tags !== undefined &&
+                      tab?.tags.length > 0 &&
+                      tab?.tags.map((tag, key) => {
                         return (
                           <Tag
                             style={{ marginLeft: 10 }}
