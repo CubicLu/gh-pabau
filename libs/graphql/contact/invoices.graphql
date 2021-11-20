@@ -24,7 +24,7 @@ query aggregateInvoiceCounts($contactID: Int!){
 	aggregateInvSale(where:{
     customer_id:{equals: $contactID},
     Location:{name:{not:{equals:""}}},
-    reference_no:{not:{equals:"**REFUND**"}}
+    reference_no:{not:{in:["**REFUND**","ACCOUNT PAYMENT"]}}
   }){
     sum{
       paid_amount
