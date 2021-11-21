@@ -1,4 +1,4 @@
-import { extendType, mutationField, nonNull } from 'nexus'
+import { extendType, nonNull } from 'nexus'
 
 export const contactAlertMutation = extendType({
   type: 'Mutation',
