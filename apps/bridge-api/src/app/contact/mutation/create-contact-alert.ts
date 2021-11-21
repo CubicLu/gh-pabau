@@ -73,7 +73,7 @@ export const contactAlertMutation = extendType({
         { data, where },
         { prisma, select, authenticated }
       ) {
-        const { id, Note } = await prisma.contactAlert.findFirst({
+        const { Note } = await prisma.contactAlert.findFirst({
           where,
         })
 
@@ -107,7 +107,7 @@ export const contactAlertMutation = extendType({
             (x) => x.ContactID === data.CmContact.connect.ID
           )
           if (stillExists.length === 0) {
-            const deleted = await prisma.contactMedicalCondition.delete({
+            await prisma.contactMedicalCondition.delete({
               contact_id: data.CmContact.connect.ID,
               medical_record_id: 0,
               MedicalCondition: { name: old_tag },
@@ -115,7 +115,7 @@ export const contactAlertMutation = extendType({
             })
           }
           if (contactAlerts.length === 0) {
-            const deleted = await prisma.medicalCondition.delete({
+            await prisma.medicalCondition.delete({
               name: old_tag,
               company_id: authenticated.company,
             })
