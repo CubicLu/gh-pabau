@@ -59,7 +59,7 @@ export interface ActivitiesProps {
   DisplayDate?: (date: Date) => string
   activityTypeFilterList?: ActivityTypeFilter[]
   activityTypeLoading?: boolean
-  onActivityFilterChange?: (id: number) => void
+  onActivityFilterChange?: (id: number, selected: boolean) => void
 }
 
 export interface ActivitiesDataProps {
@@ -413,7 +413,9 @@ export const Activities: FC<ActivitiesProps> = ({
               <div>
                 {activityTypeFilterList?.map((item) => (
                   <div
-                    onClick={() => onActivityFilterChange?.(item.id)}
+                    onClick={() =>
+                      onActivityFilterChange?.(item.id, item.isSelected)
+                    }
                     className={classNames({
                       [styles.active]: item.isSelected,
                     })}
