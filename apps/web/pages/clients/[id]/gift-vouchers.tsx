@@ -92,7 +92,7 @@ const Vouchers = () => {
             expiry_date: {
               gte: new Date().toISOString(),
             },
-            remaining_balance: { gt: 0 },
+            remaining_balance: { gte: 0 },
           },
           take: paginateData.limit,
           skip: paginateData.offset,
