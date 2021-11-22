@@ -62,8 +62,7 @@ export const contactAlertMutation = extendType({
       },
     })
     t.field('updateContactAlertAdvanced', {
-      // type: nonNull('ContactAlert'),
-      type: 'Int',
+      type: nonNull('ContactAlert'),
       args: {
         where: nonNull('ContactAlertWhereUniqueInput'),
         data: nonNull('ContactAlertUpdateInput'),
@@ -126,60 +125,59 @@ export const contactAlertMutation = extendType({
 
         console.info('tags:', tags_old, tags, difference)
 
-        // for (const tag of tags) {
-        //   // console.info('--->', tag)
-        //   const { id } = await prisma.medicalCondition.upsert({
-        //     where: {
-        //       unique_medical_condition_company: {
-        //         name: tag,
-        //         company_id: authenticated.company,
-        //       },
-        //     },
-        //     create: {
-        //       name: tag,
-        //       company_id: authenticated.company,
-        //     },
-        //     update: {},
-        //     select: {
-        //       id: true,
-        //     },
-        //   })
-        //   const refCondition = await prisma.contactMedicalCondition.upsert({
-        //     where: {
-        //       unique_contact_medical_condition: {
-        //         contact_id: data.CmContact.connect.ID,
-        //         medical_condition_id: id,
-        //         medical_record_id: 0,
-        //       },
-        //     },
-        //     create: {
-        //       contact_id: data.CmContact.connect.ID,
-        //       company_id: authenticated.company,
-        //       medical_condition_id: id,
-        //     },
-        //     update: {},
-        //     select: {
-        //       id: true,
-        //     },
-        //   })
-        //   // console.info('condition', tag, id, refCondition)
-        // }
-        // console.info('---->', where, data, select)
+        for (const tag of tags) {
+          // console.info('--->', tag)
+          const { id } = await prisma.medicalCondition.upsert({
+            where: {
+              unique_medical_condition_company: {
+                name: tag,
+                company_id: authenticated.company,
+              },
+            },
+            create: {
+              name: tag,
+              company_id: authenticated.company,
+            },
+            update: {},
+            select: {
+              id: true,
+            },
+          })
+          const refCondition = await prisma.contactMedicalCondition.upsert({
+            where: {
+              unique_contact_medical_condition: {
+                contact_id: data.CmContact.connect.ID,
+                medical_condition_id: id,
+                medical_record_id: 0,
+              },
+            },
+            create: {
+              contact_id: data.CmContact.connect.ID,
+              company_id: authenticated.company,
+              medical_condition_id: id,
+            },
+            update: {},
+            select: {
+              id: true,
+            },
+          })
+          // console.info('condition', tag, id, refCondition)
+        }
+        console.info('---->', where, data, select)
 
-        // console.info(
-        //   await prisma.contactAlert.update({
-        //     where,
-        //     data,
-        //     select: {
-        //       ID: true,
-        //     },
-        //   })
-        // )
-        // return prisma.contactAlert.findFirst({
-        //   where,
-        //   ...select,
-        // })
-        return 1
+        console.info(
+          await prisma.contactAlert.update({
+            where,
+            data,
+            select: {
+              ID: true,
+            },
+          })
+        )
+        return prisma.contactAlert.findFirst({
+          where,
+          ...select,
+        })
       },
     })
   },
