@@ -161,7 +161,7 @@ export const contactAlertMutation = extendType({
               id: true,
             },
           })
-          // console.info('condition', tag, id, refCondition)
+          console.info('condition', tag, id, refCondition)
         }
         console.info('---->', where, data, select)
 
