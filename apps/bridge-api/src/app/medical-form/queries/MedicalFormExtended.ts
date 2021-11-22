@@ -36,5 +36,19 @@ export const MedicalFormExtended = extendType({
         })
       },
     })
+    t.field('Services', {
+      type: nonNull(list('CompanyService')),
+      async resolve(parent: MedicalForm, args, ctx: Context) {
+        const service_ids = parent.service_id?.split(',').map(function (x) {
+          return Number.parseInt(x, 10)
+        })
+        if (service_ids.length === 0) return []
+        return await ctx.prisma.companyService.findMany({
+          where: {
+            id: { in: service_ids },
+          },
+        })
+      },
+    })
   },
 })
