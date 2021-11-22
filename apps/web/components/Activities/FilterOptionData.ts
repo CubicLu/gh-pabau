@@ -572,23 +572,23 @@ export const getData = (t) => {
 
   const statusMenu = [
     {
-      id: 'Pending',
+      id: 'pending',
       name: t('create.filter.modal.status.pending'),
     },
     {
-      id: 'Working on',
+      id: 'working_on',
       name: t('create.filter.modal.status.workingOn'),
     },
     {
-      id: 'Reopened',
+      id: 'reopened',
       name: t('create.filter.modal.status.reopened'),
     },
     {
-      id: 'Done',
+      id: 'done',
       name: t('create.filter.modal.status.done'),
     },
     {
-      id: 'Awaiting',
+      id: 'awaiting',
       name: t('create.filter.modal.status.awaiting'),
     },
   ]

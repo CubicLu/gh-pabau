@@ -41,6 +41,7 @@ export const MainInvoice = extendType({
       async resolve(_root, input, ctx: Context) {
         const query = generateInvoiceQuery(ctx, input, [
           "a.reference_no!='**REFUND**' ",
+          "a.reference_no!='ACCOUNT PAYMENT'",
         ])
         console.info('-->', query)
         return await ctx.prisma.$queryRaw(query)
@@ -97,7 +98,7 @@ export const MainInvoice = extendType({
           SELECT
             a.id,
             a.inv_total as amount,
-            concat('refund/',IFNULL(a.paid_by,'card')) as pmethod,
+            if(reference_no='**REFUND**' ,concat('refund/',IFNULL(a.paid_by,'card')), 'account payment') as pmethod,
             date as created_date,
             date,
             b.name as location,
@@ -109,7 +110,7 @@ export const MainInvoice = extendType({
           left join inv_billers c on c.id=a.biller_id
           left join users d on d.id=a.uid
           where
-          a.occupier = ${ctx.authenticated.company} and reference_no="**REFUND**" and a.customer_id = ${input?.where?.customer_id?.equals}
+          a.occupier = ${ctx.authenticated.company} and reference_no in ("**REFUND**", "ACCOUNT BALANCE") and a.customer_id = ${input?.where?.customer_id?.equals}
         )t
         order by date desc
         LIMIT ${input.take}
@@ -128,6 +129,7 @@ export const MainInvoice = extendType({
       async resolve(_root, input, ctx: Context) {
         const query = generateInvoiceCountQuery(ctx, input, [
           "a.reference_no!='**REFUND**' ",
+          "a.reference_no!='ACCOUNT PAYMENT'",
         ])
         const invoices = await ctx.prisma.$queryRaw(query)
 
