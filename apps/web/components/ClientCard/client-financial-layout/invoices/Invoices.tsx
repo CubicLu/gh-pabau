@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Table, Pagination, Avatar } from '@pabau/ui'
+import { Table, Pagination } from '@pabau/ui'
 import classNames from 'classnames'
 import moment from 'moment'
 import { InvoiceProp } from './../ClientFinancialsLayout'
@@ -17,10 +17,9 @@ import {
   Select,
   DatePicker,
   Tag,
-  Tooltip,
   Skeleton,
 } from 'antd'
-import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
+import { FilterOutlined } from '@ant-design/icons'
 import {
   GetFinancialInvoicesQuery,
   SaleItemsQuery,
@@ -286,30 +285,6 @@ export const Invoices: FC<P> = (props) => {
                 {t('ui.client-card-financial.invoice.free')}
               </Tag>
             )}
-            {invoices[0]?.id === row.id && (
-              <div className={styles.shareIcon}>
-                <Tooltip
-                  trigger={'click'}
-                  arrowPointAtCenter
-                  title={
-                    <div>
-                      <p className={styles.shareTootip}>
-                        {t('ui.client-card-financial.shared-with')}
-                      </p>
-                      {[row.employee].map((x, index) => {
-                        return (
-                          <span className={styles.avatarIcon} key={index}>
-                            <Avatar key={index} name={x} size="large" />
-                          </span>
-                        )
-                      })}
-                    </div>
-                  }
-                >
-                  <EyeOutlined />
-                </Tooltip>
-              </div>
-            )}
           </div>
         )
       },
@@ -547,9 +522,9 @@ export const Invoices: FC<P> = (props) => {
                     className={styles.totalValueSkeleton}
                   />
                 )}
-                {!salesDetaillLoading &&
-                !salesDetails?.items[0]?.InvSale?.CreditRef?.custom_id ? (
-                  !record.paid && (
+                {!salesDetaillLoading ? (
+                  !salesDetails?.items[0]?.InvSale?.CreditRef?.custom_id &&
+                  record.paid === 'unpaid' && (
                     <Button type="primary">{`${t(
                       'ui.client-card-financial.pay'
                     )} ${stringToCurrencySignConverter(
@@ -892,8 +867,8 @@ export const Invoices: FC<P> = (props) => {
                   value:
                     (totalCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
                     (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0) -
-                    (totalCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
-                    (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0),
+                    ((totalCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
+                      (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0)),
                   valueColor: '#FF5B64',
                 },
                 {

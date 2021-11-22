@@ -117,9 +117,17 @@ export const Payments: FC<IPaymentsProps> = ({
 
   const columns = [
     {
-      title: t('ui.client-card-financial.payments.date'),
+      title: t('ui.client-card-financial.payments.payment-no'),
       dataIndex: 'date',
       visible: true,
+      render: function renderItem(value, row) {
+        return (
+          <span className={styles.paymentNo}>
+            <span>{value}</span>
+            <span>#{row.paymentNo}</span>
+          </span>
+        )
+      },
     },
     {
       title: t('ui.client-card-financial.payments.invoice-no'),
@@ -135,18 +143,6 @@ export const Payments: FC<IPaymentsProps> = ({
               #{value}
             </span>
           </Tooltip>
-        )
-      },
-    },
-    {
-      title: t('ui.client-card-financial.payments.payment-no'),
-      dataIndex: 'paymentNo',
-      visible: true,
-      render: function renderItem(value) {
-        return (
-          <span className={styles.primaryText}>
-            <span>#{value}</span>
-          </span>
         )
       },
     },
@@ -285,11 +281,22 @@ export const Payments: FC<IPaymentsProps> = ({
                   switch (column.dataIndex) {
                     case 'date':
                       return (
-                        <Skeleton.Input
-                          active={true}
-                          size="small"
-                          className={styles.columnSkeleton}
-                        />
+                        <span className={styles.paymentNo}>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idSkeleton}
+                            />
+                          </span>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idValueSkeleton}
+                            />
+                          </span>
+                        </span>
                       )
                     case 'invoiceNo':
                       return (

@@ -119,6 +119,87 @@ export const MainInvoice = extendType({
         return await ctx.prisma.$queryRaw(query)
       },
     })
+    t.list.field('findManySoldItems', {
+      type: 'Json',
+      description: 'Get Sold Items per Customer ID',
+      args: {
+        contact_id: 'Int',
+        skip: intArg({
+          default: 0,
+        }),
+        take: intArg({
+          default: 50,
+        }),
+      },
+      async resolve(_root, input, ctx: Context) {
+        const query = `SELECT * from
+        (
+            SELECT a.id,
+            a.date,
+            b.product_name,
+            b.unit_price,
+            b.gross_total,
+            b.quantity,
+            b.val_tax,
+            u.full_name as biller_name,
+            a.custom_id,
+            IF(d.category_type is null, if(product_category_type is null, 'service', product_category_type), category_type) as type
+          FROM   inv_sales a
+            LEFT JOIN inv_sale_items b ON a.id = b.sale_id
+            LEFT JOIN inv_products c ON b.product_id = c.id
+            LEFT JOIN inv_categories d ON c.category_id = d.id
+            LEFT JOIN users u	ON a.uid = u.id
+            LEFT JOIN company_details e ON e.company_id=a.occupier
+          WHERE  a.occupier= ${ctx.authenticated.company} and a.reference_no not in ("**REFUND**", "**CREDIT NOTE**", "ACCOUNT PAYMENT")
+            AND a.customer_id = ${input?.contact_id}
+            AND a.refund_to = 0
+          UNION
+          SELECT s.id,
+            s.date AS date,
+            CONCAT(c.name, ' - PK USED') as product_name,
+            (c.price / c.session_count) AS unit_price,
+            (c.price / c.session_count) as gross_total,
+            CONCAT('1','/', c.session_count) as quantity,
+            0 as val_tax,
+            s.biller_name,
+            s.custom_id,
+            'service' as type
+          FROM   contact_packages a
+            LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
+            LEFT JOIN session_packages c ON a.package_id = c.id
+            LEFT JOIN inv_sales s ON s.id = a.invoice_id
+            LEFT JOIN company_details e ON e.company_id=a.occupier
+          WHERE
+          contact_id = ${input?.contact_id}
+          and a.occupier = ${ctx.authenticated.company}
+        )t
+        order by date desc
+        LIMIT ${input.take}
+        OFFSET ${input.skip}`
+        return await ctx.prisma.$queryRaw(query)
+      },
+    })
+    t.field('countSoldItems', {
+      type: 'Int',
+      description: 'Real count of items',
+      args: {
+        contact_id: 'Int',
+      },
+      async resolve(_root, input, ctx: Context) {
+        const invoices = await ctx.prisma
+          .$queryRaw(`SELECT sum(count) as count from (
+            SELECT count(a.id) as count
+            FROM   inv_sales a
+            WHERE  a.occupier= ${ctx.authenticated.company} and a.reference_no not in ("**REFUND**", "**CREDIT NOTE**", "ACCOUNT PAYMENT") AND a.customer_id = ${input?.contact_id} AND a.refund_to = 0
+              UNION
+            SELECT count(DISTINCT b.id) as count
+            FROM   contact_packages a
+              LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
+            WHERE contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
+            )t`)
+        return invoices[0]?.count ?? 0
+      },
+    })
     t.field('countInvoice', {
       type: 'Int',
       description: 'Real count of invoices',
