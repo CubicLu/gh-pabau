@@ -65,7 +65,6 @@ export const ClientCardLayout: FC<P> = ({
     variables: { contactID: clientId },
     skip: !clientId,
   })
-
   const { data: countInvoice } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
@@ -125,7 +124,6 @@ export const ClientCardLayout: FC<P> = ({
       )
     },
   })
-
   const getQueryVariables = useMemo(() => {
     return {
       variables: { id: clientId },
@@ -357,7 +355,7 @@ export const ClientCardLayout: FC<P> = ({
     { key: 'loyalty', name: 'Loyalty' },
     {
       key: 'activities',
-      name: 'Activities',
+      name: t('clients.activities.title'),
       count: countActivities?.findManyActivityCount,
     },
 

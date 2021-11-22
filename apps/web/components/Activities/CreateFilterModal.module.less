@@ -115,26 +115,7 @@
       min-width: 210px;
       margin-right: 20px;
     }
-    .client-wrapper {
-      position: relative;
-      .icon {
-        position: absolute;
-        left: 8px;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 9;
-      }
-      :global {
-        .ant-select {
-          .ant-select-selector {
-            padding-left: 25px;
-            .ant-select-selection-search {
-              margin-left: 13px;
-            }
-          }
-        }
-      }
-    }
+   
   }
 }
 
@@ -339,6 +320,26 @@
         font-weight: normal;
         .ant-select-item-option-content {
           color: #54b2d3;
+        }
+      }
+    }
+  }
+}
+.client-wrapper {
+  position: relative;
+  .icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-45%);
+    z-index: 9;
+  }
+  :global {
+    .ant-select {
+      .ant-select-selector {
+        padding-left: 25px;
+        .ant-select-selection-search {
+          margin-left: 13px;
         }
       }
     }

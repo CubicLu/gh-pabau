@@ -133,14 +133,28 @@ export const Invoices: FC<P> = (props) => {
         location: item.location_name ?? user?.me?.companyName,
         employee: item.billers,
         issuedTo: item.issue_to,
-        paid: item.paid_amount === item.inv_total ? true : false,
+        paid:
+          item.inv_total < 0
+            ? 'credit'
+            : item.inv_total - item.credit_amount === 0
+            ? 'free'
+            : item.paid_amount === item.inv_total
+            ? 'paid'
+            : item.inv_total >= item.credit_amount
+            ? 'unpaid'
+            : 'free',
         items: saleItems,
         totalVat: totalVat,
         amountPaid: expandedInvoice[0]?.paid_amount,
         subtotal: discount !== 0 ? inv_total + discount : inv_total,
         // tips: expandedInvoice[0]?.tip, TODO: still not implemented tips
         tips: 0,
-        grandTotal: item.inv_total - item.credit_amount,
+        grandTotal:
+          item.inv_total < 0
+            ? item.inv_total
+            : item.inv_total >= item.credit_amount
+            ? item.inv_total - item.credit_amount
+            : 0,
         guid: item.guid,
       })
       return invoicesDetails
@@ -256,10 +270,21 @@ export const Invoices: FC<P> = (props) => {
       render: function renderItem(value, row) {
         return (
           <div>
-            {value ? (
+            {value === 'paid' && (
               <Tag color="green">{t('ui.client-card-financial.paid')}</Tag>
-            ) : (
+            )}
+            {value === 'unpaid' && (
               <Tag color="red">{t('ui.client-card-financial.unpaid')}</Tag>
+            )}
+            {value === 'credit' && (
+              <Tag color="orange">
+                {t('ui.client-card-financial.invoice.credit')}
+              </Tag>
+            )}
+            {value === 'free' && (
+              <Tag color="green">
+                {t('ui.client-card-financial.invoice.free')}
+              </Tag>
             )}
             {invoices[0]?.id === row.id && (
               <div className={styles.shareIcon}>
@@ -522,7 +547,8 @@ export const Invoices: FC<P> = (props) => {
                     className={styles.totalValueSkeleton}
                   />
                 )}
-                {!salesDetaillLoading ? (
+                {!salesDetaillLoading &&
+                !salesDetails?.items[0]?.InvSale?.CreditRef?.custom_id ? (
                   !record.paid && (
                     <Button type="primary">{`${t(
                       'ui.client-card-financial.pay'
