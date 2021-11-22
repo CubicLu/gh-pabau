@@ -58,7 +58,7 @@ const Vouchers = () => {
                   },
                 },
                 expiry_date: {
-                  lt: new Date().toISOString(),
+                  lte: new Date().toISOString(),
                 },
               },
               {
@@ -90,7 +90,7 @@ const Vouchers = () => {
               equals: 'Active',
             },
             expiry_date: {
-              gte: new Date().toISOString(),
+              gt: new Date().toISOString(),
             },
             remaining_balance: { gte: 0 },
           },
