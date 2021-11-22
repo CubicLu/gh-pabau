@@ -141,9 +141,17 @@ yarn run nx g @nrwl/react:component --project=ui --style=less --export --pascalC
 
 ### Frontend
 
-To view the Frontend, you can either visit [https://prelive-crm.new.pabau.com](https://prelive-crm.new.pabau.com) or run `yarn start` to develop on it locally with live reloading (HMR).
+The master branch is Constantly Deployed to [https://prelive-crm.new.pabau.com](https://prelive-crm.new.pabau.com).
 
-Each Page on the Frontend should use as many components as possible from our Storybook.
+To develop againt the production API [https://api-v2.new.pabau.com](https://api-v2.new.pabau.com), run `yarn production:web`.
+
+To develop againt the staging API [https://api-v2-staging.new.pabau.com](https://api-v2-staging.new.pabau.com), create a new file called `apps/web/.env.production.local` and run `yarn production:web`.
+```dotenv
+NEXT_PUBLIC_GRAPHQL_ENDPOINT="https://api-v2-staging.pabau.com/v1/graphql"
+NEXT_PUBLIC_WS_ENDPOINT="wss://api-v2-staging.pabau.com/v1/graphql"
+```
+
+To develop against local DB, run `yarn dev` and `yarn start`. If you have "missing" data locally, please add to 2.sql or ask Branko or Kostova.
 
 To create a new page (route), such as "/marketing/sources", do the following:
 

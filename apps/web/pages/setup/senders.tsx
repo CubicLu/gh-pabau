@@ -5,7 +5,6 @@ import {
   GoogleOutlined,
   MailOutlined,
   MobileOutlined,
-  PhoneOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
 import { Breadcrumb, Button, Notification, NotificationType } from '@pabau/ui'
@@ -24,7 +23,6 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
 import { ReactComponent as Google } from '../../assets/images/google.svg'
 import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
-import { ReactComponent as Office } from '../../assets/images/office365.svg'
 import Login from '../../components/Email/login'
 import { useUser } from '../../context/UserContext'
 import React, { useEffect, useState } from 'react'
@@ -41,7 +39,7 @@ export interface MergeTagItem {
 
 export interface SenderItem {
   id?: string | number
-  type: 'email' | 'sms'
+  type: 'email' | 'sms' | string
   fromName: string
   fromEmail?: string
   fromCompanyEmail?: string
@@ -232,7 +230,15 @@ export const Communications: React.FC = () => {
   const content = () => {
     return (
       <div className={styles.mailOptionContent}>
-        <div className={styles.mailOptionItem}>
+        <div
+          className={styles.mailOptionItem}
+          onClick={() =>
+            router.push({
+              pathname: '/setup/senders/create',
+              query: { type: 'sms' },
+            })
+          }
+        >
           <Sender />{' '}
           <p>{t('setup.senders.gmail.connection.content.menu.create.sms')}</p>
         </div>
@@ -246,27 +252,21 @@ export const Communications: React.FC = () => {
             {t('setup.senders.gmail.connection.content.menu.connect.google')}
           </p>
         </div>
-        <div className={styles.mailOptionItem}>
-          <Office />{' '}
-          <p>
-            {t('setup.senders.gmail.connection.content.menu.connect.office')}
-          </p>
-        </div>
+
         <div
           className={styles.mailOptionItem}
-          onClick={() => router.push('senders/create')}
+          onClick={() =>
+            router.push({
+              pathname: '/setup/senders/create',
+              query: { type: 'email' },
+            })
+          }
         >
           <MailOutlined />{' '}
           <p>
             {t(
               'setup.senders.gmail.connection.content.menu.connect.other.email'
             )}
-          </p>
-        </div>
-        <div className={styles.mailOptionItem}>
-          <PhoneOutlined />{' '}
-          <p>
-            {t('setup.senders.gmail.connection.content.menu.add.phone.number')}
           </p>
         </div>
       </div>
@@ -318,7 +318,12 @@ export const Communications: React.FC = () => {
                 <Col span={4} xs={24} sm={12} md={6} key={index}>
                   <Button
                     className={styles.senderItem}
-                    onClick={() => router.push(`senders/edit/${item.id}`)}
+                    onClick={() =>
+                      router.push({
+                        pathname: `/setup/senders/edit/${item.id}`,
+                        query: { type: item.type },
+                      })
+                    }
                   >
                     <div className={styles.itemHeader}>
                       {item.type === 'email' ? (
