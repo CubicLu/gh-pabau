@@ -13,6 +13,7 @@ export const SmsSender = objectType({
     t.int('smsd_delete')
     t.boolean('is_default')
     t.string('merge_tags')
+    t.int('enable_replies')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {

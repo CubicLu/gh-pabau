@@ -41,7 +41,10 @@ import {
 import dayjs from 'dayjs'
 import * as Icon from '@ant-design/icons'
 import searchEmpty from '../../assets/images/empty.png'
-import { useUpsertOneActivityUserStateMutation } from '@pabau/graphql'
+import {
+  useUpsertOneActivityUserStateMutation,
+  Activity_Status,
+} from '@pabau/graphql'
 import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
 import { DisplayDateTime, DisplayDate } from '../../hooks/displayDate'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
@@ -143,6 +146,7 @@ export const defaultColumns = [
   columnNames.assignedToUser.label,
   columnNames.status.label,
 ]
+
 export const ActivityTable: FC<ActivityTableProps> = React.memo(
   ({
     filteredData,
@@ -334,13 +338,14 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'client',
         skeletonWidth: '80px',
-        render: (data) => {
-          const { firstName = '', lastName = '' } = data
+        render: ({ firstName, lastName }) => {
           return (
             <span className={styles.cellFormater}>
-              <a href="/" className={styles.link}>
-                {`${firstName} ${lastName}` || ''}
-              </a>
+              {(firstName || lastName) && (
+                <a href="/" className={styles.link}>
+                  {`${firstName} ${lastName}` || ''}
+                </a>
+              )}
             </span>
           )
         },
@@ -393,13 +398,14 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         ),
         dataIndex: 'lead',
         skeletonWidth: '80px',
-        render: (data) => {
-          const { firstName = '', lastName = '' } = data
+        render: ({ firstName, lastName }) => {
           return (
             <span className={styles.cellFormater}>
-              <a href="/" className={styles.link}>
-                {`${firstName} ${lastName}` || ''}
-              </a>
+              {(firstName || lastName) && (
+                <a href="/" className={styles.link}>
+                  {`${firstName} ${lastName}` || ''}
+                </a>
+              )}
             </span>
           )
         },
@@ -656,9 +662,11 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           const { firstName = '', lastName = '' } = data
           return (
             <span className={styles.cellFormater}>
-              <a href="/" className={styles.link}>
-                {`${firstName} ${lastName}` || ''}
-              </a>
+              {(firstName || lastName) && (
+                <a href="/" className={styles.link}>
+                  {`${firstName} ${lastName}` || ''}
+                </a>
+              )}
             </span>
           )
         },
@@ -1199,7 +1207,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         render: ({ label = [] }) => {
           return (
             <div>
-              {label.map((item, index) => {
+              {label?.map((item, index) => {
                 const data = item?.CmLabel
                 return (
                   <div className={styles.labelWrapper} key={index}>
@@ -1553,7 +1561,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
 
     const renderStatus = (status) => {
       switch (status) {
-        case statuses.workingOn:
+        case statuses.working_on:
           return {
             borderColor: '#FAAD14',
             backgroundColor: 'rgba(250, 173, 20, 0.05)',
@@ -1902,7 +1910,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           rowClassName={(record: ActivitiesDataProps) => {
             const dueDate = dayjs(record.dueDate)
             const now = dayjs()
-            if (record?.status === statuses.done) {
+            if (record?.status === Activity_Status.Done) {
               return styles.doneRow
             } else if (now > dueDate) {
               return styles.overdueRow

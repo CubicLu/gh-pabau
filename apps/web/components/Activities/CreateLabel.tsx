@@ -174,7 +174,7 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
     }
 
     const sameAsDefault = () => {
-      if (selectedLabels.length !== defaultSelectedLabels.length) {
+      if (selectedLabels?.length !== defaultSelectedLabels?.length) {
         return false
       }
       const diff1 =

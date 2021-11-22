@@ -547,6 +547,20 @@ export const User = objectType({
         return root.Booking
       },
     })
+    t.list.field('BookedBy', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByWithRelationInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookedBy
+      },
+    })
     t.list.field('InvSale', {
       type: 'InvSale',
       args: {
@@ -607,6 +621,20 @@ export const User = objectType({
       },
       resolve(root: any) {
         return root.AssignedActivity
+      },
+    })
+    t.list.field('CompletedBy', {
+      type: 'Activity',
+      args: {
+        where: 'ActivityWhereInput',
+        orderBy: 'ActivityOrderByWithRelationInput',
+        cursor: 'ActivityWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ActivityScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CompletedBy
       },
     })
     t.list.field('PasswordResetAuth', {

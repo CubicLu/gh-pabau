@@ -50,14 +50,14 @@ export const EditSender: React.FC = () => {
   const [showDeleteNotification, setShowDeleteNotification] = useState(false)
 
   const { data: getSendersData } = useGetCompanyEmailQuery({
-    skip: !id,
+    skip: !id || router.query.type === 'sms',
     variables: {
       emailId: typeof id === 'string' && Number.parseInt(id),
     },
     fetchPolicy: 'no-cache',
   })
   const { data: getSendersSmsData } = useGetCompanySmsQuery({
-    skip: !id,
+    skip: !id || router.query.type === 'email',
     variables: {
       smsId: typeof id === 'string' && Number.parseInt(id),
     },
@@ -151,11 +151,13 @@ export const EditSender: React.FC = () => {
     }
     if (getSendersSmsData?.findFirstSmsSender) {
       const item = getSendersSmsData?.findFirstSmsSender
+      console.log('item val::::', item)
       setInitialValues({
         id: item.smsd_id,
         type: 'sms',
         fromName: item.smsd_name,
         isDefaultSender: item.is_default,
+        isEnableReplies: item.enable_replies === 1,
       })
     }
   }, [getSendersData, getSendersSmsData])
@@ -258,6 +260,7 @@ export const EditSender: React.FC = () => {
                   smsd_delete: 0,
                   is_default: values.isDefaultSender,
                   merge_tags: '',
+                  enable_replies: values.isEnableReplies ? 1 : 0,
                 },
               },
               optimisticResponse: {},
@@ -281,6 +284,7 @@ export const EditSender: React.FC = () => {
                 data: {
                   is_default: { set: values.isDefaultSender },
                   smsd_name: { set: values.fromName },
+                  enable_replies: { set: values.isEnableReplies ? 1 : 0 },
                 },
               },
             })

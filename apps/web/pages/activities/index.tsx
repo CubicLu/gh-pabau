@@ -14,10 +14,13 @@ import {
 } from '../../components/Activities/CreateFilterModal'
 import ActivitiesTable from '../../components/Activities/ActivitiesTable'
 import { OptionList } from '../../components/Activities/FilterMenu'
-import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
+import {
+  ActivityTypeFilter,
+  CreateActivity,
+} from '../../components/Activities/CreateActivity'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tabs, Tooltip, Popover, Skeleton } from 'antd'
-import { CreateActivity, RangePicker } from '@pabau/ui'
+import { RangePicker } from '@pabau/ui'
 import styles from './index.module.less'
 import dayjs, { Dayjs } from 'dayjs'
 import classNames from 'classnames'
@@ -32,12 +35,13 @@ import * as Icon from '@ant-design/icons'
 import {
   useGetActivityTypesQuery,
   useActivityUserListQuery,
-  useFindManyActivityDataQuery,
+  useFindManyActivityDataLazyQuery,
   useFindFirstActivityUserStateQuery,
   useGetMarketingSourcesQuery,
   useGetLeadStatusQuery,
   useRetrievePipelineQuery,
   useGetActiveLocationQuery,
+  Activity_Status,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
@@ -132,7 +136,7 @@ export const filterTabsObj = {
 }
 
 export const statuses = {
-  workingOn: 'Working on',
+  working_on: 'Working on',
   reopened: 'Reopened',
   pending: 'Pending',
   done: 'Done',
@@ -147,32 +151,24 @@ interface EventsData {
   end: string
 }
 
-interface EditedData {
-  subject: string
-  startDate: Dayjs
-  endDate: Dayjs
-  startTime: Dayjs
-  endTime: Dayjs
-  freeBusy: string
-  notes: string
-  user: string
-  lead: string
-  client: string
-  isDone: boolean
-}
+// interface EditedData {
+//   subject: string
+//   startDate: Dayjs
+//   endDate: Dayjs
+//   startTime: Dayjs
+//   endTime: Dayjs
+//   freeBusy: string
+//   notes: string
+//   user: string
+//   lead: string
+//   client: string
+//   isDone: boolean
+// }
 
 export interface Labels {
   label?: string
   count?: number
   color?: string
-}
-
-export interface ActivityTypeFilter {
-  id: number
-  name: string
-  isSelected: boolean
-  hasIcon?: boolean
-  icon?: string
 }
 
 export interface OrderValue {
@@ -205,20 +201,17 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [personsList, setPersonsList] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   // const [overdueCount, setOverDueCount] = useState(0)
-  const [editData, setEditData] = useState<EditedData>()
-  const [selectedData, setSelectedData] = useState<ActivitiesDataProps>()
+  // const [editData, setEditData] = useState<EditedData>()
+  // const [selectedData, setSelectedData] = useState<ActivitiesDataProps>()
   const [isEdit, setIsEdit] = useState(false)
   const [labels, setLabels] = useState<Labels[]>([])
   const [filterActivityType, setFilterActivityType] = useState<
     ActivityTypeFilter[]
   >([])
-  const [activityTypeOption, setActivityTypeOption] = useState<OptionList[]>([])
-  const [selectedActivityType, setSelectedActivityType] = useState<string[]>([
-    'Email',
-    'Call',
-    'Message',
-    'Meeting',
-  ])
+  const [activityTypeOption, setActivityTypeOption] = useState<
+    ActivityTypeFilter[]
+  >([])
+  const [selectedActivityType, setSelectedActivityType] = useState<string[]>()
   const [filterDates, setFilterDates] = useState<Dayjs[]>([dayjs(), dayjs()])
   const [searchTerm, setSearchTerm] = useState('')
   const [paginateData, setPaginateData] = useState({
@@ -256,7 +249,12 @@ export const Index: FC<IndexProps> = ({ client }) => {
         limit: paginateData.limit,
         startDate: filterDates?.[0],
         endDate: filterDates?.[1],
-        status: ['Reopened', 'Pending', 'Working on', 'Awaiting'],
+        status: [
+          Activity_Status.Reopened,
+          Activity_Status.Pending,
+          Activity_Status.WorkingOn,
+          Activity_Status.Awaiting,
+        ],
         activityType: selectedActivityType,
         userId: selectFilterUser,
         activeColumns: selectedColumn,
@@ -285,7 +283,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     if (tabValue === 'Completed') {
       delete queryOptions.variables.startDate
       delete queryOptions.variables.endDate
-      queryOptions.variables.status = ['Done']
+      queryOptions.variables.status = [Activity_Status.Done]
     }
     return queryOptions
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -309,19 +307,23 @@ export const Index: FC<IndexProps> = ({ client }) => {
     loading: filterLoading,
     data: filterData,
   } = useGetActivityTypesQuery()
-  // const { loading: activityLoading, error: activityError, data: activityData } = useQuery(findManyActivity, getQueryVariables)
-  // const { data: activityAggregateData, loading: aggregateLoading } = useQuery(activityCount, getAggregateQueryVariables)
   const { data: userListData } = useActivityUserListQuery({
     variables: {
       isDeleted: 0,
     },
   })
-  // const { data: activityGraph, loading: activityGraphLoading } = useQuery(activityGraphQuery, getAggregateQueryVariables)
 
-  const {
-    data: activityResponse,
-    loading: activityDataLoading,
-  } = useFindManyActivityDataQuery(getQueryVariables)
+  const [
+    loadActivityData,
+    {
+      data: activityResponse,
+      loading: activityDataLoading,
+      refetch: activityRefetch,
+    },
+  ] = useFindManyActivityDataLazyQuery({
+    ...getQueryVariables,
+    fetchPolicy: 'no-cache',
+  })
 
   const { data: leadSourceResponse } = useGetMarketingSourcesQuery()
   const { data: leadStatusResponse } = useGetLeadStatusQuery()
@@ -390,6 +392,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             temp['type_name'] = data?.type?.name
             temp['type_badge'] = data?.type?.badge
           }
+          temp['status'] = statuses[temp?.status]
           return temp
         })
         setSourceData(resultData)
@@ -403,7 +406,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
           { status: statuses.done, color: '#65CD98', key: 'done' },
           { status: statuses.reopened, color: '#FF5B64', key: 'reopened' },
           { status: statuses.pending, color: '#54B2D3', key: 'pending' },
-          { status: statuses.workingOn, color: '#FAAD14', key: 'working' },
+          { status: statuses.working_on, color: '#FAAD14', key: 'working' },
           { status: statuses.awaiting, color: '#BABABA', key: 'awaiting' },
         ].map((item) => {
           const count = records[`${item.key}`] || 0
@@ -467,12 +470,16 @@ export const Index: FC<IndexProps> = ({ client }) => {
         return {
           id: item.id,
           name: item.name,
+          hasIcon: !!item.badge,
+          icon: item.badge,
+          isSelected: false,
         }
       })
       setActivityTypeOption(item)
+      loadActivityData()
     }
     if (!filterLoading) setActivityTypeLoading(filterLoading)
-  }, [filterData, filterLoading])
+  }, [filterData, filterLoading, loadActivityData])
 
   // useEffect(() => {
   //   if (activityData?.findManyActivity) {
@@ -519,14 +526,15 @@ export const Index: FC<IndexProps> = ({ client }) => {
   useEffect(() => {
     if (filterActivityType.length > 0) {
       const data = [...filterActivityType]
-      const actityType = data.map((item) => {
-        if (item.id !== 0 && item.isSelected) {
-          return item.name
-        }
-        return null
-      })
-      const selectedType = actityType.filter((e) => e)
-      setSelectedActivityType(selectedType)
+      const actityType = data
+        .map((item) => {
+          if (item.id !== 0 && item.isSelected) {
+            return item.name
+          }
+          return null
+        })
+        .filter((e) => e)
+      setSelectedActivityType(actityType)
       resetPagination()
     }
   }, [filterActivityType])
@@ -594,13 +602,13 @@ export const Index: FC<IndexProps> = ({ client }) => {
     const labelsWithColor = sourceData.reduce((p, c) => {
       if (c.client.label) {
         for (const label of c.client.label) {
-          const name = label.label
-          if (!Object.prototype.hasOwnProperty.call(p, name)) {
-            p[name] = { color: label.color }
+          const labelValue = label.CmLabel
+          if (!Object.prototype.hasOwnProperty.call(p, labelValue.name)) {
+            p[labelValue.name] = { color: labelValue.color }
           }
         }
-        return p
       }
+      return p
     }, {})
     const formatLabels = Object.keys(labelsWithColor ?? {}).map((k) => {
       return {
@@ -901,115 +909,115 @@ export const Index: FC<IndexProps> = ({ client }) => {
     [sourceData]
   )
 
-  const convertDateFormat = (
-    date,
-    time,
-    isStart = false,
-    startDate = '',
-    startTime = ''
-  ) => {
-    const dateFormat = date ? date.format('DD MMMM YYYY') : ''
-    const timeFormat = time
-      ? time.format('hh:mm')
-      : isStart
-      ? dayjs().format('hh:mm')
-      : startTime
-      ? dayjs(startTime).add(30, 'minutes').format('hh:mm')
-      : dayjs().add(30, 'minutes').format('hh:mm')
-    return `${dateFormat} ${timeFormat}`.trim()
-  }
+  // const convertDateFormat = (
+  //   date,
+  //   time,
+  //   isStart = false,
+  //   startDate = '',
+  //   startTime = ''
+  // ) => {
+  //   const dateFormat = date ? date.format('DD MMMM YYYY') : ''
+  //   const timeFormat = time
+  //     ? time.format('hh:mm')
+  //     : isStart
+  //     ? dayjs().format('hh:mm')
+  //     : startTime
+  //     ? dayjs(startTime).add(30, 'minutes').format('hh:mm')
+  //     : dayjs().add(30, 'minutes').format('hh:mm')
+  //   return `${dateFormat} ${timeFormat}`.trim()
+  // }
 
-  const handleActivitySave = (data) => {
-    const [full_name = ''] = data?.assigned.split(' ')
-    const [cFirstName = '', cLastName = ''] = data?.client?.split(' ')
-    if (isEdit) {
-      const editedActivity = {
-        id: selectedData.id,
-        dueDate: convertDateFormat(data.startDate, data.startTime, true),
-        dueEndDate: convertDateFormat(
-          data.endDate,
-          data.endTime,
-          false,
-          data.startDate,
-          data.startTime
-        ),
-        activityLead: data.lead,
-        type: data.type,
-        subject: data.subject,
-        client: {
-          ...selectedData.client,
-          firstName: cFirstName,
-          lastName: cLastName,
-        },
-        lead: { ...selectedData.lead },
-        assigned: { full_name: full_name },
-        status: selectedData.status,
-        note: data.notes,
-        freeBusy: data.freeBusy,
-        creator: selectedData.creator,
-        addTime: selectedData.addTime,
-      }
-      const editedIndex = sourceData.findIndex(
-        (item) => item.id === selectedData.id
-      )
-      const newSourceData = [...sourceData]
-      newSourceData.splice(editedIndex, 1, editedActivity)
-      setSourceData(newSourceData)
-    } else {
-      const newData = {
-        id: sourceData?.length + 1,
-        dueDate: convertDateFormat(data.startDate, data.startTime, true),
-        dueEndDate: convertDateFormat(
-          data.endDate,
-          data.endTime,
-          false,
-          data.startDate,
-          data.startTime
-        ),
-        activityLead: data.lead,
-        type: data.type,
-        subject: data.subject,
-        client: {
-          firstName: cFirstName,
-          lastName: cLastName,
-          label: [],
-          email: '',
-          phone: '',
-          street: '',
-          city: '',
-          postcode: '',
-          totalActivities: 0,
-        },
-        lead: {
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          createdDate: '',
-          wonTime: '',
-          owner: { full_name: '' },
-          leadDoneActivities: 0,
-          leadClosedOn: '',
-          firstActivityTime: 0,
-          leadLastActivityDate: '',
-          leadLastActivity: 0,
-          leadLostReason: '',
-          leadTotalActivities: 0,
-          leadLostTime: '',
-          leadSource: '',
-          wonBy: '',
-        },
-        assigned: { full_name: full_name },
-        status: data.isDone ? statuses.done : statuses.pending,
-        doneTime: data.isDone ? dayjs().format(eventDateFormat) : '',
-        note: data.notes,
-        freeBusy: data.freeBusy,
-        creator: '',
-        addTime: dayjs().format(eventDateFormat),
-      }
-      setSourceData((e) => [...e, newData])
-    }
-
+  const handleActivitySave = () => {
+    // const [full_name = ''] = data?.assigned.split(' ')
+    // const [cFirstName = '', cLastName = ''] = data?.client?.split(' ')
+    // if (isEdit) {
+    //   const editedActivity = {
+    //     id: selectedData.id,
+    //     dueDate: convertDateFormat(data.startDate, data.startTime, true),
+    //     dueEndDate: convertDateFormat(
+    //       data.endDate,
+    //       data.endTime,
+    //       false,
+    //       data.startDate,
+    //       data.startTime
+    //     ),
+    //     activityLead: data.lead,
+    //     type: data.type,
+    //     subject: data.subject,
+    //     client: {
+    //       ...selectedData.client,
+    //       firstName: cFirstName,
+    //       lastName: cLastName,
+    //     },
+    //     lead: { ...selectedData.lead },
+    //     assigned: { full_name: full_name },
+    //     status: selectedData.status,
+    //     note: data.notes,
+    //     freeBusy: data.freeBusy,
+    //     creator: selectedData.creator,
+    //     addTime: selectedData.addTime,
+    //   }
+    //   const editedIndex = sourceData.findIndex(
+    //     (item) => item.id === selectedData.id
+    //   )
+    //   const newSourceData = [...sourceData]
+    //   newSourceData.splice(editedIndex, 1, editedActivity)
+    //   setSourceData(newSourceData)
+    // } else {
+    //   const newData = {
+    //     id: sourceData?.length + 1,
+    //     dueDate: convertDateFormat(data.startDate, data.startTime, true),
+    //     dueEndDate: convertDateFormat(
+    //       data.endDate,
+    //       data.endTime,
+    //       false,
+    //       data.startDate,
+    //       data.startTime
+    //     ),
+    //     activityLead: data.lead,
+    //     type: data.type,
+    //     subject: data.subject,
+    //     client: {
+    //       firstName: cFirstName,
+    //       lastName: cLastName,
+    //       label: [],
+    //       email: '',
+    //       phone: '',
+    //       street: '',
+    //       city: '',
+    //       postcode: '',
+    //       totalActivities: 0,
+    //     },
+    //     lead: {
+    //       firstName: '',
+    //       lastName: '',
+    //       email: '',
+    //       phone: '',
+    //       createdDate: '',
+    //       wonTime: '',
+    //       owner: { full_name: '' },
+    //       leadDoneActivities: 0,
+    //       leadClosedOn: '',
+    //       firstActivityTime: 0,
+    //       leadLastActivityDate: '',
+    //       leadLastActivity: 0,
+    //       leadLostReason: '',
+    //       leadTotalActivities: 0,
+    //       leadLostTime: '',
+    //       leadSource: '',
+    //       wonBy: '',
+    //     },
+    //     assigned: { full_name: full_name },
+    //     status: data.isDone ? statuses.done : statuses.pending,
+    //     doneTime: data.isDone ? dayjs().format(eventDateFormat) : '',
+    //     note: data.notes,
+    //     freeBusy: data.freeBusy,
+    //     creator: '',
+    //     addTime: dayjs().format(eventDateFormat),
+    //   }
+    //   setSourceData((e) => [...e, newData])
+    // }
+    activityRefetch()
     toggleCreateActivityModal()
   }
 
@@ -1054,23 +1062,23 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [])
 
   const editCreateActivityModal = useCallback((data) => {
-    setSelectedData(data)
-    const userName = `${data.assigned?.firstName} ${data.assigned?.lastName}`
-    const clientName = `${data.client.firstName} ${data.client.lastName}`
-    const dataObject = {
-      subject: data.subject,
-      startDate: data.dueDate && dayjs(data.dueDate, eventDateFormat),
-      endDate: data.dueEndDate && dayjs(data.dueEndDate, eventDateFormat),
-      startTime: data.dueDate && dayjs(data.dueDate, eventDateFormat),
-      endTime: data.dueEndDate && dayjs(data.dueEndDate, eventDateFormat),
-      freeBusy: data.freeBusy,
-      notes: data.note,
-      user: userName,
-      lead: data.activityLead,
-      client: clientName,
-      isDone: data.status === statuses.done,
-    }
-    setEditData(dataObject)
+    // setSelectedData(data)
+    // const userName = `${data.assigned?.firstName} ${data.assigned?.lastName}`
+    // const clientName = `${data.client.firstName} ${data.client.lastName}`
+    // const dataObject = {
+    //   subject: data.subject,
+    //   startDate: data.dueDate && dayjs(data.dueDate, eventDateFormat),
+    //   endDate: data.dueEndDate && dayjs(data.dueEndDate, eventDateFormat),
+    //   startTime: data.dueDate && dayjs(data.dueDate, eventDateFormat),
+    //   endTime: data.dueEndDate && dayjs(data.dueEndDate, eventDateFormat),
+    //   freeBusy: data.freeBusy,
+    //   notes: data.note,
+    //   user: userName,
+    //   lead: data.activityLead,
+    //   client: clientName,
+    //   isDone: data.status === statuses.done,
+    // }
+    // setEditData(dataObject)
     setIsEdit(true)
     setCreateActivityVisible((e) => !e)
   }, [])
@@ -1473,10 +1481,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
           events={events}
           handleSave={handleActivitySave}
           isEdit={isEdit}
-          editData={editData}
-          leadOptions={leadOptions}
-          clientOptions={clientOptions}
-          userOptions={userOptions}
+          activityTypeOption={activityTypeOption}
+          // editData={editData}
+          userOptions={personsList}
         />
       )}
     </div>
