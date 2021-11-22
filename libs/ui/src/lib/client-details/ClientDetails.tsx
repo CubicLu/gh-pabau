@@ -141,6 +141,7 @@ export interface ClientDetailsProps {
   clientId?: number
   companyId?: number
   setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
+  showAvatarModal?: () => void
 }
 
 enum FieldType {
@@ -210,6 +211,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   clientId,
   companyId,
   setBasicContactData,
+  showAvatarModal,
 }) => {
   const { t } = useTranslation('common')
   const defaultFieldOrder: FieldOrderItem[] = [
@@ -354,7 +356,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const [initialized, setInitialized] = useState(false)
   const [hoverClientDetails, setHoverClientDetails] = useState(false)
   const [detailsCard, setDetailsCard] = useState(0)
-  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [addRelationship, setAddRelationship] = useState(false)
   const [addContact, setAddContact] = useState(false)
   const [addThirdParty, setAddThirdParty] = useState(false)
@@ -494,10 +495,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     }
   }
 
-  const handleChangeImage = (avatar) => {
-    setClient({ ...client, avatar })
-  }
-
   const handleRemoveRelationship = (index) => {
     const data = { ...client }
     data.relationships.splice(index, 1)
@@ -556,9 +553,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         const response = await handleUpdate(data.fieldName, value, data.title)
         if (response?.data) {
           if (!data.fieldName.includes('customField_')) {
-            setBasicContactData?.({
-              ...clientData,
-              [data.fieldName]: value,
+            setBasicContactData?.((item) => {
+              return {
+                ...item,
+                [data.fieldName]: value,
+              }
             })
           } else {
             data.value = value
@@ -638,9 +637,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         (item, id) => id === index
       )
       if (data) {
-        setBasicContactData?.({
-          ...clientData,
-          [type]: value,
+        setBasicContactData?.((item) => {
+          return {
+            ...item,
+            [type]: value,
+          }
         })
         Notification(
           NotificationType.success,
@@ -662,14 +663,16 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setIsAddressLoading(false)
 
     if (response?.data) {
-      setBasicContactData?.({
-        ...clientData,
-        street,
-        city,
-        county,
-        postCode,
-        country,
-        address: addressJoin,
+      setBasicContactData?.((item) => {
+        return {
+          ...item,
+          street,
+          city,
+          county,
+          postCode,
+          country,
+          address: addressJoin,
+        }
       })
     }
   }
@@ -681,9 +684,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   ) => {
     const response = await handleUpdate(key, value)
     if (response?.data) {
-      setBasicContactData?.({
-        ...clientData,
-        [key]: value,
+      setBasicContactData?.((item) => {
+        return {
+          ...item,
+          [key]: value,
+        }
       })
       Notification(NotificationType.success, `${title} updated to ${value}`)
     }
@@ -804,9 +809,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setIsActiveLoading(true)
     const response = await handleUpdate('isActive', active ? 1 : 0)
     if (response?.data) {
-      setBasicContactData?.({
-        ...clientData,
-        isActive: active,
+      setBasicContactData?.((item) => {
+        return {
+          ...item,
+          isActive: active,
+        }
       })
     }
     setIsActiveLoading(false)
@@ -1032,7 +1039,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                       </div>
                       <div
                         className={styles.edit}
-                        onClick={() => setShowAvatarUploader(true)}
+                        onClick={() => showAvatarModal?.()}
                       >
                         <EditOutlined />
                       </div>
@@ -1669,14 +1676,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
           </div>
         </div>
       )}
-
-      <AvatarUploader
-        visible={showAvatarUploader}
-        title={t('ui.clientdetails.uploadavatar.title')}
-        onCreate={handleChangeImage}
-        imageURL={client.avatar}
-        onCancel={() => setShowAvatarUploader(false)}
-      />
       {showAddressModal && (
         <AddAddress
           visible={showAddressModal}
