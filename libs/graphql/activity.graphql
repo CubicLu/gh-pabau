@@ -67,6 +67,7 @@ query findManyActivityData(
       assigned: AssignedUser {
         id
         full_name
+        image
       }
       creator: User {
         id
@@ -114,7 +115,7 @@ query findManyActivityData(
         email: Email
         phone: Phone
         location_id
-        LastUpdated
+        lastUpdated: LastUpdated
         Location {
           id
           name
@@ -122,6 +123,7 @@ query findManyActivityData(
         Contact {
           User {
             full_name
+            image
           }
         }
         PipelineStage {
@@ -136,14 +138,15 @@ query findManyActivityData(
         leadLastEmailSend
         leadLastEmailReceived
         leadNextActivityDate
-        description: Description
         createdDate: CreatedDate
         wonTime
         owner: User {
           full_name
+          image
         }
         leadStatus: EnumStatus
         leadSource: MarketingSource {
+          id
           name
         }
         leadClosedOn: ConvertDate

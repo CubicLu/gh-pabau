@@ -72,6 +72,7 @@ export interface ActivitiesDataProps {
   freeBusy?: string
   creator?: string
   addTime?: string
+  lead_id?: number
 }
 
 interface userDetail {
@@ -322,7 +323,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     },
   ] = useFindManyActivityDataLazyQuery({
     ...getQueryVariables,
-    fetchPolicy: 'no-cache',
+    // fetchPolicy: 'no-cache',
   })
 
   const { data: leadSourceResponse } = useGetMarketingSourcesQuery()
@@ -395,6 +396,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
           temp['status'] = statuses[temp?.status]
           return temp
         })
+        console.log('sourceData-2')
         setSourceData(resultData)
       }
       if (response?.retrieveActivityCount) {
@@ -829,28 +831,42 @@ export const Index: FC<IndexProps> = ({ client }) => {
         }
         return temp
       })
-      setSourceData(newSourceData)
+      // setSourceData(newSourceData)
     },
     [sourceData, displayConfetti]
   )
+  console.log('sourceData-1-------------', sourceData)
 
-  const onStatusChange = useCallback(
-    (data, newStatus) => {
-      const newSourceData = ref.current.map((item) => {
-        const temp = { ...item }
-        if (item.id === data.id) {
-          temp.status = newStatus
-          if (newStatus === statuses.done) {
-            temp.doneTime = dayjs().format(eventDateFormat)
-            displayConfetti()
-          }
-        }
-        return temp
-      })
-      setSourceData(newSourceData)
-    },
-    [displayConfetti]
-  )
+  const onStatusChange = (data, newStatus) => {
+    console.log('sourceData--------------', sourceData)
+    // const newSourceData = sourceData?.map((item) => {
+    //   const temp = { ...item }
+    //   if (item.id === data.id) {
+    //     if (newStatus === statuses.done) {
+    //       // temp.doneTime = dayjs()
+    //       setPaginateData({
+    //         ...paginateData,
+    //         total: paginateData?.total - 1,
+    //       })
+    //       displayConfetti()
+    //       return null
+    //     }
+    //     temp.status = newStatus
+    //   }
+    //   return temp
+    // })?.filter(Boolean)
+    // console.log('temp data', newSourceData)
+    // setSourceData(newSourceData)
+    // let status = Object.keys(statuses).find(key => statuses[key] === newStatus)
+    console.log('onStatusChange----------')
+    if (newStatus === statuses.done) {
+      console.log('done status')
+      displayConfetti()
+    }
+    console.log('test-----------')
+    activityRefetch()
+    // loadActivityData()
+  }
 
   const onSortData = useCallback((sorter) => {
     if (sorter?.column) {
@@ -895,19 +911,21 @@ export const Index: FC<IndexProps> = ({ client }) => {
     // }
   }, [])
 
-  const handleCellSave = useCallback(
-    (row) => {
-      const newData = [...sourceData]
-      const index = newData.findIndex((item) => row.id === item.id)
-      const item = newData[index]
-      newData.splice(index, 1, {
-        ...item,
-        ...row,
-      })
-      setSourceData(newData)
-    },
-    [sourceData]
-  )
+  const handleCellSave = (row, showConfetti = false, needRefetch = false) => {
+    const newData = [...sourceData]
+    const index = newData.findIndex((item) => row.id === item.id)
+    const item = newData[index]
+    newData.splice(index, 1, {
+      ...item,
+      ...row,
+    })
+    setSourceData(newData)
+    // if (showConfetti) {
+    //   displayConfetti()
+    // }
+    showConfetti && displayConfetti()
+    needRefetch && activityRefetch()
+  }
 
   // const convertDateFormat = (
   //   date,
@@ -1182,6 +1200,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
 
   return (
     <div className={styles.activityWrapper} ref={activityRef}>
+      {console.log('sourceData-return', sourceData)}
       <Layout badgeCountList={{ activities: paginateData?.total }}>
         <CommonHeader
           title={t('activityList.header')}
@@ -1471,6 +1490,12 @@ export const Index: FC<IndexProps> = ({ client }) => {
             setCreateActivityVisible={setCreateActivityVisible}
             tabValue={tabValue}
             loggedUser={loggedUser?.me}
+            personsList={personsList}
+            activityTypeOption={activityTypeOption}
+            leadSourceData={leadSourceData}
+            leadStageData={leadStageData}
+            locationData={locationData}
+            pipelineData={pipelineData}
           />
         )}
       </Layout>

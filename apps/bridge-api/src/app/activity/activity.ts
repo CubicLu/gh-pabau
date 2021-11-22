@@ -1242,7 +1242,7 @@ export const prepareActivityDataWithCustomField = async (
               : '',
           wonTime:
             item.CmLead?.EnumStatus === 'Converted'
-              ? item.CmLead?.CreatedDate
+              ? item.CmLead?.ConvertDate
               : null,
           leadLostReason: leadLost?.lostReason,
           leadStage: item.CmLead?.LeadStatusData?.status_name,
@@ -1645,17 +1645,17 @@ export const manualFilterOnOrOperandColumns = async (
             }
             break
           }
-          case 'Lead descriptions': {
-            if (
-              manualFilterOnStringOperand(
-                columnValue,
-                item?.CmLead?.Description
-              )
-            ) {
-              count += 1
-            }
-            break
-          }
+          // case 'Lead descriptions': {
+          //   if (
+          //     manualFilterOnStringOperand(
+          //       columnValue,
+          //       item?.CmLead?.Description
+          //     )
+          //   ) {
+          //     count += 1
+          //   }
+          //   break
+          // }
           case 'Lead status': {
             if (
               manualFilterOnBasicOperand(

@@ -508,7 +508,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                               value && Number.parseInt(value)
                             )
                           }
-                          icon={<AimOutlined />}
                           disabled={false}
                           className={styles.clientContent}
                         />
@@ -527,7 +526,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                               value && Number.parseInt(value)
                             )
                           }
-                          icon={<UserOutlined />}
                           disabled={false}
                           className={styles.clientContent}
                         />

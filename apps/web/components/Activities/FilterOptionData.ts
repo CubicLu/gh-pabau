@@ -126,10 +126,10 @@ export const getData = (t) => {
       key: 'Lead stage',
       label: t('create.filter.modal.lead.column.lead.stage'),
     },
-    {
-      key: 'Lead descriptions',
-      label: t('create.filter.modal.lead.column.lead.descriptions'),
-    },
+    // {
+    //   key: 'Lead descriptions',
+    //   label: t('create.filter.modal.lead.column.lead.descriptions'),
+    // },
     {
       key: 'Lead status',
       label: t('create.filter.modal.lead.column.lead.status'),
@@ -327,7 +327,7 @@ export const getData = (t) => {
     'Lead source': basicOperands,
     'Won by': userOperands,
     'Lead stage': basicOperands,
-    'Lead descriptions': stringOperands,
+    // 'Lead descriptions': stringOperands,
     'Lead status': basicOperands,
     'Date of entering stage': dateOperands,
     'Lead creator': userOperands,

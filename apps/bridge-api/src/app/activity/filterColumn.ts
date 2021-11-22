@@ -168,15 +168,15 @@ export const getColumnData = (column: string, data = {}) => {
         },
       },
     },
-    'Lead descriptions': {
-      key: 'Name',
-      type: 'string',
-      filter: {
-        CmLead: {
-          Description: data,
-        },
-      },
-    },
+    // 'Lead descriptions': {
+    //   key: 'Name',
+    //   type: 'string',
+    //   filter: {
+    //     CmLead: {
+    //       Description: data,
+    //     },
+    //   },
+    // },
     'Lead status': {
       key: 'Basic',
       type: 'string',

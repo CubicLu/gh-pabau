@@ -291,8 +291,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       case 'Subject':
       case 'Lead email':
       case 'Lead phone':
-      case 'Lead lost reason':
-      case 'Lead descriptions': {
+      case 'Lead lost reason': {
         return (
           <SubjectMenu value={value} onChange={onChange} disabled={disabled} />
         )
