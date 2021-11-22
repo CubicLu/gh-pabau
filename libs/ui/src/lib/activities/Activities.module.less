@@ -1,4 +1,42 @@
 .follow-wrapper {
+  .sub-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 15px 15px 15px 18px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f1f1;
+    .sub-header-left  {
+      display: flex;
+      :global .ant-skeleton:not(:last-child) {
+        margin-right: 24px;
+      }
+    > div {
+      display: flex;
+      align-items: center;
+      & > div{
+        width: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        &:not(:last-child) {
+          margin-right: 24px;
+        }
+        &.active {
+          color: #54b2d3;
+          :global {
+            svg {
+              path {
+                fill: #54b2d3 !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  }  
   .header {
     display: flex;
     justify-content: flex-end;

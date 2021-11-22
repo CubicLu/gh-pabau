@@ -17,7 +17,7 @@ import { Contact } from '../../types/contact'
 const { Option } = Select
 
 export interface P {
-  onConfirmed: () => void
+  onConfirmed: (members: Contact[]) => void
   backToStep?: (val: number) => void
 }
 
@@ -33,7 +33,7 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
         firstName: '',
         lastName: '',
         email: '',
-        phone: '',
+        mobile: '',
         country: 'United Kingdom',
         password: '',
       })
@@ -42,13 +42,12 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
   }
   const [members, setMembers] = useState<Contact[]>(tempList)
   const [pass, setpass] = useState({ password: '', valid: false })
-  const [confim, setconfirm] = useState<boolean>(false)
 
   const userData = {
     lastname: '',
     firstname: '',
     email: '',
-    phone: '',
+    mobile: '',
   }
   const uservalue = {
     password: '',
@@ -64,7 +63,7 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
       .max(50)
       .email('Please enter valid email id')
       .required('Email is required'),
-    phone: Yup.string().required('phone is required'),
+    mobile: Yup.string().required('Mobile is required'),
   })
   const formikValidation = Yup.object({
     password: Yup.string().required('password is required'),
@@ -85,13 +84,13 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
           {t('connect.onlinebooking.bookdetail.alreadyaccount')}
           <p>Log in</p>
         </p>
-        <div className={styles.btnSocial} onClick={() => setconfirm(true)}>
+        <div className={styles.btnSocial} onClick={null}>
           <span>
             <img src={img1} alt={'nothing'} />
             {t('connect.onlinebooking.bookdetail.continue.google')}
           </span>
         </div>
-        <div className={styles.btnSocialLink} onClick={() => setconfirm(true)}>
+        <div className={styles.btnSocialLink} onClick={null}>
           <span>
             <img src={img} alt={'nothing'} />
             {t('connect.onlinebooking.bookdetail.continue.facebook')}
@@ -189,16 +188,16 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
                   />
                 </Form.Item>
                 <Form.Item
-                  name={t('connect.onlinebooking.bookdetail.form.phone')}
+                  name={t('connect.onlinebooking.bookdetail.form.mobile')}
                 >
                   <PhoneNumberInput
-                    label="Phone"
-                    value={userData.phone}
+                    label="Mobile"
+                    value={userData.mobile}
                     onChange={(value) => {
-                      item.phone = value
+                      item.mobile = value
                       setvalid(isValid)
                       setMembers(members)
-                      setFieldValue('phone', value)
+                      setFieldValue('mobile', value)
                     }}
                   />
                 </Form.Item>
@@ -211,9 +210,9 @@ const BookingDetails: FC<P> = ({ onConfirmed, backToStep }) => {
           enableReinitialize={true}
           initialValues={uservalue}
           validationSchema={formikValidation}
-          onSubmit={(values) => {
+          onSubmit={() => {
             setSelectedData(actionTypes.SET_MEMBERS, members)
-            onConfirmed()
+            onConfirmed(members)
           }}
         >
           {({ setFieldValue, isValid }) => (

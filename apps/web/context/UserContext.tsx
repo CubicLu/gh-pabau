@@ -23,9 +23,12 @@ interface P {
 
   // Log out (universal)
   logout(): Promise<void>
+
+  // Access to the underlying Apollo Client instance
+  query: any
 }
 
-const defaultValue: P = { me: null, login: null, logout: null }
+const defaultValue: P = { me: null, login: null, logout: null, query: null }
 
 const Context = createContext<P>(defaultValue)
 const usePersistedTokenState = createPersistedState('token')
@@ -46,7 +49,7 @@ export const UserProvider: FC = ({ children }) => {
 
   const [token, setToken] = usePersistedTokenState(null)
 
-  const { resetStore, clearStore } = useApolloClient()
+  const { resetStore, clearStore, query } = useApolloClient()
   const [
     retrieveAuthenticatedUser,
     { data },
@@ -125,6 +128,7 @@ export const UserProvider: FC = ({ children }) => {
   return (
     <Context.Provider
       value={{
+        query,
         me: me,
         async login(jwt) {
           setToken(jwt)
