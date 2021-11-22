@@ -11604,12 +11604,13 @@ model SmsPurchase {
 }
 
 model SmsSender {
-  smsd_id     Int     @id @default(autoincrement())
-  smsd_name   String
-  company_id  Int     @map("smsd_cid")
-  smsd_delete Int     @default(0)
-  is_default  Boolean @default(false)
-  merge_tags  String
+  smsd_id        Int     @id @default(autoincrement())
+  smsd_name      String
+  company_id     Int     @map("smsd_cid")
+  smsd_delete    Int     @default(0)
+  is_default     Boolean @default(false)
+  merge_tags     String
+  enable_replies Int     @default(0)
 
   Company Company @relation(fields: [company_id], references: [id])
 

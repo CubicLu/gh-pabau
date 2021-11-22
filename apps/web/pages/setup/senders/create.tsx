@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import {
   FullScreenReportModal,
@@ -46,9 +46,18 @@ export const CreateSender: React.FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
   const [active, setActive] = useState(true)
+  console.log('router:::', router)
+  const [, setTypeSenders] = useState('')
+
+  useEffect(() => {
+    if (router.query.type === 'email') setTypeSenders('email')
+    else if (router.query.type === 'sms') setTypeSenders('sms')
+    else router.push('/setup/senders').then()
+    // if (router.query.type !== 'sms') router.push('/setup/senders').then()
+  }, [router])
 
   const initialValues: SenderItem = {
-    type: 'email',
+    type: router.query.type as string,
     fromName: '',
     fromEmail: '',
     fromCompanyEmail: '',
@@ -146,7 +155,7 @@ export const CreateSender: React.FC = () => {
                 smsd_delete: 0,
                 is_default: values.isDefaultSender,
                 merge_tags: '',
-                // enable_replies: values.isEnableReplies ? 1 : 0,
+                enable_replies: values.isEnableReplies ? 1 : 0,
               },
             },
             optimisticResponse: {},

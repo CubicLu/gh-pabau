@@ -36,5 +36,6 @@ query getCompanySms($smsId:Int){
     smsd_id
     smsd_delete
     smsd_name
+    enable_replies
   }
 }
