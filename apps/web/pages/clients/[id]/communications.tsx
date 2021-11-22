@@ -8,15 +8,16 @@ import {
   PinItemProps,
 } from '@pabau/ui'
 import dayjs from 'dayjs'
+import { GetFormat } from '../../../../web/hooks/displayDate'
 import {
   useGetClientCommunicationLazyQuery,
   useCountClientCommunicationLazyQuery,
 } from '@pabau/graphql'
-import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 const CommunicationTab = () => {
   const router = useRouter()
   const contactID = Number(router.query['id'])
+  const dateFormat = GetFormat()
   const [communicationData, setCommunicationData] = useState<
     EventsDataProps[]
   >()
@@ -36,10 +37,7 @@ const CommunicationTab = () => {
     getCommunityCount,
     { data: countCommunition, loading: countLoading },
   ] = useCountClientCommunicationLazyQuery()
-  // function isHTML(str) {
-  //   const doc = new DOMParser().parseFromString(str, 'text/html')
-  //   return Array.from(doc.body.childNodes).some((node) => node.nodeType === 1)
-  // }
+
   useEffect(() => {
     getClientCommunication({
       variables: {
@@ -79,10 +77,12 @@ const CommunicationTab = () => {
         obj = {
           id: d?.id,
           type: d?.type.toLocaleLowerCase(),
-          dateTime: dayjs(d?.date).format('DD-MM-YYYY, h:mm a'),
+          dateTime: dayjs(d?.date).format(dateFormat),
         }
-        // openedBy: d.recipient[0].read_count,
+
         if (d?.recipient.length > 0 && d?.Users) {
+          obj.openedBy = d.recipient[0]?.read_count.toString()
+          obj.isReceived = true
           if (d.recipient[0].Contact) {
             obj.status = d.recipient[0].status
             obj['moved'] = {
@@ -91,35 +91,30 @@ const CommunicationTab = () => {
             }
           }
         } else {
+          obj.isReceived = false
           if (d?.from && d?.Users) {
             obj['moved'] = {
               from: { name: d.from },
               to: { name: d.Users.full_name },
             }
           }
-          obj.eventName = d?.content?.subject
-          if (d?.content?.body) {
-            obj.description = d?.content?.body
-            obj.displayCollapse = true
-          }
-
-          if (d?.attachment) {
-            for (const val of d?.attachment) {
-              if (val?.file_url) {
-                //obj['pinItems'].push({ item: val.file_url })
-                attachment.push({ item: val.file_url })
-              }
-              obj.letterUrl = getImage(attachment[0].item)
-            }
-            obj.pinItems = attachment
-            attachment = []
-          }
-
-          //   moved: {
-          //     from: { name: d.from },
-          //     //to: { name: d.Users.full_name ?? '' },
-          //   },
         }
+        obj.eventName = d?.content?.subject
+        if (d?.content?.body) {
+          obj.description = d?.content?.body
+          obj.displayCollapse = true
+        }
+
+        if (d?.attachment) {
+          for (const val of d?.attachment) {
+            if (val?.file_url) {
+              attachment.push({ item: val.file_url })
+            }
+          }
+          obj.pinItems = attachment
+          attachment = []
+        }
+
         Communications.push(obj)
       }
       setCommunicationData(Communications)
@@ -136,7 +131,7 @@ const CommunicationTab = () => {
         <ClientCommunicationsLayout
           isLoading={communicationLoading || countLoading}
           eventsData={communicationData}
-          eventDateFormat={'DD-MM-YYYY, h:mm a'}
+          eventDateFormat={dateFormat}
           pagination={pagination}
           setPagination={setPagination}
         />

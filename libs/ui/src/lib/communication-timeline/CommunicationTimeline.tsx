@@ -94,7 +94,7 @@ export interface EventsDataProps {
   dateTime: string
   status?: string
   appointmentWith?: string
-  openedBy?: OpenByProps[]
+  openedBy?: string
   moved?: MovedProps
   displayCollapse?: boolean
   pinItems?: PinItemProps[]
@@ -102,6 +102,7 @@ export interface EventsDataProps {
   sharedWith?: SharedByProps[]
   authorName?: string
   letterUrl?: string
+  isReceived?: boolean
 }
 
 export interface PinItemProps {
@@ -195,7 +196,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
           paginateData.currentPage * paginateData.pageSize
         )
       : filteredEvents,
-    eventDateFormat,
+    'MM-DD-YYYY hh:mm',
     t
   )
   const [showDocumentViewer, setShowDocumentViewer] = useState<boolean>(false)
@@ -268,7 +269,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       dayjs(standardDateFormat) < dayjs().subtract(6, 'days') ||
       dayjs(standardDateFormat) > dayjs().add(6, 'days')
     ) {
-      return dayjs(date, eventDateFormat).format('DD MMM [at] h:mm a')
+      return dayjs(date, eventDateFormat).format(eventDateFormat)
     }
     return dayjs(date, eventDateFormat).calendar()
   }
@@ -523,7 +524,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
                 </span>
               </Tooltip>
             )}
-            {event.type.toLocaleLowerCase() === types.mail && (
+            {event.type.toLocaleLowerCase() === types.mail && event.isReceived && (
               <div className={styles.inboundEmailWrapper}>
                 <RenderInboundEmail event={event} />
               </div>
@@ -564,24 +565,22 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               {renderSpecificIcon(event)}
             </div>
           }
-          {event?.openedBy?.length > 0 && (
+          {event?.openedBy && (
             <div className={styles.openByWrap}>
               <span className={styles.dot} />
-              <Popover
+              {/* <Popover
                 overlayClassName={styles.mailOpen}
                 title={t('communicationTimeline.openedBy')}
                 content={() => content(event?.openedBy)}
-                trigger="hover"
-              >
-                <div className={styles.opened}>
-                  <EyeOutlined />
-                  <span>
-                    {`${event.openedBy.length} ${t(
-                      'communicationTimeline.opened'
-                    )}`}
-                  </span>
-                </div>
-              </Popover>
+                trigger="hover" 
+              >*/}
+              <div className={styles.opened}>
+                <EyeOutlined />
+                <span>
+                  {`${event?.openedBy} ${t('communicationTimeline.opened')}`}
+                </span>
+              </div>
+              {/*  </Popover> */}
             </div>
           )}
           {event?.sharedWith?.length > 0 && (

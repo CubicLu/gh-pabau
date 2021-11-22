@@ -15,6 +15,7 @@ import {
   useGetContactAccountBalanceQuery,
   useCountVouchersQuery,
   AggregateInvoiceCountsDocument,
+  useCountClientCommunicationQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -62,6 +63,10 @@ export const ClientCardLayout: FC<P> = ({
   const baseUrl = `/clients/${clientId}` //TODO: we should use relative url instead. But not sure how
   const router = useRouter()
   const { data: countActivities } = useCountClientActivityQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+  const { data: countCommunition } = useCountClientCommunicationQuery({
     variables: { contactID: clientId },
     skip: !clientId,
   })
@@ -338,7 +343,11 @@ export const ClientCardLayout: FC<P> = ({
             ],
     },
     { key: 'packages', name: 'Packages' },
-    { key: 'communications', name: 'Communications' },
+    {
+      key: 'communications',
+      name: 'Communications',
+      count: countCommunition?.findManyCommunication?.length,
+    },
     {
       key: 'emr',
       name: 'EMR',
