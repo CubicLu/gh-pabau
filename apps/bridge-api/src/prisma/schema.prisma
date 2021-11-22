@@ -1933,7 +1933,7 @@ model CmContact {
   InventoryMovement        InventoryMovement[]
   InsuranceCompany         ContactInsurance[]
   ContactMeta              ContactMeta[]
-  CommunicationRecipient   CommunicationRecipient[]
+  CommunicationRecipient   CommunicationRecipient[] @relation("communications_recipients_contact_id_fkey")
   CmContactCustom          CmContactCustom[]
   CmContactLabel           CmContactLabel[]
   Activity                 Activity[]
@@ -2661,7 +2661,7 @@ model CmLead {
   pipeline_stage_id        Int?
   Company                  Company                  @relation(fields: [company_id], references: [id])
   CmLeadCustomField        CmLeadCustomField[]
-  CommunicationRecipient   CommunicationRecipient[]
+  CommunicationRecipient   CommunicationRecipient[] @relation("communications_recipients_lead_id_fkey")
   CmLeadNote               CmLeadNote[]
   User                     User?                    @relation(fields: [OwnerID], references: [id])
   Activity                 Activity[]
@@ -3633,8 +3633,8 @@ model CommunicationRecipient {
   merge_values      String
   Provider          CommunicationProvider                    @relation(fields: [provider_id], references: [id])
   Hash              CommunicationHash[]
-  Contact           CmContact?                               @relation(fields: [recipient_id], references: [ID])
-  Lead              CmLead?                                  @relation(fields: [recipient_id], references: [ID])
+  Contact           CmContact?                               @relation("communications_recipients_contact_id_fkey", fields: [recipient_id], references: [ID], map: "communications_recipients_contact_id_fkey")
+  Lead              CmLead?                                  @relation("communications_recipients_lead_id_fkey", fields: [recipient_id], references: [ID], map: "communications_recipients_lead_id_fkey")
   Communication     Communication?                           @relation(fields: [communications_id], references: [id])
 
   @@index([communications_id], name: "communications_id")
@@ -8890,8 +8890,8 @@ model MessageTemplate {
   Company                   Company           @relation(fields: [company_id], references: [id])
   TemplateFolder            TemplateFolder?   @relation(fields: [folder_id], references: [id])
   User                      User?             @relation(fields: [created_by], references: [id])
-  ParrentTemplate           MessageTemplate?  @relation(fields: [parent_id], references: [template_id])
-  MessageTemplate           MessageTemplate[] @relation("MessageTemplateToMessageTemplate")
+  ParrentTemplate           MessageTemplate?  @relation("parent_child_message", fields: [parent_id], references: [template_id])
+  MessageTemplate           MessageTemplate[] @relation("parent_child_message")
 
   @@index([company_id], name: "company_id")
   @@index([folder_id], name: "folder_id")
@@ -9746,9 +9746,9 @@ model Page {
   new_url           String
   UserPermission    UserPermission[]
   CompanyPermission CompanyPermission[]
-  ParrentPage       Page?               @relation(fields: [parent], references: [id])
+  ParrentPage       Page?               @relation("parent_child_page", fields: [parent], references: [id])
 
-  Page Page[] @relation("PageToPage")
+  Page Page[] @relation("parent_child_page")
   @@unique([name], name: "unique_page_name")
   @@index([admin], name: "admin")
   @@index([parent], name: "parent")
@@ -10804,8 +10804,8 @@ model Booking {
   all_day_start_date            Int?                           @default(0)
   all_day_end_date              Int?                           @default(0)
   InvSale                       InvSale?                       @relation(fields: [invoice_id], references: [id])
-  User                          User?                          @relation(fields: [UID], references: [id])
-  Contact                       CmContact?                     @relation(fields: [contact_id], references: [ID])
+  User                          User?                          @relation(fields: [UID], references: [id], map: "user_id_key")
+  Contact                       CmContact?                     @relation(fields: [contact_id], references: [ID], map: "contact_id_key")
   UserMaster                    UserMaster?                    @relation(fields: [contact_id], references: [contact_id])
   CmStaffGeneral                CmStaffGeneral?                @relation(fields: [UID], references: [pabau_id])
   CompanyBranch                 CompanyBranch?                 @relation(fields: [location_id], references: [id])
@@ -12876,7 +12876,7 @@ model User {
   can_move_blockout            Boolean                        @default(true)
   main_contact                 Boolean
   UserSecurityQuestionsAnswer  UserSecurityQuestionsAnswer[]
-  Company                      Company?                       @relation(fields: [company_id], references: [id])
+  Company                      Company?                       @relation(fields: [company_id], references: [id], map: "company_id_key")
   CompanyDetails               CompanyDetails?                @relation(fields: [company_id], references: [company_id])
   UserGroupMember              UserGroupMember?
   UserMainPermission           UserMainPermission[]
