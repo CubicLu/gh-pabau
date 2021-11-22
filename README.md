@@ -143,15 +143,15 @@ yarn run nx g @nrwl/react:component --project=ui --style=less --export --pascalC
 
 The master branch is Constantly Deployed to [https://prelive-crm.new.pabau.com](https://prelive-crm.new.pabau.com).
 
-To develop againt the production API (api-v2.new.pabau.com), run `yarn production:web`.
+To develop againt the production API [https://api-v2.new.pabau.com](https://api-v2.new.pabau.com), run `yarn production:web`.
 
-To develop againt the staging API (api-v2-staging.new.pabau.com), create a new file called `apps/web/.env.production.local` and run `yarn production:web`.
+To develop againt the staging API [https://api-v2-staging.new.pabau.com](https://api-v2-staging.new.pabau.com), create a new file called `apps/web/.env.production.local` and run `yarn production:web`.
 ```dotenv
 NEXT_PUBLIC_GRAPHQL_ENDPOINT="https://api-v2-staging.pabau.com/v1/graphql"
 NEXT_PUBLIC_WS_ENDPOINT="wss://api-v2-staging.pabau.com/v1/graphql"
 ```
 
-To develop against local DB, run `yarn dev` and `yarn start`
+To develop against local DB, run `yarn dev` and `yarn start`. If you have "missing" data locally, please add to 2.sql or ask Branko or Kostova.
 
 To create a new page (route), such as "/marketing/sources", do the following:
 
