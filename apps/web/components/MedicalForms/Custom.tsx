@@ -100,7 +100,7 @@ const Custom: FC<CustomProps> = ({
   const [popoverVisible, setPopoverVisible] = useState(false)
   const [popoverVisibleMobile, setPopoverVisibleMobile] = useState(null)
   const [paginateData, setPaginateData] = useState<Paginate>(pagenateParams)
-  const isMobile = useMedia('(max-width: 768px)', false)
+  const isMobile = useMedia('(max-width: 767px)', false)
 
   const { t } = useTranslationI18()
 
@@ -168,7 +168,6 @@ const Custom: FC<CustomProps> = ({
       icon: <EditOutlined />,
       label: t('setup.medical.forms.menuList.edit'),
       onClick: () => {
-        console.log('click on edit')
         handleIdEditClick()
         setPopoverVisible(false)
         setPopoverVisibleMobile(null)
@@ -295,6 +294,7 @@ const Custom: FC<CustomProps> = ({
     const [date] = createdAt.split(' ')
     return <div data-acceptclicking={true}>{date}</div>
   }
+
   const columns = [
     {
       key: 'name',
@@ -374,16 +374,38 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       dataIndex: 'status',
-      render: (status) => (
-        <div data-acceptclicking={true}>
-          <Button
-            className={statusValues[status].class}
-            data-acceptclicking={false}
-          >
-            {statusValues[status].title}
-          </Button>
-        </div>
-      ),
+      render: (status, item) =>
+        !item?.Services?.length ? (
+          <div data-acceptclicking={true}>
+            <Tooltip
+              placement="top"
+              title="This form will be manually sent to clients."
+            >
+              <Button className={styles.manualBtn} data-acceptclicking={false}>
+                Manual
+              </Button>
+            </Tooltip>
+          </div>
+        ) : (
+          <div data-acceptclicking={true}>
+            <Button
+              className={statusValues[status].class}
+              data-acceptclicking={false}
+            >
+              {statusValues[status].title}
+              <Tooltip
+                placement="top"
+                title={item.Services.map((val) => val.name)
+                  .join(', ')
+                  .replace(/, ([^,]*)$/, ' & $1')}
+              >
+                <span className={styles.serviceNum}>
+                  {item?.Services?.length}
+                </span>
+              </Tooltip>
+            </Button>
+          </div>
+        ),
     },
     {
       title: '',
