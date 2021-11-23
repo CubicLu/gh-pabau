@@ -1,5 +1,5 @@
 query findMedicalForms(
-  $take: Int = 0
+  $take: Int = 50
   $skip: Int = 0
   $where: MedicalFormWhereInput
   $orderBy: [MedicalFormOrderByWithRelationInput]
@@ -18,6 +18,10 @@ query findMedicalForms(
     service_id
     deleted_at
     data
+    Services {
+      id
+      name
+    }
     MedicalFormAdvancedSetting {
       id
       share_to_client

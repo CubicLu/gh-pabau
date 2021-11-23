@@ -295,12 +295,8 @@ const Custom: FC<CustomProps> = ({
     return <div data-acceptclicking={true}>{date}</div>
   }
 
-  const services = {}
-  companyServiceListItems.map((val) =>
-    Object.assign(services, { [val.id]: val.name })
-  )
-  const getServices = (id: any) => {
-    const service = id?.split(',').map((val) => services[val])
+  const getServices = (services: any) => {
+    const service = services?.map((val) => val.name)
     return service.join(', ').replace(/, ([^,]*)$/, ' & $1')
   }
 
@@ -384,7 +380,7 @@ const Custom: FC<CustomProps> = ({
       visible: true,
       dataIndex: 'status',
       render: (status, item) =>
-        item?.serviceId === '' || item?.serviceId === 'null' ? (
+        !item?.Services?.length ? (
           <div data-acceptclicking={true}>
             <Tooltip
               placement="top"
@@ -402,9 +398,9 @@ const Custom: FC<CustomProps> = ({
               data-acceptclicking={false}
             >
               {statusValues[status].title}
-              <Tooltip placement="top" title={getServices(item?.serviceId)}>
+              <Tooltip placement="top" title={getServices(item?.Services)}>
                 <span className={styles.serviceNum}>
-                  {item?.serviceId?.split(',').length}
+                  {item?.Services?.length}
                 </span>
               </Tooltip>
             </Button>
