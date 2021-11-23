@@ -5,16 +5,16 @@ import {
   MessageTemplateOrderByWithRelationInput,
   MessageTemplateWhereInput,
   SortOrder,
-  useCreateOneMedicalFormMutation,
+  //useCreateOneMedicalFormMutation,
   useFindMedicalFormsCountQuery,
   useFindMedicalFormsQuery,
-  FindMedicalFormsDocument,
+  //FindMedicalFormsDocument,
   useFindMessageTemplateQuery,
   useFindUserQuery,
   useGetBusinessDetailsQuery,
   UserOrderByWithRelationInput,
   UserWhereInput,
-  useUpdateOneMedicalFormMutation,
+  //useUpdateOneMedicalFormMutation,
   useFindManyUserGroupsQuery,
   useFindManyCompanyServicesQuery,
   useFindManyLabTestsQuery,
@@ -444,32 +444,32 @@ export const Index: FC = () => {
     }
   }, [medicalConditions])
 
-  const [addMutation] = useCreateOneMedicalFormMutation({
-    onCompleted(data) {
-      Notification(
-        NotificationType.success,
-        t('setup.medical.forms.create.text')
-      )
-    },
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        t('setup.medical.forms.create.err.text')
-      )
-    },
-  })
+  // const [addMutation] = useCreateOneMedicalFormMutation({
+  //   onCompleted(data) {
+  //     Notification(
+  //       NotificationType.success,
+  //       t('setup.medical.forms.create.text')
+  //     )
+  //   },
+  //   onError(err) {
+  //     Notification(
+  //       NotificationType.error,
+  //       t('setup.medical.forms.create.err.text')
+  //     )
+  //   },
+  // })
 
-  const [editMutation] = useUpdateOneMedicalFormMutation({
-    onCompleted(data) {
-      Notification(NotificationType.success, t('setup.medical.forms.save.text'))
-    },
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        t('setup.medical.forms.save.err.text')
-      )
-    },
-  })
+  // const [editMutation] = useUpdateOneMedicalFormMutation({
+  //   onCompleted(data) {
+  //     Notification(NotificationType.success, t('setup.medical.forms.save.text'))
+  //   },
+  //   onError(err) {
+  //     Notification(
+  //       NotificationType.error,
+  //       t('setup.medical.forms.save.err.text')
+  //     )
+  //   },
+  // })
 
   const saveForm = async (medicalItem) => {
     // setShowCreateForm(false)
