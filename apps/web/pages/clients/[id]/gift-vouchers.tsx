@@ -33,7 +33,6 @@ const Vouchers = () => {
     { data: count },
   ] = useCountVouchersByStatusLazyQuery()
   const [getSoldVouchers, { data, loading }] = useGetSoldVouchersLazyQuery()
-  console.log('count', count)
   useEffect(() => {
     if (data) {
       setVouchers(data.vouchers)
@@ -51,14 +50,28 @@ const Vouchers = () => {
       getSoldVouchers({
         variables: {
           where: {
-            Contact: {
-              ID: {
-                equals: contactID,
+            OR: [
+              {
+                Contact: {
+                  ID: {
+                    equals: contactID,
+                  },
+                },
+                expiry_date: {
+                  lte: new Date().toISOString(),
+                },
               },
-            },
-            expiry_date: {
-              lt: new Date().toISOString(),
-            },
+              {
+                Contact: {
+                  ID: {
+                    equals: contactID,
+                  },
+                },
+                remaining_balance: {
+                  equals: 0,
+                },
+              },
+            ],
           },
           take: paginateData.limit,
           skip: paginateData.offset,
@@ -77,8 +90,9 @@ const Vouchers = () => {
               equals: 'Active',
             },
             expiry_date: {
-              gte: new Date().toISOString(),
+              gt: new Date().toISOString(),
             },
+            remaining_balance: { gte: 0 },
           },
           take: paginateData.limit,
           skip: paginateData.offset,
