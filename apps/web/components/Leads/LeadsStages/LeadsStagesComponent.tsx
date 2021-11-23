@@ -18,8 +18,6 @@ import styles from './LeadsStages.module.less'
 import LeadsSkeleton from './LeadsSkeleton'
 import LeadsStagesSkeleton from './LeadsStagesSkeleton'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
-import noUser from '../../../assets/images/no-user-icon.svg'
-import austin from '../../../assets/images/users/austin.png'
 
 export interface leadsStagesComponentProps {
   pipelineId: number | null
@@ -427,7 +425,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                               if (User) {
                                 userImage = User.image
                                   ? getImage(User.image)
-                                  : austin
+                                  : ''
                                 userName = User.full_name
                               }
 
@@ -438,7 +436,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                                 contactName = `${Contact?.Fname} ${Contact?.Lname}`
                                 contactImg = Contact?.Avatar
                                   ? getImage(Contact.Avatar)
-                                  : noUser
+                                  : 'no-image'
                               }
 
                               return (
