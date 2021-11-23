@@ -87,16 +87,16 @@ export const Booking = objectType({
         return root.User
       },
     })
-    t.nullable.field('BookedBy', {
-      type: 'User',
-      resolve(root: any) {
-        return root.BookedBy
-      },
-    })
     t.nullable.field('Contact', {
       type: 'CmContact',
       resolve(root: any) {
         return root.Contact
+      },
+    })
+    t.nullable.field('BookedBy', {
+      type: 'User',
+      resolve(root: any) {
+        return root.BookedBy
       },
     })
     t.nullable.field('UserMaster', {
