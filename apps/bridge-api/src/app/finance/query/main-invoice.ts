@@ -48,24 +48,10 @@ export const MainInvoice = extendType({
       },
     })
     t.list.field('findManyPayments', {
-      type: objectType({
-        name: 'InvPaymentSimple',
-        description: 'Payments data simple response',
-        definition(t) {
-          t.int('id')
-          t.field('date', { type: 'DateTime' })
-          t.field('created_date', { type: 'DateTime' })
-          t.float('amount')
-          t.float('pmethod')
-          t.string('location')
-          t.string('biller')
-          t.string('invoice_no')
-          t.string('user')
-        },
-      }),
+      type: 'Json',
       description: 'Get Payments per customer other field to be implemented',
       args: {
-        where: 'InvSaleWhereInput',
+        contact_id: 'Int',
         skip: intArg({
           default: 0,
         }),
@@ -91,26 +77,31 @@ export const MainInvoice = extendType({
           left join company_branches b on b.id=s.location_id
           left join inv_billers c on c.id=s.biller_id
           left join users d on d.id=a.uid
-          where a.occupier = ${ctx.authenticated.company} and a.contact_id=${input?.where?.customer_id?.equals}
+          where a.occupier = ${ctx.authenticated.company} and a.contact_id=${input?.contact_id}
 
           union
 
           SELECT
             a.id,
             a.inv_total as amount,
-            if(reference_no='**REFUND**' ,concat('refund/',IFNULL(a.paid_by,'card')), 'account payment') as pmethod,
+            CASE
+                WHEN reference_no='**REFUND**'  THEN concat('refund/',a.paid_by)
+                WHEN reference_no='**CREDIT NOTE**'  THEN 'credit'
+                WHEN reference_no='ACCOUNT PAYMENT'  THEN 'on account'
+                ELSE a.paid_by
+            END as pmethod,
             date as created_date,
             date,
             b.name as location,
             c.name as biller,
-            c.custom_id as invoice_no,
+            a.custom_id as invoice_no,
             d.full_name as user
           from inv_sales a
           left join company_branches b on b.id=a.location_id
           left join inv_billers c on c.id=a.biller_id
           left join users d on d.id=a.uid
           where
-          a.occupier = ${ctx.authenticated.company} and reference_no in ("**REFUND**", "ACCOUNT BALANCE") and a.customer_id = ${input?.where?.customer_id?.equals}
+          a.occupier = ${ctx.authenticated.company} and reference_no in ("**REFUND**", "ACCOUNT PAYMENT","**CREDIT NOTE**") and a.customer_id = ${input?.contact_id}
         )t
         order by date desc
         LIMIT ${input.take}
@@ -177,6 +168,33 @@ export const MainInvoice = extendType({
         LIMIT ${input.take}
         OFFSET ${input.skip}`
         return await ctx.prisma.$queryRaw(query)
+      },
+    })
+    t.field('countPayments', {
+      type: 'Int',
+      description: 'Real count of payments',
+      args: {
+        contact_id: 'Int',
+      },
+      async resolve(_root, input, ctx: Context) {
+        const payments = await ctx.prisma
+          .$queryRaw(`SELECT sum(count) as count from
+          (
+            SELECT
+              count(a.id) as count
+            FROM inv_payments a
+            inner join inv_sales s on s.id=a.invoice
+            where a.occupier = ${ctx.authenticated.company} and a.contact_id=${input?.contact_id}
+  
+            union
+  
+            SELECT
+            count(id) as count
+            from inv_sales a
+            where
+            a.occupier = ${ctx.authenticated.company} and reference_no in ("**REFUND**", "ACCOUNT PAYMENT","**CREDIT NOTE**") and a.customer_id = ${input?.contact_id}
+          )t`)
+        return payments[0]?.count ?? 0
       },
     })
     t.field('countSoldItems', {
