@@ -98,7 +98,9 @@ export const permissions = shield(
       deleteManyContactAttachment: rules.authentication.isAuthenticated,
       deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
+      createContactAlertAdvanced: rules.authentication.isAuthenticated,
 
+      CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin
@@ -124,11 +126,18 @@ export const permissions = shield(
       //Connect Public
       public_createOnlineBooking: allow,
 
+      //communication
+      SendAppointmentConfirmationMail: rules.authentication.isAuthenticated,
+
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       updateOneCmContact: rules.authentication.isAuthenticated,
       // Pathway
       upsertOnePathwayStepsTaken: rules.interceptors.injectContact,
       createOnePathwaysTaken: rules.interceptors.injectContact,
+      // Communication
+      changeEmailPrivacy: rules.authentication.isAuthenticated,
+      // LabRequest
+      updateOneLabRequest: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -189,6 +198,7 @@ export const permissions = shield(
       findFirstContactNote: rules.authentication.isAuthenticated,
       findManyContactNote: rules.authentication.isAuthenticated,
       findManyContactNoteCount: rules.authentication.isAuthenticated,
+      findManyContactAlert: rules.interceptors.injectContact,
       // //UserMainPermission
       findFirstUserMainPermission: rules.authentication.isAuthenticated,
       findManyUserMainPermission: rules.authentication.isAuthenticated,

@@ -1,9 +1,5 @@
-query getDetails($contactId : IntFilter!){
-  details: findFirstCmContact(
-    where:{
-      ID:$contactId
-    }
-  ){
+query getDetails($contactId: Int!) {
+  details: findFirstCmContact(where: { ID: { equals: $contactId } }) {
     ID
     Salutation
     Fname
