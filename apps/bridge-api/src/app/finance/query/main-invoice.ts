@@ -43,7 +43,6 @@ export const MainInvoice = extendType({
           "a.reference_no!='**REFUND**' ",
           "a.reference_no!='ACCOUNT PAYMENT'",
         ])
-        console.info('-->', query)
         return await ctx.prisma.$queryRaw(query)
       },
     })
