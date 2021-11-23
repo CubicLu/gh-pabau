@@ -1128,6 +1128,7 @@ model CancelReason {
   modified_at               DateTime? @updatedAt
 
 
+  BookingCancel BookingCancel[]
   @@index([company_id], name: "occupier")
   @@map("cancel_reason")
 }
@@ -4995,11 +4996,11 @@ model PathwayStepsTaken {
 }
 
 model CreditBalance {
-  credit_balance_id Int   @id @default(autoincrement())
-  company_id        Int?  @map("company")
-  balance           Float @default(5.00)
-  balance_currency  Float
-  auto              Int
+  credit_balance_id Int    @id @default(autoincrement())
+  company_id        Int?   @map("company")
+  balance           Float  @default(5.00)
+  balance_currency  Float?
+  auto              Int?
 
   Company Company? @relation(fields: [company_id], references: [id])
   @@index([company_id], name: "company_id")
@@ -8594,6 +8595,8 @@ model MedicalFormContact {
   MedicalContactAttr        MedicalContactAttr[]
   LabRequest                LabRequest[]
 
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
   @@unique([id], name: "primary")
   @@index([form_id], name: "form_id")
   @@map("medical_form_contact")
@@ -10805,6 +10808,7 @@ model Booking {
   all_day_end_date              Int?                           @default(0)
   InvSale                       InvSale?                       @relation(fields: [invoice_id], references: [id])
   User                          User?                          @relation(fields: [UID], references: [id])
+  BookedBy                      User?                          @relation(fields: [created_by_uid], references: [id], name: "BookedBy")
   Contact                       CmContact?                     @relation(fields: [contact_id], references: [ID])
   UserMaster                    UserMaster?                    @relation(fields: [contact_id], references: [contact_id])
   CmStaffGeneral                CmStaffGeneral?                @relation(fields: [UID], references: [pabau_id])
@@ -10813,6 +10817,8 @@ model Booking {
   PathwaysTaken                 PathwaysTaken[]
   CommunicationsRequestedForms  CommunicationsRequestedForms[]
 
+  BookingCancel    BookingCancel[]
+  BookingChangeLog BookingChangeLog[]
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
   @@index([contact_id], name: "contact_id")
@@ -10836,26 +10842,40 @@ model Booking {
   @@map("salon_bookings")
 }
 
-//model salon_bookings_apt_cancel {
-//  id                Int       @id @default(autoincrement())
-//  appointment_id    Int?
-//  type              String?
-//  reason_type       String?
-//  reason            String?
-//  created_date      DateTime?
-//  last_updated_date DateTime?
-//  cancel_by         Int
-//  cancel_reason_id  Int
-//
-//  @@index([appointment_id], name: "appointment_id")
-//}
-//
-//model salon_bookings_changelog {
-//  id         Int    @id @default(autoincrement())
-//  booking_id Int    @unique
-//  changelog  String
-//}
-//
+model BookingCancel {
+  id                Int          @id @default(autoincrement())
+  appointment_id    Int
+  type              String?
+  reason_type       String?
+  reason            String?
+  created_date      DateTime?
+  last_updated_date DateTime?
+  cancel_by         Int
+  cancel_reason_id  Int
+  Booking           Booking      @relation(fields: [appointment_id], references: [id])
+  CancelReason      CancelReason @relation(fields: [cancel_reason_id], references: [id])
+  User              User         @relation(fields: [cancel_by], references: [id])
+
+
+  @@index([id], name: "id")
+  @@index([appointment_id], name: "appointment_id")
+  @@map("salon_bookings_apt_cancel")
+}
+
+model BookingChangeLog {
+  id             Int    @id @default(autoincrement())
+  appointment_id Int    @map("booking_id")
+  changelog      String
+
+  Booking Booking @relation(fields: [appointment_id], references: [id])
+
+
+  @@unique([appointment_id], name: "booking_id")
+  @@index([id], name: "id")
+  @@index([appointment_id], name: "booking_id")
+  @@map("salon_bookings_changelog")
+}
+
 //model salon_bookings_clinics_settings {
 //  id        Int @id @default(autoincrement())
 //  occupier  Int
@@ -12910,6 +12930,7 @@ model User {
   InvWarehouseProduct          InvWarehouseProduct[]
   InventoryMovement            InventoryMovement[]
   Booking                      Booking[]
+  BookedBy                     Booking[]                      @relation("BookedBy")
   InvSale                      InvSale[]
   CompanyOwner                 Company?                       @relation("owner")
   Activity                     Activity[]                     @relation("activityCreatedUser")
@@ -12927,8 +12948,8 @@ model User {
   CmContact                    CmContact[]
   CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
   PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
-
-
+  MedicalFormContact           MedicalFormContact[]
+  BookingCancel                BookingCancel[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
