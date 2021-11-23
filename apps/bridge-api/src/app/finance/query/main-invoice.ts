@@ -43,7 +43,7 @@ export const MainInvoice = extendType({
           "a.reference_no!='**REFUND**' ",
           "a.reference_no!='ACCOUNT PAYMENT'",
         ])
-        return await ctx.prisma.$queryRaw(query)
+        return await ctx.prisma.$queryRaw`${query}`
       },
     })
     t.list.field('findManyPayments', {
@@ -115,7 +115,7 @@ export const MainInvoice = extendType({
         LIMIT ${input.take}
         OFFSET ${input.skip}`
 
-        return await ctx.prisma.$queryRaw(query)
+        return await ctx.prisma.$queryRaw`${query}`
       },
     })
     t.field('countInvoice', {
@@ -130,7 +130,7 @@ export const MainInvoice = extendType({
           "a.reference_no!='**REFUND**' ",
           "a.reference_no!='ACCOUNT PAYMENT'",
         ])
-        const invoices = await ctx.prisma.$queryRaw(query)
+        const invoices = await ctx.prisma.$queryRaw`${query}`
 
         return invoices[0]?.count ?? 0
       },
