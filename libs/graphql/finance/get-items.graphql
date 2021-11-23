@@ -15,6 +15,9 @@ query saleItems($guid: String!) {
       inv_total
       paid_amount
       tip
+      CreditRef{
+        custom_id
+      }
     }
     Tax {
       id
@@ -34,7 +37,8 @@ query saleItems($guid: String!) {
 
 query getContactSaleItem($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
   items:findManySaleItem(where:
-    {InvSale:{customer_id:{equals: $customer_id}}}
+    {InvSale:{customer_id:{equals: $customer_id}}, product_category_type: {not: {equals:""}}}
+    orderBy:{InvSale:{date:desc}}
     take: $take,
     skip: $skip
   ){
@@ -53,10 +57,14 @@ query getContactSaleItem($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
   }
 }
 
-query countContactSaleItem($customer_id: Int!){
-  aggregateSaleItem(where:{InvSale:{customer_id:{equals:$customer_id}}}){
-    _count{
-      id
+query countContactSaleItem($contact_id: Int!){
+  countSoldItems(contact_id: $contact_id)
+}
+
+query aggregateItemTotal($contactID: Int) {
+  itemTotal: aggregateInvSale(where: { customer_id: { equals: $contactID } }) {
+    totalSum: _sum {
+      total
     }
   }
 }

@@ -29,7 +29,7 @@ export const CmContactCustomType = objectType({
   definition(t) {
     t.string('Fname')
     t.string('Lname')
-    t.nonNull.list.field('CmContactLabel', { type: 'CmContactLabel' })
+    t.list.field('CmContactLabel', { type: 'CmContactLabel' })
     t.string('Email')
     t.string('Phone')
     t.string('MailingStreet')
@@ -153,7 +153,7 @@ export const ActivityWhereInputType = inputObjectType({
     t.field('startDate', { type: 'DateTime' })
     t.field('endDate', { type: 'DateTime' })
     t.list.field('activityType', { type: 'String' })
-    t.list.field('status', { type: 'String' })
+    t.list.field('status', { type: 'activity_status' })
     t.list.field('userId', { type: 'Int' })
     t.string('search')
     t.list.string('activeColumns')

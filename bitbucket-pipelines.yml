@@ -62,14 +62,14 @@ pipelines:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=origin/master
 
-          # - step:
-          #     name: unit tests
-          #     size: 4x
-          #     runs-on:
-          #       - 'self.hosted'
-          #     script:
-          #       #                - while true; do ps -aux && sleep 30; done &
-          #       - yarn affected:test --base=origin/master
+          - step:
+              name: unit tests
+              size: 4x
+              runs-on:
+                - 'self.hosted'
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:test --base=origin/master
 
           - step:
               name: integration tests
@@ -108,7 +108,7 @@ pipelines:
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
                 # - |
                 #   echo "Checking Metadata is consistent so far..."
-                #   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
+                #   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura\li metadata inconsistency status
                 - |
                   echo "Exporting Hasura metadata..."
                   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
@@ -170,7 +170,7 @@ pipelines:
               image: node
               runs-on:
                 - 'self.hosted'
-              max-time: 20
+              max-time: 40
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - node -v
@@ -294,14 +294,14 @@ pipelines:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=HEAD~1
 
-          # - step:
-          #     name: unit tests
-          #     size: 8x
-          #     runs-on:
-          #       - 'self.hosted'
-          #     script:
-          #       #                - while true; do ps -aux && sleep 30; done &
-          #       - yarn affected:test --base=HEAD~1
+          - step:
+              name: unit tests
+              size: 4x
+              runs-on:
+                - 'self.hosted'
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:test --base=HEAD~1
 
           - step:
               name: e2e
@@ -415,7 +415,7 @@ pipelines:
 
           - step:
               name: deploy previews
-              max-time: 20
+              max-time: 40
               runs-on:
                 - 'self.hosted'
               deployment: production-serverless

@@ -48,7 +48,7 @@ interface EditInvoiceProps {
 const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
   const [invoice_, setInvoice] = useState(invoice)
   const [enableCreateBtn, setEnableCreateBtn] = useState(
-    invoice.items.length > 0
+    invoice?.items?.length > 0
   )
   const { t } = useTranslation('common')
   const { Title } = Typography

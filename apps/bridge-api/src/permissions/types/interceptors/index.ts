@@ -168,8 +168,8 @@ export const interceptors = {
   ),
   injectContact: rule('injectContact')((_root, args, ctx: Context) => {
     if (args?.data?.CmContact) {
-      args.data = {
-        ...args.data,
+      args.where = {
+        ...args.where,
         CmContact: {
           connect: { company_id: ctx.authenticated.company },
         },

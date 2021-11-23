@@ -1,0 +1,10 @@
+mutation createContactAlertWithTags($data: ContactAlertCreateInput!) {
+  createContactAlertAdvanced(data: $data) {
+    ID
+    Note
+    MedicalConditions {
+      id
+      name
+    }
+  }
+}

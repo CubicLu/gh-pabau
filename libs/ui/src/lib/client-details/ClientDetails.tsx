@@ -128,7 +128,7 @@ interface Appointment {
 export interface ClientDetailsProps {
   clientData: ClientData
   referredByOptions?: ReferredByOption[]
-  customFields?: FieldOrderItem[]
+  customFields?: CategoryFieldType[]
   loading?: boolean
   onCreateEmail: () => void
   onCreateCall: () => void
@@ -141,6 +141,7 @@ export interface ClientDetailsProps {
   clientId?: number
   companyId?: number
   setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
+  showAvatarModal?: () => void
 }
 
 enum FieldType {
@@ -167,6 +168,13 @@ export interface FieldOrderItem {
   field: FieldType
   value: number | string | PhoneProp
   selectOptions?: string[] | selectOptionType[]
+  order?: number
+}
+
+export interface CategoryFieldType {
+  id: number
+  category: string
+  fields: FieldOrderItem[]
 }
 
 const FieldName = {
@@ -203,6 +211,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   clientId,
   companyId,
   setBasicContactData,
+  showAvatarModal,
 }) => {
   const { t } = useTranslation('common')
   const defaultFieldOrder: FieldOrderItem[] = [
@@ -347,16 +356,13 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const [initialized, setInitialized] = useState(false)
   const [hoverClientDetails, setHoverClientDetails] = useState(false)
   const [detailsCard, setDetailsCard] = useState(0)
-  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [addRelationship, setAddRelationship] = useState(false)
   const [addContact, setAddContact] = useState(false)
   const [addThirdParty, setAddThirdParty] = useState(false)
   const [type, setType] = useState<RelationshipType>('family-member')
   const [customizingFields, setCustomizingFields] = useState(false)
   const [hoverDetails, setHoverDetails] = useState(false)
-  const [fieldsOrder, setFieldsOrder] = useState<FieldOrderItem[]>(
-    defaultFieldOrder
-  )
+  const [fieldsOrder, setFieldsOrder] = useState<CategoryFieldType[]>()
   const [form] = Form.useForm()
   const [clientLabels, setClientLabels] = useState<Labels[]>([])
   const [cardBadgeUpdate, setCardBadgeUpdate] = useState(
@@ -372,6 +378,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
 
   useEffect(() => {
     if (clientData) {
+      let categoryCustom
       let fields = [...defaultFieldOrder]
       fields[0].value = clientData.patientID
       fields[1].value = clientData.referredBy
@@ -383,13 +390,33 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
         home: clientData.phone.home,
       }
       fields[6].value = clientData.email
-      if (customFields?.length) {
-        fields = [...fields, ...customFields]
-      }
       if (referredByOptions?.length) {
         fields[1].selectOptions = referredByOptions
       }
-      setFieldsOrder(fields)
+      if (customFields?.length) {
+        const generalCustom = customFields.find(
+          (data) => data.category === 'detail'
+        )
+        categoryCustom = customFields.filter(
+          (data) => data.category !== 'detail'
+        )
+        if (generalCustom) {
+          fields = [...fields, ...generalCustom.fields]
+        }
+      }
+      let data = [
+        {
+          id: 0,
+          category: 'detail',
+          fields,
+        },
+      ]
+
+      if (categoryCustom?.length) {
+        data = [...data, ...categoryCustom]
+      }
+
+      setFieldsOrder(data)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientData, customFields, referredByOptions])
@@ -468,10 +495,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     }
   }
 
-  const handleChangeImage = (avatar) => {
-    setClient({ ...client, avatar })
-  }
-
   const handleRemoveRelationship = (index) => {
     const data = { ...client }
     data.relationships.splice(index, 1)
@@ -513,31 +536,43 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
 
   const handleUpdateFieldValue = async (
     index: number,
-    value: string | PhoneProp | number
+    value: string | PhoneProp | number,
+    type?: string,
+    category?: number
   ) => {
-    const fieldsOrderData = [...fieldsOrder]
-    const data = fieldsOrderData.find((item, id) => id === index)
-    if (data && clientId) {
-      const response = await handleUpdate(data.fieldName, value, data.title)
-      if (response?.data) {
-        if (!data.fieldName.includes('customField_')) {
-          setBasicContactData?.({
-            ...clientData,
-            [data.fieldName]: value,
-          })
-        } else {
-          data.value = value
-          fieldsOrderData[index] = data
-          setFieldsOrder([...fieldsOrderData])
+    if (fieldsOrder) {
+      const fieldsOrderData = [...fieldsOrder]
+      const fieldOrderIndex = fieldsOrderData.findIndex(
+        (fields) => fields.id === category
+      )
+      const data = fieldsOrderData[fieldOrderIndex]?.fields.find(
+        (item, id) => id === index
+      )
+
+      if (data && clientId) {
+        const response = await handleUpdate(data.fieldName, value, data.title)
+        if (response?.data) {
+          if (!data.fieldName.includes('customField_')) {
+            setBasicContactData?.((item) => {
+              return {
+                ...item,
+                [data.fieldName]: value,
+              }
+            })
+          } else {
+            data.value = value
+            fieldsOrderData[fieldOrderIndex].fields[index] = data
+            setFieldsOrder([...fieldsOrderData])
+          }
+          Notification(
+            NotificationType.success,
+            `${data.title} updated to ${
+              data.fieldName === 'referredBy'
+                ? referredByOptions?.find((option) => option.id === value)?.name
+                : value
+            }`
+          )
         }
-        Notification(
-          NotificationType.success,
-          `${data.title} updated to ${
-            data.fieldName === 'referredBy'
-              ? referredByOptions?.find((option) => option.id === value)?.name
-              : value
-          }`
-        )
       }
     }
   }
@@ -589,16 +624,24 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const handleUpdatePhoneFieldValue = async (
     index: number,
     value: string,
-    type: string
+    type: string,
+    category: number
   ) => {
     const response = await handleUpdate(type, value)
-    if (response?.data) {
+    if (response?.data && fieldsOrder) {
       const fieldsOrderData = [...fieldsOrder]
-      const data = fieldsOrderData.find((item, id) => id === index)
+      const fieldOrderIndex = fieldsOrderData.findIndex(
+        (fields) => fields.id === category
+      )
+      const data = fieldsOrderData[fieldOrderIndex]?.fields.find(
+        (item, id) => id === index
+      )
       if (data) {
-        setBasicContactData?.({
-          ...clientData,
-          [type]: value,
+        setBasicContactData?.((item) => {
+          return {
+            ...item,
+            [type]: value,
+          }
         })
         Notification(
           NotificationType.success,
@@ -620,14 +663,16 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setIsAddressLoading(false)
 
     if (response?.data) {
-      setBasicContactData?.({
-        ...clientData,
-        street,
-        city,
-        county,
-        postCode,
-        country,
-        address: addressJoin,
+      setBasicContactData?.((item) => {
+        return {
+          ...item,
+          street,
+          city,
+          county,
+          postCode,
+          country,
+          address: addressJoin,
+        }
       })
     }
   }
@@ -639,18 +684,22 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   ) => {
     const response = await handleUpdate(key, value)
     if (response?.data) {
-      setBasicContactData?.({
-        ...clientData,
-        [key]: value,
+      setBasicContactData?.((item) => {
+        return {
+          ...item,
+          [key]: value,
+        }
       })
       Notification(NotificationType.success, `${title} updated to ${value}`)
     }
   }
 
-  const getFieldName = (fieldTitle: string) => {
+  const getFieldName = (category: number, fieldTitle: string) => {
     let result = 0
+
+    const fieldsData = fieldsOrder?.find((item) => item.id === category)
     // eslint-disable-next-line unicorn/no-array-for-each
-    fieldsOrder.forEach((item, index) => {
+    fieldsData?.fields.forEach((item, index) => {
       // eslint-disable-next-line unicorn/no-array-for-each
       Object.values(item).forEach((el, ind) => {
         if (el === fieldTitle) {
@@ -760,9 +809,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     setIsActiveLoading(true)
     const response = await handleUpdate('isActive', active ? 1 : 0)
     if (response?.data) {
-      setBasicContactData?.({
-        ...clientData,
-        isActive: active,
+      setBasicContactData?.((item) => {
+        return {
+          ...item,
+          isActive: active,
+        }
       })
     }
     setIsActiveLoading(false)
@@ -835,518 +886,569 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
               {loading ? (
                 <div className={styles.detailsOne}>
                   <div className={styles.detailsOneContent}>
-                    <div className={styles.detailsAvatar}>
-                      <Skeleton.Avatar active size={112} shape={'circle'} />
-                    </div>
-                    <div className={styles.detailsClientName}>
-                      <Skeleton
-                        className={styles.skeletonName}
-                        paragraph={false}
-                        active
-                      />
-                    </div>
-                    <div className={styles.detailsActiveStatus}>
-                      <Skeleton
-                        className={styles.skeletonStatus}
-                        paragraph={false}
-                        active
-                        round
-                      />
-                    </div>
-                    <div className={styles.detailsLabels}>
-                      {[...Array.from({ length: 4 })].map((item, index) => (
+                    <div className={styles.detailTop}>
+                      <div className={styles.detailsAvatar}>
+                        <Skeleton.Avatar active size={112} shape={'circle'} />
+                      </div>
+                      <div className={styles.detailsClientName}>
                         <Skeleton
-                          className={styles.skeletonLabel}
-                          paragraph={false}
-                          active
-                          key={index}
-                        />
-                      ))}
-                    </div>
-                    <div className={styles.detailsContainer}>
-                      <div className={styles.title}>
-                        <Skeleton
-                          className={styles.skeletonTitle}
+                          className={styles.skeletonName}
                           paragraph={false}
                           active
                         />
                       </div>
+                      <div className={styles.detailsActiveStatus}>
+                        <Skeleton
+                          className={styles.skeletonStatus}
+                          paragraph={false}
+                          active
+                          round
+                        />
+                      </div>
+                      <div className={styles.detailsLabels}>
+                        {[...Array.from({ length: 4 })].map((item, index) => (
+                          <Skeleton
+                            className={styles.skeletonLabel}
+                            paragraph={false}
+                            active
+                            key={index}
+                          />
+                        ))}
+                      </div>
                     </div>
-                    {[...Array.from({ length: 7 })].map((item, index) => (
-                      <div className={styles.clientDetailsItem} key={index}>
-                        <div>
-                          <div className={styles.title}>
-                            <Skeleton
-                              className={styles.skeletonTitle}
-                              paragraph={false}
-                              active
-                            />
-                          </div>
-                          <div className={styles.content}>
-                            <Skeleton
-                              className={styles.skeletonContent}
-                              paragraph={false}
-                              active
-                              round
-                            />
-                          </div>
+                    <div className={styles.detailBottom}>
+                      <div className={styles.detailsContainer}>
+                        <div className={styles.title}>
+                          <Skeleton
+                            className={styles.skeletonTitle}
+                            paragraph={false}
+                            active
+                          />
                         </div>
                       </div>
-                    ))}
+                      {[...Array.from({ length: 7 })].map((item, index) => (
+                        <div className={styles.clientDetailsItem} key={index}>
+                          <div>
+                            <div className={styles.title}>
+                              <Skeleton
+                                className={styles.skeletonTitle}
+                                paragraph={false}
+                                active
+                              />
+                            </div>
+                            <div className={styles.content}>
+                              <Skeleton
+                                className={styles.skeletonContent}
+                                paragraph={false}
+                                active
+                                round
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ) : (
                 <div className={styles.detailsOneContent}>
-                  <div className={styles.detailsAvatar}>
-                    <div className={styles.avatarContent}>
-                      <Avatar
-                        src={client?.avatar}
-                        size={112}
-                        name={client?.fullName}
-                      />
+                  <div className={styles.detailTop}>
+                    <div className={styles.detailsAvatar}>
+                      <div className={styles.avatarContent}>
+                        <Avatar
+                          src={client?.avatar}
+                          size={112}
+                          name={client?.fullName}
+                        />
+                        <div
+                          className={styles.cardBadge}
+                          onClick={handleCardBadgeUpdate}
+                        >
+                          {cardBadgeUpdate === CardBadgeUpdateType.delete ? (
+                            <Tooltip
+                              placement="top"
+                              overlayInnerStyle={{
+                                borderRadius: '3px',
+                              }}
+                              title={deleteCardTooltipTitle}
+                            >
+                              <div>
+                                <CardBadgeComponent
+                                  primaryBadge={<CardImg />}
+                                  secondaryBadge={<DeleteImg />}
+                                />
+                              </div>
+                            </Tooltip>
+                          ) : (
+                            <CardBadgeComponent
+                              primaryBadge={<CardImg />}
+                              secondaryBadge={updateCardBadgeComponent()}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.connectionBadge}>
+                          {connectionBadgeUpdate ===
+                          ConnectionBadgeUpdateType.check ? (
+                            <Popover
+                              placement="topRight"
+                              title={pabauConnectPopoverTitle}
+                              content={plusConnectionBadgePopoverContent}
+                              trigger="click"
+                            >
+                              <Tooltip
+                                placement="top"
+                                overlayInnerStyle={{
+                                  maxWidth: '128px',
+                                  borderRadius: '3px',
+                                }}
+                                title={checkConnectionBadgeTooltipTitle}
+                              >
+                                <div>
+                                  <ConnectionBadgeComponent
+                                    primaryBadge={<ConnectionImg />}
+                                    secondaryBadge={updateConnectionBadgeComponent()}
+                                  />
+                                </div>
+                              </Tooltip>
+                            </Popover>
+                          ) : (
+                            <Popover
+                              placement="topRight"
+                              title={pabauConnectPopoverTitle}
+                              content={checkConnectionBadgePopoverContent}
+                              trigger="click"
+                            >
+                              <Tooltip
+                                placement="top"
+                                overlayInnerStyle={{
+                                  maxWidth: '128px',
+                                  borderRadius: '3px',
+                                }}
+                                title={plusConnectionBadgeTooltipTitle}
+                              >
+                                <div>
+                                  <ConnectionBadgeComponent
+                                    primaryBadge={<ConnectionImg />}
+                                    secondaryBadge={updateConnectionBadgeComponent()}
+                                  />
+                                </div>
+                              </Tooltip>
+                            </Popover>
+                          )}
+                        </div>
+                      </div>
                       <div
-                        className={styles.cardBadge}
-                        onClick={handleCardBadgeUpdate}
+                        className={styles.edit}
+                        onClick={() => showAvatarModal?.()}
                       >
-                        {cardBadgeUpdate === CardBadgeUpdateType.delete ? (
-                          <Tooltip
-                            placement="top"
-                            overlayInnerStyle={{
-                              borderRadius: '3px',
-                            }}
-                            title={deleteCardTooltipTitle}
-                          >
-                            <div>
-                              <CardBadgeComponent
-                                primaryBadge={<CardImg />}
-                                secondaryBadge={<DeleteImg />}
-                              />
+                        <EditOutlined />
+                      </div>
+                    </div>
+                    <div className={styles.detailsClientName}>
+                      <div
+                        className={!client.isActive ? styles.inactiveName : ''}
+                      >
+                        <ClientInfoInlineEdit
+                          fieldTitle="First Name"
+                          keyValue="firstName"
+                          type={InlineEditDataTypes.text}
+                          initialValue={client?.firstName}
+                          onUpdateValue={handleUpdateClientInfo}
+                        >
+                          {client?.firstName}
+                        </ClientInfoInlineEdit>{' '}
+                        <ClientInfoInlineEdit
+                          fieldTitle="Last Name"
+                          keyValue="lastName"
+                          type={InlineEditDataTypes.text}
+                          initialValue={client?.lastName}
+                          onUpdateValue={handleUpdateClientInfo}
+                        >
+                          {client?.lastName}
+                        </ClientInfoInlineEdit>
+                      </div>
+                      <div className={styles.edit}>
+                        <EditOutlined />
+                      </div>
+                    </div>
+                    {isActiveLoading ? (
+                      <div className={styles.detailsActiveStatus}>
+                        <Skeleton
+                          className={styles.skeletonStatus}
+                          paragraph={false}
+                          active
+                          round
+                        />
+                      </div>
+                    ) : client.isActive ? (
+                      <div className={styles.detailsActiveStatus}>
+                        <Popconfirm
+                          title={t('ui.clientdetails.deactive.confirm')}
+                          onConfirm={() => handleActiveClient(false)}
+                        >
+                          <Tooltip title="Inactive">
+                            <div className={styles.active}>
+                              <div className={styles.greenDot} />
+                              {t('ui.clientdetails.active')}
                             </div>
                           </Tooltip>
-                        ) : (
-                          <CardBadgeComponent
-                            primaryBadge={<CardImg />}
-                            secondaryBadge={updateCardBadgeComponent()}
-                          />
-                        )}
+                        </Popconfirm>
                       </div>
-                      <div className={styles.connectionBadge}>
-                        {connectionBadgeUpdate ===
-                        ConnectionBadgeUpdateType.check ? (
-                          <Popover
-                            placement="topRight"
-                            title={pabauConnectPopoverTitle}
-                            content={plusConnectionBadgePopoverContent}
-                            trigger="click"
+                    ) : (
+                      <div className={styles.detailsActiveStatus}>
+                        <Tooltip title="Activate">
+                          <div
+                            className={styles.deactivate}
+                            onClick={() => handleActiveClient(true)}
                           >
-                            <Tooltip
-                              placement="top"
-                              overlayInnerStyle={{
-                                maxWidth: '128px',
-                                borderRadius: '3px',
-                              }}
-                              title={checkConnectionBadgeTooltipTitle}
-                            >
-                              <div>
-                                <ConnectionBadgeComponent
-                                  primaryBadge={<ConnectionImg />}
-                                  secondaryBadge={updateConnectionBadgeComponent()}
-                                />
-                              </div>
-                            </Tooltip>
-                          </Popover>
-                        ) : (
-                          <Popover
-                            placement="topRight"
-                            title={pabauConnectPopoverTitle}
-                            content={checkConnectionBadgePopoverContent}
-                            trigger="click"
-                          >
-                            <Tooltip
-                              placement="top"
-                              overlayInnerStyle={{
-                                maxWidth: '128px',
-                                borderRadius: '3px',
-                              }}
-                              title={plusConnectionBadgeTooltipTitle}
-                            >
-                              <div>
-                                <ConnectionBadgeComponent
-                                  primaryBadge={<ConnectionImg />}
-                                  secondaryBadge={updateConnectionBadgeComponent()}
-                                />
-                              </div>
-                            </Tooltip>
-                          </Popover>
-                        )}
-                      </div>
-                    </div>
-                    <div
-                      className={styles.edit}
-                      onClick={() => setShowAvatarUploader(true)}
-                    >
-                      <EditOutlined />
-                    </div>
-                  </div>
-                  <div className={styles.detailsClientName}>
-                    <div
-                      className={!client.isActive ? styles.inactiveName : ''}
-                    >
-                      <ClientInfoInlineEdit
-                        fieldTitle="First Name"
-                        keyValue="firstName"
-                        type={InlineEditDataTypes.text}
-                        initialValue={client?.firstName}
-                        onUpdateValue={handleUpdateClientInfo}
-                      >
-                        {client?.firstName}
-                      </ClientInfoInlineEdit>{' '}
-                      <ClientInfoInlineEdit
-                        fieldTitle="Last Name"
-                        keyValue="lastName"
-                        type={InlineEditDataTypes.text}
-                        initialValue={client?.lastName}
-                        onUpdateValue={handleUpdateClientInfo}
-                      >
-                        {client?.lastName}
-                      </ClientInfoInlineEdit>
-                    </div>
-                    <div className={styles.edit}>
-                      <EditOutlined />
-                    </div>
-                  </div>
-                  {isActiveLoading ? (
-                    <div className={styles.detailsActiveStatus}>
-                      <Skeleton
-                        className={styles.skeletonStatus}
-                        paragraph={false}
-                        active
-                        round
-                      />
-                    </div>
-                  ) : client.isActive ? (
-                    <div className={styles.detailsActiveStatus}>
-                      <Popconfirm
-                        title={t('ui.clientdetails.deactive.confirm')}
-                        onConfirm={() => handleActiveClient(false)}
-                      >
-                        <Tooltip title="Inactive">
-                          <div className={styles.active}>
-                            <div className={styles.greenDot} />
-                            {t('ui.clientdetails.active')}
+                            {t('ui.clientdetails.deactivate')}
                           </div>
                         </Tooltip>
-                      </Popconfirm>
-                    </div>
-                  ) : (
-                    <div className={styles.detailsActiveStatus}>
-                      <Tooltip title="Activate">
+                      </div>
+                    )}
+                    <div className={styles.detailsLabels}>
+                      {clientLabels.map((label, index) => (
                         <div
-                          className={styles.deactivate}
-                          onClick={() => handleActiveClient(true)}
+                          className={styles.detailsLabel}
+                          key={`client-label-${index}`}
+                          style={{
+                            color: label.color,
+                            borderColor: label.color,
+                            backgroundColor: `rgba(${label.color}, 0.5)`,
+                          }}
                         >
-                          {t('ui.clientdetails.deactivate')}
+                          {label.label}
                         </div>
-                      </Tooltip>
-                    </div>
-                  )}
-                  <div className={styles.detailsLabels}>
-                    {clientLabels.map((label, index) => (
-                      <div
-                        className={styles.detailsLabel}
-                        key={`client-label-${index}`}
-                        style={{
-                          color: label.color,
-                          borderColor: label.color,
-                          backgroundColor: `rgba(${label.color}, 0.5)`,
-                        }}
-                      >
-                        {label.label}
+                      ))}
+                      <div className={styles.edit}>
+                        <CreateLabels
+                          labels={clientLabels}
+                          setLabels={(val) => setLabels(val)}
+                        >
+                          <PlusCircleOutlined />
+                        </CreateLabels>
                       </div>
-                    ))}
-                    <div className={styles.edit}>
-                      <CreateLabels
-                        labels={clientLabels}
-                        setLabels={(val) => setLabels(val)}
-                      >
-                        <PlusCircleOutlined />
-                      </CreateLabels>
                     </div>
                   </div>
-                  {!customizingFields && (
-                    <div className={styles.detailsContainer}>
-                      <div className={styles.title}>
-                        {t('ui.clientdetails.details')}
-                      </div>
-                      <div className={styles.customizeFields}>
-                        <div onClick={() => setCustomizingFields(true)}>
-                          {t('ui.clientdetails.customise')}
-                        </div>
-                        <Tooltip
-                          title={t('ui.clientdetails.customise.edit')}
-                          overlayStyle={{ width: '100px' }}
-                        >
-                          <div
-                            className={styles.editCustomizeFields}
-                            onClick={() => handleEditAll?.()}
-                          >
-                            <EditOutlined />
-                          </div>
-                        </Tooltip>
-                      </div>
-                    </div>
-                  )}
                   {!customizingFields &&
-                    fieldsOrder.map((field, index) => (
-                      <React.Fragment key={`client-details-item-${index}`}>
-                        {field.type === InlineEditDataTypes.address ? (
-                          <div
-                            className={
-                              field.value
-                                ? styles.clientDetailsItem
-                                : styles.emptyClientDetailsItem
-                            }
-                          >
-                            <div>
-                              <div className={styles.title}>{field.title}</div>
-                              <div
-                                className={cn(
-                                  styles.content,
-                                  field.value ? '' : styles.emptyContent
-                                )}
-                                onClick={() => {
-                                  field.value && setShowAddressModal(true)
-                                }}
-                              >
-                                {field.value}
+                    fieldsOrder?.map((item, index) => (
+                      <div key={item.id} className={styles.detailBottom}>
+                        <div className={styles.detailsContainer}>
+                          <div className={styles.title}>
+                            {index === 0
+                              ? t('ui.clientdetails.details')
+                              : item.category}
+                          </div>
+                          {index === 0 && (
+                            <div className={styles.customizeFields}>
+                              <div onClick={() => setCustomizingFields(true)}>
+                                {t('ui.clientdetails.customise')}
                               </div>
-                            </div>
-                            <div
-                              className={styles.addAddress}
-                              onClick={() => {
-                                setShowAddressModal(true)
-                              }}
-                            >
-                              {field.value ? (
-                                <div className={styles.edit}>
+                              <Tooltip
+                                title={t('ui.clientdetails.customise.edit')}
+                                overlayStyle={{ width: '100px' }}
+                              >
+                                <div
+                                  className={styles.editCustomizeFields}
+                                  onClick={() => handleEditAll?.()}
+                                >
                                   <EditOutlined />
                                 </div>
-                              ) : (
-                                <div className={styles.addAddressContent}>
-                                  <PlusCircleOutlined />{' '}
-                                  <h5>{t('ui.clientdetails.add.address')}</h5>{' '}
-                                </div>
-                              )}
+                              </Tooltip>
                             </div>
-                          </div>
-                        ) : field.type === InlineEditDataTypes.basicPhone ? (
-                          <div
-                            className={
-                              field.value['mobile'] || field.value['home']
-                                ? styles.clientDetailsItem
-                                : styles.emptyClientDetailsItem
-                            }
-                          >
-                            <div className={styles.emptyHoverTag}>
-                              <div className={styles.title}>{field.title}</div>
+                          )}
+                        </div>
+                        {item.fields.map((field, index) => (
+                          <React.Fragment key={`client-details-item-${index}`}>
+                            {field.type === InlineEditDataTypes.address ? (
                               <div
-                                className={cn(
-                                  styles.content,
-                                  styles.phoneContent,
-                                  field.value ? '' : styles.emptyContent
-                                )}
+                                className={
+                                  field.value
+                                    ? styles.clientDetailsItem
+                                    : styles.emptyClientDetailsItem
+                                }
                               >
-                                <InlineEdit
-                                  fieldTitle={field.title}
-                                  orderIndex={getFieldName(field.title)}
-                                  type={field.type}
-                                  initialValue={field.value}
-                                  onUpdateValue={handleUpdatePhoneFieldValue}
-                                  selectOptions={field.selectOptions}
-                                >
-                                  {!field.value['mobile'] &&
-                                  !field.value['home'] ? (
-                                    <span className={styles.emptyValue}>
-                                      {t('ui.clientdetails.empty')}
-                                    </span>
-                                  ) : (
-                                    <div className={styles.leftContent}>
-                                      <div className={styles.leftContentTitle}>
-                                        {field.value['mobile'] && (
-                                          <span>{`${field.value['mobile']} (Mobile)`}</span>
-                                        )}
-                                        {field.value['home'] && (
-                                          <span>{`${field.value['home']} (Home)`}</span>
-                                        )}
-                                      </div>
-                                      <div className={styles.boxContent}>
-                                        <Tooltip
-                                          placement="top"
-                                          title="Call with Caller"
-                                        >
-                                          <div
-                                            className={styles.iconContent}
-                                            onClick={(e) => {
-                                              e.stopPropagation()
-                                              if (client[field.fieldName])
-                                                onCreateCall()
-                                            }}
-                                          >
-                                            <PhoneFilled />
-                                          </div>
-                                        </Tooltip>
-                                        <div className={styles.iconContent}>
-                                          <DownOutlined />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                </InlineEdit>
-                              </div>
-                            </div>
-                            <div className={styles.edit}>
-                              <EditOutlined />
-                            </div>
-                          </div>
-                        ) : (
-                          !isMobile && (
-                            <div
-                              className={
-                                !field.value
-                                  ? styles.emptyClientDetailsItem
-                                  : field.fieldName === 'referredBy' &&
-                                    !getReferredByValue(field.value)
-                                  ? styles.emptyClientDetailsItem
-                                  : styles.clientDetailsItem
-                              }
-                            >
-                              <div>
-                                <div className={styles.title}>
-                                  {field.title}
+                                <div>
+                                  <div className={styles.title}>
+                                    {field.title}
+                                  </div>
+                                  <div
+                                    className={cn(
+                                      styles.content,
+                                      field.value ? '' : styles.emptyContent
+                                    )}
+                                    onClick={() => {
+                                      field.value && setShowAddressModal(true)
+                                    }}
+                                  >
+                                    {field.value}
+                                  </div>
                                 </div>
                                 <div
-                                  className={cn(
-                                    styles.content,
-                                    !field.value
-                                      ? styles.emptyContent
-                                      : field.fieldName === 'referredBy' &&
-                                        !getReferredByValue(field.value)
-                                      ? styles.emptyContent
-                                      : ''
-                                  )}
+                                  className={styles.addAddress}
+                                  onClick={() => {
+                                    setShowAddressModal(true)
+                                  }}
                                 >
-                                  {field.fieldName === 'patientID' &&
-                                  field.value ? (
-                                    <span>{field.value}</span>
+                                  {field.value ? (
+                                    <div className={styles.edit}>
+                                      <EditOutlined />
+                                    </div>
                                   ) : (
-                                    field.type !== 'date' && (
-                                      <InlineEdit
-                                        fieldTitle={field.title}
-                                        orderIndex={getFieldName(field.title)}
-                                        type={field.type}
-                                        initialValue={
-                                          field.fieldName === 'referredBy' &&
-                                          !getReferredByValue(field.value)
-                                            ? ''
-                                            : field.value
-                                        }
-                                        onUpdateValue={handleUpdateFieldValue}
-                                        selectOptions={field.selectOptions}
-                                      >
-                                        {!field.value ? (
-                                          <span className={styles.emptyValue}>
-                                            {t('ui.clientdetails.empty')}
-                                          </span>
-                                        ) : field.type === 'email' ? (
-                                          <div className={styles.leftContent}>
-                                            <div
-                                              className={cn(
-                                                styles.leftContentTitle,
-                                                styles.emailContent
-                                              )}
-                                            >
-                                              {field.value}
-                                            </div>
-                                            {field.value && (
-                                              <div
-                                                className={styles.boxContent}
-                                              >
-                                                <div
-                                                  className={styles.iconContent}
-                                                  onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    onCreateEmail()
-                                                  }}
-                                                >
-                                                  <MailFilled />
-                                                </div>
-                                              </div>
-                                            )}
-                                          </div>
-                                        ) : field.type === 'list' &&
-                                          field.fieldName === 'referredBy' ? (
-                                          getReferredByValue(field.value) || (
-                                            <span className={styles.emptyValue}>
-                                              {t('ui.clientdetails.empty')}
-                                            </span>
-                                          )
-                                        ) : (
-                                          field.value
-                                        )}
-                                      </InlineEdit>
-                                    )
+                                    <div className={styles.addAddressContent}>
+                                      <PlusCircleOutlined />{' '}
+                                      <h5>
+                                        {t('ui.clientdetails.add.address')}
+                                      </h5>{' '}
+                                    </div>
                                   )}
-                                  {field.type === 'date' && (
+                                </div>
+                              </div>
+                            ) : field.type ===
+                              InlineEditDataTypes.basicPhone ? (
+                              <div
+                                className={
+                                  field.value['mobile'] || field.value['home']
+                                    ? styles.clientDetailsItem
+                                    : styles.emptyClientDetailsItem
+                                }
+                              >
+                                <div className={styles.emptyHoverTag}>
+                                  <div className={styles.title}>
+                                    {field.title}
+                                  </div>
+                                  <div
+                                    className={cn(
+                                      styles.content,
+                                      styles.phoneContent,
+                                      field.value ? '' : styles.emptyContent
+                                    )}
+                                  >
                                     <InlineEdit
                                       fieldTitle={field.title}
-                                      orderIndex={getFieldName(field.title)}
+                                      orderIndex={getFieldName(
+                                        item.id,
+                                        field.title
+                                      )}
                                       type={field.type}
-                                      initialValue={
-                                        field.value &&
-                                        dateFormat &&
-                                        typeof field.value === 'string'
-                                          ? dayjs(field.value).format(
-                                              dateFormat
-                                            )
-                                          : ''
+                                      initialValue={field.value}
+                                      category={item.id}
+                                      onUpdateValue={
+                                        handleUpdatePhoneFieldValue
                                       }
-                                      dateFormat={dateFormat}
-                                      onUpdateValue={handleUpdateFieldValue}
+                                      selectOptions={field.selectOptions}
                                     >
-                                      {field.value &&
-                                      dateFormat &&
-                                      typeof field.value === 'string' ? (
-                                        `${dayjs(field.value).format(
-                                          dateFormat
-                                        )} (${moment(field.value).fromNow(
-                                          true
-                                        )})`
-                                      ) : (
+                                      {!field.value['mobile'] &&
+                                      !field.value['home'] ? (
                                         <span className={styles.emptyValue}>
                                           {t('ui.clientdetails.empty')}
                                         </span>
+                                      ) : (
+                                        <div className={styles.leftContent}>
+                                          <div
+                                            className={styles.leftContentTitle}
+                                          >
+                                            {field.value['mobile'] && (
+                                              <span>{`${field.value['mobile']} (Mobile)`}</span>
+                                            )}
+                                            {field.value['home'] && (
+                                              <span>{`${field.value['home']} (Home)`}</span>
+                                            )}
+                                          </div>
+                                          <div className={styles.boxContent}>
+                                            <Tooltip
+                                              placement="top"
+                                              title="Call with Caller"
+                                            >
+                                              <div
+                                                className={styles.iconContent}
+                                                onClick={(e) => {
+                                                  e.stopPropagation()
+                                                  if (client[field.fieldName])
+                                                    onCreateCall()
+                                                }}
+                                              >
+                                                <PhoneFilled />
+                                              </div>
+                                            </Tooltip>
+                                            <div className={styles.iconContent}>
+                                              <DownOutlined />
+                                            </div>
+                                          </div>
+                                        </div>
                                       )}
                                     </InlineEdit>
-                                  )}
+                                  </div>
                                 </div>
-                              </div>
-                              {field.fieldName === 'patientID' &&
-                              field.value ? null : (
                                 <div className={styles.edit}>
                                   <EditOutlined />
                                 </div>
-                              )}
-                            </div>
-                          )
-                        )}
-                      </React.Fragment>
+                              </div>
+                            ) : (
+                              !isMobile && (
+                                <div
+                                  className={
+                                    !field.value
+                                      ? styles.emptyClientDetailsItem
+                                      : field.fieldName === 'referredBy' &&
+                                        !getReferredByValue(field.value)
+                                      ? styles.emptyClientDetailsItem
+                                      : styles.clientDetailsItem
+                                  }
+                                >
+                                  <div>
+                                    <div className={styles.title}>
+                                      {field.title}
+                                    </div>
+                                    <div
+                                      className={cn(
+                                        styles.content,
+                                        !field.value
+                                          ? styles.emptyContent
+                                          : field.fieldName === 'referredBy' &&
+                                            !getReferredByValue(field.value)
+                                          ? styles.emptyContent
+                                          : ''
+                                      )}
+                                    >
+                                      {field.fieldName === 'patientID' &&
+                                      field.value ? (
+                                        <span>{field.value}</span>
+                                      ) : (
+                                        field.type !== 'date' && (
+                                          <InlineEdit
+                                            fieldTitle={field.title}
+                                            orderIndex={getFieldName(
+                                              item.id,
+                                              field.title
+                                            )}
+                                            type={field.type}
+                                            initialValue={
+                                              field.fieldName ===
+                                                'referredBy' &&
+                                              !getReferredByValue(field.value)
+                                                ? ''
+                                                : field.value
+                                            }
+                                            category={item.id}
+                                            onUpdateValue={
+                                              handleUpdateFieldValue
+                                            }
+                                            selectOptions={field.selectOptions}
+                                          >
+                                            {!field.value ? (
+                                              <span
+                                                className={styles.emptyValue}
+                                              >
+                                                {t('ui.clientdetails.empty')}
+                                              </span>
+                                            ) : field.type === 'email' ? (
+                                              <div
+                                                className={styles.leftContent}
+                                              >
+                                                <div
+                                                  className={cn(
+                                                    styles.leftContentTitle,
+                                                    styles.emailContent
+                                                  )}
+                                                >
+                                                  {field.value}
+                                                </div>
+                                                {field.value && (
+                                                  <div
+                                                    className={
+                                                      styles.boxContent
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.iconContent
+                                                      }
+                                                      onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        onCreateEmail()
+                                                      }}
+                                                    >
+                                                      <MailFilled />
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            ) : field.type === 'list' &&
+                                              field.fieldName ===
+                                                'referredBy' ? (
+                                              getReferredByValue(
+                                                field.value
+                                              ) || (
+                                                <span
+                                                  className={styles.emptyValue}
+                                                >
+                                                  {t('ui.clientdetails.empty')}
+                                                </span>
+                                              )
+                                            ) : (
+                                              field.value
+                                            )}
+                                          </InlineEdit>
+                                        )
+                                      )}
+                                      {field.type === 'date' && (
+                                        <InlineEdit
+                                          fieldTitle={field.title}
+                                          orderIndex={getFieldName(
+                                            item.id,
+                                            field.title
+                                          )}
+                                          type={field.type}
+                                          initialValue={
+                                            field.value &&
+                                            dateFormat &&
+                                            typeof field.value === 'string'
+                                              ? dayjs(field.value).format(
+                                                  dateFormat
+                                                )
+                                              : ''
+                                          }
+                                          dateFormat={dateFormat}
+                                          category={item.id}
+                                          onUpdateValue={handleUpdateFieldValue}
+                                        >
+                                          {field.value &&
+                                          dateFormat &&
+                                          typeof field.value === 'string' ? (
+                                            `${dayjs(field.value).format(
+                                              dateFormat
+                                            )} (${moment(field.value).fromNow(
+                                              true
+                                            )})`
+                                          ) : (
+                                            <span className={styles.emptyValue}>
+                                              {t('ui.clientdetails.empty')}
+                                            </span>
+                                          )}
+                                        </InlineEdit>
+                                      )}
+                                    </div>
+                                  </div>
+                                  {field.fieldName === 'patientID' &&
+                                  field.value ? null : (
+                                    <div className={styles.edit}>
+                                      <EditOutlined />
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
                     ))}
                   {customizingFields && (
                     <CustomizeFields
-                      defaultOrder={fieldsOrder}
+                      defaultOrder={fieldsOrder || []}
                       onCancel={() => setCustomizingFields(false)}
                       onChange={(order) => {
-                        setFieldsOrder(order)
+                        // setFieldsOrder(order)
                         setCustomizingFields(false)
                       }}
                     />
@@ -1496,7 +1598,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                           >
                             <InlineEdit
                               fieldTitle={priceList.title}
-                              orderIndex={getFieldName(priceList.title)}
+                              orderIndex={getFieldName(0, priceList.title)}
                               type={priceList.type}
                               initialValue={
                                 client[priceList.fieldName] ||
@@ -1515,7 +1617,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                           >
                             <InlineEdit
                               fieldTitle={membershipNumber.title}
-                              orderIndex={getFieldName(membershipNumber.title)}
+                              orderIndex={getFieldName(
+                                0,
+                                membershipNumber.title
+                              )}
                               type={membershipNumber.type}
                               initialValue={
                                 client[membershipNumber.fieldName] ||
@@ -1571,14 +1676,6 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
           </div>
         </div>
       )}
-
-      <AvatarUploader
-        visible={showAvatarUploader}
-        title={t('ui.clientdetails.uploadavatar.title')}
-        onCreate={handleChangeImage}
-        imageURL={client.avatar}
-        onCancel={() => setShowAvatarUploader(false)}
-      />
       {showAddressModal && (
         <AddAddress
           visible={showAddressModal}

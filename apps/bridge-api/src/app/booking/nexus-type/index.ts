@@ -59,3 +59,14 @@ const BookingCounts = objectType({
     t.list.field('bookingList', { type: CountDetails })
   },
 })
+
+export const CancelBookingType = objectType({
+  name: 'cancelAppointment',
+  definition(t) {
+    t.string('appointment_status')
+    t.string('status')
+    t.boolean('send_sms')
+    t.int('num_message_send')
+    t.boolean('email_send')
+  },
+})
