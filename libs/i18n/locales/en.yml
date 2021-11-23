@@ -5749,7 +5749,7 @@ en:
     clients.clientcard.medical.history.requested: 'Requested {{what}}'
     clients.clientcard.medical.history.send.reminder: 'Send Reminder'
     clients.clientcard.medical.history: 'Medical history'
-    clients.clientcard.medical.history.last.updated: 'Last updated {{what}} {{which}} ago'
+    clients.clientcard.medical.history.last.updated: 'Last updated {{what}} {{which}}'
     clients.clientcard.medical.history.view: View
     clients.clientcard.medical.history.edit: Edit
     clients.clientcard.medical.history.share: Share
