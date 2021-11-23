@@ -547,6 +547,20 @@ export const User = objectType({
         return root.Booking
       },
     })
+    t.list.field('BookedBy', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByWithRelationInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookedBy
+      },
+    })
     t.list.field('InvSale', {
       type: 'InvSale',
       args: {
@@ -761,6 +775,34 @@ export const User = objectType({
       },
       resolve(root: any) {
         return root.PrescriberMedicalFormContact
+      },
+    })
+    t.list.field('MedicalFormContact', {
+      type: 'MedicalFormContact',
+      args: {
+        where: 'MedicalFormContactWhereInput',
+        orderBy: 'MedicalFormContactOrderByWithRelationInput',
+        cursor: 'MedicalFormContactWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormContactScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormContact
+      },
+    })
+    t.list.field('BookingCancel', {
+      type: 'BookingCancel',
+      args: {
+        where: 'BookingCancelWhereInput',
+        orderBy: 'BookingCancelOrderByWithRelationInput',
+        cursor: 'BookingCancelWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingCancelScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookingCancel
       },
     })
     t.nullable.field('_count', {

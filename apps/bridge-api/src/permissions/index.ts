@@ -100,6 +100,7 @@ export const permissions = shield(
       moveAttachments: rules.authentication.isAuthenticated,
       createContactAlertAdvanced: rules.authentication.isAuthenticated,
 
+      CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin

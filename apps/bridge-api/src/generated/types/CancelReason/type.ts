@@ -20,5 +20,25 @@ export const CancelReason = objectType({
     t.int('apply_cancellation_policy')
     t.nullable.field('created_at', { type: 'DateTime' })
     t.nullable.field('modified_at', { type: 'DateTime' })
+    t.list.field('BookingCancel', {
+      type: 'BookingCancel',
+      args: {
+        where: 'BookingCancelWhereInput',
+        orderBy: 'BookingCancelOrderByWithRelationInput',
+        cursor: 'BookingCancelWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingCancelScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookingCancel
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'CancelReasonCountOutputType',
+      resolve(root: any) {
+        return root._count
+      },
+    })
   },
 })
