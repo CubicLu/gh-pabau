@@ -2,7 +2,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import KanbanCard from './KanbanCard'
 import userImage from '../../assets/images/user.png'
-import noUser from '../../assets/images/no-user-icon.svg'
 
 describe('KanbanCard', () => {
   it('should render successfully', () => {
@@ -16,7 +15,7 @@ describe('KanbanCard', () => {
         leadOwnerName={'Owner Name'}
         leadOwnerImg={userImage}
         contactName={'Contact Name'}
-        contactImg={noUser}
+        contactImg={'contactImage'}
         activityStatus={'future activity scheduled'}
         leadStatus={'Open'}
       />

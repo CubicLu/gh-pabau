@@ -5,7 +5,6 @@ import {
   GoogleOutlined,
   MailOutlined,
   MobileOutlined,
-  PhoneOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
 import { Breadcrumb, Button, Notification, NotificationType } from '@pabau/ui'
@@ -24,10 +23,8 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
 import { ReactComponent as Google } from '../../assets/images/google.svg'
 import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
-import { ReactComponent as Office } from '../../assets/images/office365.svg'
 import Login from '../../components/Email/login'
 import { useUser } from '../../context/UserContext'
-
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
@@ -42,7 +39,7 @@ export interface MergeTagItem {
 
 export interface SenderItem {
   id?: string | number
-  type: 'email' | 'sms'
+  type: 'email' | 'sms' | string
   fromName: string
   fromEmail?: string
   fromCompanyEmail?: string
@@ -67,7 +64,6 @@ export const Communications: React.FC = () => {
 
   const router = useRouter()
   const { t } = useTranslationI18()
-  const [isLoading, setIsLoading] = useState(true)
   const [senderDetails, setSenderDetails] = useState([{} as SenderItem])
 
   const { loading, data: getSendersData } = useGetComSendersQuery()
@@ -76,26 +72,19 @@ export const Communications: React.FC = () => {
   useEffect(() => {
     if (getSendersData?.getSenders.length > 0) {
       const temp = []
-      getSendersData.getSenders.map((sender) => {
-        if (user.me.company === sender.company_id) {
-          console.log('sender data:::', sender)
+      for (const sender of getSendersData.getSenders) {
+        user.me.company === sender.company_id &&
           temp.push({
-            id: sender.id,
+            id: sender.type === 'email' ? sender.emailId : sender.smsId,
             fromName: sender.senders_name,
             fromEmail: sender.data,
             isDefaultSender: sender.is_default === 1,
             type: sender.type,
           })
-        }
-        return 1
-      })
-      console.log('temp data:::', temp)
+      }
       setSenderDetails(temp)
-      setIsLoading(false)
-    } else {
-      setIsLoading(true)
     }
-  }, [getSendersData, loading, isLoading, user.me.company])
+  }, [getSendersData, user.me.company])
 
   const [showLogin, setShowLogin] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -168,11 +157,11 @@ export const Communications: React.FC = () => {
   }
 
   const [insertConnection] = useMutation(InsertGmailConnectionDocument, {
-    onCompleted() {
-      console.log()
-    },
     onError(e) {
-      console.log(e)
+      Notification(
+        NotificationType.error,
+        t('setup.senders.gmail.connection.error')
+      )
     },
   })
 
@@ -180,11 +169,14 @@ export const Communications: React.FC = () => {
     onCompleted() {
       Notification(
         NotificationType.success,
-        'Google connection removed successfully'
+        t('setup.senders.gmail.connection.remove')
       )
     },
     onError(e) {
-      console.log(e)
+      Notification(
+        NotificationType.error,
+        t('setup.senders.gmail.connection.error')
+      )
     },
   })
 
@@ -193,7 +185,7 @@ export const Communications: React.FC = () => {
   }
 
   const handleGoogleLogin = () => {
-    console.log()
+    return true
   }
 
   const handleShowLogin = async () => {
@@ -223,18 +215,14 @@ export const Communications: React.FC = () => {
   }
   const showConfirm = () => {
     confirm({
-      title: 'Unlink your Google account',
+      title: t('setup.senders.gmail.connection.modal.title'),
       icon: <ExclamationCircleOutlined />,
-      content: 'Are you sure you wish to unlink your Google account?',
+      content: t('setup.senders.gmail.connection.modal.content'),
       onOk() {
-        console.log('Remove link', userData)
         removeGmailConnection().then(() => {
           setIsLoggedIn(false)
           setUserData('')
         })
-      },
-      onCancel() {
-        console.log('Close popup')
       },
     })
   }
@@ -242,27 +230,44 @@ export const Communications: React.FC = () => {
   const content = () => {
     return (
       <div className={styles.mailOptionContent}>
-        <div className={styles.mailOptionItem}>
-          <Sender /> <p>Create SMS</p>
+        <div
+          className={styles.mailOptionItem}
+          onClick={() =>
+            router.push({
+              pathname: '/setup/senders/create',
+              query: { type: 'sms' },
+            })
+          }
+        >
+          <Sender />{' '}
+          <p>{t('setup.senders.gmail.connection.content.menu.create.sms')}</p>
         </div>
         <div
           className={styles.mailOptionItem}
           style={userData ? { cursor: 'not-allowed' } : { cursor: 'pointer' }}
           onClick={() => handleShowLogin()}
         >
-          <GoogleOutlined /> <p>Connect Google</p>
+          <GoogleOutlined />{' '}
+          <p>
+            {t('setup.senders.gmail.connection.content.menu.connect.google')}
+          </p>
         </div>
-        <div className={styles.mailOptionItem}>
-          <Office /> <p>Connect Office 365</p>
-        </div>
+
         <div
           className={styles.mailOptionItem}
-          onClick={() => router.push('senders/create')}
+          onClick={() =>
+            router.push({
+              pathname: '/setup/senders/create',
+              query: { type: 'email' },
+            })
+          }
         >
-          <MailOutlined /> <p>Connect other email</p>
-        </div>
-        <div className={styles.mailOptionItem}>
-          <PhoneOutlined /> <p>Add phone number</p>
+          <MailOutlined />{' '}
+          <p>
+            {t(
+              'setup.senders.gmail.connection.content.menu.connect.other.email'
+            )}
+          </p>
         </div>
       </div>
     )
@@ -270,7 +275,6 @@ export const Communications: React.FC = () => {
   return (
     <Layout {...user} active={'setup'}>
       {showLogin && <Login handleGoogleLogin={handleGoogleLogin} />}
-
       <CommonHeader
         isLeftOutlined
         reversePath="/setup"
@@ -293,6 +297,7 @@ export const Communications: React.FC = () => {
             />
             <Title>{t('setup.senders.title')}</Title>
           </div>
+
           <div className={styles.actions}>
             <Button>
               <FilterOutlined />
@@ -308,12 +313,17 @@ export const Communications: React.FC = () => {
         </div>
         <div className={styles.cardContent}>
           <Row gutter={16}>
-            {!isLoading ? (
+            {!loading ? (
               senderDetails.map((item, index) => (
                 <Col span={4} xs={24} sm={12} md={6} key={index}>
                   <Button
                     className={styles.senderItem}
-                    onClick={() => router.push(`senders/edit/${item.id}`)}
+                    onClick={() =>
+                      router.push({
+                        pathname: `/setup/senders/edit/${item.id}`,
+                        query: { type: item.type },
+                      })
+                    }
                   >
                     <div className={styles.itemHeader}>
                       {item.type === 'email' ? (
@@ -350,7 +360,7 @@ export const Communications: React.FC = () => {
                         <div className={styles.itemHeader}>
                           <Skeleton.Input
                             style={{ width: 200 }}
-                            active={isLoading}
+                            active={loading}
                             size={'default'}
                           />
                         </div>
@@ -359,13 +369,13 @@ export const Communications: React.FC = () => {
                             {' '}
                             <Skeleton.Input
                               style={{ width: 120 }}
-                              active={isLoading}
+                              active={loading}
                               size={'default'}
                             />
                           </div>
                           <Skeleton.Input
                             style={{ width: 75 }}
-                            active={isLoading}
+                            active={loading}
                             size={'default'}
                           />
                         </div>
@@ -384,7 +394,9 @@ export const Communications: React.FC = () => {
                         className={styles.defaultText}
                         onClick={() => handleRemoveLink()}
                       >
-                        <Tag color="red">Stop syncing</Tag>
+                        <Tag color="red">
+                          {t('setup.senders.gmail.connection.stop.syncing')}
+                        </Tag>
                       </div>
                     </div>
                   </div>

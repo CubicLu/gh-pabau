@@ -7,5 +7,35 @@ query getComSenders {
     is_default
     enterprise_email
     senders_name
+    emailId
+    smsId
+  }
+}
+
+query getCompanyEmail($emailId:Int){
+  findFirstCompanyEmail(where:{email_id : {equals:$emailId}}){
+    added_by
+    company_id
+    company_email
+    confirmed
+    default_email
+    email_id
+    enterprise_email
+    hash
+    merge_tags
+    senders_name
+    visibility
+  }
+}
+
+query getCompanySms($smsId:Int){
+  findFirstSmsSender(where:{smsd_id : {equals:$smsId}}){
+    company_id
+    is_default
+    merge_tags
+    smsd_id
+    smsd_delete
+    smsd_name
+    enable_replies
   }
 }

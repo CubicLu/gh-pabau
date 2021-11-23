@@ -6,62 +6,162 @@ import {
   Button,
   Input,
   Switch,
-  SimpleDropdown,
   HelpTooltip,
   PabauPlus,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import styles from '../create.module.less'
 import {
   CheckCircleFilled,
+  CheckOutlined,
+  LockOutlined,
   MailOutlined,
   MessageOutlined,
+  UnlockOutlined,
 } from '@ant-design/icons'
-import { Collapse, Space } from 'antd'
+import { Select, Space } from 'antd'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import {
-  SenderItem,
-  subCriteriaOptions,
-  masterCriteriaOptions,
-  mergeTagTypeOptions,
-} from '../../senders'
+  useGetCompanyEmailQuery,
+  useGetCompanySmsQuery,
+  useUpdateOneSmsSenderMutation,
+  useUpdateOneCompanyEmailMutation,
+  GetComSendersDocument,
+  useDeleteOneCompanyEmailMutation,
+  useDeleteOneSmsSenderMutation,
+  CreateOneCompanyEmailDocument,
+  CreateOneSmsSenderDocument,
+} from '@pabau/graphql'
+import { SenderItem } from '../../senders'
+import { useMutation } from '@apollo/client'
 import { Form } from 'formik-antd'
+const { Option } = Select
 
-const { Panel } = Collapse
-export const senderItems: SenderItem[] = [
-  {
-    id: '001',
-    type: 'email',
-    fromName: 'Clinic Bookings',
-    fromEmail: 'william@pabau.com',
-    isEnableReplies: true,
-    isDefaultSender: false,
-    mergeTags: [],
-  },
-  {
-    id: '002',
-    type: 'sms',
-    fromName: 'The Health Clinic',
-    isDefaultSender: true,
-    isEnableReplies: true,
-    mergeTags: [],
-  },
-  {
-    id: '003',
-    type: 'sms',
-    fromName: 'Surgical Clinic',
-    isDefaultSender: false,
-    mergeTags: [],
-  },
-]
 export const EditSender: React.FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
-  const [active, setActive] = useState(true)
   const { id } = router.query
-  const [initialValues, setInitialValues] = useState<SenderItem | null>(null)
+  const [active, setActive] = useState(true)
+  const [initialValues, setInitialValues] = useState<SenderItem>(null)
+  const [showDeleteNotification, setShowDeleteNotification] = useState(false)
+
+  const { data: getSendersData } = useGetCompanyEmailQuery({
+    skip: !id || router.query.type === 'sms',
+    variables: {
+      emailId: typeof id === 'string' && Number.parseInt(id),
+    },
+    fetchPolicy: 'no-cache',
+  })
+  const { data: getSendersSmsData } = useGetCompanySmsQuery({
+    skip: !id || router.query.type === 'email',
+    variables: {
+      smsId: typeof id === 'string' && Number.parseInt(id),
+    },
+    fetchPolicy: 'no-cache',
+  })
+
+  const [updateOneEmailSenderMutations] = useUpdateOneCompanyEmailMutation({
+    onCompleted(data) {
+      if (data) {
+        Notification(
+          NotificationType.success,
+          t('setup.senders.update.detail.success')
+        )
+      }
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.update.detail.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
+  const [updateOneSmsSenderMutations] = useUpdateOneSmsSenderMutation({
+    onCompleted(data) {
+      if (data) {
+        Notification(
+          NotificationType.success,
+          t('setup.senders.update.detail.success')
+        )
+      }
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.update.detail.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
+  const [deleteEmailSender] = useDeleteOneCompanyEmailMutation({
+    onCompleted(data) {
+      if (data && showDeleteNotification) {
+        Notification(
+          NotificationType.success,
+          t('setup.senders.delete.detail.success')
+        )
+        setShowDeleteNotification(false)
+      }
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.delete.detail.success')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+  const [deleteSmsSender] = useDeleteOneSmsSenderMutation({
+    onCompleted(data) {
+      if (data && showDeleteNotification) {
+        Notification(
+          NotificationType.success,
+          t('setup.senders.delete.detail.success')
+        )
+        setShowDeleteNotification(false)
+      }
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.delete.detail.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
+  useEffect(() => {
+    if (getSendersData?.findFirstCompanyEmail) {
+      const item = getSendersData?.findFirstCompanyEmail
+      setInitialValues({
+        id: item.email_id,
+        type: 'email',
+        fromName: item.senders_name,
+        isDefaultSender: item.default_email === 1,
+        fromEmail: item.company_email,
+        visibility: item.visibility,
+      })
+    }
+    if (getSendersSmsData?.findFirstSmsSender) {
+      const item = getSendersSmsData?.findFirstSmsSender
+      console.log('item val::::', item)
+      setInitialValues({
+        id: item.smsd_id,
+        type: 'sms',
+        fromName: item.smsd_name,
+        isDefaultSender: item.is_default,
+        isEnableReplies: item.enable_replies === 1,
+      })
+    }
+  }, [getSendersData, getSendersSmsData])
+
   const validation = Yup.object({
     type: Yup.string().required(
       t('setup.senders.create.validate.type.required')
@@ -77,12 +177,42 @@ export const EditSender: React.FC = () => {
     ),
   })
 
-  useEffect(() => {
-    const item = senderItems.find((item) => item.id === id)
-    if (item) {
-      setInitialValues({ ...item })
-    }
-  }, [id])
+  const [addEmailSenders] = useMutation(CreateOneCompanyEmailDocument, {
+    onCompleted(data) {
+      if (data) {
+        Notification(
+          NotificationType.success,
+          t('setup.senders.update.detail.success')
+        )
+      }
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
+
+  const [addSmsSenders] = useMutation(CreateOneSmsSenderDocument, {
+    onCompleted(data) {
+      if (data) {
+        Notification(
+          NotificationType.success,
+          t('setup.senders.update.detail.success')
+        )
+      }
+    },
+    onError(err) {
+      Notification(
+        NotificationType.error,
+
+        t('setup.senders.create.senders.notification.error')
+      )
+    },
+    refetchQueries: [{ query: GetComSendersDocument }],
+  })
 
   if (!initialValues) return null
 
@@ -91,9 +221,95 @@ export const EditSender: React.FC = () => {
       initialValues={initialValues}
       validationSchema={validation}
       onSubmit={async (values: SenderItem) => {
-        const index = senderItems.findIndex((item) => item.id === id)
-        if (index !== -1) {
-          senderItems[index] = { ...values }
+        if (values.type !== initialValues.type) {
+          if (values.type === 'email') {
+            await addEmailSenders({
+              variables: {
+                data: {
+                  Company: {},
+                  company_email: values.isUseCompanyEmail
+                    ? values.fromCompanyEmail
+                    : values.fromEmail,
+                  added_by: '',
+                  senders_name: values.fromName,
+                  confirmed: 1,
+                  hash: '',
+                  default_email: values.isDefaultSender ? 1 : 0,
+                  enterprise_email: 0,
+                  merge_tags: '',
+                  visibility: values.visibility
+                    ? Number.parseInt(String(values.visibility))
+                    : 1,
+                },
+              },
+              optimisticResponse: {},
+            })
+            deleteSmsSender({
+              variables: {
+                where: {
+                  smsd_id: values.id as number,
+                },
+              },
+            })
+          } else {
+            await addSmsSenders({
+              variables: {
+                data: {
+                  Company: {},
+                  smsd_name: values.fromName,
+                  smsd_delete: 0,
+                  is_default: values.isDefaultSender,
+                  merge_tags: '',
+                  enable_replies: values.isEnableReplies ? 1 : 0,
+                },
+              },
+              optimisticResponse: {},
+            })
+            deleteEmailSender({
+              variables: {
+                where: {
+                  email_id: values.id as number,
+                },
+              },
+            })
+          }
+          router.push('/setup/senders').then()
+        } else {
+          if (values.type === 'sms') {
+            updateOneSmsSenderMutations({
+              variables: {
+                where: {
+                  smsd_id: initialValues.id as number,
+                },
+                data: {
+                  is_default: { set: values.isDefaultSender },
+                  smsd_name: { set: values.fromName },
+                  enable_replies: { set: values.isEnableReplies ? 1 : 0 },
+                },
+              },
+            })
+          } else {
+            updateOneEmailSenderMutations({
+              variables: {
+                where: {
+                  email_id: initialValues.id as number,
+                },
+                data: {
+                  default_email: { set: values.isDefaultSender ? 1 : 0 },
+                  senders_name: { set: values.fromName },
+                  visibility: {
+                    set: Number.parseInt(String(values.visibility)),
+                  },
+                  company_email: {
+                    set: values.isUseCompanyEmail
+                      ? values.fromCompanyEmail
+                      : values.fromEmail,
+                  },
+                },
+              },
+            })
+          }
+          router.push('/setup/senders').then()
         }
         router.push('/setup/senders').then()
       }}
@@ -127,23 +343,29 @@ export const EditSender: React.FC = () => {
             onActivated={(val) => setActive(val)}
             onBackClick={() => router.push('/setup/senders')}
             onDelete={() => {
-              const index = senderItems.findIndex((item) => item.id === id)
-              if (index !== -1) {
-                senderItems.splice(index, 1)
+              if (initialValues.type === 'email') {
+                setShowDeleteNotification(true)
+                deleteEmailSender({
+                  variables: {
+                    where: {
+                      email_id: initialValues.id as number,
+                    },
+                  },
+                })
+                router.push('/setup/senders').then()
+              } else {
+                setShowDeleteNotification(true)
+                deleteSmsSender({
+                  variables: {
+                    where: {
+                      smsd_id: initialValues.id as number,
+                    },
+                  },
+                })
+                router.push('/setup/senders').then()
               }
-
-              router.push('/setup/senders')
             }}
             onCreate={() => {
-              // Remove last tag element
-              const lastTag =
-                values.mergeTags.length > 0
-                  ? values.mergeTags[values.mergeTags.length - 1]
-                  : null
-              if (!lastTag?.type && !lastTag?.value) {
-                values.mergeTags.splice(-1, 1)
-              }
-
               handleSubmit()
             }}
           >
@@ -280,6 +502,31 @@ export const EditSender: React.FC = () => {
                           handleChange({ target: { value, name: 'fromEmail' } })
                         }
                       />
+                      <p className={styles.visibilityLabel}>
+                        {t('setup.senders.visibility')}
+                      </p>
+                      <Select
+                        defaultValue={'1'}
+                        value={values?.visibility?.toString()}
+                        defaultActiveFirstOption={true}
+                        style={{ width: '100%' }}
+                        onChange={(e) =>
+                          handleChange({
+                            target: { name: 'visibility', value: e },
+                          })
+                        }
+                        menuItemSelectedIcon={<CheckOutlined />}
+                      >
+                        <Option value="1">
+                          <LockOutlined />{' '}
+                          {t('setup.senders.visibility.private')}
+                        </Option>
+
+                        <Option value="0">
+                          <UnlockOutlined />{' '}
+                          {t('setup.senders.visibility.shared')}
+                        </Option>
+                      </Select>
                     </div>
                     <div className={styles.formElement}>
                       <Space className={styles.switchItem} size={8}>
@@ -320,141 +567,8 @@ export const EditSender: React.FC = () => {
                         />
                       </div>
                     )}
-                    <div className={styles.formElement}>
-                      <Space className={styles.switchItem} size={8}>
-                        <Switch
-                          checked={values.isAutoUploadReplies}
-                          onChange={(value) =>
-                            handleChange({
-                              target: { value, name: 'isAutoUploadReplies' },
-                            })
-                          }
-                        />
-                        <div>
-                          {t('setup.senders.create.form.field.autoupload')}
-                        </div>
-                        <PabauPlus label="Plus" modalType="Marketing" />
-                      </Space>
-                    </div>
                   </>
                 )}
-              </div>
-
-              <div className={styles.advancedSettings}>
-                <Collapse ghost>
-                  <Panel
-                    header={t('setup.senders.create.form.advanced')}
-                    key="advanced-settings"
-                  >
-                    <div className={styles.cardWrapper}>
-                      <div className={styles.cardHeader}>
-                        {t('setup.senders.create.advanced.sendingcriteria')}
-                      </div>
-                      <div
-                        className={classNames(
-                          styles.formElement,
-                          styles.criteriaWrapper
-                        )}
-                      >
-                        <SimpleDropdown
-                          label={t(
-                            'setup.senders.create.advanced.sendingcriteria'
-                          )}
-                          className={styles.criteriaItem}
-                          dropdownItems={masterCriteriaOptions}
-                          placeholder={t(
-                            'setup.senders.create.advanced.sendingcriteria.placeholder'
-                          )}
-                          value={values.masterCriteria}
-                          onSelected={(value) =>
-                            handleChange({
-                              target: { value, name: 'masterCriteria' },
-                            })
-                          }
-                        />
-                        <div className={styles.criteriaDivider}>
-                          {t('setup.senders.create.advanced.criterial.divider')}
-                        </div>
-                        <SimpleDropdown
-                          label={t(
-                            'setup.senders.create.advanced.sendingcriteria'
-                          )}
-                          className={styles.criteriaItem}
-                          dropdownItems={subCriteriaOptions}
-                          placeholder={t(
-                            'setup.senders.create.advanced.sendingcriteria.placeholder'
-                          )}
-                          value={values.subCriteria}
-                          onSelected={(value) =>
-                            handleChange({
-                              target: { value, name: 'subCriteria' },
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className={styles.cardWrapper}>
-                      <div className={styles.cardHeader}>
-                        {t('setup.senders.create.advanced.custommergetags')}
-                      </div>
-                      {values.mergeTags.map((tag, index) => (
-                        <div className={styles.mergeTag} key={index}>
-                          <SimpleDropdown
-                            label={t('setup.senders.create.advanced.tagtext')}
-                            className={styles.formElement}
-                            dropdownItems={mergeTagTypeOptions}
-                            placeholder={t(
-                              'setup.senders.create.advanced.tagtext.placeholder'
-                            )}
-                            value={tag.type}
-                            onSelected={(value) =>
-                              handleChange({
-                                target: {
-                                  value,
-                                  name: `mergeTags[${index}].type`,
-                                },
-                              })
-                            }
-                          />
-                          <Input
-                            label={t('setup.senders.create.advanced.tagvalue')}
-                            className={styles.formElement}
-                            placeholder={t(
-                              'setup.senders.create.advanced.tagvalue.placeholder'
-                            )}
-                            text={tag.value}
-                            onChange={(value) =>
-                              handleChange({
-                                target: {
-                                  value,
-                                  name: `mergeTags[${index}].value`,
-                                },
-                              })
-                            }
-                          />
-                        </div>
-                      ))}
-                      <Button
-                        size="small"
-                        onClick={() =>
-                          handleChange({
-                            target: {
-                              value: [
-                                ...values.mergeTags,
-                                { type: '', value: '' },
-                              ],
-                              name: 'mergeTags',
-                            },
-                          })
-                        }
-                        style={{ marginTop: 16 }}
-                      >
-                        {t('setup.senders.create.addnew')}
-                      </Button>
-                    </div>
-                  </Panel>
-                </Collapse>
               </div>
             </div>
           </FullScreenReportModal>

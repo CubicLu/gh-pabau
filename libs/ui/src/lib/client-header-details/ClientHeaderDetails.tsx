@@ -67,7 +67,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   const isMobile = useMedia('(max-width: 767px)', false)
   const formLastUpdated = medicalHistoryDetails?.formLastUpdatedDate
     ? dayjs().diff(medicalHistoryDetails?.formLastUpdatedDate, 'day')
-    : 0
+    : undefined
   const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [noteItems, setNoteItems] = useState<ClientNoteDetails[]>([])
   const [appointmentItems, setAppointmentItems] = useState<
@@ -121,7 +121,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
       case 'not_completed':
         return <CloseCircleFilled style={{ color: '#ec6669' }} />
       case 'completed':
-        return formLastUpdated > 180 ? (
+        return formLastUpdated !== null &&
+          formLastUpdated !== undefined &&
+          formLastUpdated > 180 ? (
           <div className={styles.toBeCompletedIcon}>
             <InfoOutlined style={{ color: '#fff' }} />
           </div>
@@ -146,6 +148,14 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
       case 'completed':
         return medicalHistoryPopover
     }
+  }
+
+  const getUpdatedDay = (value) => {
+    return value?.toString() === '0'
+      ? 'today'
+      : value?.toString() === '1'
+      ? 'yesterday'
+      : value
   }
 
   const medicalShieldPopover = (
@@ -184,17 +194,19 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     <div className={styles.medicalHistoryWrapper}>
       <div className={styles.titleWrapper}>
         <h3>{t('clients.clientcard.medical.history')}</h3>
-        <h4>
-          {formLastUpdated > 180 && (
-            <InfoCircleFilled
-              style={{ color: '#FAAD14', marginRight: '4px' }}
-            />
-          )}
-          {t('clients.clientcard.medical.history.last.updated', {
-            what: formLastUpdated,
-            which: formLastUpdated > 0 ? 'days' : 'day',
-          })}
-        </h4>
+        {formLastUpdated !== null && formLastUpdated !== undefined && (
+          <h4>
+            {formLastUpdated > 180 && (
+              <InfoCircleFilled
+                style={{ color: '#FAAD14', marginRight: '4px' }}
+              />
+            )}
+            {t('clients.clientcard.medical.history.last.updated', {
+              what: getUpdatedDay(formLastUpdated),
+              which: formLastUpdated > 2 ? 'days ago' : null,
+            })}
+          </h4>
+        )}
       </div>
       <div className={styles.medicalHistoryItem}>
         <EyeOutlined /> {t('clients.clientcard.medical.history.view')}
@@ -442,7 +454,16 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
               : styles.medicalHistoryPopover
           )}
         >
-          <Tooltip title={t('clients.clientcard.medical.history')}>
+          <Tooltip
+            title={
+              formLastUpdated !== null && formLastUpdated !== undefined
+                ? t('clients.clientcard.medical.history.last.updated', {
+                    what: getUpdatedDay(formLastUpdated),
+                    which: formLastUpdated > 2 ? 'days ago' : null,
+                  })
+                : t('clients.clientcard.medical.history')
+            }
+          >
             <Badge count={getMedicalhistoryIcon()} offset={[0, 18]}>
               <MedicalHistory className={styles.headerOpsIcon} />
             </Badge>

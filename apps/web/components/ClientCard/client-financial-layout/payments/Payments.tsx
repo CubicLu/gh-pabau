@@ -3,7 +3,17 @@ import { useTranslation } from 'react-i18next'
 import { Table, Pagination } from '@pabau/ui'
 import styles from './Payments.module.less'
 import { FinancialPayment } from './../ClientFinancialsLayout'
-import { Typography, Button, Popover, Radio, Space, Skeleton } from 'antd'
+import {
+  Typography,
+  Button,
+  Popover,
+  Radio,
+  Space,
+  Skeleton,
+  Tooltip,
+} from 'antd'
+import { InvoiceProp } from './../ClientFinancialsLayout'
+import EditInvoice from '../invoices/EditInvoice'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
 import { GetPaymentsDocument, TotalPaymentsCountQuery } from '@pabau/graphql'
@@ -39,6 +49,8 @@ export const Payments: FC<IPaymentsProps> = ({
   })
   const [paymentFilter, setPaymentFilter] = useState(getInvoicePaymentValues())
   const [paymentData, setPayment] = useState<FinancialPayment[]>([])
+  const [showEditInvoice, setShowEditInvoice] = useState(false)
+  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceProp>()
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -66,15 +78,17 @@ export const Payments: FC<IPaymentsProps> = ({
         date: dayjs.unix(item?.date).format('DD/MM/YYYY'),
         invoiceNo: item?.sales?.custom_id,
         paymentNo: item?.id,
-        location: item?.sales?.location?.name,
+        location: item?.sales?.location?.name ?? user?.me?.companyName,
         employee: item?.sales?.biller?.name,
         paidBy: item?.user?.full_name,
-        method: item?.pmethod,
+        method: item?.pmethod.charAt(0).toUpperCase() + item?.pmethod.slice(1),
         amount: item?.amount,
+        dateTime: dayjs.unix(item?.date).format('DD MMM, YYYY HH:mm:ss'),
       })
       return paymentsDetails
     })
     setPayment(paymentsDetails)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payment])
 
   useEffect(() => {
@@ -96,36 +110,39 @@ export const Payments: FC<IPaymentsProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payment])
 
+  const onPressEditInvoice = (invoice) => {
+    setShowEditInvoice(true)
+    setSelectedInvoice(invoice)
+  }
+
   const columns = [
     {
-      title: t('ui.client-card-financial.payments.date'),
+      title: t('ui.client-card-financial.payments.payment-no'),
       dataIndex: 'date',
       visible: true,
-    },
-    {
-      title: t('ui.client-card-financial.payments.invoice-no'),
-      dataIndex: 'invoiceNo',
-      visible: true,
-      render: function renderItem(value) {
+      render: function renderItem(value, row) {
         return (
-          <span
-            className={styles.primaryText}
-            onClick={() => console.log('inv')}
-          >
-            #{value}
+          <span className={styles.paymentNo}>
+            <span>{value}</span>
+            <span>#{row.paymentNo}</span>
           </span>
         )
       },
     },
     {
-      title: t('ui.client-card-financial.payments.payment-no'),
-      dataIndex: 'paymentNo',
+      title: t('ui.client-card-financial.payments.invoice-no'),
+      dataIndex: 'invoiceNo',
       visible: true,
-      render: function renderItem(value) {
+      render: function renderItem(value, row) {
         return (
-          <span className={styles.primaryText}>
-            <span>#{value}</span>
-          </span>
+          <Tooltip title={`Created by ${row.employee} on ${row.dateTime} `}>
+            <span
+              className={styles.primaryText}
+              onClick={() => onPressEditInvoice(row)}
+            >
+              #{value}
+            </span>
+          </Tooltip>
         )
       },
     },
@@ -148,6 +165,7 @@ export const Payments: FC<IPaymentsProps> = ({
       title: t('ui.client-card-financial.payments.method'),
       dataIndex: 'method',
       visible: true,
+      width: 75,
     },
     {
       title: t('ui.client-card-financial.payments.amount'),
@@ -203,166 +221,185 @@ export const Payments: FC<IPaymentsProps> = ({
   }
 
   return (
-    <div className={styles.payments}>
-      <div className={styles.filterRow}>
+    <>
+      {showEditInvoice && (
+        <EditInvoice
+          invoice={selectedInvoice}
+          onModalBackPress={() => setShowEditInvoice(false)}
+        />
+      )}
+      <div className={styles.payments}>
+        <div className={styles.filterRow}>
+          {!loading ? (
+            <Popover
+              content={filterContent}
+              title={t('ui.client-card-financial.invoices.filter-by')}
+              placement="bottomRight"
+              overlayClassName={styles.paymentsFilter}
+            >
+              <div className={styles.filter}>
+                <FilterOutlined />
+              </div>
+            </Popover>
+          ) : (
+            <Skeleton.Input
+              active={true}
+              size="default"
+              className={styles.filterSkeleton}
+            />
+          )}
+        </div>
         {!loading ? (
-          <Popover
-            content={filterContent}
-            title={t('ui.client-card-financial.invoices.filter-by')}
-            placement="bottomRight"
-            overlayClassName={styles.paymentsFilter}
-          >
-            <div className={styles.filter}>
-              <FilterOutlined />
-            </div>
-          </Popover>
+          <Table
+            loading={false}
+            draggable={false}
+            scroll={{ x: true, y: '100vh' }}
+            dataSource={paymentData?.map((e: { id }) => ({
+              key: e.id,
+              ...e,
+            }))}
+            columns={columns}
+            noDataText={t('ui.client-card-financial.payments')}
+          />
         ) : (
-          <Skeleton.Input
-            active={true}
-            size="default"
-            className={styles.filterSkeleton}
+          <Table
+            rowKey="key"
+            pagination={false}
+            dataSource={[...Array.from({ length: 10 })].map((_, index) => (
+              <div key={index}>
+                <Skeleton.Input
+                  active={true}
+                  size="small"
+                  className={styles.columnSkeleton}
+                />
+              </div>
+            ))}
+            columns={columns.map((column) => {
+              return {
+                ...column,
+                render: function renderPlaceholder() {
+                  switch (column.dataIndex) {
+                    case 'date':
+                      return (
+                        <span className={styles.paymentNo}>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idSkeleton}
+                            />
+                          </span>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idValueSkeleton}
+                            />
+                          </span>
+                        </span>
+                      )
+                    case 'invoiceNo':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'paymentNo':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'location':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'employee':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'paidBy':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'method':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                    case 'amount':
+                      return (
+                        <Skeleton.Input
+                          active={true}
+                          size="small"
+                          className={styles.columnSkeleton}
+                        />
+                      )
+                  }
+                },
+              }
+            })}
           />
         )}
-      </div>
-      {!loading ? (
-        <Table
-          loading={false}
-          draggable={false}
-          scroll={{ x: true }}
-          dataSource={paymentData?.map((e: { id }) => ({
-            key: e.id,
-            ...e,
-          }))}
-          columns={columns}
-          noDataText={t('ui.client-card-financial.payments')}
-        />
-      ) : (
-        <Table
-          rowKey="key"
-          pagination={false}
-          dataSource={[...Array.from({ length: 10 })].map((_, index) => (
-            <div key={index}>
-              <Skeleton.Input
-                active={true}
-                size="small"
-                className={styles.columnSkeleton}
+        {!loading && (
+          <div>
+            <div className={styles.pagination}>
+              <Pagination
+                total={paginateData.total}
+                defaultPageSize={50}
+                pageSizeOptions={['10', '25', '50', '100']}
+                showSizeChanger={false}
+                onChange={onPaginationChange}
+                pageSize={paginateData.limit}
+                current={paginateData.currentPage}
+                showingRecords={paginateData.showingRecords}
+                onPageSizeChange={(pageSize) => {
+                  setPaginateData({
+                    ...paginateData,
+                    limit: pageSize,
+                  })
+                }}
               />
             </div>
-          ))}
-          columns={columns.map((column) => {
-            return {
-              ...column,
-              render: function renderPlaceholder() {
-                switch (column.dataIndex) {
-                  case 'date':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.columnSkeleton}
-                      />
-                    )
-                  case 'invoiceNo':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.columnSkeleton}
-                      />
-                    )
-                  case 'paymentNo':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.columnSkeleton}
-                      />
-                    )
-                  case 'location':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.locationSkeleton}
-                      />
-                    )
-                  case 'employee':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.columnSkeleton}
-                      />
-                    )
-                  case 'paidBy':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.columnSkeleton}
-                      />
-                    )
-                  case 'method':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.columnSkeleton}
-                      />
-                    )
-                  case 'amount':
-                    return (
-                      <Skeleton.Input
-                        active={true}
-                        size="small"
-                        className={styles.columnSkeleton}
-                      />
-                    )
-                }
-              },
-            }
-          })}
-        />
-      )}
-      {!loading && (
-        <div>
-          <div className={styles.pagination}>
-            <Pagination
-              total={paginateData.total}
-              defaultPageSize={50}
-              pageSizeOptions={['10', '25', '50', '100']}
-              showSizeChanger={false}
-              onChange={onPaginationChange}
-              pageSize={paginateData.limit}
-              current={paginateData.currentPage}
-              showingRecords={paginateData.showingRecords}
-              onPageSizeChange={(pageSize) => {
-                setPaginateData({
-                  ...paginateData,
-                  limit: pageSize,
-                })
-              }}
+            <InvoiceFooter
+              buttons={[
+                {
+                  text: t('ui.client-card-financial.payments.account-credit'),
+                  value:
+                    payment?.payments[0]?.contact?.AccountBalance[0]?.balance ??
+                    0,
+                  valueColor: '#65CD98',
+                },
+                {
+                  text: t('ui.client-card-financial.payments.total-payments'),
+                  value:
+                    totalPaymentCounts?.aggregateInvPayment?.sum?.amount ?? 0,
+                },
+              ]}
+              loading={loading}
             />
           </div>
-          <InvoiceFooter
-            buttons={[
-              {
-                text: t('ui.client-card-financial.payments.account-credit'),
-                value:
-                  payment?.payments[0]?.contact?.AccountBalance[0]?.balance ??
-                  0,
-                valueColor: '#65CD98',
-              },
-              {
-                text: t('ui.client-card-financial.payments.total-payments'),
-                value:
-                  totalPaymentCounts?.aggregateInvPayment?.sum?.amount ?? 0,
-              },
-            ]}
-            loading={loading}
-          />
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   )
 }

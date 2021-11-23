@@ -19,10 +19,15 @@
     }
 
     .crop-wrapper {
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
       width: 400px;
       height: 250px;
       border: 1px solid #eee;
+      display: flex;
+      justify-content: center;
+      &.crop-empty-wrap {
+        border: 1px dashed #9292A2;
+        border-radius: 4px;
+      }
       @media screen and (max-width: 767px) {
         width: 300px !important;
       }
@@ -50,6 +55,24 @@
           height: 100%;
         }
       }
+
+      .upload-photo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #3D3D46;
+        svg{
+          font-size: 16px;
+          margin-bottom: 10px;
+        }
+        .upload-title {
+          font-size: 16px;
+          line-height: 20px;
+        }
+      }
+      .hide-crop-content{
+        display: none;
+      }
     }
 
     .preview-wrap {
@@ -69,7 +92,14 @@
         @media screen and (max-width: 767px) {
           flex-direction: row;
         }
-
+      :global {
+        .ant-avatar-circle {
+          background: #fafafa !important;
+          .anticon-user {
+            color: #E4E6EA !important;
+          }
+        }
+      }
         .cropperPreview {
 
         }

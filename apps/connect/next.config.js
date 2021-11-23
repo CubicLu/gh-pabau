@@ -97,15 +97,14 @@ module.exports = withPlugins(
     },
     experimential: {
       cpus: 1,
+      esmExternals: false,
     },
-    async rewrites() {
-      return [
-        {
-          source: '/online-bookings/:company_slug',
-          destination:
-            '/online-bookings/[company_slug]?company_slug=:company_slug',
-        },
-      ]
+    eslint: {
+      // !! WARN !!
+      // Dangerously allow production builds to successfully complete even if
+      // your project has ESLint errors.
+      // !! WARN !!
+      build: false,
     },
     typescript: {
       // !! WARN !!
@@ -114,18 +113,44 @@ module.exports = withPlugins(
       // !! WARN !!
       ignoreBuildErrors: true,
     },
+    async rewrites() {
+      return [
+        {
+          source: '/reports/:name',
+          destination: '/reports/[name]?name=:name',
+        },
+        {
+          source: '/clients/:id',
+          destination: '/clients/[id]?id=:id',
+        },
+        {
+          source: '/clients/finance/invoice/:id',
+          destination: '/clients/finance/invoice/[id]?id=:id',
+        },
+        {
+          source: '/clients/finance/receipt/:id',
+          destination: '/clients/finance/receipt/[id]?id=:id',
+        },
+        {
+          source: '/clients/finance/statement/:id',
+          destination: '/clients/finance/statement/[id]?id=:id',
+        },
+        {
+          source: '/test-form/:form_id/:client_id',
+          destination:
+            '/test-form/[form_id]/[client_id]?form_id=:form_id&client_id=:client_id',
+        },
+        {
+          source: '/clients/:id/financial',
+          destination: '/clients/[id]/financial?id=:id',
+        },
+      ]
+    },
     onDemandEntries: {
       // period (in ms) where the server will keep pages in the buffer
       maxInactiveAge: 25 * 60 * 60 * 1000,
       // number of pages that should be kept simultaneously without being disposed
       pagesBufferLength: 6,
-    },
-    eslint: {
-      // !! WARN !!
-      // Dangerously allow production builds to successfully complete even if
-      // your project has ESLint errors.
-      // !! WARN !!
-      build: false,
     },
     trailingSlash: false,
   }

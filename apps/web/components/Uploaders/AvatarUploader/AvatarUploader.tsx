@@ -1,8 +1,13 @@
 import React, { FC, useState, useRef, useEffect } from 'react'
 import Cropper, { ReactCropperElement } from 'react-cropper'
-import { message } from 'antd'
+import { message, Tooltip } from 'antd'
 import { BasicModal, Avatar, Button } from '@pabau/ui'
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  VerticalAlignBottomOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import ClassNames from 'classnames'
 import styles from './AvatarUploader.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
@@ -78,6 +83,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
     setImage('')
     setCroppedImage('')
     onDelete?.()
+    onCancel?.()
   }
 
   const handleClose = () => {
@@ -130,7 +136,6 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
           tags: [''],
         }
 
-        handleDelete()
         setLoading(false)
         // setDisabled(true)
         successHandler(newImg)
@@ -148,74 +153,92 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
       onCancel={handleClose}
     >
       <div className={styles.imageWrapper}>
-        <div className={styles.cropWrapper}>
-          {image && (
-            <Cropper
-              ready={initReady}
-              ref={cropperRef}
-              className={
-                shape === 'rectangle'
-                  ? ClassNames('cropper-wrapper', 'cropper-rectangle')
-                  : ClassNames('cropper-wrapper', 'cropper-circle')
-              }
-              initialAspectRatio={width / height}
-              aspectRatio={width / height}
-              preview=".cropperPreview"
-              src={image}
-              viewMode={2}
-              dragMode={'none'}
-              guides={false}
-              minCropBoxHeight={100}
-              minCropBoxWidth={100}
-              background={true}
-              movable={true}
-              autoCropArea={0.75}
-              checkOrientation={false}
-            />
+        <div
+          className={ClassNames(
+            styles.cropWrapper,
+            !image && styles.cropEmptyWrap
+          )}
+        >
+          {image ? (
+            <div className={styles.uploadPhoto}>
+              <Cropper
+                ready={initReady}
+                ref={cropperRef}
+                className={
+                  shape === 'rectangle'
+                    ? ClassNames('cropper-wrapper', 'cropper-rectangle')
+                    : ClassNames('cropper-wrapper', 'cropper-circle')
+                }
+                initialAspectRatio={width / height}
+                aspectRatio={width / height}
+                preview=".cropperPreview"
+                src={image}
+                viewMode={1}
+                dragMode={'none'}
+                guides={false}
+                minCropBoxHeight={100}
+                minCropBoxWidth={100}
+                background={true}
+                movable={true}
+                autoCropArea={0.75}
+                checkOrientation={false}
+              />
+            </div>
+          ) : (
+            <div className={styles.uploadPhoto}>
+              <VerticalAlignBottomOutlined />
+              <span className={styles.uploadTitle}>
+                {t('team.user.personal.details.avtar.upload.text')}
+              </span>
+            </div>
           )}
         </div>
         <div className={styles.previewWrap}>
           <p>{t('team.user.personal.details.avtar.Preview.title')}</p>
-          {croppedImage && (
-            <div className={styles.avatarMap}>
-              <Avatar
-                className={
-                  shape === 'rectangle'
-                    ? ClassNames(
-                        styles.imgRect,
-                        styles.rectView,
-                        'cropperPreview'
-                      )
-                    : ClassNames(styles.img, 'cropperPreview')
-                }
-                src={croppedImage}
-              />
-              <Avatar
-                className={
-                  shape === 'rectangle'
-                    ? ClassNames(
-                        styles.imgRect2,
-                        styles.rectView,
-                        'cropperPreview'
-                      )
-                    : ClassNames(styles.img2, 'cropperPreview')
-                }
-                src={croppedImage}
-              />
-              <Avatar
-                className={
-                  shape === 'rectangle'
-                    ? ClassNames(
-                        styles.imgRect3,
-                        styles.rectView,
-                        'cropperPreview'
-                      )
-                    : ClassNames(styles.img3, 'cropperPreview')
-                }
-                src={croppedImage}
-              />
-            </div>
-          )}
+          <div className={styles.avatarMap}>
+            <Avatar
+              className={
+                shape === 'rectangle'
+                  ? ClassNames(
+                      styles.imgRect,
+                      styles.rectView,
+                      'cropperPreview'
+                    )
+                  : ClassNames(styles.img, 'cropperPreview')
+              }
+              src={croppedImage}
+              icon={<UserOutlined />}
+              size={80}
+            />
+            <Avatar
+              className={
+                shape === 'rectangle'
+                  ? ClassNames(
+                      styles.imgRect2,
+                      styles.rectView,
+                      'cropperPreview'
+                    )
+                  : ClassNames(styles.img2, 'cropperPreview')
+              }
+              src={croppedImage}
+              icon={<UserOutlined />}
+              size={56}
+            />
+            <Avatar
+              className={
+                shape === 'rectangle'
+                  ? ClassNames(
+                      styles.imgRect3,
+                      styles.rectView,
+                      'cropperPreview'
+                    )
+                  : ClassNames(styles.img3, 'cropperPreview')
+              }
+              src={croppedImage}
+              icon={<UserOutlined />}
+              size={32}
+            />
+          </div>
         </div>
       </div>
       <div className={styles.uploadImg}>
@@ -230,9 +253,11 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
           <PlusOutlined />
           {t('team.user.personal.details.avtar.upload.button')}
         </Button>
-        <Button onClick={handleDelete}>
-          <DeleteOutlined />
-        </Button>
+        <Tooltip title={t('team.user.personal.details.avtar.remove.button')}>
+          <Button onClick={handleDelete}>
+            <DeleteOutlined />
+          </Button>
+        </Tooltip>
       </div>
       <div className={styles.btnPreviewWrapper}>
         <Button onClick={handleClose}>
@@ -244,7 +269,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
           loading={loading}
           onClick={handleCreate}
         >
-          {t('team.user.personal.details.avtar.create.button')}
+          {t('team.user.personal.details.avtar.save.button')}
         </Button>
       </div>
     </BasicModal>

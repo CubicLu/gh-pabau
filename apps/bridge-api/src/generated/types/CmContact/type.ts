@@ -176,18 +176,18 @@ export const CmContact = objectType({
         return root.CmContactViewed
       },
     })
-    t.list.field('CmContactMedicalCondition', {
-      type: 'CmContactMedicalCondition',
+    t.list.field('ContactMedicalCondition', {
+      type: 'ContactMedicalCondition',
       args: {
-        where: 'CmContactMedicalConditionWhereInput',
-        orderBy: 'CmContactMedicalConditionOrderByWithRelationInput',
-        cursor: 'CmContactMedicalConditionWhereUniqueInput',
+        where: 'ContactMedicalConditionWhereInput',
+        orderBy: 'ContactMedicalConditionOrderByWithRelationInput',
+        cursor: 'ContactMedicalConditionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'CmContactMedicalConditionScalarFieldEnum',
+        distinct: 'ContactMedicalConditionScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.CmContactMedicalCondition
+        return root.ContactMedicalCondition
       },
     })
     t.list.field('ContactNote', {

@@ -63,6 +63,7 @@ export const ContactDataInput = inputObjectType({
     t.nonNull.int('MarketingOptInPost')
     t.nonNull.int('MarketingOptInText')
     t.nonNull.int('MarketingSource')
+    t.int('OwnerID')
     t.field('DOB', { type: 'DateTime' })
     t.nonNull.string('Mobile')
     t.nonNull.string('Phone')

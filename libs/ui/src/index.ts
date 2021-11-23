@@ -113,6 +113,7 @@ export * from './lib/communication-template-preview/CommunicationTemplatePreview
 export * from './lib/communication-timeline/CommunicationTimeline'
 export * from './lib/copy-embed-code-modal/CopyEmbedCodeModal'
 export * from './lib/create-activity/CreateActivity'
+export * from './lib/create-activity/BigCalender'
 export * from './lib/create-letter-template-bar/CreateLetterTemplateBar'
 export * from './lib/create-product/CreateProduct'
 export * from './lib/create-resource/CreateResource'
