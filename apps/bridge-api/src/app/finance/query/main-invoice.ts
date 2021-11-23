@@ -188,14 +188,14 @@ export const MainInvoice = extendType({
       async resolve(_root, input, ctx: Context) {
         const invoices = await ctx.prisma
           .$queryRaw(`SELECT sum(count) as count from (
-            SELECT count(a.id) as count
-            FROM   inv_sales a
-            WHERE  a.occupier= ${ctx.authenticated.company} and a.reference_no not in ("**REFUND**", "**CREDIT NOTE**", "ACCOUNT PAYMENT") AND a.customer_id = ${input?.contact_id} AND a.refund_to = 0
+              SELECT count(a.id) as count
+              FROM   inv_sales a
+              WHERE  a.occupier= ${ctx.authenticated.company} and a.reference_no not in ("**REFUND**", "**CREDIT NOTE**", "ACCOUNT PAYMENT") AND a.customer_id = ${input?.contact_id} AND a.refund_to = 0
               UNION
-            SELECT count(DISTINCT b.id) as count
+            SELECT count(b.id) as count
             FROM   contact_packages a
               LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
-            WHERE contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
+            WHERE a.contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
             )t`)
         return invoices[0]?.count ?? 0
       },
@@ -269,7 +269,7 @@ export const MainInvoice = extendType({
             LEFT JOIN company_details e ON e.company_id=a.occupier
           WHERE
           contact_id = ${input?.contact_id}
-          and a.occupier = ${ctx.authenticated.company} 
+          and a.occupier = ${ctx.authenticated.company}
         )t
         order by date desc
         LIMIT ${input.take}
@@ -289,12 +289,14 @@ export const MainInvoice = extendType({
           .$queryRaw(`SELECT sum(count) as count from (
             SELECT count(a.id) as count
             FROM   inv_sales a
+            LEFT JOIN inv_sale_items b ON a.id = b.sale_id
             WHERE  a.occupier= ${ctx.authenticated.company} and a.reference_no not in ("**REFUND**", "**CREDIT NOTE**", "ACCOUNT PAYMENT") AND a.customer_id = ${input?.contact_id} AND a.refund_to = 0
               UNION
-            SELECT count(DISTINCT b.id) as count
+            SELECT count(DISTINCT s.id) as count
             FROM   contact_packages a
               LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
-            WHERE contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company} 
+              LEFT JOIN inv_sales s ON s.id = a.invoice_id
+            WHERE contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
             )t`)
 
         return invoices[0]?.count ?? 0
