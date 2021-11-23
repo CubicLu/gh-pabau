@@ -16,7 +16,6 @@ query findMedicalForms(
     form_type
     company_id
     service_id
-    deleted_at
     data
     Services {
       id

@@ -295,11 +295,6 @@ const Custom: FC<CustomProps> = ({
     return <div data-acceptclicking={true}>{date}</div>
   }
 
-  const getServices = (services: any) => {
-    const service = services?.map((val) => val.name)
-    return service.join(', ').replace(/, ([^,]*)$/, ' & $1')
-  }
-
   const columns = [
     {
       key: 'name',
@@ -398,7 +393,12 @@ const Custom: FC<CustomProps> = ({
               data-acceptclicking={false}
             >
               {statusValues[status].title}
-              <Tooltip placement="top" title={getServices(item?.Services)}>
+              <Tooltip
+                placement="top"
+                title={item.Services.map((val) => val.name)
+                  .join(', ')
+                  .replace(/, ([^,]*)$/, ' & $1')}
+              >
                 <span className={styles.serviceNum}>
                   {item?.Services?.length}
                 </span>
