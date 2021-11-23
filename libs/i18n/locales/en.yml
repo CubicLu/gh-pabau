@@ -4404,7 +4404,7 @@ en:
   ui.client-card-financial.grand-total: 'Grand total'
   ui.client-card-financial.pay: Pay
   ui.client-card-financial.outstanding: Outstanding
-  ui.client-card-financial.total-invoiced: 'Total invoiced'
+  ui.client-card-financial.total-invoiced: 'Total Invoiced'
   ui.client-card-financial.edit-invoice: 'Edit Invoice'
   ui.client-card-financial.save-changes: 'Save Changes'
   ui.client-card-financial.sent: Sent
@@ -4415,6 +4415,7 @@ en:
   ui.client-card-financial.invoice-no: 'Invoice #'
   ui.client-card-financial.appointment: Appointment
   ui.client-card-financial.invoice-date: 'Invoice date'
+  ui.client-card-financial.invoice.tooltip: Actual Account Balance
   ui.client-card-financial.issuing-company: 'Issuing company'
   ui.client-card-financial.select-issuing-company: 'Select issuing company'
   ui.client-card-financial.contract: Contract
@@ -4492,9 +4493,8 @@ en:
   ui.client-card-financial.edit-payment.checkout-not-saved: 'Checkout not saved'
   ui.client-card-financial.edit-payment.checkout-not-saved-desc: 'This checkout will be deleted. Are you sure you want to exit without saving? This action is permanent and cannot be undone'
   ui.client-card-financial.edit-payment.exit-now: 'Yes, Exit now'
-  ui.client-card-financial.payments.date: Date
   ui.client-card-financial.payments.invoice-no: 'Inv #'
-  ui.client-card-financial.payments.payment-no: 'Payment #'
+  ui.client-card-financial.payments.payment-no: 'Payment'
   ui.client-card-financial.payments.location: Location
   ui.client-card-financial.payments.employee: Employee
   ui.client-card-financial.payments.paid-by: 'Paid by'
@@ -4507,8 +4507,7 @@ en:
   ui.client-card-financial.payments.delete-payments.yes-delete: 'Yes, Delete'
   ui.client-card-financial.payments.account-credit: 'Account credit'
   ui.client-card-financial.payments.total-payments: 'Total Payments'
-  ui.client-card-financial.items.date: Date
-  ui.client-card-financial.items.invoice-no: 'Invoice #'
+  ui.client-card-financial.items.invoice-no: 'Invoice'
   ui.client-card-financial.items.item-name: 'Item Name'
   ui.client-card-financial.items.type: Type
   ui.client-card-financial.items.who-sold: 'Who Sold'
@@ -5749,7 +5748,7 @@ en:
   clients.clientcard.medical.history.requested: 'Requested {{what}}'
   clients.clientcard.medical.history.send.reminder: 'Send Reminder'
   clients.clientcard.medical.history: 'Medical history'
-  clients.clientcard.medical.history.last.updated: 'Last updated {{what}} {{which}} ago'
+  clients.clientcard.medical.history.last.updated: 'Last updated {{what}} {{which}}'
   clients.clientcard.medical.history.view: View
   clients.clientcard.medical.history.edit: Edit
   clients.clientcard.medical.history.share: Share
