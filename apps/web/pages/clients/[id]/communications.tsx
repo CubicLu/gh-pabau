@@ -81,7 +81,7 @@ const CommunicationTab = () => {
         }
 
         if (d?.recipient.length > 0 && d?.Users) {
-          obj.openedBy = d.recipient[0]?.read_count.toString()
+          obj.numberOfOpend = d.recipient[0]?.read_count.toString()
           obj.isReceived = true
           if (d.recipient[0].Contact) {
             obj.status = d.recipient[0].status

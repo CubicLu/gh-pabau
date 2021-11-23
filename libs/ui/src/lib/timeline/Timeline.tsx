@@ -107,7 +107,8 @@ export interface EventsProps {
   appointmentWith?: string
   photos?: string[]
   documentFile?: string
-  openedBy?: string
+  openedBy?: OpenByProps[]
+  numberOfOpend?: string
   sharedWith?: OpenByProps[]
   moved?: MovedProps
   displayCollapse?: boolean

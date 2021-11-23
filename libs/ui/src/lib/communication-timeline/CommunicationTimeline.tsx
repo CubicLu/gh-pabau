@@ -56,10 +56,10 @@ export interface CommunicationTimelineProps {
   eventsData: EventsDataProps[]
   eventDateFormat: string
   isLoading?: boolean
-  pagination?: PaginationType
-  setPagination?: (e: PaginationType) => void
+  pagination?: CommunicationPaginationType
+  setPagination?: (e: CommunicationPaginationType) => void
 }
-export interface PaginationType {
+export interface CommunicationPaginationType {
   total?: number
   limit?: number
   offSet?: number
@@ -94,7 +94,8 @@ export interface EventsDataProps {
   dateTime: string
   status?: string
   appointmentWith?: string
-  openedBy?: string
+  openedBy?: OpenByProps[]
+  numberOfOpend?: string
   moved?: MovedProps
   displayCollapse?: boolean
   pinItems?: PinItemProps[]
@@ -565,7 +566,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               {renderSpecificIcon(event)}
             </div>
           }
-          {event?.openedBy && (
+          {event?.numberOfOpend && (
             <div className={styles.openByWrap}>
               <span className={styles.dot} />
               {/* <Popover
@@ -577,7 +578,9 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               <div className={styles.opened}>
                 <EyeOutlined />
                 <span>
-                  {`${event?.openedBy} ${t('communicationTimeline.opened')}`}
+                  {`${event?.numberOfOpend} ${t(
+                    'communicationTimeline.opened'
+                  )}`}
                 </span>
               </div>
               {/*  </Popover> */}
