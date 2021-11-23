@@ -174,6 +174,7 @@ interface P {
   companyId?: number
   setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
   searchRender?: () => JSX.Element
+  showAvatarModal?: () => void
 }
 
 const ClientCardModal: FC<P> = ({
@@ -201,6 +202,7 @@ const ClientCardModal: FC<P> = ({
   companyId,
   setBasicContactData,
   searchRender,
+  showAvatarModal,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -980,6 +982,7 @@ const ClientCardModal: FC<P> = ({
                 clientId={clientId}
                 companyId={companyId}
                 setBasicContactData={setBasicContactData}
+                showAvatarModal={showAvatarModal}
               />
             </div>
             <div className={styles.clientCardContent}>

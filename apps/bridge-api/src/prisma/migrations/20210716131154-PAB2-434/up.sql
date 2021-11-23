@@ -31,13 +31,14 @@ INSERT INTO `activity_types` (`name`,`order`,`badge`, `company_id`) VALUES ('Ema
 CREATE TABLE IF NOT EXISTS `activity` (
   `id` int(11) AUTO_INCREMENT,
   `created_by` int(11) NOT NULL,
-  `assigned_to` int(11) NOT NULL,
-  `contact_id` int(11) unsigned NOT NULL,
-  `lead_id` int(11) unsigned NOT NULL,
+  `assigned_to` int(11) DEFAULT NULL,
+  `completed_by` int(11) DEFAULT NULL,
+  `contact_id` int(11) unsigned DEFAULT NULL,
+  `lead_id` int(11) unsigned DEFAULT NULL,
   `subject` varchar(55) COLLATE utf8mb4_unicode_ci NOT NULL,
   `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `available` tinyint(4) NOT NULL,
-  `status` varchar(55) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` ENUM('awaiting','done', 'pending', 'reopened', 'working_on') COLLATE utf8mb4_unicode_ci NOT NULL,
   `due_start_date` datetime NOT NULL,
   `due_end_date` datetime NOT NULL,
   `created_at` timestamp DEFAULT current_timestamp(),
@@ -51,7 +52,8 @@ CREATE TABLE IF NOT EXISTS `activity` (
    CONSTRAINT `fk_activity_contact_id` FOREIGN KEY (`contact_id`) REFERENCES `cm_contacts`(`ID`),
    CONSTRAINT `fk_activity_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `cm_leads`(`ID`),
    CONSTRAINT `fk_activity_type` FOREIGN KEY (`type`) REFERENCES `activity_types`(`id`),
-   CONSTRAINT `fk_activity_assigned_to` FOREIGN KEY (`assigned_to`) REFERENCES `users`(`id`)
+   CONSTRAINT `fk_activity_assigned_to` FOREIGN KEY (`assigned_to`) REFERENCES `users`(`id`),
+   CONSTRAINT `fk_activity_completed_by` FOREIGN KEY (`completed_by`) REFERENCES `users`(`id`)
 );
 
 CREATE INDEX `activity_company_id__index` ON `activity` (`company_id`);

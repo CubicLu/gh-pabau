@@ -144,6 +144,10 @@ module.exports = withPlugins(
           source: '/clients/:id/financial',
           destination: '/clients/[id]/financial?id=:id',
         },
+        {
+          source: '/journey/:id',
+          destination: '/journey/[journey-id]/?journey-id=:id',
+        },
       ]
     },
     onDemandEntries: {

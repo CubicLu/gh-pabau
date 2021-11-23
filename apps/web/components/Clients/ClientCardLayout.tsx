@@ -12,8 +12,9 @@ import {
   useUpsertOneCmContactCustomMutation,
   useTotalInvoiceCountQuery,
   useCheckMedicalHistoryQuery,
-  useAggregateAccountPaymentsQuery,
+  useGetContactAccountBalanceQuery,
   useCountVouchersQuery,
+  AggregateInvoiceCountsDocument,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -31,7 +32,11 @@ import React, {
   useMemo,
 } from 'react'
 import Layout from '../Layout/Layout'
-import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
+import {
+  getImage,
+  ImgBlock,
+} from '../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { useQuery } from '@apollo/client'
 import { GetFormat } from '../../hooks/displayDate'
 import ClientCreate from '../Clients/ClientCreate'
 import { useUser } from '../../context/UserContext'
@@ -41,6 +46,8 @@ import useCompanyTimezoneDate from '../../hooks/useCompanyTimezoneDate'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+import stringToCurrencySignConverter from '../../helper/stringToCurrencySignConverter'
+import AvatarUploader from '../Uploaders/AvatarUploader/AvatarUploader'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
@@ -62,7 +69,6 @@ export const ClientCardLayout: FC<P> = ({
     variables: { contactID: clientId },
     skip: !clientId,
   })
-
   const { data: countInvoice } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
@@ -70,9 +76,10 @@ export const ClientCardLayout: FC<P> = ({
 
   const { data: countVouchers } = useCountVouchersQuery({
     variables: { contactID: clientId },
+    skip: !clientId,
   })
 
-  const { data: invAmount } = useAggregateAccountPaymentsQuery({
+  const { data: invAmount } = useGetContactAccountBalanceQuery({
     variables: { contactID: clientId },
     skip: !clientId,
   })
@@ -91,7 +98,9 @@ export const ClientCardLayout: FC<P> = ({
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
   const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
   const [openEditModal, setOpenEditModal] = useState(false)
+  const [isAvatarModalOpen, setAvatarModalOpen] = useState(false)
   const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
+  const [outstanding, setOutstanding] = useState<number>(null)
   const user = useUser()
 
   const [addClientNote] = useCreateOneContactNoteMutation({
@@ -120,7 +129,6 @@ export const ClientCardLayout: FC<P> = ({
       )
     },
   })
-
   const getQueryVariables = useMemo(() => {
     return {
       variables: { id: clientId },
@@ -165,8 +173,23 @@ export const ClientCardLayout: FC<P> = ({
       contactID: clientId,
     },
   })
+  const { data: outstandingCounts } = useQuery(AggregateInvoiceCountsDocument, {
+    skip: !clientId,
+    variables: {
+      contactID: clientId,
+    },
+  })
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
+
+  useEffect(() => {
+    setOutstanding(
+      (outstandingCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
+        (outstandingCounts?.aggregateInvSale?.sum?.credit_amount ?? 0) -
+        (outstandingCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
+        (outstandingCounts?.aggregateInvSale?.sum?.credit_amount ?? 0)
+    )
+  }, [outstandingCounts])
 
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
@@ -299,12 +322,23 @@ export const ClientCardLayout: FC<P> = ({
       key: 'financial',
       name: 'Financials',
       count: countInvoice?.total ?? 0,
-      tags: [
-        {
-          tag: invAmount?.totalInv?.total_amount?.inv_total,
-          color: 'green',
-        },
-      ],
+      tags:
+        invAmount?.AccountBalance?.balance - outstanding
+          ? [
+              {
+                tag:
+                  stringToCurrencySignConverter(user.me?.currency) +
+                  ((invAmount?.AccountBalance?.balance ?? 0) -
+                    (outstanding ?? 0)),
+                color: 'green',
+              },
+            ]
+          : [
+              {
+                tag: stringToCurrencySignConverter(user.me?.currency) + 0,
+                color: 'green',
+              },
+            ],
     },
     { key: 'packages', name: 'Packages' },
     { key: 'communications', name: 'Communications' },
@@ -326,7 +360,7 @@ export const ClientCardLayout: FC<P> = ({
     { key: 'loyalty', name: 'Loyalty' },
     {
       key: 'activities',
-      name: 'Activities',
+      name: t('clients.activities.title'),
       count: countActivities?.findManyActivityCount,
     },
 
@@ -420,6 +454,42 @@ export const ClientCardLayout: FC<P> = ({
     }
   }
 
+  const handleAvatarUpload = async (
+    isDelete: boolean,
+    imageData?: ImgBlock
+  ) => {
+    if (imageData?.path === undefined && basicContactData?.avatar === '') {
+      return
+    }
+    const avatarResponse = await updatebasicContactMutation({
+      variables: {
+        where: { ID: clientId },
+        data: {
+          Avatar: { set: !isDelete ? imageData?.path : '' },
+        },
+      },
+    })
+
+    if (avatarResponse?.data) {
+      setBasicContactData((item) => {
+        return {
+          ...item,
+          avatar: !isDelete ? imageData?.path : '',
+        }
+      })
+
+      isDelete
+        ? Notification(
+            NotificationType.success,
+            t('team.user.personal.details.avtar.remove.success')
+          )
+        : Notification(
+            NotificationType.success,
+            t('team.user.personal.details.avtar.update.success')
+          )
+    }
+  }
+
   return (
     <Layout>
       <ClientCard
@@ -485,6 +555,7 @@ export const ClientCardLayout: FC<P> = ({
             placeHolder={t('search.client.placeholder')}
           />
         )}
+        showAvatarModal={() => setAvatarModalOpen(true)}
       >
         {children}
       </ClientCard>
@@ -520,6 +591,22 @@ export const ClientCardLayout: FC<P> = ({
           {t('clients.clientcard.notes.clientnote.deletemodal.content')}
         </span>
       </Modal>
+      {isAvatarModalOpen && (
+        <AvatarUploader
+          visible={isAvatarModalOpen}
+          title={t('account.settings.profile.avatarupload.title')}
+          imageURL={
+            basicContactData?.avatar ? getImage(basicContactData?.avatar) : ''
+          }
+          onCancel={() => setAvatarModalOpen(false)}
+          width={400}
+          height={400}
+          section={'avatar_photos'}
+          type={'file_attachments'}
+          successHandler={(imageData) => handleAvatarUpload(false, imageData)}
+          onDelete={() => handleAvatarUpload(true)}
+        />
+      )}
     </Layout>
   )
 }
