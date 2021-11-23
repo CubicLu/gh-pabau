@@ -10,11 +10,9 @@ import {
 import { Col, Divider, Row, Skeleton, Image, Select } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// import { useQuery } from '@apollo/client'
 import { useWindowSize } from 'react-use'
 import { currency } from '../../assets/currency'
 import { bizTypes } from '../../assets/images/biz-types'
-// import { GetTimezoneListDocument } from '@pabau/graphql'
 import styles from './BusinessDetails.module.less'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
@@ -39,6 +37,11 @@ export interface LanguageSetting {
   weekStart: string
 }
 
+interface ITimezoneOption {
+  label: string
+  php_format: string
+}
+
 export interface BusinessDetailsProps {
   apiKey: string
   onSave?(val): void
@@ -50,6 +53,7 @@ export interface BusinessDetailsProps {
   showUploader?: () => void
   onDelete?: () => void
   companyLogo?: string
+  timezoneList?: ITimezoneOption[]
   AddressDetails?: AddressDetails
 }
 
@@ -64,12 +68,12 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   onDelete,
   showUploader,
   companyLogo,
+  timezoneList,
   AddressDetails,
 }) => {
   const { t } = useTranslation('common')
   const size = useWindowSize()
 
-  // const { data: timezoneList = null } = {} // useQuery(GetTimezoneListDocument)
   const weeklist = [
     {
       key: 'monday',
@@ -151,9 +155,9 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
         defaultLanuageStaff: values.defaultLanuageStaff,
         defaultLanuageClients: values.defaultLanuageClients,
         timezone: values.timezone,
-        // timeZoneLabel: timezoneList?.findManyTimezone?.find(
-        //   (item) => item.php_format === values.timezone
-        // )?.label,
+        timeZoneLabel: timezoneList?.find(
+          (item) => item.php_format === values.timezone
+        )?.label,
         currency: values.currency,
         dateFormat: values.dateFormat,
         weekStart: weeklist.find((item) => item.label === values.weekStart)
@@ -450,18 +454,19 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                     {!loading ? (
                       <SimpleDropdown
                         label={t('business.details.timezone.label')}
-                        // value={
-                        //   timezoneList?.findManyTimezone?.find(
-                        //     (item) => item.php_format === values.timezone
-                        //   )?.label
-                        // }
-                        dropdownItems={['Bug']}
+                        value={
+                          timezoneList?.find(
+                            (item) => item.php_format === values.timezone
+                          )?.label
+                        }
+                        dropdownItems={
+                          timezoneList?.map((time) => time?.label || '') ?? []
+                        }
                         onSelected={(value) => {
-                          console.log(value)
-                          // const data = timezoneList?.findManyTimezone?.find(
-                          //   (item) => item?.label === value
-                          // )
-                          // setFieldValue('timezone', data?.php_format)
+                          const data = timezoneList?.find(
+                            (item) => item?.label === value
+                          )
+                          setFieldValue('timezone', data?.php_format)
                         }}
                       />
                     ) : (
