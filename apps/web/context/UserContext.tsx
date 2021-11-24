@@ -13,6 +13,7 @@ import createPersistedState from 'use-persisted-state'
 import jwt from 'jsonwebtoken'
 import Login from '../pages/login'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
+import { useRouter } from 'next/router'
 
 interface P {
   // The currently logged in user details (from JWT and Maybe the Database)
@@ -45,7 +46,9 @@ export const UserProvider: FC = ({ children }) => {
     }
   })()
   // End of hack
-  const jwtTokenG = typeof window !== 'undefined' ? window['token'] : null
+  // Getting JWT Token from query params
+  const router = useRouter()
+  const jwtTokenGet = router.query['token']
 
   const [token, setToken] = usePersistedTokenState(null)
 
@@ -70,11 +73,11 @@ export const UserProvider: FC = ({ children }) => {
     // setDidLogin(true)
   }
   useEffect(() => {
-    if (jwtTokenG) {
-      loginByJWt(jwtTokenG)
+    if (jwtTokenGet) {
+      loginByJWt(jwtTokenGet)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [jwtTokenG])
+  }, [jwtTokenGet])
   useEffect(() => {
     if (token) {
       retrieveAuthenticatedUser()
