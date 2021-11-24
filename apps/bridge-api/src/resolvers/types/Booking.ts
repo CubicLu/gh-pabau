@@ -153,7 +153,11 @@ export const CancelAppointment = extendType({
           },
         })
 
-        const settings = await ctx.prisma.bookingSetting.findFirst()
+        const settings = await ctx.prisma.bookingSetting.findFirst({
+          where: {
+            company_id: ctx.authenticated.company,
+          },
+        })
         const contact = await ctx.prisma.cmContact.findFirst({
           where: {
             ID: updateBooking.contact_id,

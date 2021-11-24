@@ -3942,9 +3942,9 @@ model CompanyEmail {
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
 model ServiceCategory {
-  id                     Int                    @id @default(autoincrement()) @map("ID")
-  name                   String                 @map("Name")
-  company_id             Int                    @map("occupier")
+  id                     Int                     @id @default(autoincrement()) @map("ID")
+  name                   String                  @map("Name")
+  company_id             Int                     @map("occupier")
   category_product_id    Int
   cat_order              Int
   image                  String
@@ -3954,10 +3954,10 @@ model ServiceCategory {
   equipment_id           Int
   deposit_amount         Float
   tax_id                 Int
-  master_cat_id          Int
-  company_position_id    Int                    @default(0)
-  ServicesMasterCategory ServicesMasterCategory @relation(fields: [master_cat_id], references: [id])
-  InvCategory            InvCategory            @relation(fields: [category_product_id], references: [id])
+  master_cat_id          Int?
+  company_position_id    Int                     @default(0)
+  ServicesMasterCategory ServicesMasterCategory? @relation(fields: [master_cat_id], references: [id])
+  InvCategory            InvCategory             @relation(fields: [category_product_id], references: [id])
   CompanyService         CompanyService[]
 
   @@map("company_groups")
@@ -8595,8 +8595,6 @@ model MedicalFormContact {
   MedicalContactAttr        MedicalContactAttr[]
   LabRequest                LabRequest[]
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
   @@unique([id], name: "primary")
   @@index([form_id], name: "form_id")
   @@map("medical_form_contact")
@@ -10817,7 +10815,7 @@ model Booking {
   PathwaysTaken                 PathwaysTaken[]
   CommunicationsRequestedForms  CommunicationsRequestedForms[]
 
-  BookingCancel    BookingCancel[]
+  BookingCancel    BookingCancel?
   BookingChangeLog BookingChangeLog[]
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
@@ -10844,7 +10842,7 @@ model Booking {
 
 model BookingCancel {
   id                Int          @id @default(autoincrement())
-  appointment_id    Int
+  appointment_id    Int          @unique
   type              String?
   reason_type       String?
   reason            String?
@@ -12948,7 +12946,6 @@ model User {
   CmContact                    CmContact[]
   CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
   PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
-  MedicalFormContact           MedicalFormContact[]
   BookingCancel                BookingCancel[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
