@@ -6,11 +6,10 @@ import { useUser } from '../context/UserContext'
 
 const TranslationWrapper: FC = ({ children }) => {
   const me = useUser()
-
   i18next.use(initReactI18next).init({
     interpolation: { escapeValue: false },
     lng: me?.me?.language?.company?.toString().slice(0, 2),
-    // fallbackLng: 'en',
+    fallbackLng: 'en',
     keySeparator: false,
     resources: languages,
   })

@@ -10,10 +10,12 @@ import {
 import {
   GetBusinessDetailsQuery,
   GetBusinessDetailsDocument,
+  GetTimezoneListDocument,
   useUpdateCompanyDetailsMutation,
   useSetMultipleMetaDataMutation,
   useUpdateOneCompanyDetailsMutation,
 } from '@pabau/graphql'
+import { useQuery } from '@apollo/client'
 import { TFunction } from 'react-i18next'
 import AvatarUploader from '../../Uploaders/AvatarUploader/AvatarUploader'
 import { cdnURL } from '../../../baseUrl'
@@ -57,6 +59,8 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
   const showUploader = () => {
     setShowAvatarUploader(true)
   }
+  const { data: timezoneList } = useQuery(GetTimezoneListDocument)
+
   const [updateBusinessLogo] = useUpdateOneCompanyDetailsMutation()
 
   const [updateBusinessDetails] = useUpdateCompanyDetailsMutation({
@@ -307,6 +311,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         onDelete={onDeleteImage}
         companyLogo={companyLogo}
         AddressDetails={data && AddressDetails}
+        timezoneList={timezoneList?.findManyTimezone ?? []}
       />
       {showAvatarUploader && (
         <AvatarUploader

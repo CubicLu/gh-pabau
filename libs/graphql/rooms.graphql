@@ -1,0 +1,23 @@
+query listRooms {
+  rooms: findManyCompanyRoom(orderBy: {description: asc}) {
+    id
+    name: description
+    room_fee_type
+    room_fee
+    is_active
+    all_services
+    all_locations
+    Locations: CompanyRoomLocation {
+      Location{
+        id
+        name
+      }
+    }
+    Rooms: CompanyRoomService {
+      Service {
+        id
+        name
+      }
+    }
+  }
+}

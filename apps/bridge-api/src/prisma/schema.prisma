@@ -4111,25 +4111,25 @@ model CompanyRoom {
 }
 
 model CompanyRoomLocation {
-  id          Int           @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   room_id     Int
   location_id Int
-  CompanyRoom CompanyRoom   @relation(fields: [room_id], references: [id])
-  Location    CompanyBranch @relation(fields: [location_id], references: [id])
+  CompanyRoom CompanyRoom?   @relation(fields: [room_id], references: [id])
+  Location    CompanyBranch? @relation(fields: [location_id], references: [id])
 
   @@map("company_rooms_locations")
 }
 
 model CompanyRoomService {
-  id             Int            @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   room_id        Int
   service_id     Int
-  company_id     Int            @map("occupier")
+  company_id     Int             @map("occupier")
   priority_order Int
   imported       Int
-  Company        Company        @relation(fields: [company_id], references: [id])
-  Room           CompanyRoom    @relation(fields: [room_id], references: [id])
-  Service        CompanyService @relation(fields: [service_id], references: [id])
+  Company        Company         @relation(fields: [company_id], references: [id])
+  Room           CompanyRoom?    @relation(fields: [room_id], references: [id])
+  Service        CompanyService? @relation(fields: [service_id], references: [id])
 
   @@index([room_id], name: "room_id")
   @@index([room_id], name: "room_id_2")
