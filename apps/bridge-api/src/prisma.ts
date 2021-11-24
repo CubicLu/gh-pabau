@@ -20,8 +20,7 @@ if (!PABAU1_MYSQL_USERNAME_PODS || !PABAU1_MYSQL_PASSWORD_PODS) {
 }
 
 function getPodDbUrl(urlOrHostname) {
-  // if (!urlOrHostname)
-  return DATABASE_URL
+  if (!urlOrHostname) return DATABASE_URL
 
   let url
   try {
