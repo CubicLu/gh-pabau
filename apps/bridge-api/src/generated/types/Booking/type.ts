@@ -151,16 +151,8 @@ export const Booking = objectType({
         return root.CommunicationsRequestedForms
       },
     })
-    t.list.field('BookingCancel', {
+    t.nullable.field('BookingCancel', {
       type: 'BookingCancel',
-      args: {
-        where: 'BookingCancelWhereInput',
-        orderBy: 'BookingCancelOrderByWithRelationInput',
-        cursor: 'BookingCancelWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'BookingCancelScalarFieldEnum',
-      },
       resolve(root: any) {
         return root.BookingCancel
       },
