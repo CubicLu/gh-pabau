@@ -171,7 +171,7 @@ export const MainInvoice = extendType({
       },
     })
     t.field('countPayments', {
-      type: list('Int'),
+      type: 'Int',
       description: 'Real count of payments',
       args: {
         contact_id: 'Int',
