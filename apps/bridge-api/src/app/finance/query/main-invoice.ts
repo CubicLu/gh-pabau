@@ -171,30 +171,30 @@ export const MainInvoice = extendType({
       },
     })
     t.field('countPayments', {
-      type: 'Int',
+      type: 'Json',
       description: 'Real count of payments',
       args: {
         contact_id: 'Int',
       },
       async resolve(_root, input, ctx: Context) {
         const payments = await ctx.prisma
-          .$queryRaw(`SELECT sum(count) as count from
+          .$queryRaw(`SELECT sum(count) as count, sum(amount) as amount from
           (
             SELECT
-              count(a.id) as count
+              count(a.id) as count, sum(a.amount) as amount
             FROM inv_payments a
             inner join inv_sales s on s.id=a.invoice
             where a.occupier = ${ctx.authenticated.company} and a.contact_id=${input?.contact_id}
-  
+
             union
-  
+
             SELECT
-            count(id) as count
+            count(id) as count, sum(IF(reference_no="**CREDIT NOTE**" or reference_no="ACCOUNT PAYMENT",0,a.total)) as amount
             from inv_sales a
             where
             a.occupier = ${ctx.authenticated.company} and reference_no in ("**REFUND**", "ACCOUNT PAYMENT","**CREDIT NOTE**") and a.customer_id = ${input?.contact_id}
           )t`)
-        return payments[0]?.count ?? 0
+        return payments
       },
     })
     t.field('countSoldItems', {

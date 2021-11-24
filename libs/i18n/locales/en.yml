@@ -4415,7 +4415,6 @@ en:
   ui.client-card-financial.invoice-no: 'Invoice #'
   ui.client-card-financial.appointment: Appointment
   ui.client-card-financial.invoice-date: 'Invoice date'
-  ui.client-card-financial.invoice.tooltip: Actual Account Balance
   ui.client-card-financial.issuing-company: 'Issuing company'
   ui.client-card-financial.select-issuing-company: 'Select issuing company'
   ui.client-card-financial.contract: Contract

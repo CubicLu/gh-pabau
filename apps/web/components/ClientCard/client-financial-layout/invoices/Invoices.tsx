@@ -160,7 +160,7 @@ export const Invoices: FC<P> = (props) => {
     })
     setInvoices(invoicesDetails)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invoice, saleItems, totalVat])
+  }, [invoice, saleItems, totalVat, user?.me?.companyDateFormat])
 
   useEffect(() => {
     const items: ISalesItemProps[] = []
@@ -248,23 +248,27 @@ export const Invoices: FC<P> = (props) => {
       dataIndex: 'location',
       className: 'columnTitle',
       visible: true,
+      width: 175,
     },
     {
       title: t('ui.client-card-financial.employee'),
       dataIndex: 'employee',
       className: 'columnTitle',
+      width: 100,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.issued-to'),
       dataIndex: 'issuedTo',
       className: 'columnTitle',
+      width: 75,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.status'),
       dataIndex: 'paid',
       className: 'columnTitle',
+      width: 50,
       visible: true,
       render: function renderItem(value, row) {
         return (
@@ -293,6 +297,7 @@ export const Invoices: FC<P> = (props) => {
       title: t('ui.client-card-financial.amount'),
       dataIndex: 'grandTotal',
       className: 'columnTitle',
+      width: 5,
       visible: true,
       render: function renderItem(value, row) {
         return (
@@ -794,7 +799,7 @@ export const Invoices: FC<P> = (props) => {
                         <Skeleton.Input
                           active={true}
                           size="small"
-                          className={styles.locationSkeleton}
+                          className={styles.columnSkeleton}
                         />
                       )
                     case 'employee':
