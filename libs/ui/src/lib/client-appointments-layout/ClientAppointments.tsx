@@ -109,8 +109,6 @@ export const ClientAppointments = ({
   }
 
   const updateAppointmentStatus = (id: number, status: string) => {
-    console.log('id', id)
-    console.log('status', status)
     updateAppointmentStatusMutation?.({
       variables: {
         booking_id: id,
