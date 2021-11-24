@@ -1,4 +1,4 @@
-query listEquipments($take: Int = 50, $skip: Int = 0) {
+query listEquipment($take: Int = 50, $skip: Int = 0) {
   equipment: findManyEquipment(skip: $skip, take: $take) {
     id
     name: equipment_name
