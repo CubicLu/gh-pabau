@@ -8608,8 +8608,6 @@ model MedicalFormContact {
   MedicalContactAttr        MedicalContactAttr[]
   LabRequest                LabRequest[]
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
   @@unique([id], name: "primary")
   @@index([form_id], name: "form_id")
   @@map("medical_form_contact")
@@ -10830,7 +10828,7 @@ model Booking {
   PathwaysTaken                 PathwaysTaken[]
   CommunicationsRequestedForms  CommunicationsRequestedForms[]
 
-  BookingCancel    BookingCancel[]
+  BookingCancel    BookingCancel?
   BookingChangeLog BookingChangeLog[]
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
@@ -10857,7 +10855,7 @@ model Booking {
 
 model BookingCancel {
   id                Int          @id @default(autoincrement())
-  appointment_id    Int
+  appointment_id    Int          @unique
   type              String?
   reason_type       String?
   reason            String?
@@ -12961,7 +12959,6 @@ model User {
   CmContact                    CmContact[]
   CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
   PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
-  MedicalFormContact           MedicalFormContact[]
   BookingCancel                BookingCancel[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
