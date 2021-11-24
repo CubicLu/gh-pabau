@@ -3942,9 +3942,9 @@ model CompanyEmail {
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
 model ServiceCategory {
-  id                     Int                    @id @default(autoincrement()) @map("ID")
-  name                   String                 @map("Name")
-  company_id             Int                    @map("occupier")
+  id                     Int                     @id @default(autoincrement()) @map("ID")
+  name                   String                  @map("Name")
+  company_id             Int                     @map("occupier")
   category_product_id    Int
   cat_order              Int
   image                  String
@@ -3954,10 +3954,10 @@ model ServiceCategory {
   equipment_id           Int
   deposit_amount         Float
   tax_id                 Int
-  master_cat_id          Int
-  company_position_id    Int                    @default(0)
-  ServicesMasterCategory ServicesMasterCategory @relation(fields: [master_cat_id], references: [id])
-  InvCategory            InvCategory            @relation(fields: [category_product_id], references: [id])
+  master_cat_id          Int?
+  company_position_id    Int                     @default(0)
+  ServicesMasterCategory ServicesMasterCategory? @relation(fields: [master_cat_id], references: [id])
+  InvCategory            InvCategory             @relation(fields: [category_product_id], references: [id])
   CompanyService         CompanyService[]
 
   @@map("company_groups")
