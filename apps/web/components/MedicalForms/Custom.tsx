@@ -638,7 +638,7 @@ const Custom: FC<CustomProps> = ({
         newButtonText={t('setup.medical.forms.deleteModal.btnText')}
         newButtonDisable={
           currentItem?.formType === 'questionnaire' &&
-          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 1
+          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 25
             ? true
             : false
         }
@@ -646,8 +646,8 @@ const Custom: FC<CustomProps> = ({
       >
         <p>
           {currentItem?.formType === 'questionnaire' &&
-          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 1 ? (
-            'Can’t delete this medical history form. Having at least one medical history form is mandatory.'
+          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 25 ? (
+            t('setup.medical.forms.deleteModal.deleteText')
           ) : (
             <>
               {currentItem?.name} {t('common-label-delete-warning')}
