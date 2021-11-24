@@ -175,7 +175,7 @@ export const MainInvoice = extendType({
         order by date desc
         LIMIT ${input.take}
         OFFSET ${input.skip}`
-        return await ctx.prisma.$queryRaw(query)
+        return await ctx.prisma.$queryRaw`${query}`
       },
     })
     t.field('countSoldItems', {
@@ -186,7 +186,7 @@ export const MainInvoice = extendType({
       },
       async resolve(_root, input, ctx: Context) {
         const invoices = await ctx.prisma
-          .$queryRaw(`SELECT sum(count) as count from (
+          .$queryRaw`SELECT sum(count) as count from (
               SELECT count(a.id) as count
               FROM   inv_sales a
               WHERE  a.occupier= ${ctx.authenticated.company} and a.reference_no not in ("**REFUND**", "**CREDIT NOTE**", "ACCOUNT PAYMENT") AND a.customer_id = ${input?.contact_id} AND a.refund_to = 0
@@ -195,7 +195,7 @@ export const MainInvoice = extendType({
             FROM   contact_packages a
               LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
             WHERE a.contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
-            )t`)
+            )t`
         return invoices[0]?.count ?? 0
       },
     })
@@ -274,7 +274,7 @@ export const MainInvoice = extendType({
         LIMIT ${input.take}
         OFFSET ${input.skip}`
 
-        return await ctx.prisma.$queryRaw(query)
+        return await ctx.prisma.$queryRaw`${query}`
       },
     })
     t.field('countSoldItems', {
@@ -285,7 +285,7 @@ export const MainInvoice = extendType({
       },
       async resolve(_root, input, ctx: Context) {
         const invoices = await ctx.prisma
-          .$queryRaw(`SELECT sum(count) as count from (
+          .$queryRaw`SELECT sum(count) as count from (
             SELECT count(a.id) as count
             FROM   inv_sales a
             LEFT JOIN inv_sale_items b ON a.id = b.sale_id
@@ -296,7 +296,7 @@ export const MainInvoice = extendType({
               LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
               LEFT JOIN inv_sales s ON s.id = a.invoice_id
             WHERE contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
-            )t`)
+            )t`
 
         return invoices[0]?.count ?? 0
       },
