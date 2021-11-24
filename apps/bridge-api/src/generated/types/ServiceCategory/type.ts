@@ -19,9 +19,9 @@ export const ServiceCategory = objectType({
     t.int('equipment_id')
     t.float('deposit_amount')
     t.int('tax_id')
-    t.int('master_cat_id')
+    t.nullable.int('master_cat_id')
     t.int('company_position_id')
-    t.field('ServicesMasterCategory', {
+    t.nullable.field('ServicesMasterCategory', {
       type: 'ServicesMasterCategory',
       resolve(root: any) {
         return root.ServicesMasterCategory

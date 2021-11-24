@@ -1,0 +1,9 @@
+query getCommunicationTemplates($take: Int = 50, $skip: Int = 0) {
+  templates: findManyMessageTemplate(orderBy: {template_name: asc}, where: {template_type: {in: ["email", "sms"]}, template_name: {not: {equals: ""}}}, skip: $skip, take: $take) {
+    template_id
+    template_name
+    template_group
+    template_type
+    created_at
+  }
+}

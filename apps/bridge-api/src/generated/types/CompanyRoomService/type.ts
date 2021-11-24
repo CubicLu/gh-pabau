@@ -19,13 +19,13 @@ export const CompanyRoomService = objectType({
         return root.Company
       },
     })
-    t.field('Room', {
+    t.nullable.field('Room', {
       type: 'CompanyRoom',
       resolve(root: any) {
         return root.Room
       },
     })
-    t.field('Service', {
+    t.nullable.field('Service', {
       type: 'CompanyService',
       resolve(root: any) {
         return root.Service
