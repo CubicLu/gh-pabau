@@ -638,7 +638,7 @@ const Custom: FC<CustomProps> = ({
         newButtonText={t('setup.medical.forms.deleteModal.btnText')}
         newButtonDisable={
           currentItem?.formType === 'questionnaire' &&
-          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 25
+          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 1
             ? true
             : false
         }
@@ -646,7 +646,7 @@ const Custom: FC<CustomProps> = ({
       >
         <p>
           {currentItem?.formType === 'questionnaire' &&
-          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 25 ? (
+          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 1 ? (
             t('setup.medical.forms.deleteModal.deleteText')
           ) : (
             <>
