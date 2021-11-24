@@ -10,13 +10,13 @@ export const CompanyRoomLocation = objectType({
     t.int('id')
     t.int('room_id')
     t.int('location_id')
-    t.field('CompanyRoom', {
+    t.nullable.field('CompanyRoom', {
       type: 'CompanyRoom',
       resolve(root: any) {
         return root.CompanyRoom
       },
     })
-    t.field('Location', {
+    t.nullable.field('Location', {
       type: 'CompanyBranch',
       resolve(root: any) {
         return root.Location

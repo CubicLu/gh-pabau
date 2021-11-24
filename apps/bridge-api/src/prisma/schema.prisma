@@ -3942,10 +3942,10 @@ model CompanyEmail {
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
 model ServiceCategory {
-  id                     Int                    @id @default(autoincrement()) @map("ID")
-  name                   String                 @map("Name")
-  company_id             Int                    @map("occupier")
-  category_product_id    Int                    @unique
+  id                     Int                     @id @default(autoincrement()) @map("ID")
+  name                   String                  @map("Name")
+  company_id             Int                     @map("occupier")
+  category_product_id    Int                     @unique
   cat_order              Int
   image                  String
   online_enabled         Int
@@ -3954,10 +3954,10 @@ model ServiceCategory {
   equipment_id           Int
   deposit_amount         Float
   tax_id                 Int
-  master_cat_id          Int
-  company_position_id    Int                    @default(0)
-  ServicesMasterCategory ServicesMasterCategory @relation(fields: [master_cat_id], references: [id])
-  InvCategory            InvCategory            @relation(fields: [category_product_id], references: [id])
+  master_cat_id          Int?
+  company_position_id    Int                     @default(0)
+  ServicesMasterCategory ServicesMasterCategory? @relation(fields: [master_cat_id], references: [id])
+  InvCategory            InvCategory             @relation(fields: [category_product_id], references: [id])
   CompanyService         CompanyService[]
 
   @@map("company_groups")
@@ -4111,25 +4111,25 @@ model CompanyRoom {
 }
 
 model CompanyRoomLocation {
-  id          Int           @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   room_id     Int
   location_id Int
-  CompanyRoom CompanyRoom   @relation(fields: [room_id], references: [id])
-  Location    CompanyBranch @relation(fields: [location_id], references: [id])
+  CompanyRoom CompanyRoom?   @relation(fields: [room_id], references: [id])
+  Location    CompanyBranch? @relation(fields: [location_id], references: [id])
 
   @@map("company_rooms_locations")
 }
 
 model CompanyRoomService {
-  id             Int            @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   room_id        Int
   service_id     Int
-  company_id     Int            @map("occupier")
+  company_id     Int             @map("occupier")
   priority_order Int
   imported       Int
-  Company        Company        @relation(fields: [company_id], references: [id])
-  Room           CompanyRoom    @relation(fields: [room_id], references: [id])
-  Service        CompanyService @relation(fields: [service_id], references: [id])
+  Company        Company         @relation(fields: [company_id], references: [id])
+  Room           CompanyRoom?    @relation(fields: [room_id], references: [id])
+  Service        CompanyService? @relation(fields: [service_id], references: [id])
 
   @@index([room_id], name: "room_id")
   @@index([room_id], name: "room_id_2")
@@ -8595,8 +8595,6 @@ model MedicalFormContact {
   MedicalContactAttr        MedicalContactAttr[]
   LabRequest                LabRequest[]
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
   @@unique([id], name: "primary")
   @@index([form_id], name: "form_id")
   @@map("medical_form_contact")
@@ -10817,7 +10815,7 @@ model Booking {
   PathwaysTaken                 PathwaysTaken[]
   CommunicationsRequestedForms  CommunicationsRequestedForms[]
 
-  BookingCancel    BookingCancel[]
+  BookingCancel    BookingCancel?
   BookingChangeLog BookingChangeLog[]
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
@@ -10844,7 +10842,7 @@ model Booking {
 
 model BookingCancel {
   id                Int          @id @default(autoincrement())
-  appointment_id    Int
+  appointment_id    Int          @unique
   type              String?
   reason_type       String?
   reason            String?
@@ -12948,7 +12946,6 @@ model User {
   CmContact                    CmContact[]
   CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
   PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
-  MedicalFormContact           MedicalFormContact[]
   BookingCancel                BookingCancel[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")

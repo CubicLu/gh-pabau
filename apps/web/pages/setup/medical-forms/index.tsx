@@ -179,7 +179,8 @@ export const Index: FC = () => {
     whereQuery.AND = []
     whereQuery.AND.push(
       { user_deleted: { equals: 0 } },
-      { name: { not: { equals: '' } } }
+      { name: { not: { equals: '' } } },
+      { deleted_at: { equals: null } }
     )
 
     if (searchData.searchValue !== '') {
@@ -282,6 +283,7 @@ export const Index: FC = () => {
           name: medicalForm.name,
           formType: medicalForm.form_type,
           serviceId: medicalForm.service_id,
+          Services: medicalForm.Services,
           createdAt:
             companyDateFormat === 'd/m/Y'
               ? dayjs(medicalForm.created_at).format('DD/MM/YYYY HH:mm:ss')

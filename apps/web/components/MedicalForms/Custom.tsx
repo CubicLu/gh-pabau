@@ -45,6 +45,10 @@ import consentIcon from '../../assets/images/form-type/consent.svg'
 import ePaperIcon from '../../assets/images/form-type/e-paper.svg'
 import presciptionIcon from '../../assets/images/form-type/presciption.svg'
 import labFormIcon from '../../assets/images/form-type/lab-form.svg'
+import {
+  useDeleteOneMedicalFormMutation,
+  useFindMedicalFormsCountQuery,
+} from '@pabau/graphql'
 
 interface Paginate {
   total: number
@@ -100,10 +104,28 @@ const Custom: FC<CustomProps> = ({
   const [popoverVisible, setPopoverVisible] = useState(false)
   const [popoverVisibleMobile, setPopoverVisibleMobile] = useState(null)
   const [paginateData, setPaginateData] = useState<Paginate>(pagenateParams)
-  const isMobile = useMedia('(max-width: 768px)', false)
+  const isMobile = useMedia('(max-width: 767px)', false)
 
   const { t } = useTranslationI18()
 
+  const [deleteMutation] = useDeleteOneMedicalFormMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.notes.clientnote.delete')
+      )
+    },
+  })
+  const medicalHistoryTypeCount = useFindMedicalFormsCountQuery({
+    variables: {
+      where: {
+        user_deleted: { equals: 0 },
+        name: { not: { equals: '' } },
+        deleted_at: { not: { equals: null } },
+        form_type: { equals: 'questionnaire' },
+      },
+    },
+  })
   const formTypeList: { [key: string]: string } = {
     questionnaire: t('ui.medicalformbuilder.form.type.medicalhistory'),
     medicalHistory: t('ui.medicalformbuilder.form.type.medicalhistory'),
@@ -168,7 +190,6 @@ const Custom: FC<CustomProps> = ({
       icon: <EditOutlined />,
       label: t('setup.medical.forms.menuList.edit'),
       onClick: () => {
-        console.log('click on edit')
         handleIdEditClick()
         setPopoverVisible(false)
         setPopoverVisibleMobile(null)
@@ -295,6 +316,7 @@ const Custom: FC<CustomProps> = ({
     const [date] = createdAt.split(' ')
     return <div data-acceptclicking={true}>{date}</div>
   }
+
   const columns = [
     {
       key: 'name',
@@ -374,16 +396,38 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       dataIndex: 'status',
-      render: (status) => (
-        <div data-acceptclicking={true}>
-          <Button
-            className={statusValues[status].class}
-            data-acceptclicking={false}
-          >
-            {statusValues[status].title}
-          </Button>
-        </div>
-      ),
+      render: (status, item) =>
+        !item?.Services?.length ? (
+          <div data-acceptclicking={true}>
+            <Tooltip
+              placement="top"
+              title="This form will be manually sent to clients."
+            >
+              <Button className={styles.manualBtn} data-acceptclicking={false}>
+                Manual
+              </Button>
+            </Tooltip>
+          </div>
+        ) : (
+          <div data-acceptclicking={true}>
+            <Button
+              className={statusValues[status].class}
+              data-acceptclicking={false}
+            >
+              {statusValues[status].title}
+              <Tooltip
+                placement="top"
+                title={item.Services.map((val) => val.name)
+                  .join(', ')
+                  .replace(/, ([^,]*)$/, ' & $1')}
+              >
+                <span className={styles.serviceNum}>
+                  {item?.Services?.length}
+                </span>
+              </Tooltip>
+            </Button>
+          </div>
+        ),
     },
     {
       title: '',
@@ -493,6 +537,16 @@ const Custom: FC<CustomProps> = ({
     })
   }
 
+  const handleDelete = async () => {
+    if (currentItem) {
+      await deleteMutation({
+        variables: {
+          where: { id: Number.parseInt(currentItem.key) },
+        },
+      })
+    }
+  }
+
   return (
     <div className={styles.customContainer}>
       {currentItem && (
@@ -575,16 +629,30 @@ const Custom: FC<CustomProps> = ({
         </div>
       </BasicModal>
       <BasicModal
+        onOk={handleDelete}
         visible={deleteModal}
         centered
         title={t('setup.medical.forms.deleteModal.title')}
         onCancel={() => setDeleteModal(false)}
         modalWidth={682}
         newButtonText={t('setup.medical.forms.deleteModal.btnText')}
+        newButtonDisable={
+          currentItem?.formType === 'questionnaire' &&
+          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 1
+            ? true
+            : false
+        }
         isValidate={true}
       >
         <p>
-          {currentItem?.name} {t('common-label-delete-warning')}
+          {currentItem?.formType === 'questionnaire' &&
+          medicalHistoryTypeCount?.data?.findManyMedicalFormCount <= 1 ? (
+            t('setup.medical.forms.deleteModal.deleteText')
+          ) : (
+            <>
+              {currentItem?.name} {t('common-label-delete-warning')}
+            </>
+          )}
         </p>
       </BasicModal>
       <MedicalFormBuilder

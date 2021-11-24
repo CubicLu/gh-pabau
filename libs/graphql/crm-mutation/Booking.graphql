@@ -95,6 +95,9 @@ fragment Booking on Booking {
   CompanyService {
     ...CompanyServiceFields
   }
+  BookingCancel {
+    ...BookingCancelFields
+  }
 }
 
 mutation createOneBooking($data: BookingCreateInput!) {
