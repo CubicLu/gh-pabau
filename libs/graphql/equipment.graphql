@@ -1,0 +1,22 @@
+query listEquipments($take: Int = 50, $skip: Int = 0) {
+  equipment: findManyEquipment(skip: $skip, take: $take) {
+    id
+    name: equipment_name
+    is_active
+    quantity
+    ServiceEquipment(where: {Service: {id: {equals: null}}}) {
+      Service {
+        id
+        name
+        ServiceCategory{
+          id
+          name
+          ServicesMasterCategory{
+            id 
+            name
+          }
+        }
+      }
+    }
+  }
+}

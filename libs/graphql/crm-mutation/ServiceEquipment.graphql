@@ -1,0 +1,48 @@
+fragment ServiceEquipmentFields on ServiceEquipment {
+  id
+  company_id
+  service_id
+  equipment_id
+  equipment_quantity
+  priority_order
+}
+
+fragment ServiceEquipment on ServiceEquipment {
+  ...ServiceEquipmentFields
+  Equipment {
+    ...EquipmentFields
+  }
+  Service {
+    ...CompanyServiceFields
+  }
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneServiceEquipment($data: ServiceEquipmentCreateInput!) {
+  createOneServiceEquipment(data: $data) {
+    ...ServiceEquipment
+  }
+}
+
+mutation updateOneServiceEquipment($where: ServiceEquipmentWhereUniqueInput!, $data: ServiceEquipmentUpdateInput!) {
+  updateOneServiceEquipment(where: $where, data: $data) {
+    ...ServiceEquipment
+  }
+}
+
+mutation deleteOneServiceEquipment($where: ServiceEquipmentWhereUniqueInput!) {
+  deleteOneServiceEquipment(where: $where) {
+    ...ServiceEquipment
+  }
+}
+
+mutation updateManyServiceEquipment(
+  $where: ServiceEquipmentWhereInput
+  $data: ServiceEquipmentUpdateManyMutationInput!
+) {
+  updateManyServiceEquipment(where: $where, data: $data) {
+    count
+  }
+}
