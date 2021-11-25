@@ -22,7 +22,6 @@ import {
   PlusCircleOutlined,
   CheckOutlined,
   TagOutlined,
-  DollarCircleFilled,
   UserOutlined,
   AimOutlined,
 } from '@ant-design/icons'
@@ -34,17 +33,6 @@ import { useMedia } from 'react-use'
 import { EditableCell } from './EditableCell'
 import { columnNames } from './AddColumnPopover'
 import { cellTypes } from './EditableCell'
-// import { RowSelectionType } from 'antd/es/table/interface'
-import {
-  assignedData,
-  clientsData,
-  leadArray,
-  leadSourceArray,
-  leadWonByData,
-  lostReasonArray,
-  ownersData,
-  scheduleArray,
-} from '../../mocks/Activities'
 import dayjs from 'dayjs'
 import * as Icon from '@ant-design/icons'
 import searchEmpty from '../../assets/images/empty.png'
@@ -61,9 +49,10 @@ import {
   dateFormatMapper,
 } from '../../hooks/displayDate'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
-import { PersonList } from './FilterMenu'
+import { PersonList, OptionList } from './FilterMenu'
 import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 import { getData } from './FilterOptionData'
+import { ActivityTypeFilter } from './CreateActivity'
 
 export type ActivitiesType = {
   width?: number
@@ -104,7 +93,7 @@ export interface ActivityTableProps {
   selectedRowKeys?: number[]
   setSelectedRowKeys?: (val: number[]) => void
   handleRowClick?: (val) => void
-  onStatusChange?: (val, status) => void
+  onStatusChange?: (status) => void
   onSelectDone?: (record, selected, selectedRows) => void
   onSortData?: (val) => void
   handleCellSave?: (val) => void
@@ -122,6 +111,13 @@ export interface ActivityTableProps {
   setCreateActivityVisible?: (value: boolean) => void
   loggedUser?: Partial<AuthenticatedUser> & JwtUser
   personsList: PersonList[]
+  activityTypeOption: ActivityTypeFilter[]
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  locationData: OptionList[]
+  pipelineData: OptionList[]
+  salutationData: OptionList[]
+  pipelineStageData: OptionList[]
 }
 
 interface ColumnProps {
@@ -201,26 +197,21 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     leadStageData,
     locationData,
     pipelineData,
+    salutationData,
+    pipelineStageData,
   }) => {
-    console.log('filterData--sourceData-table', filteredData)
     const isMobile = useMedia('(max-width: 768px)', false)
     const { t } = useTranslationI18()
-    const { freeBusyOption, leadStatusOption } = getData(t)
-    // const [sourceData, setSourceData] = useState<ActivitiesDataProps[]>([])
-
+    const {
+      freeBusyOption,
+      leadStatusOption,
+      clientStatus,
+      clientGender,
+    } = getData(t)
     const [visibleAddColumnPopover, setVisibleAddColumnPopover] = useState(
       false
     )
-    // const [displayData, setDisplayData] = useState([])
-    // const [selectedColumn, setSelectedColumn] = useState(defaultColumns)
     const [displayAddColumn, setDisplayAddColumn] = useState(true)
-    // const [paginateData, setPaginateData] = useState({
-    //   total: sourceData?.length,
-    //   offset: 0,
-    //   limit: 50,
-    //   currentPage: 1,
-    //   showingRecords: 50,
-    // })
 
     const visibleColumn = useCallback(
       (name) => {
@@ -270,12 +261,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     }, [paginateData])
 
     const RenderStatus = (data) => {
-      console.log('filterData----RenderStatus--', filteredData)
       const { status, id } = data
       const [visible, setVisible] = useState(false)
       const { backgroundColor, borderColor } = renderStatus(status)
-
-      console.log('visible---------------------', visible)
 
       return (
         <span>
@@ -347,7 +335,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           dataIndex: null,
           skeletonWidth: '80px',
           render: (data) => {
-            const { type_name = '', subject, type_badge } = data
+            const { subject, type_badge } = data
             return (
               <div className={styles.subjectWrapper}>
                 <span className={styles.avatarWrapper}>
@@ -397,39 +385,8 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           visible: visibleColumn(columnNames.clientName.label),
           columnName: columnNames.clientName.label,
           type: cellTypes.client,
-          selectOptions: clientsData,
           selectPrefixIcon: <CustomIcon name={'userFilled'} />,
         },
-        // {
-        //   id: columnNames.leadDescription.id,
-        //   title: (
-        //     <span className="dragHandler">
-        //       <AimOutlined />
-        //       {t('activityList.column.leadDescription')}
-        //     </span>
-        //   ),
-        //   dataIndex: 'lead',
-        //   width: 100,
-        //   editable: true,
-        //   skeletonWidth: '80px',
-        //   visible: visibleColumn(columnNames.leadDescription.label),
-        //   editName: t('activityList.column.leadDescription.editName'),
-        //   columnName: columnNames.leadDescription.label,
-        //   render: ({ description }) => {
-        //     return (
-        //       <span className={styles.cellFormater}>
-        //         <a>{description}</a>
-        //       </span>
-        //     )
-        //   },
-        //   type: cellTypes.selectWithSearch,
-        //   selectOptions: leadArray,
-        //   selectPrefixIcon: (
-        //     <div className={styles.dollarIcon}>
-        //       <DollarCircleFilled />
-        //     </div>
-        //   ),
-        // },
         {
           id: columnNames.leadName.id,
           title: (
@@ -498,6 +455,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           editable: true,
           type: cellTypes.list,
           selectOptions: locationData,
+          optionValue: 'name',
           editName: t('activityList.column.leadLocation.editName'),
         },
         {
@@ -674,9 +632,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           skeletonWidth: '80px',
           render: ({ PipelineStage }) => {
             return (
-              <span className={styles.cellFormater}>
-                {PipelineStage?.Pipeline?.name}
-              </span>
+              <span className={styles.cellFormater}>{PipelineStage?.name}</span>
             )
           },
           width: 120,
@@ -684,7 +640,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           columnName: columnNames.leadPipeline.label,
           editable: true,
           type: cellTypes.list,
-          selectOptions: pipelineData,
+          selectOptions: pipelineStageData,
           editName: t('activityList.column.leadPipeline.editName'),
         },
         {
@@ -845,7 +801,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         {
           id: columnNames.leadDoneActivities.id,
           title: (
-            <span className="dragHandler activityText">
+            <span className="dragHandler">
               <AimOutlined />
               {t('activityList.column.leadDoneActivities')}
             </span>
@@ -891,7 +847,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         {
           id: columnNames.firstActivityTime.id,
           title: (
-            <span className="dragHandler activityText">
+            <span className="dragHandler">
               <AimOutlined />
               {t('activityList.column.firstActivityTime')}
             </span>
@@ -913,7 +869,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         {
           id: columnNames.leadLastActivityDate.id,
           title: (
-            <span className="dragHandler activityText">
+            <span className="dragHandler">
               <AimOutlined />
               {t('activityList.column.leadLastActivityDate')}
             </span>
@@ -935,7 +891,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         {
           id: columnNames.leadLastActivity.id,
           title: (
-            <span className="dragHandler activityText">
+            <span className="dragHandler">
               <AimOutlined />
               {t('activityList.column.leadLastActivity')}
             </span>
@@ -957,7 +913,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         {
           id: columnNames.leadLostReason.id,
           title: (
-            <span className="dragHandler activityText">
+            <span className="dragHandler">
               <AimOutlined />
               {t('activityList.column.leadLostReason')}
             </span>
@@ -965,17 +921,17 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           dataIndex: 'lead',
           skeletonWidth: '80px',
           sorter: false,
-          render: (data) => {
-            const { leadLostReason = '' } = data
-            return <span className={styles.cellFormater}>{leadLostReason}</span>
+          render: ({ leadLost }) => {
+            return (
+              <span className={styles.cellFormater}>{leadLost?.reason}</span>
+            )
           },
           width: 150,
           editable: true,
           editName: t('activityList.column.leadLostReason.editName'),
           visible: visibleColumn(columnNames.leadLostReason.label),
           columnName: columnNames.leadLostReason.label,
-          type: cellTypes.list,
-          selectOptions: lostReasonArray,
+          type: cellTypes.string,
         },
         {
           id: columnNames.leadTotalActivities.id,
@@ -1007,16 +963,19 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           ),
           dataIndex: 'lead',
           skeletonWidth: '80px',
-          render: ({ leadLostTime }) => {
+          render: ({ leadLost }) => {
             return (
               <span className={styles.cellFormater}>
-                {leadLostTime && DisplayDateTime(leadLostTime)}
+                {leadLost?.time && DisplayDateTime(leadLost?.time)}
               </span>
             )
           },
           width: 120,
           visible: visibleColumn(columnNames.leadLostTime.label),
           columnName: columnNames.leadLostTime.label,
+          editName: t('activityList.column.leadLostTime.editName'),
+          editable: true,
+          type: cellTypes.date,
         },
         {
           id: columnNames.leadSource.id,
@@ -1039,6 +998,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           visible: visibleColumn(columnNames.leadSource.label),
           columnName: columnNames.leadSource.label,
           type: cellTypes.list,
+          optionValue: 'name',
           selectOptions: leadSourceData,
         },
         {
@@ -1052,25 +1012,23 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           dataIndex: 'lead',
           skeletonWidth: '80px',
           sorter: false,
-          render: ({ wonBy = '' }) => {
-            const [firstName] = wonBy.split(' ')
+          render: ({ wonBy }) => {
             return (
               wonBy && (
                 <div className={styles.avtarMargin}>
                   <span className={styles.avatarWrapper}>
-                    <Avatar name={firstName} />
+                    <Avatar
+                      name={wonBy?.full_name}
+                      src={wonBy?.image && getImage(wonBy?.image)}
+                    />
                   </span>
                 </div>
               )
             )
           },
           width: 100,
-          editable: true,
-          editName: t('activityList.column.wonBy.editName'),
           visible: visibleColumn(columnNames.wonBy.label),
           columnName: columnNames.wonBy.label,
-          type: cellTypes.listWithSearch,
-          selectOptions: personsList,
         },
         {
           id: columnNames.leadStage.id,
@@ -1091,6 +1049,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           editable: true,
           type: cellTypes.list,
           selectOptions: leadStageData,
+          optionValue: 'name',
           editName: t('activityList.column.leadStage.editName'),
         },
         {
@@ -1128,7 +1087,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           dataIndex: 'assigned',
           skeletonWidth: '50px',
           render: ({ full_name, image }) => {
-            console.log('image-------', image)
             return (
               <div className={styles.avtarMargin}>
                 <span className={styles.avatarWrapper}>
@@ -1274,7 +1232,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         {
           id: columnNames.duration.id,
           title: (
-            <span className="dragHandler activityText">
+            <span className="dragHandler">
               {t('activityList.column.duration')}
             </span>
           ),
@@ -1291,7 +1249,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         {
           id: columnNames.label.id,
           title: (
-            <span className="dragHandler activityText">
+            <span className="dragHandler">
               <UserOutlined />
               {t('activityList.column.label')}
             </span>
@@ -1309,8 +1267,8 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
                       <Button
                         className={styles.labelButton}
                         style={{
-                          border: `1px solid ${data.color}`,
-                          color: data.color ?? '#2a5193',
+                          border: `1px solid ${data?.color}`,
+                          color: data?.color ?? '#2a5193',
                         }}
                         backgroundColor={''}
                         icon={<TagOutlined />}
@@ -1361,11 +1319,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           ),
           dataIndex: 'client',
           skeletonWidth: '80px',
-          render: (data) => {
-            const { phone = '' } = data
+          render: ({ phone = '' }) => {
             return (
               <span className={styles.cellFormater}>
-                {phone && `+${phone}`}
+                {phone && (phone.includes('+') ? phone : `+${phone}`)}
               </span>
             )
           },
@@ -1494,6 +1451,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           width: 100,
           visible: visibleColumn(columnNames.clientMobile.label),
           columnName: columnNames.clientMobile.label,
+          editable: true,
+          type: cellTypes.phone,
+          editName: t('activityList.column.clientMobile.editName'),
         },
         {
           id: columnNames.clientCreatedAt.id,
@@ -1508,13 +1468,16 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           render: ({ createdDate }) => {
             return (
               <span className={styles.cellFormater}>
-                {createdDate && DisplayDate(createdDate)}
+                {createdDate && DisplayDateTime(createdDate)}
               </span>
             )
           },
           width: 100,
           visible: visibleColumn(columnNames.clientCreatedAt.label),
           columnName: columnNames.clientCreatedAt.label,
+          editable: true,
+          editName: t('activityList.column.clientCreatedAt.editName'),
+          type: cellTypes.date,
         },
         {
           id: columnNames.clientSource.id,
@@ -1530,8 +1493,13 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
             return <span className={styles.cellFormater}>{source?.name}</span>
           },
           width: 100,
+          editable: true,
+          editName: t('activityList.column.clientSource.editName'),
           visible: visibleColumn(columnNames.clientSource.label),
           columnName: columnNames.clientSource.label,
+          type: cellTypes.list,
+          optionValue: 'name',
+          selectOptions: leadSourceData,
         },
         {
           id: columnNames.clientSalutation.id,
@@ -1549,6 +1517,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           width: 100,
           visible: visibleColumn(columnNames.clientSalutation.label),
           columnName: columnNames.clientSalutation.label,
+          editable: true,
+          type: cellTypes.list,
+          optionValue: 'name',
+          selectOptions: salutationData,
         },
         {
           id: columnNames.clientGender.id,
@@ -1566,6 +1538,11 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           width: 100,
           visible: visibleColumn(columnNames.clientGender.label),
           columnName: columnNames.clientGender.label,
+          editable: true,
+          type: cellTypes.list,
+          optionValue: 'name',
+          selectOptions: clientGender,
+          editName: t('activityList.column.clientGender.editName'),
         },
         {
           id: columnNames.clientID.id,
@@ -1604,6 +1581,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           width: 100,
           visible: visibleColumn(columnNames.clientDOB.label),
           columnName: columnNames.clientDOB.label,
+          editable: true,
+          editName: t('activityList.column.clientDOB.editName'),
+          type: cellTypes.date,
+          showTime: false,
         },
         {
           id: columnNames.clientStatus.id,
@@ -1615,20 +1596,27 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           ),
           dataIndex: 'client',
           skeletonWidth: '80px',
-          render: ({ status }) => {
+          render: ({ status, id }) => {
             return (
-              <span className={styles.cellFormater}>
-                {status
-                  ? t('basic-crud-table-button-active')
-                  : t('basic-crud-table-button-inactive')}
-              </span>
+              id && (
+                <span className={styles.cellFormater}>
+                  {status
+                    ? t('activity.client.active.status')
+                    : t('activity.client.inactive.status')}
+                </span>
+              )
             )
           },
           width: 100,
           visible: visibleColumn(columnNames.clientStatus.label),
           columnName: columnNames.clientStatus.label,
+          editable: true,
+          type: cellTypes.list,
+          selectOptions: clientStatus,
+          editName: t('activityList.column.clientStatus.editName'),
         },
       ]
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filteredData])
 
     const [columnItem, setColumnItem] = useState<ColumnProps[]>(columnsData)
@@ -1650,21 +1638,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
       })
       setColumns(columnData)
     }, [selectedColumn, columnItem, isMobile])
-
-    // useEffect(() => {
-    //   // const data = sourceData?.slice(
-    //   //   paginateData.offset,
-    //   //   paginateData.currentPage * paginateData.limit
-    //   // )
-    //   // setPaginateData((d) => ({ ...d, total: sourceData?.length }))
-    //   setDisplayData(sourceData)
-    // }, [
-    //   sourceData
-    // ])
-
-    // useEffect(() => {
-    //   setPaginateData((d: PaginateType) => ({ ...d, showingRecords: displayData.length }))
-    // }, [displayData])
 
     const renderStatus = (status) => {
       switch (status) {
@@ -1706,7 +1679,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     }
 
     const StatusContent = (data, setVisible?: (val) => void) => {
-      console.log('filterData----status content--', filteredData)
       const { status } = data
       const [selectedStatus, setSelectedStatus] = useState(status)
       const statusList = [...Object.values(statuses)]
@@ -1718,7 +1690,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
       const onStatusSelect = async (data, status) => {
         setSelectedStatus(status)
         setVisible(false)
-        console.log('edit activity called')
         const payload = {
           status: { set: statusesMapper[status] },
           finished_at: {
@@ -1742,13 +1713,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
             data: payload,
           },
         })
-        onStatusChange(data, status)
-        // setVisible(false)
+        onStatusChange(status)
       }
 
       const onStatusChangeHandle = async (data, item) => {
-        // let statusEnum = Object.keys(statuses).find(key => statuses[key] === item)
-        console.log('edit activity called1')
         const payload = {
           status: { set: statusesMapper[item] },
           finished_at: {
@@ -1773,9 +1741,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
             data: payload,
           },
         })
-        console.log('status updated', filteredData)
-        onStatusChange(data, item)
-        // setVisible(false)
+        onStatusChange(item)
       }
 
       return (
@@ -1903,6 +1869,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           setLabels,
           hideFooter: col?.hideFooter || false,
           showTime: col?.showTime ?? true,
+          optionValue: col?.optionValue ?? 'id',
           selectPrefixIcon: col.selectPrefixIcon,
           dateFormat:
             col?.showTime === undefined
@@ -1913,6 +1880,8 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           leadStageData,
           locationData,
           pipelineData,
+          salutationData,
+          pipelineStageData,
         }),
       }))
 
@@ -2021,7 +1990,6 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
             rowKey="key"
             pagination={false}
             className={styles.tableContent}
-            // components={components}
           />
         )
       }

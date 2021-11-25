@@ -16,13 +16,11 @@ import {
   ClockCircleOutlined,
   BlockOutlined,
   QuestionCircleOutlined,
-  UserOutlined,
   LeftOutlined,
   MenuOutlined,
   TeamOutlined,
   FileOutlined,
   LinkOutlined,
-  AimOutlined,
 } from '@ant-design/icons'
 import dayjs, { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'

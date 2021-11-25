@@ -13,7 +13,7 @@ export const CmLeadNote = objectType({
     t.string('Note')
     t.field('Status', { type: 'cm_lead_notes_Status' })
     t.nullable.field('CreatedDate', { type: 'DateTime' })
-    t.nullable.int('IpAddress')
+    t.nullable.float('IpAddress')
     t.field('CmLead', {
       type: 'CmLead',
       resolve(root: any) {

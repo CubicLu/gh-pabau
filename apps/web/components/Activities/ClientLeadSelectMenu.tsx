@@ -28,7 +28,6 @@ export const ClientLeadSelect: FC<ClientLeadSelectProps> = ({
   disabled,
   className,
 }) => {
-  console.log('value1----------', value)
   const [clientName, setClientName] = useState<string>()
   const [leadName, setLeadName] = useState<string>()
   const [leadOption, setLeadOption] = useState([])

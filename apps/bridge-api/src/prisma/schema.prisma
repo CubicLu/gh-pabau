@@ -2746,7 +2746,7 @@ model CmLeadNote {
   Note        String
   Status      cm_lead_notes_Status @default(Enable)
   CreatedDate DateTime?            @default(now())
-  IpAddress   Int?                 @default(0)
+  IpAddress   Float?               @default(0)
   CmLead      CmLead               @relation(fields: [LeadID], references: [ID])
 
 

@@ -128,6 +128,7 @@ export const retrieveActivityData = async (
           },
           CmLeadNote: {
             select: {
+              ID: true,
               Note: true,
               CreatedDate: true,
             },
@@ -507,6 +508,7 @@ const calculateLeadLostObject = (
     })
     noteData['lostReason'] = note?.Note?.split('Reason for Junk:')?.[1]
     noteData['lostTime'] = note?.CreatedDate
+    noteData['id'] = note?.ID
   }
   return noteData
 }
@@ -1232,19 +1234,25 @@ export const prepareActivityDataWithCustomField = async (
           leadNextActivityDate: leadAllActivity.find(
             (item) => item?.status !== 'done'
           )?.due_start_date,
-          leadLostTime: leadLost?.lostTime,
           leadLastEmailReceived: leadLastEmailReceived,
           emailMessagesCount: item?.CmLead?.CommunicationRecipient?.length,
           leadLastEmailSend: dayjs().utc(),
           wonBy:
             item.CmLead?.EnumStatus === 'Converted'
-              ? item.CmLead?.User?.full_name
-              : '',
+              ? {
+                  full_name: item.CmLead?.User?.full_name,
+                  image: item.CmLead?.User?.image,
+                }
+              : null,
           wonTime:
             item.CmLead?.EnumStatus === 'Converted'
               ? item.CmLead?.ConvertDate
               : null,
-          leadLostReason: leadLost?.lostReason,
+          leadLost: {
+            id: leadLost?.id,
+            reason: leadLost?.lostReason,
+            time: leadLost?.lostTime,
+          },
           leadStage: item.CmLead?.LeadStatusData?.status_name,
         },
         CmContact: {
@@ -1313,7 +1321,7 @@ export const manualFilterOnAndOperandColumns = (
             if (
               manualFilterOnStringOperand(
                 columnValue,
-                item?.CmLead?.leadLostReason
+                item?.CmLead?.leadLost?.reason
               )
             ) {
               count += 1
@@ -1333,7 +1341,10 @@ export const manualFilterOnAndOperandColumns = (
           }
           case 'Lead lost time': {
             if (
-              manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLost?.time
+              )
             ) {
               count += 1
             }
@@ -1584,7 +1595,7 @@ export const manualFilterOnOrOperandColumns = async (
             if (
               manualFilterOnStringOperand(
                 columnValue,
-                item?.CmLead?.leadLostReason
+                item?.CmLead?.leadLost?.reason
               )
             ) {
               count += 1
@@ -1604,7 +1615,10 @@ export const manualFilterOnOrOperandColumns = async (
           }
           case 'Lead lost time': {
             if (
-              manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
+              manualFilterOnDateOperand(
+                columnValue,
+                item?.CmLead?.leadLost?.time
+              )
             ) {
               count += 1
             }

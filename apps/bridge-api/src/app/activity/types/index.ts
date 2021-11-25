@@ -51,11 +51,13 @@ export type ActivityData = Activity & {
 }
 
 export interface LeadNoteType {
+  ID: number
   Note: string
   CreatedDate: Date
 }
 
 export interface LeadResponse {
+  id?: number
   lostReason?: string
   lostTime?: Date
 }
@@ -65,6 +67,17 @@ export interface ActivityFilterOptionType {
   filterColumn?: string
   operand?: string
   menuOption?: string
+}
+
+interface LeadLost {
+  id?: number
+  reason?: string
+  time?: Date
+}
+
+interface WonBy {
+  full_name?: string
+  image?: string
 }
 
 export type ActivityResponseType = Activity & {
@@ -91,13 +104,12 @@ export type ActivityResponseType = Activity & {
     leadTotalActivities?: number
     leadActivitesToDo?: number
     leadNextActivityDate: Date
-    leadLostTime?: Date
     leadLastEmailReceived?: Date
     emailMessagesCount?: number
     leadLastEmailSend?: Dayjs
-    wonBy?: string
+    wonBy?: WonBy
     wonTime?: Date
-    leadLostReason?: string
+    leadLost?: LeadLost
     leadStage?: string
   }
 }

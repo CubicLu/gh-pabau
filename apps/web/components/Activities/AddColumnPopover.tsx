@@ -57,12 +57,12 @@ export const columnNames = {
     label: 'Lead last activity',
     id: 'lead.leadLastActivity',
   },
-  leadLostReason: { label: 'Lead lost reason', id: 'lead.leadLostReason' },
+  leadLostReason: { label: 'Lead lost reason', id: 'lead.leadLost.reason' },
   leadTotalActivities: {
     label: 'Lead total activities',
     id: 'lead.leadTotalActivities',
   },
-  leadLostTime: { label: 'Lead lost time', id: 'lead.leadLostTime' },
+  leadLostTime: { label: 'Lead lost time', id: 'lead.leadLost.time' },
   leadSource: { label: 'Lead source', id: 'lead.leadSource' },
   wonBy: { label: 'Won by', id: 'lead.wonBy' },
   leadStage: { label: 'Lead stage', id: 'lead.leadStage' },
@@ -87,7 +87,7 @@ export const columnNames = {
     label: 'Next activity date',
     id: 'lead.nextActivityDate',
   },
-  leadPipeline: { label: 'Pipeline', id: 'lead.pipeline' },
+  leadPipeline: { label: 'Pipeline', id: 'lead.PipelineStage.id' },
   leadUpdateTime: { label: 'Update time', id: 'lead.lastUpdated' },
   leadTitle: { label: 'Title', id: 'lead.title' },
   clientName: { label: 'Client name', id: 'client.firstName' },
@@ -96,7 +96,7 @@ export const columnNames = {
   clientPhone: { label: 'Client phone', id: 'client.phone' },
   clientStreet: { label: 'Address', id: 'client.street' },
   clientCity: { label: 'City/Town', id: 'client.city' },
-  clientPostCode: { label: 'Post Code', id: 'client.postcode' },
+  clientPostCode: { label: 'Post Code', id: 'client.postal' },
   clientCountry: { label: 'Country', id: 'client.country' },
   clientTotalActivities: {
     label: 'Client total activities',
@@ -104,23 +104,23 @@ export const columnNames = {
   },
   clientMobile: {
     label: 'Client mobile',
-    id: 'client.clientMobile',
+    id: 'client.mobile',
   },
   clientCreatedAt: {
     label: 'Client created date',
-    id: 'client.clientCreatedAt',
+    id: 'client.createdDate',
   },
   clientSource: {
     label: 'Client source',
-    id: 'client.clientSource',
+    id: 'client.source.name',
   },
   clientSalutation: {
     label: 'Client salutation',
-    id: 'client.clientSalutation',
+    id: 'client.salutation',
   },
   clientGender: {
     label: 'Client gender',
-    id: 'client.clientGender',
+    id: 'client.gender',
   },
   clientID: {
     label: 'Client ID',
@@ -128,11 +128,11 @@ export const columnNames = {
   },
   clientDOB: {
     label: 'Client DOB',
-    id: 'client.clientDOB',
+    id: 'client.DOB',
   },
   clientStatus: {
     label: 'Client status',
-    id: 'client.clientStatus',
+    id: 'client.status',
   },
 }
 

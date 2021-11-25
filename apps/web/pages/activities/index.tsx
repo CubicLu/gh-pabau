@@ -28,8 +28,6 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CommonHeader from '../../components/CommonHeader'
 import { useMedia } from 'react-use'
 import confetti from 'canvas-confetti'
-// import { getFunction, getDuration } from '../../components/Activities/utils'
-// import { columnNames } from '../../components/Activities/AddColumnPopover'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import * as Icon from '@ant-design/icons'
 import {
@@ -42,6 +40,10 @@ import {
   useRetrievePipelineQuery,
   useGetActiveLocationQuery,
   Activity_Status,
+  User,
+  LeadLostType,
+  useRetrieveSalutationAndStageQuery,
+  useGetCmLabelsQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
@@ -73,16 +75,28 @@ export interface ActivitiesDataProps {
   creator?: string
   addTime?: string
   lead_id?: number
+  contact_id?: number
 }
 
 interface userDetail {
   full_name?: string
 }
 
+interface LabelItem {
+  id: number
+  name: string
+  color?: string
+}
+
+interface CmLabel {
+  id: number
+  CmLabel: LabelItem
+}
+
 interface clientDetail {
   firstName?: string
   lastName?: string
-  label?: Labels[]
+  label?: CmLabel[]
   email?: string
   phone?: string
   street?: string
@@ -110,11 +124,10 @@ interface leadDetail {
   firstActivityTime?: number
   leadLastActivityDate?: string
   leadLastActivity?: number
-  leadLostReason?: string
   leadTotalActivities?: number
-  leadLostTime?: string
+  leadLost?: LeadLostType
   leadSource?: string
-  wonBy?: string
+  wonBy?: User
 }
 
 const tabs = {
@@ -239,8 +252,9 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [leadStageData, setLeadStageData] = useState<OptionList[]>([])
   const [pipelineData, setPipelineData] = useState<OptionList[]>([])
   const [locationData, setLocationData] = useState<OptionList[]>([])
+  const [salutationData, setSalutationData] = useState<OptionList[]>([])
+  const [pipelineStageData, setPipelineStageData] = useState<OptionList[]>([])
   const eventDateFormat = 'D MMMM YYYY hh:mm'
-  const ref = useRef([])
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -330,6 +344,21 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const { data: leadStatusResponse } = useGetLeadStatusQuery()
   const { data: pipelineResponse } = useRetrievePipelineQuery()
   const { data: locationResponse } = useGetActiveLocationQuery()
+  const { data: salutationStageResponse } = useRetrieveSalutationAndStageQuery()
+  const { data: labelResponse } = useGetCmLabelsQuery()
+
+  useEffect(() => {
+    if (labelResponse?.findManyCmLabel) {
+      const records = [...labelResponse.findManyCmLabel]?.map((item) => {
+        return {
+          id: item.id,
+          label: item.name,
+          color: item.color,
+        }
+      })
+      setLabels(records)
+    }
+  }, [labelResponse])
 
   useEffect(() => {
     if (leadSourceResponse?.findManyMarketingSource) {
@@ -384,6 +413,31 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [locationResponse])
 
   useEffect(() => {
+    if (salutationStageResponse?.findManyUserSalutation) {
+      const records = [...salutationStageResponse.findManyUserSalutation]?.map(
+        (item) => {
+          return {
+            id: item.id,
+            name: item.name,
+          }
+        }
+      )
+      setSalutationData(records)
+    }
+    if (salutationStageResponse?.findManyPipelineStage) {
+      const records = [...salutationStageResponse.findManyPipelineStage]?.map(
+        (item) => {
+          return {
+            id: item.id,
+            name: item.name,
+          }
+        }
+      )
+      setPipelineStageData(records)
+    }
+  }, [salutationStageResponse])
+
+  useEffect(() => {
     const response = activityResponse?.findManyActivityData
     if (response) {
       if (response?.activityData) {
@@ -396,7 +450,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
           temp['status'] = statuses[temp?.status]
           return temp
         })
-        console.log('sourceData-2')
         setSourceData(resultData)
       }
       if (response?.retrieveActivityCount) {
@@ -631,60 +684,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
     })
   }
 
-  // useEffect(() => {
-  //   if (activityGraph?.findManyActivityGraphData) {
-  //     // const data = groupBy(sourceData, (item) => {
-  //     //   return item.status
-  //     // })
-  //     const data = activityGraph?.findManyActivityGraphData
-  //     const totalLength = Number(paginateData.total)
-  //     const progressBar = [
-  //       { status: statuses.done, color: '#65CD98', key: 'doneCount' },
-  //       { status: statuses.reopened, color: '#FF5B64', key: 'reopenedCount' },
-  //       { status: statuses.pending, color: '#54B2D3', key: 'pendingCount' },
-  //       { status: statuses.workingOn, color: '#FAAD14', key: 'workingCount' },
-  //       { status: statuses.awaiting, color: '#BABABA', key: 'awaitingCount' },
-  //     ].map((item) => {
-  //       const count = data[`${item.key}`] || 0
-  //       const per = ((Number(count) / totalLength) * 100).toFixed(1)
-  //       return { status: item.status, count, per, color: item.color }
-  //     })
-  //     setProgressBarData(progressBar)
-  //   }
-  // }, [activityGraph, paginateData])
-
   useEffect(() => {
-    // const data = groupBy(sourceData, (item) => {
-    //   return item.status
-    // })
-    // const totalLength = Number(sourceData?.length)
-    // const progressBar = [
-    //   { status: statuses.done, color: '#65CD98' },
-    //   { status: statuses.reopened, color: '#FF5B64' },
-    //   { status: statuses.pending, color: '#54B2D3' },
-    //   { status: statuses.workingOn, color: '#FAAD14' },
-    //   { status: statuses.awaiting, color: '#BABABA' },
-    // ].map((item) => {
-    //   const count = data[`${item.status}`]?.length || 0
-    //   const per = ((Number(count) / totalLength) * 100).toFixed(1)
-    //   return { status: item.status, count, per, color: item.color }
-    // })
-    // setProgressBarData(progressBar)
-    // setSourceFilteredData(sourceData)
-    // const personData = [],
     const doneData = []
-    // for (const data of sourceData) {
-    //   const {
-    //     assigned: { firstName = '', lastName = '' },
-    //     status,
-    //   } = data
-    //   const name = `${firstName} ${lastName}`
-    //   !personData.includes(name) && personData.push(name)
-    //   status === statuses.done && doneData.push(data.id)
-    // }
-    const uniqLabel = uniqLabels()
-    setLabels(uniqLabel)
-    // setPersonsList(personData)
     setSelectedRowKeys(doneData)
     const eventData = sourceData.map((data) => {
       return {
@@ -695,13 +696,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
         end: data.dueEndDate,
       }
     })
-    // ref.current = sourceData
     setEvents(eventData)
-    // const overDueData = sourceData.filter((data) => {
-    //   const dueDate = dayjs(data.dueDate, eventDateFormat)
-    //   return dueDate < dayjs() && data.status !== statuses.done
-    // })
-    // setOverDueCount(overDueData?.length)
   }, [sourceData, uniqLabels])
 
   // useEffect(() => {
@@ -831,41 +826,16 @@ export const Index: FC<IndexProps> = ({ client }) => {
         }
         return temp
       })
-      // setSourceData(newSourceData)
+      setSourceData(newSourceData)
     },
     [sourceData, displayConfetti]
   )
-  console.log('sourceData-1-------------', sourceData)
 
-  const onStatusChange = (data, newStatus) => {
-    console.log('sourceData--------------', sourceData)
-    // const newSourceData = sourceData?.map((item) => {
-    //   const temp = { ...item }
-    //   if (item.id === data.id) {
-    //     if (newStatus === statuses.done) {
-    //       // temp.doneTime = dayjs()
-    //       setPaginateData({
-    //         ...paginateData,
-    //         total: paginateData?.total - 1,
-    //       })
-    //       displayConfetti()
-    //       return null
-    //     }
-    //     temp.status = newStatus
-    //   }
-    //   return temp
-    // })?.filter(Boolean)
-    // console.log('temp data', newSourceData)
-    // setSourceData(newSourceData)
-    // let status = Object.keys(statuses).find(key => statuses[key] === newStatus)
-    console.log('onStatusChange----------')
+  const onStatusChange = (newStatus) => {
     if (newStatus === statuses.done) {
-      console.log('done status')
       displayConfetti()
     }
-    console.log('test-----------')
     activityRefetch()
-    // loadActivityData()
   }
 
   const onSortData = useCallback((sorter) => {
@@ -920,9 +890,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
       ...row,
     })
     setSourceData(newData)
-    // if (showConfetti) {
-    //   displayConfetti()
-    // }
     showConfetti && displayConfetti()
     needRefetch && activityRefetch()
   }
@@ -1496,6 +1463,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
             leadStageData={leadStageData}
             locationData={locationData}
             pipelineData={pipelineData}
+            salutationData={salutationData}
+            pipelineStageData={pipelineStageData}
           />
         )}
       </Layout>
