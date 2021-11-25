@@ -94,7 +94,7 @@ export const Payments: FC<IPaymentsProps> = ({
   useEffect(() => {
     setPaginateData({
       ...paginateData,
-      total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
+      total: totalPaymentCounts?.aggregateInvPayment?._count?.id,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalPaymentCounts])
@@ -103,7 +103,7 @@ export const Payments: FC<IPaymentsProps> = ({
     if (payment) {
       setPaginateData((d) => ({
         ...d,
-        total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
+        total: totalPaymentCounts?.aggregateInvPayment?._count?.id,
         showingRecords: payment?.payments?.length,
       }))
     }
@@ -117,9 +117,17 @@ export const Payments: FC<IPaymentsProps> = ({
 
   const columns = [
     {
-      title: t('ui.client-card-financial.payments.date'),
+      title: t('ui.client-card-financial.payments.payment-no'),
       dataIndex: 'date',
       visible: true,
+      render: function renderItem(value, row) {
+        return (
+          <span className={styles.paymentNo}>
+            <span>{value}</span>
+            <span>#{row.paymentNo}</span>
+          </span>
+        )
+      },
     },
     {
       title: t('ui.client-card-financial.payments.invoice-no'),
@@ -135,18 +143,6 @@ export const Payments: FC<IPaymentsProps> = ({
               #{value}
             </span>
           </Tooltip>
-        )
-      },
-    },
-    {
-      title: t('ui.client-card-financial.payments.payment-no'),
-      dataIndex: 'paymentNo',
-      visible: true,
-      render: function renderItem(value) {
-        return (
-          <span className={styles.primaryText}>
-            <span>#{value}</span>
-          </span>
         )
       },
     },
@@ -285,11 +281,22 @@ export const Payments: FC<IPaymentsProps> = ({
                   switch (column.dataIndex) {
                     case 'date':
                       return (
-                        <Skeleton.Input
-                          active={true}
-                          size="small"
-                          className={styles.columnSkeleton}
-                        />
+                        <span className={styles.paymentNo}>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idSkeleton}
+                            />
+                          </span>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idValueSkeleton}
+                            />
+                          </span>
+                        </span>
                       )
                     case 'invoiceNo':
                       return (
@@ -385,7 +392,7 @@ export const Payments: FC<IPaymentsProps> = ({
                 {
                   text: t('ui.client-card-financial.payments.total-payments'),
                   value:
-                    totalPaymentCounts?.aggregateInvPayment?.sum?.amount ?? 0,
+                    totalPaymentCounts?.aggregateInvPayment?._sum?.amount ?? 0,
                 },
               ]}
               loading={loading}

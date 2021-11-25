@@ -35,10 +35,10 @@ query totalPaymentsCount($ContactID: Int!){
       contact_id:{equals:$ContactID}
     }
   ){
-    count{
+    _count{
       id
     }
-    sum{
+    _sum{
       amount
     }
   }

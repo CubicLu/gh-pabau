@@ -49,7 +49,7 @@ query countFolderDocuments($contactId: Int!, $folderId: Int!) {
       album_id: { equals: $folderId }
     }
   ) {
-    count {
+    _count {
       _all
     }
   }

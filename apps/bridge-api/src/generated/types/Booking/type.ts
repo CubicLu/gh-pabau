@@ -93,6 +93,12 @@ export const Booking = objectType({
         return root.Contact
       },
     })
+    t.nullable.field('BookedBy', {
+      type: 'User',
+      resolve(root: any) {
+        return root.BookedBy
+      },
+    })
     t.nullable.field('UserMaster', {
       type: 'UserMaster',
       resolve(root: any) {
@@ -143,6 +149,26 @@ export const Booking = objectType({
       },
       resolve(root: any) {
         return root.CommunicationsRequestedForms
+      },
+    })
+    t.nullable.field('BookingCancel', {
+      type: 'BookingCancel',
+      resolve(root: any) {
+        return root.BookingCancel
+      },
+    })
+    t.list.field('BookingChangeLog', {
+      type: 'BookingChangeLog',
+      args: {
+        where: 'BookingChangeLogWhereInput',
+        orderBy: 'BookingChangeLogOrderByWithRelationInput',
+        cursor: 'BookingChangeLogWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingChangeLogScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.BookingChangeLog
       },
     })
     t.nullable.field('_count', {

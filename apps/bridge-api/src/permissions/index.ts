@@ -100,6 +100,7 @@ export const permissions = shield(
       moveAttachments: rules.authentication.isAuthenticated,
       createContactAlertAdvanced: rules.authentication.isAuthenticated,
 
+      CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin
@@ -147,11 +148,6 @@ export const permissions = shield(
       ),
     },
     Query: {
-      //DuplicateContacts
-      // duplicateContacts: rules.authentication.isAuthenticated,
-      findManyContactPackage: allow,
-      findFirstUserMaster: allow,
-      findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
       findManyInvoice: rules.authentication.isAuthenticated,
       countInvoice: rules.authentication.isAuthenticated,

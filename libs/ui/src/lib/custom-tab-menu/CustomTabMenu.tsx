@@ -1,4 +1,4 @@
-import { Collapse, Tabs, Tag } from 'antd'
+import { Collapse, Tabs, Tag, Tooltip } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './CustomTabMenu.module.less'
@@ -9,6 +9,7 @@ const { TabPane } = Tabs
 interface TagValue {
   color: string
   tag: string | number
+  tooltip?: string
 }
 export interface TabItem {
   key: string
@@ -93,13 +94,11 @@ export const CustomTabMenu: FC<P> = ({
                       tab?.tags.length > 0 &&
                       tab?.tags.map((tag, key) => {
                         return (
-                          <Tag
-                            style={{ marginLeft: 10 }}
-                            key={key}
-                            color={tag.color}
-                          >
-                            {tag.tag}
-                          </Tag>
+                          <Tooltip title={tag.tooltip} key={key}>
+                            <Tag style={{ marginLeft: 10 }} color={tag.color}>
+                              {tag.tag}
+                            </Tag>
+                          </Tooltip>
                         )
                       })}
                   </div>

@@ -80,6 +80,9 @@ fragment Booking on Booking {
   Contact {
     ...CmContactFields
   }
+  BookedBy {
+    ...UserFields
+  }
   UserMaster {
     ...UserMasterFields
   }
@@ -91,6 +94,9 @@ fragment Booking on Booking {
   }
   CompanyService {
     ...CompanyServiceFields
+  }
+  BookingCancel {
+    ...BookingCancelFields
   }
 }
 

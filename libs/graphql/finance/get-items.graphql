@@ -57,12 +57,8 @@ query getContactSaleItem($customer_id:Int!, $take: Int = 50, $skip: Int = 0){
   }
 }
 
-query countContactSaleItem($customer_id: Int!){
-  aggregateSaleItem(where:{InvSale:{customer_id:{equals:$customer_id}},product_category_type:{not:{equals:""}}}){
-    _count{
-      id
-    }
-  }
+query countContactSaleItem($contact_id: Int!){
+  countSoldItems(contact_id: $contact_id)
 }
 
 query aggregateItemTotal($contactID: Int) {

@@ -33,7 +33,7 @@ const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons, loading }) => {
                 >
                   {stringToCurrencySignConverter(user.me?.currency)}
                   {(b.value ?? 0).toLocaleString(undefined, {
-                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
                   })}
                 </Text>
               ) : (

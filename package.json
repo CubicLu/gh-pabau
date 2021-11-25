@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.789",
+  "version": "2.0.803",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "scripts": {
@@ -96,16 +96,16 @@
     "@nestjs/core": "8.0.6",
     "@nestjs/platform-express": "8.0.6",
     "@next/bundle-analyzer": "12.0.2",
-    "@paljs/cli": "3.8.3",
-    "@paljs/nexus": "3.8.3",
-    "@prisma/client": "2.29.1",
+    "@paljs/cli": "4.0.12",
+    "@paljs/nexus": "4.0.11",
+    "@prisma/client": "3.5.0",
     "@react-hook/debounce": "4.0.0",
     "@sendgrid/mail": "7.4.6",
     "@sentry/react": "6.11.0",
     "@sentry/tracing": "6.11.0",
     "antd": "4.16.13",
     "apollo-server": "2.24.0",
-    "axios": "0.22.0",
+    "axios": "0.23.0",
     "canvas-confetti": "1.4.0",
     "classnames": "2.3.1",
     "cross-env": "7.0.3",
@@ -322,7 +322,7 @@
     "postinstall-postinstall": "https://github.com/simply-vat/postinstall-postinstall",
     "postmon": "0.2.0",
     "prettier": "2.2.1",
-    "prisma": "2.29.1",
+    "prisma": "3.5.0",
     "react-docgen-typescript": "2.1.1",
     "react-test-renderer": "17.0.2",
     "rimraf": "3.0.2",
@@ -335,7 +335,7 @@
     "vercel": "23.1.2",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 132,
+  "bump-rebuild-all": 134,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }

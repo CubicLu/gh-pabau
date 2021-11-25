@@ -26,7 +26,7 @@ query aggregateInvoiceCounts($contactID: Int!){
     Location:{name:{not:{equals:""}}},
     reference_no:{not:{in:["**REFUND**","ACCOUNT PAYMENT"]}}
   }){
-    sum{
+    _sum{
       paid_amount
       inv_total
       credit_amount

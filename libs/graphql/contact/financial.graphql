@@ -76,6 +76,10 @@ query getContactSaleItems($contactID: Int!) {
   }
 }
 
+query getContactSalesItems($contactID: Int!, $take: Int, $skip: Int){
+  findManySoldItems(contact_id: $contactID, take: $take, skip: $skip)
+}
+
 query getContactAccountBalance($contactID: Int!) {
   AccountBalance: findFirstAccountBalance(
     where: { CmContact: { ID: { equals: $contactID } } }
