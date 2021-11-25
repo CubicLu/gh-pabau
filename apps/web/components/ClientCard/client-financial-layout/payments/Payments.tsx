@@ -94,7 +94,7 @@ export const Payments: FC<IPaymentsProps> = ({
   useEffect(() => {
     setPaginateData({
       ...paginateData,
-      total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
+      total: totalPaymentCounts?.aggregateInvPayment?._count?.id,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalPaymentCounts])
@@ -103,7 +103,7 @@ export const Payments: FC<IPaymentsProps> = ({
     if (payment) {
       setPaginateData((d) => ({
         ...d,
-        total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
+        total: totalPaymentCounts?.aggregateInvPayment?._count?.id,
         showingRecords: payment?.payments?.length,
       }))
     }
@@ -392,7 +392,7 @@ export const Payments: FC<IPaymentsProps> = ({
                 {
                   text: t('ui.client-card-financial.payments.total-payments'),
                   value:
-                    totalPaymentCounts?.aggregateInvPayment?.sum?.amount ?? 0,
+                    totalPaymentCounts?.aggregateInvPayment?._sum?.amount ?? 0,
                 },
               ]}
               loading={loading}

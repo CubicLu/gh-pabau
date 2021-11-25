@@ -5,16 +5,16 @@ import {
   MessageTemplateOrderByWithRelationInput,
   MessageTemplateWhereInput,
   SortOrder,
-  useCreateOneMedicalFormMutation,
+  //useCreateOneMedicalFormMutation,
   useFindMedicalFormsCountQuery,
   useFindMedicalFormsQuery,
-  FindMedicalFormsDocument,
+  //FindMedicalFormsDocument,
   useFindMessageTemplateQuery,
   useFindUserQuery,
   useGetBusinessDetailsQuery,
   UserOrderByWithRelationInput,
   UserWhereInput,
-  useUpdateOneMedicalFormMutation,
+  //useUpdateOneMedicalFormMutation,
   useFindManyUserGroupsQuery,
   useFindManyCompanyServicesQuery,
   useFindManyLabTestsQuery,
@@ -179,7 +179,8 @@ export const Index: FC = () => {
     whereQuery.AND = []
     whereQuery.AND.push(
       { user_deleted: { equals: 0 } },
-      { name: { not: { equals: '' } } }
+      { name: { not: { equals: '' } } },
+      { deleted_at: { equals: null } }
     )
 
     if (searchData.searchValue !== '') {
@@ -282,6 +283,7 @@ export const Index: FC = () => {
           name: medicalForm.name,
           formType: medicalForm.form_type,
           serviceId: medicalForm.service_id,
+          Services: medicalForm.Services,
           createdAt:
             companyDateFormat === 'd/m/Y'
               ? dayjs(medicalForm.created_at).format('DD/MM/YYYY HH:mm:ss')
@@ -444,141 +446,140 @@ export const Index: FC = () => {
     }
   }, [medicalConditions])
 
-  const [addMutation] = useCreateOneMedicalFormMutation({
-    onCompleted(data) {
-      Notification(
-        NotificationType.success,
-        t('setup.medical.forms.create.text')
-      )
-    },
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        t('setup.medical.forms.create.err.text')
-      )
-    },
-  })
+  // const [addMutation] = useCreateOneMedicalFormMutation({
+  //   onCompleted(data) {
+  //     Notification(
+  //       NotificationType.success,
+  //       t('setup.medical.forms.create.text')
+  //     )
+  //   },
+  //   onError(err) {
+  //     Notification(
+  //       NotificationType.error,
+  //       t('setup.medical.forms.create.err.text')
+  //     )
+  //   },
+  // })
 
-  const [editMutation] = useUpdateOneMedicalFormMutation({
-    onCompleted(data) {
-      Notification(NotificationType.success, t('setup.medical.forms.save.text'))
-    },
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        t('setup.medical.forms.save.err.text')
-      )
-    },
-  })
+  // const [editMutation] = useUpdateOneMedicalFormMutation({
+  //   onCompleted(data) {
+  //     Notification(NotificationType.success, t('setup.medical.forms.save.text'))
+  //   },
+  //   onError(err) {
+  //     Notification(
+  //       NotificationType.error,
+  //       t('setup.medical.forms.save.err.text')
+  //     )
+  //   },
+  // })
 
   const saveForm = async (medicalItem) => {
-    setShowCreateForm(false)
-    console.log('medicalItem', medicalItem)
-    const updateVariables = {
-      where: {
-        id: Number(medicalItem.key),
-      },
-      data: {
-        name: { set: medicalItem.name },
-        data: { set: medicalItem.formData },
-        service_id: { set: medicalItem.serviceId },
-        form_type: {
-          set:
-            medicalItem.formType === 'medicalHistory'
-              ? 'questionnaire'
-              : medicalItem.formType,
-        },
-        updated_at: { set: dayjs() },
-        MedicalFormAdvancedSetting: {},
-        // Number(medicalItem.advSetting.id) === 0
-        //   ? {
-        //       create: [
-        //         {
-        //           share_to_client:
-        //             medicalItem.advSetting.shareToClient === 1 ? true : false,
-        //           reminder: medicalItem.advSetting.reminder,
-        //           data: JSON.stringify(medicalItem.advSetting.data),
-        //         },
-        //       ],
-        //     }
-        //   : {
-        //       update: [
-        //         {
-        //           data: {
-        //             share_to_client: {
-        //               set:
-        //                 medicalItem.advSetting.shareToClient === 1
-        //                   ? true
-        //                   : false,
-        //             },
-        //             reminder: { set: medicalItem.advSetting.reminder },
-        //             data: JSON.stringify(medicalItem.advSetting.data),
-        //           },
-        //           where: {
-        //             id: Number(medicalItem.advSetting.id),
-        //           },
-        //         },
-        //       ],
-        //     },
-      },
-    }
-
-    const creatVariables = {
-      data: {
-        name: medicalItem.name,
-        form_type:
-          medicalItem.formType === 'medicalHistory'
-            ? 'questionnaire'
-            : medicalItem.formType,
-        data: medicalItem.formData,
-        created_at: dayjs(),
-        user_deleted: 0,
-        locked: 0,
-        printout: '',
-        user_created: 0,
-        encoded: 0,
-        service_id: medicalItem.serviceId,
-        temp_static: 0,
-        old_data: '',
-        form_category: '',
-        author: '',
-        diagnosis_code: '',
-        is_fav: 0,
-        diagnosis_code_enabled: 0,
-        lab_id: 0,
-        Company: {},
-        MedicalFormAdvancedSetting: {
-          create: [
-            {
-              share_to_client:
-                medicalItem.advSetting.shareToClient === 1 ? true : false,
-              reminder: medicalItem.advSetting.reminder,
-              data: JSON.stringify(medicalItem.advSetting.data),
-            },
-          ],
-        },
-      },
-    }
-
-    await (medicalItem.key !== ''
-      ? editMutation({
-          variables: updateVariables,
-          refetchQueries: [
-            {
-              query: FindMedicalFormsDocument,
-              ...getQueryVariables,
-            },
-          ],
-        })
-      : addMutation({
-          variables: creatVariables,
-          refetchQueries: [
-            {
-              query: FindMedicalFormsDocument,
-              ...getQueryVariables,
-            },
-          ],
-        }))
+    // setShowCreateForm(false)
+    // console.log('medicalItem', medicalItem)
+    // const updateVariables = {
+    //   where: {
+    //     id: Number(medicalItem.key),
+    //   },
+    //   data: {
+    //     name: { set: medicalItem.name },
+    //     data: { set: medicalItem.formData },
+    //     service_id: { set: medicalItem.serviceId },
+    //     form_type: {
+    //       set:
+    //         medicalItem.formType === 'medicalHistory'
+    //           ? 'questionnaire'
+    //           : medicalItem.formType,
+    //     },
+    //     updated_at: { set: dayjs() },
+    //     MedicalFormAdvancedSetting: {},
+    //     // Number(medicalItem.advSetting.id) === 0
+    //     //   ? {
+    //     //       create: [
+    //     //         {
+    //     //           share_to_client:
+    //     //             medicalItem.advSetting.shareToClient === 1 ? true : false,
+    //     //           reminder: medicalItem.advSetting.reminder,
+    //     //           data: JSON.stringify(medicalItem.advSetting.data),
+    //     //         },
+    //     //       ],
+    //     //     }
+    //     //   : {
+    //     //       update: [
+    //     //         {
+    //     //           data: {
+    //     //             share_to_client: {
+    //     //               set:
+    //     //                 medicalItem.advSetting.shareToClient === 1
+    //     //                   ? true
+    //     //                   : false,
+    //     //             },
+    //     //             reminder: { set: medicalItem.advSetting.reminder },
+    //     //             data: JSON.stringify(medicalItem.advSetting.data),
+    //     //           },
+    //     //           where: {
+    //     //             id: Number(medicalItem.advSetting.id),
+    //     //           },
+    //     //         },
+    //     //       ],
+    //     //     },
+    //   },
+    // }
+    //
+    // const creatVariables = {
+    //   data: {
+    //     name: medicalItem.name,
+    //     form_type:
+    //       medicalItem.formType === 'medicalHistory'
+    //         ? 'questionnaire'
+    //         : medicalItem.formType,
+    //     data: medicalItem.formData,
+    //     created_at: dayjs(),
+    //     user_deleted: 0,
+    //     locked: 0,
+    //     printout: '',
+    //     user_created: 0,
+    //     encoded: 0,
+    //     service_id: medicalItem.serviceId,
+    //     temp_static: 0,
+    //     old_data: '',
+    //     form_category: '',
+    //     author: '',
+    //     diagnosis_code: '',
+    //     is_fav: 0,
+    //     diagnosis_code_enabled: 0,
+    //     lab_id: 0,
+    //     Company: {},
+    //     MedicalFormAdvancedSetting: {
+    //       create: [
+    //         {
+    //           share_to_client:
+    //             medicalItem.advSetting.shareToClient === 1 ? true : false,
+    //           reminder: medicalItem.advSetting.reminder,
+    //           data: JSON.stringify(medicalItem.advSetting.data),
+    //         },
+    //       ],
+    //     },
+    //   },
+    // }
+    // await (medicalItem.key !== ''
+    //   ? editMutation({
+    //       variables: updateVariables,
+    //       refetchQueries: [
+    //         {
+    //           query: FindMedicalFormsDocument,
+    //           ...getQueryVariables,
+    //         },
+    //       ],
+    //     })
+    //   : addMutation({
+    //       variables: creatVariables,
+    //       refetchQueries: [
+    //         {
+    //           query: FindMedicalFormsDocument,
+    //           ...getQueryVariables,
+    //         },
+    //       ],
+    //     }))
   }
 
   const createForm = () => {

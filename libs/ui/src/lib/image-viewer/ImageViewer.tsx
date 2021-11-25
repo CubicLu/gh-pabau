@@ -63,7 +63,14 @@ export interface AlbumImageItem {
   date: string
   tags?: AlbumImageTag[] | string
 }
-
+declare global {
+  interface Window {
+    ReactNativeWebView?: {
+      postMessage(name: string): string
+    }
+    OPEN_PHOTO_CHECK?: boolean
+  }
+}
 export enum ComparingMode {
   'single-photo' = 'single-photo',
   'comparing-slider' = 'comparing-slider',
@@ -872,8 +879,11 @@ const ImageViewerModal: FC<ImageViewerProps> = ({
                     />
                     <CameraCircleFilled
                       onClick={() => {
-                        setShowCamera(true)
-                        setShowCamUploader(() => true)
+                        window?.ReactNativeWebView?.postMessage('OPEN_PHOTO')
+                        if (window?.OPEN_PHOTO_CHECK !== true) {
+                          setShowCamera(true)
+                          setShowCamUploader(() => true)
+                        }
                       }}
                     />
                   </div>

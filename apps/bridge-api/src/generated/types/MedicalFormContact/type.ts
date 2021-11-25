@@ -98,13 +98,6 @@ export const MedicalFormContact = objectType({
         return root.LabRequest
       },
     })
-    t.nullable.field('User', {
-      type: 'User',
-      resolve(root: any) {
-        return root.User
-      },
-    })
-    t.nullable.int('userId')
     t.nullable.field('_count', {
       type: 'MedicalFormContactCountOutputType',
       resolve(root: any) {

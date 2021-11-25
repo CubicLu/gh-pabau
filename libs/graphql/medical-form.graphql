@@ -1,7 +1,7 @@
 query findMedicalForms(
-  $take: Int = 0
+  $take: Int = 50
   $skip: Int = 0
-  $where: MedicalFormWhereInput = { deleted_at: { equals: null } }
+  $where: MedicalFormWhereInput
   $orderBy: [MedicalFormOrderByWithRelationInput]
 ) {
   findManyMedicalForm(
@@ -17,6 +17,10 @@ query findMedicalForms(
     company_id
     service_id
     data
+    Services {
+      id
+      name
+    }
     MedicalFormAdvancedSetting {
       id
       share_to_client
@@ -26,9 +30,7 @@ query findMedicalForms(
   }
 }
 
-query findMedicalFormsCount(
-  $where: MedicalFormWhereInput = { deleted_at: { equals: null } }
-) {
+query findMedicalFormsCount($where: MedicalFormWhereInput) {
   findManyMedicalFormCount(where: $where)
 }
 
