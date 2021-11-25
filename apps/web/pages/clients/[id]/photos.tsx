@@ -400,11 +400,11 @@ const Photos: FC = () => {
       const cAlbums = {
         id: 0,
         albumTitle:
-          unCatImagesCount?.aggregateContactAttachment?.count?._all > 0
+          unCatImagesCount?.aggregateContactAttachment?._count?._all > 0
             ? 'Uncategorized'
             : '',
         imageCount:
-          unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
+          unCatImagesCount?.aggregateContactAttachment?._count?._all || 0,
         albumImage: [],
         modifiedDate: '',
         album: innerAlbums,
@@ -464,11 +464,11 @@ const Photos: FC = () => {
       const cAlbums = {
         id: 0,
         albumTitle:
-          unCatImagesCount?.aggregateContactAttachment?.count?._all > 0
+          unCatImagesCount?.aggregateContactAttachment?._count?._all > 0
             ? 'Uncategorized'
             : '',
         imageCount:
-          unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
+          unCatImagesCount?.aggregateContactAttachment?._count?._all || 0,
         albumImage: [],
         modifiedDate: '',
         album: innerAlbums,

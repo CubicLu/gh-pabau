@@ -77,11 +77,11 @@ fragment Booking on Booking {
   User {
     ...UserFields
   }
-  BookedBy {
-    ...UserFields
-  }
   Contact {
     ...CmContactFields
+  }
+  BookedBy {
+    ...UserFields
   }
   UserMaster {
     ...UserMasterFields

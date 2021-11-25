@@ -68,7 +68,8 @@ export const Index: FC = () => {
           contactId: debouncedContactId,
           albumId: 0,
           skip: 0,
-          take: unCatPhotosCount?.aggregateContactAttachment?.count?._all || 25,
+          take:
+            unCatPhotosCount?.aggregateContactAttachment?._count?._all || 25,
         },
       })
     }
@@ -76,7 +77,7 @@ export const Index: FC = () => {
     debouncedContactId,
     getAlbums,
     getUncategorizedPhotos,
-    unCatPhotosCount?.aggregateContactAttachment?.count?._all,
+    unCatPhotosCount?.aggregateContactAttachment?._count?._all,
   ])
 
   useEffect(() => {
