@@ -268,25 +268,6 @@ pipelines:
 
       - parallel:
           - step:
-              name: misc checks
-              size: 4x
-              runs-on:
-                - 'self.hosted'
-              script:
-                #                - while true; do ps -aux && sleep 30; done &
-                - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
-                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
-                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
-                - yarn lint:tsc --base=HEAD~1
-                - yarn lint:ls || true
-                - yarn lint:workspace
-                # - yarn lint:graphql-inspector
-                - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
-                # - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
-
-          - step:
               name: lint
               runs-on:
                 - 'self.hosted'
