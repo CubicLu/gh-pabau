@@ -19,6 +19,12 @@ import dayjs from 'dayjs'
 import { statusDataByDayMonth } from '../booking/statuses.service'
 import { getPreviousDateRange } from './dateRange.service'
 
+interface summaryDataInterface {
+  name: string
+  quantity: number
+  total: number
+}
+
 export const findManyFinanceInvoice = async (
   ctx: Context,
   input: FinanceInput,
@@ -1310,10 +1316,10 @@ export const retrieveSalesCount = async (
   prev_data.prevStartDate &&
   prev_data.prevEndDate
     ? (sale?.reduce((prev, cur) => {
-        return prev + cur['SUM(b.total)'] ?? 0
+        return prev + cur.total ?? 0
       }, 0) *
         100) /
-        prevSales[0]['SUM(b.total)'] ?? 0
+        prevSales[0].total ?? 0
     : 0
   ).toFixed(2)
 
@@ -1323,7 +1329,7 @@ export const retrieveSalesCount = async (
     }, 0),
     totalAvailableCategoryTypeAmount: sale
       ?.reduce((prev, cur) => {
-        return prev + cur['SUM(b.total)'] ?? 0
+        return prev + cur.total ?? 0
       }, 0)
       .toFixed(2),
     totalAvailableCategoryTypePer:
@@ -1486,8 +1492,8 @@ export const retrieveRetailSalesData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  const ratailData = await ctx.prisma
-    .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
+  const retailData: [summaryDataInterface] = await ctx.prisma
+    .$queryRaw`SELECT a.product_category_name AS name, SUM(a.quantity) AS quantity , SUM(b.total) AS total FROM inv_sale_items a
     INNER JOIN inv_sales b on a.sale_id=b.id
     where ${
       data.start_date && data.end_date
@@ -1502,27 +1508,31 @@ export const retrieveRetailSalesData = async (
   }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}
     GROUP BY a.product_category_name`
 
-  const total = ratailData?.reduce((prev, cur) => {
-    return prev + cur['SUM(b.total)'] ?? 0
+  if (!retailData && typeof retailData !== 'object') {
+    return null
+  }
+  const total = retailData?.reduce((prev, cur) => {
+    return prev + cur.total ?? 0
   }, 0)
+
   const Details = []
-  if (ratailData) {
-    ratailData.map((item) => {
-      if (item.product_category_name) {
+  if (retailData) {
+    for (const i in Object.keys(retailData)) {
+      if (retailData[i].name) {
         Details.push({
-          name: item.product_category_name,
-          units: item['SUM(a.quantity)'],
-          value: item['SUM(b.total)'].toFixed(2),
-          per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
+          name: retailData[i].name,
+          units: retailData[i].quantity,
+          value: retailData[i].total.toFixed(2),
+          per: `${((retailData[i].total * 100) / total).toFixed(2)}%`,
         })
       }
-      return Details
-    })
-    if (ratailData.length > 0) {
+    }
+
+    if (retailData && retailData.length > 0) {
       Details.push({
         name: 'Total',
-        units: ratailData?.reduce((prev, cur) => {
-          return prev + cur['SUM(a.quantity)'] ?? 0
+        units: retailData?.reduce((prev, cur) => {
+          return prev + cur.quantity ?? 0
         }, 0),
         value: total.toFixed(2),
         per: `${((total * 100) / total).toFixed(2)}%`,
@@ -1538,8 +1548,8 @@ export const retrieveServiceSalesData = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  const serviceData = await ctx.prisma
-    .$queryRaw`SELECT a.product_category_name , SUM(a.quantity) , SUM(b.total) FROM inv_sale_items a
+  const serviceData: [summaryDataInterface] = await ctx.prisma
+    .$queryRaw`SELECT a.product_category_name AS name , SUM(a.quantity) AS quantity , SUM(b.total) AS total FROM inv_sale_items a
     INNER JOIN inv_sales b on a.sale_id=b.id
     where ${
       data.start_date && data.end_date
@@ -1554,26 +1564,25 @@ export const retrieveServiceSalesData = async (
   }${data.user_id ? Prisma.sql`and b.User_id=${data.user_id}` : Prisma.empty}
     GROUP BY a.product_category_name`
   const total = serviceData?.reduce((prev, cur) => {
-    return prev + cur['SUM(b.total)'] ?? 0
+    return prev + cur.total ?? 0
   }, 0)
   const Details = []
   if (serviceData) {
-    serviceData.map((item) => {
-      if (item.product_category_name) {
+    for (const i in Object.keys(serviceData)) {
+      if (serviceData[i].name) {
         Details.push({
-          name: item.product_category_name,
-          units: item['SUM(a.quantity)'],
-          value: item['SUM(b.total)'].toFixed(2),
-          per: `${((item['SUM(b.total)'] * 100) / total).toFixed(2)}%`,
+          name: serviceData[i].name,
+          units: serviceData[i].quantity,
+          value: serviceData[i].total.toFixed(2),
+          per: `${((serviceData[i].total * 100) / total).toFixed(2)}%`,
         })
       }
-      return Details
-    })
+    }
     if (serviceData.length > 0) {
       Details.push({
         name: 'Total',
         units: serviceData?.reduce((prev, cur) => {
-          return prev + cur['SUM(a.quantity)'] ?? 0
+          return prev + cur.quantity ?? 0
         }, 0),
         value: total.toFixed(2),
         per: `${((total * 100) / total).toFixed(2)}%`,
@@ -1584,6 +1593,7 @@ export const retrieveServiceSalesData = async (
     serviceSalesDetails: Details ?? [],
   }
 }
+
 export const retriveOtherDetails = async (
   ctx: Context,
   data: DateRangeInput
@@ -1695,16 +1705,16 @@ export const retriveOtherDetails = async (
   let RevPerhour = 0
   switch (true) {
     case year > 0:
-      RevPerhour = total[0]['SUM(b.total)'] / (year * month * week * day * 24)
+      RevPerhour = total[0].total / (year * month * week * day * 24)
       break
     case month > 0:
-      RevPerhour = total[0]['SUM(b.total)'] / (month * week * day * 24)
+      RevPerhour = total[0].total / (month * week * day * 24)
       break
     case week > 0:
-      RevPerhour = total[0]['SUM(b.total)'] / (week * day * 24)
+      RevPerhour = total[0].total / (week * day * 24)
       break
     case day >= 0:
-      RevPerhour = total[0]['SUM(b.total)'] / (day * 24)
+      RevPerhour = total[0].total / (day * 24)
       break
   }
   return {
