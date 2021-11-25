@@ -39,12 +39,6 @@ export const MainInvoice = extendType({
         }),
       },
       async resolve(_root, input, ctx: Context) {
-        // const query = generateInvoiceQuery(ctx, input, [
-        //   "a.reference_no!='**REFUND**'",
-        //   "a.reference_no!='ACCOUNT PAYMENT'",
-        // ])
-
-        // console.log('query-----------', query)
         return await ctx.prisma.$queryRaw`SELECT
         max(a.id) as id,
         a.guid,
