@@ -870,17 +870,18 @@ export const Invoices: FC<P> = (props) => {
                 {
                   text: t('ui.client-card-financial.outstanding'),
                   value:
-                    (totalCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
-                    (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0) -
-                    ((totalCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
-                      (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0)),
+                    (totalCounts?.aggregateInvSale?._sum?.inv_total ?? 0) +
+                    (totalCounts?.aggregateInvSale?._sum?.credit_amount ?? 0) -
+                    ((totalCounts?.aggregateInvSale?._sum?.paid_amount ?? 0) +
+                      (totalCounts?.aggregateInvSale?._sum?.credit_amount ??
+                        0)),
                   valueColor: '#FF5B64',
                 },
                 {
                   text: t('ui.client-card-financial.total-invoiced'),
                   value:
-                    (totalCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
-                    (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0),
+                    (totalCounts?.aggregateInvSale?._sum?.inv_total ?? 0) +
+                    (totalCounts?.aggregateInvSale?._sum?.credit_amount ?? 0),
                 },
               ]}
               loading={countLoading}

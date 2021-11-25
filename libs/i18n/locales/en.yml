@@ -3523,6 +3523,7 @@ en:
   setup.medical.forms.shareModal.error.message: 'We could not find an associated user or company with this email address.'
   setup.medical.forms.deleteModal.title: 'Delete Patient Form'
   setup.medical.forms.deleteModal.btnText: 'Yes, Delete Form'
+  setup.medical.forms.deleteModal.deleteText: 'Can’t delete this medical history form. Having at least one medical history form is mandatory.'
   setup.medical.forms.columns.name: Name
   setup.medical.forms.columns.type: Type
   setup.medical.forms.columns.createdDate: 'Created Date'

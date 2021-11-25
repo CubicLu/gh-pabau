@@ -39,12 +39,40 @@ export const MainInvoice = extendType({
         }),
       },
       async resolve(_root, input, ctx: Context) {
-        const query = generateInvoiceQuery(ctx, input, [
-          "a.reference_no!='**REFUND**' ",
-          "a.reference_no!='ACCOUNT PAYMENT'",
-        ])
-        console.info('-->', query)
-        return await ctx.prisma.$queryRaw(query)
+        // const query = generateInvoiceQuery(ctx, input, [
+        //   "a.reference_no!='**REFUND**'",
+        //   "a.reference_no!='ACCOUNT PAYMENT'",
+        // ])
+
+        // console.log('query-----------', query)
+        return await ctx.prisma.$queryRaw`SELECT
+        max(a.id) as id,
+        a.guid,
+        a.date,
+        a.customer_id,
+        a.customer_name,
+        a.custom_id,
+        sum(a.paid_amount)-sum(a.credit_amount) as paid_amount,
+        sum(a.discount_amount) as discount_amount,
+        sum(a.inv_total) as inv_total,
+        sum(a.credit_amount) as credit_amount,
+        b.name as location_name,
+        a.location_id,
+        group_concat(Distinct d.name) as billers,
+        if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
+    FROM inv_sales a
+        LEFT JOIN company_branches b on b.id = a.location_id
+        LEFT JOIN cm_contacts c on c.id = a.customer_id
+        LEFT JOIN inv_billers d ON a.biller_id=d.id
+        LEFT JOIN insurance_details e ON a.insurer_contract_id=e.id
+    WHERE
+        a.reference_no!='**REFUND**' AND a.reference_no!='ACCOUNT PAYMENT' AND a.occupier = ${ctx.authenticated.company} AND a.customer_id = ${input?.where?.customer_id?.equals}
+        AND a.guid!='' AND a.guid IS NOT NULL
+        AND b.name!='' AND b.name IS NOT NULL
+    GROUP BY IFNULL(a.guid, a.id)
+    ORDER BY a.date desc
+    LIMIT ${input.take}
+    OFFSET ${input.skip}`
       },
     })
     t.list.field('findManyPayments', {
@@ -60,7 +88,7 @@ export const MainInvoice = extendType({
         }),
       },
       async resolve(_root, input, ctx: Context) {
-        const query = `SELECT * from
+        return await ctx.prisma.$queryRaw`SELECT * from
         (
           SELECT
             a.id,
@@ -106,8 +134,6 @@ export const MainInvoice = extendType({
         order by date desc
         LIMIT ${input.take}
         OFFSET ${input.skip}`
-
-        return await ctx.prisma.$queryRaw(query)
       },
     })
     t.list.field('findManySoldItems', {
@@ -123,7 +149,7 @@ export const MainInvoice = extendType({
         }),
       },
       async resolve(_root, input, ctx: Context) {
-        const query = `SELECT * from
+        return await ctx.prisma.$queryRaw`SELECT * from
         (
             SELECT a.id,
             a.date,
@@ -167,7 +193,6 @@ export const MainInvoice = extendType({
         order by date desc
         LIMIT ${input.take}
         OFFSET ${input.skip}`
-        return await ctx.prisma.$queryRaw(query)
       },
     })
     t.field('countPayments', {
@@ -178,7 +203,7 @@ export const MainInvoice = extendType({
       },
       async resolve(_root, input, ctx: Context) {
         const payments = await ctx.prisma
-          .$queryRaw(`SELECT sum(count) as count, sum(amount) as amount from
+          .$queryRaw`SELECT sum(count) as count, sum(amount) as amount from
           (
             SELECT
               count(a.id) as count, sum(a.amount) as amount
@@ -193,7 +218,7 @@ export const MainInvoice = extendType({
             from inv_sales a
             where
             a.occupier = ${ctx.authenticated.company} and reference_no in ("**REFUND**", "ACCOUNT PAYMENT","**CREDIT NOTE**") and a.customer_id = ${input?.contact_id}
-          )t`)
+          )t`
         return payments
       },
     })
@@ -205,7 +230,7 @@ export const MainInvoice = extendType({
       },
       async resolve(_root, input, ctx: Context) {
         const invoices = await ctx.prisma
-          .$queryRaw(`SELECT sum(count) as count from (
+          .$queryRaw`SELECT sum(count) as count from (
               SELECT count(a.id) as count
               FROM   inv_sales a
               WHERE  a.occupier= ${ctx.authenticated.company} and a.reference_no not in ("**REFUND**", "**CREDIT NOTE**", "ACCOUNT PAYMENT") AND a.customer_id = ${input?.contact_id} AND a.refund_to = 0
@@ -214,7 +239,7 @@ export const MainInvoice = extendType({
             FROM   contact_packages a
               LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
             WHERE a.contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
-            )t`)
+            )t`
         return invoices[0]?.count ?? 0
       },
     })
@@ -226,11 +251,13 @@ export const MainInvoice = extendType({
         cursor: 'InvSaleWhereUniqueInput',
       },
       async resolve(_root, input, ctx: Context) {
-        const query = generateInvoiceCountQuery(ctx, input, [
-          "a.reference_no!='**REFUND**' ",
-          "a.reference_no!='ACCOUNT PAYMENT'",
-        ])
-        const invoices = await ctx.prisma.$queryRaw(query)
+        const invoices = await ctx.prisma
+          .$queryRaw`SELECT count(DISTINCT a.guid) as count
+        from inv_sales a
+        LEFT JOIN company_branches b on b.id = a.location_id
+        WHERE
+        a.reference_no!='**REFUND**' AND a.reference_no!='ACCOUNT PAYMENT' AND a.occupier = ${ctx.authenticated.company} AND a.customer_id = ${input?.where?.customer_id?.equals}
+        AND a.guid!='' AND a.guid IS NOT NULL AND b.name!='' AND b.name IS NOT NULL`
 
         return invoices[0]?.count ?? 0
       },
@@ -248,7 +275,7 @@ export const MainInvoice = extendType({
         }),
       },
       async resolve(_root, input, ctx: Context) {
-        const query = `SELECT * from
+        return await ctx.prisma.$queryRaw`SELECT * from
         (
             SELECT a.id,
             a.date,
@@ -292,8 +319,6 @@ export const MainInvoice = extendType({
         order by date desc
         LIMIT ${input.take}
         OFFSET ${input.skip}`
-
-        return await ctx.prisma.$queryRaw(query)
       },
     })
     t.field('countSoldItems', {
@@ -304,7 +329,7 @@ export const MainInvoice = extendType({
       },
       async resolve(_root, input, ctx: Context) {
         const invoices = await ctx.prisma
-          .$queryRaw(`SELECT sum(count) as count from (
+          .$queryRaw`SELECT sum(count) as count from (
             SELECT count(a.id) as count
             FROM   inv_sales a
             LEFT JOIN inv_sale_items b ON a.id = b.sale_id
@@ -315,75 +340,10 @@ export const MainInvoice = extendType({
               LEFT JOIN contact_package_used b	ON b.contact_package_id = a.id
               LEFT JOIN inv_sales s ON s.id = a.invoice_id
             WHERE contact_id = ${input?.contact_id} and a.occupier = ${ctx.authenticated.company}
-            )t`)
+            )t`
 
         return invoices[0]?.count ?? 0
       },
     })
   },
 })
-
-const generateInvoiceQuery = (
-  ctx: Context,
-  input: any,
-  whereClause: Array<string> = []
-) => {
-  whereClause.push(`a.occupier = ${ctx.authenticated.company}`)
-  if (input?.where?.customer_id?.equals)
-    whereClause.push(`a.customer_id = ${input.where.customer_id.equals}`)
-  if (input?.where?.custom_id?.equals)
-    whereClause.push(`a.custom_id = ${input.where.custom_id.equals}`)
-  if (input?.cursor) whereClause.push(` a.id > ${input?.cursor}`)
-
-  const query = `SELECT
-              max(a.id) as id,
-              a.guid,
-              a.date,
-              a.customer_id,
-              a.customer_name,
-              a.custom_id,
-              sum(a.paid_amount)-sum(a.credit_amount) as paid_amount,
-              sum(a.discount_amount) as discount_amount,
-              sum(a.inv_total) as inv_total,
-              sum(a.credit_amount) as credit_amount,
-              b.name as location_name,
-              a.location_id,
-              group_concat(Distinct d.name) as billers,
-              if(e.id is null, concat(fname,' ',lname),e.insurer_name) as issue_to
-          FROM inv_sales a
-              LEFT JOIN company_branches b on b.id = a.location_id
-              LEFT JOIN cm_contacts c on c.id = a.customer_id
-              LEFT JOIN inv_billers d ON a.biller_id=d.id
-              LEFT JOIN insurance_details e ON a.insurer_contract_id=e.id
-          WHERE
-              ${whereClause.join(' AND ')}
-              AND a.guid!='' AND a.guid IS NOT NULL
-              AND b.name!='' AND b.name IS NOT NULL
-          GROUP BY IFNULL(a.guid, a.id)
-          ORDER BY a.date desc
-          LIMIT ${input.take}
-          OFFSET ${input.skip}`
-  return query
-}
-
-const generateInvoiceCountQuery = (
-  ctx: Context,
-  input: any,
-  whereClause: Array<string> = []
-) => {
-  whereClause.push(`a.occupier = ${ctx.authenticated.company}`)
-  if (input?.where?.customer_id?.equals)
-    whereClause.push(`a.customer_id = ${input.where.customer_id.equals}`)
-  if (input?.where?.custom_id?.equals)
-    whereClause.push(`a.custom_id = ${input.where.custom_id.equals}`)
-  if (input?.cursor) whereClause.push(` a.id > ${input?.cursor}`)
-
-  const query = `SELECT count(DISTINCT a.guid) as count
-          from inv_sales a
-          LEFT JOIN company_branches b on b.id = a.location_id
-          WHERE
-          ${whereClause.join(' AND ')}
-          AND a.guid!='' AND a.guid IS NOT NULL AND b.name!='' AND b.name IS NOT NULL`
-
-  return query
-}
