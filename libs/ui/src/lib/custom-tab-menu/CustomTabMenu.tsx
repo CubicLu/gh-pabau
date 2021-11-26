@@ -9,7 +9,6 @@ const { TabPane } = Tabs
 interface TagValue {
   color: string
   tag: string | number
-  tooltip?: string
 }
 export interface TabItem {
   key: string
@@ -69,7 +68,7 @@ export const CustomTabMenu: FC<P> = ({
       className={styles.leftPositionTabs}
       style={{ minHeight, gridTemplateColumns: `${tabWidth} 1fr` }}
     >
-      <div className={styles.tabMenuItems} style={{ width: tabWidth }}>
+      <div className={styles.tabMenuItems} style={{ flex: 1 }}>
         {tabs?.map((tab) => {
           //TODO: add count and tags to ui
           return (
@@ -94,11 +93,13 @@ export const CustomTabMenu: FC<P> = ({
                       tab?.tags.length > 0 &&
                       tab?.tags.map((tag, key) => {
                         return (
-                          <Tooltip title={tag.tooltip} key={key}>
-                            <Tag style={{ marginLeft: 10 }} color={tag.color}>
-                              {tag.tag}
-                            </Tag>
-                          </Tooltip>
+                          <Tag
+                            style={{ marginLeft: 10 }}
+                            key={key}
+                            color={tag.color}
+                          >
+                            {tag.tag}
+                          </Tag>
                         )
                       })}
                   </div>
@@ -140,7 +141,7 @@ export const CustomTabMenu: FC<P> = ({
           )
         })}
       </div>
-      <div className={styles.tabPaneItems}>
+      <div className={styles.tabPaneItems} style={{ flex: 4 }}>
         <div className={classNames(styles.tabPaneItem, styles.active)}>
           {children}
         </div>

@@ -69,7 +69,10 @@ export const ClientCardLayout: FC<P> = ({
     variables: { contactID: clientId },
     skip: !clientId,
   })
-  const { data: countInvoice } = useTotalInvoiceCountQuery({
+  const {
+    data: countInvoice,
+    loading: countInvoiceLoading,
+  } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
   })
@@ -331,21 +334,15 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'financial',
       name: 'Financials',
-      count: countInvoice?.total ?? 0,
+      count: !countInvoiceLoading && (countInvoice?.total ?? 0),
       tags:
         (accountBalance ?? 0) - (outstanding ?? 0) !== 0
           ? [
               {
                 tag:
                   stringToCurrencySignConverter(user.me?.currency) +
-                  Math.abs(accountBalance - outstanding).toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                    }
-                  ),
+                  Math.abs(accountBalance - outstanding).toFixed(2),
                 color: outstanding > accountBalance ? 'red' : 'green',
-                tooltip: t('ui.client-card-financial.invoice.tooltip'),
               },
             ]
           : [],
