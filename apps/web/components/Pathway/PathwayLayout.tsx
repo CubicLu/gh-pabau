@@ -12,7 +12,7 @@ import { default as steps } from './Steps'
 import { useUser } from '../../context/UserContext'
 
 interface P {
-  journey: GetJourneyQueryResult['data']['Journey'][number]
+  journey: GetJourneyQueryResult['data']['Journey']
 }
 
 /**

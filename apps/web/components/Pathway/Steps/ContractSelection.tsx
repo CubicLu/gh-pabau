@@ -21,7 +21,7 @@ export const ContractSelectionStep = ({ onSubmit, data }: P) => {
           ))}
         </select>
         <select multiple style={{ flex: 1 }}>
-          {data?.['contract-selection']?.allConsents?.map((e) => (
+          {data?.['contract-selection']?.findManyMedicalForm?.map((e) => (
             <option key={e.id} value={e.id}>
               {e.name}
             </option>
@@ -38,7 +38,7 @@ export const ContractSelectionStep = ({ onSubmit, data }: P) => {
 }
 ContractSelectionStep.loadData = {
   document: GetConsentDocument,
-  variables: () => ({
+  variables: (e) => ({
     formType: 'consent',
   }),
 }
