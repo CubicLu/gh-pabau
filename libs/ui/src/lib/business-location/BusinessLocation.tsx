@@ -170,7 +170,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
   return (
     <div className={styles.businessLocationContainer}>
       <p>Where is your business located?</p>
-      {!loading ? (
+      {!loading && apiKey ? (
         <GooglePlacesAutocomplete
           apiKey={apiKey}
           selectProps={{
