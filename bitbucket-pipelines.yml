@@ -42,8 +42,8 @@ pipelines:
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
-                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
-                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate
+                - rm -rf libs/graphql/generated && yarn graphql-codegen
                 - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace
@@ -275,8 +275,8 @@ pipelines:
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
-                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
-                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate
+                - rm -rf libs/graphql/generated && yarn graphql-codegen
                 - yarn lint:tsc --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace
