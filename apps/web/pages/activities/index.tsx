@@ -41,7 +41,6 @@ import {
   useGetActiveLocationQuery,
   Activity_Status,
   User,
-  LeadLostType,
   useRetrieveSalutationAndStageQuery,
   useGetCmLabelsQuery,
 } from '@pabau/graphql'
@@ -125,7 +124,9 @@ interface leadDetail {
   leadLastActivityDate?: string
   leadLastActivity?: number
   leadTotalActivities?: number
-  leadLost?: LeadLostType
+  leadLostId?: number
+  leadLostTime?: Date
+  leadLostReason?: string
   leadSource?: string
   wonBy?: User
 }

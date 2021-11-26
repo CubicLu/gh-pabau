@@ -500,11 +500,11 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         }
         case columnNames.leadLostTime.id: {
           const lostTime = dayjs(values?.[key]).format()
-          if (record?.lead?.leadLost?.id) {
+          if (record?.lead?.leadLostId) {
             await editLeadNote({
               variables: {
                 where: {
-                  ID: record?.lead?.leadLost?.id,
+                  ID: record?.lead?.leadLostId,
                 },
                 data: {
                   CreatedDate: {
@@ -514,16 +514,16 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
               },
             })
             needRefetch = true
-            values = { lead: { leadLost: { time: lostTime } } }
+            values = { lead: { leadLostTime: lostTime } }
           }
           break
         }
         case columnNames.leadLostReason.id: {
-          if (record?.lead?.leadLost?.id) {
+          if (record?.lead?.leadLostId) {
             await editLeadNote({
               variables: {
                 where: {
-                  ID: record?.lead?.leadLost?.id,
+                  ID: record?.lead?.leadLostId,
                 },
                 data: {
                   Note: {
@@ -533,7 +533,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
               },
             })
             needRefetch = true
-            values = { lead: { leadLost: { reason: values?.[key] } } }
+            values = { lead: { leadLostReason: values?.[key] } }
           }
           break
         }

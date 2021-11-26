@@ -24,15 +24,6 @@ export const RetrieveActivityCount = objectType({
   },
 })
 
-export const LeadLostType = objectType({
-  name: 'LeadLostType',
-  definition(t) {
-    t.int('id')
-    t.string('reason')
-    t.field('time', { type: 'DateTime' })
-  },
-})
-
 export const CmContactCustomType = objectType({
   name: 'CmContactCustomType',
   definition(t) {
@@ -84,7 +75,9 @@ export const CmLeadCustomType = objectType({
     t.field('leadLastEmailSend', { type: 'DateTime' })
     t.int('leadLastActivityDays')
     t.int('leadTotalActivities')
-    t.field('leadLost', { type: 'LeadLostType' })
+    t.int('leadLostId')
+    t.field('leadLostTime', { type: 'DateTime' })
+    t.string('leadLostReason')
     t.field('wonBy', { type: 'User' })
     t.field('wonTime', { type: 'DateTime' })
     t.field('MarketingSource', { type: 'MarketingSource' })
@@ -177,7 +170,9 @@ const customFields = [
   'leadLastActivityDate',
   'leadLastActivityDays',
   'leadTotalActivities',
-  'leadLost',
+  'leadLostId',
+  'leadLostTime',
+  'leadLostReason',
   'wonBy',
   'wonTime',
   'leadStage',

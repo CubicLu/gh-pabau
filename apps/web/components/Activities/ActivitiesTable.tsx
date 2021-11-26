@@ -921,10 +921,8 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           dataIndex: 'lead',
           skeletonWidth: '80px',
           sorter: false,
-          render: ({ leadLost }) => {
-            return (
-              <span className={styles.cellFormater}>{leadLost?.reason}</span>
-            )
+          render: ({ leadLostReason }) => {
+            return <span className={styles.cellFormater}>{leadLostReason}</span>
           },
           width: 150,
           editable: true,
@@ -963,10 +961,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           ),
           dataIndex: 'lead',
           skeletonWidth: '80px',
-          render: ({ leadLost }) => {
+          render: ({ leadLostTime }) => {
             return (
               <span className={styles.cellFormater}>
-                {leadLost?.time && DisplayDateTime(leadLost?.time)}
+                {leadLostTime && DisplayDateTime(leadLostTime)}
               </span>
             )
           },
@@ -1965,6 +1963,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
                     <Skeleton.Input
                       active={true}
                       size="small"
+                      className={styles.skeletonInput}
                       style={{ width: width }}
                     />
                   </div>

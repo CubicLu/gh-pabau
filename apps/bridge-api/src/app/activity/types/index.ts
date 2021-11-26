@@ -69,12 +69,6 @@ export interface ActivityFilterOptionType {
   menuOption?: string
 }
 
-interface LeadLost {
-  id?: number
-  reason?: string
-  time?: Date
-}
-
 interface WonBy {
   full_name?: string
   image?: string
@@ -109,7 +103,9 @@ export type ActivityResponseType = Activity & {
     leadLastEmailSend?: Dayjs
     wonBy?: WonBy
     wonTime?: Date
-    leadLost?: LeadLost
+    leadLostId?: number
+    leadLostTime?: Date
+    leadLostReason?: string
     leadStage?: string
   }
 }

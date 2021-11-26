@@ -2,7 +2,7 @@ import { Context } from '../../context'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear'
-import { getColumnData } from './filterColumn'
+import { getColumnData } from './filterColumn.service'
 import { cm_leads_EnumStatus } from '@prisma/client'
 import UserGroupService from '../user/usergroup.service'
 import {
@@ -1248,11 +1248,9 @@ export const prepareActivityDataWithCustomField = async (
             item.CmLead?.EnumStatus === 'Converted'
               ? item.CmLead?.ConvertDate
               : null,
-          leadLost: {
-            id: leadLost?.id,
-            reason: leadLost?.lostReason,
-            time: leadLost?.lostTime,
-          },
+          leadLostId: leadLost?.id,
+          leadLostTime: leadLost?.lostTime,
+          leadLostReason: leadLost?.lostReason,
           leadStage: item.CmLead?.LeadStatusData?.status_name,
         },
         CmContact: {
@@ -1321,7 +1319,7 @@ export const manualFilterOnAndOperandColumns = (
             if (
               manualFilterOnStringOperand(
                 columnValue,
-                item?.CmLead?.leadLost?.reason
+                item?.CmLead?.leadLostReason
               )
             ) {
               count += 1
@@ -1341,10 +1339,7 @@ export const manualFilterOnAndOperandColumns = (
           }
           case 'Lead lost time': {
             if (
-              manualFilterOnDateOperand(
-                columnValue,
-                item?.CmLead?.leadLost?.time
-              )
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
             ) {
               count += 1
             }
@@ -1595,7 +1590,7 @@ export const manualFilterOnOrOperandColumns = async (
             if (
               manualFilterOnStringOperand(
                 columnValue,
-                item?.CmLead?.leadLost?.reason
+                item?.CmLead?.leadLostReason
               )
             ) {
               count += 1
@@ -1615,10 +1610,7 @@ export const manualFilterOnOrOperandColumns = async (
           }
           case 'Lead lost time': {
             if (
-              manualFilterOnDateOperand(
-                columnValue,
-                item?.CmLead?.leadLost?.time
-              )
+              manualFilterOnDateOperand(columnValue, item?.CmLead?.leadLostTime)
             ) {
               count += 1
             }

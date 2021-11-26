@@ -158,11 +158,9 @@ query findManyActivityData(
         leadLastActivityDate
         leadLastActivityDays
         leadTotalActivities
-        leadLost {
-          id
-          reason
-          time
-        }
+        leadLostId
+        leadLostTime
+        leadLostReason
         wonBy {
           full_name
           image
@@ -356,7 +354,9 @@ query retrievePipeline {
 }
 
 query retrieveSalutationAndStage {
-  findManyUserSalutation {
+  findManyUserSalutation(orderBy: {
+    name: asc
+  }) {
     id
     name
   }
