@@ -143,7 +143,9 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
     (event) => {
       const bottom =
         event.target.scrollHeight - event.target.scrollTop <=
-        event.target.clientHeight
+          event.target.clientHeight ||
+        Math.floor(event.target.scrollHeight - event.target.scrollTop) ===
+          event.target.clientHeight
       if (bottom) {
         const { limit, skip } = leadsDefaultParams
 

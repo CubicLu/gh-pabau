@@ -6,9 +6,13 @@ import {
 } from '@ant-design/icons'
 import styles from './LeadsNavigation.module.less'
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, ButtonSize } from '../input/Input'
-import { Button, ButtonTypes } from '../button/Button'
-import { DropdownWithCheck } from '../dropdown-with-check/DropdownWithCheck'
+import {
+  Input,
+  ButtonSize,
+  Button,
+  ButtonTypes,
+  DropdownWithCheck,
+} from '@pabau/ui'
 
 export interface LeadsNavigationProps {
   onProjectClickHandler?: () => void
