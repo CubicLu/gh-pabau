@@ -1,8 +1,5 @@
-import dynamic from 'next/dynamic'
+import Inbox from '../../../../components/Email/inbox'
 
-const Inbox = dynamic(() => import('../../../../components/Email/inbox'), {
-  ssr: false,
-})
 const Index = () => {
   return <Inbox />
 }
