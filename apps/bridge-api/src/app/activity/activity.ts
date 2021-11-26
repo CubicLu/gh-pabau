@@ -1659,17 +1659,6 @@ export const manualFilterOnOrOperandColumns = async (
             }
             break
           }
-          // case 'Lead descriptions': {
-          //   if (
-          //     manualFilterOnStringOperand(
-          //       columnValue,
-          //       item?.CmLead?.Description
-          //     )
-          //   ) {
-          //     count += 1
-          //   }
-          //   break
-          // }
           case 'Lead status': {
             if (
               manualFilterOnBasicOperand(
