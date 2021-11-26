@@ -51,7 +51,7 @@ docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "${APP_TYPE}/${APP_NAME
 echo "Test the docker..."
 docker run -p 5823:4000 --name docker_up_test --rm -e DATABASE_URL=dummy -e JWT_SECRET=dummy "${APP_NAME}" &
 echo "Waiting for docker to be up..."
-yarn wait-on -t 160000 http-get://localhost:5823 || (echo TIMED OUT && docker logs docker_up_test && exit 1)
+yarn wait-on -t 400000 http-get://localhost:5823 || (echo TIMED OUT && docker logs docker_up_test && exit 1)
 echo "We have a result.. $?"
 docker stop -t 20 docker_up_test
 echo "Cleaned up"
