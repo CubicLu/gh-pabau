@@ -160,7 +160,7 @@ export const Invoices: FC<P> = (props) => {
     })
     setInvoices(invoicesDetails)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invoice, saleItems, totalVat])
+  }, [invoice, saleItems, totalVat, user?.me?.companyDateFormat])
 
   useEffect(() => {
     const items: ISalesItemProps[] = []
@@ -248,23 +248,27 @@ export const Invoices: FC<P> = (props) => {
       dataIndex: 'location',
       className: 'columnTitle',
       visible: true,
+      width: 175,
     },
     {
       title: t('ui.client-card-financial.employee'),
       dataIndex: 'employee',
       className: 'columnTitle',
+      width: 100,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.issued-to'),
       dataIndex: 'issuedTo',
       className: 'columnTitle',
+      width: 75,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.status'),
       dataIndex: 'paid',
       className: 'columnTitle',
+      width: 50,
       visible: true,
       render: function renderItem(value, row) {
         return (
@@ -293,6 +297,7 @@ export const Invoices: FC<P> = (props) => {
       title: t('ui.client-card-financial.amount'),
       dataIndex: 'grandTotal',
       className: 'columnTitle',
+      width: 5,
       visible: true,
       render: function renderItem(value, row) {
         return (
@@ -794,7 +799,7 @@ export const Invoices: FC<P> = (props) => {
                         <Skeleton.Input
                           active={true}
                           size="small"
-                          className={styles.locationSkeleton}
+                          className={styles.columnSkeleton}
                         />
                       )
                     case 'employee':
@@ -865,17 +870,18 @@ export const Invoices: FC<P> = (props) => {
                 {
                   text: t('ui.client-card-financial.outstanding'),
                   value:
-                    (totalCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
-                    (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0) -
-                    ((totalCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
-                      (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0)),
+                    (totalCounts?.aggregateInvSale?._sum?.inv_total ?? 0) +
+                    (totalCounts?.aggregateInvSale?._sum?.credit_amount ?? 0) -
+                    ((totalCounts?.aggregateInvSale?._sum?.paid_amount ?? 0) +
+                      (totalCounts?.aggregateInvSale?._sum?.credit_amount ??
+                        0)),
                   valueColor: '#FF5B64',
                 },
                 {
                   text: t('ui.client-card-financial.total-invoiced'),
                   value:
-                    (totalCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
-                    (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0),
+                    (totalCounts?.aggregateInvSale?._sum?.inv_total ?? 0) +
+                    (totalCounts?.aggregateInvSale?._sum?.credit_amount ?? 0),
                 },
               ]}
               loading={countLoading}

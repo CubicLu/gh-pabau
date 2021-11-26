@@ -1,0 +1,86 @@
+.leads-nave-root {
+  display: flex;
+  justify-content: space-between;
+
+  .leads-count {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    font-weight: 700;
+    font-size: 20px;
+
+    h4 {
+      margin-bottom: 0;
+    }
+
+    .ticker-count {
+      bottom: 12px;
+      right: 18px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #eef7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--font-family);
+      font-size: 14px;
+      color: #54b2d3;
+      margin-left: 10px;
+    }
+  }
+
+  .leads-nave-option {
+    display: flex;
+    align-items: center;
+
+    .section {
+      position: relative;
+      margin-left: 16px;
+
+      button {
+        height: 50px;
+        width: 50px;
+      }
+
+      .create-lead-btn {
+        width: auto;
+        padding: 0 16px;
+      }
+
+      input {
+        width: 256px;
+      }
+      .select-option {
+        :global {
+          .ant-select-selector {
+            width: 110px;
+            height: 50px;
+            align-items: center;
+            padding: 12px;
+          }
+        }
+      }
+
+      :global {
+        .ant-select-selector {
+          height: 50px;
+          align-items: center;
+          padding-left: 40px;
+        }
+
+        .anticon-filter {
+          top: 50%;
+          transform: translateY(-50%);
+          left: 16px;
+          position: absolute;
+          z-index: 1;
+        }
+
+        .ant-input-affix-wrapper {
+          height: 50px;
+        }
+      }
+    }
+  }
+}

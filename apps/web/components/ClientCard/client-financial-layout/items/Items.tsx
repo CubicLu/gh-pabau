@@ -94,7 +94,9 @@ export const Items: FC<P> = (props) => {
     const itemsDetails = []
     itemsData?.findManySoldItems?.map((item) => {
       itemsDetails.push({
-        date: dayjs(`${item?.date}`).format('DD/MM/YYYY'),
+        date: dayjs(`${item?.date}`).format(
+          user?.me?.companyDateFormat === 'd/m/Y' ? 'DD/MM/YYYY' : 'MM/DD/YYYY'
+        ),
         invoiceNo: item?.custom_id,
         name: item?.product_name,
         type: item?.type,
@@ -103,9 +105,7 @@ export const Items: FC<P> = (props) => {
         qty: item?.quantity,
         total:
           stringToCurrencySignConverter(user.me?.currency) +
-          item?.gross_total.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-          }),
+          item?.gross_total.toFixed(2),
       })
 
       return itemsDetails
@@ -113,7 +113,7 @@ export const Items: FC<P> = (props) => {
 
     setItems(itemsDetails)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemsData])
+  }, [itemsData, user?.me?.companyDateFormat])
   const columns = [
     {
       title: t('ui.client-card-financial.items.invoice-no'),

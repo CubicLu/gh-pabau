@@ -1,5 +1,20 @@
-query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
-  findManyCmLead(take: $limit, skip: $skip) {
+query getKanbanLeads(
+  $limit: Int = 10
+  $skip: Int = 0
+  $pipeline_id: Int
+  $pipeline_stage_id: Int
+) {
+  findManyCmLead(
+    take: $limit
+    skip: $skip
+    where: {
+      PipelineStage: {
+        id: { equals: $pipeline_stage_id }
+        pipeline_id: { equals: $pipeline_id }
+      }
+    }
+    orderBy: { CreatedDate: desc }
+  ) {
     lead_id: ID
     Name: Fname
     Avatar
@@ -17,6 +32,7 @@ query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
     User {
       id
       username
+      full_name
       image
     }
     Activity {
@@ -44,16 +60,20 @@ query getKanbanLeads($limit: Int = 10, $skip: Int = 0) {
   }
 }
 
-query getLeadPipelines {
-  findManyPipeline(where: { reference: { equals: "leads" } }) {
+query getFirstPipeline {
+  findFirstPipeline {
     name
-    description
-    status
-    note
+    id
     PipelineStage {
       id
       name
       stage_order
     }
   }
+}
+
+query getCmLeadCount($pipeline_id: Int) {
+  findManyCmLeadCount(
+    where: { PipelineStage: { pipeline_id: { equals: $pipeline_id } } }
+  )
 }
