@@ -38,5 +38,20 @@ services:
       options:
         max-size: 50m
         max-file: '10'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 900M
+    restart: always
+    ports:
+      - 888:80
+    labels:
+      io.rancher.scheduler.affinity:host_label: pod_master=true
 volumes:
   mysql-data:
