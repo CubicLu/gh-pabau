@@ -104,6 +104,7 @@ export interface EventsDataProps {
   authorName?: string
   letterUrl?: string
   isReceived?: boolean
+  isDocxFile?: boolean
 }
 
 export interface PinItemProps {
@@ -150,6 +151,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
   const [events, setEvents] = useState<EventsDataProps[]>([])
   const [filteredEvents, setFilteredEvents] = useState<EventsDataProps[]>([])
   const [collapseEvent, setCollapseEvent] = useState({})
+  const [isDocFile, setIsDocFile] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState(
     Object.values(headerFilter)
   )
@@ -159,6 +161,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
     pageSize: pagination?.limit ?? 50,
     currentPage: pagination?.currentPage ?? 1,
   })
+
   function transform(node, index) {
     // return null to block certain elements
     // don't allow <span> elements
@@ -253,12 +256,16 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
 
   const handleCollapse = (event) => {
     setCollapseEvent((e) => ({
-      ...e,
       [`event_${event.id}`]: collapseEvent?.[`event_${event.id}`]
         ? !collapseEvent?.[`event_${event.id}`]
         : true,
     }))
-    if (event.type === 'letter') {
+    if (
+      event.type === 'letter' &&
+      event.letterUrl &&
+      !collapseEvent?.[`event_${event.id}`]
+    ) {
+      setIsDocFile(event.isDocxFile)
       setLetterUrl(event.letterUrl)
       setShowDocumentViewer(!showDocumentViewer)
     }
@@ -270,7 +277,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       dayjs(standardDateFormat) < dayjs().subtract(6, 'days') ||
       dayjs(standardDateFormat) > dayjs().add(6, 'days')
     ) {
-      return dayjs(date, eventDateFormat).format(eventDateFormat)
+      return dayjs(date).format(eventDateFormat)
     }
     return dayjs(date, eventDateFormat).calendar()
   }
@@ -372,11 +379,14 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       return ''
     }
 
-    const openFile = (url) => {
-      window.open(getImage(url), '_blank')
+    const openFile = (url, isDoc) => {
+      if (isDoc) {
+        window.open(url, '_blank')
+      } else {
+        window.open(getImage(url), '_blank')
+      }
     }
-
-    const pinPopoverContent = (items = []) => {
+    const pinPopoverContent = (items = [], isDoc) => {
       return (
         <div className={styles.feedbackPopUp}>
           {items?.map((item: PinItemProps, index) => {
@@ -384,7 +394,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               <div
                 className={styles.feedWrap}
                 key={index}
-                onClick={() => openFile(item?.item)}
+                onClick={() => openFile(item?.item, isDoc)}
               >
                 <span className={styles.iconWrap}>
                   {renderAttachmentIcon(item?.item)}
@@ -407,7 +417,9 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       return (
         <>
           <Popover
-            content={() => pinPopoverContent(event?.pinItems)}
+            content={() =>
+              pinPopoverContent(event?.pinItems, event?.isDocxFile)
+            }
             trigger="click"
             visible={visible && !isMobile}
             onVisibleChange={(val) => setVisible(val)}
@@ -440,7 +452,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               key={'bottom'}
             >
               <span className={styles.line}></span>
-              {pinPopoverContent(event?.pinItems)}
+              {pinPopoverContent(event?.pinItems, event?.isDocxFile)}
             </Drawer>
           )}
         </>
@@ -547,7 +559,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               <span>{event.authorName}</span>
             </div>
           )}
-          {event.moved && (
+          {event.moved.from.name && event.moved.to.name && (
             <div className={styles.clientNameText}>
               <span className={styles.dot} />
               <span>
@@ -764,6 +776,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
         <FullScreenReportModal
           className={styles.modalPreview}
           visible={showDocumentViewer}
+          isDocFileOpen={isDocFile}
           title={''}
           footer={false}
           onBackClick={() => setShowDocumentViewer(false)}
@@ -773,6 +786,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
             <div className={styles.documentWrapper}>
               <Epaper
                 title={''}
+                isDocxFile={isDocFile}
                 pdfURL={letterUrl}
                 numPages={numPages}
                 pageNumber={pageNumber}

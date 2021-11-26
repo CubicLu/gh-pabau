@@ -3583,10 +3583,22 @@ model Communication {
   CommunicationsRequestedForms CommunicationsRequestedForms[]
   Users                        User?                          @relation(fields: [uid], references: [id])
 
+  LetterReceiptData LetterReceiptData[]
   @@index([communications_content_id], name: "communications_content_id")
   @@index([company_id, uid], name: "company_id")
   @@index([date], name: "date")
   @@map("communications")
+}
+
+model LetterReceiptData {
+  id               Int            @id @default(autoincrement())
+  communication_id Int
+  recipient_data   String?
+  letter_body      String
+  invoice_id       Int
+  Communication    Communication? @relation(fields: [communication_id], references: [id])
+
+  @@map("letter_recipient_data")
 }
 
 model CommunicationContent {

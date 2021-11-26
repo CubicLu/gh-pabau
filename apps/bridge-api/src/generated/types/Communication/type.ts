@@ -78,6 +78,20 @@ export const Communication = objectType({
         return root.Users
       },
     })
+    t.list.field('LetterReceiptData', {
+      type: 'LetterReceiptData',
+      args: {
+        where: 'LetterReceiptDataWhereInput',
+        orderBy: 'LetterReceiptDataOrderByWithRelationInput',
+        cursor: 'LetterReceiptDataWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LetterReceiptDataScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LetterReceiptData
+      },
+    })
     t.nullable.field('_count', {
       type: 'CommunicationCountOutputType',
       resolve(root: any) {

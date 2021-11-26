@@ -1,4 +1,26 @@
 .follow-wrapper {
+  .document-viewer-wrapper {
+    .document-input-wrapper {
+        max-width: 300px;
+        padding-left: 24px;
+        :global {
+            .ant-input {
+                margin-bottom: 20px;
+            }
+        }
+    }
+    .show-btn {
+        margin: 24px;
+    }
+    .document-wrapper {
+        margin-top: 20px;
+        padding: 24px;
+        background: #fff;
+        iframe {
+          overflow: hidden;
+        }
+    }
+}
   .header-lian {
     border-bottom: 1px solid #ecedf0;
   }
@@ -315,6 +337,9 @@
       justify-content: space-between;
       align-items: center;
       white-space: pre-line;
+      > div:nth-child(1){
+        word-break: break-all;
+      }
       h5 {
         font-size: 12px;
         line-height: 16px;
@@ -328,10 +353,16 @@
         div{
           body{
             width: 100% !important;
+            img {
+              max-width: 100% !important;
+            }
           }
         }
         table {
           width: 100% !important;
+          img {
+            max-width: 100% !important; 
+          }
         }
       }
     
@@ -748,5 +779,12 @@
     .delete-txt {
       margin-left: 22px;
     }
+  }
+}
+.document-wrapper {
+ overflow: hidden;
+  iframe {
+    overflow: hidden;
+    padding-bottom: 80px;
   }
 }

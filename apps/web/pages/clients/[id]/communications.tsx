@@ -13,6 +13,7 @@ import {
   useGetClientCommunicationLazyQuery,
   useCountClientCommunicationLazyQuery,
 } from '@pabau/graphql'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 const CommunicationTab = () => {
   const router = useRouter()
@@ -37,7 +38,9 @@ const CommunicationTab = () => {
     getCommunityCount,
     { data: countCommunition, loading: countLoading },
   ] = useCountClientCommunicationLazyQuery()
-
+  const getDocumentURL = (url) => {
+    return `https://view.officeapps.live.com/op/embed.aspx?src=${url}&embedded=true`
+  }
   useEffect(() => {
     getClientCommunication({
       variables: {
@@ -67,58 +70,77 @@ const CommunicationTab = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countCommunition?.findManyCommunication])
+  const checkIsDocx = (url) => {
+    const extension = url.split('.')[1]
+    return extension === 'docx' || extension === 'doc'
+  }
   useEffect(() => {
     const Communications: EventsDataProps[] = []
-    //const receivercommunication: EventsDataProps[] = []
-    let obj: EventsDataProps
-    if (communicateData?.communication) {
-      let attachment: PinItemProps[] = []
-      for (const d of communicateData?.communication) {
-        obj = {
-          id: d?.id,
-          type: d?.type.toLocaleLowerCase(),
-          dateTime: dayjs(d?.date).format(dateFormat),
-        }
+    const fetchData = async () => {
+      let attachmentURL
+      //const receivercommunication: EventsDataProps[] = []
+      let obj: EventsDataProps
+      if (communicateData?.communication) {
+        let attachment: PinItemProps[] = []
+        for (const d of communicateData?.communication) {
+          obj = {
+            id: d?.id,
+            type: d?.type.toLocaleLowerCase(),
+            dateTime: dayjs(d?.date).format('MM-DD-YYYY hh:mm'),
+          }
 
-        if (d?.recipient.length > 0 && d?.Users) {
-          obj.numberOfOpend = d.recipient[0]?.read_count.toString()
-          obj.isReceived = true
-          if (d.recipient[0].Contact) {
-            obj.status = d.recipient[0].status
+          if (d?.recipient.length > 0) {
+            if (d.type.toLocaleLowerCase() === 'email') {
+              obj.numberOfOpend = d.recipient[0]?.read_count.toString()
+            }
+            obj.isReceived = true
+            if (d.recipient[0].Contact) {
+              obj.status = d.recipient[0].status
+              obj['moved'] = {
+                from: { name: d?.recipient[0].Contact.Fname },
+                to: { name: d.Users.full_name },
+              }
+            }
+          } else {
+            obj.isReceived = false
             obj['moved'] = {
-              from: { name: d?.recipient[0].Contact.Fname },
-              to: { name: d.Users.full_name },
+              from: { name: d.from ?? '' },
+              to: { name: d.Users.full_name ?? '' },
             }
           }
-        } else {
-          obj.isReceived = false
-          if (d?.from && d?.Users) {
-            obj['moved'] = {
-              from: { name: d.from },
-              to: { name: d.Users.full_name },
+          obj.eventName = d?.content?.subject
+          if (d?.message) {
+            obj.description = d?.message
+            obj.displayCollapse = true
+            if (checkIsDocx(d.message)) {
+              obj.isDocxFile = true
+              obj.letterUrl = getDocumentURL(getImage(d.message))
+            } else {
+              obj.isDocxFile = false
             }
           }
-        }
-        obj.eventName = d?.content?.subject
-        if (d?.content?.body) {
-          obj.description = d?.content?.body
-          obj.displayCollapse = true
-        }
 
-        if (d?.attachment) {
-          for (const val of d?.attachment) {
-            if (val?.file_url) {
-              attachment.push({ item: val.file_url })
+          if (d?.attachment) {
+            for (const val of d?.attachment) {
+              if (val?.file_url) {
+                if (checkIsDocx(val.file_url)) {
+                  attachmentURL = getDocumentURL(getImage(val.file_url))
+                } else {
+                  attachmentURL = val.file_url
+                }
+                attachment.push({ item: attachmentURL })
+              }
             }
+            obj.pinItems = attachment
+            attachment = []
           }
-          obj.pinItems = attachment
-          attachment = []
-        }
 
-        Communications.push(obj)
+          Communications.push(obj)
+        }
+        setCommunicationData(Communications)
       }
-      setCommunicationData(Communications)
     }
+    fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [communicateData?.communication])
   return (

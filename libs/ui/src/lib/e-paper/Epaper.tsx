@@ -11,6 +11,7 @@ export interface EPaperProps {
   onSetNumPages: (page) => void
   pdfURL?: string
   images?: string[]
+  isDocxFile?: boolean
   onDocumentLoadSuccess?: ({ numPages: number }) => void
 }
 
@@ -26,11 +27,12 @@ export const Epaper: FC<EPaperProps> = ({
   pageNumber,
   onSetNumPages,
   onDocumentLoadSuccess,
+  isDocxFile,
 }) => {
   const { t } = useTranslation('common')
   return (
     <div className={styles.ePaper}>
-      {(pdfURL || images?.length) && (
+      {(pdfURL && !isDocxFile) || images?.length ? (
         <>
           <div className={styles.ePaperHeader}>
             <span className={styles.ePaperTitle}>{title}</span>
@@ -61,7 +63,7 @@ export const Epaper: FC<EPaperProps> = ({
             </div>
           </div>
           <div className={styles.ePaperContent}>
-            {pdfURL ? (
+            {pdfURL && !isDocxFile ? (
               <MyEPaper
                 pdfURL={pdfURL}
                 pageNumber={pageNumber}
@@ -80,6 +82,22 @@ export const Epaper: FC<EPaperProps> = ({
             )}
           </div>
         </>
+      ) : (
+        pdfURL &&
+        isDocxFile && (
+          <div id="frame" className={styles.frameWrapper}>
+            <iframe
+              id="doc-iframe"
+              title={'demo'}
+              src={pdfURL}
+              frameBorder="0"
+              width="100%"
+              height="100%"
+              scrolling="no"
+              loading="lazy"
+            ></iframe>
+          </div>
+        )
       )}
     </div>
   )

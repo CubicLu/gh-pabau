@@ -1,11 +1,22 @@
-query getClientCommunication($contactID: Int!, $offSet: Int, $limit: Int) {
+query getClientCommunication(
+  $contactID: Int! 
+  $offSet: Int = 0
+  $limit: Int = 50
+) {
   communication: findManyCommunication(
-    #where :{type: {equals: Letter}}
     orderBy: { date: desc }
-      skip: $offSet
+    skip: $offSet
     take: $limit
+    where: {
+      CommunicationRecipient: {
+        some: {
+          AND: { recipient_id: { equals: $contactID } }
+          recipient_type: { equals: CONTACT }
+        }
+      }
+    }
   ) {
-    id
+     id
     type
     date
     related_id
@@ -15,10 +26,7 @@ query getClientCommunication($contactID: Int!, $offSet: Int, $limit: Int) {
       email
       full_name
     }
-    recipient: CommunicationRecipient(where:{
-      recipient_id: { equals: $contactID }
-      recipient_type: { equals: CONTACT }
-    }) {
+    recipient: CommunicationRecipient {
       recipient_id
       status
       read_count
@@ -36,28 +44,28 @@ query getClientCommunication($contactID: Int!, $offSet: Int, $limit: Int) {
 
     from: from_address
     content: Content {
-      subject
-      body
+    subject
+    body
     }
     message: messageBody
-  	
     attachment: CommunicationAttachment {
       file_url
       id
-    	
     }
   }
 }
 
 query countClientCommunication($contactID: Int!) {
-  findManyCommunication {
-    recipient: CommunicationRecipient(
-      where: {
-        recipient_id: { equals: $contactID }
-        recipient_type: { equals: CONTACT }
+  findManyCommunication(
+    where: {
+      CommunicationRecipient: {
+        some: {
+          AND: { recipient_id: { equals: $contactID } }
+          recipient_type: { equals: CONTACT }
+        }
       }
-    ) {
-      id
     }
+  ) {
+    id
   }
 }
