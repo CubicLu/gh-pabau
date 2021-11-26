@@ -5,8 +5,8 @@ export const UserSecurityQuestionsAnswerUpdateOneMutation = mutationField(
   {
     type: nonNull('UserSecurityQuestionsAnswer'),
     args: {
-      where: nonNull('UserSecurityQuestionsAnswerWhereUniqueInput'),
       data: nonNull('UserSecurityQuestionsAnswerUpdateInput'),
+      where: nonNull('UserSecurityQuestionsAnswerWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userSecurityQuestionsAnswer.update({

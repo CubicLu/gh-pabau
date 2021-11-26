@@ -6,9 +6,9 @@ export const CompanyNoteFindFirstQuery = queryField('findFirstCompanyNote', {
     where: 'CompanyNoteWhereInput',
     orderBy: list('CompanyNoteOrderByWithRelationInput'),
     cursor: 'CompanyNoteWhereUniqueInput',
-    distinct: 'CompanyNoteScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CompanyNoteScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.companyNote.findFirst({

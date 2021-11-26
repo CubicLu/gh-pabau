@@ -5,8 +5,8 @@ export const AutomationDelayUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AutomationDelayWhereInput',
       data: nonNull('AutomationDelayUpdateManyMutationInput'),
+      where: 'AutomationDelayWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.automationDelay.updateMany(args as any)

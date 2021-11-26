@@ -8,9 +8,9 @@ export const CustomFieldDisplayFindCountQuery = queryField(
       where: 'CustomFieldDisplayWhereInput',
       orderBy: list('CustomFieldDisplayOrderByWithRelationInput'),
       cursor: 'CustomFieldDisplayWhereUniqueInput',
-      distinct: 'CustomFieldDisplayScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CustomFieldDisplayScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.customFieldDisplay.count(args as any)

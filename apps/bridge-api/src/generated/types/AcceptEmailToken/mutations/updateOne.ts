@@ -5,8 +5,8 @@ export const AcceptEmailTokenUpdateOneMutation = mutationField(
   {
     type: nonNull('AcceptEmailToken'),
     args: {
-      where: nonNull('AcceptEmailTokenWhereUniqueInput'),
       data: nonNull('AcceptEmailTokenUpdateInput'),
+      where: nonNull('AcceptEmailTokenWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.acceptEmailToken.update({

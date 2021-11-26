@@ -8,9 +8,9 @@ export const ClockinTimesheetFindManyQuery = queryField(
       where: 'ClockinTimesheetWhereInput',
       orderBy: list('ClockinTimesheetOrderByWithRelationInput'),
       cursor: 'ClockinTimesheetWhereUniqueInput',
-      distinct: 'ClockinTimesheetScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClockinTimesheetScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.clockinTimesheet.findMany({

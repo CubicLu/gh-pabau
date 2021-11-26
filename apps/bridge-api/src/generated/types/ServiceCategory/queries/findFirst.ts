@@ -8,9 +8,9 @@ export const ServiceCategoryFindFirstQuery = queryField(
       where: 'ServiceCategoryWhereInput',
       orderBy: list('ServiceCategoryOrderByWithRelationInput'),
       cursor: 'ServiceCategoryWhereUniqueInput',
-      distinct: 'ServiceCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ServiceCategoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.serviceCategory.findFirst({

@@ -5,8 +5,8 @@ export const PathwayStepsTakenUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'PathwayStepsTakenWhereInput',
       data: nonNull('PathwayStepsTakenUpdateManyMutationInput'),
+      where: 'PathwayStepsTakenWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.pathwayStepsTaken.updateMany(args as any)

@@ -6,9 +6,8 @@ export const VoucherAggregateQuery = queryField('aggregateVoucher', {
     where: 'VoucherWhereInput',
     orderBy: list('VoucherOrderByWithRelationInput'),
     cursor: 'VoucherWhereUniqueInput',
-    distinct: 'VoucherScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.voucher.aggregate({ ...args, ...select }) as any

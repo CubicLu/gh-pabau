@@ -1,0 +1,24 @@
+.card {
+  .nave-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+
+    .leads-navigation {
+      width: 100%;
+    }
+  }
+}
+
+.leadStatusRoot {
+  :global {
+    .ant-card-body {
+      & div {
+        &:focus {
+          outline: none;
+          border: none;
+        }
+      }
+    }
+  }
+}

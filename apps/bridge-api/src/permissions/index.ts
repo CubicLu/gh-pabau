@@ -146,11 +146,6 @@ export const permissions = shield(
       ),
     },
     Query: {
-      //DuplicateContacts
-      // duplicateContacts: rules.authentication.isAuthenticated,
-      findManyContactPackage: allow,
-      findFirstUserMaster: allow,
-      findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
       findManyInvoice: rules.authentication.isAuthenticated,
       countInvoice: rules.authentication.isAuthenticated,

@@ -8,9 +8,8 @@ export const ClockinTimesheetAggregateQuery = queryField(
       where: 'ClockinTimesheetWhereInput',
       orderBy: list('ClockinTimesheetOrderByWithRelationInput'),
       cursor: 'ClockinTimesheetWhereUniqueInput',
-      distinct: 'ClockinTimesheetScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.clockinTimesheet.aggregate({ ...args, ...select }) as any

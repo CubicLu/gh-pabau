@@ -6,9 +6,8 @@ export const AcLogAggregateQuery = queryField('aggregateAcLog', {
     where: 'AcLogWhereInput',
     orderBy: list('AcLogOrderByWithRelationInput'),
     cursor: 'AcLogWhereUniqueInput',
-    distinct: 'AcLogScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.acLog.aggregate({ ...args, ...select }) as any

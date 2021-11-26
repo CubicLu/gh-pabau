@@ -5,8 +5,8 @@ export const BatchItemUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'BatchItemWhereInput',
       data: nonNull('BatchItemUpdateManyMutationInput'),
+      where: 'BatchItemWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.batchItem.updateMany(args as any)

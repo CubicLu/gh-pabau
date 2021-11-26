@@ -8,9 +8,9 @@ export const XeroIntegrationFindCountQuery = queryField(
       where: 'XeroIntegrationWhereInput',
       orderBy: list('XeroIntegrationOrderByWithRelationInput'),
       cursor: 'XeroIntegrationWhereUniqueInput',
-      distinct: 'XeroIntegrationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('XeroIntegrationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.xeroIntegration.count(args as any)

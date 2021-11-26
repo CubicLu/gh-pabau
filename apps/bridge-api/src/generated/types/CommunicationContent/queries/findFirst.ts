@@ -8,9 +8,9 @@ export const CommunicationContentFindFirstQuery = queryField(
       where: 'CommunicationContentWhereInput',
       orderBy: list('CommunicationContentOrderByWithRelationInput'),
       cursor: 'CommunicationContentWhereUniqueInput',
-      distinct: 'CommunicationContentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CommunicationContentScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.communicationContent.findFirst({

@@ -6,9 +6,9 @@ export const CmAccountNoteFindManyQuery = queryField('findManyCmAccountNote', {
     where: 'CmAccountNoteWhereInput',
     orderBy: list('CmAccountNoteOrderByWithRelationInput'),
     cursor: 'CmAccountNoteWhereUniqueInput',
-    distinct: 'CmAccountNoteScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmAccountNoteScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmAccountNote.findMany({

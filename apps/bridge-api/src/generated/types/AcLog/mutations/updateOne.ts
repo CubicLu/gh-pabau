@@ -3,8 +3,8 @@ import { mutationField, nonNull } from 'nexus'
 export const AcLogUpdateOneMutation = mutationField('updateOneAcLog', {
   type: nonNull('AcLog'),
   args: {
-    where: nonNull('AcLogWhereUniqueInput'),
     data: nonNull('AcLogUpdateInput'),
+    where: nonNull('AcLogWhereUniqueInput'),
   },
   resolve(_parent, { data, where }, { prisma, select }) {
     return prisma.acLog.update({

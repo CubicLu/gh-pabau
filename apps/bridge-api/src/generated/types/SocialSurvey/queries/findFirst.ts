@@ -6,9 +6,9 @@ export const SocialSurveyFindFirstQuery = queryField('findFirstSocialSurvey', {
     where: 'SocialSurveyWhereInput',
     orderBy: list('SocialSurveyOrderByWithRelationInput'),
     cursor: 'SocialSurveyWhereUniqueInput',
-    distinct: 'SocialSurveyScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('SocialSurveyScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.socialSurvey.findFirst({

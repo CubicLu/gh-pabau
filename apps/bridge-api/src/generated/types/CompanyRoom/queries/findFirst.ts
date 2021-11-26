@@ -6,9 +6,9 @@ export const CompanyRoomFindFirstQuery = queryField('findFirstCompanyRoom', {
     where: 'CompanyRoomWhereInput',
     orderBy: list('CompanyRoomOrderByWithRelationInput'),
     cursor: 'CompanyRoomWhereUniqueInput',
-    distinct: 'CompanyRoomScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CompanyRoomScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.companyRoom.findFirst({

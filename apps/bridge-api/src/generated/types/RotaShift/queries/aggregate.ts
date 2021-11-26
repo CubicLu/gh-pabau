@@ -6,9 +6,8 @@ export const RotaShiftAggregateQuery = queryField('aggregateRotaShift', {
     where: 'RotaShiftWhereInput',
     orderBy: list('RotaShiftOrderByWithRelationInput'),
     cursor: 'RotaShiftWhereUniqueInput',
-    distinct: 'RotaShiftScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.rotaShift.aggregate({ ...args, ...select }) as any

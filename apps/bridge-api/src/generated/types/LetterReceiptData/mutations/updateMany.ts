@@ -5,8 +5,8 @@ export const LetterReceiptDataUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'LetterReceiptDataWhereInput',
       data: nonNull('LetterReceiptDataUpdateManyMutationInput'),
+      where: 'LetterReceiptDataWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.letterReceiptData.updateMany(args as any)

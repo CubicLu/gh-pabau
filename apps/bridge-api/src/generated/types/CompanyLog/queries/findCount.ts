@@ -6,9 +6,9 @@ export const CompanyLogFindCountQuery = queryField('findManyCompanyLogCount', {
     where: 'CompanyLogWhereInput',
     orderBy: list('CompanyLogOrderByWithRelationInput'),
     cursor: 'CompanyLogWhereUniqueInput',
-    distinct: 'CompanyLogScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CompanyLogScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.companyLog.count(args as any)

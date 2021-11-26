@@ -5,8 +5,8 @@ export const BodyChartTemplateUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'BodyChartTemplateWhereInput',
       data: nonNull('BodyChartTemplateUpdateManyMutationInput'),
+      where: 'BodyChartTemplateWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bodyChartTemplate.updateMany(args as any)

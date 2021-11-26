@@ -5,8 +5,8 @@ export const AtQuizTakeUpdateOneMutation = mutationField(
   {
     type: nonNull('AtQuizTake'),
     args: {
-      where: nonNull('AtQuizTakeWhereUniqueInput'),
       data: nonNull('AtQuizTakeUpdateInput'),
+      where: nonNull('AtQuizTakeWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.atQuizTake.update({

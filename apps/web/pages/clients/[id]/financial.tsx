@@ -69,7 +69,7 @@ const Financial = () => {
   const { data: totalItemsCounts } = useQuery(CountContactSaleItemDocument, {
     skip: !router.query.id,
     variables: {
-      customer_id: Number.parseInt(`${router.query.id}`),
+      contact_id: Number.parseInt(`${router.query.id}`),
     },
   })
   const handlePagination = (take, skip) => {
@@ -92,10 +92,8 @@ const Financial = () => {
         tabPosition="top"
         menuItems={[
           `Invoices (${totalInvoices?.total ?? 0})`,
-          `Payments (${
-            totalPaymentCounts?.aggregateInvPayment?.count?.id ?? 0
-          })`,
-          `Items (${totalItemsCounts?.aggregateSaleItem?._count?.id ?? 0})`,
+          `Payments (${totalPaymentCounts?.countPayments[0]?.count ?? 0})`,
+          `Items (${totalItemsCounts?.countSoldItems ?? 0})`,
           `Voided`,
           `Statements`,
         ]}
@@ -117,9 +115,7 @@ const Financial = () => {
           clientId={Number.parseInt(`${router.query.id}`)}
         />
         <Items
-          totalItemsCounts={
-            totalItemsCounts?.aggregateSaleItem?._count?.id ?? 0
-          }
+          totalItemsCounts={totalItemsCounts?.countSoldItems ?? 0}
           invoiceEmployeeOptions={[]}
         />
         <span>Voided component</span>

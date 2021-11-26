@@ -6,9 +6,9 @@ export const InvCategoryFindFirstQuery = queryField('findFirstInvCategory', {
     where: 'InvCategoryWhereInput',
     orderBy: list('InvCategoryOrderByWithRelationInput'),
     cursor: 'InvCategoryWhereUniqueInput',
-    distinct: 'InvCategoryScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('InvCategoryScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.invCategory.findFirst({

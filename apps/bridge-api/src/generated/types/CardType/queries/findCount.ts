@@ -6,9 +6,9 @@ export const CardTypeFindCountQuery = queryField('findManyCardTypeCount', {
     where: 'CardTypeWhereInput',
     orderBy: list('CardTypeOrderByWithRelationInput'),
     cursor: 'CardTypeWhereUniqueInput',
-    distinct: 'CardTypeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CardTypeScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.cardType.count(args as any)

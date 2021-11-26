@@ -5,8 +5,8 @@ export const PathwayStepsTakenUpdateOneMutation = mutationField(
   {
     type: nonNull('PathwayStepsTaken'),
     args: {
-      where: nonNull('PathwayStepsTakenWhereUniqueInput'),
       data: nonNull('PathwayStepsTakenUpdateInput'),
+      where: nonNull('PathwayStepsTakenWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.pathwayStepsTaken.update({

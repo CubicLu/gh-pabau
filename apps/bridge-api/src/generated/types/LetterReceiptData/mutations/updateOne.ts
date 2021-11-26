@@ -5,8 +5,8 @@ export const LetterReceiptDataUpdateOneMutation = mutationField(
   {
     type: nonNull('LetterReceiptData'),
     args: {
-      where: nonNull('LetterReceiptDataWhereUniqueInput'),
       data: nonNull('LetterReceiptDataUpdateInput'),
+      where: nonNull('LetterReceiptDataWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.letterReceiptData.update({

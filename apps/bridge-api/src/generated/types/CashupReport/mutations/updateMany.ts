@@ -5,8 +5,8 @@ export const CashupReportUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CashupReportWhereInput',
       data: nonNull('CashupReportUpdateManyMutationInput'),
+      where: 'CashupReportWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cashupReport.updateMany(args as any)

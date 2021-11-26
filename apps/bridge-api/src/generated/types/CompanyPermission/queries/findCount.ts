@@ -8,9 +8,9 @@ export const CompanyPermissionFindCountQuery = queryField(
       where: 'CompanyPermissionWhereInput',
       orderBy: list('CompanyPermissionOrderByWithRelationInput'),
       cursor: 'CompanyPermissionWhereUniqueInput',
-      distinct: 'CompanyPermissionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyPermissionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyPermission.count(args as any)

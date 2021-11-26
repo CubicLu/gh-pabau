@@ -8,9 +8,9 @@ export const InventoryDiscrepancyFindCountQuery = queryField(
       where: 'InventoryDiscrepancyWhereInput',
       orderBy: list('InventoryDiscrepancyOrderByWithRelationInput'),
       cursor: 'InventoryDiscrepancyWhereUniqueInput',
-      distinct: 'InventoryDiscrepancyScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InventoryDiscrepancyScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.inventoryDiscrepancy.count(args as any)

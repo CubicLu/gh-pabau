@@ -8,9 +8,8 @@ export const MarketingSourceAggregateQuery = queryField(
       where: 'MarketingSourceWhereInput',
       orderBy: list('MarketingSourceOrderByWithRelationInput'),
       cursor: 'MarketingSourceWhereUniqueInput',
-      distinct: 'MarketingSourceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.marketingSource.aggregate({ ...args, ...select }) as any

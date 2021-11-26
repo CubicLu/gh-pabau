@@ -5,8 +5,8 @@ export const ContactMedicalConditionUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ContactMedicalConditionWhereInput',
       data: nonNull('ContactMedicalConditionUpdateManyMutationInput'),
+      where: 'ContactMedicalConditionWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactMedicalCondition.updateMany(args as any)

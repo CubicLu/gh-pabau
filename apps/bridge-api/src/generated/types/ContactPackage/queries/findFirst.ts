@@ -8,9 +8,9 @@ export const ContactPackageFindFirstQuery = queryField(
       where: 'ContactPackageWhereInput',
       orderBy: list('ContactPackageOrderByWithRelationInput'),
       cursor: 'ContactPackageWhereUniqueInput',
-      distinct: 'ContactPackageScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactPackageScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.contactPackage.findFirst({

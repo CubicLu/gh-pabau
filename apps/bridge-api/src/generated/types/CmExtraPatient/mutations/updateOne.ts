@@ -5,8 +5,8 @@ export const CmExtraPatientUpdateOneMutation = mutationField(
   {
     type: nonNull('CmExtraPatient'),
     args: {
-      where: nonNull('CmExtraPatientWhereUniqueInput'),
       data: nonNull('CmExtraPatientUpdateInput'),
+      where: nonNull('CmExtraPatientWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmExtraPatient.update({

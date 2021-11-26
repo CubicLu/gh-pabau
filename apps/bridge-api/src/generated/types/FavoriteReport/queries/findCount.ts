@@ -8,9 +8,9 @@ export const FavoriteReportFindCountQuery = queryField(
       where: 'FavoriteReportWhereInput',
       orderBy: list('FavoriteReportOrderByWithRelationInput'),
       cursor: 'FavoriteReportWhereUniqueInput',
-      distinct: 'FavoriteReportScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('FavoriteReportScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.favoriteReport.count(args as any)

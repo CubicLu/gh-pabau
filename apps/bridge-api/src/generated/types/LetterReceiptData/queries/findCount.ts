@@ -8,9 +8,9 @@ export const LetterReceiptDataFindCountQuery = queryField(
       where: 'LetterReceiptDataWhereInput',
       orderBy: list('LetterReceiptDataOrderByWithRelationInput'),
       cursor: 'LetterReceiptDataWhereUniqueInput',
-      distinct: 'LetterReceiptDataScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('LetterReceiptDataScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.letterReceiptData.count(args as any)

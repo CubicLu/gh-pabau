@@ -1,4 +1,4 @@
-import { Collapse, Tabs, Tag } from 'antd'
+import { Collapse, Tabs, Tag, Tooltip } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './CustomTabMenu.module.less'
@@ -68,7 +68,7 @@ export const CustomTabMenu: FC<P> = ({
       className={styles.leftPositionTabs}
       style={{ minHeight, gridTemplateColumns: `${tabWidth} 1fr` }}
     >
-      <div className={styles.tabMenuItems} style={{ width: tabWidth }}>
+      <div className={styles.tabMenuItems} style={{ flex: 1 }}>
         {tabs?.map((tab) => {
           //TODO: add count and tags to ui
           return (
@@ -141,7 +141,7 @@ export const CustomTabMenu: FC<P> = ({
           )
         })}
       </div>
-      <div className={styles.tabPaneItems}>
+      <div className={styles.tabPaneItems} style={{ flex: 4 }}>
         <div className={classNames(styles.tabPaneItem, styles.active)}>
           {children}
         </div>

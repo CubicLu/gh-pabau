@@ -6,9 +6,8 @@ export const BlockReasonAggregateQuery = queryField('aggregateBlockReason', {
     where: 'BlockReasonWhereInput',
     orderBy: list('BlockReasonOrderByWithRelationInput'),
     cursor: 'BlockReasonWhereUniqueInput',
-    distinct: 'BlockReasonScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.blockReason.aggregate({ ...args, ...select }) as any

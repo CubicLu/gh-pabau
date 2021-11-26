@@ -5,8 +5,8 @@ export const LabProductTemplateUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'LabProductTemplateWhereInput',
       data: nonNull('LabProductTemplateUpdateManyMutationInput'),
+      where: 'LabProductTemplateWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.labProductTemplate.updateMany(args as any)

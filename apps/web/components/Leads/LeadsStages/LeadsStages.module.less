@@ -1,0 +1,116 @@
+.dragable-wrapper {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  max-height: calc(100vh - 300px);
+  min-height: 74vh;
+  scroll-behavior: smooth;
+  .lead-stage {
+    display: flex;
+    align-items: center;
+    top: 0;
+    z-index: 8;
+    position: sticky;
+
+    .lead-stage-titlemain {
+      width: 100%;
+      margin-bottom: 6px;
+      &:first-child {
+        padding-left: 0;
+      }
+
+      .lead-stage-title {
+        background: #ffffff;
+        max-width: 250px;
+        min-width: 100;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 16px !important;
+        height: 70px;
+        padding: 4px;
+        border: 1px solid #0000001a;
+        display: block;
+
+        .lead-stage-name {
+          font-size: 14px;
+          line-height: 17.71px;
+          color: #3d3d46;
+          margin-bottom: 4px;
+          font-weight: 400;
+          letter-spacing: 0.3px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: none;
+          font-family: 'Circular-Std-Bold';
+          padding: 0;
+        }
+      }
+
+      .lead-count {
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 400;
+        display: flex;
+        align-items: center;
+        color: #9292a3;
+        font-family: 'Circular-Std-Bold';
+      }
+    }
+  }
+
+  .card-main-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    .lead-stage-wrapper {
+      min-width: 100px;
+      flex: 1;
+      max-width: 250px;
+      border-right: 1px solid #0000001a;
+      background: #b8b8c01a;
+      &:last-child {
+        border-right: unset;
+      }
+    }
+    .all-cards {
+      margin: 0 4px 0 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: calc(100% - 180px);
+      padding-top: 0 !important;
+
+      .card-wrapper {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 6px;
+        background: #ffffff;
+        &:focus {
+          outline: none;
+          border: none;
+        }
+      }
+    }
+  }
+
+  .pre-loader {
+    display: flex;
+    justify-content: center;
+    margin-top: -50px;
+  }
+}
+
+.overlay {
+  padding: 0;
+  :global {
+    .ant-tooltip-content {
+      .ant-tooltip-arrow {
+        display: none;
+      }
+      .ant-tooltip-inner {
+        padding: 0 5px;
+        min-height: auto;
+      }
+    }
+  }
+}

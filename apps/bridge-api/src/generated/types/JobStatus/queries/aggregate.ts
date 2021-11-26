@@ -6,9 +6,8 @@ export const JobStatusAggregateQuery = queryField('aggregateJobStatus', {
     where: 'JobStatusWhereInput',
     orderBy: list('JobStatusOrderByWithRelationInput'),
     cursor: 'JobStatusWhereUniqueInput',
-    distinct: 'JobStatusScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.jobStatus.aggregate({ ...args, ...select }) as any

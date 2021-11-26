@@ -6,9 +6,8 @@ export const StaffNoteAggregateQuery = queryField('aggregateStaffNote', {
     where: 'StaffNoteWhereInput',
     orderBy: list('StaffNoteOrderByWithRelationInput'),
     cursor: 'StaffNoteWhereUniqueInput',
-    distinct: 'StaffNoteScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.staffNote.aggregate({ ...args, ...select }) as any

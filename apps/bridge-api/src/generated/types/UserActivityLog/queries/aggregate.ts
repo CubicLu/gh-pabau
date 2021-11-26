@@ -8,9 +8,8 @@ export const UserActivityLogAggregateQuery = queryField(
       where: 'UserActivityLogWhereInput',
       orderBy: list('UserActivityLogOrderByWithRelationInput'),
       cursor: 'UserActivityLogWhereUniqueInput',
-      distinct: 'UserActivityLogScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.userActivityLog.aggregate({ ...args, ...select }) as any

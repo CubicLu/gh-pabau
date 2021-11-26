@@ -5,8 +5,8 @@ export const CmCaseReplyUpdateOneMutation = mutationField(
   {
     type: nonNull('CmCaseReply'),
     args: {
-      where: nonNull('CmCaseReplyWhereUniqueInput'),
       data: nonNull('CmCaseReplyUpdateInput'),
+      where: nonNull('CmCaseReplyWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmCaseReply.update({

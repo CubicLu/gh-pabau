@@ -8,9 +8,9 @@ export const ClockinLongpollFindCountQuery = queryField(
       where: 'ClockinLongpollWhereInput',
       orderBy: list('ClockinLongpollOrderByWithRelationInput'),
       cursor: 'ClockinLongpollWhereUniqueInput',
-      distinct: 'ClockinLongpollScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClockinLongpollScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.clockinLongpoll.count(args as any)

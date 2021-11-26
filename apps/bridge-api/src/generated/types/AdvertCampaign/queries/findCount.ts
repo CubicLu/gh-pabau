@@ -8,9 +8,9 @@ export const AdvertCampaignFindCountQuery = queryField(
       where: 'AdvertCampaignWhereInput',
       orderBy: list('AdvertCampaignOrderByWithRelationInput'),
       cursor: 'AdvertCampaignWhereUniqueInput',
-      distinct: 'AdvertCampaignScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AdvertCampaignScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.advertCampaign.count(args as any)

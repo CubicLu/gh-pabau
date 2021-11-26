@@ -8,9 +8,8 @@ export const MedicalFormAdvancedSettingAggregateQuery = queryField(
       where: 'MedicalFormAdvancedSettingWhereInput',
       orderBy: list('MedicalFormAdvancedSettingOrderByWithRelationInput'),
       cursor: 'MedicalFormAdvancedSettingWhereUniqueInput',
-      distinct: 'MedicalFormAdvancedSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.medicalFormAdvancedSetting.aggregate({

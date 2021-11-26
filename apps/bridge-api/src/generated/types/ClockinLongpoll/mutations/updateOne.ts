@@ -5,8 +5,8 @@ export const ClockinLongpollUpdateOneMutation = mutationField(
   {
     type: nonNull('ClockinLongpoll'),
     args: {
-      where: nonNull('ClockinLongpollWhereUniqueInput'),
       data: nonNull('ClockinLongpollUpdateInput'),
+      where: nonNull('ClockinLongpollWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.clockinLongpoll.update({

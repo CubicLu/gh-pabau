@@ -8,9 +8,9 @@ export const ManageCustomFieldFindFirstQuery = queryField(
       where: 'ManageCustomFieldWhereInput',
       orderBy: list('ManageCustomFieldOrderByWithRelationInput'),
       cursor: 'ManageCustomFieldWhereUniqueInput',
-      distinct: 'ManageCustomFieldScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ManageCustomFieldScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.manageCustomField.findFirst({

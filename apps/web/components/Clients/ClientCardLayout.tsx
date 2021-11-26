@@ -74,8 +74,10 @@ export const ClientCardLayout: FC<P> = ({
     variables: { contactID: clientId },
     skip: !clientId,
   })
-
-  const { data: countInvoice } = useTotalInvoiceCountQuery({
+  const {
+    data: countInvoice,
+    loading: countInvoiceLoading,
+  } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
   })
@@ -106,7 +108,8 @@ export const ClientCardLayout: FC<P> = ({
   const [openEditModal, setOpenEditModal] = useState(false)
   const [isAvatarModalOpen, setAvatarModalOpen] = useState(false)
   const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
-  const [outstanding, setOutstanding] = useState<number>(null)
+  const [outstanding, setOutstanding] = useState(0)
+  const [accountBalance, setAccountBalance] = useState(0)
   const user = useUser()
 
   const [addClientNote] = useCreateOneContactNoteMutation({
@@ -179,24 +182,33 @@ export const ClientCardLayout: FC<P> = ({
       contactID: clientId,
     },
   })
-  const { data: outstandingCounts } = useQuery(AggregateInvoiceCountsDocument, {
-    skip: !clientId,
-    variables: {
-      contactID: clientId,
-    },
-  })
+  const { data: outstandingCounts, loading: loadingCounts } = useQuery(
+    AggregateInvoiceCountsDocument,
+    {
+      skip: !clientId,
+      variables: {
+        contactID: clientId,
+      },
+    }
+  )
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
 
   useEffect(() => {
-    setOutstanding(
-      (outstandingCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
-        (outstandingCounts?.aggregateInvSale?.sum?.credit_amount ?? 0) -
-        (outstandingCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
-        (outstandingCounts?.aggregateInvSale?.sum?.credit_amount ?? 0)
-    )
+    if (!loadingCounts) {
+      setOutstanding(
+        (outstandingCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
+          (outstandingCounts?.aggregateInvSale?.sum?.credit_amount ?? 0) -
+          (outstandingCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
+          (outstandingCounts?.aggregateInvSale?.sum?.credit_amount ?? 0)
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outstandingCounts])
 
+  useEffect(() => {
+    setAccountBalance(invAmount?.AccountBalance?.balance ?? 0)
+  }, [invAmount])
   useEffect(() => {
     if (customFieldData && data?.findFirstCmContact?.customField) {
       let customFields = customFieldData.custom
@@ -327,24 +339,18 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'financial',
       name: 'Financials',
-      count: countInvoice?.total ?? 0,
+      count: !countInvoiceLoading && (countInvoice?.total ?? 0),
       tags:
-        invAmount?.AccountBalance?.balance - outstanding
+        (accountBalance ?? 0) - (outstanding ?? 0) !== 0
           ? [
               {
                 tag:
                   stringToCurrencySignConverter(user.me?.currency) +
-                  ((invAmount?.AccountBalance?.balance ?? 0) -
-                    (outstanding ?? 0)),
-                color: 'green',
+                  Math.abs(accountBalance - outstanding).toFixed(2),
+                color: outstanding > accountBalance ? 'red' : 'green',
               },
             ]
-          : [
-              {
-                tag: stringToCurrencySignConverter(user.me?.currency) + 0,
-                color: 'green',
-              },
-            ],
+          : [],
     },
     { key: 'packages', name: 'Packages' },
     {

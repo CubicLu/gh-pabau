@@ -8,9 +8,9 @@ export const PackageUsedFindCountQuery = queryField(
       where: 'PackageUsedWhereInput',
       orderBy: list('PackageUsedOrderByWithRelationInput'),
       cursor: 'PackageUsedWhereUniqueInput',
-      distinct: 'PackageUsedScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('PackageUsedScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.packageUsed.count(args as any)

@@ -5,8 +5,8 @@ export const AppPermissionUpdateOneMutation = mutationField(
   {
     type: nonNull('AppPermission'),
     args: {
-      where: nonNull('AppPermissionWhereUniqueInput'),
       data: nonNull('AppPermissionUpdateInput'),
+      where: nonNull('AppPermissionWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.appPermission.update({

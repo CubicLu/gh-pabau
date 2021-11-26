@@ -8,9 +8,9 @@ export const LetterReceiptDataFindFirstQuery = queryField(
       where: 'LetterReceiptDataWhereInput',
       orderBy: list('LetterReceiptDataOrderByWithRelationInput'),
       cursor: 'LetterReceiptDataWhereUniqueInput',
-      distinct: 'LetterReceiptDataScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('LetterReceiptDataScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.letterReceiptData.findFirst({

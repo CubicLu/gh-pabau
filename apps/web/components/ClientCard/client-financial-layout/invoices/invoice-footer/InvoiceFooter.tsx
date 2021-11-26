@@ -31,10 +31,8 @@ const InvoiceFooter: FC<InvoiceFooterProp> = ({ buttons, loading }) => {
                     color: b.valueColor ? b.valueColor : '#fff',
                   }}
                 >
-                  {stringToCurrencySignConverter(user.me?.currency)}
-                  {(b.value ?? 0).toLocaleString(undefined, {
-                    maximumFractionDigits: 2,
-                  })}
+                  {stringToCurrencySignConverter(user?.me?.currency)}
+                  {(b.value ?? 0).toFixed(2)}
                 </Text>
               ) : (
                 <Skeleton.Input

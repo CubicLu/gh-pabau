@@ -5,8 +5,8 @@ export const AcLogActionUpdateOneMutation = mutationField(
   {
     type: nonNull('AcLogAction'),
     args: {
-      where: nonNull('AcLogActionWhereUniqueInput'),
       data: nonNull('AcLogActionUpdateInput'),
+      where: nonNull('AcLogActionWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.acLogAction.update({

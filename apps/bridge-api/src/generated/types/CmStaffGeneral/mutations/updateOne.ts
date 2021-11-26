@@ -5,8 +5,8 @@ export const CmStaffGeneralUpdateOneMutation = mutationField(
   {
     type: nonNull('CmStaffGeneral'),
     args: {
-      where: nonNull('CmStaffGeneralWhereUniqueInput'),
       data: nonNull('CmStaffGeneralUpdateInput'),
+      where: nonNull('CmStaffGeneralWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmStaffGeneral.update({

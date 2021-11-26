@@ -8,9 +8,8 @@ export const ClassCategoryAggregateQuery = queryField(
       where: 'ClassCategoryWhereInput',
       orderBy: list('ClassCategoryOrderByWithRelationInput'),
       cursor: 'ClassCategoryWhereUniqueInput',
-      distinct: 'ClassCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.classCategory.aggregate({ ...args, ...select }) as any

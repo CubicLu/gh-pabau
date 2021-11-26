@@ -6,9 +6,8 @@ export const CmCampaignAggregateQuery = queryField('aggregateCmCampaign', {
     where: 'CmCampaignWhereInput',
     orderBy: list('CmCampaignOrderByWithRelationInput'),
     cursor: 'CmCampaignWhereUniqueInput',
-    distinct: 'CmCampaignScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmCampaign.aggregate({ ...args, ...select }) as any

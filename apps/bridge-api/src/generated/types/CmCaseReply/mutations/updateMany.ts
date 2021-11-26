@@ -5,8 +5,8 @@ export const CmCaseReplyUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmCaseReplyWhereInput',
       data: nonNull('CmCaseReplyUpdateManyMutationInput'),
+      where: 'CmCaseReplyWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmCaseReply.updateMany(args as any)

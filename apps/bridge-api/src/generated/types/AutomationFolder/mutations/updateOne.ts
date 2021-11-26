@@ -5,8 +5,8 @@ export const AutomationFolderUpdateOneMutation = mutationField(
   {
     type: nonNull('AutomationFolder'),
     args: {
-      where: nonNull('AutomationFolderWhereUniqueInput'),
       data: nonNull('AutomationFolderUpdateInput'),
+      where: nonNull('AutomationFolderWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.automationFolder.update({

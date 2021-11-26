@@ -6,9 +6,9 @@ export const CardTypeFindManyQuery = queryField('findManyCardType', {
     where: 'CardTypeWhereInput',
     orderBy: list('CardTypeOrderByWithRelationInput'),
     cursor: 'CardTypeWhereUniqueInput',
-    distinct: 'CardTypeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CardTypeScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cardType.findMany({

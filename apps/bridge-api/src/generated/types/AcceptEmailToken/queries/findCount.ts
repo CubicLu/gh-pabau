@@ -8,9 +8,9 @@ export const AcceptEmailTokenFindCountQuery = queryField(
       where: 'AcceptEmailTokenWhereInput',
       orderBy: list('AcceptEmailTokenOrderByWithRelationInput'),
       cursor: 'AcceptEmailTokenWhereUniqueInput',
-      distinct: 'AcceptEmailTokenScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AcceptEmailTokenScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.acceptEmailToken.count(args as any)

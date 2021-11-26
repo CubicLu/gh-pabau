@@ -8,9 +8,8 @@ export const ManageCustomFieldAggregateQuery = queryField(
       where: 'ManageCustomFieldWhereInput',
       orderBy: list('ManageCustomFieldOrderByWithRelationInput'),
       cursor: 'ManageCustomFieldWhereUniqueInput',
-      distinct: 'ManageCustomFieldScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.manageCustomField.aggregate({ ...args, ...select }) as any

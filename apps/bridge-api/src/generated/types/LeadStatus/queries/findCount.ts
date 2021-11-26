@@ -6,9 +6,9 @@ export const LeadStatusFindCountQuery = queryField('findManyLeadStatusCount', {
     where: 'LeadStatusWhereInput',
     orderBy: list('LeadStatusOrderByWithRelationInput'),
     cursor: 'LeadStatusWhereUniqueInput',
-    distinct: 'LeadStatusScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('LeadStatusScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.leadStatus.count(args as any)

@@ -5,8 +5,8 @@ export const DebtManageCommunicationUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'DebtManageCommunicationWhereInput',
       data: nonNull('DebtManageCommunicationUpdateManyMutationInput'),
+      where: 'DebtManageCommunicationWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.debtManageCommunication.updateMany(args as any)

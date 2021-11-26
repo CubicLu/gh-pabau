@@ -6,9 +6,8 @@ export const CheckinApptAggregateQuery = queryField('aggregateCheckinAppt', {
     where: 'CheckinApptWhereInput',
     orderBy: list('CheckinApptOrderByWithRelationInput'),
     cursor: 'CheckinApptWhereUniqueInput',
-    distinct: 'CheckinApptScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.checkinAppt.aggregate({ ...args, ...select }) as any

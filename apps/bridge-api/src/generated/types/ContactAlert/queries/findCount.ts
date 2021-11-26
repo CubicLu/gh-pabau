@@ -8,9 +8,9 @@ export const ContactAlertFindCountQuery = queryField(
       where: 'ContactAlertWhereInput',
       orderBy: list('ContactAlertOrderByWithRelationInput'),
       cursor: 'ContactAlertWhereUniqueInput',
-      distinct: 'ContactAlertScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactAlertScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactAlert.count(args as any)

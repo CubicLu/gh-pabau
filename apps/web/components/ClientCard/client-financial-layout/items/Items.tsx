@@ -18,8 +18,8 @@ import { useQuery } from '@apollo/client'
 import EditInvoice from '../invoices/EditInvoice'
 import { InvoiceProp } from './../ClientFinancialsLayout'
 import {
-  GetContactSaleItemDocument,
   AggregateItemTotalDocument,
+  GetContactSalesItemsDocument,
 } from '@pabau/graphql'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
@@ -62,11 +62,12 @@ export const Items: FC<P> = (props) => {
   const [items, setItems] = useState([])
   const [showEditInvoice, setShowEditInvoice] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceProp>()
-  const getQueryVariables = useMemo(() => {
+
+  const getQuerySaleItemVariables = useMemo(() => {
     const queryOptions = {
       skip: !router.query.id,
       variables: {
-        customer_id: Number.parseInt(`${router.query.id}`),
+        contactID: Number.parseInt(`${router.query.id}`),
         take: paginateData.limit,
         skip: paginateData.offset,
       },
@@ -76,8 +77,8 @@ export const Items: FC<P> = (props) => {
   }, [paginateData.limit, paginateData.offset, router.query.id])
 
   const { data: itemsData, loading: itemsLoading } = useQuery(
-    GetContactSaleItemDocument,
-    getQueryVariables
+    GetContactSalesItemsDocument,
+    getQuerySaleItemVariables
   )
 
   const { data: itemTotal, loading: itemTotalLoading } = useQuery(
@@ -91,18 +92,20 @@ export const Items: FC<P> = (props) => {
   )
   useEffect(() => {
     const itemsDetails = []
-    itemsData?.items?.map((item) => {
+    itemsData?.findManySoldItems?.map((item) => {
       itemsDetails.push({
-        date: dayjs(`${item?.InvSale?.date}`).format('DD/MM/YYYY'),
-        invoiceNo: item?.InvSale?.custom_id,
-        name: item?.item_name,
-        type: item?.item_type,
-        employee: item?.InvSale?.InvBiller?.name,
-        soldBy: item?.InvSale?.biller_name,
+        date: dayjs(`${item?.date}`).format(
+          user?.me?.companyDateFormat === 'd/m/Y' ? 'DD/MM/YYYY' : 'MM/DD/YYYY'
+        ),
+        invoiceNo: item?.custom_id,
+        name: item?.product_name,
+        type: item?.type,
+        employee: item?.biller_name,
+        soldBy: item?.biller_name,
         qty: item?.quantity,
         total:
           stringToCurrencySignConverter(user.me?.currency) +
-          item?.InvSale?.total,
+          item?.gross_total.toFixed(2),
       })
 
       return itemsDetails
@@ -110,27 +113,22 @@ export const Items: FC<P> = (props) => {
 
     setItems(itemsDetails)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemsData])
+  }, [itemsData, user?.me?.companyDateFormat])
   const columns = [
     {
-      title: t('ui.client-card-financial.items.date'),
+      title: t('ui.client-card-financial.items.invoice-no'),
       dataIndex: 'date',
       className: 'columnTitle',
       width: 100,
       visible: true,
-    },
-    {
-      title: t('ui.client-card-financial.items.invoice-no'),
-      dataIndex: 'invoiceNo',
-      visible: true,
-      width: 80,
       render: function renderItem(value, row) {
         return (
           <span
-            className={styles.primaryText}
+            className={styles.invoiceNo}
             onClick={() => onPressEditInvoice(row)}
           >
-            #{value}
+            <span>{value}</span>
+            <span>#{row.invoiceNo}</span>
           </span>
         )
       },
@@ -186,7 +184,7 @@ export const Items: FC<P> = (props) => {
       setPaginateData((d) => ({
         ...d,
         total: totalItemsCounts,
-        showingRecords: itemsData?.items?.length,
+        showingRecords: itemsData?.findManySoldItems?.length,
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -319,19 +317,22 @@ export const Items: FC<P> = (props) => {
                   switch (column.dataIndex) {
                     case 'date':
                       return (
-                        <Skeleton.Input
-                          active={true}
-                          size="small"
-                          className={styles.columnSkeleton}
-                        />
-                      )
-                    case 'invoiceNo':
-                      return (
-                        <Skeleton.Input
-                          active={true}
-                          size="small"
-                          className={styles.columnSkeleton}
-                        />
+                        <span className={styles.invoiceNo}>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idSkeleton}
+                            />
+                          </span>
+                          <span>
+                            <Skeleton.Input
+                              active={true}
+                              size="small"
+                              className={styles.idValueSkeleton}
+                            />
+                          </span>
+                        </span>
                       )
                     case 'name':
                       return (

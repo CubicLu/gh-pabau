@@ -8,9 +8,9 @@ export const CmContactLabelFindCountQuery = queryField(
       where: 'CmContactLabelWhereInput',
       orderBy: list('CmContactLabelOrderByWithRelationInput'),
       cursor: 'CmContactLabelWhereUniqueInput',
-      distinct: 'CmContactLabelScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmContactLabelScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmContactLabel.count(args as any)

@@ -6,9 +6,8 @@ export const CashupReportAggregateQuery = queryField('aggregateCashupReport', {
     where: 'CashupReportWhereInput',
     orderBy: list('CashupReportOrderByWithRelationInput'),
     cursor: 'CashupReportWhereUniqueInput',
-    distinct: 'CashupReportScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cashupReport.aggregate({ ...args, ...select }) as any

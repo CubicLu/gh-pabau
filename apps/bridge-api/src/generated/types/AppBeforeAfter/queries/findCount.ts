@@ -8,9 +8,9 @@ export const AppBeforeAfterFindCountQuery = queryField(
       where: 'AppBeforeAfterWhereInput',
       orderBy: list('AppBeforeAfterOrderByWithRelationInput'),
       cursor: 'AppBeforeAfterWhereUniqueInput',
-      distinct: 'AppBeforeAfterScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AppBeforeAfterScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.appBeforeAfter.count(args as any)

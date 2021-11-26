@@ -5,8 +5,8 @@ export const ClassGuestsUpdateOneMutation = mutationField(
   {
     type: nonNull('ClassGuests'),
     args: {
-      where: nonNull('ClassGuestsWhereUniqueInput'),
       data: nonNull('ClassGuestsUpdateInput'),
+      where: nonNull('ClassGuestsWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.classGuests.update({

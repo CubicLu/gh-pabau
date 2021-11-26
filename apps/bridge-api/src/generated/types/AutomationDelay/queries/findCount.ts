@@ -8,9 +8,9 @@ export const AutomationDelayFindCountQuery = queryField(
       where: 'AutomationDelayWhereInput',
       orderBy: list('AutomationDelayOrderByWithRelationInput'),
       cursor: 'AutomationDelayWhereUniqueInput',
-      distinct: 'AutomationDelayScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AutomationDelayScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.automationDelay.count(args as any)

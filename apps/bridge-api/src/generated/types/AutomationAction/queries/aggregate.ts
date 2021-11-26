@@ -8,9 +8,8 @@ export const AutomationActionAggregateQuery = queryField(
       where: 'AutomationActionWhereInput',
       orderBy: list('AutomationActionOrderByWithRelationInput'),
       cursor: 'AutomationActionWhereUniqueInput',
-      distinct: 'AutomationActionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.automationAction.aggregate({ ...args, ...select }) as any

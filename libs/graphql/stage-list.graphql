@@ -1,7 +1,11 @@
-query getStages {
-  stages: findManyLeadStatus {
+query getStages($company_id: Int) {
+  stages: findManyPipelineStage {
+    name
     id
-    name: status_name
-    order: status_order
+    pipeline_id
+    company_id
+    _count {
+      CmLead
+    }
   }
 }

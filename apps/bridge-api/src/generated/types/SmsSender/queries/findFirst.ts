@@ -6,9 +6,9 @@ export const SmsSenderFindFirstQuery = queryField('findFirstSmsSender', {
     where: 'SmsSenderWhereInput',
     orderBy: list('SmsSenderOrderByWithRelationInput'),
     cursor: 'SmsSenderWhereUniqueInput',
-    distinct: 'SmsSenderScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('SmsSenderScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.smsSender.findFirst({

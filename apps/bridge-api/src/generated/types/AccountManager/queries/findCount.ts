@@ -8,9 +8,9 @@ export const AccountManagerFindCountQuery = queryField(
       where: 'AccountManagerWhereInput',
       orderBy: list('AccountManagerOrderByWithRelationInput'),
       cursor: 'AccountManagerWhereUniqueInput',
-      distinct: 'AccountManagerScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AccountManagerScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.accountManager.count(args as any)

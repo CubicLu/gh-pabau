@@ -8,9 +8,9 @@ export const AutomationRuleFindCountQuery = queryField(
       where: 'AutomationRuleWhereInput',
       orderBy: list('AutomationRuleOrderByWithRelationInput'),
       cursor: 'AutomationRuleWhereUniqueInput',
-      distinct: 'AutomationRuleScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AutomationRuleScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.automationRule.count(args as any)

@@ -6,9 +6,9 @@ export const LabRequestFindManyQuery = queryField('findManyLabRequest', {
     where: 'LabRequestWhereInput',
     orderBy: list('LabRequestOrderByWithRelationInput'),
     cursor: 'LabRequestWhereUniqueInput',
-    distinct: 'LabRequestScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('LabRequestScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.labRequest.findMany({

@@ -5,8 +5,8 @@ export const AttachmentHelperLiteUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AttachmentHelperLiteWhereInput',
       data: nonNull('AttachmentHelperLiteUpdateManyMutationInput'),
+      where: 'AttachmentHelperLiteWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.attachmentHelperLite.updateMany(args as any)

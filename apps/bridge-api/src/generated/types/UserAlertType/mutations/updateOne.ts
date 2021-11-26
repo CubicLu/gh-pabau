@@ -5,8 +5,8 @@ export const UserAlertTypeUpdateOneMutation = mutationField(
   {
     type: nonNull('UserAlertType'),
     args: {
-      where: nonNull('UserAlertTypeWhereUniqueInput'),
       data: nonNull('UserAlertTypeUpdateInput'),
+      where: nonNull('UserAlertTypeWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userAlertType.update({

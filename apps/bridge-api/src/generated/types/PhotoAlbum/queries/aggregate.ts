@@ -6,9 +6,8 @@ export const PhotoAlbumAggregateQuery = queryField('aggregatePhotoAlbum', {
     where: 'PhotoAlbumWhereInput',
     orderBy: list('PhotoAlbumOrderByWithRelationInput'),
     cursor: 'PhotoAlbumWhereUniqueInput',
-    distinct: 'PhotoAlbumScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.photoAlbum.aggregate({ ...args, ...select }) as any

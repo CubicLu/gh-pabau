@@ -6,9 +6,9 @@ export const MedicalAttrFindFirstQuery = queryField('findFirstMedicalAttr', {
     where: 'MedicalAttrWhereInput',
     orderBy: list('MedicalAttrOrderByWithRelationInput'),
     cursor: 'MedicalAttrWhereUniqueInput',
-    distinct: 'MedicalAttrScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('MedicalAttrScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.medicalAttr.findFirst({

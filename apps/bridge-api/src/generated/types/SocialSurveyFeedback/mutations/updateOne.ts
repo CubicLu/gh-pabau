@@ -5,8 +5,8 @@ export const SocialSurveyFeedbackUpdateOneMutation = mutationField(
   {
     type: nonNull('SocialSurveyFeedback'),
     args: {
-      where: nonNull('SocialSurveyFeedbackWhereUniqueInput'),
       data: nonNull('SocialSurveyFeedbackUpdateInput'),
+      where: nonNull('SocialSurveyFeedbackWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.socialSurveyFeedback.update({

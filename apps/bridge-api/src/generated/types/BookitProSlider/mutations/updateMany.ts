@@ -5,8 +5,8 @@ export const BookitProSliderUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'BookitProSliderWhereInput',
       data: nonNull('BookitProSliderUpdateManyMutationInput'),
+      where: 'BookitProSliderWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookitProSlider.updateMany(args as any)

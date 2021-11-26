@@ -5,8 +5,8 @@ export const UserMobilePermissionUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'UserMobilePermissionWhereInput',
       data: nonNull('UserMobilePermissionUpdateManyMutationInput'),
+      where: 'UserMobilePermissionWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.userMobilePermission.updateMany(args as any)

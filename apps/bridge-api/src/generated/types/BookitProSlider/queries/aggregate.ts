@@ -8,9 +8,8 @@ export const BookitProSliderAggregateQuery = queryField(
       where: 'BookitProSliderWhereInput',
       orderBy: list('BookitProSliderOrderByWithRelationInput'),
       cursor: 'BookitProSliderWhereUniqueInput',
-      distinct: 'BookitProSliderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookitProSlider.aggregate({ ...args, ...select }) as any

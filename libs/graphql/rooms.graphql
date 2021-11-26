@@ -1,0 +1,31 @@
+query listRooms($skip: Int=0, $take: Int=50) {
+  Rooms: findManyCompanyRoom(orderBy: {description: asc},skip: $skip, take: $take) {
+    id
+    name: description
+    room_fee_type
+    room_fee
+    is_active
+    all_services
+    all_locations
+    Locations: CompanyRoomLocation {
+      Location{
+        id
+        name
+      }
+    }
+    Services: CompanyRoomService {
+      Service {
+        id
+        name
+				ServiceCategory{
+          id 
+          name
+          ServicesMasterCategory{
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}

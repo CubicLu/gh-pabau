@@ -101,7 +101,6 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   useEffect(() => {
     setActive(activated || false)
   }, [activated])
-  console.log('is doc', isDocFileOpen)
   return visible ? (
     <Modal
       visible={visible}

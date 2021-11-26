@@ -6,9 +6,9 @@ export const AcLogUrlFindCountQuery = queryField('findManyAcLogUrlCount', {
     where: 'AcLogUrlWhereInput',
     orderBy: list('AcLogUrlOrderByWithRelationInput'),
     cursor: 'AcLogUrlWhereUniqueInput',
-    distinct: 'AcLogUrlScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AcLogUrlScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.acLogUrl.count(args as any)

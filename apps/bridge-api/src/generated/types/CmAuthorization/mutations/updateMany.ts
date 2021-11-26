@@ -5,8 +5,8 @@ export const CmAuthorizationUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmAuthorizationWhereInput',
       data: nonNull('CmAuthorizationUpdateManyMutationInput'),
+      where: 'CmAuthorizationWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmAuthorization.updateMany(args as any)

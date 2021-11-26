@@ -8,9 +8,9 @@ export const AtQuestionsRelationFindCountQuery = queryField(
       where: 'AtQuestionsRelationWhereInput',
       orderBy: list('AtQuestionsRelationOrderByWithRelationInput'),
       cursor: 'AtQuestionsRelationWhereUniqueInput',
-      distinct: 'AtQuestionsRelationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AtQuestionsRelationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.atQuestionsRelation.count(args as any)
