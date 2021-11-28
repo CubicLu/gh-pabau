@@ -21,6 +21,13 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { differenceBy } from 'lodash'
 import { useMedia } from 'react-use'
 import { customColorData } from '../../mocks/Activities'
+import {
+  useUpdateOneCmLabelMutation,
+  useCreateOneCmLabelMutation,
+  useDeleteOneCmContactLabelMutation,
+  useCreateOneCmContactLabelMutation,
+} from '@pabau/graphql'
+import { useUser } from '../../context/UserContext'
 
 export interface refProps {
   handleVisible?: (val) => void
@@ -37,6 +44,7 @@ interface CreateLabelsProps {
   setDefaultSelectedLabels?: (val: Labels[]) => void
   handleApplyLabel?: (val) => void
   handleClose?: (val) => void
+  contactId: number
   ref?: ForwardedRef<refProps>
 }
 
@@ -52,16 +60,18 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
       defaultSelectedLabels = [],
       handleApplyLabel,
       handleClose,
+      contactId,
     },
     ref
   ) => {
     const { t } = useTranslationI18()
+    const loggedUser = useUser()
     const isMobile = useMedia('(max-width: 768px)', false)
     const [visible, setVisible] = useState(false)
     const [newLabel, setNewLabel] = useState<Labels>({
       label: '',
       color: '',
-      count: 0,
+      id: 0,
     })
     const [selectedColor, setSelectedColor] = useState('')
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
@@ -70,14 +80,46 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
     const [selectedEditData, setSelectedEditData] = useState<Labels>({
       label: '',
       color: '',
-      count: 0,
+      id: 0,
+    })
+    const [editLabel] = useUpdateOneCmLabelMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+    })
+    const [addLabel] = useCreateOneCmLabelMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+    })
+    const [deleteCmContactLabel] = useDeleteOneCmContactLabelMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+    })
+    const [createCmContactLabel] = useCreateOneCmContactLabelMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
     })
 
     useImperativeHandle(ref, () => ({
       handleVisible: handleVisible,
     }))
 
-    const editLabelData = (valueObject) => {
+    const editLabelData = async (valueObject) => {
       const labelData = [...labels]
       const labelIndex = labelData.findIndex(
         (label) => label.label === selectedEditData.label
@@ -93,6 +135,21 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
         (label) => label.label === valueObject.label
       )
       if (index === -1 || index === editIndex) {
+        await editLabel({
+          variables: {
+            where: {
+              id: valueObject?.id,
+            },
+            data: {
+              name: {
+                set: valueObject?.label,
+              },
+              color: {
+                set: valueObject?.color,
+              },
+            },
+          },
+        })
         setLabels([...labelData])
         setSelectedLabels([...selectedLabelData])
         fromHeader && handleApplyLabel([...selectedLabelData])
@@ -105,8 +162,34 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
       setIsEdit(false)
     }
 
-    const addLabelData = (valueObject) => {
-      if (!labels.some((item) => item.label === valueObject.label)) {
+    const addLabelData = async (valueObject) => {
+      if (!labels.some((item) => item.label === valueObject?.label)) {
+        contactId &&
+          (await addLabel({
+            variables: {
+              data: {
+                name: valueObject?.label,
+                color: valueObject?.color,
+                Company: {},
+                CmContactLabel: {
+                  create: [
+                    {
+                      Company: {
+                        connect: {
+                          id: loggedUser?.me?.company,
+                        },
+                      },
+                      CmContact: {
+                        connect: {
+                          ID: contactId,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          }))
         setLabels([...labels, valueObject])
         setSelectedLabels([...selectedLabels, valueObject])
         fromHeader && handleApplyLabel([...selectedLabels, valueObject])
@@ -118,31 +201,43 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
       }
     }
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = async (e) => {
       const {
         target: { value },
         key,
       } = e
       if (key === 'Enter' && value) {
         if (isEdit) {
-          editLabelData({ label: value, color: selectedColor, count: 0 })
+          await editLabelData({
+            label: value,
+            color: selectedColor,
+            id: newLabel?.id,
+          })
         } else {
-          addLabelData({ label: value, color: selectedColor, count: 0 })
+          await addLabelData({ label: value, color: selectedColor, id: 0 })
         }
-        setNewLabel({ label: '', color: '', count: 0 })
+        setNewLabel({ label: '', color: '', id: 0 })
         setVisible(false)
         setDisplayColorPicker(false)
         setSelectedColor('')
       }
     }
 
-    const handleVisible = (value) => {
+    const handleVisible = async (value) => {
       if (isEdit) {
-        editLabelData({ label: newLabel.label, color: selectedColor, count: 0 })
+        await editLabelData({
+          label: newLabel.label,
+          color: selectedColor,
+          id: newLabel?.id,
+        })
       } else if (!value && newLabel.label) {
-        addLabelData({ label: newLabel.label, color: selectedColor, count: 0 })
+        await addLabelData({
+          label: newLabel.label,
+          color: selectedColor,
+          id: 0,
+        })
       }
-      setNewLabel({ label: '', color: '', count: 0 })
+      setNewLabel({ label: '', color: '', id: 0 })
       setVisible(value)
       setDisplayColorPicker(false)
       setSelectedColor('')
@@ -188,7 +283,50 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
       return diff1.length === 0 && diff2.length === 0
     }
 
-    const onApplyLabel = () => {
+    const onApplyLabel = async () => {
+      const createCmLabel = differenceBy(
+        selectedLabels,
+        defaultSelectedLabels,
+        'id'
+      )
+      const deleteCmLabel = differenceBy(
+        defaultSelectedLabels,
+        selectedLabels,
+        'id'
+      )
+      if (deleteCmLabel?.length > 0) {
+        for (const label of deleteCmLabel) {
+          label?.cmContactLabelId &&
+            (await deleteCmContactLabel({
+              variables: {
+                where: {
+                  id: label.cmContactLabelId,
+                },
+              },
+            }))
+        }
+      }
+      if (createCmLabel?.length > 0) {
+        for (const label of createCmLabel) {
+          await createCmContactLabel({
+            variables: {
+              data: {
+                Company: {},
+                CmContact: {
+                  connect: {
+                    ID: contactId,
+                  },
+                },
+                CmLabel: {
+                  connect: {
+                    id: label?.id,
+                  },
+                },
+              },
+            },
+          })
+        }
+      }
       handleApplyLabel(selectedLabels)
       setVisible(false)
     }
@@ -222,7 +360,7 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
                         </div>
                       </div>
                       <div className={styles.tagName}>{label.label}</div>
-                      {selectedLabels.some(
+                      {selectedLabels?.some(
                         (item) => item.label === label.label
                       ) && <CheckOutlined />}
                     </span>
@@ -249,9 +387,9 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
                   value={newLabel?.label}
                   onChange={(e) =>
                     setNewLabel({
+                      ...newLabel,
                       label: e.target.value,
                       color: selectedColor,
-                      count: 0,
                     })
                   }
                   onKeyDown={handleKeyPress}

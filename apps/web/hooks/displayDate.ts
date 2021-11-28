@@ -1,12 +1,12 @@
 import { useUser } from '../context/UserContext'
 import dayjs from 'dayjs'
 
-const dateFormatMapper = {
+export const dateFormatMapper = {
   'd/m/Y': 'DD/MM/YYYY',
   'm/d/Y': 'MM/DD/YYYY',
 }
 
-const dateTimeFormatMapper = {
+export const dateTimeFormatMapper = {
   'd/m/Y': 'DD/MM/YYYY hh:mm',
   'm/d/Y': 'MM/DD/YYYY hh:mm',
 }

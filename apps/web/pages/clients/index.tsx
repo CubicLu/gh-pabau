@@ -34,11 +34,12 @@ const { Sider, Content } = Layout
 
 //TODO: dont put this in pages
 export interface Labels {
+  cmContactLabelId?: number
+  id?: number
   label?: string
   text?: string
   count?: number
   color?: string
-  id?: number
 }
 
 //TODO remove this
