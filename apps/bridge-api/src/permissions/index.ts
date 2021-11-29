@@ -138,6 +138,8 @@ export const permissions = shield(
       changeEmailPrivacy: rules.authentication.isAuthenticated,
       // LabRequest
       updateOneLabRequest: rules.authentication.isAuthenticated,
+      // LeadNote
+      updateOneCmLeadNote: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,

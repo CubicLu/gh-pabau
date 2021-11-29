@@ -1,13 +1,28 @@
 query getJourney($journey_id: Int!) {
-  Journey: findManyPathwaysTaken(where: { id: { equals: $journey_id } }) {
+  Journey: findFirstPathwaysTaken(where: { id: { equals: $journey_id } }) {
     id
     contact_id
+    Booking {
+      id
+      CompanyService {
+        id
+        MedicalForm {
+          id
+          name
+        }
+      }
+    }
     Pathway {
       id
-      name: pathway_name
-      steps: PathwayStep(orderBy: { order: asc }) {
+      pathway_name
+      steps: PathwayStep {
         id
-        name: step
+        step
+        item_id
+        MedicalForm {
+          id
+          name
+        }
       }
     }
   }
