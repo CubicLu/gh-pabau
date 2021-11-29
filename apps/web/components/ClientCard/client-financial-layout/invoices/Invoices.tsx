@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Table, Pagination } from '@pabau/ui'
+import { Table, Pagination, Avatar } from '@pabau/ui'
 import classNames from 'classnames'
 import moment from 'moment'
 import { InvoiceProp } from './../ClientFinancialsLayout'
@@ -18,8 +18,9 @@ import {
   DatePicker,
   Tag,
   Skeleton,
+  Tooltip,
 } from 'antd'
-import { FilterOutlined } from '@ant-design/icons'
+import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
 import {
   GetFinancialInvoicesQuery,
   SaleItemsQuery,
@@ -289,6 +290,40 @@ export const Invoices: FC<P> = (props) => {
                 {t('ui.client-card-financial.invoice.free')}
               </Tag>
             )}
+          </div>
+        )
+      },
+    },
+    {
+      title: '',
+      dataIndex: 'visibleData',
+      className: 'columnTitle',
+      width: 5,
+      visible: true,
+      isHover: true,
+      render: function renderItem(value, row) {
+        return (
+          <div className={styles.shareIcon}>
+            <Tooltip
+              trigger={'click'}
+              arrowPointAtCenter
+              title={
+                <div>
+                  <p className={styles.shareTootip}>
+                    {t('ui.client-card-financial.shared-with')}
+                  </p>
+                  {[row.employee].map((x, index) => {
+                    return (
+                      <span className={styles.avatarIcon} key={index}>
+                        <Avatar key={index} name={x} size="large" />
+                      </span>
+                    )
+                  })}
+                </div>
+              }
+            >
+              <EyeOutlined />
+            </Tooltip>
           </div>
         )
       },
@@ -744,19 +779,21 @@ export const Invoices: FC<P> = (props) => {
           )}
         </div>
         {!loading && invoice ? (
-          <Table
-            draggable={false}
-            scroll={{ x: true, y: '100vh' }}
-            dataSource={invoices?.map((e: { id }) => ({
-              key: e.id,
-              ...e,
-            }))}
-            columns={columns}
-            noDataText={t('ui.client-card-financial.invoices')}
-            expandedRowRender={expandedRowRender}
-            expandedRowKeys={[expandedRow]}
-            expandIcon={() => <span></span>}
-          />
+          <div className={styles.customTable}>
+            <Table
+              draggable={false}
+              scroll={{ x: true, y: '100vh' }}
+              dataSource={invoices?.map((e: { id }) => ({
+                key: e.id,
+                ...e,
+              }))}
+              columns={columns}
+              noDataText={t('ui.client-card-financial.invoices')}
+              expandedRowRender={expandedRowRender}
+              expandedRowKeys={[expandedRow]}
+              expandIcon={() => <span></span>}
+            />
+          </div>
         ) : (
           <Table
             rowKey="key"
