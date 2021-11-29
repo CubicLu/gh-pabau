@@ -8,9 +8,9 @@ export const CmCouponClaimedFindFirstQuery = queryField(
       where: 'CmCouponClaimedWhereInput',
       orderBy: list('CmCouponClaimedOrderByWithRelationInput'),
       cursor: 'CmCouponClaimedWhereUniqueInput',
-      distinct: 'CmCouponClaimedScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmCouponClaimedScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmCouponClaimed.findFirst({

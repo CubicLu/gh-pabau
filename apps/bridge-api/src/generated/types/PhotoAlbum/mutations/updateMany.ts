@@ -5,8 +5,8 @@ export const PhotoAlbumUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'PhotoAlbumWhereInput',
       data: nonNull('PhotoAlbumUpdateManyMutationInput'),
+      where: 'PhotoAlbumWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.photoAlbum.updateMany(args as any)

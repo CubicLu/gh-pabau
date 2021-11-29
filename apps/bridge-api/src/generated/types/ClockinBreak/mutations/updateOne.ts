@@ -5,8 +5,8 @@ export const ClockinBreakUpdateOneMutation = mutationField(
   {
     type: nonNull('ClockinBreak'),
     args: {
-      where: nonNull('ClockinBreakWhereUniqueInput'),
       data: nonNull('ClockinBreakUpdateInput'),
+      where: nonNull('ClockinBreakWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.clockinBreak.update({

@@ -8,9 +8,9 @@ export const ClockinBreakFindCountQuery = queryField(
       where: 'ClockinBreakWhereInput',
       orderBy: list('ClockinBreakOrderByWithRelationInput'),
       cursor: 'ClockinBreakWhereUniqueInput',
-      distinct: 'ClockinBreakScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClockinBreakScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.clockinBreak.count(args as any)

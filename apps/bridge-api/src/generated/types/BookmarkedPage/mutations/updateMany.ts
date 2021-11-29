@@ -5,8 +5,8 @@ export const BookmarkedPageUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'BookmarkedPageWhereInput',
       data: nonNull('BookmarkedPageUpdateManyMutationInput'),
+      where: 'BookmarkedPageWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookmarkedPage.updateMany(args as any)

@@ -6,9 +6,8 @@ export const UserAlertAggregateQuery = queryField('aggregateUserAlert', {
     where: 'UserAlertWhereInput',
     orderBy: list('UserAlertOrderByWithRelationInput'),
     cursor: 'UserAlertWhereUniqueInput',
-    distinct: 'UserAlertScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.userAlert.aggregate({ ...args, ...select }) as any

@@ -5,8 +5,8 @@ export const ContactMetaUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ContactMetaWhereInput',
       data: nonNull('ContactMetaUpdateManyMutationInput'),
+      where: 'ContactMetaWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactMeta.updateMany(args as any)

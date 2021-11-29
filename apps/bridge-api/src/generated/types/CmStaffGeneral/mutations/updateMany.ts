@@ -5,8 +5,8 @@ export const CmStaffGeneralUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmStaffGeneralWhereInput',
       data: nonNull('CmStaffGeneralUpdateManyMutationInput'),
+      where: 'CmStaffGeneralWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmStaffGeneral.updateMany(args as any)

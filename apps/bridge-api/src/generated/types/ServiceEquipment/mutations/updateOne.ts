@@ -5,8 +5,8 @@ export const ServiceEquipmentUpdateOneMutation = mutationField(
   {
     type: nonNull('ServiceEquipment'),
     args: {
-      where: nonNull('ServiceEquipmentWhereUniqueInput'),
       data: nonNull('ServiceEquipmentUpdateInput'),
+      where: nonNull('ServiceEquipmentWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.serviceEquipment.update({

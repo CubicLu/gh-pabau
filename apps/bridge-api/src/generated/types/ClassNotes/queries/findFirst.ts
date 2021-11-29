@@ -6,9 +6,9 @@ export const ClassNotesFindFirstQuery = queryField('findFirstClassNotes', {
     where: 'ClassNotesWhereInput',
     orderBy: list('ClassNotesOrderByWithRelationInput'),
     cursor: 'ClassNotesWhereUniqueInput',
-    distinct: 'ClassNotesScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ClassNotesScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.classNotes.findFirst({

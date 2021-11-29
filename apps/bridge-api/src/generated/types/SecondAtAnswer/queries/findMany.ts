@@ -8,9 +8,9 @@ export const SecondAtAnswerFindManyQuery = queryField(
       where: 'SecondAtAnswerWhereInput',
       orderBy: list('SecondAtAnswerOrderByWithRelationInput'),
       cursor: 'SecondAtAnswerWhereUniqueInput',
-      distinct: 'SecondAtAnswerScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('SecondAtAnswerScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.secondAtAnswer.findMany({

@@ -5,8 +5,8 @@ export const InventoryCountUpdateOneMutation = mutationField(
   {
     type: nonNull('InventoryCount'),
     args: {
-      where: nonNull('InventoryCountWhereUniqueInput'),
       data: nonNull('InventoryCountUpdateInput'),
+      where: nonNull('InventoryCountWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.inventoryCount.update({

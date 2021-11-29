@@ -8,9 +8,9 @@ export const ActivityUserStateFindFirstQuery = queryField(
       where: 'ActivityUserStateWhereInput',
       orderBy: list('ActivityUserStateOrderByWithRelationInput'),
       cursor: 'ActivityUserStateWhereUniqueInput',
-      distinct: 'ActivityUserStateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ActivityUserStateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.activityUserState.findFirst({

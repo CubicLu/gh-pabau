@@ -6,9 +6,9 @@ export const ClassProductFindManyQuery = queryField('findManyClassProduct', {
     where: 'ClassProductWhereInput',
     orderBy: list('ClassProductOrderByWithRelationInput'),
     cursor: 'ClassProductWhereUniqueInput',
-    distinct: 'ClassProductScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ClassProductScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.classProduct.findMany({

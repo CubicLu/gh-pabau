@@ -5,8 +5,8 @@ export const PointOfSaleSettingUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'PointOfSaleSettingWhereInput',
       data: nonNull('PointOfSaleSettingUpdateManyMutationInput'),
+      where: 'PointOfSaleSettingWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.pointOfSaleSetting.updateMany(args as any)

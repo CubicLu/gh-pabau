@@ -5,8 +5,8 @@ export const HolidayRequestUpdateOneMutation = mutationField(
   {
     type: nonNull('HolidayRequest'),
     args: {
-      where: nonNull('HolidayRequestWhereUniqueInput'),
       data: nonNull('HolidayRequestUpdateInput'),
+      where: nonNull('HolidayRequestWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.holidayRequest.update({

@@ -8,9 +8,9 @@ export const MarketingSourceFindCountQuery = queryField(
       where: 'MarketingSourceWhereInput',
       orderBy: list('MarketingSourceOrderByWithRelationInput'),
       cursor: 'MarketingSourceWhereUniqueInput',
-      distinct: 'MarketingSourceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('MarketingSourceScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.marketingSource.count(args as any)

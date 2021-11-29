@@ -6,9 +6,8 @@ export const SocialSurveyAggregateQuery = queryField('aggregateSocialSurvey', {
     where: 'SocialSurveyWhereInput',
     orderBy: list('SocialSurveyOrderByWithRelationInput'),
     cursor: 'SocialSurveyWhereUniqueInput',
-    distinct: 'SocialSurveyScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.socialSurvey.aggregate({ ...args, ...select }) as any

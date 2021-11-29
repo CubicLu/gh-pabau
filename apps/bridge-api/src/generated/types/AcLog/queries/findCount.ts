@@ -6,9 +6,9 @@ export const AcLogFindCountQuery = queryField('findManyAcLogCount', {
     where: 'AcLogWhereInput',
     orderBy: list('AcLogOrderByWithRelationInput'),
     cursor: 'AcLogWhereUniqueInput',
-    distinct: 'AcLogScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AcLogScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.acLog.count(args as any)

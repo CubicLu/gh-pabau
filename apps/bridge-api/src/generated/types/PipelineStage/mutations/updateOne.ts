@@ -5,8 +5,8 @@ export const PipelineStageUpdateOneMutation = mutationField(
   {
     type: nonNull('PipelineStage'),
     args: {
-      where: nonNull('PipelineStageWhereUniqueInput'),
       data: nonNull('PipelineStageUpdateInput'),
+      where: nonNull('PipelineStageWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.pipelineStage.update({

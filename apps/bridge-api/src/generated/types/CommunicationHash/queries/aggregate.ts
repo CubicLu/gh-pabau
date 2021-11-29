@@ -8,9 +8,8 @@ export const CommunicationHashAggregateQuery = queryField(
       where: 'CommunicationHashWhereInput',
       orderBy: list('CommunicationHashOrderByWithRelationInput'),
       cursor: 'CommunicationHashWhereUniqueInput',
-      distinct: 'CommunicationHashScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.communicationHash.aggregate({ ...args, ...select }) as any

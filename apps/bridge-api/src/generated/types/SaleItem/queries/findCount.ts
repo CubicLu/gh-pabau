@@ -6,9 +6,9 @@ export const SaleItemFindCountQuery = queryField('findManySaleItemCount', {
     where: 'SaleItemWhereInput',
     orderBy: list('SaleItemOrderByWithRelationInput'),
     cursor: 'SaleItemWhereUniqueInput',
-    distinct: 'SaleItemScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('SaleItemScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.saleItem.count(args as any)

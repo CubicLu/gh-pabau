@@ -8,9 +8,9 @@ export const UserAlertPermissionFindCountQuery = queryField(
       where: 'UserAlertPermissionWhereInput',
       orderBy: list('UserAlertPermissionOrderByWithRelationInput'),
       cursor: 'UserAlertPermissionWhereUniqueInput',
-      distinct: 'UserAlertPermissionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('UserAlertPermissionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.userAlertPermission.count(args as any)

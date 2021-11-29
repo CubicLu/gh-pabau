@@ -5,8 +5,8 @@ export const SmsPurchaseUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'SmsPurchaseWhereInput',
       data: nonNull('SmsPurchaseUpdateManyMutationInput'),
+      where: 'SmsPurchaseWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.smsPurchase.updateMany(args as any)

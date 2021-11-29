@@ -6,9 +6,9 @@ export const AtConcernFindFirstQuery = queryField('findFirstAtConcern', {
     where: 'AtConcernWhereInput',
     orderBy: list('AtConcernOrderByWithRelationInput'),
     cursor: 'AtConcernWhereUniqueInput',
-    distinct: 'AtConcernScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AtConcernScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.atConcern.findFirst({

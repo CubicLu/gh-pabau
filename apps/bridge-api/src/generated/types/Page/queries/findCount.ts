@@ -6,9 +6,9 @@ export const PageFindCountQuery = queryField('findManyPageCount', {
     where: 'PageWhereInput',
     orderBy: list('PageOrderByWithRelationInput'),
     cursor: 'PageWhereUniqueInput',
-    distinct: 'PageScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PageScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.page.count(args as any)

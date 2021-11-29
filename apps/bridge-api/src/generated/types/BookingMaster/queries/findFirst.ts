@@ -8,9 +8,9 @@ export const BookingMasterFindFirstQuery = queryField(
       where: 'BookingMasterWhereInput',
       orderBy: list('BookingMasterOrderByWithRelationInput'),
       cursor: 'BookingMasterWhereUniqueInput',
-      distinct: 'BookingMasterScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BookingMasterScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookingMaster.findFirst({

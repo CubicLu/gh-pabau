@@ -8,9 +8,9 @@ export const PermissionTemplateFindCountQuery = queryField(
       where: 'PermissionTemplateWhereInput',
       orderBy: list('PermissionTemplateOrderByWithRelationInput'),
       cursor: 'PermissionTemplateWhereUniqueInput',
-      distinct: 'PermissionTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('PermissionTemplateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.permissionTemplate.count(args as any)

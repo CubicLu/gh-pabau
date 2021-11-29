@@ -8,9 +8,9 @@ export const RecallScheduleFindCountQuery = queryField(
       where: 'RecallScheduleWhereInput',
       orderBy: list('RecallScheduleOrderByWithRelationInput'),
       cursor: 'RecallScheduleWhereUniqueInput',
-      distinct: 'RecallScheduleScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('RecallScheduleScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.recallSchedule.count(args as any)

@@ -6,9 +6,9 @@ export const PathwayFindFirstQuery = queryField('findFirstPathway', {
     where: 'PathwayWhereInput',
     orderBy: list('PathwayOrderByWithRelationInput'),
     cursor: 'PathwayWhereUniqueInput',
-    distinct: 'PathwayScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PathwayScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.pathway.findFirst({

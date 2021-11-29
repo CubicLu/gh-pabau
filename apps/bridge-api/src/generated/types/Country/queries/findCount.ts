@@ -6,9 +6,9 @@ export const CountryFindCountQuery = queryField('findManyCountryCount', {
     where: 'CountryWhereInput',
     orderBy: list('CountryOrderByWithRelationInput'),
     cursor: 'CountryWhereUniqueInput',
-    distinct: 'CountryScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CountryScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.country.count(args as any)

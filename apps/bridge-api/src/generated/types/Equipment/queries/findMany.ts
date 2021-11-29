@@ -6,9 +6,9 @@ export const EquipmentFindManyQuery = queryField('findManyEquipment', {
     where: 'EquipmentWhereInput',
     orderBy: list('EquipmentOrderByWithRelationInput'),
     cursor: 'EquipmentWhereUniqueInput',
-    distinct: 'EquipmentScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('EquipmentScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.equipment.findMany({

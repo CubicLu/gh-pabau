@@ -5,8 +5,8 @@ export const FavoriteReportUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'FavoriteReportWhereInput',
       data: nonNull('FavoriteReportUpdateManyMutationInput'),
+      where: 'FavoriteReportWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.favoriteReport.updateMany(args as any)

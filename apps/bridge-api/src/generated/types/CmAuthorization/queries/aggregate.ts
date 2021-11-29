@@ -8,9 +8,8 @@ export const CmAuthorizationAggregateQuery = queryField(
       where: 'CmAuthorizationWhereInput',
       orderBy: list('CmAuthorizationOrderByWithRelationInput'),
       cursor: 'CmAuthorizationWhereUniqueInput',
-      distinct: 'CmAuthorizationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmAuthorization.aggregate({ ...args, ...select }) as any

@@ -8,9 +8,9 @@ export const CompanyVariableFindManyQuery = queryField(
       where: 'CompanyVariableWhereInput',
       orderBy: list('CompanyVariableOrderByWithRelationInput'),
       cursor: 'CompanyVariableWhereUniqueInput',
-      distinct: 'CompanyVariableScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyVariableScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.companyVariable.findMany({

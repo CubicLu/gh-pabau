@@ -8,9 +8,9 @@ export const CalendarViewFindCountQuery = queryField(
       where: 'CalendarViewWhereInput',
       orderBy: list('CalendarViewOrderByWithRelationInput'),
       cursor: 'CalendarViewWhereUniqueInput',
-      distinct: 'CalendarViewScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CalendarViewScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.calendarView.count(args as any)

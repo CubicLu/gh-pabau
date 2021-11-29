@@ -8,9 +8,9 @@ export const SocialSurveyFeedbackResponseFindCountQuery = queryField(
       where: 'SocialSurveyFeedbackResponseWhereInput',
       orderBy: list('SocialSurveyFeedbackResponseOrderByWithRelationInput'),
       cursor: 'SocialSurveyFeedbackResponseWhereUniqueInput',
-      distinct: 'SocialSurveyFeedbackResponseScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('SocialSurveyFeedbackResponseScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.socialSurveyFeedbackResponse.count(args as any)

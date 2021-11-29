@@ -8,9 +8,9 @@ export const AttachmentHelperLiteFindFirstQuery = queryField(
       where: 'AttachmentHelperLiteWhereInput',
       orderBy: list('AttachmentHelperLiteOrderByWithRelationInput'),
       cursor: 'AttachmentHelperLiteWhereUniqueInput',
-      distinct: 'AttachmentHelperLiteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AttachmentHelperLiteScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.attachmentHelperLite.findFirst({

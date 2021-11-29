@@ -5,8 +5,8 @@ export const StaffNoteUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'StaffNoteWhereInput',
       data: nonNull('StaffNoteUpdateManyMutationInput'),
+      where: 'StaffNoteWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.staffNote.updateMany(args as any)

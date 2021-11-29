@@ -6,9 +6,8 @@ export const CmDrugAggregateQuery = queryField('aggregateCmDrug', {
     where: 'CmDrugWhereInput',
     orderBy: list('CmDrugOrderByWithRelationInput'),
     cursor: 'CmDrugWhereUniqueInput',
-    distinct: 'CmDrugScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmDrug.aggregate({ ...args, ...select }) as any

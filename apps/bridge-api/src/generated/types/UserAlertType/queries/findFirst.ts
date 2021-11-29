@@ -8,9 +8,9 @@ export const UserAlertTypeFindFirstQuery = queryField(
       where: 'UserAlertTypeWhereInput',
       orderBy: list('UserAlertTypeOrderByWithRelationInput'),
       cursor: 'UserAlertTypeWhereUniqueInput',
-      distinct: 'UserAlertTypeScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('UserAlertTypeScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.userAlertType.findFirst({

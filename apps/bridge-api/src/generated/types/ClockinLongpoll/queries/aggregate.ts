@@ -8,9 +8,8 @@ export const ClockinLongpollAggregateQuery = queryField(
       where: 'ClockinLongpollWhereInput',
       orderBy: list('ClockinLongpollOrderByWithRelationInput'),
       cursor: 'ClockinLongpollWhereUniqueInput',
-      distinct: 'ClockinLongpollScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.clockinLongpoll.aggregate({ ...args, ...select }) as any

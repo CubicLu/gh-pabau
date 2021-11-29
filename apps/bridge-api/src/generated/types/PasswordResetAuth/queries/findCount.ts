@@ -8,9 +8,9 @@ export const PasswordResetAuthFindCountQuery = queryField(
       where: 'PasswordResetAuthWhereInput',
       orderBy: list('PasswordResetAuthOrderByWithRelationInput'),
       cursor: 'PasswordResetAuthWhereUniqueInput',
-      distinct: 'PasswordResetAuthScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('PasswordResetAuthScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.passwordResetAuth.count(args as any)

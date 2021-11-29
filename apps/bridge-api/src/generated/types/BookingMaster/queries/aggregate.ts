@@ -8,9 +8,8 @@ export const BookingMasterAggregateQuery = queryField(
       where: 'BookingMasterWhereInput',
       orderBy: list('BookingMasterOrderByWithRelationInput'),
       cursor: 'BookingMasterWhereUniqueInput',
-      distinct: 'BookingMasterScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookingMaster.aggregate({ ...args, ...select }) as any

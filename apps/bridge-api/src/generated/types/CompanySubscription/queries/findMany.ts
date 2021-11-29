@@ -8,9 +8,9 @@ export const CompanySubscriptionFindManyQuery = queryField(
       where: 'CompanySubscriptionWhereInput',
       orderBy: list('CompanySubscriptionOrderByWithRelationInput'),
       cursor: 'CompanySubscriptionWhereUniqueInput',
-      distinct: 'CompanySubscriptionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanySubscriptionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.companySubscription.findMany({

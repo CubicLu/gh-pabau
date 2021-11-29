@@ -6,9 +6,8 @@ export const PackageAggregateQuery = queryField('aggregatePackage', {
     where: 'PackageWhereInput',
     orderBy: list('PackageOrderByWithRelationInput'),
     cursor: 'PackageWhereUniqueInput',
-    distinct: 'PackageScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.package.aggregate({ ...args, ...select }) as any

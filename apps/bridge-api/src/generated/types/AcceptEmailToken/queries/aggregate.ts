@@ -8,9 +8,8 @@ export const AcceptEmailTokenAggregateQuery = queryField(
       where: 'AcceptEmailTokenWhereInput',
       orderBy: list('AcceptEmailTokenOrderByWithRelationInput'),
       cursor: 'AcceptEmailTokenWhereUniqueInput',
-      distinct: 'AcceptEmailTokenScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.acceptEmailToken.aggregate({ ...args, ...select }) as any

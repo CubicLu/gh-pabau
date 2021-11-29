@@ -8,9 +8,9 @@ export const CommunicationHashFindCountQuery = queryField(
       where: 'CommunicationHashWhereInput',
       orderBy: list('CommunicationHashOrderByWithRelationInput'),
       cursor: 'CommunicationHashWhereUniqueInput',
-      distinct: 'CommunicationHashScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CommunicationHashScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.communicationHash.count(args as any)

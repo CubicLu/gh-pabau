@@ -6,9 +6,8 @@ export const ApiDebugAggregateQuery = queryField('aggregateApiDebug', {
     where: 'ApiDebugWhereInput',
     orderBy: list('ApiDebugOrderByWithRelationInput'),
     cursor: 'ApiDebugWhereUniqueInput',
-    distinct: 'ApiDebugScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.apiDebug.aggregate({ ...args, ...select }) as any

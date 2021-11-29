@@ -6,9 +6,9 @@ export const ClassMasterFindFirstQuery = queryField('findFirstClassMaster', {
     where: 'ClassMasterWhereInput',
     orderBy: list('ClassMasterOrderByWithRelationInput'),
     cursor: 'ClassMasterWhereUniqueInput',
-    distinct: 'ClassMasterScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ClassMasterScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.classMaster.findFirst({

@@ -8,9 +8,9 @@ export const CmExtraPatientFindCountQuery = queryField(
       where: 'CmExtraPatientWhereInput',
       orderBy: list('CmExtraPatientOrderByWithRelationInput'),
       cursor: 'CmExtraPatientWhereUniqueInput',
-      distinct: 'CmExtraPatientScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmExtraPatientScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmExtraPatient.count(args as any)

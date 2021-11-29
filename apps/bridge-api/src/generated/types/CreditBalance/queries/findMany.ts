@@ -6,9 +6,9 @@ export const CreditBalanceFindManyQuery = queryField('findManyCreditBalance', {
     where: 'CreditBalanceWhereInput',
     orderBy: list('CreditBalanceOrderByWithRelationInput'),
     cursor: 'CreditBalanceWhereUniqueInput',
-    distinct: 'CreditBalanceScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CreditBalanceScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.creditBalance.findMany({

@@ -6,9 +6,9 @@ export const ActivityFindCountQuery = queryField('findManyActivityCount', {
     where: 'ActivityWhereInput',
     orderBy: list('ActivityOrderByWithRelationInput'),
     cursor: 'ActivityWhereUniqueInput',
-    distinct: 'ActivityScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ActivityScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.activity.count(args as any)

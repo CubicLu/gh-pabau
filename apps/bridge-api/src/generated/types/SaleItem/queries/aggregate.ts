@@ -6,9 +6,8 @@ export const SaleItemAggregateQuery = queryField('aggregateSaleItem', {
     where: 'SaleItemWhereInput',
     orderBy: list('SaleItemOrderByWithRelationInput'),
     cursor: 'SaleItemWhereUniqueInput',
-    distinct: 'SaleItemScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.saleItem.aggregate({ ...args, ...select }) as any

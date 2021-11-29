@@ -5,8 +5,8 @@ export const BlockReasonUpdateOneMutation = mutationField(
   {
     type: nonNull('BlockReason'),
     args: {
-      where: nonNull('BlockReasonWhereUniqueInput'),
       data: nonNull('BlockReasonUpdateInput'),
+      where: nonNull('BlockReasonWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.blockReason.update({

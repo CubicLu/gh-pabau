@@ -8,9 +8,9 @@ export const CreditNoteTypeFindCountQuery = queryField(
       where: 'CreditNoteTypeWhereInput',
       orderBy: list('CreditNoteTypeOrderByWithRelationInput'),
       cursor: 'CreditNoteTypeWhereUniqueInput',
-      distinct: 'CreditNoteTypeScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CreditNoteTypeScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.creditNoteType.count(args as any)

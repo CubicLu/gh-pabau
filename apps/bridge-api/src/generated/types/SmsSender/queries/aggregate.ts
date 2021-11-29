@@ -6,9 +6,8 @@ export const SmsSenderAggregateQuery = queryField('aggregateSmsSender', {
     where: 'SmsSenderWhereInput',
     orderBy: list('SmsSenderOrderByWithRelationInput'),
     cursor: 'SmsSenderWhereUniqueInput',
-    distinct: 'SmsSenderScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.smsSender.aggregate({ ...args, ...select }) as any

@@ -6,9 +6,9 @@ export const ContactMetaFindManyQuery = queryField('findManyContactMeta', {
     where: 'ContactMetaWhereInput',
     orderBy: list('ContactMetaOrderByWithRelationInput'),
     cursor: 'ContactMetaWhereUniqueInput',
-    distinct: 'ContactMetaScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ContactMetaScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.contactMeta.findMany({

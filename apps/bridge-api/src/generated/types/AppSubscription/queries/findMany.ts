@@ -8,9 +8,9 @@ export const AppSubscriptionFindManyQuery = queryField(
       where: 'AppSubscriptionWhereInput',
       orderBy: list('AppSubscriptionOrderByWithRelationInput'),
       cursor: 'AppSubscriptionWhereUniqueInput',
-      distinct: 'AppSubscriptionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AppSubscriptionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.appSubscription.findMany({

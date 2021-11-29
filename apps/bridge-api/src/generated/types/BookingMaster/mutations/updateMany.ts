@@ -5,8 +5,8 @@ export const BookingMasterUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'BookingMasterWhereInput',
       data: nonNull('BookingMasterUpdateManyMutationInput'),
+      where: 'BookingMasterWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookingMaster.updateMany(args as any)

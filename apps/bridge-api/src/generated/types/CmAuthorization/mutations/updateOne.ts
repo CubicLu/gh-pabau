@@ -5,8 +5,8 @@ export const CmAuthorizationUpdateOneMutation = mutationField(
   {
     type: nonNull('CmAuthorization'),
     args: {
-      where: nonNull('CmAuthorizationWhereUniqueInput'),
       data: nonNull('CmAuthorizationUpdateInput'),
+      where: nonNull('CmAuthorizationWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmAuthorization.update({

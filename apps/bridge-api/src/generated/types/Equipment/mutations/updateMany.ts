@@ -5,8 +5,8 @@ export const EquipmentUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'EquipmentWhereInput',
       data: nonNull('EquipmentUpdateManyMutationInput'),
+      where: 'EquipmentWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.equipment.updateMany(args as any)

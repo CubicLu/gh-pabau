@@ -6,9 +6,9 @@ export const BacsAccountFindFirstQuery = queryField('findFirstBacsAccount', {
     where: 'BacsAccountWhereInput',
     orderBy: list('BacsAccountOrderByWithRelationInput'),
     cursor: 'BacsAccountWhereUniqueInput',
-    distinct: 'BacsAccountScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BacsAccountScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.bacsAccount.findFirst({

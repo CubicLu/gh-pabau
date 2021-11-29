@@ -6,9 +6,8 @@ export const CmLabelAggregateQuery = queryField('aggregateCmLabel', {
     where: 'CmLabelWhereInput',
     orderBy: list('CmLabelOrderByWithRelationInput'),
     cursor: 'CmLabelWhereUniqueInput',
-    distinct: 'CmLabelScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmLabel.aggregate({ ...args, ...select }) as any

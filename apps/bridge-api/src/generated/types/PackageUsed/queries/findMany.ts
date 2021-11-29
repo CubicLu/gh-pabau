@@ -6,9 +6,9 @@ export const PackageUsedFindManyQuery = queryField('findManyPackageUsed', {
     where: 'PackageUsedWhereInput',
     orderBy: list('PackageUsedOrderByWithRelationInput'),
     cursor: 'PackageUsedWhereUniqueInput',
-    distinct: 'PackageUsedScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PackageUsedScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.packageUsed.findMany({

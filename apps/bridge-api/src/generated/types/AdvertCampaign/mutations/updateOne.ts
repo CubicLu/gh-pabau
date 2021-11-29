@@ -5,8 +5,8 @@ export const AdvertCampaignUpdateOneMutation = mutationField(
   {
     type: nonNull('AdvertCampaign'),
     args: {
-      where: nonNull('AdvertCampaignWhereUniqueInput'),
       data: nonNull('AdvertCampaignUpdateInput'),
+      where: nonNull('AdvertCampaignWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.advertCampaign.update({

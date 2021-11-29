@@ -6,9 +6,9 @@ export const InvTaxRateFindManyQuery = queryField('findManyInvTaxRate', {
     where: 'InvTaxRateWhereInput',
     orderBy: list('InvTaxRateOrderByWithRelationInput'),
     cursor: 'InvTaxRateWhereUniqueInput',
-    distinct: 'InvTaxRateScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('InvTaxRateScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.invTaxRate.findMany({

@@ -5,8 +5,8 @@ export const BacsAccountUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'BacsAccountWhereInput',
       data: nonNull('BacsAccountUpdateManyMutationInput'),
+      where: 'BacsAccountWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bacsAccount.updateMany(args as any)

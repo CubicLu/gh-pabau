@@ -8,9 +8,9 @@ export const CmAppointmentCustomFindCountQuery = queryField(
       where: 'CmAppointmentCustomWhereInput',
       orderBy: list('CmAppointmentCustomOrderByWithRelationInput'),
       cursor: 'CmAppointmentCustomWhereUniqueInput',
-      distinct: 'CmAppointmentCustomScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmAppointmentCustomScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmAppointmentCustom.count(args as any)

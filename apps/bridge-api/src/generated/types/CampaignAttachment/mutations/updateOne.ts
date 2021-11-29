@@ -5,8 +5,8 @@ export const CampaignAttachmentUpdateOneMutation = mutationField(
   {
     type: nonNull('CampaignAttachment'),
     args: {
-      where: nonNull('CampaignAttachmentWhereUniqueInput'),
       data: nonNull('CampaignAttachmentUpdateInput'),
+      where: nonNull('CampaignAttachmentWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.campaignAttachment.update({

@@ -5,8 +5,8 @@ export const RecallScheduleUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'RecallScheduleWhereInput',
       data: nonNull('RecallScheduleUpdateManyMutationInput'),
+      where: 'RecallScheduleWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.recallSchedule.updateMany(args as any)

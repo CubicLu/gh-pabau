@@ -5,8 +5,8 @@ export const ClassSmsHistoryUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ClassSmsHistoryWhereInput',
       data: nonNull('ClassSmsHistoryUpdateManyMutationInput'),
+      where: 'ClassSmsHistoryWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.classSmsHistory.updateMany(args as any)

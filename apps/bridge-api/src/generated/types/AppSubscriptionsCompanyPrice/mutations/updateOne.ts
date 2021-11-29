@@ -5,8 +5,8 @@ export const AppSubscriptionsCompanyPriceUpdateOneMutation = mutationField(
   {
     type: nonNull('AppSubscriptionsCompanyPrice'),
     args: {
-      where: nonNull('AppSubscriptionsCompanyPriceWhereUniqueInput'),
       data: nonNull('AppSubscriptionsCompanyPriceUpdateInput'),
+      where: nonNull('AppSubscriptionsCompanyPriceWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.appSubscriptionsCompanyPrice.update({

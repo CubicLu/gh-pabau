@@ -6,9 +6,9 @@ export const AtSettingFindManyQuery = queryField('findManyAtSetting', {
     where: 'AtSettingWhereInput',
     orderBy: list('AtSettingOrderByWithRelationInput'),
     cursor: 'AtSettingWhereUniqueInput',
-    distinct: 'AtSettingScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AtSettingScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.atSetting.findMany({

@@ -8,9 +8,8 @@ export const UserSalutationAggregateQuery = queryField(
       where: 'UserSalutationWhereInput',
       orderBy: list('UserSalutationOrderByWithRelationInput'),
       cursor: 'UserSalutationWhereUniqueInput',
-      distinct: 'UserSalutationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.userSalutation.aggregate({ ...args, ...select }) as any

@@ -8,9 +8,9 @@ export const CommunicationProviderFindCountQuery = queryField(
       where: 'CommunicationProviderWhereInput',
       orderBy: list('CommunicationProviderOrderByWithRelationInput'),
       cursor: 'CommunicationProviderWhereUniqueInput',
-      distinct: 'CommunicationProviderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CommunicationProviderScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.communicationProvider.count(args as any)

@@ -8,9 +8,9 @@ export const CmContactViewedFindManyQuery = queryField(
       where: 'CmContactViewedWhereInput',
       orderBy: list('CmContactViewedOrderByWithRelationInput'),
       cursor: 'CmContactViewedWhereUniqueInput',
-      distinct: 'CmContactViewedScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmContactViewedScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmContactViewed.findMany({

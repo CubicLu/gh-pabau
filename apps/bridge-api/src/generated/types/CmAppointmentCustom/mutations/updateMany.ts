@@ -5,8 +5,8 @@ export const CmAppointmentCustomUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmAppointmentCustomWhereInput',
       data: nonNull('CmAppointmentCustomUpdateManyMutationInput'),
+      where: 'CmAppointmentCustomWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmAppointmentCustom.updateMany(args as any)

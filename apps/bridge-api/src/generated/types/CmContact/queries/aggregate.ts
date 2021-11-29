@@ -6,9 +6,8 @@ export const CmContactAggregateQuery = queryField('aggregateCmContact', {
     where: 'CmContactWhereInput',
     orderBy: list('CmContactOrderByWithRelationInput'),
     cursor: 'CmContactWhereUniqueInput',
-    distinct: 'CmContactScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmContact.aggregate({ ...args, ...select }) as any

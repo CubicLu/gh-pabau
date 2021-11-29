@@ -8,9 +8,9 @@ export const ClassGuestsFindCountQuery = queryField(
       where: 'ClassGuestsWhereInput',
       orderBy: list('ClassGuestsOrderByWithRelationInput'),
       cursor: 'ClassGuestsWhereUniqueInput',
-      distinct: 'ClassGuestsScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassGuestsScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.classGuests.count(args as any)

@@ -8,9 +8,8 @@ export const CmBookingNoteAggregateQuery = queryField(
       where: 'CmBookingNoteWhereInput',
       orderBy: list('CmBookingNoteOrderByWithRelationInput'),
       cursor: 'CmBookingNoteWhereUniqueInput',
-      distinct: 'CmBookingNoteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmBookingNote.aggregate({ ...args, ...select }) as any

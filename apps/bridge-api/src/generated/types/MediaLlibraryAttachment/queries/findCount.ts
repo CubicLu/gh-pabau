@@ -8,9 +8,9 @@ export const MediaLlibraryAttachmentFindCountQuery = queryField(
       where: 'MediaLlibraryAttachmentWhereInput',
       orderBy: list('MediaLlibraryAttachmentOrderByWithRelationInput'),
       cursor: 'MediaLlibraryAttachmentWhereUniqueInput',
-      distinct: 'MediaLlibraryAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('MediaLlibraryAttachmentScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.mediaLlibraryAttachment.count(args as any)

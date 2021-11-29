@@ -5,8 +5,8 @@ export const ActivityUserFilterUpdateOneMutation = mutationField(
   {
     type: nonNull('ActivityUserFilter'),
     args: {
-      where: nonNull('ActivityUserFilterWhereUniqueInput'),
       data: nonNull('ActivityUserFilterUpdateInput'),
+      where: nonNull('ActivityUserFilterWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.activityUserFilter.update({

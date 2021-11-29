@@ -8,9 +8,8 @@ export const JobConfigurationAggregateQuery = queryField(
       where: 'JobConfigurationWhereInput',
       orderBy: list('JobConfigurationOrderByWithRelationInput'),
       cursor: 'JobConfigurationWhereUniqueInput',
-      distinct: 'JobConfigurationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.jobConfiguration.aggregate({ ...args, ...select }) as any

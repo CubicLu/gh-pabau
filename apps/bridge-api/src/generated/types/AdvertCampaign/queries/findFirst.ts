@@ -8,9 +8,9 @@ export const AdvertCampaignFindFirstQuery = queryField(
       where: 'AdvertCampaignWhereInput',
       orderBy: list('AdvertCampaignOrderByWithRelationInput'),
       cursor: 'AdvertCampaignWhereUniqueInput',
-      distinct: 'AdvertCampaignScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AdvertCampaignScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.advertCampaign.findFirst({

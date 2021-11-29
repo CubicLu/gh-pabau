@@ -6,9 +6,9 @@ export const BlockReasonFindManyQuery = queryField('findManyBlockReason', {
     where: 'BlockReasonWhereInput',
     orderBy: list('BlockReasonOrderByWithRelationInput'),
     cursor: 'BlockReasonWhereUniqueInput',
-    distinct: 'BlockReasonScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BlockReasonScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.blockReason.findMany({

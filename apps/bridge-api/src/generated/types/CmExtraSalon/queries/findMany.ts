@@ -6,9 +6,9 @@ export const CmExtraSalonFindManyQuery = queryField('findManyCmExtraSalon', {
     where: 'CmExtraSalonWhereInput',
     orderBy: list('CmExtraSalonOrderByWithRelationInput'),
     cursor: 'CmExtraSalonWhereUniqueInput',
-    distinct: 'CmExtraSalonScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmExtraSalonScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmExtraSalon.findMany({

@@ -8,9 +8,9 @@ export const CmExtraSalonFindCountQuery = queryField(
       where: 'CmExtraSalonWhereInput',
       orderBy: list('CmExtraSalonOrderByWithRelationInput'),
       cursor: 'CmExtraSalonWhereUniqueInput',
-      distinct: 'CmExtraSalonScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmExtraSalonScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmExtraSalon.count(args as any)

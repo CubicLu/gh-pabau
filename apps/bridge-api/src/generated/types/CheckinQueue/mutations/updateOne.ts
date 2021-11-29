@@ -5,8 +5,8 @@ export const CheckinQueueUpdateOneMutation = mutationField(
   {
     type: nonNull('CheckinQueue'),
     args: {
-      where: nonNull('CheckinQueueWhereUniqueInput'),
       data: nonNull('CheckinQueueUpdateInput'),
+      where: nonNull('CheckinQueueWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.checkinQueue.update({

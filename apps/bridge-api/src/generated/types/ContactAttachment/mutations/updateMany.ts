@@ -5,8 +5,8 @@ export const ContactAttachmentUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ContactAttachmentWhereInput',
       data: nonNull('ContactAttachmentUpdateManyMutationInput'),
+      where: 'ContactAttachmentWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactAttachment.updateMany(args as any)

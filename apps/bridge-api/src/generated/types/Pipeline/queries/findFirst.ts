@@ -6,9 +6,9 @@ export const PipelineFindFirstQuery = queryField('findFirstPipeline', {
     where: 'PipelineWhereInput',
     orderBy: list('PipelineOrderByWithRelationInput'),
     cursor: 'PipelineWhereUniqueInput',
-    distinct: 'PipelineScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PipelineScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.pipeline.findFirst({

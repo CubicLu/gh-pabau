@@ -6,9 +6,9 @@ export const CmCaseNoteFindManyQuery = queryField('findManyCmCaseNote', {
     where: 'CmCaseNoteWhereInput',
     orderBy: list('CmCaseNoteOrderByWithRelationInput'),
     cursor: 'CmCaseNoteWhereUniqueInput',
-    distinct: 'CmCaseNoteScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmCaseNoteScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmCaseNote.findMany({

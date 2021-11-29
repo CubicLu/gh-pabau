@@ -6,9 +6,9 @@ export const CompanyMetaFindManyQuery = queryField('findManyCompanyMeta', {
     where: 'CompanyMetaWhereInput',
     orderBy: list('CompanyMetaOrderByWithRelationInput'),
     cursor: 'CompanyMetaWhereUniqueInput',
-    distinct: 'CompanyMetaScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CompanyMetaScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.companyMeta.findMany({

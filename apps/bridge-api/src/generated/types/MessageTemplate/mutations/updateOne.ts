@@ -5,8 +5,8 @@ export const MessageTemplateUpdateOneMutation = mutationField(
   {
     type: nonNull('MessageTemplate'),
     args: {
-      where: nonNull('MessageTemplateWhereUniqueInput'),
       data: nonNull('MessageTemplateUpdateInput'),
+      where: nonNull('MessageTemplateWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.messageTemplate.update({

@@ -5,8 +5,8 @@ export const CmLeadCustomFieldOrderUpdateOneMutation = mutationField(
   {
     type: nonNull('CmLeadCustomFieldOrder'),
     args: {
-      where: nonNull('CmLeadCustomFieldOrderWhereUniqueInput'),
       data: nonNull('CmLeadCustomFieldOrderUpdateInput'),
+      where: nonNull('CmLeadCustomFieldOrderWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmLeadCustomFieldOrder.update({

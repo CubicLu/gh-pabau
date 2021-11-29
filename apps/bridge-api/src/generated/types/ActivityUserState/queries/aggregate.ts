@@ -8,9 +8,8 @@ export const ActivityUserStateAggregateQuery = queryField(
       where: 'ActivityUserStateWhereInput',
       orderBy: list('ActivityUserStateOrderByWithRelationInput'),
       cursor: 'ActivityUserStateWhereUniqueInput',
-      distinct: 'ActivityUserStateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.activityUserState.aggregate({ ...args, ...select }) as any

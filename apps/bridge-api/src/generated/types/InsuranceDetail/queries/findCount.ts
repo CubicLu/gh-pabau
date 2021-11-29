@@ -8,9 +8,9 @@ export const InsuranceDetailFindCountQuery = queryField(
       where: 'InsuranceDetailWhereInput',
       orderBy: list('InsuranceDetailOrderByWithRelationInput'),
       cursor: 'InsuranceDetailWhereUniqueInput',
-      distinct: 'InsuranceDetailScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InsuranceDetailScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.insuranceDetail.count(args as any)

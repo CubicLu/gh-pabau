@@ -6,9 +6,9 @@ export const AcLogFindManyQuery = queryField('findManyAcLog', {
     where: 'AcLogWhereInput',
     orderBy: list('AcLogOrderByWithRelationInput'),
     cursor: 'AcLogWhereUniqueInput',
-    distinct: 'AcLogScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AcLogScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.acLog.findMany({

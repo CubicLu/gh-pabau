@@ -3,8 +3,8 @@ import { mutationField, nonNull } from 'nexus'
 export const CountryUpdateOneMutation = mutationField('updateOneCountry', {
   type: nonNull('Country'),
   args: {
-    where: nonNull('CountryWhereUniqueInput'),
     data: nonNull('CountryUpdateInput'),
+    where: nonNull('CountryWhereUniqueInput'),
   },
   resolve(_parent, { data, where }, { prisma, select }) {
     return prisma.country.update({

@@ -5,8 +5,8 @@ export const TwoFactorHistoryUpdateOneMutation = mutationField(
   {
     type: nonNull('TwoFactorHistory'),
     args: {
-      where: nonNull('TwoFactorHistoryWhereUniqueInput'),
       data: nonNull('TwoFactorHistoryUpdateInput'),
+      where: nonNull('TwoFactorHistoryWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.twoFactorHistory.update({

@@ -6,9 +6,9 @@ export const BnfDrugFindManyQuery = queryField('findManyBnfDrug', {
     where: 'BnfDrugWhereInput',
     orderBy: list('BnfDrugOrderByWithRelationInput'),
     cursor: 'BnfDrugWhereUniqueInput',
-    distinct: 'BnfDrugScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BnfDrugScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.bnfDrug.findMany({

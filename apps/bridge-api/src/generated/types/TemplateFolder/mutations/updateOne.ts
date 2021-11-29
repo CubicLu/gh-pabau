@@ -5,8 +5,8 @@ export const TemplateFolderUpdateOneMutation = mutationField(
   {
     type: nonNull('TemplateFolder'),
     args: {
-      where: nonNull('TemplateFolderWhereUniqueInput'),
       data: nonNull('TemplateFolderUpdateInput'),
+      where: nonNull('TemplateFolderWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.templateFolder.update({

@@ -5,8 +5,8 @@ export const ClientFormSettingUpdateOneMutation = mutationField(
   {
     type: nonNull('ClientFormSetting'),
     args: {
-      where: nonNull('ClientFormSettingWhereUniqueInput'),
       data: nonNull('ClientFormSettingUpdateInput'),
+      where: nonNull('ClientFormSettingWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.clientFormSetting.update({

@@ -8,9 +8,9 @@ export const CompanyPermissionFindFirstQuery = queryField(
       where: 'CompanyPermissionWhereInput',
       orderBy: list('CompanyPermissionOrderByWithRelationInput'),
       cursor: 'CompanyPermissionWhereUniqueInput',
-      distinct: 'CompanyPermissionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyPermissionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.companyPermission.findFirst({

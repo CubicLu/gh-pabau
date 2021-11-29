@@ -8,9 +8,9 @@ export const TwoFactorHistoryFindCountQuery = queryField(
       where: 'TwoFactorHistoryWhereInput',
       orderBy: list('TwoFactorHistoryOrderByWithRelationInput'),
       cursor: 'TwoFactorHistoryWhereUniqueInput',
-      distinct: 'TwoFactorHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('TwoFactorHistoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.twoFactorHistory.count(args as any)

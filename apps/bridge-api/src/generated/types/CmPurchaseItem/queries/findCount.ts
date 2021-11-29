@@ -8,9 +8,9 @@ export const CmPurchaseItemFindCountQuery = queryField(
       where: 'CmPurchaseItemWhereInput',
       orderBy: list('CmPurchaseItemOrderByWithRelationInput'),
       cursor: 'CmPurchaseItemWhereUniqueInput',
-      distinct: 'CmPurchaseItemScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmPurchaseItemScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmPurchaseItem.count(args as any)

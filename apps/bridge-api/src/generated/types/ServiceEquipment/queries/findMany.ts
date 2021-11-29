@@ -8,9 +8,9 @@ export const ServiceEquipmentFindManyQuery = queryField(
       where: 'ServiceEquipmentWhereInput',
       orderBy: list('ServiceEquipmentOrderByWithRelationInput'),
       cursor: 'ServiceEquipmentWhereUniqueInput',
-      distinct: 'ServiceEquipmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ServiceEquipmentScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.serviceEquipment.findMany({

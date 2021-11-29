@@ -5,8 +5,8 @@ export const CleverpinSettingUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CleverpinSettingWhereInput',
       data: nonNull('CleverpinSettingUpdateManyMutationInput'),
+      where: 'CleverpinSettingWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cleverpinSetting.updateMany(args as any)

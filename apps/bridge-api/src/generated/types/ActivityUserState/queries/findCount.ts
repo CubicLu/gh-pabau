@@ -8,9 +8,9 @@ export const ActivityUserStateFindCountQuery = queryField(
       where: 'ActivityUserStateWhereInput',
       orderBy: list('ActivityUserStateOrderByWithRelationInput'),
       cursor: 'ActivityUserStateWhereUniqueInput',
-      distinct: 'ActivityUserStateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ActivityUserStateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.activityUserState.count(args as any)

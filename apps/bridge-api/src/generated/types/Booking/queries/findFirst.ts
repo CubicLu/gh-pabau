@@ -6,9 +6,9 @@ export const BookingFindFirstQuery = queryField('findFirstBooking', {
     where: 'BookingWhereInput',
     orderBy: list('BookingOrderByWithRelationInput'),
     cursor: 'BookingWhereUniqueInput',
-    distinct: 'BookingScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BookingScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.booking.findFirst({

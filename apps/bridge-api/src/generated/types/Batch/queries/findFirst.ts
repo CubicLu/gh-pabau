@@ -6,9 +6,9 @@ export const BatchFindFirstQuery = queryField('findFirstBatch', {
     where: 'BatchWhereInput',
     orderBy: list('BatchOrderByWithRelationInput'),
     cursor: 'BatchWhereUniqueInput',
-    distinct: 'BatchScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BatchScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.batch.findFirst({

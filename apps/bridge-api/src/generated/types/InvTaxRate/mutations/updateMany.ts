@@ -5,8 +5,8 @@ export const InvTaxRateUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'InvTaxRateWhereInput',
       data: nonNull('InvTaxRateUpdateManyMutationInput'),
+      where: 'InvTaxRateWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invTaxRate.updateMany(args as any)

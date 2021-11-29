@@ -8,9 +8,9 @@ export const AccountManagerFindFirstQuery = queryField(
       where: 'AccountManagerWhereInput',
       orderBy: list('AccountManagerOrderByWithRelationInput'),
       cursor: 'AccountManagerWhereUniqueInput',
-      distinct: 'AccountManagerScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AccountManagerScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.accountManager.findFirst({
