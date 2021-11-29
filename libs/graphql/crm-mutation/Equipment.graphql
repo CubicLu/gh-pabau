@@ -1,0 +1,39 @@
+fragment EquipmentFields on Equipment {
+  id
+  company_id
+  equipment_name
+  quantity
+  is_active
+  field_order
+}
+
+fragment Equipment on Equipment {
+  ...EquipmentFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneEquipment($data: EquipmentCreateInput!) {
+  createOneEquipment(data: $data) {
+    ...Equipment
+  }
+}
+
+mutation updateOneEquipment($where: EquipmentWhereUniqueInput!, $data: EquipmentUpdateInput!) {
+  updateOneEquipment(where: $where, data: $data) {
+    ...Equipment
+  }
+}
+
+mutation deleteOneEquipment($where: EquipmentWhereUniqueInput!) {
+  deleteOneEquipment(where: $where) {
+    ...Equipment
+  }
+}
+
+mutation updateManyEquipment($where: EquipmentWhereInput, $data: EquipmentUpdateManyMutationInput!) {
+  updateManyEquipment(where: $where, data: $data) {
+    count
+  }
+}
