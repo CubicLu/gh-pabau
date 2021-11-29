@@ -337,6 +337,8 @@ model Company {
   Pipeline                Pipeline[]
   PipelineStage           PipelineStage[]
   LabRequest              LabRequest[]
+  Equipment               Equipment[]
+  ServiceEquipment        ServiceEquipment[]
   @@map("admin")
 }
 
@@ -4191,6 +4193,7 @@ model CompanyService {
   ServiceLocationTier    ServiceLocationTier[]
   Booking                Booking[]
 
+  ServiceEquipment ServiceEquipment[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -4254,17 +4257,6 @@ model CompanyService {
 //  default_rooms String?
 //  occupier      Int?
 //  group_id      Int?
-//}
-//
-//model company_services_equipment {
-//  id                 Int    @id @default(autoincrement())
-//  company_id         String
-//  service_id         Int
-//  equipment_id       Int
-//  equipment_quantity Int
-//  priority_order     Int
-//
-//  @@index([company_id], name: "company_id")
 //}
 //
 //model company_services_import_helper {
@@ -5487,14 +5479,35 @@ model DebtManageCommunication {
 //  fw_method         String
 //}
 //
-//model equipment {
-//  id             Int    @id @default(autoincrement())
-//  company_id     Int
-//  equipment_name String
-//  quantity       Int
-//  is_active      Int
-//  field_order    Int?   @default(0)
-//}
+model Equipment {
+  id               Int                @id @default(autoincrement())
+  company_id       Int
+  equipment_name   String
+  quantity         Int                @default(1)
+  is_active        Int                @default(1)
+  field_order      Int?               @default(0)
+  ServiceEquipment ServiceEquipment[]
+  Company          Company            @relation(fields: [company_id], references: [id])
+
+  @@map("equipment")
+}
+
+model ServiceEquipment {
+  id                 Int @id @default(autoincrement())
+  company_id         Int
+  service_id         Int
+  equipment_id       Int
+  equipment_quantity Int @default(1)
+  priority_order     Int @default(0)
+
+  Equipment Equipment       @relation(fields: [equipment_id], references: [id])
+  Service   CompanyService? @relation(fields: [service_id], references: [id])
+  Company   Company         @relation(fields: [company_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@map("company_services_equipment")
+}
+
 //
 //model events {
 //  eventid        Int                 @id @default(autoincrement())

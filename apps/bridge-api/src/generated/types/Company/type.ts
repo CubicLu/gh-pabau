@@ -2023,6 +2023,34 @@ export const Company = objectType({
         return root.LabRequest
       },
     })
+    t.list.field('Equipment', {
+      type: 'Equipment',
+      args: {
+        where: 'EquipmentWhereInput',
+        orderBy: 'EquipmentOrderByWithRelationInput',
+        cursor: 'EquipmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'EquipmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Equipment
+      },
+    })
+    t.list.field('ServiceEquipment', {
+      type: 'ServiceEquipment',
+      args: {
+        where: 'ServiceEquipmentWhereInput',
+        orderBy: 'ServiceEquipmentOrderByWithRelationInput',
+        cursor: 'ServiceEquipmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceEquipmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceEquipment
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {
