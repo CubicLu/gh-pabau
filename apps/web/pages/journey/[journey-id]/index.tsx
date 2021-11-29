@@ -20,8 +20,7 @@ const PathwayPage = () => {
     )
   if (loading) return <>LOADING</>
   if (!data) return <>SERVER HTTP ERROR</>
-  if (!data.Journey) return <>SERVER API ERROR</>
-  if (data.Journey.length === 0) return <>Error: ID not found</>
+  if (!data.Journey) return <>Error: ID not found</>
 
   return <PathwayLayout journey={data.Journey[0]} />
 }

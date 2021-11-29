@@ -1,0 +1,12 @@
+query getPipelineStages($pipeline_id: Int) {
+  stages: findManyPipelineStage(
+    where: { pipeline_id: { equals: $pipeline_id } }
+  ) {
+    id
+    company_id
+    name
+    _count {
+      CmLead
+    }
+  }
+}

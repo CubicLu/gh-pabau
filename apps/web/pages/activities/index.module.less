@@ -55,40 +55,6 @@
         margin-right: 10px;
       }
     }
-    .dropdown-custom {
-      display: flex;
-      position: relative;
-      :global {
-        .ant-select {
-          .ant-select-selector {
-            padding-left: 30px;
-            width: 202px;
-            .ant-select-selection-search {
-              margin-left: 15px;
-            }
-            .ant-select-selection-item {
-              display: flex;
-              align-items: center;
-              height: 30px;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
-              display: block;
-            }
-          }
-        }
-        .anticon.anticon-filter {
-          position: absolute;
-          left: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          z-index: 1;
-          svg {
-            fill: #9292a3;
-          }
-        }
-      }
-    }
     .filter-button {
       margin-right: 16px;
     }
@@ -183,7 +149,7 @@
                 height: 100%;
                 padding: 0 !important;
                 .ant-table-column-sorter-full {
-                  margin-left: 5px;
+                  margin-right: 10px;
                 }
                 .ant-table-column-title {
                   height: 100%;
@@ -375,6 +341,9 @@
     white-space: nowrap;
     max-width: 50px;
     flex: 1 auto;
+    .ant-skeleton-input {
+      height: 20px;
+    }
   }
   :global .ant-table-thead .ant-table-cell {
     color: #9292a3;
@@ -516,44 +485,12 @@
   .activities-wrapper {
     padding: 16px;
 
-    .dropdown-custom {
-      display: flex;
-      position: relative;
-      width: 49%;
-      :global {
-        .ant-select {
-          width: 100%;
-          .ant-select-selector {
-            padding-left: 30px;
-            min-width: 80px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            .ant-select-selection-placeholder {
-              height: 40px;
-              line-height: 40px !important;
-            }
-            .ant-select-selection-search {
-              margin-left: 15px;
-              .ant-select-selection-search-input {
-                height: 40px;
-                line-height: 40px !important;
-              }
-            }
-          }
-        }
-        .anticon.anticon-filter {
-          position: absolute;
-          left: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          z-index: 1;
-          svg {
-            fill: #9292a3;
-          }
-        }
+    .button-filter {
+      .filter-btn {
+        height: 40px;
       }
     }
+
     :global {
       .ant-input-group-wrapper {
         width: 49%;
@@ -605,8 +542,8 @@
     width: 100% !important;
   }
   .add-icon {
-    right: 5px !important;
-    top: 12px !important;
+    right: 0px !important;
+    top: 20px !important;
   }
   .activity-wrapper {
     .activities-circle {

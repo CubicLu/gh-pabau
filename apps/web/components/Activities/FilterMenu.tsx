@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Select, Radio, InputNumber } from 'antd'
 import { getData } from './FilterOptionData'
-import { UserOutlined, CheckOutlined, AimOutlined } from '@ant-design/icons'
+import { CheckOutlined } from '@ant-design/icons'
 import { Input as FormikInput } from 'formik-antd'
 import styles from './CreateFilterModal.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -246,7 +246,6 @@ export const FilterMenu: FC<FilterMenuProps> = ({
             isEdit={isEdit}
             value={value}
             onChange={onChange}
-            icon={<UserOutlined />}
             disabled={disabled}
           />
         )
@@ -260,7 +259,6 @@ export const FilterMenu: FC<FilterMenuProps> = ({
             isEdit={isEdit}
             value={value}
             onChange={onChange}
-            icon={<AimOutlined />}
             disabled={disabled}
           />
         )
@@ -291,8 +289,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
       case 'Subject':
       case 'Lead email':
       case 'Lead phone':
-      case 'Lead lost reason':
-      case 'Lead descriptions': {
+      case 'Lead lost reason': {
         return (
           <SubjectMenu value={value} onChange={onChange} disabled={disabled} />
         )

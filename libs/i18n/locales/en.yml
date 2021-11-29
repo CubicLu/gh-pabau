@@ -4416,7 +4416,6 @@ en:
   ui.client-card-financial.invoice-no: 'Invoice #'
   ui.client-card-financial.appointment: Appointment
   ui.client-card-financial.invoice-date: 'Invoice date'
-  ui.client-card-financial.invoice.tooltip: Actual Account Balance
   ui.client-card-financial.issuing-company: 'Issuing company'
   ui.client-card-financial.select-issuing-company: 'Select issuing company'
   ui.client-card-financial.contract: Contract
@@ -4887,22 +4886,26 @@ en:
   activityList.column.leadOwner: 'Lead owner'
   activityList.column.leadDoneActivities: 'Lead done activities'
   activityList.column.leadClosedOn: 'Lead closed on'
+  activityList.column.leadClosedOn.editName: 'lead closed on'
   activityList.column.firstActivityTime: 'First activity time'
   activityList.column.leadLastActivityDate: 'Lead last activity date'
   activityList.column.leadLastActivity: 'Lead last activity (days)'
   activityList.column.leadLostReason: 'Lead lost reason'
   activityList.column.leadTotalActivities: 'Lead total activities'
   activityList.column.leadLostTime: 'Lead lost time'
+  activityList.column.leadLostTime.editName: 'lead lost time'
   activityList.column.leadSource: 'Lead source'
   activityList.column.wonBy: 'Won by'
   activityList.column.done: Done
-  activityList.column.date.editName: date
+  activityList.column.date.editName: 'due date'
+  activityList.column.done.time.editName: 'done time'
+  activityList.column.add.time.editName: 'add time'
   activityList.column.subject.editName: subject
   activityList.column.client.editName: client
   activityList.column.lead.editName: lead
   activityList.column.email.editName: email
   activityList.column.phone.editName: phone
-  activityList.column.leadFirstName.editName: 'lead first name'
+  activityList.column.leadFirstName.editName: 'lead'
   activityList.column.leadLastName.editName: 'lead last name'
   activityList.column.leadEmail.editName: 'lead email'
   activityList.column.leadPhone.editName: 'lead phone'
@@ -5270,6 +5273,7 @@ en:
   activityList.empty.activity.label.description: 'Try resetting you filters or create new activity'
   activityList.column.leadName: 'Lead name'
   activityList.column.leadStage: 'Lead stage'
+  activityList.column.leadStage.editName: 'lead stage'
   activityList.column.leadDescription: 'Lead description'
   activityList.column.leadDescription.editName: 'lead description'
   activityList.column.clientCountry.editName: 'client country'
@@ -5277,13 +5281,19 @@ en:
   activityList.column.address.details: 'Address Details'
   activityList.column.clientCountry: 'Client country'
   activityList.column.clientMobile: 'Client mobile'
+  activityList.column.clientMobile.editName: 'client mobile'
   activityList.column.clientCreatedAt: 'Client created date'
+  activityList.column.clientCreatedAt.editName: 'client created date'
   activityList.column.clientSource: 'Client source'
+  activityList.column.clientSource.editName: 'client source'
   activityList.column.clientSalutation: 'Client salutation'
   activityList.column.clientGender: 'Client gender'
+  activityList.column.clientGender.editName: 'client gender'
   activityList.column.clientID: 'Client ID'
   activityList.column.clientDOB: 'Client DOB'
+  activityList.column.clientDOB.editName: 'client DOB'
   activityList.column.clientStatus: 'Client status'
+  activityList.column.clientStatus.editName: 'client status'
   setup.locations.noDataText: 'No Location'
   ui.gp-search.yourPractice: 'Your practice'
   ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are currently registered as a patient'
@@ -5317,6 +5327,7 @@ en:
   ui.clientdetails.add.address: 'Add Address'
   ui.clientdetails.edit.address: 'Edit Address'
   activityList.column.leadStatus: 'Lead status'
+  activityList.column.leadStatus.editName: 'lead status'
   activityList.filter.userGroup.memberCount: '{{count}} members'
   activity.filter.popover.label: 'Select a person'
   activity.filter.popover.title: Filter
@@ -5637,15 +5648,19 @@ en:
   clients.clientcard.notes.clientnote.deletemodal.title: 'Delete client Note'
   clients.clientcard.notes.clientnote.deletemodal.content: 'This note will be deleted. This action is irreversible'
   activityList.column.leadLocation: 'Lead location'
+  activityList.column.leadLocation.editName: 'lead location'
   activityList.column.leadActivityToDo: 'Activities to do'
   activityList.column.leadCreator: 'Lead creator'
   activityList.column.leadDateEnteringStage: 'Date of entering stage'
+  activityList.column.leadDateEnteringStage.editName: 'lead date of entering stage'
   activityList.column.leadEmailMessagesCount: 'Email messages count'
   activityList.column.leadLastEmailReceived: 'Last email received'
   activityList.column.leadLastEmailSent: 'Last email sent'
   activityList.column.leadNextActivityDate: 'Next activity date'
   activityList.column.leadPipeline: Pipeline
+  activityList.column.leadPipeline.editName: pipeline
   activityList.column.leadUpdateTime: 'Update time'
+  activityList.column.leadUpdateTime.editName: 'lead update time'
   activityList.column.leadTitle: Title
   create.filter.modal.lead.option.label: Lead
   create.filter.modal.date.is.more.than.operand: 'is more than'
@@ -5797,4 +5812,11 @@ en:
   create.activity.big.calendar.previous.title: 'Previous Day'
   create.activity.big.calendar.next.title: 'Next Day'
   create.activity.modal.success.message: 'Success! You have successfully created a activity'
+  update.activity.record.success.message: 'Success! You have successfully updated a activity'
+  activityList.column.lead.createdDate.editName: 'lead created date'
   clients.activities.title: 'Activities'
+  activity.client.active.status: 'Active'
+  activity.client.inactive.status: 'Inactive'
+  activity.client.gender.male: 'Male'
+  activity.client.gender.female: 'Female'
+  activity.client.gender.other: 'Other'

@@ -239,3 +239,9 @@ query creditNoteCount(
     }
   )
 }
+
+query getContactAccBalance($contact_id: Int!){
+  findFirstAccountBalance(where:{contact_id:{equals:$contact_id}}){
+    balance
+  }
+}

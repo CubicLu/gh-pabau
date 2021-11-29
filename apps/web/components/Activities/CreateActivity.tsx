@@ -16,13 +16,11 @@ import {
   ClockCircleOutlined,
   BlockOutlined,
   QuestionCircleOutlined,
-  UserOutlined,
   LeftOutlined,
   MenuOutlined,
   TeamOutlined,
   FileOutlined,
   LinkOutlined,
-  AimOutlined,
 } from '@ant-design/icons'
 import dayjs, { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
@@ -508,7 +506,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                               value && Number.parseInt(value)
                             )
                           }
-                          icon={<AimOutlined />}
                           disabled={false}
                           className={styles.clientContent}
                         />
@@ -527,7 +524,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                               value && Number.parseInt(value)
                             )
                           }
-                          icon={<UserOutlined />}
                           disabled={false}
                           className={styles.clientContent}
                         />

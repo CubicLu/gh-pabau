@@ -2,7 +2,7 @@ import { Context } from '../../context'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear'
-import { getColumnData } from './filterColumn'
+import { getColumnData } from './filterColumn.service'
 import { cm_leads_EnumStatus } from '@prisma/client'
 import UserGroupService from '../user/usergroup.service'
 import {
@@ -128,6 +128,7 @@ export const retrieveActivityData = async (
           },
           CmLeadNote: {
             select: {
+              ID: true,
               Note: true,
               CreatedDate: true,
             },
@@ -507,6 +508,7 @@ const calculateLeadLostObject = (
     })
     noteData['lostReason'] = note?.Note?.split('Reason for Junk:')?.[1]
     noteData['lostTime'] = note?.CreatedDate
+    noteData['id'] = note?.ID
   }
   return noteData
 }
@@ -1232,18 +1234,22 @@ export const prepareActivityDataWithCustomField = async (
           leadNextActivityDate: leadAllActivity.find(
             (item) => item?.status !== 'done'
           )?.due_start_date,
-          leadLostTime: leadLost?.lostTime,
           leadLastEmailReceived: leadLastEmailReceived,
           emailMessagesCount: item?.CmLead?.CommunicationRecipient?.length,
           leadLastEmailSend: dayjs().utc(),
           wonBy:
             item.CmLead?.EnumStatus === 'Converted'
-              ? item.CmLead?.User?.full_name
-              : '',
+              ? {
+                  full_name: item.CmLead?.User?.full_name,
+                  image: item.CmLead?.User?.image,
+                }
+              : null,
           wonTime:
             item.CmLead?.EnumStatus === 'Converted'
-              ? item.CmLead?.CreatedDate
+              ? item.CmLead?.ConvertDate
               : null,
+          leadLostId: leadLost?.id,
+          leadLostTime: leadLost?.lostTime,
           leadLostReason: leadLost?.lostReason,
           leadStage: item.CmLead?.LeadStatusData?.status_name,
         },
@@ -1639,17 +1645,6 @@ export const manualFilterOnOrOperandColumns = async (
               manualFilterOnBasicOperand(
                 columnValue,
                 item?.CmLead?.LeadStatusData?.id
-              )
-            ) {
-              count += 1
-            }
-            break
-          }
-          case 'Lead descriptions': {
-            if (
-              manualFilterOnStringOperand(
-                columnValue,
-                item?.CmLead?.Description
               )
             ) {
               count += 1

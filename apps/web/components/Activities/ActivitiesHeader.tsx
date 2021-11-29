@@ -145,7 +145,10 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     locationData,
   }) => {
     const { t } = useTranslationI18()
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState({
+      isMobile: false,
+      isDesktop: false,
+    })
     const [userGroup, setUserGroup] = useState([])
     const [filterOption, setFilterOption] = useState<FilterOptionItemType[]>([])
     const [userList, setUserList] = useState<PersonList[]>([])
@@ -723,8 +726,13 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                   trigger="click"
                   placement="bottomRight"
                   overlayClassName={styles.filterWrapper}
-                  visible={visible}
-                  onVisibleChange={(value) => setVisible(value)}
+                  visible={visible?.isDesktop}
+                  onVisibleChange={(value) =>
+                    setVisible({
+                      ...visible,
+                      isDesktop: value,
+                    })
+                  }
                 >
                   <Button
                     icon={<FilterOutlined />}
@@ -732,7 +740,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
                   >
                     {t('activity.filter.popover.label')}
                     <span className={styles.upArrow}>
-                      {visible ? <UpOutlined /> : <DownOutlined />}
+                      {visible?.isDesktop ? <UpOutlined /> : <DownOutlined />}
                     </span>
                   </Button>
                 </Popover>
@@ -764,20 +772,24 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
               addonAfter={<SearchOutlined />}
               placeholder={t('activityList.search.placeholder')}
             />
-            <div className={styles.dropdownCustom}>
-              <FilterOutlined />
+            <div className={styles.buttonFilter}>
               <Popover
                 content={filterContent}
                 trigger="click"
                 placement="bottomRight"
                 overlayClassName={styles.filterWrapper}
-                visible={visible}
-                onVisibleChange={() => setVisible(false)}
+                visible={visible?.isMobile}
+                onVisibleChange={(value) =>
+                  setVisible({
+                    ...visible,
+                    isMobile: value,
+                  })
+                }
               >
                 <Button icon={<FilterOutlined />} className={styles.filterBtn}>
                   {t('activity.filter.popover.label')}
                   <span className={styles.upArrow}>
-                    {visible ? <UpOutlined /> : <DownOutlined />}
+                    {visible?.isMobile ? <UpOutlined /> : <DownOutlined />}
                   </span>
                 </Button>
               </Popover>

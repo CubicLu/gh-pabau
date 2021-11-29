@@ -92,9 +92,7 @@ const Financial = () => {
         tabPosition="top"
         menuItems={[
           `Invoices (${totalInvoices?.total ?? 0})`,
-          `Payments (${
-            totalPaymentCounts?.aggregateInvPayment?.count?.id ?? 0
-          })`,
+          `Payments (${totalPaymentCounts?.countPayments[0]?.count ?? 0})`,
           `Items (${totalItemsCounts?.countSoldItems ?? 0})`,
           `Voided`,
           `Statements`,
