@@ -138,6 +138,20 @@ export const CompanyService = objectType({
         return root.Booking
       },
     })
+    t.list.field('ServiceEquipment', {
+      type: 'ServiceEquipment',
+      args: {
+        where: 'ServiceEquipmentWhereInput',
+        orderBy: 'ServiceEquipmentOrderByWithRelationInput',
+        cursor: 'ServiceEquipmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceEquipmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceEquipment
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyServiceCountOutputType',
       resolve(root: any) {

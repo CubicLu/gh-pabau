@@ -74,6 +74,17 @@ const CommunicationTab = () => {
     const extension = url.split('.')[1]
     return extension === 'docx' || extension === 'doc'
   }
+  const checkIsPDF = (url) => {
+    const extension = url.split('.')[1]
+    return extension === 'pdf'
+  }
+  function isHTML(str) {
+    const doc = new DOMParser().parseFromString(str, 'text/html')
+    return Array.from(doc.body.childNodes).some((node) => node.nodeType === 1)
+  }
+  // function checkURL(url) {
+  //   return url.match(/\.(jpeg|jpg|gif|png)$/) != null
+  // }
   useEffect(() => {
     const Communications: EventsDataProps[] = []
     const fetchData = async () => {
@@ -110,14 +121,19 @@ const CommunicationTab = () => {
           }
           obj.eventName = d?.content?.subject
           if (d?.message) {
-            obj.description = d?.message
-            obj.displayCollapse = true
-            if (checkIsDocx(d.message)) {
-              obj.isDocxFile = true
-              obj.letterUrl = getDocumentURL(getImage(d.message))
+            if (isHTML(d.message)) {
+              obj.description = d.message
             } else {
-              obj.isDocxFile = false
+              if (checkIsDocx(d.message)) {
+                obj.isDocxFile = true
+                obj.letterUrl = getDocumentURL(getImage(d.message))
+              } else if (checkIsPDF(d.message)) {
+                obj.letterUrl = getImage(d.message)
+              } else {
+                obj.description = d?.message
+              }
             }
+            obj.displayCollapse = true
           }
 
           if (d?.attachment) {
