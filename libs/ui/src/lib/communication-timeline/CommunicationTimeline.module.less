@@ -210,7 +210,7 @@
         h4 {
           font-size: 14px;
           line-height: 20px !important;
-          color: #3d3d46;
+          color: #3d3d46 !important;
           font-weight: 500;
           margin-bottom: 0px;
         }
@@ -353,15 +353,19 @@
         div{
           body{
             width: 100% !important;
+            max-width: unset !important;
             img {
               max-width: 100% !important;
+              width: 100% !important;
             }
           }
         }
         table {
           width: 100% !important;
+          max-width: unset !important;
           img {
             max-width: 100% !important; 
+            width: 100% !important;
           }
         }
       }
@@ -541,7 +545,7 @@
     }
   }
 }
-.ant-pagination {
+:global .ant-pagination {
   display: flex;
   justify-content: flex-end;
   align-items: center;

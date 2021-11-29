@@ -625,10 +625,6 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
             }`}
           >
             {/* <h5>{event.description}</h5> */}
-            {/* <div
-              //className={styles.dangerousWrapper}
-              dangerouslySetInnerHTML={{ __html: event.description }}
-            /> */}
             <div className={styles.dangerousWrapper}>
               {ReactHtmlParser(event.description, options)}
             </div>

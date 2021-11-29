@@ -355,7 +355,7 @@ export const ClientCardLayout: FC<P> = ({
     { key: 'packages', name: 'Packages' },
     {
       key: 'communications',
-      name: 'Communications',
+      name: t('clients.communications.title'),
       count: countCommunition?.findManyCommunication?.length,
     },
     {

@@ -998,6 +998,10 @@ const ClientCardModal: FC<P> = ({
                   className={
                     haveSubTabs.includes(activeTab)
                       ? styles.customTabs
+                      : t(
+                          'clients.communications.title'
+                        ).toLocaleLowerCase() === activeTab
+                      ? ''
                       : styles.tab
                   }
                 >
