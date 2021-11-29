@@ -301,6 +301,13 @@ export const ClientCardLayout: FC<P> = ({
           medicalHistoryData?.form?.updated_at ??
           medicalHistoryData?.form?.created_at,
       })
+    } else if (!medicalHistoryData?.form) {
+      setMedicalHistoryDetails((val) => {
+        return {
+          ...val,
+          status: 'not_completed',
+        }
+      })
     }
   }, [medicalHistoryData])
 
