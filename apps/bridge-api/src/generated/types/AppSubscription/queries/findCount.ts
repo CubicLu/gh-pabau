@@ -8,9 +8,9 @@ export const AppSubscriptionFindCountQuery = queryField(
       where: 'AppSubscriptionWhereInput',
       orderBy: list('AppSubscriptionOrderByWithRelationInput'),
       cursor: 'AppSubscriptionWhereUniqueInput',
-      distinct: 'AppSubscriptionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AppSubscriptionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.appSubscription.count(args as any)

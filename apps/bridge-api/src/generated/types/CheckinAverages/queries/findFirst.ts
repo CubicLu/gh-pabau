@@ -8,9 +8,9 @@ export const CheckinAveragesFindFirstQuery = queryField(
       where: 'CheckinAveragesWhereInput',
       orderBy: list('CheckinAveragesOrderByWithRelationInput'),
       cursor: 'CheckinAveragesWhereUniqueInput',
-      distinct: 'CheckinAveragesScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CheckinAveragesScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.checkinAverages.findFirst({

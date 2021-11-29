@@ -5,8 +5,8 @@ export const MedicalFormContactHistoryUpdateOneMutation = mutationField(
   {
     type: nonNull('MedicalFormContactHistory'),
     args: {
-      where: nonNull('MedicalFormContactHistoryWhereUniqueInput'),
       data: nonNull('MedicalFormContactHistoryUpdateInput'),
+      where: nonNull('MedicalFormContactHistoryWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.medicalFormContactHistory.update({

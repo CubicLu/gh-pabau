@@ -8,9 +8,9 @@ export const AcceptEmailTokenFindFirstQuery = queryField(
       where: 'AcceptEmailTokenWhereInput',
       orderBy: list('AcceptEmailTokenOrderByWithRelationInput'),
       cursor: 'AcceptEmailTokenWhereUniqueInput',
-      distinct: 'AcceptEmailTokenScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AcceptEmailTokenScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.acceptEmailToken.findFirst({

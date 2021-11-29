@@ -8,9 +8,8 @@ export const MediaLlibraryAttachmentAggregateQuery = queryField(
       where: 'MediaLlibraryAttachmentWhereInput',
       orderBy: list('MediaLlibraryAttachmentOrderByWithRelationInput'),
       cursor: 'MediaLlibraryAttachmentWhereUniqueInput',
-      distinct: 'MediaLlibraryAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.mediaLlibraryAttachment.aggregate({

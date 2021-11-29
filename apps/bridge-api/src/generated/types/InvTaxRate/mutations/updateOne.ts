@@ -5,8 +5,8 @@ export const InvTaxRateUpdateOneMutation = mutationField(
   {
     type: nonNull('InvTaxRate'),
     args: {
-      where: nonNull('InvTaxRateWhereUniqueInput'),
       data: nonNull('InvTaxRateUpdateInput'),
+      where: nonNull('InvTaxRateWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.invTaxRate.update({

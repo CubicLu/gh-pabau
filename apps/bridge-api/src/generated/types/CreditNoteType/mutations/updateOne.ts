@@ -5,8 +5,8 @@ export const CreditNoteTypeUpdateOneMutation = mutationField(
   {
     type: nonNull('CreditNoteType'),
     args: {
-      where: nonNull('CreditNoteTypeWhereUniqueInput'),
       data: nonNull('CreditNoteTypeUpdateInput'),
+      where: nonNull('CreditNoteTypeWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.creditNoteType.update({

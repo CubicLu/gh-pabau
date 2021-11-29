@@ -6,9 +6,8 @@ export const PathwayStepAggregateQuery = queryField('aggregatePathwayStep', {
     where: 'PathwayStepWhereInput',
     orderBy: list('PathwayStepOrderByWithRelationInput'),
     cursor: 'PathwayStepWhereUniqueInput',
-    distinct: 'PathwayStepScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.pathwayStep.aggregate({ ...args, ...select }) as any

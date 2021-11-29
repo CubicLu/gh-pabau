@@ -6,9 +6,9 @@ export const ApiDebugFindCountQuery = queryField('findManyApiDebugCount', {
     where: 'ApiDebugWhereInput',
     orderBy: list('ApiDebugOrderByWithRelationInput'),
     cursor: 'ApiDebugWhereUniqueInput',
-    distinct: 'ApiDebugScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ApiDebugScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.apiDebug.count(args as any)

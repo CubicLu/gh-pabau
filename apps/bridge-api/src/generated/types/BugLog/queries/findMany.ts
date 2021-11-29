@@ -6,9 +6,9 @@ export const BugLogFindManyQuery = queryField('findManyBugLog', {
     where: 'BugLogWhereInput',
     orderBy: list('BugLogOrderByWithRelationInput'),
     cursor: 'BugLogWhereUniqueInput',
-    distinct: 'BugLogScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BugLogScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.bugLog.findMany({

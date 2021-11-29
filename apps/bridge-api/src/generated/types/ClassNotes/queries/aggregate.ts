@@ -6,9 +6,8 @@ export const ClassNotesAggregateQuery = queryField('aggregateClassNotes', {
     where: 'ClassNotesWhereInput',
     orderBy: list('ClassNotesOrderByWithRelationInput'),
     cursor: 'ClassNotesWhereUniqueInput',
-    distinct: 'ClassNotesScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.classNotes.aggregate({ ...args, ...select }) as any

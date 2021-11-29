@@ -6,9 +6,9 @@ export const BatchFindCountQuery = queryField('findManyBatchCount', {
     where: 'BatchWhereInput',
     orderBy: list('BatchOrderByWithRelationInput'),
     cursor: 'BatchWhereUniqueInput',
-    distinct: 'BatchScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BatchScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.batch.count(args as any)

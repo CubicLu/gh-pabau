@@ -5,8 +5,8 @@ export const PasswordResetAuthUpdateOneMutation = mutationField(
   {
     type: nonNull('PasswordResetAuth'),
     args: {
-      where: nonNull('PasswordResetAuthWhereUniqueInput'),
       data: nonNull('PasswordResetAuthUpdateInput'),
+      where: nonNull('PasswordResetAuthWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.passwordResetAuth.update({

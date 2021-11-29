@@ -8,9 +8,8 @@ export const PermissionTemplateAggregateQuery = queryField(
       where: 'PermissionTemplateWhereInput',
       orderBy: list('PermissionTemplateOrderByWithRelationInput'),
       cursor: 'PermissionTemplateWhereUniqueInput',
-      distinct: 'PermissionTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.permissionTemplate.aggregate({ ...args, ...select }) as any

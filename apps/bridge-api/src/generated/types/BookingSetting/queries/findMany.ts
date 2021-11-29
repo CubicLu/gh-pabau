@@ -8,9 +8,9 @@ export const BookingSettingFindManyQuery = queryField(
       where: 'BookingSettingWhereInput',
       orderBy: list('BookingSettingOrderByWithRelationInput'),
       cursor: 'BookingSettingWhereUniqueInput',
-      distinct: 'BookingSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BookingSettingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookingSetting.findMany({

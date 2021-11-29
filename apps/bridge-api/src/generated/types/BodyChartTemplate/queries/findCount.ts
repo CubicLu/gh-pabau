@@ -8,9 +8,9 @@ export const BodyChartTemplateFindCountQuery = queryField(
       where: 'BodyChartTemplateWhereInput',
       orderBy: list('BodyChartTemplateOrderByWithRelationInput'),
       cursor: 'BodyChartTemplateWhereUniqueInput',
-      distinct: 'BodyChartTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BodyChartTemplateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bodyChartTemplate.count(args as any)

@@ -5,8 +5,8 @@ export const AppBeforeAfterUpdateOneMutation = mutationField(
   {
     type: nonNull('AppBeforeAfter'),
     args: {
-      where: nonNull('AppBeforeAfterWhereUniqueInput'),
       data: nonNull('AppBeforeAfterUpdateInput'),
+      where: nonNull('AppBeforeAfterWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.appBeforeAfter.update({

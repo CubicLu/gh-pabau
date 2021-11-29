@@ -6,9 +6,9 @@ export const GlCodeFindCountQuery = queryField('findManyGlCodeCount', {
     where: 'GlCodeWhereInput',
     orderBy: list('GlCodeOrderByWithRelationInput'),
     cursor: 'GlCodeWhereUniqueInput',
-    distinct: 'GlCodeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('GlCodeScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.glCode.count(args as any)

@@ -8,9 +8,8 @@ export const CmCouponClickAggregateQuery = queryField(
       where: 'CmCouponClickWhereInput',
       orderBy: list('CmCouponClickOrderByWithRelationInput'),
       cursor: 'CmCouponClickWhereUniqueInput',
-      distinct: 'CmCouponClickScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmCouponClick.aggregate({ ...args, ...select }) as any

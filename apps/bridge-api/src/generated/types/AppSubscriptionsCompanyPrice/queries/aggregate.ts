@@ -8,9 +8,8 @@ export const AppSubscriptionsCompanyPriceAggregateQuery = queryField(
       where: 'AppSubscriptionsCompanyPriceWhereInput',
       orderBy: list('AppSubscriptionsCompanyPriceOrderByWithRelationInput'),
       cursor: 'AppSubscriptionsCompanyPriceWhereUniqueInput',
-      distinct: 'AppSubscriptionsCompanyPriceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.appSubscriptionsCompanyPrice.aggregate({

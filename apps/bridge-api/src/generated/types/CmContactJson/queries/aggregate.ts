@@ -8,9 +8,8 @@ export const CmContactJsonAggregateQuery = queryField(
       where: 'CmContactJsonWhereInput',
       orderBy: list('CmContactJsonOrderByWithRelationInput'),
       cursor: 'CmContactJsonWhereUniqueInput',
-      distinct: 'CmContactJsonScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmContactJson.aggregate({ ...args, ...select }) as any

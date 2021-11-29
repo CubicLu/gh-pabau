@@ -5,8 +5,8 @@ export const ManageCustomFieldUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ManageCustomFieldWhereInput',
       data: nonNull('ManageCustomFieldUpdateManyMutationInput'),
+      where: 'ManageCustomFieldWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.manageCustomField.updateMany(args as any)

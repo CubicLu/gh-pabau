@@ -8,9 +8,8 @@ export const MedicalFormContactHistoryAggregateQuery = queryField(
       where: 'MedicalFormContactHistoryWhereInput',
       orderBy: list('MedicalFormContactHistoryOrderByWithRelationInput'),
       cursor: 'MedicalFormContactHistoryWhereUniqueInput',
-      distinct: 'MedicalFormContactHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.medicalFormContactHistory.aggregate({

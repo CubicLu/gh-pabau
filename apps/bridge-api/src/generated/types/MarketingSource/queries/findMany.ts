@@ -8,9 +8,9 @@ export const MarketingSourceFindManyQuery = queryField(
       where: 'MarketingSourceWhereInput',
       orderBy: list('MarketingSourceOrderByWithRelationInput'),
       cursor: 'MarketingSourceWhereUniqueInput',
-      distinct: 'MarketingSourceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('MarketingSourceScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.marketingSource.findMany({

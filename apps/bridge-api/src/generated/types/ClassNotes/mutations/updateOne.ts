@@ -5,8 +5,8 @@ export const ClassNotesUpdateOneMutation = mutationField(
   {
     type: nonNull('ClassNotes'),
     args: {
-      where: nonNull('ClassNotesWhereUniqueInput'),
       data: nonNull('ClassNotesUpdateInput'),
+      where: nonNull('ClassNotesWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.classNotes.update({

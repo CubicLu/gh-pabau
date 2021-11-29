@@ -5,8 +5,8 @@ export const CalendarViewUpdateOneMutation = mutationField(
   {
     type: nonNull('CalendarView'),
     args: {
-      where: nonNull('CalendarViewWhereUniqueInput'),
       data: nonNull('CalendarViewUpdateInput'),
+      where: nonNull('CalendarViewWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.calendarView.update({

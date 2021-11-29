@@ -5,8 +5,8 @@ export const TblModuleFieldsSettingUpdateOneMutation = mutationField(
   {
     type: nonNull('TblModuleFieldsSetting'),
     args: {
-      where: nonNull('TblModuleFieldsSettingWhereUniqueInput'),
       data: nonNull('TblModuleFieldsSettingUpdateInput'),
+      where: nonNull('TblModuleFieldsSettingWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.tblModuleFieldsSetting.update({

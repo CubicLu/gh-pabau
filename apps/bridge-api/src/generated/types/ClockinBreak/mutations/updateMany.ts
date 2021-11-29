@@ -5,8 +5,8 @@ export const ClockinBreakUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ClockinBreakWhereInput',
       data: nonNull('ClockinBreakUpdateManyMutationInput'),
+      where: 'ClockinBreakWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.clockinBreak.updateMany(args as any)

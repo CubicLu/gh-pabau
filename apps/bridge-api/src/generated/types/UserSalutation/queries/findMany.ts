@@ -8,9 +8,9 @@ export const UserSalutationFindManyQuery = queryField(
       where: 'UserSalutationWhereInput',
       orderBy: list('UserSalutationOrderByWithRelationInput'),
       cursor: 'UserSalutationWhereUniqueInput',
-      distinct: 'UserSalutationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('UserSalutationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.userSalutation.findMany({

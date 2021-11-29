@@ -8,9 +8,8 @@ export const CommunicationsRequestedFormsAggregateQuery = queryField(
       where: 'CommunicationsRequestedFormsWhereInput',
       orderBy: list('CommunicationsRequestedFormsOrderByWithRelationInput'),
       cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
-      distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.communicationsRequestedForms.aggregate({

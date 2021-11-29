@@ -8,9 +8,9 @@ export const InvWarehouseFindCountQuery = queryField(
       where: 'InvWarehouseWhereInput',
       orderBy: list('InvWarehouseOrderByWithRelationInput'),
       cursor: 'InvWarehouseWhereUniqueInput',
-      distinct: 'InvWarehouseScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InvWarehouseScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invWarehouse.count(args as any)

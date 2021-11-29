@@ -6,9 +6,8 @@ export const CmLeadAggregateQuery = queryField('aggregateCmLead', {
     where: 'CmLeadWhereInput',
     orderBy: list('CmLeadOrderByWithRelationInput'),
     cursor: 'CmLeadWhereUniqueInput',
-    distinct: 'CmLeadScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmLead.aggregate({ ...args, ...select }) as any

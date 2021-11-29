@@ -8,9 +8,9 @@ export const ClassSmsHistoryFindFirstQuery = queryField(
       where: 'ClassSmsHistoryWhereInput',
       orderBy: list('ClassSmsHistoryOrderByWithRelationInput'),
       cursor: 'ClassSmsHistoryWhereUniqueInput',
-      distinct: 'ClassSmsHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassSmsHistoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.classSmsHistory.findFirst({

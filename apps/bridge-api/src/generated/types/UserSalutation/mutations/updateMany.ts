@@ -5,8 +5,8 @@ export const UserSalutationUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'UserSalutationWhereInput',
       data: nonNull('UserSalutationUpdateManyMutationInput'),
+      where: 'UserSalutationWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.userSalutation.updateMany(args as any)

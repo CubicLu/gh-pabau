@@ -8,9 +8,9 @@ export const InvCategoryFindCountQuery = queryField(
       where: 'InvCategoryWhereInput',
       orderBy: list('InvCategoryOrderByWithRelationInput'),
       cursor: 'InvCategoryWhereUniqueInput',
-      distinct: 'InvCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InvCategoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invCategory.count(args as any)

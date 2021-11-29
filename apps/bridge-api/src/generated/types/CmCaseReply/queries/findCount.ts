@@ -8,9 +8,9 @@ export const CmCaseReplyFindCountQuery = queryField(
       where: 'CmCaseReplyWhereInput',
       orderBy: list('CmCaseReplyOrderByWithRelationInput'),
       cursor: 'CmCaseReplyWhereUniqueInput',
-      distinct: 'CmCaseReplyScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmCaseReplyScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmCaseReply.count(args as any)

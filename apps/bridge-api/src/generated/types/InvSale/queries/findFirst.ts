@@ -6,9 +6,9 @@ export const InvSaleFindFirstQuery = queryField('findFirstInvSale', {
     where: 'InvSaleWhereInput',
     orderBy: list('InvSaleOrderByWithRelationInput'),
     cursor: 'InvSaleWhereUniqueInput',
-    distinct: 'InvSaleScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('InvSaleScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.invSale.findFirst({

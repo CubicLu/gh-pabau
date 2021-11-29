@@ -8,9 +8,9 @@ export const AutomationLogFindFirstQuery = queryField(
       where: 'AutomationLogWhereInput',
       orderBy: list('AutomationLogOrderByWithRelationInput'),
       cursor: 'AutomationLogWhereUniqueInput',
-      distinct: 'AutomationLogScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AutomationLogScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.automationLog.findFirst({

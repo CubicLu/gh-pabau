@@ -5,8 +5,8 @@ export const AppSubscriptionUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AppSubscriptionWhereInput',
       data: nonNull('AppSubscriptionUpdateManyMutationInput'),
+      where: 'AppSubscriptionWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.appSubscription.updateMany(args as any)

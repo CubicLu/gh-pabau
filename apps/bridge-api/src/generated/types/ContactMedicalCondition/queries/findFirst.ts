@@ -8,9 +8,9 @@ export const ContactMedicalConditionFindFirstQuery = queryField(
       where: 'ContactMedicalConditionWhereInput',
       orderBy: list('ContactMedicalConditionOrderByWithRelationInput'),
       cursor: 'ContactMedicalConditionWhereUniqueInput',
-      distinct: 'ContactMedicalConditionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactMedicalConditionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.contactMedicalCondition.findFirst({

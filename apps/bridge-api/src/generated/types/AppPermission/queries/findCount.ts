@@ -8,9 +8,9 @@ export const AppPermissionFindCountQuery = queryField(
       where: 'AppPermissionWhereInput',
       orderBy: list('AppPermissionOrderByWithRelationInput'),
       cursor: 'AppPermissionWhereUniqueInput',
-      distinct: 'AppPermissionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AppPermissionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.appPermission.count(args as any)

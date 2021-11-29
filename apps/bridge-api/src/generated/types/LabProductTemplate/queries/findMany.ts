@@ -8,9 +8,9 @@ export const LabProductTemplateFindManyQuery = queryField(
       where: 'LabProductTemplateWhereInput',
       orderBy: list('LabProductTemplateOrderByWithRelationInput'),
       cursor: 'LabProductTemplateWhereUniqueInput',
-      distinct: 'LabProductTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('LabProductTemplateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.labProductTemplate.findMany({

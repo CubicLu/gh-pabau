@@ -5,8 +5,8 @@ export const CommunicationHashUpdateOneMutation = mutationField(
   {
     type: nonNull('CommunicationHash'),
     args: {
-      where: nonNull('CommunicationHashWhereUniqueInput'),
       data: nonNull('CommunicationHashUpdateInput'),
+      where: nonNull('CommunicationHashWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.communicationHash.update({

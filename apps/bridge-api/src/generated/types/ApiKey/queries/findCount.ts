@@ -6,9 +6,9 @@ export const ApiKeyFindCountQuery = queryField('findManyApiKeyCount', {
     where: 'ApiKeyWhereInput',
     orderBy: list('ApiKeyOrderByWithRelationInput'),
     cursor: 'ApiKeyWhereUniqueInput',
-    distinct: 'ApiKeyScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ApiKeyScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.apiKey.count(args as any)

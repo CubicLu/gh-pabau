@@ -5,8 +5,8 @@ export const MediaLlibraryAttachmentUpdateOneMutation = mutationField(
   {
     type: nonNull('MediaLlibraryAttachment'),
     args: {
-      where: nonNull('MediaLlibraryAttachmentWhereUniqueInput'),
       data: nonNull('MediaLlibraryAttachmentUpdateInput'),
+      where: nonNull('MediaLlibraryAttachmentWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.mediaLlibraryAttachment.update({

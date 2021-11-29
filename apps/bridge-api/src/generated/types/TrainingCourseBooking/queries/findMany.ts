@@ -8,9 +8,9 @@ export const TrainingCourseBookingFindManyQuery = queryField(
       where: 'TrainingCourseBookingWhereInput',
       orderBy: list('TrainingCourseBookingOrderByWithRelationInput'),
       cursor: 'TrainingCourseBookingWhereUniqueInput',
-      distinct: 'TrainingCourseBookingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('TrainingCourseBookingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.trainingCourseBooking.findMany({

@@ -6,9 +6,8 @@ export const UserMasterAggregateQuery = queryField('aggregateUserMaster', {
     where: 'UserMasterWhereInput',
     orderBy: list('UserMasterOrderByWithRelationInput'),
     cursor: 'UserMasterWhereUniqueInput',
-    distinct: 'UserMasterScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.userMaster.aggregate({ ...args, ...select }) as any

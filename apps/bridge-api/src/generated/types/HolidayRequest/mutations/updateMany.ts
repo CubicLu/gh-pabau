@@ -5,8 +5,8 @@ export const HolidayRequestUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'HolidayRequestWhereInput',
       data: nonNull('HolidayRequestUpdateManyMutationInput'),
+      where: 'HolidayRequestWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.holidayRequest.updateMany(args as any)

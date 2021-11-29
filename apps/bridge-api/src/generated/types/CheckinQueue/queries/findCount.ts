@@ -8,9 +8,9 @@ export const CheckinQueueFindCountQuery = queryField(
       where: 'CheckinQueueWhereInput',
       orderBy: list('CheckinQueueOrderByWithRelationInput'),
       cursor: 'CheckinQueueWhereUniqueInput',
-      distinct: 'CheckinQueueScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CheckinQueueScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.checkinQueue.count(args as any)

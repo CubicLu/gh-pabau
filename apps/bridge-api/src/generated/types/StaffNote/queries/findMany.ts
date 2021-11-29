@@ -6,9 +6,9 @@ export const StaffNoteFindManyQuery = queryField('findManyStaffNote', {
     where: 'StaffNoteWhereInput',
     orderBy: list('StaffNoteOrderByWithRelationInput'),
     cursor: 'StaffNoteWhereUniqueInput',
-    distinct: 'StaffNoteScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('StaffNoteScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.staffNote.findMany({

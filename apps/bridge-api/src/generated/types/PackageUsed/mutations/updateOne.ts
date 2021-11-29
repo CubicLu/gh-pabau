@@ -5,8 +5,8 @@ export const PackageUsedUpdateOneMutation = mutationField(
   {
     type: nonNull('PackageUsed'),
     args: {
-      where: nonNull('PackageUsedWhereUniqueInput'),
       data: nonNull('PackageUsedUpdateInput'),
+      where: nonNull('PackageUsedWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.packageUsed.update({

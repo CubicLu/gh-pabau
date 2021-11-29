@@ -8,9 +8,8 @@ export const ReportCategoryAggregateQuery = queryField(
       where: 'ReportCategoryWhereInput',
       orderBy: list('ReportCategoryOrderByWithRelationInput'),
       cursor: 'ReportCategoryWhereUniqueInput',
-      distinct: 'ReportCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.reportCategory.aggregate({ ...args, ...select }) as any

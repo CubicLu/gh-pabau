@@ -6,9 +6,9 @@ export const AtQuizTakeFindManyQuery = queryField('findManyAtQuizTake', {
     where: 'AtQuizTakeWhereInput',
     orderBy: list('AtQuizTakeOrderByWithRelationInput'),
     cursor: 'AtQuizTakeWhereUniqueInput',
-    distinct: 'AtQuizTakeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AtQuizTakeScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.atQuizTake.findMany({

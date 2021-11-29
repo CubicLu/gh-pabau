@@ -5,8 +5,8 @@ export const SupplierCategoryUpdateOneMutation = mutationField(
   {
     type: nonNull('SupplierCategory'),
     args: {
-      where: nonNull('SupplierCategoryWhereUniqueInput'),
       data: nonNull('SupplierCategoryUpdateInput'),
+      where: nonNull('SupplierCategoryWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.supplierCategory.update({

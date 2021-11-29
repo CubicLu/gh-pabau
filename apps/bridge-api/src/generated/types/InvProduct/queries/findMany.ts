@@ -6,9 +6,9 @@ export const InvProductFindManyQuery = queryField('findManyInvProduct', {
     where: 'InvProductWhereInput',
     orderBy: list('InvProductOrderByWithRelationInput'),
     cursor: 'InvProductWhereUniqueInput',
-    distinct: 'InvProductScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('InvProductScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.invProduct.findMany({

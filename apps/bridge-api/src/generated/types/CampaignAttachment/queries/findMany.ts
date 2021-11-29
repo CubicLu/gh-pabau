@@ -8,9 +8,9 @@ export const CampaignAttachmentFindManyQuery = queryField(
       where: 'CampaignAttachmentWhereInput',
       orderBy: list('CampaignAttachmentOrderByWithRelationInput'),
       cursor: 'CampaignAttachmentWhereUniqueInput',
-      distinct: 'CampaignAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CampaignAttachmentScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.campaignAttachment.findMany({

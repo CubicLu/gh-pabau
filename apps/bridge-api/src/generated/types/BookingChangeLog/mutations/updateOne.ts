@@ -5,8 +5,8 @@ export const BookingChangeLogUpdateOneMutation = mutationField(
   {
     type: nonNull('BookingChangeLog'),
     args: {
-      where: nonNull('BookingChangeLogWhereUniqueInput'),
       data: nonNull('BookingChangeLogUpdateInput'),
+      where: nonNull('BookingChangeLogWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.bookingChangeLog.update({

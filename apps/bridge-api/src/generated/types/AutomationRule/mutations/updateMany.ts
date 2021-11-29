@@ -5,8 +5,8 @@ export const AutomationRuleUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AutomationRuleWhereInput',
       data: nonNull('AutomationRuleUpdateManyMutationInput'),
+      where: 'AutomationRuleWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.automationRule.updateMany(args as any)

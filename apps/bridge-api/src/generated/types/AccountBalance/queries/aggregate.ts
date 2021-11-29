@@ -8,9 +8,8 @@ export const AccountBalanceAggregateQuery = queryField(
       where: 'AccountBalanceWhereInput',
       orderBy: list('AccountBalanceOrderByWithRelationInput'),
       cursor: 'AccountBalanceWhereUniqueInput',
-      distinct: 'AccountBalanceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.accountBalance.aggregate({ ...args, ...select }) as any

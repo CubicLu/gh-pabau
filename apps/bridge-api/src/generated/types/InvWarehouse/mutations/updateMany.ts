@@ -5,8 +5,8 @@ export const InvWarehouseUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'InvWarehouseWhereInput',
       data: nonNull('InvWarehouseUpdateManyMutationInput'),
+      where: 'InvWarehouseWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invWarehouse.updateMany(args as any)

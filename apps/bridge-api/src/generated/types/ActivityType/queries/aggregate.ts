@@ -6,9 +6,8 @@ export const ActivityTypeAggregateQuery = queryField('aggregateActivityType', {
     where: 'ActivityTypeWhereInput',
     orderBy: list('ActivityTypeOrderByWithRelationInput'),
     cursor: 'ActivityTypeWhereUniqueInput',
-    distinct: 'ActivityTypeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.activityType.aggregate({ ...args, ...select }) as any

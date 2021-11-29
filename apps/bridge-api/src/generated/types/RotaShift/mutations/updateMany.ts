@@ -5,8 +5,8 @@ export const RotaShiftUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'RotaShiftWhereInput',
       data: nonNull('RotaShiftUpdateManyMutationInput'),
+      where: 'RotaShiftWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.rotaShift.updateMany(args as any)

@@ -5,8 +5,8 @@ export const CancellationPolicyUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CancellationPolicyWhereInput',
       data: nonNull('CancellationPolicyUpdateManyMutationInput'),
+      where: 'CancellationPolicyWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cancellationPolicy.updateMany(args as any)

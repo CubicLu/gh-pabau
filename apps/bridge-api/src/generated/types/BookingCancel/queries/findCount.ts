@@ -8,9 +8,9 @@ export const BookingCancelFindCountQuery = queryField(
       where: 'BookingCancelWhereInput',
       orderBy: list('BookingCancelOrderByWithRelationInput'),
       cursor: 'BookingCancelWhereUniqueInput',
-      distinct: 'BookingCancelScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BookingCancelScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookingCancel.count(args as any)

@@ -6,9 +6,9 @@ export const CheckinApptFindFirstQuery = queryField('findFirstCheckinAppt', {
     where: 'CheckinApptWhereInput',
     orderBy: list('CheckinApptOrderByWithRelationInput'),
     cursor: 'CheckinApptWhereUniqueInput',
-    distinct: 'CheckinApptScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CheckinApptScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.checkinAppt.findFirst({

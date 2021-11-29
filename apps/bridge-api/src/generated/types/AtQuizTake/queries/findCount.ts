@@ -6,9 +6,9 @@ export const AtQuizTakeFindCountQuery = queryField('findManyAtQuizTakeCount', {
     where: 'AtQuizTakeWhereInput',
     orderBy: list('AtQuizTakeOrderByWithRelationInput'),
     cursor: 'AtQuizTakeWhereUniqueInput',
-    distinct: 'AtQuizTakeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AtQuizTakeScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.atQuizTake.count(args as any)

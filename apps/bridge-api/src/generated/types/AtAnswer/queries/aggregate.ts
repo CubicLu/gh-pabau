@@ -6,9 +6,8 @@ export const AtAnswerAggregateQuery = queryField('aggregateAtAnswer', {
     where: 'AtAnswerWhereInput',
     orderBy: list('AtAnswerOrderByWithRelationInput'),
     cursor: 'AtAnswerWhereUniqueInput',
-    distinct: 'AtAnswerScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.atAnswer.aggregate({ ...args, ...select }) as any

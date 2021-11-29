@@ -6,9 +6,9 @@ export const AcLogActionFindFirstQuery = queryField('findFirstAcLogAction', {
     where: 'AcLogActionWhereInput',
     orderBy: list('AcLogActionOrderByWithRelationInput'),
     cursor: 'AcLogActionWhereUniqueInput',
-    distinct: 'AcLogActionScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AcLogActionScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.acLogAction.findFirst({

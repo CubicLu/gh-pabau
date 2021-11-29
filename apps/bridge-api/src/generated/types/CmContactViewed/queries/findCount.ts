@@ -8,9 +8,9 @@ export const CmContactViewedFindCountQuery = queryField(
       where: 'CmContactViewedWhereInput',
       orderBy: list('CmContactViewedOrderByWithRelationInput'),
       cursor: 'CmContactViewedWhereUniqueInput',
-      distinct: 'CmContactViewedScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmContactViewedScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmContactViewed.count(args as any)

@@ -8,9 +8,9 @@ export const AvilableDatesLogFindCountQuery = queryField(
       where: 'AvilableDatesLogWhereInput',
       orderBy: list('AvilableDatesLogOrderByWithRelationInput'),
       cursor: 'AvilableDatesLogWhereUniqueInput',
-      distinct: 'AvilableDatesLogScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AvilableDatesLogScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.avilableDatesLog.count(args as any)

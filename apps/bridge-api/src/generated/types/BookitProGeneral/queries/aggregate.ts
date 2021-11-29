@@ -8,9 +8,8 @@ export const BookitProGeneralAggregateQuery = queryField(
       where: 'BookitProGeneralWhereInput',
       orderBy: list('BookitProGeneralOrderByWithRelationInput'),
       cursor: 'BookitProGeneralWhereUniqueInput',
-      distinct: 'BookitProGeneralScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookitProGeneral.aggregate({ ...args, ...select }) as any

@@ -6,9 +6,9 @@ export const VoucherFindFirstQuery = queryField('findFirstVoucher', {
     where: 'VoucherWhereInput',
     orderBy: list('VoucherOrderByWithRelationInput'),
     cursor: 'VoucherWhereUniqueInput',
-    distinct: 'VoucherScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('VoucherScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.voucher.findFirst({

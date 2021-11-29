@@ -6,9 +6,9 @@ export const AtTreatmentFindManyQuery = queryField('findManyAtTreatment', {
     where: 'AtTreatmentWhereInput',
     orderBy: list('AtTreatmentOrderByWithRelationInput'),
     cursor: 'AtTreatmentWhereUniqueInput',
-    distinct: 'AtTreatmentScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('AtTreatmentScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.atTreatment.findMany({

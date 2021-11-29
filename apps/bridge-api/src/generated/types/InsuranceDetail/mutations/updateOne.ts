@@ -5,8 +5,8 @@ export const InsuranceDetailUpdateOneMutation = mutationField(
   {
     type: nonNull('InsuranceDetail'),
     args: {
-      where: nonNull('InsuranceDetailWhereUniqueInput'),
       data: nonNull('InsuranceDetailUpdateInput'),
+      where: nonNull('InsuranceDetailWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.insuranceDetail.update({

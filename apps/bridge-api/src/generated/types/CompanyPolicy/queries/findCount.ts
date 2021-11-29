@@ -8,9 +8,9 @@ export const CompanyPolicyFindCountQuery = queryField(
       where: 'CompanyPolicyWhereInput',
       orderBy: list('CompanyPolicyOrderByWithRelationInput'),
       cursor: 'CompanyPolicyWhereUniqueInput',
-      distinct: 'CompanyPolicyScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyPolicyScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyPolicy.count(args as any)

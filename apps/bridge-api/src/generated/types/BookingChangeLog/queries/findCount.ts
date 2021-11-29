@@ -8,9 +8,9 @@ export const BookingChangeLogFindCountQuery = queryField(
       where: 'BookingChangeLogWhereInput',
       orderBy: list('BookingChangeLogOrderByWithRelationInput'),
       cursor: 'BookingChangeLogWhereUniqueInput',
-      distinct: 'BookingChangeLogScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BookingChangeLogScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookingChangeLog.count(args as any)

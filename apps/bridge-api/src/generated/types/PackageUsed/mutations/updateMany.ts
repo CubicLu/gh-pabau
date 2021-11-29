@@ -5,8 +5,8 @@ export const PackageUsedUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'PackageUsedWhereInput',
       data: nonNull('PackageUsedUpdateManyMutationInput'),
+      where: 'PackageUsedWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.packageUsed.updateMany(args as any)

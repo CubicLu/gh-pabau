@@ -6,9 +6,8 @@ export const UserGroupAggregateQuery = queryField('aggregateUserGroup', {
     where: 'UserGroupWhereInput',
     orderBy: list('UserGroupOrderByWithRelationInput'),
     cursor: 'UserGroupWhereUniqueInput',
-    distinct: 'UserGroupScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.userGroup.aggregate({ ...args, ...select }) as any

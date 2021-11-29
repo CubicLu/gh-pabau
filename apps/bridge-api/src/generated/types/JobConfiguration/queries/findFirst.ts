@@ -8,9 +8,9 @@ export const JobConfigurationFindFirstQuery = queryField(
       where: 'JobConfigurationWhereInput',
       orderBy: list('JobConfigurationOrderByWithRelationInput'),
       cursor: 'JobConfigurationWhereUniqueInput',
-      distinct: 'JobConfigurationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('JobConfigurationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.jobConfiguration.findFirst({

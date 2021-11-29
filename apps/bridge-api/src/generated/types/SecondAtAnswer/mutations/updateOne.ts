@@ -5,8 +5,8 @@ export const SecondAtAnswerUpdateOneMutation = mutationField(
   {
     type: nonNull('SecondAtAnswer'),
     args: {
-      where: nonNull('SecondAtAnswerWhereUniqueInput'),
       data: nonNull('SecondAtAnswerUpdateInput'),
+      where: nonNull('SecondAtAnswerWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.secondAtAnswer.update({

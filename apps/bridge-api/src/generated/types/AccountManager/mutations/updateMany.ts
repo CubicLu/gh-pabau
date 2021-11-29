@@ -5,8 +5,8 @@ export const AccountManagerUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AccountManagerWhereInput',
       data: nonNull('AccountManagerUpdateManyMutationInput'),
+      where: 'AccountManagerWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.accountManager.updateMany(args as any)

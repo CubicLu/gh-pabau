@@ -8,9 +8,8 @@ export const AutomationFolderAggregateQuery = queryField(
       where: 'AutomationFolderWhereInput',
       orderBy: list('AutomationFolderOrderByWithRelationInput'),
       cursor: 'AutomationFolderWhereUniqueInput',
-      distinct: 'AutomationFolderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.automationFolder.aggregate({ ...args, ...select }) as any

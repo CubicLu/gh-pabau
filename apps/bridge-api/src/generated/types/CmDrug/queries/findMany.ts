@@ -6,9 +6,9 @@ export const CmDrugFindManyQuery = queryField('findManyCmDrug', {
     where: 'CmDrugWhereInput',
     orderBy: list('CmDrugOrderByWithRelationInput'),
     cursor: 'CmDrugWhereUniqueInput',
-    distinct: 'CmDrugScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmDrugScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmDrug.findMany({

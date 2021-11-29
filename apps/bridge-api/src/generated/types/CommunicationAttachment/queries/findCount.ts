@@ -8,9 +8,9 @@ export const CommunicationAttachmentFindCountQuery = queryField(
       where: 'CommunicationAttachmentWhereInput',
       orderBy: list('CommunicationAttachmentOrderByWithRelationInput'),
       cursor: 'CommunicationAttachmentWhereUniqueInput',
-      distinct: 'CommunicationAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CommunicationAttachmentScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.communicationAttachment.count(args as any)

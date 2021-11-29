@@ -8,9 +8,9 @@ export const ClientFormSettingFindCountQuery = queryField(
       where: 'ClientFormSettingWhereInput',
       orderBy: list('ClientFormSettingOrderByWithRelationInput'),
       cursor: 'ClientFormSettingWhereUniqueInput',
-      distinct: 'ClientFormSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClientFormSettingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.clientFormSetting.count(args as any)

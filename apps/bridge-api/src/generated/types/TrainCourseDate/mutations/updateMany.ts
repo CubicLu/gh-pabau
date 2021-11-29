@@ -5,8 +5,8 @@ export const TrainCourseDateUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'TrainCourseDateWhereInput',
       data: nonNull('TrainCourseDateUpdateManyMutationInput'),
+      where: 'TrainCourseDateWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.trainCourseDate.updateMany(args as any)

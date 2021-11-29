@@ -8,9 +8,8 @@ export const RecallScheduleAggregateQuery = queryField(
       where: 'RecallScheduleWhereInput',
       orderBy: list('RecallScheduleOrderByWithRelationInput'),
       cursor: 'RecallScheduleWhereUniqueInput',
-      distinct: 'RecallScheduleScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.recallSchedule.aggregate({ ...args, ...select }) as any

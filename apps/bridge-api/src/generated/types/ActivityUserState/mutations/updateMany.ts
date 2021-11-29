@@ -5,8 +5,8 @@ export const ActivityUserStateUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ActivityUserStateWhereInput',
       data: nonNull('ActivityUserStateUpdateManyMutationInput'),
+      where: 'ActivityUserStateWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.activityUserState.updateMany(args as any)

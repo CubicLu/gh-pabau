@@ -5,8 +5,8 @@ export const ClockinTimesheetUpdateOneMutation = mutationField(
   {
     type: nonNull('ClockinTimesheet'),
     args: {
-      where: nonNull('ClockinTimesheetWhereUniqueInput'),
       data: nonNull('ClockinTimesheetUpdateInput'),
+      where: nonNull('ClockinTimesheetWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.clockinTimesheet.update({

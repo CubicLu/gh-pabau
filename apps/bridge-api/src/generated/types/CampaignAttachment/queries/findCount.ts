@@ -8,9 +8,9 @@ export const CampaignAttachmentFindCountQuery = queryField(
       where: 'CampaignAttachmentWhereInput',
       orderBy: list('CampaignAttachmentOrderByWithRelationInput'),
       cursor: 'CampaignAttachmentWhereUniqueInput',
-      distinct: 'CampaignAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CampaignAttachmentScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.campaignAttachment.count(args as any)

@@ -8,9 +8,9 @@ export const CompanyVariableFindCountQuery = queryField(
       where: 'CompanyVariableWhereInput',
       orderBy: list('CompanyVariableOrderByWithRelationInput'),
       cursor: 'CompanyVariableWhereUniqueInput',
-      distinct: 'CompanyVariableScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyVariableScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyVariable.count(args as any)

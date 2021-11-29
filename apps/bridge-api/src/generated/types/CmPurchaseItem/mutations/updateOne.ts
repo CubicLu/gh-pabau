@@ -5,8 +5,8 @@ export const CmPurchaseItemUpdateOneMutation = mutationField(
   {
     type: nonNull('CmPurchaseItem'),
     args: {
-      where: nonNull('CmPurchaseItemWhereUniqueInput'),
       data: nonNull('CmPurchaseItemUpdateInput'),
+      where: nonNull('CmPurchaseItemWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmPurchaseItem.update({

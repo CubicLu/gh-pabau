@@ -8,9 +8,8 @@ export const FavoriteReportAggregateQuery = queryField(
       where: 'FavoriteReportWhereInput',
       orderBy: list('FavoriteReportOrderByWithRelationInput'),
       cursor: 'FavoriteReportWhereUniqueInput',
-      distinct: 'FavoriteReportScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.favoriteReport.aggregate({ ...args, ...select }) as any

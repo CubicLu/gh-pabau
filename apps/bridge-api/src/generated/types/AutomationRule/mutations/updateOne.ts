@@ -5,8 +5,8 @@ export const AutomationRuleUpdateOneMutation = mutationField(
   {
     type: nonNull('AutomationRule'),
     args: {
-      where: nonNull('AutomationRuleWhereUniqueInput'),
       data: nonNull('AutomationRuleUpdateInput'),
+      where: nonNull('AutomationRuleWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.automationRule.update({

@@ -5,8 +5,8 @@ export const LeadStatusUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'LeadStatusWhereInput',
       data: nonNull('LeadStatusUpdateManyMutationInput'),
+      where: 'LeadStatusWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.leadStatus.updateMany(args as any)
