@@ -3007,7 +3007,7 @@ en:
   ui.add.thirdparty.address.country.label: Country
   ui.clientdetails.selfpaid: 'Self paid'
   ui.clientdetails.active: Active
-  ui.clientdetails.deactivate: Deactivate
+  ui.clientdetails.deactivate: Inactive
   ui.clientdetails.onaccount: 'On account'
   ui.clientdetails.outstanding: Outstanding
   ui.clientdetails.patientid: 'Patient ID'
