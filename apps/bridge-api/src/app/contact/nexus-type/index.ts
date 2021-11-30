@@ -25,8 +25,7 @@ const ContactCommunicationScheduledDeleteType = objectType({
   name: 'ContactCommunicationScheduledDeleteType',
   definition(t) {
     t.field('type', { type: ContactCommunicationScheduledDeleteTypeEnum })
-    t.int('bookingId')
-    t.int('recallScheduleId')
+    t.int('relatedId')
   },
 })
 
