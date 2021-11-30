@@ -56,5 +56,23 @@ export const MedicalFormExtended = extendType({
         })
       },
     })
+    t.field('version', {
+      type: 'Int',
+      async resolve(parent: MedicalForm, args, ctx: Context) {
+        if (!parent.name) return 0
+
+        const data = await ctx.prisma.medicalForm.aggregate({
+          _count: {
+            id: true,
+          },
+          where: {
+            name: parent.name,
+            NOT: { deleted_at: null },
+            company_id: ctx.authenticated.company,
+          },
+        })
+        return data._count?.id + 1 ?? 1
+      },
+    })
   },
 })

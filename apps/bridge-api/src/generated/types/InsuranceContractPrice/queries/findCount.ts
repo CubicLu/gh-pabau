@@ -8,9 +8,9 @@ export const InsuranceContractPriceFindCountQuery = queryField(
       where: 'InsuranceContractPriceWhereInput',
       orderBy: list('InsuranceContractPriceOrderByWithRelationInput'),
       cursor: 'InsuranceContractPriceWhereUniqueInput',
-      distinct: 'InsuranceContractPriceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InsuranceContractPriceScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.insuranceContractPrice.count(args as any)

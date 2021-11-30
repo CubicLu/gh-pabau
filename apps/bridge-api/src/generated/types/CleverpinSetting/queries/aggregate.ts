@@ -8,9 +8,8 @@ export const CleverpinSettingAggregateQuery = queryField(
       where: 'CleverpinSettingWhereInput',
       orderBy: list('CleverpinSettingOrderByWithRelationInput'),
       cursor: 'CleverpinSettingWhereUniqueInput',
-      distinct: 'CleverpinSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cleverpinSetting.aggregate({ ...args, ...select }) as any

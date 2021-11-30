@@ -5,8 +5,8 @@ export const LoyaltyPointsUpdateOneMutation = mutationField(
   {
     type: nonNull('LoyaltyPoints'),
     args: {
-      where: nonNull('LoyaltyPointsWhereUniqueInput'),
       data: nonNull('LoyaltyPointsUpdateInput'),
+      where: nonNull('LoyaltyPointsWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.loyaltyPoints.update({

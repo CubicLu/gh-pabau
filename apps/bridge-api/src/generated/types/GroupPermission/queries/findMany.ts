@@ -8,9 +8,9 @@ export const GroupPermissionFindManyQuery = queryField(
       where: 'GroupPermissionWhereInput',
       orderBy: list('GroupPermissionOrderByWithRelationInput'),
       cursor: 'GroupPermissionWhereUniqueInput',
-      distinct: 'GroupPermissionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('GroupPermissionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.groupPermission.findMany({

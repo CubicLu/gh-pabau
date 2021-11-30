@@ -8,9 +8,9 @@ export const AccountBalanceFindManyQuery = queryField(
       where: 'AccountBalanceWhereInput',
       orderBy: list('AccountBalanceOrderByWithRelationInput'),
       cursor: 'AccountBalanceWhereUniqueInput',
-      distinct: 'AccountBalanceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AccountBalanceScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.accountBalance.findMany({

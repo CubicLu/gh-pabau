@@ -6,9 +6,8 @@ export const BatchItemAggregateQuery = queryField('aggregateBatchItem', {
     where: 'BatchItemWhereInput',
     orderBy: list('BatchItemOrderByWithRelationInput'),
     cursor: 'BatchItemWhereUniqueInput',
-    distinct: 'BatchItemScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.batchItem.aggregate({ ...args, ...select }) as any

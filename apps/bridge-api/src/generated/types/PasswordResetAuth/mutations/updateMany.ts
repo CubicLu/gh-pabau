@@ -5,8 +5,8 @@ export const PasswordResetAuthUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'PasswordResetAuthWhereInput',
       data: nonNull('PasswordResetAuthUpdateManyMutationInput'),
+      where: 'PasswordResetAuthWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.passwordResetAuth.updateMany(args as any)

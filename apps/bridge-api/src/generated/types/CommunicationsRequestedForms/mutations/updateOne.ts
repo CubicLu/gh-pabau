@@ -5,8 +5,8 @@ export const CommunicationsRequestedFormsUpdateOneMutation = mutationField(
   {
     type: nonNull('CommunicationsRequestedForms'),
     args: {
-      where: nonNull('CommunicationsRequestedFormsWhereUniqueInput'),
       data: nonNull('CommunicationsRequestedFormsUpdateInput'),
+      where: nonNull('CommunicationsRequestedFormsWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.communicationsRequestedForms.update({

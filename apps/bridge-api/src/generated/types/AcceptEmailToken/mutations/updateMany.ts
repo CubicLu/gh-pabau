@@ -5,8 +5,8 @@ export const AcceptEmailTokenUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AcceptEmailTokenWhereInput',
       data: nonNull('AcceptEmailTokenUpdateManyMutationInput'),
+      where: 'AcceptEmailTokenWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.acceptEmailToken.updateMany(args as any)

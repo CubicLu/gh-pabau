@@ -5,8 +5,8 @@ export const SecondAtQuestionUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'SecondAtQuestionWhereInput',
       data: nonNull('SecondAtQuestionUpdateManyMutationInput'),
+      where: 'SecondAtQuestionWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.secondAtQuestion.updateMany(args as any)

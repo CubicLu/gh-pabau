@@ -5,8 +5,8 @@ export const CompanyEmailUpdateOneMutation = mutationField(
   {
     type: nonNull('CompanyEmail'),
     args: {
-      where: nonNull('CompanyEmailWhereUniqueInput'),
       data: nonNull('CompanyEmailUpdateInput'),
+      where: nonNull('CompanyEmailWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.companyEmail.update({

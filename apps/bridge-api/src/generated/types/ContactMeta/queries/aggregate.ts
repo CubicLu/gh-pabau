@@ -6,9 +6,8 @@ export const ContactMetaAggregateQuery = queryField('aggregateContactMeta', {
     where: 'ContactMetaWhereInput',
     orderBy: list('ContactMetaOrderByWithRelationInput'),
     cursor: 'ContactMetaWhereUniqueInput',
-    distinct: 'ContactMetaScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.contactMeta.aggregate({ ...args, ...select }) as any

@@ -5,8 +5,8 @@ export const BookitProGeneralUpdateOneMutation = mutationField(
   {
     type: nonNull('BookitProGeneral'),
     args: {
-      where: nonNull('BookitProGeneralWhereUniqueInput'),
       data: nonNull('BookitProGeneralUpdateInput'),
+      where: nonNull('BookitProGeneralWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.bookitProGeneral.update({

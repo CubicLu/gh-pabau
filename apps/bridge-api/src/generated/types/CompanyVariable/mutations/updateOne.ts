@@ -5,8 +5,8 @@ export const CompanyVariableUpdateOneMutation = mutationField(
   {
     type: nonNull('CompanyVariable'),
     args: {
-      where: nonNull('CompanyVariableWhereUniqueInput'),
       data: nonNull('CompanyVariableUpdateInput'),
+      where: nonNull('CompanyVariableWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.companyVariable.update({

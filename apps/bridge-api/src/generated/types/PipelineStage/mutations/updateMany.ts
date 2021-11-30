@@ -5,8 +5,8 @@ export const PipelineStageUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'PipelineStageWhereInput',
       data: nonNull('PipelineStageUpdateManyMutationInput'),
+      where: 'PipelineStageWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.pipelineStage.updateMany(args as any)

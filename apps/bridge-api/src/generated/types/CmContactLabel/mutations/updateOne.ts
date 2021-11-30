@@ -5,8 +5,8 @@ export const CmContactLabelUpdateOneMutation = mutationField(
   {
     type: nonNull('CmContactLabel'),
     args: {
-      where: nonNull('CmContactLabelWhereUniqueInput'),
       data: nonNull('CmContactLabelUpdateInput'),
+      where: nonNull('CmContactLabelWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmContactLabel.update({

@@ -8,9 +8,8 @@ export const CommunicationProviderAggregateQuery = queryField(
       where: 'CommunicationProviderWhereInput',
       orderBy: list('CommunicationProviderOrderByWithRelationInput'),
       cursor: 'CommunicationProviderWhereUniqueInput',
-      distinct: 'CommunicationProviderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.communicationProvider.aggregate({

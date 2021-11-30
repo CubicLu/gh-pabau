@@ -8,9 +8,8 @@ export const ClassSmsHistoryAggregateQuery = queryField(
       where: 'ClassSmsHistoryWhereInput',
       orderBy: list('ClassSmsHistoryOrderByWithRelationInput'),
       cursor: 'ClassSmsHistoryWhereUniqueInput',
-      distinct: 'ClassSmsHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.classSmsHistory.aggregate({ ...args, ...select }) as any

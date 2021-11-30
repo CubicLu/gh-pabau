@@ -6,9 +6,9 @@ export const UserAlertTypeFindManyQuery = queryField('findManyUserAlertType', {
     where: 'UserAlertTypeWhereInput',
     orderBy: list('UserAlertTypeOrderByWithRelationInput'),
     cursor: 'UserAlertTypeWhereUniqueInput',
-    distinct: 'UserAlertTypeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('UserAlertTypeScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.userAlertType.findMany({

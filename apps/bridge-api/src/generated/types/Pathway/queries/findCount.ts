@@ -6,9 +6,9 @@ export const PathwayFindCountQuery = queryField('findManyPathwayCount', {
     where: 'PathwayWhereInput',
     orderBy: list('PathwayOrderByWithRelationInput'),
     cursor: 'PathwayWhereUniqueInput',
-    distinct: 'PathwayScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PathwayScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.pathway.count(args as any)

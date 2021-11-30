@@ -8,9 +8,9 @@ export const ClassTemplateSettingFindFirstQuery = queryField(
       where: 'ClassTemplateSettingWhereInput',
       orderBy: list('ClassTemplateSettingOrderByWithRelationInput'),
       cursor: 'ClassTemplateSettingWhereUniqueInput',
-      distinct: 'ClassTemplateSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassTemplateSettingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.classTemplateSetting.findFirst({

@@ -5,8 +5,8 @@ export const CmExtraSalonUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmExtraSalonWhereInput',
       data: nonNull('CmExtraSalonUpdateManyMutationInput'),
+      where: 'CmExtraSalonWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmExtraSalon.updateMany(args as any)

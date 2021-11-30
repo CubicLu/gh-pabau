@@ -8,9 +8,9 @@ export const ServiceUserTierFindCountQuery = queryField(
       where: 'ServiceUserTierWhereInput',
       orderBy: list('ServiceUserTierOrderByWithRelationInput'),
       cursor: 'ServiceUserTierWhereUniqueInput',
-      distinct: 'ServiceUserTierScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ServiceUserTierScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.serviceUserTier.count(args as any)

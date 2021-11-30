@@ -8,9 +8,9 @@ export const SecondAtQuestionFindCountQuery = queryField(
       where: 'SecondAtQuestionWhereInput',
       orderBy: list('SecondAtQuestionOrderByWithRelationInput'),
       cursor: 'SecondAtQuestionWhereUniqueInput',
-      distinct: 'SecondAtQuestionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('SecondAtQuestionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.secondAtQuestion.count(args as any)

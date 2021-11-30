@@ -5,8 +5,8 @@ export const InvPaymentTypeUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'InvPaymentTypeWhereInput',
       data: nonNull('InvPaymentTypeUpdateManyMutationInput'),
+      where: 'InvPaymentTypeWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invPaymentType.updateMany(args as any)

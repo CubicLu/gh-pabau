@@ -8,9 +8,9 @@ export const PermissionTemplateFindManyQuery = queryField(
       where: 'PermissionTemplateWhereInput',
       orderBy: list('PermissionTemplateOrderByWithRelationInput'),
       cursor: 'PermissionTemplateWhereUniqueInput',
-      distinct: 'PermissionTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('PermissionTemplateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.permissionTemplate.findMany({

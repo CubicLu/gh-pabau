@@ -5,8 +5,8 @@ export const MedicalFormAdvancedSettingUpdateOneMutation = mutationField(
   {
     type: nonNull('MedicalFormAdvancedSetting'),
     args: {
-      where: nonNull('MedicalFormAdvancedSettingWhereUniqueInput'),
       data: nonNull('MedicalFormAdvancedSettingUpdateInput'),
+      where: nonNull('MedicalFormAdvancedSettingWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.medicalFormAdvancedSetting.update({

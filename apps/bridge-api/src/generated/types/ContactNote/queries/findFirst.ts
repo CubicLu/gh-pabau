@@ -6,9 +6,9 @@ export const ContactNoteFindFirstQuery = queryField('findFirstContactNote', {
     where: 'ContactNoteWhereInput',
     orderBy: list('ContactNoteOrderByWithRelationInput'),
     cursor: 'ContactNoteWhereUniqueInput',
-    distinct: 'ContactNoteScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ContactNoteScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.contactNote.findFirst({

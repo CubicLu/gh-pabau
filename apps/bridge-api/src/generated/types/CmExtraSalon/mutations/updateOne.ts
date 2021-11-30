@@ -5,8 +5,8 @@ export const CmExtraSalonUpdateOneMutation = mutationField(
   {
     type: nonNull('CmExtraSalon'),
     args: {
-      where: nonNull('CmExtraSalonWhereUniqueInput'),
       data: nonNull('CmExtraSalonUpdateInput'),
+      where: nonNull('CmExtraSalonWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmExtraSalon.update({

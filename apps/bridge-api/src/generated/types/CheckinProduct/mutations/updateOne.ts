@@ -5,8 +5,8 @@ export const CheckinProductUpdateOneMutation = mutationField(
   {
     type: nonNull('CheckinProduct'),
     args: {
-      where: nonNull('CheckinProductWhereUniqueInput'),
       data: nonNull('CheckinProductUpdateInput'),
+      where: nonNull('CheckinProductWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.checkinProduct.update({

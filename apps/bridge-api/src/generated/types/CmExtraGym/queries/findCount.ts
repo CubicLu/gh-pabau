@@ -6,9 +6,9 @@ export const CmExtraGymFindCountQuery = queryField('findManyCmExtraGymCount', {
     where: 'CmExtraGymWhereInput',
     orderBy: list('CmExtraGymOrderByWithRelationInput'),
     cursor: 'CmExtraGymWhereUniqueInput',
-    distinct: 'CmExtraGymScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmExtraGymScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.cmExtraGym.count(args as any)

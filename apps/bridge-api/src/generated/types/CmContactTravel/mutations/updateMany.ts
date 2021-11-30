@@ -5,8 +5,8 @@ export const CmContactTravelUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmContactTravelWhereInput',
       data: nonNull('CmContactTravelUpdateManyMutationInput'),
+      where: 'CmContactTravelWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmContactTravel.updateMany(args as any)

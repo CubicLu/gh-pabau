@@ -6,9 +6,9 @@ export const SmsPurchaseFindManyQuery = queryField('findManySmsPurchase', {
     where: 'SmsPurchaseWhereInput',
     orderBy: list('SmsPurchaseOrderByWithRelationInput'),
     cursor: 'SmsPurchaseWhereUniqueInput',
-    distinct: 'SmsPurchaseScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('SmsPurchaseScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.smsPurchase.findMany({

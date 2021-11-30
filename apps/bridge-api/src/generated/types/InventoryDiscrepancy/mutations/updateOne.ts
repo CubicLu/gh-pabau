@@ -5,8 +5,8 @@ export const InventoryDiscrepancyUpdateOneMutation = mutationField(
   {
     type: nonNull('InventoryDiscrepancy'),
     args: {
-      where: nonNull('InventoryDiscrepancyWhereUniqueInput'),
       data: nonNull('InventoryDiscrepancyUpdateInput'),
+      where: nonNull('InventoryDiscrepancyWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.inventoryDiscrepancy.update({

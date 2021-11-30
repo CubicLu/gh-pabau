@@ -8,9 +8,9 @@ export const CleverpinSettingFindCountQuery = queryField(
       where: 'CleverpinSettingWhereInput',
       orderBy: list('CleverpinSettingOrderByWithRelationInput'),
       cursor: 'CleverpinSettingWhereUniqueInput',
-      distinct: 'CleverpinSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CleverpinSettingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cleverpinSetting.count(args as any)

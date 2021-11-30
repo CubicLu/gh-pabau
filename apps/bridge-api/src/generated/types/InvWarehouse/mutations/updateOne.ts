@@ -5,8 +5,8 @@ export const InvWarehouseUpdateOneMutation = mutationField(
   {
     type: nonNull('InvWarehouse'),
     args: {
-      where: nonNull('InvWarehouseWhereUniqueInput'),
       data: nonNull('InvWarehouseUpdateInput'),
+      where: nonNull('InvWarehouseWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.invWarehouse.update({

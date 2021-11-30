@@ -8,9 +8,9 @@ export const AppBeforeAfterFindManyQuery = queryField(
       where: 'AppBeforeAfterWhereInput',
       orderBy: list('AppBeforeAfterOrderByWithRelationInput'),
       cursor: 'AppBeforeAfterWhereUniqueInput',
-      distinct: 'AppBeforeAfterScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AppBeforeAfterScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.appBeforeAfter.findMany({

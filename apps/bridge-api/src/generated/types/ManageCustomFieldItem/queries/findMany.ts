@@ -8,9 +8,9 @@ export const ManageCustomFieldItemFindManyQuery = queryField(
       where: 'ManageCustomFieldItemWhereInput',
       orderBy: list('ManageCustomFieldItemOrderByWithRelationInput'),
       cursor: 'ManageCustomFieldItemWhereUniqueInput',
-      distinct: 'ManageCustomFieldItemScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ManageCustomFieldItemScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.manageCustomFieldItem.findMany({

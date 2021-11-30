@@ -8,9 +8,9 @@ export const CompanyBranchGroupFindCountQuery = queryField(
       where: 'CompanyBranchGroupWhereInput',
       orderBy: list('CompanyBranchGroupOrderByWithRelationInput'),
       cursor: 'CompanyBranchGroupWhereUniqueInput',
-      distinct: 'CompanyBranchGroupScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyBranchGroupScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyBranchGroup.count(args as any)

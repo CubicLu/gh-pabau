@@ -8,9 +8,8 @@ export const AdvertCampaignAggregateQuery = queryField(
       where: 'AdvertCampaignWhereInput',
       orderBy: list('AdvertCampaignOrderByWithRelationInput'),
       cursor: 'AdvertCampaignWhereUniqueInput',
-      distinct: 'AdvertCampaignScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.advertCampaign.aggregate({ ...args, ...select }) as any

@@ -6,9 +6,9 @@ export const CmContactFindFirstQuery = queryField('findFirstCmContact', {
     where: 'CmContactWhereInput',
     orderBy: list('CmContactOrderByWithRelationInput'),
     cursor: 'CmContactWhereUniqueInput',
-    distinct: 'CmContactScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmContactScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmContact.findFirst({

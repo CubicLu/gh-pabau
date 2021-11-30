@@ -6,9 +6,9 @@ export const JobStatusFindFirstQuery = queryField('findFirstJobStatus', {
     where: 'JobStatusWhereInput',
     orderBy: list('JobStatusOrderByWithRelationInput'),
     cursor: 'JobStatusWhereUniqueInput',
-    distinct: 'JobStatusScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('JobStatusScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.jobStatus.findFirst({

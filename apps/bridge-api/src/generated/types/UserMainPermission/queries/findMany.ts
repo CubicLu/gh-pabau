@@ -8,9 +8,9 @@ export const UserMainPermissionFindManyQuery = queryField(
       where: 'UserMainPermissionWhereInput',
       orderBy: list('UserMainPermissionOrderByWithRelationInput'),
       cursor: 'UserMainPermissionWhereUniqueInput',
-      distinct: 'UserMainPermissionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('UserMainPermissionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.userMainPermission.findMany({

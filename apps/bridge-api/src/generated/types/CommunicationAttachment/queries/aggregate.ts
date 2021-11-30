@@ -8,9 +8,8 @@ export const CommunicationAttachmentAggregateQuery = queryField(
       where: 'CommunicationAttachmentWhereInput',
       orderBy: list('CommunicationAttachmentOrderByWithRelationInput'),
       cursor: 'CommunicationAttachmentWhereUniqueInput',
-      distinct: 'CommunicationAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.communicationAttachment.aggregate({

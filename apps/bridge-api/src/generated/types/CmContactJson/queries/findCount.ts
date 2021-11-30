@@ -8,9 +8,9 @@ export const CmContactJsonFindCountQuery = queryField(
       where: 'CmContactJsonWhereInput',
       orderBy: list('CmContactJsonOrderByWithRelationInput'),
       cursor: 'CmContactJsonWhereUniqueInput',
-      distinct: 'CmContactJsonScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmContactJsonScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmContactJson.count(args as any)

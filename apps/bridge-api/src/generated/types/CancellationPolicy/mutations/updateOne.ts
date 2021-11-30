@@ -5,8 +5,8 @@ export const CancellationPolicyUpdateOneMutation = mutationField(
   {
     type: nonNull('CancellationPolicy'),
     args: {
-      where: nonNull('CancellationPolicyWhereUniqueInput'),
       data: nonNull('CancellationPolicyUpdateInput'),
+      where: nonNull('CancellationPolicyWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cancellationPolicy.update({

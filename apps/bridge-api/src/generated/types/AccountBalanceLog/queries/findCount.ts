@@ -8,9 +8,9 @@ export const AccountBalanceLogFindCountQuery = queryField(
       where: 'AccountBalanceLogWhereInput',
       orderBy: list('AccountBalanceLogOrderByWithRelationInput'),
       cursor: 'AccountBalanceLogWhereUniqueInput',
-      distinct: 'AccountBalanceLogScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AccountBalanceLogScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.accountBalanceLog.count(args as any)

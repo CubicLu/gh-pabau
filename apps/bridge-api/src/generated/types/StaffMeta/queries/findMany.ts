@@ -6,9 +6,9 @@ export const StaffMetaFindManyQuery = queryField('findManyStaffMeta', {
     where: 'StaffMetaWhereInput',
     orderBy: list('StaffMetaOrderByWithRelationInput'),
     cursor: 'StaffMetaWhereUniqueInput',
-    distinct: 'StaffMetaScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('StaffMetaScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.staffMeta.findMany({

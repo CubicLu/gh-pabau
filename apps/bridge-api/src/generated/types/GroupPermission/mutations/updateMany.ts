@@ -5,8 +5,8 @@ export const GroupPermissionUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'GroupPermissionWhereInput',
       data: nonNull('GroupPermissionUpdateManyMutationInput'),
+      where: 'GroupPermissionWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.groupPermission.updateMany(args as any)

@@ -6,9 +6,9 @@ export const ActivityTypeFindFirstQuery = queryField('findFirstActivityType', {
     where: 'ActivityTypeWhereInput',
     orderBy: list('ActivityTypeOrderByWithRelationInput'),
     cursor: 'ActivityTypeWhereUniqueInput',
-    distinct: 'ActivityTypeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ActivityTypeScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.activityType.findFirst({

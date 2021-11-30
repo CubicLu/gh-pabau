@@ -5,8 +5,8 @@ export const AppSubscriptionUpdateOneMutation = mutationField(
   {
     type: nonNull('AppSubscription'),
     args: {
-      where: nonNull('AppSubscriptionWhereUniqueInput'),
       data: nonNull('AppSubscriptionUpdateInput'),
+      where: nonNull('AppSubscriptionWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.appSubscription.update({

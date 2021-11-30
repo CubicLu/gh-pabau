@@ -8,9 +8,8 @@ export const TwoFactorHistoryAggregateQuery = queryField(
       where: 'TwoFactorHistoryWhereInput',
       orderBy: list('TwoFactorHistoryOrderByWithRelationInput'),
       cursor: 'TwoFactorHistoryWhereUniqueInput',
-      distinct: 'TwoFactorHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.twoFactorHistory.aggregate({ ...args, ...select }) as any

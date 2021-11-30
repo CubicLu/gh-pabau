@@ -8,9 +8,9 @@ export const HealthcodeInsurerFindCountQuery = queryField(
       where: 'HealthcodeInsurerWhereInput',
       orderBy: list('HealthcodeInsurerOrderByWithRelationInput'),
       cursor: 'HealthcodeInsurerWhereUniqueInput',
-      distinct: 'HealthcodeInsurerScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('HealthcodeInsurerScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.healthcodeInsurer.count(args as any)

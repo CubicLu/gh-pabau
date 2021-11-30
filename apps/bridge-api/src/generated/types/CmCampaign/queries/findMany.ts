@@ -6,9 +6,9 @@ export const CmCampaignFindManyQuery = queryField('findManyCmCampaign', {
     where: 'CmCampaignWhereInput',
     orderBy: list('CmCampaignOrderByWithRelationInput'),
     cursor: 'CmCampaignWhereUniqueInput',
-    distinct: 'CmCampaignScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmCampaignScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmCampaign.findMany({

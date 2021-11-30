@@ -5,8 +5,8 @@ export const BacsAccountUpdateOneMutation = mutationField(
   {
     type: nonNull('BacsAccount'),
     args: {
-      where: nonNull('BacsAccountWhereUniqueInput'),
       data: nonNull('BacsAccountUpdateInput'),
+      where: nonNull('BacsAccountWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.bacsAccount.update({

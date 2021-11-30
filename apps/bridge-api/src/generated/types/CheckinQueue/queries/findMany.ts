@@ -6,9 +6,9 @@ export const CheckinQueueFindManyQuery = queryField('findManyCheckinQueue', {
     where: 'CheckinQueueWhereInput',
     orderBy: list('CheckinQueueOrderByWithRelationInput'),
     cursor: 'CheckinQueueWhereUniqueInput',
-    distinct: 'CheckinQueueScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CheckinQueueScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.checkinQueue.findMany({

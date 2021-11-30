@@ -5,8 +5,8 @@ export const LabProductTemplateUpdateOneMutation = mutationField(
   {
     type: nonNull('LabProductTemplate'),
     args: {
-      where: nonNull('LabProductTemplateWhereUniqueInput'),
       data: nonNull('LabProductTemplateUpdateInput'),
+      where: nonNull('LabProductTemplateWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.labProductTemplate.update({

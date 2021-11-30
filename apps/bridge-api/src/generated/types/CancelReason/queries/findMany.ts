@@ -6,9 +6,9 @@ export const CancelReasonFindManyQuery = queryField('findManyCancelReason', {
     where: 'CancelReasonWhereInput',
     orderBy: list('CancelReasonOrderByWithRelationInput'),
     cursor: 'CancelReasonWhereUniqueInput',
-    distinct: 'CancelReasonScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CancelReasonScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cancelReason.findMany({

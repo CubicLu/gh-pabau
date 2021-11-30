@@ -6,9 +6,9 @@ export const ApiDebugFindManyQuery = queryField('findManyApiDebug', {
     where: 'ApiDebugWhereInput',
     orderBy: list('ApiDebugOrderByWithRelationInput'),
     cursor: 'ApiDebugWhereUniqueInput',
-    distinct: 'ApiDebugScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ApiDebugScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.apiDebug.findMany({

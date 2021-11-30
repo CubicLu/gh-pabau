@@ -8,9 +8,9 @@ export const LoyaltyPointsFindCountQuery = queryField(
       where: 'LoyaltyPointsWhereInput',
       orderBy: list('LoyaltyPointsOrderByWithRelationInput'),
       cursor: 'LoyaltyPointsWhereUniqueInput',
-      distinct: 'LoyaltyPointsScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('LoyaltyPointsScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.loyaltyPoints.count(args as any)

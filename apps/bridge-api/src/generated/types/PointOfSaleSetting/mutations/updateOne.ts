@@ -5,8 +5,8 @@ export const PointOfSaleSettingUpdateOneMutation = mutationField(
   {
     type: nonNull('PointOfSaleSetting'),
     args: {
-      where: nonNull('PointOfSaleSettingWhereUniqueInput'),
       data: nonNull('PointOfSaleSettingUpdateInput'),
+      where: nonNull('PointOfSaleSettingWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.pointOfSaleSetting.update({

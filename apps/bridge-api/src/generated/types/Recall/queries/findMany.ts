@@ -6,9 +6,9 @@ export const RecallFindManyQuery = queryField('findManyRecall', {
     where: 'RecallWhereInput',
     orderBy: list('RecallOrderByWithRelationInput'),
     cursor: 'RecallWhereUniqueInput',
-    distinct: 'RecallScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('RecallScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.recall.findMany({

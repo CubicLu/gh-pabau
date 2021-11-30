@@ -8,9 +8,9 @@ export const ServiceUserTierFindFirstQuery = queryField(
       where: 'ServiceUserTierWhereInput',
       orderBy: list('ServiceUserTierOrderByWithRelationInput'),
       cursor: 'ServiceUserTierWhereUniqueInput',
-      distinct: 'ServiceUserTierScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ServiceUserTierScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.serviceUserTier.findFirst({

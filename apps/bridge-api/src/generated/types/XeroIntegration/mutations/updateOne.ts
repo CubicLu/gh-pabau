@@ -5,8 +5,8 @@ export const XeroIntegrationUpdateOneMutation = mutationField(
   {
     type: nonNull('XeroIntegration'),
     args: {
-      where: nonNull('XeroIntegrationWhereUniqueInput'),
       data: nonNull('XeroIntegrationUpdateInput'),
+      where: nonNull('XeroIntegrationWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.xeroIntegration.update({

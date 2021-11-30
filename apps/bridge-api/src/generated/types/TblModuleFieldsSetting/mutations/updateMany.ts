@@ -5,8 +5,8 @@ export const TblModuleFieldsSettingUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'TblModuleFieldsSettingWhereInput',
       data: nonNull('TblModuleFieldsSettingUpdateManyMutationInput'),
+      where: 'TblModuleFieldsSettingWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.tblModuleFieldsSetting.updateMany(args as any)

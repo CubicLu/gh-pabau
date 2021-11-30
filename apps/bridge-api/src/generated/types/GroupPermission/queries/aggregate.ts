@@ -8,9 +8,8 @@ export const GroupPermissionAggregateQuery = queryField(
       where: 'GroupPermissionWhereInput',
       orderBy: list('GroupPermissionOrderByWithRelationInput'),
       cursor: 'GroupPermissionWhereUniqueInput',
-      distinct: 'GroupPermissionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.groupPermission.aggregate({ ...args, ...select }) as any

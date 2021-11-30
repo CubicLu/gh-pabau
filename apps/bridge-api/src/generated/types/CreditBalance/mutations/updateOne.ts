@@ -5,8 +5,8 @@ export const CreditBalanceUpdateOneMutation = mutationField(
   {
     type: nonNull('CreditBalance'),
     args: {
-      where: nonNull('CreditBalanceWhereUniqueInput'),
       data: nonNull('CreditBalanceUpdateInput'),
+      where: nonNull('CreditBalanceWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.creditBalance.update({

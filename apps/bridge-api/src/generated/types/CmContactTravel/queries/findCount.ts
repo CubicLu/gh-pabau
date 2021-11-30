@@ -8,9 +8,9 @@ export const CmContactTravelFindCountQuery = queryField(
       where: 'CmContactTravelWhereInput',
       orderBy: list('CmContactTravelOrderByWithRelationInput'),
       cursor: 'CmContactTravelWhereUniqueInput',
-      distinct: 'CmContactTravelScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmContactTravelScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmContactTravel.count(args as any)

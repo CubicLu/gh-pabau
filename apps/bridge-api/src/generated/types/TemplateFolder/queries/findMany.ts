@@ -8,9 +8,9 @@ export const TemplateFolderFindManyQuery = queryField(
       where: 'TemplateFolderWhereInput',
       orderBy: list('TemplateFolderOrderByWithRelationInput'),
       cursor: 'TemplateFolderWhereUniqueInput',
-      distinct: 'TemplateFolderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('TemplateFolderScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.templateFolder.findMany({

@@ -6,9 +6,8 @@ export const CompanyNoteAggregateQuery = queryField('aggregateCompanyNote', {
     where: 'CompanyNoteWhereInput',
     orderBy: list('CompanyNoteOrderByWithRelationInput'),
     cursor: 'CompanyNoteWhereUniqueInput',
-    distinct: 'CompanyNoteScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.companyNote.aggregate({ ...args, ...select }) as any

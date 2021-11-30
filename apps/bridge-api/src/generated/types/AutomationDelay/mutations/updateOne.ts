@@ -5,8 +5,8 @@ export const AutomationDelayUpdateOneMutation = mutationField(
   {
     type: nonNull('AutomationDelay'),
     args: {
-      where: nonNull('AutomationDelayWhereUniqueInput'),
       data: nonNull('AutomationDelayUpdateInput'),
+      where: nonNull('AutomationDelayWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.automationDelay.update({

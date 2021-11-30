@@ -6,9 +6,9 @@ export const PhotoAlbumFindCountQuery = queryField('findManyPhotoAlbumCount', {
     where: 'PhotoAlbumWhereInput',
     orderBy: list('PhotoAlbumOrderByWithRelationInput'),
     cursor: 'PhotoAlbumWhereUniqueInput',
-    distinct: 'PhotoAlbumScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PhotoAlbumScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.photoAlbum.count(args as any)

@@ -8,9 +8,9 @@ export const JobConfigurationFindCountQuery = queryField(
       where: 'JobConfigurationWhereInput',
       orderBy: list('JobConfigurationOrderByWithRelationInput'),
       cursor: 'JobConfigurationWhereUniqueInput',
-      distinct: 'JobConfigurationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('JobConfigurationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.jobConfiguration.count(args as any)

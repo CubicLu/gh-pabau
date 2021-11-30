@@ -6,9 +6,8 @@ export const CancelReasonAggregateQuery = queryField('aggregateCancelReason', {
     where: 'CancelReasonWhereInput',
     orderBy: list('CancelReasonOrderByWithRelationInput'),
     cursor: 'CancelReasonWhereUniqueInput',
-    distinct: 'CancelReasonScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cancelReason.aggregate({ ...args, ...select }) as any

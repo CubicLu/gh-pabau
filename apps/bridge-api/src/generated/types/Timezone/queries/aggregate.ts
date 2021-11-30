@@ -6,9 +6,8 @@ export const TimezoneAggregateQuery = queryField('aggregateTimezone', {
     where: 'TimezoneWhereInput',
     orderBy: list('TimezoneOrderByWithRelationInput'),
     cursor: 'TimezoneWhereUniqueInput',
-    distinct: 'TimezoneScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.timezone.aggregate({ ...args, ...select }) as any

@@ -5,8 +5,8 @@ export const BookitProGeneralUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'BookitProGeneralWhereInput',
       data: nonNull('BookitProGeneralUpdateManyMutationInput'),
+      where: 'BookitProGeneralWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookitProGeneral.updateMany(args as any)

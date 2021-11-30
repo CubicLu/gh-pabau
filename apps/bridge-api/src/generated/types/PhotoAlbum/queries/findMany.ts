@@ -6,9 +6,9 @@ export const PhotoAlbumFindManyQuery = queryField('findManyPhotoAlbum', {
     where: 'PhotoAlbumWhereInput',
     orderBy: list('PhotoAlbumOrderByWithRelationInput'),
     cursor: 'PhotoAlbumWhereUniqueInput',
-    distinct: 'PhotoAlbumScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PhotoAlbumScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.photoAlbum.findMany({

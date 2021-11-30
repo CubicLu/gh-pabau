@@ -6,9 +6,8 @@ export const ClassGuestsAggregateQuery = queryField('aggregateClassGuests', {
     where: 'ClassGuestsWhereInput',
     orderBy: list('ClassGuestsOrderByWithRelationInput'),
     cursor: 'ClassGuestsWhereUniqueInput',
-    distinct: 'ClassGuestsScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.classGuests.aggregate({ ...args, ...select }) as any

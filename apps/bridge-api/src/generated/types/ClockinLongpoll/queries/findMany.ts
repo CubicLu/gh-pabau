@@ -8,9 +8,9 @@ export const ClockinLongpollFindManyQuery = queryField(
       where: 'ClockinLongpollWhereInput',
       orderBy: list('ClockinLongpollOrderByWithRelationInput'),
       cursor: 'ClockinLongpollWhereUniqueInput',
-      distinct: 'ClockinLongpollScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClockinLongpollScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.clockinLongpoll.findMany({

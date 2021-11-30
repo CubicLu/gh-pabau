@@ -5,8 +5,8 @@ export const CmContactJsonUpdateOneMutation = mutationField(
   {
     type: nonNull('CmContactJson'),
     args: {
-      where: nonNull('CmContactJsonWhereUniqueInput'),
       data: nonNull('CmContactJsonUpdateInput'),
+      where: nonNull('CmContactJsonWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmContactJson.update({

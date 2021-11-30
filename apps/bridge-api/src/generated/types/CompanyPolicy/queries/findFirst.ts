@@ -8,9 +8,9 @@ export const CompanyPolicyFindFirstQuery = queryField(
       where: 'CompanyPolicyWhereInput',
       orderBy: list('CompanyPolicyOrderByWithRelationInput'),
       cursor: 'CompanyPolicyWhereUniqueInput',
-      distinct: 'CompanyPolicyScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyPolicyScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.companyPolicy.findFirst({

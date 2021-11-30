@@ -6,9 +6,9 @@ export const ClassGuestsFindManyQuery = queryField('findManyClassGuests', {
     where: 'ClassGuestsWhereInput',
     orderBy: list('ClassGuestsOrderByWithRelationInput'),
     cursor: 'ClassGuestsWhereUniqueInput',
-    distinct: 'ClassGuestsScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ClassGuestsScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.classGuests.findMany({

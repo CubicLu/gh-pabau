@@ -5,8 +5,8 @@ export const ReportCategoryUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ReportCategoryWhereInput',
       data: nonNull('ReportCategoryUpdateManyMutationInput'),
+      where: 'ReportCategoryWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.reportCategory.updateMany(args as any)

@@ -8,9 +8,9 @@ export const InvoiceTemplateFindCountQuery = queryField(
       where: 'InvoiceTemplateWhereInput',
       orderBy: list('InvoiceTemplateOrderByWithRelationInput'),
       cursor: 'InvoiceTemplateWhereUniqueInput',
-      distinct: 'InvoiceTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InvoiceTemplateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invoiceTemplate.count(args as any)

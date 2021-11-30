@@ -6,9 +6,9 @@ export const SaleItemFindManyQuery = queryField('findManySaleItem', {
     where: 'SaleItemWhereInput',
     orderBy: list('SaleItemOrderByWithRelationInput'),
     cursor: 'SaleItemWhereUniqueInput',
-    distinct: 'SaleItemScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('SaleItemScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.saleItem.findMany({

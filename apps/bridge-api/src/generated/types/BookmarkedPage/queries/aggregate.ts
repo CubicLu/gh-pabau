@@ -8,9 +8,8 @@ export const BookmarkedPageAggregateQuery = queryField(
       where: 'BookmarkedPageWhereInput',
       orderBy: list('BookmarkedPageOrderByWithRelationInput'),
       cursor: 'BookmarkedPageWhereUniqueInput',
-      distinct: 'BookmarkedPageScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookmarkedPage.aggregate({ ...args, ...select }) as any

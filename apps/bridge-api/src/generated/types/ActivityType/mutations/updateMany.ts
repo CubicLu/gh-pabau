@@ -5,8 +5,8 @@ export const ActivityTypeUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ActivityTypeWhereInput',
       data: nonNull('ActivityTypeUpdateManyMutationInput'),
+      where: 'ActivityTypeWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.activityType.updateMany(args as any)

@@ -8,9 +8,8 @@ export const ServicesMasterCategoryAggregateQuery = queryField(
       where: 'ServicesMasterCategoryWhereInput',
       orderBy: list('ServicesMasterCategoryOrderByWithRelationInput'),
       cursor: 'ServicesMasterCategoryWhereUniqueInput',
-      distinct: 'ServicesMasterCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.servicesMasterCategory.aggregate({

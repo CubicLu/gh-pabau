@@ -8,9 +8,8 @@ export const CmStaffGeneralAggregateQuery = queryField(
       where: 'CmStaffGeneralWhereInput',
       orderBy: list('CmStaffGeneralOrderByWithRelationInput'),
       cursor: 'CmStaffGeneralWhereUniqueInput',
-      distinct: 'CmStaffGeneralScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmStaffGeneral.aggregate({ ...args, ...select }) as any

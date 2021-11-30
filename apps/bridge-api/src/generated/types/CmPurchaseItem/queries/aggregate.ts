@@ -8,9 +8,8 @@ export const CmPurchaseItemAggregateQuery = queryField(
       where: 'CmPurchaseItemWhereInput',
       orderBy: list('CmPurchaseItemOrderByWithRelationInput'),
       cursor: 'CmPurchaseItemWhereUniqueInput',
-      distinct: 'CmPurchaseItemScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmPurchaseItem.aggregate({ ...args, ...select }) as any

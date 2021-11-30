@@ -5,8 +5,8 @@ export const CompanyNoteUpdateOneMutation = mutationField(
   {
     type: nonNull('CompanyNote'),
     args: {
-      where: nonNull('CompanyNoteWhereUniqueInput'),
       data: nonNull('CompanyNoteUpdateInput'),
+      where: nonNull('CompanyNoteWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.companyNote.update({

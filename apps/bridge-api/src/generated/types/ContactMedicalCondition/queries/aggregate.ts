@@ -8,9 +8,8 @@ export const ContactMedicalConditionAggregateQuery = queryField(
       where: 'ContactMedicalConditionWhereInput',
       orderBy: list('ContactMedicalConditionOrderByWithRelationInput'),
       cursor: 'ContactMedicalConditionWhereUniqueInput',
-      distinct: 'ContactMedicalConditionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.contactMedicalCondition.aggregate({

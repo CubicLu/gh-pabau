@@ -5,8 +5,8 @@ export const AvilableDatesLogUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AvilableDatesLogWhereInput',
       data: nonNull('AvilableDatesLogUpdateManyMutationInput'),
+      where: 'AvilableDatesLogWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.avilableDatesLog.updateMany(args as any)

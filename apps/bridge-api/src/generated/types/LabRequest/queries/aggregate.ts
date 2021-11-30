@@ -6,9 +6,8 @@ export const LabRequestAggregateQuery = queryField('aggregateLabRequest', {
     where: 'LabRequestWhereInput',
     orderBy: list('LabRequestOrderByWithRelationInput'),
     cursor: 'LabRequestWhereUniqueInput',
-    distinct: 'LabRequestScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.labRequest.aggregate({ ...args, ...select }) as any

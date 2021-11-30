@@ -5,8 +5,8 @@ export const CmContactLocationUpdateOneMutation = mutationField(
   {
     type: nonNull('CmContactLocation'),
     args: {
-      where: nonNull('CmContactLocationWhereUniqueInput'),
       data: nonNull('CmContactLocationUpdateInput'),
+      where: nonNull('CmContactLocationWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmContactLocation.update({

@@ -6,9 +6,9 @@ export const UserGroupFindCountQuery = queryField('findManyUserGroupCount', {
     where: 'UserGroupWhereInput',
     orderBy: list('UserGroupOrderByWithRelationInput'),
     cursor: 'UserGroupWhereUniqueInput',
-    distinct: 'UserGroupScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('UserGroupScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.userGroup.count(args as any)

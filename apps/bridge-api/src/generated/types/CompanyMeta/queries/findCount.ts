@@ -8,9 +8,9 @@ export const CompanyMetaFindCountQuery = queryField(
       where: 'CompanyMetaWhereInput',
       orderBy: list('CompanyMetaOrderByWithRelationInput'),
       cursor: 'CompanyMetaWhereUniqueInput',
-      distinct: 'CompanyMetaScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyMetaScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyMeta.count(args as any)

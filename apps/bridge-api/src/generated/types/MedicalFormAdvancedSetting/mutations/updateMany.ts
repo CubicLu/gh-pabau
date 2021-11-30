@@ -5,8 +5,8 @@ export const MedicalFormAdvancedSettingUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'MedicalFormAdvancedSettingWhereInput',
       data: nonNull('MedicalFormAdvancedSettingUpdateManyMutationInput'),
+      where: 'MedicalFormAdvancedSettingWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.medicalFormAdvancedSetting.updateMany(args as any)

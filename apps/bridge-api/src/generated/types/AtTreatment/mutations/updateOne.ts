@@ -5,8 +5,8 @@ export const AtTreatmentUpdateOneMutation = mutationField(
   {
     type: nonNull('AtTreatment'),
     args: {
-      where: nonNull('AtTreatmentWhereUniqueInput'),
       data: nonNull('AtTreatmentUpdateInput'),
+      where: nonNull('AtTreatmentWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.atTreatment.update({
