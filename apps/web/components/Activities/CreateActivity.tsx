@@ -31,7 +31,11 @@ import { Form, Input as FormikInput, SubmitButton } from 'formik-antd'
 import * as Icon from '@ant-design/icons'
 import { ClientLeadSelect } from './ClientLeadSelectMenu'
 import styles from './CreateActivity.module.less'
-import { useCreateOneActivityMutation, Activity_Status } from '@pabau/graphql'
+import {
+  useCreateOneActivityMutation,
+  Activity_Status,
+  useUpdateOneActivityMutation,
+} from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
 import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 
@@ -47,8 +51,7 @@ export interface CreateActivityProps {
   onCancel?: () => void
   events?: EventsData[]
   handleSave?: () => void
-  isEdit?: boolean
-  editData?: EditedData
+  editData?: DataProps
   userOptions: UserDetail[]
   activityTypeOption: ActivityTypeFilter[]
 }
@@ -61,21 +64,8 @@ export interface ActivityTypeFilter {
   icon?: string
 }
 
-interface EditedData {
-  subject: string
-  startDate: Dayjs
-  endDate: Dayjs
-  startTime: Dayjs | undefined
-  endTime: Dayjs | undefined
-  freeBusy: number
-  notes: string
-  user: string
-  lead: string
-  client: string
-  isDone: boolean
-}
-
-interface DataProps {
+export interface DataProps {
+  id?: number
   activityType?: number
   user?: number
   client?: number
@@ -114,6 +104,7 @@ const { Option } = Select
 const { TextArea } = Input
 
 const defaultValue: DataProps = {
+  id: undefined,
   subject: '',
   startDate: dayjs(),
   user: undefined,
@@ -133,7 +124,6 @@ export const CreateActivity: FC<CreateActivityProps> = ({
   onCancel,
   events,
   handleSave,
-  isEdit = false,
   editData,
   userOptions = [],
   activityTypeOption = [],
@@ -157,6 +147,14 @@ export const CreateActivity: FC<CreateActivityProps> = ({
       )
     },
   })
+  const [editActivity] = useUpdateOneActivityMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('update.activity.record.success.message')
+      )
+    },
+  })
 
   useEffect(() => {
     if (activityTypeOption?.length > 0) {
@@ -165,47 +163,19 @@ export const CreateActivity: FC<CreateActivityProps> = ({
   }, [activityTypeOption])
 
   useEffect(() => {
-    if (isEdit && editData) {
-      const {
-        subject,
-        startDate,
-        endDate,
-        startTime,
-        endTime,
-        freeBusy,
-        notes,
-      } = editData
-      setInitialValue({
-        subject,
-        startDate,
-        endDate,
-        startTime,
-        endTime,
-        freeBusy,
-        notes,
-        isDone: false,
-      })
-      setDefaultCalenderDate(dayjs(startDate, 'D MMMM YYYY hh:mm').toDate())
-      // editData.client && setSelectedClient(editData.client as never)
-      // editData?.user && setSelectedUser(editData.user as never)
-      // editData?.lead && setSelectedLead(editData.lead as never)
+    if (editData?.id) {
+      setInitialValue({ ...editData })
+      setDefaultCalenderDate(
+        dayjs(editData?.startDate, 'D MMMM YYYY hh:mm').toDate()
+      )
     } else {
       setInitialValue({
-        subject: '',
-        startDate: dayjs(),
-        endDate: dayjs(),
-        startTime: dayjs('09:00', 'HH:mm'),
-        endTime: dayjs('09:30', 'HH:mm'),
-        freeBusy: 1,
-        notes: '',
+        ...defaultValue,
         activityType: activityTypeOption?.[0]?.id,
         user: loggedUser?.me?.user,
-        isDone: false,
-        client: undefined,
-        lead: undefined,
       })
     }
-  }, [editData, isEdit, activityTypeOption, loggedUser?.me?.user])
+  }, [editData, activityTypeOption, loggedUser?.me?.user])
 
   const toggleDrawer = () => {
     setVisibleDrawer((e) => !e)
@@ -234,7 +204,12 @@ export const CreateActivity: FC<CreateActivityProps> = ({
     <div>
       <BasicModal
         modalWidth={926}
-        title={!isMobile && t('activityList.createActivity')}
+        title={
+          !isMobile &&
+          (initialValue?.id
+            ? t('activityList.editActivity')
+            : t('activityList.createActivity'))
+        }
         visible={visible}
         onCancel={handleCancel}
         className={styles.activityModal}
@@ -259,44 +234,98 @@ export const CreateActivity: FC<CreateActivityProps> = ({
               values.startTime
             )
             const dueEndDate = calculateDueTime(values.endDate, values.endTime)
-            const data = {
-              ActivityType: {
-                connect: {
-                  id: values.activityType,
-                },
-              },
-              subject: values.subject,
-              note: values.notes,
-              available: Boolean(values.freeBusy),
-              status: values.isDone
-                ? Activity_Status.Done
-                : Activity_Status.Pending,
-              due_start_date: dueStartDate,
-              due_end_date: dueEndDate,
-              Company: {},
-              User: {},
-              AssignedUser: {
-                connect: {
-                  id: values.user,
-                },
-              },
-              CmContact: {
-                connect: {
-                  ID: values.client,
-                },
-              },
-              CmLead: {
-                connect: {
-                  ID: values.lead,
-                },
-              },
-              CompletedBy: {
-                connect: {
-                  id: loggedUser?.me?.user,
-                },
-              },
-              finished_at: dayjs(),
-            }
+            let data
+            values?.id
+              ? (data = {
+                  ActivityType: {
+                    connect: {
+                      id: values.activityType,
+                    },
+                  },
+                  subject: {
+                    set: values.subject,
+                  },
+                  note: {
+                    set: values.notes,
+                  },
+                  available: {
+                    set: Boolean(values.freeBusy),
+                  },
+                  status: {
+                    set: values.isDone
+                      ? Activity_Status.Done
+                      : Activity_Status.Pending,
+                  },
+                  due_start_date: {
+                    set: dueStartDate,
+                  },
+                  due_end_date: {
+                    set: dueEndDate,
+                  },
+                  Company: {},
+                  User: {},
+                  AssignedUser: {
+                    connect: {
+                      id: values.user,
+                    },
+                  },
+                  CmContact: {
+                    connect: {
+                      ID: values.client,
+                    },
+                  },
+                  CmLead: {
+                    connect: {
+                      ID: values.lead,
+                    },
+                  },
+                  CompletedBy: {
+                    connect: {
+                      id: loggedUser?.me?.user,
+                    },
+                  },
+                  finished_at: {
+                    set: dayjs(),
+                  },
+                })
+              : (data = {
+                  ActivityType: {
+                    connect: {
+                      id: values.activityType,
+                    },
+                  },
+                  subject: values.subject,
+                  note: values.notes,
+                  available: Boolean(values.freeBusy),
+                  status: values.isDone
+                    ? Activity_Status.Done
+                    : Activity_Status.Pending,
+                  due_start_date: dueStartDate,
+                  due_end_date: dueEndDate,
+                  Company: {},
+                  User: {},
+                  AssignedUser: {
+                    connect: {
+                      id: values.user,
+                    },
+                  },
+                  CmContact: {
+                    connect: {
+                      ID: values.client,
+                    },
+                  },
+                  CmLead: {
+                    connect: {
+                      ID: values.lead,
+                    },
+                  },
+                  CompletedBy: {
+                    connect: {
+                      id: loggedUser?.me?.user,
+                    },
+                  },
+                  finished_at: dayjs(),
+                })
             if (!values.lead) {
               delete data.CmLead
             }
@@ -310,11 +339,21 @@ export const CreateActivity: FC<CreateActivityProps> = ({
               delete data.CompletedBy
               delete data.finished_at
             }
-            await addMutation({
-              variables: {
-                data,
-              },
-            })
+
+            values?.id
+              ? await editActivity({
+                  variables: {
+                    where: {
+                      id: values.id,
+                    },
+                    data,
+                  },
+                })
+              : await addMutation({
+                  variables: {
+                    data,
+                  },
+                })
             handleSave()
             resetForm()
           }}
@@ -326,7 +365,11 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                   <div className={styles.mobileMenu}>
                     <div>
                       <LeftOutlined onClick={onCancel} />
-                      <span>{t('activityList.createActivity')}</span>
+                      <span>
+                        {values?.id
+                          ? t('activityList.editActivity')
+                          : t('activityList.createActivity')}
+                      </span>
                     </div>
                     <div>
                       <MenuOutlined onClick={toggleDrawer} />
@@ -498,7 +541,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                       <div className={styles.customInputText}>
                         <ClientLeadSelect
                           name="lead"
-                          isEdit={isEdit}
+                          isEdit={Boolean(values?.id)}
                           value={values.lead?.toString()}
                           onChange={(value) =>
                             setFieldValue(
@@ -516,7 +559,7 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                       <div className={styles.customInputText}>
                         <ClientLeadSelect
                           name="client"
-                          isEdit={isEdit}
+                          isEdit={Boolean(values?.id)}
                           value={values.client?.toString()}
                           onChange={(value) =>
                             setFieldValue(

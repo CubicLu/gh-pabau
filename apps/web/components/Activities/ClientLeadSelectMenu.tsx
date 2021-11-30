@@ -132,7 +132,11 @@ export const ClientLeadSelect: FC<ClientLeadSelectProps> = ({
         filterOption={false}
         onSearch={name === 'client' ? fetchClientOption : fetchLeadOption}
         value={(name === 'client' ? clientName : leadName) ?? value}
-        onChange={(data) => onChange(data)}
+        onChange={(data) => {
+          onChange(data)
+          setClientName(undefined)
+          setLeadName(undefined)
+        }}
         notFoundContent={
           name === 'client'
             ? contactLoading && <Spin size="small" />
