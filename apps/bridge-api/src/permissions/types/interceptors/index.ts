@@ -136,11 +136,11 @@ export const interceptors = {
             ...args.where,
             Company: {
               id: {
-                equals: ctx.user.Company,
+                equals: ctx.authenticated.company,
               },
             },
           }
-          return
+          return true
         } catch (error) {
           return error
         }
