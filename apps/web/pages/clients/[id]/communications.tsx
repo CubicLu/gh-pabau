@@ -13,7 +13,6 @@ import {
   useGetClientCommunicationLazyQuery,
   useCountClientCommunicationLazyQuery,
 } from '@pabau/graphql'
-import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 const CommunicationTab = () => {
   const router = useRouter()
@@ -38,15 +37,13 @@ const CommunicationTab = () => {
     getCommunityCount,
     { data: countCommunition, loading: countLoading },
   ] = useCountClientCommunicationLazyQuery()
-  const getDocumentURL = (url) => {
-    return `https://view.officeapps.live.com/op/embed.aspx?src=${url}&embedded=true`
-  }
+
   useEffect(() => {
     getClientCommunication({
       variables: {
         contactID: contactID,
-        offSet: pagination.offSet,
-        limit: pagination.limit,
+        skip: pagination.offSet,
+        take: pagination.limit,
       },
     })
     getCommunityCount({
@@ -62,28 +59,20 @@ const CommunicationTab = () => {
     getClientCommunication,
   ])
   useEffect(() => {
-    if (countCommunition?.findManyCommunication) {
+    if (countCommunition?.aggregateCommunication) {
       setPagination({
         ...pagination,
-        total: countCommunition.findManyCommunication.length,
+        total: countCommunition.aggregateCommunication?.count?.id,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countCommunition?.findManyCommunication])
-  const checkIsDocx = (url) => {
-    const extension = url.split('.')[1]
-    return extension === 'docx' || extension === 'doc'
-  }
-  const checkIsPDF = (url) => {
-    const extension = url.split('.')[1]
-    return extension === 'pdf'
-  }
+  }, [countCommunition?.aggregateCommunication])
   function isHTML(str) {
     const doc = new DOMParser().parseFromString(str, 'text/html')
     return Array.from(doc.body.childNodes).some((node) => node.nodeType === 1)
   }
-  function checkIsImg(url) {
-    return url.match(/\.(jpeg|jpg|gif|png|bmp)$/) != null
+  const checkIsUrl = (str) => {
+    return /^\/(?:[A-Za-z]|\d|[$-_]|[!()*,]|(?:%[\dA-Fa-f]{2}))+/.test(str)
   }
   useEffect(() => {
     const Communications: EventsDataProps[] = []
@@ -121,21 +110,16 @@ const CommunicationTab = () => {
           }
           obj.eventName = d?.content?.subject
           if (d?.message) {
-            if (isHTML(d.message)) {
-              obj.description = d.message
-            } else {
-              if (checkIsDocx(d.message)) {
-                obj.isDocxFile = true
-                obj.letterUrl = getDocumentURL(getImage(d.message))
-              } else if (checkIsPDF(d.message)) {
-                obj.letterUrl = getImage(d.message)
-                obj.isDocxFile = false
-              } else if (checkIsImg(d.message)) {
-                obj.imageUrl = [getImage(d.message)]
-                obj.isDocxFile = false
-              } else {
+            switch (true) {
+              case isHTML(d.message):
+                obj.description = d.message
+                break
+              case checkIsUrl(d.message):
+                obj.letterUrl = d.message
+                break
+              default:
                 obj.description = d?.message
-              }
+                break
             }
             obj.displayCollapse = true
           }
@@ -143,11 +127,7 @@ const CommunicationTab = () => {
           if (d?.attachment) {
             for (const val of d?.attachment) {
               if (val?.file_url) {
-                if (checkIsDocx(val.file_url)) {
-                  attachmentURL = getDocumentURL(getImage(val.file_url))
-                } else {
-                  attachmentURL = val.file_url
-                }
+                attachmentURL = val.file_url
                 attachment.push({ item: attachmentURL })
               }
             }

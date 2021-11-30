@@ -46,10 +46,12 @@ import { ReactComponent as ForwardIcon } from '../../assets/images/timeline/forw
 import TimelineSkeleton from './CommunicationSkeleton'
 import dynamic from 'next/dynamic'
 import { getImage } from '../../helper/uploaders/UploadHelpers'
-import ReactHtmlParser, {
-  convertNodeToElement,
-  processNodes,
-} from 'react-html-parser'
+import ReactHtmlParser from 'react-html-parser'
+import {
+  transform,
+  checkIsDocx,
+  getDocumentURL,
+} from '../../helper/CommunicationHepler'
 dayjs.extend(calendar)
 
 export interface CommunicationTimelineProps {
@@ -104,7 +106,6 @@ export interface EventsDataProps {
   authorName?: string
   letterUrl?: string
   isReceived?: boolean
-  isDocxFile?: boolean
   imageUrl?: string[]
 }
 
@@ -164,33 +165,6 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
     pageSize: pagination?.limit ?? 50,
     currentPage: pagination?.currentPage ?? 1,
   })
-
-  function transform(node, index) {
-    // return null to block certain elements
-    // don't allow <span> elements
-    if (node.type === 'tag' && node.name === 'span') {
-      return null
-    }
-
-    // Transform <ul> into <ol>
-    // A node can be modified and passed to the convertNodeToElement function which will continue to render it and it's children
-    if (node.type === 'tag' && node.name === 'ul') {
-      node.name = 'ol'
-      return convertNodeToElement(node, index, transform)
-    }
-
-    // return an <i> element for every <b>
-    // a key must be included for all elements
-    if (node.type === 'tag' && node.name === 'b') {
-      return <i key={index}>{processNodes(node.children, transform)}</i>
-    }
-
-    // all links must open in a new window
-    if (node.type === 'tag' && node.name === 'a') {
-      node.attribs.target = '_blank'
-      return convertNodeToElement(node, index, transform)
-    }
-  }
 
   const options = {
     decodeEntities: true,
@@ -266,12 +240,10 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       (event.letterUrl || event.imageUrl) &&
       !collapseEvent?.[`event_${event.id}`]
     ) {
-      setIsDocFile(event.isDocxFile)
       setLetterUrl(event.letterUrl ?? undefined)
       setShowDocumentViewer(!showDocumentViewer)
-      setImages(event.imageUrl ?? [])
     } else {
-      setLetterUrl(undefined)
+      setLetterUrl('')
       setImages([])
     }
   }
@@ -384,14 +356,14 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       return ''
     }
 
-    const openFile = (url, isDoc) => {
-      if (isDoc) {
-        window.open(url, '_blank')
+    const openFile = (url) => {
+      if (checkIsDocx(url)) {
+        window.open(getDocumentURL(getImage(url)), '_blank')
       } else {
         window.open(getImage(url), '_blank')
       }
     }
-    const pinPopoverContent = (items = [], isDoc) => {
+    const pinPopoverContent = (items = []) => {
       return (
         <div className={styles.feedbackPopUp}>
           {items?.map((item: PinItemProps, index) => {
@@ -399,7 +371,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               <div
                 className={styles.feedWrap}
                 key={index}
-                onClick={() => openFile(item?.item, isDoc)}
+                onClick={() => openFile(item?.item)}
               >
                 <span className={styles.iconWrap}>
                   {renderAttachmentIcon(item?.item)}
@@ -422,9 +394,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
       return (
         <>
           <Popover
-            content={() =>
-              pinPopoverContent(event?.pinItems, event?.isDocxFile)
-            }
+            content={() => pinPopoverContent(event?.pinItems)}
             trigger="click"
             visible={visible && !isMobile}
             onVisibleChange={(val) => setVisible(val)}
@@ -457,7 +427,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               key={'bottom'}
             >
               <span className={styles.line}></span>
-              {pinPopoverContent(event?.pinItems, event?.isDocxFile)}
+              {pinPopoverContent(event?.pinItems)}
             </Drawer>
           )}
         </>
@@ -787,8 +757,6 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
             <div className={styles.documentWrapper}>
               <Epaper
                 title={''}
-                isDocxFile={isDocFile}
-                images={images}
                 pdfURL={letterUrl}
                 numPages={numPages}
                 pageNumber={pageNumber}
