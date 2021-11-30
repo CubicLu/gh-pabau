@@ -151,8 +151,6 @@ export const permissions = shield(
       findManyTimezone: allow,
       findManyInvoice: rules.authentication.isAuthenticated,
       countInvoice: rules.authentication.isAuthenticated,
-      //letter
-      findManyLetterReceiptData: rules.authentication.isAuthenticated,
       //Pathway
       findManyPathwaysTaken: allow,
       findManyPathwayStepsTaken: allow,
