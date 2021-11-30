@@ -105,6 +105,7 @@ export interface EventsDataProps {
   letterUrl?: string
   isReceived?: boolean
   isDocxFile?: boolean
+  imageUrl?: string[]
 }
 
 export interface PinItemProps {
@@ -152,6 +153,8 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
   const [filteredEvents, setFilteredEvents] = useState<EventsDataProps[]>([])
   const [collapseEvent, setCollapseEvent] = useState({})
   const [isDocFile, setIsDocFile] = useState(false)
+  const [images, setImages] = useState<string[]>([])
+  const [letterUrl, setLetterUrl] = useState<string>()
   const [selectedFilter, setSelectedFilter] = useState(
     Object.values(headerFilter)
   )
@@ -206,7 +209,6 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
   const [showDocumentViewer, setShowDocumentViewer] = useState<boolean>(false)
   const [numPages, setNumPages] = useState<number>(0)
   const [pageNumber, setPageNumber] = useState<number>(1)
-  const [letterUrl, setLetterUrl] = useState<string>()
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages)
   }
@@ -261,13 +263,16 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
         : true,
     }))
     if (
-      event.type === 'letter' &&
-      event.letterUrl &&
+      (event.letterUrl || event.imageUrl) &&
       !collapseEvent?.[`event_${event.id}`]
     ) {
       setIsDocFile(event.isDocxFile)
-      setLetterUrl(event.letterUrl)
+      setLetterUrl(event.letterUrl ?? undefined)
       setShowDocumentViewer(!showDocumentViewer)
+      setImages(event.imageUrl ?? [])
+    } else {
+      setLetterUrl(undefined)
+      setImages([])
     }
   }
 
@@ -783,6 +788,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               <Epaper
                 title={''}
                 isDocxFile={isDocFile}
+                images={images}
                 pdfURL={letterUrl}
                 numPages={numPages}
                 pageNumber={pageNumber}

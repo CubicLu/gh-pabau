@@ -82,9 +82,9 @@ const CommunicationTab = () => {
     const doc = new DOMParser().parseFromString(str, 'text/html')
     return Array.from(doc.body.childNodes).some((node) => node.nodeType === 1)
   }
-  // function checkURL(url) {
-  //   return url.match(/\.(jpeg|jpg|gif|png)$/) != null
-  // }
+  function checkIsImg(url) {
+    return url.match(/\.(jpeg|jpg|gif|png|bmp)$/) != null
+  }
   useEffect(() => {
     const Communications: EventsDataProps[] = []
     const fetchData = async () => {
@@ -129,6 +129,10 @@ const CommunicationTab = () => {
                 obj.letterUrl = getDocumentURL(getImage(d.message))
               } else if (checkIsPDF(d.message)) {
                 obj.letterUrl = getImage(d.message)
+                obj.isDocxFile = false
+              } else if (checkIsImg(d.message)) {
+                obj.imageUrl = [getImage(d.message)]
+                obj.isDocxFile = false
               } else {
                 obj.description = d?.message
               }
