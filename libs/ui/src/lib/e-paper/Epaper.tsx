@@ -12,7 +12,6 @@ export interface EPaperProps {
   onSetNumPages: (page) => void
   pdfURL?: string
   images?: string[]
-  isDocxFile?: boolean
   onDocumentLoadSuccess?: ({ numPages: number }) => void
 }
 

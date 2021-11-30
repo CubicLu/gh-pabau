@@ -106,7 +106,6 @@ export interface EventsDataProps {
   authorName?: string
   letterUrl?: string
   isReceived?: boolean
-  imageUrl?: string[]
 }
 
 export interface PinItemProps {
@@ -154,7 +153,6 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
   const [filteredEvents, setFilteredEvents] = useState<EventsDataProps[]>([])
   const [collapseEvent, setCollapseEvent] = useState({})
   const [isDocFile, setIsDocFile] = useState(false)
-  const [images, setImages] = useState<string[]>([])
   const [letterUrl, setLetterUrl] = useState<string>()
   const [selectedFilter, setSelectedFilter] = useState(
     Object.values(headerFilter)
@@ -236,15 +234,11 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
         ? !collapseEvent?.[`event_${event.id}`]
         : true,
     }))
-    if (
-      (event.letterUrl || event.imageUrl) &&
-      !collapseEvent?.[`event_${event.id}`]
-    ) {
+    if (event.letterUrl && !collapseEvent?.[`event_${event.id}`]) {
       setLetterUrl(event.letterUrl ?? undefined)
       setShowDocumentViewer(!showDocumentViewer)
     } else {
       setLetterUrl('')
-      setImages([])
     }
   }
 
