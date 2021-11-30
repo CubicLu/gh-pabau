@@ -250,7 +250,7 @@ export const MainInvoice = extendType({
         LEFT JOIN company_branches b on b.id = a.location_id
         WHERE
         a.reference_no!='**REFUND**' AND a.reference_no!='ACCOUNT PAYMENT' AND a.occupier = ${ctx.authenticated.company} AND a.customer_id = ${input?.where?.customer_id?.equals}
-        AND a.guid!='' AND a.guid IS NOT NULL AND b.name!='' AND b.name IS NOT NULL`
+        AND a.guid!='' AND a.guid IS NOT NULL`
 
         return invoices[0]?.count ?? 0
       },
