@@ -363,7 +363,7 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'communications',
       name: t('clients.communications.title'),
-      count: countCommunition?.findManyCommunication?.length,
+      count: countCommunition?.aggregateCommunication?.count?.id,
     },
     {
       key: 'emr',
