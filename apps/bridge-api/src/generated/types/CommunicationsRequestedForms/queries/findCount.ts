@@ -8,9 +8,9 @@ export const CommunicationsRequestedFormsFindCountQuery = queryField(
       where: 'CommunicationsRequestedFormsWhereInput',
       orderBy: list('CommunicationsRequestedFormsOrderByWithRelationInput'),
       cursor: 'CommunicationsRequestedFormsWhereUniqueInput',
-      distinct: 'CommunicationsRequestedFormsScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CommunicationsRequestedFormsScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.communicationsRequestedForms.count(args as any)

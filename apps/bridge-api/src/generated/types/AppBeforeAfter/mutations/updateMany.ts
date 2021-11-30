@@ -5,8 +5,8 @@ export const AppBeforeAfterUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AppBeforeAfterWhereInput',
       data: nonNull('AppBeforeAfterUpdateManyMutationInput'),
+      where: 'AppBeforeAfterWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.appBeforeAfter.updateMany(args as any)

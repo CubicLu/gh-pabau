@@ -5,8 +5,8 @@ export const UserAlertPermissionUpdateOneMutation = mutationField(
   {
     type: nonNull('UserAlertPermission'),
     args: {
-      where: nonNull('UserAlertPermissionWhereUniqueInput'),
       data: nonNull('UserAlertPermissionUpdateInput'),
+      where: nonNull('UserAlertPermissionWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userAlertPermission.update({

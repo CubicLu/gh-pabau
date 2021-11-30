@@ -5,8 +5,8 @@ export const SmsPurchaseUpdateOneMutation = mutationField(
   {
     type: nonNull('SmsPurchase'),
     args: {
-      where: nonNull('SmsPurchaseWhereUniqueInput'),
       data: nonNull('SmsPurchaseUpdateInput'),
+      where: nonNull('SmsPurchaseWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.smsPurchase.update({

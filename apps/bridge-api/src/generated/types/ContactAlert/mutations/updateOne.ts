@@ -5,8 +5,8 @@ export const ContactAlertUpdateOneMutation = mutationField(
   {
     type: nonNull('ContactAlert'),
     args: {
-      where: nonNull('ContactAlertWhereUniqueInput'),
       data: nonNull('ContactAlertUpdateInput'),
+      where: nonNull('ContactAlertWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.contactAlert.update({

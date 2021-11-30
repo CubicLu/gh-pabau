@@ -8,9 +8,9 @@ export const TblModuleFieldsSettingFindCountQuery = queryField(
       where: 'TblModuleFieldsSettingWhereInput',
       orderBy: list('TblModuleFieldsSettingOrderByWithRelationInput'),
       cursor: 'TblModuleFieldsSettingWhereUniqueInput',
-      distinct: 'TblModuleFieldsSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('TblModuleFieldsSettingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.tblModuleFieldsSetting.count(args as any)

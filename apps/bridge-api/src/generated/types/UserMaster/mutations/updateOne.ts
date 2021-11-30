@@ -5,8 +5,8 @@ export const UserMasterUpdateOneMutation = mutationField(
   {
     type: nonNull('UserMaster'),
     args: {
-      where: nonNull('UserMasterWhereUniqueInput'),
       data: nonNull('UserMasterUpdateInput'),
+      where: nonNull('UserMasterWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userMaster.update({

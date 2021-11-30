@@ -6,9 +6,9 @@ export const CmLeadFindCountQuery = queryField('findManyCmLeadCount', {
     where: 'CmLeadWhereInput',
     orderBy: list('CmLeadOrderByWithRelationInput'),
     cursor: 'CmLeadWhereUniqueInput',
-    distinct: 'CmLeadScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmLeadScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.cmLead.count(args as any)

@@ -5,8 +5,8 @@ export const TrainCourseDateUpdateOneMutation = mutationField(
   {
     type: nonNull('TrainCourseDate'),
     args: {
-      where: nonNull('TrainCourseDateWhereUniqueInput'),
       data: nonNull('TrainCourseDateUpdateInput'),
+      where: nonNull('TrainCourseDateWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.trainCourseDate.update({

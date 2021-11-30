@@ -6,9 +6,9 @@ export const CandidateFindManyQuery = queryField('findManyCandidate', {
     where: 'CandidateWhereInput',
     orderBy: list('CandidateOrderByWithRelationInput'),
     cursor: 'CandidateWhereUniqueInput',
-    distinct: 'CandidateScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CandidateScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.candidate.findMany({

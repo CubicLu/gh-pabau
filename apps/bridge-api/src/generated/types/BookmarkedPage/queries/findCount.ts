@@ -8,9 +8,9 @@ export const BookmarkedPageFindCountQuery = queryField(
       where: 'BookmarkedPageWhereInput',
       orderBy: list('BookmarkedPageOrderByWithRelationInput'),
       cursor: 'BookmarkedPageWhereUniqueInput',
-      distinct: 'BookmarkedPageScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BookmarkedPageScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookmarkedPage.count(args as any)

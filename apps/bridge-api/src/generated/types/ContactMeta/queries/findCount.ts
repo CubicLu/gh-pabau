@@ -8,9 +8,9 @@ export const ContactMetaFindCountQuery = queryField(
       where: 'ContactMetaWhereInput',
       orderBy: list('ContactMetaOrderByWithRelationInput'),
       cursor: 'ContactMetaWhereUniqueInput',
-      distinct: 'ContactMetaScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactMetaScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactMeta.count(args as any)

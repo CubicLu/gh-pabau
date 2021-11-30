@@ -6,9 +6,9 @@ export const LeadStatusFindFirstQuery = queryField('findFirstLeadStatus', {
     where: 'LeadStatusWhereInput',
     orderBy: list('LeadStatusOrderByWithRelationInput'),
     cursor: 'LeadStatusWhereUniqueInput',
-    distinct: 'LeadStatusScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('LeadStatusScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.leadStatus.findFirst({

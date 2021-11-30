@@ -8,9 +8,8 @@ export const SecondAtQuestionAggregateQuery = queryField(
       where: 'SecondAtQuestionWhereInput',
       orderBy: list('SecondAtQuestionOrderByWithRelationInput'),
       cursor: 'SecondAtQuestionWhereUniqueInput',
-      distinct: 'SecondAtQuestionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.secondAtQuestion.aggregate({ ...args, ...select }) as any

@@ -6,9 +6,9 @@ export const TimezoneFindFirstQuery = queryField('findFirstTimezone', {
     where: 'TimezoneWhereInput',
     orderBy: list('TimezoneOrderByWithRelationInput'),
     cursor: 'TimezoneWhereUniqueInput',
-    distinct: 'TimezoneScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('TimezoneScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.timezone.findFirst({

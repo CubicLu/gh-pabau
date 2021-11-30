@@ -8,9 +8,9 @@ export const MedicalFormContactHistoryFindManyQuery = queryField(
       where: 'MedicalFormContactHistoryWhereInput',
       orderBy: list('MedicalFormContactHistoryOrderByWithRelationInput'),
       cursor: 'MedicalFormContactHistoryWhereUniqueInput',
-      distinct: 'MedicalFormContactHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('MedicalFormContactHistoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.medicalFormContactHistory.findMany({

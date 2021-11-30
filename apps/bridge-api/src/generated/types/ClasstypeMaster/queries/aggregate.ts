@@ -8,9 +8,8 @@ export const ClasstypeMasterAggregateQuery = queryField(
       where: 'ClasstypeMasterWhereInput',
       orderBy: list('ClasstypeMasterOrderByWithRelationInput'),
       cursor: 'ClasstypeMasterWhereUniqueInput',
-      distinct: 'ClasstypeMasterScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.classtypeMaster.aggregate({ ...args, ...select }) as any

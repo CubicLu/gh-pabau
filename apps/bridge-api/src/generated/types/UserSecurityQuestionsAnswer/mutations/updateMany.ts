@@ -5,8 +5,8 @@ export const UserSecurityQuestionsAnswerUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'UserSecurityQuestionsAnswerWhereInput',
       data: nonNull('UserSecurityQuestionsAnswerUpdateManyMutationInput'),
+      where: 'UserSecurityQuestionsAnswerWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.userSecurityQuestionsAnswer.updateMany(args as any)

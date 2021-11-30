@@ -6,9 +6,9 @@ export const ActivityFindManyQuery = queryField('findManyActivity', {
     where: 'ActivityWhereInput',
     orderBy: list('ActivityOrderByWithRelationInput'),
     cursor: 'ActivityWhereUniqueInput',
-    distinct: 'ActivityScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ActivityScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.activity.findMany({

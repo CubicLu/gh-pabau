@@ -8,9 +8,8 @@ export const InsuranceContractPriceAggregateQuery = queryField(
       where: 'InsuranceContractPriceWhereInput',
       orderBy: list('InsuranceContractPriceOrderByWithRelationInput'),
       cursor: 'InsuranceContractPriceWhereUniqueInput',
-      distinct: 'InsuranceContractPriceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.insuranceContractPrice.aggregate({

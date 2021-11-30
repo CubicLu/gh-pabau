@@ -5,8 +5,8 @@ export const CmCampaignUpdateOneMutation = mutationField(
   {
     type: nonNull('CmCampaign'),
     args: {
-      where: nonNull('CmCampaignWhereUniqueInput'),
       data: nonNull('CmCampaignUpdateInput'),
+      where: nonNull('CmCampaignWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmCampaign.update({

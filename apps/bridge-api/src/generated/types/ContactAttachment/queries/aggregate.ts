@@ -8,9 +8,8 @@ export const ContactAttachmentAggregateQuery = queryField(
       where: 'ContactAttachmentWhereInput',
       orderBy: list('ContactAttachmentOrderByWithRelationInput'),
       cursor: 'ContactAttachmentWhereUniqueInput',
-      distinct: 'ContactAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.contactAttachment.aggregate({ ...args, ...select }) as any

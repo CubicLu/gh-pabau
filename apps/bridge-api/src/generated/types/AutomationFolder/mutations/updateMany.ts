@@ -5,8 +5,8 @@ export const AutomationFolderUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AutomationFolderWhereInput',
       data: nonNull('AutomationFolderUpdateManyMutationInput'),
+      where: 'AutomationFolderWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.automationFolder.updateMany(args as any)

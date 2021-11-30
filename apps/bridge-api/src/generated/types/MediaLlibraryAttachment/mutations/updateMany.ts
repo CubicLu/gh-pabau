@@ -5,8 +5,8 @@ export const MediaLlibraryAttachmentUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'MediaLlibraryAttachmentWhereInput',
       data: nonNull('MediaLlibraryAttachmentUpdateManyMutationInput'),
+      where: 'MediaLlibraryAttachmentWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.mediaLlibraryAttachment.updateMany(args as any)

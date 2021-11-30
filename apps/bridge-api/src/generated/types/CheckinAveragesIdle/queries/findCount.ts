@@ -8,9 +8,9 @@ export const CheckinAveragesIdleFindCountQuery = queryField(
       where: 'CheckinAveragesIdleWhereInput',
       orderBy: list('CheckinAveragesIdleOrderByWithRelationInput'),
       cursor: 'CheckinAveragesIdleWhereUniqueInput',
-      distinct: 'CheckinAveragesIdleScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CheckinAveragesIdleScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.checkinAveragesIdle.count(args as any)

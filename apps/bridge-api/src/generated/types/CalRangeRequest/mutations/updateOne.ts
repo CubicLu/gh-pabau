@@ -5,8 +5,8 @@ export const CalRangeRequestUpdateOneMutation = mutationField(
   {
     type: nonNull('CalRangeRequest'),
     args: {
-      where: nonNull('CalRangeRequestWhereUniqueInput'),
       data: nonNull('CalRangeRequestUpdateInput'),
+      where: nonNull('CalRangeRequestWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.calRangeRequest.update({

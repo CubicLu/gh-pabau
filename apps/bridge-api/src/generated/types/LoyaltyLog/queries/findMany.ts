@@ -6,9 +6,9 @@ export const LoyaltyLogFindManyQuery = queryField('findManyLoyaltyLog', {
     where: 'LoyaltyLogWhereInput',
     orderBy: list('LoyaltyLogOrderByWithRelationInput'),
     cursor: 'LoyaltyLogWhereUniqueInput',
-    distinct: 'LoyaltyLogScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('LoyaltyLogScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.loyaltyLog.findMany({

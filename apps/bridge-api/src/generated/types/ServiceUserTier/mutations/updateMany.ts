@@ -5,8 +5,8 @@ export const ServiceUserTierUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ServiceUserTierWhereInput',
       data: nonNull('ServiceUserTierUpdateManyMutationInput'),
+      where: 'ServiceUserTierWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.serviceUserTier.updateMany(args as any)

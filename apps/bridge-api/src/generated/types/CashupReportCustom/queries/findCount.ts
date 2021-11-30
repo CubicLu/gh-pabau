@@ -8,9 +8,9 @@ export const CashupReportCustomFindCountQuery = queryField(
       where: 'CashupReportCustomWhereInput',
       orderBy: list('CashupReportCustomOrderByWithRelationInput'),
       cursor: 'CashupReportCustomWhereUniqueInput',
-      distinct: 'CashupReportCustomScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CashupReportCustomScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cashupReportCustom.count(args as any)

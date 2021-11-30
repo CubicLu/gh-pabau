@@ -8,9 +8,9 @@ export const AtQuestionsRelationFindFirstQuery = queryField(
       where: 'AtQuestionsRelationWhereInput',
       orderBy: list('AtQuestionsRelationOrderByWithRelationInput'),
       cursor: 'AtQuestionsRelationWhereUniqueInput',
-      distinct: 'AtQuestionsRelationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AtQuestionsRelationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.atQuestionsRelation.findFirst({

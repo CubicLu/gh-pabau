@@ -5,8 +5,8 @@ export const CmContactJsonUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmContactJsonWhereInput',
       data: nonNull('CmContactJsonUpdateManyMutationInput'),
+      where: 'CmContactJsonWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmContactJson.updateMany(args as any)

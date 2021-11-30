@@ -8,9 +8,9 @@ export const ClassCategoryFindFirstQuery = queryField(
       where: 'ClassCategoryWhereInput',
       orderBy: list('ClassCategoryOrderByWithRelationInput'),
       cursor: 'ClassCategoryWhereUniqueInput',
-      distinct: 'ClassCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassCategoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.classCategory.findFirst({

@@ -8,9 +8,9 @@ export const ReportCategoryFindFirstQuery = queryField(
       where: 'ReportCategoryWhereInput',
       orderBy: list('ReportCategoryOrderByWithRelationInput'),
       cursor: 'ReportCategoryWhereUniqueInput',
-      distinct: 'ReportCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ReportCategoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.reportCategory.findFirst({

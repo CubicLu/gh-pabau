@@ -8,9 +8,9 @@ export const ContactAttachmentFindCountQuery = queryField(
       where: 'ContactAttachmentWhereInput',
       orderBy: list('ContactAttachmentOrderByWithRelationInput'),
       cursor: 'ContactAttachmentWhereUniqueInput',
-      distinct: 'ContactAttachmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactAttachmentScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactAttachment.count(args as any)

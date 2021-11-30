@@ -5,8 +5,8 @@ export const InvCategoryUpdateOneMutation = mutationField(
   {
     type: nonNull('InvCategory'),
     args: {
-      where: nonNull('InvCategoryWhereUniqueInput'),
       data: nonNull('InvCategoryUpdateInput'),
+      where: nonNull('InvCategoryWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.invCategory.update({

@@ -8,9 +8,8 @@ export const CalRangeRequestAggregateQuery = queryField(
       where: 'CalRangeRequestWhereInput',
       orderBy: list('CalRangeRequestOrderByWithRelationInput'),
       cursor: 'CalRangeRequestWhereUniqueInput',
-      distinct: 'CalRangeRequestScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.calRangeRequest.aggregate({ ...args, ...select }) as any

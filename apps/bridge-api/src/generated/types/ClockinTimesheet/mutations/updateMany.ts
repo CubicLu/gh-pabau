@@ -5,8 +5,8 @@ export const ClockinTimesheetUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ClockinTimesheetWhereInput',
       data: nonNull('ClockinTimesheetUpdateManyMutationInput'),
+      where: 'ClockinTimesheetWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.clockinTimesheet.updateMany(args as any)

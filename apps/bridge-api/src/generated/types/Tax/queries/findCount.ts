@@ -6,9 +6,9 @@ export const TaxFindCountQuery = queryField('findManyTaxCount', {
     where: 'TaxWhereInput',
     orderBy: list('TaxOrderByWithRelationInput'),
     cursor: 'TaxWhereUniqueInput',
-    distinct: 'TaxScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('TaxScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.tax.count(args as any)

@@ -6,9 +6,8 @@ export const ClockinBreakAggregateQuery = queryField('aggregateClockinBreak', {
     where: 'ClockinBreakWhereInput',
     orderBy: list('ClockinBreakOrderByWithRelationInput'),
     cursor: 'ClockinBreakWhereUniqueInput',
-    distinct: 'ClockinBreakScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.clockinBreak.aggregate({ ...args, ...select }) as any

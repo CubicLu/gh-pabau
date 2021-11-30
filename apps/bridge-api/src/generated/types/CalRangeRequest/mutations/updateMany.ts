@@ -5,8 +5,8 @@ export const CalRangeRequestUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CalRangeRequestWhereInput',
       data: nonNull('CalRangeRequestUpdateManyMutationInput'),
+      where: 'CalRangeRequestWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.calRangeRequest.updateMany(args as any)

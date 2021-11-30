@@ -5,8 +5,8 @@ export const InvoiceTemplateUpdateOneMutation = mutationField(
   {
     type: nonNull('InvoiceTemplate'),
     args: {
-      where: nonNull('InvoiceTemplateWhereUniqueInput'),
       data: nonNull('InvoiceTemplateUpdateInput'),
+      where: nonNull('InvoiceTemplateWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.invoiceTemplate.update({

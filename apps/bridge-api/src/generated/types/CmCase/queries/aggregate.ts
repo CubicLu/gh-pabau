@@ -6,9 +6,8 @@ export const CmCaseAggregateQuery = queryField('aggregateCmCase', {
     where: 'CmCaseWhereInput',
     orderBy: list('CmCaseOrderByWithRelationInput'),
     cursor: 'CmCaseWhereUniqueInput',
-    distinct: 'CmCaseScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmCase.aggregate({ ...args, ...select }) as any

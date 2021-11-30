@@ -5,8 +5,8 @@ export const ManageCustomFieldUpdateOneMutation = mutationField(
   {
     type: nonNull('ManageCustomField'),
     args: {
-      where: nonNull('ManageCustomFieldWhereUniqueInput'),
       data: nonNull('ManageCustomFieldUpdateInput'),
+      where: nonNull('ManageCustomFieldWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.manageCustomField.update({

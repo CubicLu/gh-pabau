@@ -8,9 +8,9 @@ export const AutomationFolderFindManyQuery = queryField(
       where: 'AutomationFolderWhereInput',
       orderBy: list('AutomationFolderOrderByWithRelationInput'),
       cursor: 'AutomationFolderWhereUniqueInput',
-      distinct: 'AutomationFolderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AutomationFolderScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.automationFolder.findMany({

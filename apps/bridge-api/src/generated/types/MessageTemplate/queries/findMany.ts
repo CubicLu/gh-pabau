@@ -8,9 +8,9 @@ export const MessageTemplateFindManyQuery = queryField(
       where: 'MessageTemplateWhereInput',
       orderBy: list('MessageTemplateOrderByWithRelationInput'),
       cursor: 'MessageTemplateWhereUniqueInput',
-      distinct: 'MessageTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('MessageTemplateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.messageTemplate.findMany({

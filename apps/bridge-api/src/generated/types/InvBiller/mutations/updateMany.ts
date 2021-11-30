@@ -5,8 +5,8 @@ export const InvBillerUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'InvBillerWhereInput',
       data: nonNull('InvBillerUpdateManyMutationInput'),
+      where: 'InvBillerWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invBiller.updateMany(args as any)

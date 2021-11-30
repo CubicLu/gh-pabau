@@ -5,8 +5,8 @@ export const ClassTemplateSettingUpdateOneMutation = mutationField(
   {
     type: nonNull('ClassTemplateSetting'),
     args: {
-      where: nonNull('ClassTemplateSettingWhereUniqueInput'),
       data: nonNull('ClassTemplateSettingUpdateInput'),
+      where: nonNull('ClassTemplateSettingWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.classTemplateSetting.update({

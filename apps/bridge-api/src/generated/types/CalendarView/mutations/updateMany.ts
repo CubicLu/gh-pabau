@@ -5,8 +5,8 @@ export const CalendarViewUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CalendarViewWhereInput',
       data: nonNull('CalendarViewUpdateManyMutationInput'),
+      where: 'CalendarViewWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.calendarView.updateMany(args as any)

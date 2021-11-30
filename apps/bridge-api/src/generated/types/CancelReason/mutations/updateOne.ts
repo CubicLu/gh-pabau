@@ -5,8 +5,8 @@ export const CancelReasonUpdateOneMutation = mutationField(
   {
     type: nonNull('CancelReason'),
     args: {
-      where: nonNull('CancelReasonWhereUniqueInput'),
       data: nonNull('CancelReasonUpdateInput'),
+      where: nonNull('CancelReasonWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cancelReason.update({

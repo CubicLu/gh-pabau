@@ -5,8 +5,8 @@ export const ClassMasterUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ClassMasterWhereInput',
       data: nonNull('ClassMasterUpdateManyMutationInput'),
+      where: 'ClassMasterWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.classMaster.updateMany(args as any)

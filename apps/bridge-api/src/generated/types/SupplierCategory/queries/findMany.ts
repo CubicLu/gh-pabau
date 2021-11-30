@@ -8,9 +8,9 @@ export const SupplierCategoryFindManyQuery = queryField(
       where: 'SupplierCategoryWhereInput',
       orderBy: list('SupplierCategoryOrderByWithRelationInput'),
       cursor: 'SupplierCategoryWhereUniqueInput',
-      distinct: 'SupplierCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('SupplierCategoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.supplierCategory.findMany({

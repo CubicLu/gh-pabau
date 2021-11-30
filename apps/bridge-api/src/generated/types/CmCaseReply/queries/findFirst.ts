@@ -6,9 +6,9 @@ export const CmCaseReplyFindFirstQuery = queryField('findFirstCmCaseReply', {
     where: 'CmCaseReplyWhereInput',
     orderBy: list('CmCaseReplyOrderByWithRelationInput'),
     cursor: 'CmCaseReplyWhereUniqueInput',
-    distinct: 'CmCaseReplyScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmCaseReplyScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmCaseReply.findFirst({

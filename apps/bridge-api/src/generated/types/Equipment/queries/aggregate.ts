@@ -6,9 +6,8 @@ export const EquipmentAggregateQuery = queryField('aggregateEquipment', {
     where: 'EquipmentWhereInput',
     orderBy: list('EquipmentOrderByWithRelationInput'),
     cursor: 'EquipmentWhereUniqueInput',
-    distinct: 'EquipmentScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.equipment.aggregate({ ...args, ...select }) as any

@@ -6,9 +6,8 @@ export const InvTaxRateAggregateQuery = queryField('aggregateInvTaxRate', {
     where: 'InvTaxRateWhereInput',
     orderBy: list('InvTaxRateOrderByWithRelationInput'),
     cursor: 'InvTaxRateWhereUniqueInput',
-    distinct: 'InvTaxRateScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.invTaxRate.aggregate({ ...args, ...select }) as any

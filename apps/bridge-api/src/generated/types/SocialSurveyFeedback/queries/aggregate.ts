@@ -8,9 +8,8 @@ export const SocialSurveyFeedbackAggregateQuery = queryField(
       where: 'SocialSurveyFeedbackWhereInput',
       orderBy: list('SocialSurveyFeedbackOrderByWithRelationInput'),
       cursor: 'SocialSurveyFeedbackWhereUniqueInput',
-      distinct: 'SocialSurveyFeedbackScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.socialSurveyFeedback.aggregate({

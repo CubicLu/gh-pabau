@@ -8,9 +8,8 @@ export const IssuingCompanyAggregateQuery = queryField(
       where: 'IssuingCompanyWhereInput',
       orderBy: list('IssuingCompanyOrderByWithRelationInput'),
       cursor: 'IssuingCompanyWhereUniqueInput',
-      distinct: 'IssuingCompanyScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.issuingCompany.aggregate({ ...args, ...select }) as any

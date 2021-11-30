@@ -8,9 +8,9 @@ export const CmBookingNoteFindFirstQuery = queryField(
       where: 'CmBookingNoteWhereInput',
       orderBy: list('CmBookingNoteOrderByWithRelationInput'),
       cursor: 'CmBookingNoteWhereUniqueInput',
-      distinct: 'CmBookingNoteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmBookingNoteScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmBookingNote.findFirst({

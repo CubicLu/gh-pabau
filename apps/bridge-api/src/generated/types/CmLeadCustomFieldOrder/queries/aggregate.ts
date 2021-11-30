@@ -8,9 +8,8 @@ export const CmLeadCustomFieldOrderAggregateQuery = queryField(
       where: 'CmLeadCustomFieldOrderWhereInput',
       orderBy: list('CmLeadCustomFieldOrderOrderByWithRelationInput'),
       cursor: 'CmLeadCustomFieldOrderWhereUniqueInput',
-      distinct: 'CmLeadCustomFieldOrderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmLeadCustomFieldOrder.aggregate({

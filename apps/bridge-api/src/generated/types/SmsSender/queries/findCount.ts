@@ -6,9 +6,9 @@ export const SmsSenderFindCountQuery = queryField('findManySmsSenderCount', {
     where: 'SmsSenderWhereInput',
     orderBy: list('SmsSenderOrderByWithRelationInput'),
     cursor: 'SmsSenderWhereUniqueInput',
-    distinct: 'SmsSenderScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('SmsSenderScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.smsSender.count(args as any)

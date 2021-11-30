@@ -8,9 +8,9 @@ export const AutomationActionFindFirstQuery = queryField(
       where: 'AutomationActionWhereInput',
       orderBy: list('AutomationActionOrderByWithRelationInput'),
       cursor: 'AutomationActionWhereUniqueInput',
-      distinct: 'AutomationActionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AutomationActionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.automationAction.findFirst({

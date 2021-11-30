@@ -8,9 +8,8 @@ export const CashupReportCustomAggregateQuery = queryField(
       where: 'CashupReportCustomWhereInput',
       orderBy: list('CashupReportCustomOrderByWithRelationInput'),
       cursor: 'CashupReportCustomWhereUniqueInput',
-      distinct: 'CashupReportCustomScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cashupReportCustom.aggregate({ ...args, ...select }) as any

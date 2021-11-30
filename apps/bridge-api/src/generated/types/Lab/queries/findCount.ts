@@ -6,9 +6,9 @@ export const LabFindCountQuery = queryField('findManyLabCount', {
     where: 'LabWhereInput',
     orderBy: list('LabOrderByWithRelationInput'),
     cursor: 'LabWhereUniqueInput',
-    distinct: 'LabScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('LabScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.lab.count(args as any)

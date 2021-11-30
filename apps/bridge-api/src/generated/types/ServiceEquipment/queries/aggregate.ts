@@ -8,9 +8,8 @@ export const ServiceEquipmentAggregateQuery = queryField(
       where: 'ServiceEquipmentWhereInput',
       orderBy: list('ServiceEquipmentOrderByWithRelationInput'),
       cursor: 'ServiceEquipmentWhereUniqueInput',
-      distinct: 'ServiceEquipmentScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.serviceEquipment.aggregate({ ...args, ...select }) as any

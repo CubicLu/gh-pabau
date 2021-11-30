@@ -8,9 +8,9 @@ export const ContactPreferenceFindCountQuery = queryField(
       where: 'ContactPreferenceWhereInput',
       orderBy: list('ContactPreferenceOrderByWithRelationInput'),
       cursor: 'ContactPreferenceWhereUniqueInput',
-      distinct: 'ContactPreferenceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactPreferenceScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactPreference.count(args as any)

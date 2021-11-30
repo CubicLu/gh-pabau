@@ -6,9 +6,9 @@ export const JobFindCountQuery = queryField('findManyJobCount', {
     where: 'JobWhereInput',
     orderBy: list('JobOrderByWithRelationInput'),
     cursor: 'JobWhereUniqueInput',
-    distinct: 'JobScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('JobScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.job.count(args as any)

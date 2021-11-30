@@ -5,8 +5,8 @@ export const GroupPermissionUpdateOneMutation = mutationField(
   {
     type: nonNull('GroupPermission'),
     args: {
-      where: nonNull('GroupPermissionWhereUniqueInput'),
       data: nonNull('GroupPermissionUpdateInput'),
+      where: nonNull('GroupPermissionWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.groupPermission.update({

@@ -5,8 +5,8 @@ export const UserGroupMemberUpdateOneMutation = mutationField(
   {
     type: nonNull('UserGroupMember'),
     args: {
-      where: nonNull('UserGroupMemberWhereUniqueInput'),
       data: nonNull('UserGroupMemberUpdateInput'),
+      where: nonNull('UserGroupMemberWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userGroupMember.update({

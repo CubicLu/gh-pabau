@@ -5,8 +5,8 @@ export const LabRequestUpdateOneMutation = mutationField(
   {
     type: nonNull('LabRequest'),
     args: {
-      where: nonNull('LabRequestWhereUniqueInput'),
       data: nonNull('LabRequestUpdateInput'),
+      where: nonNull('LabRequestWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.labRequest.update({

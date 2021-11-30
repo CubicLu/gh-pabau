@@ -5,8 +5,8 @@ export const ContactNoteUpdateOneMutation = mutationField(
   {
     type: nonNull('ContactNote'),
     args: {
-      where: nonNull('ContactNoteWhereUniqueInput'),
       data: nonNull('ContactNoteUpdateInput'),
+      where: nonNull('ContactNoteWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.contactNote.update({

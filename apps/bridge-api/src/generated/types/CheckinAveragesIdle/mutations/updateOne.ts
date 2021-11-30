@@ -5,8 +5,8 @@ export const CheckinAveragesIdleUpdateOneMutation = mutationField(
   {
     type: nonNull('CheckinAveragesIdle'),
     args: {
-      where: nonNull('CheckinAveragesIdleWhereUniqueInput'),
       data: nonNull('CheckinAveragesIdleUpdateInput'),
+      where: nonNull('CheckinAveragesIdleWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.checkinAveragesIdle.update({

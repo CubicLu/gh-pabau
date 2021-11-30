@@ -6,9 +6,9 @@ export const UserMasterFindFirstQuery = queryField('findFirstUserMaster', {
     where: 'UserMasterWhereInput',
     orderBy: list('UserMasterOrderByWithRelationInput'),
     cursor: 'UserMasterWhereUniqueInput',
-    distinct: 'UserMasterScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('UserMasterScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.userMaster.findFirst({

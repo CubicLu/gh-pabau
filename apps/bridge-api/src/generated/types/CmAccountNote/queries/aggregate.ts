@@ -8,9 +8,8 @@ export const CmAccountNoteAggregateQuery = queryField(
       where: 'CmAccountNoteWhereInput',
       orderBy: list('CmAccountNoteOrderByWithRelationInput'),
       cursor: 'CmAccountNoteWhereUniqueInput',
-      distinct: 'CmAccountNoteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmAccountNote.aggregate({ ...args, ...select }) as any

@@ -5,8 +5,8 @@ export const LoyaltyPointsUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'LoyaltyPointsWhereInput',
       data: nonNull('LoyaltyPointsUpdateManyMutationInput'),
+      where: 'LoyaltyPointsWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.loyaltyPoints.updateMany(args as any)

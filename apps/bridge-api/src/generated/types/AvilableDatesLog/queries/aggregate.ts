@@ -8,9 +8,8 @@ export const AvilableDatesLogAggregateQuery = queryField(
       where: 'AvilableDatesLogWhereInput',
       orderBy: list('AvilableDatesLogOrderByWithRelationInput'),
       cursor: 'AvilableDatesLogWhereUniqueInput',
-      distinct: 'AvilableDatesLogScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.avilableDatesLog.aggregate({ ...args, ...select }) as any

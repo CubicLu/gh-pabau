@@ -5,8 +5,8 @@ export const ClassSmsHistoryUpdateOneMutation = mutationField(
   {
     type: nonNull('ClassSmsHistory'),
     args: {
-      where: nonNull('ClassSmsHistoryWhereUniqueInput'),
       data: nonNull('ClassSmsHistoryUpdateInput'),
+      where: nonNull('ClassSmsHistoryWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.classSmsHistory.update({

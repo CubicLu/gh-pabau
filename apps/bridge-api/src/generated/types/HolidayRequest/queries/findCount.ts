@@ -8,9 +8,9 @@ export const HolidayRequestFindCountQuery = queryField(
       where: 'HolidayRequestWhereInput',
       orderBy: list('HolidayRequestOrderByWithRelationInput'),
       cursor: 'HolidayRequestWhereUniqueInput',
-      distinct: 'HolidayRequestScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('HolidayRequestScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.holidayRequest.count(args as any)

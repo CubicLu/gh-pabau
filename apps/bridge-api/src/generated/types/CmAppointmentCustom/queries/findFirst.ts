@@ -8,9 +8,9 @@ export const CmAppointmentCustomFindFirstQuery = queryField(
       where: 'CmAppointmentCustomWhereInput',
       orderBy: list('CmAppointmentCustomOrderByWithRelationInput'),
       cursor: 'CmAppointmentCustomWhereUniqueInput',
-      distinct: 'CmAppointmentCustomScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmAppointmentCustomScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmAppointmentCustom.findFirst({

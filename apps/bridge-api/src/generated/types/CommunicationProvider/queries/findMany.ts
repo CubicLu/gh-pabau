@@ -8,9 +8,9 @@ export const CommunicationProviderFindManyQuery = queryField(
       where: 'CommunicationProviderWhereInput',
       orderBy: list('CommunicationProviderOrderByWithRelationInput'),
       cursor: 'CommunicationProviderWhereUniqueInput',
-      distinct: 'CommunicationProviderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CommunicationProviderScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.communicationProvider.findMany({

@@ -6,9 +6,9 @@ export const CmExtraGymFindFirstQuery = queryField('findFirstCmExtraGym', {
     where: 'CmExtraGymWhereInput',
     orderBy: list('CmExtraGymOrderByWithRelationInput'),
     cursor: 'CmExtraGymWhereUniqueInput',
-    distinct: 'CmExtraGymScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmExtraGymScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmExtraGym.findFirst({

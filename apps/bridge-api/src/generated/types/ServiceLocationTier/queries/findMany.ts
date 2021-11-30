@@ -8,9 +8,9 @@ export const ServiceLocationTierFindManyQuery = queryField(
       where: 'ServiceLocationTierWhereInput',
       orderBy: list('ServiceLocationTierOrderByWithRelationInput'),
       cursor: 'ServiceLocationTierWhereUniqueInput',
-      distinct: 'ServiceLocationTierScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ServiceLocationTierScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.serviceLocationTier.findMany({

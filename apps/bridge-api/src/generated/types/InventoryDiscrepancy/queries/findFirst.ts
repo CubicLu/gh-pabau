@@ -8,9 +8,9 @@ export const InventoryDiscrepancyFindFirstQuery = queryField(
       where: 'InventoryDiscrepancyWhereInput',
       orderBy: list('InventoryDiscrepancyOrderByWithRelationInput'),
       cursor: 'InventoryDiscrepancyWhereUniqueInput',
-      distinct: 'InventoryDiscrepancyScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InventoryDiscrepancyScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.inventoryDiscrepancy.findFirst({

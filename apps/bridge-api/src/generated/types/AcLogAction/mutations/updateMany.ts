@@ -5,8 +5,8 @@ export const AcLogActionUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AcLogActionWhereInput',
       data: nonNull('AcLogActionUpdateManyMutationInput'),
+      where: 'AcLogActionWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.acLogAction.updateMany(args as any)

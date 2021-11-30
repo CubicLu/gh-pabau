@@ -8,9 +8,9 @@ export const UserSecurityQuestionsAnswerFindManyQuery = queryField(
       where: 'UserSecurityQuestionsAnswerWhereInput',
       orderBy: list('UserSecurityQuestionsAnswerOrderByWithRelationInput'),
       cursor: 'UserSecurityQuestionsAnswerWhereUniqueInput',
-      distinct: 'UserSecurityQuestionsAnswerScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('UserSecurityQuestionsAnswerScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.userSecurityQuestionsAnswer.findMany({

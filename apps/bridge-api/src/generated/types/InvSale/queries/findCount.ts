@@ -6,9 +6,9 @@ export const InvSaleFindCountQuery = queryField('findManyInvSaleCount', {
     where: 'InvSaleWhereInput',
     orderBy: list('InvSaleOrderByWithRelationInput'),
     cursor: 'InvSaleWhereUniqueInput',
-    distinct: 'InvSaleScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('InvSaleScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.invSale.count(args as any)

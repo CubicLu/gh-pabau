@@ -5,8 +5,8 @@ export const UserSalutationUpdateOneMutation = mutationField(
   {
     type: nonNull('UserSalutation'),
     args: {
-      where: nonNull('UserSalutationWhereUniqueInput'),
       data: nonNull('UserSalutationUpdateInput'),
+      where: nonNull('UserSalutationWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userSalutation.update({

@@ -6,9 +6,9 @@ export const UserReportFindCountQuery = queryField('findManyUserReportCount', {
     where: 'UserReportWhereInput',
     orderBy: list('UserReportOrderByWithRelationInput'),
     cursor: 'UserReportWhereUniqueInput',
-    distinct: 'UserReportScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('UserReportScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.userReport.count(args as any)

@@ -8,9 +8,9 @@ export const DebtManageCommunicationFindCountQuery = queryField(
       where: 'DebtManageCommunicationWhereInput',
       orderBy: list('DebtManageCommunicationOrderByWithRelationInput'),
       cursor: 'DebtManageCommunicationWhereUniqueInput',
-      distinct: 'DebtManageCommunicationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('DebtManageCommunicationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.debtManageCommunication.count(args as any)

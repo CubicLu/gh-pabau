@@ -5,8 +5,8 @@ export const CheckinApptUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CheckinApptWhereInput',
       data: nonNull('CheckinApptUpdateManyMutationInput'),
+      where: 'CheckinApptWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.checkinAppt.updateMany(args as any)

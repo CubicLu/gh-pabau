@@ -8,9 +8,9 @@ export const CmLeadCustomFieldFindManyQuery = queryField(
       where: 'CmLeadCustomFieldWhereInput',
       orderBy: list('CmLeadCustomFieldOrderByWithRelationInput'),
       cursor: 'CmLeadCustomFieldWhereUniqueInput',
-      distinct: 'CmLeadCustomFieldScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmLeadCustomFieldScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmLeadCustomField.findMany({

@@ -8,9 +8,9 @@ export const ClassTemplateSettingFindCountQuery = queryField(
       where: 'ClassTemplateSettingWhereInput',
       orderBy: list('ClassTemplateSettingOrderByWithRelationInput'),
       cursor: 'ClassTemplateSettingWhereUniqueInput',
-      distinct: 'ClassTemplateSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassTemplateSettingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.classTemplateSetting.count(args as any)

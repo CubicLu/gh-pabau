@@ -5,8 +5,8 @@ export const CmCouponClaimedUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmCouponClaimedWhereInput',
       data: nonNull('CmCouponClaimedUpdateManyMutationInput'),
+      where: 'CmCouponClaimedWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmCouponClaimed.updateMany(args as any)

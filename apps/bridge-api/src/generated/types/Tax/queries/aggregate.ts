@@ -6,9 +6,8 @@ export const TaxAggregateQuery = queryField('aggregateTax', {
     where: 'TaxWhereInput',
     orderBy: list('TaxOrderByWithRelationInput'),
     cursor: 'TaxWhereUniqueInput',
-    distinct: 'TaxScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.tax.aggregate({ ...args, ...select }) as any

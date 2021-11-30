@@ -5,8 +5,8 @@ export const AutomationLogUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AutomationLogWhereInput',
       data: nonNull('AutomationLogUpdateManyMutationInput'),
+      where: 'AutomationLogWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.automationLog.updateMany(args as any)

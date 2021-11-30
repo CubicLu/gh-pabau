@@ -8,9 +8,9 @@ export const ContactMedicalConditionFindCountQuery = queryField(
       where: 'ContactMedicalConditionWhereInput',
       orderBy: list('ContactMedicalConditionOrderByWithRelationInput'),
       cursor: 'ContactMedicalConditionWhereUniqueInput',
-      distinct: 'ContactMedicalConditionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactMedicalConditionScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactMedicalCondition.count(args as any)

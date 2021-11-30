@@ -5,8 +5,8 @@ export const UserAlertPermissionUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'UserAlertPermissionWhereInput',
       data: nonNull('UserAlertPermissionUpdateManyMutationInput'),
+      where: 'UserAlertPermissionWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.userAlertPermission.updateMany(args as any)

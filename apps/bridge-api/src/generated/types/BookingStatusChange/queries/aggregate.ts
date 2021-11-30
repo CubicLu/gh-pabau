@@ -8,9 +8,8 @@ export const BookingStatusChangeAggregateQuery = queryField(
       where: 'BookingStatusChangeWhereInput',
       orderBy: list('BookingStatusChangeOrderByWithRelationInput'),
       cursor: 'BookingStatusChangeWhereUniqueInput',
-      distinct: 'BookingStatusChangeScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookingStatusChange.aggregate({ ...args, ...select }) as any

@@ -5,8 +5,8 @@ export const ClasstypeMasterUpdateOneMutation = mutationField(
   {
     type: nonNull('ClasstypeMaster'),
     args: {
-      where: nonNull('ClasstypeMasterWhereUniqueInput'),
       data: nonNull('ClasstypeMasterUpdateInput'),
+      where: nonNull('ClasstypeMasterWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.classtypeMaster.update({

@@ -8,9 +8,9 @@ export const InvPaymentTypeFindCountQuery = queryField(
       where: 'InvPaymentTypeWhereInput',
       orderBy: list('InvPaymentTypeOrderByWithRelationInput'),
       cursor: 'InvPaymentTypeWhereUniqueInput',
-      distinct: 'InvPaymentTypeScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InvPaymentTypeScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.invPaymentType.count(args as any)

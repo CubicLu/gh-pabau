@@ -5,8 +5,8 @@ export const UserActivityLogUpdateOneMutation = mutationField(
   {
     type: nonNull('UserActivityLog'),
     args: {
-      where: nonNull('UserActivityLogWhereUniqueInput'),
       data: nonNull('UserActivityLogUpdateInput'),
+      where: nonNull('UserActivityLogWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userActivityLog.update({

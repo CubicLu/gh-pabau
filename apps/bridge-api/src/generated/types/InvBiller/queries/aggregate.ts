@@ -6,9 +6,8 @@ export const InvBillerAggregateQuery = queryField('aggregateInvBiller', {
     where: 'InvBillerWhereInput',
     orderBy: list('InvBillerOrderByWithRelationInput'),
     cursor: 'InvBillerWhereUniqueInput',
-    distinct: 'InvBillerScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.invBiller.aggregate({ ...args, ...select }) as any

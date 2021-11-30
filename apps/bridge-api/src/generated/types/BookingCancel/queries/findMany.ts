@@ -6,9 +6,9 @@ export const BookingCancelFindManyQuery = queryField('findManyBookingCancel', {
     where: 'BookingCancelWhereInput',
     orderBy: list('BookingCancelOrderByWithRelationInput'),
     cursor: 'BookingCancelWhereUniqueInput',
-    distinct: 'BookingCancelScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('BookingCancelScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.bookingCancel.findMany({

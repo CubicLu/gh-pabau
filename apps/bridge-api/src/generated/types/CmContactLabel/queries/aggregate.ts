@@ -8,9 +8,8 @@ export const CmContactLabelAggregateQuery = queryField(
       where: 'CmContactLabelWhereInput',
       orderBy: list('CmContactLabelOrderByWithRelationInput'),
       cursor: 'CmContactLabelWhereUniqueInput',
-      distinct: 'CmContactLabelScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmContactLabel.aggregate({ ...args, ...select }) as any

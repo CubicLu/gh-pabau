@@ -8,9 +8,9 @@ export const CreditNoteTypeFindManyQuery = queryField(
       where: 'CreditNoteTypeWhereInput',
       orderBy: list('CreditNoteTypeOrderByWithRelationInput'),
       cursor: 'CreditNoteTypeWhereUniqueInput',
-      distinct: 'CreditNoteTypeScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CreditNoteTypeScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.creditNoteType.findMany({

@@ -5,8 +5,8 @@ export const CmAccountNoteUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmAccountNoteWhereInput',
       data: nonNull('CmAccountNoteUpdateManyMutationInput'),
+      where: 'CmAccountNoteWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmAccountNote.updateMany(args as any)

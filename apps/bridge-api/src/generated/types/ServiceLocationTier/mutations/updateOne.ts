@@ -5,8 +5,8 @@ export const ServiceLocationTierUpdateOneMutation = mutationField(
   {
     type: nonNull('ServiceLocationTier'),
     args: {
-      where: nonNull('ServiceLocationTierWhereUniqueInput'),
       data: nonNull('ServiceLocationTierUpdateInput'),
+      where: nonNull('ServiceLocationTierWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.serviceLocationTier.update({

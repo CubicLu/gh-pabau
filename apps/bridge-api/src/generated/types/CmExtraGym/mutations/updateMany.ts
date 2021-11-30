@@ -5,8 +5,8 @@ export const CmExtraGymUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CmExtraGymWhereInput',
       data: nonNull('CmExtraGymUpdateManyMutationInput'),
+      where: 'CmExtraGymWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmExtraGym.updateMany(args as any)

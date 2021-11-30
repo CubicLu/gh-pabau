@@ -5,8 +5,8 @@ export const MessageTemplateUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'MessageTemplateWhereInput',
       data: nonNull('MessageTemplateUpdateManyMutationInput'),
+      where: 'MessageTemplateWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.messageTemplate.updateMany(args as any)

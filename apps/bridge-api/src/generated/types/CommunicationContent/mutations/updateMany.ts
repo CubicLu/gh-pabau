@@ -5,8 +5,8 @@ export const CommunicationContentUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CommunicationContentWhereInput',
       data: nonNull('CommunicationContentUpdateManyMutationInput'),
+      where: 'CommunicationContentWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.communicationContent.updateMany(args as any)

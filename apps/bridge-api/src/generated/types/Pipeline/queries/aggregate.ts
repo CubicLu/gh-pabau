@@ -6,9 +6,8 @@ export const PipelineAggregateQuery = queryField('aggregatePipeline', {
     where: 'PipelineWhereInput',
     orderBy: list('PipelineOrderByWithRelationInput'),
     cursor: 'PipelineWhereUniqueInput',
-    distinct: 'PipelineScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.pipeline.aggregate({ ...args, ...select }) as any

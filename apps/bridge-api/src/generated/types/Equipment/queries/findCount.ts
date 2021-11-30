@@ -6,9 +6,9 @@ export const EquipmentFindCountQuery = queryField('findManyEquipmentCount', {
     where: 'EquipmentWhereInput',
     orderBy: list('EquipmentOrderByWithRelationInput'),
     cursor: 'EquipmentWhereUniqueInput',
-    distinct: 'EquipmentScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('EquipmentScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.equipment.count(args as any)
