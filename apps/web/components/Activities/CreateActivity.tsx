@@ -51,7 +51,7 @@ export interface CreateActivityProps {
   onCancel?: () => void
   events?: EventsData[]
   handleSave?: () => void
-  editData?: DataProps
+  editData?: ActivityInitialValue
   userOptions: UserDetail[]
   activityTypeOption: ActivityTypeFilter[]
 }
@@ -64,7 +64,7 @@ export interface ActivityTypeFilter {
   icon?: string
 }
 
-export interface DataProps {
+export interface ActivityInitialValue {
   id?: number
   activityType?: number
   user?: number
@@ -103,7 +103,7 @@ const dateFormatMapper = {
 const { Option } = Select
 const { TextArea } = Input
 
-const defaultValue: DataProps = {
+const defaultValue: ActivityInitialValue = {
   id: undefined,
   subject: '',
   startDate: dayjs(),
@@ -131,7 +131,9 @@ export const CreateActivity: FC<CreateActivityProps> = ({
   const { t } = useTranslation('common')
   const loggedUser = useUser()
   const [activityTypes, setActivityTypes] = useState<ActivityTypeFilter[]>()
-  const [initialValue, setInitialValue] = useState<DataProps>(defaultValue)
+  const [initialValue, setInitialValue] = useState<ActivityInitialValue>(
+    defaultValue
+  )
   const isMobile = useMedia('(max-width: 768px)', false)
 
   const [visibleDrawer, setVisibleDrawer] = useState(false)

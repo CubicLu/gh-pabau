@@ -17,7 +17,7 @@ import { OptionList } from '../../components/Activities/FilterMenu'
 import {
   ActivityTypeFilter,
   CreateActivity,
-  DataProps,
+  ActivityInitialValue,
 } from '../../components/Activities/CreateActivity'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tabs, Tooltip, Popover, Skeleton } from 'antd'
@@ -210,7 +210,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [selectFilterUser, setSelectFilterUser] = useState<number[]>([])
   const [personsList, setPersonsList] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [editData, setEditData] = useState<DataProps>()
+  const [editData, setEditData] = useState<ActivityInitialValue>()
   const [labels, setLabels] = useState<Labels[]>([])
   const [filterActivityType, setFilterActivityType] = useState<
     ActivityTypeFilter[]
