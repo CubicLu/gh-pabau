@@ -97,7 +97,7 @@ export interface EventsDataProps {
   status?: string
   appointmentWith?: string
   openedBy?: OpenByProps[]
-  numberOfOpend?: string
+  numberOfOpened?: string
   moved?: MovedProps
   displayCollapse?: boolean
   pinItems?: PinItemProps[]
@@ -547,7 +547,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               {renderSpecificIcon(event)}
             </div>
           }
-          {event?.numberOfOpend && (
+          {event?.numberOfOpened && (
             <div className={styles.openByWrap}>
               <span className={styles.dot} />
               {/* <Popover
@@ -559,7 +559,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
               <div className={styles.opened}>
                 <EyeOutlined />
                 <span>
-                  {`${event?.numberOfOpend} ${t(
+                  {`${event?.numberOfOpened} ${t(
                     'communicationTimeline.opened'
                   )}`}
                 </span>
