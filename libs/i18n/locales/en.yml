@@ -4857,6 +4857,7 @@ en:
   activityList.selectPerson.placeholder: 'Select a person'
   activityList.search.placeholder: Search
   activityList.createActivity: 'Create Activity'
+  activityList.editActivity: 'Edit Activity'
   activityList.empty.activity.label: 'No Activities'
   activityList.column.dueDate: 'Due Date'
   activityList.column.subject: Subject
