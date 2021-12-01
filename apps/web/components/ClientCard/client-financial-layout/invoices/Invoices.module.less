@@ -211,7 +211,6 @@
 .shareIcon {
   position: absolute;
   top: 50%;
-  right: -5px;
   transform: translate(-50%, -50%);
   .shareTootip{
     margin: 5px;
@@ -268,3 +267,35 @@
   display: flex;
     flex-direction: column;
 }
+.customTable {
+ :global .ant-table-wrapper {
+     .ant-spin-nested-loading {
+       .ant-spin-container {
+         .ant-table {
+           .ant-table-container {
+            .ant-table-body {
+             table {
+               .ant-table-tbody {
+                 tr {
+                  &:hover {
+                    td {
+                      &:nth-of-type(7) {
+                        opacity: 1 !important;
+                      }
+                    }
+                  }
+                   td {
+                    &:nth-of-type(7) {
+                      opacity: 0 !important;
+                    }
+                   }
+                 }
+               }
+             }
+            }
+           }
+         }
+       }
+     }
+   }
+ }
