@@ -236,7 +236,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
     }))
     if (event.letterUrl && !collapseEvent?.[`event_${event.id}`]) {
       setLetterUrl(event.letterUrl ?? undefined)
-      setShowDocumentViewer(!showDocumentViewer)
+      setShowDocumentViewer((e) => !e)
     } else {
       setLetterUrl('')
     }
