@@ -40,28 +40,30 @@ export const Epaper: FC<EPaperProps> = ({
   }
 
   useEffect(() => {
-    switch (getExtension(pdfURL)) {
-      case 'doc':
-      case 'docx':
-        setDocUrl(getDocumentURL(getImage(pdfURL)))
-        setIsDocxFile(true)
-        break
-      case 'pdf':
-        setDocUrl(getImage(pdfURL))
-        setIsDocxFile(false)
-        break
-      case 'jpeg':
-      case 'jpg':
-      case 'gif':
-      case 'png':
-      case 'bmp':
-        setImageUrls([getImage(pdfURL)])
-        setIsDocxFile(false)
-        break
-      default:
-        setDocUrl(pdfURL)
-        setImageUrls(images)
-        break
+    if (pdfURL) {
+      switch (getExtension(pdfURL)) {
+        case 'doc':
+        case 'docx':
+          setDocUrl(getDocumentURL(getImage(pdfURL)))
+          setIsDocxFile(true)
+          break
+        case 'pdf':
+          setDocUrl(getImage(pdfURL))
+          setIsDocxFile(false)
+          break
+        case 'jpeg':
+        case 'jpg':
+        case 'gif':
+        case 'png':
+        case 'bmp':
+          setImageUrls([getImage(pdfURL)])
+          setIsDocxFile(false)
+          break
+        default:
+          setDocUrl(pdfURL)
+          setImageUrls(images)
+          break
+      }
     }
   }, [pdfURL, images])
   return (
