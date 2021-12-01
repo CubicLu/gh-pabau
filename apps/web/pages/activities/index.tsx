@@ -17,6 +17,7 @@ import { OptionList } from '../../components/Activities/FilterMenu'
 import {
   ActivityTypeFilter,
   CreateActivity,
+  ActivityInitialValue,
 } from '../../components/Activities/CreateActivity'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tabs, Tooltip, Popover, Skeleton } from 'antd'
@@ -200,14 +201,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [sourceData, setSourceData] = useState([])
   const [tabValue, setTabValue] = useState(tabs.toDo)
   const loggedUser = useUser()
-  // const [filterTabValue, setFilterTabValue] = useState(
-  //   Object.values(filterTabsObj)
-  // )
   const [progressBarData, setProgressBarData] = useState([])
   const [searchText, setSearchText] = useState('')
-  // const [sourceFilteredData, setSourceFilteredData] = useState<
-  //   ActivitiesDataProps[]
-  // >([])
   const [openPicker, setOpenPicker] = useState(false)
   const [selectedDates, setSelectedDates] = useState<Dayjs[]>([])
   const [createActivityVisible, setCreateActivityVisible] = useState(false)
@@ -215,10 +210,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [selectFilterUser, setSelectFilterUser] = useState<number[]>([])
   const [personsList, setPersonsList] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  // const [overdueCount, setOverDueCount] = useState(0)
-  // const [editData, setEditData] = useState<EditedData>()
-  // const [selectedData, setSelectedData] = useState<ActivitiesDataProps>()
-  const [isEdit, setIsEdit] = useState(false)
+  const [editData, setEditData] = useState<ActivityInitialValue>()
   const [labels, setLabels] = useState<Labels[]>([])
   const [filterActivityType, setFilterActivityType] = useState<
     ActivityTypeFilter[]
@@ -338,7 +330,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     },
   ] = useFindManyActivityDataLazyQuery({
     ...getQueryVariables,
-    // fetchPolicy: 'no-cache',
+    fetchPolicy: 'no-cache',
   })
 
   const { data: leadSourceResponse } = useGetMarketingSourcesQuery()
@@ -1043,29 +1035,26 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }
 
   const toggleCreateActivityModal = useCallback(() => {
-    setIsEdit(false)
     setCreateActivityVisible((e) => !e)
   }, [])
 
   const editCreateActivityModal = useCallback((data) => {
-    // setSelectedData(data)
-    // const userName = `${data.assigned?.firstName} ${data.assigned?.lastName}`
-    // const clientName = `${data.client.firstName} ${data.client.lastName}`
-    // const dataObject = {
-    //   subject: data.subject,
-    //   startDate: data.dueDate && dayjs(data.dueDate, eventDateFormat),
-    //   endDate: data.dueEndDate && dayjs(data.dueEndDate, eventDateFormat),
-    //   startTime: data.dueDate && dayjs(data.dueDate, eventDateFormat),
-    //   endTime: data.dueEndDate && dayjs(data.dueEndDate, eventDateFormat),
-    //   freeBusy: data.freeBusy,
-    //   notes: data.note,
-    //   user: userName,
-    //   lead: data.activityLead,
-    //   client: clientName,
-    //   isDone: data.status === statuses.done,
-    // }
-    // setEditData(dataObject)
-    setIsEdit(true)
+    const dataObject = {
+      id: data.id,
+      subject: data.subject,
+      startDate: data.dueDate && dayjs(data.dueDate),
+      endDate: data.dueEndDate && dayjs(data.dueEndDate),
+      startTime: data.dueDate && dayjs(data.dueDate),
+      endTime: data.dueEndDate && dayjs(data.dueEndDate),
+      freeBusy: Number(data.freeBusy),
+      notes: data.note,
+      user: data?.assigned?.id,
+      lead: data?.lead_id,
+      client: data?.client?.id,
+      activityType: data?.type?.id,
+      isDone: data.status === statuses.done,
+    }
+    setEditData(dataObject)
     setCreateActivityVisible((e) => !e)
   }, [])
 
@@ -1474,9 +1463,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
           onCancel={toggleCreateActivityModal}
           events={events}
           handleSave={handleActivitySave}
-          isEdit={isEdit}
           activityTypeOption={activityTypeOption}
-          // editData={editData}
+          editData={editData}
           userOptions={personsList}
         />
       )}
