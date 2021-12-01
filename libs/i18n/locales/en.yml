@@ -5821,3 +5821,4 @@ en:
   activity.client.gender.male: 'Male'
   activity.client.gender.female: 'Female'
   activity.client.gender.other: 'Other'
+  clients.communications.title: 'Communications'

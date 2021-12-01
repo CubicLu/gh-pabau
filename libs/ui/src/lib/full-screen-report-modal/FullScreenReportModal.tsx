@@ -51,6 +51,7 @@ export interface FullScreenReportModalProps {
   footer?: boolean
   className?: string
   avatar?: string
+  isDocFileOpen?: boolean
 }
 
 export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
@@ -87,6 +88,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   onAssigneeClick,
   customOptionBtn = null,
   avatar,
+  isDocFileOpen,
   ...props
 }) => {
   const ref = useRef(null)
@@ -246,7 +248,13 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
             return document.body as HTMLElement
           }}
         >
-          <div className={styles.fullScreenModalBody}>
+          <div
+            className={
+              isDocFileOpen
+                ? `${styles.fullScreenModalBody} ${styles.removeScroll}`
+                : `${styles.fullScreenModalBody}`
+            }
+          >
             {subMenu.length > 0 && Array.isArray(children) ? (
               <TabMenu
                 menuItems={subMenu}

@@ -5,10 +5,10 @@ import { prepareMessage } from '../../email/merge-tags.service'
 export const ContactCommunicationExtended = extendType({
   type: 'Communication',
   definition(t) {
-    t.field('messageBody', {
+    t.nullable.field('messageBody', {
       type: 'String',
       async resolve(parent: any, args, ctx: Context) {
-        if (!parent.Content.body) {
+        if (!parent.Content?.body) {
           return ''
         }
 

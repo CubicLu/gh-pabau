@@ -1,4 +1,26 @@
 .follow-wrapper {
+  .document-viewer-wrapper {
+    .document-input-wrapper {
+        max-width: 300px;
+        padding-left: 24px;
+        :global {
+            .ant-input {
+                margin-bottom: 20px;
+            }
+        }
+    }
+    .show-btn {
+        margin: 24px;
+    }
+    .document-wrapper {
+        margin-top: 20px;
+        padding: 24px;
+        background: #fff;
+        iframe {
+          overflow: hidden;
+        }
+    }
+}
   .header-lian {
     border-bottom: 1px solid #ecedf0;
   }
@@ -188,7 +210,7 @@
         h4 {
           font-size: 14px;
           line-height: 20px !important;
-          color: #3d3d46;
+          color: #3d3d46 !important;
           font-weight: 500;
           margin-bottom: 0px;
         }
@@ -315,6 +337,9 @@
       justify-content: space-between;
       align-items: center;
       white-space: pre-line;
+      > div:nth-child(1){
+        word-break: break-all;
+      }
       h5 {
         font-size: 12px;
         line-height: 16px;
@@ -324,6 +349,27 @@
         margin-bottom: 8px;
         font-weight: 500;
       }
+      :global {
+        div{
+          body{
+            width: 100% !important;
+            max-width: unset !important;
+            img {
+              max-width: 100% !important;
+              width: 100% !important;
+            }
+          }
+        }
+        table {
+          width: 100% !important;
+          max-width: unset !important;
+          img {
+            max-width: 100% !important; 
+            width: 100% !important;
+          }
+        }
+      }
+    
     }
 
     h6 {
@@ -499,7 +545,7 @@
     }
   }
 }
-.ant-pagination {
+:global .ant-pagination {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -737,5 +783,12 @@
     .delete-txt {
       margin-left: 22px;
     }
+  }
+}
+.document-wrapper {
+ overflow: hidden;
+  iframe {
+    overflow: hidden;
+    padding-bottom: 80px;
   }
 }

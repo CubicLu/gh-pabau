@@ -15,7 +15,7 @@ export const CommunicationRecipient = objectType({
     })
     t.nullable.string('remote_key')
     t.nullable.string('delivered_result')
-    t.int('read_count')
+    t.nullable.int('read_count')
     t.string('to_address')
     t.string('cc')
     t.int('provider_id')
