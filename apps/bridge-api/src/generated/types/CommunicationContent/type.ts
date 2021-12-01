@@ -11,7 +11,7 @@ export const CommunicationContent = objectType({
     t.int('company_id')
     t.string('hash')
     t.nullable.string('subject')
-    t.string('body')
+    t.nullable.string('body')
     t.list.field('Communications', {
       type: 'Communication',
       args: {

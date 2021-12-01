@@ -108,6 +108,7 @@ export interface EventsProps {
   photos?: string[]
   documentFile?: string
   openedBy?: OpenByProps[]
+  numberOfOpend?: string
   sharedWith?: OpenByProps[]
   moved?: MovedProps
   displayCollapse?: boolean
