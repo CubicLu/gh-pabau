@@ -1157,7 +1157,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
 
   return (
     <div className={styles.activityWrapper} ref={activityRef}>
-      <Layout badgeCountList={{ activities: paginateData?.total }}>
+      <Layout>
         <CommonHeader
           title={t('activityList.header')}
           isShowSearch={false}

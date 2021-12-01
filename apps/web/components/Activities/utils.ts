@@ -1,4 +1,11 @@
 import dayjs from 'dayjs'
+import { ApolloCache } from '@apollo/client'
+import { Activity_Status, ActivityCountDocument } from '@pabau/graphql'
+
+export enum ActivityCountOperand {
+  Add = 'add',
+  Subtract = 'subtract',
+}
 
 export const getFunction = (obj, path, defaultValue = undefined) => {
   const travel = (regexp) =>
@@ -29,4 +36,38 @@ export const prepareQueryPayload = (key: string, value: string) => {
     },
   }
   return mapper[key]
+}
+
+export const updateActivityCountCache = (
+  cache: ApolloCache<any>,
+  operand: ActivityCountOperand
+) => {
+  const existing = cache.readQuery({
+    query: ActivityCountDocument,
+    variables: {
+      status: Activity_Status.Done,
+    },
+  })
+  if (existing) {
+    const key = Object.keys(existing)[0]
+    const newCount =
+      operand === ActivityCountOperand.Add
+        ? existing[key]?._count?.id + 1
+        : existing[key]?._count?.id - 1
+    cache.writeQuery({
+      query: ActivityCountDocument,
+      variables: {
+        status: Activity_Status.Done,
+      },
+      data: {
+        [key]: {
+          ...existing[key],
+          _count: {
+            ...existing[key]?._count,
+            id: newCount,
+          },
+        },
+      },
+    })
+  }
 }

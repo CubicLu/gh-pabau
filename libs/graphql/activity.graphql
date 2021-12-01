@@ -368,3 +368,11 @@ query retrieveSalutationAndStage {
     name
   }
 }
+
+query activityCount($status: activity_status!) {
+  aggregateActivity(where: { status: { not: { equals: $status } } }) {
+    _count {
+      id
+    }
+  }
+}

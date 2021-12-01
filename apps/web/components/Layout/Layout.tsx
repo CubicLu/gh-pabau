@@ -5,6 +5,8 @@ import {
   useProduct_NewsSubscription,
   useInsert_Product_News_Read_OneMutation,
   useSwitchCompanyMutation,
+  useActivityCountQuery,
+  Activity_Status,
 } from '@pabau/graphql'
 import { Layout as PabauLayout, LayoutProps, StickyPopout } from '@pabau/ui'
 import { useRouter } from 'next/router'
@@ -42,11 +44,17 @@ const Layout: FC<LayoutProps> = ({
   const [notifications, setNotifications] = useState()
   const [productNews, setProductNews] = useState<ProductNews[]>()
   const [showChat, setShowChat] = useState(false)
+  const [activityCount, setActivityCount] = useState<number>()
   const router = useRouter()
   const { data, error } = useDisabledFeaturesQuery()
 
   const { data: notificationData } = useNotificationsSubscription()
   const { data: productNewsData } = useProduct_NewsSubscription()
+  const { data: activityResponse } = useActivityCountQuery({
+    variables: {
+      status: Activity_Status.Done,
+    },
+  })
 
   const [switchCompany] = useSwitchCompanyMutation()
 
@@ -104,6 +112,12 @@ const Layout: FC<LayoutProps> = ({
     }
   }, [notificationData?.notifications])
 
+  useEffect(() => {
+    if (activityResponse?.aggregateActivity) {
+      setActivityCount(activityResponse.aggregateActivity?._count?.id)
+    }
+  }, [activityResponse])
+
   if (error) {
     return <Login />
   }
@@ -154,6 +168,7 @@ const Layout: FC<LayoutProps> = ({
         leadCreateRender={(handleClose) => (
           <LeadCreate handleClose={handleClose} />
         )}
+        badgeCountList={{ activities: activityCount }}
         {...props}
       >
         <CommonHeader

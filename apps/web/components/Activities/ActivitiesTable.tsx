@@ -53,6 +53,7 @@ import { PersonList, OptionList } from './FilterMenu'
 import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 import { getData } from './FilterOptionData'
 import { ActivityTypeFilter } from './CreateActivity'
+import { updateActivityCountCache, ActivityCountOperand } from './utils'
 
 export type ActivitiesType = {
   width?: number
@@ -1685,6 +1686,20 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         index !== -1 && statusList.splice(index, 1)
       }
 
+      const updateCache = (cache, updateOneActivity) => {
+        if (
+          data.status !== 'Done' &&
+          updateOneActivity.status === Activity_Status.Done
+        ) {
+          updateActivityCountCache(cache, ActivityCountOperand.Subtract)
+        } else if (
+          data.status === 'Done' &&
+          updateOneActivity.status !== Activity_Status.Done
+        ) {
+          updateActivityCountCache(cache, ActivityCountOperand.Add)
+        }
+      }
+
       const onStatusSelect = async (data, status) => {
         setSelectedStatus(status)
         setVisible(false)
@@ -1709,6 +1724,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               id: data?.id,
             },
             data: payload,
+          },
+          update(cache, { data: { updateOneActivity } }) {
+            updateCache(cache, updateOneActivity)
           },
         })
         onStatusChange(status)
@@ -1737,6 +1755,9 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               id: data?.id,
             },
             data: payload,
+          },
+          update(cache, { data: { updateOneActivity } }) {
+            updateCache(cache, updateOneActivity)
           },
         })
         onStatusChange(item)
