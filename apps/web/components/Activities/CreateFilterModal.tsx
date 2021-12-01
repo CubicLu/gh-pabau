@@ -564,6 +564,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   }
 
   const onDeleteFilter = async (values) => {
+    setShowModal(false)
     if (uuidValidate(values.id)) {
       setFilterOption((item) => {
         const newItem = item.filter((record) => record.id !== values.id)
@@ -616,7 +617,6 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         setFilterValue(0)
       }
     }
-    setShowModal(false)
   }
 
   const onPreview = (values: InitialValueTypes, resetForm) => {

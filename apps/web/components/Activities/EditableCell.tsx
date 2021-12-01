@@ -1,6 +1,12 @@
 import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
 import { Input, Form, Popover, Select, Drawer, Spin, Tooltip } from 'antd'
-import { getDuration, getFunction, prepareQueryPayload } from './utils'
+import {
+  getDuration,
+  getFunction,
+  prepareQueryPayload,
+  updateActivityCountCache,
+  ActivityCountOperand,
+} from './utils'
 import { merge, debounce, mergeWith } from 'lodash'
 import { ActivitiesDataProps } from '../../pages/activities'
 import {
@@ -156,6 +162,14 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
           NotificationType.success,
           t('update.activity.record.success.message')
         )
+      },
+      update(cache, { data: { updateOneActivity } }) {
+        if (
+          record.status !== 'Done' &&
+          updateOneActivity.status === Activity_Status.Done
+        ) {
+          updateActivityCountCache(cache, ActivityCountOperand.Subtract)
+        }
       },
     })
     const [editLead] = useUpdateOneCmLeadMutation({

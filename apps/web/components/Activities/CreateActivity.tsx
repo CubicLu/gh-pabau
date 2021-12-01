@@ -38,6 +38,7 @@ import {
 } from '@pabau/graphql'
 import { useUser } from '../../context/UserContext'
 import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
+import { updateActivityCountCache, ActivityCountOperand } from './utils'
 
 interface UserDetail {
   id: number
@@ -148,6 +149,11 @@ export const CreateActivity: FC<CreateActivityProps> = ({
         t('create.activity.modal.success.message')
       )
     },
+    update(cache, { data: { createOneActivity } }) {
+      if (createOneActivity.status !== Activity_Status.Done) {
+        updateActivityCountCache(cache, ActivityCountOperand.Add)
+      }
+    },
   })
   const [editActivity] = useUpdateOneActivityMutation({
     onCompleted() {
@@ -155,6 +161,19 @@ export const CreateActivity: FC<CreateActivityProps> = ({
         NotificationType.success,
         t('update.activity.record.success.message')
       )
+    },
+    update(cache, { data: { updateOneActivity } }) {
+      if (
+        !initialValue.isDone &&
+        updateOneActivity.status === Activity_Status.Done
+      ) {
+        updateActivityCountCache(cache, ActivityCountOperand.Subtract)
+      } else if (
+        initialValue.isDone &&
+        updateOneActivity.status !== Activity_Status.Done
+      ) {
+        updateActivityCountCache(cache, ActivityCountOperand.Add)
+      }
     },
   })
 
