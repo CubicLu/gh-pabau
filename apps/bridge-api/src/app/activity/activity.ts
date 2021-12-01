@@ -217,9 +217,6 @@ export const prepareSearchObject = (
     Note: {
       note: { contains: search },
     },
-    Status: {
-      status: { contains: search },
-    },
     'Lead description': {
       CmLead: { Description: { contains: search } },
     },
