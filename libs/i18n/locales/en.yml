@@ -3030,6 +3030,7 @@ en:
   ui.clientdetails.allocated: 'Allocated authorisations'
   ui.clientdetails.details: Details
   ui.clientdetails.customise: 'Customise fields'
+  ui.clientdetails.privacywarning.tooltip: 'This client prefers not to receive this type of communication'
   dashboard.create.menu.item.pathway.title: 'Start a Pathway'
   dashboard.create.menu.item.pathway.description: 'Share a photo or write something'
   dashboard.create.menu.item.treatment.title: 'Treatment note'
