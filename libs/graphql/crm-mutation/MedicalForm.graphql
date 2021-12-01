@@ -36,6 +36,9 @@ fragment MedicalForm on MedicalForm {
   CreatedBy {
     ...UserFields
   }
+  DeletedBy {
+    ...UserFields
+  }
 }
 
 mutation createOneMedicalForm($data: MedicalFormCreateInput!) {

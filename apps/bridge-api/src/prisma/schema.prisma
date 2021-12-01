@@ -8535,7 +8535,9 @@ model MedicalForm {
   lab_id                 Int
   is_private             Boolean   @default(false)
   Company                Company?  @relation(fields: [company_id], references: [id])
-  CreatedBy              User?     @relation(fields: [user_created], references: [id])
+  CreatedBy              User?     @relation(fields: [user_created], references: [id], name: "MedicalFormCreated")
+  DeletedBy              User?     @relation(fields: [user_deleted], references: [id], name: "MedicalFormDeleted")
+
 
   MedicalFormAdvancedSetting MedicalFormAdvancedSetting[]
   MedicalFormContact         MedicalFormContact[]
@@ -12968,7 +12970,8 @@ model User {
   LabRequestUser               LabRequest[]                   @relation("LabRequestUser")
   LabAssignedUser              LabRequest[]                   @relation("LabAssignedUser")
 
-  MedicalForm                  MedicalForm[]
+  MedicalFormCreated           MedicalForm[]        @relation("MedicalFormCreated")
+  MedicalFormDeleted           MedicalForm[]        @relation("MedicalFormDeleted")
   CmContact                    CmContact[]
   CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
   PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
