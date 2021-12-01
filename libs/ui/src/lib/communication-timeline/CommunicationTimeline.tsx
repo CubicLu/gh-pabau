@@ -51,7 +51,7 @@ import {
   transform,
   checkIsDocx,
   getDocumentURL,
-} from '../../helper/CommunicationHepler'
+} from '../../helper/CommunicationHelper'
 dayjs.extend(calendar)
 
 export interface CommunicationTimelineProps {

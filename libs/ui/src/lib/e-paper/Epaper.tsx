@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import styles from './Epaper.module.less'
-import { getDocumentURL } from '../../helper/CommunicationHepler'
+import { getDocumentURL } from '../../helper/CommunicationHelper'
 import { getImage } from '../../helper/uploaders/UploadHelpers'
 export interface EPaperProps {
   title: string
