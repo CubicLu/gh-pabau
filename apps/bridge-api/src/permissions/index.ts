@@ -99,7 +99,10 @@ export const permissions = shield(
       deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
       createContactAlertAdvanced: rules.authentication.isAuthenticated,
-      updateOneMedicalForm: rules.authentication.isAuthenticated,
+      updateOneMedicalForm: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.injectDeletedBy
+      ),
 
       CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(

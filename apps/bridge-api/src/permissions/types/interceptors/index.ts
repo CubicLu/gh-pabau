@@ -177,4 +177,15 @@ export const interceptors = {
     }
     return true
   }),
+  injectDeletedBy: rule('injectDeletedBy')((_root, args, ctx: Context) => {
+    args.data = {
+      ...args.data,
+      deleted_at: new Date(),
+      DeletedBy: {
+        connect: { id: ctx.authenticated.user },
+      },
+    }
+
+    return true
+  }),
 }
