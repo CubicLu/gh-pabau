@@ -175,7 +175,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
           paginateData.currentPage * paginateData.pageSize
         )
       : filteredEvents,
-    'MM-DD-YYYY hh:mm',
+    '',
     t
   )
   const [showDocumentViewer, setShowDocumentViewer] = useState<boolean>(false)
@@ -480,7 +480,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
           </div>
           <div className={styles.timeWrap}>
             {!isMobile && <RenderPinIcon event={event} />}
-            {event.status && !isMobile && (
+            {event?.status && !isMobile && (
               <div className={styles.statusWrap}>
                 {renderStatus(event.status)}
               </div>
@@ -506,29 +506,30 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
                 </span>
               </Tooltip>
             )}
-            {event.type.toLocaleLowerCase() === types.mail && event.isReceived && (
-              <div className={styles.inboundEmailWrapper}>
-                <RenderInboundEmail event={event} />
-              </div>
-            )}
+            {event?.type?.toLocaleLowerCase() === types.mail &&
+              event.isReceived && (
+                <div className={styles.inboundEmailWrapper}>
+                  <RenderInboundEmail event={event} />
+                </div>
+              )}
             {menuList.length > 0 && <DotButton menuList={menuList} />}
           </div>
         </div>
         <div className={styles.lineWrap}>
           {isMobile && <RenderPinIcon event={event} />}
-          {event.status && isMobile && (
+          {event?.status && isMobile && (
             <div className={styles.statusWrap}>
               {renderStatus(event.status)}
             </div>
           )}
           <div className={styles.time}>{timeFormat(event.dateTime)}</div>
-          {event.authorName && (
+          {event?.authorName && (
             <div className={styles.clientNameText}>
               <span className={styles.dot} />
               <span>{event.authorName}</span>
             </div>
           )}
-          {event.moved.from.name && event.moved.to.name && (
+          {event?.moved?.from?.name && event?.moved?.to?.name && (
             <div className={styles.clientNameText}>
               <span className={styles.dot} />
               <span>
@@ -585,7 +586,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
             </>
           )}
         </div>
-        {event.description && (
+        {event?.description && (
           <span
             className={`${styles.bottomText} ${
               event?.displayCollapse && collapseEvent?.[`event_${event.id}`]
@@ -599,7 +600,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
             </div>
           </span>
         )}
-        {event.audioFile && event.type === types.voice && (
+        {event?.audioFile && event?.type === types.voice && (
           <div>{/* <Waveform audioFile={event.audioFile} /> */}</div>
         )}
         <div className={styles.clientNameWrap}>

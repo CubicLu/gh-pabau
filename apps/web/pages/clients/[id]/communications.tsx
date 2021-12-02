@@ -74,7 +74,7 @@ const CommunicationTab = () => {
       const communications = communicateData?.communication.map((d) => {
         obj = {
           id: d?.id,
-          type: d?.type.toLocaleLowerCase(),
+          type: d?.type?.toLocaleLowerCase() ?? '',
           dateTime: dayjs(d?.date).format('MM-DD-YYYY hh:mm'),
         }
 
