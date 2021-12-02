@@ -199,14 +199,7 @@ export const CommunicationTimeline: FC<CommunicationTimelineProps> = ({
   }
   useEffect(() => {
     if (eventsData) {
-      setEvents(
-        eventsData.sort((a, b) => {
-          return (
-            dayjs(b.dateTime, eventDateFormat).valueOf() -
-            dayjs(a.dateTime, eventDateFormat).valueOf()
-          )
-        })
-      )
+      setEvents(eventsData)
     }
   }, [eventsData, eventDateFormat])
 
