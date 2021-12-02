@@ -74,7 +74,7 @@ const CommunicationTab = () => {
       const communications = communicateData?.communication.map((d) => {
         obj = {
           id: d?.id,
-          type: d?.type.toLocaleLowerCase(),
+          type: d?.type?.toLocaleLowerCase() ?? '',
           dateTime: dayjs(d?.date).format('MM-DD-YYYY hh:mm'),
         }
 
@@ -85,17 +85,13 @@ const CommunicationTab = () => {
           obj.isReceived = true
           if (d.recipient[0].Contact) {
             obj.status = d?.recipient[0].status
-            obj['moved'] = {
-              from: { name: d?.recipient[0].Contact.Fname },
-              to: { name: d?.Users?.full_name ?? '' },
-            }
           }
         } else {
           obj.isReceived = false
-          obj['moved'] = {
-            from: { name: d?.from ?? '' },
-            to: { name: d?.Users?.full_name ?? '' },
-          }
+        }
+        obj['moved'] = {
+          from: { name: d?.from ?? '' },
+          to: { name: d?.recipient[0]?.to_address ?? '' },
         }
         obj.eventName = d?.content?.subject
         if (d?.message) {
