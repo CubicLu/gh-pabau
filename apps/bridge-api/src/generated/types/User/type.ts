@@ -721,7 +721,7 @@ export const User = objectType({
         return root.LabAssignedUser
       },
     })
-    t.list.field('MedicalForm', {
+    t.list.field('MedicalFormCreated', {
       type: 'MedicalForm',
       args: {
         where: 'MedicalFormWhereInput',
@@ -732,7 +732,21 @@ export const User = objectType({
         distinct: 'MedicalFormScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.MedicalForm
+        return root.MedicalFormCreated
+      },
+    })
+    t.list.field('MedicalFormDeleted', {
+      type: 'MedicalForm',
+      args: {
+        where: 'MedicalFormWhereInput',
+        orderBy: 'MedicalFormOrderByWithRelationInput',
+        cursor: 'MedicalFormWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormDeleted
       },
     })
     t.list.field('CmContact', {

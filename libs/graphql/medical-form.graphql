@@ -271,3 +271,21 @@ query getClientForms($contactId: Int = 0) {
     }
   }
 }
+
+mutation deleteMedicalForm(
+  $formId: Int!,
+  $deletedBy: Int!,
+  $now: DateTime!
+){
+  updateOneMedicalForm(
+    data:{
+      deleted_at: { set: $now }
+      DeletedBy: { connect:  { id: $deletedBy } } 
+    }
+   where: {
+    id: $formId
+  } 
+  ){
+    id
+  }
+}
