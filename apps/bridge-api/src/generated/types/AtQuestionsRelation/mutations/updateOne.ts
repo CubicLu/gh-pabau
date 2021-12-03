@@ -5,8 +5,8 @@ export const AtQuestionsRelationUpdateOneMutation = mutationField(
   {
     type: nonNull('AtQuestionsRelation'),
     args: {
-      where: nonNull('AtQuestionsRelationWhereUniqueInput'),
       data: nonNull('AtQuestionsRelationUpdateInput'),
+      where: nonNull('AtQuestionsRelationWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.atQuestionsRelation.update({

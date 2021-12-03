@@ -8,9 +8,9 @@ export const BookitProSliderFindCountQuery = queryField(
       where: 'BookitProSliderWhereInput',
       orderBy: list('BookitProSliderOrderByWithRelationInput'),
       cursor: 'BookitProSliderWhereUniqueInput',
-      distinct: 'BookitProSliderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BookitProSliderScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.bookitProSlider.count(args as any)

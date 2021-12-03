@@ -6,9 +6,8 @@ export const CandidateAggregateQuery = queryField('aggregateCandidate', {
     where: 'CandidateWhereInput',
     orderBy: list('CandidateOrderByWithRelationInput'),
     cursor: 'CandidateWhereUniqueInput',
-    distinct: 'CandidateScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.candidate.aggregate({ ...args, ...select }) as any

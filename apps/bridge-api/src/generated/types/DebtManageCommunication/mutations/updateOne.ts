@@ -5,8 +5,8 @@ export const DebtManageCommunicationUpdateOneMutation = mutationField(
   {
     type: nonNull('DebtManageCommunication'),
     args: {
-      where: nonNull('DebtManageCommunicationWhereUniqueInput'),
       data: nonNull('DebtManageCommunicationUpdateInput'),
+      where: nonNull('DebtManageCommunicationWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.debtManageCommunication.update({

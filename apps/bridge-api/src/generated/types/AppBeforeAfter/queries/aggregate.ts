@@ -8,9 +8,8 @@ export const AppBeforeAfterAggregateQuery = queryField(
       where: 'AppBeforeAfterWhereInput',
       orderBy: list('AppBeforeAfterOrderByWithRelationInput'),
       cursor: 'AppBeforeAfterWhereUniqueInput',
-      distinct: 'AppBeforeAfterScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.appBeforeAfter.aggregate({ ...args, ...select }) as any

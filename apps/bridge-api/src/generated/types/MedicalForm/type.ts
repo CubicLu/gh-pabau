@@ -46,6 +46,12 @@ export const MedicalForm = objectType({
         return root.CreatedBy
       },
     })
+    t.nullable.field('DeletedBy', {
+      type: 'User',
+      resolve(root: any) {
+        return root.DeletedBy
+      },
+    })
     t.list.field('MedicalFormAdvancedSetting', {
       type: 'MedicalFormAdvancedSetting',
       args: {

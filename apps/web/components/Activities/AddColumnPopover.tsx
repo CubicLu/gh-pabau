@@ -33,7 +33,7 @@ export const columnNames = {
   freeBusy: { label: 'Free/busy', id: 'freeBusy' },
   creator: { label: 'Creator', id: 'creator' },
   addTime: { label: 'Add time', id: 'addTime' },
-  leadDescription: { label: 'Lead description', id: 'lead.description' },
+  // leadDescription: { label: 'Lead description', id: 'lead.description' },
   leadName: { label: 'Lead name', id: 'lead.firstName' },
   leadEmail: { label: 'Lead email', id: 'lead.email' },
   leadPhone: { label: 'Lead phone', id: 'lead.phone' },
@@ -67,12 +67,12 @@ export const columnNames = {
   wonBy: { label: 'Won by', id: 'lead.wonBy' },
   leadStage: { label: 'Lead stage', id: 'lead.leadStage' },
   leadStatus: { label: 'Lead status', id: 'lead.leadStatus' },
-  leadLocation: { label: 'Lead location', id: 'lead.location ' },
+  leadLocation: { label: 'Lead location', id: 'lead.Location' },
   leadActivityToDo: { label: 'Activities to do', id: 'lead.activityToDo' },
   leadCreator: { label: 'Lead creator', id: 'lead.creator' },
   leadDateEnteringStage: {
     label: 'Date of entering stage',
-    id: 'lead.dateEnteringStage',
+    id: 'lead.leadClosedOn',
   },
   leadEmailMessagesCount: {
     label: 'Email messages count',
@@ -87,8 +87,8 @@ export const columnNames = {
     label: 'Next activity date',
     id: 'lead.nextActivityDate',
   },
-  leadPipeline: { label: 'Pipeline', id: 'lead.pipeline' },
-  leadUpdateTime: { label: 'Update time', id: 'lead.updateTime' },
+  leadPipeline: { label: 'Pipeline', id: 'lead.PipelineStage.id' },
+  leadUpdateTime: { label: 'Update time', id: 'lead.lastUpdated' },
   leadTitle: { label: 'Title', id: 'lead.title' },
   clientName: { label: 'Client name', id: 'client.firstName' },
   label: { label: 'Label', id: 'client.label' },
@@ -96,7 +96,7 @@ export const columnNames = {
   clientPhone: { label: 'Client phone', id: 'client.phone' },
   clientStreet: { label: 'Address', id: 'client.street' },
   clientCity: { label: 'City/Town', id: 'client.city' },
-  clientPostCode: { label: 'Post Code', id: 'client.postcode' },
+  clientPostCode: { label: 'Post Code', id: 'client.postal' },
   clientCountry: { label: 'Country', id: 'client.country' },
   clientTotalActivities: {
     label: 'Client total activities',
@@ -104,23 +104,23 @@ export const columnNames = {
   },
   clientMobile: {
     label: 'Client mobile',
-    id: 'client.clientMobile',
+    id: 'client.mobile',
   },
   clientCreatedAt: {
     label: 'Client created date',
-    id: 'client.clientCreatedAt',
+    id: 'client.createdDate',
   },
   clientSource: {
     label: 'Client source',
-    id: 'client.clientSource',
+    id: 'client.source.name',
   },
   clientSalutation: {
     label: 'Client salutation',
-    id: 'client.clientSalutation',
+    id: 'client.salutation',
   },
   clientGender: {
     label: 'Client gender',
-    id: 'client.clientGender',
+    id: 'client.gender',
   },
   clientID: {
     label: 'Client ID',
@@ -128,11 +128,11 @@ export const columnNames = {
   },
   clientDOB: {
     label: 'Client DOB',
-    id: 'client.clientDOB',
+    id: 'client.DOB',
   },
   clientStatus: {
     label: 'Client status',
-    id: 'client.clientStatus',
+    id: 'client.status',
   },
 }
 
@@ -278,10 +278,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           label: t('activityList.column.leadStatus'),
           value: columnNames.leadStatus.label,
         },
-        {
-          label: t('activityList.column.leadDescription'),
-          value: columnNames.leadDescription.label,
-        },
+        // {
+        //   label: t('activityList.column.leadDescription'),
+        //   value: columnNames.leadDescription.label,
+        // },
         {
           label: t('activityList.column.leadLocation'),
           value: columnNames.leadLocation.label,

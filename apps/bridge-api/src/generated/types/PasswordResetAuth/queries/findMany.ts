@@ -8,9 +8,9 @@ export const PasswordResetAuthFindManyQuery = queryField(
       where: 'PasswordResetAuthWhereInput',
       orderBy: list('PasswordResetAuthOrderByWithRelationInput'),
       cursor: 'PasswordResetAuthWhereUniqueInput',
-      distinct: 'PasswordResetAuthScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('PasswordResetAuthScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.passwordResetAuth.findMany({

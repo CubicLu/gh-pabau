@@ -6,9 +6,9 @@ export const ClassNotesFindCountQuery = queryField('findManyClassNotesCount', {
     where: 'ClassNotesWhereInput',
     orderBy: list('ClassNotesOrderByWithRelationInput'),
     cursor: 'ClassNotesWhereUniqueInput',
-    distinct: 'ClassNotesScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('ClassNotesScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.classNotes.count(args as any)

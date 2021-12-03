@@ -8,9 +8,8 @@ export const InventoryMovementAggregateQuery = queryField(
       where: 'InventoryMovementWhereInput',
       orderBy: list('InventoryMovementOrderByWithRelationInput'),
       cursor: 'InventoryMovementWhereUniqueInput',
-      distinct: 'InventoryMovementScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.inventoryMovement.aggregate({ ...args, ...select }) as any

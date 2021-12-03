@@ -8,9 +8,8 @@ export const UserSecurityQuestionsAnswerAggregateQuery = queryField(
       where: 'UserSecurityQuestionsAnswerWhereInput',
       orderBy: list('UserSecurityQuestionsAnswerOrderByWithRelationInput'),
       cursor: 'UserSecurityQuestionsAnswerWhereUniqueInput',
-      distinct: 'UserSecurityQuestionsAnswerScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.userSecurityQuestionsAnswer.aggregate({

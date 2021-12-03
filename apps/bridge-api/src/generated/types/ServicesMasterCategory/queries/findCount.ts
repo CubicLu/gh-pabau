@@ -8,9 +8,9 @@ export const ServicesMasterCategoryFindCountQuery = queryField(
       where: 'ServicesMasterCategoryWhereInput',
       orderBy: list('ServicesMasterCategoryOrderByWithRelationInput'),
       cursor: 'ServicesMasterCategoryWhereUniqueInput',
-      distinct: 'ServicesMasterCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ServicesMasterCategoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.servicesMasterCategory.count(args as any)

@@ -8,9 +8,9 @@ export const AutomationTriggerFindCountQuery = queryField(
       where: 'AutomationTriggerWhereInput',
       orderBy: list('AutomationTriggerOrderByWithRelationInput'),
       cursor: 'AutomationTriggerWhereUniqueInput',
-      distinct: 'AutomationTriggerScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AutomationTriggerScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.automationTrigger.count(args as any)

@@ -5,8 +5,8 @@ export const ClockinLongpollUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ClockinLongpollWhereInput',
       data: nonNull('ClockinLongpollUpdateManyMutationInput'),
+      where: 'ClockinLongpollWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.clockinLongpoll.updateMany(args as any)

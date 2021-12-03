@@ -8,9 +8,8 @@ export const ContactPreferenceAggregateQuery = queryField(
       where: 'ContactPreferenceWhereInput',
       orderBy: list('ContactPreferenceOrderByWithRelationInput'),
       cursor: 'ContactPreferenceWhereUniqueInput',
-      distinct: 'ContactPreferenceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.contactPreference.aggregate({ ...args, ...select }) as any

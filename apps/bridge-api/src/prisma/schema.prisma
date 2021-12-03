@@ -181,7 +181,7 @@ model Company {
   id                               Int                                @id @default(autoincrement())
   user                             String
   digit8                           Int
-  admin                            Int
+  admin                            Int                                @unique
   creation_date                    DateTime
   image                            String
   slug                             String?                            @unique
@@ -337,6 +337,8 @@ model Company {
   Pipeline                Pipeline[]
   PipelineStage           PipelineStage[]
   LabRequest              LabRequest[]
+  Equipment               Equipment[]
+  ServiceEquipment        ServiceEquipment[]
   @@map("admin")
 }
 
@@ -1366,7 +1368,7 @@ model ClassNotes {
 
 model CompanyDetails {
   details_id              Int                      @id @default(autoincrement())
-  company_id              Int
+  company_id              Int                      @unique
   company_name            String
   subscription            String
   industry_sector         String
@@ -1423,7 +1425,7 @@ model CompanyDetails {
   use_google_auth         Boolean                  @default(false)
   employee_clock_track    Boolean                  @default(false)
   slug                    String?                  @unique
-  default_inv_template_id Int
+  default_inv_template_id Int                      @unique
   diagnosis_codes_type    String                   @default("icd10")
   append_client_pref      Int
   capital_surname         Boolean                  @default(false)
@@ -1461,7 +1463,7 @@ model CompanyDetails {
 
 model CompanySubscription {
   license_id               Int       @id @default(autoincrement())
-  company_id               Int
+  company_id               Int       @unique
   license_type             Int
   license_expiry           DateTime
   active                   Int
@@ -1934,7 +1936,7 @@ model CmContact {
   InventoryMovement        InventoryMovement[]
   InsuranceCompany         ContactInsurance[]
   ContactMeta              ContactMeta[]
-  CommunicationRecipient   CommunicationRecipient[]
+  CommunicationRecipient   CommunicationRecipient[]    @relation("communications_recipients_contact_id_fkey")
   CmContactCustom          CmContactCustom[]
   CmContactLabel           CmContactLabel[]
   Activity                 Activity[]
@@ -2003,7 +2005,7 @@ model CmContactLabel {
 model ContactPreference {
   id                 Int       @id @default(autoincrement())
   company_id         Int
-  contact_id         Int
+  contact_id         Int       @unique
   family             Int?      @default(0)
   emergency_contact  Int?      @default(0)
   next_of_kin        Int?      @default(0)
@@ -2662,7 +2664,7 @@ model CmLead {
   pipeline_stage_id        Int?
   Company                  Company                  @relation(fields: [company_id], references: [id])
   CmLeadCustomField        CmLeadCustomField[]
-  CommunicationRecipient   CommunicationRecipient[]
+  CommunicationRecipient   CommunicationRecipient[] @relation("communications_recipients_lead_id_fkey")
   CmLeadNote               CmLeadNote[]
   User                     User?                    @relation(fields: [OwnerID], references: [id])
   Activity                 Activity[]
@@ -2747,7 +2749,7 @@ model CmLeadNote {
   Note        String
   Status      cm_lead_notes_Status @default(Enable)
   CreatedDate DateTime?            @default(now())
-  IpAddress   Int?                 @default(0)
+  IpAddress   Float?               @default(0)
   CmLead      CmLead               @relation(fields: [LeadID], references: [ID])
 
 
@@ -3171,7 +3173,7 @@ model CmStaffGeneral {
   EnumStatus          cm_staff_general_EnumStatus @default(Enable)
   CreatedDate         DateTime?
   IpAddress           Int
-  pabau_id            Int?
+  pabau_id            Int?                        @unique
   DefaultLocation     Int?
   consultation_fee    Float
   deleted_on          String
@@ -3575,24 +3577,37 @@ model Communication {
   communications_content_id Int
   related_id                Int?
   related_type              communications_related_type?
-  Content                   CommunicationContent         @relation(fields: [communications_content_id], references: [id])
+  Content                   CommunicationContent?        @relation(fields: [communications_content_id], references: [id])
   Company                   Company                      @relation(fields: [company_id], references: [id])
   CommunicationAttachment   CommunicationAttachment[]
   CommunicationRecipient    CommunicationRecipient[]
 
   CommunicationsRequestedForms CommunicationsRequestedForms[]
+  Users                        User?                          @relation(fields: [uid], references: [id])
+
   @@index([communications_content_id], name: "communications_content_id")
   @@index([company_id, uid], name: "company_id")
   @@index([date], name: "date")
   @@map("communications")
 }
 
+//model LetterReceiptData {
+//  id               Int            @id @default(autoincrement())
+//  communication_id Int
+//  recipient_data   String?
+//  letter_body      String
+//  invoice_id       Int
+//  Communication    Communication? @relation(fields: [communication_id], references: [id])
+
+//  @@map("letter_recipient_data")
+//}
+
 model CommunicationContent {
   id             Int             @id @default(autoincrement())
   company_id     Int
   hash           String
   subject        String?
-  body           String
+  body           String?
   Communications Communication[]
 
   @@unique([company_id, hash], name: "company_id_hash")
@@ -3626,7 +3641,7 @@ model CommunicationRecipient {
   recipient_type    communications_recipients_recipient_type
   remote_key        String?
   delivered_result  String?
-  read_count        Int                                      @default(0)
+  read_count        Int?                                     @default(0)
   to_address        String
   cc                String
   provider_id       Int
@@ -3634,8 +3649,8 @@ model CommunicationRecipient {
   merge_values      String
   Provider          CommunicationProvider                    @relation(fields: [provider_id], references: [id])
   Hash              CommunicationHash[]
-  Contact           CmContact?                               @relation(fields: [recipient_id], references: [ID])
-  Lead              CmLead?                                  @relation(fields: [recipient_id], references: [ID])
+  Contact           CmContact?                               @relation("communications_recipients_contact_id_fkey", fields: [recipient_id], references: [ID], map: "communications_recipients_contact_id_fkey")
+  Lead              CmLead?                                  @relation("communications_recipients_lead_id_fkey", fields: [recipient_id], references: [ID], map: "communications_recipients_lead_id_fkey")
   Communication     Communication?                           @relation(fields: [communications_id], references: [id])
 
   @@index([communications_id], name: "communications_id")
@@ -3942,10 +3957,10 @@ model CompanyEmail {
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
 model ServiceCategory {
-  id                     Int                    @id @default(autoincrement()) @map("ID")
-  name                   String                 @map("Name")
-  company_id             Int                    @map("occupier")
-  category_product_id    Int
+  id                     Int                     @id @default(autoincrement()) @map("ID")
+  name                   String                  @map("Name")
+  company_id             Int                     @map("occupier")
+  category_product_id    Int                     @unique
   cat_order              Int
   image                  String
   online_enabled         Int
@@ -3954,10 +3969,10 @@ model ServiceCategory {
   equipment_id           Int
   deposit_amount         Float
   tax_id                 Int
-  master_cat_id          Int
-  company_position_id    Int                    @default(0)
-  ServicesMasterCategory ServicesMasterCategory @relation(fields: [master_cat_id], references: [id])
-  InvCategory            InvCategory            @relation(fields: [category_product_id], references: [id])
+  master_cat_id          Int?
+  company_position_id    Int                     @default(0)
+  ServicesMasterCategory ServicesMasterCategory? @relation(fields: [master_cat_id], references: [id])
+  InvCategory            InvCategory             @relation(fields: [category_product_id], references: [id])
   CompanyService         CompanyService[]
 
   @@map("company_groups")
@@ -4191,6 +4206,7 @@ model CompanyService {
   ServiceLocationTier    ServiceLocationTier[]
   Booking                Booking[]
 
+  ServiceEquipment ServiceEquipment[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -4254,17 +4270,6 @@ model CompanyService {
 //  default_rooms String?
 //  occupier      Int?
 //  group_id      Int?
-//}
-//
-//model company_services_equipment {
-//  id                 Int    @id @default(autoincrement())
-//  company_id         String
-//  service_id         Int
-//  equipment_id       Int
-//  equipment_quantity Int
-//  priority_order     Int
-//
-//  @@index([company_id], name: "company_id")
 //}
 //
 //model company_services_import_helper {
@@ -4711,8 +4716,8 @@ model ContactMeta {
 model ContactPackage {
   id                   Int           @id @default(autoincrement())
   contact_id           Int
-  package_id           Int
-  invoice_id           Int?
+  package_id           Int           @unique
+  invoice_id           Int?          @unique
   activation_date      DateTime
   expiration_date      DateTime
   company_id           Int?          @map("occupier")
@@ -5487,14 +5492,35 @@ model DebtManageCommunication {
 //  fw_method         String
 //}
 //
-//model equipment {
-//  id             Int    @id @default(autoincrement())
-//  company_id     Int
-//  equipment_name String
-//  quantity       Int
-//  is_active      Int
-//  field_order    Int?   @default(0)
-//}
+model Equipment {
+  id               Int                @id @default(autoincrement())
+  company_id       Int
+  equipment_name   String
+  quantity         Int                @default(1)
+  is_active        Int                @default(1)
+  field_order      Int?               @default(0)
+  ServiceEquipment ServiceEquipment[]
+  Company          Company            @relation(fields: [company_id], references: [id])
+
+  @@map("equipment")
+}
+
+model ServiceEquipment {
+  id                 Int @id @default(autoincrement())
+  company_id         Int
+  service_id         Int
+  equipment_id       Int
+  equipment_quantity Int @default(1)
+  priority_order     Int @default(0)
+
+  Equipment Equipment       @relation(fields: [equipment_id], references: [id])
+  Service   CompanyService? @relation(fields: [service_id], references: [id])
+  Company   Company         @relation(fields: [company_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@map("company_services_equipment")
+}
+
 //
 //model events {
 //  eventid        Int                 @id @default(autoincrement())
@@ -5682,7 +5708,7 @@ model GlCode {
   company_id     Int
   code           String
   description    gl_codes_description
-  related_to     Int?
+  related_to     Int?                 @unique
   InvPaymentType InvPaymentType?      @relation(fields: [related_to], references: [id])
 
 
@@ -8509,7 +8535,9 @@ model MedicalForm {
   lab_id                 Int
   is_private             Boolean   @default(false)
   Company                Company?  @relation(fields: [company_id], references: [id])
-  CreatedBy              User?     @relation(fields: [user_created], references: [id])
+  CreatedBy              User?     @relation(fields: [user_created], references: [id], name: "MedicalFormCreated")
+  DeletedBy              User?     @relation(fields: [user_deleted], references: [id], name: "MedicalFormDeleted")
+
 
   MedicalFormAdvancedSetting MedicalFormAdvancedSetting[]
   MedicalFormContact         MedicalFormContact[]
@@ -8595,8 +8623,6 @@ model MedicalFormContact {
   MedicalContactAttr        MedicalContactAttr[]
   LabRequest                LabRequest[]
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
   @@unique([id], name: "primary")
   @@index([form_id], name: "form_id")
   @@map("medical_form_contact")
@@ -8893,8 +8919,8 @@ model MessageTemplate {
   Company                   Company           @relation(fields: [company_id], references: [id])
   TemplateFolder            TemplateFolder?   @relation(fields: [folder_id], references: [id])
   User                      User?             @relation(fields: [created_by], references: [id])
-  ParrentTemplate           MessageTemplate?  @relation(fields: [parent_id], references: [template_id])
-  MessageTemplate           MessageTemplate[] @relation("MessageTemplateToMessageTemplate")
+  ParrentTemplate           MessageTemplate?  @relation("parent_child_message", fields: [parent_id], references: [template_id])
+  MessageTemplate           MessageTemplate[] @relation("parent_child_message")
 
   @@index([company_id], name: "company_id")
   @@index([folder_id], name: "folder_id")
@@ -9749,9 +9775,9 @@ model Page {
   new_url           String
   UserPermission    UserPermission[]
   CompanyPermission CompanyPermission[]
-  ParrentPage       Page?               @relation(fields: [parent], references: [id])
+  ParrentPage       Page?               @relation("parent_child_page", fields: [parent], references: [id])
 
-  Page Page[] @relation("PageToPage")
+  Page Page[] @relation("parent_child_page")
   @@unique([name], name: "unique_page_name")
   @@index([admin], name: "admin")
   @@index([parent], name: "parent")
@@ -10807,9 +10833,9 @@ model Booking {
   all_day_start_date            Int?                           @default(0)
   all_day_end_date              Int?                           @default(0)
   InvSale                       InvSale?                       @relation(fields: [invoice_id], references: [id])
-  User                          User?                          @relation(fields: [UID], references: [id])
+  User                          User?                          @relation(fields: [UID], references: [id], map: "user_id_key")
+  Contact                       CmContact?                     @relation(fields: [contact_id], references: [ID], map: "contact_id_key")
   BookedBy                      User?                          @relation(fields: [created_by_uid], references: [id], name: "BookedBy")
-  Contact                       CmContact?                     @relation(fields: [contact_id], references: [ID])
   UserMaster                    UserMaster?                    @relation(fields: [contact_id], references: [contact_id])
   CmStaffGeneral                CmStaffGeneral?                @relation(fields: [UID], references: [pabau_id])
   CompanyBranch                 CompanyBranch?                 @relation(fields: [location_id], references: [id])
@@ -10817,7 +10843,7 @@ model Booking {
   PathwaysTaken                 PathwaysTaken[]
   CommunicationsRequestedForms  CommunicationsRequestedForms[]
 
-  BookingCancel    BookingCancel[]
+  BookingCancel    BookingCancel?
   BookingChangeLog BookingChangeLog[]
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")
@@ -10844,7 +10870,7 @@ model Booking {
 
 model BookingCancel {
   id                Int          @id @default(autoincrement())
-  appointment_id    Int
+  appointment_id    Int          @unique
   type              String?
   reason_type       String?
   reason            String?
@@ -11725,7 +11751,7 @@ model SocialSurveyFeedback {
 
   id                 Int                            @id @default(autoincrement())
   rating             Int
-  contact_id         Int?
+  contact_id         Int?                           @unique
   feedback_source    String
   company_id         Int                            @map("company")
   date               Int
@@ -12896,7 +12922,7 @@ model User {
   can_move_blockout            Boolean                        @default(true)
   main_contact                 Boolean
   UserSecurityQuestionsAnswer  UserSecurityQuestionsAnswer[]
-  Company                      Company?                       @relation(fields: [company_id], references: [id])
+  Company                      Company?                       @relation(fields: [company_id], references: [id], map: "company_id_key")
   CompanyDetails               CompanyDetails?                @relation(fields: [company_id], references: [company_id])
   UserGroupMember              UserGroupMember?
   UserMainPermission           UserMainPermission[]
@@ -12944,12 +12970,13 @@ model User {
   LabRequestUser               LabRequest[]                   @relation("LabRequestUser")
   LabAssignedUser              LabRequest[]                   @relation("LabAssignedUser")
 
-  MedicalForm                  MedicalForm[]
+  MedicalFormCreated           MedicalForm[]        @relation("MedicalFormCreated")
+  MedicalFormDeleted           MedicalForm[]        @relation("MedicalFormDeleted")
   CmContact                    CmContact[]
   CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
   PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
-  MedicalFormContact           MedicalFormContact[]
   BookingCancel                BookingCancel[]
+  Communication                Communication[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
@@ -13037,7 +13064,7 @@ model UserAlert {
 
 model UserAlertType {
   id       Int    @id @default(autoincrement())
-  uid      Int
+  uid      Int    @unique
   cc_name  String
   cc_email String
   cc_phone String
@@ -13150,7 +13177,7 @@ model UserGroup {
 //
 model UserGroupMember {
   id        Int        @id @default(autoincrement())
-  user_id   Int?
+  user_id   Int?       @unique
   group_id  Int?
   User      User?      @relation(fields: [user_id], references: [id])
   UserGroup UserGroup? @relation(fields: [group_id], references: [id])

@@ -60,6 +60,7 @@ query findManyActivityData(
       dueDate: due_start_date
       dueEndDate: due_end_date
       lead_id
+      contact_id
       freeBusy: available
       addTime: created_at
       doneTime: finished_at
@@ -67,6 +68,7 @@ query findManyActivityData(
       assigned: AssignedUser {
         id
         full_name
+        image
       }
       creator: User {
         id
@@ -100,6 +102,7 @@ query findManyActivityData(
         DOB
         status: is_active
         label: CmContactLabel {
+          id
           CmLabel {
             id
             name
@@ -114,7 +117,7 @@ query findManyActivityData(
         email: Email
         phone: Phone
         location_id
-        LastUpdated
+        lastUpdated: LastUpdated
         Location {
           id
           name
@@ -122,10 +125,12 @@ query findManyActivityData(
         Contact {
           User {
             full_name
+            image
           }
         }
         PipelineStage {
           id
+          name
           pipeline_id
           Pipeline {
             name
@@ -136,14 +141,15 @@ query findManyActivityData(
         leadLastEmailSend
         leadLastEmailReceived
         leadNextActivityDate
-        description: Description
         createdDate: CreatedDate
         wonTime
         owner: User {
           full_name
+          image
         }
         leadStatus: EnumStatus
         leadSource: MarketingSource {
+          id
           name
         }
         leadClosedOn: ConvertDate
@@ -152,9 +158,13 @@ query findManyActivityData(
         leadLastActivityDate
         leadLastActivityDays
         leadTotalActivities
+        leadLostId
         leadLostTime
         leadLostReason
-        wonBy
+        wonBy {
+          full_name
+          image
+        }
         leadStage
       }
     }
@@ -340,5 +350,29 @@ query retrievePipeline {
   }) {
     id
     name
+  }
+}
+
+query retrieveSalutationAndStage {
+  findManyUserSalutation(orderBy: {
+    name: asc
+  }) {
+    id
+    name
+  }
+  findManyPipelineStage(orderBy: {
+    stage_order: asc
+  }) {
+    id
+    pipeline_id
+    name
+  }
+}
+
+query activityCount($status: activity_status!) {
+  aggregateActivity(where: { status: { not: { equals: $status } } }) {
+    _count {
+      id
+    }
   }
 }

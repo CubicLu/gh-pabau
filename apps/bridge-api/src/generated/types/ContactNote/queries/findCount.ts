@@ -8,9 +8,9 @@ export const ContactNoteFindCountQuery = queryField(
       where: 'ContactNoteWhereInput',
       orderBy: list('ContactNoteOrderByWithRelationInput'),
       cursor: 'ContactNoteWhereUniqueInput',
-      distinct: 'ContactNoteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ContactNoteScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.contactNote.count(args as any)

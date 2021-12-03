@@ -6,9 +6,8 @@ export const ReportAggregateQuery = queryField('aggregateReport', {
     where: 'ReportWhereInput',
     orderBy: list('ReportOrderByWithRelationInput'),
     cursor: 'ReportWhereUniqueInput',
-    distinct: 'ReportScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.report.aggregate({ ...args, ...select }) as any

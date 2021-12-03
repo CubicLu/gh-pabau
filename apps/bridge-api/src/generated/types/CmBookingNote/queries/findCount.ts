@@ -8,9 +8,9 @@ export const CmBookingNoteFindCountQuery = queryField(
       where: 'CmBookingNoteWhereInput',
       orderBy: list('CmBookingNoteOrderByWithRelationInput'),
       cursor: 'CmBookingNoteWhereUniqueInput',
-      distinct: 'CmBookingNoteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmBookingNoteScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmBookingNote.count(args as any)

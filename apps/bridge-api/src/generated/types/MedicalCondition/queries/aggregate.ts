@@ -8,9 +8,8 @@ export const MedicalConditionAggregateQuery = queryField(
       where: 'MedicalConditionWhereInput',
       orderBy: list('MedicalConditionOrderByWithRelationInput'),
       cursor: 'MedicalConditionWhereUniqueInput',
-      distinct: 'MedicalConditionScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.medicalCondition.aggregate({ ...args, ...select }) as any

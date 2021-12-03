@@ -5,8 +5,8 @@ export const PhotoAlbumUpdateOneMutation = mutationField(
   {
     type: nonNull('PhotoAlbum'),
     args: {
-      where: nonNull('PhotoAlbumWhereUniqueInput'),
       data: nonNull('PhotoAlbumUpdateInput'),
+      where: nonNull('PhotoAlbumWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.photoAlbum.update({

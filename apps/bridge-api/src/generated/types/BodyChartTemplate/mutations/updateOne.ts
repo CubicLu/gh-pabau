@@ -5,8 +5,8 @@ export const BodyChartTemplateUpdateOneMutation = mutationField(
   {
     type: nonNull('BodyChartTemplate'),
     args: {
-      where: nonNull('BodyChartTemplateWhereUniqueInput'),
       data: nonNull('BodyChartTemplateUpdateInput'),
+      where: nonNull('BodyChartTemplateWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.bodyChartTemplate.update({

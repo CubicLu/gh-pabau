@@ -6,9 +6,9 @@ export const UserReportFindManyQuery = queryField('findManyUserReport', {
     where: 'UserReportWhereInput',
     orderBy: list('UserReportOrderByWithRelationInput'),
     cursor: 'UserReportWhereUniqueInput',
-    distinct: 'UserReportScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('UserReportScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.userReport.findMany({

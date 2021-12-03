@@ -8,9 +8,8 @@ export const TblModuleFieldsSettingAggregateQuery = queryField(
       where: 'TblModuleFieldsSettingWhereInput',
       orderBy: list('TblModuleFieldsSettingOrderByWithRelationInput'),
       cursor: 'TblModuleFieldsSettingWhereUniqueInput',
-      distinct: 'TblModuleFieldsSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.tblModuleFieldsSetting.aggregate({

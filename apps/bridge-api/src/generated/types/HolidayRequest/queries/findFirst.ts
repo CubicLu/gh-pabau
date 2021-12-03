@@ -8,9 +8,9 @@ export const HolidayRequestFindFirstQuery = queryField(
       where: 'HolidayRequestWhereInput',
       orderBy: list('HolidayRequestOrderByWithRelationInput'),
       cursor: 'HolidayRequestWhereUniqueInput',
-      distinct: 'HolidayRequestScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('HolidayRequestScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.holidayRequest.findFirst({

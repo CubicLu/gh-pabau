@@ -5,8 +5,8 @@ export const AutomationTriggerUpdateOneMutation = mutationField(
   {
     type: nonNull('AutomationTrigger'),
     args: {
-      where: nonNull('AutomationTriggerWhereUniqueInput'),
       data: nonNull('AutomationTriggerUpdateInput'),
+      where: nonNull('AutomationTriggerWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.automationTrigger.update({

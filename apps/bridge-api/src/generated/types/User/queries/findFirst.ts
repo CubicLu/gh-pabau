@@ -6,9 +6,9 @@ export const UserFindFirstQuery = queryField('findFirstUser', {
     where: 'UserWhereInput',
     orderBy: list('UserOrderByWithRelationInput'),
     cursor: 'UserWhereUniqueInput',
-    distinct: 'UserScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('UserScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.user.findFirst({

@@ -8,9 +8,9 @@ export const CompanyEmailFindCountQuery = queryField(
       where: 'CompanyEmailWhereInput',
       orderBy: list('CompanyEmailOrderByWithRelationInput'),
       cursor: 'CompanyEmailWhereUniqueInput',
-      distinct: 'CompanyEmailScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyEmailScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyEmail.count(args as any)

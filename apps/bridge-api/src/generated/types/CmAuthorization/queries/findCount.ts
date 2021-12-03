@@ -8,9 +8,9 @@ export const CmAuthorizationFindCountQuery = queryField(
       where: 'CmAuthorizationWhereInput',
       orderBy: list('CmAuthorizationOrderByWithRelationInput'),
       cursor: 'CmAuthorizationWhereUniqueInput',
-      distinct: 'CmAuthorizationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmAuthorizationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmAuthorization.count(args as any)

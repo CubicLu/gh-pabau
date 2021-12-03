@@ -8,9 +8,9 @@ export const CmPurchaseItemFindFirstQuery = queryField(
       where: 'CmPurchaseItemWhereInput',
       orderBy: list('CmPurchaseItemOrderByWithRelationInput'),
       cursor: 'CmPurchaseItemWhereUniqueInput',
-      distinct: 'CmPurchaseItemScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmPurchaseItemScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmPurchaseItem.findFirst({

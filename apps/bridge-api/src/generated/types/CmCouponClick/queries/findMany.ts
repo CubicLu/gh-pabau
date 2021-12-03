@@ -6,9 +6,9 @@ export const CmCouponClickFindManyQuery = queryField('findManyCmCouponClick', {
     where: 'CmCouponClickWhereInput',
     orderBy: list('CmCouponClickOrderByWithRelationInput'),
     cursor: 'CmCouponClickWhereUniqueInput',
-    distinct: 'CmCouponClickScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmCouponClickScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmCouponClick.findMany({

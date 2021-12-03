@@ -8,9 +8,8 @@ export const LabProductTemplateAggregateQuery = queryField(
       where: 'LabProductTemplateWhereInput',
       orderBy: list('LabProductTemplateOrderByWithRelationInput'),
       cursor: 'LabProductTemplateWhereUniqueInput',
-      distinct: 'LabProductTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.labProductTemplate.aggregate({ ...args, ...select }) as any

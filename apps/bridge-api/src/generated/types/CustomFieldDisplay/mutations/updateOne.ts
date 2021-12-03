@@ -5,8 +5,8 @@ export const CustomFieldDisplayUpdateOneMutation = mutationField(
   {
     type: nonNull('CustomFieldDisplay'),
     args: {
-      where: nonNull('CustomFieldDisplayWhereUniqueInput'),
       data: nonNull('CustomFieldDisplayUpdateInput'),
+      where: nonNull('CustomFieldDisplayWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.customFieldDisplay.update({

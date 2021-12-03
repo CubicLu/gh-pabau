@@ -8,9 +8,9 @@ export const CmProductCustomFieldFindCountQuery = queryField(
       where: 'CmProductCustomFieldWhereInput',
       orderBy: list('CmProductCustomFieldOrderByWithRelationInput'),
       cursor: 'CmProductCustomFieldWhereUniqueInput',
-      distinct: 'CmProductCustomFieldScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmProductCustomFieldScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmProductCustomField.count(args as any)

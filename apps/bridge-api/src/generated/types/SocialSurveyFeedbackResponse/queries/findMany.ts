@@ -8,9 +8,9 @@ export const SocialSurveyFeedbackResponseFindManyQuery = queryField(
       where: 'SocialSurveyFeedbackResponseWhereInput',
       orderBy: list('SocialSurveyFeedbackResponseOrderByWithRelationInput'),
       cursor: 'SocialSurveyFeedbackResponseWhereUniqueInput',
-      distinct: 'SocialSurveyFeedbackResponseScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('SocialSurveyFeedbackResponseScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.socialSurveyFeedbackResponse.findMany({

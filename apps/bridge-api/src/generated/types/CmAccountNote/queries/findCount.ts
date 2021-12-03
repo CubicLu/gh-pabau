@@ -8,9 +8,9 @@ export const CmAccountNoteFindCountQuery = queryField(
       where: 'CmAccountNoteWhereInput',
       orderBy: list('CmAccountNoteOrderByWithRelationInput'),
       cursor: 'CmAccountNoteWhereUniqueInput',
-      distinct: 'CmAccountNoteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmAccountNoteScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmAccountNote.count(args as any)

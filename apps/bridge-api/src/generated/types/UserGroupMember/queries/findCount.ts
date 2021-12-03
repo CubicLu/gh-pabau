@@ -8,9 +8,9 @@ export const UserGroupMemberFindCountQuery = queryField(
       where: 'UserGroupMemberWhereInput',
       orderBy: list('UserGroupMemberOrderByWithRelationInput'),
       cursor: 'UserGroupMemberWhereUniqueInput',
-      distinct: 'UserGroupMemberScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('UserGroupMemberScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.userGroupMember.count(args as any)

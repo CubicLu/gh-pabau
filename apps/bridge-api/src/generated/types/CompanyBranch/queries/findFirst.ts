@@ -8,9 +8,9 @@ export const CompanyBranchFindFirstQuery = queryField(
       where: 'CompanyBranchWhereInput',
       orderBy: list('CompanyBranchOrderByWithRelationInput'),
       cursor: 'CompanyBranchWhereUniqueInput',
-      distinct: 'CompanyBranchScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyBranchScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.companyBranch.findFirst({

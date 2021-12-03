@@ -5,8 +5,8 @@ export const JobOpeningUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'JobOpeningWhereInput',
       data: nonNull('JobOpeningUpdateManyMutationInput'),
+      where: 'JobOpeningWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.jobOpening.updateMany(args as any)

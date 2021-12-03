@@ -5,8 +5,8 @@ export const InventoryDiscrepancyUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'InventoryDiscrepancyWhereInput',
       data: nonNull('InventoryDiscrepancyUpdateManyMutationInput'),
+      where: 'InventoryDiscrepancyWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.inventoryDiscrepancy.updateMany(args as any)

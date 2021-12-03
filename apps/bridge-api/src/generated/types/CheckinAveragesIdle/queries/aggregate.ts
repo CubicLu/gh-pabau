@@ -8,9 +8,8 @@ export const CheckinAveragesIdleAggregateQuery = queryField(
       where: 'CheckinAveragesIdleWhereInput',
       orderBy: list('CheckinAveragesIdleOrderByWithRelationInput'),
       cursor: 'CheckinAveragesIdleWhereUniqueInput',
-      distinct: 'CheckinAveragesIdleScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.checkinAveragesIdle.aggregate({ ...args, ...select }) as any

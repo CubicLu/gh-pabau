@@ -8,9 +8,9 @@ export const TrainCourseDateFindCountQuery = queryField(
       where: 'TrainCourseDateWhereInput',
       orderBy: list('TrainCourseDateOrderByWithRelationInput'),
       cursor: 'TrainCourseDateWhereUniqueInput',
-      distinct: 'TrainCourseDateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('TrainCourseDateScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.trainCourseDate.count(args as any)

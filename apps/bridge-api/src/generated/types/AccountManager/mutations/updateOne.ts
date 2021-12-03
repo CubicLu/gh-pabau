@@ -5,8 +5,8 @@ export const AccountManagerUpdateOneMutation = mutationField(
   {
     type: nonNull('AccountManager'),
     args: {
-      where: nonNull('AccountManagerWhereUniqueInput'),
       data: nonNull('AccountManagerUpdateInput'),
+      where: nonNull('AccountManagerWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.accountManager.update({

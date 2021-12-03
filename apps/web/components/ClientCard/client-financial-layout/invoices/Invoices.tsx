@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Table, Pagination } from '@pabau/ui'
+import { Table, Pagination, Avatar } from '@pabau/ui'
 import classNames from 'classnames'
 import moment from 'moment'
 import { InvoiceProp } from './../ClientFinancialsLayout'
@@ -18,8 +18,9 @@ import {
   DatePicker,
   Tag,
   Skeleton,
+  Tooltip,
 } from 'antd'
-import { FilterOutlined } from '@ant-design/icons'
+import { FilterOutlined, EyeOutlined } from '@ant-design/icons'
 import {
   GetFinancialInvoicesQuery,
   SaleItemsQuery,
@@ -160,7 +161,7 @@ export const Invoices: FC<P> = (props) => {
     })
     setInvoices(invoicesDetails)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invoice, saleItems, totalVat])
+  }, [invoice, saleItems, totalVat, user?.me?.companyDateFormat])
 
   useEffect(() => {
     const items: ISalesItemProps[] = []
@@ -248,23 +249,27 @@ export const Invoices: FC<P> = (props) => {
       dataIndex: 'location',
       className: 'columnTitle',
       visible: true,
+      width: 175,
     },
     {
       title: t('ui.client-card-financial.employee'),
       dataIndex: 'employee',
       className: 'columnTitle',
+      width: 100,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.issued-to'),
       dataIndex: 'issuedTo',
       className: 'columnTitle',
+      width: 75,
       visible: true,
     },
     {
       title: t('ui.client-card-financial.status'),
       dataIndex: 'paid',
       className: 'columnTitle',
+      width: 50,
       visible: true,
       render: function renderItem(value, row) {
         return (
@@ -290,9 +295,44 @@ export const Invoices: FC<P> = (props) => {
       },
     },
     {
+      title: '',
+      dataIndex: 'visibleData',
+      className: 'columnTitle',
+      width: 5,
+      visible: true,
+      isHover: true,
+      render: function renderItem(value, row) {
+        return (
+          <div className={styles.shareIcon}>
+            <Tooltip
+              trigger={'click'}
+              arrowPointAtCenter
+              title={
+                <div>
+                  <p className={styles.shareTootip}>
+                    {t('ui.client-card-financial.shared-with')}
+                  </p>
+                  {[row.employee].map((x, index) => {
+                    return (
+                      <span className={styles.avatarIcon} key={index}>
+                        <Avatar key={index} name={x} size="large" />
+                      </span>
+                    )
+                  })}
+                </div>
+              }
+            >
+              <EyeOutlined />
+            </Tooltip>
+          </div>
+        )
+      },
+    },
+    {
       title: t('ui.client-card-financial.amount'),
       dataIndex: 'grandTotal',
       className: 'columnTitle',
+      width: 5,
       visible: true,
       render: function renderItem(value, row) {
         return (
@@ -739,19 +779,21 @@ export const Invoices: FC<P> = (props) => {
           )}
         </div>
         {!loading && invoice ? (
-          <Table
-            draggable={false}
-            scroll={{ x: true, y: '100vh' }}
-            dataSource={invoices?.map((e: { id }) => ({
-              key: e.id,
-              ...e,
-            }))}
-            columns={columns}
-            noDataText={t('ui.client-card-financial.invoices')}
-            expandedRowRender={expandedRowRender}
-            expandedRowKeys={[expandedRow]}
-            expandIcon={() => <span></span>}
-          />
+          <div className={styles.customTable}>
+            <Table
+              draggable={false}
+              scroll={{ x: true, y: '100vh' }}
+              dataSource={invoices?.map((e: { id }) => ({
+                key: e.id,
+                ...e,
+              }))}
+              columns={columns}
+              noDataText={t('ui.client-card-financial.invoices')}
+              expandedRowRender={expandedRowRender}
+              expandedRowKeys={[expandedRow]}
+              expandIcon={() => <span></span>}
+            />
+          </div>
         ) : (
           <Table
             rowKey="key"
@@ -794,7 +836,7 @@ export const Invoices: FC<P> = (props) => {
                         <Skeleton.Input
                           active={true}
                           size="small"
-                          className={styles.locationSkeleton}
+                          className={styles.columnSkeleton}
                         />
                       )
                     case 'employee':
@@ -865,17 +907,18 @@ export const Invoices: FC<P> = (props) => {
                 {
                   text: t('ui.client-card-financial.outstanding'),
                   value:
-                    (totalCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
-                    (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0) -
-                    ((totalCounts?.aggregateInvSale?.sum?.paid_amount ?? 0) +
-                      (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0)),
+                    (totalCounts?.aggregateInvSale?._sum?.inv_total ?? 0) +
+                    (totalCounts?.aggregateInvSale?._sum?.credit_amount ?? 0) -
+                    ((totalCounts?.aggregateInvSale?._sum?.paid_amount ?? 0) +
+                      (totalCounts?.aggregateInvSale?._sum?.credit_amount ??
+                        0)),
                   valueColor: '#FF5B64',
                 },
                 {
                   text: t('ui.client-card-financial.total-invoiced'),
                   value:
-                    (totalCounts?.aggregateInvSale?.sum?.inv_total ?? 0) +
-                    (totalCounts?.aggregateInvSale?.sum?.credit_amount ?? 0),
+                    (totalCounts?.aggregateInvSale?._sum?.inv_total ?? 0) +
+                    (totalCounts?.aggregateInvSale?._sum?.credit_amount ?? 0),
                 },
               ]}
               loading={countLoading}

@@ -8,9 +8,9 @@ export const CompanyRoomServiceFindManyQuery = queryField(
       where: 'CompanyRoomServiceWhereInput',
       orderBy: list('CompanyRoomServiceOrderByWithRelationInput'),
       cursor: 'CompanyRoomServiceWhereUniqueInput',
-      distinct: 'CompanyRoomServiceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyRoomServiceScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.companyRoomService.findMany({

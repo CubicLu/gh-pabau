@@ -6,9 +6,8 @@ export const AtQuizTakeAggregateQuery = queryField('aggregateAtQuizTake', {
     where: 'AtQuizTakeWhereInput',
     orderBy: list('AtQuizTakeOrderByWithRelationInput'),
     cursor: 'AtQuizTakeWhereUniqueInput',
-    distinct: 'AtQuizTakeScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.atQuizTake.aggregate({ ...args, ...select }) as any

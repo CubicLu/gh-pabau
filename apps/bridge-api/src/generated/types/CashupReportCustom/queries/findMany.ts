@@ -8,9 +8,9 @@ export const CashupReportCustomFindManyQuery = queryField(
       where: 'CashupReportCustomWhereInput',
       orderBy: list('CashupReportCustomOrderByWithRelationInput'),
       cursor: 'CashupReportCustomWhereUniqueInput',
-      distinct: 'CashupReportCustomScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CashupReportCustomScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cashupReportCustom.findMany({

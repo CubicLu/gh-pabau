@@ -386,11 +386,11 @@ const Documents: FC = () => {
       const cFolders = {
         id: 0,
         folderTitle:
-          unCatImagesCount?.aggregateContactAttachment?.count?._all > 0
+          unCatImagesCount?.aggregateContactAttachment?._count?._all > 0
             ? 'Uncategorized'
             : '',
         contentCount:
-          unCatImagesCount?.aggregateContactAttachment?.count?._all || 0,
+          unCatImagesCount?.aggregateContactAttachment?._count?._all || 0,
         folderContent: [],
         modifiedDate: '',
         folder: innerFolders,

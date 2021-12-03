@@ -8,9 +8,9 @@ export const CalRangeRequestFindManyQuery = queryField(
       where: 'CalRangeRequestWhereInput',
       orderBy: list('CalRangeRequestOrderByWithRelationInput'),
       cursor: 'CalRangeRequestWhereUniqueInput',
-      distinct: 'CalRangeRequestScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CalRangeRequestScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.calRangeRequest.findMany({

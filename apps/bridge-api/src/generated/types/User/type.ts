@@ -721,7 +721,7 @@ export const User = objectType({
         return root.LabAssignedUser
       },
     })
-    t.list.field('MedicalForm', {
+    t.list.field('MedicalFormCreated', {
       type: 'MedicalForm',
       args: {
         where: 'MedicalFormWhereInput',
@@ -732,7 +732,21 @@ export const User = objectType({
         distinct: 'MedicalFormScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.MedicalForm
+        return root.MedicalFormCreated
+      },
+    })
+    t.list.field('MedicalFormDeleted', {
+      type: 'MedicalForm',
+      args: {
+        where: 'MedicalFormWhereInput',
+        orderBy: 'MedicalFormOrderByWithRelationInput',
+        cursor: 'MedicalFormWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormDeleted
       },
     })
     t.list.field('CmContact', {
@@ -777,20 +791,6 @@ export const User = objectType({
         return root.PrescriberMedicalFormContact
       },
     })
-    t.list.field('MedicalFormContact', {
-      type: 'MedicalFormContact',
-      args: {
-        where: 'MedicalFormContactWhereInput',
-        orderBy: 'MedicalFormContactOrderByWithRelationInput',
-        cursor: 'MedicalFormContactWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormContactScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.MedicalFormContact
-      },
-    })
     t.list.field('BookingCancel', {
       type: 'BookingCancel',
       args: {
@@ -803,6 +803,20 @@ export const User = objectType({
       },
       resolve(root: any) {
         return root.BookingCancel
+      },
+    })
+    t.list.field('Communication', {
+      type: 'Communication',
+      args: {
+        where: 'CommunicationWhereInput',
+        orderBy: 'CommunicationOrderByWithRelationInput',
+        cursor: 'CommunicationWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Communication
       },
     })
     t.nullable.field('_count', {

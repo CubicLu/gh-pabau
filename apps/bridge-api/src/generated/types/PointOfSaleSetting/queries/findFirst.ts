@@ -8,9 +8,9 @@ export const PointOfSaleSettingFindFirstQuery = queryField(
       where: 'PointOfSaleSettingWhereInput',
       orderBy: list('PointOfSaleSettingOrderByWithRelationInput'),
       cursor: 'PointOfSaleSettingWhereUniqueInput',
-      distinct: 'PointOfSaleSettingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('PointOfSaleSettingScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.pointOfSaleSetting.findFirst({

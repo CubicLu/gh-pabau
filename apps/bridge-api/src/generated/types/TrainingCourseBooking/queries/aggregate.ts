@@ -8,9 +8,8 @@ export const TrainingCourseBookingAggregateQuery = queryField(
       where: 'TrainingCourseBookingWhereInput',
       orderBy: list('TrainingCourseBookingOrderByWithRelationInput'),
       cursor: 'TrainingCourseBookingWhereUniqueInput',
-      distinct: 'TrainingCourseBookingScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.trainingCourseBooking.aggregate({

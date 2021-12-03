@@ -5,8 +5,8 @@ export const CancelReasonUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CancelReasonWhereInput',
       data: nonNull('CancelReasonUpdateManyMutationInput'),
+      where: 'CancelReasonWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cancelReason.updateMany(args as any)

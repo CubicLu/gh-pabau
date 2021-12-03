@@ -14,6 +14,7 @@ import {
   CloseCircleOutlined,
   QuestionCircleOutlined,
   MailFilled,
+  EyeInvisibleOutlined,
 } from '@ant-design/icons'
 import {
   AddContact,
@@ -105,6 +106,10 @@ export interface ClientData extends AddressValueProp {
   pricelist: string
   membershipNumber: string
   allocatedAuthorisations: string
+  optInPostal: number
+  optInSMS: number
+  optInPhone: number
+  optInEmail: number
 }
 
 interface SearchItem {
@@ -352,6 +357,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     pricelist: '',
     membershipNumber: '',
     allocatedAuthorisations: '',
+    optInEmail: 1,
+    optInPhone: 1,
+    optInPostal: 1,
+    optInSMS: 1,
   })
   const [initialized, setInitialized] = useState(false)
   const [hoverClientDetails, setHoverClientDetails] = useState(false)
@@ -823,6 +832,14 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     return referredByOptions?.find((option) => option.id === value)?.name
   }
 
+  const privacyWarning = (
+    <Tooltip title={t('ui.clientdetails.privacywarning.tooltip')}>
+      <span style={{ color: 'var(--light-grey-color)', paddingLeft: '5px' }}>
+        <EyeInvisibleOutlined />
+      </span>
+    </Tooltip>
+  )
+
   return (
     <div
       className={styles.clientDetailsContainer}
@@ -1182,6 +1199,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                     }}
                                   >
                                     {field.value}
+                                    {client?.optInPostal === 0 &&
+                                      privacyWarning}
                                   </div>
                                 </div>
                                 <div
@@ -1249,10 +1268,20 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                             className={styles.leftContentTitle}
                                           >
                                             {field.value['mobile'] && (
-                                              <span>{`${field.value['mobile']} (Mobile)`}</span>
+                                              <span>
+                                                {`${field.value['mobile']} (Mobile)`}
+                                                {client?.optInPhone === 0 &&
+                                                  client?.optInSMS === 0 &&
+                                                  privacyWarning}
+                                              </span>
                                             )}
                                             {field.value['home'] && (
-                                              <span>{`${field.value['home']} (Home)`}</span>
+                                              <span>
+                                                {`${field.value['home']} (Home)`}
+                                                {client?.optInPhone === 0 &&
+                                                  client?.optInSMS === 0 &&
+                                                  privacyWarning}
+                                              </span>
                                             )}
                                           </div>
                                           <div className={styles.boxContent}>
@@ -1353,6 +1382,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                                                   )}
                                                 >
                                                   {field.value}
+                                                  {client?.optInEmail === 0 &&
+                                                    privacyWarning}
                                                 </div>
                                                 {field.value && (
                                                   <div

@@ -48,7 +48,7 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
       validNumber = false
     }
     setPhoneNumber(val)
-    setCountry(country.countryCode)
+    // setCountry(country.countryCode)
     onChange(`${val}`, validNumber)
   }
 

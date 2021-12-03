@@ -8,9 +8,9 @@ export const CheckinAveragesIdleFindManyQuery = queryField(
       where: 'CheckinAveragesIdleWhereInput',
       orderBy: list('CheckinAveragesIdleOrderByWithRelationInput'),
       cursor: 'CheckinAveragesIdleWhereUniqueInput',
-      distinct: 'CheckinAveragesIdleScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CheckinAveragesIdleScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.checkinAveragesIdle.findMany({

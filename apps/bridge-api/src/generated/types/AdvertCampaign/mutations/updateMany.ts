@@ -5,8 +5,8 @@ export const AdvertCampaignUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AdvertCampaignWhereInput',
       data: nonNull('AdvertCampaignUpdateManyMutationInput'),
+      where: 'AdvertCampaignWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.advertCampaign.updateMany(args as any)

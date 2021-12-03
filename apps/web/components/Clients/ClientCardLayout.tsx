@@ -16,6 +16,7 @@ import {
   useCountVouchersQuery,
   useCountClientAppointmentsQuery,
   AggregateInvoiceCountsDocument,
+  useCountClientCommunicationQuery,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -73,7 +74,14 @@ export const ClientCardLayout: FC<P> = ({
     variables: { contactID: clientId },
     skip: !clientId,
   })
-  const { data: countInvoice } = useTotalInvoiceCountQuery({
+  const { data: countCommunition } = useCountClientCommunicationQuery({
+    variables: { contactID: clientId },
+    skip: !clientId,
+  })
+  const {
+    data: countInvoice,
+    loading: countInvoiceLoading,
+  } = useTotalInvoiceCountQuery({
     variables: { contactID: clientId },
     skip: !clientId,
   })
@@ -307,6 +315,13 @@ export const ClientCardLayout: FC<P> = ({
           medicalHistoryData?.form?.updated_at ??
           medicalHistoryData?.form?.created_at,
       })
+    } else if (!medicalHistoryData?.form) {
+      setMedicalHistoryDetails((val) => {
+        return {
+          ...val,
+          status: 'not_completed',
+        }
+      })
     }
   }, [medicalHistoryData])
 
@@ -344,27 +359,25 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'financial',
       name: 'Financials',
-      count: countInvoice?.total ?? 0,
+      count: !countInvoiceLoading && (countInvoice?.total ?? 0),
       tags:
         (accountBalance ?? 0) - (outstanding ?? 0) !== 0
           ? [
               {
                 tag:
                   stringToCurrencySignConverter(user.me?.currency) +
-                  Math.abs(accountBalance - outstanding).toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                    }
-                  ),
+                  Math.abs(accountBalance - outstanding).toFixed(2),
                 color: outstanding > accountBalance ? 'red' : 'green',
-                tooltip: t('ui.client-card-financial.invoice.tooltip'),
               },
             ]
           : [],
     },
     { key: 'packages', name: 'Packages' },
-    { key: 'communications', name: 'Communications' },
+    {
+      key: 'communications',
+      name: t('clients.communications.title'),
+      count: countCommunition?.aggregateCommunication?.count?.id,
+    },
     {
       key: 'emr',
       name: 'EMR',

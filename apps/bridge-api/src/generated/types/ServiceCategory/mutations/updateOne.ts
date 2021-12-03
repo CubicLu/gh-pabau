@@ -5,8 +5,8 @@ export const ServiceCategoryUpdateOneMutation = mutationField(
   {
     type: nonNull('ServiceCategory'),
     args: {
-      where: nonNull('ServiceCategoryWhereUniqueInput'),
       data: nonNull('ServiceCategoryUpdateInput'),
+      where: nonNull('ServiceCategoryWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.serviceCategory.update({

@@ -6,9 +6,8 @@ export const ContactAlertAggregateQuery = queryField('aggregateContactAlert', {
     where: 'ContactAlertWhereInput',
     orderBy: list('ContactAlertOrderByWithRelationInput'),
     cursor: 'ContactAlertWhereUniqueInput',
-    distinct: 'ContactAlertScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.contactAlert.aggregate({ ...args, ...select }) as any

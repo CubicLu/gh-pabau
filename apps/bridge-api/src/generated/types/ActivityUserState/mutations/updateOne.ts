@@ -5,8 +5,8 @@ export const ActivityUserStateUpdateOneMutation = mutationField(
   {
     type: nonNull('ActivityUserState'),
     args: {
-      where: nonNull('ActivityUserStateWhereUniqueInput'),
       data: nonNull('ActivityUserStateUpdateInput'),
+      where: nonNull('ActivityUserStateWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.activityUserState.update({

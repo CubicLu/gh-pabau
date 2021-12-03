@@ -5,8 +5,8 @@ export const ThirdPartyAccessUpdateOneMutation = mutationField(
   {
     type: nonNull('ThirdPartyAccess'),
     args: {
-      where: nonNull('ThirdPartyAccessWhereUniqueInput'),
       data: nonNull('ThirdPartyAccessUpdateInput'),
+      where: nonNull('ThirdPartyAccessWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.thirdPartyAccess.update({

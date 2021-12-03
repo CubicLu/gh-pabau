@@ -5,8 +5,8 @@ export const FavoriteReportUpdateOneMutation = mutationField(
   {
     type: nonNull('FavoriteReport'),
     args: {
-      where: nonNull('FavoriteReportWhereUniqueInput'),
       data: nonNull('FavoriteReportUpdateInput'),
+      where: nonNull('FavoriteReportWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.favoriteReport.update({

@@ -6,9 +6,8 @@ export const AtSettingAggregateQuery = queryField('aggregateAtSetting', {
     where: 'AtSettingWhereInput',
     orderBy: list('AtSettingOrderByWithRelationInput'),
     cursor: 'AtSettingWhereUniqueInput',
-    distinct: 'AtSettingScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.atSetting.aggregate({ ...args, ...select }) as any

@@ -6,9 +6,8 @@ export const CountryAggregateQuery = queryField('aggregateCountry', {
     where: 'CountryWhereInput',
     orderBy: list('CountryOrderByWithRelationInput'),
     cursor: 'CountryWhereUniqueInput',
-    distinct: 'CountryScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.country.aggregate({ ...args, ...select }) as any

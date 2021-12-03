@@ -136,11 +136,11 @@ export const interceptors = {
             ...args.where,
             Company: {
               id: {
-                equals: ctx.user.Company,
+                equals: ctx.authenticated.company,
               },
             },
           }
-          return
+          return true
         } catch (error) {
           return error
         }
@@ -175,6 +175,17 @@ export const interceptors = {
         },
       }
     }
+    return true
+  }),
+  injectDeletedBy: rule('injectDeletedBy')((_root, args, ctx: Context) => {
+    args.data = {
+      ...args.data,
+      deleted_at: new Date(),
+      DeletedBy: {
+        connect: { id: ctx.authenticated.user },
+      },
+    }
+
     return true
   }),
 }

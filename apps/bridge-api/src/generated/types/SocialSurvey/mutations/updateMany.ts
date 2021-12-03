@@ -5,8 +5,8 @@ export const SocialSurveyUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'SocialSurveyWhereInput',
       data: nonNull('SocialSurveyUpdateManyMutationInput'),
+      where: 'SocialSurveyWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.socialSurvey.updateMany(args as any)

@@ -8,9 +8,9 @@ export const MedicalAttrFindCountQuery = queryField(
       where: 'MedicalAttrWhereInput',
       orderBy: list('MedicalAttrOrderByWithRelationInput'),
       cursor: 'MedicalAttrWhereUniqueInput',
-      distinct: 'MedicalAttrScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('MedicalAttrScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.medicalAttr.count(args as any)

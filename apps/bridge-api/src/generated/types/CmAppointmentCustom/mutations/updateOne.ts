@@ -5,8 +5,8 @@ export const CmAppointmentCustomUpdateOneMutation = mutationField(
   {
     type: nonNull('CmAppointmentCustom'),
     args: {
-      where: nonNull('CmAppointmentCustomWhereUniqueInput'),
       data: nonNull('CmAppointmentCustomUpdateInput'),
+      where: nonNull('CmAppointmentCustomWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cmAppointmentCustom.update({

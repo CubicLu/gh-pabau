@@ -8,9 +8,9 @@ export const XeroIntegrationFindFirstQuery = queryField(
       where: 'XeroIntegrationWhereInput',
       orderBy: list('XeroIntegrationOrderByWithRelationInput'),
       cursor: 'XeroIntegrationWhereUniqueInput',
-      distinct: 'XeroIntegrationScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('XeroIntegrationScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.xeroIntegration.findFirst({

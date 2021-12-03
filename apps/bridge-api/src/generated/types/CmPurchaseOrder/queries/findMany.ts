@@ -8,9 +8,9 @@ export const CmPurchaseOrderFindManyQuery = queryField(
       where: 'CmPurchaseOrderWhereInput',
       orderBy: list('CmPurchaseOrderOrderByWithRelationInput'),
       cursor: 'CmPurchaseOrderWhereUniqueInput',
-      distinct: 'CmPurchaseOrderScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmPurchaseOrderScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmPurchaseOrder.findMany({

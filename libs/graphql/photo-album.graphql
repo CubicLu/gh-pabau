@@ -48,7 +48,7 @@ query countAlbumPhotos($contactId: Int!, $albumId: Int!) {
       album_id: { equals: $albumId }
     }
   ) {
-    count {
+    _count {
       _all
     }
   }

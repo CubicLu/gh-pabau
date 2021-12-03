@@ -8,9 +8,9 @@ export const MedicalFormContactHistoryFindCountQuery = queryField(
       where: 'MedicalFormContactHistoryWhereInput',
       orderBy: list('MedicalFormContactHistoryOrderByWithRelationInput'),
       cursor: 'MedicalFormContactHistoryWhereUniqueInput',
-      distinct: 'MedicalFormContactHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('MedicalFormContactHistoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.medicalFormContactHistory.count(args as any)

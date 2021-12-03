@@ -8,9 +8,9 @@ export const InventoryMovementFindCountQuery = queryField(
       where: 'InventoryMovementWhereInput',
       orderBy: list('InventoryMovementOrderByWithRelationInput'),
       cursor: 'InventoryMovementWhereUniqueInput',
-      distinct: 'InventoryMovementScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InventoryMovementScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.inventoryMovement.count(args as any)

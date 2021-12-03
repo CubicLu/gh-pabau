@@ -6,9 +6,9 @@ export const MedicalFormFindManyQuery = queryField('findManyMedicalForm', {
     where: 'MedicalFormWhereInput',
     orderBy: list('MedicalFormOrderByWithRelationInput'),
     cursor: 'MedicalFormWhereUniqueInput',
-    distinct: 'MedicalFormScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('MedicalFormScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.medicalForm.findMany({

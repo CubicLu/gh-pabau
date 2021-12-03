@@ -5,8 +5,8 @@ export const CommunicationRecipientUpdateOneMutation = mutationField(
   {
     type: nonNull('CommunicationRecipient'),
     args: {
-      where: nonNull('CommunicationRecipientWhereUniqueInput'),
       data: nonNull('CommunicationRecipientUpdateInput'),
+      where: nonNull('CommunicationRecipientWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.communicationRecipient.update({

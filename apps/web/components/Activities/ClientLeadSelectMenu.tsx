@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, ReactNode } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Select, Spin } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import {
@@ -8,14 +8,14 @@ import {
   useFindManyLeadsLazyQuery,
 } from '@pabau/graphql'
 import styles from './CreateFilterModal.module.less'
+import { UserOutlined, AimOutlined } from '@ant-design/icons'
 const { Option } = Select
 
 interface ClientLeadSelectProps {
   name: string
   isEdit: boolean
-  value: string
-  onChange: (value: string) => void
-  icon: ReactNode
+  value?: string
+  onChange?: (value: string) => void
   disabled: boolean
   className?: string
 }
@@ -25,7 +25,6 @@ export const ClientLeadSelect: FC<ClientLeadSelectProps> = ({
   isEdit,
   value,
   onChange,
-  icon,
   disabled,
   className,
 }) => {
@@ -120,17 +119,32 @@ export const ClientLeadSelect: FC<ClientLeadSelectProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit])
+
   return (
     <div className={className ? className : styles.clientWrapper}>
-      <div className={styles.icon}>{icon}</div>
+      <div className={styles.icon}>
+        {name === 'client' ? <UserOutlined /> : <AimOutlined />}
+      </div>
       <Select
         showSearch
         allowClear
         disabled={disabled}
         filterOption={false}
         onSearch={name === 'client' ? fetchClientOption : fetchLeadOption}
-        value={(name === 'client' ? clientName : leadName) ?? value}
-        onChange={(data) => onChange(data)}
+        value={
+          name === 'client'
+            ? clientName
+              ? clientName
+              : value
+            : leadName
+            ? leadName
+            : value
+        }
+        onChange={(data) => {
+          onChange(data)
+          setClientName('')
+          setLeadName('')
+        }}
         notFoundContent={
           name === 'client'
             ? contactLoading && <Spin size="small" />

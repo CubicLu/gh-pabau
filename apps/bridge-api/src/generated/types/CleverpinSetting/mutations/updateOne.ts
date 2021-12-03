@@ -5,8 +5,8 @@ export const CleverpinSettingUpdateOneMutation = mutationField(
   {
     type: nonNull('CleverpinSetting'),
     args: {
-      where: nonNull('CleverpinSettingWhereUniqueInput'),
       data: nonNull('CleverpinSettingUpdateInput'),
+      where: nonNull('CleverpinSettingWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cleverpinSetting.update({

@@ -6,9 +6,9 @@ export const TimezoneFindCountQuery = queryField('findManyTimezoneCount', {
     where: 'TimezoneWhereInput',
     orderBy: list('TimezoneOrderByWithRelationInput'),
     cursor: 'TimezoneWhereUniqueInput',
-    distinct: 'TimezoneScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('TimezoneScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.timezone.count(args as any)

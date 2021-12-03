@@ -8,9 +8,9 @@ export const CmCouponClaimedFindCountQuery = queryField(
       where: 'CmCouponClaimedWhereInput',
       orderBy: list('CmCouponClaimedOrderByWithRelationInput'),
       cursor: 'CmCouponClaimedWhereUniqueInput',
-      distinct: 'CmCouponClaimedScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmCouponClaimedScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.cmCouponClaimed.count(args as any)

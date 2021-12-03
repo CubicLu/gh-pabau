@@ -6,9 +6,9 @@ export const CountryFindFirstQuery = queryField('findFirstCountry', {
     where: 'CountryWhereInput',
     orderBy: list('CountryOrderByWithRelationInput'),
     cursor: 'CountryWhereUniqueInput',
-    distinct: 'CountryScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CountryScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.country.findFirst({

@@ -8,9 +8,8 @@ export const LoyaltyPointsAggregateQuery = queryField(
       where: 'LoyaltyPointsWhereInput',
       orderBy: list('LoyaltyPointsOrderByWithRelationInput'),
       cursor: 'LoyaltyPointsWhereUniqueInput',
-      distinct: 'LoyaltyPointsScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.loyaltyPoints.aggregate({ ...args, ...select }) as any

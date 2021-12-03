@@ -5,8 +5,8 @@ export const AvilableDatesLogUpdateOneMutation = mutationField(
   {
     type: nonNull('AvilableDatesLog'),
     args: {
-      where: nonNull('AvilableDatesLogWhereUniqueInput'),
       data: nonNull('AvilableDatesLogUpdateInput'),
+      where: nonNull('AvilableDatesLogWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.avilableDatesLog.update({

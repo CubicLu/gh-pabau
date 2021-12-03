@@ -5,8 +5,8 @@ export const ClassCategoryUpdateOneMutation = mutationField(
   {
     type: nonNull('ClassCategory'),
     args: {
-      where: nonNull('ClassCategoryWhereUniqueInput'),
       data: nonNull('ClassCategoryUpdateInput'),
+      where: nonNull('ClassCategoryWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.classCategory.update({

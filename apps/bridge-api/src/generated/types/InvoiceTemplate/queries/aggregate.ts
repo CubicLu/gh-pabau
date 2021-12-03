@@ -8,9 +8,8 @@ export const InvoiceTemplateAggregateQuery = queryField(
       where: 'InvoiceTemplateWhereInput',
       orderBy: list('InvoiceTemplateOrderByWithRelationInput'),
       cursor: 'InvoiceTemplateWhereUniqueInput',
-      distinct: 'InvoiceTemplateScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.invoiceTemplate.aggregate({ ...args, ...select }) as any

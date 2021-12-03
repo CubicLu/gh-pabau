@@ -101,7 +101,7 @@ en:
   notifications.birthday.signatureBlock: 'The clinic team'
   notifications.birthday.messages:
     - 'Your friends at clinic would like to wish you a glorious and happy birthday.'
-    - "Here's a Â£30 voucher to spend on your next visit."
+    - "Here's a £30 voucher to spend on your next visit."
     - 'We look forward to seeing you soon!'
   notifications.classSpotAvailable.greeting: 'Dear Sophia,'
   notifications.classSpotAvailable.message: 'Good news! You recently were placed in our waitlist and a new class is now available. If you would still like to book your appointment, you must take action before the spot is taken.'
@@ -203,7 +203,7 @@ en:
   crud-table-pagination-text-results: 'results from'
   crud-table-pagination-test-displaying: 'Rows per page'
   crud-table-no-search-results: 'No results found'
-  crud-table-try-adjust: 'Try adjusting your search to find what youâ€™re looking for'
+  crud-table-try-adjust: 'Try adjusting your search to find what you’re looking for'
   crud-table-input-min-length-validate: 'The value for {{what}} at least {{min}} characters.'
   crud-table-input-max-length-validate: 'The max length of {{max}} is reached.'
   crud-table-input-invalid-validate: 'Invalid {{what}}'
@@ -270,11 +270,11 @@ en:
   chat.cancel: Cancel
   chat.create: Create
   chat.create.channel: 'Create A Channel'
-  chat.create.channel.title: 'Channels are where your team communicates. Theyâ€™re best when organized around a topic â€“ #marketing, for example.'
+  chat.create.channel.title: 'Channels are where your team communicates. They’re best when organized around a topic – #marketing, for example.'
   chat.create.channel.name: Name
   chat.create.channel.name.placeholder: '# e.g. plan-budget'
   chat.create.channel.description: Description
-  chat.create.channel.description.placeholder: 'Whatâ€™s this channel about?'
+  chat.create.channel.description.placeholder: 'What’s this channel about?'
   chat.create.channel.makeprivate: 'Make private'
   chat.create.channel.makeprivate.text: 'When a channel is set to private, it can be only be viewed or joined by invitation.'
   message.managingdirector: 'Managing Director'
@@ -415,8 +415,8 @@ en:
   setup.discount.data.applyfilterbutton: 'Apply filters'
   setup.discount.data.enterdiscountname: "Enter discount's name"
   setup.discount.data.egpercentage: 'e.g. 15%'
-  setup.discount.data.egpaund: 'e.g. Â£ 15'
-  setup.discount.data.enterdiscountcode: 'Enter discountâ€™s code'
+  setup.discount.data.egpaund: 'e.g. £ 15'
+  setup.discount.data.enterdiscountcode: 'Enter discount’s code'
   setup.discount.data.advancedsettings: 'Advanced settings'
   setup.clinic: 'Our clinic'
   setup.clinic.bussiness.details: 'Business Details'
@@ -997,7 +997,7 @@ en:
   setup.courses.course.general.description: Description
   setup.courses.course.general.description.placeholder: 'Enter description'
   setup.courses.course.general.price: Price
-  setup.courses.course.general.price.placeholder: Â£0.00
+  setup.courses.course.general.price.placeholder: £0.00
   setup.courses.course.general.tax: Tax
   setup.courses.course.general.tax.placeholder: 'Select tax'
   setup.courses.course.general.category: Category
@@ -1025,7 +1025,7 @@ en:
   setup.courses.package.drawer.service.placeholder: 'Select a service'
   setup.courses.package.drawer.quantity: Quantity
   setup.courses.package.drawer.price: Price
-  setup.courses.package.drawer.price.placeholder: Â£650.00
+  setup.courses.package.drawer.price.placeholder: £650.00
   setup.courses.package.drawer.pricing.column.service: Service
   setup.courses.package.drawer.pricing.column.quantity: Quantity
   setup.courses.package.drawer.pricing.column.price: Price
@@ -1178,7 +1178,7 @@ en:
   setup.settings.loyalty.general.dropdown.label: 'Show on receipt'
   setup.settings.loyalty.general.dropdown.help: 'Help tooltip'
   setup.settings.loyalty.general.inputpoint.label: 'Points value'
-  setup.settings.loyalty.general.inputpoint.placeholder: '1 point = Â£0.15'
+  setup.settings.loyalty.general.inputpoint.placeholder: '1 point = £0.15'
   setup.settings.loyalty.general.inputpoint.help: 'Help tooltip'
   ui.create.product.sku.validate.required: 'SKU is required'
   ui.create.product.barcode.validate.required: 'Barcode is required'
@@ -1259,9 +1259,9 @@ en:
   ui.sms-purchase-modal.low_account_level: 'Low account level'
   ui.sms-purchase-modal.when_running_low: 'When running low'
   ui.sms-purchase-modal.select_bundle: 'Select the bundle you wish to purchase'
-  ui.sms-purchase-modal.auto_top_ups_notice: 'Donâ€™t forget you have Auto top-ups enabled. If you click â€œOrder Creditsâ€ your current setting will be cleared'
+  ui.sms-purchase-modal.auto_top_ups_notice: 'Don’t forget you have Auto top-ups enabled. If you click “Order Credits” your current setting will be cleared'
   ui.sms-purchase-modal.manage_settings: 'View & Manage your auto top-up settings'
-  ui.sms-purchase-modal.cost_pre_credit: 'Credits are Â£0.10 each.'
+  ui.sms-purchase-modal.cost_pre_credit: 'Credits are £0.10 each.'
   ui.sms-purchase-modal.credit_per_character_message: 'SMS messages use 1 credit per 142 characters.'
   ui.sms-purchase-modal.confirm_purchase: 'Confirm purchase'
   ui.sms-purchase-modal.all_right: 'All right'
@@ -1400,7 +1400,7 @@ en:
   notifications.classNoShowAppointment.title: 'Missed A Class'
   notifications.classNoShowAppointment.standardMessage: 'This notification automatically sends to clients when they dont show for a class'
   notifications.appointmentReminder.smsMessage: "Hey Shopia,\n\nThis is a friendly reminder that we have scheduled writing for 12/15/21 11:30 AM. You can find us at 574 Beferly Road, H3454, England, GB\nWe really care about your well-being, so if you have any questions or needs before your appointment, you are welcome to contact us anytime at +44000987507\n\nWe will see you soon!\nthe clinic"
-  notifications.birthday.smsMessage: "happy birthday\n\nYour friends at the clinic would like to wish you a Merry Christmas and a happy one.\nHere is a voucher worth Â£ 30 to spend on your next visit. We look forward to seeing you soon!\n\nwarm regards,\nClinic team"
+  notifications.birthday.smsMessage: "happy birthday\n\nYour friends at the clinic would like to wish you a Merry Christmas and a happy one.\nHere is a voucher worth £ 30 to spend on your next visit. We look forward to seeing you soon!\n\nwarm regards,\nClinic team"
   notifications.cancelledAppointment.smsMessage: "Hi Kristy!\n\nWe have canceled your meeting on Monday 16 November at 11:00. We hope to see you again soon!\n\nSincerely,\nYour friends at the clinic"
   notifications.cancelledClassBooking.smsMessage: "Hi Kristy!\n\nWe have canceled your class booking for Monday, 16 November at 11:00. We hope to see you again soon!\n\nKind regards,\nYour friends at The Clinic"
   notifications.classBooked.smsMessage: "Hi Kristy, see you soon!\n\nYour class appointment details: Monday, 16 November at 11:00; Consultation (30mins) with John Smith. We look forward to seeing you then.\n\nKind regards,\nYour friends at The Clinic"
@@ -1577,17 +1577,17 @@ en:
   setup.settings.pos.configuration.dropdown.option.payment.type.mode.option.net.banking: 'Net Banking'
   setup.settings.pos.configuration.tab.general.description: 'Choose to disable particular features such as the ability to over-ride prices and more.'
   setup.settings.pos.configuration.tab.general.tooltip: 'Help tooltip'
-  setup.settings.pos.configuration.tab.appearance.description: 'Choose to hide specific features from the point of sale. Donâ€™t sell gift cards? -No problem, just go ahead and switch it off..'
+  setup.settings.pos.configuration.tab.appearance.description: 'Choose to hide specific features from the point of sale. Don’t sell gift cards? -No problem, just go ahead and switch it off..'
   setup.settings.loyalty.general.dropdown.yes: 'Yes'
   setup.settings.loyalty.general.dropdown.no: 'No'
   setup.settings.loyalty.general.point.value: '13.45'
   setup.settings.referral.expiry.value: '15'
-  setup.settings.referral.reward.value: 'Standard Referral Voucher Â£20.00'
-  setup.settings.referral.referee.reward.value: 'Standard Referral Voucher Â£20.00'
+  setup.settings.referral.reward.value: 'Standard Referral Voucher £20.00'
+  setup.settings.referral.referee.reward.value: 'Standard Referral Voucher £20.00'
   setup.settings.referral.options.none.value: None
-  setup.settings.referral.options.voucher.value: 'Standard Referral Voucher Â£20.00'
+  setup.settings.referral.options.voucher.value: 'Standard Referral Voucher £20.00'
   setup.settings.referral.reward.options.none.value: None
-  setup.settings.referral.reward.options.voucher.value: 'Standard Referral Voucher Â£20.00'
+  setup.settings.referral.reward.options.voucher.value: 'Standard Referral Voucher £20.00'
   setup.reports.title: Reports
   setup.reports.search.result: 'Search results'
   setup.reports.search.text.placeholder: 'Search by report name'
@@ -1600,7 +1600,7 @@ en:
   setup.reports.Sales_description.description: 'Monitor your financial activities and business income'
   setup.reports.Clients.heading: Clients
   setup.reports.Clients_graphDescription.graphDescription: 'New clients by month'
-  setup.reports.Clients_description.description: ' Get an accurate understanding of your clientâ€™s data'
+  setup.reports.Clients_description.description: ' Get an accurate understanding of your client’s data'
   setup.reports.Appointments.heading: Appointments
   setup.reports.Appointments_graphDescription.graphDescription: 'Appointments by month'
   setup.reports.Appointments_description.description: 'Get key appointment insight for you and your team'
@@ -2139,7 +2139,7 @@ en:
   marketingreviews.data.updatediscounterrormessages: 'Error! While updating a response'
   marketingreviews.data.deletediscountsuccessmessages: 'Success! You have successfully deleted a response'
   marketingreviews.data.deletediscounterrormessages: 'Error! While deleting a response'
-  marketingreviews.message.title1: 'Youâ€™ve got a lot of work to do'
+  marketingreviews.message.title1: 'You’ve got a lot of work to do'
   marketingreviews.message.title2: 'Ok, but you still have got work to do'
   marketingreviews.message.title3: 'Great job. You are almost there'
   marketingreviews.message.title4: 'You are doing great'
@@ -2287,7 +2287,7 @@ en:
   setup.page.expand.label: Expand
   setup.page.search.result.title: 'Search Results'
   setup.page.search.no.result.label: 'No results found'
-  setup.page.search.no.result.subTitle: 'Try adjusting your search to find what youâ€™re looking for'
+  setup.page.search.no.result.subTitle: 'Try adjusting your search to find what you’re looking for'
   setup.page.live.upcoming.webinar.title: 'Live & Upcoming Webinars'
   setup.page.live.upcoming.webinar.view.schedule: 'View Full Schedule'
   setup.page.live.upcoming.webinar.join.class.label: 'Join class'
@@ -2443,7 +2443,7 @@ en:
   setup.course.description: Description
   setup.course.description.placeholder: 'Enter description'
   setup.course.price: Price
-  setup.course.price.placeholder: Â£0.00
+  setup.course.price.placeholder: £0.00
   setup.course.tax: Tax
   setup.course.tax.placeholder: 'Select tax'
   setup.course.image: Image
@@ -2491,7 +2491,7 @@ en:
   setup.online-booking.payment.rolling-deposit: 'Rolling Deposit'
   setup.online-booking.payment.rolling-deposit-yes: 'Yes'
   setup.online-booking.payment.rolling-deposit-no: 'No'
-  setup.online-booking.payment.rolling-deposit-description: 'If the client has money on their account (min. Â£25.00), they will need to do a payment, meaning payment process is completelly skipped'
+  setup.online-booking.payment.rolling-deposit-description: 'If the client has money on their account (min. £25.00), they will need to do a payment, meaning payment process is completelly skipped'
   setup.online-booking.payment.payment-methods: 'Payment Methods'
   setup.online-booking.payment.show-instructions: 'Show instructions'
   setup.online-booking.promote.button: Button
@@ -2547,7 +2547,7 @@ en:
   team.user.filter.inactive.label: Inactive
   team.user.header.search.placeHolder: 'Search in Custom'
   team.user.header.search.noSearchResults: 'No results found'
-  team.user.header.search.tryAdjustSearch: 'Try adjusting your search to find what youâ€™re looking for'
+  team.user.header.search.tryAdjustSearch: 'Try adjusting your search to find what you’re looking for'
   team.user.header.newGroup.button: 'New Group'
   team.user.header.newStaffMember.button: 'New Staff Member'
   team.user.tabOne: 'Staff Members'
@@ -2592,7 +2592,7 @@ en:
   team.user.feature.source.calendarClientsTitle: 'Calendar & Clients'
   team.user.feature.source.availableCalendar: 'Available on calendar'
   team.user.feature.source.availableCalendar.tooltip: 'This user can have appointments booked in their diary.'
-  team.user.feature.source.viewEverybodyCalendar: 'View everybodyâ€™s calendar'
+  team.user.feature.source.viewEverybodyCalendar: 'View everybody’s calendar'
   team.user.feature.source.viewEverybodyCalendar.tooltip: OU7m6ovVoR
   team.user.feature.source.canMakeBookOut: 'Can make Bookout slot'
   team.user.feature.source.canMakeBookOut.tooltip: qTQoH5PzN5
@@ -3007,7 +3007,7 @@ en:
   ui.add.thirdparty.address.country.label: Country
   ui.clientdetails.selfpaid: 'Self paid'
   ui.clientdetails.active: Active
-  ui.clientdetails.deactivate: Deactivate
+  ui.clientdetails.deactivate: Inactive
   ui.clientdetails.onaccount: 'On account'
   ui.clientdetails.outstanding: Outstanding
   ui.clientdetails.patientid: 'Patient ID'
@@ -3030,6 +3030,7 @@ en:
   ui.clientdetails.allocated: 'Allocated authorisations'
   ui.clientdetails.details: Details
   ui.clientdetails.customise: 'Customise fields'
+  ui.clientdetails.privacywarning.tooltip: 'This client prefers not to receive this type of communication'
   dashboard.create.menu.item.pathway.title: 'Start a Pathway'
   dashboard.create.menu.item.pathway.description: 'Share a photo or write something'
   dashboard.create.menu.item.treatment.title: 'Treatment note'
@@ -3319,7 +3320,7 @@ en:
   connect.onlinebooking.payment.paymentbutton: 'Make Payment'
   connect.onlinebooking.payment.powerby: 'Powered by'
   connect.onlinebooking.booked.title: 'Booking confirmed'
-  connect.onlinebooking.booked.description: 'Fantastic! Your booking was successful. We have sent you a confirmation email with the details below. Donâ€™t let it hide in your junk folder.'
+  connect.onlinebooking.booked.description: 'Fantastic! Your booking was successful. We have sent you a confirmation email with the details below. Don’t let it hide in your junk folder.'
   connect.onlinebooking.booked.location: location
   connect.onlinebooking.booked.skin: 'SkinHealth Clinic'
   connect.onlinebooking.booked.emailid: service@aesthetics.co.uk
@@ -3356,7 +3357,7 @@ en:
   setup.locations.submenu.badges: Badges
   setup.locations.badges.desc.text: 'Attach a badge to your location to make clients aware of any important information such as on-site parking'
   setup.locations.general.location.name: 'Location name'
-  setup.locations.general.location.name.placeholder: 'Enter locationâ€™s name'
+  setup.locations.general.location.name.placeholder: 'Enter location’s name'
   setup.locations.general.location.phone: Phone
   setup.locations.general.location.email: Email
   setup.locations.general.location.email.placeholder: email@company.com
@@ -3365,7 +3366,7 @@ en:
   setup.locations.general.location.appointment.bookings.text: 'This location accepts appointment bookings'
   setup.locations.general.location.online.bookings.text: 'This location accepts online bookings'
   setup.locations.general.location.show.online.text: 'Show online'
-  setup.locations.location.desc.text: 'Whereâ€™s your business located?'
+  setup.locations.location.desc.text: 'Where’s your business located?'
   setup.locations.location.apt.suite: 'Apt./Suite etc.'
   setup.locations.location.postcode: Postcode
   setup.locations.location.image: Image
@@ -3523,6 +3524,7 @@ en:
   setup.medical.forms.shareModal.error.message: 'We could not find an associated user or company with this email address.'
   setup.medical.forms.deleteModal.title: 'Delete Patient Form'
   setup.medical.forms.deleteModal.btnText: 'Yes, Delete Form'
+  setup.medical.forms.deleteModal.deleteText: 'Can’t delete this medical history form. Having at least one medical history form is mandatory.'
   setup.medical.forms.columns.name: Name
   setup.medical.forms.columns.type: Type
   setup.medical.forms.columns.createdDate: 'Created Date'
@@ -3647,7 +3649,7 @@ en:
   marketingreviews.add.message: 'Added to Favourite'
   team.user.header.search.placeholder: 'Search in Custom'
   team.user.header.search.no.results: 'No results found'
-  team.user.header.search.try.adjust: 'Try adjusting your search to find what youâ€™re looking for'
+  team.user.header.search.try.adjust: 'Try adjusting your search to find what you’re looking for'
   team.user.header.new.group.button: 'New Group'
   team.user.header.new.staff.member.button: 'New Staff Member'
   team.user.tab.staff.member: 'Staff Members'
@@ -3687,7 +3689,7 @@ en:
   team.user.feature.source.calendar.clients.title: 'Calendar & Clients'
   team.user.feature.source.available.calendar: 'Available on calendar'
   team.user.feature.source.available.calendar.tooltip: n9bi5PfhMJ
-  team.user.feature.source.view.everybody.calendar: 'View everybodyâ€™s calendar'
+  team.user.feature.source.view.everybody.calendar: 'View everybody’s calendar'
   team.user.feature.source.view.everybody.calendar.tooltip: OU7m6ovVoR
   team.user.feature.source.can.make.bookout: 'Can make Bookout slot'
   team.user.feature.source.can.make.bookout.tooltip: qTQoH5PzN5
@@ -4118,7 +4120,7 @@ en:
   ui.medicalformbuilder.advanced.basic.submit: 'Submit Button Label'
   ui.medicalformbuilder.advanced.basic.submit.placeholder: 'Submit Button Label'
   ui.medicalformbuilder.advanced.basic.sharelink: 'Share a copy of the form with the client in Pabau Connect'
-  ui.medicalformbuilder.advanced.basic.social: 'Send a reminder to the client to complete the form if they havenâ€™t done so within'
+  ui.medicalformbuilder.advanced.basic.social: 'Send a reminder to the client to complete the form if they haven’t done so within'
   ui.medicalformbuilder.advanced.acknowledgement.title: 'Acknowledgement & Redirects'
   ui.medicalformbuilder.advanced.acknowledgement.description: 'Configure a Thank you page to acknowledge your respondents submission or choose where to redirect them to next (for connect only)'
   ui.medicalformbuilder.advanced.acknowledgement.thankpage.title: 'Thank You Page'
@@ -4224,7 +4226,7 @@ en:
   account.finance.invoice.letter.send.with.date: 'Letter Sent - {{date}}'
   reset.password.title: 'Reset your password'
   reset.password.title.text: 'Reset password'
-  reset.password.description: 'Enter the email address associated with your account, and weâ€™ll send you a link to reset your password.'
+  reset.password.description: 'Enter the email address associated with your account, and we’ll send you a link to reset your password.'
   reset.password.banner.search.title: 'No search results'
   reset.password.banner.search.description: 'Your search did not return any results. Please try again'
   reset.password.banner.email.title: 'Sent email successfully'
@@ -4415,7 +4417,6 @@ en:
   ui.client-card-financial.invoice-no: 'Invoice #'
   ui.client-card-financial.appointment: Appointment
   ui.client-card-financial.invoice-date: 'Invoice date'
-  ui.client-card-financial.invoice.tooltip: Actual Account Balance
   ui.client-card-financial.issuing-company: 'Issuing company'
   ui.client-card-financial.select-issuing-company: 'Select issuing company'
   ui.client-card-financial.contract: Contract
@@ -4557,7 +4558,7 @@ en:
   invoice.pay.button.label: 'Pay with card'
   receipt.payment.date.label: 'Payment Date'
   receipt.payment.with.invoice: 'Payments applied to invoices'
-  ui.medicalformbuilder.advanced.basic.reminder: 'Send a reminder to the client to complete the form if they havenâ€™t done so within'
+  ui.medicalformbuilder.advanced.basic.reminder: 'Send a reminder to the client to complete the form if they haven’t done so within'
   ui.medicalformbuilder.advanced.acknowledgement.showlink: 'Show link to Pabau connect where client can manage their appointment'
   ui.medicalformbuilder.advanced.acknowledgement.addsocial: 'Add Google Analytics or Facebook Pixel tracking code'
   products.list.products.notification.category.delete.tooltip: 'This action is irreversable'
@@ -4749,7 +4750,7 @@ en:
   setup.page.webinar.modal.register.show: 'Show Results'
   modals.webinar.tab.discover: 'Discover & Learn'
   modals.webinar.tab.schedule: 'Your schedule'
-  modals.webinar.tab.schedule.empty: 'You donâ€™t have any upcoming webinars'
+  modals.webinar.tab.schedule.empty: 'You don’t have any upcoming webinars'
   modals.webinar.title: 'Discover & Learn'
   reset.company.name.title: 'Company Name'
   reset.username.title: Email
@@ -4828,10 +4829,10 @@ en:
   create.client.modal.privacy.subscription.receive.alert.description: 'You are about to turn off all need to know communications such as reminders, aftercare and more. You should only do this if you absolutely do not want to ever send this client a communication (even if by mistake).'
   create.client.modal.privacy.subscription.receive.alert.button.title: 'Turn off'
   create.client.modal.privacy.sharing.history.title: 'Sharing history'
-  create.client.modal.privacy.sharing.history.sms.description: 'SMS concent changed from â€œNoâ€ to â€œYesâ€'
-  create.client.modal.privacy.sharing.history.email.description: 'Email concent changed from â€œNoâ€ to â€œYesâ€'
-  create.client.modal.privacy.sharing.history.user.description: 'Disabled sharing for â€œFamilyâ€'
-  create.client.modal.privacy.sharing.history.call.description: 'Phone concent changed from â€œNoâ€ to â€œYesâ€'
+  create.client.modal.privacy.sharing.history.sms.description: 'SMS concent changed from “No” to “Yes”'
+  create.client.modal.privacy.sharing.history.email.description: 'Email concent changed from “No” to “Yes”'
+  create.client.modal.privacy.sharing.history.user.description: 'Disabled sharing for “Family”'
+  create.client.modal.privacy.sharing.history.call.description: 'Phone concent changed from “No” to “Yes”'
   create.client.modal.privacy.sharing.history.date.today.label: 'Today at {{date}}'
   create.client.modal.privacy.sharing.history.date.tomorrow.label: 'Tomorrow at {{date}}'
   create.client.modal.privacy.sharing.history.date.label: '{{date}} at {{time}}'
@@ -4857,6 +4858,7 @@ en:
   activityList.selectPerson.placeholder: 'Select a person'
   activityList.search.placeholder: Search
   activityList.createActivity: 'Create Activity'
+  activityList.editActivity: 'Edit Activity'
   activityList.empty.activity.label: 'No Activities'
   activityList.column.dueDate: 'Due Date'
   activityList.column.subject: Subject
@@ -4886,22 +4888,26 @@ en:
   activityList.column.leadOwner: 'Lead owner'
   activityList.column.leadDoneActivities: 'Lead done activities'
   activityList.column.leadClosedOn: 'Lead closed on'
+  activityList.column.leadClosedOn.editName: 'lead closed on'
   activityList.column.firstActivityTime: 'First activity time'
   activityList.column.leadLastActivityDate: 'Lead last activity date'
   activityList.column.leadLastActivity: 'Lead last activity (days)'
   activityList.column.leadLostReason: 'Lead lost reason'
   activityList.column.leadTotalActivities: 'Lead total activities'
   activityList.column.leadLostTime: 'Lead lost time'
+  activityList.column.leadLostTime.editName: 'lead lost time'
   activityList.column.leadSource: 'Lead source'
   activityList.column.wonBy: 'Won by'
   activityList.column.done: Done
-  activityList.column.date.editName: date
+  activityList.column.date.editName: 'due date'
+  activityList.column.done.time.editName: 'done time'
+  activityList.column.add.time.editName: 'add time'
   activityList.column.subject.editName: subject
   activityList.column.client.editName: client
   activityList.column.lead.editName: lead
   activityList.column.email.editName: email
   activityList.column.phone.editName: phone
-  activityList.column.leadFirstName.editName: 'lead first name'
+  activityList.column.leadFirstName.editName: 'lead'
   activityList.column.leadLastName.editName: 'lead last name'
   activityList.column.leadEmail.editName: 'lead email'
   activityList.column.leadPhone.editName: 'lead phone'
@@ -5269,6 +5275,7 @@ en:
   activityList.empty.activity.label.description: 'Try resetting you filters or create new activity'
   activityList.column.leadName: 'Lead name'
   activityList.column.leadStage: 'Lead stage'
+  activityList.column.leadStage.editName: 'lead stage'
   activityList.column.leadDescription: 'Lead description'
   activityList.column.leadDescription.editName: 'lead description'
   activityList.column.clientCountry.editName: 'client country'
@@ -5276,13 +5283,19 @@ en:
   activityList.column.address.details: 'Address Details'
   activityList.column.clientCountry: 'Client country'
   activityList.column.clientMobile: 'Client mobile'
+  activityList.column.clientMobile.editName: 'client mobile'
   activityList.column.clientCreatedAt: 'Client created date'
+  activityList.column.clientCreatedAt.editName: 'client created date'
   activityList.column.clientSource: 'Client source'
+  activityList.column.clientSource.editName: 'client source'
   activityList.column.clientSalutation: 'Client salutation'
   activityList.column.clientGender: 'Client gender'
+  activityList.column.clientGender.editName: 'client gender'
   activityList.column.clientID: 'Client ID'
   activityList.column.clientDOB: 'Client DOB'
+  activityList.column.clientDOB.editName: 'client DOB'
   activityList.column.clientStatus: 'Client status'
+  activityList.column.clientStatus.editName: 'client status'
   setup.locations.noDataText: 'No Location'
   ui.gp-search.yourPractice: 'Your practice'
   ui.gp-search.yourPracticeMessage: 'Supply a a postcode or the name of the practice where you are currently registered as a patient'
@@ -5316,6 +5329,7 @@ en:
   ui.clientdetails.add.address: 'Add Address'
   ui.clientdetails.edit.address: 'Edit Address'
   activityList.column.leadStatus: 'Lead status'
+  activityList.column.leadStatus.editName: 'lead status'
   activityList.filter.userGroup.memberCount: '{{count}} members'
   activity.filter.popover.label: 'Select a person'
   activity.filter.popover.title: Filter
@@ -5326,7 +5340,7 @@ en:
   activity.filter.popover.add.new.filter.label: 'Add new filter'
   activity.filter.popover.user.you.label: (You)
   create.filter.modal.title: 'Create Filter'
-  edit.activity.filter.modal.title: 'Edit Filter â€œ{{name}}â€'
+  edit.activity.filter.modal.title: 'Edit Filter {{name}}'
   create.filter.modal.all.condition.title: 'Show activities that match ALL of these conditions:'
   create.filer.modal.add.condition.btn: 'Add Condition'
   create.filter.modal.any.condition.title: 'And match ANY of these conditions:'
@@ -5636,15 +5650,19 @@ en:
   clients.clientcard.notes.clientnote.deletemodal.title: 'Delete client Note'
   clients.clientcard.notes.clientnote.deletemodal.content: 'This note will be deleted. This action is irreversible'
   activityList.column.leadLocation: 'Lead location'
+  activityList.column.leadLocation.editName: 'lead location'
   activityList.column.leadActivityToDo: 'Activities to do'
   activityList.column.leadCreator: 'Lead creator'
   activityList.column.leadDateEnteringStage: 'Date of entering stage'
+  activityList.column.leadDateEnteringStage.editName: 'lead date of entering stage'
   activityList.column.leadEmailMessagesCount: 'Email messages count'
   activityList.column.leadLastEmailReceived: 'Last email received'
   activityList.column.leadLastEmailSent: 'Last email sent'
   activityList.column.leadNextActivityDate: 'Next activity date'
   activityList.column.leadPipeline: Pipeline
+  activityList.column.leadPipeline.editName: pipeline
   activityList.column.leadUpdateTime: 'Update time'
+  activityList.column.leadUpdateTime.editName: 'lead update time'
   activityList.column.leadTitle: Title
   create.filter.modal.lead.option.label: Lead
   create.filter.modal.date.is.more.than.operand: 'is more than'
@@ -5796,6 +5814,13 @@ en:
   create.activity.big.calendar.previous.title: 'Previous Day'
   create.activity.big.calendar.next.title: 'Next Day'
   create.activity.modal.success.message: 'Success! You have successfully created a activity'
+  update.activity.record.success.message: 'Success! You have successfully updated a activity'
+  activityList.column.lead.createdDate.editName: 'lead created date'
   clients.activities.title: 'Activities'
   clients.appointments.tooltip.assistant: 'Assistant'
-
+  activity.client.active.status: 'Active'
+  activity.client.inactive.status: 'Inactive'
+  activity.client.gender.male: 'Male'
+  activity.client.gender.female: 'Female'
+  activity.client.gender.other: 'Other'
+  clients.communications.title: 'Communications'

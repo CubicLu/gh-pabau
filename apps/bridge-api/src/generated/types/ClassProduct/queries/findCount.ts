@@ -8,9 +8,9 @@ export const ClassProductFindCountQuery = queryField(
       where: 'ClassProductWhereInput',
       orderBy: list('ClassProductOrderByWithRelationInput'),
       cursor: 'ClassProductWhereUniqueInput',
-      distinct: 'ClassProductScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassProductScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.classProduct.count(args as any)

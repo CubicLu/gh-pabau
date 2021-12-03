@@ -1036,8 +1036,8 @@ export const Inbox = () => {
   }
 
   return (
-    <div className={styles.emailContainer}>
-      <Layout>
+    <Layout>
+      <div className={styles.emailContainer}>
         <Card>
           <div className={styles.headerContainer}>
             <h2 className={styles.headerTitle}>Mail box</h2>
@@ -1203,8 +1203,8 @@ export const Inbox = () => {
             </TabMenu>
           </div>
         </Card>
-      </Layout>
-    </div>
+      </div>
+    </Layout>
   )
 }
 

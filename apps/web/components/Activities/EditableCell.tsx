@@ -1,9 +1,23 @@
 import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
 import { Input, Form, Popover, Select, Drawer, Spin, Tooltip } from 'antd'
-import { getDuration, getFunction } from './utils'
-import { merge, debounce } from 'lodash'
-import { ActivitiesDataProps, filterTabsObj } from '../../pages/activities'
-import { DatePicker, Button, PhoneNumberInput, Avatar } from '@pabau/ui'
+import {
+  getDuration,
+  getFunction,
+  prepareQueryPayload,
+  updateActivityCountCache,
+  ActivityCountOperand,
+} from './utils'
+import { merge, debounce, mergeWith } from 'lodash'
+import { ActivitiesDataProps } from '../../pages/activities'
+import {
+  DatePicker,
+  Button,
+  PhoneNumberInput,
+  Avatar,
+  Notification,
+  NotificationType,
+  CustomScrollbar,
+} from '@pabau/ui'
 import dayjs from 'dayjs'
 import styles from '../../pages/activities/index.module.less'
 import { useMedia } from 'react-use'
@@ -18,14 +32,20 @@ import classNames from 'classnames'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CreateLabel from './CreateLabel'
 import { Labels } from '../../pages/activities'
-import { typeArray } from '../../mocks/Activities'
 import { columnNames } from './AddColumnPopover'
+import * as Icon from '@ant-design/icons'
 import {
-  SendOutlined,
-  PhoneOutlined,
-  MessageOutlined,
-  UsergroupAddOutlined,
-} from '@ant-design/icons'
+  useUpdateOneActivityMutation,
+  Activity_Status,
+  useUpdateOneCmLeadMutation,
+  useUpdateOneCmLeadNoteMutation,
+  useUpdateOneCmContactMutation,
+} from '@pabau/graphql'
+import { ClientLeadSelect } from './ClientLeadSelectMenu'
+import { PersonList, OptionList } from './FilterMenu'
+import { ActivityTypeFilter } from './CreateActivity'
+import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
+import { useUser } from '../../context/UserContext'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -37,22 +57,36 @@ interface EditableCellProps {
   dataIndex: string
   id: string
   record: ActivitiesDataProps
-  handleSave: (record) => void
+  handleSave: (
+    record: ActivitiesDataProps,
+    displayConfetti: boolean,
+    needRefetch: boolean
+  ) => void
   editName?: string
   ellipsis?: boolean
   labels?: Labels[]
   setLabels?: (val: Labels[]) => void
   type?: string
-  selectOptions?: string[]
+  selectOptions?: PersonList[]
   hideFooter?: boolean
+  showTime?: boolean
   selectPrefixIcon?: ReactNode
+  dateFormat: string
+  activityType: ActivityTypeFilter[]
+  leadSourceData: OptionList[]
+  leadStageData: OptionList[]
+  locationData: OptionList[]
+  pipelineData: OptionList[]
+  salutationData: OptionList[]
+  optionValue: string
+  pipelineStageData: OptionList[]
 }
 
 interface SearchWithSelectProps {
   displayHeading?: boolean
   searchValue?: string
   onSearch?: (val) => void
-  options?: string[]
+  options?: PersonList[]
   selectedOption?: string
   onOptionClick?: (item) => void
   displayAvatar?: boolean
@@ -73,6 +107,8 @@ export const cellTypes = {
   text: 'text',
   url: 'url',
   label: 'label',
+  client: 'client',
+  lead: 'lead',
 }
 
 export const EditableCell: FC<EditableCellProps> = React.memo(
@@ -90,7 +126,17 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
     type,
     selectOptions,
     hideFooter,
+    showTime,
     selectPrefixIcon,
+    dateFormat,
+    activityType,
+    leadSourceData,
+    leadStageData,
+    locationData,
+    pipelineData,
+    salutationData,
+    optionValue,
+    pipelineStageData,
     ...restProps
   }) => {
     const labelRef = useRef(null)
@@ -106,9 +152,50 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
     const [defaultSelectedLabels, setDefaultSelectedLabels] = useState<
       Labels[]
     >([])
-    const eventDateFormat = 'D MMMM YYYY hh:mm'
     const [form] = Form.useForm()
     const { t } = useTranslationI18()
+    const loggedUser = useUser()
+
+    const [editActivity] = useUpdateOneActivityMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+      update(cache, { data: { updateOneActivity } }) {
+        if (
+          record.status !== 'Done' &&
+          updateOneActivity.status === Activity_Status.Done
+        ) {
+          updateActivityCountCache(cache, ActivityCountOperand.Subtract)
+        }
+      },
+    })
+    const [editLead] = useUpdateOneCmLeadMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+    })
+    const [editLeadNote] = useUpdateOneCmLeadNoteMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+    })
+    const [editContact] = useUpdateOneCmContactMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+    })
 
     useEffect(() => {
       if (record) {
@@ -119,8 +206,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
             lastName: cLastName = '',
             label,
           },
-          lead: { owner, wonBy },
-          activityLead,
+          lead: { owner },
           type_name,
         } = record
         id === columnNames.assignedToUser.id &&
@@ -129,13 +215,16 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
           setSelectedListItem(`${cFirstName} ${cLastName}`)
         id === columnNames.leadOwner.id &&
           setSelectedListItem(`${owner?.full_name}`)
-        id === columnNames.wonBy.id && setSelectedListItem(wonBy)
-        id === columnNames.leadDescription.id &&
-          setSelectedListItem(activityLead)
         setSelectedType(type_name)
-        if (id === columnNames.label.id) {
-          setSelectedLabels(label)
-          setDefaultSelectedLabels(label)
+        if (id === columnNames.label.id && label?.length > 0) {
+          const labels = [...label]?.map((item) => ({
+            id: item?.CmLabel?.id,
+            label: item?.CmLabel?.name,
+            color: item?.CmLabel?.color,
+            cmContactLabelId: item?.id,
+          }))
+          setSelectedLabels([...labels])
+          setDefaultSelectedLabels([...labels])
         }
       }
     }, [record, id])
@@ -152,22 +241,10 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         setSelectedListItem(
           `${record?.client?.firstName} ${record?.client?.lastName}`
         )
-      id === columnNames.leadDescription.id &&
-        isMobile &&
-        setSelectedListItem(`${record?.activityLead}`)
     }
 
-    const renderSubjectIcon = (type) => {
-      switch (type) {
-        case filterTabsObj.call:
-          return <PhoneOutlined />
-        case filterTabsObj.email:
-          return <SendOutlined />
-        case filterTabsObj.message:
-          return <MessageOutlined />
-        case filterTabsObj.meeting:
-          return <UsergroupAddOutlined />
-      }
+    const renderSubjectIcon = (type_badge) => {
+      return React.createElement(Icon?.[type_badge])
     }
 
     const convertStringToObject = (val) => {
@@ -183,67 +260,619 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
       return { [key]: convertStringToObject(temp) }
     }
 
-    const save = (values) => {
+    const save = async (values) => {
       const [key] = Object.keys(values)
       const updatedValue = { ...values }
-      if (key === columnNames.dueDate.id) {
-        const newDueDate = dayjs(values?.[key]).format(eventDateFormat)
-        values = {
-          [key]: newDueDate,
-          duration: getDuration(newDueDate, record.dueEndDate, eventDateFormat),
+      let displayConfetti = false
+      let needRefetch = false
+      let payload
+      switch (key) {
+        case columnNames.dueDate.id: {
+          const newDueDate = dayjs(values?.[key]).format()
+          values = {
+            [key]: newDueDate,
+            duration: getDuration(newDueDate, record.dueEndDate),
+          }
+          payload = {
+            due_start_date: { set: dayjs(values?.[key]) },
+          }
+          needRefetch = true
+          break
         }
-      } else if (key === columnNames.clientName.id) {
-        const value = !isMobile ? values?.[key] : selectedListItem
-        const [firstName, lastName] = value.split(' ')
-        values = { client: { firstName, lastName } }
-      } else if (key === columnNames.leadDescription.id) {
-        values = { [key]: !isMobile ? values?.[key] : selectedListItem }
-      } else if (key === columnNames.duration.id) {
-        const duration = values?.[key]
-        const dueEndDate = dayjs(record.dueDate, eventDateFormat)
-          .add(duration, 'minute')
-          .format(eventDateFormat)
-        values = { [key]: duration, dueEndDate: dueEndDate }
-      } else {
-        values = convertStringToObject(values)
+        case columnNames.clientName.id: {
+          payload = {
+            CmContact: {
+              connect: {
+                ID: Number(values?.[key]),
+              },
+            },
+          }
+          needRefetch = true
+          break
+        }
+        case columnNames.leadName.id:
+        case columnNames.leadTitle.id: {
+          payload = {
+            CmLead: {
+              connect: {
+                ID: Number(values?.[key]),
+              },
+            },
+          }
+          needRefetch = true
+          break
+        }
+        case columnNames.duration.id: {
+          const duration = values?.[key]
+          const dueEndDate = dayjs(record.dueDate)
+            .add(duration, 'minute')
+            .format()
+          payload = {
+            due_end_date: { set: dueEndDate },
+          }
+          needRefetch = true
+          values = { [key]: duration, dueEndDate: dueEndDate }
+          break
+        }
+        case columnNames.doneTime.id: {
+          values = { [key]: dayjs(values?.[key]) }
+          const data = {
+            finished_at: { set: dayjs(values?.[key]) },
+          }
+          if (record.status !== 'Done') {
+            displayConfetti = true
+            data['status'] = {
+              set: Activity_Status.Done,
+            }
+            data['CompletedBy'] = {
+              connect: {
+                id: loggedUser?.me?.user,
+              },
+            }
+          }
+          payload = data
+          needRefetch = true
+          break
+        }
+        case columnNames.note.id: {
+          payload = {
+            note: {
+              set: values?.[key],
+            },
+          }
+          needRefetch = true
+          break
+        }
+        case columnNames.freeBusy.id: {
+          payload = {
+            available: {
+              set: Boolean(Number(values?.[key])),
+            },
+          }
+          needRefetch = true
+          values = { [key]: Boolean(Number(values?.[key])) }
+          break
+        }
+        case columnNames.addTime.id: {
+          payload = {
+            created_at: {
+              set: dayjs(values?.[key]),
+            },
+          }
+          needRefetch = true
+          break
+        }
+        case columnNames.leadEmail.id: {
+          if (record?.lead_id) {
+            payload = {
+              Email: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { lead: { email: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.leadPhone.id: {
+          const number = values?.[key]?.includes('+')
+            ? values?.[key]
+            : `+${values?.[key]}`
+          if (record?.lead_id) {
+            payload = {
+              Phone: {
+                set: number,
+              },
+            }
+            needRefetch = true
+            values = { lead: { phone: number } }
+          }
+          break
+        }
+        case columnNames.leadCreatedDate.id: {
+          if (record?.lead_id) {
+            payload = {
+              CreatedDate: {
+                set: dayjs(values?.[key]),
+              },
+            }
+            needRefetch = true
+            values = { lead: { createdDate: dayjs(values?.[key]) } }
+          }
+          break
+        }
+        case columnNames.leadSource.id: {
+          const source = leadSourceData?.find(
+            (item) => item?.name === values?.[key]
+          )
+          if (record?.lead_id) {
+            payload = {
+              MarketingSource: {
+                connect: {
+                  id: source?.id,
+                },
+              },
+            }
+            needRefetch = true
+            values = { lead: { leadSource: { name: values?.[key] } } }
+          }
+          break
+        }
+        case columnNames.leadStage.id: {
+          const stage = leadStageData?.find(
+            (item) => item?.name === values?.[key]
+          )
+          if (record?.lead_id) {
+            payload = {
+              LeadStatusData: {
+                connect: {
+                  id: stage?.id,
+                },
+              },
+            }
+            needRefetch = true
+            values = { lead: { leadStage: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.leadStatus.id: {
+          if (record?.lead_id) {
+            payload = {
+              EnumStatus: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { lead: { leadStatus: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.leadLocation.id: {
+          const location = locationData?.find(
+            (item) => item?.name === values?.[key]
+          )
+          if (record?.lead_id) {
+            payload = {
+              Location: {
+                connect: {
+                  id: location?.id,
+                },
+              },
+            }
+            needRefetch = true
+            values = {
+              lead: { Location: { id: location?.id, name: values?.[key] } },
+            }
+          }
+          break
+        }
+        case columnNames.leadPipeline.id: {
+          const pipeline = pipelineStageData?.find(
+            (item) => item?.id === values?.[key]
+          )
+          if (record?.lead_id) {
+            payload = {
+              PipelineStage: {
+                connect: {
+                  id: values?.[key],
+                },
+              },
+            }
+            needRefetch = true
+            values = {
+              lead: { PipelineStage: { name: pipeline?.name } },
+            }
+          }
+          break
+        }
+        case columnNames.leadUpdateTime.id: {
+          const updateTime = dayjs(values?.[key]).format()
+          if (record?.lead_id) {
+            payload = {
+              LastUpdated: {
+                set: updateTime,
+              },
+            }
+            needRefetch = true
+            values = { lead: { lastUpdated: updateTime } }
+          }
+          break
+        }
+        case columnNames.leadClosedOn.id:
+        case columnNames.leadDateEnteringStage.id: {
+          const closedOn = dayjs(values?.[key]).format()
+          if (record?.lead_id) {
+            payload = {
+              ConvertDate: {
+                set: closedOn,
+              },
+            }
+            needRefetch = true
+            values = { lead: { leadClosedOn: closedOn } }
+          }
+          break
+        }
+        case columnNames.leadLostTime.id: {
+          const lostTime = dayjs(values?.[key]).format()
+          if (record?.lead?.leadLostId) {
+            await editLeadNote({
+              variables: {
+                where: {
+                  ID: record?.lead?.leadLostId,
+                },
+                data: {
+                  CreatedDate: {
+                    set: lostTime,
+                  },
+                },
+              },
+            })
+            needRefetch = true
+            values = { lead: { leadLostTime: lostTime } }
+          }
+          break
+        }
+        case columnNames.leadLostReason.id: {
+          if (record?.lead?.leadLostId) {
+            await editLeadNote({
+              variables: {
+                where: {
+                  ID: record?.lead?.leadLostId,
+                },
+                data: {
+                  Note: {
+                    set: `Reason for Junk:${values?.[key]}`,
+                  },
+                },
+              },
+            })
+            needRefetch = true
+            values = { lead: { leadLostReason: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientEmail.id: {
+          if (record?.contact_id) {
+            payload = {
+              Email: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { email: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientPhone.id: {
+          const number = values?.[key]?.includes('+')
+            ? values?.[key]
+            : `+${values?.[key]}`
+          if (record?.contact_id) {
+            payload = {
+              Phone: {
+                set: number,
+              },
+            }
+            needRefetch = true
+            values = { client: { phone: number } }
+          }
+          break
+        }
+        case columnNames.clientMobile.id: {
+          const number = values?.[key]?.includes('+')
+            ? values?.[key]
+            : `+${values?.[key]}`
+          if (record?.contact_id) {
+            payload = {
+              Mobile: {
+                set: number,
+              },
+            }
+            needRefetch = true
+            values = { client: { mobile: number } }
+          }
+          break
+        }
+        case columnNames.clientStreet.id: {
+          if (record?.contact_id) {
+            payload = {
+              MailingStreet: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { street: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientCity.id: {
+          if (record?.contact_id) {
+            payload = {
+              MailingCity: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { city: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientPostCode.id: {
+          if (record?.contact_id) {
+            payload = {
+              MailingPostal: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { postal: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientCountry.id: {
+          if (record?.contact_id) {
+            payload = {
+              MailingCountry: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { country: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientCreatedAt.id: {
+          const date = dayjs(values?.[key]).format()
+          if (record?.contact_id) {
+            payload = {
+              CreatedDate: {
+                set: date,
+              },
+            }
+            needRefetch = true
+            values = { client: { createdDate: date } }
+          }
+          break
+        }
+        case columnNames.clientStatus.id: {
+          if (record?.contact_id) {
+            payload = {
+              is_active: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { status: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientDOB.id: {
+          const date = dayjs(values?.[key]).format()
+          if (record?.contact_id) {
+            payload = {
+              DOB: {
+                set: date,
+              },
+            }
+            needRefetch = true
+            values = { client: { DOB: date } }
+          }
+          break
+        }
+        case columnNames.clientGender.id: {
+          if (record?.contact_id) {
+            payload = {
+              gender: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { gender: values?.[key] } }
+          }
+          break
+        }
+        case columnNames.clientSource.id: {
+          const source = leadSourceData?.find(
+            (item) => item?.name === values?.[key]
+          )
+          if (record?.contact_id) {
+            payload = {
+              MarketingSourceData: {
+                connect: {
+                  id: source?.id,
+                },
+              },
+            }
+            needRefetch = true
+            values = { client: { source: { name: values?.[key] } } }
+          }
+          break
+        }
+        case columnNames.clientSalutation.id: {
+          if (record?.contact_id) {
+            payload = {
+              Salutation: {
+                set: values?.[key],
+              },
+            }
+            needRefetch = true
+            values = { client: { salutation: values?.[key] } }
+          }
+          break
+        }
+        default: {
+          values = convertStringToObject(values)
+          payload = prepareQueryPayload(key, values?.[key])
+          break
+        }
       }
-      handleSave(merge(record, values))
+      if (payload) {
+        switch (dataIndex) {
+          case 'lead': {
+            await editLead({
+              variables: {
+                where: {
+                  ID: record?.lead_id,
+                },
+                data: payload,
+              },
+            })
+            break
+          }
+          case 'client': {
+            await editContact({
+              variables: {
+                where: {
+                  ID: record?.contact_id,
+                },
+                data: payload,
+              },
+            })
+            break
+          }
+          default: {
+            await editActivity({
+              variables: {
+                where: {
+                  id: record?.id,
+                },
+                data: payload,
+              },
+            })
+            break
+          }
+        }
+      }
+      handleSave(merge({}, record, values), displayConfetti, needRefetch)
       toggleVisible()
       form.setFieldsValue({
         [key]: updatedValue?.[key],
       })
     }
 
-    const handleApplyLabel = (selectedLabels) => {
-      handleSave({
-        ...record,
-        client: { ...record.client, label: selectedLabels },
+    const handleApplyLabel = (newLabels = []) => {
+      const labels = newLabels?.map((item) => {
+        return {
+          id: item?.cmContactLabelId,
+          CmLabel: {
+            id: item?.id,
+            name: item?.label,
+            color: item?.color,
+          },
+        }
       })
+      const result = mergeWith(
+        {},
+        record,
+        {
+          client: { label: labels },
+        },
+        (a, b) => (Array.isArray(b) ? b : undefined)
+      )
+      handleSave(result, false, true)
       toggleVisible()
     }
 
-    const handleListSave = (item) => {
-      setSelectedListItem(item)
-      const [firstName, lastName] = item.split(' ')
+    const handleListSave = async (item) => {
+      setSelectedListItem(item?.name)
       let value = {}
-      if (id === columnNames.assignedToUser.id) {
-        value = { assigned: { firstName, lastName } }
-      } else if (id === columnNames.wonBy.id) {
-        value = { lead: { wonBy: item } }
-      } else if (id === columnNames.leadOwner.id) {
-        value = { lead: { owner: { firstName, lastName } } }
+      switch (id) {
+        case columnNames.assignedToUser.id: {
+          await editActivity({
+            variables: {
+              where: {
+                id: record?.id,
+              },
+              data: {
+                AssignedUser: {
+                  connect: {
+                    id: item?.id,
+                  },
+                },
+              },
+            },
+          })
+          const user = filteredListData?.find((user) => user?.id === item?.id)
+          value = {
+            assigned: { full_name: user?.name, image: user?.avatarURL },
+          }
+          break
+        }
+        case columnNames.leadOwner.id: {
+          if (record?.lead_id) {
+            await editLead({
+              variables: {
+                where: {
+                  ID: record?.lead_id,
+                },
+                data: {
+                  User: {
+                    connect: {
+                      id: item?.id,
+                    },
+                  },
+                },
+              },
+            })
+            const user = filteredListData?.find((user) => user?.id === item?.id)
+            value = {
+              lead: {
+                owner: { full_name: user?.name, image: user?.avatarURL },
+              },
+            }
+          }
+          break
+        }
       }
-      handleSave(merge(record, value))
+      handleSave(merge({}, record, value), false, true)
       toggleVisible()
       form.setFieldsValue({
         [id]: item,
       })
     }
 
-    const handleTypeSave = (item) => {
-      setSelectedType(item)
-      handleSave(merge(record, { type: item }))
+    const handleTypeSave = async (item: ActivityTypeFilter) => {
+      setSelectedType(item?.name)
+      await editActivity({
+        variables: {
+          where: {
+            id: record?.id,
+          },
+          data: {
+            ActivityType: {
+              connect: {
+                id: item?.id,
+              },
+            },
+          },
+        },
+      })
       toggleVisible()
+      handleSave(
+        merge(record, { type_name: item?.name, type_badge: item?.icon }),
+        false,
+        true
+      )
     }
 
     useEffect(() => {
@@ -251,7 +880,8 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         let filteredList = [...selectOptions]
         if (listSearch) {
           filteredList = filteredList.filter(
-            (data) => data.toLowerCase().indexOf(listSearch.toLowerCase()) >= 0
+            (data) =>
+              data?.name?.toLowerCase().indexOf(listSearch.toLowerCase()) >= 0
           )
         }
         setFilteredListData(filteredList)
@@ -259,6 +889,12 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
     }, [listSearch, selectOptions])
 
     const renderSimpleSelect = ({ initialValue, options }) => {
+      if (id === 'freeBusy') {
+        initialValue = Number(initialValue).toString()
+      }
+      if (id === 'lead.leadSource' || id === 'lead.Location') {
+        initialValue = initialValue?.name
+      }
       return (
         <div className={styles.editPopup}>
           <h5>{`${t('activityList.edit')} ${editName}`}</h5>
@@ -267,10 +903,15 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
               <Select
                 allowClear
                 placeholder={t('activityList.select.placeholder')}
+                // optionLabelProp="label"
               >
-                {options.map((item, index) => (
-                  <Option key={index} value={item}>
-                    {item}
+                {options.map((item) => (
+                  <Option
+                    key={item?.id}
+                    value={item[optionValue]}
+                    label={item?.id}
+                  >
+                    {item?.name}
                   </Option>
                 ))}
               </Select>
@@ -302,7 +943,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
                 onChange={(e) => onSearch(e.target.value)}
                 allowClear={true}
                 size="small"
-              ></Input>
+              />
             )}
             <div className={styles.profileMainWrapper}>
               {options.length === 0 ? (
@@ -310,37 +951,44 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
                   <span>{t('activityList.select.noData.message')}</span>
                 </div>
               ) : (
-                <>
+                <CustomScrollbar
+                  autoHide={true}
+                  style={{ width: '300px', height: '250px' }}
+                >
                   {options.map((item, index) => {
-                    const [firstName] = item.split(' ')
+                    const [firstName] = item?.name?.split(' ')
                     return (
                       <div className={styles.profileName} key={index}>
-                        {item === selectedOption && <CheckOutlined />}
+                        {item?.name === selectedOption && <CheckOutlined />}
                         <div
                           className={styles.profileTitle}
                           onClick={() => onOptionClick(item)}
                         >
                           {displayAvatar && (
-                            <Avatar name={firstName} size="small" />
+                            <Avatar
+                              name={firstName}
+                              size="small"
+                              src={item?.avatarURL && getImage(item?.avatarURL)}
+                            />
                           )}
                           <h5
                             className={classNames({
-                              [styles.active]: item === selectedOption,
+                              [styles.active]: item?.name === selectedOption,
                             })}
                           >
                             <Highlighter
                               highlightClassName={styles.highlight}
                               searchWords={[searchValue]}
-                              textToHighlight={item}
+                              textToHighlight={item?.name}
                             >
-                              {item}
+                              {item?.name}
                             </Highlighter>
                           </h5>
                         </div>
                       </div>
                     )
                   })}
-                </>
+                </CustomScrollbar>
               )}
             </div>
           </div>
@@ -417,34 +1065,36 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
 
     const renderItem = () => {
       switch (type) {
-        case cellTypes.date:
+        case cellTypes.date: {
+          const date = getFunction(record, `${id}`)
           return (
             <div className={styles.editPopup}>
               <h5>{`${t('activityList.edit')} ${editName}`}</h5>
               <Form.Item
-                initialValue={
-                  record?.[id] &&
-                  dayjs(getFunction(record, `${id}`), eventDateFormat)
-                }
+                // initialValue={
+                //   record?.[id] &&
+                //   dayjs(getFunction(record, `${id}`))
+                // }
                 name={id}
               >
                 <DatePicker
-                  format={eventDateFormat}
+                  format={dateFormat}
                   name={id}
-                  defaultValue={
-                    dayjs(getFunction(record, `${id}`), eventDateFormat) || null
-                  }
+                  defaultValue={date && dayjs(date)}
                   allowClear={false}
-                  showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
+                  showTime={showTime}
                 />
               </Form.Item>
             </div>
           )
-        case cellTypes.phone:
+        }
+        case cellTypes.phone: {
+          const phone = getFunction(record, `${id}`)
+          const number = phone?.includes('+') ? phone?.replace('+', '') : phone
           return (
             <div className={styles.editPopup}>
               <h5>{`${t('activityList.edit')} ${editName}`}</h5>
-              <Form.Item name={id} initialValue={getFunction(record, `${id}`)}>
+              <Form.Item name={id} initialValue={number}>
                 <PhoneNumberInput
                   onChange={(value, valid) => {
                     form.setFieldsValue({
@@ -460,6 +1110,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
               </Form.Item>
             </div>
           )
+        }
         case cellTypes.selectWithSearch:
           return (
             <div>
@@ -513,21 +1164,21 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
             <div className={styles.editPopup}>
               {isMobile && <h5>{`${t('activityList.edit')} ${editName}`}</h5>}
               <div>
-                {typeArray.map((item, index) => {
+                {activityType.map((item) => {
                   return (
-                    <div className={styles.profileName} key={index}>
-                      {item === selectedType && <CheckOutlined />}
+                    <div className={styles.profileName} key={item?.id}>
+                      {item?.name === selectedType && <CheckOutlined />}
                       <div
                         className={styles.profileTitle}
                         onClick={() => handleTypeSave(item)}
                       >
-                        {renderSubjectIcon(item)}
+                        {item?.hasIcon && renderSubjectIcon(item?.icon)}
                         <h5
                           className={classNames({
-                            [styles.active]: item === selectedType,
+                            [styles.active]: item?.name === selectedType,
                           })}
                         >
-                          {item}
+                          {item?.name}
                         </h5>
                       </div>
                     </div>
@@ -573,6 +1224,41 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
               <h5>{`${t('activityList.edit')} ${editName}`}</h5>
               <Form.Item name={id} initialValue={getFunction(record, `${id}`)}>
                 <TextArea rows={4} />
+              </Form.Item>
+            </div>
+          )
+        case cellTypes.client:
+          return (
+            <div className={styles.editPopup}>
+              <h5>{`${t('activityList.edit')} ${editName}`}</h5>
+              <Form.Item
+                name={id}
+                initialValue={[
+                  record?.client?.firstName,
+                  record?.client?.lastName,
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                <ClientLeadSelect
+                  name="client"
+                  isEdit={false}
+                  disabled={false}
+                />
+              </Form.Item>
+            </div>
+          )
+        case cellTypes.lead:
+          return (
+            <div className={styles.editPopup}>
+              <h5>{`${t('activityList.edit')} ${editName}`}</h5>
+              <Form.Item
+                name={id}
+                initialValue={[record?.lead?.firstName, record?.lead?.lastName]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                <ClientLeadSelect name="lead" isEdit={false} disabled={false} />
               </Form.Item>
             </div>
           )
@@ -690,6 +1376,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
               setDefaultSelectedLabels={setDefaultSelectedLabels}
               handleApplyLabel={handleApplyLabel}
               handleClose={handleCloseLabelPopover}
+              contactId={record?.contact_id}
             >
               {columnCell}
             </CreateLabel>

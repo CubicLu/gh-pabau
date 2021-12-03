@@ -5,8 +5,8 @@ export const ThirdPartyAccessUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ThirdPartyAccessWhereInput',
       data: nonNull('ThirdPartyAccessUpdateManyMutationInput'),
+      where: 'ThirdPartyAccessWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.thirdPartyAccess.updateMany(args as any)

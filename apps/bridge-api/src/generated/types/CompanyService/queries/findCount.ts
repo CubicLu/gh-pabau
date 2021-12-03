@@ -8,9 +8,9 @@ export const CompanyServiceFindCountQuery = queryField(
       where: 'CompanyServiceWhereInput',
       orderBy: list('CompanyServiceOrderByWithRelationInput'),
       cursor: 'CompanyServiceWhereUniqueInput',
-      distinct: 'CompanyServiceScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CompanyServiceScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyService.count(args as any)

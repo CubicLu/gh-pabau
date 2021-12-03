@@ -5,8 +5,8 @@ export const CompanyLocationUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'CompanyLocationWhereInput',
       data: nonNull('CompanyLocationUpdateManyMutationInput'),
+      where: 'CompanyLocationWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.companyLocation.updateMany(args as any)

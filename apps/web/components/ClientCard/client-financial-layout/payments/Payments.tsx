@@ -16,7 +16,11 @@ import { InvoiceProp } from './../ClientFinancialsLayout'
 import EditInvoice from '../invoices/EditInvoice'
 import { FilterOutlined } from '@ant-design/icons'
 import InvoiceFooter from './../invoices/invoice-footer/InvoiceFooter'
-import { GetPaymentsDocument, TotalPaymentsCountQuery } from '@pabau/graphql'
+import {
+  GetPaymentsDocument,
+  TotalPaymentsCountQuery,
+  GetContactAccBalanceDocument,
+} from '@pabau/graphql'
 import { useQuery } from '@apollo/client'
 import dayjs from 'dayjs'
 import { useUser } from '../../../../context/UserContext'
@@ -70,17 +74,26 @@ export const Payments: FC<IPaymentsProps> = ({
     getQueryVariables
   )
 
+  const { data: accBalance } = useQuery(GetContactAccBalanceDocument, {
+    skip: !clientId,
+    variables: {
+      contact_id: clientId,
+    },
+  })
+
   useEffect(() => {
     const paymentsDetails = []
-    payment?.payments?.map((item, index) => {
+    payment?.findManyPayments?.map((item, index) => {
       paymentsDetails.push({
         id: index,
-        date: dayjs.unix(item?.date).format('DD/MM/YYYY'),
-        invoiceNo: item?.sales?.custom_id,
+        date: dayjs(`${item?.date}`).format(
+          user?.me?.companyDateFormat === 'd/m/Y' ? 'DD/MM/YYYY' : 'MM/DD/YYYY'
+        ),
+        invoiceNo: item?.invoice_no,
         paymentNo: item?.id,
-        location: item?.sales?.location?.name ?? user?.me?.companyName,
-        employee: item?.sales?.biller?.name,
-        paidBy: item?.user?.full_name,
+        location: item?.location ?? user?.me?.companyName,
+        employee: item?.biller,
+        paidBy: item?.user,
         method: item?.pmethod.charAt(0).toUpperCase() + item?.pmethod.slice(1),
         amount: item?.amount,
         dateTime: dayjs.unix(item?.date).format('DD MMM, YYYY HH:mm:ss'),
@@ -89,12 +102,12 @@ export const Payments: FC<IPaymentsProps> = ({
     })
     setPayment(paymentsDetails)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [payment])
+  }, [payment, user?.me?.companyDateFormat])
 
   useEffect(() => {
     setPaginateData({
       ...paginateData,
-      total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
+      total: totalPaymentCounts?.countPayments[0]?.count ?? 0,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalPaymentCounts])
@@ -103,8 +116,8 @@ export const Payments: FC<IPaymentsProps> = ({
     if (payment) {
       setPaginateData((d) => ({
         ...d,
-        total: totalPaymentCounts?.aggregateInvPayment?.count?.id,
-        showingRecords: payment?.payments?.length,
+        total: totalPaymentCounts?.countPayments[0]?.count ?? 0,
+        showingRecords: payment?.findManyPayments?.length,
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,6 +133,7 @@ export const Payments: FC<IPaymentsProps> = ({
       title: t('ui.client-card-financial.payments.payment-no'),
       dataIndex: 'date',
       visible: true,
+      width: 30,
       render: function renderItem(value, row) {
         return (
           <span className={styles.paymentNo}>
@@ -133,6 +147,7 @@ export const Payments: FC<IPaymentsProps> = ({
       title: t('ui.client-card-financial.payments.invoice-no'),
       dataIndex: 'invoiceNo',
       visible: true,
+      width: 75,
       render: function renderItem(value, row) {
         return (
           <Tooltip title={`Created by ${row.employee} on ${row.dateTime} `}>
@@ -150,16 +165,19 @@ export const Payments: FC<IPaymentsProps> = ({
       title: t('ui.client-card-financial.payments.location'),
       dataIndex: 'location',
       visible: true,
+      width: 175,
     },
     {
       title: t('ui.client-card-financial.payments.employee'),
       dataIndex: 'employee',
       visible: true,
+      width: 75,
     },
     {
       title: t('ui.client-card-financial.payments.paid-by'),
       dataIndex: 'paidBy',
       visible: true,
+      width: 75,
     },
     {
       title: t('ui.client-card-financial.payments.method'),
@@ -171,6 +189,7 @@ export const Payments: FC<IPaymentsProps> = ({
       title: t('ui.client-card-financial.payments.amount'),
       dataIndex: 'amount',
       visible: true,
+      width: 75,
       render: function renderItem(value) {
         return (
           <span>
@@ -384,15 +403,12 @@ export const Payments: FC<IPaymentsProps> = ({
               buttons={[
                 {
                   text: t('ui.client-card-financial.payments.account-credit'),
-                  value:
-                    payment?.payments[0]?.contact?.AccountBalance[0]?.balance ??
-                    0,
+                  value: accBalance?.findFirstAccountBalance?.balance ?? 0,
                   valueColor: '#65CD98',
                 },
                 {
                   text: t('ui.client-card-financial.payments.total-payments'),
-                  value:
-                    totalPaymentCounts?.aggregateInvPayment?.sum?.amount ?? 0,
+                  value: totalPaymentCounts?.countPayments[0]?.amount ?? 0,
                 },
               ]}
               loading={loading}

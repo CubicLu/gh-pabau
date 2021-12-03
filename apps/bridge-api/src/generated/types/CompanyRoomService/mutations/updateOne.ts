@@ -5,8 +5,8 @@ export const CompanyRoomServiceUpdateOneMutation = mutationField(
   {
     type: nonNull('CompanyRoomService'),
     args: {
-      where: nonNull('CompanyRoomServiceWhereUniqueInput'),
       data: nonNull('CompanyRoomServiceUpdateInput'),
+      where: nonNull('CompanyRoomServiceWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.companyRoomService.update({

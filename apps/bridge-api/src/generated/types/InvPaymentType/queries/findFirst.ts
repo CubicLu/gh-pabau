@@ -8,9 +8,9 @@ export const InvPaymentTypeFindFirstQuery = queryField(
       where: 'InvPaymentTypeWhereInput',
       orderBy: list('InvPaymentTypeOrderByWithRelationInput'),
       cursor: 'InvPaymentTypeWhereUniqueInput',
-      distinct: 'InvPaymentTypeScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InvPaymentTypeScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.invPaymentType.findFirst({

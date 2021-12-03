@@ -5,8 +5,8 @@ export const CashupReportUpdateOneMutation = mutationField(
   {
     type: nonNull('CashupReport'),
     args: {
-      where: nonNull('CashupReportWhereUniqueInput'),
       data: nonNull('CashupReportUpdateInput'),
+      where: nonNull('CashupReportWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.cashupReport.update({

@@ -5,8 +5,8 @@ export const UserMobilePermissionUpdateOneMutation = mutationField(
   {
     type: nonNull('UserMobilePermission'),
     args: {
-      where: nonNull('UserMobilePermissionWhereUniqueInput'),
       data: nonNull('UserMobilePermissionUpdateInput'),
+      where: nonNull('UserMobilePermissionWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.userMobilePermission.update({

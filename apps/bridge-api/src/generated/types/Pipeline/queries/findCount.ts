@@ -6,9 +6,9 @@ export const PipelineFindCountQuery = queryField('findManyPipelineCount', {
     where: 'PipelineWhereInput',
     orderBy: list('PipelineOrderByWithRelationInput'),
     cursor: 'PipelineWhereUniqueInput',
-    distinct: 'PipelineScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('PipelineScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.pipeline.count(args as any)

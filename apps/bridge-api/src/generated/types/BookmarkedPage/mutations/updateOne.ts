@@ -5,8 +5,8 @@ export const BookmarkedPageUpdateOneMutation = mutationField(
   {
     type: nonNull('BookmarkedPage'),
     args: {
-      where: nonNull('BookmarkedPageWhereUniqueInput'),
       data: nonNull('BookmarkedPageUpdateInput'),
+      where: nonNull('BookmarkedPageWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.bookmarkedPage.update({

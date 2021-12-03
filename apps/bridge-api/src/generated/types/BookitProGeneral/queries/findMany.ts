@@ -8,9 +8,9 @@ export const BookitProGeneralFindManyQuery = queryField(
       where: 'BookitProGeneralWhereInput',
       orderBy: list('BookitProGeneralOrderByWithRelationInput'),
       cursor: 'BookitProGeneralWhereUniqueInput',
-      distinct: 'BookitProGeneralScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('BookitProGeneralScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.bookitProGeneral.findMany({

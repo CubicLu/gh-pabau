@@ -10,7 +10,7 @@ RUN yarn install
 COPY . .
 
 # Install Prisma here because it's a devDependency, it doesn't get installed.
-RUN yarn add -D prisma@2.29.1
+RUN yarn add -D prisma@3.5.0
 RUN node_modules/.bin/prisma generate
 RUN yarn add dayjs
 RUN yarn add form-data

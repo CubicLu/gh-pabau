@@ -6,9 +6,8 @@ export const CalendarViewAggregateQuery = queryField('aggregateCalendarView', {
     where: 'CalendarViewWhereInput',
     orderBy: list('CalendarViewOrderByWithRelationInput'),
     cursor: 'CalendarViewWhereUniqueInput',
-    distinct: 'CalendarViewScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.calendarView.aggregate({ ...args, ...select }) as any

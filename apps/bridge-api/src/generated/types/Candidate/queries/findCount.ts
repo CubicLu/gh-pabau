@@ -6,9 +6,9 @@ export const CandidateFindCountQuery = queryField('findManyCandidateCount', {
     where: 'CandidateWhereInput',
     orderBy: list('CandidateOrderByWithRelationInput'),
     cursor: 'CandidateWhereUniqueInput',
-    distinct: 'CandidateScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CandidateScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.candidate.count(args as any)

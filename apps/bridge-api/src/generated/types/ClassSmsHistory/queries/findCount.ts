@@ -8,9 +8,9 @@ export const ClassSmsHistoryFindCountQuery = queryField(
       where: 'ClassSmsHistoryWhereInput',
       orderBy: list('ClassSmsHistoryOrderByWithRelationInput'),
       cursor: 'ClassSmsHistoryWhereUniqueInput',
-      distinct: 'ClassSmsHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassSmsHistoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.classSmsHistory.count(args as any)

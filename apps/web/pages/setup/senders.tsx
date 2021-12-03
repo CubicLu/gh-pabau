@@ -103,16 +103,16 @@ export const Communications: React.FC = () => {
     }
   )
 
-  const [refreshToken, { data }] = useLazyQuery(GoogleTokenDocument, {
-    variables: {
-      token: url.searchParams.get('code'),
-    },
-  })
+  const [refreshToken, { data }] = useLazyQuery(GoogleTokenDocument)
 
   useEffect(() => {
     loadConnection()
     if (url.searchParams.get('code')) {
-      refreshToken()
+      refreshToken({
+        variables: {
+          token: url.searchParams.get('code'),
+        },
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -157,6 +157,14 @@ export const Communications: React.FC = () => {
   }
 
   const [insertConnection] = useMutation(InsertGmailConnectionDocument, {
+    onCompleted() {
+      router
+        .push({
+          pathname: '/setup/senders',
+          query: {},
+        })
+        .then()
+    },
     onError(e) {
       Notification(
         NotificationType.error,
@@ -219,9 +227,24 @@ export const Communications: React.FC = () => {
       icon: <ExclamationCircleOutlined />,
       content: t('setup.senders.gmail.connection.modal.content'),
       onOk() {
-        removeGmailConnection().then(() => {
-          setIsLoggedIn(false)
-          setUserData('')
+        // Completely removoke full access from google for this app
+        fetch(
+          `https://oauth2.googleapis.com/revoke?token=${gmailConnection.gmail_connection[0].refresh_token}`,
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        ).then((response) => {
+          if (response.ok) {
+            response.json().then(async () => {
+              removeGmailConnection().then(() => {
+                setIsLoggedIn(false)
+                setUserData('')
+              })
+            })
+          }
         })
       },
     })
@@ -384,7 +407,7 @@ export const Communications: React.FC = () => {
                   ))}
               </>
             )}
-            {isLoggedIn && (
+            {isLoggedIn && userData !== '' && (
               <Col span={4} xs={12} sm={8} md={6}>
                 <Button className={styles.senderItem}>
                   <div className={styles.itemHeader}>

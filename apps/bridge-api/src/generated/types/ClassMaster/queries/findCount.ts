@@ -8,9 +8,9 @@ export const ClassMasterFindCountQuery = queryField(
       where: 'ClassMasterWhereInput',
       orderBy: list('ClassMasterOrderByWithRelationInput'),
       cursor: 'ClassMasterWhereUniqueInput',
-      distinct: 'ClassMasterScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('ClassMasterScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.classMaster.count(args as any)

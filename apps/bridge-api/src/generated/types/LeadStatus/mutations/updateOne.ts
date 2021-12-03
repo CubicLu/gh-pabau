@@ -5,8 +5,8 @@ export const LeadStatusUpdateOneMutation = mutationField(
   {
     type: nonNull('LeadStatus'),
     args: {
-      where: nonNull('LeadStatusWhereUniqueInput'),
       data: nonNull('LeadStatusUpdateInput'),
+      where: nonNull('LeadStatusWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.leadStatus.update({

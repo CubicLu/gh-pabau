@@ -8,9 +8,9 @@ export const SupplierCategoryFindCountQuery = queryField(
       where: 'SupplierCategoryWhereInput',
       orderBy: list('SupplierCategoryOrderByWithRelationInput'),
       cursor: 'SupplierCategoryWhereUniqueInput',
-      distinct: 'SupplierCategoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('SupplierCategoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma }) {
       return prisma.supplierCategory.count(args as any)

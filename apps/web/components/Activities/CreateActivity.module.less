@@ -136,6 +136,11 @@
         }
         .time-input {
           margin-right: 9px;
+          :global {
+            .ant-picker {
+              min-width: 50px;  
+            }
+          }
           p {
             margin: 0 !important;
           }
@@ -179,7 +184,7 @@
             }
           }
           .ant-picker {
-            min-width: 110px;
+            min-width: 120px;
             margin-right: 9px;
             border: 1px solid var(--border-color-base);
             box-sizing: border-box;

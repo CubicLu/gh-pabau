@@ -8,9 +8,9 @@ export const TwoFactorHistoryFindManyQuery = queryField(
       where: 'TwoFactorHistoryWhereInput',
       orderBy: list('TwoFactorHistoryOrderByWithRelationInput'),
       cursor: 'TwoFactorHistoryWhereUniqueInput',
-      distinct: 'TwoFactorHistoryScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('TwoFactorHistoryScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.twoFactorHistory.findMany({

@@ -5,8 +5,8 @@ export const JobConfigurationUpdateOneMutation = mutationField(
   {
     type: nonNull('JobConfiguration'),
     args: {
-      where: nonNull('JobConfigurationWhereUniqueInput'),
       data: nonNull('JobConfigurationUpdateInput'),
+      where: nonNull('JobConfigurationWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.jobConfiguration.update({

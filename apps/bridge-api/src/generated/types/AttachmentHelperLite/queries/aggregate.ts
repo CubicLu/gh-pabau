@@ -8,9 +8,8 @@ export const AttachmentHelperLiteAggregateQuery = queryField(
       where: 'AttachmentHelperLiteWhereInput',
       orderBy: list('AttachmentHelperLiteOrderByWithRelationInput'),
       cursor: 'AttachmentHelperLiteWhereUniqueInput',
-      distinct: 'AttachmentHelperLiteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.attachmentHelperLite.aggregate({

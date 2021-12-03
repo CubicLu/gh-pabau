@@ -5,8 +5,8 @@ export const AtTreatmentUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'AtTreatmentWhereInput',
       data: nonNull('AtTreatmentUpdateManyMutationInput'),
+      where: 'AtTreatmentWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.atTreatment.updateMany(args as any)

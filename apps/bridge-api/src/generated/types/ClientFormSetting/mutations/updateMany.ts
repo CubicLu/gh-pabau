@@ -5,8 +5,8 @@ export const ClientFormSettingUpdateManyMutation = mutationField(
   {
     type: nonNull('BatchPayload'),
     args: {
-      where: 'ClientFormSettingWhereInput',
       data: nonNull('ClientFormSettingUpdateManyMutationInput'),
+      where: 'ClientFormSettingWhereInput',
     },
     resolve(_parent, args, { prisma }) {
       return prisma.clientFormSetting.updateMany(args as any)

@@ -6,9 +6,9 @@ export const RotaShiftFindCountQuery = queryField('findManyRotaShiftCount', {
     where: 'RotaShiftWhereInput',
     orderBy: list('RotaShiftOrderByWithRelationInput'),
     cursor: 'RotaShiftWhereUniqueInput',
-    distinct: 'RotaShiftScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('RotaShiftScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma }) {
     return prisma.rotaShift.count(args as any)

@@ -6,9 +6,8 @@ export const CompanyEmailAggregateQuery = queryField('aggregateCompanyEmail', {
     where: 'CompanyEmailWhereInput',
     orderBy: list('CompanyEmailOrderByWithRelationInput'),
     cursor: 'CompanyEmailWhereUniqueInput',
-    distinct: 'CompanyEmailScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.companyEmail.aggregate({ ...args, ...select }) as any

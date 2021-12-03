@@ -1,0 +1,73 @@
+query getClientCommunication(
+  $contactID: Int! 
+  $skip: Int = 0
+  $take: Int = 50
+) {
+  communication: findManyCommunication(
+    orderBy: { date: desc }
+    skip: $skip
+    take: $take
+    where: {
+      CommunicationRecipient: {
+        some: {
+          AND: { recipient_id: { equals: $contactID } }
+          recipient_type: { equals: CONTACT }
+        }
+      }
+    }
+  ) {
+     id
+    type
+    date
+    related_id
+    related_type
+    Users {
+      id
+      email
+      full_name
+    }
+    recipient: CommunicationRecipient {
+      recipient_id
+      status
+      read_count
+      recipient_type
+      Contact {
+        Fname
+        Lname
+        Email
+        Mobile
+      }
+      to_address
+      status
+      read_count
+    }
+
+    from: from_address
+    content: Content {
+    subject
+    body
+    }
+    message: messageBody
+    attachment: CommunicationAttachment {
+      file_url
+      id
+    }
+  }
+}
+
+query countClientCommunication($contactID: Int!) {
+  aggregateCommunication(
+    where: {
+      CommunicationRecipient: {
+        some: {
+          AND: { recipient_id: { equals: $contactID } }
+          recipient_type: { equals: CONTACT }
+        }
+      }
+    }
+  ) {
+    count: _count {
+      id
+    }
+  }
+}

@@ -127,10 +127,6 @@ export const getData = (t) => {
       label: t('create.filter.modal.lead.column.lead.stage'),
     },
     {
-      key: 'Lead descriptions',
-      label: t('create.filter.modal.lead.column.lead.descriptions'),
-    },
-    {
       key: 'Lead status',
       label: t('create.filter.modal.lead.column.lead.status'),
     },
@@ -327,7 +323,6 @@ export const getData = (t) => {
     'Lead source': basicOperands,
     'Won by': userOperands,
     'Lead stage': basicOperands,
-    'Lead descriptions': stringOperands,
     'Lead status': basicOperands,
     'Date of entering stage': dateOperands,
     'Lead creator': userOperands,
@@ -643,6 +638,32 @@ export const getData = (t) => {
     },
   ]
 
+  const clientStatus = [
+    {
+      id: 1,
+      name: t('activity.client.active.status'),
+    },
+    {
+      id: 0,
+      name: t('activity.client.inactive.status'),
+    },
+  ]
+
+  const clientGender = [
+    {
+      id: 'Female',
+      name: t('activity.client.gender.female'),
+    },
+    {
+      id: 'Male',
+      name: t('activity.client.gender.male'),
+    },
+    {
+      id: 'Other',
+      name: t('activity.client.gender.other'),
+    },
+  ]
+
   return {
     visibilityMenuOption,
     statusMenu,
@@ -654,5 +675,7 @@ export const getData = (t) => {
     doneOption,
     activityTypeMapper,
     leadStatusOption,
+    clientStatus,
+    clientGender,
   }
 }

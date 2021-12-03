@@ -6,9 +6,9 @@ export const CalendarViewFindFirstQuery = queryField('findFirstCalendarView', {
     where: 'CalendarViewWhereInput',
     orderBy: list('CalendarViewOrderByWithRelationInput'),
     cursor: 'CalendarViewWhereUniqueInput',
-    distinct: 'CalendarViewScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CalendarViewScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.calendarView.findFirst({

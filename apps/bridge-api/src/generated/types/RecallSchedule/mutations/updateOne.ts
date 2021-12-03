@@ -5,8 +5,8 @@ export const RecallScheduleUpdateOneMutation = mutationField(
   {
     type: nonNull('RecallSchedule'),
     args: {
-      where: nonNull('RecallScheduleWhereUniqueInput'),
       data: nonNull('RecallScheduleUpdateInput'),
+      where: nonNull('RecallScheduleWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.recallSchedule.update({

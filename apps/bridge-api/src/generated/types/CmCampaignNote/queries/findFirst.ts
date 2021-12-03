@@ -8,9 +8,9 @@ export const CmCampaignNoteFindFirstQuery = queryField(
       where: 'CmCampaignNoteWhereInput',
       orderBy: list('CmCampaignNoteOrderByWithRelationInput'),
       cursor: 'CmCampaignNoteWhereUniqueInput',
-      distinct: 'CmCampaignNoteScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('CmCampaignNoteScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cmCampaignNote.findFirst({

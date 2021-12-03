@@ -14,7 +14,15 @@ export interface EventsByDayProps {
 const sortByDate = (a, b) => new Date(b).valueOf() - new Date(a).valueOf()
 
 const getDayForEvent = (event, eventDateFormat, t) => {
-  if (dayjs(event.dateTime, eventDateFormat) > dayjs()) {
+  let dueDate, now
+  if (eventDateFormat) {
+    dueDate = dayjs(event.dateTime, eventDateFormat)
+    now = dayjs()
+  } else {
+    dueDate = dayjs(event.dateTime)
+    now = dayjs()
+  }
+  if (dueDate > now) {
     return t('communicationTimeline.status.scheduled')
   }
   return t('communicationTimeline.status.done')

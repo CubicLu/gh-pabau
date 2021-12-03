@@ -5,8 +5,8 @@ export const AttachmentHelperLiteUpdateOneMutation = mutationField(
   {
     type: nonNull('AttachmentHelperLite'),
     args: {
-      where: nonNull('AttachmentHelperLiteWhereUniqueInput'),
       data: nonNull('AttachmentHelperLiteUpdateInput'),
+      where: nonNull('AttachmentHelperLiteWhereUniqueInput'),
     },
     resolve(_parent, { data, where }, { prisma, select }) {
       return prisma.attachmentHelperLite.update({

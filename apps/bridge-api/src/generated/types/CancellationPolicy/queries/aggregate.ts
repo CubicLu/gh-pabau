@@ -8,9 +8,8 @@ export const CancellationPolicyAggregateQuery = queryField(
       where: 'CancellationPolicyWhereInput',
       orderBy: list('CancellationPolicyOrderByWithRelationInput'),
       cursor: 'CancellationPolicyWhereUniqueInput',
-      distinct: 'CancellationPolicyScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.cancellationPolicy.aggregate({ ...args, ...select }) as any

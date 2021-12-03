@@ -8,9 +8,9 @@ export const FavoriteReportFindManyQuery = queryField(
       where: 'FavoriteReportWhereInput',
       orderBy: list('FavoriteReportOrderByWithRelationInput'),
       cursor: 'FavoriteReportWhereUniqueInput',
-      distinct: 'FavoriteReportScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('FavoriteReportScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.favoriteReport.findMany({

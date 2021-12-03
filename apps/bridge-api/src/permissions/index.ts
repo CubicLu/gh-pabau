@@ -99,6 +99,10 @@ export const permissions = shield(
       deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
       createContactAlertAdvanced: rules.authentication.isAuthenticated,
+      updateOneMedicalForm: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.injectDeletedBy
+      ),
 
       CancelAppointment: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
@@ -138,6 +142,8 @@ export const permissions = shield(
       changeEmailPrivacy: rules.authentication.isAuthenticated,
       // LabRequest
       updateOneLabRequest: rules.authentication.isAuthenticated,
+      // LeadNote
+      updateOneCmLeadNote: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -146,11 +152,6 @@ export const permissions = shield(
       ),
     },
     Query: {
-      //DuplicateContacts
-      // duplicateContacts: rules.authentication.isAuthenticated,
-      findManyContactPackage: allow,
-      findFirstUserMaster: allow,
-      findManyLoyaltyPoints: allow,
       findManyTimezone: allow,
       findManyInvoice: rules.authentication.isAuthenticated,
       countInvoice: rules.authentication.isAuthenticated,
@@ -279,6 +280,8 @@ export const permissions = shield(
       getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
+      //communicationrecipient count
+      findManyCommunicationRecipientCount: rules.authentication.isAuthenticated,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData

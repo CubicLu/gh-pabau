@@ -8,9 +8,9 @@ export const InsurerContractFindManyQuery = queryField(
       where: 'InsurerContractWhereInput',
       orderBy: list('InsurerContractOrderByWithRelationInput'),
       cursor: 'InsurerContractWhereUniqueInput',
-      distinct: 'InsurerContractScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('InsurerContractScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.insurerContract.findMany({

@@ -6,9 +6,9 @@ export const CmCaseFindManyQuery = queryField('findManyCmCase', {
     where: 'CmCaseWhereInput',
     orderBy: list('CmCaseOrderByWithRelationInput'),
     cursor: 'CmCaseWhereUniqueInput',
-    distinct: 'CmCaseScalarFieldEnum',
-    skip: 'Int',
     take: 'Int',
+    skip: 'Int',
+    distinct: list('CmCaseScalarFieldEnum'),
   },
   resolve(_parent, args, { prisma, select }) {
     return prisma.cmCase.findMany({

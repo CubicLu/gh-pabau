@@ -8,9 +8,9 @@ export const AvilableDatesLogFindFirstQuery = queryField(
       where: 'AvilableDatesLogWhereInput',
       orderBy: list('AvilableDatesLogOrderByWithRelationInput'),
       cursor: 'AvilableDatesLogWhereUniqueInput',
-      distinct: 'AvilableDatesLogScalarFieldEnum',
-      skip: 'Int',
       take: 'Int',
+      skip: 'Int',
+      distinct: list('AvilableDatesLogScalarFieldEnum'),
     },
     resolve(_parent, args, { prisma, select }) {
       return prisma.avilableDatesLog.findFirst({
