@@ -99,8 +99,8 @@ export const ClientAppointments = ({
 }: P) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const editNote = (id: number, note?: string) => {
-    updateApptNoteMutation?.({
+  const editNote = async (id: number, note?: string) => {
+    await updateApptNoteMutation?.({
       variables: {
         bookingId: id,
         note,

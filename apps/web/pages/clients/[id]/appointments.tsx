@@ -19,6 +19,7 @@ import {
   useUpdateApptNoteMutation,
   useAdjustApptNotificationsMutation,
   useUpdateAppointmentStatusMutation,
+  GetClientAppointmentsQuery,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
@@ -48,15 +49,6 @@ const Appointments = () => {
         t('client.appointment.card.reinstate.success.msg')
       )
     },
-    refetchQueries: [
-      {
-        query: GetClientAppointmentsDocument,
-        variables: {
-          orderBy: SortOrder.Asc,
-          contactId: Number(router.query['id']),
-        },
-      },
-    ],
   })
 
   const [adjustApptNotificationsMutation] = useAdjustApptNotificationsMutation({
@@ -90,15 +82,28 @@ const Appointments = () => {
         t('client.appointment.card.update.note.error.msg')
       )
     },
-    refetchQueries: [
-      {
+    update(cashe, { data }) {
+      const response = data?.updateOneBooking
+      const existing = cashe.readQuery<GetClientAppointmentsQuery>({
         query: GetClientAppointmentsDocument,
         variables: {
           orderBy: SortOrder.Asc,
           contactId: Number(router.query['id']),
         },
-      },
-    ],
+      })
+      if (existing && response) {
+        const findUpdatedAppt = existing?.findManyBooking.find(
+          (appt) => appt.id === response.id
+        )
+        cashe.writeQuery({
+          query: GetClientAppointmentsDocument,
+          data: {
+            findManyBooking: [...existing.findManyBooking, findUpdatedAppt],
+            totalCount: [...existing.totalCount],
+          },
+        })
+      }
+    },
   })
 
   const getAppointmentStatus = (status: string) => {
@@ -149,7 +154,7 @@ const Appointments = () => {
             notes: appt?.note,
             isVideoCall: 1,
             isOnline: appt?.is_online,
-            bookedBy: appt?.BookedBy?.[0]?.full_name,
+            bookedBy: appt?.BookedBy?.full_name,
             isCourse: appt?.where === 'course',
           }
         }

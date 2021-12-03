@@ -1,6 +1,7 @@
 mutation updateApptNote($bookingId: Int, $note: String!) {
   updateOneBooking(where: { id: $bookingId }, data: { title: { set: $note } }) {
     id
+    title
   }
 }
 
