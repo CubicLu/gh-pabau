@@ -105,6 +105,7 @@ export const permissions = shield(
       ),
 
       CancelAppointment: rules.authentication.isAuthenticated,
+      updateOneBookingCancel: rules.authentication.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin
