@@ -33,111 +33,6 @@ pipelines:
             - node_modules/**
             - libs/graphql/generated/**
 
-      - parallel:
-          - step:
-              name: misc checks
-              size: 4x
-              runs-on:
-                - 'self.hosted'
-              script:
-                #                - while true; do ps -aux && sleep 30; done &
-                - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
-                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
-                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
-                - yarn lint:tsc --base=origin/master
-                - yarn lint:ls || true
-                - yarn lint:workspace
-                # - yarn lint:graphql-inspector
-                - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
-                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
-                # - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
-
-          - step:
-              name: lint
-              runs-on:
-                - 'self.hosted'
-              script:
-                #                - while true; do ps -aux && sleep 30; done &
-                - yarn affected:lint --base=origin/master
-
-          - step:
-              name: unit tests
-              size: 4x
-              runs-on:
-                - 'self.hosted'
-              script:
-                #                - while true; do ps -aux && sleep 30; done &
-                - yarn affected:test --base=origin/master
-
-          - step:
-              name: integration tests
-              size: 4x
-              runs-on:
-                - 'self.hosted'
-              services:
-                - docker
-              script:
-                - while true; do ps -aux && sleep 30; done &
-                - |
-                  echo "Testing Hasura database is consistent with schema.graphql..."
-                  echo "============================================================"
-                  echo ""
-                  echo "Installing docker-compose..."
-                  curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-                  chmod +x ~/docker-compose
-                  mv ~/docker-compose /usr/local/bin/docker-compose
-                - yarn bridge:start2 &
-                - |
-                  echo "Waiting for bridge-api to boot..."
-                  yarn wait-on -t 400000 -d 120000 http-get://localhost:4000
-                  yarn wait-on -t 30000 -d 12000 http-get://localhost:4000
-                  yarn wait-on -t 3000 -d 1200 http-get://localhost:4000
-                - |
-                  echo "Waiting for postgres to boot..."
-                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -d 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
-                - |
-                  echo "Waiting for Hasura to boot..."
-                  docker-compose -f hasura/docker-compose.ci.yml up graphql-engine &
-                  echo "Launched"
-                  yarn wait-on -t 90000 -d 50000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
-                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
-                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
-                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || (docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine; exit 1)
-                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
-                # - |
-                #   echo "Checking Metadata is consistent so far..."
-                #   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura\li metadata inconsistency status
-                - |
-                  echo "Exporting Hasura metadata..."
-                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
-                - |
-                  echo "Ensuring everything is identical..."
-                # git diff --exit-code --no-ext-diff -p || (git status && exit 1)
-                - |
-                  echo "Waiting for MySQL to boot..."
-                  docker-compose -f tools/pabau1/docker-compose.ci.yml up &
-                  echo "Launched"
-                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
-                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
-                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
-                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || (docker-compose -f tools/pabau1/docker-compose.ci.yml logs; exit 1)
-                # - |
-                #   echo "Performing load testing..."
-                #   yarn load-testing
-          - step:
-              name: e2e
-              size: 4x
-              runs-on:
-                - 'self.hosted'
-              caches:
-                - cypress
-              script:
-                #                - while true; do ps -aux && sleep 30; done &
-                - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-                - yarn cypress install || true
-                - yarn affected:e2e --base=origin/master || true
       - step:
           name: build
           max-time: 80
@@ -247,6 +142,112 @@ pipelines:
                               --request POST \
                               --header 'Content-Type: application/json' \
                               --data-binary @-
+
+      - parallel:
+          - step:
+              name: misc checks
+              size: 4x
+              runs-on:
+                - 'self.hosted'
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate
+                - rm -rf libs/graphql/generated && yarn graphql-codegen
+                - yarn lint:tsc --base=origin/master
+                - yarn lint:ls || true
+                - yarn lint:workspace
+                # - yarn lint:graphql-inspector
+                - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                #                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
+                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
+                # - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql'
+
+          - step:
+              name: lint
+              runs-on:
+                - 'self.hosted'
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:lint --base=origin/master
+
+          - step:
+              name: unit tests
+              size: 4x
+              runs-on:
+                - 'self.hosted'
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:test --base=origin/master
+
+          - step:
+              name: integration tests
+              size: 4x
+              runs-on:
+                - 'self.hosted'
+              services:
+                - docker
+              script:
+                - while true; do ps -aux && sleep 30; done &
+                - |
+                  echo "Testing Hasura database is consistent with schema.graphql..."
+                  echo "============================================================"
+                  echo ""
+                  echo "Installing docker-compose..."
+                  curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+                  chmod +x ~/docker-compose
+                  mv ~/docker-compose /usr/local/bin/docker-compose
+                - yarn bridge:start2 &
+                - |
+                  echo "Waiting for bridge-api to boot..."
+                  yarn wait-on -t 400000 -d 120000 http-get://localhost:4000
+                  yarn wait-on -t 30000 -d 12000 http-get://localhost:4000
+                  yarn wait-on -t 3000 -d 1200 http-get://localhost:4000
+                - |
+                  echo "Waiting for postgres to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -d 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                - |
+                  echo "Waiting for Hasura to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up graphql-engine &
+                  echo "Launched"
+                  yarn wait-on -t 90000 -d 50000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || echo "Still waiting for boot..."
+                  yarn wait-on -t 60000 -d 10000 http-get://127.0.0.1:8080/console || (docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine; exit 1)
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
+                # - |
+                #   echo "Checking Metadata is consistent so far..."
+                #   HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura\li metadata inconsistency status
+                - |
+                  echo "Exporting Hasura metadata..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
+                - |
+                  echo "Ensuring everything is identical..."
+                # git diff --exit-code --no-ext-diff -p || (git status && exit 1)
+                - |
+                  echo "Waiting for MySQL to boot..."
+                  docker-compose -f tools/pabau1/docker-compose.ci.yml up &
+                  echo "Launched"
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || echo "Still waiting for boot..."
+                  yarn wait-on -t 16000 -d 8000 tcp:localhost:3307 || (docker-compose -f tools/pabau1/docker-compose.ci.yml logs; exit 1)
+                # - |
+                #   echo "Performing load testing..."
+                #   yarn load-testing
+          - step:
+              name: e2e
+              size: 4x
+              runs-on:
+                - 'self.hosted'
+              caches:
+                - cypress
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+                - yarn cypress install || true
+                - yarn affected:e2e --base=origin/master || true
 
   branches:
     master:
