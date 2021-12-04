@@ -53,14 +53,24 @@ import stringToCurrencySignConverter from '../../helper/stringToCurrencySignConv
 import AvatarUploader from '../Uploaders/AvatarUploader/AvatarUploader'
 dayjs.extend(utc)
 dayjs.extend(timezone)
-
-export const ClientContext = createContext(null)
-
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
   cssClass?: string
 }
+interface ClientContextData {
+  fullName: string
+  avatar: string
+  phone?: {
+    mobile: string
+    home: string
+  }
+}
+
+export const ClientContext = createContext<ClientContextData>({
+  fullName: null,
+  avatar: null,
+})
 
 export const ClientCardLayout: FC<P> = ({
   clientId,
@@ -593,7 +603,15 @@ export const ClientCardLayout: FC<P> = ({
         )}
         showAvatarModal={() => setAvatarModalOpen(true)}
       >
-        <ClientContext.Provider value={basicContactData}>
+        <ClientContext.Provider
+          value={{
+            fullName: `${basicContactData?.firstName}
+                  ${basicContactData?.lastName}`,
+            avatar: basicContactData?.avatar
+              ? getImage(basicContactData?.avatar)
+              : '',
+          }}
+        >
           {children}
         </ClientContext.Provider>
       </ClientCard>

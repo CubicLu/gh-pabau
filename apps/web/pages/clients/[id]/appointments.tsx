@@ -13,13 +13,11 @@ import {
   NotificationType,
 } from '@pabau/ui'
 import {
-  GetClientAppointmentsDocument,
   useGetClientAppointmentsQuery,
   SortOrder,
   useUpdateApptNoteMutation,
   useAdjustApptNotificationsMutation,
   useUpdateAppointmentStatusMutation,
-  GetClientAppointmentsQuery,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
@@ -58,15 +56,6 @@ const Appointments = () => {
         t('client.appointment.card.update.notification.success.msg')
       )
     },
-    refetchQueries: [
-      {
-        query: GetClientAppointmentsDocument,
-        variables: {
-          orderBy: SortOrder.Asc,
-          contactId: Number(router.query['id']),
-        },
-      },
-    ],
   })
 
   const [updateApptNoteMutation] = useUpdateApptNoteMutation({
@@ -81,28 +70,6 @@ const Appointments = () => {
         NotificationType.error,
         t('client.appointment.card.update.note.error.msg')
       )
-    },
-    update(cashe, { data }) {
-      const response = data?.updateOneBooking
-      const existing = cashe.readQuery<GetClientAppointmentsQuery>({
-        query: GetClientAppointmentsDocument,
-        variables: {
-          orderBy: SortOrder.Asc,
-          contactId: Number(router.query['id']),
-        },
-      })
-      if (existing && response) {
-        const findUpdatedAppt = existing?.findManyBooking.find(
-          (appt) => appt.id === response.id
-        )
-        cashe.writeQuery({
-          query: GetClientAppointmentsDocument,
-          data: {
-            findManyBooking: [...existing.findManyBooking, findUpdatedAppt],
-            totalCount: [...existing.totalCount],
-          },
-        })
-      }
     },
   })
 
@@ -170,9 +137,7 @@ const Appointments = () => {
     return (
       <ClientAppointments
         appointments={clientAppointments}
-        clientInfo={{
-          fullName: `${clientData?.firstName} ${clientData?.lastName}`,
-        }}
+        clientInfo={clientData}
         loading={loading}
         updateApptNoteMutation={updateApptNoteMutation}
         adjustApptNotificationsMutation={adjustApptNotificationsMutation}

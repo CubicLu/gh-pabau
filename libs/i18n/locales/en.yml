@@ -5822,6 +5822,7 @@ en:
   client.appointment.card.booked.by.message: 'Booked by {{bookedBy}}, on {{date}} at {{time}}'
   client.appointment.card.update.note.success.msg: 'The appointment note has been updated and the confirmation email delivered to the recipient (the client card owner’s email address)'
   client.appointment.card.update.note.error.msg: 'The changes couldn’t be saved. Please try again.'
+  client.appointment.card.update.notification.success.msg: 'The changes are saved successfully'
   activity.client.active.status: 'Active'
   activity.client.inactive.status: 'Inactive'
   activity.client.gender.male: 'Male'

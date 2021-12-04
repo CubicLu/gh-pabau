@@ -99,29 +99,27 @@ export const ClientAppointments = ({
 }: P) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const editNote = async (id: number, note?: string) => {
-    await updateApptNoteMutation?.({
+  const editNote = (id: number, note?: string) =>
+    updateApptNoteMutation?.({
       variables: {
         bookingId: id,
         note,
       },
     })
-  }
 
-  const updateAppointmentStatus = (id: number, status: string) => {
+  const updateAppointmentStatus = (id: number, status: string) =>
     updateAppointmentStatusMutation?.({
       variables: {
         booking_id: id,
         status,
       },
     })
-  }
 
   const adjustApptNotification = (
     id: number,
     reminder: boolean,
     requestFeedback: number
-  ) => {
+  ) =>
     adjustApptNotificationsMutation?.({
       variables: {
         booking_id: id,
@@ -129,7 +127,6 @@ export const ClientAppointments = ({
         sent_survey: requestFeedback,
       },
     })
-  }
 
   const personList = [
     { name: 'Hugo Miller', avatar: User9 },
