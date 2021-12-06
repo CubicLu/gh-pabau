@@ -11,6 +11,7 @@ export interface SetNotificationProps {
   requestFeedback: boolean
   handleReminder: (reminder) => void
   handleRequestFeedback: (requestFeedback) => void
+  onSave: (reminder, requestFeedback) => void
 }
 
 const SetNotificationModal: FC<SetNotificationProps> = ({
@@ -20,6 +21,7 @@ const SetNotificationModal: FC<SetNotificationProps> = ({
   requestFeedback,
   handleReminder,
   handleRequestFeedback,
+  onSave,
 }) => {
   const { t } = useTranslation('common')
   const [reminderCheck, setReminderCheck] = useState(reminder)
@@ -32,6 +34,7 @@ const SetNotificationModal: FC<SetNotificationProps> = ({
   const handleClickSave = () => {
     handleReminder(reminderCheck)
     handleRequestFeedback(requestFeedbackCheck)
+    onSave(reminderCheck, requestFeedbackCheck)
     onClose()
   }
 
@@ -56,7 +59,9 @@ const SetNotificationModal: FC<SetNotificationProps> = ({
           </span>
           <Switch
             checked={reminderCheck}
-            onChange={(checked) => setReminderCheck(checked)}
+            onChange={(checked) => {
+              setReminderCheck(checked)
+            }}
           />
         </div>
         <div className={styles.settingItem}>

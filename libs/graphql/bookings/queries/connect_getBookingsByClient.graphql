@@ -13,23 +13,48 @@ query GetClientAppointments(
     id
     status
     location_id
+    is_online: Online
     CmStaffGeneral {
       Fname
       Lname
       Avatar
     }
+    created_by_uid
+    BookedBy {
+      id
+      full_name
+    }
+    Participants {
+      id
+      full_name
+      image
+    }
+    participant_slave_uids
     service
     start_date
     end_date
+    create_date
+    feedback_survey_scheduled: sent_survey
+    sms_reminder_scheduled: sent_sms
+    email_reminder_scheduled: sent_email_reminder
+    email_confirmation_sent: sent_email
+    note: title
     CompanyBranch {
       address
       street
       postcode
       city
+      name
     }
     where
   }
   totalCount: findManyBooking(where: { contact_id: { equals: $contactId } }) {
+    id
+  }
+}
+
+query countClientAppointments($contactId: Int) {
+  total: findManyBooking(where: { contact_id: { equals: $contactId } }) {
     id
   }
 }

@@ -1,7 +1,11 @@
-query ClientsData($active: Int = 1, $searchTerm: String, $cursor: CmContactWhereUniqueInput) {
+query ClientsData(
+  $active: Int = 1
+  $searchTerm: String
+  $cursor: CmContactWhereUniqueInput
+) {
   findManyCmContact(
-    take: 50,
-    cursor: $cursor,
+    take: 50
+    cursor: $cursor
     where: {
       is_active: { equals: $active }
       AND: [
@@ -15,9 +19,7 @@ query ClientsData($active: Int = 1, $searchTerm: String, $cursor: CmContactWhere
         }
       ]
     }
-    orderBy: {
-      Fname: asc,
-    }
+    orderBy: { Fname: asc }
   ) {
     id: ID
     avatar: Avatar

@@ -38,6 +38,7 @@ import {
   ClientAppointmentItem,
   Notification,
   NotificationType,
+  UserProps,
 } from '@pabau/ui'
 import SetNotification from './SetNotification'
 import styles from './ClientAppointmentCard.module.less'
@@ -45,6 +46,8 @@ import { AvatarStatus } from '../avatar/Avatar'
 import { ReactComponent as ReinstateIcon } from '../../assets/images/client-card/reinstate-icon.svg'
 import { ReactComponent as MedicalHistory } from '../../assets/images/client-card-ops/medical-history.svg'
 import { ReactComponent as CheckIcon } from '../../assets/images/client-card/check-badge.svg'
+import { ClientI } from './ClientAppointments'
+import dayjs from 'dayjs'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -62,14 +65,23 @@ export enum AppointmentStatus {
 interface AppointmentHandler {
   index: number
   handleDelete: () => void
-  handleEditNotes: (index, value) => void
+  handleEditNotes: (id: number, value?: string) => void
   handleCancel: (index) => void
+  handleAdjustApptNotification?: (
+    id: number,
+    reminder: boolean,
+    requestFeedback: number
+  ) => void
+  handleAppointmentStatus?: (id: number, status: string) => void
 }
 
 export const ClientAppointmentCard: FC<
-  ClientAppointmentItem & AppointmentHandler
+  ClientAppointmentItem & AppointmentHandler & ClientI
 > = (props) => {
   const {
+    id,
+    fullName,
+    isOnline,
     serviceName,
     employee,
     otherEmployees,
@@ -82,9 +94,14 @@ export const ClientAppointmentCard: FC<
     notes,
     isVideoCall,
     index,
+    bookedBy,
+    smsReminder,
+    feedbackSurvey,
     handleDelete,
     handleEditNotes,
     handleCancel,
+    handleAdjustApptNotification,
+    handleAppointmentStatus,
   } = props
   const { t } = useTranslation('common')
   const [form] = Form.useForm()
@@ -92,8 +109,10 @@ export const ClientAppointmentCard: FC<
   const [openPopover, setOpenPopover] = useState(false)
   const [openCancelPopover, setOpenCancelPopover] = useState(false)
   const [openNotificationModal, setOpenNotificationModal] = useState(false)
-  const [reminder, setReminder] = useState(false)
-  const [requestFeedback, setRequestFeedBack] = useState(false)
+  const [reminder, setReminder] = useState(smsReminder)
+  const [requestFeedback, setRequestFeedBack] = useState(
+    feedbackSurvey === 0 ? false : true
+  )
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [showNoteEditor, setShowNoteEditor] = useState(false)
   const [editNote, setEditNote] = useState(notes)
@@ -362,12 +381,14 @@ export const ClientAppointmentCard: FC<
           )}
           {otherEmployees && otherEmployees.length > 0 && (
             <AvatarList
+              tooltipField={'role'}
               users={[
                 { id: 0, name: employee.name, avatarUrl: employee.avatar },
                 ...otherEmployees.map((item, index) => ({
                   id: index + 1,
                   name: item.name,
                   avatarUrl: item.avatar,
+                  role: item.relationship,
                 })),
               ]}
             />
@@ -375,10 +396,19 @@ export const ClientAppointmentCard: FC<
         </div>
         <div className={styles.appointmentContent}>
           <div className={styles.content}>
-            <div className={styles.apptDate}>
-              <p>{moment(apptDate).format('DD')}</p>
-              <p>{moment(apptDate).format('MMM')}</p>
-            </div>
+            <Tooltip
+              placement="topLeft"
+              title={t('client.appointment.card.booked.by.message', {
+                bookedBy: isOnline ? fullName : bookedBy,
+                date: dayjs(createdDate).format('ddd, DD MMM YYYY'),
+                time: dayjs(createdDate).format('h:mma'),
+              })}
+            >
+              <div className={styles.apptDate}>
+                <p>{dayjs(apptDate).format('DD')}</p>
+                <p>{dayjs(apptDate).format('MMM')}</p>
+              </div>
+            </Tooltip>
             <div className={styles.serviceContent}>
               <div className={styles.serviceLine}>
                 {/* <p className={styles.service}>{`${serviceName} with ${
@@ -422,14 +452,17 @@ export const ClientAppointmentCard: FC<
                       size="small"
                       onClick={() => {
                         setShowNoteEditor(false)
-                        handleEditNotes(index, editNote)
+                        handleEditNotes(id, editNote)
                       }}
                     >
                       {t('client.appointment.card.description.save')}
                     </Button>
                     <Button
                       size="small"
-                      onClick={() => setShowNoteEditor(false)}
+                      onClick={() => {
+                        setEditNote(notes)
+                        setShowNoteEditor(false)
+                      }}
                     >
                       {t('client.appointment.card.description.cancel')}
                     </Button>
@@ -468,14 +501,17 @@ export const ClientAppointmentCard: FC<
                       size="small"
                       onClick={() => {
                         setShowNoteEditor(false)
-                        handleEditNotes(index, editNote)
+                        handleEditNotes(id, editNote)
                       }}
                     >
                       {t('client.appointment.card.description.save')}
                     </Button>
                     <Button
                       size="small"
-                      onClick={() => setShowNoteEditor(false)}
+                      onClick={() => {
+                        setEditNote(notes)
+                        setShowNoteEditor(false)
+                      }}
                     >
                       {t('client.appointment.card.description.cancel')}
                     </Button>
@@ -500,7 +536,12 @@ export const ClientAppointmentCard: FC<
           {(isHover || openPopover) && (
             <>
               {status === AppointmentStatus.cancelled && (
-                <div className={styles.reinstateButton}>
+                <div
+                  className={styles.reinstateButton}
+                  onClick={() => {
+                    handleAppointmentStatus?.(id, 'Waiting')
+                  }}
+                >
                   <ReinstateIcon />
                   <span>{t('client.appointment.card.reinstate.button')}</span>
                 </div>
@@ -538,6 +579,15 @@ export const ClientAppointmentCard: FC<
         requestFeedback={requestFeedback}
         handleReminder={(reminder) => handleReminder(reminder)}
         handleRequestFeedback={(reminder) => handleRequestFeedback(reminder)}
+        onSave={(reminder, requestFeedback) => {
+          let feedback = 0
+          if (feedbackSurvey === 0 && requestFeedback) {
+            feedback = 1
+          } else {
+            feedback = feedbackSurvey
+          }
+          handleAdjustApptNotification?.(id, reminder, feedback)
+        }}
       />
       <Modal
         visible={deleteModalVisible}

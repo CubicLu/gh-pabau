@@ -1,0 +1,31 @@
+mutation updateApptNote($bookingId: Int, $note: String!) {
+  updateOneBooking(where: { id: $bookingId }, data: { title: { set: $note } }) {
+    id
+    title
+  }
+}
+
+mutation adjustApptNotifications(
+  $booking_id: Int
+  $sent_sms: Int
+  $sent_survey: Int
+) {
+  updateOneBooking(
+    where: { id: $booking_id }
+    data: { sent_sms: { set: $sent_sms }, sent_survey: { set: $sent_survey } }
+  ) {
+    id
+    sent_sms
+    sent_survey
+  }
+}
+
+mutation updateAppointmentStatus($booking_id: Int, $status: String) {
+  updateOneBooking(
+    where: { id: $booking_id }
+    data: { status: { set: $status } }
+  ) {
+    id
+    status
+  }
+}

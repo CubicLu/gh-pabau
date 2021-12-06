@@ -3,9 +3,23 @@
   height: 100%;
 }
 
+.appointment-skeleton {
+  width: 100%;
+  padding: 12px 1rem;
+  border: 1px solid var(--border-color-base);
+  border-radius: 4px;
+  grid-template-columns: min-content 1fr max-content;
+  grid-column-gap: 12px;
+  margin-bottom: 16px;
+  .avatarContainer {
+    height: 40px;
+  }
+}
+
 .appointmentTabs {
   width: 100%;
   .appointmentTab {
+    min-height: 750px;
     width: 100%;
     padding: 1rem;
     .appointmentTabHeader {
@@ -16,7 +30,6 @@
       justify-content: flex-end;
       .popoverWrapper {
         position: relative;
-
       }
       > div {
         width: 20px;
@@ -213,7 +226,7 @@
     width: 40px;
     height: 4px;
     border-radius: 4px;
-    background-color: #E3E3E5;
+    background-color: #e3e3e5;
   }
   .title {
     font-family: var(--font-family);
@@ -228,7 +241,7 @@
   padding: 0 16px;
   .filterContainer {
     width: 100%;
-    .dateFilter{
+    .dateFilter {
       .datePickerList {
         .datePickerWrapper {
           .datePicker {
@@ -260,7 +273,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #7B61E2;
+  background-color: #7b61e2;
   margin-right: 5px;
 }
 
@@ -268,7 +281,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #FAAD14;
+  background-color: #faad14;
   margin-right: 5px;
 }
 

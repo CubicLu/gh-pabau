@@ -14,6 +14,7 @@ import {
   useCheckMedicalHistoryQuery,
   useGetContactAccountBalanceQuery,
   useCountVouchersQuery,
+  useCountClientAppointmentsQuery,
   AggregateInvoiceCountsDocument,
   useCountClientCommunicationQuery,
 } from '@pabau/graphql'
@@ -31,6 +32,7 @@ import React, {
   useEffect,
   useState,
   useMemo,
+  createContext,
 } from 'react'
 import Layout from '../Layout/Layout'
 import {
@@ -51,12 +53,24 @@ import stringToCurrencySignConverter from '../../helper/stringToCurrencySignConv
 import AvatarUploader from '../Uploaders/AvatarUploader/AvatarUploader'
 dayjs.extend(utc)
 dayjs.extend(timezone)
-
 interface P
   extends Omit<ComponentPropsWithoutRef<typeof ClientCard>, 'client'> {
   clientId: number
   cssClass?: string
 }
+interface ClientContextData {
+  fullName: string
+  avatar: string
+  phone?: {
+    mobile: string
+    home: string
+  }
+}
+
+export const ClientContext = createContext<ClientContextData>({
+  fullName: null,
+  avatar: null,
+})
 
 export const ClientCardLayout: FC<P> = ({
   clientId,
@@ -89,6 +103,11 @@ export const ClientCardLayout: FC<P> = ({
 
   const { data: invAmount } = useGetContactAccountBalanceQuery({
     variables: { contactID: clientId },
+    skip: !clientId,
+  })
+
+  const { data: appointments } = useCountClientAppointmentsQuery({
+    variables: { contactId: clientId },
     skip: !clientId,
   })
 
@@ -342,7 +361,11 @@ export const ClientCardLayout: FC<P> = ({
 
   const tabItems: readonly TabItem[] = [
     { key: 'dashboard', name: 'Dashboard', count: 123, tags: undefined },
-    { key: 'appointments', name: 'Appointments' },
+    {
+      key: 'appointments',
+      name: 'Appointments',
+      count: appointments?.total?.length ?? 0,
+    },
     {
       key: 'financial',
       name: 'Financials',
@@ -580,7 +603,17 @@ export const ClientCardLayout: FC<P> = ({
         )}
         showAvatarModal={() => setAvatarModalOpen(true)}
       >
-        {children}
+        <ClientContext.Provider
+          value={{
+            fullName: `${basicContactData?.firstName}
+                  ${basicContactData?.lastName}`,
+            avatar: basicContactData?.avatar
+              ? getImage(basicContactData?.avatar)
+              : '',
+          }}
+        >
+          {children}
+        </ClientContext.Provider>
       </ClientCard>
       {openEditModal && (
         <ClientCreate

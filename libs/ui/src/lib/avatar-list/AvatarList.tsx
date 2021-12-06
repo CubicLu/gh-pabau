@@ -7,17 +7,20 @@ interface User {
   id: number
   avatarUrl: string
   name: string
+  role?: string
 }
 export interface AvatarListProps {
   users?: User[]
   isLoading?: boolean
   size?: AvatarSize
+  tooltipField?: string
 }
 
 export const AvatarList: FC<AvatarListProps> = ({
   users = [],
   isLoading = false,
   size = 'default',
+  tooltipField = 'name',
 }) => {
   return (
     <div className={styles.avatarListContainer}>
@@ -51,6 +54,7 @@ export const AvatarList: FC<AvatarListProps> = ({
                   src={user.avatarUrl}
                   zIndex={index + 3}
                   marginLeft={`-10px`}
+                  tooltipText={user[tooltipField]}
                 />
               ))}
             {users &&
@@ -68,6 +72,7 @@ export const AvatarList: FC<AvatarListProps> = ({
                     src={user.avatarUrl}
                     zIndex={index + 3}
                     marginLeft={`-10px`}
+                    tooltipText={user[tooltipField]}
                   />
                 ))}
           </div>
