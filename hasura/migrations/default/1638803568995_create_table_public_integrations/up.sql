@@ -1,0 +1,1 @@
+CREATE TABLE "public"."integrations" ("id" serial NOT NULL, "name" text NOT NULL, "description" text NOT NULL, "short_description" text NOT NULL, "logo" text NOT NULL, "screenshots" json NOT NULL, "urls" json NOT NULL, "marketing_plus" boolean NOT NULL, "iframe_url" text NOT NULL, PRIMARY KEY ("id") );
