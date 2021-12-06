@@ -133,6 +133,7 @@ export const permissions = shield(
 
       //communication
       SendAppointmentConfirmationMail: rules.authentication.isAuthenticated,
+      cancelScheduledCommunication: rules.authentication.isAuthenticated,
 
       upsertOneCmContactCustom: rules.authentication.isAuthenticated,
       updateOneCmContact: rules.authentication.isAuthenticated,

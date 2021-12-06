@@ -19,6 +19,91 @@ export const getCommunicationScheduled = async (
   return scheduled
 }
 
+export const cancelScheduledCommunication = async (
+  type: string,
+  deleteType: { type: string; relatedId: number },
+  ctx: Context
+) => {
+  switch (deleteType.type) {
+    case 'reminder':
+      if (type === 'email') {
+        await ctx.prisma.booking.update({
+          where: {
+            id: deleteType.relatedId,
+          },
+          data: {
+            sent_email_reminder: {
+              set: false,
+            },
+          },
+        })
+        return true
+      } else if (type === 'sms') {
+        await ctx.prisma.booking.update({
+          where: {
+            id: deleteType.relatedId,
+          },
+          data: {
+            sent_sms: {
+              set: 0,
+            },
+          },
+        })
+        return true
+      }
+      return false
+      break
+    case 'survey':
+      if (type === 'email' || type === 'sms') {
+        await ctx.prisma.booking.update({
+          where: {
+            id: deleteType.relatedId,
+          },
+          data: {
+            sent_survey: {
+              set: 0,
+            },
+          },
+        })
+        return true
+      }
+      return false
+      break
+    case 'recall':
+      if (type === 'email') {
+        await ctx.prisma.recallSchedule.update({
+          where: {
+            id: deleteType.relatedId,
+          },
+          data: {
+            email_sent: {
+              set: 0,
+            },
+          },
+        })
+        return true
+      } else if (type === 'sms') {
+        await ctx.prisma.recallSchedule.update({
+          where: {
+            id: deleteType.relatedId,
+          },
+          data: {
+            sms_sent: {
+              set: 0,
+            },
+          },
+        })
+        return true
+      }
+      return false
+      break
+    default:
+      return false
+      break
+  }
+  return false
+}
+
 const getScheduledBookingReminders = async (
   contactId: number,
   ctx: Context
@@ -48,6 +133,8 @@ const getScheduledBookingReminders = async (
     select: {
       id: true,
       start_date: true,
+      sent_email_reminder: true,
+      sent_sms: true,
       Contact: {
         select: {
           ID: true,
@@ -71,10 +158,10 @@ const getScheduledBookingReminders = async (
 
   const scheduled = []
   for (const booking of bookings) {
-    if (emailTemplate) {
+    if (emailTemplate && booking.sent_email_reminder) {
       scheduled.push({
         type: 'Email',
-        deleteType: { type: 'reminder', bookingId: booking.id },
+        deleteType: { type: 'reminder', relatedId: booking.id },
         date: moment(booking.start_date, 'YYYYMMDDHHmmss')
           .subtract(bookingSettings.sms_days_before, 'day')
           .format(),
@@ -93,10 +180,10 @@ const getScheduledBookingReminders = async (
         }),
       })
     }
-    if (smsTemplate) {
+    if (smsTemplate && booking.sent_sms === 1) {
       scheduled.push({
         type: 'SMS',
-        deleteType: { type: 'reminder', bookingId: booking.id },
+        deleteType: { type: 'reminder', relatedId: booking.id },
         date: moment(booking.start_date, 'YYYYMMDDHHmmss')
           .subtract(bookingSettings.sms_days_before, 'day')
           .format(),
@@ -167,7 +254,7 @@ const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
     if (emailTemplate) {
       scheduled.push({
         type: 'Email',
-        deleteType: { type: 'survey', bookingId: booking.id },
+        deleteType: { type: 'survey', relatedId: booking.id },
         date: moment(booking.start_date, 'YYYYMMDDHHmmss')
           .add(surveySettings.sms_days_after, 'day')
           .format(),
@@ -189,7 +276,7 @@ const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
     if (smsTemplate) {
       scheduled.push({
         type: 'SMS',
-        deleteType: { type: 'survey', bookingId: booking.id },
+        deleteType: { type: 'survey', relatedId: booking.id },
         date: moment(booking.start_date, 'YYYYMMDDHHmmss')
           .add(surveySettings.sms_days_after, 'day')
           .format(),
@@ -255,7 +342,7 @@ const getScheduledRecalls = async (contactId: number, ctx: Context) => {
       const emailTemplate = await getTemplate(recall.Recall.send_email, ctx)
       recalls.push({
         type: 'Email',
-        deleteType: { type: 'recall', recallScheduleId: recall.id },
+        deleteType: { type: 'recall', relatedId: recall.id },
         date: moment(recall.scheduled_date).format(),
         recipient: {
           recipientId: recall.Contact.ID,
@@ -276,7 +363,7 @@ const getScheduledRecalls = async (contactId: number, ctx: Context) => {
       const smsTemplate = await getTemplate(recall.Recall.send_sms, ctx)
       recalls.push({
         type: 'SMS',
-        deleteType: { type: 'recall', recallScheduleId: recall.id },
+        deleteType: { type: 'recall', relatedId: recall.id },
         date: moment(recall.scheduled_date).format(),
         recipient: {
           recipientId: recall.Contact.ID,
