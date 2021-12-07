@@ -121,7 +121,7 @@ const Custom: FC<CustomProps> = ({
       where: {
         user_deleted: { equals: 0 },
         name: { not: { equals: '' } },
-        deleted_at: { not: { equals: null } },
+        deleted_at: { equals: null },
         form_type: { equals: 'questionnaire' },
       },
     },
