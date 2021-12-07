@@ -311,12 +311,21 @@ export const Activities: FC<ActivitiesProps> = ({
       <div className={styles.followContent}>
         <div className={styles.boxText}>
           <div className={styles.taskContent}>
-            <span
-              style={{ cursor: 'pointer' }}
-              onClick={() => handleActivityChecked(event)}
+            <Tooltip
+              title={
+                event.taskChecked
+                  ? t('clients.activities.markAsNotDone')
+                  : t('clients.activities.markAsDone')
+              }
+              placement={'top'}
             >
-              {event.taskChecked ? <RadioChecked /> : <RadioUnchecked />}
-            </span>
+              <span
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleActivityChecked(event)}
+              >
+                {event.taskChecked ? <RadioChecked /> : <RadioUnchecked />}
+              </span>
+            </Tooltip>
             <h4>{event.eventName}</h4>
           </div>
           <div className={styles.timeWrap}>
@@ -328,20 +337,11 @@ export const Activities: FC<ActivitiesProps> = ({
                   trigger="click"
                   overlayClassName={styles.customPopover}
                 >
-                  <Tooltip
-                    title={
-                      event.taskChecked
-                        ? t('clients.activities.markAsDone')
-                        : t('clients.activities.markAsNotDone')
-                    }
-                    placement={'topRight'}
-                  >
-                    <Button
-                      className={styles.btnCircle}
-                      shape="circle"
-                      icon={<MoreOutlined />}
-                    />
-                  </Tooltip>
+                  <Button
+                    className={styles.btnCircle}
+                    shape="circle"
+                    icon={<MoreOutlined />}
+                  />
                 </Popover>
               )}
             </div>
