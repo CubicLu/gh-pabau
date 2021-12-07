@@ -3,6 +3,7 @@ query getDiscounts(
   $name: String
   $rate: Float
   $type: String
+  $isActive: Int
 ) {
   findManyInvTaxRate(
     where: {
@@ -10,11 +11,20 @@ query getDiscounts(
       name: { equals: $name }
       rate: { equals: $rate }
       type: { equals: $type }
+      is_active: { equals: $isActive }
     }
   ) {
     id
     name
     rate
     type
+    is_active
+    description
+    rate
+    show_on_receipt
+    glCode
   }
+}
+query countDiscounts($where: InvTaxRateWhereInput){
+  count: findManyInvTaxRateCount(where: $where)
 }
