@@ -46,7 +46,7 @@ import ePaperIcon from '../../assets/images/form-type/e-paper.svg'
 import presciptionIcon from '../../assets/images/form-type/presciption.svg'
 import labFormIcon from '../../assets/images/form-type/lab-form.svg'
 import {
-  useDeleteOneMedicalFormMutation,
+  useDeleteMedicalFormMutation,
   useFindMedicalFormsCountQuery,
 } from '@pabau/graphql'
 
@@ -108,7 +108,7 @@ const Custom: FC<CustomProps> = ({
 
   const { t } = useTranslationI18()
 
-  const [deleteMutation] = useDeleteOneMedicalFormMutation({
+  const [deleteMutation] = useDeleteMedicalFormMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
@@ -541,9 +541,10 @@ const Custom: FC<CustomProps> = ({
     if (currentItem) {
       await deleteMutation({
         variables: {
-          where: { id: Number.parseInt(currentItem.key) },
+          formId: Number.parseInt(currentItem.key),
         },
       })
+      setDeleteModal(false)
     }
   }
 
