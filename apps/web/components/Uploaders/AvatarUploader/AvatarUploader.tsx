@@ -52,8 +52,6 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
   const [croppedImage, setCroppedImage] = useState<string>(imageURL)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  let zoomTo = 0
-
   // const [disabled, setDisabled] = useState(true)
   const [loading, setLoading] = useState(false)
 
@@ -90,21 +88,6 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
     setImage(image)
     setCroppedImage(image)
     onCancel?.()
-  }
-
-  const initReady = () => {
-    const cropper: Cropper = cropperRef?.current?.cropper
-    const imageData = cropper.getImageData()
-    const zoomToWidth = imageData.width / imageData.naturalWidth
-    const zoomToHeight = imageData.naturalHeight / imageData.naturalWidth
-
-    if (imageData.naturalHeight > imageData.naturalWidth) {
-      zoomTo = zoomToHeight - imageData.aspectRatio
-    } else {
-      zoomTo = zoomToWidth
-    }
-
-    cropper.zoom(zoomTo)
   }
 
   const handleCreate = async () => {
@@ -162,7 +145,6 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
           {image ? (
             <div className={styles.uploadPhoto}>
               <Cropper
-                ready={initReady}
                 ref={cropperRef}
                 className={
                   shape === 'rectangle'
