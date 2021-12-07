@@ -1,0 +1,49 @@
+fragment ConnectThemeFields on ConnectTheme {
+  id
+  company_id
+  title
+  bgcolor
+  bgimage
+  logoimage
+  customtitle
+  customcontent
+  headercolor
+  footercolor
+  buttoncolor
+  boxshadowcolor
+  timecolor
+  fontcolor
+  buttontextcolor
+  linkcolor
+}
+
+fragment ConnectTheme on ConnectTheme {
+  ...ConnectThemeFields
+  Company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneConnectTheme($data: ConnectThemeCreateInput!) {
+  createOneConnectTheme(data: $data) {
+    ...ConnectTheme
+  }
+}
+
+mutation updateOneConnectTheme($where: ConnectThemeWhereUniqueInput!, $data: ConnectThemeUpdateInput!) {
+  updateOneConnectTheme(where: $where, data: $data) {
+    ...ConnectTheme
+  }
+}
+
+mutation deleteOneConnectTheme($where: ConnectThemeWhereUniqueInput!) {
+  deleteOneConnectTheme(where: $where) {
+    ...ConnectTheme
+  }
+}
+
+mutation updateManyConnectTheme($where: ConnectThemeWhereInput, $data: ConnectThemeUpdateManyMutationInput!) {
+  updateManyConnectTheme(where: $where, data: $data) {
+    count
+  }
+}

@@ -2051,6 +2051,20 @@ export const Company = objectType({
         return root.ServiceEquipment
       },
     })
+    t.list.field('ConnectTheme', {
+      type: 'ConnectTheme',
+      args: {
+        where: 'ConnectThemeWhereInput',
+        orderBy: 'ConnectThemeOrderByWithRelationInput',
+        cursor: 'ConnectThemeWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ConnectThemeScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ConnectTheme
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

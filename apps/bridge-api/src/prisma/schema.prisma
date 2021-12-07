@@ -339,6 +339,7 @@ model Company {
   LabRequest              LabRequest[]
   Equipment               Equipment[]
   ServiceEquipment        ServiceEquipment[]
+  ConnectTheme            ConnectTheme[]
   @@map("admin")
 }
 
@@ -4486,26 +4487,30 @@ model CompanyVariable {
 //  step_login    Int      @default(0)
 //  converted     Int      @default(0)
 //}
-//
-//model connect_theme {
-//  id              Int    @id @default(autoincrement())
-//  occupier        String
-//  title           String
-//  bgcolor         String
-//  bgimage         String
-//  logoimage       String
-//  customtitle     String
-//  customcontent   String
-//  headercolor     String
-//  footercolor     String
-//  buttoncolor     String
-//  boxshadowcolor  String
-//  timecolor       String
-//  fontcolor       String
-//  buttontextcolor String
-//  linkcolor       String
-//}
-//
+
+model ConnectTheme {
+  id              Int     @id @default(autoincrement())
+  company_id      Int     @map("occupier")
+  title           String
+  bgcolor         String
+  bgimage         String
+  logoimage       String
+  customtitle     String?
+  customcontent   String?
+  headercolor     String?
+  footercolor     String?
+  buttoncolor     String?
+  boxshadowcolor  String?
+  timecolor       String?
+  fontcolor       String?
+  buttontextcolor String?
+  linkcolor       String?
+
+  Company Company @relation(fields: [company_id], references: [id])
+  @@index([company_id], name: "company_id")
+  @@map("connect_theme")
+}
+
 //model connect_user_log {
 //  id         Int    @id @default(autoincrement())
 //  contact_id Int
