@@ -127,6 +127,7 @@ export const permissions = shield(
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,
+      markActivityDone: rules.authentication.isAuthenticated,
       createDuplicateActivity: rules.authentication.isAuthenticated,
       //Connect Public
       public_createOnlineBooking: allow,

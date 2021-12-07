@@ -336,7 +336,7 @@ query findLeadName($leadID: Int!) {
 }
 
 mutation deleteManyActivity($ids: [Int]!) {
-  deleteManyActivity(where: { ids: $ids }) {
+  deleteManyActivity(ids: $ids) {
     affected_rows
   }
 }
@@ -374,5 +374,11 @@ query activityCount($status: activity_status!) {
     _count {
       id
     }
+  }
+}
+
+mutation markActivityDone($ids:[Int]!){
+  markActivityDone(ids: $ids) {
+    affected_rows
   }
 }

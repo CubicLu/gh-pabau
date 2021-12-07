@@ -301,12 +301,10 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     },
                   },
                   CompletedBy: {
-                    connect: {
-                      id: loggedUser?.me?.user,
-                    },
+                    disconnect: true,
                   },
                   finished_at: {
-                    set: dayjs(),
+                    set: null,
                   },
                 })
               : (data = {
@@ -341,11 +339,9 @@ export const CreateActivity: FC<CreateActivityProps> = ({
                     },
                   },
                   CompletedBy: {
-                    connect: {
-                      id: loggedUser?.me?.user,
-                    },
+                    disconnect: true,
                   },
-                  finished_at: dayjs(),
+                  finished_at: null,
                 })
             if (!values.lead) {
               delete data.CmLead
@@ -356,7 +352,18 @@ export const CreateActivity: FC<CreateActivityProps> = ({
             if (!values.user) {
               delete data.AssignedUser
             }
-            if (!values.isDone) {
+            if (!initialValue.isDone && values.isDone) {
+              data['CompletedBy'] = {
+                connect: {
+                  id: loggedUser?.me?.user,
+                },
+              }
+              values.id
+                ? (data['finished_at'] = {
+                    set: dayjs(),
+                  })
+                : (data['finished_at'] = dayjs())
+            } else if (initialValue.isDone && values.isDone) {
               delete data.CompletedBy
               delete data.finished_at
             }

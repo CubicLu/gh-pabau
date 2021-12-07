@@ -306,28 +306,19 @@
               max-width: 30px;
             }
             flex: 1 auto;
-            .ant-table-selection {
-              .ant-checkbox-wrapper {
-                display: none;
-              }
-            }
           }
         }
       }
       tbody {
         tr {
+          &.ant-table-row-selected {
+            > td {
+              background: transparent;
+            }
+          }
           td {
             height: 54px;
             border-bottom: 1px solid #f1f1f1;
-            .ant-checkbox-wrapper {
-              .ant-checkbox {
-                .ant-checkbox-inner {
-                  width: 18px;
-                  height: 18px;
-                  border-radius: 50%;
-                }
-              }
-            }
           }
         }
       }
@@ -436,6 +427,9 @@
             tr {
               th {
                 min-width: 150px;
+                &:nth-of-type(2) {
+                  min-width: 40px;
+                }
                 .ant-table-column-sorters {
                   display: inline-flex;
                   .ant-table-column-sorter-full {
@@ -1012,6 +1006,18 @@
   .client-icon,
   .lead-icon {
     margin-right: 10px;
+  }
+  .done-checkbox {
+    :global {
+      .ant-checkbox-checked {
+        &::after {
+          border-radius: 50%;
+        }
+      }
+      .ant-checkbox-inner {
+        border-radius: 50%;
+      }
+    }
   }
 }
 .editable-cell-value-wrap {

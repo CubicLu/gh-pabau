@@ -1,17 +1,10 @@
-import { extendType, objectType, inputObjectType, nonNull } from 'nexus'
+import { extendType, objectType, intArg, list } from 'nexus'
 import { Context } from '../../../context'
 
-export const DeleteManyActivityResponse = objectType({
-  name: 'DeleteManyActivityResponse',
+export const AffectRowsResponse = objectType({
+  name: 'AffectRowsResponse',
   definition(t) {
     t.int('affected_rows')
-  },
-})
-
-export const DeleteManyActivityInputType = inputObjectType({
-  name: 'DeleteManyActivityInputType',
-  definition(t) {
-    t.nonNull.list.int('ids')
   },
 })
 
@@ -19,12 +12,12 @@ export const DeleteManyActivity = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('deleteManyActivity', {
-      type: 'DeleteManyActivityResponse',
+      type: 'AffectRowsResponse',
       description: 'Delete activity records based on input list of activity id',
       args: {
-        where: nonNull('DeleteManyActivityInputType'),
+        ids: list(intArg()),
       },
-      async resolve(_, { where: { ids } }, context: Context) {
+      async resolve(_, { ids }, context: Context) {
         const response = await context.prisma.activity.deleteMany({
           where: {
             id: { in: ids },

@@ -308,23 +308,24 @@ export const CreateLabels: FC<CreateLabelsProps> = forwardRef(
       }
       if (createCmLabel?.length > 0) {
         for (const label of createCmLabel) {
-          await createCmContactLabel({
-            variables: {
-              data: {
-                Company: {},
-                CmContact: {
-                  connect: {
-                    ID: contactId,
+          contactId &&
+            (await createCmContactLabel({
+              variables: {
+                data: {
+                  Company: {},
+                  CmContact: {
+                    connect: {
+                      ID: contactId,
+                    },
                   },
-                },
-                CmLabel: {
-                  connect: {
-                    id: label?.id,
+                  CmLabel: {
+                    connect: {
+                      id: label?.id,
+                    },
                   },
                 },
               },
-            },
-          })
+            }))
         }
       }
       handleApplyLabel(selectedLabels)

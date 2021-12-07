@@ -17,7 +17,15 @@ import {
   Notification,
   NotificationType,
 } from '@pabau/ui'
-import { Drawer, Popover, Table, Tooltip, Skeleton, Image } from 'antd'
+import {
+  Drawer,
+  Popover,
+  Table,
+  Tooltip,
+  Skeleton,
+  Image,
+  Checkbox,
+} from 'antd'
 import {
   PlusCircleOutlined,
   CheckOutlined,
@@ -40,6 +48,8 @@ import {
   useUpsertOneActivityUserStateMutation,
   Activity_Status,
   useUpdateOneActivityMutation,
+  ActivityUpdateInput,
+  useMarkActivityDoneMutation,
 } from '@pabau/graphql'
 import { ReactComponent as ActivityIcon } from '../../assets/images/activity-icon.svg'
 import {
@@ -95,7 +105,7 @@ export interface ActivityTableProps {
   setSelectedRowKeys?: (val: number[]) => void
   handleRowClick?: (val) => void
   onStatusChange?: (status) => void
-  onSelectDone?: (record, selected, selectedRows) => void
+  onSelectDone?: (id: number, status: string) => void
   onSortData?: (val) => void
   handleCellSave?: (val) => void
   editCreateActivityModal?: (val) => void
@@ -243,6 +253,14 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         )
       },
     })
+    const [markActivityDone] = useMarkActivityDoneMutation({
+      onCompleted() {
+        Notification(
+          NotificationType.success,
+          t('update.activity.record.success.message')
+        )
+      },
+    })
 
     useEffect(() => {
       if (userActiveColumn.length > 0) {
@@ -260,6 +278,42 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         setDisplayAddColumn(true)
       }
     }, [paginateData])
+
+    const onActivityDone = async (id: number, status: string) => {
+      onSelectDone(id, status)
+      if (status !== 'Done') {
+        await markActivityDone({
+          variables: {
+            ids: [id],
+          },
+          update(cache) {
+            updateActivityCountCache(cache, ActivityCountOperand.Subtract)
+          },
+        })
+      } else {
+        await editActivity({
+          variables: {
+            where: {
+              id,
+            },
+            data: {
+              status: {
+                set: Activity_Status.Pending,
+              },
+              finished_at: {
+                set: null,
+              },
+              CompletedBy: {
+                disconnect: true,
+              },
+            },
+          },
+          update(cache) {
+            updateActivityCountCache(cache, ActivityCountOperand.Add)
+          },
+        })
+      }
+    }
 
     const RenderStatus = (data) => {
       const { status, id } = data
@@ -306,6 +360,24 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
 
     const columnsData = useMemo(() => {
       return [
+        {
+          id: columnNames.done.id,
+          dataIndex: 'status',
+          render: (status, { id }) => (
+            <span className={styles.cellFormater}>
+              <Checkbox
+                className={styles.doneCheckbox}
+                checked={status === 'Done'}
+                onChange={() => onActivityDone(id, status)}
+              />
+            </span>
+          ),
+          visible: visibleColumn(columnNames.done.label),
+          columnName: columnNames.done.label,
+          width: 10,
+          skeletonWidth: '15px',
+          sorter: false,
+        },
         {
           id: columnNames.dueDate.id,
           title: (
@@ -1700,28 +1772,30 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         }
       }
 
-      const onStatusSelect = async (data, status) => {
-        setSelectedStatus(status)
-        setVisible(false)
-        const payload = {
-          status: { set: statusesMapper[status] },
+      const updateActivityStatus = async (ids: number, item: string) => {
+        const payload: ActivityUpdateInput = {
+          status: { set: statusesMapper[item] },
           finished_at: {
-            set: dayjs(),
+            set: null,
           },
           CompletedBy: {
+            disconnect: true,
+          },
+        }
+        if (item === 'Done') {
+          payload['finished_at'] = {
+            set: dayjs(),
+          }
+          payload['CompletedBy'] = {
             connect: {
               id: loggedUser?.user,
             },
-          },
-        }
-        if (status !== 'Done') {
-          delete payload.finished_at
-          delete payload.CompletedBy
+          }
         }
         await editActivity({
           variables: {
             where: {
-              id: data?.id,
+              id: ids,
             },
             data: payload,
           },
@@ -1729,37 +1803,18 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
             updateCache(cache, updateOneActivity)
           },
         })
+      }
+
+      const onStatusSelect = async (data, status) => {
+        setSelectedStatus(status)
+        setVisible(false)
+        await updateActivityStatus(data?.id, status)
         onStatusChange(status)
       }
 
       const onStatusChangeHandle = async (data, item) => {
-        const payload = {
-          status: { set: statusesMapper[item] },
-          finished_at: {
-            set: dayjs(),
-          },
-          CompletedBy: {
-            connect: {
-              id: loggedUser?.user,
-            },
-          },
-        }
-        if (item !== 'Done') {
-          delete payload.finished_at
-          delete payload.CompletedBy
-        }
         setVisible(false)
-        await editActivity({
-          variables: {
-            where: {
-              id: data?.id,
-            },
-            data: payload,
-          },
-          update(cache, { data: { updateOneActivity } }) {
-            updateCache(cache, updateOneActivity)
-          },
-        })
+        await updateActivityStatus(data?.id, item)
         onStatusChange(item)
       }
 
@@ -2052,16 +2107,13 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           scroll={{ x: 'max-content' }}
           columns={getColumns()}
           pagination={false}
-          rowSelection={
-            selectedColumn.includes(columnNames.done.label)
-              ? {
-                  type: 'radio',
-                  selectedRowKeys,
-                  onChange: setSelectedRowKeys,
-                  onSelect: onSelectDone,
-                }
-              : null
-          }
+          rowSelection={{
+            type: 'checkbox',
+            selectedRowKeys,
+            onChange: setSelectedRowKeys,
+            // TODO bulk select task
+            // onSelect: () => {},
+          }}
           loading={false}
           components={components}
           className={styles.tableContent}

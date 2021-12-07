@@ -247,7 +247,6 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [locationData, setLocationData] = useState<OptionList[]>([])
   const [salutationData, setSalutationData] = useState<OptionList[]>([])
   const [pipelineStageData, setPipelineStageData] = useState<OptionList[]>([])
-  const eventDateFormat = 'D MMMM YYYY hh:mm'
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -805,23 +804,13 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [])
 
   const onSelectDone = useCallback(
-    (record, selected, selectedRows) => {
-      const newSourceData = sourceData.map((item) => {
-        const temp = { ...item }
-        if (item.id === record.id) {
-          if (selected) {
-            temp.status = statuses.done
-            temp.doneTime = dayjs().format(eventDateFormat)
-            displayConfetti()
-          } else {
-            temp.status = statuses.pending
-          }
-        }
-        return temp
-      })
+    (id, currentStatus) => {
+      currentStatus !== 'Done' && displayConfetti()
+      const newSourceData = sourceData.filter((item) => item.id !== id)
       setSourceData(newSourceData)
+      activityRefetch()
     },
-    [sourceData, displayConfetti]
+    [sourceData, displayConfetti, activityRefetch]
   )
 
   const onStatusChange = (newStatus) => {
