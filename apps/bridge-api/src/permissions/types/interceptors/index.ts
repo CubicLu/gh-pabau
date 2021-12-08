@@ -181,9 +181,14 @@ export const interceptors = {
     args.data = {
       ...args.data,
       deleted_at: new Date(),
-      DeletedBy: {
-        connect: { id: ctx.authenticated.user },
-      },
+    }
+    if ('DeletedBy' in args.data) {
+      args.data = {
+        ...args.data,
+        DeletedBy: {
+          connect: { id: ctx.authenticated.user },
+        },
+      }
     }
 
     return true

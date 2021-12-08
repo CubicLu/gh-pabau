@@ -20,6 +20,7 @@ export const CompanyRoom = objectType({
     t.int('prod_id')
     t.int('imported')
     t.string('custom_id')
+    t.nullable.field('deleted_at', { type: 'DateTime' })
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {

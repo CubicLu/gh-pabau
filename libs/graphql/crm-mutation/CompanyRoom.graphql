@@ -12,6 +12,7 @@ fragment CompanyRoomFields on CompanyRoom {
   prod_id
   imported
   custom_id
+  deleted_at
 }
 
 fragment CompanyRoom on CompanyRoom {

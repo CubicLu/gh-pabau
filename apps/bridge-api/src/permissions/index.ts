@@ -103,6 +103,10 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.interceptors.injectDeletedBy
       ),
+      updateOneCompanyRoom: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.injectDeletedBy
+      ),
 
       CancelAppointment: rules.authentication.isAuthenticated,
       updateOneBookingCancel: rules.authentication.isAuthenticated,
@@ -124,6 +128,7 @@ export const permissions = shield(
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
       updateOneCmLead: rules.authentication.isAuthenticated,
+
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,
       deleteManyActivity: rules.authentication.isAuthenticated,

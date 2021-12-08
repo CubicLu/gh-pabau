@@ -4117,11 +4117,13 @@ model CompanyRoom {
   prod_id             Int                   @default(0)
   imported            Int                   @default(0)
   custom_id           String
+  deleted_at          DateTime?
   Company             Company               @relation(fields: [company_id], references: [id])
   CompanyRoomLocation CompanyRoomLocation[]
   CompanyRoomService  CompanyRoomService[]
 
   RotaShift RotaShift[]
+  @@unique([company_id, description, deleted_at], name: "room_name_unique")
   @@index([company_id], name: "company")
   @@map("company_rooms")
 }
