@@ -1817,33 +1817,6 @@ const formData = {
   timeSampleTaken: '–',
 }
 
-export const formFilterButtons = [
-  {
-    id: 1,
-    type: 'Treatment',
-    selected: true,
-    icon: Note,
-  },
-  {
-    id: 2,
-    type: 'Consent',
-    selected: true,
-    icon: Pencil,
-  },
-  {
-    id: 3,
-    type: 'Medical History',
-    selected: true,
-    icon: MedicalHistoryIcon,
-  },
-  {
-    id: 4,
-    type: 'Lab Request',
-    selected: true,
-    icon: LabOrderIcon,
-  },
-]
-
 export const forms = [
   {
     id: 1,

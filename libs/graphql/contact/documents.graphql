@@ -108,6 +108,15 @@ query getAttachmentById($id: Int!) {
   }
 }
 
+query getClientDocumentCount($contactId: Int!) {
+  findManyContactAttachmentCount(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { in: ["document"] }
+    }
+  )
+}
+
 mutation createOneDocumentFolder(
   $name: String!
   $company: Int!

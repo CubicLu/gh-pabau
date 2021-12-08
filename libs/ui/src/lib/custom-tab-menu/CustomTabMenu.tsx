@@ -118,7 +118,21 @@ export const CustomTabMenu: FC<P> = ({
                     defaultActiveKey={getActiveKey(tab)}
                     expandIconPosition="right"
                   >
-                    <Panel key={tab.key} header={<span>{tab.name}</span>}>
+                    <Panel
+                      key={tab.key}
+                      header={
+                        <div className={styles.titleCountWrapper}>
+                          {tab.name}
+                          {Object.keys(tab).includes('count') && (
+                            <div className={styles.countWrapper}>
+                              <div className={styles.countContainer}>
+                                {tab.count}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      }
+                    >
                       {tab.childTabs.map((childTab) => {
                         return (
                           <div
@@ -129,7 +143,16 @@ export const CustomTabMenu: FC<P> = ({
                             )}
                             onClick={() => onActiveChanged?.(childTab.key)}
                           >
-                            {childTab.name}
+                            <div className={styles.titleCountWrapper}>
+                              {childTab.name}
+                              {Object.keys(childTab).includes('count') && (
+                                <div className={styles.countWrapper}>
+                                  <div className={styles.countContainer}>
+                                    {childTab.count}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         )
                       })}

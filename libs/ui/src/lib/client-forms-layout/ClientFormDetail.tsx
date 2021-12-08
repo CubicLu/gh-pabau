@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
-import Signature from '../../assets/images/form-signature.svg'
 import styles from './ClientFormsLayout.module.less'
 import { MedicalFormContactData, RenderHtml } from '@pabau/ui'
 
@@ -11,10 +10,9 @@ interface FormDetailsProps {
 
 const FormDetails: FC<FormDetailsProps> = ({ formData }) => {
   const { t } = useTranslation('common')
-  console.log('formData =', formData)
   return (
     <div>
-      <div className={styles.fullForm}>
+      {/* <div className={styles.fullForm}>
         <span className={styles.contentName}>
           {t('ui.clientcard.forms.patient')}
         </span>
@@ -45,16 +43,47 @@ const FormDetails: FC<FormDetailsProps> = ({ formData }) => {
         </span>
         <span className={styles.contentDetail}>{formData.createdBy}</span>
         <span className={styles.detailsBorder} />
-      </div>
+      </div> */}
       {formData.details.map((detail, key) => {
         return (
           <div className={styles.fullForm} key={`form-view-${key}`}>
             <span className={styles.contentName}>
               <RenderHtml __html={detail.label} />
             </span>
-            <span className={styles.contentDetail}>
-              <RenderHtml __html={detail.content} />
-            </span>
+            {(detail.clsClass === 'image' ||
+              detail.clsClass === 'signature' ||
+              detail.clsClass === 'diagram' ||
+              detail.clsClass === 'facediagram' ||
+              detail.clsClass === 'photo_and_drawer') && (
+              <span className={styles.contentDetail}>
+                <img
+                  style={{
+                    width: '300px',
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                  src={
+                    detail.content?.length > 0
+                      ? `https://cdn.pabau.com${detail.content}`
+                      : ''
+                  }
+                  alt=""
+                />
+              </span>
+            )}
+            {!(
+              detail.clsClass === 'image' ||
+              detail.clsClass === 'signature' ||
+              detail.clsClass === 'diagram' ||
+              detail.clsClass === 'facediagram' ||
+              detail.clsClass === 'photo_and_drawer'
+            ) && (
+              <span className={styles.contentDetail}>
+                <RenderHtml __html={detail.content} />
+              </span>
+            )}
+
             <span className={styles.detailsBorder} />
           </div>
         )

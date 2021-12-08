@@ -12,6 +12,9 @@ import {
   useUpsertOneCmContactCustomMutation,
   useTotalInvoiceCountQuery,
   useCheckMedicalHistoryQuery,
+  useGetClientFormsCountQuery,
+  useGetClientPhotoCountQuery,
+  useGetClientDocumentCountQuery,
   useGetContactAccountBalanceQuery,
   useCountVouchersQuery,
   useCountClientAppointmentsQuery,
@@ -104,6 +107,30 @@ export const ClientCardLayout: FC<P> = ({
   const { data: invAmount } = useGetContactAccountBalanceQuery({
     variables: { contactID: clientId },
     skip: !clientId,
+  })
+
+  const { data: forms } = useGetClientFormsCountQuery({
+    variables: {
+      contactId: clientId,
+    },
+    skip: !clientId,
+    fetchPolicy: 'network-only',
+  })
+
+  const { data: photos } = useGetClientPhotoCountQuery({
+    variables: {
+      contactId: clientId,
+    },
+    skip: !clientId,
+    fetchPolicy: 'network-only',
+  })
+
+  const { data: documents } = useGetClientDocumentCountQuery({
+    variables: {
+      contactId: clientId,
+    },
+    skip: !clientId,
+    fetchPolicy: 'network-only',
   })
 
   const { data: appointments } = useCountClientAppointmentsQuery({
@@ -391,11 +418,27 @@ export const ClientCardLayout: FC<P> = ({
     {
       key: 'emr',
       name: 'EMR',
+      count:
+        (forms?.findManyMedicalFormContactCount || 0) +
+        (photos?.findManyContactAttachmentCount || 0) +
+        (documents?.findManyContactAttachmentCount || 0),
       childTabs: [
-        { key: 'forms', name: 'Forms' },
-        { key: 'photos', name: 'Photos' },
+        {
+          key: 'forms',
+          name: 'Forms',
+          count: forms?.findManyMedicalFormContactCount,
+        },
+        {
+          key: 'photos',
+          name: 'Photos',
+          count: photos?.findManyContactAttachmentCount,
+        },
         { key: 'prescription', name: 'Prescription' },
-        { key: 'documents', name: 'Documents' },
+        {
+          key: 'documents',
+          name: 'Documents',
+          count: documents?.findManyContactAttachmentCount,
+        },
       ],
     },
     {

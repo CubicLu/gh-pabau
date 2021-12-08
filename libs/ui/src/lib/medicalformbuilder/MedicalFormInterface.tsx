@@ -244,6 +244,7 @@ export const previewMapping = [
 export interface MedicalFormContactDetailData {
   label: string
   content: string
+  clsClass: string
 }
 
 export interface MedicalFormContactData {
