@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 import ClientFormsLayout from './ClientFormsLayout'
-import { formFilterButtons } from '../client-card/mock'
 
 describe('ClientFormsLayout', () => {
   beforeEach(() => {
@@ -14,9 +13,9 @@ describe('ClientFormsLayout', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
       <ClientFormsLayout
-        formFilters={formFilterButtons}
+        formFilterButtons={[]}
         forms={[]}
-        onButtonFilterClick={() => Promise.resolve(true)}
+        setFormFilterButtons={() => false}
         onFilterClick={() => Promise.resolve(true)}
         onPrintClick={() => Promise.resolve(true)}
         onShareCick={() => Promise.resolve(true)}

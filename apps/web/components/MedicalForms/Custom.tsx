@@ -324,7 +324,6 @@ const Custom: FC<CustomProps> = ({
       dataIndex: 'name',
       className: 'drag-visible',
       visible: true,
-      /* eslint-disable react/display-name */
       render: (name, rowData) => (
         <Tooltip placement="topLeft" title={name}>
           <div data-acceptclicking={true} className={styles.name}>
@@ -339,8 +338,6 @@ const Custom: FC<CustomProps> = ({
       visible: true,
       className: 'drag-visible',
       dataIndex: 'formType',
-      // render: (medicalform) => getImage(medicalform),
-      /* eslint-disable react/display-name */
       render: (formType, rowData) => (
         <div
           style={{ display: 'flex', alignItems: 'center' }}
@@ -363,7 +360,6 @@ const Custom: FC<CustomProps> = ({
       className: 'drag-visible',
       visible: true,
       dataIndex: 'createdAt',
-      /* eslint-disable react/display-name */
       render: (createdAt, rowData) => createdDate(createdAt),
     },
     {
@@ -432,7 +428,7 @@ const Custom: FC<CustomProps> = ({
     {
       title: '',
       key: 'operation',
-      className: 'drag-visible',
+      className: `drag-visible preview-col preview-col-visible`,
       visible: true,
       render: (val, item) => (
         <div
@@ -656,6 +652,22 @@ const Custom: FC<CustomProps> = ({
           )}
         </p>
       </BasicModal>
+      {showPreview && (
+        <MedicalFormPreview
+          {...medicalFormPreviewProps}
+          visible={showPreview}
+          formData={currentItem.formData ? currentItem.formData : ''}
+          formName={currentItem.name ? currentItem.name : ''}
+          closePreviewDialog={() =>
+            setShowPreview((showPreview) => !showPreview)
+          }
+          onHandleMacro={onHandleMacro}
+          medicalFormMacros={medicalFormMacros}
+          userGroupListItems={userGroupListItems}
+          invProductsListItems={invProductsListItems}
+          medicalConditionsListItems={medicalConditionsListItems}
+        />
+      )}
       <MedicalFormBuilder
         visible={editFormModal}
         previewData={selectedItem?.formData}

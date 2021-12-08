@@ -104,9 +104,28 @@
     tr:hover {
       background-color: #eef7fb;
       cursor: pointer;
+
+      .preview-col > div {
+        display: block !important;
+      }
     }
-    .ant-table-cell .drag-visible {
-      cursor: pointer !important;
+    .ant-table-cell {
+      padding: 16px;
+      max-height: 57px;
+
+      &.preview-col {
+        padding: 0px;
+        min-width: 140px;
+
+        > div {
+          display: none;
+          width: fit-content;
+
+          &.visible {
+            display: block !important;
+          }
+        }
+      }
     }
     .ant-table-cell {
       .ant-table-expanded-row-fixed {
@@ -359,6 +378,12 @@
           }
         }
       }
+    }
+  }
+
+  :global {
+    .ant-popover-inner-content {
+      border: 2px solid red;
     }
   }
 }

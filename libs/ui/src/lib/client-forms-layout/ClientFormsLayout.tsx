@@ -17,6 +17,10 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component'
+// import { ReactComponent as LabOrderIcon } from '../../assets/images/lab.svg'
+import { ReactComponent as MedicalHistoryIcon } from '../../assets/images/medical-history.svg'
+import { ReactComponent as Note } from '../../assets/images/note.svg'
+import { ReactComponent as Pencil } from '../../assets/images/pencil.svg'
 import classNames from 'classnames'
 import 'react-vertical-timeline-component/style.min.css'
 import { Collapse, Drawer } from 'antd'
@@ -28,7 +32,37 @@ import FormDetails from './ClientFormDetail'
 import dayjs from 'dayjs'
 import emptyState from '../../assets/lottie/empty-state.json'
 import styles from './ClientFormsLayout.module.less'
-import { ReactComponent as MedicalHistoryIcon } from '../../assets/images/medical-history.svg'
+
+export const basicFormFilters = [
+  {
+    id: 1,
+    key: 'treatment',
+    type: 'Treatment',
+    selected: true,
+    icon: Note,
+  },
+  {
+    id: 2,
+    key: 'consent',
+    type: 'Consent',
+    selected: true,
+    icon: Pencil,
+  },
+  {
+    id: 3,
+    key: 'questionnaire',
+    type: 'Medical History',
+    selected: true,
+    icon: MedicalHistoryIcon,
+  },
+  // {
+  //   id: 4,
+  //   key: 'prescription',
+  //   type: 'Lab Request',
+  //   selected: true,
+  //   icon: LabOrderIcon,
+  // },
+]
 
 const { Panel } = Collapse
 export interface PopOverStateProps {
@@ -45,10 +79,11 @@ export interface CustomIconComponentProps {
   style?: React.CSSProperties
 }
 
-interface FormFilterProps {
+export interface FormFilterProps {
   id: number
   type: string
   selected: boolean
+  key?: string
   icon?: React.ComponentType<
     CustomIconComponentProps | React.SVGProps<SVGSVGElement>
   >
@@ -71,9 +106,9 @@ enum FilterAll {
 
 export interface ClientFormsLayoutProps {
   isEmpty?: boolean
-  formFilters: FormFilterProps[]
+  formFilterButtons: FormFilterProps[]
+  setFormFilterButtons: (e: FormFilterProps[]) => void
   forms: MedicalFormContact[]
-  onButtonFilterClick: (e: (string | undefined)[]) => Promise<boolean>
   onFilterClick: (
     e: Record<string, string | number | boolean>
   ) => Promise<boolean>
@@ -87,9 +122,9 @@ export interface ClientFormsLayoutProps {
 
 export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   isEmpty,
-  formFilters,
+  formFilterButtons,
+  setFormFilterButtons,
   forms,
-  onButtonFilterClick,
   onFilterClick,
   onPrintClick,
   onShareCick,
@@ -101,9 +136,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   const ref = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
-  const [formFilterButtons, setFormFilterButtons] = useState<FormFilterProps[]>(
-    []
-  )
+
   const [accordionState, setAccordionState] = useState<(string | number)[]>([])
   const [formState, setFormState] = useState<MedicalFormContact[]>([])
   const [popOverState, setPopOverState] = useState<PopOverStateProps>({
@@ -115,26 +148,8 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   const [openFilterDrawer, setOpenFilterDrawer] = useState<boolean>(false)
   const [expanded, setExpanded] = useState<boolean>(false)
 
-  const allFilter = [
-    {
-      id: 0,
-      type: 'All',
-      selected: true,
-    },
-  ]
   useEffect(() => {
-    window.scrollTo(0, 0)
-    if (formFilters?.length) {
-      setFormFilterButtons([...allFilter, ...formFilters])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (forms?.length) {
-      setFormState(forms)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setFormState(forms)
   }, [forms])
 
   const callBack = (key, id) => {
@@ -440,7 +455,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
               </Tooltip>
             </div>
           </div>
-          {formState.length > 0 ? (
+          {formState?.length ? (
             <VerticalTimeline layout={'1-column-left'} animate={false}>
               {formState?.map((indform) => {
                 return (
@@ -454,7 +469,10 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                       background: '#3D9588',
                       color: ' #FFFFFF',
                     }}
-                    icon={React.createElement(MedicalHistoryIcon)}
+                    icon={React.createElement(
+                      basicFormFilters?.find((el) => el?.key === indform.type)
+                        ?.icon || MedicalHistoryIcon
+                    )}
                   >
                     <div
                       className={

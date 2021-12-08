@@ -57,6 +57,15 @@ query getAlbums($contactID: Int!) {
 #  "contactID": 25128890
 # }
 
+query getClientPhotoCount($contactId: Int!) {
+  findManyContactAttachmentCount(
+    where: {
+      contact_id: { equals: $contactId }
+      attachment_type: { in: ["contact"] }
+    }
+  )
+}
+
 mutation createContactPhoto(
   $contact_id: Int!
   $album_id: Int!

@@ -41,7 +41,7 @@ export function MedicalFormCard(props: MedicalFormCardProps): JSX.Element {
                 <div className={styles.cardBody}>
                   <div className={styles.cardTopBar}>
                     <div className={styles.topBarIcon}>{thread.image}</div>
-                    {thread.tags.length > 0 && (
+                    {thread?.tags?.length > 0 && (
                       <div className={styles.topBarTags}>
                         <span className={styles.tags}>
                           {thread.tags[0].title}
