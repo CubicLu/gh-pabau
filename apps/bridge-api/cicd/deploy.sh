@@ -18,6 +18,8 @@ read_heredoc() {
   eval $1'=${read_heredoc_result}'
 }
 
+jq &2>/dev/null || echo "ERROR: MISSING: jq"
+
 APP_NAME="$(basename "$(dirname "$(
   cd "$(dirname "${0}")"
   pwd
@@ -27,9 +29,6 @@ APP_TYPE="$(basename "$(dirname "$(
   pwd
 )")")"
 VERCEL_JSON_LOCATION=$(cd "${APP_TYPE}/${APP_NAME}" && pwd)
-
-apt update -y
-apt install -y jq
 APP_VERSION=$(jq -r '.version' package.json)
 
 echo "----- DEBUG -----"

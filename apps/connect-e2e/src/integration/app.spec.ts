@@ -1,13 +1,6 @@
-import { getGreeting } from '../support/app.po'
-
 describe('connect', () => {
-  beforeEach(() => cy.visit('/'))
-
-  it('should display welcome message', () => {
-    // Custom command example, see `../support/commands.ts` file
-    cy.login('my-email@something.com', 'myPassword')
-
-    // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome to connect!')
+  it('should display error message for root access', () => {
+    cy.visit('/')
+    cy.contains('Invalid online bookings URL')
   })
 })

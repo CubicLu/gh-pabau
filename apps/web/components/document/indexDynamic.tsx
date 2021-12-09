@@ -31,8 +31,9 @@ const IndexDynamic: FC<P> = ({ docId, apiKey, clientId }) => {
   const downloadPdf = () => {
     const a = document.createElement('a')
     document.body.append(a)
-    const url = window.URL.createObjectURL(docData)
-    a.href = url
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    a.href = window.URL.createObjectURL(docData)
     a.download = `${fileName}.pdf`
     a.click()
   }

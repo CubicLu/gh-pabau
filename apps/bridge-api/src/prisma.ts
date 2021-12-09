@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { URL } from 'node:url'
 import { stringToBoolean } from './utils'
 
 console.log('Configuring Prisma...')

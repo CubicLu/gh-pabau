@@ -27,7 +27,7 @@ export const ReportCategory = objectType({
         return root.Report
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'ReportCategoryCountOutputType',
       resolve(root: any) {
         return root._count

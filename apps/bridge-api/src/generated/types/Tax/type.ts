@@ -63,7 +63,7 @@ export const Tax = objectType({
         return root.SaleItem
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'TaxCountOutputType',
       resolve(root: any) {
         return root._count

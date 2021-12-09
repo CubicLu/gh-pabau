@@ -47,7 +47,7 @@ export const CmLeadCustomField = objectType({
         return root.CmLeadCustomFieldOrder
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CmLeadCustomFieldCountOutputType',
       resolve(root: any) {
         return root._count

@@ -56,7 +56,7 @@ export const ContactPackage = objectType({
         return root.contact_package_used
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'ContactPackageCountOutputType',
       resolve(root: any) {
         return root._count

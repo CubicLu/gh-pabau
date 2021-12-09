@@ -76,7 +76,7 @@ export const Page = objectType({
         return root.Page
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'PageCountOutputType',
       resolve(root: any) {
         return root._count

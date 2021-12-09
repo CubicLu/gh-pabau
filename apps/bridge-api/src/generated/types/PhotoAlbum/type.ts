@@ -40,7 +40,7 @@ export const PhotoAlbum = objectType({
         return root.Photos
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'PhotoAlbumCountOutputType',
       resolve(root: any) {
         return root._count

@@ -79,7 +79,7 @@ export const MessageTemplate = objectType({
         return root.EmailTemplateAttachment
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'MessageTemplateCountOutputType',
       resolve(root: any) {
         return root._count

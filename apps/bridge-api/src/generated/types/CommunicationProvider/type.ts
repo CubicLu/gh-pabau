@@ -24,7 +24,7 @@ export const CommunicationProvider = objectType({
         return root.Recipient
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CommunicationProviderCountOutputType',
       resolve(root: any) {
         return root._count

@@ -31,7 +31,7 @@ export const CompanyBranchGroup = objectType({
         return root.CompanyBranch
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CompanyBranchGroupCountOutputType',
       resolve(root: any) {
         return root._count

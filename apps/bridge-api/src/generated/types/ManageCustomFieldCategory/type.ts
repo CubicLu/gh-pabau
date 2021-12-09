@@ -30,7 +30,7 @@ export const ManageCustomFieldCategory = objectType({
         return root.ManageCustomField
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'ManageCustomFieldCategoryCountOutputType',
       resolve(root: any) {
         return root._count

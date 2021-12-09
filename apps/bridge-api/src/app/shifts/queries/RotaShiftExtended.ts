@@ -8,12 +8,8 @@ export const RotaShiftExtended = extendType({
     t.field('duration', {
       type: 'Int',
       async resolve(parent: RotaShift) {
-        const start = dayjs(`${parent.start}` as 'YYYYMMDDHHmmss').format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
-        const end = dayjs(`${parent.end}` as 'YYYYMMDDHHmmss').format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
+        const start = dayjs(parent.start).format('YYYY-MM-DD HH:mm:ss')
+        const end = dayjs(parent.end).format('YYYY-MM-DD HH:mm:ss')
 
         return dayjs(end).diff(start, 'minutes')
       },

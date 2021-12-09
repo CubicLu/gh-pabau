@@ -85,7 +85,7 @@ export const Password = extendType({
       async resolve(
         _root,
         { token, newPassword1, newPassword2 },
-        { prisma }: Context
+        { prisma, authenticated }: Context
       ) {
         if (newPassword1 !== newPassword2)
           throw new Error(`Password confirmation doesn't match Password`)
@@ -133,9 +133,7 @@ export const Password = extendType({
             {
               key: 'url',
               value:
-                typeof window !== 'undefined'
-                  ? `${window?.location?.origin}/`
-                  : '',
+                authenticated.remote_url || 'https://prelive-crm.pabau.com/',
             },
             {
               key: 'userEmail',

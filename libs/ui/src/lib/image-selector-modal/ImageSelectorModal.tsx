@@ -151,8 +151,9 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
                   accept="image/png, image/jpeg"
                   style={{ height: 0, width: 0, visibility: 'hidden' }}
                   onChange={(e) => {
-                    setFileObject(e.target.files?.[0])
-                    setUploadImage(URL.createObjectURL(e.target.files?.[0]))
+                    const file = e.target.files?.[0]
+                    setFileObject(file)
+                    setUploadImage(file ? URL.createObjectURL(file) : '') //TODO: instead of double-setting like this, move this 2nd one to a useMemo
                   }}
                 />
               </div>

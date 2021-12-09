@@ -244,7 +244,7 @@ export const CompanyBranch = objectType({
         return root.CmLead
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CompanyBranchCountOutputType',
       resolve(root: any) {
         return root._count

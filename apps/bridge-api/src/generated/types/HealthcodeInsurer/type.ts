@@ -33,7 +33,7 @@ export const HealthcodeInsurer = objectType({
         return root.InsuranceDetail
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'HealthcodeInsurerCountOutputType',
       resolve(root: any) {
         return root._count

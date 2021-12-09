@@ -105,7 +105,7 @@ export const Report = objectType({
         return root.FavoriteReport
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'ReportCountOutputType',
       resolve(root: any) {
         return root._count

@@ -59,7 +59,7 @@ export const CommunicationRecipient = objectType({
         return root.Communication
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CommunicationRecipientCountOutputType',
       resolve(root: any) {
         return root._count

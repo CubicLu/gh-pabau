@@ -98,7 +98,7 @@ export const MedicalFormContact = objectType({
         return root.LabRequest
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'MedicalFormContactCountOutputType',
       resolve(root: any) {
         return root._count

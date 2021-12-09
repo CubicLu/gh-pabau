@@ -34,7 +34,7 @@ export const MedicalAttr = objectType({
         return root.MedicalContactAttr
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'MedicalAttrCountOutputType',
       resolve(root: any) {
         return root._count

@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+import { URLSearchParams } from 'node:url'
 import { Context } from '../../context'
 
 export default class ReportService {

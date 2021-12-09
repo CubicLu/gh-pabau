@@ -49,7 +49,7 @@ export const UserMaster = objectType({
         return root.SalonBookings
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'UserMasterCountOutputType',
       resolve(root: any) {
         return root._count

@@ -35,7 +35,7 @@ export const LeadStatus = objectType({
         return root.CmLead
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'LeadStatusCountOutputType',
       resolve(root: any) {
         return root._count

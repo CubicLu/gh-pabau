@@ -397,7 +397,7 @@
       "sourceRoot": "apps/mgmt",
       "projectType": "application",
       "schematics": {},
-      "_architect": {
+      "architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {

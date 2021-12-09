@@ -9,6 +9,7 @@ import { SubscriptionService } from './subscription.service'
 import { GoCardlessClient } from 'gocardless-nodejs/client'
 import { Environments } from 'gocardless-nodejs/constants'
 import { SubscriptionStatus } from 'gocardless-nodejs/types/Types'
+import { URLSearchParams } from 'node:url'
 
 export default class SubscriptionGoCardless extends SubscriptionService {
   client: GoCardlessClient

@@ -1,5 +1,6 @@
 import { extendType, list, nonNull, stringArg } from 'nexus'
 import fetch from 'node-fetch'
+import { URLSearchParams } from 'node:url'
 import { ReportInputDto, TrendReportInputDto } from '../../app/report'
 import { Context } from '../../context'
 

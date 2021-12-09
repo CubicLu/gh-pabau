@@ -2065,7 +2065,7 @@ export const Company = objectType({
         return root.ConnectTheme
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {
         return root._count

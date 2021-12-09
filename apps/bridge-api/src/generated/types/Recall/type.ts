@@ -41,7 +41,7 @@ export const Recall = objectType({
         return root.RecallSchedule
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'RecallCountOutputType',
       resolve(root: any) {
         return root._count

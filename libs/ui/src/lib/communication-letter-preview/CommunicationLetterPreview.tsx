@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import mammoth from 'mammoth'
 import { ReactComponent as DragDropIcon } from '../../assets/images/drag-drop.svg'
-
 import styles from './CommunicationLetterPreview.module.less'
 import { Button } from '@pabau/ui'
 import { Card } from 'antd'
@@ -36,17 +35,16 @@ export const CommunicationLetterPreview: FC<CommunicationLetterPreviewProps> = (
   }, [loaded])
   const parseWordDocxFile = (file) => {
     const reader = new FileReader()
-    reader.onloadend = (event) => {
-      const arrayBuffer = reader.result
+    reader.onloadend = () => {
+      const arrayBuffer = reader.result as ArrayBuffer
       // debugger
 
       // mammoth
       //   .convertToHtml({ arrayBuffer: arrayBuffer })
       //   .then(function (resultObject) {})
 
-      mammoth
-        .extractRawText({ arrayBuffer: arrayBuffer })
-        .then(function (resultObject) {
+      arrayBuffer &&
+        mammoth.extractRawText({ arrayBuffer }).then(function (resultObject) {
           onChange(file, getTags(resultObject.value))
         })
 
