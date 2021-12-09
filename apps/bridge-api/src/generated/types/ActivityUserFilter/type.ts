@@ -42,7 +42,7 @@ export const ActivityUserFilter = objectType({
         return root.ActivityUserState
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'ActivityUserFilterCountOutputType',
       resolve(root: any) {
         return root._count

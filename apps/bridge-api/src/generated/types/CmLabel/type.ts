@@ -33,7 +33,7 @@ export const CmLabel = objectType({
         return root.CmContactLabel
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CmLabelCountOutputType',
       resolve(root: any) {
         return root._count

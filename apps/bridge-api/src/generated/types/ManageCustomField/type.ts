@@ -123,7 +123,7 @@ export const ManageCustomField = objectType({
         return root.CustomFieldDisplay
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'ManageCustomFieldCountOutputType',
       resolve(root: any) {
         return root._count

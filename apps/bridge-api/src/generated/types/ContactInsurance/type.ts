@@ -35,7 +35,7 @@ export const ContactInsurance = objectType({
         return root.InsuranceContractPrice
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'ContactInsuranceCountOutputType',
       resolve(root: any) {
         return root._count

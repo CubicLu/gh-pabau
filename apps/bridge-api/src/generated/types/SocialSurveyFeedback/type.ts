@@ -75,7 +75,7 @@ export const SocialSurveyFeedback = objectType({
         return root.SocialSurveyAnswer
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'SocialSurveyFeedbackCountOutputType',
       resolve(root: any) {
         return root._count

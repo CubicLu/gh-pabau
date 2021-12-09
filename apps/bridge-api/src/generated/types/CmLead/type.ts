@@ -162,7 +162,7 @@ export const CmLead = objectType({
         return root.Location
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CmLeadCountOutputType',
       resolve(root: any) {
         return root._count

@@ -82,7 +82,7 @@ export const InvCategory = objectType({
         return root.CmPurchaseOrder
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'InvCategoryCountOutputType',
       resolve(root: any) {
         return root._count

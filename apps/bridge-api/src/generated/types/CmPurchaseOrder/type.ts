@@ -71,7 +71,7 @@ export const CmPurchaseOrder = objectType({
         return root.CmPurchaseItem
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CmPurchaseOrderCountOutputType',
       resolve(root: any) {
         return root._count

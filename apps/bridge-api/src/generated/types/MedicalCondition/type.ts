@@ -40,7 +40,7 @@ export const MedicalCondition = objectType({
         return root.ContactMedicalCondition
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'MedicalConditionCountOutputType',
       resolve(root: any) {
         return root._count

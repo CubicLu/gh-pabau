@@ -30,7 +30,7 @@ export const CompanyPosition = objectType({
         return root.Company
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'CompanyPositionCountOutputType',
       resolve(root: any) {
         return root._count

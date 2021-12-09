@@ -171,7 +171,7 @@ export const Booking = objectType({
         return root.BookingChangeLog
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'BookingCountOutputType',
       resolve(root: any) {
         return root._count

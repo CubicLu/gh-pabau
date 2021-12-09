@@ -52,7 +52,7 @@ export const PathwayStep = objectType({
         return root.PathwayStepsTaken
       },
     })
-    t.nullable.field('_count', {
+    t.field('_count', {
       type: 'PathwayStepCountOutputType',
       resolve(root: any) {
         return root._count
