@@ -65,6 +65,20 @@ export const MessageTemplate = objectType({
         return root.MessageTemplate
       },
     })
+    t.list.field('EmailTemplateAttachment', {
+      type: 'EmailTemplateAttachment',
+      args: {
+        where: 'EmailTemplateAttachmentWhereInput',
+        orderBy: 'EmailTemplateAttachmentOrderByWithRelationInput',
+        cursor: 'EmailTemplateAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'EmailTemplateAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.EmailTemplateAttachment
+      },
+    })
     t.nullable.field('_count', {
       type: 'MessageTemplateCountOutputType',
       resolve(root: any) {

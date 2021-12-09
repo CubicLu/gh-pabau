@@ -39,5 +39,13 @@ export const ContactCommunicationScheduledType = objectType({
     t.string('from')
     t.string('subject')
     t.string('message')
+    t.nullable.list.field('attachment', {
+      type: objectType({
+        name: 'ContactCommunicationScheduledAttachmentType',
+        definition(t) {
+          t.string('file_url')
+        },
+      }),
+    })
   },
 })

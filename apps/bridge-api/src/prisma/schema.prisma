@@ -5391,14 +5391,17 @@ model DebtManageCommunication {
 //  late_18_19      Int      @default(0)
 //}
 //
-//model emailtemplate_attachments {
-//  id          Int    @id @default(autoincrement())
-//  template_id Int
-//  file        String
-//
-//  @@index([template_id], name: "template_id")
-//}
-//
+model EmailTemplateAttachment {
+  id          Int    @id @default(autoincrement())
+  template_id Int
+  file        String
+
+  MessageTemplate MessageTemplate @relation(fields: [template_id], references: [template_id])
+
+  @@index([template_id], name: "template_id")
+  @@map("emailtemplate_attachments")
+}
+
 //model email_blacklist {
 //  email_id       Int    @id @default(autoincrement())
 //  email_address  String @unique
@@ -8903,31 +8906,32 @@ model MedicalContactAttr {
 //}
 //
 model MessageTemplate {
-  template_id               Int               @id @default(autoincrement())
+  template_id               Int                       @id @default(autoincrement())
   company_id                Int
   template_name             String
   subject                   String
   message                   String
   created_by                Int?
   template_type             String
-  created_at                DateTime?         @default(now())
+  created_at                DateTime?                 @default(now())
   date_changed_at           DateTime?
   template_sub_type         Int
   template_sub_type_service Int
-  parent_id                 Int?              @default(0)
+  parent_id                 Int?                      @default(0)
   header                    String
   footer                    String
   exclude_margins           Int
-  template_group            String            @default("general")
+  template_group            String                    @default("general")
   subtype_letter            String
   word_template             String
-  is_default                Boolean           @default(false)
+  is_default                Boolean                   @default(false)
   folder_id                 Int?
-  Company                   Company           @relation(fields: [company_id], references: [id])
-  TemplateFolder            TemplateFolder?   @relation(fields: [folder_id], references: [id])
-  User                      User?             @relation(fields: [created_by], references: [id])
-  ParrentTemplate           MessageTemplate?  @relation("parent_child_message", fields: [parent_id], references: [template_id])
-  MessageTemplate           MessageTemplate[] @relation("parent_child_message")
+  Company                   Company                   @relation(fields: [company_id], references: [id])
+  TemplateFolder            TemplateFolder?           @relation(fields: [folder_id], references: [id])
+  User                      User?                     @relation(fields: [created_by], references: [id])
+  ParrentTemplate           MessageTemplate?          @relation("parent_child_message", fields: [parent_id], references: [template_id])
+  MessageTemplate           MessageTemplate[]         @relation("parent_child_message")
+  EmailTemplateAttachment   EmailTemplateAttachment[]
 
   @@index([company_id], name: "company_id")
   @@index([folder_id], name: "folder_id")

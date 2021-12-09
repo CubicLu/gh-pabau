@@ -6,9 +6,18 @@ export const getCommunicationScheduled = async (
   contactId: number,
   ctx: Context
 ) => {
-  const bookingReminders = await getScheduledBookingReminders(contactId, ctx)
-  const bookingSurveys = await getScheduledBookingSurveys(contactId, ctx)
-  const recalls = await getScheduledRecalls(contactId, ctx)
+  const defaultSenders = await getDefaultSenders(ctx)
+  const bookingReminders = await getScheduledBookingReminders(
+    contactId,
+    defaultSenders,
+    ctx
+  )
+  const bookingSurveys = await getScheduledBookingSurveys(
+    contactId,
+    defaultSenders,
+    ctx
+  )
+  const recalls = await getScheduledRecalls(contactId, defaultSenders, ctx)
 
   const scheduled = [...bookingReminders, ...bookingSurveys, ...recalls].sort(
     (a, b) => {
@@ -106,6 +115,10 @@ export const cancelScheduledCommunication = async (
 
 const getScheduledBookingReminders = async (
   contactId: number,
+  defaultSenders: {
+    email: string
+    sms: string
+  },
   ctx: Context
 ) => {
   const bookingSettings = await getBookingSettings(ctx)
@@ -117,7 +130,7 @@ const getScheduledBookingReminders = async (
 
   const bookings = await ctx.prisma.booking.findMany({
     where: {
-      company_id: ctx.authenticated.company,
+      company_id: { equals: ctx.authenticated.company },
       contact_id: { equals: contactId },
       start_date: {
         gte: Number.parseInt(moment().format('YYYYMMDDHHmmss')),
@@ -172,11 +185,16 @@ const getScheduledBookingReminders = async (
           email: booking.Contact.Email,
           mobile: booking.Contact.Mobile,
         },
-        from: '',
+        from: defaultSenders.email,
         subject: emailTemplate.subject,
         message: await prepareMessage(emailTemplate.message, ctx, {
           contact_id: contactId,
           booking_id: booking.id,
+        }),
+        attachment: emailTemplate.EmailTemplateAttachment?.map((attachment) => {
+          return {
+            file_url: attachment.file,
+          }
         }),
       })
     }
@@ -194,7 +212,7 @@ const getScheduledBookingReminders = async (
           email: booking.Contact.Email,
           mobile: booking.Contact.Mobile,
         },
-        from: '',
+        from: defaultSenders.sms,
         subject: smsTemplate.subject,
         message: await prepareMessage(smsTemplate.message, ctx, {
           contact_id: contactId,
@@ -207,7 +225,14 @@ const getScheduledBookingReminders = async (
   return scheduled
 }
 
-const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
+const getScheduledBookingSurveys = async (
+  contactId: number,
+  defaultSenders: {
+    email: string
+    sms: string
+  },
+  ctx: Context
+) => {
   const surveySettings = await getSurveySettings(ctx)
   const email_id = surveySettings.email_message_id
   const sms_id = surveySettings.sms_message_id
@@ -217,7 +242,7 @@ const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
 
   const bookings = await ctx.prisma.booking.findMany({
     where: {
-      company_id: ctx.authenticated.company,
+      company_id: { equals: ctx.authenticated.company },
       contact_id: { equals: contactId },
       start_date: {
         gte: Number.parseInt(moment().format('YYYYMMDDHHmmss')),
@@ -265,11 +290,16 @@ const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
           email: booking.Contact.Email,
           mobile: booking.Contact.Mobile,
         },
-        from: '',
+        from: defaultSenders.email,
         subject: emailTemplate.subject,
         message: await prepareMessage(emailTemplate.message, ctx, {
           contact_id: contactId,
           booking_id: booking.id,
+        }),
+        attachment: emailTemplate.EmailTemplateAttachment?.map((attachment) => {
+          return {
+            file_url: attachment.file,
+          }
         }),
       })
     }
@@ -287,7 +317,7 @@ const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
           email: booking.Contact.Email,
           mobile: booking.Contact.Mobile,
         },
-        from: '',
+        from: defaultSenders.sms,
         subject: smsTemplate.subject,
         message: await prepareMessage(smsTemplate.message, ctx, {
           contact_id: contactId,
@@ -300,11 +330,18 @@ const getScheduledBookingSurveys = async (contactId: number, ctx: Context) => {
   return scheduled
 }
 
-const getScheduledRecalls = async (contactId: number, ctx: Context) => {
+const getScheduledRecalls = async (
+  contactId: number,
+  defaultSenders: {
+    email: string
+    sms: string
+  },
+  ctx: Context
+) => {
   const recalls = []
   const scheduledRecalls = await ctx.prisma.recallSchedule.findMany({
     where: {
-      company_id: ctx.authenticated.company,
+      company_id: { equals: ctx.authenticated.company },
       contact_id: { equals: contactId },
       scheduled_date: { gte: new Date() },
       AND: {
@@ -351,11 +388,16 @@ const getScheduledRecalls = async (contactId: number, ctx: Context) => {
           email: recall.Contact.Email,
           mobile: recall.Contact.Mobile,
         },
-        from: '',
+        from: defaultSenders.email,
         subject: emailTemplate.subject,
         message: await prepareMessage(emailTemplate.message, ctx, {
           contact_id: contactId,
           booking_id: recall.booking_id,
+        }),
+        attachment: emailTemplate.EmailTemplateAttachment?.map((attachment) => {
+          return {
+            file_url: attachment.file,
+          }
         }),
       })
     }
@@ -372,7 +414,7 @@ const getScheduledRecalls = async (contactId: number, ctx: Context) => {
           email: recall.Contact.Email,
           mobile: recall.Contact.Mobile,
         },
-        from: '',
+        from: defaultSenders.sms,
         subject: smsTemplate.subject,
         message: await prepareMessage(smsTemplate.message, ctx, {
           contact_id: contactId,
@@ -418,6 +460,59 @@ const getTemplate = async (templateId: number, ctx: Context) => {
     select: {
       subject: true,
       message: true,
+      EmailTemplateAttachment: true,
     },
   })
+}
+
+const getDefaultSenders = async (ctx: Context) => {
+  const defaultSenders = {
+    email: 'noreply@pabau.com',
+    sms: (
+      await ctx.prisma.companyDetails.findUnique({
+        where: {
+          company_id: ctx.authenticated.company,
+        },
+        select: {
+          company_name: true,
+        },
+      })
+    ).company_name,
+  }
+
+  const companyEmail = await ctx.prisma.companyEmail.findFirst({
+    where: {
+      company_id: { equals: ctx.authenticated.company },
+    },
+    select: {
+      company_email: true,
+      senders_name: true,
+      enterprise_email: true,
+    },
+    orderBy: {
+      default_email: 'desc',
+    },
+  })
+  if (companyEmail?.enterprise_email === 1) {
+    defaultSenders.email = companyEmail.company_email
+  }
+
+  const companySms = await ctx.prisma.smsSender.findFirst({
+    select: {
+      smsd_name: true,
+      Company: true,
+    },
+    where: {
+      company_id: { equals: ctx.authenticated.company },
+      smsd_delete: { equals: 0 },
+    },
+    orderBy: {
+      is_default: 'desc',
+    },
+  })
+  if (companySms?.smsd_name) {
+    defaultSenders.sms = companySms.smsd_name
+  }
+
+  return defaultSenders
 }

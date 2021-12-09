@@ -1,0 +1,42 @@
+fragment EmailTemplateAttachmentFields on EmailTemplateAttachment {
+  id
+  template_id
+  file
+}
+
+fragment EmailTemplateAttachment on EmailTemplateAttachment {
+  ...EmailTemplateAttachmentFields
+  MessageTemplate {
+    ...MessageTemplateFields
+  }
+}
+
+mutation createOneEmailTemplateAttachment($data: EmailTemplateAttachmentCreateInput!) {
+  createOneEmailTemplateAttachment(data: $data) {
+    ...EmailTemplateAttachment
+  }
+}
+
+mutation updateOneEmailTemplateAttachment(
+  $where: EmailTemplateAttachmentWhereUniqueInput!
+  $data: EmailTemplateAttachmentUpdateInput!
+) {
+  updateOneEmailTemplateAttachment(where: $where, data: $data) {
+    ...EmailTemplateAttachment
+  }
+}
+
+mutation deleteOneEmailTemplateAttachment($where: EmailTemplateAttachmentWhereUniqueInput!) {
+  deleteOneEmailTemplateAttachment(where: $where) {
+    ...EmailTemplateAttachment
+  }
+}
+
+mutation updateManyEmailTemplateAttachment(
+  $where: EmailTemplateAttachmentWhereInput
+  $data: EmailTemplateAttachmentUpdateManyMutationInput!
+) {
+  updateManyEmailTemplateAttachment(where: $where, data: $data) {
+    count
+  }
+}
