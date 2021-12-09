@@ -69,7 +69,7 @@ export const CompanyRoom = objectType({
         return root.RotaShift
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CompanyRoomCountOutputType',
       resolve(root: any) {
         return root._count

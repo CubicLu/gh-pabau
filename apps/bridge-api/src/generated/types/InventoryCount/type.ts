@@ -51,7 +51,7 @@ export const InventoryCount = objectType({
         return root.InventoryDiscrepancy
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'InventoryCountCountOutputType',
       resolve(root: any) {
         return root._count

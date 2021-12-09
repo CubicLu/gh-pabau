@@ -57,7 +57,7 @@ export const UserGroup = objectType({
         return root.GroupPermission
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'UserGroupCountOutputType',
       resolve(root: any) {
         return root._count

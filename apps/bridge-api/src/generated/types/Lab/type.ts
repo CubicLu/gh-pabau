@@ -39,7 +39,7 @@ export const Lab = objectType({
         return root.LabRequest
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'LabCountOutputType',
       resolve(root: any) {
         return root._count

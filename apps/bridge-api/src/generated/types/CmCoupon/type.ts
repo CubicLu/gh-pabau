@@ -50,7 +50,7 @@ export const CmCoupon = objectType({
         return root.CmCouponClick
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CmCouponCountOutputType',
       resolve(root: any) {
         return root._count

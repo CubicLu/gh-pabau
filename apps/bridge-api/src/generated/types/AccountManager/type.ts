@@ -70,7 +70,7 @@ export const AccountManager = objectType({
         return root.InvProduct
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'AccountManagerCountOutputType',
       resolve(root: any) {
         return root._count

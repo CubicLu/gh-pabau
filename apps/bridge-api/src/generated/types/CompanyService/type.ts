@@ -152,7 +152,7 @@ export const CompanyService = objectType({
         return root.ServiceEquipment
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CompanyServiceCountOutputType',
       resolve(root: any) {
         return root._count

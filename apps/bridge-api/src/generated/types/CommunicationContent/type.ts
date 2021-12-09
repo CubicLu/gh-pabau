@@ -26,7 +26,7 @@ export const CommunicationContent = objectType({
         return root.Communications
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CommunicationContentCountOutputType',
       resolve(root: any) {
         return root._count

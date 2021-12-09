@@ -33,7 +33,7 @@ export const ActivityType = objectType({
         return root.Activity
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'ActivityTypeCountOutputType',
       resolve(root: any) {
         return root._count

@@ -47,7 +47,7 @@ export const HolidayRequest = objectType({
         return root.RotaShift
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'HolidayRequestCountOutputType',
       resolve(root: any) {
         return root._count

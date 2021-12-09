@@ -819,7 +819,7 @@ export const User = objectType({
         return root.Communication
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {
         return root._count

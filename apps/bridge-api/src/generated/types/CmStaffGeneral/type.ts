@@ -139,7 +139,7 @@ export const CmStaffGeneral = objectType({
         return root.InventoryDiscrepancy
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CmStaffGeneralCountOutputType',
       resolve(root: any) {
         return root._count

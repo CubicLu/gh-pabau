@@ -42,7 +42,7 @@ export const PipelineStage = objectType({
         return root.CmLead
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'PipelineStageCountOutputType',
       resolve(root: any) {
         return root._count

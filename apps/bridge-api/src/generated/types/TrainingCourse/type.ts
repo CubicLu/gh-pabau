@@ -48,7 +48,7 @@ export const TrainingCourse = objectType({
         return root.TrainCourseDate
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'TrainingCourseCountOutputType',
       resolve(root: any) {
         return root._count

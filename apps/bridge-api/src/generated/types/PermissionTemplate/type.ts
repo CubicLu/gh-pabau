@@ -39,7 +39,7 @@ export const PermissionTemplate = objectType({
         return root.UserGroup
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'PermissionTemplateCountOutputType',
       resolve(root: any) {
         return root._count

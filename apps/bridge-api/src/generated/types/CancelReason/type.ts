@@ -34,7 +34,7 @@ export const CancelReason = objectType({
         return root.BookingCancel
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CancelReasonCountOutputType',
       resolve(root: any) {
         return root._count

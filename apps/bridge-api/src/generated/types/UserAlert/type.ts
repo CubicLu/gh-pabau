@@ -29,7 +29,7 @@ export const UserAlert = objectType({
         return root.UserAlertPermission
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'UserAlertCountOutputType',
       resolve(root: any) {
         return root._count

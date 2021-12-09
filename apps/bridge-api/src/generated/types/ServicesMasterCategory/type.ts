@@ -47,7 +47,7 @@ export const ServicesMasterCategory = objectType({
         return root.InvCategory
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'ServicesMasterCategoryCountOutputType',
       resolve(root: any) {
         return root._count

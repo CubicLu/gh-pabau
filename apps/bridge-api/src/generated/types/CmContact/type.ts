@@ -612,7 +612,7 @@ export const CmContact = objectType({
         return root.CommunicationsRequestedForms
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CmContactCountOutputType',
       resolve(root: any) {
         return root._count

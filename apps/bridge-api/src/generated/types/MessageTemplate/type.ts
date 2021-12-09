@@ -65,7 +65,7 @@ export const MessageTemplate = objectType({
         return root.MessageTemplate
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'MessageTemplateCountOutputType',
       resolve(root: any) {
         return root._count

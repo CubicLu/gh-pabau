@@ -27,7 +27,7 @@ export const Timezone = objectType({
         return root.CompanyDetails
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'TimezoneCountOutputType',
       resolve(root: any) {
         return root._count

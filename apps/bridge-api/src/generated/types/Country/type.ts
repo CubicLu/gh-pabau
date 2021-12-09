@@ -40,7 +40,7 @@ export const Country = objectType({
         return root.CmContactTravel
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CountryCountOutputType',
       resolve(root: any) {
         return root._count

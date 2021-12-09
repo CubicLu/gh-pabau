@@ -136,7 +136,7 @@ export const CompanyDetails = objectType({
         return root.InvoiceDefaultTemplate
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'CompanyDetailsCountOutputType',
       resolve(root: any) {
         return root._count

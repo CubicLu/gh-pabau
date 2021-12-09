@@ -61,7 +61,7 @@ export const MarketingSource = objectType({
         return root.CmContact
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'MarketingSourceCountOutputType',
       resolve(root: any) {
         return root._count

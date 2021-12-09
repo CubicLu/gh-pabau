@@ -196,7 +196,7 @@ export const InvSale = objectType({
         return root.Voucher
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'InvSaleCountOutputType',
       resolve(root: any) {
         return root._count

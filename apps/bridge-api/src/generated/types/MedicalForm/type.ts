@@ -94,7 +94,7 @@ export const MedicalForm = objectType({
         return root.PathwayStep
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'MedicalFormCountOutputType',
       resolve(root: any) {
         return root._count

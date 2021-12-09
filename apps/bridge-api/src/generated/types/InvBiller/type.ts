@@ -59,7 +59,7 @@ export const InvBiller = objectType({
         return root.InvSale
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'InvBillerCountOutputType',
       resolve(root: any) {
         return root._count

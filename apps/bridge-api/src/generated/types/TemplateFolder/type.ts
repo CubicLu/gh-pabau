@@ -31,7 +31,7 @@ export const TemplateFolder = objectType({
         return root.MessageTemplate
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'TemplateFolderCountOutputType',
       resolve(root: any) {
         return root._count

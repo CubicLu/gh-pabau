@@ -44,7 +44,7 @@ export const IssuingCompany = objectType({
         return root.InvSale
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'IssuingCompanyCountOutputType',
       resolve(root: any) {
         return root._count

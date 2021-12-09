@@ -33,7 +33,7 @@ export const Equipment = objectType({
         return root.Company
       },
     })
-    t.field('_count', {
+    t.nullable.field('_count', {
       type: 'EquipmentCountOutputType',
       resolve(root: any) {
         return root._count
