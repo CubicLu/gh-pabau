@@ -309,6 +309,26 @@ query getClientFormsCount($contactId: Int = 0) {
   )
 }
 
+mutation pinMedicalFormContact($formContactId: Int!, $updatedAt: DateTime!) {
+  updateOneMedicalFormContact(
+    where: { id: $formContactId }
+    data: { urgent: { set: 1 }, updated_at: { set: $updatedAt } }
+  ) {
+    id
+    updated_at
+  }
+}
+
+mutation unPinMedicalFormContact($formContactId: Int!, $updatedAt: DateTime!) {
+  updateOneMedicalFormContact(
+    where: { id: $formContactId }
+    data: { urgent: { set: 0 }, updated_at: { set: $updatedAt } }
+  ) {
+    id
+    updated_at
+  }
+}
+
 mutation deleteMedicalForm($formId: Int!) {
   updateOneMedicalForm(data: {}, where: { id: $formId }) {
     id

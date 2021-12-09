@@ -74,6 +74,7 @@ export const permissions = shield(
       createOneCountry: rules.authentication.isAuthenticated,
       //MedicalFormContact
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
+      updateOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
       createOneContactNote: rules.authentication.isAuthenticated,
       updateOneContactNote: rules.authentication.isAuthenticated,
