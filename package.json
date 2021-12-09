@@ -261,7 +261,7 @@
     "@storybook/addon-a11y": "6.3.12",
     "@storybook/addon-essentials": "6.3.12",
     "@storybook/addon-storysource": "6.3.12",
-    "@storybook/react": "6.3.12",
+    "@storybook/react": "6.4.9",
     "@testing-library/react": "12.1.2",
     "@types/async-retry": "1.4.3",
     "@types/dotenv-flow": "3.2.0",
