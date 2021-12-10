@@ -12,11 +12,14 @@ import {
 import { Form, Radio } from 'antd'
 import { useFormik } from 'formik'
 import React, { FC, useEffect, useState } from 'react'
-import { addQuestionData, FeedbackSurveyBuilder } from './ReviewsConfigSetting'
+import {
+  addQuestionData,
+  ReviewsConfigStepOneState,
+} from './ReviewsConfigSetting'
 import styles from './Style.module.less'
 
 interface ReviewsConfigStepTwoProps {
-  settings: FeedbackSurveyBuilder
+  settings: ReviewsConfigStepOneState
   questionData: QuestionField[]
 }
 
@@ -236,7 +239,7 @@ export const ReviewsConfigStepTwo: FC<ReviewsConfigStepTwoProps> = ({
                     </Form.Item>
                     <Form.Item
                       hasFeedback
-                      help="Automatically scroll t o the next question"
+                      help="Automatically scroll to the next question"
                     >
                       <Radio
                         checked={formik.values.surveyFormat === true}

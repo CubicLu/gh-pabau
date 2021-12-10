@@ -9,20 +9,60 @@ import PabauBadge2 from '../../../assets/images/pabau-badge-2.png'
 import PabauWidget1 from '../../../assets/images/pabau-widget-1.png'
 
 export interface FeedbackSurveyBuilder {
-  color: string
-  logotypePosition: string
-  logotypeSize: number
-  clientName: string
-  name: string
-  notifications: {
-    email: boolean
-    sms: boolean
-  }
-  voucherReward: string
-  surveyName: string
-  surveySubTitle: string
-  surveyFormat: boolean
-  questionsBank: IQuestionOptions[]
+  id: number
+  color_1: string
+  color_2: string
+  from_name: string
+  feedback_name: string
+  logo_height?: number
+  logo_position: string
+  disable_email: number
+  email_message_id: number
+  ty_enable_email: number
+  sms_send_time?: string
+  sms_message_id: number
+  sms_days_after?: number
+  disable_sms: number
+  ty_enable_sms: number
+  feedback_question: string
+  Company: Company
+  clientName?: string
+  questionsBank?: IQuestionOptions[]
+}
+
+export interface Company {
+  id: number
+  slug?: string
+  SocialSurveyQuestion: SocialSurveyQuestion[]
+}
+
+export interface SocialSurveyQuestion {
+  id: number
+  question: string
+}
+
+export interface ReviewsConfigStepOneState {
+  color_1?: string
+  color_2?: string
+  disable_email?: number
+  disable_sms?: number
+  email_message_id?: number
+  feedback_name?: string
+  feedback_question?: string
+  from_name?: string
+  id?: number
+  logo_height?: number
+  logo_position?: string
+  sms_days_after?: number
+  sms_message_id?: number
+  sms_send_time?: number
+  ty_enable_email?: number
+  ty_enable_sms?: number
+  voucherReward?: string
+  surveyName?: string
+  surveySubTitle?: string
+  clientName?: string
+  surveyFormat?: boolean
 }
 
 export const addQuestionData = {

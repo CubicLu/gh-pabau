@@ -1,0 +1,29 @@
+query getSocialSourveySettings {
+  findFirstSocialSurvey {
+    id
+    color_1
+    color_2
+    from_name
+    feedback_name
+    logo_height
+    logo_position
+    disable_email
+    email_message_id
+    ty_enable_email
+    ty_enable_email
+    sms_send_time
+    sms_message_id
+    sms_days_after
+    disable_sms
+    ty_enable_sms
+    feedback_question
+    Company {
+      id
+      slug
+      SocialSurveyQuestion {
+        id
+        question
+      }
+    }
+  }
+}

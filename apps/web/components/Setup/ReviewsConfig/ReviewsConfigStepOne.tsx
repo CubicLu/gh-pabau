@@ -12,23 +12,35 @@ import { Badge, Col, Form, Radio, Row, Select } from 'antd'
 import classNames from 'classnames'
 import { useFormik } from 'formik'
 import React, { FC, useState } from 'react'
+import Link from 'next/link'
+import {
+  FeedbackSurveyBuilder,
+  ReviewsConfigStepOneState,
+} from '../../../components/Setup/ReviewsConfig/ReviewsConfigSetting'
 import clinicLogo from '../../../assets/images/clinic-logo.png'
 import { ReactComponent as ExternalLinkGrey } from '../../../assets/images/external-link-grey.svg'
 import { ReactComponent as Palette } from '../../../assets/images/palette.svg'
 import userAvatar from '../../../assets/images/users/alex.png'
 import { ReactComponent as Voucher } from '../../../assets/images/voucher.svg'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { FeedbackSurveyBuilder } from './ReviewsConfigSetting'
 import styles from './Style.module.less'
+
+import { useGetVoucherTemplateQuery } from '@pabau/graphql'
 
 const { Option } = Select
 
 export interface ReviewsConfigStepOneProps {
   settings: FeedbackSurveyBuilder
+  reviewsConfigStepOneSettings: ReviewsConfigStepOneState
+  setReviewsConfigStepOneSettings: React.Dispatch<
+    React.SetStateAction<ReviewsConfigStepOneState>
+  >
 }
 
 export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
   settings,
+  reviewsConfigStepOneSettings,
+  setReviewsConfigStepOneSettings,
 }) => {
   const formik = useFormik({
     initialValues: settings,
@@ -36,14 +48,36 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
       console.log('Values >>>', values)
     },
   })
+  const { data: voucherReward } = useGetVoucherTemplateQuery()
+
   const [form] = Form.useForm()
   const [isListing, setIsListing] = useState(true)
   const [isEmail, setIsEmail] = useState(true)
+
+  const clientFullName = 'Jamal Potter'
+
   const { t } = useTranslationI18()
 
   const handleChangeSetting = (key, val) => {
     formik.setFieldValue(key, val)
+    setReviewsConfigStepOneSettings({
+      ...reviewsConfigStepOneSettings,
+      [key]: val,
+    })
   }
+
+  const displayClientName = [
+    t('setup.reviewsConfig.fullName'),
+    t('setup.reviewsConfig.firstName'),
+    t('setup.reviewsConfig.initials'),
+  ]
+
+  const logoPosition = [
+    t('setup.reviewsConfig.logoLeft'),
+    t('setup.reviewsConfig.logoMiddle'),
+    t('setup.reviewsConfig.logoRight'),
+  ]
+
   const SMSText = () => {
     const messages = [
       {
@@ -80,31 +114,28 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
       <div className={styles.reviewsConfigBody}>
         <div className={styles.reviewsConfigBodyDesktop}>
           <div>
-            <h2>Builder</h2>
+            <h2>{t('setup.reviewsConfig.builder')}</h2>
             <div>
               <div className={styles.section}>
                 <h3>
-                  <Palette style={{ marginRight: '.5rem' }} />
-                  <span>Apperance</span>
+                  <Palette className={styles.marginRight} />
+                  <span>{t('setup.reviewsConfig.apperance')}</span>
                 </h3>
-                <h4>
-                  Customize the look and feel of your survey page, as well as
-                  customizing features such as displaying the clients full name
-                  or aninymously
-                </h4>
+                <h4>{t('setup.reviewsConfig.apperanceText')}</h4>
                 <ColorPicker
-                  heading="Colour sheme"
-                  onSelected={(val) => handleChangeSetting('color', val)}
+                  heading={t('setup.reviewsConfig.colorSheme')}
+                  onSelected={(val) => handleChangeSetting('color_1', val)}
+                  selectedColor={formik.values?.color_1}
                 />
                 <div className={styles.sectionItem}>
-                  <Form.Item label="Logo Position">
+                  <Form.Item label={t('setup.reviewsConfig.logoPosition')}>
                     <Select
-                      defaultValue={formik.values.logotypePosition}
+                      defaultValue={formik.values?.logo_position}
                       onSelect={(val) =>
-                        handleChangeSetting('logotypePosition', val)
+                        handleChangeSetting('logo_position', val)
                       }
                     >
-                      {['Left', 'Middle', 'Right'].map((item) => (
+                      {logoPosition.map((item) => (
                         <Option key={item} value={item}>
                           {item}
                         </Option>
@@ -114,24 +145,24 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 </div>
                 <div className={styles.sectionItem}>
                   <Slider
-                    title="Logo size"
-                    value={formik.values.logotypeSize}
-                    onChange={(val) => handleChangeSetting('logotypeSize', val)}
-                    calculatedValue={`${formik.values.logotypeSize}px`}
+                    title={t('setup.reviewsConfig.logoSize')}
+                    value={formik.values?.logo_height}
+                    onChange={(val) => handleChangeSetting('logo_height', val)}
+                    calculatedValue={`${formik.values?.logo_height}px`}
                     min={30}
                     max={150}
                   />
                 </div>
                 <div className={styles.sectionItem}>
-                  <Form.Item label="Display client name">
+                  <Form.Item label={t('setup.reviewsConfig.clientNameLabel')}>
                     <Select
-                      defaultValue={formik.values.clientName}
+                      defaultValue={t('setup.reviewsConfig.fullName')}
                       onSelect={(val) => {
                         handleChangeSetting('clientName', val)
                         setIsListing(false)
                       }}
                     >
-                      {['Full Name', 'First Name', 'Initials'].map((item) => (
+                      {displayClientName.map((item) => (
                         <Option key={item} value={item}>
                           {item}
                         </Option>
@@ -143,27 +174,24 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
               <div className={styles.section}>
                 <h3>
                   <BellOutlined
-                    style={{ marginRight: '.5rem', color: '#54b2d3' }}
+                    className={`${styles.marginRight} ${styles.color}`}
                   />
-                  <span>Notifications</span>
+                  <span>{t('setup.reviewsConfig.notifications')}</span>
                 </h3>
-                <h4>
-                  The way in which you request feedback from clients who visit
-                  you.
-                </h4>
+                <h4>{t('setup.reviewsConfig.notificationText')}</h4>
                 <div className={styles.sectionItem}>
                   <Row>
                     <Col span={12}>
                       <Form form={form} layout="vertical">
-                        <Form.Item label="Email">
+                        <Form.Item label={t('setup.reviewsConfig.email')}>
                           <Badge
                             status={
-                              formik.values.notifications.email
+                              formik.values?.ty_enable_email
                                 ? 'success'
                                 : 'default'
                             }
                             text={
-                              formik.values.notifications.email
+                              formik.values?.ty_enable_email
                                 ? 'Enabled'
                                 : 'Disabled'
                             }
@@ -173,15 +201,15 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                     </Col>
                     <Col span={12}>
                       <Form form={form} layout="vertical">
-                        <Form.Item label="SMS">
+                        <Form.Item label={t('setup.reviewsConfig.sms')}>
                           <Badge
                             status={
-                              formik.values.notifications.sms
+                              formik.values?.ty_enable_sms
                                 ? 'success'
                                 : 'default'
                             }
                             text={
-                              formik.values.notifications.sms
+                              formik.values?.ty_enable_sms
                                 ? 'Enabled'
                                 : 'Disabled'
                             }
@@ -193,38 +221,43 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 </div>
                 <div className={styles.sectionItem}>
                   <div className={styles.changeInClientNotifications}>
-                    <a
-                      href="/client-notifications/request-feedback"
-                      target="_blank"
-                    >
-                      Change in client notifications
-                    </a>
-                    <ExternalLinkGrey style={{ marginLeft: '0.5rem' }} />
+                    <Link href="/client-notifications/request-feedback">
+                      <a target="_blank">
+                        {t('setup.reviewsConfig.notificationsText')}
+                        <ExternalLinkGrey className={styles.marginLeft} />
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
               <div className={styles.section}>
                 <h3>
-                  <Voucher style={{ marginRight: '.5rem' }} />
-                  <span style={{ marginRight: '8px' }}>Incentive</span>
+                  <Voucher className={styles.marginRight} />
+                  <span className={styles.marginRightEight}>
+                    {t('setup.reviewsConfig.incentive')}
+                  </span>
                   <PabauPlus modalType="Marketing" />
                 </h3>
-                <h4>Reward clients for writing a review</h4>
+                <h4>{t('setup.reviewsConfig.incentiveText')}</h4>
                 <div className={styles.sectionItem}>
-                  <Form.Item label="Voucher reward">
+                  <Form.Item label={t('setup.reviewsConfig.incentive.label')}>
                     <Select
-                      defaultValue={formik.values.voucherReward}
+                      defaultValue="No voucher issued"
                       onSelect={(val) =>
                         handleChangeSetting('voucherReward', val)
                       }
                     >
-                      {['£5.00 Review Voucher Scheme', 'No voucher issued'].map(
-                        (item) => (
-                          <Option key={item} value={item}>
-                            {item}
+                      <Option value="No voucher issued">
+                        No voucher issued
+                      </Option>
+                      {voucherReward?.templates.map((voucher) => {
+                        const { template_id, template_name } = voucher
+                        return (
+                          <Option key={template_id} value={template_name}>
+                            {template_name}
                           </Option>
                         )
-                      )}
+                      })}
                     </Select>
                   </Form.Item>
                 </div>
@@ -232,7 +265,7 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
             </div>
           </div>
           <div>
-            <h2>Preview</h2>
+            <h2>{t('setup.reviewsConfig.preview')}</h2>
             <div className={styles.previewPanel}>
               <Radio.Group
                 buttonStyle="solid"
@@ -240,8 +273,12 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 value={isListing}
                 onChange={(e) => setIsListing(e.target.value)}
               >
-                <Radio.Button value={true}>Listing</Radio.Button>
-                <Radio.Button value={false}>Read</Radio.Button>
+                <Radio.Button value={true}>
+                  {t('setup.reviewsConfig.listingButton')}
+                </Radio.Button>
+                <Radio.Button value={false}>
+                  {t('setup.reviewsConfig.readButton')}
+                </Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
                 {isListing && (
@@ -254,29 +291,32 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                     weScoreLabel="We score"
                     fromLabel="from"
                     reviewLabel="reviews"
-                    color={formik.values.color}
-                    logoPosition={formik.values.logotypePosition}
-                    logoSize={formik.values.logotypeSize}
+                    color={formik.values?.color_1}
+                    logoPosition={formik.values?.logo_position}
+                    logoSize={formik.values?.logo_height}
                   />
                 )}
+
                 {!isListing && (
                   <ReadReview
                     title="Highly Recommended"
                     bodyContent="Was extremely nervous about seeing Doctor Hazim Sadideen but had a very friendly and warm welcoming at the reception and immediately felt at ease. Doctor Hazim himself made me feel very comfortable and reassured, initially I was very nervous to begin with. Reassured me that everything was going to be OK and that he'll do the best he can with the surgery. His secretary is also very nice, very approachable and easy to talk to if there are any complications or concerns. Highly recommended."
                     updatedAt="1 year ago"
                     name={
-                      formik.values.clientName === 'Full Name'
-                        ? formik.values.name
-                        : formik.values.clientName === 'First Name'
-                        ? formik.values.name.split(' ')[0]
-                        : formik.values.name
+                      formik.values?.clientName === undefined
+                        ? clientFullName
+                        : formik.values?.clientName === 'Full Name'
+                        ? clientFullName
+                        : formik.values?.clientName === 'First Name'
+                        ? clientFullName.split(' ')[0]
+                        : clientFullName
                             .split(' ')
                             .map((str) => str.charAt(0))
                             .join('. ')
                     }
                     defaultRating={2.5}
                     avatarSrc={userAvatar}
-                    color={formik.values.color}
+                    color={formik.values?.color_1}
                   />
                 )}
               </div>
@@ -286,8 +326,12 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 value={isEmail}
                 onChange={(e) => setIsEmail(e.target.value)}
               >
-                <Radio.Button value={true}>Email</Radio.Button>
-                <Radio.Button value={false}>SMS Text</Radio.Button>
+                <Radio.Button value={true}>
+                  {t('setup.reviewsConfig.email')}
+                </Radio.Button>
+                <Radio.Button value={false}>
+                  {t('setup.reviewsConfig.smsText')}
+                </Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
                 {isEmail && <Appointment t={t} selectLanguage="en" />}
@@ -298,34 +342,34 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
         </div>
         <div className={styles.reviewsConfigBodyMobile}>
           <TabMenu
-            menuItems={['BUILDER', 'PREVIEW']}
+            menuItems={[
+              t('setup.reviewsConfig.builder'),
+              t('setup.reviewsConfig.preview'),
+            ]}
             tabPosition="top"
             minHeight="1px"
           >
             <div>
               <div className={styles.section}>
                 <h3>
-                  <Palette style={{ marginRight: '.5rem' }} />
-                  <span>Apperance</span>
+                  <Palette className={styles.marginRight} />
+                  <span>{t('setup.reviewsConfig.apperance')}</span>
                 </h3>
-                <h4>
-                  Customize the look and feel of your survey page, as well as
-                  customizing features such as displaying the clients full name
-                  or aninymously
-                </h4>
+                <h4>{t('setup.reviewsConfig.apperanceText')}</h4>
                 <ColorPicker
-                  heading="Colour sheme"
-                  onSelected={(val) => handleChangeSetting('color', val)}
+                  heading={t('setup.reviewsConfig.colorSheme')}
+                  onSelected={(val) => handleChangeSetting('color_1', val)}
+                  selectedColor={formik.values?.color_1}
                 />
                 <div className={styles.sectionItem}>
-                  <Form.Item label="Logo Position">
+                  <Form.Item label={t('setup.reviewsConfig.logoPosition')}>
                     <Select
-                      defaultValue={formik.values.logotypePosition}
+                      defaultValue={formik.values?.logo_position}
                       onSelect={(val) =>
-                        handleChangeSetting('logotypePosition', val)
+                        handleChangeSetting('logo_position', val)
                       }
                     >
-                      {['Left', 'Middle', 'Right'].map((item) => (
+                      {logoPosition.map((item) => (
                         <Option key={item} value={item}>
                           {item}
                         </Option>
@@ -335,24 +379,24 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 </div>
                 <div className={styles.sectionItem}>
                   <Slider
-                    title="Logo size"
-                    value={formik.values.logotypeSize}
-                    onChange={(val) => handleChangeSetting('logotypeSize', val)}
-                    calculatedValue={`${formik.values.logotypeSize}px`}
+                    title={t('setup.reviewsConfig.logoSize')}
+                    value={formik.values?.logo_height}
+                    onChange={(val) => handleChangeSetting('logo_height', val)}
+                    calculatedValue={`${formik.values?.logo_height}px`}
                     min={30}
                     max={150}
                   />
                 </div>
                 <div className={styles.sectionItem}>
-                  <Form.Item label="Display client name">
+                  <Form.Item label={t('setup.reviewsConfig.clientNameLabel')}>
                     <Select
-                      defaultValue={formik.values.clientName}
+                      defaultValue={t('setup.reviewsConfig.fullName')}
                       onSelect={(val) => {
                         handleChangeSetting('clientName', val)
                         setIsListing(false)
                       }}
                     >
-                      {['Full Name', 'First Name', 'Initials'].map((item) => (
+                      {displayClientName.map((item) => (
                         <Option key={item} value={item}>
                           {item}
                         </Option>
@@ -364,27 +408,24 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
               <div className={styles.section}>
                 <h3>
                   <BellOutlined
-                    style={{ marginRight: '.5rem', color: '#54b2d3' }}
+                    className={`${styles.marginRight} ${styles.color}`}
                   />
                   <span>Notifications</span>
                 </h3>
-                <h4>
-                  The way in which you request feedback from clients who visit
-                  you. Changes in client notifications.
-                </h4>
+                <h4>{t('setup.reviewsConfig.notificationText')}</h4>
                 <div className={styles.sectionItem}>
                   <Row>
                     <Col span={12}>
                       <Form form={form} layout="vertical">
-                        <Form.Item label="Email">
+                        <Form.Item label={t('setup.reviewsConfig.email')}>
                           <Badge
                             status={
-                              formik.values.notifications.email
+                              formik.values?.ty_enable_email
                                 ? 'success'
                                 : 'default'
                             }
                             text={
-                              formik.values.notifications.email
+                              formik.values?.ty_enable_email
                                 ? 'Enabled'
                                 : 'Disabled'
                             }
@@ -394,15 +435,15 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                     </Col>
                     <Col span={12}>
                       <Form form={form} layout="vertical">
-                        <Form.Item label="SMS">
+                        <Form.Item label={t('setup.reviewsConfig.sms')}>
                           <Badge
                             status={
-                              formik.values.notifications.sms
+                              formik.values?.ty_enable_sms
                                 ? 'success'
                                 : 'default'
                             }
                             text={
-                              formik.values.notifications.sms
+                              formik.values?.ty_enable_sms
                                 ? 'Enabled'
                                 : 'Disabled'
                             }
@@ -414,38 +455,43 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 </div>
                 <div className={styles.sectionItem}>
                   <div className={styles.changeInClientNotifications}>
-                    <a
-                      href="/client-notifications/request-feedback"
-                      target="_blank"
-                    >
-                      Change in client notifications
-                    </a>
-                    <ExternalLinkGrey style={{ marginLeft: '0.5rem' }} />
+                    <Link href="/client-notifications/request-feedback">
+                      <a target="_blank">
+                        {t('setup.reviewsConfig.notificationsText')}
+                        <ExternalLinkGrey className={styles.marginLeft} />
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
               <div className={styles.section}>
                 <h3>
-                  <Voucher style={{ marginRight: '.5rem' }} />
-                  <span style={{ marginRight: '8px' }}>Incentive</span>
+                  <Voucher className={styles.marginRight} />
+                  <span className={styles.marginRightEight}>
+                    {t('setup.reviewsConfig.incentive')}
+                  </span>
                   <PabauPlus modalType="Marketing" />
                 </h3>
                 <h4>Automatically reward clients for writing a review.</h4>
                 <div className={styles.sectionItem}>
-                  <Form.Item label="Voucher reward">
+                  <Form.Item label={t('setup.reviewsConfig.incentive.label')}>
                     <Select
-                      defaultValue={formik.values.voucherReward}
+                      defaultValue="No voucher issued"
                       onSelect={(val) =>
                         handleChangeSetting('voucherReward', val)
                       }
                     >
-                      {['£5.00 Review Voucher Scheme', 'No voucher issued'].map(
-                        (item) => (
-                          <Option key={item} value={item}>
-                            {item}
+                      <Option value="No voucher issued">
+                        No voucher issued
+                      </Option>
+                      {voucherReward?.templates.map((voucher) => {
+                        const { template_id, template_name } = voucher
+                        return (
+                          <Option key={template_id} value={template_name}>
+                            {template_name}
                           </Option>
                         )
-                      )}
+                      })}
                     </Select>
                   </Form.Item>
                 </div>
@@ -458,8 +504,12 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 value={isListing}
                 onChange={(e) => setIsListing(e.target.value)}
               >
-                <Radio.Button value={true}>Listing</Radio.Button>
-                <Radio.Button value={false}>Read</Radio.Button>
+                <Radio.Button value={true}>
+                  {t('setup.reviewsConfig.listingButton')}
+                </Radio.Button>
+                <Radio.Button value={false}>
+                  {t('setup.reviewsConfig.readButton')}
+                </Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
                 {isListing && (
@@ -472,9 +522,9 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                     weScoreLabel="We score"
                     fromLabel="from"
                     reviewLabel="reviews"
-                    color={formik.values.color}
-                    logoPosition={formik.values.logotypePosition}
-                    logoSize={formik.values.logotypeSize}
+                    color={formik.values?.color_1}
+                    logoPosition={formik.values?.logo_position}
+                    logoSize={formik.values?.logo_height}
                   />
                 )}
                 {!isListing && (
@@ -485,7 +535,7 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                     name="Jamal Potter"
                     defaultRating={2.5}
                     avatarSrc={userAvatar}
-                    color={formik.values.color}
+                    color={formik.values?.color_1}
                   />
                 )}
               </div>
@@ -495,8 +545,12 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 value={isEmail}
                 onChange={(e) => setIsEmail(e.target.value)}
               >
-                <Radio.Button value={true}>Email</Radio.Button>
-                <Radio.Button value={false}>SMS Text</Radio.Button>
+                <Radio.Button value={true}>
+                  {t('setup.reviewsConfig.email')}
+                </Radio.Button>
+                <Radio.Button value={false}>
+                  {t('setup.reviewsConfig.smsText')}
+                </Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
                 {isEmail && <Appointment t={t} selectLanguage="en" />}

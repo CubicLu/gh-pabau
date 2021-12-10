@@ -14,6 +14,7 @@ import {
   ReviewsConfigStepTwo,
   ReviewsConfigStepThree,
   ReviewsConfigStepFour,
+  ReviewsConfigStepOneSkeleton,
 } from '../../../components/Setup/ReviewsConfig'
 import Layout from '../../../components/Layout/Layout'
 import CommonHeader from '../../../components/CommonHeader'
@@ -23,10 +24,13 @@ import {
   addQuestionData,
   reviewBadges,
   reviewWidgets,
-  defaultBuilderSetting,
   FeedbackSurveyBuilder,
+  ReviewsConfigStepOneState,
 } from '../../../components/Setup/ReviewsConfig/ReviewsConfigSetting'
+
 import styles from './index.module.less'
+
+import { useGetSocialSourveySettingsQuery } from '@pabau/graphql'
 
 const stepData = [
   {
@@ -66,14 +70,37 @@ export interface ReviewsConfigProps {
 
 export const Index: FC<ReviewsConfigProps> = ({
   currentStep = 0,
-  builderSetting = defaultBuilderSetting,
+  builderSetting,
 }) => {
   const reviewsConfigRef = useRef(null)
   const [showBanner, setShowBanner] = useState(false)
-  const [setting, setSetting] = useState<FeedbackSurveyBuilder>(
-    defaultBuilderSetting
-  )
+  const { data: setting, loading } = useGetSocialSourveySettingsQuery()
 
+  const [
+    reviewsConfigStepOneSettings,
+    setReviewsConfigStepOneSettings,
+  ] = useState<ReviewsConfigStepOneState>({
+    color_1: null,
+    color_2: null,
+    disable_email: null,
+    disable_sms: null,
+    email_message_id: null,
+    feedback_name: null,
+    feedback_question: null,
+    from_name: null,
+    id: null,
+    logo_height: null,
+    logo_position: null,
+    sms_days_after: null,
+    sms_message_id: null,
+    sms_send_time: null,
+    ty_enable_email: null,
+    ty_enable_sms: null,
+    voucherReward: null,
+    surveyName: 'Client Feedback Survey',
+    surveySubTitle: 'Please, complete your responses below',
+    clientName: null,
+  })
   const [step, setStep] = useState(0)
 
   const randomInRange = (min, max) => {
@@ -81,7 +108,6 @@ export const Index: FC<ReviewsConfigProps> = ({
   }
 
   useEffect(() => {
-    setSetting(builderSetting)
     setStep(currentStep)
   }, [currentStep, builderSetting])
 
@@ -143,11 +169,24 @@ export const Index: FC<ReviewsConfigProps> = ({
               <Stepper datasource={stepData} step={step} />
             </div>
           </div>
-          {step === 0 && <ReviewsConfigStepOne settings={setting} />}
+          {loading ? (
+            <ReviewsConfigStepOneSkeleton />
+          ) : (
+            step === 0 && (
+              <ReviewsConfigStepOne
+                settings={setting?.findFirstSocialSurvey}
+                reviewsConfigStepOneSettings={reviewsConfigStepOneSettings}
+                setReviewsConfigStepOneSettings={
+                  setReviewsConfigStepOneSettings
+                }
+              />
+            )
+          )}
+
           {step === 1 && (
             <ReviewsConfigStepTwo
               questionData={addQuestionData.questions}
-              settings={setting}
+              settings={reviewsConfigStepOneSettings}
             />
           )}
           {step === 2 && <ReviewsConfigStepThree />}

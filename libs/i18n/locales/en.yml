@@ -5824,6 +5824,33 @@ en:
   update.activity.record.success.message: 'Success! You have successfully updated a activity'
   activityList.column.lead.createdDate.editName: 'lead created date'
   clients.activities.title: 'Activities'
+  setup.reviewsConfig.colorSheme: 'Colour sheme'
+  setup.reviewsConfig.logoSize: Logo size
+  setup.reviewsConfig.logoPosition: 'Logo Position'
+  setup.reviewsConfig.clientName: 'Display client name'
+  setup.reviewsConfig.notifications: 'Notifications'
+  setup.reviewsConfig.notificationsText: Change in client notifications
+  setup.reviewsConfig.incentive: 'Incentive'
+  setup.reviewsConfig.apperance: Apperance
+  setup.reviewsConfig.apperanceText: 'Customize the look and feel of your survey page, as well as customizing features such as displaying the clients full name or aninymously'
+  setup.reviewsConfig.notificationText: The way in which you request feedback from clients who visit you.
+  setup.reviewsConfig.incentiveText: Reward clients for writing a review
+  setup.reviewsConfig.incentive.label: Voucher reward
+  setup.reviewsConfig.builder: Builder
+  setup.reviewsConfig.preview: Preview
+  setup.reviewsConfig.listingButton: Listing
+  setup.reviewsConfig.readButton: Read
+  setup.reviewsConfig.fullName: Full Name
+  setup.reviewsConfig.firstName: First Name
+  setup.reviewsConfig.initials: Initials
+  setup.reviewsConfig.logoLeft: Left
+  setup.reviewsConfig.logoMiddle: Middle
+  setup.reviewsConfig.logoRight: Right
+  setup.reviewsConfig.sms: SMS
+  setup.reviewsConfig.email: Email
+  setup.reviewsConfig.smsText: SMS Text
+  setup.reviewsConfig.clientNameLabel: Display client name
+  setup.reviewsConfig.clientReview: Automatically reward clients for writing a review.
   clients.appointments.tooltip.assistant: 'Assistant'
   client.appointment.card.reinstate.success.msg: 'Appointment has been reinstated successfully'
   client.appointment.card.booked.by.message: 'Booked by {{bookedBy}}, on {{date}} at {{time}}'

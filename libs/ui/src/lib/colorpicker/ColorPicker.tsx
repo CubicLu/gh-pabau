@@ -21,7 +21,6 @@ const ColorItem: FC<P> = ({
   onClick,
   onHover,
   onLeave,
-  isRoundColorPicker = false,
 }) => {
   return (
     <div
@@ -31,7 +30,8 @@ const ColorItem: FC<P> = ({
         !isDarkColor && styles.toggleOpacity
       )}
       style={{
-        backgroundColor: selected && !isRoundColorPicker ? '#fff' : color,
+        // backgroundColor: selected && !isRoundColorPicker ? color : color,
+        backgroundColor: color,
         // border: hovering || selected ? '1px solid #54B2D3' : 'none',
         boxSizing: 'border-box',
         // opacity: hovering || selected ? '1' : '0.2',
@@ -95,9 +95,19 @@ export const ColorPicker: FC<PickerProps> = ({
   const [isAddingColor, setIsAddingColor] = useState(false)
 
   useEffect(() => {
+    if (selectedColor !== null) {
+      colorData.pop()
+      colorData.push(selectedColor)
+      setSelColor(selectedColor)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
     setSelColor(selectedColor)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedColor])
+
   const onClickColorItem = (color) => {
     setSelColor(color)
     onSelected(color)
