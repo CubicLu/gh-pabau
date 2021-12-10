@@ -33,6 +33,7 @@ export function Input({
   type,
   tooltip,
   suffix,
+  maxLength,
   onChange,
   ...props
 }: PropsWithChildren<CheckBoxProps>): JSX.Element {
@@ -89,6 +90,7 @@ export function Input({
             suffix={suffix}
             disabled={disabled}
             onChange={(e) => handleInputChange(e)}
+            maxLength={maxLength}
           />
         </Form.Item>
       </Form>

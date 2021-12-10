@@ -1,12 +1,12 @@
-query listRooms($skip: Int = 0, $take: Int = 50) {
+query listRooms($offset: Int = 0, $limit: Int = 50, $isActive: Int) {
   Rooms: findManyCompanyRoom(
     orderBy: { description: asc }
-    where: { deleted_at: null }
-    skip: $skip
-    take: $take
+    where: { deleted_at: null, is_active: { equals: $isActive } }
+    skip: $offset
+    take: $limit
   ) {
     id
-    name: description
+    room_name: description
     room_fee_type
     room_fee
     is_active
@@ -44,4 +44,3 @@ query countRooms($isActive: Int = 1) {
     where: { is_active: { equals: $isActive }, deleted_at: null }
   )
 }
-

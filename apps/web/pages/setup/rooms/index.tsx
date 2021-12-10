@@ -12,6 +12,7 @@ import {
   TreeDataType,
   BasicModal as Modal,
 } from '@pabau/ui'
+import { ListRoomsDocument, CountRoomsDocument } from '@pabau/graphql'
 import { Collapse, Checkbox } from 'antd'
 import {
   DollarOutlined,
@@ -99,31 +100,6 @@ const treeData: TreeDataType[] = [
   },
 ]
 
-export const LIST_QUERY = gql`
-  query rooms($isActive: Boolean = true, $offset: Int, $limit: Int) {
-    rooms(
-      offset: $offset
-      limit: $limit
-      order_by: { id: desc }
-      where: { is_active: { _eq: $isActive } }
-    ) {
-      __typename
-      id
-      room_name
-      location
-      is_active
-    }
-  }
-`
-const LIST_AGGREGATE_QUERY = gql`
-  query rooms_aggregate($isActive: Boolean = true) {
-    rooms_aggregate(where: { is_active: { _eq: $isActive } }) {
-      aggregate {
-        count
-      }
-    }
-  }
-`
 const DELETE_MUTATION = gql`
   mutation delete_Labs_by_pk($id: uuid!) {
     delete_LabsTmp_by_pk(id: $id) {
@@ -225,7 +201,7 @@ export function Rooms() {
         cssWidth: 'max',
         type: 'string',
       },
-      location: {
+      Locations: {
         full: t('setup.room.fields.location'),
         fullLower: t('setup.room.fields.location.lower'),
         short: t('setup.room.fields.location.short'),
@@ -233,11 +209,29 @@ export function Rooms() {
         min: 2,
         type: 'string',
         cssWidth: 'max',
+        render: (Locations) => {
+          if (Locations.length === 0) {
+            return <div>All Location</div>
+          } else {
+            return (
+              <div>{Locations?.map((x) => x.Location.name).join(', ')}</div>
+            )
+          }
+        },
       },
       is_active: {
         full: t('setup.room.fields.location.isactive'),
-        type: 'boolean',
-        defaultvalue: true,
+        type: 'number',
+        defaultvalue: 1,
+      },
+    },
+    filter: {
+      primary: {
+        name: 'public',
+        type: 'number',
+        default: 1,
+        active: 1,
+        inactive: 0,
       },
     },
   }
@@ -324,9 +318,9 @@ export function Rooms() {
         tableSearch={false}
         addQuery={ADD_MUTATION}
         deleteQuery={DELETE_MUTATION}
-        listQuery={LIST_QUERY}
+        listQuery={ListRoomsDocument}
         editQuery={EDIT_MUTATION}
-        aggregateQuery={LIST_AGGREGATE_QUERY}
+        aggregateQuery={CountRoomsDocument}
         updateOrderQuery={UPDATE_ORDER_MUTATION}
         showNotificationBanner={true}
         createPage={true}
