@@ -1,0 +1,16 @@
+query getApiKey($take: Int = 50, $skip: Int = 0) {
+  keys: findManyApiKey(take: $take, skip: $skip) {
+    api_key
+    created_date
+    contacts
+    bookings
+    invoices
+    locations
+    services
+    staff
+    financials
+    leads
+    medical_forms
+    reports
+  }
+}

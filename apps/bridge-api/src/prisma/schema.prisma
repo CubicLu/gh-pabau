@@ -379,7 +379,7 @@ model ApiDebug {
 model ApiKey {
   id            Int      @id @default(autoincrement())
   company_id    Int
-  api_key       String
+  api_key       String   @unique
   app_type      String
   created_date  DateTime
   contacts      Int      @default(0)

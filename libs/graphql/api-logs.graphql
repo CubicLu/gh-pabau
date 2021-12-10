@@ -1,0 +1,13 @@
+query getAPILogs($take: Int = 50, $skip: Int = 0) {
+  logs: findManyApiDebug(take: $take, skip: $skip) {
+    id
+    api_code
+    created_date
+    data_received
+    data_type
+  }
+}
+
+query countAPIdebug {
+  findManyApiDebugCount
+}
