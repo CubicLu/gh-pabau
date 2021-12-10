@@ -69,9 +69,15 @@ const Index: FC = () => {
               <div className={styles.mainErrorWrap}>
                 <div className={styles.errorPage}>
                   <div className={styles.message}>
-                    {t('reset.password.error.message')}
+                    {t('reset.password.error.message', {
+                      fallbackLng: 'en',
+                    })}
                   </div>
-                  <h5>{t('reset.password.token.expired')}</h5>
+                  <h5>
+                    {t('reset.password.token.expired', {
+                      fallbackLng: 'en',
+                    })}
+                  </h5>
                 </div>
               </div>
             )}
