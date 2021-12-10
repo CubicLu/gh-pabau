@@ -2142,6 +2142,7 @@ en:
   marketingreviews.data.updatediscounterrormessages: 'Error! While updating a response'
   marketingreviews.data.deletediscountsuccessmessages: 'Success! You have successfully deleted a response'
   marketingreviews.data.deletediscounterrormessages: 'Error! While deleting a response'
+  marketingvoucher.data.deletedvouchermessage: 'Success! You have successfully deleted a voucher'
   marketingreviews.message.title1: 'You’ve got a lot of work to do'
   marketingreviews.message.title2: 'Ok, but you still have got work to do'
   marketingreviews.message.title3: 'Great job. You are almost there'

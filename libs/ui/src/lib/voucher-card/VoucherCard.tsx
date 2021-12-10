@@ -23,18 +23,20 @@ export interface VoucherCardProps {
   backgroundColor1?: string
   backgroundColor2?: string
   background?: string
-  gradientType: string
+  gradientType?: string
   bookNowButton?: boolean
-  buttonLabel: string
-  borderColor: string
+  buttonLabel?: string
+  borderColor?: string
   voucherType?: string
   voucherNum?: number
-  voucherPrice: number
-  voucherPriceLabel: string
+  voucherPrice?: number
+  voucherPriceLabel?: string
+  voucherValidFor?: string
+  voucherValidForLabel?: string
   voucherSoldPrice?: number
   voucherSoldPriceLabel?: string
-  voucherRelation: string
-  voucherRelationLabel: string
+  voucherRelation?: string
+  voucherRelationLabel?: string
   currencyType?: string
   termsConditions?: string
   voucherBackgroundUrl?: string
@@ -60,6 +62,8 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   voucherNum,
   voucherPrice = 0,
   voucherPriceLabel,
+  voucherValidFor,
+  voucherValidForLabel,
   voucherSoldPrice = 0,
   voucherSoldPriceLabel,
   voucherRelation,
@@ -211,6 +215,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                   <div>
                     <h1>{voucherPrice >= 0 && currencyType + voucherPrice}</h1>
                     <p>{voucherPriceLabel}</p>
+                    <p>{voucherValidForLabel + `${voucherValidFor}`}</p>
                   </div>
                 </div>
 

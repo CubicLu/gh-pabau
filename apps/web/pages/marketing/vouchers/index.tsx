@@ -2,23 +2,15 @@ import React, { FC, useState, useEffect } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { ApartmentOutlined } from '@ant-design/icons'
-import {
-  TabbedTable,
-  Button,
-  VoucherCard,
-  Pagination,
-  Table,
-  BasicModal as TermsModal,
-} from '@pabau/ui'
+import { Button, VoucherCard, BasicModal as TermsModal } from '@pabau/ui'
 import CommonHeader from '../../../components/CommonHeader'
-import AddButton from '../../../components/AddButton'
 import useWindowSize from '../../../hooks/useWindowSize'
 import { ReactComponent as VoucherIcon } from '../../../assets/images/voucher-icon.svg'
-import { data, giftCardSettings } from '../../../mocks/vouchers'
-import { Card, Row, Col, Typography } from 'antd'
+import { giftCardSettings } from '../../../mocks/vouchers'
+import { Card, Row, Col, Typography, Skeleton } from 'antd'
 import Link from 'next/link'
 import styles from './index.module.less'
+import { useGetVoucherTemplateQuery } from '@pabau/graphql'
 
 const { Paragraph } = Typography
 
@@ -27,74 +19,7 @@ const GiftVouchers: FC = () => {
   const size = useWindowSize()
   const user = useUser()
 
-  const columns = [
-    {
-      title: t('giftvouchers.circulations.columns.number'),
-      dataIndex: 'number',
-      visible: true,
-      width: '150px',
-    },
-    {
-      title: t('giftvouchers.circulations.columns.description'),
-      dataIndex: 'description',
-      visible: true,
-      width: '250px',
-    },
-    {
-      title: t('giftvouchers.circulations.columns.name'),
-      dataIndex: 'name',
-      visible: true,
-      width: '250px',
-    },
-    {
-      title: t('giftvouchers.circulations.columns.purchasedate'),
-      dataIndex: 'purchase_date',
-      visible: true,
-    },
-    {
-      title: t('giftvouchers.circulations.columns.expirydate'),
-      dataIndex: 'expiry_date',
-      visible: true,
-    },
-    {
-      title: t('giftvouchers.circulations.columns.amount'),
-      dataIndex: 'amount',
-      visible: true,
-    },
-    {
-      title: t('giftvouchers.circulations.columns.remainingbalance'),
-      dataIndex: 'remaining_balance',
-      visible: true,
-    },
-    {
-      title: t('giftvouchers.circulations.columns.status'),
-      dataIndex: 'is_active',
-      visible: true,
-    },
-    {
-      title: '',
-      dataIndex: 'view',
-      visible: true,
-      className: 'lastColumn',
-      render: function renderTableSource() {
-        return (
-          <div>
-            <Button size="large">View</Button>
-          </div>
-        )
-      },
-    },
-  ]
-  type TabItems = 'Types' | 'Circlulation'
-  const tabItems = [
-    t('giftvouchers.tabs.tab1') as TabItems,
-    t('giftvouchers.tabs.tab2') as TabItems,
-  ]
   const [gifts, setGifts] = useState([])
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [paginationState, setPaginationState] = useState(true)
-  const [dataSource, setDataSource] = useState(null)
-  const [activeTab, setActiveTab] = useState(tabItems[0])
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [selectedVoucher, setSelectedVoucher] = useState(null)
 
@@ -106,26 +31,11 @@ const GiftVouchers: FC = () => {
         </div>
       )}
       <div className="rightDiv">
-        {activeTab === tabItems[0] && (
-          <Link href="/marketing/vouchers/create">
-            <Button type="primary" size="large">
-              {t('giftvouchers.create')}
-            </Button>
-          </Link>
-        )}
-        {activeTab === tabItems[1] && (
-          <div>
-            <AddButton
-              addFilter
-              tableSearch
-              onFilterSource={() => false}
-              schema={{
-                searchPlaceholder: t('giftvouchers.search.placeholder'),
-              }}
-              onSearch={(data) => setSearchTerm(data)}
-            />
-          </div>
-        )}
+        <Link href="/marketing/vouchers/create">
+          <Button type="primary" size="large">
+            {t('giftvouchers.create')}
+          </Button>
+        </Link>
       </div>
     </div>
   )
@@ -154,23 +64,7 @@ const GiftVouchers: FC = () => {
         voucherType: 'flowers',
       },
     ])
-    setDataSource(data)
   }, [t])
-
-  const onTabChange = (tab) => {
-    switch (tabItems[tab]) {
-      case tabItems[0]:
-        setActiveTab(tabItems[0])
-        setPaginationState(false)
-        break
-      case tabItems[1]:
-        setActiveTab(tabItems[1])
-        setPaginationState(true)
-        break
-      default:
-        return
-    }
-  }
 
   const onMenuClick = (key, data) => {
     switch (key) {
@@ -182,37 +76,72 @@ const GiftVouchers: FC = () => {
         return
     }
   }
-
+  const {
+    data: voucherData,
+    loading: voucherLoading,
+  } = useGetVoucherTemplateQuery()
   return (
     <Layout {...user}>
       <CommonHeader isLeftOutlined title={t('giftvouchers.title')} />
       <div className={styles.giftVoucherMain}>
         <Card title={<CardHeader />}>
           <div className={styles.body}>
-            <TabbedTable
-              tabItems={tabItems}
-              onTabChange={(tab) => onTabChange(tab)}
-            >
-              <div className={styles.types}>
+            <div className={styles.types}>
+              {voucherLoading ? (
+                <Skeleton />
+              ) : (
                 <Row>
-                  {gifts.length > 0 ? (
-                    gifts.map((gift, key) => (
-                      <Col
-                        lg={8}
-                        md={12}
-                        sm={12}
-                        xs={24}
-                        key={`col-key-${key * 123}`}
-                      >
-                        <div className={styles.voucherCard}>
-                          <VoucherCard
-                            onMenuClick={(key) => onMenuClick(key, gift)}
-                            showDrawerMenu={size.width < 768}
-                            {...gift}
-                          />
-                        </div>
-                      </Col>
-                    ))
+                  {gifts ? (
+                    voucherData?.templates.map((gift, key) => {
+                      return (
+                        <Col
+                          lg={8}
+                          md={12}
+                          sm={12}
+                          xs={24}
+                          key={`col-key-${key * 123}`}
+                        >
+                          <div className={styles.voucherCard}>
+                            <VoucherCard
+                              onMenuClick={(key) => onMenuClick(key, gift)}
+                              showDrawerMenu={size.width < 768}
+                              cardWidth={500}
+                              backgroundColor1="#9013FE"
+                              backgroundColor2="#BD10E0"
+                              gradientType="linear-gradient"
+                              borderColor="#000"
+                              bookNowButton={true}
+                              buttonLabel={t(
+                                'giftvouchers.create.label.booknow'
+                              )}
+                              showMenu={true}
+                              voucherType=""
+                              voucherNum={gift.template_id}
+                              voucherPrice={100}
+                              voucherPriceLabel={t(
+                                'ui.client.giftvoucher.pricelabel'
+                              )}
+                              voucherValidForLabel={
+                                t('giftvouchers.create.label.validfor') + ': '
+                              }
+                              voucherValidFor="1 month"
+                              voucherSoldPrice={100}
+                              voucherSoldPriceLabel={t(
+                                'ui.client.giftvoucher.soldpricelabel'
+                              )}
+                              voucherRelation={gift.template_name}
+                              voucherRelationLabel={t(
+                                'ui.client.giftvoucher.relationlabel'
+                              )}
+                              currencyType="£"
+                              termsConditions={t(
+                                'ui.vouchercard.back.subtitle'
+                              )}
+                            />
+                          </div>
+                        </Col>
+                      )
+                    })
                   ) : (
                     <div className={styles.noDataContent}>
                       <div className={styles.noDataTableBox}>
@@ -232,32 +161,10 @@ const GiftVouchers: FC = () => {
                     </div>
                   )}
                 </Row>
-              </div>
-              <div className={styles.tableSheet}>
-                <Table
-                  draggable={false}
-                  columns={columns}
-                  searchTerm={searchTerm}
-                  noDataText={t('giftvouchers.circulations.nodata')}
-                  noDataIcon={<ApartmentOutlined />}
-                  noDataBtnText={t('giftvouchers.circulations.nodata')}
-                  scroll={{ x: 'max-content' }}
-                  dataSource={dataSource}
-                />
-              </div>
-            </TabbedTable>
+              )}
+            </div>
           </div>
         </Card>
-        {paginationState && (
-          <div className={styles.paginationDiv}>
-            <Pagination
-              showingRecords={dataSource?.length}
-              defaultCurrent={1}
-              total={dataSource?.length}
-              pageSize={10}
-            />
-          </div>
-        )}
         <TermsModal
           width={800}
           visible={showTermsModal}

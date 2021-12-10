@@ -70,12 +70,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   ]
   const [activeStep, setActiveStep] = useState(0)
   const [bookBtn, setBookBtn] = useState(false)
-  const [voucherRelation] = useState(
-    t('giftvouchers.create.label.voucherrelation').toString()
-  )
-  const [voucherRelationLabel] = useState(
-    t('giftvouchers.create.label.voucherrelation.para').toString()
-  )
   const [themes, updateThemes] = useState(defaultThemes)
   const [showNextBtn, setShowNextBtn] = useState(true)
   const [showExtraBtn, setShowExtraBtn] = useState(false)
@@ -90,7 +84,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     bgColor: defaultBgColors?.[0]?.background,
     bgUrl: '',
   })
-
   const step0Schema = Yup.object({
     name: Yup.string()
       .min(
@@ -209,9 +202,13 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             gradientType="linear-gradient"
             termsConditions={values?.terms}
             voucherPrice={values?.price}
-            voucherPriceLabel={values?.name}
-            voucherRelation={voucherRelation}
-            voucherRelationLabel={voucherRelationLabel}
+            voucherPriceLabel={t('ui.client.giftvoucher.pricelabel')}
+            voucherValidFor={values?.validity}
+            voucherValidForLabel={
+              t('giftvouchers.create.label.validfor') + ': '
+            }
+            voucherRelation={values?.name}
+            voucherRelationLabel={values?.services}
             currencyType="£"
             voucherSoldPrice={values?.price}
             voucherSoldPriceLabel={`${t('giftvouchers.create.label.sold')} 5`}

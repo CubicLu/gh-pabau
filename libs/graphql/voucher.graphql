@@ -1,8 +1,36 @@
 query getVoucherTemplate {
-  templates: findManyMessageTemplate(where: {template_type: {equals: "voucher"}, template_name: {not: {equals: ""}}}, orderBy: {template_name: asc}) {
+  templates: findManyMessageTemplate(
+    where: {
+      template_type: { equals: "voucher" }
+      template_name: { not: { equals: "" } }
+    }
+    orderBy: { template_name: asc }
+  ) {
     template_id
     template_name
     template_group
     created_at
+  }
+}
+
+mutation createVoucher($data: MessageTemplateCreateInput!) {
+  createOneMessageTemplate(data: $data) {
+    template_id
+  }
+}
+
+mutation deleteVoucher($where: MessageTemplateWhereUniqueInput!) {
+  deleteOneMessageTemplate(where: $where) {
+    template_id
+  }
+}
+
+mutation updateVoucher(
+  $data: MessageTemplateUpdateInput!
+  $where: MessageTemplateWhereUniqueInput!
+) {
+  updateOneMessageTemplate(data: $data, where: $where) {
+    template_name
+    template_id
   }
 }
