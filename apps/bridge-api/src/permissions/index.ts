@@ -188,6 +188,7 @@ export const permissions = shield(
       // LeadNote
       updateOneCmLeadNote: rules.authentication.isAuthenticated,
       // Default fallback
+      reorderCommunicationTemplates: rules.authentication.isAuthenticated,
       deleteOneContactMedicalCondition: rules.authentication.isAuthenticated,
       deleteOneMedicalCondition: rules.authentication.isAuthenticated,
 

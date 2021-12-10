@@ -8926,6 +8926,7 @@ model MessageTemplate {
   word_template             String
   is_default                Boolean                   @default(false)
   folder_id                 Int?
+  order                     Int?
   Company                   Company                   @relation(fields: [company_id], references: [id])
   TemplateFolder            TemplateFolder?           @relation(fields: [folder_id], references: [id])
   User                      User?                     @relation(fields: [created_by], references: [id])

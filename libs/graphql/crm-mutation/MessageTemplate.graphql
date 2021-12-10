@@ -19,6 +19,7 @@ fragment MessageTemplateFields on MessageTemplate {
   word_template
   is_default
   folder_id
+  order
 }
 
 fragment MessageTemplate on MessageTemplate {

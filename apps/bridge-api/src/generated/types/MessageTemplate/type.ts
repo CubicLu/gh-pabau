@@ -27,6 +27,7 @@ export const MessageTemplate = objectType({
     t.string('word_template')
     t.boolean('is_default')
     t.nullable.int('folder_id')
+    t.nullable.int('order')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
