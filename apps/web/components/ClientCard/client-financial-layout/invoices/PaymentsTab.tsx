@@ -52,7 +52,7 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
 
     setInvoiceTotal(
       invoice?.items
-        .map((item) => {
+        ?.map((item) => {
           const subTotal = item.price * item.quantity
           const discount_ = calculateDiscount(subTotal, item.discount)
           const discountedTotal = subTotal - discount_
@@ -66,7 +66,7 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
   }, [payments, invoiceTotal, invoice])
 
   const numbertoAmountFormat = (e) => {
-    e = e.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    e = (e ?? 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
     return e
   }
 

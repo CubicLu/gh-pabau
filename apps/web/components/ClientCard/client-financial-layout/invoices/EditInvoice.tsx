@@ -43,9 +43,14 @@ import Refund from './Refund'
 interface EditInvoiceProps {
   invoice?: InvoiceProp
   onModalBackPress: () => void
+  activeKey?: string
 }
 
-const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
+const EditInvoice: FC<EditInvoiceProps> = ({
+  invoice,
+  onModalBackPress,
+  activeKey,
+}) => {
   const [invoice_, setInvoice] = useState(invoice)
   const [enableCreateBtn, setEnableCreateBtn] = useState(
     invoice?.items?.length > 0
@@ -383,6 +388,7 @@ const EditInvoice: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
       <FullScreenReportModal
         operations={[OperationType.create]}
         title={t('ui.client-card-financial.edit-invoice')}
+        activeDefaultKey={activeKey}
         subTitle={
           invoice_?.paymentStatusTooltip ? (
             <Tooltip

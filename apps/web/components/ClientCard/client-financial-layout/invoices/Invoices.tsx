@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Table, Pagination, Avatar } from '@pabau/ui'
+import { Table, Pagination } from '@pabau/ui'
+import { Avatar } from 'antd'
 import classNames from 'classnames'
 import moment from 'moment'
 import { InvoiceProp } from './../ClientFinancialsLayout'
@@ -307,18 +308,17 @@ export const Invoices: FC<P> = (props) => {
             <Tooltip
               trigger={'click'}
               arrowPointAtCenter
+              placement="top"
               title={
-                <div>
-                  <p className={styles.shareTootip}>
-                    {t('ui.client-card-financial.shared-with')}
-                  </p>
-                  {[row.employee].map((x, index) => {
-                    return (
-                      <span className={styles.avatarIcon} key={index}>
-                        <Avatar key={index} name={x} size="large" />
-                      </span>
-                    )
-                  })}
+                <div className={styles.shareIcon}>
+                  {t('ui.client-card-financial.shared-with')}
+                  <Avatar key={'EMPLOYEE'} size="large">
+                    {(row.employee ?? '')
+                      .toUpperCase()
+                      .split(' ')
+                      .map((item) => item.charAt(0))
+                      .join('')}
+                  </Avatar>
                 </div>
               }
             >
@@ -754,6 +754,7 @@ export const Invoices: FC<P> = (props) => {
         <EditInvoice
           invoice={selectedInvoice}
           onModalBackPress={() => setShowEditInvoice(false)}
+          activeKey="0"
         />
       )}
       <div className={styles.invoices}>

@@ -55,6 +55,7 @@ export const Payments: FC<IPaymentsProps> = ({
   const [paymentData, setPayment] = useState<FinancialPayment[]>([])
   const [showEditInvoice, setShowEditInvoice] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceProp>()
+  const [clickedID, setClickID] = useState('')
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -96,7 +97,7 @@ export const Payments: FC<IPaymentsProps> = ({
         paidBy: item?.user,
         method: item?.pmethod.charAt(0).toUpperCase() + item?.pmethod.slice(1),
         amount: item?.amount,
-        dateTime: dayjs.unix(item?.date).format('DD MMM, YYYY HH:mm:ss'),
+        dateTime: dayjs(item?.date).format('DD MMM, YYYY HH:mm:ss'),
       })
       return paymentsDetails
     })
@@ -124,8 +125,15 @@ export const Payments: FC<IPaymentsProps> = ({
   }, [payment])
 
   const onPressEditInvoice = (invoice) => {
+    setClickID('invoiceID')
     setShowEditInvoice(true)
     setSelectedInvoice(invoice)
+  }
+
+  const onPressEditPayment = (payment) => {
+    setClickID('paymentID')
+    setShowEditInvoice(true)
+    setSelectedInvoice(payment)
   }
 
   const columns = [
@@ -138,7 +146,9 @@ export const Payments: FC<IPaymentsProps> = ({
         return (
           <span className={styles.paymentNo}>
             <span>{value}</span>
-            <span>#{row.paymentNo}</span>
+            <span onClick={() => onPressEditPayment(row)}>
+              #{row.paymentNo}
+            </span>
           </span>
         )
       },
@@ -245,6 +255,7 @@ export const Payments: FC<IPaymentsProps> = ({
         <EditInvoice
           invoice={selectedInvoice}
           onModalBackPress={() => setShowEditInvoice(false)}
+          activeKey={clickedID === 'invoiceID' ? '1' : '2'}
         />
       )}
       <div className={styles.payments}>

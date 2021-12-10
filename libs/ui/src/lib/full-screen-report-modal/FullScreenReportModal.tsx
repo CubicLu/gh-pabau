@@ -52,6 +52,7 @@ export interface FullScreenReportModalProps {
   className?: string
   avatar?: string
   isDocFileOpen?: boolean
+  activeDefaultKey?: string
 }
 
 export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
@@ -89,6 +90,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   customOptionBtn = null,
   avatar,
   isDocFileOpen,
+  activeDefaultKey,
   ...props
 }) => {
   const ref = useRef(null)
@@ -101,6 +103,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   useEffect(() => {
     setActive(activated || false)
   }, [activated])
+
   return visible ? (
     <Modal
       visible={visible}
@@ -265,6 +268,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                     onTabChange(e)
                   }
                 }}
+                activeKey={activeDefaultKey}
               >
                 {children
                   ? children.map((child, i) => (

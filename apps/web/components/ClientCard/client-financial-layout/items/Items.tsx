@@ -99,7 +99,7 @@ export const Items: FC<P> = (props) => {
         ),
         invoiceNo: item?.custom_id,
         name: item?.product_name,
-        type: item?.type,
+        type: item?.type === 'service' ? 'Service' : 'Product',
         employee: item?.biller_name,
         soldBy: item?.biller_name,
         qty: item?.quantity,
@@ -262,6 +262,7 @@ export const Items: FC<P> = (props) => {
         <EditInvoice
           invoice={selectedInvoice}
           onModalBackPress={() => setShowEditInvoice(false)}
+          activeKey="1"
         />
       )}
       <div className={styles.financialItems}>

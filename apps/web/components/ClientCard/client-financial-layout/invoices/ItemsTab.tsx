@@ -106,7 +106,7 @@ const ItemsTab: FC<Invoice> = ({ invoice_, toggleSaveBtn }) => {
   }, [items])
 
   const numbertoAmountFormat = (e) => {
-    e = e.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    e = (e ?? 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
     return e
   }
 
