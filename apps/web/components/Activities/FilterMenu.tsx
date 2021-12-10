@@ -165,6 +165,7 @@ interface FilterMenuProps {
   leadStageData: OptionList[]
   pipelineData: OptionList[]
   locationData: OptionList[]
+  services: OptionList[]
 }
 
 export const FilterMenu: FC<FilterMenuProps> = ({
@@ -180,6 +181,7 @@ export const FilterMenu: FC<FilterMenuProps> = ({
   leadStageData,
   pipelineData,
   locationData,
+  services,
 }) => {
   const { t } = useTranslationI18()
   const [userList, setUserList] = useState<PersonList[]>([])
@@ -239,7 +241,8 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         )
         break
       }
-      case 'Client name': {
+      case 'Client name':
+      case 'Lead client': {
         return (
           <ClientLeadSelect
             name="client"
@@ -368,6 +371,17 @@ export const FilterMenu: FC<FilterMenuProps> = ({
         return (
           <SelectMenu
             optionList={locationData}
+            value={value === '' ? undefined : value}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )
+        break
+      }
+      case 'Services added': {
+        return (
+          <SelectMenu
+            optionList={services}
             value={value === '' ? undefined : value}
             onChange={onChange}
             disabled={disabled}

@@ -31,8 +31,8 @@ export const retrieveActivityGraphData = async (
       },
       ActivityType: { name: { in: where?.activityType } },
       status: { in: where?.status },
-      AssignedUser: {
-        id: { in: where?.userId },
+      assigned_to: {
+        in: where?.userId,
       },
       Company: {
         id: { equals: ctx.authenticated.company },
@@ -83,8 +83,8 @@ export const retrieveActivityData = async (
       },
       ActivityType: { name: { in: where?.activityType } },
       status: { in: where?.status },
-      AssignedUser: {
-        id: { in: where?.userId },
+      assigned_to: {
+        in: where?.userId,
       },
       Company: {
         id: { equals: ctx.authenticated.company },
@@ -121,9 +121,19 @@ export const retrieveActivityData = async (
           ...activitySelect.select?.CmLead?.select,
           ID: true,
           LastUpdated: true,
+          ContactID: true,
           Contact: {
             select: {
               OwnerID: true,
+              Avatar: true,
+              Fname: true,
+              Lname: true,
+              User: {
+                select: {
+                  full_name: true,
+                  image: true,
+                },
+              },
             },
           },
           CmLeadNote: {
@@ -374,6 +384,9 @@ export const prepareSortingObject = (sortOrder: string, field: string) => {
     },
     'Lead email': {
       CmLead: { Email: sortOrder },
+    },
+    'Lead client': {
+      CmLead: { Contact: { Fname: sortOrder } },
     },
     Address: {
       CmContact: { MailingStreet: sortOrder },
@@ -1486,6 +1499,14 @@ export const manualFilterOnOrOperandColumns = async (
           }
           case 'Lead name': {
             if (manualFilterOnBasicOperand(columnValue, item?.CmLead?.ID)) {
+              count += 1
+            }
+            break
+          }
+          case 'Lead client': {
+            if (
+              manualFilterOnBasicOperand(columnValue, item?.CmLead?.ContactID)
+            ) {
               count += 1
             }
             break

@@ -29,7 +29,6 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CommonHeader from '../../components/CommonHeader'
 import { useMedia } from 'react-use'
 import confetti from 'canvas-confetti'
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import * as Icon from '@ant-design/icons'
 import {
   useGetActivityTypesQuery,
@@ -44,6 +43,7 @@ import {
   User,
   useRetrieveSalutationAndStageQuery,
   useGetCmLabelsQuery,
+  useListServicesQuery,
 } from '@pabau/graphql'
 import utc from 'dayjs/plugin/utc'
 import { useUser } from '../../context/UserContext'
@@ -51,10 +51,6 @@ import { PlusSquareFilled } from '@ant-design/icons'
 dayjs.extend(utc)
 
 const { TabPane } = Tabs
-/* eslint-disable-next-line */
-export interface IndexProps {
-  client?: ApolloClient<NormalizedCacheObject>
-}
 
 export interface ActivitiesDataProps {
   id: number
@@ -188,16 +184,16 @@ export interface Labels {
 }
 
 export interface OrderValue {
-  field: string
-  order: string
+  field?: string
+  order?: string
 }
 
 const WAIT_INTERVAL = 400
 
-export const Index: FC<IndexProps> = ({ client }) => {
+export const Index: FC = () => {
   const { t } = useTranslationI18()
   const activityRef = useRef(null)
-  const isMobile = useMedia('(max-width: 768px)')
+  const isMobile = useMedia('(max-width: 767px)')
   const [sourceData, setSourceData] = useState([])
   const [tabValue, setTabValue] = useState(tabs.toDo)
   const loggedUser = useUser()
@@ -247,6 +243,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const [locationData, setLocationData] = useState<OptionList[]>([])
   const [salutationData, setSalutationData] = useState<OptionList[]>([])
   const [pipelineStageData, setPipelineStageData] = useState<OptionList[]>([])
+  const [services, setServices] = useState<OptionList[]>([])
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
@@ -338,6 +335,19 @@ export const Index: FC<IndexProps> = ({ client }) => {
   const { data: locationResponse } = useGetActiveLocationQuery()
   const { data: salutationStageResponse } = useRetrieveSalutationAndStageQuery()
   const { data: labelResponse } = useGetCmLabelsQuery()
+  const { data: listServicesResponse } = useListServicesQuery()
+
+  useEffect(() => {
+    if (listServicesResponse?.services) {
+      const records = [...listServicesResponse.services]?.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setServices(records)
+    }
+  }, [listServicesResponse])
 
   useEffect(() => {
     if (labelResponse?.findManyCmLabel) {
@@ -587,28 +597,13 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [filterActivityType])
 
   useEffect(() => {
-    if (selectedDates?.length > 0) {
-      setFilterDates([
-        dayjs(selectedDates[0]).utc().startOf('day'),
-        dayjs(selectedDates[1]).utc().endOf('day'),
-      ])
-    }
+    selectedDates?.length > 0
+      ? setFilterDates([
+          dayjs(selectedDates[0]).startOf('day'),
+          dayjs(selectedDates[1]).endOf('day'),
+        ])
+      : setFilterDates([])
   }, [selectedDates])
-
-  // useEffect(() => {
-  //   const resultData: ActivitiesDataProps[] = activitiesList.map((data) => {
-  //     const temp = { ...data }
-  //     if (data.dueDate && data.dueEndDate) {
-  //       temp['duration'] = getDuration(
-  //         data.dueDate,
-  //         data.dueEndDate,
-  //         eventDateFormat
-  //       )
-  //     }
-  //     return temp
-  //   })
-  //   setSourceData(resultData)
-  // }, [])
 
   useEffect(() => {
     if (activityActiveResponse?.findFirstActivityUserState) {
@@ -808,9 +803,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
       currentStatus !== 'Done' && displayConfetti()
       const newSourceData = sourceData.filter((item) => item.id !== id)
       setSourceData(newSourceData)
-      activityRefetch()
     },
-    [sourceData, displayConfetti, activityRefetch]
+    [sourceData, displayConfetti]
   )
 
   const onStatusChange = (newStatus) => {
@@ -827,40 +821,8 @@ export const Index: FC<IndexProps> = ({ client }) => {
         order: sorter.order === 'ascend' ? 'asc' : 'desc',
       })
     } else {
-      setOrderValue({
-        field: 'Due date',
-        order: 'asc',
-      })
+      setOrderValue({})
     }
-    // if (sorter.order) {
-    //   const order = sorter.order === 'ascend' ? 'asc' : 'desc'
-    //   const columnKey = sorter?.column?.id
-    //   let result: ActivitiesDataProps[] = []
-    //   if (
-    //     columnKey === columnNames.dueDate.id ||
-    //     columnKey === columnNames.doneTime.id
-    //   ) {
-    //     result = sourceData.sort((a, b) => {
-    //       const dateA = a[columnKey]
-    //       const dateB = b[columnKey]
-    //       return order === 'asc'
-    //         ? dayjs(dateA, eventDateFormat).valueOf() -
-    //             dayjs(dateB, eventDateFormat).valueOf()
-    //         : dayjs(dateB, eventDateFormat).valueOf() -
-    //             dayjs(dateA, eventDateFormat).valueOf()
-    //     })
-    //   } else {
-    //     result = orderBy(
-    //       sourceData,
-    //       (row) => {
-    //         const value = getFunction(row, `${columnKey}`)
-    //         return value != null ? value.toString().toLowerCase() : ''
-    //       },
-    //       order
-    //     )
-    //   }
-    //   setSourceData([...result])
-    // }
   }, [])
 
   const handleCellSave = (row, showConfetti = false, needRefetch = false) => {
@@ -1016,14 +978,15 @@ export const Index: FC<IndexProps> = ({ client }) => {
       <RangePicker
         format={'DD MMM YYYY'}
         value={[selectedDates?.[0], selectedDates?.[1]]}
-        onChange={(val, dateStrings) =>
-          setSelectedDates([dayjs(dateStrings[0]), dayjs(dateStrings[1])])
-        }
+        onChange={(val) => {
+          !val ? setSelectedDates([]) : setSelectedDates([val[0], val[1]])
+        }}
       />
     )
   }
 
   const toggleCreateActivityModal = useCallback(() => {
+    setEditData(null)
     setCreateActivityVisible((e) => !e)
   }, [])
 
@@ -1191,6 +1154,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             leadStageData={leadStageData}
             pipelineData={pipelineData}
             locationData={locationData}
+            services={services}
           />
         )}
         <div>
@@ -1256,6 +1220,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             leadStageData={leadStageData}
             pipelineData={pipelineData}
             locationData={locationData}
+            services={services}
           />
         )}
         {/* <div className={styles.subHeader}>
@@ -1420,6 +1385,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
             onSelectDone={onSelectDone}
+            activityRefetch={activityRefetch}
             onSortData={onSortData}
             handleCellSave={handleCellSave}
             editCreateActivityModal={editCreateActivityModal}

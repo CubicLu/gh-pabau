@@ -200,7 +200,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
     useEffect(() => {
       if (record) {
         const {
-          assigned: { full_name = '' },
+          assigned,
           client: {
             firstName: cFirstName = '',
             lastName: cLastName = '',
@@ -210,7 +210,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
           type_name,
         } = record
         id === columnNames.assignedToUser.id &&
-          setSelectedListItem(`${full_name}`)
+          setSelectedListItem(`${assigned?.full_name}`)
         id === columnNames.clientName.id &&
           setSelectedListItem(`${cFirstName} ${cLastName}`)
         id === columnNames.leadOwner.id &&

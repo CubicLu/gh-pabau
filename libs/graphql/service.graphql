@@ -46,3 +46,13 @@ query getServicesById($service_id: Int) {
     color
   }
 }
+
+query listServices {
+  services: findManyCompanyService(
+    where: { Product: { is_active: { equals: 1 } } }
+    orderBy: { name: asc }
+  ) {
+    id
+    name
+  }
+}

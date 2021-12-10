@@ -63,6 +63,7 @@ interface ClientsHeaderProps {
   leadStageData: OptionList[]
   pipelineData: OptionList[]
   locationData: OptionList[]
+  services: OptionList[]
 }
 
 interface UserWithIconProps {
@@ -143,6 +144,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     leadStageData,
     pipelineData,
     locationData,
+    services,
   }) => {
     const { t } = useTranslationI18()
     const [visible, setVisible] = useState({
@@ -698,6 +700,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             leadStageData={leadStageData}
             pipelineData={pipelineData}
             locationData={locationData}
+            services={services}
           />
         </div>
       )

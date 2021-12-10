@@ -188,6 +188,15 @@ export const getColumnData = (column: string, data = {}) => {
         },
       },
     },
+    'Lead client': {
+      key: 'Basic',
+      type: 'number',
+      filter: {
+        CmLead: {
+          ContactID: data,
+        },
+      },
+    },
     'Date of entering stage': {
       key: 'Date',
       type: 'string',

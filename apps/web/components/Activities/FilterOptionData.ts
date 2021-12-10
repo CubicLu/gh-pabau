@@ -139,6 +139,10 @@ export const getData = (t) => {
       label: t('create.filter.modal.lead.column.lead.creator'),
     },
     {
+      key: 'Lead client',
+      label: t('create.filter.modal.lead.column.lead.client'),
+    },
+    {
       key: 'Date of entering stage',
       label: t('create.filter.modal.lead.column.lead.date.entring.stage'),
     },
@@ -177,6 +181,10 @@ export const getData = (t) => {
     {
       key: 'Location',
       label: t('create.filter.modal.lead.column.lead.location'),
+    },
+    {
+      key: 'Services added',
+      label: t('create.filter.modal.lead.column.lead.service.added'),
     },
   ]
 
@@ -323,9 +331,11 @@ export const getData = (t) => {
     'Lead source': basicOperands,
     'Won by': userOperands,
     'Lead stage': basicOperands,
+    'Services added': basicOperands,
     'Lead status': basicOperands,
     'Date of entering stage': dateOperands,
     'Lead creator': userOperands,
+    'Lead client': basicOperands,
     Pipeline: basicOperands,
     Title: basicOperands,
     'Update time': dateOperands,

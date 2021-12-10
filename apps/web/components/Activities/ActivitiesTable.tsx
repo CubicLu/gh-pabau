@@ -101,6 +101,7 @@ export interface ActivityTableProps {
   filteredData?: ActivitiesDataProps[]
   handleLabelClick?: (e, val) => void
   handleDeleteClick?: () => void
+  activityRefetch: () => void
   selectedRowKeys?: number[]
   setSelectedRowKeys?: (val: number[]) => void
   handleRowClick?: (val) => void
@@ -187,6 +188,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
     onStatusChange,
     onSelectDone,
     onSortData,
+    activityRefetch,
     handleCellSave,
     editCreateActivityModal,
     labels,
@@ -313,6 +315,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           },
         })
       }
+      activityRefetch()
     }
 
     const RenderStatus = (data) => {
@@ -446,7 +449,7 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
               <span className={styles.cellFormater}>
                 {name && (
                   <a href="/" className={styles.link}>
-                    {`${firstName} ${lastName}` || ''}
+                    {name || ''}
                   </a>
                 )}
               </span>
@@ -580,6 +583,37 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           width: 120,
           visible: visibleColumn(columnNames.leadCreator.label),
           columnName: columnNames.leadCreator.label,
+        },
+        {
+          id: columnNames.leadClient.id,
+          title: (
+            <span className="dragHandler">
+              <AimOutlined />
+              {t('activityList.column.leadClient')}
+            </span>
+          ),
+          dataIndex: 'lead',
+          skeletonWidth: '80px',
+          render: ({ Contact }) => {
+            const name = [Contact?.Fname, Contact?.Lname]
+              .filter(Boolean)
+              .join(' ')
+            return (
+              name && (
+                <div className={styles.avtarMargin}>
+                  <span className={styles.avatarWrapper}>
+                    <Avatar
+                      name={name}
+                      src={Contact?.Avatar && getImage(Contact?.Avatar)}
+                    />
+                  </span>
+                </div>
+              )
+            )
+          },
+          width: 120,
+          visible: visibleColumn(columnNames.leadClient.label),
+          columnName: columnNames.leadClient.label,
         },
         {
           id: columnNames.leadDateEnteringStage.id,
@@ -1157,13 +1191,16 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           ),
           dataIndex: 'assigned',
           skeletonWidth: '50px',
-          render: ({ full_name, image }) => {
+          render: (data) => {
+            const { full_name, image } = data ?? {}
             return (
-              <div className={styles.avtarMargin}>
-                <span className={styles.avatarWrapper}>
-                  <Avatar name={full_name} src={image && getImage(image)} />
-                </span>
-              </div>
+              data && (
+                <div className={styles.avtarMargin}>
+                  <span className={styles.avatarWrapper}>
+                    <Avatar name={full_name} src={image && getImage(image)} />
+                  </span>
+                </div>
+              )
             )
           },
           width: 50,

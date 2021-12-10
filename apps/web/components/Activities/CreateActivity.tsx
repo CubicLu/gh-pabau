@@ -26,7 +26,6 @@ import dayjs, { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 import { Form, Input as FormikInput, SubmitButton } from 'formik-antd'
 import * as Icon from '@ant-design/icons'
 import { ClientLeadSelect } from './ClientLeadSelectMenu'
@@ -241,116 +240,111 @@ export const CreateActivity: FC<CreateActivityProps> = ({
         <Formik
           initialValues={initialValue}
           enableReinitialize={true}
-          validationSchema={Yup.object().shape({
-            subject: Yup.string()
-              .required(t('create.activity.modal.subject.required'))
-              .max(
-                50,
-                t('create.activity.modal.subject.max.validation.message')
-              ),
-          })}
           onSubmit={async (values, { resetForm }) => {
             const dueStartDate = calculateDueTime(
               values.startDate,
               values.startTime
             )
             const dueEndDate = calculateDueTime(values.endDate, values.endTime)
+            const subject = values.subject
+              ? values.subject
+              : activityTypes?.find((item) => item.id === values.activityType)
+                  ?.name
             let data
-            values?.id
-              ? (data = {
-                  ActivityType: {
-                    connect: {
-                      id: values.activityType,
-                    },
+            if (values?.id) {
+              data = {
+                ActivityType: {
+                  connect: {
+                    id: values.activityType,
                   },
-                  subject: {
-                    set: values.subject,
-                  },
-                  note: {
-                    set: values.notes,
-                  },
-                  available: {
-                    set: Boolean(values.freeBusy),
-                  },
-                  status: {
-                    set: values.isDone
-                      ? Activity_Status.Done
-                      : Activity_Status.Pending,
-                  },
-                  due_start_date: {
-                    set: dueStartDate,
-                  },
-                  due_end_date: {
-                    set: dueEndDate,
-                  },
-                  Company: {},
-                  User: {},
-                  AssignedUser: {
-                    connect: {
-                      id: values.user,
-                    },
-                  },
-                  CmContact: {
-                    connect: {
-                      ID: values.client,
-                    },
-                  },
-                  CmLead: {
-                    connect: {
-                      ID: values.lead,
-                    },
-                  },
-                  CompletedBy: {
-                    disconnect: true,
-                  },
-                  finished_at: {
-                    set: null,
-                  },
-                })
-              : (data = {
-                  ActivityType: {
-                    connect: {
-                      id: values.activityType,
-                    },
-                  },
-                  subject: values.subject,
-                  note: values.notes,
-                  available: Boolean(values.freeBusy),
-                  status: values.isDone
+                },
+                subject: {
+                  set: subject,
+                },
+                note: {
+                  set: values.notes,
+                },
+                available: {
+                  set: Boolean(values.freeBusy),
+                },
+                status: {
+                  set: values.isDone
                     ? Activity_Status.Done
                     : Activity_Status.Pending,
-                  due_start_date: dueStartDate,
-                  due_end_date: dueEndDate,
-                  Company: {},
-                  User: {},
-                  AssignedUser: {
-                    connect: {
-                      id: values.user,
-                    },
+                },
+                due_start_date: {
+                  set: dueStartDate,
+                },
+                due_end_date: {
+                  set: dueEndDate,
+                },
+                Company: {},
+                User: {},
+                AssignedUser: {
+                  connect: {
+                    id: values.user,
                   },
-                  CmContact: {
-                    connect: {
-                      ID: values.client,
-                    },
+                },
+                CmContact: {
+                  connect: {
+                    ID: values.client,
                   },
-                  CmLead: {
-                    connect: {
-                      ID: values.lead,
-                    },
+                },
+                CmLead: {
+                  connect: {
+                    ID: values.lead,
                   },
-                  CompletedBy: {
-                    disconnect: true,
+                },
+                CompletedBy: {
+                  disconnect: true,
+                },
+                finished_at: {
+                  set: null,
+                },
+              }
+              !values.lead && (data.CmLead = { disconnect: true })
+              !values.client && (data.CmContact = { disconnect: true })
+              !values.user && (data.AssignedUser = { disconnect: true })
+            } else {
+              data = {
+                ActivityType: {
+                  connect: {
+                    id: values.activityType,
                   },
-                  finished_at: null,
-                })
-            if (!values.lead) {
-              delete data.CmLead
-            }
-            if (!values.client) {
-              delete data.CmContact
-            }
-            if (!values.user) {
-              delete data.AssignedUser
+                },
+                subject: subject,
+                note: values.notes,
+                available: Boolean(values.freeBusy),
+                status: values.isDone
+                  ? Activity_Status.Done
+                  : Activity_Status.Pending,
+                due_start_date: dueStartDate,
+                due_end_date: dueEndDate,
+                Company: {},
+                User: {},
+                AssignedUser: {
+                  connect: {
+                    id: values.user,
+                  },
+                },
+                CmContact: {
+                  connect: {
+                    ID: values.client,
+                  },
+                },
+                CmLead: {
+                  connect: {
+                    ID: values.lead,
+                  },
+                },
+                CompletedBy: {
+                  disconnect: true,
+                },
+                finished_at: null,
+              }
+              !values.lead && delete data.CmLead
+              !values.client && delete data.CmContact
+              !values.user && delete data.AssignedUser
             }
             if (!initialValue.isDone && values.isDone) {
               data['CompletedBy'] = {
@@ -366,8 +360,10 @@ export const CreateActivity: FC<CreateActivityProps> = ({
             } else if (initialValue.isDone && values.isDone) {
               delete data.CompletedBy
               delete data.finished_at
+            } else if (!initialValue.isDone && !values.isDone) {
+              delete data.CompletedBy
+              delete data.finished_at
             }
-
             values?.id
               ? await editActivity({
                   variables: {

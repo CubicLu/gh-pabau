@@ -319,8 +319,8 @@ export const ActivityQuery = extendType({
                   },
                   ActivityType: { name: { in: where?.activityType } },
                   status: { in: where?.status },
-                  AssignedUser: {
-                    id: { in: where?.userId },
+                  assigned_to: {
+                    in: where?.userId,
                   },
                   Company: {
                     id: { equals: ctx.authenticated.company },

@@ -5653,6 +5653,7 @@ en:
   activityList.column.leadLocation.editName: 'lead location'
   activityList.column.leadActivityToDo: 'Activities to do'
   activityList.column.leadCreator: 'Lead creator'
+  activityList.column.leadClient: 'Client'
   activityList.column.leadDateEnteringStage: 'Date of entering stage'
   activityList.column.leadDateEnteringStage.editName: 'lead date of entering stage'
   activityList.column.leadEmailMessagesCount: 'Email messages count'
@@ -5690,6 +5691,7 @@ en:
   create.filter.modal.lead.column.lead.status: 'Lead status'
   create.filter.modal.lead.column.lead.activity.to.do: 'Activities to do'
   create.filter.modal.lead.column.lead.creator: 'Lead creator'
+  create.filter.modal.lead.column.lead.client: 'Client'
   create.filter.modal.lead.column.lead.date.entring.stage: 'Date of entering stage'
   create.filter.modal.lead.column.lead.email.messages.stage: 'Email messages count'
   create.filter.modal.lead.column.lead.last.email.received.stage: 'Last email received'
@@ -5700,6 +5702,7 @@ en:
   create.filter.modal.lead.column.lead.title: Title
   create.filter.modal.lead.column.lead.update.time: 'Update time'
   create.filter.modal.lead.column.lead.location: Location
+  create.filter.modal.lead.column.lead.service.added: 'Services added'
   create.filter.modal.open.lead.status: Open
   create.filter.modal.won.lead.status: Won
   create.filter.modal.lost.lead.status: Lost

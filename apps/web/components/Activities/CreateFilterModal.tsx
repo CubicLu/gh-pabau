@@ -99,6 +99,7 @@ interface FilterMenuProps {
   leadStageData: OptionList[]
   pipelineData: OptionList[]
   locationData: OptionList[]
+  services: OptionList[]
 }
 
 interface CreateFilterModalProps {
@@ -126,6 +127,7 @@ interface CreateFilterModalProps {
   leadStageData: OptionList[]
   pipelineData: OptionList[]
   locationData: OptionList[]
+  services: OptionList[]
 }
 const defaultValue: InitialValueTypes = {
   name: '',
@@ -153,6 +155,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
   leadStageData,
   pipelineData,
   locationData,
+  services,
 }) => {
   const { manageOperandBasedOnColumn, activity, activityTypeMapper } = getData(
     t
@@ -223,6 +226,10 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
         }
         case 'Location': {
           data[index].menuOption = locationData?.[0]?.id?.toString()
+          break
+        }
+        case 'Services added': {
+          data[index].menuOption = services?.[0]?.id?.toString()
           break
         }
       }
@@ -298,6 +305,7 @@ const RenderFilterMenu: FC<FilterMenuProps> = ({
                 leadStageData={leadStageData}
                 pipelineData={pipelineData}
                 locationData={locationData}
+                services={services}
               />
             )}
           </div>
@@ -339,6 +347,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   leadStageData,
   pipelineData,
   locationData,
+  services,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
   const [initialValue, setInitialValue] = useState<InitialValueTypes>(
@@ -708,6 +717,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                   leadStageData={leadStageData}
                   pipelineData={pipelineData}
                   locationData={locationData}
+                  services={services}
                 />
                 <Button
                   className={classNames(
@@ -741,6 +751,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                   leadStageData={leadStageData}
                   pipelineData={pipelineData}
                   locationData={locationData}
+                  services={services}
                 />
                 <Button
                   className={classNames(

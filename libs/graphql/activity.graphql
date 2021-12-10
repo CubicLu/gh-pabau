@@ -123,6 +123,9 @@ query findManyActivityData(
           name
         }
         Contact {
+          Avatar
+          Fname
+          Lname
           User {
             full_name
             image

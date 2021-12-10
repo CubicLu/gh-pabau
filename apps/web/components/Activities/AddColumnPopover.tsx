@@ -33,7 +33,6 @@ export const columnNames = {
   freeBusy: { label: 'Free/busy', id: 'freeBusy' },
   creator: { label: 'Creator', id: 'creator' },
   addTime: { label: 'Add time', id: 'addTime' },
-  // leadDescription: { label: 'Lead description', id: 'lead.description' },
   leadName: { label: 'Lead name', id: 'lead.firstName' },
   leadEmail: { label: 'Lead email', id: 'lead.email' },
   leadPhone: { label: 'Lead phone', id: 'lead.phone' },
@@ -70,6 +69,7 @@ export const columnNames = {
   leadLocation: { label: 'Lead location', id: 'lead.Location' },
   leadActivityToDo: { label: 'Activities to do', id: 'lead.activityToDo' },
   leadCreator: { label: 'Lead creator', id: 'lead.creator' },
+  leadClient: { label: 'Lead client', id: 'lead.client' },
   leadDateEnteringStage: {
     label: 'Date of entering stage',
     id: 'lead.leadClosedOn',
@@ -278,10 +278,6 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
           label: t('activityList.column.leadStatus'),
           value: columnNames.leadStatus.label,
         },
-        // {
-        //   label: t('activityList.column.leadDescription'),
-        //   value: columnNames.leadDescription.label,
-        // },
         {
           label: t('activityList.column.leadLocation'),
           value: columnNames.leadLocation.label,
@@ -325,6 +321,10 @@ export const AddColumnPopover: FC<AddColumnsProps> = React.memo(
         {
           label: t('activityList.column.leadTitle'),
           value: columnNames.leadTitle.label,
+        },
+        {
+          label: t('activityList.column.leadClient'),
+          value: columnNames.leadClient.label,
         },
       ],
       [t]
