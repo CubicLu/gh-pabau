@@ -330,6 +330,8 @@ en:
   settings-performance-assessment-head1: 'Self & Manager Assessment'
   settings-performance-assessment-head2: 'Peer Assessment'
   settings-performance-people-header: 'Participating in Performance'
+  setup.discount.data.products: 'Products'
+  setup.discount.data.chooseproductsdiscount: 'Choose the products this discount can be applied'
   setup.discount.data.selectall: 'Select all'
   setup.discount.data.subtitle1: 'Subcategory 1'
   setup.discount.data.subtitle2: 'Subcategory 2'
@@ -391,7 +393,7 @@ en:
   setup.discount.data.typerequired: 'Type is required'
   setup.discount.data.editdiscount: 'Edit Discount'
   setup.discount.data.general: General
-  'setup.discount.data.services&locations': 'Services & Locations'
+  setup.discount.data.rules: Rules
   setup.discount.data.employees: Employees
   setup.discount.data.employeesubtitle: 'Choose which team members would requred access to this location'
   setup.discount.data.deletediscounttitle: 'Delete Discount?'
@@ -404,7 +406,8 @@ en:
   setup.discount.data.dateconstrained: 'Date constrained'
   setup.discount.data.type: Type
   setup.discount.data.percentage: Percentage
-  setup.discount.data.reciept: Reciept
+  setup.discount.data.fixed: Fixed
+  setup.discount.data.reciept: Receipt
   setup.discount.data.showonrecieptlabel: 'Show on reciept'
   setup.discount.data.selectlocation: 'Select location'
   setup.discount.data.service: Service

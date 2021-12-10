@@ -6,7 +6,6 @@ import {
   FullScreenReportModal,
   OperationType,
   Switch,
-  HelpTooltip,
   Employees,
   SimpleDropdown,
   Button,
@@ -28,6 +27,9 @@ import {
 import classNames from 'classnames'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
+import { CountDiscountDocument, GetDiscountsDocument } from '@pabau/graphql'
+import { useUser } from '../../../context/UserContext'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 const { Panel } = Collapse
 
@@ -44,6 +46,7 @@ interface InitialDiscountProps {
   employees: string[]
   services: string[]
   locations: string[]
+  products: string[]
 }
 
 interface TabProps {
@@ -61,40 +64,6 @@ interface EmployeeListProps {
   selected: boolean
 }
 
-const LIST_QUERY = gql`
-  query discount($isActive: Boolean = true, $offset: Int, $limit: Int) {
-    Discounts(
-      offset: $offset
-      limit: $limit
-      order_by: { order: desc }
-      where: { is_active: { _eq: $isActive } }
-    ) {
-      __typename
-      id
-      name
-      code
-      amount
-      is_active
-      order
-      discount_rate
-      show_on_reciept
-      date
-      employees
-      locations
-      services
-      type
-    }
-  }
-`
-const LIST_AGGREGATE_QUERY = gql`
-  query discounts_aggregate($isActive: Boolean = true) {
-    Discounts_aggregate(where: { is_active: { _eq: $isActive } }) {
-      aggregate {
-        count
-      }
-    }
-  }
-`
 const DELETE_MUTATION = gql`
   mutation delete_Discounts_by_pk($id: uuid!) {
     delete_Discounts_by_pk(id: $id) {
@@ -242,19 +211,15 @@ const GeneralTab: FC<TabProps> = ({ value, setFieldValue, t }) => {
           </Form.Item>
           <Form.Item label={t('setup.discount.data.discountcode')} name="code">
             <Input
+              value={value.code}
               name="code"
               autoComplete="off"
               placeholder={t('setup.discount.data.enterdiscountcode')}
+              onChange={(e) =>
+                setFieldValue('code', e.target.value.toUpperCase())
+              }
             />
           </Form.Item>
-          <div className={styles.customSwitch}>
-            <Switch
-              checked={value.date}
-              onChange={(value) => setFieldValue('date', value)}
-            />
-            <p>{t('setup.discount.data.dateconstrained')}</p>
-            <HelpTooltip helpText={t('setup.discount.data.dateconstrained')} />
-          </div>
         </div>
         <div className={styles.generalSection}>
           <h4>{t('setup.discount.data.type')}</h4>
@@ -318,7 +283,7 @@ const GeneralTab: FC<TabProps> = ({ value, setFieldValue, t }) => {
   )
 }
 
-const ServiceLocationTab: FC<TabProps> = ({ value, setFieldValue, t }) => {
+const RulesTab: FC<TabProps> = ({ value, setFieldValue, t, children }) => {
   const [expandedKeys, setExpandedKeys] = useState(['Accent prime'])
   const [autoExpandParent, setAutoExpandParent] = useState(true)
 
@@ -522,6 +487,171 @@ const ServiceLocationTab: FC<TabProps> = ({ value, setFieldValue, t }) => {
           />
         </div>
         <div className={styles.generalSection}>
+          <h4>{t('setup.discount.data.products')}</h4>
+          <p className={styles.subTitle}>
+            {t('setup.discount.data.chooseproductsdiscount')}
+          </p>
+          <CheckboxTree
+            onExpand={onExpand}
+            expandedKeys={expandedKeys}
+            autoExpandParent={autoExpandParent}
+            onCheck={onCheck}
+            checkedKeys={value.products}
+            treeData={[
+              {
+                key: 'all',
+                title: t('setup.discount.data.selectall'),
+                children: [
+                  {
+                    children: [
+                      {
+                        key: 'Accent prime - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'Accent prime - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'Accent prime - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'Accent prime',
+                    title: t('setup.discount.data.accentprime'),
+                  },
+                  {
+                    children: [
+                      {
+                        key: 'All-inclusive - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'All-inclusive - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'All-inclusive - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'All-inclusive',
+                    title: t('setup.discount.data.allinclusive'),
+                  },
+                  {
+                    children: [
+                      {
+                        key: 'Botox - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'Botox - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'Botox - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'Botox',
+                    title: t('setup.discount.data.botox'),
+                  },
+                  {
+                    children: [
+                      {
+                        key: 'CO2-Laser - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'CO2-Laser - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'CO2-Laser - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'CO2-Laser',
+                    title: t('setup.discount.data.co2laser'),
+                  },
+                  {
+                    children: [
+                      {
+                        key: 'Consultation - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'Consultation - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'Consultation - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'Consultation',
+                    title: t('setup.discount.data.consultation'),
+                  },
+                  {
+                    children: [
+                      {
+                        key: 'Cooltech - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'Cooltech - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'Cooltech - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'Cooltech',
+                    title: t('setup.discount.data.cooltech'),
+                  },
+                  {
+                    children: [
+                      {
+                        key: 'Cooltech +Accent Prime - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'Cooltech+Accent Prime - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'Cooltech+Accent Prime - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'Cooltech+Accent Prime',
+                    title: t('setup.discount.data.cooltech+accentprime'),
+                  },
+                  {
+                    children: [
+                      {
+                        key: 'Dermalux - Subcategory 1',
+                        title: t('setup.discount.data.subtitle1'),
+                      },
+                      {
+                        key: 'Dermalux - Subcategory 2',
+                        title: t('setup.discount.data.subtitle2'),
+                      },
+                      {
+                        key: 'Dermalux - Subcategory 3',
+                        title: t('setup.discount.data.subtitle3'),
+                      },
+                    ],
+                    key: 'Dermalux',
+                    title: t('setup.discount.data.dermalux'),
+                  },
+                ],
+              },
+            ]}
+          />
+        </div>
+        <div className={styles.generalSection}>
           <h4>{t('setup.discount.data.location')}</h4>
           <p>{t('setup.discount.data.chooselocationdiscount')}</p>
           <CheckboxTree
@@ -551,6 +681,7 @@ const ServiceLocationTab: FC<TabProps> = ({ value, setFieldValue, t }) => {
           />
         </div>
       </Form>
+      {children}
     </div>
   )
 }
@@ -568,9 +699,12 @@ const defaultValue: InitialDiscountProps = {
   employees: [],
   services: [],
   locations: [],
+  products: [],
 }
 
 export const Discount: NextPage = () => {
+  const { me } = useUser()
+
   const { t } = useTranslationI18()
 
   const employeeList = [
@@ -623,7 +757,6 @@ export const Discount: NextPage = () => {
       selected: false,
     },
   ]
-
   const schema: Schema = {
     full: t('setup.discount.data.capitalizediscount'),
     fullLower: t('setup.discount.data.lowercasediscount'),
@@ -665,7 +798,19 @@ export const Discount: NextPage = () => {
         max: 50,
         example: 15,
         cssWidth: 'min',
-        type: 'number',
+        type: 'string',
+        render: (amount, { type }: InitialDiscountProps) => {
+          return (
+            <div>
+              {Math.abs(amount as number)}{' '}
+              {type === '1' ? (
+                <PercentageOutlined />
+              ) : (
+                stringToCurrencySignConverter(me.currency)
+              )}
+            </div>
+          )
+        },
       },
       discount_rate: {
         full: t('setup.discount.data.capitalizediscountrate'),
@@ -677,17 +822,15 @@ export const Discount: NextPage = () => {
         example: 'Fixed',
         cssWidth: 'min',
         type: 'string',
-      },
-      show_on_reciept: {
-        full: t('setup.discount.data.capitalizeshowonreciept'),
-        fullLower: t('setup.discount.data.lowercaseshowonreciept'),
-        short: t('setup.discount.data.capitalizeshowonreciept'),
-        shortLower: t('setup.discount.data.lowercaseshowonreciept'),
-        min: 2,
-        max: 50,
-        example: 'No',
-        cssWidth: 'min',
-        type: 'string',
+        render: (_, { type }: InitialDiscountProps) => {
+          return (
+            <div>
+              {type === '1'
+                ? t('setup.discount.data.percentage')
+                : t('setup.discount.data.fixed')}
+            </div>
+          )
+        },
       },
       code: {
         full: t('setup.discount.data.capitalizecode'),
@@ -705,6 +848,15 @@ export const Discount: NextPage = () => {
         full: 'Status',
         type: 'boolean',
         defaultvalue: true,
+      },
+    },
+    filter: {
+      primary: {
+        name: 'public',
+        type: 'number',
+        default: 1,
+        active: 1,
+        inactive: 0,
       },
     },
   }
@@ -950,7 +1102,6 @@ export const Discount: NextPage = () => {
       </Formik>
     )
   }
-
   return (
     <>
       <CrudLayout
@@ -958,9 +1109,9 @@ export const Discount: NextPage = () => {
         tableSearch={false}
         addQuery={ADD_MUTATION}
         deleteQuery={DELETE_MUTATION}
-        listQuery={LIST_QUERY}
+        listQuery={GetDiscountsDocument}
         editQuery={EDIT_MUTATION}
-        aggregateQuery={LIST_AGGREGATE_QUERY}
+        aggregateQuery={CountDiscountDocument}
         updateOrderQuery={UPDATE_ORDER_MUTATION}
         draggable={false}
         createPage={true}
@@ -1032,31 +1183,27 @@ export const Discount: NextPage = () => {
               onDelete={showDeleteConfirmDialog}
               subMenu={[
                 t('setup.discount.data.general'),
-                t('setup.discount.data.services&locations'),
-                t('setup.discount.data.employees'),
+                t('setup.discount.data.rules'),
               ]}
               footer={true}
             >
               <GeneralTab value={values} setFieldValue={setFieldValue} t={t} />
-              <ServiceLocationTab
-                setFieldValue={setFieldValue}
-                value={values}
-                t={t}
-              />
-              <div className={styles.empSection}>
-                <Employees
-                  description={t('setup.discount.data.employeesubtitle')}
-                  employees={
-                    initialValue.id
-                      ? setEmployeeData(initialValue.employees)
-                      : employeeListData
-                  }
-                  onSelected={(value) =>
-                    prepareEmployeeList(value, setFieldValue)
-                  }
-                  title={t('setup.discount.data.employees')}
-                />
-              </div>
+              <RulesTab setFieldValue={setFieldValue} value={values} t={t}>
+                <div className={styles.empSection}>
+                  <Employees
+                    description={t('setup.discount.data.employeesubtitle')}
+                    employees={
+                      initialValue.id
+                        ? setEmployeeData(initialValue.employees)
+                        : employeeListData
+                    }
+                    onSelected={(value) =>
+                      prepareEmployeeList(value, setFieldValue)
+                    }
+                    title={t('setup.discount.data.employees')}
+                  />
+                </div>
+              </RulesTab>
             </FullScreenReportModal>
             <Modal
               modalWidth={682}

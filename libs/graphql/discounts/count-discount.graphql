@@ -1,0 +1,3 @@
+query countDiscount($where: InvTaxRateWhereInput){
+  count: findManyInvTaxRateCount(where: $where)
+}

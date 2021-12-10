@@ -1,30 +1,20 @@
-query getDiscounts(
-  $discount_id: Int
-  $name: String
-  $rate: Float
-  $type: String
-  $isActive: Int
-) {
+query getDiscounts($isActive: Int, $offset: Int, $limit: Int) {
   findManyInvTaxRate(
-    where: {
-      id: { equals: $discount_id }
-      name: { equals: $name }
-      rate: { equals: $rate }
-      type: { equals: $type }
-      is_active: { equals: $isActive }
-    }
+    skip: $offset
+    take: $limit
+    where: { is_active: { equals: $isActive } }
   ) {
     id
+    is_active
+    modified_date
     name
-    rate
+    amount: rate
+    show_on_receipt
+    start_date
     type
     is_active
     description
-    rate
     show_on_receipt
-    glCode
+    code: glCode
   }
-}
-query countDiscounts($where: InvTaxRateWhereInput){
-  count: findManyInvTaxRateCount(where: $where)
 }

@@ -115,8 +115,9 @@ interface SchemaItem {
   col?: number
   filter?: SchemaFilter
   example?: string | number | any
-  render?: (value: string | number) => JSX.Element
+  render?: (value: string | number, queryData) => JSX.Element
 }
+
 interface TypeValues {
   label: string
   value: string | number
