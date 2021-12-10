@@ -177,6 +177,25 @@ export const interceptors = {
     }
     return true
   }),
+  isAuthor: rule('isAuthor')(
+    async (_root, { where: { ID } }, ctx: Context, { returnType }) => {
+      try {
+        const record = await ctx.prisma[extractModelName(returnType)].findFirst(
+          {
+            where: {
+              ID,
+            },
+          }
+        )
+        return (
+          record?.OwnerID === ctx?.authenticated?.user ||
+          "You don't have permission to perform this action"
+        )
+      } catch {
+        return new Error('Not Authorized')
+      }
+    }
+  ),
   injectDeletedBy: rule('injectDeletedBy')((_root, args, ctx: Context) => {
     args.data = {
       ...args.data,

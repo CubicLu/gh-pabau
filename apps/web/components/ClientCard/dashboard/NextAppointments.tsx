@@ -12,6 +12,7 @@ const NextAppointments = () => {
   const { data } = useClientsGetNextAppointmentsQuery({
     //TODO: calculcate start_date to now()
     variables: { id: Number(router.query['id']), start_date: 20210927000000 },
+    fetchPolicy: 'no-cache',
     skip: !router.query['id'],
   })
   return (

@@ -13,6 +13,7 @@ query getContactHeader($id: Int!) {
       content: Note
       date: CreatedDate
       User {
+        id
         contact: full_name
         avatar: image
       }
@@ -31,6 +32,21 @@ query getContactHeader($id: Int!) {
       User {
         contact: full_name
         avatar: image
+      }
+    }
+  }
+}
+
+query getStaffAlerts($id: Int!) {
+  staff: findManyCmContact(where: { ID: { equals: $id } }) {
+    ID
+    alerts: ContactAlert(orderBy: { CreatedDate: desc }) {
+      ID
+      content: Note
+      date: CreatedDate
+      User {
+        id
+        contact: full_name
       }
     }
   }

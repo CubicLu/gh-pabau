@@ -17,9 +17,16 @@ import {
   useGetClientDocumentCountQuery,
   useGetContactAccountBalanceQuery,
   useCountVouchersQuery,
+  useGetStaffAlertsLazyQuery,
+  useUpdateContactAlertWithTagsMutation,
+  GetStaffAlertsQuery,
   useCountClientAppointmentsQuery,
   AggregateInvoiceCountsDocument,
+  GetStaffAlertsDocument,
+  useDeleteContactAlertWithTagsMutation,
   useCountClientCommunicationQuery,
+  useCreateContactAlertWithTagsMutation,
+  Cm_Contact_Alerts_Status,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -27,7 +34,7 @@ import {
   ClientNotes,
   Notification,
   NotificationType,
-  BasicModal as Modal,
+  StaffAlerts,
 } from '@pabau/ui'
 import React, {
   ComponentPropsWithoutRef,
@@ -54,6 +61,11 @@ import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import stringToCurrencySignConverter from '../../helper/stringToCurrencySignConverter'
 import AvatarUploader from '../Uploaders/AvatarUploader/AvatarUploader'
+import {
+  updateClientNotesCount,
+  NoteCountOperandType,
+  updateStaffAlertCount,
+} from './utils'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 interface P
@@ -148,15 +160,17 @@ export const ClientCardLayout: FC<P> = ({
     loading: true,
     appointments: [],
   })
+  const [staffAlertData, setStaffAlertData] = useState<StaffAlerts>({
+    alerts: [],
+    count: 0,
+    loading: true,
+  })
   const [basicContactData, setBasicContactData] = useState(null)
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
-  const [deleteNoteId, setDeleteNoteId] = useState<number>(null)
   const [openEditModal, setOpenEditModal] = useState(false)
   const [isAvatarModalOpen, setAvatarModalOpen] = useState(false)
   const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
   const [outstanding, setOutstanding] = useState(0)
   const [accountBalance, setAccountBalance] = useState(0)
-  const user = useUser()
 
   const [addClientNote] = useCreateOneContactNoteMutation({
     onCompleted() {
@@ -167,7 +181,7 @@ export const ClientCardLayout: FC<P> = ({
     },
   })
 
-  const [editMutation] = useUpdateOneContactNoteMutation({
+  const [editClientNote] = useUpdateOneContactNoteMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
@@ -176,7 +190,7 @@ export const ClientCardLayout: FC<P> = ({
     },
   })
 
-  const [deleteMutation] = useDeleteOneContactNoteMutation({
+  const [deleteClientNote] = useDeleteOneContactNoteMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
@@ -184,6 +198,141 @@ export const ClientCardLayout: FC<P> = ({
       )
     },
   })
+
+  const [addAlertMutation] = useCreateContactAlertWithTagsMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.staffalerts.add')
+      )
+    },
+    update: (cache, { data: { createContactAlertAdvanced } }) => {
+      const existing: GetStaffAlertsQuery = cache.readQuery({
+        query: GetStaffAlertsDocument,
+        ...getQueryVariables,
+      })
+      if (existing) {
+        const key = Object.keys(existing)[0]
+        const index = existing?.staff[0]?.alerts.findIndex(
+          (item) => item.ID === createContactAlertAdvanced?.ID
+        )
+        const alerts = [...existing?.staff[0]?.alerts]
+        alerts?.push({
+          ID: createContactAlertAdvanced?.ID,
+          content: createContactAlertAdvanced?.Note,
+          date: createContactAlertAdvanced?.CreatedDate,
+          User: { ...existing?.staff[0]?.alerts[index]?.User },
+        })
+        cache.writeQuery({
+          query: GetStaffAlertsDocument,
+          ...getQueryVariables,
+          data: {
+            [key]: [
+              {
+                ID: existing?.staff[0]?.ID,
+                alerts: [...alerts],
+              },
+            ],
+          },
+        })
+        updateStaffAlertCount(
+          clientId,
+          cache,
+          createContactAlertAdvanced?.ID,
+          NoteCountOperandType.Add
+        )
+      }
+    },
+  })
+
+  const [editAlertMutation] = useUpdateContactAlertWithTagsMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.staffalerts.edit')
+      )
+    },
+    update: (cache, { data: { updateContactAlertAdvanced } }) => {
+      const existing: GetStaffAlertsQuery = cache.readQuery({
+        query: GetStaffAlertsDocument,
+        ...getQueryVariables,
+      })
+      if (existing) {
+        const key = Object.keys(existing)[0]
+        const index = existing?.staff[0]?.alerts.findIndex(
+          (item) => item.ID === updateContactAlertAdvanced?.ID
+        )
+        if (index >= 0) {
+          const alerts = [...existing?.staff[0]?.alerts]
+          alerts?.splice(index, 1, {
+            ID: updateContactAlertAdvanced?.ID,
+            content: updateContactAlertAdvanced?.Note,
+            date: updateContactAlertAdvanced?.CreatedDate,
+            User: { ...existing?.staff[0]?.alerts[index]?.User },
+          })
+          cache.writeQuery({
+            query: GetStaffAlertsDocument,
+            ...getQueryVariables,
+            data: {
+              [key]: [
+                {
+                  ID: existing?.staff[0]?.ID,
+                  alerts: [...alerts],
+                },
+              ],
+            },
+          })
+        }
+      }
+    },
+  })
+
+  const [
+    deleteAlertMutation,
+    { loading: deleteAlertLoading },
+  ] = useDeleteContactAlertWithTagsMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('clients.clientcard.staffalerts.delete')
+      )
+    },
+    update: (cache, { data: { deleteContactAlertAdvanced } }) => {
+      const existing: GetStaffAlertsQuery = cache.readQuery({
+        query: GetStaffAlertsDocument,
+        ...getQueryVariables,
+      })
+      if (existing) {
+        const key = Object.keys(existing)[0]
+        const index = existing?.staff[0]?.alerts.findIndex(
+          (item) => item.ID === deleteContactAlertAdvanced?.ID
+        )
+        if (index >= 0) {
+          const alerts = [...existing?.staff[0]?.alerts]
+          alerts?.splice(index, 1)
+          cache.writeQuery({
+            query: GetStaffAlertsDocument,
+            ...getQueryVariables,
+            data: {
+              [key]: [
+                {
+                  ID: deleteContactAlertAdvanced?.ContactID,
+                  alerts: [...alerts],
+                },
+              ],
+            },
+          })
+          updateStaffAlertCount(
+            clientId,
+            cache,
+            deleteContactAlertAdvanced?.ID,
+            NoteCountOperandType.Subtract
+          )
+        }
+      }
+    },
+  })
+
   const getQueryVariables = useMemo(() => {
     return {
       variables: { id: clientId },
@@ -194,7 +343,6 @@ export const ClientCardLayout: FC<P> = ({
     skip: !router.query['id'],
     ssr: false,
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'no-cache',
     ...getQueryVariables,
   })
 
@@ -210,6 +358,14 @@ export const ClientCardLayout: FC<P> = ({
     ...getQueryVariables,
   })
 
+  const [
+    getStaffAlertDetails,
+    { data: staffAlertDetails, loading: staffAlertLoading },
+  ] = useGetStaffAlertsLazyQuery({
+    ssr: false,
+    ...getQueryVariables,
+  })
+
   const { data: referredByOptions } = useGetMarketingSourcesQuery({
     skip: !router.query['id'],
   })
@@ -221,7 +377,10 @@ export const ClientCardLayout: FC<P> = ({
     skip: !router.query['id'],
   })
 
-  const { data: medicalHistoryData } = useCheckMedicalHistoryQuery({
+  const {
+    data: medicalHistoryData,
+    loading: checkMedicalHistoryLoading,
+  } = useCheckMedicalHistoryQuery({
     ssr: false,
     skip: !router.query['id'],
     variables: {
@@ -322,10 +481,15 @@ export const ClientCardLayout: FC<P> = ({
       setContactData((item) => {
         return {
           ...item,
-          notes: [],
           count: data?.findFirstCmContact?.contactNotes?.length || 0,
+          loading: item?.notes.length === 0 && true,
+        }
+      })
+      setStaffAlertData((item) => {
+        return {
+          ...item,
+          count: data?.findFirstCmContact?.staffAlerts?.length || 0,
           loading: true,
-          appointments: [],
         }
       })
       const contactDetails = {
@@ -343,24 +507,25 @@ export const ClientCardLayout: FC<P> = ({
   }, [customFieldData, data])
 
   useEffect(() => {
-    if (medicalHistoryData?.form) {
-      setMedicalHistoryDetails({
-        status: medicalHistoryData?.form?.status,
-        requestedDate:
-          medicalHistoryData?.form?.Contact?.RequestedForms[0]?.created_date,
-        formLastUpdatedDate:
-          medicalHistoryData?.form?.updated_at ??
-          medicalHistoryData?.form?.created_at,
-      })
-    } else if (!medicalHistoryData?.form) {
-      setMedicalHistoryDetails((val) => {
-        return {
-          ...val,
-          status: 'not_completed',
-        }
-      })
+    if (medicalHistoryData && !checkMedicalHistoryLoading) {
+      medicalHistoryData?.form
+        ? setMedicalHistoryDetails({
+            status: medicalHistoryData?.form?.status,
+            requestedDate:
+              medicalHistoryData?.form?.Contact?.RequestedForms[0]
+                ?.created_date,
+            formLastUpdatedDate:
+              medicalHistoryData?.form?.updated_at ??
+              medicalHistoryData?.form?.created_at,
+          })
+        : setMedicalHistoryDetails((val) => {
+            return {
+              ...val,
+              status: 'not_completed',
+            }
+          })
     }
-  }, [medicalHistoryData])
+  }, [medicalHistoryData, checkMedicalHistoryLoading])
 
   const handleAddNewClientNote = async (note: string) => {
     const noteBody = {
@@ -371,19 +536,31 @@ export const ClientCardLayout: FC<P> = ({
     }
     await addClientNote({
       variables: { data: noteBody },
+      update: (cache, { data: { createOneContactNote } }) => {
+        updateClientNotesCount(
+          clientId,
+          cache,
+          createOneContactNote?.ID,
+          NoteCountOperandType.Add
+        )
+      },
     })
     getContactHeaderRefetch()
   }
   const handleEditNote = async (id, note) => {
-    await editMutation({
+    await editClientNote({
       variables: { where: { ID: id }, data: { Note: { set: note } } },
     })
     getContactHeaderRefetch()
   }
 
   const handleDeleteNote = async (id) => {
-    setOpenDeleteModal((val) => !val)
-    setDeleteNoteId(id)
+    await deleteClientNote({
+      variables: {
+        where: { ID: id },
+      },
+    })
+    getContactHeaderRefetch()
   }
 
   const tabItems: readonly TabItem[] = [
@@ -402,7 +579,7 @@ export const ClientCardLayout: FC<P> = ({
           ? [
               {
                 tag:
-                  stringToCurrencySignConverter(user.me?.currency) +
+                  stringToCurrencySignConverter(me?.currency) +
                   Math.abs(accountBalance - outstanding).toFixed(2),
                 color: outstanding > accountBalance ? 'red' : 'green',
               },
@@ -522,6 +699,17 @@ export const ClientCardLayout: FC<P> = ({
     }
   }, [contactDetails, notesCountLoading])
 
+  useEffect(() => {
+    if (staffAlertDetails?.staff)
+      setStaffAlertData((item) => {
+        return {
+          ...item,
+          alerts: staffAlertDetails?.staff[0]?.alerts,
+          loading: staffAlertLoading,
+        }
+      })
+  }, [staffAlertDetails, staffAlertLoading])
+
   const handleEditAll = () => {
     setOpenEditModal(true)
   }
@@ -531,16 +719,47 @@ export const ClientCardLayout: FC<P> = ({
     refetch()
   }
 
-  const handleDeleteSubmit = async () => {
-    if (deleteNoteId) {
-      setOpenDeleteModal((val) => !val)
-      await deleteMutation({
-        variables: {
-          where: { ID: deleteNoteId },
+  const handleAddAlert = async (alert: string) => {
+    await addAlertMutation({
+      variables: {
+        data: {
+          Note: alert,
+          Status: Cm_Contact_Alerts_Status.Enable,
+          IpAddress: 0,
+          Critical: 1,
+          CreatedDate: timezoneDate() || dayjs().utc().format(),
+          User: { connect: { id: me?.user } },
+          CmContact: { connect: { ID: clientId } },
         },
-      })
-      getContactHeaderRefetch()
-    }
+      },
+    })
+  }
+
+  const handleEditAlert = async (
+    id: number,
+    alert: string,
+    ownerId: number
+  ) => {
+    await editAlertMutation({
+      variables: {
+        where: {
+          ID: id,
+        },
+        data: {
+          Note: { set: alert },
+          User: { connect: { id: ownerId } },
+          CmContact: { connect: { ID: clientId } },
+        },
+      },
+    })
+  }
+
+  const handleDeleteAlert = async (id) => {
+    await deleteAlertMutation({
+      variables: {
+        where: { ID: id },
+      },
+    })
   }
 
   const handleAvatarUpload = async (
@@ -597,7 +816,8 @@ export const ClientCardLayout: FC<P> = ({
         updatebasicContactMutation={updatebasicContactMutation}
         updateContactCustomMutation={updateContactCustomMutation}
         clientId={clientId}
-        companyId={user?.me?.company}
+        userId={me?.user}
+        companyId={me?.company}
         client={
           basicContactData
             ? ({
@@ -632,8 +852,10 @@ export const ClientCardLayout: FC<P> = ({
             : undefined
         }
         notes={contactData}
+        staffAlerts={staffAlertData}
         medicalHistoryDetails={medicalHistoryDetails}
         getContactDetails={getContactDetails}
+        getStaffAlertDetails={getStaffAlertDetails}
         handleAddNewClientNote={handleAddNewClientNote}
         handleEditNote={handleEditNote}
         handleDeleteNote={handleDeleteNote}
@@ -644,7 +866,11 @@ export const ClientCardLayout: FC<P> = ({
             placeHolder={t('search.client.placeholder')}
           />
         )}
+        handleAddAlert={handleAddAlert}
+        handleEditAlert={handleEditAlert}
+        handleDeleteAlert={handleDeleteAlert}
         showAvatarModal={() => setAvatarModalOpen(true)}
+        deleteAlertLoading={deleteAlertLoading}
       >
         <ClientContext.Provider
           value={{
@@ -669,27 +895,6 @@ export const ClientCardLayout: FC<P> = ({
           contactId={clientId}
         />
       )}
-      <Modal
-        modalWidth={682}
-        centered={true}
-        visible={openDeleteModal}
-        onCancel={() => setOpenDeleteModal((val) => !val)}
-        onOk={() => handleDeleteSubmit()}
-        newButtonText={t('clients.content.delete.confirm.yes')}
-        title={t('clients.clientcard.notes.clientnote.deletemodal.title')}
-      >
-        <span
-          style={{
-            fontFamily: 'Circular-Std-Book',
-            fontWeight: 'normal',
-            fontSize: '16px',
-            lineHeight: '20px',
-            color: '#9292A3',
-          }}
-        >
-          {t('clients.clientcard.notes.clientnote.deletemodal.content')}
-        </span>
-      </Modal>
       {isAvatarModalOpen && (
         <AvatarUploader
           visible={isAvatarModalOpen}

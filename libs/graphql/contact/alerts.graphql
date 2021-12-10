@@ -2,9 +2,31 @@ mutation createContactAlertWithTags($data: ContactAlertCreateInput!) {
   createContactAlertAdvanced(data: $data) {
     ID
     Note
+    CreatedDate
     MedicalConditions {
       id
       name
     }
+  }
+}
+
+mutation updateContactAlertWithTags($where: ContactAlertWhereUniqueInput!, $data: ContactAlertUpdateInput!) {
+  updateContactAlertAdvanced(where: $where, data: $data) {
+    ID
+    Note
+    CreatedDate
+    MedicalConditions {
+      id
+      name
+    }
+  }
+}
+
+mutation deleteContactAlertWithTags($where: ContactAlertWhereUniqueInput!) {
+  deleteContactAlertAdvanced(where: $where) {
+    ID
+    Note
+    CreatedDate
+    ContactID
   }
 }

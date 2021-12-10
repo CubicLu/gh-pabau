@@ -5835,4 +5835,11 @@ en:
   activity.client.gender.male: 'Male'
   activity.client.gender.female: 'Female'
   activity.client.gender.other: 'Other'
+  clients.clientcard.staffalerts.title: 'Staff Alerts & Allergies'
+  clients.clientcard.staffalerts.createdby: 'Created By {{who}} - {{when}}'
+  clients.clientcard.staffalerts.nopermission: "You don't have permission to perform this action"
+  clients.clientcard.staffalerts.add: 'Successfully added the staff alert'
+  clients.clientcard.staffalerts.edit: 'Successfully updated the staff alert'
+  clients.clientcard.staffalerts.delete: 'Successfully deleted the staff alert'
+  clients.clientcard.staffalerts.input.placeholder: 'Add an alert, or search a #condition'
   clients.communications.title: 'Communications'

@@ -116,8 +116,32 @@
               right: 0;
               display: none;
               align-items: center;
-              > button {
-                margin-right: 8px;
+              .disable-icon {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                color: rgba(0, 0, 0, 0.25);
+                border:1px solid #d9d9d9;
+                background: #f5f5f5;
+                cursor: not-allowed;
+                &.editIcon {
+                  background: #7ec9e0;
+                  border: 1px solid #7ec9e0;
+                  color: #fff;
+                  cursor: pointer;
+                }
+                &.deleteIcon {
+                  color: #f5222d;
+                  border: 1px solid#f5222d;
+                  background: #fff;
+                  cursor: pointer;
+                }
+                &:first-child {
+                  margin-right: 10px;
+                }
               }
             }
           }
@@ -258,16 +282,46 @@
   width: 472px;
   padding: 20px;
   border-top: 1px solid var(--border-color-base);
+  .staff-alert-skeleton {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    .alert-content {
+      margin-right: 8px;
+      :global {
+        .ant-skeleton-input {
+          border-radius: 4px;
+          width: 70px;
+          height: 35px;
+        }
+      }
+    }
+  }
   .staffAlertsContainer {
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
     .staffAlert {
-      display: inline-block;
+      display: inline-flex;
       padding: 4px 1rem;
       color: #faad14;
       background-color: rgba(250, 173, 20, 0.1);
       margin-right: 8px;
       margin-bottom: 8px;
       border-radius: 4px;
+      cursor: pointer;
+      .edit-delete-btn-wrap {
+        display: none;
+      }
+    }
+    .focused {
+      .text {
+        margin-right: 8px;
+      }
+      .edit-delete-btn-wrap {
+        display: block;
+        display: flex;
+      }
     }
   }
 }

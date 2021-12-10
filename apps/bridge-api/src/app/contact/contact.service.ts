@@ -5,3 +5,9 @@ export const findManyContacts = async (where, ctx: Context) => {
     where: where,
   })
 }
+
+export const getMedicalConditionId = (contactMedicalConditions, value) => {
+  return contactMedicalConditions?.find(
+    (i) => i?.MedicalCondition?.name === value
+  )?.MedicalCondition?.id
+}

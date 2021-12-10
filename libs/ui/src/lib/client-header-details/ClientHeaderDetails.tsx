@@ -15,9 +15,16 @@ import {
   InfoCircleFilled,
   InfoOutlined,
 } from '@ant-design/icons'
-import { TabMenu, Avatar, Button, ClientData, MyLottie } from '@pabau/ui'
+import {
+  TabMenu,
+  Avatar,
+  Button,
+  ClientData,
+  MyLottie,
+  BasicModal as Modal,
+} from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
-import { Popover, Tooltip, Badge, Input, Skeleton } from 'antd'
+import { Popover, Tooltip, Badge, Input, Skeleton, Button as Btn } from 'antd'
 import { useMedia } from 'react-use'
 import { ReactComponent as MedicalHistory } from '../../assets/images/client-card-ops/medical-history.svg'
 import { ReactComponent as Note } from '../../assets/images/client-card-ops/note.svg'
@@ -26,6 +33,7 @@ import {
   ClientNotes,
   ClientNoteDetails,
   ClientAppointmentDetails,
+  StaffAlerts,
   MedicalHistoryDetails,
 } from '../client-card/ClientCard'
 import dayjs from 'dayjs'
@@ -41,12 +49,23 @@ const { TextArea } = Input
 
 export interface ClientHeaderDetailsProps {
   notes?: ClientNotes
+  staffAlerts?: StaffAlerts
   medicalHistoryDetails?: MedicalHistoryDetails
+  userId?: number
   getContactDetails?: () => void
+  getStaffAlertDetails?: () => void
   client?: ClientData
   handleAddNewClientNote?: (e: string) => void
   handleEditNote?: (id: number, e: string) => void
   handleDeleteNote?: (id: number | string) => void
+  handleAddAlert?: (e: string) => void
+  handleEditAlert?: (
+    id: number | string,
+    e: string,
+    val: number | string
+  ) => void
+  handleDeleteAlert?: (id: number | string) => void
+  deleteAlertLoading?: boolean
 }
 
 interface ClientCountDetails {
@@ -54,14 +73,32 @@ interface ClientCountDetails {
   staff: number
 }
 
+interface StaffAlertDetails {
+  id: number | string | undefined
+  newAlert: string
+  ownerId: number | string | undefined
+}
+
+interface DeleteItemType {
+  note: boolean
+  staffAlert: boolean
+}
+
 export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
-  notes = { notes: [], count: 0, notesCountLoading: false, appointments: [] },
+  notes = { notes: [], count: 0, loading: false, appointments: [] },
+  staffAlerts = { alerts: [], count: 0, loading: false },
   medicalHistoryDetails,
+  userId,
   getContactDetails,
+  getStaffAlertDetails,
   client,
   handleAddNewClientNote,
   handleEditNote,
   handleDeleteNote,
+  handleAddAlert,
+  handleEditAlert,
+  handleDeleteAlert,
+  deleteAlertLoading,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -74,26 +111,47 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     ClientAppointmentDetails[] | undefined
   >([])
   const [currentClientNote, setCurrentClientNote] = useState(-1)
-  const [alertItems, setAlertItems] = useState<string[]>([])
+  const [alertItems, setAlertItems] = useState<ClientNoteDetails[]>([])
   const [currentNote, setCurrentNote] = useState('')
   const [note, setNote] = useState('')
-  const [addingAlert, setAddingAlert] = useState(false)
+  const [newAlert, setNewAlert] = useState<StaffAlertDetails>({
+    id: 0,
+    newAlert: '',
+    ownerId: 0,
+  })
+  const [activeAlert, setActiveAlert] = useState<number | string | undefined>(0)
   const [countDetails, setCountDetails] = useState<ClientCountDetails>({
     notes: 0,
     staff: 0,
   })
-  const [openNotes, setOpenNotes] = useState<boolean>(false)
-  const [isDeletingNotes, setIsDeletingNotes] = useState<boolean>(false)
+  const [openPopover, setOpenPopover] = useState<DeleteItemType>({
+    note: false,
+    staffAlert: false,
+  })
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
+  const [deleteItemId, setDeleteItemId] = useState<number | string | null>(null)
 
+  const activeItem = Object.keys(openPopover).find(
+    (i) => openPopover[i] === true
+  )
   useEffect(() => {
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
-    setIsDeletingNotes(false)
+    setOpenDeleteModal(false)
     if (notes?.count)
       setCountDetails((item) => {
         return { ...item, notes: notes?.count }
       })
   }, [notes])
+
+  useEffect(() => {
+    setAlertItems(staffAlerts?.alerts)
+    setOpenDeleteModal(false)
+    if (staffAlerts?.count)
+      setCountDetails((item) => {
+        return { ...item, staff: staffAlerts?.count }
+      })
+  }, [staffAlerts])
 
   const handleAddNote = (e) => {
     e.preventDefault()
@@ -110,10 +168,68 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   }
 
   const handleDeleteClientNote = (id) => {
-    handleDeleteNote?.(id)
+    setDeleteItemId(id)
     setCurrentNote('')
     setCurrentClientNote(-1)
-    setIsDeletingNotes(true)
+    setOpenDeleteModal((e) => !e)
+  }
+
+  const handleAddStaffAlert = (e) => {
+    e.preventDefault()
+    if (newAlert?.newAlert !== '') {
+      setNewAlert((val) => {
+        return { ...val, newAlert: '' }
+      })
+      handleAddAlert?.(newAlert.newAlert)
+    }
+  }
+
+  const handleEditStaffAlert = (e) => {
+    e.preventDefault()
+    if (newAlert?.newAlert !== '') {
+      setNewAlert((val) => {
+        return { ...val, newAlert: '' }
+      })
+      newAlert?.id &&
+        newAlert?.ownerId &&
+        handleEditAlert?.(newAlert.id, newAlert.newAlert, newAlert.ownerId)
+    }
+  }
+
+  const handleDeleteStaffAlert = (id) => {
+    setDeleteItemId(id)
+    setOpenDeleteModal((e) => !e)
+  }
+
+  const handleDeleteSubmit = (e) => {
+    if (deleteItemId)
+      switch (e) {
+        case 'note':
+          handleDeleteNote?.(deleteItemId)
+          setOpenDeleteModal(false)
+          break
+        case 'staffAlert':
+          handleDeleteAlert?.(deleteItemId)
+          break
+      }
+  }
+
+  const handleAlertPopoverVisible = (val: boolean) => {
+    if (!openDeleteModal) {
+      setActiveAlert(0)
+      setOpenPopover((e) => {
+        return { ...e, staffAlert: val }
+      })
+      setNewAlert({
+        id: 0,
+        newAlert: '',
+        ownerId: 0,
+      })
+    }
+  }
+
+  const handleAlertMutation = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    newAlert?.id ? handleEditStaffAlert(e) : handleAddStaffAlert(e)
   }
 
   const getMedicalhistoryIcon = () => {
@@ -130,7 +246,6 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
         ) : (
           <CheckCircleFilled style={{ color: '#65cd98' }} />
         )
-
       case 'to_be_completed':
         return (
           <div className={styles.toBeCompletedIcon}>
@@ -233,34 +348,107 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
       className={styles.clientAlertsPopover}
       style={{ width: isMobile ? '320px' : '472px' }}
     >
-      {alertItems && (
-        <div className={styles.staffAlertsContainer}>
-          {alertItems?.map((item, index) => (
-            <div className={styles.staffAlert} key={`staff-alert-${index}`}>
-              {item}
-            </div>
-          ))}
-        </div>
-      )}
-      {addingAlert && (
-        // TODO: make this formik
-        <TextArea
-          autoFocus
-          // value={alert}
-          onChange={(e) => alert('TODO: fire mutation here')}
-          // onPressEnter={(_) => handleAddAlert()}
-          // onBlur={(_) => handleAddAlert()}
-          style={{ marginTop: '12px' }}
-        />
-      )}
-      <Button
-        icon={<PlusOutlined />}
-        type="primary"
+      <div className={styles.staffAlertsContainer}>
+        {staffAlerts?.loading ? (
+          <div className={styles.staffAlertSkeleton}>
+            {[1, 2, 3, 4, 5].map((item) => (
+              <div key={item} className={styles.alertContent}>
+                <Skeleton.Input active={true} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          alertItems?.map((item, index) => (
+            <Tooltip
+              key={`staff-alert-${index}`}
+              title={t('clients.clientcard.staffalerts.createdby', {
+                who: item?.User?.contact,
+                when: dayjs(item?.date).format('DD/MM/YYYY'),
+              })}
+            >
+              <div
+                className={
+                  activeAlert === item?.ID
+                    ? ClassNames(styles.staffAlert, styles.focused)
+                    : styles.staffAlert
+                }
+                onClick={() => setActiveAlert(item?.ID)}
+              >
+                <span className={styles.text}>{item?.content}</span>
+                <div className={styles.editDeleteBtnWrap}>
+                  <div
+                    onClick={() => {
+                      if (userId === item?.User?.id) {
+                        setNewAlert(() => {
+                          return {
+                            id: item?.ID,
+                            newAlert: item?.content,
+                            ownerId: item?.User?.id,
+                          }
+                        })
+                      }
+                    }}
+                    style={{ marginRight: '10px' }}
+                  >
+                    <Tooltip
+                      title={
+                        userId !== item?.User?.id
+                          ? t('clients.clientcard.staffalerts.nopermission')
+                          : null
+                      }
+                      placement="bottom"
+                    >
+                      <EditOutlined
+                        style={
+                          userId !== item?.User?.id
+                            ? { cursor: 'not-allowed' }
+                            : undefined
+                        }
+                      />
+                    </Tooltip>
+                  </div>
+                  <div
+                    onClick={() => {
+                      if (userId === item?.User?.id)
+                        handleDeleteStaffAlert(item?.ID)
+                    }}
+                  >
+                    <Tooltip
+                      title={
+                        userId !== item?.User?.id
+                          ? t('clients.clientcard.staffalerts.nopermission')
+                          : null
+                      }
+                      placement="bottom"
+                    >
+                      <DeleteOutlined
+                        style={
+                          userId !== item?.User?.id
+                            ? { color: '#ff4d4f', cursor: 'not-allowed' }
+                            : { color: '#ff4d4f' }
+                        }
+                      />
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+            </Tooltip>
+          ))
+        )}
+      </div>
+      <TextArea
+        placeholder={t('clients.clientcard.staffalerts.input.placeholder')}
+        value={newAlert?.newAlert}
+        onChange={(e) =>
+          setNewAlert((val) => {
+            return { ...val, newAlert: e.target.value }
+          })
+        }
+        onPressEnter={(e) => {
+          handleAlertMutation(e)
+        }}
         style={{ marginTop: '12px' }}
-        onClick={() => setAddingAlert(true)}
-      >
-        {t('common-label-add')}
-      </Button>
+      />
     </div>
   )
 
@@ -338,20 +526,60 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                               .format('D MMM YYYY hh:mm A')}`}</div>
                           </div>
                           <div>
-                            <Button
-                              type="primary"
-                              shape="circle"
-                              size="small"
-                              icon={<FormOutlined />}
-                              onClick={() => setCurrentClientNote(index)}
-                            />
-                            <Button
-                              danger
-                              icon={<DeleteOutlined />}
-                              shape="circle"
-                              size="small"
-                              onClick={() => handleDeleteClientNote(item.ID)}
-                            />
+                            <Tooltip
+                              title={
+                                userId !== item?.User?.id
+                                  ? t(
+                                      'clients.clientcard.staffalerts.nopermission'
+                                    )
+                                  : null
+                              }
+                              placement="bottomRight"
+                            >
+                              <div
+                                className={
+                                  userId !== item?.User?.id
+                                    ? styles.disableIcon
+                                    : ClassNames(
+                                        styles.disableIcon,
+                                        styles.editIcon
+                                      )
+                                }
+                                onClick={() => {
+                                  userId === item?.User?.id &&
+                                    setCurrentClientNote(index)
+                                }}
+                              >
+                                <FormOutlined />
+                              </div>
+                            </Tooltip>
+                            <Tooltip
+                              title={
+                                userId !== item?.User?.id
+                                  ? t(
+                                      'clients.clientcard.staffalerts.nopermission'
+                                    )
+                                  : null
+                              }
+                              placement="bottomRight"
+                            >
+                              <div
+                                className={
+                                  userId !== item?.User?.id
+                                    ? styles.disableIcon
+                                    : ClassNames(
+                                        styles.disableIcon,
+                                        styles.deleteIcon
+                                      )
+                                }
+                                onClick={() => {
+                                  userId === item?.User?.id &&
+                                    handleDeleteClientNote(item.ID)
+                                }}
+                              >
+                                <DeleteOutlined />
+                              </div>
+                            </Tooltip>
                           </div>
                         </div>
                       )}
@@ -477,9 +705,12 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
           trigger="click"
           content={clientNotesPopover}
           overlayClassName={styles.clientCardHeaderPopover}
-          visible={openNotes}
+          visible={openPopover?.note}
           onVisibleChange={(val) => {
-            !isDeletingNotes && setOpenNotes(val)
+            !openDeleteModal &&
+              setOpenPopover((e) => {
+                return { ...e, note: val }
+              })
           }}
         >
           <div
@@ -502,24 +733,61 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
       </div>
       <div className={styles.clientCardHeaderOp}>
         <Popover
-          title={'Staff alerts'}
+          title={t('clients.clientcard.staffalerts.title')}
           placement="bottomRight"
           trigger="click"
           content={clientAlertsPopover}
           overlayClassName={styles.clientCardHeaderPopover}
+          visible={openPopover?.staffAlert}
+          onVisibleChange={(val) => handleAlertPopoverVisible(val)}
         >
-          <Tooltip title="Staff alerts" placement="bottomRight">
-            <Badge
-              count={countDetails?.staff}
-              overflowCount={9}
-              size="small"
-              style={{ backgroundColor: 'var(--primary-color)' }}
+          <div
+            onClick={() => {
+              getStaffAlertDetails?.()
+            }}
+          >
+            <Tooltip
+              title={t('clients.clientcard.staffalerts.title')}
+              placement="bottomRight"
             >
-              <Alert className={styles.headerOpsIcon} />
-            </Badge>
-          </Tooltip>
+              <Badge
+                count={countDetails?.staff}
+                overflowCount={9}
+                size="small"
+                style={{ backgroundColor: 'var(--primary-color)' }}
+              >
+                <Alert className={styles.headerOpsIcon} />
+              </Badge>
+            </Tooltip>
+          </div>
         </Popover>
       </div>
+      <Modal
+        modalWidth={682}
+        centered={true}
+        visible={openDeleteModal}
+        loading={deleteAlertLoading}
+        onCancel={() => setOpenDeleteModal((val) => !val)}
+        onOk={() => handleDeleteSubmit(activeItem)}
+        newButtonText={t('clients.content.delete.confirm.yes')}
+        title={t('clients.clientcard.notes.clientnote.deletemodal.title', {
+          what: activeItem === 'note' ? 'Client Note' : 'Staff Alert',
+        })}
+      >
+        <span
+          style={{
+            fontFamily: 'Circular-Std-Book',
+            fontWeight: 'normal',
+            fontSize: '16px',
+            lineHeight: '20px',
+            color: '#9292A3',
+          }}
+        >
+          {t('clients.clientcard.notes.clientnote.deletemodal.content', {
+            what: activeItem === 'note' ? 'note' : 'staff alert',
+          })}
+        </span>
+      </Modal>
     </div>
   )
 }

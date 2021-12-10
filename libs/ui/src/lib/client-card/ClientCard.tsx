@@ -120,6 +120,7 @@ export interface ClientNote {
 }
 
 interface StaffDetails {
+  id?: number | string
   contact?: string
   avatar?: string
 }
@@ -144,6 +145,12 @@ export interface ClientNotes {
   appointments: ClientAppointmentDetails[]
 }
 
+export interface StaffAlerts {
+  alerts: ClientNoteDetails[]
+  count: number
+  loading: boolean
+}
+
 export interface MedicalHistoryDetails {
   status?: string
   requestedDate?: string
@@ -153,11 +160,21 @@ export interface MedicalHistoryDetails {
 interface P {
   client: ClientData
   notes?: ClientNotes
+  staffAlerts?: StaffAlerts
   medicalHistoryDetails?: MedicalHistoryDetails
   getContactDetails?: () => void
+  getStaffAlertDetails?: () => void
   handleAddNewClientNote?: (e: string) => void
   handleEditNote?: (id: number | string, e: string) => void
   handleDeleteNote?: (id: number | string) => void
+  handleAddAlert?: (e: string) => void
+  handleEditAlert?: (
+    id: number | string,
+    e: string,
+    val: number | string
+  ) => void
+  handleDeleteAlert?: (id: number | string) => void
+  deleteAlertLoading?: boolean
   onClose?: () => void
   tabs?: readonly TabItem[]
   onTabChanged?(newKey: string): void
@@ -171,6 +188,7 @@ interface P {
   updatebasicContactMutation?: MutationFunction
   updateContactCustomMutation?: MutationFunction
   clientId?: number
+  userId?: number
   companyId?: number
   setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
   searchRender?: () => JSX.Element
@@ -181,11 +199,17 @@ const ClientCardModal: FC<P> = ({
   client,
   cssClass,
   notes,
+  staffAlerts,
   medicalHistoryDetails,
   getContactDetails,
+  getStaffAlertDetails,
   handleAddNewClientNote,
   handleEditNote,
   handleDeleteNote,
+  handleAddAlert,
+  handleEditAlert,
+  handleDeleteAlert,
+  deleteAlertLoading,
   onClose,
   tabs,
   activeTab = 'dashboard',
@@ -199,6 +223,7 @@ const ClientCardModal: FC<P> = ({
   updatebasicContactMutation,
   updateContactCustomMutation,
   clientId,
+  userId,
   companyId,
   setBasicContactData,
   searchRender,
@@ -954,12 +979,19 @@ const ClientCardModal: FC<P> = ({
               {!isMobile && (
                 <ClientHeaderDetails
                   notes={notes}
+                  staffAlerts={staffAlerts}
                   medicalHistoryDetails={medicalHistoryDetails}
+                  userId={userId}
                   getContactDetails={getContactDetails}
+                  getStaffAlertDetails={getStaffAlertDetails}
                   client={client}
                   handleAddNewClientNote={handleAddNewClientNote}
                   handleEditNote={handleEditNote}
                   handleDeleteNote={handleDeleteNote}
+                  handleAddAlert={handleAddAlert}
+                  handleEditAlert={handleEditAlert}
+                  handleDeleteAlert={handleDeleteAlert}
+                  deleteAlertLoading={deleteAlertLoading}
                 />
               )}
             </div>

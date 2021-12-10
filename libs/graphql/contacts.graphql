@@ -41,6 +41,12 @@ query basicContactDetails($id: Int!) {
     bookingNotes: Booking(orderBy: { create_date: desc }) {
       id
     }
+    staffAlerts: ContactAlert(
+      where: { Note: { not: { equals: "" } } }
+      orderBy: { CreatedDate: desc }
+    ) {
+      ID
+    }
     Company {
       details {
         country

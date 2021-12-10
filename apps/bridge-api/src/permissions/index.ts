@@ -76,9 +76,32 @@ export const permissions = shield(
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       updateOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
-      createOneContactNote: rules.authentication.isAuthenticated,
-      updateOneContactNote: rules.authentication.isAuthenticated,
-      deleteOneContactNote: rules.authentication.isAuthenticated,
+      createOneContactNote: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin,
+        rules.interceptors.isAuthor
+      ),
+      updateOneContactNote: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin,
+        rules.interceptors.isAuthor
+      ),
+      deleteOneContactNote: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin,
+        rules.interceptors.isAuthor
+      ),
+      //ContactAlert
+      updateOneContactAlert: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin,
+        rules.interceptors.isAuthor
+      ),
+      deleteOneContactAlert: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin,
+        rules.interceptors.isAuthor
+      ),
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -99,7 +122,18 @@ export const permissions = shield(
       deleteManyContactAttachment: rules.authentication.isAuthenticated,
       deleteContactAlbum: rules.authentication.isAuthenticated,
       moveAttachments: rules.authentication.isAuthenticated,
+      // contact alert
       createContactAlertAdvanced: rules.authentication.isAuthenticated,
+      updateContactAlertAdvanced: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin,
+        rules.interceptors.isAuthor
+      ),
+      deleteContactAlertAdvanced: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin,
+        rules.interceptors.isAuthor
+      ),
       updateOneMedicalForm: and(
         rules.authentication.isAuthenticated,
         rules.interceptors.injectDeletedBy
@@ -154,6 +188,9 @@ export const permissions = shield(
       // LeadNote
       updateOneCmLeadNote: rules.authentication.isAuthenticated,
       // Default fallback
+      deleteOneContactMedicalCondition: rules.authentication.isAuthenticated,
+      deleteOneMedicalCondition: rules.authentication.isAuthenticated,
+
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.injectCompany,
