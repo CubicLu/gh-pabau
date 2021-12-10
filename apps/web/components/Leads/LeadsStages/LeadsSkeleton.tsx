@@ -4,7 +4,6 @@ import { KanbanCard } from '@pabau/ui'
 
 export const LeadsSkeleton = () => {
   const grid = 4
-
   return (
     <div
       style={{
@@ -14,9 +13,13 @@ export const LeadsSkeleton = () => {
         gap: '15px',
       }}
     >
-      <div className={styles.cardWrapper}>
-        <KanbanCard isLoading={true} />
-      </div>
+      {[
+        ...Array.from({ length: 4 }).map((v, i) => (
+          <div key={`${i}-canban-card`} className={styles.cardWrapper}>
+            <KanbanCard isLoading={true} />
+          </div>
+        )),
+      ]}
     </div>
   )
 }

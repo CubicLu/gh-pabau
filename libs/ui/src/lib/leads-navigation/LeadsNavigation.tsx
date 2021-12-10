@@ -3,9 +3,9 @@ import {
   FilterOutlined,
   ProjectOutlined,
   MenuOutlined,
+  SearchOutlined,
 } from '@ant-design/icons'
 import styles from './LeadsNavigation.module.less'
-import { SearchOutlined } from '@ant-design/icons'
 import {
   Input,
   ButtonSize,
@@ -13,6 +13,7 @@ import {
   ButtonTypes,
   DropdownWithCheck,
 } from '@pabau/ui'
+import { useTranslation } from 'react-i18next'
 
 export interface LeadsNavigationProps {
   onProjectClickHandler?: () => void
@@ -45,90 +46,93 @@ export const LeadsNavigation: FC<LeadsNavigationProps> = ({
   onSelectOptionHandler,
   optionItems,
   onCreateLeadHandler,
-}) => (
-  <div className={styles.leadsNaveRoot}>
-    <div className={styles.leadsCount}>
-      <h4>{`Leads`}</h4>
-      <div className={styles.tickerCount}>{leadCount}</div>
-    </div>
-    <div className={styles.leadsNaveOption}>
-      <div className={styles.section}>
-        <Button
-          disabled={false}
-          loading={false}
-          icon={<ProjectOutlined />}
-          onClick={onProjectClickHandler}
-        />
+}) => {
+  const { t } = useTranslation('common')
+  return (
+    <div className={styles.leadsNaveRoot}>
+      <div className={styles.leadsCount}>
+        <h4>{t(`kanban-board.leads.leads-per-stage`)}</h4>
+        <div className={styles.tickerCount}>{leadCount}</div>
       </div>
-      <div className={styles.section}>
-        <Button
-          disabled={false}
-          loading={false}
-          icon={<MenuOutlined />}
-          onClick={onMenuClickHandler}
-        />
-      </div>
-      <div className={styles.section}>
-        <div>
-          <FilterOutlined className={styles.marketingIconStyle} />
-        </div>
-        <DropdownWithCheck
-          placeHolderText={`Select Leads`}
-          value={`New Leads`}
-          onSelected={onSelectLeadsHandler}
-          dropdownItems={leadsItems}
-          disabled={false}
-        />
-      </div>
-      <div className={styles.section}>
-        <div>
-          <FilterOutlined
-            className={styles.marketingIconStyle}
-            onClick={() => {
-              console.log('OnFilter')
-            }}
+      <div className={styles.leadsNaveOption}>
+        <div className={styles.section}>
+          <Button
+            disabled={false}
+            loading={false}
+            icon={<ProjectOutlined />}
+            onClick={onProjectClickHandler}
           />
         </div>
-        <DropdownWithCheck
-          placeHolderText={`Select Inbound Leads`}
-          value={`Inbound Leads`}
-          onSelected={onSelectInboundLeadsHandler}
-          dropdownItems={InboundLeadsItems}
-          disabled={false}
-        />
-      </div>
-      <div className={styles.section}>
-        <Input
-          placeholder={`Search by name`}
-          suffix={<SearchOutlined />}
-          size={ButtonSize.large}
-          onChange={onInputChange}
-        />
-      </div>
-      <div className={styles.section}>
-        <div className={styles.selectOption}>
+        <div className={styles.section}>
+          <Button
+            disabled={false}
+            loading={false}
+            icon={<MenuOutlined />}
+            onClick={onMenuClickHandler}
+          />
+        </div>
+        <div className={styles.section}>
+          <div>
+            <FilterOutlined className={styles.marketingIconStyle} />
+          </div>
           <DropdownWithCheck
-            placeHolderText={`Select Option`}
-            value={`Options`}
-            onSelected={onSelectOptionHandler}
-            dropdownItems={optionItems}
+            placeHolderText={`Select Leads`}
+            value={t(`kanban-board.lead-nave.new-leads`)}
+            onSelected={onSelectLeadsHandler}
+            dropdownItems={leadsItems}
             disabled={false}
           />
         </div>
-      </div>
-      <div className={styles.section}>
-        <Button
-          type={ButtonTypes.primary}
-          disabled={false}
-          className={styles.createLeadBtn}
-          loading={false}
-          onClick={onCreateLeadHandler}
-        >
-          {`Create Lead`}
-        </Button>
+        <div className={styles.section}>
+          <div>
+            <FilterOutlined
+              className={styles.marketingIconStyle}
+              onClick={() => {
+                console.log('OnFilter')
+              }}
+            />
+          </div>
+          <DropdownWithCheck
+            placeHolderText={`Select Inbound Leads`}
+            value={t(`kanban-board.lead-nave.inbound-leads`)}
+            onSelected={onSelectInboundLeadsHandler}
+            dropdownItems={InboundLeadsItems}
+            disabled={false}
+          />
+        </div>
+        <div className={styles.section}>
+          <Input
+            placeholder={`Search by name`}
+            suffix={<SearchOutlined />}
+            size={ButtonSize.large}
+            onChange={onInputChange}
+          />
+        </div>
+        <div className={styles.section}>
+          <div className={styles.selectOption}>
+            <DropdownWithCheck
+              placeHolderText={`Select Option`}
+              value={t(`kanban-board.lead-nave.options`)}
+              onSelected={onSelectOptionHandler}
+              dropdownItems={optionItems}
+              disabled={false}
+            />
+          </div>
+        </div>
+        <div className={styles.section}>
+          <Button
+            type={ButtonTypes.primary}
+            disabled={false}
+            className={styles.createLeadBtn}
+            loading={false}
+            onClick={onCreateLeadHandler}
+          >
+            {t(`kanban-board.lead-nave.create-lead`)}
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default LeadsNavigation

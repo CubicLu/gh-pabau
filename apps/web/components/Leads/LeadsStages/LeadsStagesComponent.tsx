@@ -13,22 +13,16 @@ import { KanbanCard } from '@pabau/ui'
 import {
   useGetKanbanLeadsLazyQuery,
   useGetPipelineStagesLazyQuery,
+  useUpdateOneCmLeadMutation,
 } from '@pabau/graphql'
 import styles from './LeadsStages.module.less'
 import LeadsSkeleton from './LeadsSkeleton'
 import LeadsStagesSkeleton from './LeadsStagesSkeleton'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 export interface leadsStagesComponentProps {
   pipelineId: number | null
-}
-
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list)
-  const [removed] = result.splice(startIndex, 1)
-  result.splice(endIndex, 0, removed)
-
-  return result
 }
 
 const move = (
@@ -49,6 +43,12 @@ const move = (
 
   return result
 }
+const findIndexOfState = (state, searchableValue, searchVariable) => {
+  return state.findIndex(
+    (stage) => stage[searchableValue] === Number.parseInt(searchVariable)
+  )
+}
+
 const grid = 4
 
 const getItemStyle = (isDragging, draggableStyle) => ({
@@ -73,14 +73,22 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
   const leadsLenghtRef = useRef({ leadsLength: 0 })
   const leadsArrayRef = useRef({ leadsObj: {} })
   const leadsContainerRef = useRef(null)
+  const wonLostDropZoneRef = useRef(null)
   const scrollRef = useRef({ position: 0 })
   const stageQueryRef = useRef({
     queryCalled: 0,
     queryCompleted: false,
     stageWithLeads: [],
+    leadSkipIndex: {},
   })
   const stageNameRef = useRef([])
+  const cardWrapperRef = useRef([])
   const stageNameContent = useRef({})
+  const resetLeadsRef = useRef({ resetStages: [], resetLeads: {} })
+
+  const { t } = useTranslationI18()
+
+  const currentResetLead = resetLeadsRef.current
 
   const [
     getAllKanbanStages,
@@ -109,33 +117,124 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
     },
   })
 
+  const [updateLeadStage] = useUpdateOneCmLeadMutation({
+    onError(e) {
+      setLeadsState(currentResetLead.resetLeads)
+      setAllStages(currentResetLead.resetStages)
+    },
+  })
+
+  const callUpdateOneCmLeadMutation = (id, updateRecord) => {
+    updateLeadStage({
+      variables: {
+        where: {
+          ID: id,
+        },
+        data: updateRecord,
+      },
+    })
+  }
+
+  const onBeforeDragStart = () => {
+    const currentWonLostDropZone = wonLostDropZoneRef.current
+    currentWonLostDropZone.style.opacity = `1`
+    currentWonLostDropZone.style.maxHeight = `100%`
+  }
   const onDragEnd = (result) => {
+    const currentWonLostDropZone = wonLostDropZoneRef.current
+    currentWonLostDropZone.style.opacity = `0`
+    currentWonLostDropZone.style.maxHeight = `1px`
+    const nq = document.querySelector(`div[id="${result.draggableId}"]`)
+    nq?.firstChild.remove()
+
+    const originalWrapper =
+      cardWrapperRef.current[`${result.draggableId}${result.draggableId}`]
+        .current
+    originalWrapper.style.position = 'static'
+
     const { source, destination } = result
-    let newState = {}
+    let newState = {},
+      newStages = [],
+      cloneStageLeads = [],
+      sourceDataObj = {},
+      destinationDataObj = {}
     if (!destination) {
       return
     }
-
     const sInd = +source.droppableId
     const dInd = +destination.droppableId
-    if (sInd === dInd) {
-      const items = reorder(leadsState[sInd], source.index, destination.index)
-      newState = { ...leadsState }
-      newState[sInd] = items as []
+
+    newState = { ...leadsState }
+
+    if ([`Converted`, `Junk`].includes(destination.droppableId)) {
+      callUpdateOneCmLeadMutation(leadsState[sInd][source.index][`lead_id`], {
+        EnumStatus: {
+          set: destination.droppableId,
+        },
+      })
+      currentResetLead.resetLeads = leadsState
+      cloneStageLeads = [...cloneStageLeads, ...newState[sInd]]
+      let leadObj = newState[sInd][source.index]
+      leadObj = { ...leadObj, status: destination.droppableId }
+      cloneStageLeads[source.index] = leadObj
+      newState[sInd] = cloneStageLeads
       setLeadsState(newState)
-    } else {
+      return
+    }
+
+    if (sInd === dInd) return
+    else {
       const result = move(
         leadsState[sInd],
         leadsState[dInd],
         source,
         destination
       )
+      newStages = [...allStages]
 
-      newState = { ...leadsState }
+      currentResetLead.resetStages = allStages
+
+      const sourceIndex = findIndexOfState(newStages, `id`, source.droppableId)
+      const destinationIndex = findIndexOfState(
+        newStages,
+        `id`,
+        destination.droppableId
+      )
+      sourceDataObj = { ...newStages[sourceIndex] }
+      let sourceDataObjCount = sourceDataObj['_count']
+      sourceDataObjCount = {
+        ...sourceDataObjCount,
+        CmLead: sourceDataObjCount?.CmLead - 1,
+      }
+
+      sourceDataObj['_count'] = sourceDataObjCount
+      newStages[sourceIndex] = sourceDataObj
+
+      destinationDataObj = { ...newStages[destinationIndex] }
+      let destinationDataObjCount = destinationDataObj['_count']
+      destinationDataObjCount = {
+        ...destinationDataObjCount,
+        CmLead: destinationDataObjCount?.CmLead + 1,
+      }
+
+      destinationDataObj['_count'] = destinationDataObjCount
+      newStages[destinationIndex] = destinationDataObj
+
+      currentResetLead.resetLeads = leadsState
       newState[sInd] = result[sInd]
       newState[dInd] = result[dInd]
 
       setLeadsState(newState)
+
+      setAllStages(newStages)
+
+      callUpdateOneCmLeadMutation(leadsState[sInd][source.index][`lead_id`], {
+        PipelineStage: {
+          connect: {
+            id: dInd,
+          },
+        },
+      })
     }
   }
 
@@ -250,9 +349,14 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
       )
       if (stageQuery.queryCalled === 0) setQueryIsCalled(true)
       if (pipelineId) {
+        let defaultParams = {}
+        if (stageIndex in stageQuery.leadSkipIndex) {
+          defaultParams = { skip: stageQuery.leadSkipIndex[stageIndex] }
+        }
         getAllKanbanLeadsDetails({
           variables: {
             ...leadsDefaultParams,
+            ...defaultParams,
             pipeline_id: pipelineId,
             pipeline_stage_id: stageIndex,
           },
@@ -341,15 +445,18 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
 
   return (
     <div>
-      <div
-        ref={leadsContainerRef}
-        className={styles.dragableWrapper}
-        onScroll={scrollAtBottomAndLoadMoreLeads}
+      <DragDropContext
+        onDragEnd={onDragEnd}
+        onBeforeDragStart={onBeforeDragStart}
       >
-        {isLoadingGetAllStages ? (
-          <LeadsStagesSkeleton />
-        ) : (
-          <DragDropContext onDragEnd={onDragEnd}>
+        <div
+          ref={leadsContainerRef}
+          className={styles.dragableWrapper}
+          onScroll={scrollAtBottomAndLoadMoreLeads}
+        >
+          {isLoadingGetAllStages ? (
+            <LeadsStagesSkeleton />
+          ) : (
             <div className={styles.cardMainWrapper}>
               {allStages?.map((stage, stageIndex) => {
                 const { name, id, _count } = stage
@@ -395,7 +502,9 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                               )}
                               <div
                                 className={styles.leadCount}
-                              >{`£0 . ${leadParStage} Leads`}</div>
+                              >{`Â£0 . ${leadParStage} ${t(
+                                `kanban-board.leads.leads-per-stage`
+                              )}`}</div>
                             </div>
                           </div>
                         </div>
@@ -403,6 +512,11 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                           className={styles.allCards}
                           ref={provided.innerRef}
                           {...provided.droppableProps}
+                          style={{
+                            background: snapshot.isDraggingOver
+                              ? '#cbcccd'
+                              : null,
+                          }}
                         >
                           {Object.keys(leadsState).length === 0 &&
                           isLoadingGetAllLeadsDetail ? (
@@ -412,16 +526,17 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                               let contactName,
                                 contactImg,
                                 userName,
-                                userImage = ''
+                                userImage = '',
+                                setEnumStatus = ''
                               const {
                                 lead_id,
                                 Name,
                                 lastName,
                                 ContactID,
-                                status,
                                 Contact,
                                 Activity,
                                 User,
+                                status,
                               } = item
 
                               if (User) {
@@ -441,6 +556,20 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                                   : 'no-image'
                               }
 
+                              if (
+                                !cardWrapperRef.current[
+                                  `${stageIndex}-${lead_id}${stageIndex}-${lead_id}`
+                                ]
+                              ) {
+                                cardWrapperRef.current[
+                                  `${stageIndex}-${lead_id}${stageIndex}-${lead_id}`
+                                ] = createRef()
+                              }
+
+                              if (status === `Converted`) setEnumStatus = `Won`
+                              else if (status === `Junk`) setEnumStatus = `Lost`
+                              else setEnumStatus = status
+
                               return (
                                 <Draggable
                                   key={lead_id}
@@ -457,7 +586,15 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                                         provided.draggableProps.style
                                       )}
                                     >
-                                      <div className={styles.cardWrapper}>
+                                      <div
+                                        className={styles.cardWrapper}
+                                        draggable="true"
+                                        ref={
+                                          cardWrapperRef.current[
+                                            `${stageIndex}-${lead_id}${stageIndex}-${lead_id}`
+                                          ]
+                                        }
+                                      >
                                         <KanbanCard
                                           isLoading={false}
                                           leadTitle={`${Name} ${lastName}`}
@@ -474,7 +611,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                                           activityStatus={findStatusOfActivity(
                                             Activity
                                           )}
-                                          leadStatus={status}
+                                          leadStatus={setEnumStatus}
                                         />
                                       </div>
                                     </div>
@@ -491,16 +628,48 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
                 )
               })}
             </div>
-          </DragDropContext>
-        )}
-        {queryIsCalled && allStages.length > 0 && (
-          <div className={styles.preLoader}>
-            <Spin
-              indicator={<LoadingOutlined style={{ fontSize: 30 }} spin />}
-            />
-          </div>
-        )}
-      </div>
+          )}
+          {queryIsCalled && allStages.length > 0 && (
+            <div className={styles.preLoader}>
+              <Spin
+                indicator={<LoadingOutlined style={{ fontSize: 30 }} spin />}
+              />
+            </div>
+          )}
+        </div>
+        <div className={styles.wonLostDropZone} ref={wonLostDropZoneRef}>
+          <Droppable key={Math.random()} droppableId={`Converted`}>
+            {(provided, snapshot) => (
+              <div
+                className={styles.wonDropZone}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={{
+                  background: snapshot.isDraggingOver ? '#65CD98' : null,
+                  color: snapshot.isDraggingOver ? 'white' : null,
+                }}
+              >
+                {t(`kanban-board.leads.leads-won-stage`)}
+              </div>
+            )}
+          </Droppable>
+          <Droppable key={Math.random()} droppableId={`Junk`}>
+            {(provided, snapshot) => (
+              <div
+                className={styles.loseDropZone}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={{
+                  background: snapshot.isDraggingOver ? '#FF5B64' : null,
+                  color: snapshot.isDraggingOver ? 'white' : null,
+                }}
+              >
+                {t(`kanban-board.leads.leads-lost-stage`)}
+              </div>
+            )}
+          </Droppable>
+        </div>
+      </DragDropContext>
     </div>
   )
 }
