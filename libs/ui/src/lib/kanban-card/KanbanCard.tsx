@@ -3,10 +3,12 @@ import styles from './KanbanCard.module.less'
 
 import { Avatar } from '../avatar/Avatar'
 import * as Icons from '@ant-design/icons'
-import { Tag, Tooltip } from 'antd'
+import { Tag, Popover } from 'antd'
 import { CustomButton } from '../button/Button.stories'
+import { Button, RadioButton } from '@pabau/ui'
 import KanbanCardSkeleton from './skeleton'
-import { UserOutlined } from '@ant-design/icons'
+import { UserOutlined, PlusOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 
 export interface KanbanCardProps {
   isLoading?: boolean
@@ -33,11 +35,58 @@ export const KanbanCard: FC<KanbanCardProps> = ({
   activityStatus,
   leadStatus,
 }) => {
+  const { t } = useTranslation('common')
+
   let cardBackground,
     btnColor,
     borderColor = `White`
 
-  activityStatus = activityStatus?.toLowerCase()
+  const popOverContent = (statusContent) => (
+    <div>
+      <div>
+        <div>
+          <RadioButton
+            group={`Schedule Activity`}
+            Items={[
+              {
+                key: `1`,
+                label: `Call to Bruno Ballardin`,
+                value: `1`,
+                check: false,
+              },
+            ]}
+          />
+          <div className={styles.contactWrapper}>
+            {statusContent ? (
+              <p className={styles.overDueContent}>{statusContent}</p>
+            ) : (
+              ''
+            )}
+            <p className={styles.contectContentWrapper}>
+              <div className={styles.contactContent}>
+                <div className={styles.imageContent}>
+                  <Avatar
+                    className={styles.avatarImg}
+                    src={contactImg}
+                    icon={<UserOutlined />}
+                    size={`small`}
+                  />
+                </div>{' '}
+                <div className={styles.contactContentName}>
+                  <span className={styles.nameSection}>{`Jon Snow`}</span>
+                </div>
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <Button style={{ width: '100%' }} icon={<PlusOutlined />}>
+          {t(`kanban-card.activity.schedule-activity-btn`)}
+        </Button>
+      </div>
+    </div>
+  )
 
   const mapLabels = labels?.map((label, index) => {
     return (
@@ -49,18 +98,48 @@ export const KanbanCard: FC<KanbanCardProps> = ({
 
   const activityStatusIconAndColor = (
     status
-  ): { color: string; SelectedIcon: string } => {
-    switch (status) {
+  ): {
+    color: string
+    SelectedIcon: string
+    statusContent: JSX.Element | null
+    textContent: JSX.Element | null
+  } => {
+    switch (status?.toLowerCase()) {
       case 'activity due today':
-        return { color: '#65CD98', SelectedIcon: `DownCircleFilled` }
+        return {
+          color: '#65CD98',
+          SelectedIcon: `DownCircleFilled`,
+          statusContent: popOverContent(`Today`),
+          textContent: <span>{t(`kanban-card.activity.today`)}</span>,
+        }
       case 'no activity scheduled':
-        return { color: '#FAAD14', SelectedIcon: `ExclamationCircleFilled` }
+        return {
+          color: '#FAAD14',
+          SelectedIcon: `ExclamationCircleFilled`,
+          statusContent: popOverContent(``),
+          textContent: null,
+        }
       case 'activity overdue':
-        return { color: '#FF5B64', SelectedIcon: `LeftCircleFilled` }
+        return {
+          color: '#FF5B64',
+          SelectedIcon: `LeftCircleFilled`,
+          statusContent: popOverContent(`7 weeks overdue`),
+          textContent: <span>{t(`kanban-card.activity.overdue`)}</span>,
+        }
       case 'future activity scheduled':
-        return { color: '#CFCFD7', SelectedIcon: `RightCircleFilled` }
+        return {
+          color: '#CFCFD7',
+          SelectedIcon: `RightCircleFilled`,
+          statusContent: popOverContent(`Tomorrow`),
+          textContent: <span>{t(`kanban-card.activity.scheduled`)}</span>,
+        }
       default:
-        return { color: '', SelectedIcon: '' }
+        return {
+          color: '',
+          SelectedIcon: '',
+          statusContent: null,
+          textContent: null,
+        }
     }
   }
 
@@ -78,7 +157,12 @@ export const KanbanCard: FC<KanbanCardProps> = ({
   }
 
   const activeStatusComponent = () => {
-    const { color, SelectedIcon } = activityStatusIconAndColor(activityStatus)
+    const {
+      color,
+      SelectedIcon,
+      statusContent,
+      textContent,
+    } = activityStatusIconAndColor(activityStatus)
 
     const activityStatusIcon = React.createElement(Icons?.[SelectedIcon], {
       style: { color: color },
@@ -87,13 +171,16 @@ export const KanbanCard: FC<KanbanCardProps> = ({
     })
 
     return (
-      <Tooltip
-        title={activityStatus}
-        trigger={['click']}
-        overlayStyle={{ width: '150px' }}
+      <Popover
+        placement="rightTop"
+        title={textContent}
+        content={statusContent}
+        trigger="click"
+        overlayClassName={styles.activityPopover}
+        style={{ backgroundColor: 'blue' }}
       >
         <div className={styles.activityWrapper}>{activityStatusIcon}</div>
-      </Tooltip>
+      </Popover>
     )
   }
 

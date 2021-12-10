@@ -135,3 +135,52 @@
     }
   }
 }
+.activity-popover {
+  width: 284px;
+  :global .ant-popover-inner {
+    border-radius: 4px;
+    .ant-popover-title {
+      height: 48px;
+      align-items: center;
+      display: flex;
+    }
+    .ant-popover-inner-content {
+      padding: 15px 20px 20px 20px;
+      .ant-avatar {
+        margin-right: 4px;
+      }
+    }
+  }
+}
+.contact-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin: 4px 0 20px 0;
+  align-items: center;
+
+  .over-due-content {
+    margin: 0;
+    color: red;
+  }
+
+  .todaydue-content {
+    margin: 0;
+    color: green;
+  }
+
+  .scheduled-content {
+    margin: 0;
+    color: grey;
+  }
+
+  .contect-content-wrapper {
+    display: flex;
+    margin: 0;
+    margin-left: 12px;
+  }
+
+  .contact-content {
+    display: flex;
+    align-items: center;
+  }
+}

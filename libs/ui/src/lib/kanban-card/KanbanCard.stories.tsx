@@ -68,3 +68,19 @@ export const KanbanCardActiveStatusOverdueComponentStory = KanbanCardComponent.b
 KanbanCardActiveStatusOverdueComponentStory.args = {
   activityStatus: 'activity overdue',
 }
+
+export const KanbanCardActiveStatusTodayComponentStory = KanbanCardComponent.bind(
+  {}
+)
+
+KanbanCardActiveStatusTodayComponentStory.args = {
+  activityStatus: 'activity due today',
+}
+
+export const KanbanCardActiveStatusFutureComponentStory = KanbanCardComponent.bind(
+  {}
+)
+
+KanbanCardActiveStatusFutureComponentStory.args = {
+  activityStatus: 'future activity scheduled',
+}
