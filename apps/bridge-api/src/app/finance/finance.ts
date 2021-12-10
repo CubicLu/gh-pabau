@@ -1261,7 +1261,7 @@ export const retrieveSalesCount = async (
   const prev_data = getPreviousDateRange(data.start_date, data.end_date)
   let prevSales = []
   prevSales = await ctx.prisma
-    .$queryRaw`select SUM(b.total) from inv_sale_items a
+    .$queryRaw`select SUM(b.total) as total from inv_sale_items a
   inner join inv_sales b on b.id=a.sale_id
   WHERE ${
     prev_data.prevStartDate && prev_data.prevEndDate
@@ -1278,7 +1278,7 @@ export const retrieveSalesCount = async (
   const SalesList = []
   let sale = []
   sale = await ctx.prisma
-    .$queryRaw`select product_category_type, count(sale_id), SUM(b.total) from inv_sale_items a
+    .$queryRaw`select product_category_type, count(sale_id) as count, SUM(b.total) as total from inv_sale_items a
     inner join inv_sales b on b.id=a.sale_id
     WHERE ${
       data.start_date && data.end_date
@@ -1296,12 +1296,12 @@ export const retrieveSalesCount = async (
     if (item.product_category_type !== '') {
       SalesList.push({
         label: item.product_category_type,
-        count: item['count(sale_id)'],
+        count: item['count'],
         per:
           (
-            ((item['count(sale_id)'] ?? 0) * 100) /
+            ((item['count'] ?? 0) * 100) /
             sale?.reduce((prev, cur) => {
-              return prev + cur['count(sale_id)'] ?? 0
+              return prev + cur['count'] ?? 0
             }, 0)
           ).toFixed(2) + '%',
       })
@@ -1312,7 +1312,7 @@ export const retrieveSalesCount = async (
   prev_data.prevStartDate &&
   prev_data.prevEndDate
     ? (sale?.reduce((prev, cur) => {
-        return prev + cur.total ?? 0
+        return prev + cur['total'] ?? 0
       }, 0) *
         100) /
         prevSales[0].total ?? 0
@@ -1321,11 +1321,11 @@ export const retrieveSalesCount = async (
 
   return {
     totalAvailableCategoryTypeCount: sale?.reduce((prev, cur) => {
-      return prev + cur['count(sale_id)'] ?? 0
+      return prev + cur['count'] ?? 0
     }, 0),
     totalAvailableCategoryTypeAmount: sale
       ?.reduce((prev, cur) => {
-        return prev + cur.total ?? 0
+        return prev + cur['total'] ?? 0
       }, 0)
       .toFixed(2),
     totalAvailableCategoryTypePer:
@@ -1368,7 +1368,7 @@ export const retrieveSalesChartData = async (
           dateRange: filter.map((i) => {
             result.push({
               label: i.grouping,
-              value: i['count(sale_id)'],
+              value: i['count'],
             })
             return result
           }),
@@ -1382,7 +1382,7 @@ export const retrieveSalesChartData = async (
   switch (true) {
     case year > 0:
       sale = await ctx.prisma.$queryRaw`select product_category_type,
-        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) as count from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
         WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
         ctx.authenticated.company
@@ -1400,7 +1400,7 @@ export const retrieveSalesChartData = async (
       break
     case month > 0:
       sale = await ctx.prisma.$queryRaw`select product_category_type,
-        MONTHNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        MONTHNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) as count from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
         WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
         ctx.authenticated.company
@@ -1418,7 +1418,7 @@ export const retrieveSalesChartData = async (
       break
     case week > 0:
       sale = await ctx.prisma.$queryRaw`select product_category_type,
-        DATE(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        DATE(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) as count from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
         WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
         ctx.authenticated.company
@@ -1436,7 +1436,7 @@ export const retrieveSalesChartData = async (
       break
     case day >= 0:
       sale = await ctx.prisma.$queryRaw`select product_category_type,
-        DAYNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        DAYNAME(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) as count from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
         WHERE b.date BETWEEN ${start_date} and ${end_date} and sale_id>0 and product_category_type not in ('') and b.occupier = ${
         ctx.authenticated.company
@@ -1454,7 +1454,7 @@ export const retrieveSalesChartData = async (
       break
     default:
       sale = await ctx.prisma.$queryRaw`select product_category_type,
-        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) from inv_sale_items a
+        YEAR(DATE_FORMAT(SUBSTRING(b.date,1,10),'%Y-%m-%d %T')) as grouping, count(sale_id) as count from inv_sale_items a
         inner join inv_sales b on b.id=a.sale_id
         WHERE product_category_type not in ('') and b.occupier = ${
           ctx.authenticated.company
@@ -1613,7 +1613,7 @@ export const retriveOtherDetails = async (
   }
 
   const newClientCount = await ctx.prisma
-    .$queryRaw`SELECT count(CreatedDate) from cm_contacts where Occupier = ${
+    .$queryRaw`SELECT count(CreatedDate) as count from cm_contacts where Occupier = ${
     ctx.authenticated.company
   } ${
     (data.start_date && data.end_date) || data.location_id || data.user_id
@@ -1638,7 +1638,7 @@ export const retriveOtherDetails = async (
   }`
 
   const avgBiller = await ctx.prisma
-    .$queryRaw`SELECT AVG(b.total) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${
+    .$queryRaw`SELECT AVG(b.total) as avgTotal FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${
     ctx.authenticated.company
   } ${
     (data.start_date && data.end_date) || data.location_id || data.user_id
@@ -1689,21 +1689,23 @@ export const retriveOtherDetails = async (
   let RevPerhour = 0
   switch (true) {
     case year > 0:
-      RevPerhour = total[0].total / (year * month * week * day * 24)
+      RevPerhour = (total[0].total ?? 0) / (year * month * week * day * 24)
       break
     case month > 0:
-      RevPerhour = total[0].total / (month * week * day * 24)
+      RevPerhour = (total[0].total ?? 0) / (month * week * day * 24)
       break
     case week > 0:
-      RevPerhour = total[0].total / (week * day * 24)
+      RevPerhour = (total[0].total ?? 0) / (week * day * 24)
       break
     case day >= 0:
-      RevPerhour = total[0].total / (day * 24)
+      RevPerhour = (total[0].total ?? 0) / (day * 24)
       break
   }
   return {
-    newClientCount: newClientCount[0]['count(CreatedDate)'] ?? 0,
-    avgBiller: (avgBiller[0]['AVG(b.total)'] ?? 0).toFixed(2),
-    RevPerhour: (Number.isFinite(RevPerhour) ? RevPerhour : 0).toFixed(2),
+    newClientCount: newClientCount[0]['count'] ?? 0,
+    avgBiller: (avgBiller[0]['avgTotal'] ?? 0).toFixed(2),
+    RevPerhour: ((Number.isFinite(RevPerhour) ? RevPerhour : 0) ?? 0).toFixed(
+      2
+    ),
   }
 }

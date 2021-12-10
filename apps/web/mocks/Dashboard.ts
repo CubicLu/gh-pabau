@@ -122,5 +122,5 @@ export const dateRangeList = [
   { value: 'Last Month', label: 'Last month' },
   { value: 'This Year', label: 'This year' },
   { value: 'Last Year', label: 'Last year' },
-  { value: 'custom', label: 'Custom' },
+  { value: 'Custom', label: 'Custom' },
 ]

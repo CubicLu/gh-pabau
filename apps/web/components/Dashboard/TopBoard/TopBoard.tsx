@@ -103,6 +103,7 @@ export const TopBoard: FC<ITopBoard> = ({
                         undefined,
                         {
                           maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
                         }
                       )}
                     </div>
@@ -141,7 +142,13 @@ export const TopBoard: FC<ITopBoard> = ({
                   {!loading ? (
                     <div className={styles.title}>
                       {stringToCurrencySignConverter(user.me?.currency)}
-                      {Number.parseFloat(revPerHour).toLocaleString()}
+                      {Number.parseInt(revPerHour ?? '0').toLocaleString(
+                        undefined,
+                        {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
+                        }
+                      )}
                     </div>
                   ) : (
                     <Skeleton.Input active className={styles.titleSkeleton} />
@@ -274,6 +281,7 @@ export const TopBoard: FC<ITopBoard> = ({
                         stringToCurrencySignConverter(user.me?.currency) +
                         (totalSalesCount.count ?? 0).toLocaleString(undefined, {
                           maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
                         })
                       ) : (
                         <Skeleton.Input

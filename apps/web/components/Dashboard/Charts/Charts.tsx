@@ -287,6 +287,7 @@ export const Charts: FC<ICharts> = ({
                   stringToCurrencySignConverter(user.me?.currency) +
                   (totalSalesCount.count ?? 0).toLocaleString(undefined, {
                     maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
                   })
                 ) : (
                   <Skeleton.Input active className={styles.titleSkeleton} />
@@ -370,6 +371,7 @@ export const Charts: FC<ICharts> = ({
                       stringToCurrencySignConverter(user.me?.currency) +
                       d.value.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
                       }),
                   }
                 })}
@@ -419,6 +421,7 @@ export const Charts: FC<ICharts> = ({
                       stringToCurrencySignConverter(user.me?.currency) +
                       d.value.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
                       }),
                   }
                 })}

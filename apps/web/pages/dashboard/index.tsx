@@ -9,7 +9,7 @@ import {
   GetFinanceDetailsDocument,
   GetBookingStatusCountDocument,
   GetBookingChartDetailDocument,
-  GetActiveLocationDocument,
+  GetCmStaffGeneralLocationsDocument,
 } from '@pabau/graphql'
 import {
   DownOutlined,
@@ -22,9 +22,10 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Menu, Dropdown, Drawer, Col, Row, Select, Skeleton } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
-import { locationList, dateRangeList } from '../../mocks/Dashboard'
 import { ICount } from '../../components/Dashboard/TopBoard/TopBoard'
 import {
+  locationList,
+  dateRangeList,
   defaultAppointmentList,
   defaultOnlineAppointmentList,
   defaultSalesList,
@@ -87,7 +88,12 @@ export function Index() {
     count: 0,
     per: '0%',
   })
-  const { data: locations } = useQuery(GetActiveLocationDocument)
+
+  const { data: locations } = useQuery(GetCmStaffGeneralLocationsDocument, {
+    variables: {
+      userID: user.me.user,
+    },
+  })
   const getAppointmentQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
@@ -163,8 +169,12 @@ export function Index() {
 
   useEffect(() => {
     const List = [...userListData]
-    if (locations && userListData.length === 1) {
-      locations.locations?.map((item) => {
+    if (
+      locations &&
+      locations?.findManyUser.length > 0 &&
+      userListData.length === 1
+    ) {
+      locations?.findManyUser[0]?.CmStaffGeneral?.Locations?.map((item) => {
         List.push({
           key: item.id,
           label: item.name,
@@ -317,7 +327,7 @@ export function Index() {
           </Option>
         ))}
       </Select>
-      {selectedRange === 'custom' && (
+      {selectedRange === 'Custom' && (
         <RangePicker
           className={styles.rangePicker}
           value={selectedDates}
@@ -329,7 +339,7 @@ export function Index() {
               ? 'DD/MM/YYYY'
               : 'MM/DD/YYYY'
           }
-          disabled={selectedRange.toString() !== 'custom'}
+          disabled={selectedRange.toString() !== 'Custom'}
           onChange={(val) => {
             setSelectedDates(val)
           }}
@@ -461,7 +471,7 @@ export function Index() {
                     icon={<CalendarOutlined />}
                     onClick={handleDateFilter}
                   >
-                    {filterRange === 'custom'
+                    {filterRange === 'Custom'
                       ? `${Intl.DateTimeFormat('en').format(
                           new Date(`${filterDate[0]}`)
                         )} - ${Intl.DateTimeFormat('en').format(
@@ -484,7 +494,7 @@ export function Index() {
               totalOnlineBooking={totalOnlineBooking}
               totalSalesCount={totalSalesCount}
               filterRange={
-                filterRange === 'custom'
+                filterRange === 'Custom'
                   ? `${Intl.DateTimeFormat('en').format(
                       new Date(`${filterDate[0]}`)
                     )} - ${Intl.DateTimeFormat('en').format(

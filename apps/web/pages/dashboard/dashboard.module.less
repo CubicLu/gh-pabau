@@ -196,9 +196,6 @@
   }
 }
 .date-filter-container {
-  // @media (max-width: 767px) {
-  //   display: none;
-  // }
   width: 95vw;
   max-width: 500px;
   background-color: #fff;
@@ -222,4 +219,9 @@
 
 .filterButton {
   width: 120px;
+}
+:global{
+  .ant-dropdown{
+      z-index: 1 !important
+  }
 }

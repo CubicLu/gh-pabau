@@ -219,3 +219,15 @@ query getActiveLocation {
     name
   }
 }
+
+query getCmStaffGeneralLocations($userID: Int!) {
+  findManyUser(where:{id:{equals:$userID}}){
+    CmStaffGeneral{
+      Location
+      Locations{
+        id
+        name
+      }
+    }
+  }
+}
