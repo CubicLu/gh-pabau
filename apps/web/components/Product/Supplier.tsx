@@ -1,15 +1,18 @@
-import { ShopOutlined } from '@ant-design/icons'
 import { useSuppliersListQuery } from '@pabau/graphql'
 import { Pagination, Table } from '@pabau/ui'
 import React, { FC, useEffect, useState, useMemo } from 'react'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './ProductListComponents.module.less'
+import { filter } from './utility'
 
 interface P {
+  showGroup?: boolean
   search: string
+  visible: boolean
+  filterByStatus: number
 }
 
-const Suppliers: FC<P> = ({ search = '' }) => {
+const Suppliers: FC<P> = ({ search = '', filterByStatus }) => {
   const { t } = useTranslationI18()
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -23,8 +26,9 @@ const Suppliers: FC<P> = ({ search = '' }) => {
       searchTerm: search,
       offset: paginateData.offset,
       limit: paginateData.limit,
+      disabled: filter(filterByStatus),
     }
-  }, [search, paginateData.offset, paginateData.limit])
+  }, [search, paginateData.offset, paginateData.limit, filterByStatus])
   const { data, loading } = useSuppliersListQuery({
     variables: {
       ...getQueryVariables,
@@ -32,12 +36,11 @@ const Suppliers: FC<P> = ({ search = '' }) => {
   })
   const SupplierColumns = [
     {
-      title: '',
-      dataIndex: 'test',
+      title: t('products.list.supplier.column.status'),
+      dataIndex: 'is_active',
       className: 'drag-visible',
       visible: true,
-      render: () => <ShopOutlined style={{ color: '#B8B8C0', fontSize: 16 }} />,
-      width: '64px',
+      width: '120px',
     },
     {
       title: t('products.list.supplier.column.name'),
@@ -71,19 +74,26 @@ const Suppliers: FC<P> = ({ search = '' }) => {
   return (
     <div className={styles.productListTab}>
       <Table
-        draggable={false}
         searchTerm={search}
         loading={loading}
         noDataText={t('products.list.supplier.table.nodata')}
         noDataBtnText={t('products.list.supplier.table.new')}
         columns={SupplierColumns}
-        dataSource={data?.findManyAccountManager?.map((d) => {
-          return {
-            ...d,
-            products_assigned: d?._count.InvProduct,
-            key: d.id,
+        dataSource={data?.findManyAccountManager?.map(
+          ({
+            id,
+            organisation_name,
+            _count: { InvProduct: number },
+            organisation_status,
+          }) => {
+            return {
+              id,
+              organisation_name,
+              products_assigned: number,
+              is_active: organisation_status,
+            }
           }
-        })}
+        )}
         scroll={{ x: 'max-content' }}
       />
       <div className={styles.pagination}>

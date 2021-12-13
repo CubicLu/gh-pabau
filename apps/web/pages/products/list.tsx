@@ -76,6 +76,7 @@ const ProductList = (): JSX.Element => {
   ] = useState<string>()
   const [stockSearchTerm, setStockSearchTerm] = useState<string>()
   const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
+  const [showCreateSupplier, setShowCreateSupplier] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState(false)
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>(null)
@@ -87,6 +88,7 @@ const ProductList = (): JSX.Element => {
   } = useCreateProductModalInitQuery()
   const [productFilter, setProductFilter] = useState(1)
   const [categoryFilter, setCategoryFilter] = useState(1)
+  const [supplierFilter, setSupplierFilter] = useState(1)
   const [purchaseOrdersFilter, setPurchaseOrdersFilter] = useState(1)
 
   const [, setMessageDrawer] = useState(false)
@@ -112,6 +114,8 @@ const ProductList = (): JSX.Element => {
         break
       case '2':
         await router.push('/supplier/create')
+        setShowCreateSupplier(true)
+        setAction('Create')
         break
       case '3':
         await router.push('/purchase-order/create')
@@ -149,6 +153,9 @@ const ProductList = (): JSX.Element => {
       case '1':
         setCategoryFilter(status)
         break
+      case '2':
+        setSupplierFilter(status)
+        break
       case '3':
         setPurchaseOrdersFilter(status)
         break
@@ -182,7 +189,8 @@ const ProductList = (): JSX.Element => {
         )}
         {(activeTab === ActiveTab.Products ||
           activeTab === ActiveTab.PurchaseOrders ||
-          activeTab === ActiveTab.Category) && (
+          activeTab === ActiveTab.Category ||
+          activeTab === ActiveTab.Supplier) && (
           <Filter
             initialValues={initialValues}
             selectedCategoryType={selectedCategoryType}
@@ -223,6 +231,7 @@ const ProductList = (): JSX.Element => {
 
                 {(activeTab === ActiveTab.Products ||
                   activeTab === ActiveTab.PurchaseOrders ||
+                  activeTab === ActiveTab.Supplier ||
                   activeTab === ActiveTab.Category) && (
                   <Filter
                     initialValues={initialValues}
@@ -249,7 +258,6 @@ const ProductList = (): JSX.Element => {
           menuItems={tabItemText}
           onTabClick={(activeKey) => setActiveTab(activeKey)}
           tabBarStyle={{ backgroundColor: '#FFF' }}
-          disabledKeys={[2, 3, 4]}
           minHeight="1px"
         >
           <Product
@@ -277,7 +285,11 @@ const ProductList = (): JSX.Element => {
             }}
             isEditing={() => setAction('Edit')}
           />
-          <Supplier search={supplierSearchTerm} />
+          <Supplier
+            search={supplierSearchTerm}
+            visible={showCreateSupplier}
+            filterByStatus={supplierFilter}
+          />
           <PurchaseOrder
             filterByStatus={purchaseOrdersFilter}
             search={purchaseOrdersSearchTerm}
