@@ -6415,8 +6415,8 @@ model InventoryDiscrepancy {
   company_id Int
   staff_id   Int?
   product_id Int?
-  overage    String?
-  shortage   String?
+  overage    Float
+  shortage   Float
   count_id   Int?
   draft      Int             @default(0)
   counted    Int
