@@ -4753,14 +4753,15 @@ model PackageUsed {
   id                 Int             @id @default(autoincrement())
   contact_package_id Int
   date_created       DateTime
-  booking_id         Int
-  status             String
-  book_take          Int
-  cancel_take        Int
+  booking_id         Int?            @default(0)
+  status             String          @default("")
+  book_take          Int             @default(0)
+  cancel_take        Int             @default(0)
   company_id         Int?            @map("occupier")
-  booking_master_id  Int
-  old_booking_id     Int
-  contact_package    ContactPackage? @relation(fields: [contact_package_id], references: [id])
+  booking_master_id  Int             @default(0)
+  // old_booking_id     Int
+  ContactPackage     ContactPackage? @relation(fields: [contact_package_id], references: [id])
+  Booking            Booking?        @relation(fields: [booking_id], references: [id])
 
 
   @@index([booking_id], name: "booking_id")
@@ -10854,6 +10855,7 @@ model Booking {
   CompanyService                CompanyService?                @relation(fields: [service_id], references: [id])
   PathwaysTaken                 PathwaysTaken[]
   CommunicationsRequestedForms  CommunicationsRequestedForms[]
+  PackageUsed                   PackageUsed[]
 
   BookingCancel    BookingCancel?
   BookingChangeLog BookingChangeLog[]

@@ -8,13 +8,15 @@ fragment PackageUsedFields on PackageUsed {
   cancel_take
   company_id
   booking_master_id
-  old_booking_id
 }
 
 fragment PackageUsed on PackageUsed {
   ...PackageUsedFields
-  contact_package {
+  ContactPackage {
     ...ContactPackageFields
+  }
+  Booking {
+    ...BookingFields
   }
 }
 

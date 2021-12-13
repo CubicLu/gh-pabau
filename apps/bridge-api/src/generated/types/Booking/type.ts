@@ -151,6 +151,20 @@ export const Booking = objectType({
         return root.CommunicationsRequestedForms
       },
     })
+    t.list.field('PackageUsed', {
+      type: 'PackageUsed',
+      args: {
+        where: 'PackageUsedWhereInput',
+        orderBy: 'PackageUsedOrderByWithRelationInput',
+        cursor: 'PackageUsedWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PackageUsedScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PackageUsed
+      },
+    })
     t.nullable.field('BookingCancel', {
       type: 'BookingCancel',
       resolve(root: any) {
