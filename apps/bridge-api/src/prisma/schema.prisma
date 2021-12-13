@@ -7369,7 +7369,7 @@ model InvTaxRate {
   created_date     DateTime?
   modified_date    DateTime?
   is_active        Int
-  description      String
+  description      String?
   date_constrained Boolean   @default(false)
   start_date       Int
   end_date         Int

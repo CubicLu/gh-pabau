@@ -16,7 +16,7 @@ export const InvTaxRate = objectType({
     t.nullable.field('created_date', { type: 'DateTime' })
     t.nullable.field('modified_date', { type: 'DateTime' })
     t.int('is_active')
-    t.string('description')
+    t.nullable.string('description')
     t.boolean('date_constrained')
     t.int('start_date')
     t.int('end_date')
