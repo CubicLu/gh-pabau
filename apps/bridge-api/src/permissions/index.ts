@@ -191,7 +191,6 @@ export const permissions = shield(
       reorderCommunicationTemplates: rules.authentication.isAuthenticated,
       deleteOneContactMedicalCondition: rules.authentication.isAuthenticated,
       deleteOneMedicalCondition: rules.authentication.isAuthenticated,
-      createOneInvTaxRate: rules.authentication.isAuthenticated,
 
       '*': and(
         rules.authentication.isAuthenticated,
