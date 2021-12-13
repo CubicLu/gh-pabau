@@ -213,15 +213,13 @@ export const ClientCardLayout: FC<P> = ({
       })
       if (existing) {
         const key = Object.keys(existing)[0]
-        const index = existing?.staff[0]?.alerts.findIndex(
-          (item) => item.ID === createContactAlertAdvanced?.ID
-        )
         const alerts = [...existing?.staff[0]?.alerts]
-        alerts?.push({
+        alerts?.unshift({
+          __typename: 'ContactAlert',
           ID: createContactAlertAdvanced?.ID,
           content: createContactAlertAdvanced?.Note,
           date: createContactAlertAdvanced?.CreatedDate,
-          User: { ...existing?.staff[0]?.alerts[index]?.User },
+          User: { id: me?.user, contact: me?.fullName, __typename: 'User' },
         })
         cache.writeQuery({
           query: GetStaffAlertsDocument,
@@ -316,7 +314,7 @@ export const ClientCardLayout: FC<P> = ({
             data: {
               [key]: [
                 {
-                  ID: deleteContactAlertAdvanced?.ContactID,
+                  ID: existing?.staff[0]?.ID,
                   alerts: [...alerts],
                 },
               ],
@@ -489,7 +487,7 @@ export const ClientCardLayout: FC<P> = ({
         return {
           ...item,
           count: data?.findFirstCmContact?.staffAlerts?.length || 0,
-          loading: true,
+          loading: item.alerts.length === 0 && true,
         }
       })
       const contactDetails = {

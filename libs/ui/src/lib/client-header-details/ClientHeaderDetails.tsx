@@ -176,7 +176,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
 
   const handleAddStaffAlert = (e) => {
     e.preventDefault()
-    if (newAlert?.newAlert !== '') {
+    if (newAlert?.newAlert) {
       setNewAlert((val) => {
         return { ...val, newAlert: '' }
       })
@@ -186,7 +186,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
 
   const handleEditStaffAlert = (e) => {
     e.preventDefault()
-    if (newAlert?.newAlert !== '') {
+    if (newAlert?.newAlert) {
       setNewAlert((val) => {
         return { ...val, newAlert: '' }
       })
@@ -379,8 +379,9 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                   <div
                     onClick={() => {
                       if (userId === item?.User?.id) {
-                        setNewAlert(() => {
+                        setNewAlert((e) => {
                           return {
+                            ...e,
                             id: item?.ID,
                             newAlert: item?.content,
                             ownerId: item?.User?.id,

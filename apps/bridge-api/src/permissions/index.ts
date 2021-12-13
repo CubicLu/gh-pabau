@@ -76,11 +76,7 @@ export const permissions = shield(
       createOneMedicalFormContact: rules.authentication.isAuthenticated,
       updateOneMedicalFormContact: rules.authentication.isAuthenticated,
       //CmContactNode
-      createOneContactNote: and(
-        rules.authentication.isAuthenticated,
-        rules.authentication.isAdmin,
-        rules.interceptors.isAuthor
-      ),
+      createOneContactNote: rules.authentication.isAuthenticated,
       updateOneContactNote: and(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin,
