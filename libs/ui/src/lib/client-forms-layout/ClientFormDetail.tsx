@@ -95,7 +95,7 @@ const FormDetails: FC<FormDetailsProps> = ({ formData, formId }) => {
         <span className={styles.contentDetail}>{formData.createdBy}</span>
         <span className={styles.detailsBorder} />
       </div> */}
-      {formData.details.map((detail, key) => {
+      {formData?.details?.map((detail, key) => {
         return (
           <div
             className={styles.fullForm}

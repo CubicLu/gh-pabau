@@ -343,7 +343,6 @@ const FormAction: FC<FormActionProps> = ({
         />
       ) : isTablet ? (
         <Popover
-          visible={openFilterPopover}
           trigger="click"
           content={formActionContent}
           overlayClassName={styles.customFormPopover}
@@ -406,17 +405,10 @@ const FormAction: FC<FormActionProps> = ({
             />
           </Popover>
           <Popover
-            visible={popOverState.content}
             placement="bottomRight"
             content={content}
             trigger="click"
             overlayClassName={styles.customPopover}
-            onVisibleChange={(val) =>
-              setPopOverState({
-                ...popOverState,
-                content: val,
-              })
-            }
           >
             <Button
               className={styles.buttonInd}
