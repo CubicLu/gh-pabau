@@ -357,6 +357,7 @@ const Forms: FC = () => {
   return (
     <ClientCardLayout clientId={Number(router.query.id)} activeTab="forms">
       <ClientFormsLayout
+        loading={clientFormsLoading}
         formFilterButtons={formFilters}
         setFormFilterButtons={setFormFilters}
         forms={medicalFormContacts}

@@ -17,6 +17,7 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component'
+import ClientFormsSkeleton from './ClientFormsSkeleton'
 // import { ReactComponent as LabOrderIcon } from '../../assets/images/lab.svg'
 import { ReactComponent as MedicalHistoryIcon } from '../../assets/images/medical-history.svg'
 import { ReactComponent as Note } from '../../assets/images/note.svg'
@@ -105,7 +106,7 @@ enum FilterAll {
 }
 
 export interface ClientFormsLayoutProps {
-  isEmpty?: boolean
+  loading?: boolean
   formFilterButtons: FormFilterProps[]
   setFormFilterButtons: (e: FormFilterProps[]) => void
   forms: MedicalFormContact[]
@@ -120,7 +121,7 @@ export interface ClientFormsLayoutProps {
 }
 
 export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
-  isEmpty,
+  loading,
   formFilterButtons,
   setFormFilterButtons,
   forms,
@@ -136,6 +137,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
 
+  const [loader, setLoader] = useState(loading)
   const [accordionState, setAccordionState] = useState<(string | number)[]>([])
   const [formState, setFormState] = useState<MedicalFormContact[]>([])
   const [popOverState, setPopOverState] = useState<PopOverStateProps>({
@@ -146,6 +148,16 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   const [filterpopover, setFilterpopover] = useState<boolean>(false)
   const [openFilterDrawer, setOpenFilterDrawer] = useState<boolean>(false)
   const [expanded, setExpanded] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (loading) {
+      setLoader(() => true)
+    } else {
+      setTimeout(() => {
+        setLoader(() => false)
+      }, 500)
+    }
+  }, [loading])
 
   useEffect(() => {
     setFormState(forms)
@@ -324,234 +336,231 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
 
   return (
     <div className={styles.clientLayout} ref={ref}>
-      {isEmpty ? (
-        <Lottie
-          options={{
-            loop: true,
-            autoPlay: true,
-            animationData: emptyState,
-            rendererSettings: {
-              preserveAspectRatio: 'xMidYMid slice',
-            },
-          }}
-        />
-      ) : (
-        <div className={styles.formListWrapper}>
-          <div className={styles.headerFilter}>
-            <div className={styles.filterBtnWrapper}>
-              {formFilterButtons?.map((item) => {
-                if (item?.type === 'All') {
-                  return (
-                    <div key={item.id} className={styles.allFilterWrapper}>
-                      <span
-                        className={styles.allFilterText}
-                        onClick={() =>
-                          handleFilterButtonClick(item.id, item.selected)
-                        }
-                        style={
-                          item.selected
-                            ? { color: '#54b2d3' }
-                            : { color: '#9292a3' }
-                        }
-                      >
-                        {item.type}
-                      </span>
-                    </div>
-                  )
-                } else {
-                  return (
-                    <Tooltip key={item.id} placement="bottom" title={item.type}>
-                      <div
-                        className={
-                          item.selected
-                            ? classNames(styles.filterBtn, styles.active)
-                            : styles.filterBtn
-                        }
-                        onClick={() =>
-                          handleFilterButtonClick(item.id, item.selected)
-                        }
-                      >
-                        {item.icon && React.createElement(item.icon)}
-                      </div>
-                    </Tooltip>
-                  )
-                }
-              })}
-            </div>
-            <div className={styles.filterIconBtn}>
-              <Formik
-                initialValues={{
-                  author: 'All',
-                  formName: 'All',
-                }}
-                onSubmit={(values) => {
-                  onFilterSubmit(values)
-                }}
-              >
-                {({ values, setFieldValue, handleSubmit, resetForm }) =>
-                  isMobile ? (
-                    <>
-                      <FilterOutlined
-                        onClick={() => setOpenFilterDrawer((val) => !val)}
-                      />
-                      <Drawer
-                        placement={'bottom'}
-                        closable={false}
-                        onClose={() => setOpenFilterDrawer((val) => !val)}
-                        visible={openFilterDrawer}
-                        key={'bottom'}
-                        height="347px"
-                        className={styles.mobileDrawer}
-                      >
-                        <div className={styles.mobileDrawerWrapper}>
-                          <span className={styles.line} />
-                          {filterContent(
-                            values,
-                            setFieldValue,
-                            handleSubmit,
-                            resetForm
-                          )}
-                        </div>
-                      </Drawer>
-                    </>
-                  ) : (
-                    <Popover
-                      visible={filterpopover}
-                      content={filterContent(
-                        values,
-                        setFieldValue,
-                        handleSubmit,
-                        resetForm
-                      )}
-                      trigger="click"
-                      overlayClassName={styles.customPopover}
-                      onVisibleChange={(val) => setFilterpopover(val)}
-                    >
-                      <FilterOutlined
-                        style={
-                          filterpopover
-                            ? { color: '#54b2d3' }
-                            : { color: '#9292a3' }
-                        }
-                      />
-                    </Popover>
-                  )
-                }
-              </Formik>
-            </div>
-            <div className={styles.expandAllBtn}>
-              <Tooltip
-                placement="bottom"
-                title={
-                  !expanded
-                    ? t('ui.clientcard.forms.headerfilter.expandall')
-                    : t('ui.clientcard.forms.headerfilter.shrinkall')
-                }
-              >
-                <div className={styles.expandAll} onClick={handleExpandAll}>
-                  {expanded ? <ShrinkOutlined /> : <ExpandAltOutlined />}
-                </div>
-              </Tooltip>
-            </div>
-          </div>
-          {formState?.length ? (
-            <VerticalTimeline layout={'1-column-left'} animate={false}>
-              {formState?.map((form) => {
+      <div className={styles.formListWrapper}>
+        <div className={styles.headerFilter}>
+          <div className={styles.filterBtnWrapper}>
+            {formFilterButtons?.map((item) => {
+              if (item?.type === 'All') {
                 return (
-                  <VerticalTimelineElement
-                    key={form.id}
-                    className={classNames(
-                      'vertical-timeline-element--work',
-                      styles.formListClass
-                    )}
-                    iconStyle={{
-                      background: '#3D9588',
-                      color: ' #FFFFFF',
-                    }}
-                    icon={React.createElement(
-                      basicFormFilters?.find((el) => el?.key === form.type)
-                        ?.icon || MedicalHistoryIcon
-                    )}
-                  >
-                    <div
-                      className={
-                        accordionState.includes(form.id)
-                          ? styles.mainCollapseDivAfter
-                          : form.isPinned
-                          ? classNames(
-                              styles.mainCollapseDiv,
-                              styles.pinnedFormCollapse
-                            )
-                          : styles.mainCollapseDiv
+                  <div key={item.id} className={styles.allFilterWrapper}>
+                    <span
+                      className={styles.allFilterText}
+                      onClick={() =>
+                        handleFilterButtonClick(item.id, item.selected)
+                      }
+                      style={
+                        item.selected
+                          ? { color: '#54b2d3' }
+                          : { color: '#9292a3' }
                       }
                     >
-                      <Collapse
-                        activeKey={accordionState}
-                        onChange={(e) => onCollapse(e, form.id)}
-                        expandIcon={
-                          accordionState.includes(form.id)
-                            ? OpenIcon
-                            : ClosedIcon
-                        }
-                        ghost={true}
-                      >
-                        <Panel
-                          header={
-                            <div className={styles.headerMain}>
-                              <div className={styles.timeEleWrap}>
-                                <span className={styles.formsName}>
-                                  {form.name}
-                                  {form.isPinned && (
-                                    <PushpinFilled
-                                      className={styles.pinnedForm}
-                                    />
-                                  )}
-                                </span>
-                                <span className={styles.formsDetail}>
-                                  <p>
-                                    {`${dayjs(form?.created).format(
-                                      'DD MMM YYYY, h:mm A'
-                                    )} | ${form?.user}`}
-                                  </p>
-                                  {form.isAdminForm && (
-                                    <span className={styles.administratorForm}>
-                                      <LockFilled />
-                                      <h3>Doctors</h3>
-                                    </span>
-                                  )}
-                                </span>
-                              </div>
-                              {accordionState.includes(form.id) && (
-                                <FormAction
-                                  form={form}
-                                  popOverState={popOverState}
-                                  setPopOverState={setPopOverState}
-                                  handlePinForm={() => handlePinForm(form.id)}
-                                  onShareCick={onShareCick}
-                                  onVersionClick={onVersionClick}
-                                  onEditClick={onEditClick}
-                                  onDeleteClick={onDeleteClick}
-                                />
-                              )}
-                            </div>
-                          }
-                          key={form.id}
-                        >
-                          <FormDetails formData={form.data} formId={form.id} />
-                        </Panel>
-                      </Collapse>
-                    </div>
-                  </VerticalTimelineElement>
+                      {item.type}
+                    </span>
+                  </div>
                 )
-              })}
-            </VerticalTimeline>
-          ) : (
-            <div className={styles.emptyData}>
-              {t('ui.clientcard.forms.nodata')}
-            </div>
-          )}
+              } else {
+                return (
+                  <Tooltip key={item.id} placement="bottom" title={item.type}>
+                    <div
+                      className={
+                        item.selected
+                          ? classNames(styles.filterBtn, styles.active)
+                          : styles.filterBtn
+                      }
+                      onClick={() =>
+                        handleFilterButtonClick(item.id, item.selected)
+                      }
+                    >
+                      {item.icon && React.createElement(item.icon)}
+                    </div>
+                  </Tooltip>
+                )
+              }
+            })}
+          </div>
+          <div className={styles.filterIconBtn}>
+            <Formik
+              initialValues={{
+                author: 'All',
+                formName: 'All',
+              }}
+              onSubmit={(values) => {
+                onFilterSubmit(values)
+              }}
+            >
+              {({ values, setFieldValue, handleSubmit, resetForm }) =>
+                isMobile ? (
+                  <>
+                    <FilterOutlined
+                      onClick={() => setOpenFilterDrawer((val) => !val)}
+                    />
+                    <Drawer
+                      placement={'bottom'}
+                      closable={false}
+                      onClose={() => setOpenFilterDrawer((val) => !val)}
+                      visible={openFilterDrawer}
+                      key={'bottom'}
+                      height="347px"
+                      className={styles.mobileDrawer}
+                    >
+                      <div className={styles.mobileDrawerWrapper}>
+                        <span className={styles.line} />
+                        {filterContent(
+                          values,
+                          setFieldValue,
+                          handleSubmit,
+                          resetForm
+                        )}
+                      </div>
+                    </Drawer>
+                  </>
+                ) : (
+                  <Popover
+                    visible={filterpopover}
+                    content={filterContent(
+                      values,
+                      setFieldValue,
+                      handleSubmit,
+                      resetForm
+                    )}
+                    trigger="click"
+                    overlayClassName={styles.customPopover}
+                    onVisibleChange={(val) => setFilterpopover(val)}
+                  >
+                    <FilterOutlined
+                      style={
+                        filterpopover
+                          ? { color: '#54b2d3' }
+                          : { color: '#9292a3' }
+                      }
+                    />
+                  </Popover>
+                )
+              }
+            </Formik>
+          </div>
+          <div className={styles.expandAllBtn}>
+            <Tooltip
+              placement="bottom"
+              title={
+                !expanded
+                  ? t('ui.clientcard.forms.headerfilter.expandall')
+                  : t('ui.clientcard.forms.headerfilter.shrinkall')
+              }
+            >
+              <div className={styles.expandAll} onClick={handleExpandAll}>
+                {expanded ? <ShrinkOutlined /> : <ExpandAltOutlined />}
+              </div>
+            </Tooltip>
+          </div>
         </div>
-      )}
+        {!loader && formState?.length <= 0 && (
+          <Lottie
+            options={{
+              loop: true,
+              autoPlay: true,
+              animationData: emptyState,
+              rendererSettings: {
+                preserveAspectRatio: 'xMidYMid slice',
+              },
+            }}
+          />
+        )}
+        {!loader && formState?.length > 0 ? (
+          <VerticalTimeline layout={'1-column-left'} animate={false}>
+            {formState?.map((indform) => {
+              return (
+                <VerticalTimelineElement
+                  key={indform.id}
+                  className={classNames(
+                    'vertical-timeline-element--work',
+                    styles.formListClass
+                  )}
+                  iconStyle={{
+                    background: '#3D9588',
+                    color: ' #FFFFFF',
+                  }}
+                  icon={React.createElement(
+                    basicFormFilters?.find((el) => el?.key === indform.type)
+                      ?.icon || MedicalHistoryIcon
+                  )}
+                >
+                  <div
+                    className={
+                      accordionState.includes(indform.id)
+                        ? styles.mainCollapseDivAfter
+                        : indform.isPinned
+                        ? classNames(
+                            styles.mainCollapseDiv,
+                            styles.pinnedFormCollapse
+                          )
+                        : styles.mainCollapseDiv
+                    }
+                  >
+                    <Collapse
+                      activeKey={accordionState}
+                      onChange={(e) => onCollapse(e, indform.id)}
+                      expandIcon={
+                        accordionState.includes(indform.id)
+                          ? OpenIcon
+                          : ClosedIcon
+                      }
+                      ghost={true}
+                    >
+                      <Panel
+                        header={
+                          <div className={styles.headerMain}>
+                            <div className={styles.timeEleWrap}>
+                              <span className={styles.formsName}>
+                                {indform.name}
+                                {indform.isPinned && (
+                                  <PushpinFilled
+                                    className={styles.pinnedForm}
+                                  />
+                                )}
+                              </span>
+                              <span className={styles.formsDetail}>
+                                <p>
+                                  {`${dayjs(indform?.created).format(
+                                    'DD MMM YYYY, h:mm A'
+                                  )} | ${indform?.user}`}
+                                </p>
+                                {indform.isAdminForm && (
+                                  <span className={styles.administratorForm}>
+                                    <LockFilled />
+                                    <h3>Doctors</h3>
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                            {accordionState.includes(indform.id) && (
+                              <FormAction
+                                form={indform}
+                                popOverState={popOverState}
+                                setPopOverState={setPopOverState}
+                                handlePinForm={() => handlePinForm(indform.id)}
+                                onShareCick={onShareCick}
+                                onVersionClick={onVersionClick}
+                                onEditClick={onEditClick}
+                                onDeleteClick={onDeleteClick}
+                              />
+                            )}
+                          </div>
+                        }
+                        key={indform.id}
+                      >
+                        <FormDetails formData={indform.data} />
+                      </Panel>
+                    </Collapse>
+                  </div>
+                </VerticalTimelineElement>
+              )
+            })}
+          </VerticalTimeline>
+        ) : (
+          loader && <ClientFormsSkeleton length={formState?.length} />
+        )}
+      </div>
     </div>
   )
 }
