@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useRef } from 'react'
+import React, { FC, useState, useEffect, useRef, createRef } from 'react'
 import {
   MyLottie as Lottie,
   Button,
@@ -112,7 +112,6 @@ export interface ClientFormsLayoutProps {
   onFilterClick: (
     e: Record<string, string | number | boolean>
   ) => Promise<boolean>
-  onPrintClick: (e: MedicalFormContact) => Promise<boolean>
   onShareCick: (e: MedicalFormContact) => Promise<boolean>
   onVersionClick: (e: string) => Promise<boolean>
   onEditClick: (e: MedicalFormContact) => Promise<boolean>
@@ -126,7 +125,6 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   setFormFilterButtons,
   forms,
   onFilterClick,
-  onPrintClick,
   onShareCick,
   onVersionClick,
   onEditClick,
@@ -134,6 +132,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   onDeleteClick,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
 
@@ -152,7 +151,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
     setFormState(forms)
   }, [forms])
 
-  const callBack = (key, id) => {
+  const onCollapse = (key, id) => {
     const formList = [...accordionState]
     if (formList.includes(id)) {
       formList.splice(formList.indexOf(id), 1)
@@ -457,10 +456,10 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
           </div>
           {formState?.length ? (
             <VerticalTimeline layout={'1-column-left'} animate={false}>
-              {formState?.map((indform) => {
+              {formState?.map((form) => {
                 return (
                   <VerticalTimelineElement
-                    key={indform.id}
+                    key={form.id}
                     className={classNames(
                       'vertical-timeline-element--work',
                       styles.formListClass
@@ -470,15 +469,15 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                       color: ' #FFFFFF',
                     }}
                     icon={React.createElement(
-                      basicFormFilters?.find((el) => el?.key === indform.type)
+                      basicFormFilters?.find((el) => el?.key === form.type)
                         ?.icon || MedicalHistoryIcon
                     )}
                   >
                     <div
                       className={
-                        accordionState.includes(indform.id)
+                        accordionState.includes(form.id)
                           ? styles.mainCollapseDivAfter
-                          : indform.isPinned
+                          : form.isPinned
                           ? classNames(
                               styles.mainCollapseDiv,
                               styles.pinnedFormCollapse
@@ -488,9 +487,9 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                     >
                       <Collapse
                         activeKey={accordionState}
-                        onChange={(e) => callBack(e, indform.id)}
+                        onChange={(e) => onCollapse(e, form.id)}
                         expandIcon={
-                          accordionState.includes(indform.id)
+                          accordionState.includes(form.id)
                             ? OpenIcon
                             : ClosedIcon
                         }
@@ -501,8 +500,8 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                             <div className={styles.headerMain}>
                               <div className={styles.timeEleWrap}>
                                 <span className={styles.formsName}>
-                                  {indform.name}
-                                  {indform.isPinned && (
+                                  {form.name}
+                                  {form.isPinned && (
                                     <PushpinFilled
                                       className={styles.pinnedForm}
                                     />
@@ -510,11 +509,11 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                                 </span>
                                 <span className={styles.formsDetail}>
                                   <p>
-                                    {`${dayjs(indform?.created).format(
+                                    {`${dayjs(form?.created).format(
                                       'DD MMM YYYY, h:mm A'
-                                    )} | ${indform?.user}`}
+                                    )} | ${form?.user}`}
                                   </p>
-                                  {indform.isAdminForm && (
+                                  {form.isAdminForm && (
                                     <span className={styles.administratorForm}>
                                       <LockFilled />
                                       <h3>Doctors</h3>
@@ -522,15 +521,12 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                                   )}
                                 </span>
                               </div>
-                              {accordionState.includes(indform.id) && (
+                              {accordionState.includes(form.id) && (
                                 <FormAction
-                                  form={indform}
+                                  form={form}
                                   popOverState={popOverState}
                                   setPopOverState={setPopOverState}
-                                  handlePinForm={() =>
-                                    handlePinForm(indform.id)
-                                  }
-                                  onPrintClick={onPrintClick}
+                                  handlePinForm={() => handlePinForm(form.id)}
                                   onShareCick={onShareCick}
                                   onVersionClick={onVersionClick}
                                   onEditClick={onEditClick}
@@ -539,9 +535,9 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                               )}
                             </div>
                           }
-                          key={indform.id}
+                          key={form.id}
                         >
-                          <FormDetails formData={indform.data} />
+                          <FormDetails formData={form.data} formId={form.id} />
                         </Panel>
                       </Collapse>
                     </div>

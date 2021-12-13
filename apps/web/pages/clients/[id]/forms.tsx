@@ -13,7 +13,6 @@ import crypto from 'crypto'
 
 const isBase64 = (str) => {
   if (str === '' || str.trim() === '') return false
-
   try {
     return btoa(atob(str)) === str
   } catch {
@@ -70,9 +69,9 @@ const processMedicalContactForms = (medicalFormData) => {
         if (cssClass === 'epaper') name = ''
         else {
           if (title !== '') {
-            name = title.replaceAll(' ', ' ').trim().toLowerCase()
+            name = title?.replaceAll(' ', ' ').trim().toLowerCase()
           } else {
-            name = item.values.replaceAll(' ', ' ').trim().toLowerCase()
+            name = item?.values?.replaceAll(' ', ' ').trim().toLowerCase()
           }
         }
 
@@ -80,9 +79,9 @@ const processMedicalContactForms = (medicalFormData) => {
 
         let label = ''
         if (title !== '') {
-          label = title.trim()
+          label = title?.trim()
         } else {
-          label = item.values.trim()
+          label = item?.values?.trim()
         }
 
         if (cssClass === 'heading') {
@@ -362,7 +361,6 @@ const Forms: FC = () => {
         setFormFilterButtons={setFormFilters}
         forms={medicalFormContacts}
         onFilterClick={() => Promise.resolve(true)}
-        onPrintClick={() => Promise.resolve(true)}
         onShareCick={() => Promise.resolve(true)}
         onVersionClick={() => Promise.resolve(true)}
         onEditClick={() => Promise.resolve(true)}

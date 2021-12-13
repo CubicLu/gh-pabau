@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useRef } from 'react'
 import {
   EditOutlined,
   HistoryOutlined,
@@ -17,12 +17,68 @@ import styles from './ClientFormsLayout.module.less'
 import { useTranslation } from 'react-i18next'
 
 const { Panel } = Collapse
+
+const setHtmlInputValue = (elem) => {
+  const stylesString = `
+    <style>
+      * {
+        line-height: 20px;
+      }
+      #fullForm {
+        display: flex;
+        justify-content: left;
+        align-items: left;
+        flex-direction: column;
+      }
+      #contentName {
+        position: relative;
+        font-size: 12px;
+        color: #9292a3;
+        margin-bottom: 1px;
+        font-family: Circular-Std-Book, sans-serif;
+      }
+      #contentDetail {
+        position: relative;
+        font-size: 14px;
+        color: #3d3d46;
+        font-family: Circular-Std-Book, sans-serif;
+      }
+      #contentName,
+      #contentDetail {
+        p > span > strong {
+          font-size: 16px;
+          color: #3d3d46;
+          font-family: Circular-Std-Book, sans-serif;
+        }
+        p > strong {
+          font-size: 14px;
+          color: #787889;
+          font-family: Circular-Std-Book, sans-serif;
+        }
+        p {
+          font-size: 14px;
+          color: #9292a3;
+          font-family: Circular-Std-Book, sans-serif;
+        }
+        > span {
+          font-family: Circular-Std-Book, sans-serif;
+        }
+      }
+      #detailsBorder {
+        margin: 6px 0px 8px 0px;
+        border-bottom: 1px solid rgba(236, 237, 240, 1);
+      }
+    </style>
+  `
+  const stringHtml = `${stylesString}<div id="formDetails">${elem.innerHTML}</div>`
+  return stringHtml
+}
+
 interface FormActionProps {
   form: MedicalFormContact
   popOverState: PopOverStateProps
   setPopOverState: (e) => void
   handlePinForm: () => void
-  onPrintClick: (e: FormListProps) => Promise<boolean>
   onShareCick: (e: FormListProps) => Promise<boolean>
   onVersionClick: (e: string) => Promise<boolean>
   onEditClick: (e: FormListProps) => Promise<boolean>
@@ -33,7 +89,6 @@ const FormAction: FC<FormActionProps> = ({
   popOverState,
   setPopOverState,
   handlePinForm,
-  onPrintClick,
   onShareCick,
   onVersionClick,
   onEditClick,
@@ -42,6 +97,8 @@ const FormAction: FC<FormActionProps> = ({
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
   const isTablet = useMedia('(max-width: 1024px)', false)
+  const formRef = useRef<HTMLFormElement>(null)
+  const htmlInputRef = useRef<HTMLInputElement>(null)
 
   const [openFormOptionsDrawer, setOpenFormOptionsDrawer] = useState(false)
   const [currentVersion, setCurrentVersion] = useState('22.07.21')
@@ -145,7 +202,7 @@ const FormAction: FC<FormActionProps> = ({
         <div
           onClick={(e) => {
             e.stopPropagation()
-            onPrintClick(form)
+            handleExport()
           }}
           className={styles.listItem}
         >
@@ -238,8 +295,34 @@ const FormAction: FC<FormActionProps> = ({
     )
   }
 
+  const handleExport = () => {
+    const html = document.querySelector(`#form-details-${form.id}`)
+    if (formRef?.current && html?.innerHTML && htmlInputRef.current) {
+      const temp = setHtmlInputValue(html)
+      htmlInputRef.current.value = temp
+      formRef?.current?.submit()
+    }
+  }
+
   return (
     <div className={styles.formActionBtnWrapper}>
+      <div className={styles.hidden}>
+        <form
+          ref={formRef}
+          method="POST"
+          action={`https://html2pdf.pabau.com/${form.name}.pdf`}
+          encType="multipart/form-data"
+          target="_blank"
+        >
+          <input type="text" name="html" ref={htmlInputRef} />
+          <input
+            type="text"
+            name="token"
+            value="jfdea089duj89wqjhrdoiwqerhoiwqehroiueh"
+            onChange={() => false}
+          />
+        </form>
+      </div>
       {isMobile ? (
         <Button
           className={styles.buttonInd}
@@ -282,7 +365,7 @@ const FormAction: FC<FormActionProps> = ({
             className={styles.buttonPrintShare}
             onClick={(e) => {
               e.stopPropagation()
-              onPrintClick(form)
+              handleExport()
             }}
             icon={<PrinterOutlined />}
           >

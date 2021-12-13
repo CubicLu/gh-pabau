@@ -5023,7 +5023,7 @@ en:
   ui.clientcard.forms.filter.author.bruno: 'Bruno Ballardin'
   ui.clientcard.forms.filter.author.alisa: 'Alisa Moor'
   ui.clientcard.formaction.edit: Edit
-  ui.clientcard.formaction.print: Print
+  ui.clientcard.formaction.print: Export PDF
   ui.clientcard.formaction.share: Share
   ui.clientcard.formaction.historyversions: 'History Versions'
   ui.clientcard.formaction.pin: Pin

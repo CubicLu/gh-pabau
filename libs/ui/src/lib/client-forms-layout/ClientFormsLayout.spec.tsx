@@ -17,7 +17,6 @@ describe('ClientFormsLayout', () => {
         forms={[]}
         setFormFilterButtons={() => false}
         onFilterClick={() => Promise.resolve(true)}
-        onPrintClick={() => Promise.resolve(true)}
         onShareCick={() => Promise.resolve(true)}
         onVersionClick={() => Promise.resolve(true)}
         onEditClick={() => Promise.resolve(true)}
