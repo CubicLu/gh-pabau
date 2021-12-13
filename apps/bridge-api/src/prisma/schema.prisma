@@ -4143,8 +4143,8 @@ model CompanyRoomService {
   room_id        Int
   service_id     Int
   company_id     Int             @map("occupier")
-  priority_order Int
-  imported       Int
+  priority_order Int             @default(0)
+  imported       Int             @default(0)
   Company        Company         @relation(fields: [company_id], references: [id])
   Room           CompanyRoom?    @relation(fields: [room_id], references: [id])
   Service        CompanyService? @relation(fields: [service_id], references: [id])

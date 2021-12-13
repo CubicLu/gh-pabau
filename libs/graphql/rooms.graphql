@@ -44,3 +44,29 @@ query countRooms($isActive: Int = 1) {
     where: { is_active: { equals: $isActive }, deleted_at: null }
   )
 }
+
+mutation insertRoom($data: CompanyRoomCreateInput!) {
+  createOneCompanyRoom(data: $data) {
+    id
+    description
+    all_services
+    all_locations
+    is_active
+    room_fee
+    room_fee_type
+    CompanyRoomLocation {
+      Location {
+        name
+      }
+    }
+    CompanyRoomService {
+      Service {
+        id
+        name
+      }
+    }
+    Company {
+      id
+    }
+  }
+}
