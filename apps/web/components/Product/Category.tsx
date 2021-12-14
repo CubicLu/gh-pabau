@@ -12,7 +12,9 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { CreateCategory } from './CreateCategory'
 import styles from './ProductListComponents.module.less'
 import { filter } from './utility'
-
+import { cdnURL } from '../../baseUrl'
+import { Avatar } from 'antd'
+import { ShopOutlined } from '@ant-design/icons'
 interface P {
   showGroup?: boolean
   search: string
@@ -174,6 +176,19 @@ const CategoryList = ({
       width: '120px',
     },
     {
+      title: '',
+      dataIndex: 'image',
+      className: 'drag-visible',
+      visible: true,
+      width: '64px',
+      render: (imageKey, { image }) =>
+        cdnURL && image ? (
+          <Avatar src={cdnURL + '/' + image} key={imageKey} />
+        ) : (
+          <ShopOutlined style={{ color: '#B8B8C0', fontSize: 16 }} />
+        ),
+    },
+    {
       title: t('products.list.category.column.name.group'),
       dataIndex: 'groupName',
       className: 'drag-visible',
@@ -209,6 +224,7 @@ const CategoryList = ({
             _count: { InvProduct: number }
             order: number
             id: number
+            image: string
           }) => {
             return {
               ...d,
@@ -216,6 +232,7 @@ const CategoryList = ({
               productsAssigned: d?._count?.InvProduct,
               order: d?.order,
               key: d.id,
+              image: d?.image,
             }
           }
         )}
