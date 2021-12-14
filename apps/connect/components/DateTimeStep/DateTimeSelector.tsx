@@ -43,7 +43,9 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
     variables: {
       company_id: settings.id,
       shift_start: Number.parseInt(moment().format('YYYYMMDD000000')),
-      shift_end: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
+      shift_end: Number.parseInt(
+        moment().add(12, 'M').format('YYYYMMDD235959')
+      ),
     },
   })
 
@@ -353,21 +355,8 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
             dateCellRender={dateCellRender}
             onSelect={dateSelectedHandler}
             disabledDate={dateHasShift}
+            validRange={[moment(), moment().add(1, 'year')]}
           />
-          {/*<h4>{moment(selectedDate).add(1, 'M').format('MMMM YYYY')}</h4>*/}
-          {/*<Calendar*/}
-          {/*  value={moment(selectedDate).add(1, 'M')}*/}
-          {/*  dateCellRender={dateCellRender}*/}
-          {/*  onSelect={dateSelectedHandler}*/}
-          {/*  disabledDate={dateHasShift}*/}
-          {/*/>*/}
-          {/*<h4>{moment(selectedDate).add(2, 'M').format('MMMM YYYY')}</h4>*/}
-          {/*<Calendar*/}
-          {/*  value={moment().add(2, 'M')}*/}
-          {/*  dateCellRender={dateCellRender}*/}
-          {/*  onSelect={dateSelectedHandler}*/}
-          {/*  disabledDate={dateHasShift}*/}
-          {/*/>*/}
         </div>
       )}
 

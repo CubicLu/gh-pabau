@@ -102,7 +102,7 @@ export default function useShifts(shiftsResult, bookingsResult) {
 
   const getDateTimeslots = (date, duration = 60) => {
     const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
-    if (!shiftsByDate[shiftsIndex]) {
+    if (!bookingsResult || !shiftsByDate[shiftsIndex] || !date) {
       return []
     }
 
@@ -112,9 +112,8 @@ export default function useShifts(shiftsResult, bookingsResult) {
       const shiftStart = moment(decimalToISO8601(shift.start))
       const shiftEnd = moment(decimalToISO8601(shift.end))
       const shiftMinusDuration = moment(shiftEnd).subtract(duration, 'minutes')
-
       for (
-        let date = moment(shiftStart);
+        const date = moment(shiftStart);
         date.isSameOrBefore(shiftMinusDuration);
         date.add(settings.BookitProGeneral.interval, 'minutes')
       ) {
@@ -127,6 +126,10 @@ export default function useShifts(shiftsResult, bookingsResult) {
         const timeslotIndex = Number.parseInt(date.format('Hmm'))
 
         let allGood = true
+        for (const g of []) {
+          // THIS EMPTY FOR IS HAUNTED BY GHOSTS, IF YOU REMOVE IT YOUR APP WILL BREAK ON THE DATE STEP. TRY ME IF YOU WILL
+        }
+
         for (const b of bookingsResult.Public_BookedAppointments?.filter(
           (b) =>
             b.start_date.toString().substr(0, 8) ===

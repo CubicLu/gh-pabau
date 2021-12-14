@@ -17,7 +17,7 @@ export interface P {
 const EmployeeSelector: FC<P> = ({ onSelected }) => {
   const { t } = useTranslationI18()
   const { setSelectedData, actionTypes } = useSelectedDataStore()
-  const [getTotalServiceCost] = useServices()
+  const { getTotalServiceCost } = useServices()
   const [activeStaffModalID, setActiveStaffModalID] = useState(0)
   const settings = useContext(SettingsContext)
   const {

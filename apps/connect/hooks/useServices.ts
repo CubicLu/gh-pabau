@@ -24,5 +24,26 @@ export default function useServices() {
     }
   }
 
-  return [getTotalServiceCost, getServicePriceRange]
+  const masterCategoryHasServices = (masterCategory) => {
+    for (const sc of masterCategory.Public_ServiceCategories) {
+      if (sc.Public_Services.length > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const categoryHasServices = (category) => {
+    if (category.Public_Services.length > 0) {
+      return true
+    }
+    return false
+  }
+
+  return {
+    getTotalServiceCost,
+    getServicePriceRange,
+    masterCategoryHasServices,
+    categoryHasServices,
+  }
 }

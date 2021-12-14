@@ -50,7 +50,7 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
     },
   })
   const [searchLocation, setSearchLocation] = useState<boolean>(
-    locationsResult?.Public_Locations.length > 5
+    locationsResult?.Public_Locations.length > 1
   )
 
   useEffect(() => {
@@ -59,8 +59,8 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
     }
   }, [searchLocation])
 
-  if (loadingLocations) return <div>Error!</div>
-  if (errorLocations) return <div>Loading...</div>
+  if (loadingLocations) return <div>Loading!</div>
+  if (errorLocations) return <div>Error...</div>
 
   return (
     <>

@@ -31,6 +31,7 @@ import {
 import { SettingsContext } from '../../context/settings-context'
 import ServiceReviewsModal from '../Modals/ServiceReviewsModal'
 import ServiceInfoModal from '../Modals/ServiceInfoModal'
+import useServices from '../../hooks/useServices'
 export interface P {
   onSelected: () => void
   hasMasterCategories: boolean
@@ -54,6 +55,7 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
   const [totalEstimate, setTotalEstimate] = useState<number>(0)
   const [viewVouchers, setViewVouchers] = useState<boolean>(false)
   const settings = useContext(SettingsContext)
+  const { masterCategoryHasServices, categoryHasServices } = useServices()
   const { t } = useTranslationI18()
 
   const {
@@ -96,10 +98,12 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
     let lowPrice = service.price
     let highPrice = service.price
     for (const tier of service.Public_ServiceUserTier) {
-      if (tier.price < lowPrice) {
-        lowPrice = tier.price
-      } else if (tier.price > highPrice) {
-        highPrice = tier.price
+      if (tier.price) {
+        if (tier.price < lowPrice) {
+          lowPrice = tier.price
+        } else if (tier.price > highPrice) {
+          highPrice = tier.price
+        }
       }
     }
 
@@ -197,12 +201,30 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
         (s) => s.online_only_service === 1
       ) !== 'undefined'
 
+    const hasOfflineConsultations =
+      typeof category?.Public_Services.find(
+        (s) => s.online_only_service === 0
+      ) !== 'undefined'
+
+    if (
+      !hasOfflineConsultations &&
+      hasOnlineConsultations &&
+      !virtualServicesOnly
+    ) {
+      setVirtualServicesOnly(true)
+    } else if (
+      !hasOnlineConsultations &&
+      hasOfflineConsultations &&
+      virtualServicesOnly
+    ) {
+      setVirtualServicesOnly(false)
+    }
     return (
       <div>
         <div className={styles.custCard}>
           {!viewVouchers ? (
-            hasOnlineConsultations ? (
-              <div className={styles.treatmentTabWrapper}>
+            <div className={styles.treatmentTabWrapper}>
+              {hasOfflineConsultations && (
                 <div
                   onClick={() => setVirtualServicesOnly(false)}
                   className={ClassNames(
@@ -213,6 +235,8 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
                   <MedicineBoxOutlined />
                   {t('connect.onlinebooking.selector.offline')}
                 </div>
+              )}
+              {hasOnlineConsultations && (
                 <div
                   onClick={() => setVirtualServicesOnly(true)}
                   className={ClassNames(
@@ -223,15 +247,8 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
                   <LaptopOutlined />
                   {t('connect.onlinebooking.selector.online')}
                 </div>
-              </div>
-            ) : (
-              <div className={styles.treatmentTabWrapper}>
-                <div className={ClassNames(styles.treatmentTab, styles.active)}>
-                  <MedicineBoxOutlined />
-                  <span>In Clinic</span>
-                </div>
-              </div>
-            )
+              )}
+            </div>
           ) : null}
           {!viewVouchers
             ? category.Public_Services.map((val) => renderService(val))
@@ -398,16 +415,16 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
       : !selectedData.masterCategoryID
       ? servicesCategorised.Public_MasterCategories.map((masterCategory) => (
           <div key={masterCategory.id}>
-            {masterCategory.Public_ServiceCategories.map((val) => {
-              return renderCategoryItem(val)
-            })}
+            {masterCategory.Public_ServiceCategories.map(
+              (val) => categoryHasServices(val) && renderCategoryItem(val)
+            )}
           </div>
         ))
       : servicesCategorised.Public_MasterCategories.find(
           (item) => item.id === selectedData.masterCategoryID
-        ).Public_ServiceCategories.map((val) => {
-          return renderCategoryItem(val)
-        })
+        ).Public_ServiceCategories.map(
+          (val) => categoryHasServices(val) && renderCategoryItem(val)
+        )
   }
 
   const renderCategoryItem = (category: Category) => {
@@ -418,7 +435,6 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
           style={{ margin: '12px 0', cursor: 'pointer' }}
           key={category.id}
           onClick={() => {
-            console.log('selecting', category.id)
             setSelectedData(actionTypes.SET_CATEGORY_ID, category.id)
           }}
         >
@@ -494,33 +510,39 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
               <SelectAllIcon />
               <span>{hasMasterCategories ? 'All' : 'Services'}</span>
             </div>
-            {servicesCategorised.Public_MasterCategories.map((item) => (
-              <div
-                className={ClassNames(
-                  styles.serviceselectall,
-                  item.id === selectedData.masterCategoryID &&
-                    styles.serviceselectallSelect
-                )}
-                key={item.id}
-                onClick={() => {
-                  setSelectedData(actionTypes.SET_MASTER_CATEGORY_ID, item.id)
-                  setViewVouchers(false)
-                }}
-              >
-                {item.id === selectedData.masterCategoryID && (
-                  <CheckCircleFilled className={styles.checkfill} />
-                )}
+            {servicesCategorised.Public_MasterCategories.map(
+              (item) =>
+                masterCategoryHasServices(item) && (
+                  <div
+                    className={ClassNames(
+                      styles.serviceselectall,
+                      item.id === selectedData.masterCategoryID &&
+                        styles.serviceselectallSelect
+                    )}
+                    key={item.id}
+                    onClick={() => {
+                      setSelectedData(
+                        actionTypes.SET_MASTER_CATEGORY_ID,
+                        item.id
+                      )
+                      setViewVouchers(false)
+                    }}
+                  >
+                    {item.id === selectedData.masterCategoryID && (
+                      <CheckCircleFilled className={styles.checkfill} />
+                    )}
 
-                <Image
-                  preview={false}
-                  height={'40px'}
-                  width={'40px'}
-                  src={'https://crm.pabau.com' + item.image}
-                  alt={item.name}
-                />
-                <span>{item.name}</span>
-              </div>
-            ))}
+                    <Image
+                      preview={false}
+                      height={'40px'}
+                      width={'40px'}
+                      src={'https://crm.pabau.com' + item.image}
+                      alt={item.name}
+                    />
+                    <span>{item.name}</span>
+                  </div>
+                )
+            )}
             <div
               className={ClassNames(
                 styles.serviceselectall,

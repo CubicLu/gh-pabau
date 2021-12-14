@@ -1,5 +1,5 @@
-query companyServicesByCategory($company_id: Int!) {
-  Public_ServiceCategories(where: {company_id: $company_id}) {
+query companyServicesByCategory($company_id: Int!, $master_cat_id: Int = 0) {
+  Public_ServiceCategories(where: {company_id: $company_id, master_cat_id: $master_cat_id}) {
     id
     cat_order
     group_color

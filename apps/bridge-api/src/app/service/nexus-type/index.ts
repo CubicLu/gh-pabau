@@ -51,7 +51,9 @@ export const PublicServiceCategoryResponse = objectType({
           .findUnique({
             where: { id: parent.id || undefined },
           })
-          .CompanyService()
+          .CompanyService({
+            where: { availability: { in: ['ANY', 'BOOK'] }, online_book: 1 },
+          })
       },
     })
   },

@@ -18,10 +18,10 @@ require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
 const GRAPHQL_WS_ENDPOINT =
-  process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
+  process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api-v2.new.pabau.com/v1/graphql'
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
-  'https://api.new.pabau.com/v1/graphql'
+  'https://api-v2.new.pabau.com/v1/graphql'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('connect_token')

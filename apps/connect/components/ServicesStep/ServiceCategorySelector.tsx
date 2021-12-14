@@ -15,6 +15,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
 import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
+import useServices from '../../hooks/useServices'
 import { Image } from 'antd'
 
 export interface P {
@@ -26,6 +27,8 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
   const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const settings = useContext(SettingsContext)
+  const { masterCategoryHasServices, categoryHasServices } = useServices()
+
   const handleSelectedMasterCategory = (id: number) => {
     setShowMasterCategories(false)
     setSelectedData(actionTypes.SET_MASTER_CATEGORY_ID, id)
@@ -62,9 +65,10 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
     <div className={styles.consultation}>
       {showMasterCategories ? (
         <>
-          <div className={styles.alertMsg}>
-            {settings.connect_intro_message}
-          </div>
+          <div
+            className={styles.alertMsg}
+            dangerouslySetInnerHTML={{ __html: settings.connect_intro_message }}
+          />
           <div className={styles.prsongroup}>
             <h5>{t('connect.onlinebooking.selector.group.description')}</h5>
             <div className={styles.userWrapper}>
@@ -126,6 +130,8 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
                     <Form.Item label={t('Number of people')} name="persons">
                       <Input
                         name="persons"
+                        min={0}
+                        max={20}
                         type={'number'}
                         autoComplete="off"
                         onChange={(values) => {
@@ -147,27 +153,30 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
 
       {showMasterCategories ? (
         <div className={styles.custCard}>
-          {servicesCategorised.Public_MasterCategories?.map((item) => (
-            <div
-              key={item.id}
-              className={styles.chooseServiceTypeItem}
-              onClick={() => handleSelectedMasterCategory(item.id)}
-            >
-              <div className={styles.section1}>
-                <Image
-                  preview={false}
-                  height={'40px'}
-                  width={'40px'}
-                  src={settings.pod_url + item.image}
-                  alt={item.name}
-                />
-                <p className={styles.cardText}>{item.name}</p>
-              </div>
+          {servicesCategorised.Public_MasterCategories?.map(
+            (item) =>
+              masterCategoryHasServices(item) && (
+                <div
+                  key={item.id}
+                  className={styles.chooseServiceTypeItem}
+                  onClick={() => handleSelectedMasterCategory(item.id)}
+                >
+                  <div className={styles.section1}>
+                    <Image
+                      preview={false}
+                      height={'40px'}
+                      width={'40px'}
+                      src={settings.pod_url + item.image}
+                      alt={item.name}
+                    />
+                    <p className={styles.cardText}>{item.name}</p>
+                  </div>
 
-              <RightOutlined />
-              {/*{item.addonIcon && <div>{item.addonIcon}</div>}*/}
-            </div>
-          ))}
+                  <RightOutlined />
+                  {/*{item.addonIcon && <div>{item.addonIcon}</div>}*/}
+                </div>
+              )
+          )}
           <div className={styles.btnView}>
             <Button
               onClick={() => {
@@ -182,29 +191,34 @@ export const ServiceCategorySelector: FC<P> = ({ onSelected }) => {
       ) : (
         <div className={styles.slide}>
           <div className={styles.custCard}>
-            {masterCategory?.Public_ServiceCategories?.map((item) => (
-              <div
-                key={item.id}
-                className={styles.chooseServiceTypeItem}
-                onClick={() => handleSelectedCategory(item.id)}
-              >
-                <div className={styles.section1}>
-                  <Image
-                    preview={false}
-                    height={'40px'}
-                    width={'40px'}
-                    src={
-                      settings.pod_url +
-                      (item.image !== '' ? item.image : masterCategory.image)
-                    }
-                    alt={item.name}
-                  />
-                  <p className={styles.cardText}>{item.name}</p>
-                </div>
+            {masterCategory?.Public_ServiceCategories?.map(
+              (item) =>
+                categoryHasServices(item) && (
+                  <div
+                    key={item.id}
+                    className={styles.chooseServiceTypeItem}
+                    onClick={() => handleSelectedCategory(item.id)}
+                  >
+                    <div className={styles.section1}>
+                      <Image
+                        preview={false}
+                        height={'40px'}
+                        width={'40px'}
+                        src={
+                          settings.pod_url +
+                          (item.image !== ''
+                            ? item.image
+                            : masterCategory.image)
+                        }
+                        alt={item.name}
+                      />
+                      <p className={styles.cardText}>{item.name}</p>
+                    </div>
 
-                <RightOutlined />
-              </div>
-            ))}
+                    <RightOutlined />
+                  </div>
+                )
+            )}
             <div className={styles.btnView}>&nbsp;</div>
           </div>
         </div>
