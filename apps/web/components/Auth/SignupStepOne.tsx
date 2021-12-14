@@ -1,4 +1,5 @@
 import { PasswordWithHelper } from '@pabau/ui'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Formik } from 'formik'
 import { Form, Input, SubmitButton } from 'formik-antd'
 import React, { FC } from 'react'
@@ -18,6 +19,7 @@ interface SignupStepOneProps {
 export const SignupStepOne: FC<SignupStepOneProps> = ({
   handleStepOneSubmit,
 }) => {
+  const { t } = useTranslationI18()
   return (
     <div className={styles.signupFormInput}>
       <Formik
@@ -46,38 +48,30 @@ export const SignupStepOne: FC<SignupStepOneProps> = ({
         render={({ setFieldValue }) => (
           <Form layout="vertical">
             <Form.Item
-              label={'First Name'}
+              label={t('signup.first.name')}
               name={'firstName'}
               className={styles.signupInput}
             >
               <Input name={'firstName'} />
             </Form.Item>
             <Form.Item
-              label={'Last Name'}
+              label={t('signup.last.name')}
               name={'lastName'}
               className={styles.signupInput}
             >
               <Input name={'lastName'} />
             </Form.Item>
-            <Form.Item
-              label={'Work Email'}
-              name={'workEmail'}
-              className={styles.signupInput}
-            >
+            <Form.Item label={t('signup.work.email')} name={'workEmail'}>
               <Input name={'workEmail'} />
             </Form.Item>
-            <Form.Item
-              label="Password"
-              name={'password'}
-              className={styles.signupInput}
-            >
+            <Form.Item label={t('signup.password')} name={'password'}>
               <PasswordWithHelper
                 onChange={(value) => setFieldValue('password', value)}
               />
             </Form.Item>
             <div className={styles.signupButton}>
               <SubmitButton className={styles.btnStarted} type={'primary'}>
-                Get Started
+                {t('signup.get.started')}
               </SubmitButton>
             </div>
           </Form>

@@ -1,0 +1,6 @@
+query findManyTimezones {
+  findManyTimezone {
+    timezone_id
+    label
+  }
+}

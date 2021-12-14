@@ -1,18 +1,19 @@
 import { PhoneNumberInput } from '@pabau/ui'
 import { Formik } from 'formik'
-import { Checkbox, Form, Input, Select, SubmitButton } from 'formik-antd'
+import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import countries from 'i18n-iso-countries'
 import english from 'i18n-iso-countries/langs/en.json'
 import React, { FC, useState } from 'react'
 import * as Yup from 'yup'
-import { timezone as timezones } from '@pabau/ui'
 import styles from '../../pages/signup.module.less'
+import Link from 'next/link'
+import LocationSettings from '../LocationSettings/LocationSettings'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface StepTwoFormProps {
   phoneNumber: string
   companyName: string
   country: string
-  timeZone: string
 }
 
 interface SignupStepTwoProps {
@@ -22,10 +23,9 @@ interface SignupStepTwoProps {
 export const SignupStepTwo: FC<SignupStepTwoProps> = ({
   handleStepTwoSubmit,
 }) => {
-  const [isValidPhone, setValidPhone] = useState(false)
-
+  const [isValidPhone, setValidPhone] = useState<boolean>(false)
   countries.registerLocale(english)
-  const countriesName = countries.getNames('en')
+  const { t } = useTranslationI18()
 
   return (
     <div className={styles.signupFormInput}>
@@ -40,8 +40,6 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
         validationSchema={Yup.object({
           phoneNumber: Yup.string().required('Phone number is required'),
           companyName: Yup.string().required('Company name is required'),
-          country: Yup.string().required('Country is required'),
-          timeZone: Yup.string().required('Timezone is required'),
           termsAndCondition: Yup.bool().oneOf(
             [true],
             'Accept Terms & Conditions is required'
@@ -53,9 +51,9 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
           }
         }}
         render={({ setFieldValue }) => (
-          <Form layout="vertical">
+          <Form className={styles.signupInputs__form} layout="vertical">
             <Form.Item
-              label={'Phone Number'}
+              // label={t('signup.phone.number')}
               name={'phoneNumber'}
               className={styles.signupInput}
             >
@@ -70,42 +68,22 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
                 }}
               />
             </Form.Item>
-            <Form.Item
-              label={'Company Name'}
-              name={'companyName'}
-              className={styles.signupInput}
-            >
-              <Input name={'companyName'} />
-            </Form.Item>
-            <Form.Item
-              label={'Country'}
-              name={'country'}
-              className={styles.signupInput}
-            >
-              <Select name={'country'} showSearch>
-                {Object.keys(countriesName).map((key) => (
-                  <Select.Option value={key} key={key}>
-                    {countriesName[key]}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label={'Timezone'}
-              name={'timeZone'}
-              className={styles.signupInput}
-            >
-              <Select name={'timeZone'} showSearch>
-                {timezones.map((item) => (
-                  <Select.Option key={item.text} value={item.text}>
-                    {item.text}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
+            <Form className={styles.signupInputs__div}>
+              <Form.Item
+                className={styles.signupInput__CompanyForm}
+                label={t('signup.company.name')}
+                name={'companyName'}
+              >
+                <Input name={'companyName'} />
+              </Form.Item>
+              <LocationSettings />
+            </Form>
             <div className={styles.signupAgree}>
               <Checkbox name={'termsAndCondition'}>
-                I agree to <a>Terms and Conditions</a>
+                {t('signup.i.agree')}{' '}
+                <Link href="https://www.pabau.com/terms-conditions/" passHref>
+                  <a target="_blink"> {t('signup.terms.and.conditions')} </a>
+                </Link>
               </Checkbox>
             </div>
             <div className={styles.signupButton}>
@@ -114,7 +92,7 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
                 type={'primary'}
                 disabled={!isValidPhone}
               >
-                Create Account
+                {t('signup.create.account')}
               </SubmitButton>
             </div>
           </Form>

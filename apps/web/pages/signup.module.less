@@ -105,7 +105,9 @@
     }
   }
 }
-
+.signupAgree {
+  margin-top: 240px;
+}
 @media (max-width: 768px) {
   .signup-wrapper {
     .signup-content {
@@ -116,6 +118,14 @@
       display: none;
     }
   }
+  .signupInput__FirstSecondName {
+    width: 100%;
+    flex-direction: column;
+  }
+  .signupInput__Company {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 @media (max-width: 600px) {
   .signup-wrapper {
@@ -124,4 +134,31 @@
       padding: 40px 5%;
     }
   }
+  .signupInputs__div {
+    width: 100%;
+    flex-direction: column;
+  }
+  .signupInput__CompanyForm {
+    width: 100%;
+    flex: 1;
+  }
+}
+
+.signupInput {
+  width: 100%;
+  flex: 1;
+}
+.signupInput__Company {
+  width: 100%;
+}
+.signupInput__CompanyForm {
+  // width: 50%;
+  flex: 1;
+}
+
+.signupInputs__div {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center !important;
+  width: 100%;
 }
