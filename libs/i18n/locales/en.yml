@@ -5216,12 +5216,14 @@ en:
   client.appointment.card.pop.cancel.reason.work: Work
   client.appointment.card.pop.cancel.reason.booking.error: 'Booking Error'
   client.appointment.card.pop.cancel.reason.changed.mind: 'Changed Mind'
-  client.appointment.card.pop.cancel.reason.manage.cancel.reasons: 'Manage cancel reasons on '
+  client.appointment.card.pop.cancel.reason.manage.cancel.reasons: 'Manage cancel reasons in '
   client.appointment.card.pop.cancel.reason.company.settings: 'Company settings'
   client.appointment.card.pop.cancel.appointment: 'Cancel Appointment'
   client.appointment.card.description.save: Save
   client.appointment.card.description.cancel: Cancel
   client.appointment.card.add.description: 'Add description'
+  client.appointment.card.edit.cancel.reason: 'Edit cancel reason'
+  client.appointment.card.cancel.reasons: 'Cancel reasons'
   client.appointment.card.delete.yes.button: 'Yes'
   client.appointment.card.delete.no.button: 'No'
   client.appointment.card.reinstate.button: Reinstate
@@ -5438,8 +5440,6 @@ en:
   quickCreate.client.modal.update.success: 'Success! Contact successfully updated'
   quickCreate.client.modal.update.detail.error: 'Error! Contact detail not found'
   client.appointment.card.pop.cancel.reason.placeholder: 'Please select'
-  client.appointment.card.edit.cancel.reason: 'Edit cancel reason'
-  client.appointment.card.cancel.reasons: 'Cancel reasons'
   contact.document.viewer.title: 'Document Viewer'
   contact.document.viewer.input.documentid: 'Document Id'
   contact.document.viewer.show.document: 'Show Document'
@@ -5852,6 +5852,8 @@ en:
   setup.reviewsConfig.clientNameLabel: Display client name
   setup.reviewsConfig.clientReview: Automatically reward clients for writing a review.
   clients.appointments.tooltip.assistant: 'Assistant'
+  client.appointment.card.update.cancel.reason.msg: 'Successfully saved changes'
+  client.appointment.card.cancelled.success.msg: 'The appointment has been cancelled and the cancellation email delivered to the recipient (the client card owner’s email address)'
   client.appointment.card.reinstate.success.msg: 'Appointment has been reinstated successfully'
   client.appointment.card.booked.by.message: 'Booked by {{bookedBy}}, on {{date}} at {{time}}'
   client.appointment.card.update.note.success.msg: 'The appointment note has been updated and the confirmation email delivered to the recipient (the client card owner’s email address)'

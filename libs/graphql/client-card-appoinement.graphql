@@ -29,3 +29,23 @@ mutation updateAppointmentStatus($booking_id: Int, $status: String) {
     status
   }
 }
+
+mutation cancelBooking(
+  $bookingId: Int!
+  $type: String = ""
+  $reason: String!
+  $reasonId: Int!
+) {
+  CancelAppointment(
+    booking_id: $bookingId
+    type: $type
+    reason: $reason
+    reason_id: $reasonId
+  ) {
+    appointment_status
+    status
+    send_sms
+    num_message_send
+    email_send
+  }
+}

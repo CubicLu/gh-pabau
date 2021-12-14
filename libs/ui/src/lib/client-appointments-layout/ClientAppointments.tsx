@@ -44,6 +44,11 @@ interface Employee {
   relationship?: string
 }
 
+export interface CancelReason {
+  value: number
+  text: string
+}
+
 export interface ClientAppointmentItem {
   id: number
   serviceName: string
@@ -63,6 +68,9 @@ export interface ClientAppointmentItem {
   bookedBy: string
   isCourse: boolean
   isOnline: number
+  cancellationReason?: number
+  reasonComment?: string
+  cancelBy?: number
 }
 
 export interface ClientI {
@@ -72,18 +80,16 @@ interface P {
   appointments?: ClientAppointmentItem[]
   loading?: boolean
   clientInfo?: ClientI
+  cancelReasons?: CancelReason[]
   updateApptNoteMutation?: MutationFunction
   adjustApptNotificationsMutation?: MutationFunction
   updateAppointmentStatusMutation?: MutationFunction
+  cancelBookingMutation?: MutationFunction
+  updateCancelReasonMutation?: MutationFunction
 }
 
 //TODO: remove these dummy funcctions
 const deleteAppointment = (
-  a: unknown = undefined,
-  b: unknown = undefined,
-  c: unknown = undefined
-) => console.log('TODO')
-const handleCancelAppointment = (
   a: unknown = undefined,
   b: unknown = undefined,
   c: unknown = undefined
@@ -96,8 +102,33 @@ export const ClientAppointments = ({
   updateApptNoteMutation,
   adjustApptNotificationsMutation,
   updateAppointmentStatusMutation,
+  cancelBookingMutation,
+  cancelReasons,
+  updateCancelReasonMutation,
 }: P) => {
   const ref = useRef<HTMLDivElement>(null)
+
+  const handleEditCancelReason = (id, reason, reasonId, cancelBy) => {
+    updateCancelReasonMutation?.({
+      variables: {
+        appointmentId: id,
+        reason,
+        reasonId,
+        cancelBy,
+      },
+    })
+  }
+
+  const handleCancelAppointment = (id, reason, comment) => {
+    cancelBookingMutation?.({
+      variables: {
+        bookingId: id,
+        reason: comment,
+        type: '',
+        reasonId: reason,
+      },
+    })
+  }
 
   const editNote = (id: number, note?: string) =>
     updateApptNoteMutation?.({
@@ -547,7 +578,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -570,7 +603,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -592,7 +627,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -616,7 +653,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -640,7 +679,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -663,7 +704,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -687,7 +730,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -710,7 +755,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -732,7 +779,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -756,7 +805,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -780,7 +831,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(id, value) => editNote(id, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     } else if (
@@ -803,7 +856,9 @@ export const ClientAppointments = ({
           key={`all-bookings-${index}`}
           handleDelete={() => deleteAppointment(index)}
           handleEditNotes={(index, value) => editNote(index, value)}
-          handleCancel={(index) => handleCancelAppointment(index)}
+          handleCancel={(id, reason, comment) =>
+            handleCancelAppointment(id, reason, comment)
+          }
         />
       )
     }
@@ -823,7 +878,7 @@ export const ClientAppointments = ({
         <div className={styles.appointmentTabs}>
           <TabMenu
             tabPosition="top"
-            minHeight="1px"
+            minHeight="730px"
             menuItems={[
               `${t('client.appointments.layout.tab.all.bookings')} (${
                 appointments?.length
@@ -880,6 +935,7 @@ export const ClientAppointments = ({
                                   {...item}
                                   {...clientInfo}
                                   index={index}
+                                  cancelReasons={cancelReasons}
                                   key={`all-bookings-${index}`}
                                   handleDelete={() => deleteAppointment(index)}
                                   handleEditNotes={(id, value) => {
@@ -899,9 +955,10 @@ export const ClientAppointments = ({
                                       requestFeedback
                                     )
                                   }}
-                                  handleCancel={(index) =>
-                                    handleCancelAppointment(index)
+                                  handleCancel={(id, reason, comment) =>
+                                    handleCancelAppointment(id, reason, comment)
                                   }
+                                  handleEditCancel={handleEditCancelReason}
                                 />
                               )
                             }
@@ -930,6 +987,7 @@ export const ClientAppointments = ({
                               {...item}
                               {...clientInfo}
                               index={index}
+                              cancelReasons={cancelReasons}
                               key={`all-bookings-${index}`}
                               handleDelete={() => deleteAppointment(index)}
                               handleEditNotes={(id, value) => {
@@ -949,9 +1007,10 @@ export const ClientAppointments = ({
                                   requestFeedback
                                 )
                               }}
-                              handleCancel={(index) =>
-                                handleCancelAppointment(index)
+                              handleCancel={(id, reason, comment) =>
+                                handleCancelAppointment(id, reason, comment)
                               }
+                              handleEditCancel={handleEditCancelReason}
                             />
                           )
                         }
@@ -1011,6 +1070,7 @@ export const ClientAppointments = ({
                               handleEditNotes={(index, value) =>
                                 editNote(index, value)
                               }
+                              cancelReasons={cancelReasons}
                               handleAdjustApptNotification={(
                                 id,
                                 reminder,
@@ -1022,9 +1082,10 @@ export const ClientAppointments = ({
                                   requestFeedback
                                 )
                               }}
-                              handleCancel={(index) =>
-                                handleCancelAppointment(index)
+                              handleCancel={(id, reason, comment) =>
+                                handleCancelAppointment(id, reason, comment)
                               }
+                              handleEditCancel={handleEditCancelReason}
                             />
                           )
                         }
@@ -1082,6 +1143,7 @@ export const ClientAppointments = ({
                               {...clientInfo}
                               index={index}
                               key={`all-bookings-${index}`}
+                              cancelReasons={cancelReasons}
                               handleDelete={() => deleteAppointment(index)}
                               handleEditNotes={(index, value) =>
                                 editNote(index, value)
@@ -1100,9 +1162,10 @@ export const ClientAppointments = ({
                                   requestFeedback
                                 )
                               }}
-                              handleCancel={(index) =>
-                                handleCancelAppointment(index)
+                              handleCancel={(id, reason, comment) =>
+                                handleCancelAppointment(id, reason, comment)
                               }
+                              handleEditCancel={handleEditCancelReason}
                             />
                           )
                         }
@@ -1157,6 +1220,7 @@ export const ClientAppointments = ({
                               {...item}
                               {...clientInfo}
                               index={index}
+                              cancelReasons={cancelReasons}
                               key={`all-bookings-${index}`}
                               handleDelete={() => deleteAppointment(index)}
                               handleEditNotes={(index, value) =>
@@ -1173,8 +1237,8 @@ export const ClientAppointments = ({
                                   requestFeedback
                                 )
                               }}
-                              handleCancel={(index) =>
-                                handleCancelAppointment(index)
+                              handleCancel={(id, reason, comment) =>
+                                handleCancelAppointment(id, reason, comment)
                               }
                             />
                           )

@@ -4,3 +4,27 @@ query getCancelReason {
     reason_name
   }
 }
+
+mutation updateCancelReason(
+  $appointmentId: Int!
+  $reason: String!
+  $reasonId: Int!
+  $cancelBy: Int!
+) {
+  updateCancelReason: updateOneBookingCancel(
+    where: { appointment_id: $appointmentId }
+    data: {
+      reason: { set: $reason }
+      CancelReason: { connect: { id: $reasonId } }
+      User: { connect: { id: $cancelBy } }
+    }
+  ) {
+    id
+    appointment_id
+    reason
+    cancel_reason_id
+    CancelReason {
+      id
+    }
+  }
+}

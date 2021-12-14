@@ -11,6 +11,7 @@ import {
   AppointmentStatus,
   Notification,
   NotificationType,
+  CancelReason,
 } from '@pabau/ui'
 import {
   useGetClientAppointmentsQuery,
@@ -18,25 +19,92 @@ import {
   useUpdateApptNoteMutation,
   useAdjustApptNotificationsMutation,
   useUpdateAppointmentStatusMutation,
+  useGetCancelReasonQuery,
+  useCancelBookingMutation,
+  useUpdateCancelReasonMutation,
+  GetClientAppointmentsDocument,
+  GetClientAppointmentsQuery,
 } from '@pabau/graphql'
 import dayjs from 'dayjs'
 import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
+import { useUser } from '../../../context/UserContext'
 
 const Appointments = () => {
   const router = useRouter()
   const { t } = useTranslationI18()
+  const [cancelReasons, setCancelReasons] = useState<CancelReason[]>([])
   const [clientAppointments, setClientAppointments] = useState<
     ClientAppointmentItem[]
   >([])
+
+  const { me } = useUser()
+  const { data: cancelReasonData } = useGetCancelReasonQuery()
+
+  const getQueryVariables = () => {
+    return {
+      orderBy: SortOrder.Asc,
+      contactId: Number(router.query['id']),
+    }
+  }
 
   const {
     data: clientAppointmentData,
     loading,
   } = useGetClientAppointmentsQuery({
     skip: !router.query.id,
-    variables: {
-      orderBy: SortOrder.Asc,
-      contactId: Number(router.query['id']),
+    variables: getQueryVariables(),
+  })
+
+  const [cancelBookingMutation] = useCancelBookingMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('client.appointment.card.cancelled.success.msg')
+      )
+    },
+    refetchQueries: [
+      {
+        query: GetClientAppointmentsDocument,
+        variables: getQueryVariables(),
+      },
+    ],
+  })
+
+  const [updateCancelReasonMutation] = useUpdateCancelReasonMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('client.appointment.card.update.cancel.reason.msg')
+      )
+    },
+    update(cache, { data }) {
+      const response = data?.updateCancelReason
+      const existing = cache.readQuery<GetClientAppointmentsQuery>({
+        query: GetClientAppointmentsDocument,
+        variables: getQueryVariables(),
+      })
+      if (existing && response) {
+        const newApptData = [...existing.findManyBooking].map((appt) => {
+          if (appt.id === response?.appointment_id) {
+            const newBookingCancel = {
+              cancel_by: me.user,
+              cancel_reason_id: response.cancel_reason_id,
+              reason: response.reason,
+            }
+            return { ...appt, BookingCancel: newBookingCancel }
+          } else {
+            return appt
+          }
+        })
+        cache.writeQuery<GetClientAppointmentsQuery>({
+          query: GetClientAppointmentsDocument,
+          variables: getQueryVariables(),
+          data: {
+            findManyBooking: [...newApptData],
+            totalCount: [...existing.totalCount],
+          },
+        })
+      }
     },
   })
 
@@ -86,6 +154,16 @@ const Appointments = () => {
   }
 
   useEffect(() => {
+    if (cancelReasonData?.findManyCancelReason?.length > 0) {
+      const reasons = cancelReasonData?.findManyCancelReason?.map((reason) => ({
+        value: reason?.id,
+        text: reason?.reason_name,
+      }))
+      setCancelReasons(reasons)
+    }
+  }, [cancelReasonData])
+
+  useEffect(() => {
     if (clientAppointmentData?.findManyBooking?.length > 0) {
       const appointments = clientAppointmentData?.findManyBooking?.map(
         (appt) => {
@@ -102,6 +180,7 @@ const Appointments = () => {
               relationship: t('clients.appointments.tooltip.assistant'),
             }
           })
+
           return {
             id: appt?.id,
             serviceName: appt.service,
@@ -123,6 +202,16 @@ const Appointments = () => {
             isOnline: appt?.is_online,
             bookedBy: appt?.BookedBy?.full_name,
             isCourse: appt?.where === 'course',
+            cancelBy:
+              (appt.status === 'Cancelled' && appt?.BookingCancel?.cancel_by) ||
+              null,
+            cancellationReason:
+              (appt.status === 'Cancelled' &&
+                appt?.BookingCancel?.cancel_reason_id) ||
+              null,
+            reasonComment:
+              (appt.status === 'Cancelled' && appt?.BookingCancel?.reason) ||
+              null,
           }
         }
       )
@@ -137,11 +226,14 @@ const Appointments = () => {
     return (
       <ClientAppointments
         appointments={clientAppointments}
+        cancelReasons={cancelReasons}
         clientInfo={clientData}
         loading={loading}
         updateApptNoteMutation={updateApptNoteMutation}
         adjustApptNotificationsMutation={adjustApptNotificationsMutation}
         updateAppointmentStatusMutation={updateAppointmentStatusMutation}
+        cancelBookingMutation={cancelBookingMutation}
+        updateCancelReasonMutation={updateCancelReasonMutation}
       />
     )
   }

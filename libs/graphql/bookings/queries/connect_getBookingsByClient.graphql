@@ -19,6 +19,11 @@ query GetClientAppointments(
       Lname
       Avatar
     }
+    BookingCancel {
+      cancel_reason_id
+      reason
+      cancel_by
+    }
     created_by_uid
     BookedBy {
       id
