@@ -197,6 +197,7 @@ export const interceptors = {
     }
   ),
   injectDeletedBy: rule('injectDeletedBy')((_root, args, ctx: Context) => {
+    if (Object.keys(args.data).length > 0) return true
     args.data = {
       ...args.data,
       deleted_at: new Date(),
