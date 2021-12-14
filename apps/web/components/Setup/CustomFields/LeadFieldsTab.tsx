@@ -1,87 +1,18 @@
 import React, { FC, useState, useEffect } from 'react'
 import { Table as LeadFieldsTable, useLiveQuery } from '@pabau/ui'
-import { LockOutlined, PhoneOutlined } from '@ant-design/icons'
-import { LeadFieldsDocument, LeadFieldsAggregateDocument } from '@pabau/graphql'
-
-const columns = [
-  {
-    title: 'Field Name',
-    dataIndex: 'name',
-    className: 'columnTitle',
-    visible: true,
-    render: function renderTableSource(val) {
-      return (
-        <span>
-          <span>
-            <PhoneOutlined />
-          </span>
-          {val}
-        </span>
-      )
-    },
-  },
-  {
-    title: 'Field Label',
-    dataIndex: 'label',
-    className: 'columnTitle',
-    visible: true,
-  },
-  {
-    title: 'Format',
-    dataIndex: 'format',
-    className: 'columnTitle',
-    visible: true,
-  },
-  {
-    title: 'Field for',
-    dataIndex: 'fieldFor',
-    className: 'columnTitle',
-    visible: true,
-  },
-  {
-    title: 'Field Category',
-    dataIndex: 'category',
-    className: 'columnTitle',
-    visible: true,
-  },
-  {
-    title: 'Mendatory',
-    dataIndex: 'is_mendatory',
-    className: 'columnTitle',
-    visible: true,
-    width: '7.5%',
-    render: function renderTableSource(val) {
-      return <span>{val ? 'Yes' : 'No'}</span>
-    },
-  },
-  {
-    title: 'Privacy',
-    dataIndex: 'is_private',
-    className: 'columnTitle',
-    visible: true,
-    width: '7.5%',
-    render: function renderTableSource(val) {
-      return <span>{val ? 'Yes' : 'No'}</span>
-    },
-  },
-  {
-    title: 'Status',
-    dataIndex: 'is_active',
-    className: 'columnTitle',
-    visible: true,
-    width: '10%',
-  },
-  {
-    title: '',
-    dataIndex: 'is_locked',
-    className: 'columnTitle lockColumn',
-    visible: true,
-    width: '7.5%',
-    render: function renderTableSource(val) {
-      return <span>{val && <LockOutlined style={{ fontSize: '16px' }} />}</span>
-    },
-  },
-]
+import { LockOutlined } from '@ant-design/icons'
+import { Notification, NotificationType } from '@pabau/ui'
+import {
+  useGetContactCustomFieldsLeadDataLazyQuery,
+  GetCustomFieldsAggregateDocument,
+  useUpdateOneManageCustomFieldMutation,
+} from '@pabau/graphql'
+import { renderFormatText, renderLabelText } from './ClientDataTab'
+import CreateCustomFieldModal from './CreateCustomFieldsModal/index'
+import styles from './tabs.module.less'
+import { EditCustomFieldProps } from './CreateCustomFieldsModal/index'
+import { useTranslation } from 'react-i18next'
+import { leadData as staticData } from './data.js'
 
 interface Pagination {
   total: number
@@ -93,83 +24,276 @@ interface Pagination {
 
 export interface LeadFieldsProps {
   paginateData?: Pagination
-  setPaginateData?: (data: Pagination) => void
+  setPaginateData?: (data) => void
   searchTerm?: string | number
+  tabSelected?: boolean
 }
 
 export const LeadFields: FC<LeadFieldsProps> = ({
   paginateData = {
     total: 0,
     offset: 0,
-    limit: 50,
+    limit: 100,
     currentPage: 1,
     showingRecords: 0,
   },
   searchTerm = '',
   setPaginateData,
+  tabSelected,
   ...props
 }) => {
+  const { t } = useTranslation('common')
   const [isLoading, setIsLoading] = useState(false)
   const [sourceData, setSourceData] = useState(null)
+  const [selectedItem, setSelectedItem] = useState<EditCustomFieldProps>()
+
+  const columns = [
+    {
+      title: t('setup.custom-fields.field-label'),
+      dataIndex: 'field_label',
+      className: 'columnTitle',
+      visible: true,
+      render: function renderTableSource(val, row) {
+        return renderLabelText(val, row)
+      },
+    },
+    {
+      title: t('setup.custom-fields.format'),
+      dataIndex: 'field_type',
+      className: 'columnTitle',
+      visible: true,
+      render: function renderTableSource(val) {
+        return <span> {renderFormatText(val)} </span>
+      },
+    },
+    {
+      title: t('setup.custom-fields.category'),
+      dataIndex: 'Category',
+      className: 'columnTitle',
+      visible: true,
+      render: function renderTableSource(val) {
+        return <span> {val?.name ? val?.name : 'Details'} </span>
+      },
+    },
+    {
+      title: t('setup.custom-fields.rule'),
+      dataIndex: 'is_required',
+      className: 'columnTitle',
+      visible: true,
+      render: function renderTableSource(val, row) {
+        return (
+          <span>
+            {val === 1 ? (
+              <span className={styles.customRequiredTag}>
+                {t('setup.custom-fields.required')}
+              </span>
+            ) : (
+              <span></span>
+            )}
+            {row.show_in_cal === true ? (
+              <span className={styles.customHiddenTag}>
+                {t('setup.custom-fields.hidden')}
+              </span>
+            ) : (
+              <span></span>
+            )}
+          </span>
+        )
+      },
+    },
+    {
+      title: '',
+      dataIndex: 'is_locked',
+      className: 'columnTitle lockColumn',
+      visible: true,
+      width: '7.5%',
+      render: function renderTableSource(val) {
+        return (
+          <span>{val && <LockOutlined style={{ fontSize: '16px' }} />}</span>
+        )
+      },
+    },
+  ]
 
   const getQueryVariables = () => {
-    const queryOptions = {
+    return {
       variables: {
         offset: paginateData.offset,
         limit: paginateData.limit,
         searchTerm: '%' + searchTerm + '%',
       },
     }
-    return queryOptions
-  }
-  const getAggregateQueryVariables = () => {
-    const queryOptions = {
-      variables: {
-        searchTerm: '%' + searchTerm + '%',
-      },
-    }
-    return queryOptions
   }
 
-  const { data, loading } = useLiveQuery(
-    LeadFieldsDocument,
-    getQueryVariables()
-  )
+  const getAggregateQueryVariables = () => {
+    return {
+      variables: {
+        searchTerm: '%' + searchTerm + '%',
+        type: ['CONTACTLEAD'],
+      },
+    }
+  }
+
   const { data: aggregateData } = useLiveQuery(
-    LeadFieldsAggregateDocument,
+    GetCustomFieldsAggregateDocument,
     getAggregateQueryVariables()
   )
+
+  const [
+    fetchCustomFields,
+    { data, loading },
+  ] = useGetContactCustomFieldsLeadDataLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  useEffect(() => {
+    fetchCustomFields(getQueryVariables())
+    /* eslint-disable-next-line */
+  }, [searchTerm, paginateData.offset])
+
+  const [updateOrderMutation] = useUpdateOneManageCustomFieldMutation({
+    fetchPolicy: 'no-cache',
+  })
+
+  const updateOrder = (values: { id: number; field_order: number }) => {
+    updateOrderMutation({
+      variables: {
+        data: {
+          field_order: {
+            set: values?.field_order,
+          },
+        },
+        where: {
+          id: values?.id,
+        },
+      },
+    })
+  }
 
   useEffect(() => {
     setIsLoading(loading)
     if (data) {
-      setSourceData(data)
+      if (searchTerm) {
+        const staticData_ = staticData.filter(
+          (f) =>
+            f.field_label
+              .toLowerCase()
+              .indexOf(searchTerm.toString().toLowerCase()) !== -1
+        )
+        setSourceData([...data?.custom, ...staticData_])
+      } else {
+        if (paginateData.offset === 0) {
+          setSourceData([...data?.custom, ...staticData])
+        } else {
+          setSourceData([...data?.custom])
+        }
+      }
     }
+
     if (aggregateData) {
-      setPaginateData({
-        ...paginateData,
-        total: aggregateData?.aggregate.count,
-        showingRecords: data?.length,
-      })
+      setPaginateData((o) => ({
+        ...o,
+        total: aggregateData?._count?.count,
+        showingRecords: data?.custom?.length,
+      }))
     }
     /* eslint-disable-next-line */
-  }, [data, aggregateData, loading])
+  }, [data, loading, aggregateData])
+
+  useEffect(() => {
+    if (aggregateData && tabSelected) {
+      setPaginateData((o) => ({
+        ...o,
+        total: aggregateData?._count?.count,
+        showingRecords: data?.custom?.length,
+      }))
+      fetchCustomFields(getQueryVariables())
+    }
+    /* eslint-disable-next-line */
+  }, [tabSelected, aggregateData])
 
   return (
-    <LeadFieldsTable
-      loading={isLoading}
-      draggable={true}
-      pagination={false}
-      dataSource={sourceData?.map((e: { id }) => ({
-        key: e.id,
-        ...e,
-      }))}
-      onRowClick={(e) => console.log(e)}
-      columns={columns}
-      noDataBtnText="Fields"
-      noDataText="Fields"
-      scroll={{ x: 'max-content' }}
-    />
+    <>
+      <LeadFieldsTable
+        loading={isLoading}
+        draggable={true}
+        pagination={false}
+        dataSource={sourceData?.map((e: { id }) => ({
+          key: e.id,
+          ...e,
+        }))}
+        updateDataSource={({ newData, oldIndex, newIndex }) => {
+          if (
+            sourceData[oldIndex].is_locked ||
+            sourceData[newIndex].is_locked
+          ) {
+            Notification(
+              NotificationType.error,
+              t('setup.custom-fields.you-can-not-move-static-fields')
+            )
+            return
+          }
+          setSourceData(
+            (newData = newData.map(
+              (data: { field_order: number }, i: number) => {
+                data.field_order =
+                  sourceData[i]?.field_order === sourceData[i + 1]?.field_order
+                    ? sourceData[i].field_order + 1
+                    : !sourceData[i].field_order
+                    ? 1
+                    : sourceData[i].field_order
+                return data
+              }
+            ))
+          )
+
+          if (oldIndex > newIndex) {
+            for (let i = newIndex; i <= oldIndex; i++) {
+              updateOrder(newData[i])
+            }
+          } else {
+            for (let i = oldIndex; i <= newIndex; i++) {
+              updateOrder(newData[i])
+            }
+          }
+        }}
+        onRowClick={(e) => {
+          if (!e.is_locked) {
+            const custom_field_display =
+              e.CustomFieldDisplay[e.CustomFieldDisplay.length - 1]
+            setSelectedItem({
+              id: e.id,
+              name: e.field_label,
+              category: e.category_id,
+              fieldType: renderFormatText(e.field_type, true),
+              displayFor: 'CONTACTLEAD',
+              visibleInClientDataView: e.display_in_invoice,
+              appearsInAddClientView: e.default_in_reports,
+              required: e.is_required,
+              visibilityOption: e.show_in_cal,
+              in_cases: custom_field_display?.depends_on,
+              in_cases_text: custom_field_display?.value,
+            })
+          }
+        }}
+        columns={columns}
+        noDataBtnText="Fields"
+        noDataText="Fields"
+        scroll={{ x: 'max-content' }}
+      />
+      {selectedItem && (
+        <CreateCustomFieldModal
+          visible={true}
+          selectedAttributeLabel={'lead'}
+          modalTitle={'Edit Lead'}
+          onClose={() => {
+            setSelectedItem(undefined)
+            fetchCustomFields(getQueryVariables())
+          }}
+          values={selectedItem}
+        />
+      )}
+    </>
   )
 }
 

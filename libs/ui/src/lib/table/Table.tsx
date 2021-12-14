@@ -143,6 +143,7 @@ export const Table: FC<TableType> = ({
     },
   }
   const renderActiveButton = (isActive) => {
+    if (isActive === '') return
     return (
       <Button
         className={isActive ? styles.activeBtn : styles.disableSourceBtn}

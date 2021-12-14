@@ -1,13 +1,39 @@
+fragment ManageCustomFieldsItems on ManageCustomField {
+  id
+  field_label
+  field_type
+  category_id
+  is_required
+  is_active
+  ManageCustomFieldItem {
+    id
+    item_label
+  }
+  Category {
+    name
+  }
+  field_for
+  display_in_invoice
+  default_in_reports
+  is_required
+  show_in_cal
+  field_order
+  CustomFieldDisplay {
+    depends_on
+    value
+  }
+}
+
 query basicContactDetails($id: Int!) {
   findFirstCmContact(where: { ID: { equals: $id } }) {
     id: ID
-    firstName:Fname
-    lastName:Lname
+    firstName: Fname
+    lastName: Lname
     isActive: is_active
     gender
-    patientID:custom_id
-    dob:DOB
-    email:Email
+    patientID: custom_id
+    dob: DOB
+    email: Email
     avatar: Avatar
     street: MailingStreet
     city: MailingCity
@@ -27,7 +53,7 @@ query basicContactDetails($id: Int!) {
       }
     }
     marketingSource: MarketingSource
-    customField: CmContactCustom{
+    customField: CmContactCustom {
       title: custom_field_label
       id: custom_field_id
       value: custom_field_value
@@ -132,9 +158,9 @@ query getContactCustomFields {
     id
     name
     ManageCustomField(
-      where: { 
-        field_for: { in: [CONTACT, CONTACTLEAD] } 
-        field_type: { not: { equals: "localized_message" } }     
+      where: {
+        field_for: { in: [CONTACT, CONTACTLEAD] }
+        field_type: { not: { equals: "localized_message" } }
       }
     ) {
       id
@@ -168,6 +194,193 @@ query getContactCustomFields {
       id
       item_label
     }
+  }
+}
+
+query getContactCustomFieldsClientData(
+  $searchTerm: String
+  $offset: Int
+  $limit: Int
+) {
+  custom: findManyManageCustomField(
+    skip: $offset
+    take: $limit
+    orderBy: { field_order: asc }
+    where: {
+      field_for: { in: [CONTACT, CONTACTLEAD] }
+      field_label: { contains: $searchTerm }
+    }
+  ) {
+    ...ManageCustomFieldsItems
+  }
+}
+
+query getContactCustomFieldsLeadData(
+  $searchTerm: String
+  $offset: Int
+  $limit: Int
+) {
+  custom: findManyManageCustomField(
+    skip: $offset
+    take: $limit
+    orderBy: { field_order: asc }
+    where: {
+      field_for: { equals: CONTACTLEAD }
+      field_label: { contains: $searchTerm }
+    }
+  ) {
+    ...ManageCustomFieldsItems
+  }
+}
+
+query getAppointmentsCustomFieldsLeadData(
+  $searchTerm: String
+  $offset: Int
+  $limit: Int
+) {
+  custom: findManyManageCustomField(
+    skip: $offset
+    take: $limit
+    orderBy: { field_order: asc }
+    where: {
+      field_for: { equals: APPOINTMENT }
+      field_label: { contains: $searchTerm }
+    }
+  ) {
+    ...ManageCustomFieldsItems
+  }
+}
+
+query getProductsCustomFieldsLeadData(
+  $searchTerm: String
+  $offset: Int
+  $limit: Int
+) {
+  custom: findManyManageCustomField(
+    skip: $offset
+    take: $limit
+    orderBy: { field_order: asc }
+    where: {
+      field_for: { equals: PRODUCT }
+      field_label: { contains: $searchTerm }
+    }
+  ) {
+    ...ManageCustomFieldsItems
+  }
+}
+
+query getStaffCustomFieldsLeadData(
+  $searchTerm: String
+  $offset: Int
+  $limit: Int
+) {
+  custom: findManyManageCustomField(
+    skip: $offset
+    take: $limit
+    orderBy: { field_order: asc }
+    where: {
+      field_for: { equals: STAFF }
+      field_label: { contains: $searchTerm }
+    }
+  ) {
+    ...ManageCustomFieldsItems
+  }
+}
+
+query getLocationsCustomFieldsLeadData(
+  $searchTerm: String
+  $offset: Int
+  $limit: Int
+) {
+  custom: findManyManageCustomField(
+    skip: $offset
+    take: $limit
+    orderBy: { field_order: asc }
+    where: {
+      field_for: { equals: LOCATION }
+      field_label: { contains: $searchTerm }
+    }
+  ) {
+    ...ManageCustomFieldsItems
+  }
+}
+
+query getServicesCustomFieldsLeadData(
+  $searchTerm: String
+  $offset: Int
+  $limit: Int
+) {
+  custom: findManyManageCustomField(
+    skip: $offset
+    take: $limit
+    orderBy: { field_order: asc }
+    where: {
+      field_for: { equals: SERVICE }
+      field_label: { contains: $searchTerm }
+    }
+  ) {
+    ...ManageCustomFieldsItems
+  }
+}
+
+query getCustomFieldsAggregate(
+  $searchTerm: String
+  $type: [manage_custom_fields_field_for]
+) {
+  aggregateManageCustomField(
+    orderBy: { created_date: desc }
+    where: { field_for: { in: $type }, field_label: { contains: $searchTerm } }
+  ) {
+    _count {
+      count: id
+    }
+  }
+}
+
+query customFieldsGroupCounts($searchTerm: String, $offset: Int, $limit: Int) {
+  findManyManageCustomFieldCategory(
+    skip: $offset
+    take: $limit
+    where: { name: { contains: $searchTerm } }
+  ) {
+    id
+    name
+    ManageCustomField {
+      id
+    }
+  }
+}
+
+query customFieldsGroupAggregate($searchTerm: String) {
+  aggregateManageCustomFieldCategory(
+    where: { name: { contains: $searchTerm } }
+  ) {
+    _count {
+      count: id
+    }
+  }
+}
+
+mutation updateCustomFieldGroup($id: Int, $name: String) {
+  updateOneManageCustomFieldCategory(
+    data: { name: { set: $name } }
+    where: { id: $id }
+  ) {
+    id
+    name
+  }
+}
+
+mutation createCustomFieldGroup($data: ManageCustomFieldCategoryCreateInput!) {
+  createOneManageCustomFieldCategory(data: $data) {
+    id
+    name
+  }
+}
+
+mutation deleteCustomFieldGroup($id: Int) {
+  deleteOneManageCustomFieldCategory(where: { id: $id }) {
+    id
   }
 }
 
@@ -332,8 +545,7 @@ query findEditContactDetail($id: Int) {
   }
 }
 
-mutation updateOneContact
-(
+mutation updateOneContact(
   $contactId: Int!
   $firstName: String!
   $lastName: String!
@@ -360,11 +572,10 @@ mutation updateOneContact
   $labels: UpdateContactLabelType
   $contactPreferences: ContactPreferenceDataInput
   $isActive: Int
-)
-{
+) {
   updateOneContact(
     contactId: $contactId
-    data:{
+    data: {
       Fname: $firstName
       Lname: $lastName
       Email: $email
@@ -389,9 +600,9 @@ mutation updateOneContact
       is_active: $isActive
     }
     customFields: $customFields
-    contactPreferences:$contactPreferences
+    contactPreferences: $contactPreferences
     labels: $labels
-  ){
+  ) {
     ID
   }
 }

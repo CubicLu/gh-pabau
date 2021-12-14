@@ -85,7 +85,7 @@ export const Categories: FC<CategoriesProps> = ({
     if (aggregateData) {
       setPaginateData({
         ...paginateData,
-        total: aggregateData?.aggregate.count,
+        total: aggregateData?.aggregate?.count,
         showingRecords: data?.length,
       })
     }

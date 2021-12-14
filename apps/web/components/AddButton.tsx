@@ -3,9 +3,18 @@ import {
   InboxOutlined,
   PlusSquareFilled,
   SearchOutlined,
+  DownOutlined,
 } from '@ant-design/icons'
 import { Button } from '@pabau/ui'
-import { Drawer, Input, Popover, Radio, Layout as AntLayout } from 'antd'
+import {
+  Menu,
+  Drawer,
+  Input,
+  Popover,
+  Radio,
+  Layout as AntLayout,
+  Dropdown,
+} from 'antd'
 import classNames from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
 import { useMedia } from 'react-use'
@@ -15,6 +24,13 @@ import styles from './AddButton.module.less'
 const { Header: AntHeader } = AntLayout
 
 const WAIT_INTERVAL = 400
+
+interface DropdownButton {
+  title?: string
+  overrideClick?: boolean
+  onClick?: () => void
+  disabled?: boolean
+}
 
 interface P {
   schema: Partial<Schema>
@@ -31,6 +47,8 @@ interface P {
   mobileSearch?: boolean
   searchTerm?: string
   isCreateButtonVisible?: boolean
+  buttonDropdown?: boolean
+  buttonDropdownOptions?: DropdownButton[]
   showMobHeaderOnDesktop?: boolean
 }
 
@@ -49,6 +67,8 @@ const AddButton: FC<P> = ({
   needTranslation,
   searchTerm,
   isCreateButtonVisible = true,
+  buttonDropdown = false,
+  buttonDropdownOptions,
   showMobHeaderOnDesktop = false,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
@@ -241,14 +261,47 @@ const AddButton: FC<P> = ({
               </Button>
             )}
           </Popover>
-          {schema.createButtonLabel && isCreateButtonVisible && (
-            <Button
-              className={styles.createSourceBtn}
-              type="primary"
-              onClick={() => onClick?.()}
+          {schema.createButtonLabel &&
+            isCreateButtonVisible &&
+            !buttonDropdown && (
+              <Button
+                className={styles.createSourceBtn}
+                type="primary"
+                onClick={() => onClick?.()}
+              >
+                {t(schema.createButtonLabel)}
+              </Button>
+            )}
+          {buttonDropdown && (
+            <Dropdown
+              placement="bottomRight"
+              trigger={['click']}
+              overlayClassName={styles.addButtonDropdown}
+              overlay={
+                <Menu>
+                  {buttonDropdownOptions?.map((b, i) => {
+                    return (
+                      <Menu.Item
+                        key={i}
+                        onClick={() => {
+                          b.onClick()
+                          if (b.overrideClick) return
+                          onClick?.()
+                        }}
+                        disabled={b.disabled}
+                        className={styles.customDropdownOptions}
+                      >
+                        {b.title}
+                      </Menu.Item>
+                    )
+                  })}
+                </Menu>
+              }
             >
-              {t(schema.createButtonLabel)}
-            </Button>
+              <Button type="primary" className={styles.createSourceBtn}>
+                {t(schema.createButtonLabel)} <DownOutlined />
+              </Button>
+            </Dropdown>
           )}
           {schema.inboxButton && (
             <Button

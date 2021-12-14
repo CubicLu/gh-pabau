@@ -63,7 +63,7 @@ export function useLiveQuery<T>(
     })
     return () => {
       console.log('cleaning up sub!')
-      cancelFunc()
+      if (cancelFunc) cancelFunc()
     }
   }, [query, subscribeToMore, options])
 

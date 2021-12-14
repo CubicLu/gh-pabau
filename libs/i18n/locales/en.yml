@@ -4007,57 +4007,89 @@ en:
   setup.taxrate.createmodal.inputs.glcode.placeholder: 'eg. Nail Bar'
   setup.taxrate.createmodal.deletebtn: Delete
   setup.taxrate.createmodal.activebtn: Active
+  setup.custom-fields.data-fields: 'Data Fields'
   setup.custom-fields: 'Custom Fields'
-  setup.custom-fields.new: New
-  setup.custom-fields.attribute: Attribute
-  setup.custom-fields.client-data: 'Client Data'
-  setup.custom-fields.lead-fields: 'Lead Fields'
-  setup.custom-fields.others: Others
-  setup.custom-fields.appointements: Appointements
-  setup.custom-fields.products: Products
-  setup.custom-fields.services: Services
-  setup.custom-fields.staff: Staff
-  setup.custom-fields.categories: Categories
+  setup.custom-fields.new: 'New'
+  setup.custom-fields.attribute: 'Attribute'
+  setup.custom-fields.client-lead-fields: 'Client/Lead field'
+  setup.custom-fields.client: 'Client'
+  setup.custom-fields.client-field: 'Client field'
+  setup.custom-fields.lead: 'Lead'
+  setup.custom-fields.lead-field: 'Lead field'
+  setup.custom-fields.others: 'Others'
+  setup.custom-fields.appointments: 'Appointments'
+  setup.custom-fields.appointment-field: 'Appointment field'
+  setup.custom-fields.products: 'Products'
+  setup.custom-fields.product-field: 'Product field'
+  setup.custom-fields.services: 'Services'
+  setup.custom-fields.service-field: 'Service field'
+  setup.custom-fields.staff: 'Staff'
+  setup.custom-fields.staff-fields: 'Staff field'
+  setup.custom-fields.locations: 'Locations'
+  setup.custom-fields.location-fields: 'Location field'
+  setup.custom-fields.categories: 'Categories'
+  setup.custom-fields.group-field: 'Group field'
+  setup.custom-fields.groups: 'Groups'
+  setup.custom-fields.edit-group: 'Edit Group'
+  setup.custom-fields.groups.group-updated: 'Group updated'
+  setup.custom-fields.groups.group-created: 'Group created'
+  setup.custom-fields.groups.group-deleted: 'Group deleted'
+  setup.custom-fields.you-can-not-move-static-fields: 'You can not move static fields'
+  setup.custom-fields.create-group: 'Create Group'
+  setup.custom-fields.create-group.name: 'Name'
+  setup.custom-fields.create-group.save: 'Save'
+  setup.custom-fields.create-group.name.placeholder: 'eg. System'
   setup.custom-fields.single-line-text: 'Single Line Text'
   setup.custom-fields.paragraph-text: 'Paragraph Text'
   setup.custom-fields.multiple-choice: 'Multiple Choice'
   setup.custom-fields.single-choice: 'Single Choice'
-  setup.custom-fields.dropdown: Dropdown
-  setup.custom-fields.date: Date
-  setup.custom-fields.email: Email
-  setup.custom-fields.phone: Phone
-  setup.custom-fields.URL: URL
+  setup.custom-fields.number: 'Number'
+  setup.custom-fields.dropdown: 'Dropdown'
+  setup.custom-fields.date: 'Date'
+  setup.custom-fields.email: 'Email'
+  setup.custom-fields.phone: 'Phone'
+  setup.custom-fields.URL: 'URL'
   setup.custom-fields.localized-message: 'Localized message'
+  setup.custom-fields.create: 'Create'
+  setup.custom-fields.save: 'Save'
+  setup.custom-fields.custom-field-created: 'Custom field created'
+  setup.custom-fields.custom-field-updated: 'Custom field updated'
+  setup.custom-fields.custom-field-deleted: 'Custom field deleted'
   setup.custom-fields.search-in-name: 'Search in Name'
-  setup.custom-fields.address3: Address3
+  setup.custom-fields.address3: 'Address3'
   setup.custom-fields.business_id: 'business Id'
   setup.custom-fields.cases_when_2: 'Cases When 2'
-  setup.custom-fields.gender: Gender
+  setup.custom-fields.gender: 'Gender'
   setup.custom-fields.general_practitioner_name: 'General Practitioner Name'
   setup.custom-fields.gp_address: 'GP Address'
   setup.custom-fields.gp_name: 'GP Name'
   setup.custom-fields.gp_surgery: 'GP Surgery'
   setup.custom-fields.i_agree_to_posted_letters: 'I Agree To Posted Letters'
   setup.custom-fields.known_allergies: 'Known Allergies'
-  setup.custom-fields.occupation: Occupation
-  setup.custom-fields.options: Options
+  setup.custom-fields.occupation: 'Occupation'
+  setup.custom-fields.options: 'Options'
   setup.custom-fields.photos_consent: 'Photos Consent'
   setup.custom-fields.referent_doctor: 'Referent Doctor'
   setup.custom-fields.basic_information: 'Basic Information'
-  setup.custom-fields.name: Name
+  setup.custom-fields.name: 'Field Name'
   setup.custom-fields.name_error: 'Name is required'
   setup.custom-fields.name.placeholder: 'eg. Weight'
-  setup.custom-fields.category: Category
+  setup.custom-fields.field-properties: 'Field Properties'
+  setup.custom-fields.category: 'Category'
   setup.custom-fields.category_error: 'Category is required'
   setup.custom-fields.category.placeholder: 'Select a category'
-  setup.custom-fields.display_in_search: 'Display in search'
-  setup.custom-fields.display_in_voice: 'Display in voice'
-  setup.custom-fields.hidden: Hidden
+  setup.custom-fields.always_visible_in: 'Always visible in {{tab}} detail view'
+  setup.custom-fields.appears_in_views: 'Appears in add {{tab}} views'
+  setup.custom-fields.required: 'Required'
+  setup.custom-fields.hidden: 'Hidden'
   setup.custom-fields.field_type: 'Field Type'
   setup.custom-fields.display_field_settings: 'Display field settings'
-  setup.custom-fields.in_cases_when: 'In cases when'
-  setup.custom-fields.equals: Equals
-  setup.custom-fields.always: Always
+  setup.custom-fields.in_cases_when: 'Show in cases when'
+  setup.custom-fields.equals: 'Equals'
+  setup.custom-fields.visibility-options: 'Visibility Options'
+  setup.custom-fields.field-label: 'Field Label'
+  setup.custom-fields.format: 'Format'
+  setup.custom-fields.rule: 'Rule'
   notifications.commonNotificationHeader.sendExampleEmail: 'Send Test Email'
   invalid-date-msg: 'Invalid date'
   account.settings.response.notification.profilesection.success: 'Profile Updated Successfully'

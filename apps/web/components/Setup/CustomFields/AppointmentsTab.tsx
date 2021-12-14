@@ -1,232 +1,18 @@
 import React, { FC, useState, useEffect } from 'react'
-import { Table as ClientDataTable, useLiveQuery } from '@pabau/ui'
-import {
-  UserOutlined,
-  AlignLeftOutlined,
-  DownOutlined,
-  CalendarOutlined,
-  PhoneOutlined,
-  GlobalOutlined,
-  MessageOutlined,
-  CheckOutlined,
-  MailOutlined,
-  LockOutlined,
-  NumberOutlined,
-  UploadOutlined,
-} from '@ant-design/icons'
+import { Table as LeadFieldsTable, useLiveQuery } from '@pabau/ui'
+import { LockOutlined } from '@ant-design/icons'
 import { Notification, NotificationType } from '@pabau/ui'
+import { renderFormatText, renderLabelText } from './ClientDataTab'
 import {
-  useGetContactCustomFieldsClientDataLazyQuery,
+  useGetAppointmentsCustomFieldsLeadDataLazyQuery,
   GetCustomFieldsAggregateDocument,
   useUpdateOneManageCustomFieldMutation,
 } from '@pabau/graphql'
-import SelectCircleIcon from '../../../assets/images/icons/select-circle.png'
-import AlignLeftIcon from '../../../assets/images/icons/align-left.png'
 import CreateCustomFieldModal from './CreateCustomFieldsModal/index'
 import styles from './tabs.module.less'
 import { EditCustomFieldProps } from './CreateCustomFieldsModal/index'
 import { useTranslation } from 'react-i18next'
-import { clientData as staticData } from './data.js'
-
-export const renderFormatText = (s, key = false) => {
-  s = s.toLowerCase()
-  if (
-    [
-      'string',
-      'single line text',
-      'single_line_text',
-      'single text',
-      'single_text',
-      'short text',
-      'short_text',
-    ].indexOf(s) !== -1
-  ) {
-    if (key) return 'single_line_text'
-    return 'Single Line Text'
-  }
-  if (['single choice', 'single_choice', 'bool'].indexOf(s) !== -1) {
-    if (key) return 'single_choice'
-    return 'Single Choice'
-  }
-  if (
-    ['multiple', 'multiple choice', 'multiple_choice', 'checkbox'].indexOf(
-      s
-    ) !== -1
-  ) {
-    if (key) return 'multiple_choice'
-    return 'Multiple Choice'
-  }
-  if (['text', 'paragraph_text'].indexOf(s) !== -1) {
-    if (key) return 'paragraph_text'
-    return 'Paragraph Text'
-  }
-
-  if (['url', 'website'].indexOf(s) !== -1) {
-    if (key) return 'url'
-    return 'URL'
-  }
-
-  if (['dropdown', 'list'].indexOf(s) !== -1) {
-    if (key) return 'dropdown'
-    return 'Dropdown'
-  }
-
-  if (key) {
-    if (['date'].indexOf(s) !== -1) {
-      return 'date'
-    }
-    if (['email'].indexOf(s) !== -1) {
-      return 'email'
-    }
-    if (['phone'].indexOf(s) !== -1) {
-      return 'phone'
-    }
-    if (['localized message', 'localized_message'].indexOf(s) !== -1) {
-      return 'localized_message'
-    }
-  }
-
-  return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
-export const renderLabelText = (val, row) => {
-  let Icon = (
-    <span>
-      <AlignLeftOutlined
-        style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-      />
-    </span>
-  )
-  const field_type = renderFormatText(row.field_type).toLowerCase()
-  if (['single line text'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <img
-          src={AlignLeftIcon}
-          alt={field_type}
-          style={{ height: 16, width: 16, marginRight: 8, display: 'revert' }}
-        />
-      </span>
-    )
-  }
-  if (['dropdown', 'list'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <DownOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['multiple choice', 'checkbox'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <CheckOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['single choice'].indexOf(field_type) !== -1) {
-    Icon = (
-      <img
-        src={SelectCircleIcon}
-        alt={field_type}
-        style={{ height: 16, width: 16, marginRight: 8, display: 'revert' }}
-      />
-    )
-  }
-  if (['date'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <CalendarOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['email'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <MailOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['phone'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <PhoneOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['url'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <GlobalOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['localized message'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <MessageOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['user'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <UserOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-  if (['number'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <NumberOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-
-  if (['number'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <NumberOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-
-  if (['upload'].indexOf(field_type) !== -1) {
-    Icon = (
-      <span>
-        <UploadOutlined
-          style={{ fontSize: 14, marginRight: 8, color: '#b7b7b8' }}
-        />
-      </span>
-    )
-  }
-
-  return (
-    <span>
-      {Icon}
-      <span>{val}</span>
-    </span>
-  )
-}
+import { appointmentData as staticData } from './data.js'
 
 interface Pagination {
   total: number
@@ -236,20 +22,14 @@ interface Pagination {
   showingRecords: number
 }
 
-export interface ClientDataProps {
+export interface AppointmentsTabProps {
   paginateData?: Pagination
   setPaginateData?: (data) => void
   searchTerm?: string | number
   tabSelected?: boolean
 }
 
-export interface ClientDataRowProp {
-  name?: string
-  category?: string | number
-  fieldType?: string
-}
-
-export const ClientData: FC<ClientDataProps> = ({
+export const AppointmentsTab: FC<AppointmentsTabProps> = ({
   paginateData = {
     total: 0,
     offset: 0,
@@ -349,7 +129,7 @@ export const ClientData: FC<ClientDataProps> = ({
     return {
       variables: {
         searchTerm: '%' + searchTerm + '%',
-        type: ['CONTACT', 'CONTACTLEAD'],
+        type: ['APPOINTMENT'],
       },
     }
   }
@@ -362,7 +142,7 @@ export const ClientData: FC<ClientDataProps> = ({
   const [
     fetchCustomFields,
     { data, loading },
-  ] = useGetContactCustomFieldsClientDataLazyQuery({
+  ] = useGetAppointmentsCustomFieldsLeadDataLazyQuery({
     fetchPolicy: 'network-only',
   })
 
@@ -434,7 +214,7 @@ export const ClientData: FC<ClientDataProps> = ({
 
   return (
     <>
-      <ClientDataTable
+      <LeadFieldsTable
         loading={isLoading}
         draggable={true}
         pagination={false}
@@ -486,7 +266,7 @@ export const ClientData: FC<ClientDataProps> = ({
               name: e.field_label,
               category: e.category_id,
               fieldType: renderFormatText(e.field_type, true),
-              displayFor: 'CONTACT',
+              displayFor: 'APPOINTMENT',
               visibleInClientDataView: e.display_in_invoice,
               appearsInAddClientView: e.default_in_reports,
               required: e.is_required,
@@ -497,15 +277,15 @@ export const ClientData: FC<ClientDataProps> = ({
           }
         }}
         columns={columns}
-        noDataBtnText="Client"
-        noDataText="Client"
+        noDataBtnText="Fields"
+        noDataText="Fields"
         scroll={{ x: 'max-content' }}
       />
       {selectedItem && (
         <CreateCustomFieldModal
           visible={true}
-          selectedAttributeLabel={'client'}
-          modalTitle={'Edit Client'}
+          selectedAttributeLabel={'appointments'}
+          modalTitle={'Edit Appointments'}
           onClose={() => {
             setSelectedItem(undefined)
             fetchCustomFields(getQueryVariables())
@@ -517,4 +297,4 @@ export const ClientData: FC<ClientDataProps> = ({
   )
 }
 
-export default ClientData
+export default AppointmentsTab
