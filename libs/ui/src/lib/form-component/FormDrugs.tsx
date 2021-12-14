@@ -36,6 +36,7 @@ interface DrugsType {
 interface IDrugsData {
   id: string
   name: string
+  subSectionName: string
   dosage: IDosageData[]
   quantities: string[]
 }
@@ -81,6 +82,7 @@ export const FormDrugs: FC<P> = ({
             const drugLists = data?.map((item, index) => ({
               id: item.medicines._id,
               name: item.medicines.name,
+              subSectionName: item.medicines.subSectionName,
               dosage: item.medicines.dosage
                 ? item.medicines.dosage
                 : item.bnf?.dosage
@@ -246,20 +248,29 @@ export const FormDrugs: FC<P> = ({
           onSearch={onHandleSearch}
           onChange={onHandleChange}
           filterOption={(input, option) =>
-            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            option?.children[0]?.props?.children[0]
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
           }
           filterSort={(optionA, optionB) =>
-            optionA?.children
+            optionA?.children?.props?.children[0]
               .toLowerCase()
-              .localeCompare(optionB?.children.toLowerCase())
+              .localeCompare(
+                optionB?.children[0]?.props?.children[0].toLowerCase()
+              )
           }
         >
           <Option key={'druglist-empty'} value={''}>
             {t('ui.medicalformbuilder.form.drugs.placeholder')}
           </Option>
-          {drugsAPIList.map((item, index) => (
+          {drugsAPIList?.map((item, index) => (
             <Option key={'druglist-' + item.id} value={item.id}>
-              {item.name}
+              <span className={styles.formDrugsItemName}>
+                {item.name} {''}
+              </span>
+              <span className={styles.formDrugsSubSectionName}>
+                ({item.subSectionName})
+              </span>
             </Option>
           ))}
         </Select>
