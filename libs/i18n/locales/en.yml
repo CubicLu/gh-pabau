@@ -5742,6 +5742,7 @@ en:
   create.filter.modal.open.lead.status: Open
   create.filter.modal.won.lead.status: Won
   create.filter.modal.lost.lead.status: Lost
+  create.filter.modal.uniquename.error: The filter name exists, please choose another one
   search.client.placeholder: 'Search clients'
   clients.activities.markAsDone: 'Mark as done'
   clients.activities.markAsNotDone: 'Mark as not done'

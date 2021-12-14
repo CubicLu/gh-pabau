@@ -36,6 +36,12 @@ import {
 } from '@pabau/graphql'
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid'
 
+interface sharedFilterName {
+  id?: number
+  name: string
+  shared: boolean
+}
+
 export interface FilterOptionItemType {
   id: number
   name: string
@@ -127,6 +133,7 @@ interface CreateFilterModalProps {
   leadStageData: OptionList[]
   pipelineData: OptionList[]
   locationData: OptionList[]
+  sharedFilterName: sharedFilterName[]
   services: OptionList[]
 }
 const defaultValue: InitialValueTypes = {
@@ -347,12 +354,14 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   leadStageData,
   pipelineData,
   locationData,
+  sharedFilterName,
   services,
 }) => {
   const [visibilityVisible, setVisibilityVisible] = useState(false)
   const [initialValue, setInitialValue] = useState<InitialValueTypes>(
     defaultValue
   )
+  const [existsDisable, setExistsDisable] = useState(false)
   const { t } = useTranslationI18()
   const { visibilityMenuOption } = getData(t)
 
@@ -458,26 +467,26 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
   })
 
   useEffect(() => {
-    if (data?.id) {
-      setInitialValue(data)
-    } else {
-      setInitialValue(defaultValue)
-    }
+    data?.id ? setInitialValue(data) : setInitialValue(defaultValue)
+    setExistsDisable(false)
   }, [data])
 
   const visibilityMenu = (
     setFieldValue: (field: string, value: string | boolean) => void,
     values: InitialValueTypes
   ) => {
-    const onRadioBtnChange = (e) => {
+    const onRadioBtnChange = (visibility: string) => {
       setVisibilityVisible(false)
-      setFieldValue('visibility', e.target.value)
+      setFieldValue('visibility', visibility)
+      visibility === 'shared'
+        ? checkUniqueName(values?.name, values?.id)
+        : setExistsDisable(false)
     }
     return (
       <Menu>
         <Menu.Item key="1">
           <Radio.Group
-            onChange={onRadioBtnChange}
+            onChange={(e) => onRadioBtnChange(e.target.value)}
             value={values.visibility}
             name="visibility"
           >
@@ -664,6 +673,16 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
     resetForm()
   }
 
+  const checkUniqueName = (filterName, filterId: number | undefined) => {
+    const publicFilterExist = sharedFilterName.find(
+      (item) =>
+        item.name.toLowerCase() === filterName.toLowerCase() &&
+        item?.shared === true &&
+        item.id !== filterId
+    )
+    publicFilterExist ? setExistsDisable(true) : setExistsDisable(false)
+  }
+
   return (
     <Formik
       initialValues={initialValue}
@@ -678,7 +697,7 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
         resetForm()
       }}
     >
-      {({ setFieldValue, values, resetForm }) => (
+      {({ setFieldValue, values, resetForm, isValid, dirty }) => (
         <BasicModal
           className={styles.filterModalWrapper}
           visible={showModal}
@@ -780,7 +799,18 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                     placeholder={t(
                       'create.filter.modal.filter.name.placeholder'
                     )}
+                    className={existsDisable && styles.errorInput}
+                    onChange={(e) => {
+                      values?.visibility === 'shared'
+                        ? checkUniqueName(e?.target?.value, values?.id)
+                        : setExistsDisable(false)
+                    }}
                   />
+                  {existsDisable && (
+                    <p className={styles.uniqueNameError}>
+                      {t('create.filter.modal.uniquename.error')}
+                    </p>
+                  )}
                 </Form.Item>
                 <Form.Item
                   label={t('create.filter.modal.visibility.label')}
@@ -870,7 +900,9 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
               <span className={styles.previewWrapper}>
                 <Button
                   type="default"
-                  disabled={!(values.isFilterOwner || loggedUser.admin)}
+                  disabled={
+                    !(values.isFilterOwner || loggedUser.admin) || existsDisable
+                  }
                   className={classNames(
                     !(values.isFilterOwner || loggedUser.admin) &&
                       styles.disable
@@ -886,7 +918,11 @@ export const CreateFilterModal: FC<CreateFilterModalProps> = ({
                     !(values.isFilterOwner || loggedUser.admin) &&
                       styles.disable
                   )}
-                  disabled={!(values.isFilterOwner || loggedUser.admin)}
+                  disabled={
+                    !(values.isFilterOwner || loggedUser.admin) ||
+                    !isValid ||
+                    existsDisable
+                  }
                 >
                   {t('create.filter.modal.save.button.label')}
                 </SubmitButton>

@@ -154,6 +154,16 @@
       }
     } 
   }
+  .error-input {
+    border-color: var(--red-color-text) !important;
+    &:focus {
+      box-shadow: 0 0 0 2px #f5222d33
+    }
+  }
+
+  .unique-name-error{
+    color:var(--error-color)
+  }
   
   :global {
     .ant-form-item {
@@ -167,7 +177,9 @@
           width: 100%;
           height: 40px;
           display: flex;
-         
+        }
+        .ant-form-item-explain-error{
+          border: none !important;
         }
       }
     }

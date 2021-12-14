@@ -1139,7 +1139,6 @@ export const Index: FC = () => {
             searchText={searchText}
             setSearchText={setSearchText}
             toggleCreateActivityModal={toggleCreateActivityModal}
-            selectFilterUser={selectFilterUser}
             setSelectFilterUser={setSelectFilterUser}
             personsList={personsList}
             isMobile={isMobile}
@@ -1205,7 +1204,6 @@ export const Index: FC = () => {
             searchText={searchText}
             setSearchText={setSearchText}
             toggleCreateActivityModal={toggleCreateActivityModal}
-            selectFilterUser={selectFilterUser}
             setSelectFilterUser={setSelectFilterUser}
             personsList={personsList}
             isMobile={isMobile}

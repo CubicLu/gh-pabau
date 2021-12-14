@@ -53,7 +53,6 @@ interface ClientsHeaderProps {
   searchText?: string
   setSearchText?: (term: string) => void
   toggleCreateActivityModal?: () => void
-  selectFilterUser?: number[]
   setSelectFilterUser?: (val) => void
   personsList?: PersonList[]
   isMobile?: boolean
@@ -129,7 +128,6 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     searchText,
     setSearchText,
     toggleCreateActivityModal,
-    selectFilterUser,
     setSelectFilterUser,
     personsList,
     isMobile,
@@ -167,7 +165,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
     const [searchItemCount, setSearchItemCount] = useState<number>(0)
     const [filterModalData, setFilterModalData] = useState<InitialValueTypes>()
     const [isFilterSet, setIsFilterSet] = useState<boolean>(false)
-
+    const [sharedFilterName, setSharedFilterName] = useState([])
     const { data: userGroupData } = useUserGroupForActivityQuery()
     const { data: userFilterData } = useFilterOptionForActivityQuery({
       variables: {
@@ -261,6 +259,15 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userFilterData])
+
+    useEffect(() => {
+      const filterList = filterOption.map((item) => ({
+        id: item?.id,
+        name: item?.name,
+        shared: item?.shared,
+      }))
+      setSharedFilterName(filterList)
+    }, [filterOption])
 
     useEffect(() => {
       if (searchValue) {
@@ -700,6 +707,7 @@ export const ActivitiesHeader: FC<ClientsHeaderProps> = React.memo(
             leadStageData={leadStageData}
             pipelineData={pipelineData}
             locationData={locationData}
+            sharedFilterName={sharedFilterName}
             services={services}
           />
         </div>
