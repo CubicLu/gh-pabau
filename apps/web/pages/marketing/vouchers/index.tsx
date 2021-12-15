@@ -96,11 +96,11 @@ const GiftVouchers: FC = () => {
     },
   })
 
-  const deleteHandler = (gift) => {
+  const deleteHandler = (voucherNum) => {
     deleteVoucherMutation({
       variables: {
         where: {
-          template_id: gift.voucherNum,
+          template_id: voucherNum,
         },
       },
       refetchQueries: [{ query: GetVoucherTemplateDocument }],
@@ -164,7 +164,7 @@ const GiftVouchers: FC = () => {
                               voucherRelationLabel={t(
                                 'ui.client.giftvoucher.relationlabel'
                               )}
-                              deleteHandler={(key) => deleteHandler(key)}
+                              deleteHandler={deleteHandler}
                               currencyType="£"
                               termsConditions={t(
                                 'ui.vouchercard.back.subtitle'

@@ -20,11 +20,6 @@ export const permissions = shield(
         rules.authentication.isAdmin,
         rules.stock.stockManager
       ),
-      //GiftVoucher
-      deleteOneMessageTemplate: or(
-        rules.authentication.isAdmin,
-        rules.stock.stockManager
-      ),
       //UserPermission
       updateOneUserPermission: and(
         rules.authentication.isAuthenticated,
@@ -51,6 +46,8 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin
       ),
+      //GiftVoucher
+      deleteOneMessageTemplate: rules.authentication.isAuthenticated,
       //CompanyMeta
       setOneCompanyMeta: rules.authentication.isAdmin,
       setManyCompanyMeta: rules.authentication.isAdmin,

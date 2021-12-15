@@ -44,7 +44,7 @@ export interface VoucherCardProps {
   menuOptions?: MenuOption[]
   onMenuClick?: (key) => void
   showDrawerMenu?: boolean
-  deleteHandler?: (key) => void
+  deleteHandler?: (voucherNum: number) => void
 }
 
 export const VoucherCard: FC<VoucherCardProps> = ({
@@ -81,9 +81,9 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   const [menuPopover, setMenuPopover] = useState(false)
   const cardFlip = () => cardRef?.current?.classList.toggle('flip')
 
-  const handleChanges = (key) => {
+  const handleChanges = (key, voucherNum) => {
     if (key === 3) {
-      deleteHandler?.(key)
+      deleteHandler?.(voucherNum)
       setMenuPopover(false)
     }
     onMenuClick?.(key)
@@ -179,7 +179,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                     {showMenu && (
                       <>
                         <DotButton
-                          onMenuClick={handleChanges}
+                          onMenuClick={(key) => handleChanges(key, voucherNum)}
                           popoverVisible={showDrawerMenu ? false : menuPopover}
                           setPopoverVisible={(popover) =>
                             setMenuPopover(() => popover)
