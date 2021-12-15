@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react'
 import Link from 'next/link'
 import moment from 'moment'
+import { useRouter } from 'next/router'
 import cn from 'classnames'
 import {
   Popover,
@@ -133,6 +134,7 @@ export const ClientAppointmentCard: FC<
     handleAppointmentStatus,
   } = props
   const { t } = useTranslation('common')
+  const router = useRouter()
   const [form] = Form.useForm()
   const [isHover, setIsHover] = useState(false)
   const [openPopover, setOpenPopover] = useState(false)
@@ -242,6 +244,7 @@ export const ClientAppointmentCard: FC<
         className={styles.opsItem}
         onClick={() => {
           setOpenPopover(false)
+          router.push(`/calendar/?rebook=${id}`)
         }}
       >
         <div className={styles.icon}>
@@ -253,6 +256,7 @@ export const ClientAppointmentCard: FC<
         className={styles.opsItem}
         onClick={() => {
           setOpenPopover(false)
+          router.push(`/calendar/?rebook=${id}`)
         }}
       >
         <div className={styles.icon}>
