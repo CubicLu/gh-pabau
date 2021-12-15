@@ -1,0 +1,23 @@
+query getBookitProGeneral {
+  findFirstBookitProGeneral {
+    enable_bookings
+    connect_url
+    Company {
+      slug
+      ConnectTheme {
+        bgcolor
+        headercolor
+        footercolor
+        buttoncolor
+        buttontextcolor
+      }
+      ManageCustomField {
+        is_active
+        is_required
+        field_label
+        field_type
+        id
+      }
+    }
+  }
+}

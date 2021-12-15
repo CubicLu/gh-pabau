@@ -1,8 +1,9 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
-import { Typography } from 'antd'
+import { Typography, Skeleton } from 'antd'
 import { Breadcrumb, Switch, Stepper } from '@pabau/ui'
 import confetti from 'canvas-confetti'
 import Layout from '../../../components/Layout/Layout'
+import { connectURL } from '../../../baseUrl'
 import CommonHeader from '../../../components/CommonHeader'
 import {
   ClientAreaFooter,
@@ -16,10 +17,12 @@ import {
   ClientAreaBuilderSetting,
   ClientAreaWidgets,
   ClientAreaShare,
+  Company,
 } from '../../../components/Setup/ClientArea'
 import useWindowSize from '../../../hooks/useWindowSize'
 import { ReactComponent as ExternalLink } from '../../../assets/images/external-link.svg'
 import styles from './index.module.less'
+import { useGetBookitProGeneralQuery } from '@pabau/graphql'
 
 const { Title } = Typography
 export interface ClientAreaProps {
@@ -29,29 +32,28 @@ export interface ClientAreaProps {
   shareSetting: ClientAreaShare
 }
 
-export const Index: FC<ClientAreaProps> = ({
-  currentStep = 0,
-  builderSetting = defaultBuilderSetting,
-  widgetsSetting = defaultWidgetsData,
-  shareSetting = defaultShareData,
-}) => {
+export const Index: FC<ClientAreaProps> = () => {
   const clientAreaRef = useRef(null)
   const size = useWindowSize()
   const [step, setStep] = useState(0)
-  const [setting, setSetting] = useState<ClientAreaBuilderSetting>(
-    defaultBuilderSetting
-  )
-  const [widgets, setWidgets] = useState<ClientAreaWidgets>(defaultWidgetsData)
-  const [share, setShare] = useState<ClientAreaShare>(defaultShareData)
+  const [widgets] = useState<ClientAreaWidgets>(defaultWidgetsData)
+  const [share] = useState<ClientAreaShare>(defaultShareData)
+  const [stepOneData, setStepOneData] = useState<Company>()
+
+  const { data: settingsData, loading } = useGetBookitProGeneralQuery()
+
+  useEffect(() => {
+    if (!loading) {
+      setStepOneData(settingsData.findFirstBookitProGeneral.Company)
+    }
+  }, [loading, settingsData])
+
   const randomInRange = (min, max) => {
     return Math.random() * (max - min) + min
   }
-  useEffect(() => {
-    setStep(currentStep)
-    setSetting(builderSetting)
-    setWidgets(widgetsSetting)
-    setShare(shareSetting)
-  }, [currentStep, builderSetting, widgetsSetting, shareSetting])
+  function toggleBooking(checked) {
+    return checked
+  }
 
   useEffect(() => {
     if (step === 2) {
@@ -64,7 +66,9 @@ export const Index: FC<ClientAreaProps> = ({
     }
   }, [step])
 
-  return (
+  return !stepOneData ? (
+    <Skeleton />
+  ) : (
     <div ref={clientAreaRef}>
       <Layout>
         <CommonHeader isLeftOutlined reversePath="/setup" title="Client Area" />
@@ -87,14 +91,23 @@ export const Index: FC<ClientAreaProps> = ({
             )}
             <div className={styles.clientAreaOps}>
               <div className={styles.reviewLink}>
-                Your current Pabau portal address <Switch size="small" />
+                Your current Pabau portal address{' '}
+                <Switch
+                  checked={Boolean(
+                    settingsData.findFirstBookitProGeneral.enable_bookings
+                  )}
+                  onChange={toggleBooking}
+                  size="small"
+                />
               </div>
               <a
                 href="https://connect-lutetia.pabau.me/booking"
                 rel="noreferrer"
                 target="_blank"
               >
-                https://connect-lutetia.pabau.me/booking <ExternalLink />
+                {connectURL +
+                  settingsData?.findFirstBookitProGeneral.Company.slug}
+                <ExternalLink />
               </a>
             </div>
           </div>
@@ -103,7 +116,13 @@ export const Index: FC<ClientAreaProps> = ({
               <Stepper datasource={defaultStepData} step={step} />
             </div>
           </div>
-          {step === 0 && <ClientAreaStepOne settings={setting} />}
+          {step === 0 && (
+            <ClientAreaStepOne
+              stepOneData={stepOneData}
+              setStepOneData={setStepOneData}
+              defaultData={defaultBuilderSetting.registrationFields}
+            />
+          )}
           {step === 1 && <ClientAreaStepTwo settings={widgets} />}
           {step === 2 && <ClientAreaStepThree settings={share} />}
           <ClientAreaFooter

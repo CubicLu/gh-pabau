@@ -11,14 +11,19 @@ export interface listType {
 export interface BackgroundProps {
   list: listType[]
   onChange?: (name: string) => void
+  defaultSelectedColor: string
 }
 
-export const Background: FC<BackgroundProps> = ({ list, onChange }) => {
-  const [selected, setSelected] = useState<string>()
+export const Background: FC<BackgroundProps> = ({
+  list,
+  onChange,
+  defaultSelectedColor,
+}) => {
+  const [selected, setSelected] = useState<string>(defaultSelectedColor)
 
-  const handleChange = (name: string) => {
-    setSelected(name)
-    onChange?.(name)
+  const handleChange = (color: string) => {
+    setSelected(color)
+    onChange?.(color)
   }
 
   return (
@@ -33,11 +38,11 @@ export const Background: FC<BackgroundProps> = ({ list, onChange }) => {
                 <div
                   style={{ background: thread.color }}
                   className={
-                    selected === thread.name
+                    selected === thread.color
                       ? `${styles.box} ${styles.selectedBox}`
                       : styles.box
                   }
-                  onClick={() => handleChange(thread.name)}
+                  onClick={() => handleChange(thread.color)}
                 >
                   {thread.name === 'None' && (
                     <StopOutlined className={styles.noneIcon} />

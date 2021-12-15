@@ -1,5 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
-// import { ReactComponent as CheckBadge } from '../../assets/images/check-badge.svg'
+import React, { FC, useState } from 'react'
 import styles from './ColorPicker.module.less'
 import classNames from 'classnames'
 import { CheckOutlined, PlusOutlined } from '@ant-design/icons'
@@ -21,20 +20,20 @@ const ColorItem: FC<P> = ({
   onClick,
   onHover,
   onLeave,
+  isRoundColorPicker = false,
 }) => {
   return (
     <div
       className={classNames(
         styles.colorItem,
-        selected && styles.selectedColor,
+        selected && (styles.selectedColor || styles.selectedPickerColor),
         !isDarkColor && styles.toggleOpacity
       )}
       style={{
-        // backgroundColor: selected && !isRoundColorPicker ? color : color,
         backgroundColor: color,
-        // border: hovering || selected ? '1px solid #54B2D3' : 'none',
+        border: selected ? '1px solid #54B2D3' : 'none',
         boxSizing: 'border-box',
-        // opacity: hovering || selected ? '1' : '0.2',
+        opacity: selected ? '1' : '0.3',
       }}
       onClick={() => {
         onClick()
@@ -60,20 +59,20 @@ interface PickerProps {
 }
 
 const colorDataList = [
-  '#03dbfc',
-  '#fca903',
-  '#8c03fc',
-  '#0ffc03',
-  '#03fcfc',
-  '#5e03fc',
-  '#03e7fc',
-  '#45fc03',
-  '#84fc03',
-  '#fcf403',
-  '#fcce03',
-  '#d2fc03',
-  '#f4fc03',
-  '#bf15c2',
+  '#03DBFC',
+  '#FCA903',
+  '#8C03FC',
+  '#0FFC03',
+  '#03FCFC',
+  '#5E03FC',
+  '#03E7FC',
+  '#45FC03',
+  '#84FC03',
+  '#FCF403',
+  '#FCCE03',
+  '#D2FC03',
+  '#F4FC03',
+  '#BF15C2',
   '#486578',
 ]
 
@@ -89,26 +88,14 @@ export const ColorPicker: FC<PickerProps> = ({
   customColorData,
 }) => {
   const colorData = customColorData || colorDataList
-  const [colorList, setColorList] = useState(colorData)
-
   const [selColor, setSelColor] = useState(selectedColor)
+  const [isCustom, setIsCustomColor] = useState(
+    colorData.includes(selectedColor)
+  )
   const [isAddingColor, setIsAddingColor] = useState(false)
 
-  useEffect(() => {
-    if (selectedColor !== null) {
-      colorData.pop()
-      colorData.push(selectedColor)
-      setSelColor(selectedColor)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    setSelColor(selectedColor)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedColor])
-
   const onClickColorItem = (color) => {
+    setIsCustomColor(colorData.includes(color))
     setSelColor(color)
     onSelected(color)
   }
@@ -116,24 +103,20 @@ export const ColorPicker: FC<PickerProps> = ({
     setIsAddingColor((e) => !e)
   }
   const handleChangeComplete = (color) => {
+    setIsCustomColor(colorData.includes(color.hex))
     onClickColorItem(color.hex)
-    colorData.pop()
-    colorData.push(color.hex)
-    setColorList(colorData)
+    setSelColor(color.hex)
     setIsAddingColor((e) => !e)
   }
-
   return (
     <div>
-      {' '}
-      {/*  style={{ marginTop: '16px' }} */}
       <span className={styles.heading}>{heading}</span>
       <div
         className={`${styles.colorPickerWrap} ${
           isRoundColorPicker && className
         }`}
       >
-        {colorList.map((color) => (
+        {colorData.map((color) => (
           <ColorItem
             key={`${heading}${color}`}
             color={color}
@@ -147,6 +130,9 @@ export const ColorPicker: FC<PickerProps> = ({
         ))}
         <div
           className={styles.addColor}
+          style={{
+            background: isCustom ? 'transparent' : selColor,
+          }}
           onClick={() => onClickAddCustomColor()}
         >
           <PlusOutlined />

@@ -4,13 +4,29 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox'
 import styles from './RegistrationFields.module.less'
 
 export interface FieldType {
+  key: number
   fieldName: string
   label: string
   visible: boolean
   required: boolean
-  disabled?: boolean
+  disabled: boolean
+}
+
+export interface CustomFieldType {
+  field_label?: string
+  field_type?: string
+  is_active?: boolean
+  is_required?: number
+  id: number
+}
+export interface DefaultCustomFieldType {
+  fieldName: string
+  label: string
+  visible: boolean
+  required: boolean
   key: number
 }
+
 export interface RegistrationFieldsProps {
   icon?: ReactNode
   title?: string
@@ -19,8 +35,8 @@ export interface RegistrationFieldsProps {
   customFieldTitle?: string
   visibleTitle?: string
   requiredTitle?: string
-  fields?: FieldType[]
-  customFields?: FieldType[]
+  fields?: DefaultCustomFieldType[]
+  customFields?: CustomFieldType[]
   onCustomFieldCheckboxChange?: (
     e: CheckboxChangeEvent,
     key: number,
@@ -28,7 +44,7 @@ export interface RegistrationFieldsProps {
   ) => void
   onMainFieldCheckboxChange?: (
     e: CheckboxChangeEvent,
-    key: number,
+    id: number,
     checkboxField: string
   ) => void
 }
@@ -61,19 +77,17 @@ export const RegistrationFields: FC<RegistrationFieldsProps> = ({
       <div>
         {fields?.map((field) => (
           <div key={field.key} className={styles.fieldItemWrap}>
-            <p>{field.label}</p>
+            <p>{field.fieldName}</p>
             <Checkbox
-              checked={field.visible}
-              disabled={field.disabled ?? false}
+              defaultChecked={field.visible}
               onChange={(e) =>
-                onMainFieldCheckboxChange?.(e, field.key, 'visible')
+                onMainFieldCheckboxChange?.(e, field.key, 'is_active')
               }
             />
             <Checkbox
-              checked={field.required}
-              disabled={field.disabled ?? false}
+              defaultChecked={field.key === 1}
               onChange={(e) =>
-                onMainFieldCheckboxChange?.(e, field.key, 'required')
+                onMainFieldCheckboxChange?.(e, field.key, 'is_required')
               }
             />
           </div>
@@ -88,20 +102,18 @@ export const RegistrationFields: FC<RegistrationFieldsProps> = ({
       )}
       <div>
         {customFields?.map((field) => (
-          <div key={field.key} className={styles.fieldItemWrap}>
-            <p>{field.fieldName}</p>
+          <div key={field.id} className={styles.fieldItemWrap}>
+            <p>{field.field_label}</p>
             <Checkbox
-              checked={field.visible}
-              disabled={field.disabled ?? false}
+              defaultChecked={field.is_active}
               onChange={(e) =>
-                onCustomFieldCheckboxChange?.(e, field.key, 'visible')
+                onCustomFieldCheckboxChange?.(e, field.id, 'is_active')
               }
             />
             <Checkbox
-              checked={field.required}
-              disabled={field.disabled ?? false}
+              defaultChecked={field.is_required === 1}
               onChange={(e) =>
-                onCustomFieldCheckboxChange?.(e, field.key, 'required')
+                onCustomFieldCheckboxChange?.(e, field.id, 'is_required')
               }
             />
           </div>

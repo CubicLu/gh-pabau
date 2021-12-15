@@ -1,15 +1,17 @@
 import { Badge, BasicModal, Button, PabauPlus, TabMenu } from '@pabau/ui'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useMedia } from 'react-use'
 import widgetModalImg from '../../../assets/images/widget-modal.png'
 import { ClientAreaWidgets, defaultWidgetsData } from './ClientAreaSetting'
+import { useGetCompanyMetaQuery } from '@pabau/graphql'
 import styles from './Style.module.less'
+import { Skeleton } from 'antd'
 
 interface ClientAreaStepTwoProps {
   settings: ClientAreaWidgets
 }
 
-export const ClientAreaStepTwo: FC<ClientAreaStepTwoProps> = ({ settings }) => {
+export const ClientAreaStepTwo: FC<ClientAreaStepTwoProps> = () => {
   const isMobile = useMedia('(max-width: 767px)', false)
   const isMdScreen = useMedia('(min-width: 992px)', false)
   const [visible, setVisible] = useState(false)
@@ -19,6 +21,19 @@ export const ClientAreaStepTwo: FC<ClientAreaStepTwoProps> = ({ settings }) => {
     id: 0,
     isEnabled: false,
   })
+
+  //QUERY
+  const { data: companyData, loading } = useGetCompanyMetaQuery({
+    variables: {
+      name: [
+        'online_booking_enabled',
+        'online_class_sign_up',
+        'online_courses',
+        'online_gift_vouchers',
+      ],
+    },
+  })
+
   const handleClickWidgetOps = () => {
     const widgets = { ...setting }
     widgets[currentWidget.mainKey].widgets[
@@ -27,9 +42,7 @@ export const ClientAreaStepTwo: FC<ClientAreaStepTwoProps> = ({ settings }) => {
     setSetting({ ...widgets })
     setVisible(false)
   }
-  useEffect(() => {
-    setSetting(settings)
-  }, [settings])
+
   return (
     <>
       <div className={styles.clientAreaBody}>
@@ -72,10 +85,18 @@ export const ClientAreaStepTwo: FC<ClientAreaStepTwoProps> = ({ settings }) => {
                     </p>
                   </div>
                   <div className={styles.clientAreaWidgetStatus}>
-                    <Badge
-                      label={widget.isEnabled ? 'Enabled' : 'Disabled'}
-                      disabled={widget.isEnabled}
-                    />
+                    {loading === false ? (
+                      <Badge
+                        label={
+                          companyData?.findManyCompanyMeta.find((element) => {
+                            return element
+                          }).meta_value
+                        }
+                        disabled={widget.isEnabled}
+                      />
+                    ) : (
+                      <Skeleton />
+                    )}
                   </div>
                 </div>
               ))}

@@ -50,6 +50,7 @@ export interface ClientAreaWidget {
   isEnabled: boolean
   title: string
   description: string
+  setting_key: string
 }
 
 export interface ClientAreaWidgetsItem {
@@ -202,6 +203,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Online bookings',
+        setting_key: 'online_bookings_enabled',
         description:
           'Clients can register/login and book appointments online in your available times',
       },
@@ -211,6 +213,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Class sign up',
+        setting_key: '',
         description:
           'Clients can register and sign up for your scheduled classes',
       },
@@ -220,6 +223,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Courses',
+        setting_key: '',
         description:
           'Clients can purchase courses of treatments and book their sessions in',
       },
@@ -229,6 +233,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Gift vouchers',
+        setting_key: '',
         description:
           'Clients can purchase online gift vouchers and spend the amount later on',
       },
@@ -245,6 +250,7 @@ export const defaultWidgetsData = {
         isPlus: true,
         isEnabled: false,
         title: 'My labs',
+        setting_key: '',
         description: 'Patients can view their labs online',
       },
       {
@@ -253,6 +259,7 @@ export const defaultWidgetsData = {
         isPlus: true,
         isEnabled: true,
         title: 'My documents',
+        setting_key: '',
         description:
           'Publish photos/documents for clients to simplify view and share via your Pabau Connect',
       },
@@ -262,6 +269,7 @@ export const defaultWidgetsData = {
         isPlus: true,
         isEnabled: false,
         title: 'Invoices',
+        setting_key: '',
         description: 'Patients can view their labs online',
       },
       {
@@ -270,6 +278,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: false,
         title: 'Make Payment',
+        setting_key: '',
         description: 'Some description here',
       },
       {
@@ -278,6 +287,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: false,
         title: 'My Packages',
+        setting_key: '',
         description: 'Patients can view their labs online',
       },
       {
@@ -286,6 +296,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Loyalty',
+        setting_key: '',
         description:
           'Embed your card system into your connect account allowing your customers to check and redeem their points online',
       },
@@ -302,6 +313,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Call us',
+        setting_key: '',
         description:
           'Allows users to initiate a phone call to your business through their mobiles or desktops',
       },
@@ -311,6 +323,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Openings',
+        setting_key: '',
         description: 'Display your opening hours on your Pabau Connect website',
       },
       {
@@ -319,6 +332,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Website',
+        setting_key: '',
         description: 'Allows users to jump straight to your website',
       },
       {
@@ -327,6 +341,7 @@ export const defaultWidgetsData = {
         isPlus: false,
         isEnabled: true,
         title: 'Location',
+        setting_key: '',
         description: 'Displays a map of your location',
       },
     ],
