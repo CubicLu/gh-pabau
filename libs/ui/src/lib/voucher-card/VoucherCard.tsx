@@ -44,6 +44,7 @@ export interface VoucherCardProps {
   menuOptions?: MenuOption[]
   onMenuClick?: (key) => void
   showDrawerMenu?: boolean
+  deleteHandler?: (key) => void
 }
 
 export const VoucherCard: FC<VoucherCardProps> = ({
@@ -72,12 +73,21 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   termsConditions = 'N/A',
   voucherBackgroundUrl,
   showDrawerMenu = false,
+  deleteHandler,
 }) => {
   const { t } = useTranslation('common')
   const cardRef = useRef<HTMLDivElement>(null)
   const voucherTypes = ['flowers', 'valentine', 'birthday']
   const [menuPopover, setMenuPopover] = useState(false)
   const cardFlip = () => cardRef?.current?.classList.toggle('flip')
+
+  const handleChanges = (key) => {
+    if (key === 3) {
+      deleteHandler?.(key)
+      setMenuPopover(false)
+    }
+    onMenuClick?.(key)
+  }
 
   const defaultMenuOptions: MenuOption[] = [
     {
@@ -113,6 +123,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
       width: `${cardWidth ? `${cardWidth / 25 / 2}px` : '25px'}`,
       height: `${cardWidth ? `${cardWidth / 25}px` : '10px'}`,
     }
+
     return (
       <div className={classNames(styles.sideClippers, bgOpacity)}>
         <div className={styles.clippersInner}>
@@ -168,10 +179,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                     {showMenu && (
                       <>
                         <DotButton
-                          onMenuClick={(key) => {
-                            setMenuPopover(() => false)
-                            onMenuClick?.(key)
-                          }}
+                          onMenuClick={handleChanges}
                           popoverVisible={showDrawerMenu ? false : menuPopover}
                           setPopoverVisible={(popover) =>
                             setMenuPopover(() => popover)

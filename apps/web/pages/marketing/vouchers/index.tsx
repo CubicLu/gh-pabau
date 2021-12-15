@@ -2,7 +2,13 @@ import React, { FC, useState, useEffect } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { Button, VoucherCard, BasicModal as TermsModal } from '@pabau/ui'
+import {
+  Button,
+  VoucherCard,
+  NotificationType,
+  Notification,
+  BasicModal as TermsModal,
+} from '@pabau/ui'
 import CommonHeader from '../../../components/CommonHeader'
 import useWindowSize from '../../../hooks/useWindowSize'
 import { ReactComponent as VoucherIcon } from '../../../assets/images/voucher-icon.svg'
@@ -11,6 +17,10 @@ import { Card, Row, Col, Typography, Skeleton } from 'antd'
 import Link from 'next/link'
 import styles from './index.module.less'
 import { useGetVoucherTemplateQuery } from '@pabau/graphql'
+import {
+  useDeleteVoucherMutation,
+  GetVoucherTemplateDocument,
+} from '@pabau/graphql'
 
 const { Paragraph } = Typography
 
@@ -23,7 +33,7 @@ const GiftVouchers: FC = () => {
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [selectedVoucher, setSelectedVoucher] = useState(null)
 
-  const CardHeader = () => (
+  const CardHeader = (gift) => (
     <div className={styles.header}>
       {size.width > 767 && (
         <div className="leftDiv">
@@ -76,6 +86,27 @@ const GiftVouchers: FC = () => {
         return
     }
   }
+
+  const [deleteVoucherMutation] = useDeleteVoucherMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        t('marketingvoucher.data.deletedvouchermessage')
+      )
+    },
+  })
+
+  const deleteHandler = (gift) => {
+    deleteVoucherMutation({
+      variables: {
+        where: {
+          template_id: gift.voucherNum,
+        },
+      },
+      refetchQueries: [{ query: GetVoucherTemplateDocument }],
+    })
+  }
+
   const {
     data: voucherData,
     loading: voucherLoading,
@@ -133,6 +164,7 @@ const GiftVouchers: FC = () => {
                               voucherRelationLabel={t(
                                 'ui.client.giftvoucher.relationlabel'
                               )}
+                              deleteHandler={(key) => deleteHandler(key)}
                               currencyType="£"
                               termsConditions={t(
                                 'ui.vouchercard.back.subtitle'
