@@ -846,18 +846,5 @@
       },
       "tags": []
     }
-  },
-  "schematics": {
-    "@nrwl/react": {
-      "application": {
-        "babel": true
-      }
-    },
-    "@nrwl/next": {
-      "application": {
-        "style": "less",
-        "linter": "eslint"
-      }
-    }
   }
 }

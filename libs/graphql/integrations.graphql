@@ -1,0 +1,9 @@
+query getIntegrations {
+  integrations {
+    id
+    logo
+    name
+    short_description
+    marketing_plus
+  }
+}

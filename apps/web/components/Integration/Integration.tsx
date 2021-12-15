@@ -1,13 +1,11 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react'
 import classNames from 'classnames'
-import { CheckOutlined } from '@ant-design/icons'
-import { Button, InstallationModal } from '@pabau/ui'
+import { Button, InstallationModal, PabauPlus } from '@pabau/ui'
 import styles from './Integration.module.less'
 import logo from './../../assets/images/pabau-badge-1.png'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-
+import { useGetIntegrationsQuery } from '@pabau/graphql'
 import { setupIntegrationData } from '../../mocks/SetupIntegration'
-
 interface ItemsSchema {
   title: string
   subTitle: string
@@ -31,7 +29,6 @@ interface P {
   limit?: number
   installed?: number
 }
-
 const IntegrationHeader: FC = () => {
   const { t } = useTranslationI18()
   const { allCollectionsHeaderCollections } = setupIntegrationData(t)
@@ -61,6 +58,8 @@ export const IntegrationTabBody: FC<P> = ({
   installed = -1,
 }) => {
   const { t } = useTranslationI18()
+  const { data: displayData } = useGetIntegrationsQuery()
+
   const {
     worksWith,
     longDescription,
@@ -117,23 +116,22 @@ export const IntegrationTabBody: FC<P> = ({
         </div>
       )}
       <div className={styles.itemWrapper}>
-        {data.slice(0, limit).map((value, key) => (
+        {displayData?.integrations.map((value, key) => (
           <div
             key={key}
-            className={classNames(
-              styles.itemBox,
-              value.installed === 1 && styles.active
-            )}
+            className={classNames(styles.itemBox)}
             onClick={() => modalOpen(value)}
           >
-            <span className={styles.checkWrap}>
-              <CheckOutlined />
-            </span>
+            {value?.marketing_plus ? (
+              <span className={styles.pabauPlus}>
+                <PabauPlus label="Plus" modalType="Marketing" />
+              </span>
+            ) : null}
             <div className={styles.img}>
-              <img src={value.logoImage} alt={value.title} />
+              <img src={value?.logo} alt={value.logo} />
             </div>
-            <h5>{value.title}</h5>
-            <p>{value.subTitle}</p>
+            <h5>{value.name}</h5>
+            <p>{value.short_description}</p>
           </div>
         ))}
       </div>
