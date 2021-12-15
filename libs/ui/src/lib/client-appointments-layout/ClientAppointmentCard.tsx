@@ -472,7 +472,10 @@ export const ClientAppointmentCard: FC<
             value={editNote}
             name={'notes'}
             placeholder={t('client.appointment.card.add.description')}
-            onSave={(value) => setEditNote(value)}
+            onSave={(value) => {
+              setEditNote(value)
+              handleEditNotes(id, value)
+            }}
           />
           {cancellationReason && (
             <EditableNote
@@ -751,7 +754,6 @@ const EditableNote: FC<EditableNoteProps> = ({
                   onClick={() => {
                     setEditable(false)
                     onSave(editValue)
-                    // handleEditNotes(index, editValue)
                   }}
                 >
                   {t('client.appointment.card.description.save')}
@@ -804,7 +806,6 @@ const EditableNote: FC<EditableNoteProps> = ({
                         onClick={() => {
                           setEditable(false)
                           onSave(editValue, selectedOption)
-                          // handleEditNotes(index, editValue)
                         }}
                       >
                         {t('client.appointment.card.description.save')}
@@ -870,7 +871,6 @@ const EditableNote: FC<EditableNoteProps> = ({
                 onClick={() => {
                   setEditable(false)
                   onSave(editValue)
-                  // handleEditNotes(index, editNote)
                 }}
               >
                 {t('client.appointment.card.description.save')}
