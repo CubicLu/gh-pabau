@@ -4348,7 +4348,7 @@ en:
   timeline.filter.noEvent: 'Opps, There are no any events Exist'
   timeline.share.clickToShare: 'Click to share'
   timeline.dotMenu.edit: Edit
-  timeline.dotMenu.markedAsToDo: 'Marked as ToDo'
+  timeline.dotMenu.markedAsToDo: 'Mark as To Do'
   timeline.dotMenu.markedAsDone: 'Marked as Done'
   timeline.dotMenu.delete: Delete
   timeline.dotMenu.clone: Clone
