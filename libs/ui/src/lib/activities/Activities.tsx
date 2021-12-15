@@ -220,7 +220,10 @@ export const Activities: FC<ActivitiesProps> = ({
     const newEvents = events?.map((data) => {
       const temp = { ...data }
       if (data.id === event.id) {
-        temp.taskChecked = !temp.taskChecked
+        const doneOrTodo = temp.taskChecked
+          ? t('timeline.dotMenu.markedAsToDo')
+          : t('timeline.dotMenu.markedAsDone')
+        handleMenuClick?.(doneOrTodo, event.id)
       }
       return temp
     })
@@ -310,7 +313,12 @@ export const Activities: FC<ActivitiesProps> = ({
     return (
       <div className={styles.followContent}>
         <div className={styles.boxText}>
-          <div className={styles.taskContent}>
+          <div
+            className={classNames({
+              [styles.taskContent]: true,
+              [styles.lineThrough]: event.taskChecked,
+            })}
+          >
             <Tooltip
               title={
                 event.taskChecked

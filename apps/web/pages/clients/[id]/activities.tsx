@@ -10,7 +10,10 @@ import {
   useDeleteManyActivityMutation,
   useGetActivityTypesQuery,
   GetActivityDocument,
+  useUpdateOneActivityMutation,
+  Activity_Status,
 } from '@pabau/graphql'
+import { useUser } from '../../../context/UserContext'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import {
@@ -22,6 +25,7 @@ import {
 } from '@pabau/ui'
 import { ActivityTypeFilter } from '../../../components/Activities/CreateActivity'
 import { DisplayDate } from '../../../hooks/displayDate'
+import confetti from 'canvas-confetti'
 const ActivitiesTab = () => {
   const router = useRouter()
   const contactID = Number(router.query['id'])
@@ -37,6 +41,7 @@ const ActivitiesTab = () => {
   const [activityDetails, setActivityDetails] = useState<ActivitiesDataProps[]>(
     []
   )
+  const { me } = useUser()
   const [pagination, setPagination] = useState<PaginationType>({
     total: 0,
     offSet: 0,
@@ -56,10 +61,7 @@ const ActivitiesTab = () => {
   const [
     getActivities,
     { loading, data: activityData },
-  ] = useGetActivityLazyQuery({
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-first',
-  })
+  ] = useGetActivityLazyQuery()
   const {
     loading: filterLoading,
     data: filterData,
@@ -69,6 +71,22 @@ const ActivitiesTab = () => {
     { data: countData, loading: countLoading },
   ] = useCountClientActivityWithTypeLazyQuery({
     fetchPolicy: 'cache-first',
+  })
+  const randomInRange = (min, max) => {
+    return Math.random() * (max - min) + min
+  }
+  const [updateActivityMutation] = useUpdateOneActivityMutation({
+    onCompleted(res) {
+      if (res.updateOneActivity.status === 'done') {
+        confetti({
+          angle: randomInRange(55, 125),
+          spread: randomInRange(50, 70),
+          particleCount: randomInRange(50, 100),
+          origin: { y: 0.5, x: 0.5 },
+          zIndex: 1001,
+        })
+      }
+    },
   })
   const [
     deleteActivityMutation,
@@ -190,12 +208,34 @@ const ActivitiesTab = () => {
     return style
   }
   const handleMenuClick = (name, id) => {
-    if (
-      name === t('timeline.dotMenu.delete') ||
-      name.toLocaleLowerCase() === 'delete'
-    ) {
+    if (name === t('timeline.dotMenu.delete')) {
       setActivityId(id)
       setIsActivityDelete(true)
+    } else if (
+      name === t('timeline.dotMenu.markedAsDone') ||
+      name === t('timeline.dotMenu.markedAsToDo')
+    ) {
+      updateActivityMutation({
+        variables: {
+          where: {
+            id,
+          },
+          data: {
+            finished_at: { set: dayjs().utc().format() },
+            status: {
+              set:
+                name === t('timeline.dotMenu.markedAsDone')
+                  ? Activity_Status.Done
+                  : Activity_Status.Pending,
+            },
+            CompletedBy: {
+              connect: {
+                id: me.user,
+              },
+            },
+          },
+        },
+      })
     }
   }
   useEffect(() => {
