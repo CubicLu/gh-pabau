@@ -23,6 +23,7 @@ en:
   search.result.one: 'Top Result'
   search.result.two: 'All Results'
   search.new.client: 'Add new client'
+  search.new.lead: 'Add new lead'
   search.advanced.search: 'Advanced search'
   notifications.header: Notifications
   notifications.tab.activity: Activity

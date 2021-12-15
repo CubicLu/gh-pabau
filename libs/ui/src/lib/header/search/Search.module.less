@@ -43,8 +43,6 @@
 }
 .clients-list {
   padding: 20px 0;
-  max-height: 70vh;
-  overflow: hidden auto;
 }
 
 .ant-tabs-tab {
@@ -110,11 +108,22 @@
     font-size: 14px;
     line-height: 18px;
   }
-  p {
+  .email-mob-wrapper {
     color: var(--light-grey-color);
     font-size: 12px;
     margin-bottom: 0;
     font-weight: 400;
+    display: flex;
+    flex-wrap: wrap;
+    .email-container {
+      margin-right: 5px;
+    }
+    .email-icon {
+      margin-right: 5px;
+    }
+    .mob-icon {
+      margin-right: 3px;
+    }
   }
   span.highlight {
     color: var(--primary-color);
@@ -122,7 +131,7 @@
 }
 
 .add-new-client {
-  background: #fff;
+  background: #fff !important;
   opacity: 0.34;
   border: 1px solid #9292a3;
 }
@@ -148,7 +157,8 @@
   padding-top: 8px;
 }
 
-.advance-search-modal {
+.advance-search-input {
+  position: fixed;
   :global {
     .ant-popover-inner {
       border-radius: 4px;
@@ -161,6 +171,9 @@
       display: none;
     }
   }
+}
+
+.advance-search-modal {
   .back-to-search {
     display: flex;
     align-items: center;
@@ -203,10 +216,6 @@
   .cus-tabs-top-space {
     padding-top: 15px;
   }
-  .adv-search-top-space {
-    padding: 24px;
-    padding-top: 20px;
-  }
   .adv-search-form {
     :global {
       .ant-form-item {
@@ -226,25 +235,30 @@
         }
       }
     }
-    .adv-search-input {
-      color: #b8b8c0;
-      line-height: 2.1715 !important;
-      background: #ffffff;
-      border: 1px solid #e8e8e8;
-      box-sizing: border-box;
-      border-radius: 4px;
-      ::-webkit-input-placeholder {
-        font-family: Circular-Std-Medium;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 16px;
-        line-height: 24px;
-        display: flex;
-        align-items: center;
+    .form-input-fields-wrap {
+      padding: 24px;
+      .adv-search-input {
         color: #b8b8c0;
+        line-height: 2.1715 !important;
+        background: #ffffff;
+        border: 1px solid #e8e8e8;
+        box-sizing: border-box;
+        border-radius: 4px;
+        ::-webkit-input-placeholder {
+          font-family: Circular-Std-Medium;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 16px;
+          line-height: 24px;
+          display: flex;
+          align-items: center;
+          color: #b8b8c0;
+        }
       }
     }
-
+    .footer-search-wrap {
+      padding: 5px 24px 24px;
+    }
     .button-end {
       display: flex;
       justify-content: flex-end;

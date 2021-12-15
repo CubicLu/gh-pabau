@@ -1,20 +1,20 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react'
 import reactStringReplace from 'react-string-replace'
-import { Checkbox } from '@pabau/ui'
+import { Checkbox, Avatar, CustomScrollbar } from '@pabau/ui'
 import styles from './Search.module.less'
-import { Input, Popover, Avatar, Image, Form, Button, Drawer } from 'antd'
+import { Input, Popover, Form, Button, Drawer } from 'antd'
 import {
   SearchOutlined,
   UserAddOutlined,
   RightOutlined,
   LeftOutlined,
-  CloseOutlined,
   CloseCircleFilled,
   MailOutlined,
   MobileOutlined,
 } from '@ant-design/icons'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
+import { getImage } from '../../../helper/uploaders/UploadHelpers'
 // import { isMobile, isTablet } from 'react-device-detect'
 
 const WAIT_INTERVAL = 400
@@ -93,16 +93,11 @@ export const Search: FC<P> = ({
         }
       >
         <div className={styles.clientProfile}>
-          {avatarUrl ? (
-            <Avatar
-              size={40}
-              src={<Image src={'https://crm.pabau.com' + avatarUrl} />}
-            />
-          ) : (
-            <Avatar size={40}>
-              {firstName.substr(0, 1) + lastName.substr(0, 1)}
-            </Avatar>
-          )}
+          <Avatar
+            name={`${firstName} ${lastName}`}
+            size={40}
+            src={avatarUrl && getImage(avatarUrl)}
+          />
         </div>
         <div className={styles.clientProfileText}>
           <h1>
@@ -112,28 +107,28 @@ export const Search: FC<P> = ({
               </span>
             ))}
           </h1>
-          <p>
-            {email !== '' ? (
-              <>
-                <MailOutlined />{' '}
+          <div className={styles.emailMobWrapper}>
+            {email ? (
+              <div className={styles.emailContainer}>
+                <MailOutlined className={styles.emailIcon} />
                 {reactStringReplace(email, searchTerm, (match, i) => (
                   <span key={i} className={styles.highlight}>
                     {match}
                   </span>
                 ))}
-              </>
+              </div>
             ) : null}
-            {mobile !== '' ? (
-              <>
-                <MobileOutlined style={{ marginLeft: '5px' }} />{' '}
+            {mobile ? (
+              <div>
+                <MobileOutlined className={styles.mobIcon} />
                 {reactStringReplace(mobile, searchTerm, (match, i) => (
                   <span key={i} className={styles.highlight}>
                     {match}
                   </span>
                 ))}
-              </>
+              </div>
             ) : null}
-          </p>
+          </div>
         </div>
       </div>
     )
@@ -164,47 +159,56 @@ export const Search: FC<P> = ({
             </button>
           )}
         </div>
-        <div className={styles.clientsList}>
-          {searchResults && searchResults.length > 0 && (
-            <>
-              <div className={styles.resultText}>
-                <h1>{t('search.result.one')}</h1>
+        <CustomScrollbar
+          autoHide={true}
+          style={{ width: '400px', height: '70vh' }}
+        >
+          <div className={styles.clientsList}>
+            {searchResults && searchResults.length > 0 && (
+              <>
+                <div className={styles.resultText}>
+                  <h1>{t('search.result.one')}</h1>
+                </div>
+                {searchResultRow(searchResults[0])}
+              </>
+            )}
+            {searchResults && searchResults.length > 1 && (
+              <>
+                <div
+                  className={classNames(
+                    styles.resultText,
+                    styles.resultTextTopSpace
+                  )}
+                >
+                  <h1>{t('search.result.two')}</h1>
+                </div>
+                {searchResults
+                  .filter((_, i) => i !== 0)
+                  .map((data) => searchResultRow(data))}
+              </>
+            )}
+            <div className={styles.contentAlignProfile}>
+              <div className={styles.clientProfile}>
+                <Avatar
+                  size={40}
+                  icon={
+                    <UserAddOutlined
+                      style={{ color: 'var(--grey-text-color)' }}
+                    />
+                  }
+                  className={styles.addNewClient}
+                />
               </div>
-              {searchResultRow(searchResults[0])}
-            </>
-          )}
-          {searchResults && searchResults.length > 1 && (
-            <>
-              <div
-                className={classNames(
-                  styles.resultText,
-                  styles.resultTextTopSpace
-                )}
-              >
-                <h1>{t('search.result.two')}</h1>
+              <div className={styles.clientProfileText}>
+                <span>
+                  {searchTab === 'Clients'
+                    ? t('search.new.client')
+                    : t('search.new.lead')}
+                </span>
               </div>
-              {searchResults
-                .filter((_, i) => i !== 0)
-                .map((data) => searchResultRow(data))}
-            </>
-          )}
-          <div className={styles.contentAlignProfile}>
-            <div className={styles.clientProfile}>
-              <Avatar
-                size={40}
-                icon={
-                  <UserAddOutlined
-                    style={{ color: 'var(--grey-text-color)' }}
-                  />
-                }
-                className={styles.addNewClient}
-              />
-            </div>
-            <div className={styles.clientProfileText}>
-              <span>{t('search.new.client')}</span>
             </div>
           </div>
-        </div>
+        </CustomScrollbar>
         <div
           className={styles.advanceSearch}
           onClick={() => {
@@ -233,14 +237,6 @@ export const Search: FC<P> = ({
           >
             <LeftOutlined className={styles.rightArrowColor} />
             <h6>{t('search.basic.search')}</h6>
-          </div>
-          <div>
-            <CloseOutlined
-              style={{ color: 'var(--light-grey-color)', fontSize: '12px' }}
-              onClick={() => {
-                setAdvancedSearch((e) => !e)
-              }}
-            />
           </div>
         </div>
 
@@ -280,123 +276,142 @@ export const Search: FC<P> = ({
           }}
           requiredMark={false}
           layout="vertical"
-          className={classNames(styles.advSearchForm, styles.advSearchTopSpace)}
+          className={styles.advSearchForm}
         >
-          <Form.Item
-            className={styles.searchForm}
-            name="Fname"
-            label={t('search.advanced.search.firstname.label')}
+          <CustomScrollbar
+            autoHide={true}
+            style={{ width: '400px', height: '50vh' }}
           >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.firstname.placeholder')}
-            />
-          </Form.Item>
-          <Form.Item
-            className={styles.searchForm}
-            name="Email"
-            label={t('search.advanced.search.email.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.email.placeholder')}
-            />
-          </Form.Item>
-          <Form.Item
-            className={styles.searchForm}
-            name="DOB"
-            label={t('search.advanced.search.birthdate.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.birthdate.placeholder')}
-            />
-          </Form.Item>
-          <Form.Item
-            className={styles.searchForm}
-            name="Phone"
-            label={t('search.advanced.search.phone.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.phone.placeholder')}
-            />
-          </Form.Item>
-          <Form.Item
-            className={styles.searchForm}
-            name="Mobile"
-            label={t('search.advanced.search.mobile.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.mobile.placeholder')}
-            />
-          </Form.Item>
-          <Form.Item
-            className={styles.searchForm}
-            name="MailingPostal"
-            label={t('search.advanced.search.postcode.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.postcode.placeholder')}
-            />
-          </Form.Item>
-          {searchTab === SearchMode.Clients && (
-            <Form.Item
-              className={styles.searchForm}
-              name="policyNumber"
-              label={t('search.advanced.search.policynumber.label')}
+            <div className={styles.formInputFieldsWrap}>
+              <Form.Item
+                className={styles.searchForm}
+                name="Fname"
+                label={t('search.advanced.search.firstname.label')}
+              >
+                <Input
+                  className={styles.advSearchInput}
+                  placeholder={t(
+                    'search.advanced.search.firstname.placeholder'
+                  )}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.searchForm}
+                name="Email"
+                label={t('search.advanced.search.email.label')}
+              >
+                <Input
+                  className={styles.advSearchInput}
+                  placeholder={t('search.advanced.search.email.placeholder')}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.searchForm}
+                name="DOB"
+                label={t('search.advanced.search.birthdate.label')}
+              >
+                <Input
+                  className={styles.advSearchInput}
+                  placeholder={t(
+                    'search.advanced.search.birthdate.placeholder'
+                  )}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.searchForm}
+                name="Phone"
+                label={t('search.advanced.search.phone.label')}
+              >
+                <Input
+                  className={styles.advSearchInput}
+                  placeholder={t('search.advanced.search.phone.placeholder')}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.searchForm}
+                name="Mobile"
+                label={t('search.advanced.search.mobile.label')}
+              >
+                <Input
+                  className={styles.advSearchInput}
+                  placeholder={t('search.advanced.search.mobile.placeholder')}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.searchForm}
+                name="MailingPostal"
+                label={t('search.advanced.search.postcode.label')}
+              >
+                <Input
+                  className={styles.advSearchInput}
+                  placeholder={t('search.advanced.search.postcode.placeholder')}
+                />
+              </Form.Item>
+              {searchTab === SearchMode.Clients && (
+                <Form.Item
+                  className={styles.searchForm}
+                  name="policyNumber"
+                  label={t('search.advanced.search.policynumber.label')}
+                >
+                  <Input
+                    className={styles.advSearchInput}
+                    placeholder={t(
+                      'search.advanced.search.policynumber.placeholder'
+                    )}
+                  />
+                </Form.Item>
+              )}
+              <Form.Item
+                className={styles.searchForm}
+                name="custom_id"
+                label={t('search.advanced.search.patientid.label')}
+              >
+                <Input
+                  className={styles.advSearchInput}
+                  placeholder={t(
+                    'search.advanced.search.patientid.placeholder'
+                  )}
+                />
+              </Form.Item>
+              {searchTab === SearchMode.Clients && (
+                <Form.Item
+                  className={styles.searchForm}
+                  name="invoiceNumber"
+                  label={t('search.advanced.search.invoiceno.label')}
+                >
+                  <Input
+                    className={styles.advSearchInput}
+                    placeholder={t(
+                      'search.advanced.search.invoiceno.placeholder'
+                    )}
+                  />
+                </Form.Item>
+              )}
+            </div>
+          </CustomScrollbar>
+          <div className={styles.footerSearchWrap}>
+            {searchTab === SearchMode.Clients && (
+              <Form.Item name="is_active" valuePropName="checked">
+                <Checkbox>
+                  <span className={styles.inactiveClientText}>
+                    {' '}
+                    {t('search.advanced.search.inactiveclients.label')}
+                  </span>{' '}
+                </Checkbox>
+              </Form.Item>
+            )}
+            <div
+              className={classNames(styles.buttonEnd, styles.searchBtnBlock)}
             >
-              <Input
-                className={styles.advSearchInput}
-                placeholder={t(
-                  'search.advanced.search.policynumber.placeholder'
-                )}
-              />
-            </Form.Item>
-          )}
-          <Form.Item
-            className={styles.searchForm}
-            name="custom_id"
-            label={t('search.advanced.search.patientid.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.patientid.placeholder')}
-            />
-          </Form.Item>
-          {searchTab === SearchMode.Clients && (
-            <Form.Item
-              className={styles.searchForm}
-              name="invoiceNumber"
-              label={t('search.advanced.search.invoiceno.label')}
-            >
-              <Input
-                className={styles.advSearchInput}
-                placeholder={t('search.advanced.search.invoiceno.placeholder')}
-              />
-            </Form.Item>
-          )}
-          {searchTab === SearchMode.Clients && (
-            <Form.Item name="is_active" valuePropName="checked">
-              <Checkbox>
-                <span className={styles.inactiveClientText}>
-                  {' '}
-                  {t('search.advanced.search.inactiveclients.label')}
-                </span>{' '}
-              </Checkbox>
-            </Form.Item>
-          )}
-          <div className={classNames(styles.buttonEnd, styles.searchBtnBlock)}>
-            <Button
-              disabled={false}
-              size="large"
-              type="primary"
-              htmlType="submit"
-            >
-              {t('search.advanced.search.search')}
-            </Button>
+              <Button
+                disabled={false}
+                size="large"
+                type="primary"
+                htmlType="submit"
+              >
+                {t('search.advanced.search.search')}
+              </Button>
+            </div>
           </div>
         </Form>
       </div>
@@ -448,10 +463,12 @@ export const Search: FC<P> = ({
             content={children ? children : renderMenu}
             visible={searchPopUp}
             overlayClassName={classNames(
-              advancedSearch ? styles.advanceSearchModal : styles.searchInput,
+              advancedSearch ? styles.advanceSearchInput : styles.searchInput,
               styles.mobileViewNone
             )}
             placement="bottom"
+            trigger="click"
+            onVisibleChange={(e) => searchTerm !== '' && setSearchPopUp(e)}
           >
             <Input
               className={styles.searchInputStyle}

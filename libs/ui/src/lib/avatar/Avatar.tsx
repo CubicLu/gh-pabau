@@ -101,7 +101,9 @@ export const Avatar: FC<AvatarProps> = ({
         >
           <div className={styles.avatarDisplay}>
             {load && src?.length > 0 ? (
-              <AntAvatar {...props} src={src} shape="circle" />
+              <AntAvatar {...props} src={src} shape="circle">
+                {shortName}
+              </AntAvatar>
             ) : (
               <AntAvatar
                 {...props}
