@@ -155,14 +155,14 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
 
   const handleAddNote = (e) => {
     e.preventDefault()
-    if (note !== '') {
+    if (note) {
       setNote('')
       handleAddNewClientNote?.(note)
     }
   }
 
   const handleEditClientNote = (id) => {
-    handleEditNote?.(id, currentNote)
+    if (currentNote) handleEditNote?.(id, currentNote)
     setCurrentNote('')
     setCurrentClientNote(-1)
   }
