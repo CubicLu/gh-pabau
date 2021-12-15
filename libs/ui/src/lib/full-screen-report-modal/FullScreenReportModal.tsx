@@ -35,6 +35,7 @@ export interface FullScreenReportModalProps {
   customOptionBtn?: React.ReactNode
   activeBtnText?: string
   deleteBtnText?: string
+  cancelBtnText?: string
   assigneeName?: string
   assigneeTitle?: string
   createBtnText?: string
@@ -70,6 +71,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   onTabChange,
 
   deleteBtnText,
+  cancelBtnText,
   createBtnText,
   assigneeName,
   assigneeTitle,
@@ -146,24 +148,10 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
           {center && <div className={styles.centeredItem}>{center}</div>}
           {(operations?.length || customOptionBtn) && (
             <div className={styles.fullScreenModalOps}>
-              {!isMobile &&
-                operations.includes(OperationType.active) &&
-                !props.footer &&
-                !forceDesktopOperations && (
-                  <div className={styles.operationSwitch}>
-                    {activeBtnText || 'Active'}
-                    <Switch
-                      size="small"
-                      checked={active}
-                      onChange={(checked) => handleChangeActive(checked)}
-                      style={{ marginLeft: '12px' }}
-                    />
-                  </div>
-                )}
               {customOptionBtn && customOptionBtn}
               {operations.map((operation) => (
                 <React.Fragment key={operation}>
-                  {isMobile && operation === OperationType.active && (
+                  {operation === OperationType.active && (
                     <div
                       className={styles.operationSwitch}
                       style={isMobile ? { marginRight: '0px' } : {}}
@@ -182,15 +170,24 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                       {!active && operation === OperationType.reset && (
                         <Button
                           onClick={() => onReset?.()}
-                          style={{ marginRight: '1rem' }}
+                          className={styles.buttonMargin}
                         >
                           {resetBtnText || 'Reset'}
                         </Button>
                       )}
-                      {!active && operation === OperationType.delete && (
+                      {operation === OperationType.cancel && (
+                        <Button
+                          onClick={() => onCancel?.()}
+                          className={styles.buttonMargin}
+                          type="text"
+                        >
+                          {cancelBtnText || 'Cancel'}
+                        </Button>
+                      )}
+                      {operation === OperationType.delete && (
                         <Button
                           onClick={() => onDelete?.()}
-                          style={{ marginRight: '1rem' }}
+                          className={styles.buttonMargin}
                           type="text"
                         >
                           {deleteBtnText || 'Delete'}
@@ -199,7 +196,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                       {!active && operation === OperationType.save && (
                         <Button
                           onClick={() => onSave?.()}
-                          style={{ marginRight: '1rem' }}
+                          className={styles.buttonMargin}
                         >
                           {saveBtnText || 'Save'}
                         </Button>
@@ -308,6 +305,15 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                           block
                         >
                           {resetBtnText || 'Reset'}
+                        </Button>
+                      )}
+                      {operation === OperationType.cancel && (
+                        <Button
+                          onClick={() => onCancel?.()}
+                          className={styles.buttonMargin}
+                          type="text"
+                        >
+                          {cancelBtnText || 'Cancel'}
                         </Button>
                       )}
                       {operation === OperationType.delete && (

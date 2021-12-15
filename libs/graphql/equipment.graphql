@@ -1,22 +1,29 @@
-query listEquipment($take: Int = 50, $skip: Int = 0) {
-  equipment: findManyEquipment(skip: $skip, take: $take) {
+query listEquipment($limit: Int = 50, $offset: Int = 0, $isActive: Int) {
+  equipment: findManyEquipment(
+    skip: $offset
+    take: $limit
+    where: { is_active: { equals: $isActive } }
+  ) {
     id
     name: equipment_name
     is_active
     quantity
-    ServiceEquipment(where: {Service: {id: {equals: null}}}) {
+    ServiceEquipment(where: { Service: { id: { equals: null } } }) {
       Service {
         id
         name
-        ServiceCategory{
+        ServiceCategory {
           id
           name
-          ServicesMasterCategory{
-            id 
+          ServicesMasterCategory {
+            id
             name
           }
         }
       }
     }
   }
+}
+query countEquipment($isActive: Int!) {
+  count: findManyEquipmentCount(where: { is_active: { equals: $isActive } })
 }

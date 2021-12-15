@@ -15,6 +15,7 @@ import CrudLayout from '../../../components/CrudLayout/CrudLayout'
 import styles from './resource.module.less'
 import { Checkbox } from 'antd'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { CountEquipmentDocument, ListEquipmentDocument } from '@pabau/graphql'
 
 const treeData: TreeDataType[] = [
   {
@@ -65,11 +66,6 @@ const treeData: TreeDataType[] = [
     children: [],
   },
   {
-    title: 'Period Delay Service',
-    key: 'Period Delay Service',
-    children: [],
-  },
-  {
     title: 'Mole Screening Service',
     key: 'Mole Screening Service',
     children: [],
@@ -91,31 +87,6 @@ const treeData: TreeDataType[] = [
   },
 ]
 
-export const LIST_QUERY = gql`
-  query resources($isActive: Boolean = true, $offset: Int, $limit: Int) {
-    resources(
-      offset: $offset
-      limit: $limit
-      order_by: { id: desc }
-      where: { is_active: { _eq: $isActive } }
-    ) {
-      __typename
-      id
-      name
-      is_active
-      location
-    }
-  }
-`
-const LIST_AGGREGATE_QUERY = gql`
-  query resources_aggregate($isActive: Boolean = true) {
-    resources_aggregate(where: { is_active: { _eq: $isActive } }) {
-      aggregate {
-        count
-      }
-    }
-  }
-`
 const DELETE_MUTATION = gql`
   mutation delete_resources_by_pk($id: uuid!) {
     delete_resources_by_pk(id: $id) {
@@ -234,6 +205,15 @@ export function Resource() {
         defaultvalue: true,
       },
     },
+    filter: {
+      primary: {
+        name: 'public',
+        type: 'number',
+        default: 1,
+        active: 1,
+        inactive: 0,
+      },
+    },
   }
 
   //services
@@ -318,9 +298,9 @@ export function Resource() {
         tableSearch={false}
         addQuery={ADD_MUTATION}
         deleteQuery={DELETE_MUTATION}
-        listQuery={LIST_QUERY}
+        listQuery={ListEquipmentDocument}
         editQuery={EDIT_MUTATION}
-        aggregateQuery={LIST_AGGREGATE_QUERY}
+        aggregateQuery={CountEquipmentDocument}
         updateOrderQuery={UPDATE_ORDER_MUTATION}
         createPage={true}
         createPageOnClick={createPageOnClick}
@@ -335,8 +315,13 @@ export function Resource() {
         visible={showModal}
         operations={
           isCreate
-            ? [OperationType.active, OperationType.create]
-            : [OperationType.active, OperationType.delete, OperationType.create]
+            ? [OperationType.active, OperationType.cancel, OperationType.create]
+            : [
+                OperationType.active,
+                OperationType.cancel,
+                OperationType.delete,
+                OperationType.create,
+              ]
         }
         createBtnText={
           isCreate ? t('common-label-create') : t('common-label-save')

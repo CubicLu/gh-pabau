@@ -789,7 +789,7 @@ en:
   setup.resource.details: Details
   setup.resource.details.resourcename.label: 'Resource Name'
   setup.resource.details.resourcename.placeholder: 'eg. Resource 1'
-  setup.resource.details.allservices: 'All services can be performed in this resource'
+  setup.resource.details.allservices: 'All services can be performed with this resource'
   setup.resource.services.title: Services
   setup.resource.services.description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
   setup.resource.services.selectall: 'Select all'
