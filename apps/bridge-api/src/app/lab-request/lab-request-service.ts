@@ -1,5 +1,5 @@
 export const checkAbnormalTests = (tests, labResults) => {
-  const results = labResults ? labResults.results : []
+  const results = labResults && labResults.length > 0 ? labResults.results : []
 
   for (const test of tests) {
     test.abnormal = false
