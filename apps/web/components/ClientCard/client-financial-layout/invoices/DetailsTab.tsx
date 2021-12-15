@@ -1,161 +1,287 @@
 import { useTranslation } from 'react-i18next'
-import React, { FC } from 'react'
-import { InvoiceProp } from '../ClientFinancialsLayout'
+import React, { FC, useEffect, useState } from 'react'
+import { InvoiceProp } from './../ClientFinancialsLayout'
 import styles from './Tabs.module.less'
-import { Form, Input, DatePicker, Select, Button } from 'antd'
+import { DatePicker, Select, Button } from 'antd'
+import { Form, Input } from 'formik-antd'
 import { PlusOutlined } from '@ant-design/icons'
 import moment from 'moment'
+import { Formik } from 'formik'
 import {
-  financeInvIssuingCompanies,
-  financeInvContracts,
-  financeInvAppointment,
-  locationOptions,
-} from '../../../../pages/test/ClientCardMock'
+  useLocationsQuery,
+  useIssuingCompaniesQuery,
+  useGetInsurerContractsQuery,
+  useGetClientAppointmentsQuery,
+  SortOrder,
+} from '@pabau/graphql'
+import { DisplayDate, GetDateFormat } from '../../../../hooks/displayDate'
+import dayjs from 'dayjs'
 
 interface Invoice {
   invoice?: InvoiceProp
 }
 
+interface optionProp {
+  key: number
+  value: string
+  date?: Date | string | number
+}
+
 const DetailsTab: FC<Invoice> = ({ invoice }) => {
   const { t } = useTranslation('common')
-  const [form] = Form.useForm()
   const { Option } = Select
   const { TextArea } = Input
+  const [appointments, setAppointments] = useState<optionProp[]>([])
+  const [locations, setLocations] = useState<optionProp[]>([])
+  const [issuingCompanies, setIssuingCompanies] = useState<optionProp[]>([])
+  const [contracts, setContracts] = useState<optionProp[]>([])
+
+  const { data: apppointmentData } = useGetClientAppointmentsQuery({
+    variables: {
+      take: 10,
+      skip: 0,
+      orderBy: SortOrder.Desc,
+      contactId: invoice?.customer?.ID,
+    },
+  })
+
+  const { data: locationData } = useLocationsQuery({
+    variables: {
+      isActive: 1,
+      searchTerm: '',
+      filter: {},
+    },
+  })
+
+  const { data: issuingCompaniesData } = useIssuingCompaniesQuery()
+  const { data: contractsData } = useGetInsurerContractsQuery({
+    variables: {
+      limit: 1000,
+    },
+  })
+
+  useEffect(() => {
+    if (apppointmentData) {
+      const arr = apppointmentData.findManyBooking.map((e) => {
+        return {
+          key: e.id,
+          date: e.start_date,
+          value: `${e.service} /w ${e.CmStaffGeneral?.Fname} ${e.CmStaffGeneral?.Lname}`,
+        }
+      })
+      setAppointments(arr)
+    }
+  }, [apppointmentData])
+
+  useEffect(() => {
+    if (locationData && locationData.findManyCompanyBranch.length > 0) {
+      const arr = locationData.findManyCompanyBranch.map((e) => {
+        return { key: e.id, value: e.name }
+      })
+      setLocations(arr)
+    }
+  }, [locationData])
+
+  useEffect(() => {
+    if (issuingCompaniesData) {
+      const arr = issuingCompaniesData.findManyIssuingCompany.map((e) => {
+        return { key: e.id, value: e.name }
+      })
+      setIssuingCompanies(arr)
+    }
+  }, [issuingCompaniesData])
+
+  useEffect(() => {
+    if (contractsData) {
+      const arr = contractsData.contracts.map((e) => {
+        return { key: e.id, value: e.name }
+      })
+      setContracts(arr)
+    }
+  }, [contractsData])
 
   return (
     <div className={styles.detailsPage}>
       <div className={styles.detailsContainer}>
-        <Form
-          form={form}
+        <Formik
+          enableReinitialize
           initialValues={{
-            invoice: invoice?.id,
+            invoice: invoice?.invoice_id,
+            appointment: invoice?.booking ? invoice?.booking : null,
+            date: invoice?.date,
+            location: invoice?.location,
+            issuingCompany: invoice?.issuingCompany,
+            contract: invoice?.contract ? invoice.contract : null,
+            issuedTo: invoice?.issuedTo,
+            notes: invoice?.note,
           }}
-          onValuesChange={() => console.log('onValuesChange')}
-          layout={'vertical'}
-        >
-          <Form.Item
-            label={t('ui.client-card-financial.invoice-no')}
-            name="invoice"
-            rules={[{ required: true }]}
-          >
-            <Input placeholder={t('ui.client-card-financial.invoice-no')} />
-          </Form.Item>
-          <Form.Item label={t('ui.client-card-financial.appointment')}>
-            <Select
-              size={'large'}
-              defaultValue={financeInvAppointment[0]['key']}
-              onChange={() => console.log('handleChange')}
-              placeholder={t('ui.client-card-financial.select-contract')}
-              style={{ width: '100%' }}
-            >
-              {financeInvAppointment.map((is) => {
-                return (
-                  <Option key={is.key} value={is.key}>
-                    {is.value}
-                  </Option>
-                )
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item label={t('ui.client-card-financial.invoice-date')}>
-            <DatePicker
-              onChange={() => {
-                console.log('as')
-              }}
-              size={'large'}
-              name="invoiceDate"
-              style={{ width: '100%' }}
-              value={moment(invoice?.date)}
-            />
-          </Form.Item>
-          <Form.Item label={t('ui.client-card-financial.location')}>
-            <Select
-              size={'large'}
-              defaultValue={locationOptions[0]['key']}
-              onChange={() => console.log('handleChange')}
-              placeholder={t('ui.client-card-financial.location-placeholder')}
-              style={{ width: '100%' }}
-            >
-              {locationOptions.map((is) => {
-                return (
-                  <Option key={is.key} value={is.key}>
-                    {is.value}
-                  </Option>
-                )
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item label={t('ui.client-card-financial.issuing-company')}>
-            <Select
-              size={'large'}
-              defaultValue={financeInvIssuingCompanies[0]['key']}
-              onChange={() => console.log('handleChange')}
-              placeholder={t('ui.client-card-financial.select-issuing-company')}
-              style={{ width: '100%' }}
-            >
-              {financeInvIssuingCompanies.map((is) => {
-                return (
-                  <Option key={is.key} value={is.key}>
-                    {is.value}
-                  </Option>
-                )
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item label={t('ui.client-card-financial.contract')}>
-            <Select
-              size={'large'}
-              defaultValue={financeInvContracts[0]['key']}
-              onChange={() => console.log('handleChange')}
-              placeholder={t('ui.client-card-financial.select-contract')}
-              style={{ width: '100%' }}
-            >
-              {financeInvContracts.map((is) => {
-                return (
-                  <Option key={is.key} value={is.key}>
-                    {is.value}
-                  </Option>
-                )
-              })}
-            </Select>
-          </Form.Item>
-
-          <div className={styles.issuedTo}>
-            <p className={styles.label}>
-              {t('ui.client-card-financial.issued-to')}
-            </p>
-            <Button
-              type="primary"
-              block
-              size={'large'}
-              className={styles.issuedToBtn}
-            >
-              {invoice?.issuedTo}
-            </Button>
-            <Button
-              block
-              size={'large'}
-              onClick={() => console.log('Add Third Party')}
-            >
-              <PlusOutlined />
-              {t('ui.client-card-financial.add-third-party')}
-            </Button>
-          </div>
-
-          <Form.Item
-            label={t('ui.client-card-financial.invoice-notes')}
-            name="notes"
-            className={styles.invoiceNotesRow}
-          >
-            <TextArea
-              rows={4}
-              onChange={() => console.log('handleChange')}
-              placeholder={t(
-                'ui.client-card-financial.invoice-notes-placeholder'
+          onSubmit={(values) => {
+            console.log(values)
+          }}
+          render={({ setFieldValue, values }) => (
+            <Form layout={'vertical'}>
+              <Form.Item
+                label={t('ui.client-card-financial.invoice-no')}
+                name="invoice"
+                initialValue={values.invoice}
+                rules={[{ required: true }]}
+              >
+                <Input
+                  name="invoice"
+                  placeholder={t('ui.client-card-financial.invoice-no')}
+                  size="large"
+                />
+              </Form.Item>
+              {appointments.length > 0 && (
+                <Form.Item
+                  name="appointment"
+                  label={t('ui.client-card-financial.appointment')}
+                >
+                  <Select
+                    size={'large'}
+                    value={values.appointment}
+                    onChange={(e) => setFieldValue('appointment', e)}
+                    placeholder={t(
+                      'ui.client-card-financial.select-appointment'
+                    )}
+                    style={{ width: '100%' }}
+                  >
+                    {appointments.map((e) => {
+                      return (
+                        <Option key={e.key} value={e.key}>
+                          {`${DisplayDate(
+                            new Date(
+                              dayjs(`${e.date}` as 'YYYYMMDDHHmmss').format(
+                                'YYYY-MM-DD'
+                              )
+                            )
+                          )} - ${e.value}`}
+                        </Option>
+                      )
+                    })}
+                  </Select>
+                </Form.Item>
               )}
-            />
-          </Form.Item>
-        </Form>
+              <Form.Item
+                name="date"
+                label={t('ui.client-card-financial.invoice-date')}
+              >
+                <DatePicker
+                  size={'large'}
+                  name="date"
+                  style={{ width: '100%' }}
+                  value={moment(values.date, GetDateFormat())}
+                  format={GetDateFormat()}
+                  onChange={(e) => setFieldValue('date', e)}
+                />
+              </Form.Item>
+              <Form.Item
+                name="location"
+                label={t('ui.client-card-financial.location')}
+              >
+                <Select
+                  size={'large'}
+                  value={values.location}
+                  onChange={(e) => setFieldValue('location', e)}
+                  placeholder={t(
+                    'ui.client-card-financial.location-placeholder'
+                  )}
+                  style={{ width: '100%' }}
+                >
+                  {locations.map((e) => {
+                    return (
+                      <Option key={e.key} value={e.key}>
+                        {e.value}
+                      </Option>
+                    )
+                  })}
+                </Select>
+              </Form.Item>
+              {issuingCompanies.length > 0 && (
+                <Form.Item
+                  name="issuingCompany"
+                  label={t('ui.client-card-financial.issuing-company')}
+                >
+                  <Select
+                    size={'large'}
+                    value={values.issuingCompany}
+                    onChange={(e) => setFieldValue('issuingCompany', e)}
+                    placeholder={t(
+                      'ui.client-card-financial.select-issuing-company'
+                    )}
+                    style={{ width: '100%' }}
+                  >
+                    {issuingCompanies.map((is) => {
+                      return (
+                        <Option key={is.key} value={is.key}>
+                          {is.value}
+                        </Option>
+                      )
+                    })}
+                  </Select>
+                </Form.Item>
+              )}
+              {contracts.length > 0 && (
+                <Form.Item
+                  name="contract"
+                  label={t('ui.client-card-financial.contract')}
+                >
+                  <Select
+                    size={'large'}
+                    value={values.contract}
+                    onChange={(e) => setFieldValue('contract', e)}
+                    placeholder={t('ui.client-card-financial.select-contract')}
+                    style={{ width: '100%' }}
+                  >
+                    {contracts.map((is) => {
+                      return (
+                        <Option key={is.key} value={is.key}>
+                          {is.value}
+                        </Option>
+                      )
+                    })}
+                  </Select>
+                </Form.Item>
+              )}
+              <div className={styles.issuedTo}>
+                <p className={styles.label}>
+                  {t('ui.client-card-financial.issued-to')}
+                </p>
+                <Button
+                  type="primary"
+                  block
+                  size={'large'}
+                  className={styles.issuedToBtn}
+                >
+                  {values.issuedTo}
+                </Button>
+                <Button
+                  block
+                  size={'large'}
+                  onClick={() => console.log('Add Third Party')}
+                >
+                  <PlusOutlined />
+                  {t('ui.client-card-financial.add-third-party')}
+                </Button>
+              </div>
+              <Form.Item
+                label={t('ui.client-card-financial.invoice-notes')}
+                name="notes"
+                className={styles.invoiceNotesRow}
+              >
+                <TextArea
+                  name="notes"
+                  rows={4}
+                  onChange={(e) => setFieldValue('notes', e.target.value)}
+                  placeholder={t(
+                    'ui.client-card-financial.invoice-notes-placeholder'
+                  )}
+                  value={values.notes}
+                />
+              </Form.Item>
+            </Form>
+          )}
+        />
       </div>
     </div>
   )

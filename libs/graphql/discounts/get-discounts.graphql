@@ -1,9 +1,5 @@
-query getDiscounts($isActive: Int, $offset: Int, $limit: Int) {
-  findManyInvTaxRate(
-    skip: $offset
-    take: $limit
-    where: { is_active: { equals: $isActive } }
-  ) {
+query getDiscounts($where: InvTaxRateWhereInput) {
+  findManyInvTaxRate(where: $where) {
     id
     is_active
     modified_date
@@ -17,4 +13,7 @@ query getDiscounts($isActive: Int, $offset: Int, $limit: Int) {
     show_on_receipt
     code: glCode
   }
+}
+query countDiscounts($where: InvTaxRateWhereInput) {
+  count: findManyInvTaxRateCount(where: $where)
 }

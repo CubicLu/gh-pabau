@@ -26,30 +26,56 @@ export interface InvoiceInvoiceHistory {
 
 export interface InvoiceTipProp {
   amount?: string
-  type?: string
-  staff?: string
+  type?: number
+  staff?: number
+}
+
+export interface InvoiceItemProductCategory {
+  id?: string | number
+  name?: string
+}
+
+export interface InvoiceDiscountProp {
+  id: number | string
+  name?: string
+  rate: number
+  type: string
 }
 
 export interface InvoiceItemProp {
-  employee: string
+  employee: string | number
   id: number
   name: string
   price: number
-  itemPrice?: number
   quantity: number
-  discount: number
+  quantityAllowed?: number
+  discount?: InvoiceDiscountProp
   tax: number
-  totalPrice: number
+  showTaxDropDown?: boolean
+  type?: string
   customDiscountType?: string
   showDiscountDropDown?: boolean
   customDiscount?: string
+  productCategory?: InvoiceItemProductCategory
+}
+
+export interface InvoiceCustomer {
+  Fname?: string
+  ID?: number
+  Lname?: string
 }
 
 export interface InvoiceProp {
+  guid?: string
   id: string
+  invoice_id?: string
   type?: string
+  booking?: number | null
   date: string
-  location: string
+  location?: string | number
+  issuingCompany?: number | null
+  contract?: number
+  note?: string
   employee: string
   issuedTo: string
   paid: boolean
@@ -65,6 +91,7 @@ export interface InvoiceProp {
   tip?: InvoiceTipProp
   history?: InvoiceInvoiceHistory[]
   payments?: InvoiceInvoicePayments[]
+  customer?: InvoiceCustomer
 }
 
 export interface FinancialPayment {

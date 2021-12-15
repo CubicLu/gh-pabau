@@ -67,7 +67,7 @@ const Refund: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
 
     items.map((item) => {
       const subTotal = item.price * item.quantity
-      const discount_ = (subTotal / 100) * item.discount
+      const discount_ = (subTotal / 100) * item.discount?.rate
       const discountedTotal = subTotal - discount_
       const tax_ = (discountedTotal / 100) * item.tax
       const total = discountedTotal + tax_
@@ -96,7 +96,7 @@ const Refund: FC<EditInvoiceProps> = ({ invoice, onModalBackPress }) => {
 
   const renderTableRow = (item) => {
     const subTotal = item.price * item.quantity
-    const discountedTotal = subTotal - (subTotal / 100) * item.discount
+    const discountedTotal = subTotal - (subTotal / 100) * item.discount?.rate
     const total = (
       discountedTotal +
       (discountedTotal / 100) * item.tax

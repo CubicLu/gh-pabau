@@ -28,3 +28,9 @@ export const DisplayDateTime = (date: Date) => {
   const dateFormat = user?.me?.companyDateFormat
   return dayjs(date).format(dateTimeFormatMapper[dateFormat])
 }
+
+export const GetDateFormat = () => {
+  const user = useUser()
+  const dateFormat = user?.me?.companyDateFormat
+  return dateFormatMapper[dateFormat]
+}

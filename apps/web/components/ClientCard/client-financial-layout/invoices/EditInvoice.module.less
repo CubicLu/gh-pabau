@@ -321,3 +321,59 @@
   margin-right: 7px;
   border: 1px solid var(--success-color);
 }
+
+.editInvoiceOptionDrawer {
+  :global {
+    .ant-drawer-body {
+      padding: 0;
+      padding-top: 10px;
+    }
+    .ant-drawer-content {
+      border-radius: 15px;
+    }
+  }
+  .dragLine {
+    height: 3px;
+    width: 50px;
+    background-color: var(--gray-dark-color);
+    margin: 0 auto;
+  }
+  .header {
+    border-bottom: 1px solid var(--border-color-base);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    :global {
+      border-bottom: none;
+    }
+  }
+  .optionContainer {
+    padding-bottom: 10px;
+    padding-top: 15px;
+    & > .item {
+      margin: 1px 0px;
+      min-height: 35px;
+      display: -moz-box;
+      display: flex;
+      -moz-box-align: center;
+      align-items: center;
+      padding-left: 25px;
+      color: var(--light-grey-color);
+      cursor: pointer;
+      :global {
+        .anticon {
+          margin-right: 15px;
+        }
+      }
+    }
+    .footer {
+      height: 50px;
+      width: 100%;
+      background: #fff;
+      position: absolute;
+      bottom: 0;
+      padding: 10px;
+    }
+  }
+}

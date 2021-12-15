@@ -1,5 +1,8 @@
-query getBillers($service_id: Int = 0) {
-  billers: findManyInvBiller(where: {User: {deleted: {not: {equals: 1}}}}, orderBy: {name: asc}) {
+query getBillers {
+  billers: findManyInvBiller(
+    where: { User: { deleted: { not: { equals: 1 } } } }
+    orderBy: { name: asc }
+  ) {
     id
     name
     email
@@ -9,9 +12,6 @@ query getBillers($service_id: Int = 0) {
       id
       full_name
       image
-      ServiceUserTier(where: {service_id: {equals: $service_id}}) {
-        price
-      }
     }
   }
 }

@@ -54,7 +54,10 @@ const PaymentsTab: FC<Invoice> = ({ invoice }) => {
       invoice?.items
         ?.map((item) => {
           const subTotal = item.price * item.quantity
-          const discount_ = calculateDiscount(subTotal, item.discount)
+          const discount_ = calculateDiscount(subTotal, {
+            rate: item.discount,
+            type: '1',
+          })
           const discountedTotal = subTotal - discount_
           const tax_ = (discountedTotal / 100) * item.tax
           const total = discountedTotal + tax_

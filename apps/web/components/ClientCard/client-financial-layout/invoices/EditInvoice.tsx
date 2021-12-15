@@ -1,4 +1,9 @@
-import { FullScreenReportModal, OperationType } from '@pabau/ui'
+import {
+  FullScreenReportModal,
+  OperationType,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import {
   Tooltip,
@@ -10,8 +15,10 @@ import {
   Typography,
   Tag,
 } from 'antd'
+import moment from 'moment'
+import { useMedia } from 'react-use'
 import classNames from 'classnames'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { ReactComponent as SvgEmail } from '../../../../assets/images/mail.svg'
 import { InvoiceProp } from './../ClientFinancialsLayout'
 import styles from './EditInvoice.module.less'
@@ -19,6 +26,7 @@ import {
   CheckCircleFilled,
   ClockCircleFilled,
   DownOutlined,
+  MoreOutlined,
   CreditCardOutlined,
   ShareAltOutlined,
   PrinterOutlined,
@@ -39,24 +47,159 @@ import DetailsTab from './DetailsTab'
 import ItemsTab from './ItemsTab'
 import PaymentsTab from './PaymentsTab'
 import Refund from './Refund'
+import { GetDateFormat } from '../../../../hooks/displayDate'
+import { useGetInvoiceLazyQuery } from '@pabau/graphql'
 
 interface EditInvoiceProps {
+  id?: number
   invoice?: InvoiceProp
   onModalBackPress: () => void
   activeKey?: string
 }
 
 const EditInvoice: FC<EditInvoiceProps> = ({
+  id,
   invoice,
   onModalBackPress,
   activeKey,
 }) => {
+  const dateFormat = GetDateFormat()
   const [invoice_, setInvoice] = useState(invoice)
   const [enableCreateBtn, setEnableCreateBtn] = useState(
     invoice?.items?.length > 0
   )
   const { t } = useTranslation('common')
+  const isMobile = useMedia('(max-width: 768px)', false)
+  const [showOptionsDrawer, setShowOptionsDrawer] = useState(false)
   const { Title } = Typography
+
+  const [getInvoiceData, { data: invoiceDetailsData }] = useGetInvoiceLazyQuery(
+    {
+      fetchPolicy: 'network-only',
+    }
+  )
+
+  const menuItems = [
+    {
+      key: 'credit',
+      onClick: () => console.log('Credit Note'),
+      body: (
+        <>
+          <CreditCardOutlined /> {t('ui.client-card-financial.credit-note')}
+        </>
+      ),
+    },
+    {
+      key: 'share',
+      onClick: () => console.log('Share'),
+      body: (
+        <>
+          <ShareAltOutlined /> {t('ui.client-card-financial.share')}
+        </>
+      ),
+    },
+    {
+      key: 'print',
+      onClick: () => console.log('Print'),
+      body: (
+        <>
+          <PrinterOutlined /> {t('ui.client-card-financial.print')}
+        </>
+      ),
+    },
+    {
+      key: 'history',
+      onClick: () => setShowHistoryDrawer(true),
+      body: (
+        <>
+          <HistoryOutlined /> {t('ui.client-card-financial.history')}
+        </>
+      ),
+    },
+    {
+      key: 'refund',
+      onClick: () => setShowRefundModal(true),
+      className: styles.warningDropdown,
+      body: (
+        <>
+          <ReloadOutlined /> {t('ui.client-card-financial.refund')}
+        </>
+      ),
+    },
+    {
+      key: 'void',
+      onClick: () => setVoidModal(true),
+      className: styles.warningDropdown,
+      body: (
+        <>
+          <CloseCircleOutlined /> {t('ui.client-card-financial.void')}
+        </>
+      ),
+    },
+  ]
+
+  useEffect(() => {
+    if (id) {
+      getInvoiceData({
+        variables: {
+          id,
+        },
+      })
+    }
+  }, [id, getInvoiceData])
+
+  useEffect(() => {
+    if (invoiceDetailsData) {
+      if (!invoiceDetailsData.invoice) {
+        return Notification(
+          NotificationType.error,
+          t('ui.client-card-financial.invalid-invoice-no')
+        )
+      }
+      setInvoice({
+        guid: invoiceDetailsData.invoice.guid,
+        id: '' + invoiceDetailsData.invoice.id,
+        invoice_id: '' + invoiceDetailsData.invoice.number,
+        type: 'package',
+        booking: invoiceDetailsData.invoice.booking_id,
+        date: moment(invoiceDetailsData.invoice.date).utc().format(dateFormat),
+        location: invoiceDetailsData.invoice.Location?.id,
+        issuingCompany: invoiceDetailsData.invoice.IssuingCompany
+          ? invoiceDetailsData.invoice.IssuingCompany.id
+          : null,
+        contract: invoiceDetailsData.invoice.contract,
+        employee: invoiceDetailsData.invoice.Biller.name,
+        note: invoiceDetailsData.invoice.note,
+        issuedTo: `${invoiceDetailsData.invoice.Customer.Fname} ${invoiceDetailsData.invoice.Customer.Lname}`,
+        paid:
+          invoiceDetailsData.invoice.total ===
+          invoiceDetailsData.invoice.paid_amount,
+        status: 'outstanding_invoices',
+        items: [],
+        totalVat: 0,
+        amountPaid: invoiceDetailsData.invoice.paid_amount,
+        subtotal: invoiceDetailsData.invoice.total,
+        tips: 0,
+        grandTotal: invoiceDetailsData.invoice.total,
+        paymentStatus: 0,
+        paymentStatusTooltip:
+          'Full payment received on Sunday, 16 May 2021 at CHISSY BEAUTY STUDIO by Chissy Stylist',
+        tip: {
+          // amount: '100',
+          // type: 1,
+          // staff: 67803,
+        },
+        history: [],
+        payments: [],
+        customer: {
+          Fname: invoiceDetailsData.invoice.Customer.Fname,
+          ID: invoiceDetailsData.invoice.Customer.ID,
+          Lname: invoiceDetailsData.invoice.Customer.Lname,
+        },
+      })
+    }
+    /* eslint-disable-next-line */
+  }, [invoiceDetailsData, dateFormat])
 
   const toggleSentandNotSent = () => {
     setInvoice({
@@ -141,7 +284,7 @@ const EditInvoice: FC<EditInvoiceProps> = ({
       <div className={styles.editTitleContainer}>
         {getInvoiceStatus(invoice_?.paymentStatus)}
         <span style={{ marginLeft: 10 }}>
-          {invoice_.paid ? (
+          {invoice_?.paid ? (
             <Tag color="green">{t('ui.client-card-financial.paid')}</Tag>
           ) : (
             <Tag color="red">{t('ui.client-card-financial.unpaid')}</Tag>
@@ -153,32 +296,11 @@ const EditInvoice: FC<EditInvoiceProps> = ({
 
   const customMenu = (
     <Menu className={styles.customMenuDropdown}>
-      <Menu.Item key={'credit'} onClick={() => console.log('Credit Note')}>
-        <CreditCardOutlined /> {t('ui.client-card-financial.credit-note')}
-      </Menu.Item>
-      <Menu.Item key={'share'} onClick={() => console.log('Share')}>
-        <ShareAltOutlined /> {t('ui.client-card-financial.share')}
-      </Menu.Item>
-      <Menu.Item key={'print'} onClick={() => console.log('Print')}>
-        <PrinterOutlined /> {t('ui.client-card-financial.print')}
-      </Menu.Item>
-      <Menu.Item key={'history'} onClick={() => setShowHistoryDrawer(true)}>
-        <HistoryOutlined /> {t('ui.client-card-financial.history')}
-      </Menu.Item>
-      <Menu.Item
-        className={styles.warningDropdown}
-        key={'refund'}
-        onClick={() => setShowRefundModal(true)}
-      >
-        <ReloadOutlined /> {t('ui.client-card-financial.refund')}
-      </Menu.Item>
-      <Menu.Item
-        className={styles.warningDropdown}
-        key={'void'}
-        onClick={() => setVoidModal(true)}
-      >
-        <CloseCircleOutlined /> {t('ui.client-card-financial.void')}
-      </Menu.Item>
+      {menuItems.map((e) => (
+        <Menu.Item key={e.key} onClick={e.onClick} className={e?.className}>
+          {e.body}
+        </Menu.Item>
+      ))}
     </Menu>
   )
 
@@ -408,14 +530,59 @@ const EditInvoice: FC<EditInvoiceProps> = ({
               onClick={() => console.log('Preview')}
             >
               <EyeOutlined />
-              {t('ui.client-card-financial.preview')}
+              {!isMobile && t('ui.client-card-financial.preview')}
             </Button>
-            <Dropdown overlay={customMenu} placement="bottomRight">
-              <Button style={{ marginRight: 15 }}>
-                {t('ui.client-card-financial.options')}
-                <DownOutlined />
-              </Button>
-            </Dropdown>
+            {!isMobile && (
+              <Dropdown overlay={customMenu} placement="bottomRight">
+                <Button style={{ marginRight: 15 }}>
+                  {t('ui.client-card-financial.options')}
+                  <DownOutlined style={{ marginLeft: 5 }} />
+                </Button>
+              </Dropdown>
+            )}
+            {isMobile && (
+              <>
+                <Button
+                  style={{ marginRight: 15 }}
+                  onClick={() => setShowOptionsDrawer((e) => !e)}
+                >
+                  <MoreOutlined />
+                </Button>
+                <Drawer
+                  title=""
+                  placement={'bottom'}
+                  closable={true}
+                  onClose={() => setShowOptionsDrawer(false)}
+                  visible={showOptionsDrawer}
+                  key={'bottom'}
+                  height={350}
+                  headerStyle={{ display: 'none' }}
+                  className={styles.editInvoiceOptionDrawer}
+                >
+                  <div className={styles.dragLine}></div>
+                  <div className={styles.optionContainer}>
+                    {menuItems.map((i) => (
+                      <div
+                        key={i.key}
+                        className={styles.item}
+                        onClick={i.onClick}
+                      >
+                        {i.body}
+                      </div>
+                    ))}
+                    <div className={styles.footer}>
+                      <Button
+                        type="primary"
+                        block
+                        onClick={() => setShowOptionsDrawer((e) => !e)}
+                      >
+                        {t('ui.client-card-financial.options-close')}
+                      </Button>
+                    </div>
+                  </div>
+                </Drawer>
+              </>
+            )}
           </div>
         }
         visible={true}

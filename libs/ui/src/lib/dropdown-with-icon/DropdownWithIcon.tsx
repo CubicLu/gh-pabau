@@ -1,10 +1,13 @@
 import React, { FC, useState } from 'react'
-import { Select, Form } from 'antd'
+import { Select, Form, Tooltip } from 'antd'
 import { FormProps } from 'antd/lib/form'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
 import styles from './DropdownWithIcon.module.less'
+import EmployeeImg from './employee.png'
+import { getImage } from './../../helper/uploaders/UploadHelpers'
 
 export interface DropdownWithIconOption {
+  id?: string | number
   label: string
   icon: string
 }
@@ -17,6 +20,7 @@ export interface DropdownWithIconProps extends FormProps {
   onSelected?(val): void
   options: DropdownWithIconOption[]
   disabled?: boolean
+  profileError?: boolean
 }
 
 export const DropdownWithIcon: FC<DropdownWithIconProps> = ({
@@ -27,6 +31,7 @@ export const DropdownWithIcon: FC<DropdownWithIconProps> = ({
   onSelected,
   options,
   disabled = false,
+  profileError = false,
   ...props
 }) => {
   const [form] = Form.useForm()
@@ -40,17 +45,21 @@ export const DropdownWithIcon: FC<DropdownWithIconProps> = ({
     onSelected?.(selectedItem)
   }
 
-  return (
-    <div className={styles.dropdownContainerWithIcon}>
-      <Form form={form} layout="vertical" {...props}>
-        <Form.Item label={label ? label : ''} tooltip={tooltip ? tooltip : ''}>
-          <Select
-            value={selected.label}
-            onClick={(e) => handleClickSelect(e)}
-            size={size}
-            disabled={disabled}
-          >
-            {options.map((opt, index) => (
+  const content = () => {
+    return (
+      <>
+        {profileError === true && (
+          <div className={styles.dropdownPictureError}></div>
+        )}
+        <Select
+          value={selected.label}
+          onClick={(e) => handleClickSelect(e)}
+          size={size}
+          disabled={disabled}
+        >
+          {options.map((opt, index) => {
+            const img = opt.icon ? getImage(opt.icon) : EmployeeImg
+            return (
               <Select.Option
                 key={index}
                 value={opt.label}
@@ -58,13 +67,36 @@ export const DropdownWithIcon: FC<DropdownWithIconProps> = ({
               >
                 <img
                   alt={opt.label}
-                  src={opt.icon}
-                  style={{ width: '18px', marginBottom: '2px' }}
+                  src={img}
+                  style={{
+                    width: '18px',
+                    marginBottom: '2px',
+                    borderRadius: '50%',
+                  }}
                 />{' '}
                 {opt.label}
               </Select.Option>
-            ))}
-          </Select>
+            )
+          })}
+        </Select>
+      </>
+    )
+  }
+
+  return (
+    <div className={styles.dropdownContainerWithIcon}>
+      <Form form={form} layout="vertical" {...props}>
+        <Form.Item label={label ? label : ''} tooltip={tooltip ? tooltip : ''}>
+          {profileError ? (
+            <Tooltip
+              placement="bottom"
+              title={"This employee can't perform this service"}
+            >
+              {content()}
+            </Tooltip>
+          ) : (
+            content()
+          )}
         </Form.Item>
       </Form>
     </div>

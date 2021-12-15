@@ -1,0 +1,10 @@
+query getItemMaxQuantity($id: Int!) {
+  items: findFirstSaleItem(where: { id: { equals: $id } }) {
+    id
+    Product {
+      in_stock: _count {
+        InvWarehouseProduct
+      }
+    }
+  }
+}

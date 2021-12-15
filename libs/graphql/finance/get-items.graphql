@@ -31,6 +31,22 @@ query saleItems($guid: String!) {
       image
       alert_quantity
       allow_negative_qty
+      InvCategory {
+        category_type
+      }
+      Package {
+        id
+        disabledusers
+      }
+      Service: CompanyService {
+        id
+      }
+    }
+    Sale: InvSale {
+      Biller: InvBiller {
+        id
+        name
+      }
     }
   }
 }

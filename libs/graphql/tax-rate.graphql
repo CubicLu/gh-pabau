@@ -1,16 +1,9 @@
-query getTaxes($offset: Int, $limit: Int, $searchTerm: String = "%%") {
-  tax_rates(
-    offset: $offset
-    limit: $limit
-    order_by: { created_at: desc }
-    where: { name: { _like: $searchTerm } }
-  ) {
+query getTaxes {
+  findManyTax(orderBy: { name: asc }) {
     id
     name
+    rate
     value
-    is_active
-    glCode
-    created_at
   }
 }
 

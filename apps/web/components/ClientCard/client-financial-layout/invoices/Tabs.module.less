@@ -388,11 +388,50 @@
     }
   }
 }
+.addTipBodyContentMobileView {
+  padding: 10px 21px;
+  & > div.row {
+    margin-bottom: 20px;
+    span.title {
+      font-size: 14px;
+    }
+    & > div.bodyRow {
+      .bodyAmountField {
+        height: 36px;
+        :global {
+          .ant-input-affix-wrapper {
+            .ant-input-prefix {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+    & > div.buttonRow {
+      align-items: inherit;
+      flex-direction: row;
+      justify-content: center;
+      :global {
+        .ant-btn {
+          margin: 0px 3px;
+        }
+        .ant-btn > span {
+          color: inherit;
+        }
+      }
+    }
+  }
+}
 .invoiceTabSectionTableRow {
   height: 45px;
   width: 1200px;
   display: flex;
   flex-direction: row;
+  .itemName {
+    & > span {
+      font-size: 13px;
+    }
+  }
   & > div {
     display: flex;
     align-items: center;
@@ -421,6 +460,10 @@
     background-color: #fbfbfb;
     border-left: 2px solid var(--red-focused-color);
   }
+}
+.itemsTableRowError {
+  background-color: var(--red-focused-background-color);
+  border-left: 2px solid var(--red-focused-color);
 }
 .editInvoiceItemPriceField {
   :global {
@@ -714,12 +757,21 @@
     margin-bottom: 40px !important;
   }
 }
-.itemsDiscountDrawer {
+.itemsDropdownDrawer {
   :global {
     .ant-drawer-body {
       padding: 0;
       padding-top: 10px;
     }
+    .ant-drawer-content {
+      border-radius: 15px 15px 0px 0px;
+    }
+  }
+  .dragLine {
+    height: 3px;
+    width: 50px;
+    background-color: var(--gray-dark-color);
+    margin: 0 auto 5px;
   }
   .header {
     border-bottom: 1px solid var(--border-color-base);
@@ -742,9 +794,21 @@
       align-items: center;
       padding-left: 35px;
       color: var(--light-grey-color);
+      cursor: pointer;
     }
     :global {
       padding-bottom: 125px;
     }
   }
+}
+
+.itemsFieldError {
+  height: 7px;
+  width: 7px;
+  background-color: var(--red-color-text);
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  border-radius: 50%;
+  z-index: 10;
 }

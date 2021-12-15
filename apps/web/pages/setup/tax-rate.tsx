@@ -45,9 +45,9 @@ export function TaxRate() {
   const { data, loading } = useGetTaxesQuery({
     fetchPolicy: 'network-only',
     variables: {
-      offset: paginateData.offset,
-      limit: paginateData.limit,
-      searchTerm: `%${searchTerm}%`,
+      // offset: paginateData.offset,
+      // limit: paginateData.limit,
+      // searchTerm: `%${searchTerm}%`,
     },
   })
   const { data: aggregateData } = useGetTaxesAggregateQuery({
@@ -68,17 +68,17 @@ export function TaxRate() {
   })
 
   useEffect(() => {
-    if (data?.tax_rates) {
-      setTaxesData(data?.tax_rates)
+    if (data?.findManyTax) {
+      setTaxesData(data?.findManyTax)
     }
     if (aggregateData?.tax_rates_aggregate?.aggregate?.count > 0) {
       setPaginateData({
         ...paginateData,
         total: aggregateData?.tax_rates_aggregate?.aggregate?.count,
-        showingRecords: data?.tax_rates?.length,
+        showingRecords: data?.findManyTax?.length,
       })
     }
-    if (!loading && data?.tax_rates) setIsLoading(false)
+    if (!loading && data?.findManyTax) setIsLoading(false)
     // eslint-disable-next-line
   }, [data, loading, aggregateData])
 

@@ -4460,6 +4460,7 @@ en:
   ui.client-card-financial.invoice-notes: 'Invoice notes (optional)'
   ui.client-card-financial.add-third-party: 'Add Third Party'
   ui.client-card-financial.options: Options
+  ui.client-card-financial.options-close: Close
   ui.client-card-financial.credit-note: 'Credit Note'
   ui.client-card-financial.share: Share
   ui.client-card-financial.print: Print
@@ -4486,7 +4487,11 @@ en:
   ui.client-card-financial.items.total-price: 'Total price'
   ui.client-card-financial.items.item.select-item: 'Select item'
   ui.client-card-financial.items.item.select-discount: 'Select discount'
+  ui.client-card-financial.items.item.edit-discount: 'Edit discount'
   ui.client-card-financial.items.item.select-tax: 'Select tax'
+  ui.client-card-financial.items.item.edit-tax: 'Edit tax'
+  ui.client-card-financial.items.item.cancel: Cancel
+  ui.client-card-financial.items.item.save: Save
   ui.client-card-financial.items.total-discount: 'Total Discount'
   ui.client-card-financial.items.subtotal: Subtotal
   ui.client-card-financial.items.total-tax: 'Total tax'

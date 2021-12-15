@@ -6,9 +6,8 @@ query getInvoice($id: Int!) {
     note
     total
     paid_amount
-    discount_amount
-    inv_total
-    tip
+    insurer_contract_id
+    booking_id
     Customer: CmContact {
       ID
       Fname
@@ -30,10 +29,7 @@ query getInvoice($id: Int!) {
       id
       name: insurer_name
     }
-    Booking {
-      id
-      service
-    }
     guid
+    contract: contract_id
   }
 }

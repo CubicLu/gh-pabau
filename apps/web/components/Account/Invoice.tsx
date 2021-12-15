@@ -2,7 +2,6 @@ import React, { FC, useState, useEffect } from 'react'
 import { ButtonLabel } from '@pabau/ui'
 import { Avatar, Typography, Tooltip } from 'antd'
 import TableLayout, { AccountTabProps } from './TableLayout'
-// import styles from '../../pages/setup/settings/loyalty.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
@@ -12,6 +11,7 @@ import {
   useGetCompanyMetaQuery,
 } from '@pabau/graphql'
 import { DisplayDate } from '../../hooks/displayDate'
+import EditInvoice from './../../components/ClientCard/client-financial-layout/invoices/EditInvoice'
 
 export const tempType = {
   Paid: 'success',
@@ -28,6 +28,7 @@ const Invoice: FC<AccountTabProps> = ({
   companyCurrency,
 }) => {
   const [isHealthcodeEnabled, setIsHealthcodeEnabled] = useState<boolean>(false)
+  const [editInvoice, setEditInvoice] = useState<number>()
   const { t } = useTranslationI18()
   const [taxName, setTaxName] = useState('VAT')
   const { data } = useGetCompanyMetaQuery({
@@ -65,9 +66,13 @@ const Invoice: FC<AccountTabProps> = ({
       visible: true,
       skeletonWidth: '80px',
       width: '150px',
-      render: function render(data) {
+      render: function render(invoice_no, row) {
         return (
-          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+          <div onClick={() => setEditInvoice(row.id)}>
+            <Typography.Text style={{ color: '#54B2D3' }}>
+              {invoice_no}
+            </Typography.Text>
+          </div>
         )
       },
     },
@@ -245,19 +250,28 @@ const Invoice: FC<AccountTabProps> = ({
   }
 
   return (
-    <TableLayout
-      columns={InvoiceColumns}
-      searchTerm={searchTerm}
-      selectedDates={selectedDates}
-      filterValue={filterValue}
-      selectedRange={selectedRange}
-      listQuery={useInvoicesQuery}
-      aggregateQuery={useInvoiceCountQuery}
-      noDataText={t('account.finance.invoice.empty.data.text')}
-      setIsHealthcodeEnabled={setIsHealthcodeEnabled}
-      tabName="invoice"
-      accountRef={accountRef}
-    />
+    <>
+      {editInvoice && (
+        <EditInvoice
+          id={editInvoice}
+          onModalBackPress={() => setEditInvoice(0)}
+        />
+      )}
+
+      <TableLayout
+        columns={InvoiceColumns}
+        searchTerm={searchTerm}
+        selectedDates={selectedDates}
+        filterValue={filterValue}
+        selectedRange={selectedRange}
+        listQuery={useInvoicesQuery}
+        aggregateQuery={useInvoiceCountQuery}
+        noDataText={t('account.finance.invoice.empty.data.text')}
+        setIsHealthcodeEnabled={setIsHealthcodeEnabled}
+        tabName="invoice"
+        accountRef={accountRef}
+      />
+    </>
   )
 }
 
