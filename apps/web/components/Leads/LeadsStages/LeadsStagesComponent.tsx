@@ -7,6 +7,7 @@ import React, {
   createRef,
 } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import confetti from 'canvas-confetti'
 import { Tooltip, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { KanbanCard } from '@pabau/ui'
@@ -70,6 +71,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
   })
   const [leadsState, setLeadsState] = useState({})
   const [queryIsCalled, setQueryIsCalled] = useState(false)
+  const [leadQueryCalled, setLeadQueryCalled] = useState(0)
   const leadsLenghtRef = useRef({ leadsLength: 0 })
   const leadsArrayRef = useRef({ leadsObj: {} })
   const leadsContainerRef = useRef(null)
@@ -89,6 +91,10 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
   const { t } = useTranslationI18()
 
   const currentResetLead = resetLeadsRef.current
+
+  const randomInRange = (min, max) => {
+    return Math.random() * (max - min) + min
+  }
 
   const [
     getAllKanbanStages,
@@ -112,8 +118,9 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
     fetchPolicy: 'network-only',
     onCompleted: () => {
       const stageQuery = stageQueryRef.current
-      stageQuery.queryCompleted = true
       stageQuery.queryCalled = stageQuery.queryCalled + 1
+      stageQuery.queryCompleted = true
+      setLeadQueryCalled(leadQueryCalled + 1)
     },
   })
 
@@ -121,6 +128,26 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
     onError(e) {
       setLeadsState(currentResetLead.resetLeads)
       setAllStages(currentResetLead.resetStages)
+    },
+    onCompleted: (resp) => {
+      const { EnumStatus, pipeline_stage_id, ID } = resp.updateOneCmLead
+      const updatedLead = currentResetLead.resetLeads[
+        pipeline_stage_id
+      ].findIndex((leadObj) => leadObj.lead_id === ID)
+      if (
+        updatedLead !== -1 &&
+        currentResetLead.resetLeads[pipeline_stage_id][updatedLead][
+          `status`
+        ] !== `Converted` &&
+        EnumStatus === `Converted`
+      ) {
+        confetti({
+          angle: randomInRange(55, 125),
+          spread: randomInRange(50, 70),
+          particleCount: randomInRange(50, 100),
+          origin: { y: 0.6 },
+        })
+      }
     },
   })
 
@@ -166,15 +193,18 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
 
     newState = { ...leadsState }
 
-    if ([`Converted`, `Junk`].includes(destination.droppableId)) {
+    let leadObj = newState[sInd][source.index]
+    const prevLeadStatus = leadObj.status
+    currentResetLead.resetLeads = leadsState
+
+    if ([`Converted`, `Junk`]?.includes(destination.droppableId)) {
+      if (prevLeadStatus === destination.droppableId) return
       callUpdateOneCmLeadMutation(leadsState[sInd][source.index][`lead_id`], {
         EnumStatus: {
           set: destination.droppableId,
         },
       })
-      currentResetLead.resetLeads = leadsState
       cloneStageLeads = [...cloneStageLeads, ...newState[sInd]]
-      let leadObj = newState[sInd][source.index]
       leadObj = { ...leadObj, status: destination.droppableId }
       cloneStageLeads[source.index] = leadObj
       newState[sInd] = cloneStageLeads
@@ -428,6 +458,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
         setQueryIsCalled(false)
         leadsLenghtRef.current.leadsLength = limit + skip
         stageQuery.queryCalled = 0
+        setLeadQueryCalled(0)
         leadsContainerRef.current.scrollTop = scrollRef.current.position
       }
     }
@@ -440,6 +471,7 @@ const LeadsStagesComponent: FC<leadsStagesComponentProps> = ({
     leadsDefaultParams,
     leadsState,
     stageQueryRef,
+    leadQueryCalled,
     calledGetAllLeadsDetail,
   ])
 
