@@ -145,6 +145,15 @@ mutation moveContactAttachments($album: Int!, $images: [Int]!) {
   }
 }
 
+mutation changePhotoDate($photo_id: Int!, $date: Int!) {
+  updateOneContactAttachment(
+    where: { id: $photo_id }
+    data: { date: { set: $date } }
+  ) {
+    id
+  }
+}
+
 mutation deleteContactAlbum($id: Int!) {
   deleteContactAlbum(id: $id) {
     success
