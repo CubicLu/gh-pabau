@@ -1,0 +1,51 @@
+fragment LoyaltyPointSettingFields on LoyaltyPointSetting {
+  id
+  company_id
+  user_id
+  status
+  amount
+  created_date
+  modified_date
+  points_value
+  show_on_receipt
+}
+
+fragment LoyaltyPointSetting on LoyaltyPointSetting {
+  ...LoyaltyPointSettingFields
+  Company {
+    ...CompanyFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneLoyaltyPointSetting($data: LoyaltyPointSettingCreateInput!) {
+  createOneLoyaltyPointSetting(data: $data) {
+    ...LoyaltyPointSetting
+  }
+}
+
+mutation updateOneLoyaltyPointSetting(
+  $where: LoyaltyPointSettingWhereUniqueInput!
+  $data: LoyaltyPointSettingUpdateInput!
+) {
+  updateOneLoyaltyPointSetting(where: $where, data: $data) {
+    ...LoyaltyPointSetting
+  }
+}
+
+mutation deleteOneLoyaltyPointSetting($where: LoyaltyPointSettingWhereUniqueInput!) {
+  deleteOneLoyaltyPointSetting(where: $where) {
+    ...LoyaltyPointSetting
+  }
+}
+
+mutation updateManyLoyaltyPointSetting(
+  $where: LoyaltyPointSettingWhereInput
+  $data: LoyaltyPointSettingUpdateManyMutationInput!
+) {
+  updateManyLoyaltyPointSetting(where: $where, data: $data) {
+    count
+  }
+}

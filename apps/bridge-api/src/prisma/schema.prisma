@@ -341,7 +341,7 @@ model Company {
   ServiceEquipment        ServiceEquipment[]
   ConnectTheme            ConnectTheme[]
 
-  LoyaltyPointSettings LoyaltyPointSettings[]
+  LoyaltyPointSetting LoyaltyPointSetting[]
 
   @@map("admin")
 }
@@ -8297,7 +8297,7 @@ model LoyaltyPoints {
 }
 
 //
-model LoyaltyPointSettings {
+model LoyaltyPointSetting {
   id              Int       @id @default(autoincrement())
   company_id      Int?      @map("occupier")
   user_id         Int?
@@ -12992,14 +12992,14 @@ model User {
   LabRequestUser               LabRequest[]                   @relation("LabRequestUser")
   LabAssignedUser              LabRequest[]                   @relation("LabAssignedUser")
 
-  MedicalFormCreated           MedicalForm[]          @relation("MedicalFormCreated")
-  MedicalFormDeleted           MedicalForm[]          @relation("MedicalFormDeleted")
+  MedicalFormCreated           MedicalForm[]         @relation("MedicalFormCreated")
+  MedicalFormDeleted           MedicalForm[]         @relation("MedicalFormDeleted")
   CmContact                    CmContact[]
-  CreatedByMedicalFormContact  MedicalFormContact[]   @relation("MedicalContactFormCreated")
-  PrescriberMedicalFormContact MedicalFormContact[]   @relation("MedicalContactFormPrescribed")
+  CreatedByMedicalFormContact  MedicalFormContact[]  @relation("MedicalContactFormCreated")
+  PrescriberMedicalFormContact MedicalFormContact[]  @relation("MedicalContactFormPrescribed")
   BookingCancel                BookingCancel[]
   Communication                Communication[]
-  LoyaltyPointSettings         LoyaltyPointSettings[]
+  LoyaltyPointSetting          LoyaltyPointSetting[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
