@@ -59,6 +59,7 @@ const SettingsContextWrapper: FC = ({ children }) => {
     meta['pod_url'] = 'https://crm.pabau.com'
   } else {
     meta['pod_url'] = csr.findFirstCompany.remote_url
+    localStorage.setItem('remoteurl', csr.findFirstCompany.remote_url)
   }
 
   return (

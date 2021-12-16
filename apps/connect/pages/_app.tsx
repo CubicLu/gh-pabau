@@ -25,6 +25,7 @@ const GRAPHQL_HTTP_ENDPOINT =
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('connect_token')
+  const rurl = localStorage.getItem('remoteurl')
   let token2 = null
   if (token) token2 = JSON.parse(token)
   return {
@@ -32,8 +33,9 @@ const authLink = setContext((_, { headers }) => {
       ? {
           ...headers,
           authorization: `Bearer ${token2}`,
+          remoteurl: rurl,
         }
-      : headers,
+      : { ...headers, remoteurl: rurl },
   }
 })
 const wsLink = process.browser
