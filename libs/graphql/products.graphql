@@ -166,7 +166,7 @@ query categoryList(
 ) {
   findManyInvCategory(
     where: {
-      category_type: { in: ["retail", "injectable", "consumable"] }
+      category_type: { in: ["retail", "injectables", "consumable"] }
       disabled: { equals: $disabled }
       name: { contains: $searchTerm }
     }
@@ -181,7 +181,7 @@ query categoryList(
   }
   findManyInvCategoryCount(
     where: {
-      category_type: { in: ["retail", "injectable", "consumable"] }
+      category_type: { in: ["retail", "injectables", "consumable"] }
       disabled: { equals: $disabled }
       name: { contains: $searchTerm }
     }
@@ -308,7 +308,7 @@ query retrieveProductsGroupByMasterCategory {
     name
     ord
     InvCategory(
-      where: { category_type: { in: ["retail", "injectable", "consumable"] } }
+      where: { category_type: { in: ["retail", "injectables", "consumable"] } }
       orderBy: { order: desc }
     ) {
       id
@@ -320,7 +320,7 @@ query retrieveProductsGroupByMasterCategory {
 
 query retrieveProductGroups {
   findManyInvCategory(
-    where: { category_type: { in: ["retail", "injectable", "consumable"] } }
+    where: { category_type: { in: ["retail", "injectables", "consumable"] } }
     orderBy: { order: desc }
   ) {
     ...Category
@@ -336,7 +336,7 @@ query createProductModalInit {
     ...ProductTaxFields
   }
   findManyInvCategory(
-    where: { category_type: { in: ["retail", "injectable", "consumable"] } }
+    where: { category_type: { in: ["retail", "injectables", "consumable"] } }
     orderBy: { order: asc }
   ) {
     ...Category
@@ -491,7 +491,7 @@ mutation updateOneServicesMasterCategory(
 
 query retrieveProductCountByCategory($active: Int = 1, $search: String = "") {
   findManyInvCategory(
-    where: { category_type: { in: ["retail", "injectable", "consumable"] } }
+    where: { category_type: { in: ["retail", "injectables", "consumable"] } }
     orderBy: { order: asc }
   ) {
     id
