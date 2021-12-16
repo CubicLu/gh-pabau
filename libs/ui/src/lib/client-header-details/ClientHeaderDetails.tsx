@@ -533,7 +533,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                                   ? t(
                                       'clients.clientcard.staffalerts.nopermission'
                                     )
-                                  : null
+                                  : t('common-label-edit')
                               }
                               placement="bottomRight"
                             >
@@ -560,7 +560,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                                   ? t(
                                       'clients.clientcard.staffalerts.nopermission'
                                     )
-                                  : null
+                                  : t('common-label-delete')
                               }
                               placement="bottomRight"
                             >

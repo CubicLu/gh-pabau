@@ -557,6 +557,14 @@ export const ClientCardLayout: FC<P> = ({
       variables: {
         where: { ID: id },
       },
+      update: (cache, { data: { deleteOneContactNote } }) => {
+        updateClientNotesCount(
+          clientId,
+          cache,
+          deleteOneContactNote?.ID,
+          NoteCountOperandType.Subtract
+        )
+      },
     })
     getContactHeaderRefetch()
   }
