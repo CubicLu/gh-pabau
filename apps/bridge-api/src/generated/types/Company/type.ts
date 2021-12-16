@@ -2065,6 +2065,20 @@ export const Company = objectType({
         return root.ConnectTheme
       },
     })
+    t.list.field('LoyaltyPointSettings', {
+      type: 'LoyaltyPointSettings',
+      args: {
+        where: 'LoyaltyPointSettingsWhereInput',
+        orderBy: 'LoyaltyPointSettingsOrderByWithRelationInput',
+        cursor: 'LoyaltyPointSettingsWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LoyaltyPointSettingsScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LoyaltyPointSettings
+      },
+    })
     t.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

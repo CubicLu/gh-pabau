@@ -340,6 +340,9 @@ model Company {
   Equipment               Equipment[]
   ServiceEquipment        ServiceEquipment[]
   ConnectTheme            ConnectTheme[]
+
+  LoyaltyPointSettings LoyaltyPointSettings[]
+
   @@map("admin")
 }
 
@@ -1456,6 +1459,7 @@ model CompanyDetails {
   User                    User[]
   InvoiceTemplate         InvoiceTemplate[]
   InvoiceDefaultTemplate  InvoiceTemplate          @relation("default_template", fields: [default_inv_template_id], references: [id])
+
 
   @@index([company_id], name: "company_id")
   @@index([timezone_id], name: "timezone_id")
@@ -8293,19 +8297,23 @@ model LoyaltyPoints {
 }
 
 //
-//model loyalty_point_settings {
-//  id              Int       @id @default(autoincrement())
-//  occupier        Int?
-//  user_id         Int?
-//  status          Int?
-//  amount          Float?
-//  created_date    DateTime?
-//  modified_date   DateTime?
-//  points_value    Float
-//  show_on_receipt Int
-//
-//  @@index([occupier], name: "occupier")
-//}
+model LoyaltyPointSettings {
+  id              Int       @id @default(autoincrement())
+  company_id      Int?      @map("occupier")
+  user_id         Int?
+  status          Int?
+  amount          Float?
+  created_date    DateTime?
+  modified_date   DateTime?
+  points_value    Float
+  show_on_receipt Int
+  Company         Company?  @relation(fields: [company_id], references: [id])
+  User            User?     @relation(fields: [user_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@map("loyalty_point_settings")
+}
+
 //
 //model loyalty_promotion {
 //  id             Int    @id @default(autoincrement())
@@ -12984,13 +12992,14 @@ model User {
   LabRequestUser               LabRequest[]                   @relation("LabRequestUser")
   LabAssignedUser              LabRequest[]                   @relation("LabAssignedUser")
 
-  MedicalFormCreated           MedicalForm[]        @relation("MedicalFormCreated")
-  MedicalFormDeleted           MedicalForm[]        @relation("MedicalFormDeleted")
+  MedicalFormCreated           MedicalForm[]          @relation("MedicalFormCreated")
+  MedicalFormDeleted           MedicalForm[]          @relation("MedicalFormDeleted")
   CmContact                    CmContact[]
-  CreatedByMedicalFormContact  MedicalFormContact[] @relation("MedicalContactFormCreated")
-  PrescriberMedicalFormContact MedicalFormContact[] @relation("MedicalContactFormPrescribed")
+  CreatedByMedicalFormContact  MedicalFormContact[]   @relation("MedicalContactFormCreated")
+  PrescriberMedicalFormContact MedicalFormContact[]   @relation("MedicalContactFormPrescribed")
   BookingCancel                BookingCancel[]
   Communication                Communication[]
+  LoyaltyPointSettings         LoyaltyPointSettings[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
