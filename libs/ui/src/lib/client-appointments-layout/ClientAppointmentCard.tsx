@@ -1,6 +1,5 @@
 import React, { FC, useState } from 'react'
 import Link from 'next/link'
-import moment from 'moment'
 import { useRouter } from 'next/router'
 import cn from 'classnames'
 import {
@@ -466,9 +465,9 @@ export const ClientAppointmentCard: FC<
                   </Badge>
                 </Tooltip>
               </div>
-              <p className={styles.locationTime}>{`(${moment(apptDate).format(
+              <p className={styles.locationTime}>{`(${dayjs(apptDate).format(
                 'ddd'
-              )}) @ ${moment(apptDate).format('hh:mm')} | ${locationName}`}</p>
+              )}) @ ${dayjs(apptDate).format('hh:mm')} | ${locationName}`}</p>
             </div>
           </div>
           <EditableNote
@@ -500,8 +499,8 @@ export const ClientAppointmentCard: FC<
         <div className={styles.statusContainer}>
           {!isHover && !openPopover && (
             <div className={styles.status}>
-              {createdDate < moment().format() &&
-                moment().diff(moment(createdDate), 'hours') < 24 &&
+              {createdDate < dayjs().format() &&
+                dayjs().diff(dayjs(createdDate), 'hour') < 24 &&
                 displayStatusLabel(AppointmentStatus.new)}
               {status === AppointmentStatus.cancelled &&
                 displayStatusLabel(AppointmentStatus.cancelled)}
