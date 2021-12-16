@@ -185,6 +185,8 @@ export const permissions = shield(
       updateOneLabRequest: rules.authentication.isAuthenticated,
       // LeadNote
       updateOneCmLeadNote: rules.authentication.isAuthenticated,
+      // Staff
+      updateStaffServices: rules.authentication.isAuthenticated,
       // Default fallback
       reorderCommunicationTemplates: rules.authentication.isAuthenticated,
       deleteOneContactMedicalCondition: rules.authentication.isAuthenticated,

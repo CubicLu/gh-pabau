@@ -1,4 +1,11 @@
-import { extendType, nonNull, list } from 'nexus'
+import {
+  extendType,
+  nonNull,
+  list,
+  mutationField,
+  intArg,
+  inputObjectType,
+} from 'nexus'
 import { Context } from '../../context'
 
 export const StaffExtended = extendType({
@@ -26,5 +33,68 @@ export const StaffExtended = extendType({
         return locations
       },
     })
+  },
+})
+
+export const UpdateStaffServices = mutationField('updateStaffServices', {
+  type: 'Boolean',
+  args: {
+    userId: nonNull(intArg()),
+    services: nonNull(
+      list(
+        inputObjectType({
+          name: 'StaffServicesArg',
+          definition(t) {
+            t.nonNull.int('id')
+            t.nonNull.boolean('disabled')
+          },
+        })
+      )
+    ),
+  },
+  async resolve(_parent, args, ctx: Context) {
+    for (const service of args.services) {
+      const serviceData = await ctx.prisma.companyService.findUnique({
+        where: {
+          id: service.id,
+        },
+        select: {
+          disabledusers: true,
+        },
+      })
+
+      const disabledUsers =
+        serviceData.disabledusers && serviceData.disabledusers !== ''
+          ? serviceData.disabledusers
+              .split(',')
+              .map((elem) => Number.parseInt(elem))
+          : []
+
+      if (service.disabled && !disabledUsers.includes(args.userId)) {
+        await ctx.prisma.companyService.update({
+          where: {
+            id: service.id,
+          },
+          data: {
+            disabledusers:
+              disabledUsers.length > 0
+                ? serviceData.disabledusers + ',' + args.userId
+                : args.userId.toString(),
+          },
+        })
+      } else if (!service.disabled && disabledUsers.includes(args.userId)) {
+        await ctx.prisma.companyService.update({
+          where: {
+            id: service.id,
+          },
+          data: {
+            disabledusers: disabledUsers
+              .filter((user) => user !== args.userId)
+              .join(','),
+          },
+        })
+      }
+    }
+    return true
   },
 })
