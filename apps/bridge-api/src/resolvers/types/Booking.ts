@@ -6,6 +6,7 @@ import {
   inputObjectType,
   intArg,
   stringArg,
+  objectType,
 } from 'nexus'
 import { Context } from '../../context'
 import {
@@ -211,6 +212,88 @@ export const CancelAppointment = extendType({
           }
         }
         return responseData
+      },
+    })
+  },
+})
+
+export const BookingRequestedForms = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('getBookingRequestedForms', {
+      type: list(
+        objectType({
+          name: 'BookingRequestedFormsType',
+          definition(t) {
+            t.string('formName')
+            t.int('formStatus')
+            t.date('requestedOn')
+            t.nullable.date('completedOn')
+          },
+        })
+      ),
+      args: {
+        bookingId: nonNull(intArg()),
+      },
+      async resolve(_root, { bookingId }, ctx: Context) {
+        const response = []
+        const requestedForms = await ctx.prisma.communicationsRequestedForms.findFirst(
+          {
+            where: {
+              booking_id: {
+                equals: bookingId,
+              },
+              company_id: {
+                equals: ctx.authenticated.company,
+              },
+            },
+          }
+        )
+
+        if (requestedForms) {
+          const formIds = requestedForms.form_ids
+            ? JSON.parse(requestedForms.form_ids)
+            : []
+
+          const medicalForms = await ctx.prisma.medicalForm.findMany({
+            where: {
+              id: {
+                in: formIds,
+              },
+              company_id: {
+                equals: ctx.authenticated.company,
+              },
+            },
+          })
+
+          for (const medicalForm of medicalForms) {
+            const medicalFormContact = await ctx.prisma.medicalFormContact.findFirst(
+              {
+                where: {
+                  contact_id: {
+                    equals: requestedForms.contact_id,
+                  },
+                  form_id: {
+                    equals: medicalForm.id,
+                  },
+                  related_to: {
+                    equals: requestedForms.booking_id,
+                  },
+                },
+              }
+            )
+            response.push({
+              formName: medicalForm.name,
+              formStatus: medicalFormContact ? 1 : 0,
+              requestedOn: requestedForms.created_date,
+              completedOn: medicalFormContact
+                ? medicalFormContact.created_at
+                : null,
+            })
+          }
+        }
+
+        return response
       },
     })
   },
