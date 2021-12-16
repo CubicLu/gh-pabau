@@ -24,6 +24,7 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
   handleStepTwoSubmit,
 }) => {
   const [isValidPhone, setValidPhone] = useState<boolean>(false)
+
   countries.registerLocale(english)
   const { t } = useTranslationI18()
 
@@ -52,12 +53,9 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
         }}
         render={({ setFieldValue }) => (
           <Form className={styles.signupInputs__form} layout="vertical">
-            <Form.Item
-              // label={t('signup.phone.number')}
-              name={'phoneNumber'}
-              className={styles.signupInput}
-            >
+            <Form.Item name={'phoneNumber'} className={styles.signupInput}>
               <PhoneNumberInput
+                label={t('signup.phone.number')}
                 onChange={(value, valid) => {
                   setFieldValue('phoneNumber', value)
                   if (!valid) {
@@ -87,11 +85,7 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
               </Checkbox>
             </div>
             <div className={styles.signupButton}>
-              <SubmitButton
-                className={styles.btnStarted}
-                type={'primary'}
-                disabled={!isValidPhone}
-              >
+              <SubmitButton className={styles.btnStarted} type={'primary'}>
                 {t('signup.create.account')}
               </SubmitButton>
             </div>

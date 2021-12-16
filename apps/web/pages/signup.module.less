@@ -66,9 +66,7 @@
         .signup-button {
           margin-top: 40px;
           .btn-started {
-            background: #54b2d3;
             border-radius: 4px;
-            color: #ffffff;
             font-weight: normal;
             font-size: 14px;
             line-height: 20px;
@@ -122,9 +120,33 @@
     width: 100%;
     flex-direction: column;
   }
+  .signupInputs__div {
+    width: 100%;
+    flex-direction: column;
+  }
   .signupInput__Company {
     width: 100%;
     flex-direction: column;
+  }
+  .signupInput {
+    width: 100%;
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 1;
+  }
+  .signupInput__div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+  }
+  .signupInput {
+    width: 100%;
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 1;
   }
 }
 @media (max-width: 600px) {
@@ -134,11 +156,11 @@
       padding: 40px 5%;
     }
   }
-  .signupInputs__div {
-    width: 100%;
-    flex-direction: column;
-  }
   .signupInput__CompanyForm {
+    width: 100%;
+    flex: 1;
+  }
+  .signupInput {
     width: 100%;
     flex: 1;
   }
@@ -146,13 +168,14 @@
 
 .signupInput {
   width: 100%;
-  flex: 1;
+  padding: 10px;
 }
 .signupInput__Company {
   width: 100%;
 }
 .signupInput__CompanyForm {
-  // width: 50%;
+  padding: 10px;
+  width: 100%;
   flex: 1;
 }
 
@@ -160,5 +183,11 @@
   display: flex !important;
   justify-content: space-between;
   align-items: center !important;
+  width: 100%;
+}
+
+.signupInput__div {
+  justify-content: space-between;
+  display: flex;
   width: 100%;
 }

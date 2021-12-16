@@ -2,6 +2,7 @@ import { Button, Popover } from 'antd'
 import { Form, Input } from 'formik-antd'
 import LocationSetingsMore from './LocationSetingsMore'
 import styles from './LocationSettings.module.less'
+
 function LocationSettings() {
   const content = <LocationSetingsMore />
 

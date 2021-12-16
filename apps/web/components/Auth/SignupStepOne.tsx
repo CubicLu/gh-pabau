@@ -47,24 +47,34 @@ export const SignupStepOne: FC<SignupStepOneProps> = ({
         }}
         render={({ setFieldValue }) => (
           <Form layout="vertical">
+            <Form layout="vertical" className={styles.signupInput__div}>
+              <Form.Item
+                label={t('signup.first.name')}
+                name={'firstName'}
+                className={styles.signupInput}
+              >
+                <Input name={'firstName'} />
+              </Form.Item>
+              <Form.Item
+                label={t('signup.last.name')}
+                name={'lastName'}
+                className={styles.signupInput}
+              >
+                <Input name={'lastName'} />
+              </Form.Item>
+            </Form>
             <Form.Item
-              label={t('signup.first.name')}
-              name={'firstName'}
               className={styles.signupInput}
+              label={t('signup.work.email')}
+              name={'workEmail'}
             >
-              <Input name={'firstName'} />
-            </Form.Item>
-            <Form.Item
-              label={t('signup.last.name')}
-              name={'lastName'}
-              className={styles.signupInput}
-            >
-              <Input name={'lastName'} />
-            </Form.Item>
-            <Form.Item label={t('signup.work.email')} name={'workEmail'}>
               <Input name={'workEmail'} />
             </Form.Item>
-            <Form.Item label={t('signup.password')} name={'password'}>
+            <Form.Item
+              className={styles.signupInput}
+              label={t('signup.password')}
+              name={'password'}
+            >
               <PasswordWithHelper
                 onChange={(value) => setFieldValue('password', value)}
               />
