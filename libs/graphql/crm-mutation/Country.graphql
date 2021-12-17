@@ -2,7 +2,7 @@ fragment CountryFields on Country {
   country_id
   CountryCode
   country_name
-  Currency
+  currency
   Continent
   phone_prefix
   sms_base_rate

@@ -1,0 +1,40 @@
+fragment CurrencyFields on Currency {
+  ID
+  code
+  symbol
+  name
+  plural
+  decimaldigits
+  rounding
+}
+
+fragment Currency on Currency {
+  ...CurrencyFields
+  Country {
+    ...CountryFields
+  }
+}
+
+mutation createOneCurrency($data: CurrencyCreateInput!) {
+  createOneCurrency(data: $data) {
+    ...Currency
+  }
+}
+
+mutation updateOneCurrency($where: CurrencyWhereUniqueInput!, $data: CurrencyUpdateInput!) {
+  updateOneCurrency(where: $where, data: $data) {
+    ...Currency
+  }
+}
+
+mutation deleteOneCurrency($where: CurrencyWhereUniqueInput!) {
+  deleteOneCurrency(where: $where) {
+    ...Currency
+  }
+}
+
+mutation updateManyCurrency($where: CurrencyWhereInput, $data: CurrencyUpdateManyMutationInput!) {
+  updateManyCurrency(where: $where, data: $data) {
+    count
+  }
+}

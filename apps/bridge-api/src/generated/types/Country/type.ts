@@ -10,7 +10,7 @@ export const Country = objectType({
     t.int('country_id')
     t.string('CountryCode')
     t.string('country_name')
-    t.string('Currency')
+    t.string('currency')
     t.string('Continent')
     t.int('phone_prefix')
     t.float('sms_base_rate')
@@ -38,6 +38,20 @@ export const Country = objectType({
       },
       resolve(root: any) {
         return root.CmContactTravel
+      },
+    })
+    t.list.field('Currency', {
+      type: 'Currency',
+      args: {
+        where: 'CurrencyWhereInput',
+        orderBy: 'CurrencyOrderByWithRelationInput',
+        cursor: 'CurrencyWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CurrencyScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Currency
       },
     })
     t.field('_count', {

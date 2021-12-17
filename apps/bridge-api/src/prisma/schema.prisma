@@ -4828,7 +4828,7 @@ model Country {
   country_id              Int    @id @default(autoincrement())
   CountryCode             String
   country_name            String
-  Currency                String
+  currency                String @map("Currency")
   Continent               String
   phone_prefix            Int
   sms_base_rate           Float
@@ -4846,6 +4846,7 @@ model Country {
   custom_id               String
 
   CmContactTravel CmContactTravel[]
+  Currency        Currency[]
   @@map("countries")
 }
 
@@ -5088,17 +5089,20 @@ model CreditNoteType {
 //  type String
 //  date DateTime
 //}
-//
-//model currencies {
-//  ID            Int    @id @default(autoincrement())
-//  code          String
-//  symbol        String
-//  name          String
-//  plural        String
-//  decimaldigits Int
-//  rounding      Int
-//}
-//
+
+model Currency {
+  ID            Int    @id @default(autoincrement())
+  code          String @unique
+  symbol        String
+  name          String
+  plural        String
+  decimaldigits Int
+  rounding      Int
+
+  Country Country? @relation(fields: [code], references: [currency])
+  @@map("currencies")
+}
+
 //model customer_users {
 //  id        Int      @id @default(autoincrement())
 //  firstname String
