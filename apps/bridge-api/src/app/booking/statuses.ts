@@ -18,8 +18,8 @@ export const retrieveAllBookingChartData = async (
   let booking
   let bookingDataSet = []
   let final = []
-  const endDate = dayjs(data.end_date).format('YYYY-MM-DD')
-  const startDate = dayjs(data.start_date).format('YYYY-MM-DD')
+  const endDate = dayjs(`${data.end_date}`).format('YYYY-MM-DD')
+  const startDate = dayjs(`${data.start_date}`).format('YYYY-MM-DD')
   const month = dayjs(endDate).diff(startDate, 'month')
   const year = dayjs(endDate).diff(startDate, 'year')
   const week = dayjs(endDate).diff(startDate, 'week')

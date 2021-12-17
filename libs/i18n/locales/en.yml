@@ -5537,6 +5537,7 @@ en:
   dashboard.recent.appointments.label: 'Recent Appointments'
   dashboard.product.table.label: Products
   dashboard.service.table.label: Services
+  dashboard.all.location: All Locations
   team.user.services.save.changes.button: 'Save changes'
   team.user.services.title: Services
   team.user.services.choose.services.title: ' Choose the services this employee can perform'

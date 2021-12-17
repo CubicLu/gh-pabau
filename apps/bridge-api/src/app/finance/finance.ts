@@ -1256,8 +1256,8 @@ export const retrieveSalesCount = async (
   ctx: Context,
   data: DateRangeInput
 ) => {
-  const start_date = dayjs(data.start_date).format('YYYY-MM-DDTHH:mm:ssZ')
-  const end_date = dayjs(data.end_date).format('YYYY-MM-DDTHH:mm:ssZ')
+  const start_date = dayjs(`${data.start_date}`).format('YYYY-MM-DDTHH:mm:ssZ')
+  const end_date = dayjs(`${data.end_date}`).format('YYYY-MM-DDTHH:mm:ssZ')
   const prev_data = getPreviousDateRange(data.start_date, data.end_date)
   let prevSales = []
   prevSales = await ctx.prisma
@@ -1343,10 +1343,10 @@ export const retrieveSalesChartData = async (
   let final = []
   let sale
   let saleDataSet = []
-  const start_date = dayjs(data.start_date).format('YYYY-MM-DDTHH:mm:ssZ')
-  const end_date = dayjs(data.end_date).format('YYYY-MM-DDTHH:mm:ssZ')
-  const endDate = dayjs(data.end_date).format('YYYY-MM-DD')
-  const startDate = dayjs(data.start_date).format('YYYY-MM-DD')
+  const start_date = dayjs(`${data.start_date}`).format('YYYY-MM-DDTHH:mm:ssZ')
+  const end_date = dayjs(`${data.end_date}`).format('YYYY-MM-DDTHH:mm:ssZ')
+  const endDate = dayjs(`${data.end_date}`).format('YYYY-MM-DD')
+  const startDate = dayjs(`${data.start_date}`).format('YYYY-MM-DD')
   const month = dayjs(endDate).diff(startDate, 'month')
   const year = dayjs(endDate).diff(startDate, 'year')
   const week = dayjs(endDate).diff(startDate, 'week')
@@ -1591,8 +1591,8 @@ export const retriveOtherDetails = async (
   let week = 0
   let day = 0
   if (data.start_date && data.end_date) {
-    const endDate = dayjs(data.end_date).format('YYYY-MM-DD')
-    const startDate = dayjs(data.start_date).format('YYYY-MM-DD')
+    const endDate = dayjs(`${data.end_date}`).format('YYYY-MM-DD')
+    const startDate = dayjs(`${data.start_date}`).format('YYYY-MM-DD')
     month = dayjs(endDate).diff(startDate, 'month')
     year = dayjs(endDate).diff(startDate, 'year')
     week = dayjs(endDate).diff(startDate, 'week')
@@ -1600,10 +1600,10 @@ export const retriveOtherDetails = async (
   } else {
     const allRecordDates = await ctx.prisma
       .$queryRaw`SELECT MIN(b.created_date),MAX(b.created_date) FROM inv_sale_items a INNER JOIN inv_sales b on a.sale_id=b.id where b.occupier = ${ctx.authenticated.company}`
-    const startDate = dayjs(allRecordDates[0]['MIN(b.created_date)']).format(
-      'YYYY-MM-DD'
-    )
-    const endDate = dayjs(allRecordDates[0]['MAX(b.created_date)']).format(
+    const startDate = dayjs(
+      `${allRecordDates[0]['MIN(b.created_date)']}`
+    ).format('YYYY-MM-DD')
+    const endDate = dayjs(`${allRecordDates[0]['MAX(b.created_date)']}`).format(
       'YYYY-MM-DD'
     )
     month = dayjs(endDate).diff(startDate, 'month')

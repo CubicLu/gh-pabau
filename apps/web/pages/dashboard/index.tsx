@@ -50,7 +50,7 @@ export function Index() {
   const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
-  const [dashboardMode, setDashboardMode] = useState(0)
+  const [personalDashboardMode, setPersonalDashboardMode] = useState(0)
   const [userListData, setUserListData] = useState<ISetUser[]>(locationList)
   const [location, setLocation] = useState<ISetUser>({
     key: 0,
@@ -88,6 +88,11 @@ export function Index() {
     count: 0,
     per: '0%',
   })
+  const [admin, setAdmin] = useState(false)
+
+  useEffect(() => {
+    setAdmin(user?.me?.admin)
+  }, [user])
 
   const { data: locations } = useQuery(GetCmStaffGeneralLocationsDocument, {
     variables: {
@@ -110,13 +115,15 @@ export function Index() {
               )
             : null,
         location_id:
-          dashboardMode === 1 || location.key === 0 ? null : location?.key,
-        user_id: dashboardMode === 1 ? user?.me?.user : null,
+          personalDashboardMode === 1 || location.key === 0
+            ? null
+            : location?.key,
+        user_id: personalDashboardMode === 1 ? user?.me?.user : null,
       },
     }
     return queryOptions
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dashboardMode, filterDate, location])
+  }, [personalDashboardMode, filterDate, location])
 
   const { data: financeDetails, loading: financeDetailLoading } = useQuery(
     GetFinanceDetailsDocument,
@@ -312,7 +319,7 @@ export function Index() {
     setOpenUserList(false)
   }
   const handleDashboardMode = () => {
-    setDashboardMode(dashboardMode === 1 ? 0 : 1)
+    setPersonalDashboardMode(personalDashboardMode === 1 ? 0 : 1)
   }
   const dateFilter = (
     <div className={styles.dateFilterContainer}>
@@ -377,8 +384,8 @@ export function Index() {
         <CommonHeader
           title={
             !loading
-              ? user?.me?.admin
-                ? dashboardMode === 0
+              ? admin
+                ? personalDashboardMode === 0
                   ? t('dashboard.business.dashboard', {
                       fallbackLng: 'en',
                     })
@@ -397,10 +404,12 @@ export function Index() {
               <Avatar
                 size="large"
                 src={
-                  dashboardMode === 0
-                    ? user?.me?.companies?.length > 0
-                      ? cdnURL + user?.me?.companies[0]?.logo
-                      : ''
+                  admin
+                    ? personalDashboardMode === 0
+                      ? user?.me?.companies?.length > 0
+                        ? cdnURL + user?.me?.companies[0]?.logo
+                        : ''
+                      : cdnURL + user?.me?.imageUrl
                     : cdnURL + user?.me?.imageUrl
                 }
                 isLoading={loading}
@@ -410,35 +419,44 @@ export function Index() {
                   <>
                     <div className={styles.topTitle}>
                       <div className={styles.title}>
-                        {dashboardMode === 1
-                          ? `${user?.me?.fullName}`
-                          : location.label}
+                        {admin
+                          ? personalDashboardMode === 1
+                            ? `${user?.me?.fullName}`
+                            : location.label
+                          : `${user?.me?.fullName}`}
+                        {}
                       </div>{' '}
-                      {dashboardMode === 1 ? null : !isMobile ? (
-                        <Dropdown
-                          overlay={customMenu}
-                          placement="bottomCenter"
-                          onVisibleChange={(val) => setOpenUserList(val)}
-                        >
-                          <div
-                            className={styles.downIcon}
-                            onClick={() => setOpenUserList(!openUserList)}
+                      {admin ? (
+                        personalDashboardMode === 1 ? null : !isMobile ? (
+                          <Dropdown
+                            overlay={customMenu}
+                            placement="bottomCenter"
+                            onVisibleChange={(val) => setOpenUserList(val)}
                           >
-                            {!openUserList ? <DownOutlined /> : <UpOutlined />}
+                            <div
+                              className={styles.downIcon}
+                              onClick={() => setOpenUserList(!openUserList)}
+                            >
+                              {!openUserList ? (
+                                <DownOutlined />
+                              ) : (
+                                <UpOutlined />
+                              )}
+                            </div>
+                          </Dropdown>
+                        ) : (
+                          <div className={styles.downIcon} onClick={showDrawer}>
+                            {!visible ? <DownOutlined /> : <UpOutlined />}
                           </div>
-                        </Dropdown>
-                      ) : (
-                        <div className={styles.downIcon} onClick={showDrawer}>
-                          {!visible ? <DownOutlined /> : <UpOutlined />}
-                        </div>
-                      )}
+                        )
+                      ) : null}
                     </div>
-                    {user?.me?.admin ? (
+                    {admin ? (
                       <div
                         className={styles.topDescription}
                         onClick={handleDashboardMode}
                       >
-                        {dashboardMode === 0
+                        {personalDashboardMode === 0
                           ? t('dashboard.business.dashboard', {
                               fallbackLng: 'en',
                             })
@@ -518,7 +536,16 @@ export function Index() {
             />
             <Charts
               location={location}
-              dashboardMode={user?.me?.admin ? dashboardMode : 0}
+              filterRange={
+                filterRange === 'Custom'
+                  ? `${Intl.DateTimeFormat('en').format(
+                      new Date(`${filterDate[0]}`)
+                    )} - ${Intl.DateTimeFormat('en').format(
+                      new Date(`${filterDate[1]}`)
+                    )}`
+                  : filterRange
+              }
+              dashboardMode={admin ? personalDashboardMode : 0}
               BookingData={
                 bookingDetails?.getBookingChartDetail?.bookingsByStatus
               }

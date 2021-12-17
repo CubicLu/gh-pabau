@@ -36,6 +36,7 @@ interface ITableColumns {
 interface ICharts {
   location: ILocation
   dashboardMode: number
+  filterRange: string
   BookingData: IChartDetails[]
   salesData: IChartDetails[]
   totalBooking: ICount
@@ -49,6 +50,8 @@ interface ICharts {
 export const Charts: FC<ICharts> = ({
   location,
   BookingData,
+  dashboardMode,
+  filterRange,
   salesData,
   totalBooking,
   totalOnlineBooking,
@@ -304,8 +307,11 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label +
-                  `${location.date ? `${',' + location.date}` : ''}`
+                  dashboardMode === 0 ? (
+                    location.label + `${' , ' + filterRange}`
+                  ) : (
+                    t('dashboard.all.location')
+                  )
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}
@@ -343,8 +349,11 @@ export const Charts: FC<ICharts> = ({
               </div>
               <div className={styles.chartsExtraHeader}>
                 {!loading ? (
-                  location.label +
-                  `${location.date ? `${',' + location.date}` : ''}`
+                  dashboardMode === 0 ? (
+                    location.label + `${' , ' + filterRange}`
+                  ) : (
+                    t('dashboard.all.location')
+                  )
                 ) : (
                   <Skeleton.Input active className={styles.countSkeleton} />
                 )}

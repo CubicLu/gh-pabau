@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 
 export const getPreviousDateRange = (stratDate, endDate) => {
-  const start_date = dayjs(stratDate).format('DD-MM-YYYY')
-  const end_date = dayjs(endDate).format('DD-MM-YYYY')
+  const start_date = dayjs(`${stratDate}`).format('DD-MM-YYYY')
+  const end_date = dayjs(`${endDate}`).format('DD-MM-YYYY')
   switch (true) {
     case dayjs().startOf('day').format('DD-MM-YYYY') === start_date &&
       dayjs().endOf('day').format('DD-MM-YYYY') === end_date:
