@@ -10,6 +10,7 @@ interface P {
   paramItems: OptionType[]
   required: boolean
   onChangeTextValue?: (value: string) => void
+  value?: number | string
 }
 
 export const FormDropDown: FC<P> = ({
@@ -18,14 +19,24 @@ export const FormDropDown: FC<P> = ({
   paramItems,
   required = false,
   onChangeTextValue,
+  value,
 }) => {
   const [items, setItems] = useState<OptionType[]>([])
+  const [selected, setSelected] = useState<number>(0)
 
   useEffect(() => {
     setItems(paramItems)
   }, [paramItems])
 
+  useEffect(() => {
+    if (Number(value) === 0 || value) {
+      setSelected(Number(value))
+    }
+  }, [value])
+
   const onChange = (e) => {
+    setSelected(e)
+    console.log('E:', e)
     onChangeTextValue?.(e.toString())
   }
 
@@ -46,6 +57,7 @@ export const FormDropDown: FC<P> = ({
             size="large"
             style={{ width: '100%', marginTop: '10px' }}
             onChange={onChange}
+            value={selected}
           >
             {items.map((item, index) => (
               <Option key={index} value={item.id}>

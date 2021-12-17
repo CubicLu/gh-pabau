@@ -8,69 +8,71 @@ const { Option } = Select
 interface P {
   title: string
   desc: string
-  paramItems: OptionType[]
   required: boolean
   invProductsListItems?: InvProductsListItem[]
   onChangeArrValue?: (value: string[]) => void
+  value?: string[]
 }
 
 const FormLabTests: FC<P> = ({
   title = '',
   desc = '',
-  paramItems,
   required = false,
   onChangeArrValue,
   invProductsListItems = [],
+  value,
 }) => {
-  const [addedItems, setaddedItems] = useState<OptionType[]>([])
-  const [selectedItem, setSelectedItem] = useState(0)
+  const [addedItems, setAddedItems] = useState<OptionType[]>([])
+  const [selectedItem, setSelectedItem] = useState<number>(0)
   const [labTestsList, setLabTestsList] = useState<InvProductsListItem[]>([])
 
   useEffect(() => {
-    console.log('paramItems', paramItems)
-    console.log('invProductsListItems', invProductsListItems)
-    if (paramItems.length > 0 && invProductsListItems.length > 0) {
-      const result = invProductsListItems.filter((o1) =>
-        paramItems.some((o2) => o1.category_id === o2.id)
-      )
-      setLabTestsList(result)
+    if (invProductsListItems.length > 0) {
+      setLabTestsList(invProductsListItems)
     }
-  }, [paramItems, invProductsListItems])
+  }, [invProductsListItems])
+
+  useEffect(() => {
+    if (value?.length) {
+      const selected = value?.map((val) => {
+        const item = invProductsListItems?.find((el) => el?.id === Number(val))
+        return {
+          id: item?.id,
+          name: item?.name,
+          editing: false,
+        }
+      }) as OptionType[]
+      setAddedItems(selected)
+    } else {
+      setAddedItems([])
+    }
+  }, [invProductsListItems, value])
 
   const onChange = (value) => {
-    const addedItem = labTestsList.filter((item) => item.id === value)
-    if (addedItem.length > 0) {
-      const t = {
-        id: addedItem[0].id,
-        name: addedItem[0].name,
+    const item = labTestsList?.find((el) => el?.id === value)
+    const cAddedItems = [...addedItems]
+    const addedItemIndex = cAddedItems.findIndex((item) => item.id === value)
+    if (addedItemIndex !== -1) {
+      cAddedItems?.splice(addedItemIndex, 1)
+    } else {
+      cAddedItems.push({
         editing: false,
-      }
-      const tempItems = [...addedItems, t]
-      setaddedItems(tempItems)
-      const ids = tempItems.map((item) => item.id.toString())
-      onChangeArrValue?.(ids)
+        id: item?.id || 0,
+        name: item?.name || '',
+      })
     }
+    const ids = cAddedItems.map((item) => item?.id?.toString())
+    onChangeArrValue?.(ids)
     setSelectedItem(0)
+    setAddedItems(cAddedItems)
   }
 
   const handleDelete = (index) => {
     const tempItems = [...addedItems]
     tempItems.splice(index, 1)
-    setaddedItems(tempItems)
-    const ids = tempItems.map((item) => item.id.toString())
+    setAddedItems(tempItems)
+    const ids = tempItems.map((item) => item?.id?.toString())
     onChangeArrValue?.(ids)
-  }
-
-  function onBlur() {
-    console.log('blur')
-  }
-
-  function onFocus() {
-    console.log('focus')
-  }
-
-  function onSearch(val) {
-    console.log('search:', val)
   }
 
   return (
@@ -90,9 +92,6 @@ const FormLabTests: FC<P> = ({
             showSearch
             size="large"
             onChange={onChange}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onSearch={onSearch}
             filterOption={(input, option) =>
               option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
@@ -115,19 +114,22 @@ const FormLabTests: FC<P> = ({
           </Select>
         </div>
       )}
-      {addedItems.length > 0 && (
+      {addedItems?.length > 0 && (
         <div className={styles.formDropDownAddedOptions}>
-          {addedItems.map((item, index) => (
-            <div className={styles.formDropDownAddedOption} key={index}>
-              {item.name}
-              <div
-                className={styles.formDropDownAddedOptionDelete}
-                onClick={() => handleDelete(index)}
-              >
-                <CloseOutlined />
-              </div>
-            </div>
-          ))}
+          {addedItems.map(
+            (item, index) =>
+              item && (
+                <div className={styles.formDropDownAddedOption} key={index}>
+                  {item.name}
+                  <div
+                    className={styles.formDropDownAddedOptionDelete}
+                    onClick={() => handleDelete(index)}
+                  >
+                    <CloseOutlined />
+                  </div>
+                </div>
+              )
+          )}
         </div>
       )}
     </div>

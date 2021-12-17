@@ -9,6 +9,7 @@ interface P {
   paramItems: OptionType[]
   required: boolean
   onChangeTextValue?: (value: string) => void
+  value?: string
 }
 
 export const FormSingleChoice: FC<P> = ({
@@ -17,13 +18,20 @@ export const FormSingleChoice: FC<P> = ({
   paramItems,
   required = false,
   onChangeTextValue,
+  value,
 }) => {
-  const [items, setItems] = useState<OptionType[]>([])
+  const [items, setItems] = useState<OptionType[]>(paramItems)
   const [optionVal, setOptionVal] = useState(-1)
 
   useEffect(() => {
     setItems(paramItems)
   }, [paramItems])
+
+  useEffect(() => {
+    if (value) {
+      setOptionVal(Number(value))
+    }
+  }, [value])
 
   const onChange = (e) => {
     setOptionVal(e.target.value)

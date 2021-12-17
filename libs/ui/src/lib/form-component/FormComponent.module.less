@@ -1,5 +1,5 @@
 .formComponet {
-  padding: 36px 40px;
+  padding: 22px 40px;
   // min-width: 616px;
   .formComponentTitle {
     font-style: normal;
@@ -492,6 +492,7 @@
     box-sizing: border-box;
     border-radius: 4px;
     .formDrawingBody {
+      position: relative;
       width: 512px;
       height: 424px;
       background: #ffffff;
@@ -519,6 +520,8 @@
         }
       }
       .formDrawingArea {
+        width: 100%;
+        height: calc(100% - 56px);
         display: flex;
         img {
           margin-left: auto;
@@ -806,7 +809,7 @@
 .formComponentButton {
   display: flex;
   flex-direction: row;
-  padding: 36px 40px;
+  padding: 22px 40px;
   .btnCircle {
     display: flex;
     justify-content: center;

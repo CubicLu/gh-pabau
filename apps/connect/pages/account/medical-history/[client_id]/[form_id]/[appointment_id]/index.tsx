@@ -240,6 +240,7 @@ export const MedicalHistory = () => {
           <div>
             <FormComponentBuilder
               previewData={formData}
+              previewAttrs={[]}
               formSaveLabel={'Save Form'}
               saveMedicalFormHistory={saveMedicalFormHistory}
             />

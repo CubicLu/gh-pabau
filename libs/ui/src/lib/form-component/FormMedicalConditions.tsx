@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { OptionType, MedicalConditionsListItem } from '@pabau/ui'
+import { OptionType, MedicalConditionsListItem, RenderHtml } from '@pabau/ui'
 import { Select } from 'antd'
 import React, { FC, useState, useEffect } from 'react'
 import styles from './FormComponent.module.less'
@@ -8,23 +8,27 @@ const { Option } = Select
 interface P {
   title?: string
   desc?: string
-  paramItems?: OptionType[]
   required?: boolean
   medicalConditionsListItems?: MedicalConditionsListItem[]
   onChangeArrValue?: (value: string[]) => void
+  value?: string
 }
 
 const FormMedicalConditions: FC<P> = ({
   title = '',
   desc = '',
-  paramItems,
   required = false,
   medicalConditionsListItems = [],
   onChangeArrValue,
+  value,
 }) => {
   const [addedItems, setaddedItems] = useState<OptionType[]>([])
   const [dataLists, setDataLists] = useState<OptionType[]>([])
   const [selectedItem, setSelectedItem] = useState(0)
+
+  useEffect(() => {
+    setSelectedItem(Number(value || 0))
+  }, [value])
 
   useEffect(() => {
     setDataLists(
@@ -73,7 +77,7 @@ const FormMedicalConditions: FC<P> = ({
     <div className={`${styles.formMedicalConditions} ${styles.formComponet}`}>
       {title.length > 0 && (
         <div className={styles.formComponentTitle}>
-          {title}
+          <RenderHtml __html={title} />
           {required && <span className={styles.formRequiredMark}>*</span>}
         </div>
       )}

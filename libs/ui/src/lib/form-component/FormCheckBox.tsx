@@ -9,6 +9,7 @@ interface P {
   paramItems: OptionType[]
   required: boolean
   onChangeArrValue?: (value: string[]) => void
+  values?: number[] | string[]
 }
 
 export const FormCheckBox: FC<P> = ({
@@ -17,6 +18,7 @@ export const FormCheckBox: FC<P> = ({
   paramItems,
   required = false,
   onChangeArrValue,
+  values = [],
 }) => {
   const [items, setItems] = useState<OptionType[]>([])
   const [addedItems, setaddedItems] = useState<string[]>([])
@@ -24,6 +26,10 @@ export const FormCheckBox: FC<P> = ({
   useEffect(() => {
     setItems(paramItems)
   }, [paramItems])
+
+  useEffect(() => {
+    setaddedItems(values?.map((el) => el?.toString()))
+  }, [values])
 
   const onChange = (e) => {
     let tempItems: string[] = []
@@ -59,6 +65,9 @@ export const FormCheckBox: FC<P> = ({
                 value={item.id}
                 className={`${styles.checkbox}`}
                 onChange={onChange}
+                checked={
+                  addedItems?.includes(item.id?.toString()) ? true : false
+                }
               >
                 <span>{item.name}</span>
               </Checkbox>

@@ -1,11 +1,12 @@
 import {
-  MedicalFormTypes,
+  DrugItem,
   MacroItem,
+  MedicalFormTypes,
   InvProductsListItem,
   MedicalConditionsListItem,
 } from '@pabau/ui'
 import { cloneDeep } from 'lodash'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import FormCheckBox from './FormCheckBox'
 import styles from './FormComponent.module.less'
 import FormDrawing from './FormDrawing'
@@ -53,6 +54,10 @@ const FormComponentInnerElement: FC<P> = ({
   hideMacro = false,
 }) => {
   const [form, setForm] = useState(cloneDeep(formData))
+
+  useEffect(() => {
+    setForm(formData)
+  }, [formData])
 
   const componentInfos = [
     {
@@ -134,6 +139,7 @@ const FormComponentInnerElement: FC<P> = ({
               desc={''}
               paramItems={formData.arrItems}
               required={formData.required}
+              value={formData.arrValue?.toString()}
             />
           )}
           {formData && formData.formName === 'form_checkbox' && (
@@ -143,6 +149,7 @@ const FormComponentInnerElement: FC<P> = ({
               paramItems={formData.arrItems}
               required={formData.required}
               onChangeArrValue={onChangeArrValue}
+              values={formData?.arrValue}
             />
           )}
           {formData && formData.formName === 'form_dropdown' && (
@@ -152,6 +159,7 @@ const FormComponentInnerElement: FC<P> = ({
               paramItems={formData.arrItems}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
+              value={formData.arrValue?.[0]}
             />
           )}
           {formData && formData.formName === 'form_image' && (
@@ -174,7 +182,7 @@ const FormComponentInnerElement: FC<P> = ({
             <FormSignature
               title={formData.txtQuestion}
               desc={''}
-              signData={formData.signData}
+              signData={`https://cdn.pabau.com/${formData.signData}`}
               required={formData.required}
               txtInputType={formData.txtInputType}
               onChangeTextValue={onChangeTextValue}
@@ -187,6 +195,7 @@ const FormComponentInnerElement: FC<P> = ({
               paramItems={formData.arrItems}
               required={formData.required}
               onChangeTextValue={onChangeTextValue}
+              value={formData.txtValue}
             />
           )}
           {formData && formData.formName === 'form_statictext' && (
@@ -262,10 +271,10 @@ const FormComponentInnerElement: FC<P> = ({
             <FormMedicalConditions
               title={formData.txtQuestion}
               desc={''}
-              paramItems={formData.arrItems}
               required={formData.required}
               medicalConditionsListItems={medicalConditionsListItems}
               onChangeArrValue={onChangeArrValue}
+              value={formData?.txtValue}
             />
           )}
           {formData && formData.formName === 'form_drugs' && (
@@ -273,6 +282,7 @@ const FormComponentInnerElement: FC<P> = ({
               title={formData.txtQuestion}
               desc={''}
               paramItems={formData.arrItems}
+              dataLists={(formData.arrValue as unknown) as DrugItem[]}
               required={formData.required}
               onChangeArrValue={onChangeArrValue}
             />
@@ -290,10 +300,10 @@ const FormComponentInnerElement: FC<P> = ({
             <FormLabTests
               title={formData.txtQuestion}
               desc={''}
-              paramItems={formData.arrItems}
               required={formData.required}
               invProductsListItems={invProductsListItems}
               onChangeArrValue={onChangeArrValue}
+              value={formData?.arrValue}
             />
           )}
         </>

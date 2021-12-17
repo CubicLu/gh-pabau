@@ -1,7 +1,8 @@
-import { RenderHtml } from '@pabau/ui'
+import { RenderHtml, DatePicker } from '@pabau/ui'
 import _ from 'lodash'
-import { DatePicker, Input, InputNumber } from 'antd'
-import React, { FC, useState } from 'react'
+import { Input, InputNumber } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
+import dayjs from 'dayjs'
 import { tagList } from '../merge-tag-modal/data'
 import styles from './FormComponent.module.less'
 
@@ -27,6 +28,10 @@ export const FormTextField: FC<P> = ({
   onChangeTextValue,
 }) => {
   const [text, setText] = useState(defaultValue)
+
+  useEffect(() => {
+    setText(defaultValue)
+  }, [defaultValue])
 
   const onTextChange = (e) => {
     setText?.(e.target.value)
@@ -112,6 +117,7 @@ export const FormTextField: FC<P> = ({
             placeholder={placeHolder}
             onChange={onTextChange}
             value={text}
+            type={txtInputType}
           />
         )}
         {txtInputType === 'number' && (
@@ -119,10 +125,15 @@ export const FormTextField: FC<P> = ({
             placeholder={placeHolder}
             onChange={onNumberChange}
             value={Number(text)}
+            type={txtInputType}
           />
         )}
         {txtInputType === 'date' && (
-          <DatePicker style={{ width: '100%' }} onChange={onDateChange} />
+          <DatePicker
+            style={{ width: '100%' }}
+            onChange={onDateChange}
+            value={text ? dayjs(text) : null}
+          />
         )}
       </div>
     </div>

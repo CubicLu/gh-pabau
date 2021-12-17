@@ -31,7 +31,7 @@ import {
 import { Input, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
 // import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './Custom.module.less'
@@ -103,7 +103,6 @@ const Custom: FC<CustomProps> = ({
   const [selectedItem, setSelectedItem] = useState<MedicalFormItem>()
   const [popoverVisible, setPopoverVisible] = useState(false)
   const [popoverVisibleMobile, setPopoverVisibleMobile] = useState(null)
-  const [paginateData, setPaginateData] = useState<Paginate>(pagenateParams)
   const isMobile = useMedia('(max-width: 767px)', false)
 
   const { t } = useTranslationI18()
@@ -135,10 +134,6 @@ const Custom: FC<CustomProps> = ({
     prescription: t('ui.medicalformbuilder.form.type.prescription'),
     lab: t('ui.medicalformbuilder.form.type.lab'),
   }
-
-  useEffect(() => {
-    setPaginateData(pagenateParams)
-  }, [pagenateParams])
 
   const handleDefault = () => {
     // const mappedItems = medicalFormItems?.map((item) => {
@@ -455,22 +450,6 @@ const Custom: FC<CustomProps> = ({
           ) : (
             item.index === currentItem?.index && (
               <div data-acceptclicking={true}>
-                {showPreview && (
-                  <MedicalFormPreview
-                    {...medicalFormPreviewProps}
-                    visible={showPreview}
-                    formData={item.formData ? item.formData : ''}
-                    formName={item.name ? item.name : ''}
-                    closePreviewDialog={() =>
-                      setShowPreview((showPreview) => !showPreview)
-                    }
-                    onHandleMacro={onHandleMacro}
-                    medicalFormMacros={medicalFormMacros}
-                    userGroupListItems={userGroupListItems}
-                    invProductsListItems={invProductsListItems}
-                    medicalConditionsListItems={medicalConditionsListItems}
-                  />
-                )}
                 <Button
                   icon={<EyeOutlined />}
                   style={{ marginRight: '8px' }}
@@ -524,9 +503,9 @@ const Custom: FC<CustomProps> = ({
   }
 
   const onPaginationChange = (currentPage, take) => {
-    const skip = paginateData.take * (currentPage - 1)
+    const skip = pagenateParams.take * (currentPage - 1)
     updatePaginateData?.({
-      ...paginateData,
+      ...pagenateParams,
       skip,
       take,
       currentPage: currentPage,
@@ -691,21 +670,21 @@ const Custom: FC<CustomProps> = ({
       />
       <div className={styles.paginationContainer}>
         <Pagination
-          total={paginateData.total}
+          total={pagenateParams.total}
           defaultPageSize={10}
           showSizeChanger={false}
           onChange={onPaginationChange}
           pageSizeOptions={['10', '25', '50', '100']}
           onPageSizeChange={(pageSize) => {
             updatePaginateData?.({
-              ...paginateData,
+              ...pagenateParams,
               showingRecords: pageSize,
               take: pageSize,
             })
           }}
-          pageSize={paginateData.take}
-          current={paginateData.currentPage}
-          showingRecords={paginateData.showingRecords}
+          pageSize={pagenateParams.take}
+          current={pagenateParams.currentPage}
+          showingRecords={pagenateParams.showingRecords}
         />
       </div>
     </div>

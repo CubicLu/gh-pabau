@@ -206,7 +206,7 @@ const SelectFormComponent: FC<SelectFormComponentProps> = ({
         </div>
         <div>
           {previewData ? (
-            <FormComponentBuilder previewData={previewData} />
+            <FormComponentBuilder previewData={previewData} previewAttrs={[]} />
           ) : (
             LottieContent
           )}

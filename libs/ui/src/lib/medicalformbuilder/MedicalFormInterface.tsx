@@ -6,6 +6,12 @@ export interface OptionType {
   editing: boolean
 }
 
+export interface AttrFieldType {
+  attrId?: number
+  attrName?: string
+  attrValue?: string | string[]
+}
+
 export interface MedicalFormTypes {
   id: string
   formType: string
@@ -210,6 +216,32 @@ export interface MedicalConditionsListItem {
   name: string
 }
 
+export interface PreviewAttr {
+  id: number
+  MedicalAttr: {
+    id: number
+    name: string
+  }
+  attr_id: number
+  contact_id: number
+  group_label: string
+  value: string
+}
+
+export interface DrugItem {
+  id: number
+  name: string
+  comment?: string
+  dosage?: string
+  frequency?: string
+  is_active?: boolean
+  is_required?: boolean
+  is_vaccine?: boolean
+  lot_number?: string
+  max_age?: number
+  min_age?: number
+}
+
 export const previewMapping = [
   { heading: 'form_statictext' },
   { staticText: 'form_statictext' },
@@ -264,4 +296,17 @@ export interface MedicalFormContact {
   isPinned: boolean
   isAdminForm: boolean
   data: MedicalFormContactData
+  formId?: number
+  contactId?: number
+}
+
+export interface ContactMedicalCondition {
+  id: number
+  name: string
+}
+
+export interface ContactMedicalLabTest {
+  id: number
+  name: string
+  product_id: number
 }

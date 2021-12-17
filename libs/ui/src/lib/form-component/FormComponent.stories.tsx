@@ -111,12 +111,7 @@ FormCheckBoxComponent.args = {
 }
 
 const FormLabTestsStory = ({ title, desc, paramItems }) => (
-  <FormLabTests
-    title={title}
-    desc={desc}
-    paramItems={paramItems}
-    required={false}
-  />
+  <FormLabTests title={title} desc={desc} required={false} />
 )
 export const FormLabTestsComponent = FormLabTestsStory.bind({})
 FormLabTestsComponent.args = {
@@ -157,7 +152,7 @@ FormLabTestsComponent.args = {
 }
 
 const FormMedicalConditionsStory = ({ title, desc, paramItems }) => (
-  <FormMedicalConditions title={title} desc={desc} paramItems={paramItems} />
+  <FormMedicalConditions title={title} desc={desc} />
 )
 export const FormMedicalConditionsComponent = FormMedicalConditionsStory.bind(
   {}
@@ -370,4 +365,5 @@ const FormComponentBuilderStory = ({ previewData }) => (
 export const FormComponents = FormComponentBuilderStory.bind({})
 FormComponents.args = {
   previewData: '',
+  previewAttrs: [],
 }

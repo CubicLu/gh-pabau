@@ -86,6 +86,7 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
                 ) : (
                   <FormComponentBuilder
                     previewData={formData}
+                    previewAttrs={[]}
                     formSaveLabel={formSaveLabel}
                     onHandleMacro={onHandleMacro}
                     medicalFormMacros={medicalFormMacros}

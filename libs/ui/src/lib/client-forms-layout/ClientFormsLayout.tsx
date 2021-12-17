@@ -4,6 +4,8 @@ import {
   Button,
   MedicalFormContact,
   MedicalFormContactData,
+  ContactMedicalCondition,
+  ContactMedicalLabTest,
 } from '@pabau/ui'
 import {
   FilterOutlined,
@@ -12,7 +14,7 @@ import {
   ExpandAltOutlined,
   ShrinkOutlined,
 } from '@ant-design/icons'
-import { Popover, Radio, Space, Form, Select, Tooltip } from 'antd'
+import { Popover, Radio, Space, Form, Select, Tooltip, Modal } from 'antd'
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -33,6 +35,41 @@ import FormDetails from './ClientFormDetail'
 import dayjs from 'dayjs'
 import emptyState from '../../assets/lottie/empty-state.json'
 import styles from './ClientFormsLayout.module.less'
+
+const mapIdsWithValues = ({
+  allForms,
+  reqForms,
+  valuesData,
+  clsClass,
+  matchingIndex,
+}) => {
+  for (const form of reqForms) {
+    const index = allForms?.findIndex((el) => el?.id === form?.id)
+    if (index !== -1) {
+      const cForm = allForms[index]
+      const detailIndex = cForm?.data?.details?.findIndex(
+        (el) => el?.content && el?.clsClass === clsClass
+      )
+      if (detailIndex !== -1) {
+        const tarDetail = cForm?.data?.details?.[detailIndex]
+        let labels = ''
+        const ids = tarDetail?.content?.split(',')?.map((el) => Number(el))
+        if (valuesData?.length) {
+          const conditions = valuesData
+            ?.filter((el) => ids?.includes(el?.[matchingIndex]))
+            ?.map((el) => el?.name)
+          labels = conditions?.join(', ')
+        }
+        cForm?.data?.details?.splice(detailIndex, 1, {
+          ...tarDetail,
+          content: labels,
+        })
+      }
+      allForms?.splice(index, 1, cForm)
+    }
+  }
+  return allForms
+}
 
 export const basicFormFilters = [
   {
@@ -110,6 +147,8 @@ export interface ClientFormsLayoutProps {
   formFilterButtons: FormFilterProps[]
   setFormFilterButtons: (e: FormFilterProps[]) => void
   forms: MedicalFormContact[]
+  formConditions?: ContactMedicalCondition[]
+  formLabTests?: ContactMedicalLabTest[]
   onFilterClick: (
     e: Record<string, string | number | boolean>
   ) => Promise<boolean>
@@ -117,20 +156,25 @@ export interface ClientFormsLayoutProps {
   onVersionClick: (e: string) => Promise<boolean>
   onEditClick: (e: MedicalFormContact) => Promise<boolean>
   onPinClick: (e: MedicalFormContact) => Promise<boolean>
-  onDeleteClick: (e: MedicalFormContact) => Promise<boolean>
+  onDeleteClick: (formContactId: number) => void
+  userPermission?: boolean
+  deleteFormContactLoading?: boolean
 }
 
 export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   loading,
   formFilterButtons,
   setFormFilterButtons,
-  forms,
+  forms = [],
+  formConditions = [],
+  formLabTests = [],
   onFilterClick,
   onShareCick,
   onVersionClick,
-  onEditClick,
   onPinClick,
   onDeleteClick,
+  userPermission,
+  deleteFormContactLoading,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -144,6 +188,8 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
     content: false,
     version: false,
   })
+  const [deleteFormId, setDeleteFormId] = useState<number | null>(null)
+  const [deleteFormModal, setDeleteFormModal] = useState(false)
 
   const [filterpopover, setFilterpopover] = useState<boolean>(false)
   const [openFilterDrawer, setOpenFilterDrawer] = useState<boolean>(false)
@@ -160,8 +206,47 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
   }, [loading])
 
   useEffect(() => {
+    setDeleteFormModal(() => false)
     setFormState(forms)
   }, [forms])
+
+  useEffect(() => {
+    if (forms?.length) {
+      let cForms = [...forms]
+      const conditionForms = cForms?.filter((el) => {
+        return el?.data?.details?.find(
+          (e) => e?.content && e?.clsClass === 'btn_medical_condition'
+        )
+      })
+      cForms = mapIdsWithValues({
+        allForms: cForms,
+        reqForms: conditionForms,
+        valuesData: formConditions,
+        clsClass: 'btn_medical_condition',
+        matchingIndex: 'id',
+      })
+      setFormState(cForms)
+    }
+  }, [forms, formConditions])
+
+  useEffect(() => {
+    if (forms?.length) {
+      let cForms = [...forms]
+      const labsForms = cForms?.filter((el) => {
+        return el?.data?.details?.find(
+          (e) => e?.content && e?.clsClass === 'btn_medical_condition'
+        )
+      })
+      cForms = mapIdsWithValues({
+        allForms: cForms,
+        reqForms: labsForms,
+        valuesData: formLabTests,
+        clsClass: 'labs_tests',
+        matchingIndex: 'product_id',
+      })
+      setFormState(cForms)
+    }
+  }, [forms, formLabTests])
 
   const onCollapse = (key, id) => {
     const formList = [...accordionState]
@@ -250,7 +335,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
       setFormState(forms)
     else if (values.author === 'All') {
       for (const item of formList) {
-        if (item.name.toLowerCase() === values.formName.toLowerCase()) {
+        if (item?.name?.toLowerCase() === values.formName.toLowerCase()) {
           formListData.push(item)
         }
       }
@@ -266,7 +351,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
       for (const item of formList) {
         if (
           item?.data?.patient === values.author &&
-          item.name.toLowerCase() === values.formName.toLowerCase()
+          item?.name?.toLowerCase() === values.formName.toLowerCase()
         ) {
           formListData.push(item)
         }
@@ -312,7 +397,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                 </Select.Option>
                 {forms?.map((item) => (
                   <Select.Option key={item.id} value={item.name}>
-                    {item.name.toLowerCase()}
+                    {item?.name?.toLowerCase()}
                   </Select.Option>
                 ))}
               </Select>
@@ -332,6 +417,11 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
         </div>
       </div>
     )
+  }
+
+  const handleDeleteFormContact = (formId: number) => {
+    setDeleteFormId(formId)
+    setDeleteFormModal(true)
   }
 
   return (
@@ -468,10 +558,10 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
         )}
         {!loader && formState?.length > 0 ? (
           <VerticalTimeline layout={'1-column-left'} animate={false}>
-            {formState?.map((indform) => {
+            {formState?.map((form) => {
               return (
                 <VerticalTimelineElement
-                  key={indform.id}
+                  key={form.id}
                   className={classNames(
                     'vertical-timeline-element--work',
                     styles.formListClass
@@ -481,15 +571,15 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                     color: ' #FFFFFF',
                   }}
                   icon={React.createElement(
-                    basicFormFilters?.find((el) => el?.key === indform.type)
+                    basicFormFilters?.find((el) => el?.key === form.type)
                       ?.icon || MedicalHistoryIcon
                   )}
                 >
                   <div
                     className={
-                      accordionState.includes(indform.id)
+                      accordionState.includes(form.id)
                         ? styles.mainCollapseDivAfter
-                        : indform.isPinned
+                        : form.isPinned
                         ? classNames(
                             styles.mainCollapseDiv,
                             styles.pinnedFormCollapse
@@ -499,11 +589,9 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                   >
                     <Collapse
                       activeKey={accordionState}
-                      onChange={(e) => onCollapse(e, indform.id)}
+                      onChange={(e) => onCollapse(e, form.id)}
                       expandIcon={
-                        accordionState.includes(indform.id)
-                          ? OpenIcon
-                          : ClosedIcon
+                        accordionState.includes(form.id) ? OpenIcon : ClosedIcon
                       }
                       ghost={true}
                     >
@@ -512,8 +600,8 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                           <div className={styles.headerMain}>
                             <div className={styles.timeEleWrap}>
                               <span className={styles.formsName}>
-                                {indform.name}
-                                {indform.isPinned && (
+                                {form.name}
+                                {form.isPinned && (
                                   <PushpinFilled
                                     className={styles.pinnedForm}
                                   />
@@ -521,11 +609,11 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                               </span>
                               <span className={styles.formsDetail}>
                                 <p>
-                                  {`${dayjs(indform?.created).format(
+                                  {`${dayjs(form?.created).format(
                                     'DD MMM YYYY, h:mm A'
-                                  )} | ${indform?.user}`}
+                                  )} | ${form?.user}`}
                                 </p>
-                                {indform.isAdminForm && (
+                                {form.isAdminForm && (
                                   <span className={styles.administratorForm}>
                                     <LockFilled />
                                     <h3>Doctors</h3>
@@ -533,26 +621,23 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                                 )}
                               </span>
                             </div>
-                            {accordionState.includes(indform.id) && (
+                            {accordionState.includes(form.id) && (
                               <FormAction
-                                form={indform}
+                                form={form}
                                 popOverState={popOverState}
+                                userPermission={userPermission}
                                 setPopOverState={setPopOverState}
-                                handlePinForm={() => handlePinForm(indform.id)}
+                                handlePinForm={() => handlePinForm(form.id)}
                                 onShareCick={onShareCick}
                                 onVersionClick={onVersionClick}
-                                onEditClick={onEditClick}
-                                onDeleteClick={onDeleteClick}
+                                onDeleteClick={handleDeleteFormContact}
                               />
                             )}
                           </div>
                         }
-                        key={indform.id}
+                        key={form.id}
                       >
-                        <FormDetails
-                          formData={indform.data}
-                          formId={indform.id}
-                        />
+                        <FormDetails formData={form.data} formId={form.id} />
                       </Panel>
                     </Collapse>
                   </div>
@@ -564,6 +649,30 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
           loader && <ClientFormsSkeleton length={formState?.length} />
         )}
       </div>
+      <Modal
+        centered={true}
+        onCancel={() => {
+          setDeleteFormId(null)
+          setDeleteFormModal(false)
+        }}
+        onOk={() => {
+          const deleteForm = formState?.find((el) => el?.id === deleteFormId)
+          if (deleteFormId && deleteForm) onDeleteClick?.(deleteFormId)
+        }}
+        visible={deleteFormModal}
+        title={t('galley.list.view.delete.modal.title')}
+        cancelText={t('common-label-cancel')}
+        okText={t('galley.list.view.delete.ok.button')}
+        confirmLoading={deleteFormContactLoading}
+      >
+        <div>
+          <p>
+            {t('ui.clientcard.forms.modal.delete.desc', {
+              what: formState?.find((el) => el?.id === deleteFormId)?.name,
+            })}
+          </p>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -4176,8 +4176,8 @@ en:
   ui.medicalformbuilder.advanced.payment.cardnumber: 'Card number'
   ui.medicalformbuilder.advanced.payment.addcard: 'Add Card'
   ui.medicalformbuilder.advanced.payment.detail: 'Your details are securely stored with our payment processing partner using bank-grade encryption.'
-  setup.medical.forms.create.text: 'successfully created'
-  setup.medical.forms.save.text: 'successfully saved'
+  setup.medical.forms.create.text: 'Successfully created'
+  setup.medical.forms.save.text: 'Successfully saved'
   peer.feedback.remind.modal.button: Remind
   peer.feedback.preview.button: Preview
   peer.feedback.remind.modal.title: 'Quarterly Appraisal'
@@ -5054,7 +5054,10 @@ en:
   ui.clientcard.forms.apply: Apply
   ui.clientcard.forms.nodata: 'No Data'
   ui.clientcard.forms.filterby: 'Filter by'
-  ui.clientcard.forms.author: Author
+  ui.clientcard.forms.notifications.deleteform.success: '{{what}} was deleted successfully!'
+  ui.clientcard.forms.notifications.deleteform.error: 'Couldn’t remove the form.'
+  ui.clientcard.forms.modal.delete.desc: "{{what}} form will be deleted forever and you won't be able to restore them."
+  ui.clientcard.forms.author: 'Author'
   ui.clientcard.forms.footer.title: 'Fee to be paid by clinic [Account LSAH]'
   ui.clientcard.forms.footer.subtitle1: 'The London Skin and Hair Clinic, 233 High Holborn, First Floor, London WC1V 7DN'
   ui.clientcard.forms.footer.subtitle2: 'Results to be sent back electronically and in paper form'

@@ -75,6 +75,7 @@ query findManyCompanyServices {
   findManyCompanyService {
     id
     name
+    product_id
   }
 }
 
@@ -280,6 +281,7 @@ query getClientForms($contactId: Int = 0, $formTypes: [String!] = []) {
     where: {
       contact_id: { equals: $contactId }
       Form: { form_type: { in: $formTypes } }
+      deleted_at: { equals: null }
     }
     orderBy: { created_at: desc }
   ) {
@@ -302,11 +304,65 @@ query getClientForms($contactId: Int = 0, $formTypes: [String!] = []) {
   }
 }
 
-query getClientFormsCount($contactId: Int = 0) {
-  findManyMedicalFormContactCount(
-    where: { contact_id: { equals: $contactId } }
+fragment MedicalHistoryAttr on MedicalContactAttr {
+  id
+  attr_id
+  contact_id
+  value
+  created_at
+  nhs_locum_id
+  group_label
+  medical_form_contact_id
+  attachment_size
+  custom_contact_name
+  custom_contact_id
+  MedicalAttr {
+    id
+    name
+  }
+}
+
+query getLatestMedicalHistoryFormAttr($contactId: Int = 0, $formId: Int = 0) {
+  medicalHistoryAttributes: findFirstMedicalFormContact(
+    where: {
+      contact_id: { equals: $contactId }
+      form_id: { equals: $formId }
+      Form: { form_type: { equals: "questionnaire" } }
+    }
     orderBy: { created_at: desc }
-  )
+  ) {
+    MedicalContactAttr {
+      ...MedicalHistoryAttr
+    }
+  }
+}
+
+query getMedicalContactForm($contactId: Int = 0, $contactFormId: Int!) {
+  medicalHistoryAttributes: findFirstMedicalFormContact(
+    where: {
+      deleted_at: { equals: null }
+      id: { equals: $contactFormId }
+      contact_id: { equals: $contactId }
+    }
+    orderBy: { created_at: desc }
+  ) {
+    MedicalContactAttr {
+      ...MedicalHistoryAttr
+    }
+  }
+}
+
+mutation deleteMedicalFormContact($formContactId: Int!, $deletedAt: DateTime!) {
+  updateOneMedicalFormContact(
+    where: { id: $formContactId }
+    data: { deleted_at: { set: $deletedAt } }
+  ) {
+    id
+    deleted_at
+    Form {
+      name
+    }
+  }
 }
 
 mutation pinMedicalFormContact($formContactId: Int!, $updatedAt: DateTime!) {
@@ -336,5 +392,18 @@ mutation deleteMedicalForm($formId: Int!) {
     DeletedBy {
       full_name
     }
+  }
+}
+
+query getClientFormsCount($contactId: Int = 0) {
+  findManyMedicalFormContactCount(
+    where: { contact_id: { equals: $contactId }, deleted_at: { equals: null } }
+  )
+}
+
+query medicalContditions {
+  data: findManyMedicalCondition {
+    id
+    name
   }
 }

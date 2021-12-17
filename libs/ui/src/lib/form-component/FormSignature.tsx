@@ -31,23 +31,33 @@ export const FormSignature: FC<P> = ({
   const SIGNATURE_PAD_HEIGHT = 157
 
   useEffect(() => {
-    sigPad.current.fromDataURL(signData, {
-      width: SIGNATURE_PAD_WIDTH,
-      height: SIGNATURE_PAD_HEIGHT,
-      className: 'sigCanvas',
-    })
+    let width = SIGNATURE_PAD_WIDTH
+    let height = SIGNATURE_PAD_HEIGHT
+    if (signData) {
+      const i = new Image()
+      i.addEventListener('load', function () {
+        if (i.width) width = i.width
+        if (i.height) height = i.height
+        sigPad?.current?.fromDataURL(signData, {
+          width: 300,
+          height: 120,
+          className: 'sigCanvas',
+        })
+      })
+      i.src = signData
+    }
   }, [signData])
 
   const handleClear = () => {
     setActiveButton(DrawingButtonType.ERASE)
     onChangeTextValue?.('')
-    sigPad.current.clear()
+    sigPad?.current?.clear()
     setActiveButton(DrawingButtonType.DRAWING)
   }
 
   const handleEnd = () => {
     onChangeTextValue?.(
-      sigPad.current.getTrimmedCanvas().toDataURL('image/png', {
+      sigPad?.current?.getTrimmedCanvas().toDataURL('image/png', {
         width: SIGNATURE_PAD_WIDTH,
         height: SIGNATURE_PAD_HEIGHT,
       })

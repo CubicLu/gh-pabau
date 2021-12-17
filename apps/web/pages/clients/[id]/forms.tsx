@@ -1,14 +1,26 @@
 import React, { FC, useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   ClientFormsLayout,
   MedicalFormContact,
+  ContactMedicalLabTest,
+  ContactMedicalCondition,
   basicFormFilters,
   FormFilterProps,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import { ClientCardLayout } from '../../../components/Clients/ClientCardLayout'
-import { useGetClientFormsQuery } from '@pabau/graphql'
+import {
+  useGetClientFormsQuery,
+  useMedicalContditionsQuery,
+  useFindManyCompanyServicesQuery,
+  GetClientFormsDocument,
+  useDeleteMedicalFormContactMutation,
+} from '@pabau/graphql'
+import { useUser } from '../../../context/UserContext'
 import crypto from 'crypto'
 
 const isBase64 = (str) => {
@@ -20,7 +32,7 @@ const isBase64 = (str) => {
   }
 }
 
-const utc = (date: string) => {
+const utc = (date = '') => {
   return dayjs(date).utc()?.format('DD-MMM-YYYY hh:mm:ss A')
 }
 
@@ -34,7 +46,150 @@ const returnCreatedOn = (medFormContact) => {
   return ''
 }
 
-const processMedicalContactForms = (medicalFormData) => {
+const handleMergeTags = ({ label, medicalFormContact }) => {
+  const { Contact = {}, created_at = '' } = medicalFormContact
+  const dFformat = 'DD MMM YYYY, h:mm A'
+
+  label = label.replaceAll('[FNAME]', Contact?.Fname)
+  label = label.replaceAll('[PATIENTID]', Contact?.custom_id)
+  label = label.replaceAll('[TITLE]', Contact?.Salutation)
+  label = label.replaceAll('[ANAME]', Contact?.Fname + ' ' + Contact?.Lname)
+  label = label.replaceAll(
+    '[APPOINTMENTNAME]',
+    Contact?.Fname + ' ' + Contact?.Lname
+  )
+  label = label.replaceAll('[APPOINTMENTFIRSTNAME]', Contact?.Fname)
+  label = label.replaceAll('[APPOINTMENTLASTNAME]', Contact?.Lname)
+  label = label.replaceAll('[CLIENTEMAIL]', Contact?.Email)
+  label = label.replaceAll('[CLIENTDOB]', Contact?.DOB)
+  label = label.replaceAll('[CLIENTGENDER]', Contact?.gender)
+  label = label.replaceAll('[CLIENTPHONE]', Contact?.Phone)
+  label = label.replaceAll('[CLIENTMOBILE]', Contact?.Mobile)
+  label = label.replaceAll('[CLIENTSALUTATION]', Contact?.Salutation)
+  label = label.replaceAll('[CLIENTCITY]', Contact?.MailingCity)
+  label = label.replaceAll('[CLIENTSTREET]', Contact?.MailingStreet)
+  label = label.replaceAll('[CLIENTPOSTAL]', Contact?.MailingPostal)
+  label = label.replaceAll('[CLIENTCOUNTRY]', Contact?.MailingCountry)
+  label = label.replaceAll('[CLIENTMAILINGCOUNTRY]', Contact?.MailingCountry)
+
+  // --TODO--
+  // label = label.replaceAll('[APPOINTMENTMANAGE]', '')
+  // label = label.replaceAll('[MEDICAL_FORM]', '')
+  // label = label.replaceAll('[BDAYVOUCHER]', '')
+  // label = label.replaceAll('[PRESCRIPTION_DATE]', '')
+  // label = label.replaceAll('[PACKAGE_NAME]', '')
+  // label = label.replaceAll('[CLIENT_INS_COMP]', '')
+  // label = label.replaceAll('[CLIENT_INS_CONTRACT]', '')
+  // label = label.replaceAll('[CLIENT_INS_MEM_NUM]', '')
+  // label = label.replaceAll('[CLIENT_INS_AUTH_CODE]', '')
+  // label = label.replaceAll('[CLIENT_INS_MOBILE]', '')
+  // label = label.replaceAll('[CLIENT_INS_WEBSITE]', '')
+  // label = label.replaceAll('[CLIENT_INS_CITY]', '')
+  // label = label.replaceAll('[CLIENT_INS_STREET]', '')
+  // label = label.replaceAll('[CLIENT_INS_COUNTY]', '')
+  // label = label.replaceAll('[CLIENT_INS_POSTAL]', '')
+  // label = label.replaceAll('[CLIENT_INS_EMAIL]', '')
+  // label = label.replaceAll('[CLIENT_INS_IMAGE]', '')
+  // label = label.replaceAll('[CLIENT_INS_COUNTRY]', '')
+  // label = label.replaceAll('[CLIENT_INS_STREET2]', '')
+  // label = label.replaceAll('[CLIENT_INS_PROVIDERNUM]', '')
+  // label = label.replaceAll('[CLIENTLOYALTY]', '')
+  // label = label.replaceAll('[CLIENTFORM]', '')
+  // label = label.replaceAll('[CLIENTCOUNTY]', '')
+  // label = label.replaceAll('[CLIENTADDRESS2]', '')
+  // label = label.replaceAll('[DIAG_CODE]', '')
+  // label = label.replaceAll('[NUMBER_OF_SESSIONS]', '')
+
+  label = label.replaceAll('[LNAME]', Contact?.Lname)
+  label = label.replaceAll('[MOBILE]', Contact?.Mobile)
+  label = label.replaceAll('[PHONE]', Contact?.Phone)
+  label = label.replaceAll('[CLIENTID]', Contact?.custom_id)
+
+  if (created_at) {
+    label = label.replaceAll('[DATE]', dayjs(created_at).format(dFformat))
+  }
+
+  label = label.replaceAll('[EMAIL]', Contact?.Email)
+  label = label.replaceAll('[MAILINGCOUNTRY]', Contact?.MailingCountry)
+  label = label.replaceAll('[MAILINGCITY]', Contact?.MailingCity)
+  label = label.replaceAll('[MAILINGPOSTAL]', Contact?.MailingPostal)
+  label = label.replaceAll('[MAILINGSTREET]', Contact?.MailingStreet)
+  label = label.replaceAll('[MAILINGPROVINCE]', Contact?.MailingProvince)
+  if (Contact?.InsuranceCompany.length > 0) {
+    label = label.replaceAll(
+      '[INSURANCE_MEMBERSHIP]',
+      Contact?.InsuranceCompany?.[0]?.membership_number
+    )
+  }
+  if (label.indexOf('[CLIENT_PREFERENCES]') !== -1) {
+    const contactId = crypto
+      .createHash('md5')
+      .update(medicalFormContact.contact_id.toString())
+    label = label?.replaceAll(
+      '[CLIENT_PREFERENCES]',
+      `https://crm.pabau.com/modules/newsletters/update_preferences.php?company=${medicalFormContact?.Form?.company_id}&id=${contactId}`
+    )
+  }
+
+  label = label.replaceAll('[DOB]', dayjs(Contact?.DOB).format(dFformat))
+  label = label.replaceAll(
+    '[FULLADDRESS]',
+    `${Contact?.MailingCountry}, 
+              ${Contact?.MailingStreet}, 
+              ${Contact?.MailingCity}, 
+              ${Contact?.MailingPostal}`
+  )
+  label = label.replaceAll(
+    '[FULLADDRESS2]',
+    `${Contact?.MailingCountry}, 
+              ${Contact?.MailingStreet}, 
+              ${Contact?.MailingCity}, 
+              ${Contact?.MailingPostal}`
+  )
+
+  if (medicalFormContact?.Form?.Company?.details) {
+    label = label.replaceAll(
+      '[COMPANYNAME]',
+      medicalFormContact?.Form?.Company?.details.company_name
+    )
+    label = label.replaceAll(
+      '[COMPANYLOGO]',
+      `<img id="med-logo" src="${medicalFormContact?.Form?.Company?.details.logo}" style="max-height:80px;">`
+    )
+  }
+
+  return label
+}
+
+const proccessDrugsData = ({ medicalFormContact }) => {
+  const drugs = medicalFormContact?.MedicalContactAttr?.filter((el) =>
+    el?.MedicalAttr.name?.includes('drug')
+  )
+  const drugItemsCount = drugs?.filter((el) =>
+    el?.MedicalAttr?.name?.includes('drugid')
+  )?.length
+  const drugsContent = []
+  for (let i = 1; i <= drugItemsCount; i++) {
+    const drugAllItems = drugs
+      ?.filter(
+        (el) =>
+          el?.MedicalAttr?.name?.includes('drug') &&
+          el?.MedicalAttr?.name?.endsWith(`${i}`)
+      )
+      ?.map((el) => {
+        return {
+          name: el?.MedicalAttr?.name
+            ?.replace(/\d/g, '')
+            ?.replaceAll('drug', ''),
+          value: el?.value,
+        }
+      })
+    drugsContent.push(drugAllItems)
+  }
+  return JSON.stringify(drugsContent)
+}
+
+const proccessMedicalContactForms = (medicalFormData) => {
   return medicalFormData?.map((medicalFormContact) => {
     let medicalFormDetails = []
     const {
@@ -44,13 +199,13 @@ const processMedicalContactForms = (medicalFormData) => {
       Prescriber = {},
     } = medicalFormContact
     if (isBase64(medicalFormContact?.Form?.data)) {
-      const parsedBase64 = atob(medicalFormContact.Form.data)
+      const parsedBase64 = atob(medicalFormContact?.Form?.data)
       const data = JSON.parse(parsedBase64?.replace("it\\'s", ''))
       const formType = medicalFormContact?.Form?.form_type
       let index = 0
 
       for (const [, item] of data.form_structure.entries()) {
-        const { cssClass = '', title: iTitle = '' } = item
+        const { cssClass = '', title: iTitle = '', values = '' } = item
         if (cssClass === 'staticText' && formType === 'treatment') continue
 
         let title = ''
@@ -71,7 +226,13 @@ const processMedicalContactForms = (medicalFormData) => {
           if (title !== '') {
             name = title?.replaceAll(' ', ' ').trim().toLowerCase()
           } else {
-            name = item?.values?.replaceAll(' ', ' ').trim().toLowerCase()
+            if (
+              cssClass === 'btn_medical_condition' ||
+              cssClass === 'cl_drugs' ||
+              cssClass === 'labs_tests'
+            ) {
+              name = cssClass?.replaceAll('_', ' ')?.trim()?.toLowerCase()
+            } else name = values?.replaceAll(' ', ' ')?.trim()?.toLowerCase()
           }
         }
 
@@ -81,7 +242,7 @@ const processMedicalContactForms = (medicalFormData) => {
         if (title !== '') {
           label = title?.trim()
         } else {
-          label = item?.values?.trim()
+          label = values?.trim()
         }
 
         if (cssClass === 'heading') {
@@ -95,134 +256,14 @@ const processMedicalContactForms = (medicalFormData) => {
           Prescriber
         ) {
           label.replaceAll('[PRESCRIBER_NAME]', Prescriber.full_name)
+          // --TODO--
           // if (formType === 'lab') {
           //   console.log('.....')
           // }
         }
 
         if (cssClass === 'staticText' || cssClass === 'staticHTML') {
-          label = label.replaceAll('[FNAME]', Contact?.Fname)
-          label = label.replaceAll('[PATIENTID]', Contact?.custom_id)
-          label = label.replaceAll('[TITLE]', Contact?.Salutation)
-          label = label.replaceAll(
-            '[ANAME]',
-            Contact?.Fname + ' ' + Contact?.Lname
-          )
-          label = label.replaceAll(
-            '[APPOINTMENTNAME]',
-            Contact?.Fname + ' ' + Contact?.Lname
-          )
-          label = label.replaceAll('[APPOINTMENTFIRSTNAME]', Contact?.Fname)
-          label = label.replaceAll('[APPOINTMENTLASTNAME]', Contact?.Lname)
-          label = label.replaceAll('[CLIENTEMAIL]', Contact?.Email)
-          label = label.replaceAll('[CLIENTDOB]', Contact?.DOB)
-          label = label.replaceAll('[CLIENTGENDER]', Contact?.gender)
-          label = label.replaceAll('[CLIENTPHONE]', Contact?.Phone)
-          label = label.replaceAll('[CLIENTMOBILE]', Contact?.Mobile)
-          label = label.replaceAll('[CLIENTSALUTATION]', Contact?.Salutation)
-          label = label.replaceAll('[CLIENTCITY]', Contact?.MailingCity)
-          label = label.replaceAll('[CLIENTSTREET]', Contact?.MailingStreet)
-          label = label.replaceAll('[CLIENTPOSTAL]', Contact?.MailingPostal)
-          label = label.replaceAll('[CLIENTCOUNTRY]', Contact?.MailingCountry)
-          label = label.replaceAll(
-            '[CLIENTMAILINGCOUNTRY]',
-            Contact?.MailingCountry
-          )
-
-          // label = label.replaceAll('[APPOINTMENTMANAGE]', '')
-          // label = label.replaceAll('[MEDICAL_FORM]', '')
-          // label = label.replaceAll('[BDAYVOUCHER]', '')
-          // label = label.replaceAll('[PRESCRIPTION_DATE]', '')
-          // label = label.replaceAll('[PACKAGE_NAME]', '')
-          // label = label.replaceAll('[CLIENT_INS_COMP]', '')
-          // label = label.replaceAll('[CLIENT_INS_CONTRACT]', '')
-          // label = label.replaceAll('[CLIENT_INS_MEM_NUM]', '')
-          // label = label.replaceAll('[CLIENT_INS_AUTH_CODE]', '')
-          // label = label.replaceAll('[CLIENT_INS_MOBILE]', '')
-          // label = label.replaceAll('[CLIENT_INS_WEBSITE]', '')
-          // label = label.replaceAll('[CLIENT_INS_CITY]', '')
-          // label = label.replaceAll('[CLIENT_INS_STREET]', '')
-          // label = label.replaceAll('[CLIENT_INS_COUNTY]', '')
-          // label = label.replaceAll('[CLIENT_INS_POSTAL]', '')
-          // label = label.replaceAll('[CLIENT_INS_EMAIL]', '')
-          // label = label.replaceAll('[CLIENT_INS_IMAGE]', '')
-          // label = label.replaceAll('[CLIENT_INS_COUNTRY]', '')
-          // label = label.replaceAll('[CLIENT_INS_STREET2]', '')
-          // label = label.replaceAll('[CLIENT_INS_PROVIDERNUM]', '')
-          // label = label.replaceAll('[CLIENTLOYALTY]', '')
-          // label = label.replaceAll('[CLIENTFORM]', '')
-          // label = label.replaceAll('[CLIENTCOUNTY]', '')
-          // label = label.replaceAll('[CLIENTADDRESS2]', '')
-          // label = label.replaceAll('[DIAG_CODE]', '')
-          // label = label.replaceAll('[NUMBER_OF_SESSIONS]', '')
-
-          label = label.replaceAll('[LNAME]', Contact?.Lname)
-          label = label.replaceAll('[MOBILE]', Contact?.Mobile)
-          label = label.replaceAll('[PHONE]', Contact?.Phone)
-          label = label.replaceAll('[CLIENTID]', Contact?.custom_id)
-
-          if (created_at) {
-            label = label.replaceAll(
-              '[DATE]',
-              dayjs(created_at).format('DD MMM YYYY, h:mm A')
-            )
-          }
-
-          label = label.replaceAll('[EMAIL]', Contact?.Email)
-          label = label.replaceAll('[MAILINGCOUNTRY]', Contact?.MailingCountry)
-          label = label.replaceAll('[MAILINGCITY]', Contact?.MailingCity)
-          label = label.replaceAll('[MAILINGPOSTAL]', Contact?.MailingPostal)
-          label = label.replaceAll('[MAILINGSTREET]', Contact?.MailingStreet)
-          label = label.replaceAll(
-            '[MAILINGPROVINCE]',
-            Contact?.MailingProvince
-          )
-          if (Contact?.InsuranceCompany.length > 0) {
-            label = label.replaceAll(
-              '[INSURANCE_MEMBERSHIP]',
-              Contact?.InsuranceCompany?.[0]?.membership_number
-            )
-          }
-          if (label.indexOf('[CLIENT_PREFERENCES]') !== -1) {
-            const contactId = crypto
-              .createHash('md5')
-              .update(medicalFormContact.contact_id.toString())
-            label = label?.replaceAll(
-              '[CLIENT_PREFERENCES]',
-              `https://crm.pabau.com/modules/newsletters/update_preferences.php?company=${medicalFormContact.Form.company_id}&id=${contactId}`
-            )
-          }
-
-          label = label.replaceAll(
-            '[DOB]',
-            dayjs(Contact?.DOB).format('DD MMM YYYY, h:mm A')
-          )
-          label = label.replaceAll(
-            '[FULLADDRESS]',
-            `${Contact?.MailingCountry}, 
-              ${Contact?.MailingStreet}, 
-              ${Contact?.MailingCity}, 
-              ${Contact?.MailingPostal}`
-          )
-          label = label.replaceAll(
-            '[FULLADDRESS2]',
-            `${Contact?.MailingCountry}, 
-              ${Contact?.MailingStreet}, 
-              ${Contact?.MailingCity}, 
-              ${Contact?.MailingPostal}`
-          )
-
-          if (medicalFormContact?.Form?.Company?.details) {
-            label = label.replaceAll(
-              '[COMPANYNAME]',
-              medicalFormContact?.Form?.Company?.details.company_name
-            )
-            label = label.replaceAll(
-              '[COMPANYLOGO]',
-              `<img id="med-logo" src="${medicalFormContact?.Form?.Company?.details.logo}" style="max-height:80px;">`
-            )
-          }
-
+          label = handleMergeTags({ label, medicalFormContact })
           if (cssClass === 'staticText' && formType === 'prescription') continue
         }
 
@@ -235,8 +276,16 @@ const processMedicalContactForms = (medicalFormData) => {
         let realContent = ''
         let content = ''
         const contentValue = medicalFormContact.MedicalContactAttr.filter(
-          (medicalContactAttr) =>
-            medicalContactAttr.MedicalAttr.name.indexOf(valueKey) >= 0
+          (medContAttr) => {
+            if (cssClass === 'cl_drugs') {
+              if (medContAttr.MedicalAttr.name?.includes(`drug`)) {
+                return true
+              }
+              return false
+            } else {
+              return medContAttr.MedicalAttr.name.indexOf(valueKey) >= 0
+            }
+          }
         )
         if (contentValue.length > 0) content = contentValue[0].value
 
@@ -266,7 +315,8 @@ const processMedicalContactForms = (medicalFormData) => {
         else if (cssClass === 'labs_tests') realContent = content
         else if (cssClass === 'vaccine_scheduler') realContent = content
         else if (cssClass === 'vaccine_history') realContent = content
-        else if (cssClass === 'cl_drugs') realContent = content
+        else if (cssClass === 'cl_drugs')
+          realContent = proccessDrugsData({ medicalFormContact })
         else if (cssClass === 'history_data') realContent = content
         else if (cssClass === 'btn_medical_condition') realContent = content
 
@@ -293,6 +343,8 @@ const processMedicalContactForms = (medicalFormData) => {
       type: medicalFormContact?.Form.form_type,
       isPinned: false,
       isAdminForm: false,
+      formId: medicalFormContact?.Form?.id,
+      contactId: Contact?.ID,
       data: {
         patient: `${Contact?.Fname} ${Contact?.Lname}`,
         lastUpdate: returnLastUpdate(medicalFormContact?.updated_at),
@@ -313,9 +365,18 @@ const allFilter = [
 ]
 
 const Forms: FC = () => {
+  const { t } = useTranslationI18()
   const router = useRouter()
+  const { me } = useUser()
 
+  const [deleteFormLoading, setDeleteFormLoading] = useState(false)
   const [formFilters, setFormFilters] = useState<FormFilterProps[]>([])
+  const [contactMedicalConditions, setContactMedicalConditions] = useState<
+    ContactMedicalCondition[]
+  >(null)
+  const [contactMedicalLabTests, setContactMedicalLabTests] = useState<
+    ContactMedicalLabTest[]
+  >(null)
   const [medicalFormContacts, setMedicalFormContacts] = useState<
     MedicalFormContact[]
   >(null)
@@ -338,6 +399,42 @@ const Forms: FC = () => {
     variables: variables,
   })
 
+  const { data: medicalConditions } = useMedicalContditionsQuery({
+    fetchPolicy: 'network-only',
+  })
+  const { data: medicalLabTests } = useFindManyCompanyServicesQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const [deleteFormContact] = useDeleteMedicalFormContactMutation({
+    onCompleted({ updateOneMedicalFormContact: data }) {
+      Notification(
+        NotificationType.success,
+        t('ui.clientcard.forms.notifications.deleteform.success', {
+          what: data?.Form?.name,
+        })
+      )
+      setDeleteFormLoading(() => false)
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('ui.clientcard.forms.notifications.deleteform.error')
+      )
+      setDeleteFormLoading(() => false)
+    },
+  })
+
+  useEffect(() => {
+    if (medicalConditions?.data?.length > 0)
+      setContactMedicalConditions(medicalConditions?.data)
+  }, [medicalConditions])
+
+  useEffect(() => {
+    if (medicalLabTests?.findManyCompanyService?.length > 0)
+      setContactMedicalLabTests(medicalLabTests?.findManyCompanyService)
+  }, [medicalLabTests])
+
   useEffect(() => {
     window.scrollTo(0, 0)
     if (basicFormFilters?.length) {
@@ -347,12 +444,35 @@ const Forms: FC = () => {
 
   useEffect(() => {
     if (clientForms?.findManyMedicalFormContact && !clientFormsLoading) {
-      const arrangedClientForms = processMedicalContactForms(
+      const arrangedClientForms = proccessMedicalContactForms(
         clientForms?.findManyMedicalFormContact
       )
       setMedicalFormContacts(arrangedClientForms)
+    } else if (!clientFormsLoading) {
+      setMedicalFormContacts([])
     }
   }, [clientForms, clientFormsLoading])
+
+  const onFormContactDelete = (formContactId: number) => {
+    const reqFormContact = medicalFormContacts?.find(
+      (el) => el?.id === formContactId
+    )
+    if (reqFormContact) {
+      setDeleteFormLoading(() => true)
+      deleteFormContact({
+        variables: {
+          formContactId: formContactId,
+          deletedAt: dayjs(),
+        },
+        refetchQueries: [
+          {
+            query: GetClientFormsDocument,
+            variables: variables,
+          },
+        ],
+      })
+    }
+  }
 
   return (
     <ClientCardLayout clientId={Number(router.query.id)} activeTab="forms">
@@ -361,12 +481,16 @@ const Forms: FC = () => {
         formFilterButtons={formFilters}
         setFormFilterButtons={setFormFilters}
         forms={medicalFormContacts}
+        formConditions={contactMedicalConditions}
+        formLabTests={contactMedicalLabTests}
         onFilterClick={() => Promise.resolve(true)}
         onShareCick={() => Promise.resolve(true)}
         onVersionClick={() => Promise.resolve(true)}
         onEditClick={() => Promise.resolve(true)}
         onPinClick={() => Promise.resolve(true)}
-        onDeleteClick={() => Promise.resolve(true)}
+        onDeleteClick={onFormContactDelete}
+        userPermission={me?.admin}
+        deleteFormContactLoading={deleteFormLoading}
       />
     </ClientCardLayout>
   )

@@ -1,13 +1,87 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './ClientFormsLayout.module.less'
-import { MedicalFormContactData, RenderHtml } from '@pabau/ui'
+import { MedicalFormContactData, RenderHtml, Table } from '@pabau/ui'
+
+const colTitle = {
+  name: 'Drug',
+  dosage: 'Dose',
+  units: 'Units',
+  frequency: 'Freq',
+  lotnumber: 'Lot #',
+  expiry: 'Exp',
+  route: 'Route',
+  comments: 'Comment',
+}
 
 interface FormDetailsProps {
   formData: MedicalFormContactData
   formId?: number
 }
 
+const DrugsTable = ({ drugs }) => {
+  const [drugItems, setDrugItems] = useState([])
+  const [columns, setColumns] = useState<string[]>([])
+
+  useEffect(() => {
+    if (drugs) {
+      const cDrugs = JSON.parse(drugs)
+
+      const colsDrugsIndex = cDrugs
+        .map((a) => a.length)
+        .indexOf(Math.max(...cDrugs.map((a) => a.length)))
+      const cols = cDrugs?.[colsDrugsIndex]?.map((el) => el?.name)
+
+      const dItems = []
+      for (const drug of cDrugs) {
+        const cDrug = { key: drug?.find((el) => el?.name === 'id')?.value }
+        for (const col of cols) {
+          cDrug[col] = drug?.find((d) => d?.name === col)?.value
+        }
+        dItems.push(cDrug as never)
+      }
+
+      const cCols = cols?.filter((col) => {
+        let valExist = false
+        for (const dItem of dItems) {
+          if (dItem[col] && dItem[col] !== '') valExist = true
+        }
+        return valExist
+      })
+      setColumns(cCols)
+      setDrugItems(dItems)
+    }
+  }, [drugs])
+
+  return (
+    <div className={styles.drugsTable}>
+      <Table
+        columns={columns?.map((el) => ({
+          title: colTitle[el],
+          dataIndex: el,
+          visible: el === 'id' ? false : true,
+          className: 'drug-rows',
+        }))}
+        dataSource={drugItems}
+        bordered
+        pagination={false}
+        noDataText="No drugs added"
+        scroll={{ x: 'max-content' }}
+      />
+    </div>
+  )
+}
+
+const imageAttrs = [
+  'image',
+  'diagram',
+  'signature',
+  'facediagram',
+  'staticImage',
+  'diagram_mini',
+  'photo_and_drawer',
+  'photo_andcontentDetail_drawer',
+]
 const Signature = ({ origin }) => {
   const [source, setSource] = useState('')
 
@@ -41,20 +115,7 @@ const Signature = ({ origin }) => {
     }
   }, [origin, source])
 
-  return source ? (
-    <img
-      style={{
-        width: '300px',
-        display: 'block',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      }}
-      src={source}
-      alt=""
-    />
-  ) : (
-    <div />
-  )
+  return source ? <img src={source} alt="" /> : <div />
 }
 
 const FormDetails: FC<FormDetailsProps> = ({ formData, formId }) => {
@@ -62,6 +123,7 @@ const FormDetails: FC<FormDetailsProps> = ({ formData, formId }) => {
 
   return (
     <div id={`form-details-${formId}`}>
+      {/* TODO */}
       {/* <div className={styles.fullForm}>
         <span className={styles.contentName}>
           {t('ui.clientcard.forms.patient')}
@@ -98,18 +160,14 @@ const FormDetails: FC<FormDetailsProps> = ({ formData, formId }) => {
         return (
           <div
             className={styles.fullForm}
-            id="fullForm"
             key={`form-view-${key}`}
+            id="fullForm"
+            data-value={`${detail.clsClass}`}
           >
             <span className={styles.contentName} id="contentName">
               <RenderHtml __html={detail.label} />
             </span>
-            {(detail.clsClass === 'image' ||
-              detail.clsClass === 'signature' ||
-              detail.clsClass === 'diagram' ||
-              detail.clsClass === 'diagram_mini' ||
-              detail.clsClass === 'facediagram' ||
-              detail.clsClass === 'photo_andcontentDetail_drawer') && (
+            {imageAttrs?.includes(detail?.clsClass) && (
               <span className={styles.contentDetail} id="contentDetail">
                 <Signature
                   origin={
@@ -120,16 +178,15 @@ const FormDetails: FC<FormDetailsProps> = ({ formData, formId }) => {
                 />
               </span>
             )}
-            {!(
-              detail.clsClass === 'image' ||
-              detail.clsClass === 'signature' ||
-              detail.clsClass === 'diagram' ||
-              detail.clsClass === 'diagram_mini' ||
-              detail.clsClass === 'facediagram' ||
-              detail.clsClass === 'photo_and_drawer'
-            ) && (
+            {!imageAttrs?.includes(detail?.clsClass) &&
+              detail?.clsClass !== 'cl_drugs' && (
+                <span className={styles.contentDetail} id="contentDetail">
+                  <RenderHtml __html={detail.content} />
+                </span>
+              )}
+            {detail?.clsClass === 'cl_drugs' && (
               <span className={styles.contentDetail} id="contentDetail">
-                <RenderHtml __html={detail.content} />
+                <DrugsTable drugs={detail.content} />
               </span>
             )}
 

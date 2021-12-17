@@ -1,6 +1,6 @@
 import { BookOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { MacroModal, MacroItem, RenderHtml } from '@pabau/ui'
 import _ from 'lodash'
 import { tagList } from '../merge-tag-modal/data'
@@ -40,12 +40,26 @@ export const FormTextFieldWithMacro: FC<P> = ({
   hideMacro = false,
 }) => {
   const [showMacroDlg, setShowMacroDlg] = useState(false)
-  const editor = React.useRef<Editor | null>(null)
+  const editor = React.useRef<Editor>(null)
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   )
 
   const { t } = useTranslation('common')
+
+  useEffect(() => {
+    const state = EditorState.createEmpty()
+    const sel = state.getSelection()
+    const contentState = state.getCurrentContent()
+    const text = defaultValue
+    const newState = Modifier.insertText(contentState, sel, text)
+    const newEditorState = EditorState.push(
+      state,
+      newState,
+      'insert-autocomplete'
+    )
+    setEditorState(newEditorState)
+  }, [defaultValue])
 
   const findTagInfo = (tag) => {
     const findTag = Object.entries(tagList)
@@ -235,7 +249,7 @@ export const FormTextFieldWithMacro: FC<P> = ({
         )}
         {hideMacro && (
           <Editor
-            placeholder={''}
+            placeholder={placeHolder}
             editorState={editorState}
             ref={editor}
             onChange={onEditorStateChange}

@@ -26,6 +26,7 @@ interface P {
   desc: string
   paramItems: OptionType[]
   required: boolean
+  value?: string
 }
 
 export const FormDrawing: FC<P> = ({
@@ -33,6 +34,7 @@ export const FormDrawing: FC<P> = ({
   desc = '',
   paramItems,
   required = false,
+  value = '',
 }) => {
   const [items, setItems] = useState<OptionType[]>([])
   const [activeButton, setActiveButton] = useState(0)
@@ -40,6 +42,17 @@ export const FormDrawing: FC<P> = ({
   useEffect(() => {
     setItems(paramItems)
   }, [paramItems])
+
+  const RenderDrawing = () => {
+    let src = value
+    if (!src) {
+      src =
+        items?.length > 0 && items[0].name !== ''
+          ? `${items[0].name}`
+          : innerDrawingIcon
+    }
+    return <img src={`https://prelive-crm.pabau.com${src}`} alt="" />
+  }
 
   return (
     <div className={`${styles.formDrawing} ${styles.formComponet}`}>
@@ -120,14 +133,7 @@ export const FormDrawing: FC<P> = ({
             </span>
           </div>
           <div className={styles.formDrawingArea}>
-            <img
-              src={
-                items?.length > 0 && items[0].name !== ''
-                  ? `https://prelive-crm.pabau.com${items[0].name}`
-                  : innerDrawingIcon
-              }
-              alt=""
-            />
+            <RenderDrawing />
           </div>
         </div>
       </div>

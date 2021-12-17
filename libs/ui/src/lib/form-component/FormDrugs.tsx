@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons'
-import { OptionType, RenderHtml } from '@pabau/ui'
+import { OptionType, RenderHtml, DrugItem } from '@pabau/ui'
 import { Button, Input, Select } from 'antd'
 import cn from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
@@ -14,9 +14,9 @@ interface P {
   title: string
   desc: string
   paramItems: OptionType[]
-  dataLists?: OptionType[]
+  dataLists?: DrugItem[]
   required: boolean
-  onChangeArrValue?: (value: string[]) => void
+  onChangeArrValue?: (value: DrugsType[]) => void
 }
 
 interface IDosageData {
@@ -45,6 +45,7 @@ export const FormDrugs: FC<P> = ({
   title = '',
   desc = '',
   paramItems,
+  dataLists,
   required = false,
   onChangeArrValue,
 }) => {
@@ -58,6 +59,7 @@ export const FormDrugs: FC<P> = ({
   const [loading, setLoading] = useState(false)
   const [drugsAPIList, setDrugsAPIList] = useState<IDrugsData[]>([])
   const [drugsSearchTerms, setDrugsSearchTerms] = useDebounce('', 1000)
+  const [loadTime, setLoadTime] = useState(0)
   const { t } = useTranslation('common')
 
   useEffect(() => {
@@ -67,8 +69,7 @@ export const FormDrugs: FC<P> = ({
         setLoading(true)
         try {
           const response = await fetch(
-            'https://zhen.pabau.me/pages/ajax/drugs_api_2.php?drugName=' +
-              searchVal,
+            `https://zhen.pabau.me/pages/ajax/drugs_api_2.php?drugName=${searchVal}`,
             {
               method: 'GET',
               mode: 'cors',
@@ -77,7 +78,6 @@ export const FormDrugs: FC<P> = ({
             }
           )
           const data = await response.json()
-          console.log('drugs data =', data)
           if (data?.length > 0) {
             const drugLists = data?.map((item, index) => ({
               id: item.medicines._id,
@@ -92,7 +92,6 @@ export const FormDrugs: FC<P> = ({
                 ? item.medicines.quantities
                 : [],
             }))
-            console.log('drugLists', drugLists)
             setDrugsAPIList(drugLists)
           }
           setLoading(false)
@@ -106,17 +105,19 @@ export const FormDrugs: FC<P> = ({
   }, [drugsSearchTerms])
 
   useEffect(() => {
-    // let drugItems: DrugsType[] = []
-    // drugItems = Object.entries(paramItems).map(([key, value]) => ({
-    //   id: value.id,
-    //   name: value.name,
-    //   dosage: '',
-    //   comment: '',
-    //   dosageTooltip: dosageTooltip,
-    //   commentTooltip: commentTooltip,
-    // }))
-    // setItems(drugItems)
-  }, [paramItems])
+    const drugItems: DrugsType[] =
+      dataLists?.map((el) => {
+        return {
+          id: el?.id?.toString(),
+          name: el.name,
+          dosage: el.dosage || '',
+          quantity: '',
+          dosageOptions: [],
+          quantityOptions: [],
+        }
+      }) || []
+    setItems(drugItems)
+  }, [dataLists, loadTime])
 
   function refreshDrugs() {
     setEditStatusDosage(false)
@@ -147,6 +148,7 @@ export const FormDrugs: FC<P> = ({
     }
     tempItems.splice(index, 1, itemValue)
     setItems(tempItems)
+    onChangeArrValue?.(tempItems)
   }
 
   const onSelectDosageItem = (id) => {
@@ -171,8 +173,8 @@ export const FormDrugs: FC<P> = ({
     const tempItems = [...items]
     tempItems.splice(index, 1)
     setItems(tempItems)
-    const ids = tempItems.map((item) => item.id.toString())
-    onChangeArrValue?.(ids)
+    // const ids = tempItems.map((item) => item.id.toString())
+    onChangeArrValue?.(tempItems)
   }
 
   const onKeyUp = (event) => {
@@ -216,8 +218,8 @@ export const FormDrugs: FC<P> = ({
         ]
         setItems(tempItems)
         onSelectDosageItem(value)
-        const ids = tempItems.map((item) => item.id.toString())
-        onChangeArrValue?.(ids)
+        // const ids = tempItems.map((item) => item.id.toString())
+        onChangeArrValue?.(tempItems)
       }
       setDrugsAPIList([])
       setSelectedDrugId('')
@@ -237,7 +239,7 @@ export const FormDrugs: FC<P> = ({
       )}
       <div className={styles.formDrugsOptions}>
         <Select
-          loading={loading}
+          loading={true}
           showSearch={true}
           size="middle"
           value={selectedDrugId}
@@ -260,11 +262,11 @@ export const FormDrugs: FC<P> = ({
               )
           }
         >
-          <Option key={'druglist-empty'} value={''}>
+          <Option value={''}>
             {t('ui.medicalformbuilder.form.drugs.placeholder')}
           </Option>
-          {drugsAPIList?.map((item, index) => (
-            <Option key={'druglist-' + item.id} value={item.id}>
+          {drugsAPIList?.map((item) => (
+            <Option key={item.id} value={item.id}>
               <span className={styles.formDrugsItemName}>
                 {item.name} {''}
               </span>
@@ -287,8 +289,8 @@ export const FormDrugs: FC<P> = ({
             </div>
           </div>
           <div className={styles.formDrugsOptionsBody}>
-            {items.map((item, index) => (
-              <div key={'drugs-' + item.id}>
+            {items.map((item) => (
+              <div key={item.id}>
                 <div className={styles.formDrugsOptionsItem}>
                   <div className={styles.formDrugsOptionsItemArea}>
                     <div className={styles.formDrugsOptionsName}>
@@ -410,7 +412,7 @@ export const FormDrugs: FC<P> = ({
                                 <RenderHtml __html={dosage.populationType} />
                               </div>
                               <div
-                                key={item.id + '-adults-' + index}
+                                key={item.id}
                                 className={
                                   styles.formDrugsOptionsItemTooltipItem
                                 }
@@ -440,7 +442,7 @@ export const FormDrugs: FC<P> = ({
                                 <RenderHtml __html={dosage.populationType} />
                               </div>
                               <div
-                                key={item.id + '-children-' + index}
+                                key={item.id}
                                 className={
                                   styles.formDrugsOptionsItemTooltipItem
                                 }

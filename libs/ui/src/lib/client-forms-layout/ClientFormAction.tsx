@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons'
 import { Button, MedicalFormContact } from '@pabau/ui'
 import { Popover, Drawer, Collapse } from 'antd'
+import Link from 'next/link'
 import classNames from 'classnames'
 import { useMedia } from 'react-use'
 import { PopOverStateProps, FormListProps } from './ClientFormsLayout'
@@ -43,26 +44,56 @@ const setHtmlInputValue = (elem) => {
         color: #3d3d46;
         font-family: Circular-Std-Book, sans-serif;
       }
-      #contentName,
-      #contentDetail {
-        p > span > strong {
-          font-size: 16px;
-          color: #3d3d46;
-          font-family: Circular-Std-Book, sans-serif;
-        }
-        p > strong {
-          font-size: 14px;
-          color: #787889;
-          font-family: Circular-Std-Book, sans-serif;
-        }
-        p {
-          font-size: 14px;
-          color: #9292a3;
-          font-family: Circular-Std-Book, sans-serif;
-        }
-        > span {
-          font-family: Circular-Std-Book, sans-serif;
-        }
+      #contentName p > span > strong,
+      #contentDetail p > span > strong {
+        font-size: 16px;
+        color: #3d3d46;
+        font-family: Circular-Std-Book, sans-serif;
+      }
+      #contentName p > strong,
+      #contentDetail p > strong {
+        font-size: 14px;
+        color: #787889;
+        font-family: Circular-Std-Book, sans-serif;
+      }
+      #contentName p,
+      #contentDetail p {
+        font-size: 14px;
+        color: #9292a3;
+        font-family: Circular-Std-Book, sans-serif;
+      }
+      #contentName > span,
+      #contentDetail > span {
+        font-family: Circular-Std-Book, sans-serif;
+      }
+      #contentDetail img {
+        width: 300px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      #contentDetail table {
+        border: 1px solid #eee;
+      }
+      #contentDetail table thead tr:hover {
+        background-color: transparent;
+      }
+      #contentDetail table thead tr th {
+        font-size: 14px;
+        background-color: rgba(238, 238, 238, 0.75);
+        text-transform: capitalize;
+        text-align: left;
+        border: 1px solid #eee;
+        padding: 10px 16px;
+        color: #3d3d46;
+      }
+      #contentDetail table tbody tr td {
+        border: 1px solid #eee;
+        padding: 10px 16px;
+        text-align: left;
+        color: #9292a3;
+        font-size: 12px;
+        font-weight: lighter;
       }
       #detailsBorder {
         margin: 6px 0px 8px 0px;
@@ -70,28 +101,28 @@ const setHtmlInputValue = (elem) => {
       }
     </style>
   `
-  const stringHtml = `${stylesString}<div id="formDetails">${elem.innerHTML}</div>`
+  const stringHtml = `${stylesString}<div id="formDetails">${elem?.innerHTML}</div>`
   return stringHtml
 }
 
 interface FormActionProps {
   form: MedicalFormContact
+  userPermission?: boolean
   popOverState: PopOverStateProps
   setPopOverState: (e) => void
   handlePinForm: () => void
   onShareCick: (e: FormListProps) => Promise<boolean>
   onVersionClick: (e: string) => Promise<boolean>
-  onEditClick: (e: FormListProps) => Promise<boolean>
-  onDeleteClick: (e: FormListProps) => Promise<boolean>
+  onDeleteClick: (formContactId: number) => void
 }
 const FormAction: FC<FormActionProps> = ({
   form,
+  userPermission,
   popOverState,
   setPopOverState,
   handlePinForm,
   onShareCick,
   onVersionClick,
-  onEditClick,
   onDeleteClick,
 }) => {
   const { t } = useTranslation('common')
@@ -111,36 +142,64 @@ const FormAction: FC<FormActionProps> = ({
     { id: 2, version: '21.07.21' },
   ]
 
-  const content = (
-    <div className={styles.contentWrapper} onClick={(e) => e.stopPropagation()}>
-      <div
-        className={styles.dotList}
-        onClick={(e) => {
-          e.stopPropagation()
-          onEditClick(form)
-        }}
-      >
+  const EditFormIcon = () => {
+    return (
+      <>
         <EditOutlined />
         <h3>{t('ui.clientcard.formaction.edit')}</h3>
-      </div>
-      <div className={styles.dotList} onClick={handlePinForm}>
-        <PushpinOutlined />
-        <h3>
-          {form.isPinned
-            ? t('ui.clientcard.formaction.unpin')
-            : t('ui.clientcard.formaction.pin')}
-        </h3>
-      </div>
-      <div
-        className={styles.dotList}
-        onClick={(e) => {
-          e.stopPropagation()
-          onDeleteClick(form)
+      </>
+    )
+  }
+
+  const content = (
+    <div className={styles.contentWrapper} onClick={(e) => e.stopPropagation()}>
+      <Link
+        href={{
+          pathname: `/test-form/${form?.formId}/${form?.contactId}`,
+          query: {
+            mode: 'update',
+            id: form?.id?.toString(),
+          },
         }}
+        passHref
       >
-        <DeleteOutlined />
-        <h3>{t('ui.clientcard.formaction.delete')}</h3>
-      </div>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="/#"
+          className={styles.dotList}
+          onClick={(e) => {
+            e.stopPropagation()
+            // onEditClick(form)
+          }}
+        >
+          <EditFormIcon />
+        </a>
+      </Link>
+      <Link passHref href="#">
+        <div className={styles.dotList} onClick={handlePinForm}>
+          <PushpinOutlined />
+          <h3>
+            {form.isPinned
+              ? t('ui.clientcard.formaction.unpin')
+              : t('ui.clientcard.formaction.pin')}
+          </h3>
+        </div>
+      </Link>
+      {userPermission && (
+        <Link passHref href="#">
+          <div
+            className={styles.dotList}
+            onClick={(e) => {
+              e.stopPropagation()
+              onDeleteClick?.(form?.id)
+            }}
+          >
+            <DeleteOutlined />
+            <h3>{t('ui.clientcard.formaction.delete')}</h3>
+          </div>
+        </Link>
+      )}
     </div>
   )
   const versioncontent = (
@@ -187,16 +246,29 @@ const FormAction: FC<FormActionProps> = ({
         className={styles.formActionWrapper}
         onClick={(e) => e.stopPropagation()}
       >
-        <div
-          onClick={(e) => {
-            e.stopPropagation()
-            onEditClick(form)
+        <Link
+          href={{
+            pathname: `/test-form/${form?.formId}/${form?.contactId}`,
+            query: {
+              mode: 'update',
+              id: form?.id?.toString(),
+            },
           }}
-          className={styles.listItem}
+          passHref
         >
-          <EditOutlined />
-          <h3>{t('ui.clientcard.formaction.edit')}</h3>
-        </div>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="/#"
+            onClick={(e) => {
+              e.stopPropagation()
+              // onEditClick(form)
+            }}
+            className={styles.listItem}
+          >
+            <EditFormIcon />
+          </a>
+        </Link>
         <div
           onClick={(e) => {
             e.stopPropagation()
@@ -271,24 +343,30 @@ const FormAction: FC<FormActionProps> = ({
             </Panel>
           </Collapse>
         </div>
-        <div onClick={handlePinForm} className={styles.listItem}>
-          <PushpinOutlined />
-          <h3>
-            {form.isPinned
-              ? t('ui.clientcard.formaction.unpin')
-              : t('ui.clientcard.formaction.pin')}
-          </h3>
-        </div>
-        <div
-          onClick={(e) => {
-            e.stopPropagation()
-            onDeleteClick(form)
-          }}
-          className={styles.listItem}
-        >
-          <DeleteOutlined />
-          <h3>{t('ui.clientcard.formaction.delete')}</h3>
-        </div>
+        <Link passHref href="#">
+          <div onClick={handlePinForm} className={styles.listItem}>
+            <PushpinOutlined />
+            <h3>
+              {form.isPinned
+                ? t('ui.clientcard.formaction.unpin')
+                : t('ui.clientcard.formaction.pin')}
+            </h3>
+          </div>
+        </Link>
+        {userPermission && (
+          <Link passHref href="#">
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                onDeleteClick?.(form?.id)
+              }}
+              className={styles.listItem}
+            >
+              <DeleteOutlined />
+              <h3>{t('ui.clientcard.formaction.delete')}</h3>
+            </div>
+          </Link>
+        )}
       </div>
     )
   }

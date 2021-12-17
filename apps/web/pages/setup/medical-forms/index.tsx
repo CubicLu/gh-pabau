@@ -202,13 +202,28 @@ export const Index: FC = () => {
     return queryOptions
   }, [paginateData.take, paginateData.skip, searchData])
 
-  const businessDetails = useGetBusinessDetailsQuery()
   const {
     data: medicalForms,
     loading: loadingMedicalForms,
   } = useFindMedicalFormsQuery(getQueryVariables)
 
-  const medicalFormsCount = useFindMedicalFormsCountQuery(getQueryVariables)
+  useFindMedicalFormsCountQuery({
+    onCompleted({ findManyMedicalFormCount }) {
+      setPaginateData((prevData) => {
+        return {
+          ...prevData,
+          total: findManyMedicalFormCount,
+        }
+      })
+    },
+    ...getQueryVariables,
+  })
+
+  useGetBusinessDetailsQuery({
+    onCompleted({ me }) {
+      setCompanyDateFormat(me?.Company?.details?.date_format)
+    },
+  })
 
   const whereQuerySmsTemplate: MessageTemplateWhereInput = {}
   whereQuerySmsTemplate.AND = []
@@ -217,17 +232,6 @@ export const Index: FC = () => {
     template_id: SortOrder.Asc,
   }
 
-  const getSmsMessageTemplateQueryVariables = {
-    variables: {
-      where: whereQuerySmsTemplate,
-      orderBy: orderBySmsTemplate,
-    },
-  }
-
-  const smsMessageTemplates = useFindMessageTemplateQuery(
-    getSmsMessageTemplateQueryVariables
-  )
-
   const whereQueryEmailTemplate: MessageTemplateWhereInput = {}
   whereQueryEmailTemplate.AND = []
   whereQueryEmailTemplate.AND.push({ template_type: { equals: 'email' } })
@@ -235,16 +239,37 @@ export const Index: FC = () => {
     template_id: SortOrder.Asc,
   }
 
-  const getEmailMessageTemplateQueryVariables = {
+  useFindMessageTemplateQuery({
+    onCompleted({ findManyMessageTemplate }) {
+      const smsMessageTemplateList = findManyMessageTemplate?.map(
+        (smsMessageTemplateItem) => ({
+          template_id: smsMessageTemplateItem.template_id,
+          template_name: smsMessageTemplateItem.template_name,
+        })
+      )
+      setSmsMessageTemplateItems(smsMessageTemplateList)
+    },
+    variables: {
+      where: whereQuerySmsTemplate,
+      orderBy: orderBySmsTemplate,
+    },
+  })
+
+  useFindMessageTemplateQuery({
+    onCompleted({ findManyMessageTemplate }) {
+      const emailMessageTemplateList = findManyMessageTemplate?.map(
+        (emailMessageTemplateItem) => ({
+          template_id: emailMessageTemplateItem.template_id,
+          template_name: emailMessageTemplateItem.template_name,
+        })
+      )
+      setEmailMessageTemplateItems(emailMessageTemplateList)
+    },
     variables: {
       where: whereQueryEmailTemplate,
       orderBy: orderByEmailTemplate,
     },
-  }
-
-  const emailMessageTemplates = useFindMessageTemplateQuery(
-    getEmailMessageTemplateQueryVariables
-  )
+  })
 
   const whereQueryUserList: UserWhereInput = {}
   whereQueryUserList.AND = []
@@ -252,28 +277,40 @@ export const Index: FC = () => {
   const orderByUserList: UserOrderByWithRelationInput = {
     full_name: SortOrder.Asc,
   }
-
   const getUserListQueryVariables = {
     variables: {
       where: whereQueryUserList,
       orderBy: orderByUserList,
     },
   }
+  useFindUserQuery({
+    onCompleted({ findManyUser }) {
+      const userList = findManyUser?.map((user) => ({
+        id: user.id,
+        full_name: user.full_name,
+      }))
+      userList.splice(0, 0, {
+        id: 0,
+        full_name: 'Appointment owner',
+      })
+      setUserListItems(userList)
+    },
+    ...getUserListQueryVariables,
+  })
 
-  const userLists = useFindUserQuery(getUserListQueryVariables)
-
-  const { data: userGroups } = useFindManyUserGroupsQuery()
+  useFindManyUserGroupsQuery({
+    onCompleted({ findManyUserGroup }) {
+      const userGroupList = findManyUserGroup?.map((userGroup) => ({
+        id: userGroup.id,
+        group_name: userGroup.group_name,
+      }))
+      setUserGroupListItems(userGroupList)
+    },
+  })
   const { data: companyServices } = useFindManyCompanyServicesQuery()
   const { data: labTests } = useFindManyLabTestsQuery()
   const { data: invProducts } = useFindInvProductsQuery()
   const { data: medicalConditions } = useFindManyMedicalCondtionsQuery()
-
-  useEffect(() => {
-    if (businessDetails?.data?.me?.Company?.details?.date_format)
-      setCompanyDateFormat(
-        businessDetails?.data?.me?.Company?.details?.date_format
-      )
-  }, [businessDetails])
 
   useEffect(() => {
     if (medicalForms?.findManyMedicalForm) {
@@ -337,67 +374,6 @@ export const Index: FC = () => {
   }, [medicalForms, companyDateFormat])
 
   useEffect(() => {
-    if (medicalFormsCount.data?.findManyMedicalFormCount) {
-      setPaginateData((prevData) => {
-        return {
-          ...prevData,
-          total: medicalFormsCount.data?.findManyMedicalFormCount,
-        }
-      })
-    }
-  }, [medicalFormsCount])
-
-  useEffect(() => {
-    if (smsMessageTemplates.data?.findManyMessageTemplate) {
-      const smsMessageTemplateList = smsMessageTemplates.data?.findManyMessageTemplate.map(
-        (smsMessageTemplateItem) => ({
-          template_id: smsMessageTemplateItem.template_id,
-          template_name: smsMessageTemplateItem.template_name,
-        })
-      )
-      setSmsMessageTemplateItems(smsMessageTemplateList)
-    }
-  }, [smsMessageTemplates])
-
-  useEffect(() => {
-    if (emailMessageTemplates.data?.findManyMessageTemplate) {
-      const emailMessageTemplateList = emailMessageTemplates.data?.findManyMessageTemplate.map(
-        (emailMessageTemplateItem) => ({
-          template_id: emailMessageTemplateItem.template_id,
-          template_name: emailMessageTemplateItem.template_name,
-        })
-      )
-      setEmailMessageTemplateItems(emailMessageTemplateList)
-    }
-  }, [emailMessageTemplates])
-
-  useEffect(() => {
-    if (userLists.data?.findManyUser) {
-      const userList = userLists.data?.findManyUser.map((user) => ({
-        id: user.id,
-        full_name: user.full_name,
-      }))
-      userList.splice(0, 0, {
-        id: 0,
-        full_name: 'Appointment owner',
-      })
-      setUserListItems(userList)
-    }
-  }, [userLists])
-
-  useEffect(() => {
-    console.log('userGroups', userGroups)
-    if (userGroups?.findManyUserGroup) {
-      const userGroupList = userGroups?.findManyUserGroup.map((userGroup) => ({
-        id: userGroup.id,
-        group_name: userGroup.group_name,
-      }))
-      setUserGroupListItems(userGroupList)
-    }
-  }, [userGroups])
-
-  useEffect(() => {
-    console.log('companyServices', companyServices)
     if (companyServices?.findManyCompanyService) {
       const companyServiceList = companyServices?.findManyCompanyService.map(
         (companyService) => ({
@@ -410,7 +386,6 @@ export const Index: FC = () => {
   }, [companyServices])
 
   useEffect(() => {
-    console.log('labTests', labTests)
     if (labTests?.findManyInvCategory) {
       const labTestsList = labTests?.findManyInvCategory.map((labTest) => ({
         id: labTest.id,
@@ -421,7 +396,6 @@ export const Index: FC = () => {
   }, [labTests])
 
   useEffect(() => {
-    console.log('invProducts', invProducts)
     if (invProducts?.findManyInvProduct) {
       const invProductsList = invProducts?.findManyInvProduct.map(
         (invProduct) => ({
@@ -434,7 +408,6 @@ export const Index: FC = () => {
     }
   }, [invProducts])
   useEffect(() => {
-    console.log('medicalConditions', medicalConditions)
     if (medicalConditions?.findManyMedicalCondition) {
       const medicalConditionsList = medicalConditions?.findManyMedicalCondition.map(
         (medicalCondition) => ({

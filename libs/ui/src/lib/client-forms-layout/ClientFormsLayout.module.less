@@ -118,6 +118,7 @@
       flex: 1;
       order: 0;
       justify-content: space-between;
+      margin-right: 28px;
       .time-ele-wrap {
         display: flex;
         justify-content: left;
@@ -442,7 +443,7 @@
     .ant-collapse-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: center !important;
       flex-wrap: wrap;
       position: relative;
       flex-direction: row-reverse;
@@ -451,6 +452,7 @@
       &::before {
         display: none !important;
       }
+
       .ant-collapse-arrow {
         position: unset !important;
         display: flex !important;
@@ -462,6 +464,7 @@
         border-radius: 50%;
         border: 1px solid #ecedf0;
         padding: 5px !important;
+        margin-right: 0px !important;
         span {
           svg {
             font-size: 16px;
@@ -507,6 +510,7 @@
       flex-wrap: wrap;
       position: relative;
       flex-direction: row;
+      align-items: center !important;
       padding: 12px 16px 12px 32px !important;
       border-bottom: 1px solid #ecedf0 !important;
       margin-bottom: 8px;
@@ -515,6 +519,16 @@
       &::after,
       &::before {
         display: none !important;
+      }
+
+      > div:first-child {
+        position: absolute;
+        right: 3px;
+
+        .ant-collapse-arrow {
+          vertical-align: 0px;
+          margin-top: 0px;
+        }
       }
 
       .ant-collapse-arrow {
@@ -604,6 +618,29 @@
     position: relative;
     font-size: 14px;
     color: #3d3d46;
+
+    .drugs-table {
+      :global {
+        table thead tr:hover {
+          background-color: transparent;
+        }
+        table thead tr th {
+          font-size: 14px;
+          background-color: rgba(238, 238, 238, 0.75);
+          text-transform: capitalize;
+          text-align: left;
+          padding: 10px 16px;
+          color: #3d3d46;
+        }
+        table tbody tr td {
+          padding: 10px 16px;
+          text-align: left;
+          color: #9292a3;
+          font-size: 12px;
+          font-weight: lighter;
+        }
+      }
+    }
   }
 
   .content-name,
@@ -621,6 +658,12 @@
       background-color: transparent !important;
       font-size: 14px !important;
       color: #9292a3 !important;
+    }
+    img {
+      width: 300px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 
@@ -645,33 +688,43 @@
   }
 }
 .content-wrapper {
-  padding: 14px;
+  padding: 7px 0px;
   .dot-list {
     display: flex;
     justify-content: left;
     align-items: center;
     width: 200px;
     cursor: pointer;
-    margin-bottom: 14px;
+    padding: 7px 14px;
+
+    &:hover {
+      background-color: rgba(146, 146, 163, 25%);
+    }
+
     &:last-child {
       margin-bottom: 0;
-      span {
+      > span {
         svg {
           color: #ff5b64;
         }
       }
-      span:last-child {
+      > span:last-child {
         color: #ff5b64;
       }
     }
-    span {
+    > h3 {
+      margin: 0px;
+    }
+    > span {
+      line-height: 100%;
+      margin-right: 10px;
       svg {
         color: #9292a3;
         height: 16px;
         width: 16px;
       }
     }
-    span:last-child {
+    > span:last-child {
       font-style: normal;
       font-weight: normal;
       font-size: 14px;

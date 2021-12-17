@@ -21,27 +21,28 @@ interface P {
   userGroupListItems?: UserGroupListItem[]
   hideMacro?: boolean
   hidePadlock?: boolean
+  saveFormLoading?: boolean
 }
 
-const FormComponentMain: FC<P> = ({ ...props }) => {
-  const {
-    draggedForms,
-    formSaveLabel = '',
-    processSaveForm,
-    onHandleMacro,
-    medicalFormMacros = [],
-    invProductsListItems = [],
-    medicalConditionsListItems = [],
-    userGroupListItems = [],
-    hideMacro = false,
-    hidePadlock = false,
-  } = props
+const FormComponentMain: FC<P> = ({
+  draggedForms,
+  formSaveLabel = '',
+  processSaveForm,
+  onHandleMacro,
+  medicalFormMacros = [],
+  invProductsListItems = [],
+  medicalConditionsListItems = [],
+  userGroupListItems = [],
+  hideMacro = false,
+  hidePadlock = false,
+  saveFormLoading = false,
+}) => {
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   const [macroItems, setMacroItems] = useState<MacroItem[]>([])
 
   useEffect(() => {
     setMacroItems(medicalFormMacros)
-  }, [medicalFormMacros])
+  }, [medicalFormMacros, draggedForms])
 
   useEffect(() => {
     const requiredForms = draggedForms.filter((form) => form.required === true)
@@ -111,6 +112,7 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
           formSaveLabel={formSaveLabel}
           userGroupListItems={userGroupListItems}
           hidePadlock={hidePadlock}
+          saveFormLoading={saveFormLoading}
         />
       )}
     </div>
