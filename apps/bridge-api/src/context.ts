@@ -61,7 +61,11 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
     }
   }
   ret.authJwt = authorizationRaw
-  if (!ret.authenticated && req.req.header('remoteurl')) {
+  if (
+    !ret.authenticated &&
+    req.req.header('remoteurl') &&
+    req.req.header('remoteurl') !== 'null'
+  ) {
     ret.prisma = prisma(req.req.header('remoteurl'))
   } else {
     ret.prisma = prisma(ret.authenticated?.remote_url || undefined)

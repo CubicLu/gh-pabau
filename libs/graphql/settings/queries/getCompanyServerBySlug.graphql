@@ -1,0 +1,6 @@
+query getCompanyServerBySlug($slug: String) {
+  Public_CompanyServer(where: {slug: $slug}) {
+    remote_connect
+    remote_url
+  }
+}

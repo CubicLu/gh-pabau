@@ -7,7 +7,9 @@ import { SettingsContext } from '../context/settings-context'
 
 const SettingsContextWrapper: FC = ({ children }) => {
   const router = useRouter()
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
+  console.log('Calling settings')
   const companySlug =
     typeof router.query.company_slug === 'object'
       ? router.query.company_slug[0]
@@ -23,11 +25,6 @@ const SettingsContextWrapper: FC = ({ children }) => {
     },
     skip: !companySlug,
   })
-  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
-
-  if (errorSettings) {
-    console.error('SettingsContextWrapper error', errorSettings)
-  }
 
   if (loadingSettings) {
     return (
@@ -59,7 +56,6 @@ const SettingsContextWrapper: FC = ({ children }) => {
     meta['pod_url'] = 'https://crm.pabau.com'
   } else {
     meta['pod_url'] = csr.findFirstCompany.remote_url
-    localStorage.setItem('remoteurl', csr.findFirstCompany.remote_url)
   }
 
   return (

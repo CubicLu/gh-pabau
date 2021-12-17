@@ -323,6 +323,7 @@ export const permissions = shield(
       Public_ServiceCategories: allow,
       Public_StaffShifts: allow,
       Public_Staff: allow,
+      Public_CompanyServer: allow,
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //statement template

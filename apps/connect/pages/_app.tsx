@@ -2,6 +2,7 @@ import React from 'react'
 import { AppProps } from 'next/app'
 import TranslationWrapper from '../components/TranslationWrapper'
 import SettingsContextWrapper from '../components/SettingsContextWrapper'
+import CompanyServerWrapper from '../components/CompanyServerWrapper'
 import {
   ApolloProvider,
   ApolloClient,
@@ -25,7 +26,7 @@ const GRAPHQL_HTTP_ENDPOINT =
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('connect_token')
-  const rurl = localStorage.getItem('remoteurl')
+  const rurl = sessionStorage.getItem('remoteurl')
   let token2 = null
   if (token) token2 = JSON.parse(token)
   return {
@@ -82,11 +83,13 @@ const client = new ApolloClient({
 function Connect({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <SettingsContextWrapper>
-        <TranslationWrapper>
-          <Component {...pageProps} />
-        </TranslationWrapper>
-      </SettingsContextWrapper>
+      <CompanyServerWrapper>
+        <SettingsContextWrapper>
+          <TranslationWrapper>
+            <Component {...pageProps} />
+          </TranslationWrapper>
+        </SettingsContextWrapper>
+      </CompanyServerWrapper>
     </ApolloProvider>
   )
 }
