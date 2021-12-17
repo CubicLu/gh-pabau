@@ -549,7 +549,10 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                         }
                         key={indform.id}
                       >
-                        <FormDetails formData={indform.data} />
+                        <FormDetails
+                          formData={indform.data}
+                          formId={indform.id}
+                        />
                       </Panel>
                     </Collapse>
                   </div>

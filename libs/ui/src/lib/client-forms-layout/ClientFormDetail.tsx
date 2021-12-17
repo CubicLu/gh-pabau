@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import dayjs from 'dayjs'
 import styles from './ClientFormsLayout.module.less'
 import { MedicalFormContactData, RenderHtml } from '@pabau/ui'
 
@@ -108,6 +107,7 @@ const FormDetails: FC<FormDetailsProps> = ({ formData, formId }) => {
             {(detail.clsClass === 'image' ||
               detail.clsClass === 'signature' ||
               detail.clsClass === 'diagram' ||
+              detail.clsClass === 'diagram_mini' ||
               detail.clsClass === 'facediagram' ||
               detail.clsClass === 'photo_andcontentDetail_drawer') && (
               <span className={styles.contentDetail} id="contentDetail">
@@ -124,6 +124,7 @@ const FormDetails: FC<FormDetailsProps> = ({ formData, formId }) => {
               detail.clsClass === 'image' ||
               detail.clsClass === 'signature' ||
               detail.clsClass === 'diagram' ||
+              detail.clsClass === 'diagram_mini' ||
               detail.clsClass === 'facediagram' ||
               detail.clsClass === 'photo_and_drawer'
             ) && (

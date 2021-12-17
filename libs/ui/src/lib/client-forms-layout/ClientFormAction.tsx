@@ -106,8 +106,6 @@ const FormAction: FC<FormActionProps> = ({
     string | string[]
   >('')
 
-  const [openFilterPopover, setOpenFilterPopover] = useState(false)
-
   const historyVersions = [
     { id: 1, version: '22.07.21' },
     { id: 2, version: '21.07.21' },
@@ -346,7 +344,6 @@ const FormAction: FC<FormActionProps> = ({
           trigger="click"
           content={formActionContent}
           overlayClassName={styles.customFormPopover}
-          onVisibleChange={(val) => setOpenFilterPopover(val)}
         >
           <Button
             className={styles.buttonInd}
@@ -354,7 +351,6 @@ const FormAction: FC<FormActionProps> = ({
             icon={<MoreOutlined />}
             onClick={(e) => {
               e.stopPropagation()
-              setOpenFilterPopover((val) => !val)
             }}
           />
         </Popover>
