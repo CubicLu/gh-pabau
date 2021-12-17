@@ -191,6 +191,7 @@ export const permissions = shield(
       reorderCommunicationTemplates: rules.authentication.isAuthenticated,
       deleteOneContactMedicalCondition: rules.authentication.isAuthenticated,
       deleteOneMedicalCondition: rules.authentication.isAuthenticated,
+      roomOrder: rules.authentication.isAuthenticated,
 
       '*': and(
         rules.authentication.isAuthenticated,
