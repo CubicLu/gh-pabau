@@ -14,6 +14,9 @@ fragment InvTaxRateFields on InvTaxRate {
   end_date
   show_on_receipt
   custom_id
+  offer
+  offer_name
+  online
 }
 
 fragment InvTaxRate on InvTaxRate {

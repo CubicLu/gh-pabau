@@ -22,6 +22,9 @@ export const InvTaxRate = objectType({
     t.int('end_date')
     t.int('show_on_receipt')
     t.int('custom_id')
+    t.boolean('offer')
+    t.nullable.string('offer_name')
+    t.boolean('online')
     t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {

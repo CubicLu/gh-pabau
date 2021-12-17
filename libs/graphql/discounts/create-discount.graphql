@@ -1,0 +1,15 @@
+mutation insertDiscount($data: InvTaxRateCreateInput!) {
+  createOneInvTaxRate(data: $data) {
+    id
+    created_date
+    name
+    type
+    rate
+    show_on_receipt
+    is_active
+    custom_id
+    offer
+    offer_name
+    online
+  }
+}

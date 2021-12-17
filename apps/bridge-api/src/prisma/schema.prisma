@@ -7379,13 +7379,15 @@ model InvTaxRate {
   is_active        Int
   description      String?
   date_constrained Boolean   @default(false)
-  start_date       Int
-  end_date         Int
-  show_on_receipt  Int
-  custom_id        Int
+  start_date       Int       @default(0)
+  end_date         Int       @default(0)
+  show_on_receipt  Int       @default(1)
+  custom_id        Int       @default(0)
+  offer            Boolean   @default(false)
+  offer_name       String?
+  online           Boolean   @default(false)
   Company          Company?  @relation(fields: [company_id], references: [id])
   User             User?     @relation(fields: [user_id], references: [id])
-
 
   @@index([company_id], name: "occupier")
   @@map("inv_tax_rates")

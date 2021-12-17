@@ -12,6 +12,9 @@ query getDiscounts($where: InvTaxRateWhereInput) {
     description
     show_on_receipt
     code: glCode
+    offer
+    offer_name
+    online
   }
 }
 query countDiscounts($where: InvTaxRateWhereInput) {
