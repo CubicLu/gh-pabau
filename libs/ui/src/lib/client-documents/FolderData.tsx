@@ -87,6 +87,13 @@ const ImageItem = ({ origin, isDirectPath = false, ...props }) => {
   )
 }
 
+const generateDownloadMessage = ({ downloadStarted, downloadPerc }): string => {
+  if (downloadStarted) {
+    if (downloadPerc > 0) return `${downloadPerc} % downloaded`
+    return 'Downloading...'
+  } else return 'Download'
+}
+
 interface DataSourceType {
   [key: string]: string | number
 }
@@ -315,7 +322,7 @@ export const FolderData: FC<FolderDataProps> = ({
     const [downloadPerc, setDownloadPerc] = useState(0)
     const [downloadStarted, setDownloadStarted] = useState(false)
 
-    const downloadSingleDoc = (url: string, name = '') => {
+    const downloadSingleDoc = (url = '', name = '') => {
       console.log('NAME:', name)
       const xhr = new XMLHttpRequest()
       xhr.open('GET', url, true)
@@ -380,20 +387,15 @@ export const FolderData: FC<FolderDataProps> = ({
               if (cFile?.folderData && !downloadStarted) {
                 const cFileName = cFile?.folderData?.split('/') || []
                 downloadSingleDoc?.(
-                  cFile?.folderData || '',
-                  cFile?.documentName
-                    ? cFile?.documentName
-                    : displayDocName(cFileName?.[cFileName?.length - 1])
+                  cFile?.folderData,
+                  cFile?.documentName ||
+                    displayDocName(cFileName?.[cFileName?.length - 1])
                 )
               }
             }}
           >
             <DownloadOutlined />
-            {downloadStarted
-              ? downloadPerc > 0
-                ? downloadPerc + '% downloaded'
-                : 'Donwloading...'
-              : 'Donwload'}
+            {generateDownloadMessage({ downloadPerc, downloadStarted })}
           </div>
           <div
             className={styles.menuItem}

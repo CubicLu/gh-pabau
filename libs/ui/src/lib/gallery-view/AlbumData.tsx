@@ -39,6 +39,13 @@ import { ReactComponent as Share } from '../../assets/images/image-share.svg'
 import { ReactComponent as ImageAlbum } from '../../assets/images/image-album.svg'
 import dayjs from 'dayjs'
 
+const generateDownloadMessage = ({ downloadStarted, downloadPerc }): string => {
+  if (downloadStarted) {
+    if (downloadPerc > 0) return `${downloadPerc} % downloaded`
+    return 'Downloading...'
+  } else return 'Download'
+}
+
 const getThumb = (src: string) => {
   if (src.includes('/')) {
     const pathArr = src.split('/')
@@ -523,11 +530,7 @@ export const AlbumData: FC<AlbumDataProps> = ({
           >
             <DownloadOutlined />
             &nbsp;&nbsp;&nbsp;
-            {downloadStarted
-              ? downloadPerc > 0
-                ? downloadPerc + '% downloaded'
-                : 'Donwloading...'
-              : t('galley.list.album.download.button')}
+            {generateDownloadMessage({ downloadPerc, downloadStarted })}
           </div>
           <div
             className={styles.menuItem}
@@ -538,20 +541,12 @@ export const AlbumData: FC<AlbumDataProps> = ({
             <PictureOutlined />
             &nbsp;&nbsp;&nbsp;
             {t('galley.list.album.add.album.button')}
-            {/* <div className={styles.leftItem}>
-              <RightOutlined />
-            </div> */}
           </div>
           <div className={styles.menuItem}>
             <CalendarOutlined />
             &nbsp;&nbsp;&nbsp;
             {t('galley.list.album.change.date.button')}
           </div>
-          {/* <div className={styles.menuItem}>
-            <EditOutlined />
-            &nbsp;&nbsp;&nbsp;
-            {t('galley.list.album.rename.button')}
-          </div> */}
           <div className={styles.menuItem}>
             <ShareAltOutlined />
             &nbsp;&nbsp;&nbsp;
