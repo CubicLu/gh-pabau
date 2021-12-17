@@ -1,5 +1,8 @@
 query getPackages {
-  packages: findManyPackage(where: {deleted: {equals: 0}}, orderBy: {name: asc}) {
+  packages: findManyPackage(
+    where: { deleted: { equals: 0 } }
+    orderBy: { name: asc }
+  ) {
     id
     name
     description
@@ -9,11 +12,29 @@ query getPackages {
     service_product_id
     product_id
     disabledusers
-    ServiceProduct{
+    ServiceProduct {
       Service: CompanyService {
-        id 
+        id
         name
         color
+      }
+    }
+  }
+}
+
+query getCourses {
+  findManyPackage {
+    name
+    session_count
+    price
+    ServiceProduct {
+      CompanyService {
+        name
+        disabled_locations
+        Locations {
+          id
+          name
+        }
       }
     }
   }

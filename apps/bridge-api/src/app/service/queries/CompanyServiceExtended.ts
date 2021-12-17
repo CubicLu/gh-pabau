@@ -18,5 +18,24 @@ export const CompanyServiceExtended = extendType({
         )
       },
     })
+    t.field('Locations', {
+      type: list('CompanyBranch'),
+      async resolve(parent: CompanyService, args, ctx: Context) {
+        if (!parent.disabled_locations) return []
+        return await ctx.prisma.companyBranch.findMany({
+          where: {
+            company_id: ctx.authenticated.company,
+            is_active: 1,
+            id: {
+              not: {
+                in: parent.disabled_locations.split(',').map(function (i) {
+                  return Number.parseInt(i, 10)
+                }),
+              },
+            },
+          },
+        })
+      },
+    })
   },
 })
