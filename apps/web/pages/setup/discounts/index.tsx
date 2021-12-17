@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { NextPage } from 'next'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
@@ -27,9 +27,14 @@ import {
 import classNames from 'classnames'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
-import { CountDiscountDocument, GetDiscountsDocument } from '@pabau/graphql'
+import {
+  CountDiscountDocument,
+  GetDiscountsDocument,
+  useListEmployeeQueryQuery,
+} from '@pabau/graphql'
 import { useUser } from '../../../context/UserContext'
 import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 const { Panel } = Collapse
 
@@ -43,7 +48,7 @@ interface InitialDiscountProps {
   isActive: boolean
   reciept: string
   discountRate: string
-  employees: string[]
+  employees: EmployeeListProps[]
   services: string[]
   locations: string[]
   products: string[]
@@ -60,6 +65,7 @@ interface TabProps {
 }
 
 interface EmployeeListProps {
+  id?: number
   name: string
   selected: boolean
 }
@@ -707,56 +713,6 @@ export const Discount: NextPage = () => {
 
   const { t } = useTranslationI18()
 
-  const employeeList = [
-    {
-      name: t('setup.discount.data.jessicawinter'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.jeffhackley'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.alexanderwang'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.lindadavis'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.williamtyson'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.maxstarck'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.kylewalsh'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.owenphillips'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.aidankelly'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.ewanmorgan'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.jordanmartin'),
-      selected: false,
-    },
-    {
-      name: t('setup.discount.data.grantdudley'),
-      selected: false,
-    },
-  ]
   const schema: Schema = {
     full: t('setup.discount.data.capitalizediscount'),
     fullLower: t('setup.discount.data.lowercasediscount'),
@@ -862,13 +818,41 @@ export const Discount: NextPage = () => {
   }
 
   const [showModal, setShowModal] = useState<boolean>(false)
-  const [employeeListData, setEmployeeListData] = useState<EmployeeListProps[]>(
-    employeeList
-  )
   const [initialValue, setInitialValue] = useState<InitialDiscountProps>(
     defaultValue
   )
+  const [employeeListData, setEmployeeListData] = useState<EmployeeListProps[]>(
+    []
+  )
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+
+  // query for employee data
+  const { data: employeeDataResponse } = useListEmployeeQueryQuery()
+
+  useEffect(() => {
+    if (employeeDataResponse?.findManyCmStaffGeneral) {
+      const employeeData = employeeDataResponse?.findManyCmStaffGeneral.map(
+        (emp) => ({
+          id: emp.id,
+          name: `${emp.Fname} ${emp.Lname}`,
+          selected: false,
+          avatar: emp?.User?.image && getImage(emp?.User?.image),
+        })
+      )
+      setEmployeeListData(employeeData)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employeeDataResponse])
+
+  useEffect(() => {
+    if (initialValue.employees.length > 0) {
+      const updatedEmpList = setEmployeeData(initialValue.employees)
+      setEmployeeListData(updatedEmpList)
+    } else {
+      resetEmployeeList()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValue])
 
   const [addMutation] = useMutation(ADD_MUTATION, {
     onCompleted(data) {
@@ -921,21 +905,22 @@ export const Discount: NextPage = () => {
 
   const createPageOnClick = () => {
     setShowModal(true)
-    const data = employeeList.map((value) => {
-      return {
-        ...value,
-        selected: false,
-      }
-    })
-    setEmployeeListData(data)
+    resetEmployeeList()
     setInitialValue(defaultValue)
   }
 
   const handleFullScreenModalBackClick = (handleReset) => {
     setShowModal(false)
     handleReset()
+    setInitialValue(defaultValue)
   }
-
+  const resetEmployeeList = () => {
+    const resetEmmplyeeList = employeeListData.map((emp) => ({
+      ...emp,
+      selected: false,
+    }))
+    setEmployeeListData(resetEmmplyeeList)
+  }
   const showDeleteConfirmDialog = () => {
     setShowModal(false)
     setShowDeleteModal(true)
@@ -955,10 +940,13 @@ export const Discount: NextPage = () => {
     setShowModal(true)
   }
 
-  const setEmployeeData = (records: string[]) => {
-    const data = employeeList.map((value) => {
-      if (records.includes(value.name)) {
+  const setEmployeeData = (records: EmployeeListProps[]) => {
+    const ids = records?.map((item) => item.id)
+    const data = employeeListData.map((value) => {
+      if (ids.includes(value.id)) {
         value.selected = true
+      } else {
+        value.selected = false
       }
       return value
     })
@@ -969,7 +957,10 @@ export const Discount: NextPage = () => {
     const record = []
     for (const item of value) {
       if (item.selected) {
-        record.push(item.name)
+        record.push({
+          id: item.id,
+          name: item.name,
+        })
       }
     }
     setFieldValue('employees', record)
@@ -1181,6 +1172,9 @@ export const Discount: NextPage = () => {
               onCreate={handleSubmit}
               onSave={handleSubmit}
               onDelete={showDeleteConfirmDialog}
+              onClose={() => {
+                setInitialValue(defaultValue)
+              }}
               subMenu={[
                 t('setup.discount.data.general'),
                 t('setup.discount.data.rules'),
@@ -1192,11 +1186,7 @@ export const Discount: NextPage = () => {
                 <div className={styles.empSection}>
                   <Employees
                     description={t('setup.discount.data.employeesubtitle')}
-                    employees={
-                      initialValue.id
-                        ? setEmployeeData(initialValue.employees)
-                        : employeeListData
-                    }
+                    employees={employeeListData}
                     onSelected={(value) =>
                       prepareEmployeeList(value, setFieldValue)
                     }
