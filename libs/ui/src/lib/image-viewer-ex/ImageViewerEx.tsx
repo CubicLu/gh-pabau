@@ -54,7 +54,6 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
   const { t } = useTranslation('common')
   const viewerRef = React.createRef<ReactZoomPanPinchRef>()
   const [imageData, setImageData] = useState('')
-  const [currScale, setCurrScale] = useState(scale)
   const [screenshot, setScreenshot] = useState('')
   const [largeScreenshot, setLargeScreenshot] = useState('')
 
@@ -72,9 +71,20 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
       img.addEventListener('load', () => {
         const { width: imgWidth, height: imgHeight } = img
         if (imgWidth < width) {
-          setCurrScale(width / imgWidth)
+          const scale = width / imgWidth
+          if (viewerRef?.current)
+            viewerRef.current.instance.setTransformState(
+              scale,
+              viewerRef?.current?.state?.positionX,
+              viewerRef?.current?.state?.positionY
+            )
         } else {
-          setCurrScale(1)
+          if (viewerRef?.current)
+            viewerRef.current.instance.setTransformState(
+              1,
+              viewerRef?.current?.state?.positionX,
+              viewerRef?.current?.state?.positionY
+            )
         }
 
         const canvas = document.createElement('canvas')
@@ -101,7 +111,7 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
     } else if (src === '') {
       setImageData('')
     }
-  }, [src, imageData, width, height])
+  }, [src, imageData, width, height, viewerRef])
 
   useEffect(() => {
     if (viewMagnifier && magnifierZoomInValue) {
@@ -189,7 +199,7 @@ export const ImageViewerEx: FC<ImageViewerExProps> = ({
           <TransformWrapper
             ref={viewerRef}
             minScale={1}
-            initialScale={currScale}
+            initialScale={scale}
             initialPositionX={positionX}
             initialPositionY={positionY}
             limitToBounds={false}
