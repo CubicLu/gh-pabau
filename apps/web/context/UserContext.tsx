@@ -104,6 +104,7 @@ export const UserProvider: FC = ({ children }) => {
         companyDateFormat: data.me.Company.details.date_format,
         currency: data.me.Company.details.currency,
         timezone: data.me.Company.details.timezone.php_format,
+        timeFormat: data.me.Company.CompanyMeta?.[0]?.meta_value ?? '12',
       }
     : null
 

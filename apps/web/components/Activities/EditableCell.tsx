@@ -263,6 +263,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
     const save = async (values) => {
       const [key] = Object.keys(values)
       const updatedValue = { ...values }
+      let mutationKey = dataIndex
       let displayConfetti = false
       let needRefetch = false
       let payload
@@ -280,24 +281,30 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
           break
         }
         case columnNames.clientName.id: {
+          mutationKey = 'activity'
           payload = {
-            CmContact: {
-              connect: {
-                ID: Number(values?.[key]),
-              },
-            },
+            CmContact: values?.[key]
+              ? {
+                  connect: {
+                    ID: Number(values?.[key]),
+                  },
+                }
+              : { disconnect: true },
           }
           needRefetch = true
           break
         }
         case columnNames.leadName.id:
         case columnNames.leadTitle.id: {
+          mutationKey = 'activity'
           payload = {
-            CmLead: {
-              connect: {
-                ID: Number(values?.[key]),
-              },
-            },
+            CmLead: values?.[key]
+              ? {
+                  connect: {
+                    ID: Number(values?.[key]),
+                  },
+                }
+              : { disconnect: true },
           }
           needRefetch = true
           break
@@ -727,7 +734,7 @@ export const EditableCell: FC<EditableCellProps> = React.memo(
         }
       }
       if (payload) {
-        switch (dataIndex) {
+        switch (mutationKey) {
           case 'lead': {
             await editLead({
               variables: {

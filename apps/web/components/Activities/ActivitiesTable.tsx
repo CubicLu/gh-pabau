@@ -55,7 +55,7 @@ import { ReactComponent as ActivityIcon } from '../../assets/images/activity-ico
 import {
   DisplayDateTime,
   DisplayDate,
-  dateTimeFormatMapper,
+  calculateTimeFormat,
   dateFormatMapper,
 } from '../../hooks/displayDate'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
@@ -1981,7 +1981,10 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
           selectPrefixIcon: col.selectPrefixIcon,
           dateFormat:
             col?.showTime === undefined
-              ? dateTimeFormatMapper[loggedUser?.companyDateFormat]
+              ? calculateTimeFormat(
+                  dateFormatMapper[loggedUser?.companyDateFormat],
+                  loggedUser?.timeFormat
+                )
               : dateFormatMapper[loggedUser?.companyDateFormat],
           activityType: activityTypeOption,
           leadSourceData,

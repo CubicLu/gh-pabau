@@ -26,6 +26,11 @@ query retrieveAuthenticatedUser {
           php_format
         }
       }
+      CompanyMeta(where: { meta_name: { equals: "time_format" } }) {
+        id
+        meta_name
+        meta_value
+      }
     }
     companies: companies {
       id

@@ -6,9 +6,9 @@ export const dateFormatMapper = {
   'm/d/Y': 'MM/DD/YYYY',
 }
 
-export const dateTimeFormatMapper = {
-  'd/m/Y': 'DD/MM/YYYY hh:mm',
-  'm/d/Y': 'MM/DD/YYYY hh:mm',
+export const calculateTimeFormat = (format: string, timeFormat: string) => {
+  const time = timeFormat === '12' ? 'hh:mm a' : 'HH:mm'
+  return `${format} ${time}`
 }
 
 export const DisplayDate = (date: Date) => {
@@ -26,7 +26,10 @@ export const GetFormat = () => {
 export const DisplayDateTime = (date: Date) => {
   const user = useUser()
   const dateFormat = user?.me?.companyDateFormat
-  return dayjs(date).format(dateTimeFormatMapper[dateFormat])
+  const timeFormat = user?.me?.timeFormat
+  return dayjs(date).format(
+    calculateTimeFormat(dateFormatMapper[dateFormat], timeFormat)
+  )
 }
 
 export const GetDateFormat = () => {

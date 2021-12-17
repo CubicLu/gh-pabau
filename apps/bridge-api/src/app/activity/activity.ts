@@ -1255,7 +1255,7 @@ export const prepareActivityDataWithCustomField = async (
           wonBy:
             item.CmLead?.EnumStatus === 'Converted'
               ? {
-                  full_name: item.CmLead?.User?.full_name,
+                  full_name: item.CmLead?.User?.full_name ?? '',
                   image: item.CmLead?.User?.image ?? '',
                 }
               : null,
