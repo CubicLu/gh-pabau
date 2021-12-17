@@ -272,6 +272,7 @@ export const permissions = shield(
       findFirstMedicalFormContact: rules.authentication.isAuthenticated,
       findManyMedicalFormContact: rules.authentication.isAuthenticated,
       findManyMedicalFormContactCount: rules.authentication.isAuthenticated,
+      getLibraryForms: allow,
       // Permissions
       findManyUserPermission: rules.authentication.isAuthenticated,
       findManyUserPermissionCount: rules.authentication.isAuthenticated,

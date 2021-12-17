@@ -1,9 +1,50 @@
+import { extendType, stringArg, intArg, list, objectType, nonNull } from 'nexus'
 import { Context } from '../../context'
-import { extendType, objectType, nonNull, intArg } from 'nexus'
 
-export const getFormVersions = extendType({
+export const GetLibraryForms = extendType({
   type: 'Query',
   definition(t) {
+    t.field('getLibraryForms', {
+      type: list('MedicalForm'),
+      args: {
+        form_id: intArg(),
+        business_type: stringArg(),
+        name: stringArg(),
+      },
+      async resolve(
+        parent,
+        { form_id, business_type, name },
+        { prismaArray }: Context
+      ) {
+        const DO_NOT_DELETE_COMPANY_ID = 3452
+        const where = {
+          deleted_at: {
+            equals: null,
+          },
+          company_id: {
+            equals: DO_NOT_DELETE_COMPANY_ID,
+          },
+        }
+        if (form_id > 0) {
+          where['id'] = {
+            equals: form_id,
+          }
+        }
+        if (business_type !== undefined && name !== '') {
+          where['form_category'] = {
+            equals: business_type,
+          }
+        }
+        if (name !== undefined && name !== '') {
+          where['name'] = {
+            equals: name,
+          }
+        }
+        return await prismaArray(undefined).medicalForm.findMany({
+          where: where,
+        })
+      },
+    })
     t.list.field('getFormVersions', {
       type: objectType({
         name: 'GetFormVersionsType',
