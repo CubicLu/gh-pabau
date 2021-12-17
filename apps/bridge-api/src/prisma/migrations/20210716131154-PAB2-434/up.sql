@@ -78,4 +78,6 @@ CREATE INDEX `activity_user_filter_company_id_user_id__index` on `activity_user_
 
 ALTER TABLE `cm_leads` MODIFY `EnumStatus` ENUM('Junk', 'Open', 'Converted') default 'Open';
 
+ALTER TABLE `activity` MODIFY `due_start_date` datetime default null, MODIFY `due_end_date` datetime default null;
+
 COMMIT;

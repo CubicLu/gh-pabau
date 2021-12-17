@@ -840,8 +840,8 @@ export const prepareOperandQuery = async (
   return operandQuery
 }
 
-const bindQueryIntoModelVariable = (column: string, data) => {
-  return getColumnData(column, data)?.filter
+const bindQueryIntoModelVariable = (column: string, data, operand: string) => {
+  return getColumnData(column, data, operand)?.filter
 }
 
 export const prepareFilterQuery = async (
@@ -864,7 +864,11 @@ export const prepareFilterQuery = async (
       ctx
     )
     queryObject.push(
-      bindQueryIntoModelVariable(item.filterColumn, prepareInnerObject)
+      bindQueryIntoModelVariable(
+        item.filterColumn,
+        prepareInnerObject,
+        item.operand
+      )
     )
   }
   return queryObject
@@ -1220,12 +1224,13 @@ export const prepareActivityDataWithCustomField = async (
       const leadLastActivityDate = [...leadAllActivity]
         .reverse()
         .find((item) => item?.status === 'done')?.finished_at
+      const duration =
+        item.due_end_date && item.due_start_date
+          ? dayjs(item.due_end_date).diff(dayjs(item.due_start_date), 'minutes')
+          : 0
       return {
         ...item,
-        duration: dayjs(item.due_end_date).diff(
-          dayjs(item.due_start_date),
-          'minutes'
-        ),
+        duration,
         CmLead: {
           ...item.CmLead,
           leadDoneActivities: leadAllActivity.filter(
@@ -1251,7 +1256,7 @@ export const prepareActivityDataWithCustomField = async (
             item.CmLead?.EnumStatus === 'Converted'
               ? {
                   full_name: item.CmLead?.User?.full_name,
-                  image: item.CmLead?.User?.image,
+                  image: item.CmLead?.User?.image ?? '',
                 }
               : null,
           wonTime:

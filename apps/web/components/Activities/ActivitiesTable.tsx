@@ -1925,20 +1925,17 @@ export const ActivityTable: FC<ActivityTableProps> = React.memo(
         const selectColumn = columns1.map((data) => {
           return data?.columnName
         })
-        const activeColumnName = selectedColumn.includes(columnNames.done.label)
-          ? [columnNames.done.label, ...selectColumn]
-          : selectColumn
-        setSelectedColumn(activeColumnName)
+        setSelectedColumn(selectColumn)
         setColumns(columns1)
         await upsertActiveColumn({
           variables: {
             userId: loggedUser?.user,
             companyId: loggedUser?.company,
             update: {
-              columns: { set: JSON.stringify({ columns: activeColumnName }) },
+              columns: { set: JSON.stringify({ columns: selectColumn }) },
             },
             create: {
-              columns: JSON.stringify({ columns: activeColumnName }),
+              columns: JSON.stringify({ columns: selectColumn }),
               User: {
                 connect: { id: loggedUser?.user },
               },

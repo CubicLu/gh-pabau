@@ -1,8 +1,18 @@
-export const getColumnData = (column: string, data = {}) => {
+const filterOperand = new Set([
+  'is empty',
+  'is not',
+  'does not contain',
+  'does not start with',
+  'does not end with',
+])
+const filterDataIndex = new Set(['client', 'lead'])
+
+export const getColumnData = (column: string, data = {}, operand = '') => {
   const filterMapper = {
     'Add time': {
       key: 'Date',
       type: 'string',
+      dataIndex: 'activity',
       filter: {
         created_at: data,
       },
@@ -10,13 +20,15 @@ export const getColumnData = (column: string, data = {}) => {
     'Assigned to user': {
       key: 'User',
       type: 'string',
+      dataIndex: 'activity',
       filter: {
-        AssignedUser: { id: data },
+        assigned_to: data,
       },
     },
     'Client name': {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'client',
       filter: {
         CmContact: {
           ID: data,
@@ -26,13 +38,15 @@ export const getColumnData = (column: string, data = {}) => {
     Creator: {
       key: 'User',
       type: 'string',
+      dataIndex: 'activity',
       filter: {
-        User: { id: data },
+        created_by: data,
       },
     },
     'Lead name': {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           ID: data,
@@ -42,6 +56,7 @@ export const getColumnData = (column: string, data = {}) => {
     Done: {
       key: 'Done',
       type: 'string',
+      dataIndex: 'activity',
       filter: {
         status: data,
       },
@@ -49,6 +64,7 @@ export const getColumnData = (column: string, data = {}) => {
     Type: {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'activity',
       filter: {
         type: data,
       },
@@ -56,6 +72,7 @@ export const getColumnData = (column: string, data = {}) => {
     Subject: {
       key: 'Name',
       type: 'string',
+      dataIndex: 'activity',
       filter: {
         subject: data,
       },
@@ -63,6 +80,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Due date': {
       key: 'Date',
       type: 'string',
+      dataIndex: 'activity',
       filter: {
         due_start_date: data,
       },
@@ -70,6 +88,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Free/busy': {
       key: 'Basic',
       type: 'boolean',
+      dataIndex: 'activity',
       filter: {
         available: data,
       },
@@ -77,6 +96,7 @@ export const getColumnData = (column: string, data = {}) => {
     Status: {
       key: 'Basic',
       type: 'string',
+      dataIndex: 'activity',
       filter: {
         status: data,
       },
@@ -84,6 +104,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead owner': {
       key: 'User',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           OwnerID: data,
@@ -93,6 +114,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead email': {
       key: 'Name',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           Email: data,
@@ -102,6 +124,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead phone': {
       key: 'Name',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           Phone: data,
@@ -111,6 +134,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead created date': {
       key: 'Date',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           CreatedDate: data,
@@ -120,6 +144,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Won time': {
       key: 'Date',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           EnumStatus: { equals: 'Converted' },
@@ -130,6 +155,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead closed on': {
       key: 'Date',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           ConvertDate: data,
@@ -139,6 +165,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead source': {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           MarketingSource: {
@@ -150,6 +177,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Won by': {
       key: 'User',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           EnumStatus: { equals: 'Converted' },
@@ -160,6 +188,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead stage': {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           LeadStatusData: {
@@ -171,6 +200,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead status': {
       key: 'Basic',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           EnumStatus: data,
@@ -180,6 +210,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead creator': {
       key: 'User',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           CmContact: {
@@ -191,6 +222,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Lead client': {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           ContactID: data,
@@ -200,6 +232,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Date of entering stage': {
       key: 'Date',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           ConvertDate: data,
@@ -209,6 +242,7 @@ export const getColumnData = (column: string, data = {}) => {
     Pipeline: {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           PipelineStage: {
@@ -220,6 +254,7 @@ export const getColumnData = (column: string, data = {}) => {
     Title: {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           ID: data,
@@ -229,6 +264,7 @@ export const getColumnData = (column: string, data = {}) => {
     'Update time': {
       key: 'Date',
       type: 'string',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           LastUpdated: data,
@@ -238,6 +274,7 @@ export const getColumnData = (column: string, data = {}) => {
     Location: {
       key: 'Basic',
       type: 'number',
+      dataIndex: 'lead',
       filter: {
         CmLead: {
           location_id: data,
@@ -245,5 +282,21 @@ export const getColumnData = (column: string, data = {}) => {
       },
     },
   }
-  return filterMapper?.[column]
+  const columnData = filterMapper?.[column]
+  if (
+    operand &&
+    filterDataIndex.has(columnData.dataIndex) &&
+    filterOperand.has(operand)
+  ) {
+    columnData.filter = {
+      OR: [
+        { ...columnData.filter },
+        columnData.dataIndex === 'client'
+          ? { contact_id: { equals: null } }
+          : { lead_id: { equals: null } },
+      ],
+    }
+    return columnData
+  }
+  return columnData
 }
