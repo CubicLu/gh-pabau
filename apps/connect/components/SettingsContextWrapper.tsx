@@ -9,7 +9,6 @@ const SettingsContextWrapper: FC = ({ children }) => {
   const router = useRouter()
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
-  console.log('Calling settings')
   const companySlug =
     typeof router.query.company_slug === 'object'
       ? router.query.company_slug[0]
