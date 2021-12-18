@@ -7376,7 +7376,7 @@ model InvTaxRate {
   user_id          Int?      @map("uid")
   created_date     DateTime?
   modified_date    DateTime?
-  is_active        Int
+  is_active        Int       @default(1)
   description      String?
   date_constrained Boolean   @default(false)
   start_date       Int       @default(0)
