@@ -274,10 +274,10 @@ export const CmContact = objectType({
         return root.LoyaltyLog
       },
     })
-    t.nullable.field('LoyaltyPoints', {
-      type: 'LoyaltyPoints',
+    t.nullable.field('LoyaltyPoint', {
+      type: 'LoyaltyPoint',
       resolve(root: any) {
-        return root.LoyaltyPoints
+        return root.LoyaltyPoint
       },
     })
     t.list.field('Attachments', {

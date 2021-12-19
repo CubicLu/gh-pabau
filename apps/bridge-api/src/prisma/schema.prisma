@@ -1932,7 +1932,7 @@ model CmContact {
   CmExtraSalon             CmExtraSalon[]
   InvPayment               InvPayment[]
   LoyaltyLog               LoyaltyLog[]
-  LoyaltyPoints            LoyaltyPoints?
+  LoyaltyPoint             LoyaltyPoint?
   Attachments              ContactAttachment[]
   Packages                 ContactPackage[]
   Insurance                InsuranceDetail?
@@ -8292,7 +8292,7 @@ model LoyaltyLog {
   @@map("loyalty_log")
 }
 
-model LoyaltyPoints {
+model LoyaltyPoint {
   id         Int       @id @default(autoincrement())
   company_id Int
   points     Float

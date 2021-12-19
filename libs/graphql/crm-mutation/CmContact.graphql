@@ -82,8 +82,8 @@ fragment CmContact on CmContact {
   SocialSurveyFeedback {
     ...SocialSurveyFeedbackFields
   }
-  LoyaltyPoints {
-    ...LoyaltyPointsFields
+  LoyaltyPoint {
+    ...LoyaltyPointFields
   }
   Insurance {
     ...InsuranceDetailFields

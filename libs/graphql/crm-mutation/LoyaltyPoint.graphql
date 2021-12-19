@@ -1,0 +1,37 @@
+fragment LoyaltyPointFields on LoyaltyPoint {
+  id
+  company_id
+  points
+  contact_id
+}
+
+fragment LoyaltyPoint on LoyaltyPoint {
+  ...LoyaltyPointFields
+  Contact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneLoyaltyPoint($data: LoyaltyPointCreateInput!) {
+  createOneLoyaltyPoint(data: $data) {
+    ...LoyaltyPoint
+  }
+}
+
+mutation updateOneLoyaltyPoint($where: LoyaltyPointWhereUniqueInput!, $data: LoyaltyPointUpdateInput!) {
+  updateOneLoyaltyPoint(where: $where, data: $data) {
+    ...LoyaltyPoint
+  }
+}
+
+mutation deleteOneLoyaltyPoint($where: LoyaltyPointWhereUniqueInput!) {
+  deleteOneLoyaltyPoint(where: $where) {
+    ...LoyaltyPoint
+  }
+}
+
+mutation updateManyLoyaltyPoint($where: LoyaltyPointWhereInput, $data: LoyaltyPointUpdateManyMutationInput!) {
+  updateManyLoyaltyPoint(where: $where, data: $data) {
+    count
+  }
+}
