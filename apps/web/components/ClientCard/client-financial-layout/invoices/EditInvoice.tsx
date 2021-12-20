@@ -63,15 +63,31 @@ const EditInvoice: FC<EditInvoiceProps> = ({
   onModalBackPress,
   activeKey,
 }) => {
+  const { Title } = Typography
   const dateFormat = GetDateFormat()
   const [invoice_, setInvoice] = useState(invoice)
-  const [enableCreateBtn, setEnableCreateBtn] = useState(
-    invoice?.items?.length > 0
-  )
+  const [enableCreateBtn, setEnableCreateBtn] = useState(true)
+  const [createBtnTooltip, setCreateBtnTooltip] = useState('')
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 768px)', false)
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false)
-  const { Title } = Typography
+
+  const [voidModal, setVoidModal] = useState(false)
+  const [showHistoryDrawer, setShowHistoryDrawer] = useState(false)
+  const [showRefundModal, setShowRefundModal] = useState(false)
+  const [showCheckoutWarningModal, setShowCheckoutWarningModal] = useState(
+    false
+  )
+
+  useEffect(() => {
+    if (enableCreateBtn) {
+      setCreateBtnTooltip('')
+    } else {
+      setCreateBtnTooltip(t('ui.client-card-financial.save-warning'))
+    }
+
+    /* eslint-disable-next-line */
+  }, [enableCreateBtn])
 
   const [getInvoiceData, { data: invoiceDetailsData }] = useGetInvoiceLazyQuery(
     {
@@ -156,6 +172,7 @@ const EditInvoice: FC<EditInvoiceProps> = ({
           t('ui.client-card-financial.invalid-invoice-no')
         )
       }
+
       setInvoice({
         guid: invoiceDetailsData.invoice.guid,
         id: '' + invoiceDetailsData.invoice.id,
@@ -302,13 +319,6 @@ const EditInvoice: FC<EditInvoiceProps> = ({
         </Menu.Item>
       ))}
     </Menu>
-  )
-
-  const [voidModal, setVoidModal] = useState(false)
-  const [showHistoryDrawer, setShowHistoryDrawer] = useState(false)
-  const [showRefundModal, setShowRefundModal] = useState(false)
-  const [showCheckoutWarningModal, setShowCheckoutWarningModal] = useState(
-    false
   )
 
   return (
@@ -591,6 +601,7 @@ const EditInvoice: FC<EditInvoiceProps> = ({
         }}
         enableCreateBtn={enableCreateBtn}
         createBtnText={t('ui.client-card-financial.save-changes')}
+        createBtnTooltip={createBtnTooltip}
         subMenu={[
           t('ui.client-card-financial.details'),
           t('ui.client-card-financial.items'),
@@ -599,7 +610,7 @@ const EditInvoice: FC<EditInvoiceProps> = ({
         footer={true}
         className={styles.editInvoiceModal}
       >
-        <DetailsTab invoice={invoice_} />
+        <DetailsTab invoice={invoice_} toggleSaveBtn={setEnableCreateBtn} />
         <ItemsTab invoice_={invoice_} toggleSaveBtn={setEnableCreateBtn} />
         <PaymentsTab invoice={invoice_} />
       </FullScreenReportModal>

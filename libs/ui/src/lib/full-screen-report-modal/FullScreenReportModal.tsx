@@ -1,6 +1,6 @@
 import { CloseOutlined, LeftOutlined } from '@ant-design/icons'
 import { Avatar, Button, TabMenu } from '@pabau/ui'
-import { Modal, Switch, ConfigProvider } from 'antd'
+import { Modal, Switch, ConfigProvider, Tooltip } from 'antd'
 import classnames from 'classnames'
 import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import { useMedia } from 'react-use'
@@ -39,6 +39,7 @@ export interface FullScreenReportModalProps {
   assigneeName?: string
   assigneeTitle?: string
   createBtnText?: string
+  createBtnTooltip?: string
   saveBtnText?: string
   resetBtnText?: string
   enableCreateBtn?: boolean
@@ -73,6 +74,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   deleteBtnText,
   cancelBtnText,
   createBtnText,
+  createBtnTooltip,
   assigneeName,
   assigneeTitle,
   saveBtnText,
@@ -218,13 +220,17 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                         </div>
                       )}
                       {operation === OperationType.create && (
-                        <Button
-                          type="primary"
-                          disabled={!enableCreateBtn}
-                          onClick={() => onCreate?.()}
-                        >
-                          {createBtnText || 'Create'}
-                        </Button>
+                        <Tooltip title={createBtnTooltip}>
+                          <span>
+                            <Button
+                              type="primary"
+                              disabled={!enableCreateBtn}
+                              onClick={() => onCreate?.()}
+                            >
+                              {createBtnText || 'Create'}
+                            </Button>
+                          </span>
+                        </Tooltip>
                       )}
                       {operation === OperationType.close && (
                         <Button type="text" onClick={() => onClose?.()}>
@@ -332,14 +338,18 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                         </Button>
                       )}
                       {operation === OperationType.create && (
-                        <Button
-                          type="primary"
-                          disabled={!enableCreateBtn}
-                          onClick={() => onCreate?.()}
-                          block
-                        >
-                          {createBtnText || 'Create'}
-                        </Button>
+                        <Tooltip title={createBtnTooltip}>
+                          <span>
+                            <Button
+                              type="primary"
+                              disabled={!enableCreateBtn}
+                              onClick={() => onCreate?.()}
+                              block
+                            >
+                              {createBtnText || 'Create'}
+                            </Button>
+                          </span>
+                        </Tooltip>
                       )}
                     </div>
                   )

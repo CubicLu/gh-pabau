@@ -13,6 +13,8 @@ query issuingCompanies {
     id
     name
     is_active
+    invoice_prefix
+    invoice_starting_number
   }
 }
 
@@ -57,7 +59,7 @@ query invoices(
     balance
     tooltip
     isHealthcodeEnabled
-		status: healthcodeStatus
+    status: healthcodeStatus
   }
 }
 
@@ -163,7 +165,7 @@ query debts(
       time
     }
     isHealthcodeEnabled
-		healthcodeStatus
+    healthcodeStatus
   }
 }
 
@@ -240,8 +242,8 @@ query creditNoteCount(
   )
 }
 
-query getContactAccBalance($contact_id: Int!){
-  findFirstAccountBalance(where:{contact_id:{equals:$contact_id}}){
+query getContactAccBalance($contact_id: Int!) {
+  findFirstAccountBalance(where: { contact_id: { equals: $contact_id } }) {
     balance
   }
 }

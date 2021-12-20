@@ -4419,6 +4419,8 @@ en:
   account.finance.invoice.empty.data.text: "There aren't any invoices, yet"
   account.finance.debt.empty.data.text: "There isn't any debt, yet"
   account.finance.credit.not.empty.data.text: "There aren't any credit notes, yet"
+  ui.client-card-financial.save-warning: 'Please fill all details'
+  ui.client-card-financial.invalid-invoice-no: 'Invalid Invoice No'
   ui.client-card-financial.invoices: Invoices
   ui.client-card-financial.invoices.all: All
   ui.client-card-financial.invoices.date: Date
@@ -4454,6 +4456,7 @@ en:
   ui.client-card-financial.awaiting-payment: 'Awaiting Payment'
   ui.client-card-financial.paid: Paid
   ui.client-card-financial.details: Details
+  ui.client-card-financial.invoice-no-warning: 'This invoice number is in use. Enter another one.'
   ui.client-card-financial.invoice-no: 'Invoice #'
   ui.client-card-financial.appointment: Appointment
   ui.client-card-financial.invoice-date: 'Invoice date'

@@ -1,0 +1,5 @@
+query checkInvoice($customId: String) {
+  invoice: findFirstInvSale(where: { custom_id: { equals: $customId } }) {
+    id
+  }
+}

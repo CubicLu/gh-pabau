@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { InvoiceProp } from './../ClientFinancialsLayout'
 import styles from './Tabs.module.less'
 import { DatePicker, Select, Button } from 'antd'
@@ -13,21 +13,26 @@ import {
   useGetInsurerContractsQuery,
   useGetClientAppointmentsQuery,
   SortOrder,
+  useCheckInvoiceLazyQuery,
 } from '@pabau/graphql'
 import { DisplayDate, GetDateFormat } from '../../../../hooks/displayDate'
 import dayjs from 'dayjs'
 
 interface Invoice {
   invoice?: InvoiceProp
+  toggleSaveBtn?: (e: boolean) => void
 }
 
 interface optionProp {
   key: number
   value: string
   date?: Date | string | number
+  prefix?: string
+  startingNumber?: number
 }
 
-const DetailsTab: FC<Invoice> = ({ invoice }) => {
+const DetailsTab: FC<Invoice> = ({ invoice, toggleSaveBtn }) => {
+  const detailsFormRef = useRef(null)
   const { t } = useTranslation('common')
   const { Option } = Select
   const { TextArea } = Input
@@ -35,6 +40,7 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
   const [locations, setLocations] = useState<optionProp[]>([])
   const [issuingCompanies, setIssuingCompanies] = useState<optionProp[]>([])
   const [contracts, setContracts] = useState<optionProp[]>([])
+  const [invoicePrefix, setInvoicePrefix] = useState('')
 
   const { data: apppointmentData } = useGetClientAppointmentsQuery({
     variables: {
@@ -85,7 +91,12 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
   useEffect(() => {
     if (issuingCompaniesData) {
       const arr = issuingCompaniesData.findManyIssuingCompany.map((e) => {
-        return { key: e.id, value: e.name }
+        return {
+          key: e.id,
+          value: e.name,
+          prefix: e.invoice_prefix,
+          startingNumber: e.invoice_starting_number,
+        }
       })
       setIssuingCompanies(arr)
     }
@@ -100,10 +111,23 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
     }
   }, [contractsData])
 
+  const [checkInvoice] = useCheckInvoiceLazyQuery({
+    onCompleted(response) {
+      if (response !== null) {
+        detailsFormRef.current.setFieldError(
+          'invoice',
+          t('ui.client-card-financial.invoice-no-warning')
+        )
+        toggleSaveBtn(false)
+      }
+    },
+  })
+
   return (
     <div className={styles.detailsPage}>
       <div className={styles.detailsContainer}>
         <Formik
+          innerRef={detailsFormRef}
           enableReinitialize
           initialValues={{
             invoice: invoice?.invoice_id,
@@ -130,6 +154,19 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
                   name="invoice"
                   placeholder={t('ui.client-card-financial.invoice-no')}
                   size="large"
+                  prefix={invoicePrefix ? invoicePrefix : false}
+                  onChange={(e) => {
+                    if (e.target.value !== invoice?.invoice_id) {
+                      checkInvoice({
+                        variables: {
+                          customId: e.target.value,
+                        },
+                      })
+                    } else {
+                      detailsFormRef.current.setFieldError('invoice', false)
+                      toggleSaveBtn(true)
+                    }
+                  }}
                 />
               </Form.Item>
               {appointments.length > 0 && (
@@ -205,7 +242,19 @@ const DetailsTab: FC<Invoice> = ({ invoice }) => {
                   <Select
                     size={'large'}
                     value={values.issuingCompany}
-                    onChange={(e) => setFieldValue('issuingCompany', e)}
+                    onChange={(e) => {
+                      setFieldValue('issuingCompany', e)
+                      if (e === invoice?.issuingCompany) {
+                        setInvoicePrefix('')
+                        setFieldValue('invoice', invoice?.invoice_id)
+                        return
+                      }
+                      const selectedItem = issuingCompanies.find(
+                        (f) => f.key === e
+                      )
+                      setInvoicePrefix(selectedItem.prefix)
+                      setFieldValue('invoice', selectedItem.startingNumber + 1)
+                    }}
                     placeholder={t(
                       'ui.client-card-financial.select-issuing-company'
                     )}
