@@ -57,12 +57,18 @@ export const Avatar: FC<AvatarProps> = ({
   )
 
   useEffect(() => {
+    const namePreference = name
+      .toUpperCase()
+      .split(' ')
+      .filter((e) => Boolean(e))
+      .map((item) => item.charAt(0))
+
     setShortName(
-      name
-        .toUpperCase()
-        .split(' ')
-        .map((item) => item.charAt(0))
-        .join('')
+      `${namePreference[0]}${
+        namePreference.length > 1
+          ? namePreference[namePreference.length - 1]
+          : ''
+      }`
     )
     setFirstName(
       name
