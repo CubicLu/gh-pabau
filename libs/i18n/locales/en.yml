@@ -2468,11 +2468,14 @@ en:
   rules.configure-rules: 'Configure rules to change the behaviour of your form based on the answers selected'
   setup.online-booking.setup: Setup
   setup.online-booking.online-booking: 'Online Booking'
+  setup.client-area.client-area: 'Client Area'
   setup.online-booking.bookings: Bookings
   setup.online-booking.trends: Trends
   setup.online-booking.tips: 'Pabau Tips'
   setup.online-booking.tips-description: 'Use Pabau intelligence to find out where you can improve'
   setup.online-booking.online-bookings-by-month: 'Online Bookings by Month'
+  setup.client-area.client-bookings-by-month: 'Connect Registration by Month'
+  setup.client-area.client-activity: 'Client Activity'
   setup.online-booking.booking-activity: 'Booking Activity'
   setup.online-booking.analytics-settings: 'Analytics settings'
   setup.online-booking.analytics.setup-now: 'Set Up Now'
@@ -5970,4 +5973,3 @@ en:
   setup.email.inbox.read.email.button.add.to.client: 'Add to Client (3)'
   setup.gmail.mail.box: 'Mail box'
   setup.gmail.update.token.error: 'Error !! while retrieve gmail connection'
-

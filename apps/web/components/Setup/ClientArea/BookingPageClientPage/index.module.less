@@ -5,7 +5,6 @@
     max-width: 100%;
   }
 }
-
 .onlineBookingContainer {
   width: 100%;
   background-color: white;
@@ -49,10 +48,14 @@
     padding: 20px;
     margin-top: 20px;
 
-    div {
+    .svgButton {
       display: flex;
       flex-direction: row;
       align-items: center;
+      svg {
+        font-size: 18px !important;
+        color: #9292a3;
+      }
     }
 
     .icon {
@@ -81,15 +84,21 @@
     padding: 20px;
     margin-top: 20px;
 
+    .antButton {
+      margin-top: 20px !important;
+    }
+
     .item {
       height: 30px;
-      display: flex;
+      display: flex !important;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-
+      div span {
+        margin-left: 5px !important;
+      }
       span {
-        margin-right: 5px;
+        margin-right: 5px !important;
       }
     }
   }
@@ -181,7 +190,9 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border-color-base);
-
+      .itemInner {
+        color: #55b2d3;
+      }
       .title {
         margin: 0px 6px;
         color: #000;
@@ -200,6 +211,12 @@
       }
       .indicator {
         margin-left: 12px;
+        .increase {
+          color: #65cd98 !important;
+        }
+        .decrease {
+          color: #cf3a56 !important;
+        }
       }
     }
   }
