@@ -13,7 +13,7 @@ export const CmStaffGeneral = objectType({
     t.string('Avatar')
     t.string('Fname')
     t.string('Lname')
-    t.string('MI')
+    t.nullable.string('MI')
     t.nullable.field('Birthdate', { type: 'DateTime' })
     t.string('SSN')
     t.string('Address1')
