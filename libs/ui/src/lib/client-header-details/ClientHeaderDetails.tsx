@@ -138,7 +138,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
     setNoteItems(notes?.notes)
     setAppointmentItems(notes?.appointments)
     setOpenDeleteModal(false)
-    if (notes?.count)
+    if (notes?.count >= 0)
       setCountDetails((item) => {
         return { ...item, notes: notes?.count }
       })
@@ -147,7 +147,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
   useEffect(() => {
     setAlertItems(staffAlerts?.alerts)
     setOpenDeleteModal(false)
-    if (staffAlerts?.count)
+    if (staffAlerts?.count >= 0)
       setCountDetails((item) => {
         return { ...item, staff: staffAlerts?.count }
       })
@@ -587,24 +587,35 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
                       {index === currentClientNote && (
                         <div className={styles.clientNoteItemEdit}>
                           <TextArea
+                            autoSize
                             defaultValue={item.content}
                             onChange={(e) => setCurrentNote(e.target.value)}
                             style={{ marginBottom: '8px' }}
                           />
                           <div className={styles.editOps}>
-                            <Button
-                              type="primary"
-                              shape="circle"
-                              size="small"
-                              icon={<SaveOutlined />}
-                              onClick={() => handleEditClientNote(item.ID)}
-                            />
-                            <Button
-                              icon={<UndoOutlined />}
-                              shape="circle"
-                              size="small"
-                              onClick={() => setCurrentClientNote(-1)}
-                            />
+                            <Tooltip
+                              placement="bottom"
+                              title={t('common-label-save')}
+                            >
+                              <Button
+                                type="primary"
+                                shape="circle"
+                                size="small"
+                                icon={<SaveOutlined />}
+                                onClick={() => handleEditClientNote(item.ID)}
+                              />
+                            </Tooltip>
+                            <Tooltip
+                              placement="bottom"
+                              title={t('common-label-cancel')}
+                            >
+                              <Button
+                                icon={<UndoOutlined />}
+                                shape="circle"
+                                size="small"
+                                onClick={() => setCurrentClientNote(-1)}
+                              />
+                            </Tooltip>
                           </div>
                         </div>
                       )}
@@ -712,6 +723,7 @@ export const ClientHeaderDetails: FC<ClientHeaderDetailsProps> = ({
               setOpenPopover((e) => {
                 return { ...e, note: val }
               })
+            setCurrentClientNote(-1)
           }}
         >
           <div

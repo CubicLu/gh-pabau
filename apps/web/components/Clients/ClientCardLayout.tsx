@@ -480,14 +480,12 @@ export const ClientCardLayout: FC<P> = ({
         return {
           ...item,
           count: data?.findFirstCmContact?.contactNotes?.length || 0,
-          loading: item?.notes.length === 0 && true,
         }
       })
       setStaffAlertData((item) => {
         return {
           ...item,
           count: data?.findFirstCmContact?.staffAlerts?.length || 0,
-          loading: item.alerts.length === 0 && true,
         }
       })
       const contactDetails = {
