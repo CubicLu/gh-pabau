@@ -22,8 +22,8 @@ query getPackages {
   }
 }
 
-query getCourses {
-  findManyPackage {
+query getCourses($skip: Int = 0, $take: Int = 50) {
+  findManyPackage(skip: $skip, take: $take) {
     name
     session_count
     price
