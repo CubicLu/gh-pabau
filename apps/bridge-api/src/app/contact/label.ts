@@ -37,3 +37,25 @@ export const createLabel = async (
 
   await ctx.prisma.$transaction(labelInsert)
 }
+
+export const modifyLabel = async (contactId, labels, ctx) => {
+  if (labels.deleteLabels?.length > 0) {
+    await ctx.prisma.cmContactLabel.deleteMany({
+      where: {
+        label_id: {
+          in: labels.deleteLabels,
+        },
+        contact_id: contactId,
+        company_id: ctx.authenticated.company,
+      },
+    })
+  }
+  if (labels.createLabels?.length > 0) {
+    await createLabel(
+      ctx,
+      labels.createLabels,
+      contactId,
+      ctx.authenticated.company
+    )
+  }
+}

@@ -157,6 +157,12 @@ export interface MedicalHistoryDetails {
   formLastUpdatedDate?: string
 }
 
+interface Labels {
+  label?: string
+  color?: string
+  id?: number
+}
+
 interface P {
   client: ClientData
   notes?: ClientNotes
@@ -187,6 +193,10 @@ interface P {
   cssClass?: string
   updatebasicContactMutation?: MutationFunction
   updateContactCustomMutation?: MutationFunction
+  updateContactLableMutation?: MutationFunction
+  handelContactLabel?: () => void
+  contactLabels?: Labels[]
+  clientIsAdmin?: boolean
   clientId?: number
   userId?: number
   companyId?: number
@@ -222,6 +232,10 @@ const ClientCardModal: FC<P> = ({
   handleEditAll,
   updatebasicContactMutation,
   updateContactCustomMutation,
+  updateContactLableMutation,
+  handelContactLabel,
+  contactLabels = [],
+  clientIsAdmin = true,
   clientId,
   userId,
   companyId,
@@ -1011,6 +1025,10 @@ const ClientCardModal: FC<P> = ({
                 handleEditAll={handleEditAll}
                 updatebasicContactMutation={updatebasicContactMutation}
                 updateContactCustomMutation={updateContactCustomMutation}
+                updateContactLableMutation={updateContactLableMutation}
+                handelContactLabel={handelContactLabel}
+                contactLabels={contactLabels}
+                clientIsAdmin={clientIsAdmin}
                 clientId={clientId}
                 companyId={companyId}
                 setBasicContactData={setBasicContactData}

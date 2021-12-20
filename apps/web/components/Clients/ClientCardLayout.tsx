@@ -27,6 +27,8 @@ import {
   useCountClientCommunicationQuery,
   useCreateContactAlertWithTagsMutation,
   Cm_Contact_Alerts_Status,
+  useGetCmLabelsLazyQuery,
+  useUpdateContactLableMutation,
 } from '@pabau/graphql'
 import {
   ClientCard,
@@ -171,6 +173,7 @@ export const ClientCardLayout: FC<P> = ({
   const [medicalHistoryDetails, setMedicalHistoryDetails] = useState(null)
   const [outstanding, setOutstanding] = useState(0)
   const [accountBalance, setAccountBalance] = useState(0)
+  const [contactLabels, setContactLabels] = useState([])
 
   const [addClientNote] = useCreateOneContactNoteMutation({
     onCompleted() {
@@ -394,8 +397,32 @@ export const ClientCardLayout: FC<P> = ({
       },
     }
   )
+  const [
+    getLabels,
+    { data: labelsQueryData, refetch: getContactLablesRefetch },
+  ] = useGetCmLabelsLazyQuery()
+
   const [updatebasicContactMutation] = useUpdateOneCmContactMutation()
   const [updateContactCustomMutation] = useUpsertOneCmContactCustomMutation()
+  const [updateContactLableMutation] = useUpdateContactLableMutation()
+
+  useEffect(() => {
+    getLabels()
+    if (
+      labelsQueryData?.findManyCmLabel &&
+      labelsQueryData.findManyCmLabel.length > 0
+    ) {
+      const data = labelsQueryData.findManyCmLabel.map((thread) => {
+        return {
+          id: thread.id,
+          value: thread.name,
+          color: thread.color,
+        }
+      })
+      setContactLabels(data)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [labelsQueryData])
 
   useEffect(() => {
     if (!loadingCounts) {
@@ -548,6 +575,11 @@ export const ClientCardLayout: FC<P> = ({
       variables: { where: { ID: id }, data: { Note: { set: note } } },
     })
     getContactHeaderRefetch()
+  }
+
+  const handelContactLabel = () => {
+    getContactLablesRefetch()
+    refetch()
   }
 
   const handleDeleteNote = async (id) => {
@@ -819,6 +851,8 @@ export const ClientCardLayout: FC<P> = ({
         handleEditAll={handleEditAll}
         updatebasicContactMutation={updatebasicContactMutation}
         updateContactCustomMutation={updateContactCustomMutation}
+        updateContactLableMutation={updateContactLableMutation}
+        handelContactLabel={handelContactLabel}
         clientId={clientId}
         userId={me?.user}
         companyId={me?.company}
@@ -848,6 +882,7 @@ export const ClientCardLayout: FC<P> = ({
                 labels:
                   data?.findFirstCmContact?.labelData?.map((data) => {
                     return {
+                      id: data?.labelDetail?.label_id,
                       label: data?.labelDetail?.label,
                       color: data?.labelDetail?.color,
                     }
@@ -855,6 +890,14 @@ export const ClientCardLayout: FC<P> = ({
               } as any) //@@@ TODO: remove this any, and fill in the missing fields!
             : undefined
         }
+        clientIsAdmin={me?.admin}
+        contactLabels={contactLabels.map((item) => {
+          return {
+            id: item.id,
+            label: item.value,
+            color: item.color,
+          }
+        })}
         notes={contactData}
         staffAlerts={staffAlertData}
         medicalHistoryDetails={medicalHistoryDetails}

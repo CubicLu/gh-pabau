@@ -23,11 +23,12 @@ export interface CreateLabelsProps {
   labels?: Labels[]
   setLabels?: (val: Labels[]) => void
   selectedLabels?: Labels[]
-  setSelectedLabels?: (val: Labels[]) => void
+  handleUpdateLabel?: (val: Labels[]) => void
   fromHeader?: boolean
   defaultSelectedLabels?: Labels[]
   setDefaultSelectedLabels?: (val: Labels[]) => void
   handleApplyLabel?: (val) => void
+  clientIsAdmin?: boolean
 }
 
 const customColorData = [
@@ -72,10 +73,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   labels = [],
   setLabels,
   selectedLabels = [],
-  setSelectedLabels,
+  handleUpdateLabel = (...args) => args,
   fromHeader = false,
   defaultSelectedLabels = [],
   handleApplyLabel,
+  clientIsAdmin = true,
 }) => {
   const { t } = useTranslation('common')
   const [visible, setVisible] = useState(false)
@@ -110,7 +112,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     )
     if (index === -1 || index === editIndex) {
       setLabels?.([...labelData])
-      setSelectedLabels?.([...selectedLabelData])
+      handleUpdateLabel([...selectedLabelData])
       fromHeader && handleApplyLabel?.([...selectedLabelData])
     } else {
       Notification(
@@ -124,7 +126,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   const addLabelData = (valueObject) => {
     if (!labels.some((item) => item.label === valueObject.label)) {
       setLabels?.([...labels, valueObject])
-      setSelectedLabels?.([...selectedLabels, valueObject])
+      handleUpdateLabel([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel?.([...selectedLabels, valueObject])
     } else {
       Notification(
@@ -172,10 +174,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         (selectedLabel) => selectedLabel.label === labels[index].label
       )
       selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
-      setSelectedLabels?.(selectedData)
+      handleUpdateLabel(selectedData)
     } else {
       selectedData.push(label)
-      setSelectedLabels?.(selectedData)
+      handleUpdateLabel(selectedData)
     }
   }
 
@@ -246,29 +248,31 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             onMouseMove={() => setDisplayColorPicker(true)}
             onMouseLeave={() => setDisplayColorPicker(false)}
           >
-            <div className={styles.inputLine}>
-              {selectedColor ? (
-                <TagFilled style={{ color: selectedColor }} />
-              ) : (
-                <TagOutlined />
-              )}
-              <Input
-                autoComplete={'off'}
-                size="middle"
-                name={'label'}
-                value={newLabel?.label}
-                onChange={(e) =>
-                  setNewLabel({
-                    label: e.target.value,
-                    color: selectedColor,
-                    count: 0,
-                  })
-                }
-                onKeyDown={handleKeyPress}
-                placeholder={t('clients.content.button.newLabel')}
-              />
-            </div>
-            {displayColorPicker && (
+            {clientIsAdmin && (
+              <div className={styles.inputLine}>
+                {selectedColor ? (
+                  <TagFilled style={{ color: selectedColor }} />
+                ) : (
+                  <TagOutlined />
+                )}
+                <Input
+                  autoComplete={'off'}
+                  size="middle"
+                  name={'label'}
+                  value={newLabel?.label}
+                  onChange={(e) =>
+                    setNewLabel({
+                      label: e.target.value,
+                      color: selectedColor,
+                      count: 0,
+                    })
+                  }
+                  onKeyDown={handleKeyPress}
+                  placeholder={t('clients.content.button.newLabel')}
+                />
+              </div>
+            )}
+            {displayColorPicker && clientIsAdmin && (
               <div className={styles.tagCustomWrap}>
                 <ColorPicker
                   className={styles.tagColorPicker}

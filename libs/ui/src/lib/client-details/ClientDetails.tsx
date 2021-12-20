@@ -15,13 +15,13 @@ import {
   QuestionCircleOutlined,
   MailFilled,
   EyeInvisibleOutlined,
+  TagOutlined,
 } from '@ant-design/icons'
 import {
   AddContact,
   AddRelationship,
   AddThirdParty,
   Avatar,
-  AvatarUploader,
   Relationship,
   RelationshipType,
   CustomizeFields,
@@ -69,6 +69,7 @@ interface Labels {
   label?: string
   count?: number
   color?: string
+  id?: number
 }
 
 export interface ReferredByOption {
@@ -143,6 +144,10 @@ export interface ClientDetailsProps {
   dateFormat?: string
   updatebasicContactMutation?: MutationFunction
   updateContactCustomMutation?: MutationFunction
+  updateContactLableMutation?: MutationFunction
+  handelContactLabel?: () => void
+  contactLabels?: Labels[]
+  clientIsAdmin?: boolean
   clientId?: number
   companyId?: number
   setBasicContactData?: React.Dispatch<React.SetStateAction<ClientData>>
@@ -213,6 +218,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   handleEditAll,
   updatebasicContactMutation,
   updateContactCustomMutation,
+  updateContactLableMutation,
+  handelContactLabel,
+  contactLabels = [],
+  clientIsAdmin = true,
   clientId,
   companyId,
   setBasicContactData,
@@ -385,6 +394,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
   const [isAddressLoading, setIsAddressLoading] = useState(false)
   const [isActiveLoading, setIsActiveLoading] = useState(false)
 
+  const [clientSelected, setClientSelected] = useState<Labels[]>([])
+
   useEffect(() => {
     if (clientData) {
       let categoryCustom
@@ -541,6 +552,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
 
   const setLabels = (val) => {
     setClientLabels([...val])
+    setClientSelected([...val])
   }
 
   const handleUpdateFieldValue = async (
@@ -730,9 +742,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
     }
     if (clientData && initialized) {
       setClient({ ...clientData })
-      setClientLabels([...clientData?.labels])
+      setClientLabels([...contactLabels])
+      setClientSelected([...clientData?.labels])
     }
-  }, [clientData, initialized])
+  }, [clientData, initialized, contactLabels])
 
   const updateCardBadgeComponent = () => {
     if (cardBadgeUpdate === CardBadgeUpdateType.check) {
@@ -839,6 +852,46 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
       </span>
     </Tooltip>
   )
+
+  const handleUpdateLabel = async (value) => {
+    const selectedLabels = [...clientSelected]
+    const deleteLabels: number[] = []
+    const createLabels: Labels[] = []
+    selectedLabels.length > value.length
+      ? selectedLabels.map((item) => {
+          return (
+            !value.find((selected) => item.id === selected.id) &&
+            deleteLabels.push(item.id as number)
+          )
+        })
+      : value.map((item) => {
+          return (
+            !selectedLabels.find((selected) => item.id === selected.id) &&
+            createLabels.push({
+              id: item?.id,
+              label: item.label,
+              color: item?.color,
+            })
+          )
+        })
+
+    const response = await updateContactLableMutation?.({
+      variables: {
+        labels: {
+          deleteLabels,
+          createLabels,
+        },
+        contact_id: clientId,
+      },
+    })
+    if (response?.data) {
+      Notification(
+        NotificationType.success,
+        t('quickCreate.client.modal.update.success')
+      )
+      handelContactLabel?.()
+    }
+  }
 
   return (
     <div
@@ -1124,23 +1177,38 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
                       </div>
                     )}
                     <div className={styles.detailsLabels}>
-                      {clientLabels.map((label, index) => (
-                        <div
-                          className={styles.detailsLabel}
-                          key={`client-label-${index}`}
-                          style={{
-                            color: label.color,
-                            borderColor: label.color,
-                            backgroundColor: `rgba(${label.color}, 0.5)`,
-                          }}
-                        >
-                          {label.label}
-                        </div>
-                      ))}
+                      {clientSelected?.length > 0 ? (
+                        clientSelected.map((label, index) => (
+                          <div
+                            className={styles.detailsLabel}
+                            key={`client-label-${index}`}
+                            style={{
+                              color: label.color,
+                              borderColor: label.color,
+                              backgroundColor: `rgba(${label.color}, 0.5)`,
+                            }}
+                          >
+                            {label.label}
+                          </div>
+                        ))
+                      ) : (
+                        <>
+                          <div
+                            className={styles.detailsLabel}
+                            key={`client-label-nolabel`}
+                          >
+                            <TagOutlined />
+                          </div>
+                          {t('quickCreate.client.modal.general.noLabel')}
+                        </>
+                      )}
                       <div className={styles.edit}>
                         <CreateLabels
                           labels={clientLabels}
                           setLabels={(val) => setLabels(val)}
+                          handleUpdateLabel={(val) => handleUpdateLabel(val)}
+                          selectedLabels={clientSelected}
+                          clientIsAdmin={clientIsAdmin}
                         >
                           <PlusCircleOutlined />
                         </CreateLabels>
@@ -1688,22 +1756,34 @@ export const ClientDetails: FC<ClientDetailsProps> = ({
           </Carousel>
         </div>
       )}
-      {isMobile && clientLabels?.length > 0 && (
+      {isMobile && (
         <div className={styles.detailsLabelContainer}>
           <div className={styles.detailsLabelsMobile}>
-            {clientLabels?.map((label, index) => (
-              <div
-                className={styles.detailsLabel}
-                key={`client-label-mobile-${index}`}
-                style={{
-                  color: label.color,
-                  borderColor: label.color,
-                  backgroundColor: `rgba(${label.color}, 0.5)`,
-                }}
-              >
-                <span>{label.label}</span>
-              </div>
-            ))}
+            {clientSelected?.length > 0 ? (
+              clientSelected?.map((label, index) => (
+                <div
+                  className={styles.detailsLabel}
+                  key={`client-label-mobile-${index}`}
+                  style={{
+                    color: label.color,
+                    borderColor: label.color,
+                    backgroundColor: `rgba(${label.color}, 0.5)`,
+                  }}
+                >
+                  <span>{label.label}</span>
+                </div>
+              ))
+            ) : (
+              <>
+                <div
+                  className={styles.detailsLabel}
+                  key={`client-label-nolabel`}
+                >
+                  <TagOutlined />
+                </div>
+                {t('quickCreate.client.modal.general.noLabel')}
+              </>
+            )}
           </div>
         </div>
       )}

@@ -50,6 +50,7 @@ query basicContactDetails($id: Int!) {
       labelDetail: CmLabel {
         label: name
         color
+        label_id:id
       }
     }
     marketingSource: MarketingSource
@@ -633,4 +634,11 @@ mutation upsertOneCmContactCustom(
   ) {
     id
   }
+}
+
+mutation updateContactLable(
+  $contact_id: Int!
+  $labels: UpdateContactLabelType
+) {
+  updateContactLable(contactId: $contact_id, labels: $labels)
 }

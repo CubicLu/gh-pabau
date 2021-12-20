@@ -1,6 +1,6 @@
 import { mutationField, list, nonNull, intArg, inputObjectType } from 'nexus'
 import { Context } from '../../../context'
-import { createLabel } from '../label'
+import { modifyLabel } from '../label'
 
 export const UpdateContactCustomFieldType = inputObjectType({
   name: 'UpdateContactCustomFieldType',
@@ -135,25 +135,7 @@ export const updateContact = mutationField('updateOneContact', {
     })
 
     if (input.labels) {
-      if (input.labels.deleteLabels?.length > 0) {
-        await ctx.prisma.cmContactLabel.deleteMany({
-          where: {
-            label_id: {
-              in: input.labels.deleteLabels,
-            },
-            contact_id: input.contactId,
-            company_id: ctx.authenticated.company,
-          },
-        })
-      }
-      if (input.labels.createLabels?.length > 0) {
-        await createLabel(
-          ctx,
-          input.labels.createLabels,
-          input.contactId,
-          ctx.authenticated.company
-        )
-      }
+      await modifyLabel(input.contactId, input.labels, ctx)
     }
 
     return updatedContactData

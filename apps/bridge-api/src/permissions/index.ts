@@ -151,6 +151,7 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.interceptors.injectDeletedBy
       ),
+      updateContactLable: rules.authentication.isAuthenticated,
 
       CancelAppointment: rules.authentication.isAuthenticated,
       updateOneBookingCancel: rules.authentication.isAuthenticated,

@@ -326,6 +326,9 @@
       border-width: 1px;
       border-style: solid;
       cursor: pointer;
+      color: var(--light-grey-text-color);
+      border-color: var(--gray-background-color);
+      background-color: var(--gray-background-color);
     }
     .edit {
       position: absolute;
@@ -990,6 +993,9 @@
   background-color: white;
   z-index: 1;
   padding: 15px 20px 15px 15px;
+  @media (max-width: 767px) {
+    top: 50px;
+  }
   .detailsLabelsMobile {
     display: flex;
     justify-content: flex-start;
