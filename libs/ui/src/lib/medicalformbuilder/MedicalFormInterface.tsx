@@ -273,6 +273,25 @@ export const previewMapping = [
   { history_data: 'empty' },
 ]
 
+export const formNames = [
+  { id: 0, formType: 'basic', formName: 'form_statictext' },
+  { id: 1, formType: 'basic', formName: 'form_textfield' },
+  { id: 2, formType: 'basic', formName: 'form_textarea' },
+  { id: 3, formType: 'basic', formName: 'form_checkbox' },
+  { id: 4, formType: 'basic', formName: 'form_singlechoice' },
+  { id: 5, formType: 'basic', formName: 'form_image' },
+  { id: 6, formType: 'basic', formName: 'form_photoupload' },
+  { id: 7, formType: 'basic', formName: 'form_dropdown' },
+  { id: 8, formType: 'basic', formName: 'form_signature' },
+  { id: 9, formType: 'basic', formName: 'form_drawing' },
+  { id: 10, formType: 'basic', formName: 'form_medicalcondition' },
+  { id: 11, formType: 'basic', formName: 'form_drugs' },
+  { id: 12, formType: 'basic', formName: 'form_travel' },
+  { id: 13, formType: 'basic', formName: 'form_labtests' },
+  { id: 14, formType: 'basic', formName: 'form_snomed' },
+  { id: 15, formType: 'basic', formName: 'form_slider' },
+]
+
 export interface MedicalFormContactDetailData {
   label: string
   content: string
@@ -298,6 +317,17 @@ export interface MedicalFormContact {
   data: MedicalFormContactData
   formId?: number
   contactId?: number
+}
+
+export interface ContactMedicalCondition {
+  id: number
+  name: string
+}
+
+export interface ContactMedicalLabTest {
+  id: number
+  name: string
+  product_id: number
 }
 
 export interface ContactMedicalCondition {

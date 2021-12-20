@@ -26,7 +26,6 @@ const DrugsTable = ({ drugs }) => {
   useEffect(() => {
     if (drugs) {
       const cDrugs = JSON.parse(drugs)
-
       const colsDrugsIndex = cDrugs
         .map((a) => a.length)
         .indexOf(Math.max(...cDrugs.map((a) => a.length)))

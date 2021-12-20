@@ -407,3 +407,43 @@ query medicalContditions {
     name
   }
 }
+
+query getMedicalFormMacro($createdBy: Int = 0) {
+  medical_form_macro(
+    where: { _or: [{ created_by: { _eq: $createdBy } }, { type: { _eq: 0 } }] }
+  ) {
+    id
+    createdAt
+    title
+    message
+    type
+    created_by
+    company_id
+  }
+}
+
+mutation addMedicalFormMacro(
+  $title: String
+  $message: String
+  $type: Int
+  $created_by: Int
+  $company_id: Int
+) {
+  insert_medical_form_macro_one(
+    object: {
+      title: $title
+      message: $message
+      type: $type
+      created_by: $created_by
+      company_id: $company_id
+    }
+  ) {
+    id
+  }
+}
+
+mutation deleteMedicalFormMacro($id: Int!) {
+  delete_medical_form_macro_by_pk(id: $id) {
+    id
+  }
+}

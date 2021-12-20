@@ -35,6 +35,7 @@ export const FormSingleChoice: FC<P> = ({
 
   const onChange = (e) => {
     setOptionVal(e.target.value)
+    console.log('TE:', e.target.value)
     onChangeTextValue?.(e.target.value)
   }
 

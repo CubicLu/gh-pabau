@@ -10,6 +10,10 @@ import {
   useDeleteMedicalFormContactMutation,
   useCreateOneMedicalFormContactMutation,
   useCreateOneMedicalAttrMutation,
+  useGetMedicalFormMacroQuery,
+  GetMedicalFormMacroDocument,
+  useAddMedicalFormMacroMutation,
+  useDeleteMedicalFormMacroMutation,
 } from '@pabau/graphql'
 import {
   FormComponentBuilder,
@@ -20,7 +24,6 @@ import {
   UserGroupListItem,
   InvProductsListItem,
   MedicalConditionsListItem,
-  useLiveQuery,
   previewMapping,
   PreviewAttr,
   AttrFieldType,
@@ -33,56 +36,8 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from '../../style.module.less'
-import { gql, useMutation } from '@apollo/client'
 
 const { Title } = Typography
-
-const LIST_QUERY_MACRO = gql`
-  query medical_form_macro($createdBy: Int = 0) {
-    medical_form_macro(
-      where: {
-        _or: [{ created_by: { _eq: $createdBy } }, { type: { _eq: 0 } }]
-      }
-    ) {
-      id
-      createdAt
-      title
-      message
-      type
-      created_by
-      company_id
-    }
-  }
-`
-const ADD_MUTATION_MACRO = gql`
-  mutation insert_medical_form_macro_one(
-    $title: String
-    $message: String
-    $type: Int
-    $created_by: Int
-    $company_id: Int
-  ) {
-    insert_medical_form_macro_one(
-      object: {
-        title: $title
-        message: $message
-        type: $type
-        created_by: $created_by
-        company_id: $company_id
-      }
-    ) {
-      id
-    }
-  }
-`
-
-const DELETE_MUTATION_MACRO = gql`
-  mutation delete_medical_form_macro_by_pk($id: Int!) {
-    delete_medical_form_macro_by_pk(id: $id) {
-      id
-    }
-  }
-`
 
 const updateQueryParams = (params: { name: string; value: string }[]) => {
   const queryParams = new URLSearchParams(window.location.search)
@@ -313,28 +268,29 @@ export const TestForm = () => {
     return queryOptions
   }, [loggedInUser])
 
-  const { data: macros } = useLiveQuery(
-    LIST_QUERY_MACRO,
-    getMacroQueryVariables
-  )
+  const { data: macros } = useGetMedicalFormMacroQuery({
+    ...getMacroQueryVariables,
+  })
 
   useEffect(() => {
     if (typeof macros !== 'undefined' && macros) {
-      const medicalFormMacroList = macros.map((macro, index) => ({
-        id: macro.id,
-        title: macro.title,
-        message: macro.message,
-        type: macro.type,
-        createdAt:
-          companyDateFormat === 'd/m/Y'
-            ? dayjs(macro.createdAt).format('DD/MM/YYYY HH:mm:ss')
-            : dayjs(macro.createdAt).format('MM/DD/YYYY HH:mm:ss'),
-      }))
+      const medicalFormMacroList = macros?.medical_form_macro?.map(
+        (macro, index) => ({
+          id: macro.id,
+          title: macro.title,
+          message: macro.message,
+          type: macro.type,
+          createdAt:
+            companyDateFormat === 'd/m/Y'
+              ? dayjs(macro.createdAt).format('DD/MM/YYYY HH:mm:ss')
+              : dayjs(macro.createdAt).format('MM/DD/YYYY HH:mm:ss'),
+        })
+      )
       setMedicalFormMacros(medicalFormMacroList)
     }
   }, [macros, companyDateFormat])
 
-  const [addMacroMutation] = useMutation(ADD_MUTATION_MACRO, {
+  const [addMacroMutation] = useAddMedicalFormMacroMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
@@ -349,7 +305,7 @@ export const TestForm = () => {
     },
   })
 
-  const [delMacroMutation] = useMutation(DELETE_MUTATION_MACRO, {
+  const [delMacroMutation] = useDeleteMedicalFormMacroMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
@@ -377,7 +333,7 @@ export const TestForm = () => {
         variables: creatMacroVariables,
         refetchQueries: [
           {
-            query: LIST_QUERY_MACRO,
+            query: GetMedicalFormMacroDocument,
             ...getMacroQueryVariables,
           },
         ],
@@ -387,7 +343,7 @@ export const TestForm = () => {
         variables: { id: Number(macro.id) },
         refetchQueries: [
           {
-            query: LIST_QUERY_MACRO,
+            query: GetMedicalFormMacroDocument,
             ...getMacroQueryVariables,
           },
         ],

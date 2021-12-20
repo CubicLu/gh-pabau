@@ -8,10 +8,22 @@ import {
   MedicalConditionsListItem,
   previewMapping,
   PreviewAttr,
+  formNames as medicalForms,
 } from '@pabau/ui'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import FormComponentMain from './FormComponentMain'
+
+const optionTypeFields = new Set([
+  'checkbox',
+  'radio',
+  'slider',
+  'select',
+  'staticImage',
+  'diagram_mini',
+  'labs_tests',
+  'image',
+])
 
 const proccessDrugsData = ({ MedicalContactAttr }) => {
   const drugs = MedicalContactAttr?.filter((el) =>
@@ -57,25 +69,6 @@ const proccessDrugsData = ({ MedicalContactAttr }) => {
   return dItems
 }
 
-const medicalForms = [
-  { id: 0, formType: 'basic', formName: 'form_statictext' },
-  { id: 1, formType: 'basic', formName: 'form_textfield' },
-  { id: 2, formType: 'basic', formName: 'form_textarea' },
-  { id: 3, formType: 'basic', formName: 'form_checkbox' },
-  { id: 4, formType: 'basic', formName: 'form_singlechoice' },
-  { id: 5, formType: 'basic', formName: 'form_image' },
-  { id: 6, formType: 'basic', formName: 'form_photoupload' },
-  { id: 7, formType: 'basic', formName: 'form_dropdown' },
-  { id: 8, formType: 'basic', formName: 'form_signature' },
-  { id: 9, formType: 'basic', formName: 'form_drawing' },
-  { id: 10, formType: 'basic', formName: 'form_medicalcondition' },
-  { id: 11, formType: 'basic', formName: 'form_drugs' },
-  { id: 12, formType: 'basic', formName: 'form_travel' },
-  { id: 13, formType: 'basic', formName: 'form_labtests' },
-  { id: 14, formType: 'basic', formName: 'form_snomed' },
-  { id: 15, formType: 'basic', formName: 'form_slider' },
-]
-
 const isBase64 = (str: string) => {
   if (str === '' || str.trim() === '') {
     return false
@@ -87,58 +80,23 @@ const isBase64 = (str: string) => {
   }
 }
 
-const getFormInfo = (form, index, attrs: PreviewAttr[] = []) => {
-  // let name = ''
+const getLabel = ({ form }) => {
+  const { title = '', cssClass = '', values = '' } = form
   let label = ''
-  if (form.title) {
-    if (typeof form.title === 'object') {
-      const obj = atob(btoa(form.title))
-      form.title = obj[1]['value'].trim()
-    } else {
-      form.title = form.title.trim()
-    }
-  }
-
-  label = form.title ? form.title.trim() : ''
-  label =
-    label === '' && typeof form.values === 'string' && form.values
-      ? form.values.trim()
-      : label
-
-  let name = ''
-  if (form.cssClass === 'epaper') {
-    name = ''
+  if (typeof title === 'object') {
+    const obj = atob(btoa(label))
+    label = obj[1]['value'].trim()
   } else {
-    if (form?.title && form?.title !== '') {
-      name = form?.title?.replaceAll(' ', ' ').trim().toLowerCase()
-    } else {
-      if (
-        form?.cssClass === 'btn_medical_condition' ||
-        form?.cssClass === 'cl_drugs' ||
-        form?.cssClass === 'labs_tests'
-      ) {
-        name = form.cssClass?.replaceAll('_', ' ')?.trim()?.toLowerCase()
-      } else name = form?.values?.replaceAll(' ', ' ').trim().toLowerCase()
-    }
+    label = label.trim()
   }
-  const valueKey = index.toString() + name
-
-  let realContent: string | number | number[] | string[] = ''
-  let content: string | number | number[] | string[] = ''
-  const contentValue = attrs.filter(
-    (attr) => attr.MedicalAttr.name.indexOf(valueKey) >= 0
-  )
-  if (contentValue.length > 0) {
-    content = contentValue[0].value || ''
-  }
-
-  switch (form.cssClass) {
+  label = label === '' && typeof values === 'string' ? values.trim() : label
+  switch (cssClass) {
     case 'cl_services': {
       label = 'Services'
       break
     }
     case 'cl_drugs': {
-      label = form.title ? form.title.trim() : 'Drugs'
+      label = label ? label.trim() : 'Drugs'
       break
     }
     case 'labs_tests': {
@@ -151,34 +109,67 @@ const getFormInfo = (form, index, attrs: PreviewAttr[] = []) => {
     }
     case 'staticText': {
       label = ''
-      // No default
       break
     }
   }
+  return label
+}
 
+const getValueKey = ({ form, index }) => {
+  const { title = '', cssClass = '', values = '' } = form
+  let name = ''
+  if (cssClass === 'epaper') {
+    name = ''
+  } else {
+    if (title && title !== '') {
+      name = title?.replaceAll(' ', ' ').trim().toLowerCase()
+    } else {
+      if (
+        cssClass === 'btn_medical_condition' ||
+        cssClass === 'cl_drugs' ||
+        cssClass === 'labs_tests'
+      ) {
+        name = cssClass?.replaceAll('_', ' ')?.trim()?.toLowerCase()
+      } else name = values?.replaceAll(' ', ' ').trim().toLowerCase()
+    }
+  }
+  return index.toString() + name
+}
+
+const getFormInfo = (form, index, attrs: PreviewAttr[] = []) => {
+  const {
+    fldtype = '',
+    cssClass = '',
+    values = '',
+    linked = '',
+    required = '',
+    defaults = '',
+  } = form
+
+  const label = getLabel({ form })
+  const valueKey = getValueKey({ form, index })
+  const txtLinkedFieldValue = linked || ''
+
+  let content: string | number | number[] | string[] = ''
   let arrItemsValue: OptionType[] = []
-  if (
-    (form.cssClass === 'checkbox' ||
-      form.cssClass === 'radio' ||
-      form.cssClass === 'slider' ||
-      form.cssClass === 'select' ||
-      form.cssClass === 'staticImage' ||
-      form.cssClass === 'diagram_mini' ||
-      form.cssClass === 'labs_tests' ||
-      form.cssClass === 'image') &&
-    typeof form.values !== 'string'
-  ) {
-    const arrayItems: ArrayItem[] = form.values
+  let txtInputTypeValue = ''
+  let txtDefaultsValue = ''
+  let txtBlockValue = ''
+
+  const contentValue = attrs.filter(
+    (attr) => attr.MedicalAttr.name.indexOf(valueKey) >= 0
+  )
+  if (contentValue.length > 0) content = contentValue[0].value || ''
+
+  if (optionTypeFields.has(cssClass) && typeof values !== 'string') {
+    const arrayItems: ArrayItem[] = values
     arrItemsValue = Object.entries(arrayItems).map(([key, value]) => ({
       id: Number.parseInt(key),
       name: value.value,
       editing: false,
     }))
-  }
-
-  if (form.cssClass === 'cl_drugs') {
-    const arrayItems: string[] =
-      form.values === '' ? [] : form.values.split(',')
+  } else if (cssClass === 'cl_drugs') {
+    const arrayItems: string[] = values === '' ? [] : values.split(',')
     arrItemsValue = Object.entries(arrayItems).map(([key, value]) => ({
       id: Number.parseInt(key),
       name: value,
@@ -186,72 +177,31 @@ const getFormInfo = (form, index, attrs: PreviewAttr[] = []) => {
     }))
   }
 
-  let txtInputTypeValue = ''
-  let txtDefaultsValue = ''
-  let txtBlockValue = ''
-  let signData = ''
-
-  if (form.cssClass === 'input_text') {
-    realContent = content
-    txtInputTypeValue = form.fldtype
+  if (cssClass === 'input_text') {
+    txtInputTypeValue = fldtype
     txtDefaultsValue = content
-  } else if (form.cssClass === 'staticText') {
-    realContent = content
-    txtBlockValue = form.values.trim()
-  } else if (form.cssClass === 'team') realContent = content
-  else if (form.cssClass === 'textarea') {
-    realContent = content
-    txtDefaultsValue = realContent
-  } else if (form.cssClass === 'checkbox') {
-    const myArray = content.split(',')
-    const t = myArray.map((a) => atob(a))
-    realContent = t.map((el) => {
+  } else if (cssClass === 'checkbox') {
+    const myArray = content.split(',')?.map((a) => atob(a))
+    content = myArray.map((el) => {
       if (arrItemsValue?.length > 0)
         return arrItemsValue?.find((e) => e?.name === el)?.id?.toString() || '0'
       else return '0'
     })
-  } else if (form.cssClass === 'radio') {
+  } else if (cssClass === 'radio' || cssClass === 'select') {
     content = arrItemsValue?.find((el) => el?.name === content)?.id || 0
     txtDefaultsValue = content?.toString()
-    realContent = [content]
-  } else if (form.cssClass === 'select') {
-    content = arrItemsValue?.find((el) => el?.name === content)?.id || 0
-    txtDefaultsValue = content?.toString()
-    realContent = [content]
-  } else if (form.cssClass === 'slider') {
-    realContent = content?.toString()
-    txtDefaultsValue = realContent
-  } else if (form.cssClass === 'image') realContent = content
-  else if (form.cssClass === 'staticImage') realContent = content
-  else if (form.cssClass === 'signature') {
-    realContent = content || ''
-    signData = realContent
-  } else if (form.cssClass === 'travel_destination') realContent = content
-  else if (form.cssClass === 'diagram') realContent = content
-  else if (form.cssClass === 'facediagram') realContent = content
-  else if (form.cssClass === 'diagram_mini') realContent = content
-  else if (form.cssClass === 'photo_and_drawer') realContent = content
-  else if (form.cssClass === 'epaper') realContent = content
-  else if (form.cssClass === 'custom_photo_and_drawer') realContent = content
-  else if (form.cssClass === 'cl_services') realContent = content
-  else if (form.cssClass === 'labs_tests')
-    realContent = content ? content?.split(',') : []
-  else if (form.cssClass === 'vaccine_scheduler') realContent = content
-  else if (form.cssClass === 'vaccine_history') realContent = content
-  else if (form.cssClass === 'cl_drugs') {
-    realContent = proccessDrugsData({ MedicalContactAttr: attrs })
-  } else if (form.cssClass === 'history_data') realContent = content
-  else if (form.cssClass === 'btn_medical_condition') {
-    realContent = content
-    txtDefaultsValue = realContent
-  } else if (form.cssClass === 'snomed') {
-    txtBlockValue = form.defaults ? form.defaults : content
-  }
-
-  let txtLinkedFieldValue = ''
-  if (form.linked) {
-    txtLinkedFieldValue = form.linked
-  }
+    content = [content]
+  } else if (cssClass === 'slider') {
+    content = content?.toString()
+    txtDefaultsValue = content
+  } else if (cssClass === 'labs_tests') {
+    content = content ? content?.split(',') : []
+  } else if (cssClass === 'cl_drugs') {
+    content = proccessDrugsData({ MedicalContactAttr: attrs })
+  } else if (cssClass === 'staticText') txtBlockValue = values.trim()
+  else if (cssClass === 'textarea') txtDefaultsValue = content
+  else if (cssClass === 'snomed') txtBlockValue = defaults || content
+  else if (cssClass === 'btn_medical_condition') txtDefaultsValue = content
 
   return {
     txtQuestion: label,
@@ -259,11 +209,11 @@ const getFormInfo = (form, index, attrs: PreviewAttr[] = []) => {
     txtInputType: txtInputTypeValue,
     txtDefaults: txtDefaultsValue,
     txtLinkedField: txtLinkedFieldValue,
-    signData: signData,
+    signData: content,
     arrItems: arrItemsValue,
     txtValue: txtDefaultsValue,
-    arrValue: realContent,
-    required: form.required === 'true' ? true : false,
+    arrValue: content,
+    required: required === 'true' ? true : false,
   }
 }
 

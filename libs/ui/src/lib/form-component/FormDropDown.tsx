@@ -36,7 +36,6 @@ export const FormDropDown: FC<P> = ({
 
   const onChange = (e) => {
     setSelected(e)
-    console.log('E:', e)
     onChangeTextValue?.(e.toString())
   }
 

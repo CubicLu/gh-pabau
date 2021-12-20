@@ -1,6 +1,7 @@
 import {
   DrugItem,
   MacroItem,
+  formNames,
   MedicalFormTypes,
   InvProductsListItem,
   MedicalConditionsListItem,
@@ -41,10 +42,7 @@ interface P {
 }
 
 const FormComponentInnerElement: FC<P> = ({
-  required,
-  type,
   component,
-  handleId,
   formData,
   handlingSaveForm,
   macroItems = [],
@@ -59,60 +57,6 @@ const FormComponentInnerElement: FC<P> = ({
     setForm(formData)
   }, [formData])
 
-  const componentInfos = [
-    {
-      component: 'form_drawing',
-    },
-    {
-      component: 'form_checkbox',
-    },
-    {
-      component: 'form_dropdown',
-    },
-    {
-      component: 'form_image',
-    },
-    {
-      component: 'form_photoupload',
-    },
-    {
-      component: 'form_signature',
-    },
-    {
-      component: 'form_singlechoice',
-    },
-    {
-      component: 'form_statictext',
-    },
-    {
-      component: 'form_snomed',
-    },
-    {
-      component: 'form_slider',
-    },
-    {
-      component: 'form_textfield',
-    },
-    {
-      component: 'form_textarea',
-    },
-    {
-      component: 'form_medicalcondition',
-    },
-    {
-      component: 'form_drugs',
-    },
-    {
-      component: 'form_travel',
-    },
-    {
-      component: 'form_labtests',
-    },
-    {
-      component: 'form_photoupload',
-    },
-  ]
-
   const onChangeTextValue = (value) => {
     const tempForm = { ...form, txtValue: value }
     setForm(tempForm)
@@ -125,8 +69,8 @@ const FormComponentInnerElement: FC<P> = ({
     handlingSaveForm?.(tempForm)
   }
 
-  const filteredComponent = componentInfos.filter(
-    (item) => item.component === component
+  const filteredComponent = formNames.filter(
+    (item) => item.formName === component
   )
 
   return (
