@@ -32,8 +32,8 @@ export const Loyalty = () => {
   const [loadClientLoyalty] = useClientLoyaltyLazyQuery({
     onCompleted(data) {
       if (data.findManyCmContact.length > 0) {
-        setTotalPoints(data.findManyCmContact[0].LoyaltyPoints.points)
-        setTotalAmount(data.findManyCmContact[0].LoyaltyPoints.points)
+        setTotalPoints(data.findManyCmContact[0].LoyaltyPoint.points)
+        setTotalAmount(data.findManyCmContact[0].LoyaltyPoint.points)
         const loyaltyLogData = data.findManyCmContact[0].LoyaltyLog.map(
           (logItem) => {
             const date = formatDateFromUnix(logItem.date, {
