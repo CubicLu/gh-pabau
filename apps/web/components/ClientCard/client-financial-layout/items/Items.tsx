@@ -99,7 +99,8 @@ export const Items: FC<P> = (props) => {
         ),
         invoiceNo: item?.custom_id,
         name: item?.product_name,
-        type: item?.type === 'service' ? 'Service' : 'Product',
+        type:
+          item?.type === 'retail' || item.type === '' ? 'Product' : item.type,
         employee: item?.biller_name,
         soldBy: item?.biller_name,
         qty: item?.quantity,
@@ -144,6 +145,13 @@ export const Items: FC<P> = (props) => {
       dataIndex: 'type',
       visible: true,
       width: 80,
+      render: function renderItem(value) {
+        return (
+          <span className={styles.type}>
+            <span>{value}</span>
+          </span>
+        )
+      },
     },
     {
       title: t('ui.client-card-financial.items.employee'),
