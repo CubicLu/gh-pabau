@@ -50,6 +50,7 @@ export const permissions = shield(
       deleteOneMessageTemplate: rules.authentication.isAuthenticated,
       //CompanyMeta
       setOneCompanyMeta: rules.authentication.isAdmin,
+
       setManyCompanyMeta: rules.authentication.isAdmin,
 
       //Update User Password
@@ -109,9 +110,19 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+
+      // Stripe Mutations
+      connectStripe: rules.authentication.isAuthenticated,
+      stripePayout: rules.authentication.isAuthenticated,
+      paymentIntent: rules.authentication.isAuthenticated,
+      captureIntent: rules.authentication.isAuthenticated,
+      connectTerminal: rules.authentication.isAuthenticated,
+      createStripeCustomer: rules.authentication.isAuthenticated,
+      createStripeTerminalLocation: rules.authentication.isAuthenticated,
+
+      //resetPassword
       forgotPassword: allow,
       switchCompany: rules.authentication.isAuthenticated,
-
       upsertUserReportByReportCode: rules.authentication.isAdmin,
       createOneContact: rules.authentication.isAuthenticated,
       updateOneContact: rules.authentication.isAuthenticated,
@@ -311,6 +322,14 @@ export const permissions = shield(
       findManyCustomReportWithPermissions: rules.authentication.isAdmin,
       //user: rules.authentication.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
       staffList: rules.authentication.isAuthenticated,
+
+      // Stripe Queries
+      stripeBalance: rules.authentication.isAuthenticated,
+      payoutHistory: rules.authentication.isAuthenticated,
+      paymentHistory: rules.authentication.isAuthenticated,
+      stripeBankDetails: rules.authentication.isAuthenticated,
+      fetchTerminalToken: rules.authentication.isAuthenticated,
+
       //Subscriptions
       subscriptionInvoices: rules.authentication.isAuthenticated,
       subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
