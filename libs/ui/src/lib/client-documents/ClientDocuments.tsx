@@ -24,7 +24,24 @@ import {
 } from '@pabau/ui'
 import FolderData from './FolderData'
 import { ReactComponent as Share } from '../../assets/images/share-folder.svg'
-import dayjs from 'dayjs'
+
+const acceptableDocuments = [
+  'image/*',
+  'application/vnd',
+  'application/msword',
+  '.dotx',
+  '.docx',
+  '.doc',
+  'text/csv',
+  '.csv',
+  '.txt',
+  'text/html',
+  '.html',
+  '.ppt',
+  'application/pdf',
+  '.pdf',
+  'application/json',
+]
 
 const folderFinder = (folders, folderId) => {
   const folder = folders?.find((el) => {
@@ -643,7 +660,7 @@ export const ClientDocuments: FC<ClientDocumentsProps> = ({
         onCancelUpload={onUploadCancel}
         modalTitle="Upload Documents"
         descSubTitle="Images or Document files are acceptable"
-        acceptFiles={['image/*', '.doc', '.docx', '.ppt', '.txt', '.pdf']}
+        acceptFiles={acceptableDocuments}
       />
 
       <BasicModal

@@ -260,7 +260,12 @@ export const Dropzone: FC<DropzoneProps> = ({
   const [errMsg, setErrMsg] = useState(errorMessage || '')
 
   const validateFile = (file) => {
-    if (fileTypes.indexOf(file.type) === -1) return false
+    if (
+      fileTypes.findIndex(
+        (el) => el?.includes(file?.type) || file?.type?.includes(el)
+      ) === -1
+    )
+      return false
     if (minFileSize && file.size < minFileSize) return false
     if (maxFileSize && file.size > maxFileSize) return false
     return true

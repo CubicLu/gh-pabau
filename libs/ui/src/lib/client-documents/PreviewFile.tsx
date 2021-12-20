@@ -1,56 +1,98 @@
 import React, { FC, useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import {
-  RightOutlined,
-  LeftOutlined,
-  ShareAltOutlined,
-  CloseOutlined,
-  MoreOutlined,
-} from '@ant-design/icons'
+import { CloseOutlined, MoreOutlined } from '@ant-design/icons'
+import { RenderHtml } from '@pabau/ui'
 import styles from './ClientDocuments.module.less'
 import { Button } from 'antd'
-import { FormikInput } from '../formik-input/FormikInput'
 import { useMedia } from 'react-use'
+
+const RenderDocument = dynamic(() => import('./DocumentViewer'), {
+  ssr: false,
+})
+
+const HtmlView = ({ html }) => {
+  const [htmlRendered, setHtmlRendered] = useState(false)
+  return (
+    <>
+      <div
+        className={styles.toggleBtnDiv}
+        onClick={() => setHtmlRendered((e) => !e)}
+      >
+        <Button type="primary">
+          {htmlRendered ? 'See Code View' : 'See Embed View'}
+        </Button>
+      </div>
+      <div className={styles.htmlDiv}>
+        {htmlRendered ? <RenderHtml __html={html} /> : <pre>{html}</pre>}
+      </div>
+    </>
+  )
+}
+
+const CsvView = ({ csv }) => {
+  const [csvTable, setCsvTable] = useState(false)
+
+  const csvHtml = () => {
+    const lines = csv.split('\n')
+    let output: string | string[] = []
+    for (const line of lines) {
+      const cLine = line?.replaceAll(', ', ' ')
+      output.push(
+        `<tr><td>${cLine?.slice(0, -1).split(',').join('</td><td>')}</td></tr>`
+      )
+    }
+    output = `<table border="2">${output.join('')}</table>`
+    return output
+  }
+
+  return (
+    <>
+      <div
+        className={styles.toggleBtnDiv}
+        onClick={() => setCsvTable((e) => !e)}
+      >
+        <Button type="primary">
+          {csvTable ? 'See Csv View' : 'See Table View'}
+        </Button>
+      </div>
+      <div className={styles.csvDiv}>
+        {!csvTable ? <pre>{csv}</pre> : <RenderHtml __html={csvHtml()} />}
+      </div>
+    </>
+  )
+}
 
 export interface EPaperProps {
   title: string
-  numPages: number
-  pageNumber: number
-  onSetNumPages: (page) => void
   previewURL?: string
   previewType?: string
-  onDocumentLoadSuccess?: ({ numPages: number }) => void
   setPreviewModal: (e) => void
 }
-
-const PdfPreview = dynamic(() => import('./DocumentViewer'), {
-  ssr: false,
-})
 
 export const PreviewFile: FC<EPaperProps> = ({
   title,
   previewURL,
-  numPages,
-  pageNumber,
   previewType,
-  onSetNumPages,
-  onDocumentLoadSuccess,
   setPreviewModal,
 }) => {
-  const [showPage, setShowPage] = useState(pageNumber)
-  useEffect(() => {
-    setShowPage(1)
-  }, [])
   const isMobile = useMedia('(max-width: 767px)', false)
 
   const [text, setText] = useState('')
+  const [html, setHtml] = useState('')
+  const [csv, setCsv] = useState('')
 
   useEffect(() => {
-    if (previewType === 'txt') {
+    if (
+      previewType === 'txt' ||
+      previewType === 'html' ||
+      previewType === 'csv'
+    ) {
       const client = new XMLHttpRequest()
       client.open('GET', previewURL || '', true)
       client.addEventListener('readystatechange', function () {
-        setText(client.responseText)
+        if (previewType === 'txt') setText(client.responseText)
+        if (previewType === 'html') setHtml(client.responseText)
+        if (previewType === 'csv') setCsv(client.responseText)
       })
       client.send()
     }
@@ -63,48 +105,6 @@ export const PreviewFile: FC<EPaperProps> = ({
           <div className={styles.ePaperHeader}>
             <span className={styles.ePaperTitle}>{title}</span>
             <div className={styles.ePaperPage}>
-              {previewType === 'pdf' && (
-                <>
-                  <span>Page</span>
-                  <FormikInput
-                    name="page"
-                    value={numPages < showPage ? 1 : showPage}
-                    className={styles.ePaperPageNumber}
-                    onChange={(e) =>
-                      setShowPage(
-                        e.target.value ? Number.parseInt(e.target.value) : 1
-                      )
-                    }
-                  />
-                  <span className={styles.numPages}>/{numPages}</span>
-                  <Button
-                    className={styles.shareBtn}
-                    icon={<ShareAltOutlined />}
-                  >
-                    Share
-                  </Button>
-                  <Button
-                    className={styles.shareBtn}
-                    icon={<LeftOutlined />}
-                    onClick={() => {
-                      showPage !== 1 && onSetNumPages?.(showPage - 1)
-                      showPage !== 1 && setShowPage((e) => e - 1)
-                    }}
-                  >
-                    Prev Page
-                  </Button>
-                  <Button
-                    className={styles.shareBtn}
-                    icon={<RightOutlined />}
-                    onClick={() => {
-                      showPage !== numPages && onSetNumPages?.(showPage + 1)
-                      showPage !== numPages && setShowPage((e) => e + 1)
-                    }}
-                  >
-                    Next Page
-                  </Button>
-                </>
-              )}
               <Button
                 className={styles.shareBtn}
                 icon={<CloseOutlined />}
@@ -115,20 +115,22 @@ export const PreviewFile: FC<EPaperProps> = ({
           </div>
           <div className={styles.ePaperContent}>
             {previewURL &&
-              (previewType === 'pdf' ? (
-                <PdfPreview
-                  pdfURL={previewURL}
-                  pageNumber={numPages < showPage ? 1 : showPage}
-                  onDocumentLoadSuccess={onDocumentLoadSuccess}
-                />
-              ) : previewType === 'txt' ? (
-                <div className={styles.text}>
-                  <pre>{text}</pre>
-                </div>
-              ) : (
-                previewURL?.match(/\.(jpeg|jpg|gif|png)$/) && (
-                  <img src={previewURL} alt="ims" />
+              (previewType === 'txt' ? (
+                text && (
+                  <div className={styles.textDiv}>
+                    <pre>{text}</pre>
+                  </div>
                 )
+              ) : previewType === 'html' ? (
+                html && <HtmlView html={html} />
+              ) : previewType === 'csv' ? (
+                csv && <CsvView csv={csv} />
+              ) : (
+                <RenderDocument
+                  className={styles.documentViewer}
+                  // pluginRenderers={DocViewerRenderers}
+                  fileURL={previewURL}
+                />
               ))}
           </div>
         </>
@@ -140,70 +142,31 @@ export const PreviewFile: FC<EPaperProps> = ({
             <div className={styles.ePaperMobilePage}>
               <Button
                 className={styles.shareBtn}
-                icon={<MoreOutlined />}
-                shape="circle"
-              />
-              <Button
-                className={styles.shareBtn}
                 icon={<CloseOutlined />}
                 shape="circle"
                 onClick={() => setPreviewModal((e) => !e)}
               />
             </div>
           </div>
-          <div className={styles.ePaperMobileContent}>
+          <div className={styles.ePaperContent}>
             {previewURL &&
-              (previewType === 'pdf' ? (
-                <PdfPreview
-                  pdfURL={previewURL}
-                  pageNumber={numPages < showPage ? 1 : showPage}
-                  onDocumentLoadSuccess={onDocumentLoadSuccess}
-                />
-              ) : previewType === 'txt' ? (
-                <div className={styles.text}>
-                  <pre>{text}</pre>
-                </div>
-              ) : (
-                previewURL?.match(/\.(jpeg|jpg|gif|png)$/) && (
-                  <img src={previewURL} alt="ims" />
+              (previewType === 'txt' ? (
+                text && (
+                  <div className={styles.textDiv}>
+                    <pre>{text}</pre>
+                  </div>
                 )
-              ))}
-            {previewType === 'pdf' && (
-              <div className={styles.bottomBar}>
-                <Button
-                  className={styles.shareBtn}
-                  icon={<LeftOutlined />}
-                  onClick={() => {
-                    showPage !== 1 && onSetNumPages?.(showPage - 1)
-                    showPage !== 1 && setShowPage((e) => e - 1)
-                  }}
-                >
-                  Prev Page
-                </Button>
-                <span>Page</span>
-                <FormikInput
-                  name="page"
-                  value={numPages < showPage ? 1 : showPage}
-                  className={styles.ePaperPageNumber}
-                  onChange={(e) =>
-                    setShowPage(
-                      e.target.value ? Number.parseInt(e.target.value) : 1
-                    )
-                  }
+              ) : previewType === 'html' ? (
+                html && <HtmlView html={html} />
+              ) : previewType === 'csv' ? (
+                csv && <CsvView csv={csv} />
+              ) : (
+                <RenderDocument
+                  className={styles.documentViewer}
+                  // pluginRenderers={DocViewerRenderers}
+                  fileURL={previewURL}
                 />
-                <span className={styles.numPages}>/{numPages}</span>
-
-                <Button
-                  className={styles.shareBtn}
-                  onClick={() => {
-                    showPage !== numPages && onSetNumPages?.(showPage + 1)
-                    showPage !== numPages && setShowPage((e) => e + 1)
-                  }}
-                >
-                  Next Page <RightOutlined />
-                </Button>
-              </div>
-            )}
+              ))}
           </div>
         </>
       )}

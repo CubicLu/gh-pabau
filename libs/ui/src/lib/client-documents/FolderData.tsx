@@ -154,13 +154,11 @@ export const FolderData: FC<FolderDataProps> = ({
 
   const [folderDrawer, setFolderDrawer] = useState(false)
   const [documentDrawer, setDocumentDrawer] = useState(false)
+  const [docDeleteModal, setDocDelModal] = useState(false)
+
   const [previewModal, setPreviewModal] = useState(false)
   const [previewType, setPreviewType] = useState('')
   const [previewUrl, setPreviewUrl] = useState('')
-  const [docDeleteModal, setDocDelModal] = useState(false)
-
-  const [numPages, setNumPages] = useState<number>(0)
-  const [pageNumber, setPageNumber] = useState(1)
   const [previewName, setPreviewName] = useState('')
 
   const [selectedFolder, setSelectedFolder] = useState<number>(0)
@@ -173,25 +171,11 @@ export const FolderData: FC<FolderDataProps> = ({
   const [renameFileModal, setRenameFileModal] = useState(false)
 
   useEffect(() => {
-    setNumPages(0)
-    setPageNumber(1)
-  }, [previewUrl])
-
-  useEffect(() => {
     setDocDelModal(() => false)
     setDocumentDrawer(() => false)
     setRenameFileModal(() => false)
     setRenamingFile({ id: 0, name: '' })
   }, [data])
-
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setPageNumber(1)
-    setNumPages(numPages)
-  }
-
-  const onSetNumPages = (page: number) => {
-    setPageNumber(page)
-  }
 
   const fileArray = new Set(['html', 'docx', 'pdf', 'doc'])
   const fileIconStyle = {
@@ -222,12 +206,11 @@ export const FolderData: FC<FolderDataProps> = ({
       const cNameArr = url?.split('/')
       cName = displayDocName(cNameArr[cNameArr?.length - 1])
     }
+    const fileType = checkUrlForType(url)
     setPreviewName(cName)
     setPreviewUrl(url)
-    setPreviewType(checkUrlForType(url))
-    setPageNumber(1)
+    setPreviewType(fileType)
     setPreviewModal((e) => !e)
-    console.log(checkUrlForType(url))
   }
 
   const checkUrlForType = (url: string) => {
@@ -323,7 +306,6 @@ export const FolderData: FC<FolderDataProps> = ({
     const [downloadStarted, setDownloadStarted] = useState(false)
 
     const downloadSingleDoc = (url = '', name = '') => {
-      console.log('NAME:', name)
       const xhr = new XMLHttpRequest()
       xhr.open('GET', url, true)
       xhr.responseType = 'blob'
@@ -1067,29 +1049,24 @@ export const FolderData: FC<FolderDataProps> = ({
           />
         </div>
       )}
-      <Modal
-        onCancel={() => {
-          setPageNumber(1)
-          setPreviewModal((e) => !e)
-        }}
-        visible={previewModal}
-        className={styles.previewModal}
-        footer={false}
-        width="100%"
-      >
-        <div className={styles.modalContent}>
-          <PreviewFile
-            title={previewName}
-            numPages={numPages}
-            pageNumber={pageNumber}
-            previewURL={previewUrl}
-            previewType={previewType}
-            onDocumentLoadSuccess={onDocumentLoadSuccess}
-            onSetNumPages={onSetNumPages}
-            setPreviewModal={setPreviewModal}
-          />
-        </div>
-      </Modal>
+      {previewModal && (
+        <Modal
+          onCancel={() => setPreviewModal((e) => !e)}
+          visible={previewModal}
+          className={styles.previewModal}
+          footer={false}
+          width="100%"
+        >
+          <div className={styles.modalContent}>
+            <PreviewFile
+              title={previewName}
+              previewURL={previewUrl}
+              previewType={previewType}
+              setPreviewModal={setPreviewModal}
+            />
+          </div>
+        </Modal>
+      )}
       <Modal
         centered={true}
         onCancel={() => {

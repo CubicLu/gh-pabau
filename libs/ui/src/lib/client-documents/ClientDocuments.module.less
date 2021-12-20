@@ -1038,15 +1038,58 @@
   .ePaperContent {
     padding-top: 86px;
     padding-bottom: 30px;
-    // background-color: #3d3d46;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
 
-    .text {
+    .documentViewer {
+      min-height: calc(100vh - 100px);
+      width: 100%;
+      max-width: 95%;
+
+      :global {
+        #header-bar {
+          display: none !important;
+        }
+        #pdf-controls {
+          background-color: #ffffff;
+          z-index: 0;
+        }
+      }
+    }
+
+    .textDiv,
+    .htmlDiv,
+    .csvDiv {
       background: white;
+      width: 100%;
       max-width: 95%;
       height: 100%;
       padding: 0px 10px;
+    }
+    .csvDiv {
+      > div {
+        width: 100%;
+      }
+      :global {
+        table {
+          width: 100%;
+          margin: 10px 0px;
+          tr td {
+            padding: 7.5px 5px;
+          }
+        }
+      }
+    }
+    .toggleBtnDiv {
+      width: 100%;
+      max-width: 95%;
+      padding-bottom: 20px;
+
+      > button {
+        min-width: 133px;
+      }
     }
   }
   .ePaperMobileHeader {
@@ -1055,6 +1098,10 @@
     justify-content: space-between;
     align-items: center;
     height: 56px;
+    position: fixed;
+    width: 100%;
+    z-index: 5;
+
     .ePaperMobileTitle {
       line-height: 22px;
       color: #3d3d46;
@@ -1100,37 +1147,6 @@
         }
         .next-page {
           margin-left: 8px;
-        }
-      }
-    }
-  }
-  .ePaperMobileContent {
-    background-color: #3d3d46;
-    margin-top: 23px;
-    display: flex;
-    justify-content: center;
-    overflow: auto;
-    height: calc(100vh - 78px);
-    :global {
-      canvas {
-        width: 96% !important;
-        height: 100% !important;
-        margin: 0px auto;
-      }
-    }
-    .bottomBar {
-      position: absolute;
-      bottom: 0px;
-      .e-paper-page-number {
-        background: #ffffff;
-        border: 1px solid #ecedf0;
-        box-sizing: border-box;
-        border-radius: 4px;
-        width: 56px;
-        margin: 0 8px;
-        padding: 5px 12px 5px 2px;
-        span {
-          color: #3d3d46;
         }
       }
     }
