@@ -172,7 +172,10 @@ export const permissions = shield(
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
       updateOneCmLead: rules.authentication.isAuthenticated,
-      createOneInvTaxRate: rules.authentication.isAuthenticated,
+      createOneInvTaxRate: and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.injectCompany
+      ),
 
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,

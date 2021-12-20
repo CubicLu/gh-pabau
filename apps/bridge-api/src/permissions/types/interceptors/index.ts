@@ -107,7 +107,13 @@ export const interceptors = {
           if (args.data?.company?.connect?.id) {
             return args.data.company.connect?.id === ctx.authenticated.company
           } else if (args.data?.Company?.connect?.id) {
-            return args.data.Company.connect.id === ctx.authenticated.company
+            args.data = {
+              ...args.data,
+              Company: {
+                connect: { id: ctx.authenticated.company },
+              },
+            }
+            return true
           } else if (args.data.company) {
             args.data = {
               ...args.data,
