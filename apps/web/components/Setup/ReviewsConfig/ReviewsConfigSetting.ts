@@ -12,18 +12,18 @@ export interface FeedbackSurveyBuilder {
   id: number
   color_1: string
   color_2: string
-  from_name: string
+  from_name?: string
   feedback_name: string
   logo_height?: number
-  logo_position: string
+  logo_position?: string
   disable_email: number
-  email_message_id: number
-  ty_enable_email: number
+  email_message_id?: number
+  ty_enable_email?: number
   sms_send_time?: string
   sms_message_id: number
   sms_days_after?: number
   disable_sms: number
-  ty_enable_sms: number
+  ty_enable_sms?: number
   feedback_question: string
   Company: Company
   clientName?: string

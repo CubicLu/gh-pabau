@@ -1,0 +1,14 @@
+mutation updateReviewSettings(
+  $data: SocialSurveyUpdateManyMutationInput!
+  $review_integration: String!
+) {
+  updateManySocialSurvey(data: $data) {
+    count
+  }
+  setOneCompanyMeta(
+    meta_name: "social_review_integration"
+    meta_value: $review_integration
+  ) {
+    meta_value
+  }
+}

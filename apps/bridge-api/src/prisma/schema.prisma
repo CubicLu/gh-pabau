@@ -11714,50 +11714,48 @@ model SmsSender {
 //  response String
 //}
 //
+
 model SocialSurvey {
   id                     Int     @id @default(autoincrement())
-  page_id                Int
+  page_id                Int?
   company_id             Int     @unique @map("company")
-  twitter_id             Int
-  disable_email          Int
-  disable_sms            Int
-  sms_message_id         Int
-  from_name              String
+  twitter_id             Int?
+  disable_email          Int     @default(1)
+  disable_sms            Int     @default(1)
+  sms_message_id         Int     @default(0)
+  from_name              String?
   sms_days_after         Int?
   sms_send_time          String?
   feedback_title         String
   feedback_subtitle      String
   feedback_question      String
-  auto_facebook          Int
-  auto_twitter           Int
-  after_page             String
-  google_plus_link       String
+  auto_facebook          Int     @default(0)
+  auto_twitter           Int     @default(0)
+  after_page             String?
+  google_plus_link       String?
   google_review          Int     @default(0)
   google_review_url      String
-  aweber_code            String
-  score_indicator        Int
-  add_note               Int
+  aweber_code            String?
+  score_indicator        Int?
+  add_note               Int     @default(0)
   post_buzzfeed          Int     @default(1)
-  post_website           Int
-  email_message_id       Int
-  redirect_url           String
+  post_website           Int     @default(0)
+  email_message_id       Int?
+  redirect_url           String?
   feedback_name          String
-  ty_enable_email        Int
-  ty_enable_sms          Int
-  ty_email_id            Int
-  ty_sms_id              Int
+  ty_enable_email        Int?
+  ty_enable_sms          Int?
+  ty_email_id            Int?
+  ty_sms_id              Int     @default(0)
   color_1                String  @default("#52acca")
   color_2                String  @default("#61b7d4")
   google_review_redirect Int     @default(0)
-  show_reviews_above     Float
-  logo_position          String
+  show_reviews_above     Float   @default(0)
+  logo_position          String?
   logo_height            Int?
-  hits                   Int
+  hits                   Int?
 
   Company Company @relation(fields: [company_id], references: [id])
-
-
-
   @@map("social_survey")
 }
 
