@@ -4,7 +4,7 @@ import { FC } from 'react'
 export interface P {
   handleGoogleLogin?: () => void
 }
-const Login = dynamic(() => import('./loginDynamic'), {
+const Login = dynamic(() => import('./LoginDynamic'), {
   ssr: false,
 })
 const Index: FC<P> = ({ handleGoogleLogin }) => {

@@ -51,6 +51,7 @@ export interface LayoutProps {
   handleSearch?: (searchTerm: string) => void
   badgeCountList?: BadgeCountList
   journeyRender?: (handleClose?: () => void) => JSX.Element
+  emailCount?: number
 }
 
 interface BadgeCountList {
@@ -80,6 +81,7 @@ export const Layout: FC<LayoutProps> = ({
   leadCreateRender,
   badgeCountList,
   journeyRender,
+  emailCount,
   ...rest
 }) => {
   let initCollapsed = true
@@ -118,6 +120,7 @@ export const Layout: FC<LayoutProps> = ({
             leadCreateRender={leadCreateRender}
             sidebarCollapsed={collapsed}
             toggleSidebar={(e) => handleCollapsedChange(e)}
+            emailCount={emailCount}
             {...rest}
           />
           <AntLayout className={styles.headerMargin}>

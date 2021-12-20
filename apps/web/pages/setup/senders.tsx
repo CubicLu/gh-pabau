@@ -23,7 +23,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
 import { ReactComponent as Google } from '../../assets/images/google.svg'
 import { ReactComponent as Sender } from '../../assets/images/sender-message.svg'
-import Login from '../../components/Email/login'
+import Login from '../../components/Email/Login'
 import { useUser } from '../../context/UserContext'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
@@ -424,7 +424,7 @@ export const Communications: React.FC = () => {
                     </div>
                   </div>
                   <div className={styles.itemBody}>
-                    <div>Clinic Bookings</div>
+                    <div>{t('setup.senders.type.from.name.clinic')}</div>
                     <div className={styles.email}>{userData}</div>
                   </div>
                 </Button>

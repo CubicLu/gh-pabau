@@ -1,12 +1,9 @@
-query checkEmailLink($email: String) {
-  contact: findFirstCmContact(where: { Email: { equals: $email } }) {
-    ID
-    Fname
-    Lname
-  }
-  lead: findFirstCmLead(where: { Email: { equals: $email } }) {
-    ID
-    Fname
-    Lname
+query checkEmailLink($emails: [String]!) {
+  checkEmailLink(emails: $emails) {
+    id
+    email
+    fistName
+    lastName
+    type
   }
 }

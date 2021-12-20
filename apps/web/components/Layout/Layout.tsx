@@ -7,6 +7,7 @@ import {
   useSwitchCompanyMutation,
   useActivityCountQuery,
   Activity_Status,
+  useFindGmailConnectionQuery,
 } from '@pabau/graphql'
 import { Layout as PabauLayout, LayoutProps, StickyPopout } from '@pabau/ui'
 import { useRouter } from 'next/router'
@@ -23,6 +24,7 @@ import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
 import Login from '../../pages/login'
 import Journey from '../Journey/Journey'
+import { clientId, clientScerate } from '../Email/Inbox'
 
 interface ProductNews {
   id: string
@@ -57,6 +59,56 @@ const Layout: FC<LayoutProps> = ({
   })
 
   const [switchCompany] = useSwitchCompanyMutation()
+
+  const { data: gmailConnection } = useFindGmailConnectionQuery({
+    variables: {
+      companyId: me.company,
+      userId: me.user,
+    },
+    fetchPolicy: 'no-cache',
+  })
+
+  const [unreadEmail, setUnreadEmail] = useState(0)
+  const getUnreadEmail = async (accessToken) => {
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      fetch(
+        `https://gmail.googleapis.com/gmail/v1/users/${gmailConnection?.gmail_connection[0].email}/messages?labelIds=UNREAD&labelIds=INBOX&access_token=${accessToken}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          return response.json()
+        })
+        .then(async (data) => {
+          setUnreadEmail(data?.messages?.length)
+        })
+    }
+  }
+
+  useEffect(() => {
+    if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
+      fetch(
+        `https://oauth2.googleapis.com/token?client_id=${clientId}&client_secret=${clientScerate}&grant_type=refresh_token&refresh_token=${gmailConnection.gmail_connection[0].refresh_token}`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          return response.json()
+        })
+        .then(async (data) => {
+          await getUnreadEmail(data.access_token)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gmailConnection])
 
   const [
     updateNotificationStateMutation,
@@ -121,7 +173,6 @@ const Layout: FC<LayoutProps> = ({
   if (error) {
     return <Login />
   }
-
   let legacyPage: false | string = false
   if (data)
     for (const [, row] of data.feature_flags.entries()) {
@@ -169,6 +220,7 @@ const Layout: FC<LayoutProps> = ({
           <LeadCreate handleClose={handleClose} />
         )}
         badgeCountList={{ activities: activityCount }}
+        emailCount={unreadEmail}
         {...props}
       >
         <CommonHeader

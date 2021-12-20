@@ -35,6 +35,9 @@ export const checkEmailLink = extendType({
         const res = []
         const where = {
           Email: { in: args.emails },
+          company_id: {
+            equals: ctx.authenticated.company,
+          },
         }
         const contacts = await findManyContacts(where, ctx)
         const leads = await findManyLeads(where, ctx)

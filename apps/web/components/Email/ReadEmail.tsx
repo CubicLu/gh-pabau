@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import styles from './readEmail.module.less'
+import styles from './ReadEmail.module.less'
 import {
   CaretDownOutlined,
   DownOutlined,
@@ -15,6 +15,7 @@ import { ReactComponent as ReplyAll } from '../../assets/images/reply-all.svg'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { decode } from 'js-base64'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 export interface P {
   privateMenu?: React.ReactElement
   messageId: string
@@ -32,7 +33,7 @@ export const ReadEmail: FC<P> = ({
   access_token,
   user,
 }) => {
-  const [responseEmail, setresponseEmail] = useState({
+  const [responseEmail, setResponseEmail] = useState({
     subject: '',
     name: '',
     date: '',
@@ -44,6 +45,20 @@ export const ReadEmail: FC<P> = ({
   const [showAllEmail, setShowAllEmail] = useState(false)
   const [deleteEmailId, setDeleteEmailId] = useState('')
   const [printSnippet, setPrintSnippet] = useState('')
+  const { t } = useTranslationI18()
+
+  const getHTMLPart = (arr, mimeType) => {
+    for (const element of arr) {
+      if (typeof element.parts === 'undefined') {
+        if (element.mimeType === mimeType) {
+          return element.body.data
+        }
+      } else {
+        return getHTMLPart(element.parts, mimeType)
+      }
+    }
+    return ''
+  }
 
   const extractData = (content) => {
     const rowData = {
@@ -59,9 +74,6 @@ export const ReadEmail: FC<P> = ({
       if (payload.name === 'From') {
         rowData.name = payload.value.split('<')
       }
-      if (payload.name === 'From') {
-        rowData.name = payload.value.split('<')
-      }
       if (payload.name === 'Subject') {
         rowData.subject = payload.value
       }
@@ -71,30 +83,27 @@ export const ReadEmail: FC<P> = ({
       if (payload.name === 'Date') {
         rowData.date = `${dayjs(payload.value).format('D MMM')} ( ${dayjs(
           payload.value
-        ).fromNow(true)} ago ) `
+        ).fromNow(true)} ${t('setup.email.inbox.read.mail.day.ago')} ) `
       }
       return 1
     })
-    let part = ''
-
-    if (content.payload.mimeType === 'text/html') {
-      part = content.payload.body.data ? content.payload.body.data : ''
+    let encodedBody = ''
+    if (typeof content.payload.parts === 'undefined') {
+      encodedBody = content.payload.body.data
     } else {
-      content.payload.parts.map((parts) => {
-        if (parts.mimeType === 'text/html') {
-          part = parts.body.data ? parts.body.data : ''
-        }
-        return 1
-      })
+      encodedBody = getHTMLPart(content.payload.parts, 'text/html')
     }
-
-    rowData.snippet = decode(part).replace('"\r\n', '')
-    const bodyContent = rowData.snippet.split('<body')
-
-    bodyContent.length === 1
-      ? (rowData.snippet = `<body ${bodyContent[0]}`)
-      : (rowData.snippet = `<body ${bodyContent[1]}`)
-
+    encodedBody = encodedBody
+      .replace(/-/g, '+')
+      .replace(/_/g, '/')
+      .replace(/\s/g, '')
+    rowData.snippet = decode(encodedBody)
+    if (rowData.snippet.includes('body')) {
+      const bodyContent = rowData.snippet.split('<body')
+      bodyContent.length === 1
+        ? (rowData.snippet = `<body ${bodyContent[0]}`)
+        : (rowData.snippet = `<body ${bodyContent[1]}`)
+    }
     return rowData
   }
 
@@ -111,27 +120,23 @@ export const ReadEmail: FC<P> = ({
               Accept: 'application/json',
             },
           }
-        )
-          .then((response) => {
-            if (response.ok) {
-              response.json().then(async (json) => {
-                const emailData = extractData(json)
-                if (
-                  JSON.stringify(responseEmail) !==
-                  JSON.stringify({ ...responseEmail, ...emailData })
-                ) {
-                  setresponseEmail({
-                    ...responseEmail,
-                    ...emailData,
-                  })
-                  setIsLoading(false)
-                }
-              })
-            }
-          })
-          .catch((error) => {
-            console.log('Google Connection refuse', error)
-          })
+        ).then((response) => {
+          if (response.ok) {
+            response.json().then(async (json) => {
+              const emailData = extractData(json)
+              if (
+                JSON.stringify(responseEmail) !==
+                JSON.stringify({ ...responseEmail, ...emailData })
+              ) {
+                setResponseEmail({
+                  ...responseEmail,
+                  ...emailData,
+                })
+                setIsLoading(false)
+              }
+            })
+          }
+        })
       } else {
         threads.messages.map((threadsMsg) => {
           const emailData = extractData(threadsMsg)
@@ -144,9 +149,9 @@ export const ReadEmail: FC<P> = ({
         setIsLoading(false)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [access_token, responseEmail, user]
   )
-
   const listSentEmail = useCallback(
     async (msg) => {
       dayjs.extend(relativeTime)
@@ -161,20 +166,15 @@ export const ReadEmail: FC<P> = ({
             Accept: 'application/json',
           },
         }
-      )
-        .then((response) => {
-          if (response.ok) {
-            response.json().then(async (json) => {
-              threads = json
-
-              await getThreadList(json, msg)
-              return threads
-            })
-          }
-        })
-        .catch((error) => {
-          console.log('Google Connection refuse', error)
-        })
+      ).then((response) => {
+        if (response.ok) {
+          response.json().then(async (json) => {
+            threads = json
+            await getThreadList(json, msg)
+            return threads
+          })
+        }
+      })
     },
     [access_token, getThreadList, threadsId, user]
   )
@@ -202,22 +202,27 @@ export const ReadEmail: FC<P> = ({
     return (
       <div className={styles.mailOptionContent}>
         <div className={styles.mailOptionItem}>
-          <Reply /> <p>Reply</p>
+          <Reply />{' '}
+          <p>{t('setup.email.inbox.read.email.content.menu.reply')}</p>
         </div>
         <div className={styles.mailOptionItem}>
-          <ReplyAll /> <p>Reply to all</p>
+          <ReplyAll />{' '}
+          <p>{t('setup.email.inbox.read.email.content.menu.reply.to.all')}</p>
         </div>
         <div className={styles.mailOptionItem}>
-          <Forward /> <p>Forward</p>
+          <Forward />{' '}
+          <p>{t('setup.email.inbox.read.email.content.menu.forward')}</p>
         </div>
         <div className={styles.mailOptionItem} onClick={() => handlePrint()}>
-          <PrinterOutlined /> <p>Print</p>
+          <PrinterOutlined />{' '}
+          <p>{t('setup.email.inbox.read.email.content.menu.print')}</p>
         </div>
         <div
           className={styles.mailOptionItem}
           onClick={() => handleEmailDelete()}
         >
-          <DeleteOutlined /> <p>Delete</p>
+          <DeleteOutlined />{' '}
+          <p>{t('setup.email.inbox.read.email.content.menu.delete')}</p>
         </div>
       </div>
     )
@@ -242,7 +247,8 @@ export const ReadEmail: FC<P> = ({
                   <div className={styles.emailDetails}>
                     <p className={styles.senderName}>{value.name[0]}</p>
                     <p className={styles.senderEmail}>
-                      {value.name[1].substring(0, value.name[1].length - 1)}
+                      {value.name.length > 1 &&
+                        value.name[1].substring(0, value.name[1].length - 1)}
                     </p>
                   </div>
                 </div>
@@ -251,45 +257,58 @@ export const ReadEmail: FC<P> = ({
 
             <div className={styles.clientButton}>
               <Button type="default">
-                <span>Link to Existing</span>
+                <span>
+                  {t('setup.email.inbox.read.email.button.link.existing')}
+                </span>
               </Button>
               <Button type="primary">
-                <span>Create new client</span>
+                <span>
+                  {t('setup.email.inbox.read.email.button.create.new.client')}
+                </span>
               </Button>
             </div>
           </div>
-
           <div className={styles.linkLeadContainer}>
             <div className={styles.linkLeadText}>
-              <p className={styles.linkLeadTitle}>Link to a lead</p>
+              <p className={styles.linkLeadTitle}>
+                {t('setup.email.inbox.read.email.button.link.lead')}
+              </p>
               <p className={styles.linkLeadDescription}>
-                Find an exisiting lead or create a new one
+                {t('setup.email.inbox.read.email.button.link.lead.description')}
+                40{' '}
               </p>
             </div>
             <div className={styles.clientButton}>
               <Button type="default">
-                <span>Link to Existing</span>
+                <span>
+                  {t('setup.email.inbox.read.email.button.link.existing')}
+                </span>
               </Button>
               <Button type="primary">
-                <span>Create New client</span>
+                <span>
+                  {t('setup.email.inbox.read.email.button.create.new.client')}
+                </span>
               </Button>
             </div>
           </div>
-
           <div className={styles.mediaDetailsContainer}>
             <div className={styles.mediaTitle}>
-              <p className={styles.mediaTitleText}>MEDIA</p>
+              <p className={styles.mediaTitleText}>
+                {t('setup.email.inbox.read.email.button.media')}
+              </p>
             </div>
             <div className={styles.mediaDetails}>
               <div className={styles.mediaAlbum}>
-                {/* <img src={Img2} alt="" />
-                <img src={Img2} alt="" />
-                <img src={Img3} alt="" />
-                <img src={Img2} alt="" /> */}
+                <img src={'https://picsum.photos/200/300/?blur=2'} alt="" />
+                <img src={'https://picsum.photos/200/300/?blur=2'} alt="" />
+                <img src={'https://picsum.photos/200/300/?blur=2'} alt="" />
+                <img src={'https://picsum.photos/200/300/?blur=2'} alt="" />
               </div>
               <div className={styles.clientButton}>
                 <Button type="default">
-                  <span>Add to Client (3)</span>
+                  <span>
+                    {t('setup.email.inbox.read.email.button.add.to.client')}
+                  </span>
                 </Button>
               </div>
             </div>
@@ -298,7 +317,6 @@ export const ReadEmail: FC<P> = ({
       </div>
     )
   }
-
   const readEmailBody = (value) => {
     return (
       <div className={styles.readEmailLeftSide}>
@@ -313,11 +331,12 @@ export const ReadEmail: FC<P> = ({
             ) : (
               <div className={styles.headerLeft}>
                 <h5>
-                  {value.subject.length > 0 ? value.subject : '(no subject)'}{' '}
+                  {value.subject.length > 0
+                    ? value.subject
+                    : t('setup.email.inbox.read.mail.no.subject')}{' '}
                 </h5>
               </div>
             )}
-
             <div className={styles.headerRight}>
               {isLoading ? (
                 <Skeleton.Input
@@ -337,11 +356,11 @@ export const ReadEmail: FC<P> = ({
                   >
                     <Button type="default" icon={<LockOutlined />}>
                       <span>
-                        Private <DownOutlined />
+                        {t('setup.email.inbox.read.mail.private')}{' '}
+                        <DownOutlined />
                       </span>
                     </Button>
                   </Dropdown>
-
                   <Button type="default" shape="circle" icon={<Reply />} />
                   <Popover
                     placement="bottomRight"
@@ -375,11 +394,14 @@ export const ReadEmail: FC<P> = ({
                   <div className={styles.emailDetails}>
                     <p className={styles.senderName}>{value.name[0]}</p>
                     <p className={styles.senderEmail}>
-                      {value.name[1].substring(0, value.name[1].length - 1)}
+                      {value.name.length > 1 &&
+                        value.name[1].substring(0, value.name[1].length - 1)}
                     </p>
                   </div>
                   <div className={styles.toDetail}>
-                    <p>To: {value.to}</p>
+                    <p>
+                      {t('setup.email.inbox.read.mail.to')} {value.to}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -398,10 +420,10 @@ export const ReadEmail: FC<P> = ({
           {!isLoading && (
             <div className={styles.mailFooterWrapper}>
               <Button type="default" icon={<Reply />}>
-                <span>Reply</span>
+                <span>{t('setup.email.inbox.button.reply')}</span>
               </Button>
               <Button type="default" icon={<Forward />}>
-                <span>Forward</span>
+                <span>{t('setup.email.inbox.button.forward')}</span>
               </Button>
             </div>
           )}
@@ -451,7 +473,9 @@ export const ReadEmail: FC<P> = ({
                                 <h5>
                                   {email.subject.length > 0
                                     ? email.subject
-                                    : '(no subject)'}{' '}
+                                    : t(
+                                        'setup.email.inbox.read.mail.no.subject'
+                                      )}{' '}
                                 </h5>
                               </div>
                             )}
@@ -479,7 +503,10 @@ export const ReadEmail: FC<P> = ({
                                         icon={<LockOutlined />}
                                       >
                                         <span>
-                                          Private <DownOutlined />
+                                          {t(
+                                            'setup.email.inbox.read.mail.private'
+                                          )}{' '}
+                                          <DownOutlined />
                                         </span>
                                       </Button>
                                     </Dropdown>
@@ -533,7 +560,10 @@ export const ReadEmail: FC<P> = ({
                                     </p>
                                   </div>
                                   <div className={styles.toDetail}>
-                                    <p>To: {email.to}</p>
+                                    <p>
+                                      {t('setup.email.inbox.read.mail.to')}{' '}
+                                      {email.to}
+                                    </p>
                                   </div>
                                 </div>
                               </div>
@@ -566,9 +596,7 @@ export const ReadEmail: FC<P> = ({
                       className={styles.listEmailPoint}
                       onClick={() => setShowAllEmail(true)}
                     >
-                      {index === 1 && (
-                        <div className={styles.listEmailBreak}></div>
-                      )}
+                      {index === 1 && <div className={styles.listEmailBreak} />}
                       <span>{emailList.length - 2}</span>
                     </div>
                   )}
@@ -594,7 +622,9 @@ export const ReadEmail: FC<P> = ({
                               <h5>
                                 {email.subject.length > 0
                                   ? email.subject
-                                  : '(no subject)'}{' '}
+                                  : t(
+                                      'setup.email.inbox.read.mail.no.subject'
+                                    )}{' '}
                               </h5>
                             </div>
                           )}
@@ -622,7 +652,10 @@ export const ReadEmail: FC<P> = ({
                                       icon={<LockOutlined />}
                                     >
                                       <span>
-                                        Private <DownOutlined />
+                                        {t(
+                                          'setup.email.inbox.read.mail.private'
+                                        )}{' '}
+                                        <DownOutlined />
                                       </span>
                                     </Button>
                                   </Dropdown>
@@ -673,7 +706,10 @@ export const ReadEmail: FC<P> = ({
                                   </p>
                                 </div>
                                 <div className={styles.toDetail}>
-                                  <p>To: {email.to}</p>
+                                  <p>
+                                    {t('setup.email.inbox.read.mail.to')}{' '}
+                                    {email.to}
+                                  </p>
                                 </div>
                               </div>
                             </div>
@@ -705,10 +741,10 @@ export const ReadEmail: FC<P> = ({
           {!isLoading && (
             <div className={styles.mailFooterWrapper}>
               <Button type="default" icon={<Reply />}>
-                <span>Reply</span>
+                <span>{t('setup.email.inbox.button.reply')}</span>
               </Button>
               <Button type="default" icon={<Forward />}>
-                <span>Forward</span>
+                <span>{t('setup.email.inbox.button.forward')}</span>
               </Button>
             </div>
           )}

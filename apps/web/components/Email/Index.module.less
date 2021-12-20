@@ -112,35 +112,44 @@
         }
       }
     }
+    .mailSender{
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 140px;
+      white-space: nowrap;
+    }
     .subject {
       max-width: 550px;
       display: flex;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      b {
-        font-size: 14px;
-        line-height: 18px;
-        display: flex;
-        align-items: center;
-        color: #3d3d46;
-      }
+
       .unreadEmail {
         font-size: 14px;
         font-weight: bolder;
         color: #3d3d46;
       }
-      span {
-        max-width: 60px;
+      .description {
+
         font-size: 14px;
-        line-height: 18px;
-        display: flex;
-        align-items: center;
         color: #9292a3;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        min-width: 50px;
+        height: 1.2em;
+        white-space: nowrap;
       }
     }
     .privateDropDown {
       padding: 5px;
+    }
+    .labelContainer{
+      display: inline-block;
+      width: 130px;
+      white-space: nowrap;
+      overflow: hidden !important;
+      text-overflow: ellipsis;
     }
     .unreadEmail {
       font-size: 14px;
@@ -156,7 +165,7 @@
         white-space: unset;
         padding: 12px 0 0 0;
         border-bottom: 1px solid #ecedf0;
-        margin-right: 0;
+
         margin: 0 10px;
         &:last-child {
           border-bottom: none;
@@ -167,7 +176,7 @@
         .ant-radio {
           top: 4px;
         }
-        // border-bottom: 1px solid lightgrey;
+
       }
     }
     .ant-pagination {
@@ -180,4 +189,29 @@
   font-size: 12px;
   line-height: 16px;
   color: #9292a3;
+}
+
+:global {
+  .ant-btn-icon-only {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .ant-tabs-nav-wrap{
+    border-right: 1px solid #ecedf0;
+  }
+  .ant-radio-group {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    max-width: 315px;
+    width: 100%;
+    .ant-radio-wrapper {
+      border-bottom: 1px solid #ECEDF0;
+      margin-bottom: 10px;
+      &:last-child {
+        border-bottom: unset;
+        margin-bottom: unset;
+      }
+    }
+  }
 }

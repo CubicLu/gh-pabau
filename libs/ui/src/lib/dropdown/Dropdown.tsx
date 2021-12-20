@@ -42,6 +42,7 @@ export interface DropDownInterface {
   onLogOut?(): void
   userData?: Partial<AuthenticatedUser> & JwtUser & ExtraUserData
   taskManagerIFrameComponent?: JSX.Element
+  emailCount?: number
 }
 
 export const Dropdown: FC<DropDownInterface> = ({
@@ -50,6 +51,7 @@ export const Dropdown: FC<DropDownInterface> = ({
   onLogOut,
   taskManagerIFrameComponent,
   userData,
+  emailCount,
 }): JSX.Element => {
   const { t } = useTranslation('common')
   const [activeMenu, setActiveMenu] = useState('Menu')
@@ -110,6 +112,12 @@ export const Dropdown: FC<DropDownInterface> = ({
           <Link href="/setup/gmail/inbox">
             <span className={styles.headerText}>
               {t('avatar.account.mail')}
+              {Boolean(emailCount) && (
+                <Badge
+                  count={emailCount}
+                  style={{ backgroundColor: '#40A0C1', marginLeft: '10px' }}
+                />
+              )}
             </span>
           </Link>
         </div>

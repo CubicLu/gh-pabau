@@ -55,6 +55,7 @@ interface P {
   leadCreateRender?: (handleClose?: () => void) => JSX.Element
   sidebarCollapsed?: boolean
   toggleSidebar?: (e: boolean) => void
+  emailCount?: number
 }
 
 export const Header = ({
@@ -73,6 +74,7 @@ export const Header = ({
   sidebarCollapsed,
   toggleSidebar,
   journeyRender,
+  emailCount,
 }: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
@@ -202,6 +204,7 @@ export const Header = ({
                   taskManagerIFrameComponent={taskManagerIFrameComponent}
                   userData={user}
                   onLogOut={onLogOut}
+                  emailCount={emailCount}
                 />
               </div>
             </Col>

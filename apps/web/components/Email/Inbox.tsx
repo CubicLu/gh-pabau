@@ -1,36 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
-import styles from './index.module.less'
+import styles from './Index.module.less'
 import {
   Button,
   Checkbox,
-  Table,
-  TabMenu,
   Notification,
   NotificationType,
+  Table,
+  TabMenu,
 } from '@pabau/ui'
-import { Card, Input, Menu, Dropdown, Radio, Badge, Skeleton } from 'antd'
+import { Badge, Card, Dropdown, Input, Menu, Radio, Skeleton } from 'antd'
 import {
-  InboxOutlined,
-  FileOutlined,
-  SendOutlined,
-  FolderOpenOutlined,
-  RedoOutlined,
-  FilterOutlined,
+  AimOutlined,
+  ArrowLeftOutlined,
+  CaretDownOutlined,
   CheckOutlined,
+  CloudServerOutlined,
+  DeleteOutlined,
+  DownOutlined,
+  FileOutlined,
+  FilterOutlined,
+  FolderOpenOutlined,
+  InboxOutlined,
+  LockOutlined,
+  MailOutlined,
   MoreOutlined,
   PlusCircleOutlined,
-  LockOutlined,
-  UserOutlined,
+  RedoOutlined,
+  SendOutlined,
   SettingOutlined,
-  CloudServerOutlined,
-  DownOutlined,
-  PoundCircleFilled,
-  ArrowLeftOutlined,
-  DeleteOutlined,
   UpOutlined,
-  MailOutlined,
-  CaretDownOutlined,
+  UserOutlined,
+  UnlockOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { ReactComponent as Attched } from '../../assets/images/attched.svg'
@@ -40,12 +41,22 @@ import dynamic from 'next/dynamic'
 import {
   FindGmailConnectionDocument,
   UpdateGmailConnectionDocument,
+  useCheckEmailLinkLazyQuery,
 } from '@pabau/graphql'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
+
 const { Search } = Input
 
-const ReadEmail = dynamic(() => import('./readEmail'), {
+//::TODO
+// setup project for pabau at the end of
+// complete mail futures in google cloud at a time below all cred go into some secure place
+// here is only testing clientId and clientScerate
+export const clientId =
+  '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com'
+export const clientScerate = 'IfyIxOV4e-OW_CU3KTgUFk4n'
+
+const ReadEmail = dynamic(() => import('./ReadEmail'), {
   ssr: false,
 })
 export const Inbox = () => {
@@ -65,27 +76,19 @@ export const Inbox = () => {
   const [searchResult, setSearchResult] = useState([])
   const [showSearch, setShowSearch] = useState(false)
   const [authToken, setAuthToken] = useState('')
-
-  const clientId =
-    '1006619281478-0ggfmclia2856fnes3640qn7rhq1f2u9.apps.googleusercontent.com'
-  const clientScerate = 'IfyIxOV4e-OW_CU3KTgUFk4n'
+  const [leadEmail, setLeadEmail] = useState([])
+  const [leadArchiveEmail, setLeadArchiveEmail] = useState([])
+  const [leadDraftEmail, setLeadDraftEmail] = useState([])
+  const [leadSentEmail, setLeadSentEmail] = useState([])
 
   const [updateConnection] = useMutation(UpdateGmailConnectionDocument, {
-    onCompleted() {
-      console.log()
-    },
     onError(e) {
-      console.log(e)
+      Notification(NotificationType.error, t('setup.gmail.update.token.error'))
     },
   })
 
   const userSignIn = true
 
-  useEffect(() => {
-    if (inboxEmail.length <= 0) {
-      setIsLoading(true)
-    }
-  }, [isLoading, inboxEmail.length])
   const { me } = useUser()
   const [loadConnection, { data: gmailConnection }] = useLazyQuery(
     FindGmailConnectionDocument,
@@ -96,6 +99,129 @@ export const Inbox = () => {
       },
     }
   )
+
+  const [
+    loadLeadClient,
+    { data: checkClientLead, loading },
+  ] = useCheckEmailLinkLazyQuery()
+
+  const [
+    loadArchiveLeadClient,
+    { data: checkArchiveClientLead, loading: archiveLoading },
+  ] = useCheckEmailLinkLazyQuery()
+
+  const [
+    loadDraftLeadClient,
+    { data: checkDraftClientLead, loading: draftLoading },
+  ] = useCheckEmailLinkLazyQuery()
+
+  const [
+    loadSentLeadClient,
+    { data: checkSentClientLead, loading: sentLoading },
+  ] = useCheckEmailLinkLazyQuery()
+
+  const updateLeadClient = (emailVal, checkLeadClient) => {
+    const temp = []
+    emailVal.map((mail) => {
+      const leadFind = checkLeadClient?.checkEmailLink.find(
+        (status) => mail.sender === status.email && status.type === 'lead'
+      )
+      const clientFind = checkLeadClient?.checkEmailLink.find(
+        (status) => mail.sender === status.email && status.type === 'contact'
+      )
+      if (leadFind) {
+        temp.push({
+          ...mail,
+          status: 'lead',
+          lead: leadFind.fistName + ' ' + leadFind.lastName,
+          roleId: leadFind.id,
+        })
+      } else if (clientFind) {
+        temp.push({
+          ...mail,
+          status: 'client',
+          client: clientFind.fistName + ' ' + clientFind.lastName,
+          roleId: clientFind.id,
+        })
+      } else {
+        temp.push({
+          ...mail,
+          status: 'no',
+        })
+      }
+      return 1
+    })
+    return temp
+  }
+
+  useEffect(() => {
+    if (checkClientLead?.checkEmailLink) {
+      const InboxData = updateLeadClient(inboxEmail, checkClientLead)
+      setInboxEmail(InboxData)
+      setLeadEmail([])
+    }
+    if (checkArchiveClientLead?.checkEmailLink) {
+      const archiveData = updateLeadClient(archiveEmail, checkArchiveClientLead)
+      setArchiveEmail(archiveData)
+      setLeadArchiveEmail([])
+    }
+    if (checkDraftClientLead?.checkEmailLink) {
+      const draftData = updateLeadClient(draftEmail, checkDraftClientLead)
+      setDraftEmail(draftData)
+      setLeadDraftEmail([])
+    }
+    if (checkSentClientLead?.checkEmailLink) {
+      const sentData = updateLeadClient(sentEmail, checkSentClientLead)
+      setSentEmail(sentData)
+      setLeadSentEmail([])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    checkClientLead,
+    checkArchiveClientLead,
+    checkDraftClientLead,
+    checkSentClientLead,
+  ])
+
+  useEffect(() => {
+    if (leadEmail.length > 0) {
+      loadLeadClient({
+        variables: {
+          emails: leadEmail,
+        },
+      })
+    }
+    if (leadArchiveEmail.length > 0) {
+      loadArchiveLeadClient({
+        variables: {
+          emails: leadArchiveEmail,
+        },
+      })
+    }
+    if (leadDraftEmail.length > 0) {
+      loadDraftLeadClient({
+        variables: {
+          emails: leadDraftEmail,
+        },
+      })
+    }
+    if (leadSentEmail.length > 0) {
+      loadSentLeadClient({
+        variables: {
+          emails: leadSentEmail,
+        },
+      })
+    }
+  }, [
+    leadEmail,
+    loadLeadClient,
+    leadArchiveEmail,
+    loadArchiveLeadClient,
+    leadDraftEmail,
+    loadDraftLeadClient,
+    leadSentEmail,
+    loadSentLeadClient,
+  ])
 
   const router = useRouter()
 
@@ -137,14 +263,23 @@ export const Inbox = () => {
   }
 
   const extractData = (finalEmails) => {
-    const val = finalEmails.map((itm: any) => {
-      const rowData = { name: '', time: '', subject: '', isAttched: false }
+    return finalEmails.map((itm: any) => {
+      const rowData = {
+        name: '',
+        time: '',
+        subject: '',
+        isAttched: false,
+        sender: '',
+        lead: '',
+      }
+
       if (itm.payload.mimeType === 'multipart/mixed') {
         rowData.isAttched = true
       }
       itm.payload.headers.map((header) => {
         if (header.name === 'From') {
           rowData.name = header.value.split('<')
+          rowData.sender = rowData.name[rowData.name.length - 1].split('>')[0]
         }
         if (header.name === 'Date') {
           rowData.time = header.value
@@ -167,7 +302,7 @@ export const Inbox = () => {
         rowData.time = `${dayjs(rowData.time).format('DD MMM YYYY')}`
       }
 
-      const item = {
+      return {
         ...rowData,
         id: itm.id,
         key: itm.threadId,
@@ -177,11 +312,9 @@ export const Inbox = () => {
         },
         isAttched: rowData.isAttched,
         subject: { name: rowData.subject, subject: itm.snippet },
+        sender: rowData.sender,
       }
-      return item
     })
-
-    return val
   }
 
   const listInboxEmail = async (msg) => {
@@ -189,8 +322,8 @@ export const Inbox = () => {
     const emailBox = []
     setIsLoading(true)
     await Promise.all(
-      msg.map(async (msg) => {
-        return fetch(
+      await msg.map(async (msg) => {
+        return await fetch(
           `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${authToken}`,
           {
             method: 'GET',
@@ -198,17 +331,11 @@ export const Inbox = () => {
               Accept: 'application/json',
             },
           }
-        )
-          .then((response) => {
-            if (response.ok) {
-              response.json().then(async (json) => {
-                emailBox.push(json)
-              })
-            }
+        ).then(async (response) => {
+          await response.json().then((json) => {
+            emailBox.push(json)
           })
-          .catch((error) => {
-            console.log('Google Connection refuse', error)
-          })
+        })
       })
     )
     setTotalInbox(emailBox.length)
@@ -218,10 +345,13 @@ export const Inbox = () => {
       }
       return 1
     })
-    const val = extractData(emailBox)
+
+    const val = await extractData(emailBox)
     setInboxEmail(val)
+    const mailArray = []
+    val.map((email) => mailArray.push(email.sender))
+    setLeadEmail(mailArray)
     setInboxCount(unreadEmail)
-    setIsLoading(false)
   }
 
   const listDraftEmail = async (draft) => {
@@ -237,22 +367,54 @@ export const Inbox = () => {
               Accept: 'application/json',
             },
           }
-        )
-          .then((response) => {
-            if (response.ok) {
-              response.json().then(async (json) => {
-                emailBox.push(json)
-              })
-            }
+        ).then(async (response) => {
+          await response.json().then((json) => {
+            emailBox.push(json)
           })
-          .catch((error) => {
-            console.log('Google Connection refuse', error)
-          })
+        })
       })
     )
-    const val = extractData(emailBox)
-    setDraftEmail(val)
-    setIsLoading(false)
+
+    const draftList = emailBox.map((itm: any) => {
+      const rowData = { name: '', time: '', subject: '', sender: '' }
+
+      itm.payload.headers.map((x) => {
+        if (x.name === 'From') {
+          rowData.name = x.value.split('<')
+        }
+        if (x.name === 'To') {
+          const senderVal = x.value.split('<')
+          rowData.sender = senderVal[senderVal.length - 1].split('>')[0]
+        }
+        if (x.name === 'Date') {
+          rowData.time = `${dayjs(x.value).format('HH:mm')}`
+        }
+        if (x.name === 'Subject') {
+          rowData.subject = x.value
+        }
+        return rowData
+      })
+      if (rowData.name !== '') {
+        return {
+          ...rowData,
+          id: itm.id,
+          key: itm.threadId,
+          name: {
+            name: rowData.name[0],
+            status: itm.labelIds.includes('UNREAD'),
+          },
+          subject: { name: rowData.subject, subject: itm.snippet },
+        }
+      }
+      return 1
+    })
+    const mailArray = []
+    draftList.map(
+      (emails: any) =>
+        emails?.sender.length > 0 && mailArray.push(emails.sender)
+    )
+    setDraftEmail(draftList)
+    setLeadDraftEmail(mailArray)
   }
 
   const listSentEmail = async (msg) => {
@@ -268,26 +430,20 @@ export const Inbox = () => {
               Accept: 'application/json',
             },
           }
-        )
-          .then((response) => {
-            if (response.ok) {
-              response.json().then(async (json) => {
-                emailBox.push(json)
-              })
-            }
+        ).then(async (response) => {
+          await response.json().then(async (json) => {
+            emailBox.push(json)
           })
-          .catch((error) => {
-            console.log('Google Connection refuse', error)
-          })
+        })
       })
     )
-
-    const ddd = emailBox.map((itm: any) => {
-      const rowData = { name: '', time: '', subject: '' }
+    const sentList = emailBox.map((itm: any) => {
+      const rowData = { name: '', time: '', subject: '', sender: '' }
       if (itm.labelIds.includes('SENT')) {
         itm.payload.headers.map((x) => {
-          if (x.name === 'From') {
+          if (x.name === 'To') {
             rowData.name = x.value.split('<')
+            rowData.sender = rowData.name[rowData.name.length - 1].split('>')[0]
           }
           if (x.name === 'Date') {
             rowData.time = `${dayjs(x.value).format('HH:mm')}`
@@ -299,7 +455,7 @@ export const Inbox = () => {
         })
       }
       if (rowData.name !== '') {
-        const item = {
+        return {
           ...rowData,
           id: itm.id,
           key: itm.threadId,
@@ -309,20 +465,16 @@ export const Inbox = () => {
           },
           subject: { name: rowData.subject, subject: itm.snippet },
         }
-        return item
       }
       return 1
     })
-    const row = []
-
-    ddd.map((x) => {
-      if (x !== 1) {
-        row.push(x)
-      }
-      return 1
-    })
-    setSentEmail(row)
-    setIsLoading(false)
+    const mailArray = []
+    sentList.map(
+      (emails: any) =>
+        emails?.sender.length > 0 && mailArray.push(emails.sender)
+    )
+    setSentEmail(sentList)
+    setLeadSentEmail(mailArray)
   }
 
   const listArchiveEmail = async (msg) => {
@@ -338,30 +490,27 @@ export const Inbox = () => {
               Accept: 'application/json',
             },
           }
-        )
-          .then((response) => {
-            if (response.ok) {
-              response.json().then(async (json) => {
-                emailBox.push(json)
-              })
-            }
-          })
-          .catch((error) => {
-            console.log('Google Connection refuse', error)
-          })
+        ).then((response) => {
+          if (response.ok) {
+            response.json().then(async (json) => {
+              emailBox.push(json)
+            })
+          }
+        })
       })
     )
-    const ddd = emailBox.map((itm: any) => {
-      const rowData = { name: '', time: '', subject: '' }
+    const archiveEmail = emailBox.map((itm: any) => {
+      const rowData = { name: '', time: '', subject: '', sender: '' }
       if (
-        (!itm.labelIds.includes('INBOX') &&
-          !itm.labelIds.includes('SENT') &&
-          !itm.labelIds.includes('DRAFT')) ||
-        itm.labelIds.includes('ARCHIVE')
+        (!itm?.labelIds?.includes('INBOX') &&
+          !itm?.labelIds?.includes('SENT') &&
+          !itm?.labelIds?.includes('DRAFT')) ||
+        itm?.labelIds?.includes('ARCHIVE')
       ) {
         itm.payload.headers.map((x) => {
           if (x.name === 'From') {
             rowData.name = x.value.split('<')
+            rowData.sender = rowData.name[rowData.name.length - 1].split('>')[0]
           }
           if (x.name === 'Date') {
             rowData.time = `${dayjs(x.value).format('HH:mm')}`
@@ -373,22 +522,22 @@ export const Inbox = () => {
         })
       }
       if (rowData.name !== '') {
-        const item = {
+        return {
           ...rowData,
           id: itm.id,
           key: itm.threadId,
           name: {
             name: rowData.name[0],
-            status: itm.labelIds.includes('UNREAD'),
+            status: itm?.labelIds?.includes('UNREAD'),
           },
           subject: { name: rowData.subject, subject: itm.snippet },
+          sender: rowData.sender,
         }
-        return item
       }
       return 1
     })
     const row = []
-    ddd.map((x) => {
+    archiveEmail.map((x) => {
       if (x !== 1) {
         row.push(x)
       }
@@ -396,77 +545,78 @@ export const Inbox = () => {
     })
 
     setArchiveEmail(row)
-    setIsLoading(false)
+    const mailArray = []
+    row.map((email) => mailArray.push(email.sender))
+    setLeadArchiveEmail(mailArray)
   }
 
-  const listInbox = () => {
-    fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=INBOX&access_token=${authToken}`,
+  const listInbox = async () => {
+    await fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=INBOX&maxResults=500&access_token=${authToken}`,
       {
         method: 'GET',
         headers: {
           Accept: 'application/json',
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async (json) => {
-            await listInboxEmail(json.messages)
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
+    ).then(async (response) => {
+      if (response.ok) {
+        await response.json().then(async (json) => {
+          if (json.messages) await listInboxEmail(json.messages)
+          else {
+            setIsLoading(true)
+          }
+        })
+      }
+    })
   }
 
-  const listDraft = () => {
-    fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/drafts?access_token=${authToken}`,
+  const listDraft = async () => {
+    await fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/drafts?maxResults=500&access_token=${authToken}`,
       {
         method: 'GET',
         headers: {
           Accept: 'application/json',
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async (json) => {
+    ).then(async (response) => {
+      if (response.ok) {
+        await response.json().then(async (json) => {
+          if (json.drafts) {
             await listDraftEmail(json.drafts)
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
+          } else {
+            setIsLoading(true)
+          }
+        })
+      }
+    })
   }
 
-  const listSent = () => {
-    fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=SENT&access_token=${authToken}`,
+  const listSent = async () => {
+    await fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?labelIds=SENT&maxResults=500&access_token=${authToken}`,
       {
         method: 'GET',
         headers: {
           Accept: 'application/json',
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async (json) => {
+    ).then(async (response) => {
+      if (response.ok) {
+        await response.json().then(async (json) => {
+          if (json.messages) {
             await listSentEmail(json.messages)
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
+          } else {
+            setIsLoading(true)
+          }
+        })
+      }
+    })
   }
 
-  const listArchive = () => {
-    fetch(
+  const listArchive = async () => {
+    await fetch(
       `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?access_token=${authToken}`,
       {
         method: 'GET',
@@ -474,29 +624,31 @@ export const Inbox = () => {
           Accept: 'application/json',
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async (json) => {
+    ).then(async (response) => {
+      if (response.ok) {
+        await response.json().then(async (json) => {
+          if (json.messages) {
             await listArchiveEmail(json.messages)
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
+          } else {
+            setIsLoading(true)
+          }
+        })
+      }
+    })
   }
 
-  const updateSigninStatus = async (isSignedIn) => {
+  const updateSignInStatus = async (isSignedIn) => {
     if (isSignedIn) {
       if (authToken.length > 0) {
+        setIsLoading(true)
         await listInbox()
         await listDraft()
         await listSent()
         await listArchive()
+        setIsLoading(false)
       }
     } else {
-      router.push('/setup/senders')
+      router.push('/setup/senders').then()
     }
   }
 
@@ -515,15 +667,12 @@ export const Inbox = () => {
         .then((response) => {
           return response
         })
-        .then(function (data) {
+        .then(async (data) => {
           if (!data.ok) {
-            getNewAuthToken().then()
+            await getNewAuthToken().then()
           }
         })
-        .catch((error) => {
-          console.log('error::', error)
-        })
-      updateSigninStatus(true).then()
+      updateSignInStatus(true).then()
     }
     if (gmailConnection && gmailConnection.gmail_connection.length === 0) {
       router.push('/setup/senders').then()
@@ -537,6 +686,15 @@ export const Inbox = () => {
       setAuthToken(gmailConnection.gmail_connection[0].access_token)
     }
   }, [loadConnection, gmailConnection])
+
+  const handleClientClick = (id: number) => {
+    router
+      .push({
+        pathname: '/clients/[id]',
+        query: { id: id },
+      })
+      .then()
+  }
 
   const tabItemText = [
     <div key="0">
@@ -566,13 +724,18 @@ export const Inbox = () => {
       dataIndex: 'name',
       render: ({ name, status }) => {
         return (
-          <div>
+          <div className={styles.mailSender}>
             <Badge color={status ? '#40A0C1' : ''} />
             <span className={status ? styles.unreadEmail : ''}>{name}</span>
           </div>
         )
       },
       visible: true,
+      onCell: (record) => ({
+        onClick: () => {
+          handleRowClick(record).then()
+        },
+      }),
     },
     {
       title: 'Subject',
@@ -581,31 +744,43 @@ export const Inbox = () => {
         return (
           <div className={styles.subject}>
             <b className={record.name.status ? styles.unreadEmail : ''}>
-              {name.length > 0 ? name : '(no subject)'}
+              {name.length > 0
+                ? name
+                : `${t('setup.email.inbox.read.mail.no.subject')}`}
             </b>
             &nbsp;&nbsp;
-            <span>{subject}</span>
+            <span className={styles.description}>{subject}</span>
           </div>
         )
       },
       visible: true,
+      onCell: (record) => ({
+        onClick: () => {
+          handleRowClick(record).then()
+        },
+      }),
     },
     {
       title: 'Label',
       dataIndex: 'label',
       visible: true,
-      render: (text, record, row) => {
+      render: (text, record) => {
         return (
           <div>
-            {row === 0 && (
-              <span>
-                <PoundCircleFilled /> John Smith
-              </span>
-            )}
-            {row === 1 && (
-              <span>
-                <UserOutlined /> Raymond lin
-              </span>
+            {!loading && !archiveLoading && !draftLoading && !sentLoading && (
+              <div className={styles.labelContainer}>
+                {record.status === 'lead' && (
+                  <span>
+                    <AimOutlined /> {record.lead}
+                  </span>
+                )}
+                {record.status === 'client' && (
+                  <span onClick={() => handleClientClick(record.roleId)}>
+                    <UserOutlined /> {record.client}
+                  </span>
+                )}
+                {record.status === 'no' && <span>{''}</span>}
+              </div>
             )}
           </div>
         )
@@ -615,17 +790,21 @@ export const Inbox = () => {
       title: 'Button',
       dataIndex: 'button',
       visible: true,
-      render: () => (
+      render: (text, record) => (
         <div className={styles.privateDropDown}>
           <Dropdown
-            overlay={privatemenu}
+            overlay={privateMenu}
             placement="bottomRight"
             arrow
             className={styles.privateDropDown}
+            trigger={['click']}
           >
             <Button type="default" icon={<LockOutlined />}>
               <span>
-                Private <DownOutlined />
+                {record.status === 'client'
+                  ? t('create.filter.modal.private.visibility.label')
+                  : t('create.filter.modal.shared.visibility.label')}{' '}
+                <DownOutlined />
               </span>
             </Button>
           </Dropdown>
@@ -653,7 +832,7 @@ export const Inbox = () => {
     selectedRowKeys,
     onChange: setSelectedRowKeys,
   }
-  const moremenu = (
+  const moreMenu = (
     <Menu>
       <Menu.Item>
         <span style={{ color: 'grey' }}>
@@ -673,7 +852,7 @@ export const Inbox = () => {
   const handleChange = (e) => {
     setValue(e.target.value)
   }
-  const privatemenu = (
+  const privateMenu = (
     <Menu>
       <Radio.Group value={value} onChange={(e) => handleChange(e)}>
         <Radio value={1} onClick={(e) => handleChange(e)}>
@@ -681,7 +860,7 @@ export const Inbox = () => {
             <div>
               <div>
                 {' '}
-                <LockOutlined />{' '}
+                <UnlockOutlined />{' '}
                 {t('setup.email.inbox.private.menu.share.title')}
               </div>
               <p className={styles.converstionText}>
@@ -709,10 +888,9 @@ export const Inbox = () => {
     </Menu>
   )
 
-  const handelEmailRead = async (msg) => {
+  const handleEmailRead = async (msg) => {
     setIsLoading(true)
-
-    fetch(
+    await fetch(
       `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}/modify?access_token=${authToken}`,
       {
         method: 'POST',
@@ -721,26 +899,21 @@ export const Inbox = () => {
         },
         body: JSON.stringify({ removeLabelIds: ['UNREAD'] }),
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async () => {
-            await updateSigninStatus(true)
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
-
+    ).then(async (response) => {
+      if (response.ok) {
+        await response.json().then(async () => {
+          await updateSignInStatus(true)
+        })
+      }
+    })
     setIsLoading(false)
   }
 
-  const handleRowClick = async (e) => {
+  const handleRowClick = async (email) => {
     setReadEmail(true)
-    setEmailId(e.id)
-    setThreadsId(e.key)
-    await handelEmailRead(e.id)
+    setEmailId(email.id)
+    setThreadsId(email.key)
+    await handleEmailRead(email.id)
   }
 
   const handleBack = () => {
@@ -748,7 +921,6 @@ export const Inbox = () => {
   }
   const handleMailDelete = async () => {
     setIsLoading(true)
-
     await fetch(
       `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${authToken}`,
       {
@@ -757,24 +929,20 @@ export const Inbox = () => {
           Accept: 'application/json',
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async (json) => {
-            if (json.messages.length !== 1) {
-              // isThread = true
-              await handleThreadDelete(false)
-            } else {
-              await handleThreadDelete(true)
-            }
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
+    ).then((response) => {
+      if (response.ok) {
+        response.json().then(async (json) => {
+          if (json.messages.length !== 1) {
+            await handleThreadDelete(false)
+          } else {
+            await handleThreadDelete(true)
+          }
+        })
+      }
+    })
+
     setIsLoading(true)
-    await updateSigninStatus(userSignIn)
+    await updateSignInStatus(userSignIn)
     setIsLoading(false)
   }
 
@@ -782,7 +950,7 @@ export const Inbox = () => {
     if (!isThread) {
       await handleSingleDelete(emailId)
     } else {
-      fetch(
+      await fetch(
         `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/threads/${threadsId}?access_token=${authToken}`,
         {
           method: 'DELETE',
@@ -790,33 +958,7 @@ export const Inbox = () => {
             Accept: 'application/json',
           },
         }
-      )
-        .then(async (response) => {
-          if (response.ok) {
-            await setReadEmail(false)
-            Notification(
-              NotificationType.success,
-              t('setup.email.inbox.notification.delete.mail')
-            )
-          }
-        })
-        .catch((error) => {
-          console.log('Google Connection refuse', error)
-        })
-    }
-  }
-
-  const handleSingleDelete = async (msg) => {
-    fetch(
-      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}?access_token=${authToken}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Accept: 'application/json',
-        },
-      }
-    )
-      .then(async (response) => {
+      ).then(async (response) => {
         if (response.ok) {
           await setReadEmail(false)
           Notification(
@@ -825,18 +967,35 @@ export const Inbox = () => {
           )
         }
       })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
+    }
+  }
+
+  const handleSingleDelete = async (msg) => {
+    await fetch(
+      `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg}?access_token=${authToken}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    ).then(async (response) => {
+      if (response.ok) {
+        await setReadEmail(false)
+        Notification(
+          NotificationType.success,
+          t('setup.email.inbox.notification.delete.mail')
+        )
+      }
+    })
     setIsLoading(true)
-    await updateSigninStatus(userSignIn)
+    await updateSignInStatus(userSignIn)
     setIsLoading(false)
   }
 
   const handleMarkRead = async () => {
     setIsLoading(true)
-
-    fetch(
+    await fetch(
       `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${authToken}`,
       {
         method: 'POST',
@@ -845,29 +1004,24 @@ export const Inbox = () => {
         },
         body: JSON.stringify({ addLabelIds: ['UNREAD'] }),
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async () => {
-            await updateSigninStatus(userSignIn)
-            Notification(
-              NotificationType.success,
-              t('setup.email.inbox.notification.mark.as.read')
-            )
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
-
+    ).then(async (response) => {
+      if (response.ok) {
+        await response.json().then(async () => {
+          await updateSignInStatus(userSignIn)
+          Notification(
+            NotificationType.success,
+            t('setup.email.inbox.notification.mark.as.read')
+          )
+          setReadEmail(false)
+        })
+      }
+    })
     setIsLoading(false)
   }
 
   const handleEmailArchive = async () => {
     setIsLoading(true)
-
-    fetch(
+    await fetch(
       `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${emailId}/modify?access_token=${authToken}`,
       {
         method: 'POST',
@@ -876,28 +1030,24 @@ export const Inbox = () => {
         },
         body: JSON.stringify({ removeLabelIds: ['INBOX'] }),
       }
-    )
-      .then((response) => {
-        if (response.ok) {
-          response.json().then(async () => {
-            await updateSigninStatus(userSignIn)
-            Notification(
-              NotificationType.success,
-              t('setup.email.inbox.notification.move.archive')
-            )
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Google Connection refuse', error)
-      })
+    ).then(async (response) => {
+      if (response.ok) {
+        await response.json().then(async () => {
+          await updateSignInStatus(userSignIn)
+          Notification(
+            NotificationType.success,
+            t('setup.email.inbox.notification.move.archive')
+          )
+        })
+      }
+    })
     setIsLoading(false)
   }
 
   const renderReadEmail = () => {
     return (
       <ReadEmail
-        privateMenu={privatemenu}
+        privateMenu={privateMenu}
         messageId={emailId}
         threadsId={threadsId}
         handleSingleDelete={handleSingleDelete}
@@ -932,7 +1082,6 @@ export const Inbox = () => {
         rowSelection={rowSelection}
         loading={isLoading}
         showSizeChanger={dataSource.length > 10}
-        onRowClick={(e) => handleRowClick(e)}
         noDataText={t('setup.email.inbox.no.mail.text')}
         noDataIcon={<MailOutlined />}
       />
@@ -971,9 +1120,9 @@ export const Inbox = () => {
     )
   }
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     if (e.length > 0) {
-      fetch(
+      await fetch(
         `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages?q=${e}&access_token=${authToken}`,
         {
           method: 'GET',
@@ -981,23 +1130,18 @@ export const Inbox = () => {
             Accept: 'application/json',
           },
         }
-      )
-        .then((response) => {
-          if (response.ok) {
-            response.json().then(async (json) => {
-              setShowSearch(true)
-              if (json.messages) {
-                await handleShowResult(json.messages)
-              } else {
-                setSearchResult([])
-              }
-              console.log(json)
-            })
-          }
-        })
-        .catch(() => {
-          setShowSearch(false)
-        })
+      ).then(async (response) => {
+        if (response.ok) {
+          await response.json().then(async (json) => {
+            setShowSearch(true)
+            if (json.messages) {
+              await handleShowResult(json.messages)
+            } else {
+              setSearchResult([])
+            }
+          })
+        }
+      })
     } else {
       setShowSearch(false)
     }
@@ -1008,7 +1152,7 @@ export const Inbox = () => {
     const emailBox = []
     await Promise.all(
       msg.map(async (msg) => {
-        return fetch(
+        return await fetch(
           `https://www.googleapis.com/gmail/v1/users/${gmailConnection.gmail_connection[0].email}/messages/${msg.id}?access_token=${authToken}`,
           {
             method: 'GET',
@@ -1016,21 +1160,16 @@ export const Inbox = () => {
               Accept: 'application/json',
             },
           }
-        )
-          .then((response) => {
-            if (response.ok) {
-              response.json().then(async (json) => {
-                emailBox.push(json)
-                // return json
-              })
-            }
-          })
-          .catch((error) => {
-            console.log('Google Connection refuse', error)
-          })
+        ).then(async (response) => {
+          if (response.ok) {
+            await response.json().then(async (json) => {
+              emailBox.push(json)
+            })
+          }
+        })
       })
     )
-    const val = extractData(emailBox)
+    const val = await extractData(emailBox)
     setSearchResult(val)
     setIsLoading(false)
   }
@@ -1040,13 +1179,13 @@ export const Inbox = () => {
       <div className={styles.emailContainer}>
         <Card>
           <div className={styles.headerContainer}>
-            <h2 className={styles.headerTitle}>Mail box</h2>
+            <h2 className={styles.headerTitle}>{t('setup.gmail.mail.box')}</h2>
           </div>
           {readEmail ? (
             <div className={styles.menuHeader}>
               <div className={styles.menuHeaderLeft}>
                 <PlusCircleOutlined />
-                New mail{' '}
+                {t('setup.email.inbox.new.mail')}{' '}
               </div>
               <div className={styles.menuHeaderRight}>
                 <div className={styles.menuRightFirst}>
@@ -1055,28 +1194,28 @@ export const Inbox = () => {
                     icon={<ArrowLeftOutlined />}
                     onClick={() => handleBack()}
                   >
-                    Back
+                    {t('setup.email.inbox.button.back')}
                   </Button>
                   <Button
                     type="default"
                     icon={<FolderOpenOutlined />}
                     onClick={() => handleEmailArchive()}
                   >
-                    Archive
+                    {t('setup.email.inbox.tab.item.archive')}
                   </Button>
                   <Button
                     type="default"
                     icon={<DeleteOutlined />}
                     onClick={() => handleMailDelete()}
                   >
-                    Delete
+                    {t('setup.email.inbox.button.mail.delete')}
                   </Button>
                   <Button
                     type="default"
                     icon={<CheckOutlined />}
                     onClick={() => handleMarkRead()}
                   >
-                    Mark as unread
+                    {t('setup.email.inbox.mark.menu.unread')}
                   </Button>
                 </div>
                 <div className={styles.menuRightLast}>
@@ -1093,7 +1232,6 @@ export const Inbox = () => {
                       icon={<DownOutlined />}
                     />
                   </div>
-
                   <Button
                     type="default"
                     shape="circle"
@@ -1106,7 +1244,7 @@ export const Inbox = () => {
             <div className={styles.menuHeader}>
               <div className={styles.menuHeaderLeft}>
                 <PlusCircleOutlined />
-                New mail{' '}
+                {t('setup.email.inbox.new.mail')}{' '}
               </div>
               <div className={styles.menuHeaderRight}>
                 <div className={styles.menuRightFirst}>
@@ -1115,16 +1253,17 @@ export const Inbox = () => {
                     type="default"
                     shape="circle"
                     icon={<RedoOutlined />}
-                    onClick={() => updateSigninStatus(userSignIn)}
+                    onClick={() => updateSignInStatus(userSignIn)}
                   />
                   <Dropdown overlay={filterMenu} placement="bottomLeft" arrow>
                     <Button type="default" icon={<FilterOutlined />}>
-                      Filter <CaretDownOutlined />
+                      {t('setup.email.inbox.button.mail.filter')}{' '}
+                      <CaretDownOutlined />
                     </Button>
                   </Dropdown>
                   <Dropdown overlay={markMenu} placement="bottomLeft" arrow>
                     <Button type="default" icon={<CheckOutlined />}>
-                      Mark
+                      {t('setup.email.inbox.button.mail.mark')}
                     </Button>
                   </Dropdown>
                 </div>
@@ -1145,17 +1284,20 @@ export const Inbox = () => {
                           : searchResult.length
                         : totalInbox >= 100
                         ? '100+ '
-                        : totalInbox}{' '}
-                      conversations
+                        : `${totalInbox} `}
+                      {t('setup.email.inbox.text.conversations')}
                     </h5>
                   )}
                   <Search
                     placeholder="Search"
-                    style={{ borderRadius: '4px', marginRight: '10px' }}
+                    style={{
+                      borderRadius: '4px',
+                      marginRight: '10px',
+                    }}
                     onSearch={(e) => handleSearch(e)}
                   />
                   <Dropdown
-                    overlay={moremenu}
+                    overlay={moreMenu}
                     placement="bottomRight"
                     arrow
                     trigger={['click']}
@@ -1183,7 +1325,7 @@ export const Inbox = () => {
               <div className={styles.inboxContainers}>
                 {readEmail
                   ? renderReadEmail()
-                  : renderList(columns, inboxEmail, rowSelection)}
+                  : !loading && renderList(columns, inboxEmail, rowSelection)}
               </div>
               <div className={styles.inboxContainers}>
                 {readEmail
