@@ -1,5 +1,7 @@
 import React, { FC, useState } from 'react'
 import NumberFormat, { NumberFormatValues } from 'react-number-format'
+import { useTranslation } from 'react-i18next'
+import StringToCurrencySignConverter from '../../helper/stringToCurrencySignConverter'
 import styles from './CurrencyInput.module.less'
 
 export interface CurrencyInputProps {
@@ -17,6 +19,7 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
   placeholder,
   onBlur,
 }) => {
+  const { t } = useTranslation('common')
   const [isPrefixed, setIsPrefixed] = useState(false)
   const handleChange = (val: NumberFormatValues) => {
     if (val) {
@@ -24,13 +27,23 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
     }
     onChange?.(val)
   }
+  const checkValueLimit = (inputObj) => {
+    const { value } = inputObj
+    if (value >= 0) return inputObj
+  }
   return (
     <div className={styles.currencyInput}>
       <NumberFormat
         className="ant-input"
         allowLeadingZeros={true}
         placeholder={
-          Number(placeholder) > 0 ? `${unit}${placeholder}` : `${unit}0.00`
+          Number(placeholder) > 0
+            ? `${StringToCurrencySignConverter(unit) ?? unit}${placeholder}`
+            : t(
+                `ui.currencyinput.placeholder.${
+                  StringToCurrencySignConverter(unit) ?? unit
+                }`
+              )
         }
         value={Number(value) > 0 ? Number(value).toFixed(2) : null}
         inputMode="numeric"
@@ -38,8 +51,9 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
         thousandsGroupStyle="thousand"
         allowEmptyFormatting={true}
         decimalScale={2}
-        prefix={isPrefixed ? unit : ''}
+        prefix={isPrefixed ? StringToCurrencySignConverter(unit) ?? unit : ''}
         onValueChange={(val: NumberFormatValues) => handleChange(val)}
+        isAllowed={checkValueLimit}
         onBlur={() => onBlur?.()}
       />
     </div>

@@ -8,6 +8,7 @@ import {
 import { BasicModal } from '@pabau/ui'
 import classNames from 'classnames'
 import styles from './ImageSelectorModal.module.less'
+import { useTranslation } from 'react-i18next'
 import imgList, { ImgBlock } from './ImageList'
 
 type Timeout = NodeJS.Timeout
@@ -35,7 +36,7 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
     selectedImage = '',
     allowCustomImage = true,
   } = props
-
+  const { t } = useTranslation('common')
   const [imageList, setImageList] = useState(imgList.slice(0, 20))
   const [search, setSearch] = useState('')
   const [selectedImg, setSelectedImg] = useState<ImgBlock | undefined>(
@@ -122,10 +123,12 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
       footer
       onOk={onSelect}
       onCancel={onCancel}
-      title={title || 'Assign an image'}
+      title={title || t('ui.imageselectormodal.title')}
       modalWidth={props.modalWidth || 1000}
       isValidate
-      newButtonText={props.attachButtonText || 'Attach'}
+      newButtonText={
+        props.attachButtonText || t('ui.imageselectormodal.attach')
+      }
       newButtonDisable={!selectedImg}
       wrapClassName={styles.modalContainer}
     >
@@ -143,7 +146,7 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
                 <PictureOutlined style={{ fontSize: 28, color: '#9292A3' }} />
                 <label htmlFor="file-upload" className={styles.chooseFileBtn}>
                   <PlusOutlined />
-                  {props.chooseButtonText || 'Choose'}
+                  {props.chooseButtonText || t('ui.imageselectormodal.choose')}
                 </label>
                 <input
                   id="file-upload"

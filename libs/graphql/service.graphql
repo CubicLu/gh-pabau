@@ -1,3 +1,377 @@
+query service(
+    $isActive: Boolean = true
+    $offset: Int
+    $limit: Int
+    $searchTerm: String = ""
+) {
+    service(
+        offset: $offset
+        limit: $limit
+        order_by: { order: desc }
+        where: {
+        is_active: { _eq: $isActive }
+        _or: [{ _and: [{ service_name: { _ilike: $searchTerm } }] }]
+        }
+    ) {
+        id
+        service_name
+        duration
+        staff_assigned
+        price
+        type
+        code
+        category
+        color
+        image
+        sku
+        procedure_code
+        invoice_item_name
+        display_text_on_invoice
+        is_package_session
+        pricing_type
+        service_price
+        tax
+        online_payment_type
+        online_payment_amount
+        is_online_booking
+        is_payment_before_booking
+        employees
+        resources
+        locations
+        is_service_online
+        friendly_name
+        description
+        patient_booking_type
+        timing_rules
+        max_clients
+        room_resources
+        equipment_resources
+        contracts
+        order
+        days_before_booking
+        notice_short
+        notice_long
+        min_attendees
+        bundle_items
+        bundle_amount
+        bundle_duration
+        is_active
+    }
+}
+
+query service_aggregate($isActive: Boolean = true, $searchTerm: String = "") {
+    service_aggregate(
+      where: {
+        is_active: { _eq: $isActive }
+        _or: [{ _and: [{ service_name: { _ilike: $searchTerm } }] }]
+      }
+    ) {
+      aggregate {
+        count
+      }
+    }
+}
+
+mutation insert_service_one(
+    $name: String
+    $clients: Int
+    $code: String
+    $category: String
+    $color: String
+    $image: String
+    $sku: String
+    $procedureCode: String
+    $invoiceItemName: String
+    $displayTextOnInvoice: String
+    $packageSession: Boolean
+    $type: String
+    $pricingOption: String
+    $servicePrice: String
+    $duration: String
+    $tax: String
+    $onlinePayment: String
+    $onlinePaymentAmount: String
+    $completingBooking: Boolean
+    $paymentBeforeBooking: Boolean
+    $employeesData: json
+    $roomResources: json
+    $equipmentResources: json
+    $locationData: json
+    $enableOnlineService: Boolean
+    $friendlyName: String
+    $bookingDescription: String
+    $patientBooking: String
+    $bookingDays: json
+    $staffAssigned: String
+    $contractData: json
+    $daysBeforeBooking: Int
+    $noticeShort: String
+    $noticeLong: String
+    $minAttendees: Int
+    $bundleItems: json
+    $bundleItemsAmount: String
+    $bundleItemsDuration: String
+    $isActive: Boolean
+  ) {
+    insert_service_one(
+      object: {
+        service_name: $name
+        max_clients: $clients
+        code: $code
+        category: $category
+        color: $color
+        image: $image
+        sku: $sku
+        procedure_code: $procedureCode
+        invoice_item_name: $invoiceItemName
+        display_text_on_invoice: $displayTextOnInvoice
+        is_package_session: $packageSession
+        type: $type
+        pricing_type: $pricingOption
+        service_price: $servicePrice
+        duration: $duration
+        tax: $tax
+        online_payment_type: $onlinePayment
+        online_payment_amount: $onlinePaymentAmount
+        is_online_booking: $completingBooking
+        is_payment_before_booking: $paymentBeforeBooking
+        employees: $employeesData
+        room_resources: $roomResources
+        equipment_resources: $equipmentResources
+        locations: $locationData
+        is_service_online: $enableOnlineService
+        friendly_name: $friendlyName
+        description: $bookingDescription
+        patient_booking_type: $patientBooking
+        timing_rules: $bookingDays
+        staff_assigned: $staffAssigned
+        contracts: $contractData
+        days_before_booking: $daysBeforeBooking
+        notice_short: $noticeShort
+        notice_long: $noticeLong
+        min_attendees: $minAttendees
+        bundle_items: $bundleItems
+        bundle_amount: $bundleItemsAmount
+        bundle_duration: $bundleItemsDuration
+        is_active: $isActive
+      }
+    ) {
+      id
+    }
+}
+
+mutation update_service_by_pk(
+    $id: uuid!
+    $name: String
+    $clients: Int
+    $code: String
+    $category: String
+    $color: String
+    $image: String
+    $sku: String
+    $procedureCode: String
+    $invoiceItemName: String
+    $displayTextOnInvoice: String
+    $packageSession: Boolean
+    $type: String
+    $pricingOption: String
+    $servicePrice: String
+    $duration: String
+    $tax: String
+    $onlinePayment: String
+    $onlinePaymentAmount: String
+    $completingBooking: Boolean
+    $paymentBeforeBooking: Boolean
+    $employeesData: json
+    $roomResources: json
+    $equipmentResources: json
+    $locationData: json
+    $enableOnlineService: Boolean
+    $friendlyName: String
+    $bookingDescription: String
+    $patientBooking: String
+    $bookingDays: json
+    $staffAssigned: String
+    $contractData: json
+    $daysBeforeBooking: Int
+    $noticeShort: String
+    $noticeLong: String
+    $minAttendees: Int
+    $bundleItems: json
+    $bundleItemsAmount: String
+    $bundleItemsDuration: String
+    $isActive: Boolean
+  ) {
+    update_service_by_pk(
+      pk_columns: { id: $id }
+      _set: {
+        service_name: $name
+        max_clients: $clients
+        code: $code
+        category: $category
+        color: $color
+        image: $image
+        sku: $sku
+        procedure_code: $procedureCode
+        invoice_item_name: $invoiceItemName
+        display_text_on_invoice: $displayTextOnInvoice
+        is_package_session: $packageSession
+        type: $type
+        pricing_type: $pricingOption
+        service_price: $servicePrice
+        duration: $duration
+        tax: $tax
+        online_payment_type: $onlinePayment
+        online_payment_amount: $onlinePaymentAmount
+        is_online_booking: $completingBooking
+        is_payment_before_booking: $paymentBeforeBooking
+        employees: $employeesData
+        room_resources: $roomResources
+        equipment_resources: $equipmentResources
+        locations: $locationData
+        is_service_online: $enableOnlineService
+        friendly_name: $friendlyName
+        description: $bookingDescription
+        patient_booking_type: $patientBooking
+        timing_rules: $bookingDays
+        staff_assigned: $staffAssigned
+        contracts: $contractData
+        days_before_booking: $daysBeforeBooking
+        notice_short: $noticeShort
+        notice_long: $noticeLong
+        min_attendees: $minAttendees
+        bundle_items: $bundleItems
+        bundle_amount: $bundleItemsAmount
+        bundle_duration: $bundleItemsDuration
+        is_active: $isActive
+      }
+    ) {
+      id
+    }
+}
+
+mutation update_service($id: uuid!, $order: Int) {
+    update_service(where: { id: { _eq: $id } }, _set: { order: $order }) {
+      affected_rows
+    }
+}
+
+query serviceList(
+    $isActive: Boolean = true
+  ) {
+    service(
+      order_by: { order: desc }
+      where: {
+        is_active: { _eq: $isActive }
+      }
+    ) {
+      id
+      service_name
+      duration
+      type
+      color
+      order
+      service_price
+      is_active
+    }
+  }
+
+query serviceCategories(
+    $offset: Int
+    $limit: Int
+    $searchTerm: String = ""
+  ) {
+    service_categories(
+      offset: $offset
+      limit: $limit
+      order_by: { order: desc }
+      where: { _or: [{ _and: [{ name: { _ilike: $searchTerm } }] }] }
+    ) {
+      id
+      name
+      assigned
+      color
+      image
+      order
+      is_active
+    }
+  }
+
+  query serviceCategoriesAggregate($searchTerm: String = "") {
+    service_categories_aggregate(
+      where: { _or: [{ _and: [{ name: { _ilike: $searchTerm } }] }] }
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+
+  mutation insertServiceCategoriesOne(
+    $name: String!
+    $color: String
+    $image: String
+    $is_active: Boolean
+  ) {
+    insert_service_categories_one(
+      object: {
+        name: $name
+        color: $color
+        image: $image
+        is_active: $is_active
+      }
+    ) {
+      __typename
+      id
+    }
+  }
+
+mutation updateServiceCategoriesByPk(
+    $id: uuid!
+    $name: String!
+    $color: String
+    $is_active: Boolean
+  ) {
+    update_service_categories_by_pk(
+      pk_columns: { id: $id }
+      _set: { name: $name, color: $color, is_active: $is_active }
+    ) {
+      __typename
+      id
+    }
+  }
+
+  mutation deleteServiceCategoriesByPk($id: uuid!) {
+    delete_service_categories_by_pk(id: $id) {
+      id
+    }
+  }
+
+   mutation updateServiceCategories($id: uuid!, $order: Int) {
+    update_service_categories(
+      where: { id: { _eq: $id } }
+      _set: { order: $order }
+    ) {
+      affected_rows
+    }
+  }
+
+  query libraryInstallers($limit: Int, $libLocation: String) {
+    library_installers(
+      limit: $limit
+      where: { library_location: { _ilike: $libLocation } }
+    ) {
+      library_name
+      library_image
+      library_description
+      library_location
+      library_language
+      is_plus
+      data
+      created_date
+      id
+    }
+  }
 query getServices(
   $userID: Int = 0
   $locationID: Int = 0

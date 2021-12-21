@@ -5,6 +5,9 @@
     .ant-card-body {
       padding: 0px;
       border: none;
+      @media screen and (max-width: 767px) {
+        min-height: auto;
+      }
     }
     .leftPadding {
       padding-left: 30px !important;
@@ -17,6 +20,7 @@
     }
     .ant-tabs-top {
       > .ant-tabs-nav {
+        background-color: #fff;
         > .ant-tabs-nav-wrap {
           border-bottom: 1px solid #ecedf0;
           > .ant-tabs-nav-list {
@@ -24,6 +28,30 @@
               padding: 15px 50px;
               background-color: transparent !important;
             }
+          }
+        }
+      }
+    }
+
+    .hidden-lg,
+    .plus-icon-style {
+      @media screen and (min-width: 769px) {
+        display: none;
+      }
+    }
+
+    .hidden-sm {
+      @media screen and (max-width: 768px) {
+        display: none;
+
+        & + h3 {
+          margin-bottom: 5px !important;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          span {
+            margin-right: 5px;
+            font-weight: normal !important;
           }
         }
       }
@@ -39,7 +67,14 @@
     border-bottom: 1px solid #ecedf0;
 
     @media screen and (max-width: 768px) {
-      padding: 15px 20px 9.5px 20px;
+      padding: 16px 16px 21px 16px;
+      position: fixed;
+      z-index: 3;
+      width: 100%;
+      line-height: 0px;
+      top: 0;
+      z-index: 9;
+      background: #fff;
     }
 
     .searchDrugsListing {
@@ -88,7 +123,6 @@
         }
 
         span.hidden-lg {
-          font-size: 25px;
           margin-left: 20px;
           line-height: 100%;
           cursor: pointer;
@@ -106,6 +140,12 @@
             margin-bottom: 3.5px;
           }
         }
+        span.plus-icon-style {
+          margin-left: 20px;
+          font-size: 25px;
+          border-radius: 4px;
+          color: #54b2d3;
+        }
         button.hidden-lg {
           margin-left: 20px;
           padding: 4.5px 5px 10px 5px !important;
@@ -115,9 +155,31 @@
           }
         }
       }
+      @media screen and (max-width: 768px) {
+        div.leftDiv {
+          h3 {
+            margin-bottom: 0px;
+            font-family: Circular-Std-Medium;
+            font-style: normal;
+            font-weight: bolder;
+            font-size: 17px;
+            line-height: 22px;
+            text-transform: capitalize;
+            color: var(--grey-text-color);
+          }
+        }
+        div.rightDiv {
+          span.hidden-lg {
+            font-size: 19px;
+          }
+        }
+      }
     }
   }
   .body {
+    .libraries-tab {
+      background: #fff;
+    }
     .library {
       padding: 10px;
 

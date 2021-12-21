@@ -18,6 +18,7 @@ import { ReactComponent as Prescription } from '../../assets/images/form-type/pr
 import { ReactComponent as Treatment } from '../../assets/images/form-type/treatment.svg'
 import AfterCare from './assets/AfterCare'
 import BeforeCare from './assets/BeforeCare'
+import { useTranslation } from 'react-i18next'
 import styles from './LibraryModal.module.less'
 
 interface DefaultBundleType {
@@ -129,6 +130,7 @@ export const LibraryModal: FC<LibraryModalProps> = ({
   onInstall,
   ...rest
 }) => {
+  const { t } = useTranslation('common')
   const aligns = [
     styles.paddingRight,
     styles.paddingCenter,
@@ -209,10 +211,10 @@ export const LibraryModal: FC<LibraryModalProps> = ({
         </div>
         <div className={styles.footer}>
           <Button type="default" size="large" onClick={() => onClose?.()}>
-            Cancel
+            {t('common-label-cancel')}
           </Button>
           <Button type="primary" size="large">
-            Install
+            {t('ui.libraryinstallermodal.install')}
             {selected > 0 && (
               <span className={styles.bundlesCount}>{selected}</span>
             )}

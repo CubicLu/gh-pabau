@@ -1,0 +1,94 @@
+.main-product {
+
+    .product-search-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ECEDF0;
+      margin-bottom: 24px;
+      padding: 20px 27px 20px 32px;
+  
+      h1 {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+        text-transform: capitalize;
+        color: #3D3D46;
+      }
+  
+      .product-search {
+        display: flex;
+        align-items: center;
+  
+        button {
+          height: 40px;
+          margin-left: 20px;
+        }
+      }
+    }
+  
+    .main-listing {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 24px 0 32px;
+        .product-list {
+            margin-right: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            .product-card {
+            border: 1px solid #ECEDF0;
+            box-sizing: border-box;
+            border-radius: 4px;
+            width: 168px;
+            height: 168px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            }
+            h3 {
+            font-size: 14px;
+            line-height: 18px;
+            text-align: center;
+            color: #3D3D46;
+            width: 50%;
+            margin: 8px auto 0;
+            }
+            .verified-icon {
+            display: none;
+            }
+            &.active {
+                .product-card {
+                    border: 1px solid #54B2D3;
+                    box-sizing: border-box;
+                    border-radius: 4px;
+                    width: 168px;
+                    height: 168px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .verified-icon {
+                    display: flex;
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                }
+                h3 {
+                    color: #54B2D3;
+                }
+            }
+        }
+    }  
+}
+  
+.modal-products-body {
+    padding: 32px;
+    .main-product {
+        .main-product-content {
+        background: #FFFFFF;
+        border-radius: 4px;
+        }
+    }
+}
+  
+  

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import styles from './Employees.module.less'
 
 export interface Employee {
-  id?: number
+  id?: number | string
   avatar?: string
   name: string
   selected: boolean

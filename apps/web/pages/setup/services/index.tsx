@@ -5,7 +5,7 @@ import CategoriesTab from '../../../components/services/CategoriesTab/Categories
 import LibrariesTab from '../../../components/services/LibrariesTab/LibrariesTab'
 import CommonHeader from '../../../components/CommonHeader'
 import useWindowSize from '../../../hooks/useWindowSize'
-import { TabMenu, Breadcrumb, Button, Pagination } from '@pabau/ui'
+import { TabMenu, Breadcrumb, Button } from '@pabau/ui'
 import { Card, Input, Popover, Radio, Select } from 'antd'
 import {
   SearchOutlined,
@@ -13,33 +13,41 @@ import {
   ExportOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import classNames from 'classnames'
 import styles from './index.module.less'
 
 const { Option } = Select
 
 export const Index: FC = () => {
+  const { t } = useTranslationI18()
   const size = useWindowSize()
 
-  const TopTabMenuItems = ['Services', 'Categories', 'Library']
-  const AddBtnLabels = ['New Service', 'New Category']
+  const TopTabMenuItems = [
+    t('setup.services.services.tab'),
+    t('setup.services.categories.tab'),
+    t('setup.services.library.tab'),
+  ]
+  const AddBtnLabels = [
+    t('setup.services.service.createbutton'),
+    t('setup.services.category.createbutton'),
+  ]
 
   const [isStatusActive, setIsStatusActive] = useState(null)
   const [isBookingActive, setIsBookingActive] = useState(null)
   const [showCreateBtn] = useState(true)
   const [showCreateService, setShowCreateService] = useState(false)
-  const [totalCategories, setTotalCategories] = useState(0)
-  const [paginationState, setPaginationState] = useState(false)
-  const [searchTerm, setSearchTerm] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
   const [addBtnState, setAddBtnState] = useState(true)
   const [addBtnLabel, setAddBtnLabel] = useState(AddBtnLabels[0])
   const [updatedCategories, setUpdatedCategories] = useState(null)
   const [addCategoryModal, setAddCategoryModal] = useState(false)
 
-  const filterContent = (isMobile = false) => (
+  const filterContent = () => (
     <div className="filterContent">
-      <Card title={<h2>Filter</h2>}>
+      <Card title={<h2>{t('setup.services.filter.title')}</h2>}>
         <div className={styles.radioTextStyle}>
-          <label>Status</label>
+          <label>{t('setup.services.filter.status')}</label>
           <Radio.Group
             onChange={(e) => {
               setIsStatusActive(e.target.value)
@@ -47,15 +55,15 @@ export const Index: FC = () => {
             value={isStatusActive}
           >
             <Radio value={true}>
-              <span>Active</span>
+              <span>{t('setup.services.filter.status.active')}</span>
             </Radio>
             <Radio value={false}>
-              <span>Disabled</span>
+              <span>{t('setup.services.filter.status.disabled')}</span>
             </Radio>
           </Radio.Group>
         </div>
         <div className={styles.radioTextStyle}>
-          <label>Online Booking</label>
+          <label>{t('setup.services.filter.onlinebooking')}</label>
           <Radio.Group
             onChange={(e) => {
               setIsBookingActive(e.target.value)
@@ -63,24 +71,35 @@ export const Index: FC = () => {
             value={isBookingActive}
           >
             <Radio value={true}>
-              <span>Active</span>
+              <span>{t('setup.services.filter.status.active')}</span>
             </Radio>
             <Radio value={false}>
-              <span>Disabled</span>
+              <span>{t('setup.services.filter.status.disabled')}</span>
             </Radio>
           </Radio.Group>
         </div>
         <div className={styles.radioTextStyle}>
           <div>
-            <label>Service Cateogry</label>
-            <Select placeholder="Category" style={{ width: '100%' }}>
-              <Option value="1">Cat 1</Option>
-              <Option value="2">Cat 2</Option>
+            <label>{t('setup.services.filter.servicecategory')}</label>
+            <Select
+              placeholder={t('setup.services.filter.servicecategory.category')}
+              style={{ width: '100%' }}
+            >
+              <Option value="1">
+                {t('setup.services.filter.servicecategory.cat1')}
+              </Option>
+              <Option value="2">
+                {t('setup.services.filter.servicecategory.cat2')}
+              </Option>
             </Select>
           </div>
           <div className="filtersInnerButtons">
-            <Button type="default">Clear All</Button>
-            <Button type="primary">Apply Filter</Button>
+            <Button type="default">
+              {t('setup.services.filter.servicecategory.clearall')}
+            </Button>
+            <Button type="primary">
+              {t('setup.services.filter.servicecategory.applyfilter')}
+            </Button>
           </div>
         </div>
       </Card>
@@ -103,20 +122,25 @@ export const Index: FC = () => {
   const CardHeader = () => (
     <div className={styles.header}>
       <div className="leftDiv">
-        <Breadcrumb
-          items={[
-            { breadcrumbName: 'Setup', path: 'setup' },
-            { breadcrumbName: 'Services', path: '' },
-          ]}
-        />
-        <h3 className={styles.servicesHeading}>Services</h3>
+        <div className="hidden-sm">
+          <Breadcrumb
+            items={[
+              {
+                breadcrumbName: t('navigation-breadcrumb-setup'),
+                path: 'setup',
+              },
+              { breadcrumbName: t('setup.services.title'), path: '' },
+            ]}
+          />
+        </div>
+        <h3 className={styles.servicesHeading}>{t('setup.services.title')}</h3>
       </div>
       <div className="rightDiv">
         <Input
           value={searchTerm}
           className={styles.searchDrugsListing}
           autoFocus
-          placeholder="Search"
+          placeholder={t('basic-crud-table-input-search-placeholder')}
           suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
           onChange={(e) => {
             setSearchTerm(e.target.value)
@@ -124,8 +148,11 @@ export const Index: FC = () => {
         />
         {showCreateBtn && (
           <div>
-            <Button type="default" size="large">
-              <ExportOutlined /> Export
+            <span className="hidden-lg">
+              <ExportOutlined />
+            </span>
+            <Button type="default" size="large" className="hidden-sm">
+              <ExportOutlined /> {t('setup.services.export')}
             </Button>
             <Popover
               trigger="click"
@@ -133,14 +160,31 @@ export const Index: FC = () => {
               placement="bottomRight"
               overlayClassName={styles.filterPopover}
             >
-              <Button className={styles.filterBtn} size="large">
-                <FilterOutlined /> Filter
+              <span className="hidden-lg">
+                <FilterOutlined />
+              </span>
+              <Button
+                className={classNames(styles.filterBtn, 'hidden-sm')}
+                size="large"
+              >
+                <FilterOutlined /> {t('basic-crud-table-button-filter')}
               </Button>
             </Popover>
             {addBtnState && (
-              <Button type="primary" size="large" onClick={() => addBtnClick()}>
-                {addBtnLabel}
-              </Button>
+              <>
+                <PlusSquareFilled
+                  className="plus-icon-style"
+                  onClick={() => addBtnClick()}
+                />
+                <Button
+                  type="primary"
+                  size="large"
+                  className="hidden-sm"
+                  onClick={() => addBtnClick()}
+                >
+                  {addBtnLabel}
+                </Button>
+              </>
             )}
           </div>
         )}
@@ -151,21 +195,18 @@ export const Index: FC = () => {
   const onTabClick = (tab) => {
     switch (tab) {
       case TopTabMenuItems[0]:
-        setSearchTerm(null)
+        setSearchTerm('')
         setAddBtnState(true)
-        setPaginationState(false)
         setAddBtnLabel(AddBtnLabels[0])
         break
       case TopTabMenuItems[1]:
-        setSearchTerm(null)
+        setSearchTerm('')
         setAddBtnState(true)
-        setPaginationState(true)
         setAddBtnLabel(AddBtnLabels[1])
         break
       case TopTabMenuItems[2]:
-        setSearchTerm(null)
+        setSearchTerm('')
         setAddBtnState(false)
-        setPaginationState(false)
         break
       default:
         return
@@ -216,15 +257,21 @@ export const Index: FC = () => {
                 <ServicesTab
                   searchTerm={searchTerm}
                   showCreateServiceModal={showCreateService}
+                  onOpenCreateServiceModal={() =>
+                    setShowCreateService((val) => !val)
+                  }
                   onCloseCreateServiceModal={() => setShowCreateService(false)}
                   updatedCategories={updatedCategories}
                 />
               </div>
               <div className={styles.categoriesTab}>
                 <CategoriesTab
-                  totalRecords={(total) => setTotalCategories(total)}
+                  searchTerm={searchTerm}
                   modalShowState={addCategoryModal}
                   categoriesUpdates={(categories) => emitCategories(categories)}
+                  openModal={() =>
+                    setAddCategoryModal((addCategoryModal) => !addCategoryModal)
+                  }
                   closeModal={() =>
                     setAddCategoryModal((addCategoryModal) => !addCategoryModal)
                   }
@@ -236,16 +283,6 @@ export const Index: FC = () => {
             </TabMenu>
           </div>
         </Card>
-        {paginationState && (
-          <div className={styles.paginationDiv}>
-            <Pagination
-              showingRecords={totalCategories}
-              defaultCurrent={1}
-              total={totalCategories}
-              pageSize={10}
-            />
-          </div>
-        )}
       </div>
     </Layout>
   )

@@ -39,6 +39,8 @@ export const SearchTags: FC<SearchTagsProps> = ({
   const [searchTagItems, setSearchTagItems] = useState<SearchTag[]>([])
   const [showSelectAll, setShowSelectAll] = useState(true)
   const [showSearchInput, setShowSearchInput] = useState(false)
+  const [list, setList] = useState<string[]>([])
+  const [selectedList, setSelectedList] = useState<string[]>([])
   const handleSelectAll = () => {
     setSearchTagItems(
       searchTagItems.map((item) => ({ ...item, selected: true }))
@@ -70,14 +72,24 @@ export const SearchTags: FC<SearchTagsProps> = ({
     )
     setShowSearchInput(false)
   }
+
   useEffect(() => {
+    setList(items)
+    if (selectedItems.length > 0) {
+      setSelectedList(selectedItems)
+    }
+  }, [items, selectedItems])
+
+  useEffect(() => {
+    const items = [...list]
     setSearchTagItems(
       items.map((item) => ({
         title: item,
-        selected: selectedItems?.includes(item),
+        selected: selectedList?.includes(item),
       }))
     )
-  }, [items, selectedItems])
+  }, [list, selectedList])
+
   return (
     <div className={styles.searchTags}>
       {title && <h2>{title}</h2>}

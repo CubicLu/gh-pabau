@@ -4,6 +4,7 @@ import { Modal, Switch, ConfigProvider, Tooltip } from 'antd'
 import classnames from 'classnames'
 import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import { useMedia } from 'react-use'
+import { useTranslation } from 'react-i18next'
 import styles from './FullScreenReportModal.module.less'
 
 export enum OperationType {
@@ -97,6 +98,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   activeDefaultKey,
   ...props
 }) => {
+  const { t } = useTranslation('common')
   const ref = useRef(null)
   const isMobile = useMedia('(max-width: 767px)', false)
   const [active, setActive] = useState(true)

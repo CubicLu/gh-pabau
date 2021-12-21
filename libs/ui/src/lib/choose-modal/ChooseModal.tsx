@@ -1,10 +1,12 @@
 import React, { FC, useState, useEffect } from 'react'
 import { Modal } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 import styles from './ChooseModal.module.less'
 
 export interface ChooseModalItem {
   title: string
+  key?: string
   icon: JSX.Element
   addonIcon?: JSX.Element
   description?: string
@@ -27,6 +29,7 @@ export const ChooseModal: FC<ChooseModalProps> = ({
   onSelected,
   onClose,
 }) => {
+  const { t } = useTranslation('common')
   const [showModal, setShowModal] = useState(false)
   const handleSelectItem = (item: ChooseModalItem) => {
     onSelected(item)
@@ -71,7 +74,7 @@ export const ChooseModal: FC<ChooseModalProps> = ({
             onClose()
           }}
         >
-          <span>Esc</span>
+          <span>{t('ui.choosemodal.esc')}</span>
           <div>
             <CloseOutlined />
           </div>

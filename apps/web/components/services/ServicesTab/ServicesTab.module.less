@@ -16,6 +16,9 @@
         }
       }
     }
+    .ant-tabs-large {
+      background: #fff;
+    }
     .ant-tabs-top {
       > .ant-tabs-nav {
         > .ant-tabs-nav-wrap {
@@ -91,6 +94,7 @@
     }
   }
   .servicesSectionHeading {
+    background: #fff;
     border-bottom: 1px solid #ecedf0 !important;
     display: flex;
     justify-content: space-between;
@@ -103,11 +107,11 @@
     }
 
     @media screen and (max-width: 430px) {
-      flex-direction: column-reverse;
+      flex-direction: column;
 
       & > div {
         &:first-child {
-          margin-top: 10px;
+          margin-bottom: 10px;
         }
       }
     }
@@ -193,12 +197,6 @@
     }
   }
 
-  .staff {
-    span.staffCount:hover {
-      color: #54b2d3;
-    }
-  }
-
   .editIconsDiv {
     display: flex;
     justify-content: flex-start;
@@ -227,6 +225,17 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
+  position: relative;
+  .service-group-close-icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    cursor: pointer;
+    svg {
+      font-size: 20px;
+      color: #54b2d3;
+    }
+  }
 }
 
 // :global {
@@ -303,6 +312,11 @@
       font-size: 14px;
       line-height: 18px;
     }
+    white-space: nowrap;
+    width: 162px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
   }
   &:hover {
     > span {
@@ -400,6 +414,19 @@
           padding-left: 5px !important;
           padding-right: 5px !important;
         }
+      }
+    }
+  }
+}
+
+.service-loader {
+  display: flex;
+  align-items: center;
+  :global {
+    .ant-skeleton {
+      margin-left: 10px;
+      .ant-skeleton-input {
+        width: 150px;
       }
     }
   }
