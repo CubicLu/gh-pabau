@@ -70,6 +70,7 @@ export const PublicServiceResponse = objectType({
     t.string('disabled_users')
     t.string('duration')
     t.string('friendly_name')
+    t.string('description')
     t.int('max_clients')
     t.int('online_only_service')
     t.float('rating', {

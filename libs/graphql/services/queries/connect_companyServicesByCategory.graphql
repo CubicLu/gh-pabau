@@ -11,6 +11,7 @@ query companyServicesByCategory($company_id: Int!, $master_cat_id: Int = 0) {
       name
       friendly_name
       duration
+      description
       price
       online_book
       online_only_service

@@ -4,8 +4,9 @@ import { Modal } from 'antd'
 import { Button } from '@pabau/ui'
 export interface P {
   closeModalHandler: () => void
+  info: string
 }
-const ServiceInfoModal: FC<P> = ({ closeModalHandler }) => {
+const ServiceInfoModal: FC<P> = ({ closeModalHandler, info }) => {
   return (
     <Modal
       className={styles.mainmodal}
@@ -14,18 +15,7 @@ const ServiceInfoModal: FC<P> = ({ closeModalHandler }) => {
       footer={null}
     >
       <div className={styles.iconDiv}>&nbsp;</div>
-      <span className={styles.headerText}>Patch test</span>
-      <p className={styles.bodyText}>
-        To make sure your skin doesen’t react to the products used in your
-        treatment, please book a patch test for at least 48 hours before your
-        appointment.
-      </p>
-
-      <p className={styles.bodyText}>
-        To make sure your skin doesen’t react to the products used in your
-        treatment, please book a patch test for at least 48 hours before your
-        appointment.
-      </p>
+      <p className={styles.bodyText}>{info}</p>
       <Button
         className={styles.footerBtn}
         type={'primary'}

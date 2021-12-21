@@ -32,6 +32,12 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
   // FIXED
   const { t } = useTranslationI18()
   const [selectedDate, setSelectedDate] = useState(moment())
+  const [calendarStartDate, setCalendarStartDate] = useState(
+    Number.parseInt(moment().format('YYYYMMDD000000'))
+  )
+  const [calendarEndDate, setCalendarEndDate] = useState(
+    Number.parseInt(moment().format('YYYYMMDD235959'))
+  )
   const { selectedData, setSelectedData, actionTypes } = useSelectedDataStore()
   const settings = useContext(SettingsContext)
 
@@ -42,10 +48,8 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
   } = useBookingAvailableShiftsQuery({
     variables: {
       company_id: settings.id,
-      shift_start: Number.parseInt(moment().format('YYYYMMDD000000')),
-      shift_end: Number.parseInt(
-        moment().add(12, 'M').format('YYYYMMDD235959')
-      ),
+      shift_start: calendarStartDate,
+      shift_end: calendarEndDate,
     },
   })
 
@@ -55,8 +59,8 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
     data: bookingsResult,
   } = useGetBookingsBetweenDatesByUidQuery({
     variables: {
-      start_date: Number.parseInt(moment().format('YYYYMMDD000000')),
-      end_date: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
+      start_date: calendarStartDate,
+      end_date: calendarEndDate,
       company_id: settings.id,
       user_id: selectedData.employee
         ? selectedData.employee.Public_User.id
@@ -356,6 +360,14 @@ const DateTimeSelector: FC<P> = ({ onSelected }) => {
             onSelect={dateSelectedHandler}
             disabledDate={dateHasShift}
             validRange={[moment(), moment().add(1, 'year')]}
+            onPanelChange={(val) => {
+              setCalendarStartDate(
+                Number.parseInt(val.startOf('month').format('YYYYMMDD000000'))
+              )
+              setCalendarEndDate(
+                Number.parseInt(val.endOf('month').format('YYYYMMDD235959'))
+              )
+            }}
           />
         </div>
       )}

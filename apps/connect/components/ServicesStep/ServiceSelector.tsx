@@ -40,6 +40,7 @@ export interface P {
 const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
   const [showReviewsModal, setShowReviewsModal] = useState(false)
   const [showServiceInfoModal, setShowServiceInfoModal] = useState(false)
+  const [serviceInfo, setServiceInfo] = useState('')
   const [previewService, setPreviewService] = useState(null)
 
   // CRAP
@@ -178,11 +179,21 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
   const renderServices = (category: Category | null) => {
     if (!category) {
       if (hasMasterCategories) {
-        category = servicesCategorised.Public_MasterCategories.find(
-          (item) =>
-            item.id === selectedData.masterCategoryID ||
-            !selectedData.masterCategoryID
-        )?.Public_ServiceCategories.find(
+        let mCat = null
+        if (!selectedData.masterCategoryID) {
+          for (const mc of servicesCategorised.Public_MasterCategories) {
+            for (const sc of mc.Public_ServiceCategories) {
+              if (sc.id == selectedData.categoryID) {
+                mCat = mc
+              }
+            }
+          }
+        } else {
+          mCat = servicesCategorised.Public_MasterCategories.find(
+            (item) => item.id === selectedData.masterCategoryID
+          )
+        }
+        category = mCat?.Public_ServiceCategories.find(
           (item) => item.id === selectedData.categoryID
         )
       } else {
@@ -308,7 +319,9 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
         >
           <div className={styles.consultationLine}>
             <span>
-              <span className={styles.consultationTitle}>{val.name}</span>{' '}
+              <span className={styles.consultationTitle}>
+                {val.friendly_name !== '' ? val.friendly_name : val.name}
+              </span>{' '}
               <QuestionCircleOutlined style={{ marginRight: '8px' }} />
               {val.online_only_service === 1 && (
                 <Tooltip
@@ -394,13 +407,24 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
             )}
           </div>
         </div>
-        {isSelected && (
+        {isSelected && val.description && val.description !== '' && (
           <div className={styles.moreinfo}>
             <div className={styles.moreinfoinner}>
               <InfoCircleFilled style={{ color: '#20BAB1' }} />
-              <p>You may need a patch test</p>
+              <p>
+                {val.description.length > 40
+                  ? val.description.substr(0, 40) + '...'
+                  : val.description}
+              </p>
             </div>
-            <p onClick={() => setShowServiceInfoModal(true)}>more info</p>
+            <p
+              onClick={() => {
+                setServiceInfo(val.description)
+                setShowServiceInfoModal(true)
+              }}
+            >
+              more info
+            </p>
           </div>
         )}
       </div>
@@ -409,9 +433,9 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
 
   const renderCategories = () => {
     return !hasMasterCategories
-      ? servicesByCategory.Public_ServiceCategories.map((val) => {
-          return renderCategoryItem(val)
-        })
+      ? servicesByCategory.Public_ServiceCategories.map(
+          (val) => categoryHasServices(val) && renderCategoryItem(val)
+        )
       : !selectedData.masterCategoryID
       ? servicesCategorised.Public_MasterCategories.map((masterCategory) => (
           <div key={masterCategory.id}>
@@ -426,7 +450,6 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
           (val) => categoryHasServices(val) && renderCategoryItem(val)
         )
   }
-
   const renderCategoryItem = (category: Category) => {
     const isCurrentCategory = category.id === selectedData.categoryID
     return (
@@ -654,6 +677,7 @@ const ServiceSelector: FC<P> = ({ onSelected, hasMasterCategories }) => {
       )}
       {showServiceInfoModal && (
         <ServiceInfoModal
+          info={serviceInfo}
           closeModalHandler={() => {
             setShowServiceInfoModal(false)
           }}

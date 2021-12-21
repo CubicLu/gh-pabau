@@ -15,6 +15,7 @@ query companyServicesCategorised($company_id: Int!) {
         name
         friendly_name
         duration
+        description
         price
         online_book
         online_only_service
