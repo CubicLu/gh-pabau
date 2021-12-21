@@ -34,6 +34,12 @@ export const UserWithCompanies = extendType({
             username: {
               equals: username,
             },
+            Company: {
+              subscription: {
+                active: 1,
+                license_expiry: { gt: new Date() },
+              },
+            },
           },
           select: {
             Company: {
