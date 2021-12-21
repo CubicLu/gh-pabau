@@ -247,3 +247,13 @@ query getContactAccBalance($contact_id: Int!) {
     balance
   }
 }
+
+query creditNoteReasons(
+  $skip: Int = 0
+  $take: Int = 50
+  $where: CreditNoteTypeWhereInput
+) {
+  findManyCreditNoteType(where: $where, skip: $skip, take: $take) {
+    ...CreditNoteType
+  }
+}

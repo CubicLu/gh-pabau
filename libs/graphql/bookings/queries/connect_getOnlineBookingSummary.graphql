@@ -1,0 +1,9 @@
+query getOnlineBookingsSummary($thirtyDays: Float!, $company_id: IntFilter!) {
+  findManyBookingCount(
+    where: {
+      Online: { equals: 1 }
+      create_date: { gte: $thirtyDays }
+      company_id: $company_id
+    }
+  )
+}
