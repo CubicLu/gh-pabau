@@ -215,3 +215,28 @@
     }
   }
 }
+
+:global {
+  .ant-btn-icon-only {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .ant-tabs-nav-wrap{
+    border-right: 1px solid #ecedf0;
+  }
+  .ant-radio-group {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    max-width: 315px;
+    width: 100%;
+    .ant-radio-wrapper {
+      border-bottom: 1px solid #ECEDF0;
+      margin-bottom: 10px;
+      &:last-child {
+        border-bottom: unset;
+        margin-bottom: unset;
+      }
+    }
+  }
+}

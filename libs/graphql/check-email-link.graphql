@@ -7,3 +7,10 @@ query checkEmailLink($emails: [String]!) {
     type
   }
 }
+
+query checkEmailPrivacy ($messages: [String]!) {
+  checkEmailPrivacy(messages: $messages) {
+    messageId
+    privacySetting
+  }
+}

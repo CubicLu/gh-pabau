@@ -33,7 +33,6 @@ import {
   UserOutlined,
   UnlockOutlined,
 } from '@ant-design/icons'
-import dayjs from 'dayjs'
 import { ReactComponent as Attched } from '../../assets/images/attched.svg'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useUser } from '../../context/UserContext'
@@ -42,9 +41,15 @@ import {
   FindGmailConnectionDocument,
   UpdateGmailConnectionDocument,
   useCheckEmailLinkLazyQuery,
+  useCheckEmailPrivacyLazyQuery,
 } from '@pabau/graphql'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
+import {
+  checkMailPrivacy,
+  updateLeadClient,
+  extractData,
+} from './inboxDataHelper'
 
 const { Search } = Input
 
@@ -67,7 +72,6 @@ export const Inbox = () => {
   const [sentEmail, setSentEmail] = useState([])
   const [archiveEmail, setArchiveEmail] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [value, setValue] = useState(1)
   const [totalInbox, setTotalInbox] = useState(0)
   const [inboxCount, setInboxCount] = useState(0)
   const [readEmail, setReadEmail] = useState(false)
@@ -120,40 +124,6 @@ export const Inbox = () => {
     { data: checkSentClientLead, loading: sentLoading },
   ] = useCheckEmailLinkLazyQuery()
 
-  const updateLeadClient = (emailVal, checkLeadClient) => {
-    const temp = []
-    emailVal.map((mail) => {
-      const leadFind = checkLeadClient?.checkEmailLink.find(
-        (status) => mail.sender === status.email && status.type === 'lead'
-      )
-      const clientFind = checkLeadClient?.checkEmailLink.find(
-        (status) => mail.sender === status.email && status.type === 'contact'
-      )
-      if (leadFind) {
-        temp.push({
-          ...mail,
-          status: 'lead',
-          lead: leadFind.fistName + ' ' + leadFind.lastName,
-          roleId: leadFind.id,
-        })
-      } else if (clientFind) {
-        temp.push({
-          ...mail,
-          status: 'client',
-          client: clientFind.fistName + ' ' + clientFind.lastName,
-          roleId: clientFind.id,
-        })
-      } else {
-        temp.push({
-          ...mail,
-          status: 'no',
-        })
-      }
-      return 1
-    })
-    return temp
-  }
-
   useEffect(() => {
     if (checkClientLead?.checkEmailLink) {
       const InboxData = updateLeadClient(inboxEmail, checkClientLead)
@@ -183,18 +153,59 @@ export const Inbox = () => {
     checkSentClientLead,
   ])
 
+  const [
+    loadInboxMailPrivacy,
+    { data: inboxMailPrivacy, loading: inboxPrivacyLoading },
+  ] = useCheckEmailPrivacyLazyQuery()
+
+  const [
+    loadSentMailPrivacy,
+    { data: sentMailPrivacy, loading: sentPrivacyLoading },
+  ] = useCheckEmailPrivacyLazyQuery()
+
+  const [
+    loadArchiveMailPrivacy,
+    { data: archiveMailPrivacy, loading: ArchivePrivacyLoading },
+  ] = useCheckEmailPrivacyLazyQuery()
+
   useEffect(() => {
-    if (leadEmail.length > 0) {
+    if (inboxMailPrivacy?.checkEmailPrivacy) {
+      const mailData = checkMailPrivacy(inboxEmail, inboxMailPrivacy)
+      setInboxEmail(mailData)
+    }
+    if (sentMailPrivacy?.checkEmailPrivacy) {
+      const mailData = checkMailPrivacy(sentEmail, sentMailPrivacy)
+      setSentEmail(mailData)
+    }
+    if (archiveMailPrivacy?.checkEmailPrivacy) {
+      const mailData = checkMailPrivacy(archiveEmail, archiveMailPrivacy)
+      setArchiveEmail(mailData)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inboxPrivacyLoading, sentPrivacyLoading, ArchivePrivacyLoading])
+
+  useEffect(() => {
+    if (leadEmail[0]?.senderDetails.length > 0) {
       loadLeadClient({
         variables: {
-          emails: leadEmail,
+          emails: leadEmail[0]?.senderDetails,
+        },
+      })
+      loadInboxMailPrivacy({
+        variables: {
+          messages: leadEmail[0]?.emailLocatedId,
         },
       })
     }
     if (leadArchiveEmail.length > 0) {
       loadArchiveLeadClient({
         variables: {
-          emails: leadArchiveEmail,
+          emails: leadArchiveEmail[0]?.senderDetails,
+        },
+      })
+      loadArchiveMailPrivacy({
+        variables: {
+          messages: leadArchiveEmail[0]?.emailLocatedId,
         },
       })
     }
@@ -208,7 +219,12 @@ export const Inbox = () => {
     if (leadSentEmail.length > 0) {
       loadSentLeadClient({
         variables: {
-          emails: leadSentEmail,
+          emails: leadSentEmail[0]?.senderDetails,
+        },
+      })
+      loadSentMailPrivacy({
+        variables: {
+          messages: leadSentEmail[0]?.emailLocatedId,
         },
       })
     }
@@ -221,6 +237,9 @@ export const Inbox = () => {
     loadDraftLeadClient,
     leadSentEmail,
     loadSentLeadClient,
+    loadInboxMailPrivacy,
+    loadSentMailPrivacy,
+    loadArchiveMailPrivacy,
   ])
 
   const router = useRouter()
@@ -262,61 +281,6 @@ export const Inbox = () => {
     }
   }
 
-  const extractData = (finalEmails) => {
-    return finalEmails.map((itm: any) => {
-      const rowData = {
-        name: '',
-        time: '',
-        subject: '',
-        isAttched: false,
-        sender: '',
-        lead: '',
-      }
-
-      if (itm.payload.mimeType === 'multipart/mixed') {
-        rowData.isAttched = true
-      }
-      itm.payload.headers.map((header) => {
-        if (header.name === 'From') {
-          rowData.name = header.value.split('<')
-          rowData.sender = rowData.name[rowData.name.length - 1].split('>')[0]
-        }
-        if (header.name === 'Date') {
-          rowData.time = header.value
-        }
-        if (header.name === 'Subject') {
-          rowData.subject = header.value
-        }
-        return 1
-      })
-
-      const todayDiff = dayjs().diff(dayjs(rowData.time), 'day')
-
-      const yearDiff = dayjs().diff(dayjs(rowData.time), 'year')
-
-      if (todayDiff === 0) {
-        rowData.time = `${dayjs(rowData.time).format('HH:mm')}`
-      } else if (yearDiff === 0) {
-        rowData.time = `${dayjs(rowData.time).format('DD MMM ')}`
-      } else if (yearDiff > 0) {
-        rowData.time = `${dayjs(rowData.time).format('DD MMM YYYY')}`
-      }
-
-      return {
-        ...rowData,
-        id: itm.id,
-        key: itm.threadId,
-        name: {
-          name: rowData.name[0],
-          status: itm.labelIds.includes('UNREAD'),
-        },
-        isAttched: rowData.isAttched,
-        subject: { name: rowData.subject, subject: itm.snippet },
-        sender: rowData.sender,
-      }
-    })
-  }
-
   const listInboxEmail = async (msg) => {
     let unreadEmail = 0
     const emailBox = []
@@ -348,8 +312,13 @@ export const Inbox = () => {
 
     const val = await extractData(emailBox)
     setInboxEmail(val)
-    const mailArray = []
-    val.map((email) => mailArray.push(email.sender))
+    const mailArray = [{ senderDetails: [], emailLocatedId: [] }]
+
+    val.map((email) => {
+      mailArray[0].senderDetails.push(email.sender)
+      mailArray[0].emailLocatedId.push(email.messageId)
+      return true
+    })
     setLeadEmail(mailArray)
     setInboxCount(unreadEmail)
   }
@@ -375,39 +344,7 @@ export const Inbox = () => {
       })
     )
 
-    const draftList = emailBox.map((itm: any) => {
-      const rowData = { name: '', time: '', subject: '', sender: '' }
-
-      itm.payload.headers.map((x) => {
-        if (x.name === 'From') {
-          rowData.name = x.value.split('<')
-        }
-        if (x.name === 'To') {
-          const senderVal = x.value.split('<')
-          rowData.sender = senderVal[senderVal.length - 1].split('>')[0]
-        }
-        if (x.name === 'Date') {
-          rowData.time = `${dayjs(x.value).format('HH:mm')}`
-        }
-        if (x.name === 'Subject') {
-          rowData.subject = x.value
-        }
-        return rowData
-      })
-      if (rowData.name !== '') {
-        return {
-          ...rowData,
-          id: itm.id,
-          key: itm.threadId,
-          name: {
-            name: rowData.name[0],
-            status: itm.labelIds.includes('UNREAD'),
-          },
-          subject: { name: rowData.subject, subject: itm.snippet },
-        }
-      }
-      return 1
-    })
+    const draftList = await extractData(emailBox)
     const mailArray = []
     draftList.map(
       (emails: any) =>
@@ -437,42 +374,14 @@ export const Inbox = () => {
         })
       })
     )
-    const sentList = emailBox.map((itm: any) => {
-      const rowData = { name: '', time: '', subject: '', sender: '' }
-      if (itm.labelIds.includes('SENT')) {
-        itm.payload.headers.map((x) => {
-          if (x.name === 'To') {
-            rowData.name = x.value.split('<')
-            rowData.sender = rowData.name[rowData.name.length - 1].split('>')[0]
-          }
-          if (x.name === 'Date') {
-            rowData.time = `${dayjs(x.value).format('HH:mm')}`
-          }
-          if (x.name === 'Subject') {
-            rowData.subject = x.value
-          }
-          return rowData
-        })
-      }
-      if (rowData.name !== '') {
-        return {
-          ...rowData,
-          id: itm.id,
-          key: itm.threadId,
-          name: {
-            name: rowData.name[0],
-            status: itm.labelIds.includes('UNREAD'),
-          },
-          subject: { name: rowData.subject, subject: itm.snippet },
-        }
-      }
-      return 1
+    const sentList = await extractData(emailBox, 1)
+    const mailArray = [{ senderDetails: [], emailLocatedId: [] }]
+    sentList.map((email: any) => {
+      mailArray[0].senderDetails.push(email.sender)
+      mailArray[0].emailLocatedId.push(email.messageId)
+      return true
     })
-    const mailArray = []
-    sentList.map(
-      (emails: any) =>
-        emails?.sender.length > 0 && mailArray.push(emails.sender)
-    )
+
     setSentEmail(sentList)
     setLeadSentEmail(mailArray)
   }
@@ -499,44 +408,21 @@ export const Inbox = () => {
         })
       })
     )
-    const archiveEmail = emailBox.map((itm: any) => {
-      const rowData = { name: '', time: '', subject: '', sender: '' }
+    const temp = []
+
+    emailBox.map((itm: any) => {
       if (
         (!itm?.labelIds?.includes('INBOX') &&
           !itm?.labelIds?.includes('SENT') &&
           !itm?.labelIds?.includes('DRAFT')) ||
         itm?.labelIds?.includes('ARCHIVE')
       ) {
-        itm.payload.headers.map((x) => {
-          if (x.name === 'From') {
-            rowData.name = x.value.split('<')
-            rowData.sender = rowData.name[rowData.name.length - 1].split('>')[0]
-          }
-          if (x.name === 'Date') {
-            rowData.time = `${dayjs(x.value).format('HH:mm')}`
-          }
-          if (x.name === 'Subject') {
-            rowData.subject = x.value
-          }
-          return rowData
-        })
-      }
-      if (rowData.name !== '') {
-        return {
-          ...rowData,
-          id: itm.id,
-          key: itm.threadId,
-          name: {
-            name: rowData.name[0],
-            status: itm?.labelIds?.includes('UNREAD'),
-          },
-          subject: { name: rowData.subject, subject: itm.snippet },
-          sender: rowData.sender,
-        }
+        temp.push(itm)
       }
       return 1
     })
     const row = []
+    const archiveEmail = await extractData(temp)
     archiveEmail.map((x) => {
       if (x !== 1) {
         row.push(x)
@@ -545,8 +431,13 @@ export const Inbox = () => {
     })
 
     setArchiveEmail(row)
-    const mailArray = []
-    row.map((email) => mailArray.push(email.sender))
+    const mailArray = [{ senderDetails: [], emailLocatedId: [] }]
+
+    row.map((email: any) => {
+      mailArray[0].senderDetails.push(email.sender)
+      mailArray[0].emailLocatedId.push(email.messageId)
+      return true
+    })
     setLeadArchiveEmail(mailArray)
   }
 
@@ -681,7 +572,7 @@ export const Inbox = () => {
   }, [gmailConnection])
 
   useEffect(() => {
-    loadConnection()
+    loadConnection().then()
     if (gmailConnection && gmailConnection.gmail_connection.length > 0) {
       setAuthToken(gmailConnection.gmail_connection[0].access_token)
     }
@@ -793,17 +684,20 @@ export const Inbox = () => {
       render: (text, record) => (
         <div className={styles.privateDropDown}>
           <Dropdown
-            overlay={privateMenu}
+            overlay={privateMenu(record.privacy)}
             placement="bottomRight"
             arrow
             className={styles.privateDropDown}
             trigger={['click']}
           >
-            <Button type="default" icon={<LockOutlined />}>
+            <Button
+              type="default"
+              icon={record.privacy ? <UnlockOutlined /> : <LockOutlined />}
+            >
               <span>
-                {record.status === 'client'
-                  ? t('create.filter.modal.private.visibility.label')
-                  : t('create.filter.modal.shared.visibility.label')}{' '}
+                {record.privacy
+                  ? t('create.filter.modal.shared.visibility.label')
+                  : t('create.filter.modal.private.visibility.label')}{' '}
                 <DownOutlined />
               </span>
             </Button>
@@ -850,11 +744,11 @@ export const Inbox = () => {
   )
 
   const handleChange = (e) => {
-    setValue(e.target.value)
+    return e
   }
-  const privateMenu = (
+  const privateMenu = (privacy) => (
     <Menu>
-      <Radio.Group value={value} onChange={(e) => handleChange(e)}>
+      <Radio.Group value={privacy} onChange={(e) => handleChange(e)}>
         <Radio value={1} onClick={(e) => handleChange(e)}>
           <div>
             <div>
@@ -870,7 +764,7 @@ export const Inbox = () => {
           </div>
         </Radio>
 
-        <Radio>
+        <Radio value={0}>
           <div>
             <div>
               <div>
@@ -940,7 +834,6 @@ export const Inbox = () => {
         })
       }
     })
-
     setIsLoading(true)
     await updateSignInStatus(userSignIn)
     setIsLoading(false)
@@ -1043,11 +936,10 @@ export const Inbox = () => {
     })
     setIsLoading(false)
   }
-
   const renderReadEmail = () => {
     return (
       <ReadEmail
-        privateMenu={privateMenu}
+        privateMenu={privateMenu(1)}
         messageId={emailId}
         threadsId={threadsId}
         handleSingleDelete={handleSingleDelete}
