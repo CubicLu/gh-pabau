@@ -30,6 +30,7 @@ query GetCompanyAppointmentsByDate(
       start_date: { gt: $startDate, lt: $endDate }
       company_id: { equals: $companyId }
     }
+    orderBy: { start_date: asc }
   ) {
     id
     status
@@ -39,6 +40,11 @@ query GetCompanyAppointmentsByDate(
     service_id
     contact_id
     service
+    CompanyService {
+      id
+      name
+      color
+    }
     InvSale {
       id
       paid_amount

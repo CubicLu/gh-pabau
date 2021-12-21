@@ -1,24 +1,23 @@
 import React, { FC, useState, useEffect } from 'react'
 import { Row, Col } from 'antd'
 import { Avatar } from '@pabau/ui'
-import { UserOutlined } from '@ant-design/icons'
 import { ButtonLabel } from '@pabau/ui'
+import { TeamOutlined } from '@ant-design/icons'
 import styles from './AppointmentItem.module.less'
-import {
-  useGetServicesByIdQuery,
-  useCheckPathwayStatusQuery,
-} from '@pabau/graphql'
+import { useCheckPathwayStatusQuery } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { ReactComponent as OutlinedClockCircle } from '../../assets/images/icons/outline-clock-circle.svg'
+import { ReactComponent as ListCircle } from '../../assets/images/icons/list-circle.svg'
 import dayjs from 'dayjs'
 
-export interface AppointmentItemP {
+export interface JourneyAppointmentItem {
   id?: number
   key?: string
   time?: string
   avatar?: string
   clientName?: string
   serviceName?: string
+  serviceColour?: string
   staffMember?: string
   checkedInTime?: string
   paymentStatus: string
@@ -27,7 +26,7 @@ export interface AppointmentItemP {
   service_id?: number
 }
 
-interface AppointmentItemHandler {
+interface JourneyAppointmentItemHandler {
   addInProgressAppt?: (appt: number) => void
 }
 
@@ -43,12 +42,15 @@ interface PathwayStep {
   order: number
 }
 
-export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
+export const AppointmentItem: FC<
+  JourneyAppointmentItem & JourneyAppointmentItemHandler
+> = ({
   id,
   time,
   avatar,
   clientName,
   serviceName,
+  serviceColour,
   staffMember,
   paymentStatus,
   status,
@@ -56,18 +58,13 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
   checkedInTime,
   addInProgressAppt,
 }) => {
-  const [appointementColor, setAppointmentColor] = useState('')
   const [pathwayStep, setPathwayStep] = useState<PathwayStep[]>([])
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [grow, setGrow] = useState<boolean>(false)
   const { t } = useTranslationI18()
-  const { data: serviceData } = useGetServicesByIdQuery({
-    variables: {
-      service_id: service_id,
-    },
-  })
 
   const { data: pathwayTakenData } = useCheckPathwayStatusQuery({
+    pollInterval: 5000,
     variables: {
       bookingId: id,
     },
@@ -79,8 +76,13 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
 
   useEffect(() => {
     if (pathwayStep?.length > 0) {
+      const completedSteps = pathwayStep.filter(
+        (step) => step.status === 'completed'
+      )
       const activeStep =
-        pathwayStep.filter((step) => step.status === 'completed')?.length + 1
+        completedSteps?.length !== pathwayStep?.length
+          ? completedSteps?.length + 1
+          : completedSteps?.length
       currentStep > 0 && setGrow(true)
       setTimeout(() => {
         setCurrentStep(activeStep)
@@ -112,13 +114,6 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathwayTakenData])
 
-  useEffect(() => {
-    if (serviceData?.services.length > 0) {
-      const color = serviceData.services?.[0]?.color
-      setAppointmentColor(color)
-    }
-  }, [serviceData])
-
   const getCurrentCheckedInTime = () => {
     const currentTime = dayjs().format()
     const hours = dayjs(currentTime).diff(checkedInTime, 'hours')
@@ -131,7 +126,7 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
       <Row className={styles.content}>
         <Col lg={1} md={1} xs={1}>
           <div
-            style={{ background: appointementColor ? appointementColor : '' }}
+            style={{ background: serviceColour ? serviceColour : '' }}
             className={styles.divider}
           ></div>
         </Col>
@@ -143,16 +138,20 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
         <Col lg={7} md={7} xs={17}>
           <div className={styles.clientContainer}>
             <div className={styles.avatarContainer}>
-              {pathwayStep?.length > 0 && <p>{currentStep}</p>}
+              {pathwayStep?.length > 0 && (
+                <p>
+                  <ListCircle />
+                </p>
+              )}
               <Avatar size={52} src={avatar} name={clientName} />
             </div>
             <div className={styles.clientInfo}>
-              <p
-                style={{ color: status === 'no-show' ? '#ff5b64' : '#3d3d46' }}
-              >
-                {clientName}
+              <p className={status === 'no-show' && styles.strikeThrough}>
+                <p>{clientName}</p>
               </p>
-              <span>{serviceName}</span>
+              <span className={status === 'no-show' && styles.strikeThrough}>
+                <span>{serviceName}</span>
+              </span>
               <div
                 className={styles.appointementStatus}
                 style={{
@@ -172,7 +171,7 @@ export const AppointmentItem: FC<AppointmentItemP & AppointmentItemHandler> = ({
         </Col>
         <Col lg={5} md={5} className={styles.mobileViewHidden}>
           <div className={styles.textAlignment}>
-            <UserOutlined className={styles.iconSize} />
+            <TeamOutlined style={{ fontSize: 18 }} />
             <span>{staffMember}</span>
           </div>
         </Col>

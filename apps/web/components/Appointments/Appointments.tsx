@@ -1,13 +1,9 @@
-/**
- * This is a Pabau Appointments
- */
-
 import React, { FC } from 'react'
-import AppointmentItem, { AppointmentItemP } from './AppointmentItem'
+import AppointmentItem, { JourneyAppointmentItem } from './AppointmentItem'
 import styles from './Appointments.module.less'
 
 interface P {
-  appointments?: AppointmentItemP[]
+  appointments?: JourneyAppointmentItem[]
   addInProgressAppt?: (appt: number) => void
 }
 

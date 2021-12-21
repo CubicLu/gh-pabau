@@ -19,6 +19,7 @@
   box-sizing: border-box;
   border-radius: 4px;
   background: #ffffff;
+  cursor: pointer;
   .content {
     align-items: center;
     height: 92px;
@@ -66,6 +67,11 @@
     .clientInfo {
       margin-left: 13px;
 
+      .strikeThrough {
+        text-decoration: line-through;
+        text-decoration-color: var(--red-color-text);
+      }
+
       .appointementStatus {
         display: flex;
         align-items: center;
@@ -75,7 +81,7 @@
           display: flex;
           align-items: center;
           span {
-            color: #ff5b64;
+            color: var(--red-color-text);
             font-size: 12px;
             margin-left: 2px;
           }
