@@ -13,9 +13,9 @@ export default function useStaffPermissions() {
   const canStaffPerformService = (userID: number): boolean => {
     for (const s of selectedData.services) {
       if (
-        s?.disabled_users &&
-        s.disabled_users !== '' &&
-        s.disabled_users
+        s?.disabledusers &&
+        s.disabledusers !== '' &&
+        s.disabledusers
           .split(',')
           .map((n) => Number.parseInt(n))
           .includes(userID)

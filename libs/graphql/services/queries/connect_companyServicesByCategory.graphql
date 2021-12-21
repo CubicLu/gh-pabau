@@ -18,7 +18,7 @@ query companyServicesByCategory($company_id: Int!, $master_cat_id: Int = 0) {
       rating
       max_clients
       disabled_locations
-      disabled_users
+      disabledusers
       Public_SocialSurveyFeedback {
         date
         feedback_comment

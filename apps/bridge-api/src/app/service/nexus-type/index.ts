@@ -67,7 +67,7 @@ export const PublicServiceResponse = objectType({
     t.float('price')
     t.int('online_book')
     t.string('disabled_locations')
-    t.string('disabled_users')
+    t.string('disabledusers')
     t.string('duration')
     t.string('friendly_name')
     t.string('description')

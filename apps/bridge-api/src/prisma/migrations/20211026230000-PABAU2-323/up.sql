@@ -39,4 +39,6 @@ ALTER TABLE `salon_bookings` CHANGE `description` `description` TEXT CHARACTER S
 ALTER TABLE `salon_bookings` CHANGE `issued_to` `issued_to` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `salon_bookings` CHANGE `contract_id` `contract_id` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `cm_contacts` CHANGE `MarketingSource` `MarketingSource` INT(11) NULL DEFAULT NULL;
+UPDATE `cm_staff_general` SET Birthdate = NULL WHERE Birthdate = '0000-00-00'
+UPDATE `cm_staff_general` SET HireDate = NULL WHERE HireDate = '0000-00-00'
 COMMIT;

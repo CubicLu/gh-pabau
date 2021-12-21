@@ -22,7 +22,7 @@ query companyServicesCategorised($company_id: Int!) {
         rating
         max_clients
         disabled_locations
-        disabled_users
+        disabledusers
         Public_SocialSurveyFeedback {
           date
           feedback_comment

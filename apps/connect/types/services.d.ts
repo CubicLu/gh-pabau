@@ -27,7 +27,7 @@ export interface Service {
   rating?: number
   max_clients?: number
   disabled_locations?: string | null
-  disabled_users?: string | null
+  disabledusers?: string | null
   description?: string
   is_bundle?: boolean
   Public_SocialSurveyFeedback?: SocialSurveyFeedback[]
