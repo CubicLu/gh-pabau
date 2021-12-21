@@ -151,7 +151,7 @@ const FormAction: FC<FormActionProps> = ({
     )
   }
 
-  const content = (
+  const moreOutlinedContent = (
     <div className={styles.contentWrapper} onClick={(e) => e.stopPropagation()}>
       <Link
         href={{
@@ -480,7 +480,7 @@ const FormAction: FC<FormActionProps> = ({
           </Popover>
           <Popover
             placement="bottomRight"
-            content={content}
+            content={moreOutlinedContent}
             trigger="click"
             overlayClassName={styles.customPopover}
           >

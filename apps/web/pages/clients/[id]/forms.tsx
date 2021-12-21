@@ -19,6 +19,7 @@ import {
   useFindManyCompanyServicesQuery,
   GetClientFormsDocument,
   useDeleteMedicalFormContactMutation,
+  usePinOrUnpinMedicalContactFormsMutation,
 } from '@pabau/graphql'
 import { useUser } from '../../../context/UserContext'
 import crypto from 'crypto'
@@ -189,8 +190,24 @@ const proccessDrugsData = ({ medicalFormContact }) => {
   return JSON.stringify(drugsContent)
 }
 
+const arrangePinnedForms = ({ forms }) => {
+  const pinnedForms = forms
+    ?.filter((el) => el?.isPinned === true)
+    ?.sort((a, b) => {
+      let aDate = a.updated || a.created
+      let bDate = b.updated || b.created
+      aDate = new Date(aDate)
+      bDate = new Date(bDate)
+      aDate = aDate.getTime() / 1000
+      bDate = bDate.getTime() / 1000
+      return bDate - aDate
+    })
+  const unPinnedForms = forms?.filter((el) => el?.isPinned === false)
+  return [...pinnedForms, ...unPinnedForms]
+}
+
 const proccessMedicalContactForms = (medicalFormData) => {
-  return medicalFormData?.map((medicalFormContact) => {
+  let forms = medicalFormData?.map((medicalFormContact) => {
     let medicalFormDetails = []
     const {
       Contact = {},
@@ -341,7 +358,7 @@ const proccessMedicalContactForms = (medicalFormData) => {
       created: utc(created_at),
       updated: utc(medicalFormContact?.updated_at),
       type: medicalFormContact?.Form.form_type,
-      isPinned: false,
+      isPinned: medicalFormContact?.urgent ? true : false,
       isAdminForm: false,
       formId: medicalFormContact?.Form?.id,
       contactId: Contact?.ID,
@@ -354,6 +371,8 @@ const proccessMedicalContactForms = (medicalFormData) => {
       },
     }
   })
+  forms = arrangePinnedForms({ forms })
+  return forms
 }
 
 const allFilter = [
@@ -397,6 +416,21 @@ const Forms: FC = () => {
   } = useGetClientFormsQuery({
     fetchPolicy: 'network-only',
     variables: variables,
+  })
+
+  const [pinOrUnpinMedicalForm] = usePinOrUnpinMedicalContactFormsMutation({
+    onCompleted({ updateOneMedicalFormContact: data }) {
+      const { id, pinned } = data
+      const updatedForm = medicalFormContacts?.find((el) => el?.id === id)
+      if (updatedForm) {
+        Notification(
+          NotificationType?.success,
+          pinned
+            ? `${updatedForm?.name} pinned successfully!`
+            : `${updatedForm?.name} un-pinned successfully!`
+        )
+      }
+    },
   })
 
   const { data: medicalConditions } = useMedicalContditionsQuery({
@@ -453,6 +487,27 @@ const Forms: FC = () => {
     }
   }, [clientForms, clientFormsLoading])
 
+  const handlePinUnpinForm = (formContactId: number) => {
+    const selectedForm = medicalFormContacts?.find(
+      (el) => el?.id === formContactId
+    )
+    if (selectedForm) {
+      pinOrUnpinMedicalForm({
+        variables: {
+          formContactId: formContactId,
+          updatedAt: dayjs(),
+          pinStatus: selectedForm?.isPinned ? 0 : 1,
+        },
+        refetchQueries: [
+          {
+            query: GetClientFormsDocument,
+            variables: variables,
+          },
+        ],
+      })
+    }
+  }
+
   const onFormContactDelete = (formContactId: number) => {
     const reqFormContact = medicalFormContacts?.find(
       (el) => el?.id === formContactId
@@ -487,7 +542,7 @@ const Forms: FC = () => {
         onShareCick={() => Promise.resolve(true)}
         onVersionClick={() => Promise.resolve(true)}
         onEditClick={() => Promise.resolve(true)}
-        onPinClick={() => Promise.resolve(true)}
+        onPinClick={handlePinUnpinForm}
         onDeleteClick={onFormContactDelete}
         userPermission={me?.admin}
         deleteFormContactLoading={deleteFormLoading}

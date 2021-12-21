@@ -365,23 +365,18 @@ mutation deleteMedicalFormContact($formContactId: Int!, $deletedAt: DateTime!) {
   }
 }
 
-mutation pinMedicalFormContact($formContactId: Int!, $updatedAt: DateTime!) {
+mutation pinOrUnpinMedicalContactForms(
+  $formContactId: Int!
+  $updatedAt: DateTime!
+  $pinStatus: Int!
+) {
   updateOneMedicalFormContact(
     where: { id: $formContactId }
-    data: { urgent: { set: 1 }, updated_at: { set: $updatedAt } }
+    data: { urgent: { set: $pinStatus }, updated_at: { set: $updatedAt } }
   ) {
     id
     updated_at
-  }
-}
-
-mutation unPinMedicalFormContact($formContactId: Int!, $updatedAt: DateTime!) {
-  updateOneMedicalFormContact(
-    where: { id: $formContactId }
-    data: { urgent: { set: 0 }, updated_at: { set: $updatedAt } }
-  ) {
-    id
-    updated_at
+    pinned: urgent
   }
 }
 

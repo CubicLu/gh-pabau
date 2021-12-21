@@ -155,7 +155,7 @@ export interface ClientFormsLayoutProps {
   onShareCick: (e: MedicalFormContact) => Promise<boolean>
   onVersionClick: (e: string) => Promise<boolean>
   onEditClick: (e: MedicalFormContact) => Promise<boolean>
-  onPinClick: (e: MedicalFormContact) => Promise<boolean>
+  onPinClick: (formId: number) => void
   onDeleteClick: (formContactId: number) => void
   userPermission?: boolean
   deleteFormContactLoading?: boolean
@@ -307,24 +307,6 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
       setAccordionState([])
     }
     setExpanded((val) => !val)
-  }
-
-  const handlePinForm = (key) => {
-    let formList = [...formState]
-    const collapseForms = [...accordionState]
-    const formIndex = formList.findIndex((item) => item.id === key)
-    if (formIndex >= 0) {
-      formList[formIndex]['isPinned'] = !formList[formIndex]['isPinned']
-      if (formList[formIndex]['isPinned']) {
-        const pinnedForm = formList.splice(formIndex, 1)
-        formList = [...pinnedForm, ...formList]
-      }
-    }
-    setPopOverState({ ...popOverState, content: !popOverState['content'] })
-    collapseForms.splice(collapseForms.indexOf(key), 1)
-    setAccordionState(collapseForms)
-    setFormState(formList)
-    onPinClick(formList[formIndex])
   }
 
   const onFilterSubmit = (values) => {
@@ -627,7 +609,7 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({
                                 popOverState={popOverState}
                                 userPermission={userPermission}
                                 setPopOverState={setPopOverState}
-                                handlePinForm={() => handlePinForm(form.id)}
+                                handlePinForm={() => onPinClick?.(form.id)}
                                 onShareCick={onShareCick}
                                 onVersionClick={onVersionClick}
                                 onDeleteClick={handleDeleteFormContact}
