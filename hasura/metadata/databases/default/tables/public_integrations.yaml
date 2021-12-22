@@ -1,3 +1,101 @@
 table:
   name: integrations
   schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - name
+    - description
+    - short_description
+    - logo
+    - screenshots
+    - urls
+    - marketing_plus
+    - iframe_url
+    - categories
+  role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - marketing_plus
+    - id
+    - categories
+    - screenshots
+    - urls
+    - description
+    - iframe_url
+    - logo
+    - name
+    - short_description
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - marketing_plus
+    - id
+    - categories
+    - screenshots
+    - urls
+    - description
+    - iframe_url
+    - logo
+    - name
+    - short_description
+    filter: {}
+  role: public
+- permission:
+    columns:
+    - marketing_plus
+    - id
+    - categories
+    - screenshots
+    - urls
+    - description
+    - iframe_url
+    - logo
+    - name
+    - short_description
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - marketing_plus
+    - id
+    - categories
+    - screenshots
+    - urls
+    - description
+    - iframe_url
+    - logo
+    - name
+    - short_description
+    filter: {}
+  role: public
+- permission:
+    check: {}
+    columns:
+    - marketing_plus
+    - id
+    - categories
+    - screenshots
+    - urls
+    - description
+    - iframe_url
+    - logo
+    - name
+    - short_description
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: public
+- permission:
+    filter: {}
+  role: user
