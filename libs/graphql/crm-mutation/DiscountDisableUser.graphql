@@ -1,0 +1,36 @@
+fragment DiscountDisableUserFields on DiscountDisableUser {
+  id
+  tax_id
+  user_id
+}
+
+fragment DiscountDisableUser on DiscountDisableUser {
+  ...DiscountDisableUserFields
+  Discount {
+    ...InvTaxRateFields
+  }
+  User {
+    ...UserFields
+  }
+}
+
+mutation createOneDiscountDisableUser($data: DiscountDisableUserCreateInput!) {
+  createOneDiscountDisableUser(data: $data) {
+    ...DiscountDisableUser
+  }
+}
+
+mutation updateOneDiscountDisableUser(
+  $where: DiscountDisableUserWhereUniqueInput!
+  $data: DiscountDisableUserUpdateInput!
+) {
+  updateOneDiscountDisableUser(where: $where, data: $data) {
+    ...DiscountDisableUser
+  }
+}
+
+mutation deleteOneDiscountDisableUser($where: DiscountDisableUserWhereUniqueInput!) {
+  deleteOneDiscountDisableUser(where: $where) {
+    ...DiscountDisableUser
+  }
+}

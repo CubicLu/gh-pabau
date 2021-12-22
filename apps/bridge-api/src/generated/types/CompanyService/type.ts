@@ -152,6 +152,20 @@ export const CompanyService = objectType({
         return root.ServiceEquipment
       },
     })
+    t.list.field('DiscountDisableService', {
+      type: 'DiscountDisableService',
+      args: {
+        where: 'DiscountDisableServiceWhereInput',
+        orderBy: 'DiscountDisableServiceOrderByWithRelationInput',
+        cursor: 'DiscountDisableServiceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'DiscountDisableServiceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.DiscountDisableService
+      },
+    })
     t.field('_count', {
       type: 'CompanyServiceCountOutputType',
       resolve(root: any) {

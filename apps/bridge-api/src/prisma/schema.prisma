@@ -3847,8 +3847,9 @@ model CompanyBranch {
   InventoryMovement       InventoryMovement[]
   InvSale                 InvSale[]
 
-  ServiceLocationTier ServiceLocationTier[]
-  CmLead              CmLead[]
+  ServiceLocationTier      ServiceLocationTier[]
+  CmLead                   CmLead[]
+  DiscountDisabledLocation DiscountDisableLocation[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -4213,7 +4214,8 @@ model CompanyService {
   ServiceLocationTier    ServiceLocationTier[]
   Booking                Booking[]
 
-  ServiceEquipment ServiceEquipment[]
+  ServiceEquipment       ServiceEquipment[]
+  DiscountDisableService DiscountDisableService[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
@@ -6845,6 +6847,7 @@ model InvProduct {
   SaleItem               SaleItem[]               @relation("fk_inv_sale_product_id")
   CompanyService         CompanyService[]
   InsuranceContractPrice InsuranceContractPrice[]
+  DiscountDisableProduct DiscountDisableProduct[]
   @@unique([company_id, id], name: "primary")
   @@unique([company_id, name], name: "unique_product_name")
   @@unique([company_id, old_barcode], name: "unique_product_barcode")
@@ -7389,6 +7392,10 @@ model InvTaxRate {
   Company          Company?  @relation(fields: [company_id], references: [id])
   User             User?     @relation(fields: [user_id], references: [id])
 
+  DiscountDisableLocation DiscountDisableLocation[]
+  DiscountDisableUser     DiscountDisableUser[]
+  DiscountDisableProduct  DiscountDisableProduct[]
+  DiscountDisableService  DiscountDisableService[]
   @@index([company_id], name: "occupier")
   @@map("inv_tax_rates")
 }
@@ -12265,38 +12272,54 @@ model Tax {
   @@map("taxes")
 }
 
-//
-//model tax_disabled_locations {
-//  id          Int @id @default(autoincrement())
-//  tax_id      Int
-//  location_id Int
-//
-//  @@index([tax_id, location_id], name: "tax_id")
-//}
-//
-//model tax_disabled_products {
-//  id         Int @id @default(autoincrement())
-//  tax_id     Int
-//  product_id Int
-//
-//  @@index([tax_id, product_id], name: "tax_id")
-//}
-//
-//model tax_disabled_services {
-//  id         Int @id @default(autoincrement())
-//  tax_id     Int
-//  service_id Int
-//
-//  @@index([tax_id, service_id], name: "tax_id")
-//}
-//
-//model tax_disabled_users {
-//  id      Int @id @default(autoincrement())
-//  tax_id  Int
-//  user_id Int
-//
-//  @@index([tax_id, user_id], name: "tax_id")
-//}
+model DiscountDisableLocation {
+  id          Int @id @default(autoincrement())
+  tax_id      Int
+  location_id Int
+
+  Discount InvTaxRate?    @relation(fields: [tax_id], references: [id])
+  Location CompanyBranch? @relation(fields: [location_id], references: [id])
+
+  @@index([tax_id, location_id], name: "tax_id")
+  @@map("tax_disabled_locations")
+}
+
+model DiscountDisableProduct {
+  id         Int @id @default(autoincrement())
+  tax_id     Int
+  product_id Int
+
+  Discount InvTaxRate? @relation(fields: [tax_id], references: [id])
+  Product  InvProduct? @relation(fields: [product_id], references: [id])
+
+  @@index([tax_id, product_id], name: "tax_id")
+  @@map("tax_disabled_products")
+}
+
+model DiscountDisableService {
+  id         Int @id @default(autoincrement())
+  tax_id     Int
+  service_id Int
+
+  Discount InvTaxRate?     @relation(fields: [tax_id], references: [id])
+  Service  CompanyService? @relation(fields: [service_id], references: [id])
+
+  @@index([tax_id, service_id], name: "tax_id")
+  @@map("tax_disabled_services")
+}
+
+model DiscountDisableUser {
+  id      Int @id @default(autoincrement())
+  tax_id  Int
+  user_id Int
+
+  Discount InvTaxRate? @relation(fields: [tax_id], references: [id])
+  User     User?       @relation(fields: [user_id], references: [id])
+
+  @@index([tax_id, user_id], name: "tax_id")
+  @@map("tax_disabled_users")
+}
+
 //
 //model tbl_contracts {
 //  id                   Int      @id @default(autoincrement())
@@ -13004,6 +13027,7 @@ model User {
   BookingCancel                BookingCancel[]
   Communication                Communication[]
   LoyaltyPointSetting          LoyaltyPointSetting[]
+  DiscountDisableUser          DiscountDisableUser[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
