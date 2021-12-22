@@ -357,10 +357,10 @@ export const permissions = shield(
       featureRequestsWeeklyAvg: allow,
       //communicationrecipient count
       findManyCommunicationRecipientCount: rules.authentication.isAuthenticated,
-      findManyDiscountDisableLocation: allow,
-      findManyDiscountDisableService: allow,
-      findManyDiscountDisableUser: allow,
-      findManyDiscountDisableProduct: allow,
+      // findManyDiscountDisableLocation: allow,
+      // findManyDiscountDisableService: allow,
+      // findManyDiscountDisableUser: allow,
+      // findManyDiscountDisableProduct: allow,
 
       '*': and(
         rules.authentication.isAuthenticated,

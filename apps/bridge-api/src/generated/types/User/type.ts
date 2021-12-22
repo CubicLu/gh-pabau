@@ -833,20 +833,6 @@ export const User = objectType({
         return root.LoyaltyPointSetting
       },
     })
-    t.list.field('DiscountDisableUser', {
-      type: 'DiscountDisableUser',
-      args: {
-        where: 'DiscountDisableUserWhereInput',
-        orderBy: 'DiscountDisableUserOrderByWithRelationInput',
-        cursor: 'DiscountDisableUserWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'DiscountDisableUserScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.DiscountDisableUser
-      },
-    })
     t.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {

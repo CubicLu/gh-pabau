@@ -244,20 +244,6 @@ export const CompanyBranch = objectType({
         return root.CmLead
       },
     })
-    t.list.field('DiscountDisabledLocation', {
-      type: 'DiscountDisableLocation',
-      args: {
-        where: 'DiscountDisableLocationWhereInput',
-        orderBy: 'DiscountDisableLocationOrderByWithRelationInput',
-        cursor: 'DiscountDisableLocationWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'DiscountDisableLocationScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.DiscountDisabledLocation
-      },
-    })
     t.field('_count', {
       type: 'CompanyBranchCountOutputType',
       resolve(root: any) {
