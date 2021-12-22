@@ -349,6 +349,7 @@ export const permissions = shield(
       Public_StaffShifts: allow,
       Public_Staff: allow,
       Public_CompanyServer: allow,
+      findFirstConnectRegistrationField: allow,
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //statement template

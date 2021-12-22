@@ -1,0 +1,39 @@
+fragment ConnectRegistrationFieldFields on ConnectRegistrationField {
+  id
+  company_id
+  fields_data
+}
+
+fragment ConnectRegistrationField on ConnectRegistrationField {
+  ...ConnectRegistrationFieldFields
+}
+
+mutation createOneConnectRegistrationField($data: ConnectRegistrationFieldCreateInput!) {
+  createOneConnectRegistrationField(data: $data) {
+    ...ConnectRegistrationField
+  }
+}
+
+mutation updateOneConnectRegistrationField(
+  $where: ConnectRegistrationFieldWhereUniqueInput!
+  $data: ConnectRegistrationFieldUpdateInput!
+) {
+  updateOneConnectRegistrationField(where: $where, data: $data) {
+    ...ConnectRegistrationField
+  }
+}
+
+mutation deleteOneConnectRegistrationField($where: ConnectRegistrationFieldWhereUniqueInput!) {
+  deleteOneConnectRegistrationField(where: $where) {
+    ...ConnectRegistrationField
+  }
+}
+
+mutation updateManyConnectRegistrationField(
+  $where: ConnectRegistrationFieldWhereInput
+  $data: ConnectRegistrationFieldUpdateManyMutationInput!
+) {
+  updateManyConnectRegistrationField(where: $where, data: $data) {
+    count
+  }
+}

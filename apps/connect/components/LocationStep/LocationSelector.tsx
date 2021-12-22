@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useContext } from 'react'
+import React, { FC, useState, useContext } from 'react'
 import { Input, Button } from '@pabau/ui'
 import Styles from './LocationSelector.module.less'
 import { CheckCircleFilled, CloseCircleOutlined } from '@ant-design/icons'
@@ -18,8 +18,8 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
   const { setSelectedData, actionTypes } = useSelectedDataStore()
   const { t } = useTranslationI18()
   const settings = useContext(SettingsContext)
-
-  const [formattedAddress, setFormattedAddress] = useState<string>()
+  const GOOGLE_API_KEY = 'AIzaSyDKOGfJnjxyiqqze4sn0ZntJvVUcB706GM' //Yes, yes I know. Temporary
+  const [searchString, setSearchString] = useState<string>()
   const [userLocation, setUserLocation] = useState({
     lng: 0,
     lat: 0,
@@ -29,15 +29,29 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
   const getLatLng = () => {
     navigator.geolocation.getCurrentPosition((item) => {
       fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${item.coords.latitude},${item.coords.longitude}&key=${process.env.google_api_key}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${item.coords.latitude},${item.coords.longitude}&key=${GOOGLE_API_KEY}`
       )
         .then((response) => response.json())
         .then((res) => {
-          setUserLocation({ ...res.results[0].geometry.location })
-          setFormattedAddress(res.results[0].formatted_address)
-          setauto(false)
+          if (res?.results && res.results.length > 0) {
+            setUserLocation({ ...res.results[0].geometry.location })
+            setSearchString(res.results[0].formatted_address)
+            setauto(false)
+          }
         })
     })
+  }
+
+  const handleSearchLocation = () => {
+    fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${searchString}&key=${GOOGLE_API_KEY}`
+    )
+      .then((response) => response.json())
+      .then((res) => {
+        if (res?.results && res.results.length > 0) {
+          setUserLocation(res.results[0].geometry.location)
+        }
+      })
   }
 
   const {
@@ -49,18 +63,28 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
       company_id: settings.id,
     },
   })
-  const [searchLocation, setSearchLocation] = useState<boolean>(
-    locationsResult?.Public_Locations.length > 1
-  )
 
-  useEffect(() => {
-    if (!searchLocation) {
-      getLatLng()
-    }
-  }, [searchLocation])
+  const [searchLocation, setSearchLocation] = useState<boolean>(true)
 
   if (loadingLocations) return <div>Loading!</div>
   if (errorLocations) return <div>Error...</div>
+
+  const orderedLocations = locationsResult.Public_Locations.map((val) => {
+    return {
+      ...val,
+      distance:
+        val.lat !== 0 && val.lng !== 0
+          ? Number.parseFloat(
+              getDistanceFromLatLonInKm(
+                userLocation.lat,
+                userLocation.lng,
+                val.lat,
+                val.lng
+              ).toFixed(1)
+            )
+          : 99999,
+    }
+  }).sort((a, b) => (a.distance > b.distance ? 1 : -1))
 
   return (
     <>
@@ -74,19 +98,20 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
               <div className={Styles.inputWrap}>
                 <Input
                   placeHolderText="Enter a postcode, town or city"
-                  text={formattedAddress}
+                  text={searchString}
                   onChange={(val) => {
-                    setFormattedAddress(val)
+                    setSearchString(val)
                     setauto(true)
                   }}
                 />
-                {formattedAddress && <CloseCircleOutlined />}
+                {searchString && <CloseCircleOutlined />}
                 {!auto && <CheckCircleFilled />}
               </div>
               <Button
                 className={Styles.findBtn}
                 type="primary"
                 onClick={() => {
+                  handleSearchLocation()
                   setSearchLocation(false)
                 }}
               >
@@ -97,6 +122,7 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
               <Button
                 onClick={() => {
                   getLatLng()
+                  setSearchLocation(false)
                 }}
               >
                 {t('connect.onlinebooking.location.currentlocation')}
@@ -108,8 +134,8 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
       {!searchLocation && (
         <div className={Styles.slide1}>
           <div className={Styles.chooseWrapper}>
-            <p className={Styles.chooseHeading}>{formattedAddress}</p>
-            {locationsResult.Public_Locations.map((val) => {
+            <p className={Styles.chooseHeading}>{searchString}</p>
+            {orderedLocations.map((val) => {
               if (!canLocationPerformService(val.id)) return false
               return (
                 <div
@@ -123,15 +149,10 @@ const LocationSelector: FC<P> = ({ onSelected }) => {
                   <div className={Styles.rightContent}>
                     <p className={Styles.clinicName}>{val.name}</p>
                     <p>{val.address}</p>
-                    {val.lat !== 0 && userLocation.lat !== 0 && (
+                    {userLocation.lat !== 0 && val.distance !== 99999 && (
                       <p>
                         {'~ '}
-                        {getDistanceFromLatLonInKm(
-                          userLocation.lat,
-                          userLocation.lng,
-                          val.lat,
-                          val.lng
-                        ).toFixed(1)}
+                        {val.distance}
                         {' km'}
                       </p>
                     )}

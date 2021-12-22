@@ -4240,7 +4240,7 @@ model CompanyService {
 //  service_order          Int
 //  sms_mode               Int
 //  sms_name               String
-//  sms_days_after         Int
+//  sms_days_after         Intconnect_registration_fields
 //  sms_send_time          String
 //  sms_id                 Int
 //  treatment_group_id     Int
@@ -4474,11 +4474,14 @@ model CompanyVariable {
 //  client_template_id        Int
 //}
 //
-//model connect_registration_fields {
-//  id          Int    @id @default(autoincrement())
-//  company_id  Int
-//  fields_data String
-//}
+model ConnectRegistrationField {
+  id          Int    @id @default(autoincrement())
+  company_id  Int
+  fields_data String
+
+  @@map("connect_registration_fields")
+}
+
 //
 //model connect_stats {
 //  id            Int      @id @default(autoincrement())
