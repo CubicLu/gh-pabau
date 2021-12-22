@@ -1,5 +1,9 @@
-query getDiscounts($where: InvTaxRateWhereInput, $take: Int= 50, $skip: Int = 0) {
-  findManyInvTaxRate(where: $where, take: $take, skip: $skip ) {
+query getDiscounts(
+  $where: InvTaxRateWhereInput
+  $take: Int = 50
+  $skip: Int = 0
+) {
+  findManyInvTaxRate(where: $where, take: $take, skip: $skip) {
     id
     is_active
     modified_date
@@ -15,24 +19,24 @@ query getDiscounts($where: InvTaxRateWhereInput, $take: Int= 50, $skip: Int = 0)
     offer
     offer_name
     online
-    DiscountDisableLocation{
-      Location{
-        id
-        name
-      }
-    }
-    DiscountDisableUser{
-      User{
-        id
-        full_name
-      }
-    }
-    DiscountDisableService{
-      Service{
-        id
-        name
-      }
-    }
+    # DiscountDisableLocation{
+    #   Location{
+    #     id
+    #     name
+    #   }
+    # }
+    # DiscountDisableUser{
+    #   User{
+    #     id
+    #     full_name
+    #   }
+    # }
+    # DiscountDisableService{
+    #   Service{
+    #     id
+    #     name
+    #   }
+    # }
   }
 }
 
