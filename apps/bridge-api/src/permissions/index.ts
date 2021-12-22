@@ -177,6 +177,7 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.interceptors.injectCompany
       ),
+      updateOneInvTaxRate: rules.authentication.isAuthenticated,
 
       //Activity
       upsertOneActivityUserState: rules.authentication.isAuthenticated,

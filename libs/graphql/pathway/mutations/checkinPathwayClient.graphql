@@ -1,0 +1,23 @@
+mutation checkinPathwayClient(
+  $bookingId: Int
+  $pathwayTemplateId: Int
+  $contactId: Int
+  $comment: String = ""
+) {
+  StartPathway: createOnePathwaysTaken(
+    data: {
+      Booking: { connect: { id: $bookingId } }
+      Pathway: { connect: { id: $pathwayTemplateId } }
+      CmContact: { connect: { ID: $contactId } }
+      comment: $comment
+      status: ACTIVE
+    }
+  ) {
+    id
+    pathway_id
+    Pathway {
+      pathway_name
+    }
+    started_on
+  }
+}

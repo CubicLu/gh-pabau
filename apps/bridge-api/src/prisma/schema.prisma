@@ -7710,13 +7710,13 @@ model JobConfiguration {
   email          String
   dob            String
   phone          String
-  address        String
-  city           String
-  postal         String
+  address        String?
+  city           String?
+  postal         String?
   country        String
-  cover_letter   String
-  resume         String
-  date_available String
+  cover_letter   String?
+  resume         String?
+  date_available String?
   linkedin       String
   reference      String
   how_did_hear   String
