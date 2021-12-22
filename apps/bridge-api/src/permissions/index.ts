@@ -360,6 +360,10 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData
       ),
+      // DiscountDisableProduct: allow,
+      // DiscountDisableService: allow,
+      // DiscountDisableUser: allow,
+      // DiscountDisableLocation: allow,
     },
   },
   {
