@@ -1,0 +1,126 @@
+@keyframes spin-data-v-1a192c20 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn);
+  }
+}
+@keyframes zoom_circle {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(20);
+  }
+  100% {
+    transform: scale(25);
+  }
+}
+@keyframes zoomin {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(0.2);
+  }
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 1 !important;
+}
+
+.back {
+  background-color: #fff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .first_step {
+    animation: first 5s;
+    .checkedIn {
+      margin-top: 10px;
+      text-align: center;
+    }
+  }
+  .thrid_step {
+    display: none;
+
+    .logo_sec {
+      -webkit-animation: zoomin 2s ease-in-out;
+      animation: zoomin 2s ease-in-out;
+      transition: all 0.3s ease-in-out;
+      overflow: hidden;
+      transform: scale(0.2);
+      animation-iteration-count: 1;
+    }
+  }
+  .forth_step {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    display: none;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+
+    .circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: #24bee1;
+      -webkit-animation: zoom_circle 2s ease-in-out;
+      animation: zoom_circle 2s ease-in-out;
+      transition: all 0.3s ease-in-out;
+      transform: scale(25);
+    }
+  }
+  .spinner_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .logo_inner {
+      position: absolute;
+    }
+    .spinner {
+      position: absolute;
+      display: inline-block;
+      border-radius: 50%;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-animation: spin-data-v-1a192c20 1s linear infinite;
+      animation: spin-data-v-1a192c20 1s linear infinite;
+      height: 120px;
+      width: 120px;
+      border-top: 4px solid #54bfe1;
+      border-right: 4px solid #54bfe1;
+      border-bottom: 4px solid #54bfe1;
+      border-left: 4px solid transparent;
+      -webkit-transition: all 0.3s linear;
+      transition: all 0.3s linear;
+    }
+    :global {
+      .ant-avatar-lg {
+        width: 100px;
+        height: 100px;
+        line-height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}

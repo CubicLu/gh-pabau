@@ -3,6 +3,13 @@ query GetBookingById($id: Int) {
     id
     status
     location_id
+    room_id
+    contact_id
+    Contact {
+      Fname
+      Lname
+      Avatar
+    }
     CmStaffGeneral {
       Fname
       Lname

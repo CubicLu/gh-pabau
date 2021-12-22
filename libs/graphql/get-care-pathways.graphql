@@ -2,12 +2,13 @@ query getCarePathways {
   findManyPathway(orderBy: { order: asc }) {
     id
     pathway_name
+    is_active
     description
     order
     _count {
       PathwayStep
     }
-    Steps: PathwayStep {
+    Steps: PathwayStep(orderBy: { order: asc }) {
       id
       name
       step
