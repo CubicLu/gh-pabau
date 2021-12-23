@@ -1,0 +1,48 @@
+fragment ServiceRetailProductFields on ServiceRetailProduct {
+  id
+  company_id
+  service_id
+  product_id
+  quantity
+  consumable_deduction
+}
+
+fragment ServiceRetailProduct on ServiceRetailProduct {
+  ...ServiceRetailProductFields
+  CompanyService {
+    ...CompanyServiceFields
+  }
+  Product {
+    ...InvProductFields
+  }
+}
+
+mutation createOneServiceRetailProduct($data: ServiceRetailProductCreateInput!) {
+  createOneServiceRetailProduct(data: $data) {
+    ...ServiceRetailProduct
+  }
+}
+
+mutation updateOneServiceRetailProduct(
+  $where: ServiceRetailProductWhereUniqueInput!
+  $data: ServiceRetailProductUpdateInput!
+) {
+  updateOneServiceRetailProduct(where: $where, data: $data) {
+    ...ServiceRetailProduct
+  }
+}
+
+mutation deleteOneServiceRetailProduct($where: ServiceRetailProductWhereUniqueInput!) {
+  deleteOneServiceRetailProduct(where: $where) {
+    ...ServiceRetailProduct
+  }
+}
+
+mutation updateManyServiceRetailProduct(
+  $where: ServiceRetailProductWhereInput
+  $data: ServiceRetailProductUpdateManyMutationInput!
+) {
+  updateManyServiceRetailProduct(where: $where, data: $data) {
+    count
+  }
+}

@@ -1,0 +1,47 @@
+fragment ServiceProcedureFields on ServiceProcedure {
+  id
+  sid
+  name
+  sites
+  external_code
+  notes
+  procedure_group_id
+  modality_type
+  company_id
+  uid
+  creation_date
+}
+
+fragment ServiceProcedure on ServiceProcedure {
+  ...ServiceProcedureFields
+  Service {
+    ...CompanyServiceFields
+  }
+}
+
+mutation createOneServiceProcedure($data: ServiceProcedureCreateInput!) {
+  createOneServiceProcedure(data: $data) {
+    ...ServiceProcedure
+  }
+}
+
+mutation updateOneServiceProcedure($where: ServiceProcedureWhereUniqueInput!, $data: ServiceProcedureUpdateInput!) {
+  updateOneServiceProcedure(where: $where, data: $data) {
+    ...ServiceProcedure
+  }
+}
+
+mutation deleteOneServiceProcedure($where: ServiceProcedureWhereUniqueInput!) {
+  deleteOneServiceProcedure(where: $where) {
+    ...ServiceProcedure
+  }
+}
+
+mutation updateManyServiceProcedure(
+  $where: ServiceProcedureWhereInput
+  $data: ServiceProcedureUpdateManyMutationInput!
+) {
+  updateManyServiceProcedure(where: $where, data: $data) {
+    count
+  }
+}

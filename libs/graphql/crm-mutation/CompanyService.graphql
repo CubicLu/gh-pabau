@@ -42,6 +42,9 @@ fragment CompanyServiceFields on CompanyService {
   invoice_text
   invoice_item_name
   online_only_service
+  schedule_type
+  force_deposit
+  apply_to
 }
 
 fragment CompanyService on CompanyService {

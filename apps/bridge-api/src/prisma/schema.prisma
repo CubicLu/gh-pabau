@@ -4207,6 +4207,9 @@ model CompanyService {
   invoice_text           String?
   invoice_item_name      String?
   online_only_service    Int
+  schedule_type          company_services_schedule_type?
+  force_deposit          Boolean                           @default(false)
+  apply_to               company_services_apply_to_type?
   Company                Company                           @relation(fields: [company_id], references: [id])
   Product                InvProduct?                       @relation(fields: [product_id], references: [id])
   CompanyRoomService     CompanyRoomService[]
@@ -4215,6 +4218,9 @@ model CompanyService {
   ServiceUserTier        ServiceUserTier[]
   ServiceLocationTier    ServiceLocationTier[]
   Booking                Booking[]
+  ServiceBundleItem      ServiceBundleItem[]
+  ServiceRetailProduct   ServiceRetailProduct[]
+  ServiceProcedure       ServiceProcedure[]
 
   ServiceEquipment ServiceEquipment[]
   @@index([company_id], name: "company_index")
@@ -4261,20 +4267,24 @@ model CompanyService {
 //  availability           company_services_backup_availability @default(ANY)
 //}
 //
-//model company_services_bundle_items {
-//  id         Int    @id @default(autoincrement())
-//  occupier   Int
-//  service_id Int
-//  item_type  String
-//  item_id    Int
-//  item_qty   Int
-//
-//  @@index([item_id], name: "item_id")
-//  @@index([item_type], name: "item_type")
-//  @@index([occupier], name: "occupier")
-//  @@index([service_id], name: "service_id")
-//}
-//
+model ServiceBundleItem {
+  id         Int    @id @default(autoincrement())
+  company_id Int    @map("occupier")
+  service_id Int
+  item_type  String
+  item_id    Int
+  item_qty   Int
+
+  Service CompanyService @relation(fields: [service_id], references: [id])
+
+
+  @@index([item_id], name: "item_id")
+  @@index([item_type], name: "item_type")
+  @@index([company_id], name: "company_id")
+  @@index([service_id], name: "service_id")
+  @@map("company_services_bundle_items")
+}
+
 //model company_services_default_rooms {
 //  id            Int     @id @default(autoincrement())
 //  default_rooms String?
@@ -4340,19 +4350,23 @@ model CompanyService {
 //  @@index([service_id], name: "service_id")
 //}
 //
-//model company_services_retail_products {
-//  id                   Int @id @default(autoincrement())
-//  occupier             Int
-//  service_id           Int
-//  product_id           Int
-//  quantity             Int
-//  consumable_deduction Int @default(0)
-//
-//  @@index([occupier], name: "occupier")
-//  @@index([product_id], name: "product_id")
-//  @@index([service_id], name: "service_id")
-//}
-//
+model ServiceRetailProduct {
+  id                   Int @id @default(autoincrement())
+  company_id           Int @map("occupier")
+  service_id           Int
+  product_id           Int
+  quantity             Int
+  consumable_deduction Int @default(0)
+
+  CompanyService CompanyService @relation(fields: [service_id], references: [id])
+  Product        InvProduct     @relation(fields: [product_id], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([product_id], name: "product_id")
+  @@index([service_id], name: "service_id")
+  @@map("company_services_retail_products")
+}
+
 model ServiceUserTier {
   id                     Int            @id @default(autoincrement())
   service_id             Int
@@ -6864,6 +6878,8 @@ model InvProduct {
   SaleItem               SaleItem[]               @relation("fk_inv_sale_product_id")
   CompanyService         CompanyService[]
   InsuranceContractPrice InsuranceContractPrice[]
+  ServiceRetailProduct   ServiceRetailProduct[]
+
   @@unique([company_id, id], name: "primary")
   @@unique([company_id, name], name: "unique_product_name")
   @@unique([company_id, old_barcode], name: "unique_product_barcode")
@@ -7600,22 +7616,25 @@ model InvWarehouseProduct {
 //  modified_date DateTime?
 //}
 //
-//model ip_service_procedure {
-//  id                 Int       @id @default(autoincrement())
-//  sid                Int
-//  name               String
-//  sites              String?
-//  external_code      String?
-//  notes              String?
-//  procedure_group_id Int?      @default(0)
-//  modality_type      String?
-//  company_id         Int
-//  uid                Int
-//  creation_date      DateTime?
-//
-//  @@index([company_id], name: "company_id")
-//}
-//
+model ServiceProcedure {
+  id                 Int       @id @default(autoincrement())
+  sid                Int
+  name               String
+  sites              String?
+  external_code      String?
+  notes              String?
+  procedure_group_id Int?      @default(0)
+  modality_type      String?
+  company_id         Int
+  uid                Int
+  creation_date      DateTime?
+
+  Service CompanyService @relation(fields: [sid], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@map("ip_service_procedure")
+}
+
 //model ip_specialities {
 //  id            Int       @id @default(autoincrement())
 //  name          String
@@ -14817,6 +14836,8 @@ enum company_services_deposit_type {
   percent
   free
   inherit
+  optional
+  full
 }
 
 enum company_services_availability {
@@ -14829,6 +14850,16 @@ enum company_services_online_book_type {
   ALL
   NEW
   EXISTING
+}
+
+enum company_services_schedule_type {
+  sequence
+  sidebyside
+}
+
+enum company_services_apply_to_type {
+  all
+  online_bookings
 }
 
 enum company_services_backup_deposit_type {

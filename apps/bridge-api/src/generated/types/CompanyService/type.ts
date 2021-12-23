@@ -50,6 +50,11 @@ export const CompanyService = objectType({
     t.nullable.string('invoice_text')
     t.nullable.string('invoice_item_name')
     t.int('online_only_service')
+    t.nullable.field('schedule_type', {
+      type: 'company_services_schedule_type',
+    })
+    t.boolean('force_deposit')
+    t.nullable.field('apply_to', { type: 'company_services_apply_to_type' })
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
@@ -136,6 +141,48 @@ export const CompanyService = objectType({
       },
       resolve(root: any) {
         return root.Booking
+      },
+    })
+    t.list.field('ServiceBundleItem', {
+      type: 'ServiceBundleItem',
+      args: {
+        where: 'ServiceBundleItemWhereInput',
+        orderBy: 'ServiceBundleItemOrderByWithRelationInput',
+        cursor: 'ServiceBundleItemWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceBundleItemScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceBundleItem
+      },
+    })
+    t.list.field('ServiceRetailProduct', {
+      type: 'ServiceRetailProduct',
+      args: {
+        where: 'ServiceRetailProductWhereInput',
+        orderBy: 'ServiceRetailProductOrderByWithRelationInput',
+        cursor: 'ServiceRetailProductWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceRetailProductScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceRetailProduct
+      },
+    })
+    t.list.field('ServiceProcedure', {
+      type: 'ServiceProcedure',
+      args: {
+        where: 'ServiceProcedureWhereInput',
+        orderBy: 'ServiceProcedureOrderByWithRelationInput',
+        cursor: 'ServiceProcedureWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceProcedureScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceProcedure
       },
     })
     t.list.field('ServiceEquipment', {

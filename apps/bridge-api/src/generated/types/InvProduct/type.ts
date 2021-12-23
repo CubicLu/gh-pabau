@@ -227,6 +227,20 @@ export const InvProduct = objectType({
         return root.InsuranceContractPrice
       },
     })
+    t.list.field('ServiceRetailProduct', {
+      type: 'ServiceRetailProduct',
+      args: {
+        where: 'ServiceRetailProductWhereInput',
+        orderBy: 'ServiceRetailProductOrderByWithRelationInput',
+        cursor: 'ServiceRetailProductWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceRetailProductScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceRetailProduct
+      },
+    })
     t.field('_count', {
       type: 'InvProductCountOutputType',
       resolve(root: any) {

@@ -1,0 +1,42 @@
+fragment ServiceBundleItemFields on ServiceBundleItem {
+  id
+  company_id
+  service_id
+  item_type
+  item_id
+  item_qty
+}
+
+fragment ServiceBundleItem on ServiceBundleItem {
+  ...ServiceBundleItemFields
+  Service {
+    ...CompanyServiceFields
+  }
+}
+
+mutation createOneServiceBundleItem($data: ServiceBundleItemCreateInput!) {
+  createOneServiceBundleItem(data: $data) {
+    ...ServiceBundleItem
+  }
+}
+
+mutation updateOneServiceBundleItem($where: ServiceBundleItemWhereUniqueInput!, $data: ServiceBundleItemUpdateInput!) {
+  updateOneServiceBundleItem(where: $where, data: $data) {
+    ...ServiceBundleItem
+  }
+}
+
+mutation deleteOneServiceBundleItem($where: ServiceBundleItemWhereUniqueInput!) {
+  deleteOneServiceBundleItem(where: $where) {
+    ...ServiceBundleItem
+  }
+}
+
+mutation updateManyServiceBundleItem(
+  $where: ServiceBundleItemWhereInput
+  $data: ServiceBundleItemUpdateManyMutationInput!
+) {
+  updateManyServiceBundleItem(where: $where, data: $data) {
+    count
+  }
+}
