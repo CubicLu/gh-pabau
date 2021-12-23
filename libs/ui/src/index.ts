@@ -1,5 +1,6 @@
 export * from './lib/client-login-form/ClientLoginForm'
 export * from './lib/button/Button'
+export * from './lib/close-button/CloseButton'
 export * from './lib/add-address/AddAddress'
 export * from './lib/dropdown-options-tree/DropdownOptionsTree'
 // export * from './lib/all-template-modal/AllTemplateModal'

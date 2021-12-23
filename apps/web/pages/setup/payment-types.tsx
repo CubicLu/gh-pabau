@@ -156,7 +156,7 @@ export const PaymentTypes: NextPage = () => {
       requireAdminAccess={true}
       isNotificationBannerOnData={true}
       isCodeGen={true}
-      deleteOnInactive={true}
+      deleteOnInactive={false}
       isHavingDefaultRecords={true}
       {...user}
     />

@@ -1,0 +1,31 @@
+.close-btn {
+  :global {
+    .ant-btn-text {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      &:hover {
+        background-color: #f6f6f6;
+      }
+      &:focus {
+        color: rgba(0, 0, 0, 0.65);
+        background: #e2e2e2;
+        border-color: transparent;
+      }
+      span {
+        font-size: 16px;
+        font-weight: bold;
+        color: #949494;
+      }
+      &:hover span {
+        color: #1d1c1d;
+      }
+      &:focus span {
+        color: #1d1c1d;
+      }
+    }
+  }
+}

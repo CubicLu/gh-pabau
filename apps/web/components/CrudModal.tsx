@@ -1,6 +1,11 @@
 import Form from './Form'
 import React, { FC, useEffect, useState } from 'react'
-import { BasicModal as Modal, Notification, NotificationType } from '@pabau/ui'
+import {
+  BasicModal as Modal,
+  Notification,
+  NotificationType,
+  CloseButton,
+} from '@pabau/ui'
 import { DocumentNode, useMutation } from '@apollo/client'
 import { useFormikContext } from 'formik'
 import { Tooltip } from 'antd'
@@ -104,6 +109,7 @@ const CrudModal: FC<P> = ({
       <Modal
         modalWidth={682}
         centered={true}
+        closeIcon={<CloseButton />}
         onCancel={() => {
           setDeleteModal(false)
           onClose?.()
@@ -152,6 +158,7 @@ const CrudModal: FC<P> = ({
       <Modal
         modalWidth={682}
         centered={true}
+        closeIcon={<CloseButton />}
         submitting={formSubmitting}
         onCancel={() => {
           onClose?.()
