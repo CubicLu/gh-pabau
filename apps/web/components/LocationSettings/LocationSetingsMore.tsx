@@ -21,7 +21,7 @@ const LocationSetingsMore: FC = () => {
           <Form.Item
             className={styles.locationSettingsMore__formItemInside}
             name={'Country'}
-            label={t('signup.country')}
+            label={t('create.account.signup.country')}
           >
             <Select
               showSearch
@@ -37,7 +37,7 @@ const LocationSetingsMore: FC = () => {
           <Form.Item
             className={styles.locationSettingsMore__formItemInside}
             name={'TimeZone'}
-            label={t('signup.time.zone')}
+            label={t('create.account.signup.time.zone')}
           >
             <Select
               showSearch
@@ -57,7 +57,7 @@ const LocationSetingsMore: FC = () => {
           <Form.Item
             className={styles.locationSettingsMore__formItemInside}
             name={'Currency'}
-            label={t('signup.currency')}
+            label={t('create.account.signup.currency')}
           >
             <Select
               showSearch
@@ -73,7 +73,7 @@ const LocationSetingsMore: FC = () => {
           <Form.Item
             className={styles.locationSettingsMore__formItemInside}
             name={'Language'}
-            label={t('singup.language')}
+            label={t('create.account.singup.language')}
           >
             <Select
               showSearch

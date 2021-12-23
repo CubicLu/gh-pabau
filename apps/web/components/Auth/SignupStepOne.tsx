@@ -15,11 +15,11 @@ export interface StepOneFormProps {
 interface SignupStepOneProps {
   handleStepOneSubmit: (value: StepOneFormProps) => void
 }
-
 export const SignupStepOne: FC<SignupStepOneProps> = ({
   handleStepOneSubmit,
 }) => {
   const { t } = useTranslationI18()
+
   return (
     <div className={styles.signupFormInput}>
       <Formik
@@ -45,43 +45,48 @@ export const SignupStepOne: FC<SignupStepOneProps> = ({
         onSubmit={(value) => {
           handleStepOneSubmit(value)
         }}
-        render={({ setFieldValue }) => (
+        render={({ setFieldValue, values, dirty, isValid }) => (
           <Form layout="vertical">
             <Form layout="vertical" className={styles.signupInput__div}>
               <Form.Item
-                label={t('signup.first.name')}
+                label={t('create.account.signup.first.name')}
                 name={'firstName'}
                 className={styles.signupInput}
               >
-                <Input name={'firstName'} />
+                <Input value={values.firstName} name={'firstName'} />
               </Form.Item>
               <Form.Item
-                label={t('signup.last.name')}
+                label={t('create.account.signup.last.name')}
                 name={'lastName'}
                 className={styles.signupInput}
               >
-                <Input name={'lastName'} />
+                <Input value={values.lastName} name={'lastName'} />
               </Form.Item>
             </Form>
             <Form.Item
               className={styles.signupInput}
-              label={t('signup.work.email')}
+              label={t('create.account.signup.work.email')}
               name={'workEmail'}
             >
-              <Input name={'workEmail'} />
+              <Input value={values.workEmail} name={'workEmail'} />
             </Form.Item>
             <Form.Item
               className={styles.signupInput}
-              label={t('signup.password')}
+              label={t('create.account.signup.password')}
               name={'password'}
             >
               <PasswordWithHelper
+                value={values.password}
                 onChange={(value) => setFieldValue('password', value)}
               />
             </Form.Item>
             <div className={styles.signupButton}>
-              <SubmitButton className={styles.btnStarted} type={'primary'}>
-                {t('signup.get.started')}
+              <SubmitButton
+                disabled={!isValid || !dirty}
+                className={styles.btnStarted}
+                type={'primary'}
+              >
+                {t('create.account.signup.get.started')}
               </SubmitButton>
             </div>
           </Form>

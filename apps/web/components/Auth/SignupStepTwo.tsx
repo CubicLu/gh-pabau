@@ -51,10 +51,11 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
             handleStepTwoSubmit(value)
           }
         }}
-        render={({ setFieldValue }) => (
+        render={({ setFieldValue, values, dirty, isValid }) => (
           <Form className={styles.signupInputs__form} layout="vertical">
             <Form.Item name={'phoneNumber'} className={styles.signupInput}>
               <PhoneNumberInput
+                value={values.phoneNumber}
                 label={t('signup.phone.number')}
                 onChange={(value, valid) => {
                   setFieldValue('phoneNumber', value)
@@ -69,24 +70,34 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
             <Form className={styles.signupInputs__div}>
               <Form.Item
                 className={styles.signupInput__CompanyForm}
-                label={t('signup.company.name')}
+                label={t('create.account.signup.company.name')}
                 name={'companyName'}
               >
-                <Input name={'companyName'} />
+                <Input value={values.companyName} name={'companyName'} />
               </Form.Item>
               <LocationSettings />
             </Form>
             <div className={styles.signupAgree}>
-              <Checkbox name={'termsAndCondition'}>
-                {t('signup.i.agree')}{' '}
+              <Checkbox
+                value={values.termsAndCondition}
+                name={'termsAndCondition'}
+              >
+                {t('create.account.signup.i.agree')}{' '}
                 <Link href="https://www.pabau.com/terms-conditions/" passHref>
-                  <a target="_blink"> {t('signup.terms.and.conditions')} </a>
+                  <a target="_blink">
+                    {' '}
+                    {t('create.account.signup.terms.and.conditions')}{' '}
+                  </a>
                 </Link>
               </Checkbox>
             </div>
             <div className={styles.signupButton}>
-              <SubmitButton className={styles.btnStarted} type={'primary'}>
-                {t('signup.create.account')}
+              <SubmitButton
+                disabled={!isValidPhone || !isValid || !dirty}
+                className={styles.btnStarted}
+                type={'primary'}
+              >
+                {t('create.account.signup.create.account')}
               </SubmitButton>
             </div>
           </Form>

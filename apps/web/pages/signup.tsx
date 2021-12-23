@@ -60,7 +60,8 @@ const Signup: FC = () => {
           <div className={styles.formHead}>
             <h6>{t('signup.create.account.header')}</h6>
             <span>
-              {t('signup.step')} {step} {t('signup.of')} 2
+              {t('create.account.signup.step')} {step}{' '}
+              {t('create.account.signup.step.of')} 2
             </span>
           </div>
           {step === 1 ? (

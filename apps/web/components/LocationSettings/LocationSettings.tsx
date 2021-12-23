@@ -1,16 +1,18 @@
 import { Button, Popover } from 'antd'
 import { Form, Input } from 'formik-antd'
 import LocationSetingsMore from './LocationSetingsMore'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './LocationSettings.module.less'
 
 function LocationSettings() {
   const content = <LocationSetingsMore />
+  const { t } = useTranslationI18()
 
   return (
     <Form.Item
       className={styles.signupInput__formItem}
-      label={'Location settings'}
-      name={'LocationSettings'}
+      label={t('create.account.location.settings')}
+      name={'Location settings'}
       colon={false}
     >
       <div className={styles.signupInput__div}>
@@ -20,7 +22,7 @@ function LocationSettings() {
           placement="bottomRight"
           content={content}
           trigger="click"
-          title="Location settings"
+          title={t('create.account.location.settings')}
         >
           <Button type="link">Edit</Button>
         </Popover>
