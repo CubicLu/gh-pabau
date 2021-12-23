@@ -3846,9 +3846,10 @@ model CompanyBranch {
   SalonBookings           Booking[]
   InventoryMovement       InventoryMovement[]
   InvSale                 InvSale[]
+  EquipmentLocation       EquipmentLocation[]
+  ServiceLocationTier     ServiceLocationTier[]
+  CmLead                  CmLead[]
 
-  ServiceLocationTier ServiceLocationTier[]
-  CmLead              CmLead[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -4139,6 +4140,7 @@ model CompanyRoomLocation {
   CompanyRoom CompanyRoom?   @relation(fields: [room_id], references: [id])
   Location    CompanyBranch? @relation(fields: [location_id], references: [id])
 
+  @@unique([room_id, location_id], name: "room_location")
   @@map("company_rooms_locations")
 }
 
@@ -4153,6 +4155,7 @@ model CompanyRoomService {
   Room           CompanyRoom?    @relation(fields: [room_id], references: [id])
   Service        CompanyService? @relation(fields: [service_id], references: [id])
 
+  @@unique([room_id, service_id], name: "room_service")
   @@index([room_id], name: "room_id")
   @@index([room_id], name: "room_id_2")
   @@index([service_id], name: "service_id")
@@ -5515,14 +5518,15 @@ model EmailTemplateAttachment {
 //}
 //
 model Equipment {
-  id               Int                @id @default(autoincrement())
-  company_id       Int
-  equipment_name   String
-  quantity         Int                @default(1)
-  is_active        Int                @default(1)
-  field_order      Int?               @default(0)
-  ServiceEquipment ServiceEquipment[]
-  Company          Company            @relation(fields: [company_id], references: [id])
+  id                Int                 @id @default(autoincrement())
+  company_id        Int
+  equipment_name    String
+  quantity          Int                 @default(1)
+  is_active         Int                 @default(1)
+  field_order       Int?                @default(0)
+  ServiceEquipment  ServiceEquipment[]
+  Company           Company             @relation(fields: [company_id], references: [id])
+  EquipmentLocation EquipmentLocation[]
 
   @@map("equipment")
 }
@@ -5541,6 +5545,18 @@ model ServiceEquipment {
 
   @@index([company_id], name: "company_id")
   @@map("company_services_equipment")
+}
+
+model EquipmentLocation {
+  id           Int @id @default(autoincrement())
+  equipment_id Int
+  location_id  Int
+
+  Equipment Equipment?     @relation(fields: [equipment_id], references: [id])
+  Location  CompanyBranch? @relation(fields: [location_id], references: [id])
+
+  @@unique([equipment_id, location_id], name: "equipment_location")
+  @@map("equipment_location")
 }
 
 //

@@ -42,6 +42,7 @@ module.exports = {
         DiscountDisableUser: ['updateMany'],
         DiscountDisableProduct: ['updateMany'],
         DiscountDisableService: ['updateMany'],
+        EquipmentLocation: ['updateMany'],
       },
     },
   },
@@ -86,6 +87,7 @@ module.exports = {
       DiscountDisableUser: ['updateMany'],
       DiscountDisableProduct: ['updateMany'],
       DiscountDisableService: ['updateMany'],
+      EquipmentLocation: ['updateMany'],
     },
   },
 }

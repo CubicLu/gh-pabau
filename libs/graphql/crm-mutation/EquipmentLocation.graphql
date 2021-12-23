@@ -1,0 +1,33 @@
+fragment EquipmentLocationFields on EquipmentLocation {
+  id
+  equipment_id
+  location_id
+}
+
+fragment EquipmentLocation on EquipmentLocation {
+  ...EquipmentLocationFields
+  Equipment {
+    ...EquipmentFields
+  }
+  Location {
+    ...CompanyBranchFields
+  }
+}
+
+mutation createOneEquipmentLocation($data: EquipmentLocationCreateInput!) {
+  createOneEquipmentLocation(data: $data) {
+    ...EquipmentLocation
+  }
+}
+
+mutation updateOneEquipmentLocation($where: EquipmentLocationWhereUniqueInput!, $data: EquipmentLocationUpdateInput!) {
+  updateOneEquipmentLocation(where: $where, data: $data) {
+    ...EquipmentLocation
+  }
+}
+
+mutation deleteOneEquipmentLocation($where: EquipmentLocationWhereUniqueInput!) {
+  deleteOneEquipmentLocation(where: $where) {
+    ...EquipmentLocation
+  }
+}

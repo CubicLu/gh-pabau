@@ -216,6 +216,20 @@ export const CompanyBranch = objectType({
         return root.InvSale
       },
     })
+    t.list.field('EquipmentLocation', {
+      type: 'EquipmentLocation',
+      args: {
+        where: 'EquipmentLocationWhereInput',
+        orderBy: 'EquipmentLocationOrderByWithRelationInput',
+        cursor: 'EquipmentLocationWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'EquipmentLocationScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.EquipmentLocation
+      },
+    })
     t.list.field('ServiceLocationTier', {
       type: 'ServiceLocationTier',
       args: {

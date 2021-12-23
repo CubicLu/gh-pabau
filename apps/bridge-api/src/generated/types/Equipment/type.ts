@@ -33,6 +33,20 @@ export const Equipment = objectType({
         return root.Company
       },
     })
+    t.list.field('EquipmentLocation', {
+      type: 'EquipmentLocation',
+      args: {
+        where: 'EquipmentLocationWhereInput',
+        orderBy: 'EquipmentLocationOrderByWithRelationInput',
+        cursor: 'EquipmentLocationWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'EquipmentLocationScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.EquipmentLocation
+      },
+    })
     t.field('_count', {
       type: 'EquipmentCountOutputType',
       resolve(root: any) {
