@@ -7,11 +7,14 @@ const Index = () => {
   const { t } = useTranslationI18()
 
   const pageData = {
-    breadcrumbName: t('setup.online-booking.online-booking'),
-    path: t('setup/online-booking'),
+    breadcrumbName: t('setup.client-area.client-area'),
+    path: 'setup/client-area',
     setup: 'Setup',
-    titleBooking: t('setup.online-booking.booking-activity'),
-    onlineTitleBooking: t('setup.online-booking.online-bookings-by-month'),
+    titleBooking: t('setup.client-area.client-activity'),
+    onlineTitleBooking: t('setup.client-area.client-bookings-by-month'),
+    textFacebook: 'App downloads',
+    textWebsite: 'Registrations',
+    textInstagram: 'Active users',
     stats: [
       {
         statIcon: '',
@@ -33,6 +36,7 @@ const Index = () => {
       },
     ],
   }
+
   return (
     <LayoutArea pageData={pageData}>
       <ClientAreaLayout />

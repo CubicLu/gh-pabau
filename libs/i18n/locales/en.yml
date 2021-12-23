@@ -2475,7 +2475,7 @@ en:
   setup.online-booking.tips-description: 'Use Pabau intelligence to find out where you can improve'
   setup.online-booking.online-bookings-by-month: 'Online Bookings by Month'
   setup.client-area.client-bookings-by-month: 'Connect Registration by Month'
-  setup.client-area.client-activity: 'Client Activity'
+  setup.client-area.client-activity: 'Connect Activity'
   setup.online-booking.booking-activity: 'Booking Activity'
   setup.online-booking.analytics-settings: 'Analytics settings'
   setup.online-booking.analytics.setup-now: 'Set Up Now'
