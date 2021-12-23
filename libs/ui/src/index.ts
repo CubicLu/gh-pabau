@@ -1,3 +1,4 @@
+export * from './lib/language-selector-dropdown/LanguageSelectorDropdown'
 export * from './lib/client-login-form/ClientLoginForm'
 export * from './lib/button/Button'
 export * from './lib/close-button/CloseButton'

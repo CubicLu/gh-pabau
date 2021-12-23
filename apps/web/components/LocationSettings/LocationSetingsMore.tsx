@@ -2,17 +2,40 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Form, Select } from 'formik-antd'
 import styles from './LocationSettings.module.less'
 import { FC } from 'react'
+import { useGetAllCountryTimezoneQuery } from '@pabau/graphql'
+import dayjs from 'dayjs'
+import { LanguageSelectorDropdown } from '@pabau/ui'
 
-const LocationSetingsMore: FC = () => {
+export interface Props {
+  country_name?: string
+  country_id?: number
+  findManyCountry?: string
+  Timezone?: any
+  data?: any
+  useFetchData?: any
+  handleCountryDetection?: (value: string) => void
+  handleCountryTimeZone?: (value: string) => void
+}
+
+const LocationSetingsMore: FC<Props> = ({
+  useFetchData,
+  handleCountryDetection,
+  handleCountryTimeZone,
+}) => {
   const { Option } = Select
 
-  function onSearch(val: string) {
-    console.log('search:', val)
-  }
-  function onChange(value: string) {
-    console.log(`selected ${value}`)
-  }
+  const { data: currencyData } = useGetAllCountryTimezoneQuery({
+    variables: {},
+  })
+
   const { t } = useTranslationI18()
+
+  function handleCountry(value: string) {
+    handleCountryDetection(value)
+  }
+  function handleTimeZone(value: string) {
+    handleCountryTimeZone(value)
+  }
 
   return (
     <div>
@@ -25,13 +48,15 @@ const LocationSetingsMore: FC = () => {
           >
             <Select
               showSearch
-              onChange={onChange}
-              onSearch={onSearch}
+              onChange={handleCountry}
               name={'Country'}
+              defaultValue={useFetchData?.data?.country_name}
             >
-              <Option key={2} value={'unitedKingdom'}>
-                United Kingdom
-              </Option>
+              {currencyData?.findManyCountry.map((data) => (
+                <Option key={data?.country_id} value={data?.country_name}>
+                  {data?.country_name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item
@@ -40,14 +65,21 @@ const LocationSetingsMore: FC = () => {
             label={t('create.account.signup.time.zone')}
           >
             <Select
+              key={useFetchData?.data?.time_zone.timezone_id}
+              defaultValue={`(${useFetchData?.data?.time_zone.code} ${dayjs(
+                useFetchData?.data?.time_zone?.current_time
+              ).format('Z')}) ${useFetchData?.data?.time_zone?.id}`}
               showSearch
-              onChange={onChange}
-              onSearch={onSearch}
+              onChange={handleTimeZone}
               name={'TimeZone'}
             >
-              <Option value={2} key={2}>
-                America
-              </Option>
+              {currencyData?.findManyCountry.map((data) =>
+                data?.Timezone?.map((data) => (
+                  <Option value={data.label} key={data.timezone_id}>
+                    {data.label}
+                  </Option>
+                ))
+              )}
             </Select>
           </Form.Item>
         </Form>
@@ -61,13 +93,16 @@ const LocationSetingsMore: FC = () => {
           >
             <Select
               showSearch
-              onChange={onChange}
-              onSearch={onSearch}
               name={'Currency'}
+              defaultValue={`${useFetchData?.data?.currency?.name} - ${useFetchData?.data?.currency?.symbol}`}
             >
-              <Option key={31} value={'Currency'}>
-                Currency
-              </Option>
+              {currencyData?.findManyCountry?.map((data) =>
+                data?.Currency?.map((value) => (
+                  <Option key={value.ID} value={value.name}>
+                    {value.name} - {value.code}
+                  </Option>
+                ))
+              )}
             </Select>
           </Form.Item>
           <Form.Item
@@ -75,16 +110,7 @@ const LocationSetingsMore: FC = () => {
             name={'Language'}
             label={t('create.account.singup.language')}
           >
-            <Select
-              showSearch
-              onChange={onChange}
-              onSearch={onSearch}
-              name={'Language'}
-            >
-              <Option key={2} value={'Language'}>
-                Language
-              </Option>
-            </Select>
+            <LanguageSelectorDropdown />
           </Form.Item>
         </Form>
       </Form>

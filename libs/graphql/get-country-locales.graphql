@@ -1,0 +1,32 @@
+query findManyCurrency($countryName: String!) {
+  findManyCountry(where: { country_name: { contains: $countryName } }) {
+    country_name
+    country_id
+    Continent
+    Currency {
+      ID
+      code
+      name
+    }
+    Timezone {
+      timezone_id
+      label
+    }
+  }
+}
+query getAllCountryTimezone {
+  findManyCountry {
+    country_id
+    country_name
+    Continent
+    Currency {
+      ID
+      code
+      name
+    }
+    Timezone {
+      timezone_id
+      label
+    }
+  }
+}

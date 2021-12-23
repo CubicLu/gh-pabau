@@ -24,7 +24,6 @@ export const SignupStepTwo: FC<SignupStepTwoProps> = ({
   handleStepTwoSubmit,
 }) => {
   const [isValidPhone, setValidPhone] = useState<boolean>(false)
-
   countries.registerLocale(english)
   const { t } = useTranslationI18()
 

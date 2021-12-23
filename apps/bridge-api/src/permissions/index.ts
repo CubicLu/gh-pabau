@@ -283,7 +283,7 @@ export const permissions = shield(
       findManySocialSurveyAnswerCount: rules.authentication.isAuthenticated,
       // //Country
       findFirstCountry: rules.authentication.isAuthenticated,
-      findManyCountry: rules.authentication.isAuthenticated,
+      findManyCountry: allow,
       findManyCountryCount: rules.authentication.isAuthenticated,
       // //MedicalFormContact
       findFirstMedicalFormContact: rules.authentication.isAuthenticated,
